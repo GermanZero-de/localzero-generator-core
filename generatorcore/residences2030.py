@@ -1,4 +1,5 @@
 from dataclasses import dataclass, asdict
+
 from .electricity2018 import *
 from .residences2018 import *
 from .business2018 import *

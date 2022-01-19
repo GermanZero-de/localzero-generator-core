@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field, InitVar, asdict
+from dataclasses import dataclass, asdict
 from .setup import ass, entry, fact
 
 # Definition der relevanten Spaltennamen für den Sektor E

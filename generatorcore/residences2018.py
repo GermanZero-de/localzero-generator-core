@@ -1,5 +1,5 @@
-from dataclasses import dataclass, field, InitVar, asdict
-from .setup import ass, entry, fact
+from dataclasses import dataclass, asdict
+from .setup import entry, fact
 
 
 # Definition der relevanten Spaltennamen für den Sektor R18
