@@ -1,4 +1,4 @@
-from setup import *
+from .setup import *
 from dataclasses import dataclass, asdict
 
 
@@ -132,9 +132,9 @@ def Agri2030_calc(root):
     ''' import external values'''
     import json
     if entry('In_M_AGS_com') == 'DG000000':
-        excel_path = 'Excel_DG_values.json'
+        excel_path = 'excel/germany_values.json'
     elif entry('In_M_AGS_com') == '03159016':
-        excel_path = 'Excel_Goe_values.json'
+        excel_path = 'excel/goettingen_values.json'
 
     with open(excel_path, 'r') as fp:
         exl = json.load(fp)

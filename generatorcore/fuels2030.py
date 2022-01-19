@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-from setup import *
+from .setup import *
 
 #  Definition der relevanten Spaltennamen für den Sektor F (30)
 

@@ -1,4 +1,4 @@
-from setup import *
+from .setup import *
 from dataclasses import dataclass, asdict
 
 

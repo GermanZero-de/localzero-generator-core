@@ -3,10 +3,10 @@
 
 
 #from dataclasses import dataclass, field, InitVar, asdict
-from electricity2018 import *
-from residences2018 import *
-from business2018 import *
-from setup import *
+from .electricity2018 import *
+from .residences2018 import *
+from .business2018 import *
+from .setup import *
 
 # Definition der relevanten Spaltennamen für den Sektor R30
 
@@ -117,9 +117,9 @@ def Residence2030_calc(root: Generator):
     ''' import external values'''
     import json
     if entry('In_M_AGS_com') == 'DG000000':
-        excel_path = 'Excel_DG_values.json'
+        excel_path = 'excel/germany_values.json'
     elif entry('In_M_AGS_com') == '03159016':
-        excel_path = 'Excel_Goe_values.json'
+        excel_path = 'excel/goettingen_values.json'
 
     with open(excel_path, 'r') as fp:
         exl = json.load(fp)

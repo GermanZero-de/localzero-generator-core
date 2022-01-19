@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 import datetime
-import refdata
+from . import refdata
 
 # FIXME: This block should die
 

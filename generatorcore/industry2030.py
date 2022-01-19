@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field, InitVar, asdict
-import industry2018
-from setup import *
+from . import industry2018
+from .setup import *
 
 
 # mineral     todo

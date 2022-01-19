@@ -2,8 +2,8 @@
 # coding: utf-8
 
 from dataclasses import dataclass, field, InitVar, asdict
-from residences2018 import *
-from setup import *
+from .residences2018 import *
+from .setup import *
 
 # Definition der relevanten Spaltennamen für den Sektor E
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from dataclasses import dataclass, field, InitVar, asdict
-from setup import *
+from .setup import *
 
 
 # Definition der relevanten Spaltennamen für den Sektor R18

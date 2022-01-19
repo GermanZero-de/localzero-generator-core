@@ -1,30 +1,28 @@
-#!/usr/bin/env python
-# coding: utf-8
+import time
 
 # hier Sektoren Files importieren:
-from prequel import *
-from electricity2018 import *
-from business2018 import *
-from industry2018 import *
-from transport2018 import *
-from residences2018 import *
-from agri2018 import *
-from heat2018 import *
-from lulucf2018 import *
-from fuels2018 import *
+from .prequel import *
+from .electricity2018 import *
+from .business2018 import *
+from .industry2018 import *
+from .transport2018 import *
+from .residences2018 import *
+from .agri2018 import *
+from .heat2018 import *
+from .lulucf2018 import *
+from .fuels2018 import *
 
-from residences2030 import *
-from business2030 import *
-from heat2030 import *
-from fuels2030 import *
-from transport2030 import *
-from electricity2030 import *
-from heat2030 import *
-from agri2030 import *
-from lulucf2030 import *
-from industry2030 import *
-from setup import *
-import time
+from .residences2030 import *
+from .business2030 import *
+from .heat2030 import *
+from .fuels2030 import *
+from .transport2030 import *
+from .electricity2030 import *
+from .heat2030 import *
+from .agri2030 import *
+from .lulucf2030 import *
+from .industry2030 import *
+from .setup import *
 
 
 @dataclass
@@ -121,7 +119,3 @@ class Generator:
         self.calculate()
         # dictionary from DataClass
         self.dict = asdict(self)
-
-
-# Generator Object
-g = Generator()
