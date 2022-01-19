@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-from .setup import *
-from dataclasses import dataclass, asdict
+from .setup import ass, entry
 
 
 # this function brings forward als calculations that are needed prior to

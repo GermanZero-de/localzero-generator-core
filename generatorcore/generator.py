@@ -22,7 +22,7 @@ from .heat2030 import *
 from .agri2030 import *
 from .lulucf2030 import *
 from .industry2030 import *
-from .setup import *
+from .setup import ass, entry, fact
 
 
 @dataclass
