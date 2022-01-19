@@ -24,9 +24,9 @@ def main():
     parser.set_defaults()
     subcmd_parsers = parser.add_subparsers(dest="subcmd")
 
-    cmd_run_parser = subcmd_parsers.add_parser('run', help='Run the generator')
+    cmd_run_parser = subcmd_parsers.add_parser("run", help="Run the generator")
     # TODO: Add the below when the generator can actually use that
-    #cmd_run_parser.add_argument('-ags', default='03159016')
+    # cmd_run_parser.add_argument('-ags', default='03159016')
     cmd_run_parser.set_defaults(func=run_cmd)
 
     args = parser.parse_args()
