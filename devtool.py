@@ -4,7 +4,7 @@ This is a simple wrapper around the generator to
 
     - Make sure we eat our own dogfood(TM) and try the API.
 
-    - Give us a quick way to run the generator as 
+    - Give us a quick way to run the generator as
       just running Generator.py as a script runs into the
       scripts and packages / modules shall not be mixed rule.
       See https://mail.python.org/pipermail/python-3000/2007-April/006793.html

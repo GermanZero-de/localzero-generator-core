@@ -172,9 +172,9 @@ class RefData:
     def load(cls, datadir: str | None = None) -> 'RefData':
         """Load all the reference data into memory.  This assumes that the working directory has a subdirectory
            called 'data' that contains the reference data in two subfolders one called 'public' and the other
-           'proprietary'. 
+           'proprietary'.
 
-           If your data directory is somewhere else provide the full path to it.  
+           If your data directory is somewhere else provide the full path to it.
 
            TODO: Provide a way to run this even when no proprietary data is available. As of right now unnecessary
            as we can't yet run the generator without the data.

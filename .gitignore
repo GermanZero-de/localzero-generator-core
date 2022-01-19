@@ -5,8 +5,6 @@
 *.xlsx
 
 # See the README in data
-# Commented out while we are doing the g2p hack to enable forward progress 
-# until all the repositories are ready
 /data/public/
 /data/proprietary/
 

@@ -568,7 +568,7 @@ def Heat2018_calc(root):
         """p_coal.energy = (
             entry ('In_I_ofossil_fec')
 
-           #result: 21.019.444 MWh  
+           #result: 21.019.444 MWh
         )"""
 
         p_ofossil.energy = (
