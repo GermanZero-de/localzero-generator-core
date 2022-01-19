@@ -15,7 +15,9 @@ PROPRIETARY_DATA_SOURCES = frozenset(["traffic"])
 
 def _load(datadir: str, what: str, year: int = 2018) -> pd.DataFrame:
     repo = "proprietary" if what in PROPRIETARY_DATA_SOURCES else "public"
-    return pd.read_csv(os.path.join(datadir, repo, what, str(year) + ".csv"), dtype={'ags': 'str'})
+    return pd.read_csv(
+        os.path.join(datadir, repo, what, str(year) + ".csv"), dtype={"ags": "str"}
+    )
 
 
 class RowNotFound(Exception):
@@ -28,6 +30,7 @@ class RowNotFound(Exception):
 
     def __str__(self):
         return f"Could not find ags={self.ags} in dataframe\n{self.df}"
+
 
 # TODO: Good error messages when field is not populated
 # TODO: Good error messages when field name is mistyped
@@ -44,7 +47,7 @@ class Row:
             # and extract a very small number of rows. pandas is total overkill
             # in particular when we are publishing a package for others to use
             # it's nice to have a small list of dependencies
-            self._series = df[df['ags'] == ags].iloc[0]
+            self._series = df[df["ags"] == ags].iloc[0]
         except:
             raise RowNotFound(ags=ags, df=df)
 
@@ -66,24 +69,25 @@ class Row:
 
 
 class RefData:
-    """This class gives you a single handle around all the reference data.
-    """
+    """This class gives you a single handle around all the reference data."""
 
-    def __init__(self,
-                 area: pd.DataFrame,
-                 area_kinds: pd.DataFrame,
-                 assumptions: pd.DataFrame,
-                 buildings: pd.DataFrame,
-                 destatis: pd.DataFrame,
-                 facts: pd.DataFrame,
-                 flats: pd.DataFrame,
-                 nat_agri: pd.DataFrame,
-                 nat_organic_agri: pd.DataFrame,
-                 nat_energy: pd.DataFrame,
-                 nat_res_buildings: pd.DataFrame,
-                 population: pd.DataFrame,
-                 renewable_energy: pd.DataFrame,
-                 traffic: pd.DataFrame):
+    def __init__(
+        self,
+        area: pd.DataFrame,
+        area_kinds: pd.DataFrame,
+        assumptions: pd.DataFrame,
+        buildings: pd.DataFrame,
+        destatis: pd.DataFrame,
+        facts: pd.DataFrame,
+        flats: pd.DataFrame,
+        nat_agri: pd.DataFrame,
+        nat_organic_agri: pd.DataFrame,
+        nat_energy: pd.DataFrame,
+        nat_res_buildings: pd.DataFrame,
+        population: pd.DataFrame,
+        renewable_energy: pd.DataFrame,
+        traffic: pd.DataFrame,
+    ):
         self._area = area
         self._area_kinds = area_kinds
         self._assumptions = assumptions
@@ -150,51 +154,51 @@ class RefData:
         """Statistics about the past. Must be able to give a source for each fact."""
         # TODO: Kill the exception handler
         try:
-            value = float(self._facts[self._facts['label'] == keyname]['value'])  # type: ignore
-            return(value)
+            value = float(self._facts[self._facts["label"] == keyname]["value"])  # type: ignore
+            return value
 
         except:
-            print('could not find ' + keyname, file=sys.stderr)
+            print("could not find " + keyname, file=sys.stderr)
             return 1.0
 
     def ass(self, keyname: str) -> float:
         """Similar to fact, but these try to describe the future. And are therefore based on various assumptions."""
         # TODO: Kill the exception handler
         try:
-            value = float(self._assumptions[self._assumptions['label'] == keyname]['value'])  # type: ignore
-            return(value)
+            value = float(self._assumptions[self._assumptions["label"] == keyname]["value"])  # type: ignore
+            return value
 
         except:
-            print('could not find ' + keyname, file=sys.stderr)
+            print("could not find " + keyname, file=sys.stderr)
             return 1.0
 
     @classmethod
-    def load(cls, datadir: str | None = None) -> 'RefData':
+    def load(cls, datadir: str | None = None) -> "RefData":
         """Load all the reference data into memory.  This assumes that the working directory has a subdirectory
-           called 'data' that contains the reference data in two subfolders one called 'public' and the other
-           'proprietary'.
+        called 'data' that contains the reference data in two subfolders one called 'public' and the other
+        'proprietary'.
 
-           If your data directory is somewhere else provide the full path to it.
+        If your data directory is somewhere else provide the full path to it.
 
-           TODO: Provide a way to run this even when no proprietary data is available. As of right now unnecessary
-           as we can't yet run the generator without the data.
+        TODO: Provide a way to run this even when no proprietary data is available. As of right now unnecessary
+        as we can't yet run the generator without the data.
         """
         if datadir is None:
             datadir = os.path.join(os.getcwd(), "data")
         d = cls(
-            area=_load(datadir, 'area'),
-            area_kinds=_load(datadir, 'area_kinds'),
-            assumptions=_load(datadir, 'assumptions'),
-            buildings=_load(datadir, 'buildings'),
-            destatis=_load(datadir, 'destatis'),
-            facts=_load(datadir, 'facts'),
-            flats=_load(datadir, 'flats'),
-            nat_agri=_load(datadir, 'nat_agri'),
-            nat_organic_agri=_load(datadir, 'nat_organic_agri', 2016),
-            nat_energy=_load(datadir, 'nat_energy'),
-            nat_res_buildings=_load(datadir, 'nat_res_buildings'),
-            population=_load(datadir, 'population'),
-            renewable_energy=_load(datadir, 'renewable_energy'),
-            traffic=_load(datadir, 'traffic')
+            area=_load(datadir, "area"),
+            area_kinds=_load(datadir, "area_kinds"),
+            assumptions=_load(datadir, "assumptions"),
+            buildings=_load(datadir, "buildings"),
+            destatis=_load(datadir, "destatis"),
+            facts=_load(datadir, "facts"),
+            flats=_load(datadir, "flats"),
+            nat_agri=_load(datadir, "nat_agri"),
+            nat_organic_agri=_load(datadir, "nat_organic_agri", 2016),
+            nat_energy=_load(datadir, "nat_energy"),
+            nat_res_buildings=_load(datadir, "nat_res_buildings"),
+            population=_load(datadir, "population"),
+            renewable_energy=_load(datadir, "renewable_energy"),
+            traffic=_load(datadir, "traffic"),
         )
         return d
