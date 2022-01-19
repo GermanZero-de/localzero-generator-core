@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 from dataclasses import dataclass, field, InitVar, asdict
 from .setup import *
 

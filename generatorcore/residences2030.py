@@ -1,7 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-
 # from dataclasses import dataclass, field, InitVar, asdict
 from .electricity2018 import *
 from .residences2018 import *

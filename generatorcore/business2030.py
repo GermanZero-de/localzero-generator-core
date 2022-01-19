@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
 from dataclasses import dataclass
 from .setup import *
 import time

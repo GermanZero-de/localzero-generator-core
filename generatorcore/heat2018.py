@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
 from .setup import *
 from dataclasses import dataclass, asdict
 
