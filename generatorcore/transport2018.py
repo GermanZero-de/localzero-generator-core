@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
 # # Laden der Datentabellen und deren Suchfunktionen
 
 from dataclasses import dataclass, field, InitVar, asdict
