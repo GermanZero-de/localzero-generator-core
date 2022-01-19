@@ -4,7 +4,10 @@ TODO: Write some text
 
 
 How to get coding
------------------
+=================
+
+Poetry
+------
 
 If you want to develop the generator, it is recommended that you first
 install poetry (https://python-poetry.org/docs/).  A good reasonably short
@@ -22,3 +25,21 @@ If you happen to use vscode (Visual Studio Code), then a good trick
 is to start vscode for the first time with :code:`code .` in this terminal.
 That way the editors builtin python support will pick up the virtualenv.
 Alternatively use the :code:`Python: Select Interpreter` command.
+
+Black
+-----
+We use black to automatically format the code and thereby avoid any spurious merge
+conflicts, due to layout differences. This will happen in a pre-commit automatically,
+but to for the best experience you should configure your editor to do the same.
+
+How to run the generator
+------------------------
+
+.. code-block:: console
+    python devtool.py run
+
+But this will immediately fail, complaining that you don't have the necessary
+data available.
+
+Therefore you will have to checkout the proprietary and the public data
+repositories into :code:`data/public` and :code:`data/proprietary` respectively.

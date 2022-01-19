@@ -24,4 +24,4 @@ Zero team you can put a copy of that data into ``data/proprietary`` and use it t
 work on the website edition of the Generator, but remember that the data should not
 be put on a public github or otherwise be given away to people outside of GermanZero.
 
-.. _publicRepository: https://github.com/GermanZero-de/going-zero-data-intern
+.. _publicRepository: https://github.com/GermanZero-de/localzero-data-public.git
