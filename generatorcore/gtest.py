@@ -14,7 +14,7 @@ class gtest:
 
     # read excel-dictionary
     def set_excel(self, excel_path):
-        with open(excel_path, 'r') as fp:
+        with open(excel_path, "r") as fp:
             self.xls = json.load(fp)
         fp.close()
         # dictionary
@@ -42,7 +42,7 @@ class gtest:
         vne = vn = vnc = vcc = vnz = 0
 
         if gen is None or xls is None:
-            print('dictionaries to compare missing')
+            print("dictionaries to compare missing")
             return
 
         sector_xls = self.xls[sector]
@@ -67,51 +67,76 @@ class gtest:
                 if col not in sector_gen[row]:
                     vne += 1
                     if filter & 1 != 0:
-                        print('column "' + col + '" does not exist (' + row + ')')
+                        print('column "' + col + '" does not exist (' + row + ")")
                     continue
 
                 # exclude string values
-                if not isinstance(sector_xls[row][col], str) and not isinstance(sector_gen[row][col], str):
+                if not isinstance(sector_xls[row][col], str) and not isinstance(
+                    sector_gen[row][col], str
+                ):
 
                     # print None - values
                     if sector_gen[row][col] is None:
                         vn += 1
                         if filter & 2 != 0:
-                            print('%-50s: %15.2f is None' % (row + '.' + col, sector_xls[row][col]))
+                            print(
+                                "%-50s: %15.2f is None"
+                                % (row + "." + col, sector_xls[row][col])
+                            )
 
                     # treat 0 or non 0 values different
                     elif sector_xls[row][col] != 0:
                         # if type(sector_gen[row][col]) is not float:
                         # continue
-                        rerr = abs((sector_gen[row][col] - sector_xls[row][col]) / sector_xls[row][col])
+                        rerr = abs(
+                            (sector_gen[row][col] - sector_xls[row][col])
+                            / sector_xls[row][col]
+                        )
                         if rerr > eps:
                             vnc += 1
                             if filter & 4 != 0:
-                                print('%-50s: %15.2f %15.2f Excel' % (row + '.' + col, sector_gen[row][col], sector_xls[row][col]))
+                                print(
+                                    "%-50s: %15.2f %15.2f Excel"
+                                    % (
+                                        row + "." + col,
+                                        sector_gen[row][col],
+                                        sector_xls[row][col],
+                                    )
+                                )
                         else:
                             vcc += 1
                             if filter & 8 != 0:
-                                print('%-50s: %15.2f %15.2f Correct' % (row + '.' + col, sector_gen[row][col], sector_xls[row][col]))
+                                print(
+                                    "%-50s: %15.2f %15.2f Correct"
+                                    % (
+                                        row + "." + col,
+                                        sector_gen[row][col],
+                                        sector_xls[row][col],
+                                    )
+                                )
 
         for row in sector_gen:
             if row not in sector_xls:
                 vnz += 1
                 if filter & 16 != 0:
-                    print('%-50s: row not in Excel' % (row))
+                    print("%-50s: row not in Excel" % (row))
             else:
                 for col in sector_gen[row]:
                     if sector_gen[row][col] is not None:
                         if col not in sector_xls[row]:
                             vnz += 1
                             if filter & 16 != 0:
-                                print('%-50s: %15.2f column not in Excel' % (row + '.' + col, sector_gen[row][col]))
+                                print(
+                                    "%-50s: %15.2f column not in Excel"
+                                    % (row + "." + col, sector_gen[row][col])
+                                )
 
         # Statistics
-        print('columns or rows not declared: ' + str(vne))
-        print('values not calculated: ' + str(vn))
-        print('values wrong: ' + str(vnc))
-        print('values not in Excel: ' + str(vnz))
-        print('values correct: ' + str(vcc))
-        print('sum: ' + str(vne + vn + vnc + vnz + vcc))
+        print("columns or rows not declared: " + str(vne))
+        print("values not calculated: " + str(vn))
+        print("values wrong: " + str(vnc))
+        print("values not in Excel: " + str(vnz))
+        print("values correct: " + str(vcc))
+        print("sum: " + str(vne + vn + vnc + vnz + vcc))
 
         return sector_gen, sector_xls

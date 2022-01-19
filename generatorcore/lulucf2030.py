@@ -124,667 +124,523 @@ def Lulucf2030_calc(root):
 
     try:
 
-        g_forest_managed.CO2e_pb_per_t = (
-            ass('Ass_L_G_forest_conv_CO2e_per_ha_2050')
-        )
-        g_forest_managed.demand_change = ass('Ass_L_G_forest_conv_pct_change')
+        g_forest_managed.CO2e_pb_per_t = ass("Ass_L_G_forest_conv_CO2e_per_ha_2050")
+        g_forest_managed.demand_change = ass("Ass_L_G_forest_conv_pct_change")
         g_forest_managed.area_ha_change = (
-            l18.g_forest_managed.area_ha *
-            g_forest_managed.demand_change
+            l18.g_forest_managed.area_ha * g_forest_managed.demand_change
         )
-        g_forest.CO2e_cb_per_t = (fact('Fact_L_G_forest_CO2e_cb_per_ha_203X'))
+        g_forest.CO2e_cb_per_t = fact("Fact_L_G_forest_CO2e_cb_per_ha_203X")
 
         g_forest_managed.area_ha = (
-            l18.g_forest_managed.area_ha +
-            g_forest_managed.area_ha_change
+            l18.g_forest_managed.area_ha + g_forest_managed.area_ha_change
         )
         g_forest_managed.CO2e_pb = (
-            g_forest_managed.CO2e_pb_per_t *
-            g_forest_managed.area_ha
+            g_forest_managed.CO2e_pb_per_t * g_forest_managed.area_ha
         )
-        g_forest_managed.invest_per_x = (
-            ass('Ass_L_G_forest_afforestation_invest_per_ha_2020')
+        g_forest_managed.invest_per_x = ass(
+            "Ass_L_G_forest_afforestation_invest_per_ha_2020"
         )
-        g_crop_min_conv.demand_change = (
-            ass('Ass_L_G_crop_organic_matter_pct_2050')
+        g_crop_min_conv.demand_change = ass("Ass_L_G_crop_organic_matter_pct_2050")
+        g_crop_min_conv.CO2e_pb_per_t = fact(
+            "Fact_L_G_crop_minrl_soil_ord_CO2e_per_ha_2018"
         )
-        g_crop_min_conv.CO2e_pb_per_t = (
-            fact('Fact_L_G_crop_minrl_soil_ord_CO2e_per_ha_2018')
-        )
-        g_forest_natural.CO2e_pb_per_t = (
-            fact('Fact_L_G_forest_nature_CO2e_per_ha_2018')
-        )
-        g_forest.CO2e_cb = (g_forest_managed.area_ha * g_forest.CO2e_cb_per_t)
-        g_forest_natural.demand_change = (
-            ass('Ass_L_G_forest_nature_pct_change')
-        )
+        g_forest_natural.CO2e_pb_per_t = fact("Fact_L_G_forest_nature_CO2e_per_ha_2018")
+        g_forest.CO2e_cb = g_forest_managed.area_ha * g_forest.CO2e_cb_per_t
+        g_forest_natural.demand_change = ass("Ass_L_G_forest_nature_pct_change")
         g_forest_natural.area_ha_change = (
-            l18.g_forest_natural.area_ha *
-            g_forest_natural.demand_change
+            l18.g_forest_natural.area_ha * g_forest_natural.demand_change
         )
-        g_crop_org_low.invest_per_x = (
-            ass('Ass_L_G_wet_rewetting_invest_per_ha_2016')
-        )
+        g_crop_org_low.invest_per_x = ass("Ass_L_G_wet_rewetting_invest_per_ha_2016")
         g_forest_natural.area_ha = (
-            l18.g_forest_natural.area_ha +
-            g_forest_natural.area_ha_change
+            l18.g_forest_natural.area_ha + g_forest_natural.area_ha_change
         )
         g.CO2e_cb = g_forest.CO2e_cb
         g_forest_natural.CO2e_pb = (
-            g_forest_natural.CO2e_pb_per_t *
-            g_forest_natural.area_ha
+            g_forest_natural.CO2e_pb_per_t * g_forest_natural.area_ha
         )
-        g_forest.CO2e_pb = (
-            g_forest_managed.CO2e_pb +
-            g_forest_natural.CO2e_pb
-        )
-        g_forest.CO2e_total = (g_forest.CO2e_cb + g_forest.CO2e_pb)
-        g_forest_managed.area_ha_available_pct_of_action = (
-            ass('Ass_L_G_forest_conv_dead_pct_2018') /
-            ass('Ass_L_G_forest_conv_pct_2050')
-        )
+        g_forest.CO2e_pb = g_forest_managed.CO2e_pb + g_forest_natural.CO2e_pb
+        g_forest.CO2e_total = g_forest.CO2e_cb + g_forest.CO2e_pb
+        g_forest_managed.area_ha_available_pct_of_action = ass(
+            "Ass_L_G_forest_conv_dead_pct_2018"
+        ) / ass("Ass_L_G_forest_conv_pct_2050")
         g_forest_managed.area_ha_available = (
-            g_forest_managed.area_ha *
-            g_forest_managed.area_ha_available_pct_of_action
+            g_forest_managed.area_ha * g_forest_managed.area_ha_available_pct_of_action
         )
         g_forest_managed.invest = (
-            g_forest_managed.area_ha_available *
-            g_forest_managed.invest_per_x
+            g_forest_managed.area_ha_available * g_forest_managed.invest_per_x
         )
         g_forest.invest = g_forest_managed.invest
-        g_forest.change_CO2e_t = (
-            g_forest.CO2e_total -
-            l18.g_forest.CO2e_total
+        g_forest.change_CO2e_t = g_forest.CO2e_total - l18.g_forest.CO2e_total
+        g_crop_min_conv.area_ha_change = l18.g_crop_min_conv.area_ha * (
+            g_crop_min_conv.demand_change
         )
-        g_crop_min_conv.area_ha_change = (
-            l18.g_crop_min_conv.area_ha * (g_crop_min_conv.demand_change)
-        )
-        g_forest.area_ha = (
-            g_forest_managed.area_ha +
-            g_forest_natural.area_ha
-        )
+        g_forest.area_ha = g_forest_managed.area_ha + g_forest_natural.area_ha
         g_crop_min_conv.area_ha = (
-            l18.g_crop_min_conv.area_ha +
-            g_crop_min_conv.area_ha_change
+            l18.g_crop_min_conv.area_ha + g_crop_min_conv.area_ha_change
         )
         g_crop_min_conv.CO2e_pb = (
-            g_crop_min_conv.CO2e_pb_per_t *
-            g_crop_min_conv.area_ha
+            g_crop_min_conv.CO2e_pb_per_t * g_crop_min_conv.area_ha
         )
-        g_crop_min_hum.CO2e_pb_per_t = (
-            fact('Fact_L_G_crop_minrl_soil_sust_CO2e_per_ha_203X')
+        g_crop_min_hum.CO2e_pb_per_t = fact(
+            "Fact_L_G_crop_minrl_soil_sust_CO2e_per_ha_203X"
         )
         g_crop_min_hum.area_ha_change = 0
 
-        g_grass_min_conv.demand_change = (ass('Ass_L_G_no_LUC_203X')
-                                          )
-        g_grass_min_conv.CO2e_pb_per_t = (
-            fact('Fact_L_G_grass_strict_minrl_soil_ord_CO2e_per_ha_2018')
+        g_grass_min_conv.demand_change = ass("Ass_L_G_no_LUC_203X")
+        g_grass_min_conv.CO2e_pb_per_t = fact(
+            "Fact_L_G_grass_strict_minrl_soil_ord_CO2e_per_ha_2018"
         )
         g_crop_min_hum.area_ha = g_crop_min_hum.area_ha_change
-        g_crop_min_hum.CO2e_pb = (
-            g_crop_min_hum.CO2e_pb_per_t *
-            g_crop_min_hum.area_ha
-        )
-        g_grass_org_low.invest_per_x = (
-            ass('Ass_L_G_wet_rewetting_invest_per_ha_2016')
-        )
-        g_crop_org_low.CO2e_pb_per_t = (
-            fact('Fact_L_G_crop_fen_CO2e_per_ha_2018')
-        )
-        g_crop_org_low.demand_change = (ass('Ass_L_G_area_rewetting_2050'))
+        g_crop_min_hum.CO2e_pb = g_crop_min_hum.CO2e_pb_per_t * g_crop_min_hum.area_ha
+        g_grass_org_low.invest_per_x = ass("Ass_L_G_wet_rewetting_invest_per_ha_2016")
+        g_crop_org_low.CO2e_pb_per_t = fact("Fact_L_G_crop_fen_CO2e_per_ha_2018")
+        g_crop_org_low.demand_change = ass("Ass_L_G_area_rewetting_2050")
 
         g_crop_org_low.area_ha_change = (
-            l18.g_crop_org_low.area_ha *
-            g_crop_org_low.demand_change
+            l18.g_crop_org_low.area_ha * g_crop_org_low.demand_change
         )
         g_crop_org_low.area_ha = (
-            l18.g_crop_org_low.area_ha +
-            g_crop_org_low.area_ha_change
+            l18.g_crop_org_low.area_ha + g_crop_org_low.area_ha_change
         )
-        g_crop_org_low.CO2e_pb = (
-            g_crop_org_low.CO2e_pb_per_t *
-            g_crop_org_low.area_ha
-        )
-        g_crop_org_high.CO2e_pb_per_t = (
-            fact('Fact_L_G_crop_bog_CO2e_per_ha_2018')
-        )
-        g_crop_org_high.demand_change = (ass('Ass_L_G_area_rewetting_2050'))
+        g_crop_org_low.CO2e_pb = g_crop_org_low.CO2e_pb_per_t * g_crop_org_low.area_ha
+        g_crop_org_high.CO2e_pb_per_t = fact("Fact_L_G_crop_bog_CO2e_per_ha_2018")
+        g_crop_org_high.demand_change = ass("Ass_L_G_area_rewetting_2050")
 
         g_crop_org_high.area_ha_change = (
-            l18.g_crop_org_high.area_ha *
-            g_crop_org_high.demand_change
+            l18.g_crop_org_high.area_ha * g_crop_org_high.demand_change
         )
         g_crop_org_high.area_ha = (
-            l18.g_crop_org_high.area_ha +
-            g_crop_org_high.area_ha_change
+            l18.g_crop_org_high.area_ha + g_crop_org_high.area_ha_change
         )
         g_crop_org_high.CO2e_pb = (
-            g_crop_org_high.CO2e_pb_per_t *
-            g_crop_org_high.area_ha
+            g_crop_org_high.CO2e_pb_per_t * g_crop_org_high.area_ha
         )
         g_crop.CO2e_pb = (
-            g_crop_min_conv.CO2e_pb +
-            g_crop_min_hum.CO2e_pb +
-            g_crop_org_low.CO2e_pb +
-            g_crop_org_high.CO2e_pb
+            g_crop_min_conv.CO2e_pb
+            + g_crop_min_hum.CO2e_pb
+            + g_crop_org_low.CO2e_pb
+            + g_crop_org_high.CO2e_pb
         )
         g_crop_org_low.to_wet_low = g_crop_org_low.area_ha_change
 
         g_crop.CO2e_total = g_crop.CO2e_pb
 
-        g_crop.change_CO2e_t = (g_crop.CO2e_total - l18.g_crop.CO2e_total)
+        g_crop.change_CO2e_t = g_crop.CO2e_total - l18.g_crop.CO2e_total
 
-        g_grass_min_conv.area_ha_change = (
-            l18.g_grass_min_conv.area_ha * (g_grass_min_conv.demand_change)
+        g_grass_min_conv.area_ha_change = l18.g_grass_min_conv.area_ha * (
+            g_grass_min_conv.demand_change
         )
-        g_crop_org_high.invest_per_x = (
-            ass('Ass_L_G_wet_rewetting_invest_per_ha_2016')
-        )
+        g_crop_org_high.invest_per_x = ass("Ass_L_G_wet_rewetting_invest_per_ha_2016")
         g_crop_org_low.invest = (
-            - g_crop_org_low.area_ha_change *
-            g_crop_org_low.invest_per_x
+            -g_crop_org_low.area_ha_change * g_crop_org_low.invest_per_x
         )
         g_crop.area_ha = (
-            g_crop_min_conv.area_ha +
-            g_crop_min_hum.area_ha +
-            g_crop_org_low.area_ha +
-            g_crop_org_high.area_ha
+            g_crop_min_conv.area_ha
+            + g_crop_min_hum.area_ha
+            + g_crop_org_low.area_ha
+            + g_crop_org_high.area_ha
         )
-        g_crop.area_ha_change = (g_crop.area_ha - l18.g_crop.area_ha)
+        g_crop.area_ha_change = g_crop.area_ha - l18.g_crop.area_ha
 
         g_crop_org_high.to_wet_high = g_crop_org_high.area_ha_change
 
-        g_crop.demand_change = (g_crop.area_ha_change / l18.g_crop.area_ha)
+        g_crop.demand_change = g_crop.area_ha_change / l18.g_crop.area_ha
 
         g_grass_min_conv.area_ha = (
-            l18.g_grass_min_conv.area_ha +
-            g_grass_min_conv.area_ha_change
+            l18.g_grass_min_conv.area_ha + g_grass_min_conv.area_ha_change
         )
         g_grass_min_conv.CO2e_pb = (
-            g_grass_min_conv.CO2e_pb_per_t *
-            g_grass_min_conv.area_ha
+            g_grass_min_conv.CO2e_pb_per_t * g_grass_min_conv.area_ha
         )
         g_crop_org_high.invest = (
-            - g_crop_org_high.area_ha_change *
-            g_crop_org_high.invest_per_x
+            -g_crop_org_high.area_ha_change * g_crop_org_high.invest_per_x
         )
         g_crop.invest = (
-            g_crop_org_low.invest +
-            g_crop_org_high.invest +
-            g_crop_org_high.invest
+            g_crop_org_low.invest + g_crop_org_high.invest + g_crop_org_high.invest
         )
-        g_grass_org_low.CO2e_pb_per_t = (
-            fact('Fact_L_G_grass_strict_org_soil_fen_CO2e_per_ha_2018')
+        g_grass_org_low.CO2e_pb_per_t = fact(
+            "Fact_L_G_grass_strict_org_soil_fen_CO2e_per_ha_2018"
         )
-        g_grass_org_low.demand_change = (ass('Ass_L_G_area_rewetting_2050'))
+        g_grass_org_low.demand_change = ass("Ass_L_G_area_rewetting_2050")
 
-        g_grove_min.demand_change = (ass('Ass_L_G_no_LUC_203X'))
+        g_grove_min.demand_change = ass("Ass_L_G_no_LUC_203X")
 
-        g_grove_min.CO2e_pb_per_t = (
-            fact('Fact_L_G_grass_woody_minrl_soil_ord_CO2e_per_ha_2018')
+        g_grove_min.CO2e_pb_per_t = fact(
+            "Fact_L_G_grass_woody_minrl_soil_ord_CO2e_per_ha_2018"
         )
-        g_grass_org_low.area_ha_change = (
-            l18.g_grass_org_low.area_ha * (g_grass_org_low.demand_change)
+        g_grass_org_low.area_ha_change = l18.g_grass_org_low.area_ha * (
+            g_grass_org_low.demand_change
         )
         g_grass_org_low.area_ha = (
-            l18.g_grass_org_low.area_ha +
-            g_grass_org_low.area_ha_change
+            l18.g_grass_org_low.area_ha + g_grass_org_low.area_ha_change
         )
-        g_grove_org_low.invest_per_x = (
-            ass('Ass_L_G_wet_rewetting_invest_per_ha_2016')
-        )
+        g_grove_org_low.invest_per_x = ass("Ass_L_G_wet_rewetting_invest_per_ha_2016")
         g_grass_org_low.CO2e_pb = (
-            g_grass_org_low.CO2e_pb_per_t *
-            g_grass_org_low.area_ha
+            g_grass_org_low.CO2e_pb_per_t * g_grass_org_low.area_ha
         )
-        g_grass_org_high.CO2e_pb_per_t = (
-            fact('Fact_L_G_grass_strict_org_soil_bog_CO2e_per_ha_2018')
+        g_grass_org_high.CO2e_pb_per_t = fact(
+            "Fact_L_G_grass_strict_org_soil_bog_CO2e_per_ha_2018"
         )
-        g_grass_org_high.demand_change = (ass('Ass_L_G_area_rewetting_2050'))
-        g_grass_org_high.area_ha_change = (
-            l18.g_grass_org_high.area_ha * (g_grass_org_high.demand_change)
+        g_grass_org_high.demand_change = ass("Ass_L_G_area_rewetting_2050")
+        g_grass_org_high.area_ha_change = l18.g_grass_org_high.area_ha * (
+            g_grass_org_high.demand_change
         )
         g_grass_org_high.area_ha = (
-            l18.g_grass_org_high.area_ha +
-            g_grass_org_high.area_ha_change
+            l18.g_grass_org_high.area_ha + g_grass_org_high.area_ha_change
         )
         g_grass_org_high.CO2e_pb = (
-            g_grass_org_high.CO2e_pb_per_t *
-            g_grass_org_high.area_ha
+            g_grass_org_high.CO2e_pb_per_t * g_grass_org_high.area_ha
         )
         g_grass.CO2e_pb = (
-            g_grass_min_conv.CO2e_pb +
-            g_grass_org_low.CO2e_pb +
-            g_grass_org_high.CO2e_pb
+            g_grass_min_conv.CO2e_pb
+            + g_grass_org_low.CO2e_pb
+            + g_grass_org_high.CO2e_pb
         )
         g_grass_org_low.to_wet_low = g_grass_org_low.area_ha_change
 
         g_grass.CO2e_total = g_grass.CO2e_pb
 
-        g_grass.change_CO2e_t = (g_grass.CO2e_total - l18.g_grass.CO2e_total)
+        g_grass.change_CO2e_t = g_grass.CO2e_total - l18.g_grass.CO2e_total
 
-        g_grove_min.area_ha_change = (
-            l18.g_grove_min.area_ha * (g_grove_min.demand_change)
+        g_grove_min.area_ha_change = l18.g_grove_min.area_ha * (
+            g_grove_min.demand_change
         )
-        g_grass_org_high.invest_per_x = (
-            ass('Ass_L_G_wet_rewetting_invest_per_ha_2016')
-        )
+        g_grass_org_high.invest_per_x = ass("Ass_L_G_wet_rewetting_invest_per_ha_2016")
         g_grass_org_low.invest = (
-            - g_grass_org_low.area_ha_change *
-            g_grass_org_low.invest_per_x
+            -g_grass_org_low.area_ha_change * g_grass_org_low.invest_per_x
         )
         g_grass.area_ha = (
-            g_grass_min_conv.area_ha +
-            g_grass_org_low.area_ha +
-            g_grass_org_high.area_ha
+            g_grass_min_conv.area_ha
+            + g_grass_org_low.area_ha
+            + g_grass_org_high.area_ha
         )
-        g_grass.area_ha_change = (g_grass.area_ha - l18.g_grass.area_ha)
+        g_grass.area_ha_change = g_grass.area_ha - l18.g_grass.area_ha
 
         g_grass_org_high.to_wet_high = g_grass_org_high.area_ha_change
 
-        g_grass.demand_change = (g_grass.area_ha_change / l18.g_grass.area_ha)
+        g_grass.demand_change = g_grass.area_ha_change / l18.g_grass.area_ha
 
-        g_grove_min.area_ha = (
-            l18.g_grove_min.area_ha +
-            g_grove_min.area_ha_change
-        )
-        g_grove_min.CO2e_pb = (g_grove_min.CO2e_pb_per_t * g_grove_min.area_ha)
+        g_grove_min.area_ha = l18.g_grove_min.area_ha + g_grove_min.area_ha_change
+        g_grove_min.CO2e_pb = g_grove_min.CO2e_pb_per_t * g_grove_min.area_ha
 
         g_grass_org_high.invest = (
-            - g_grass_org_high.area_ha_change *
-            g_grass_org_high.invest_per_x
+            -g_grass_org_high.area_ha_change * g_grass_org_high.invest_per_x
         )
-        g_grass.invest = (g_grass_org_low.invest + g_grass_org_high.invest)
+        g_grass.invest = g_grass_org_low.invest + g_grass_org_high.invest
 
-        g_wet_min.demand_change = (ass('Ass_L_G_no_LUC_203X'))
+        g_wet_min.demand_change = ass("Ass_L_G_no_LUC_203X")
 
-        g_wet_min.CO2e_pb_per_t = (
-            fact('Fact_L_G_wetland_peat_minrl_soil_ord_CO2e_per_ha_2018')
+        g_wet_min.CO2e_pb_per_t = fact(
+            "Fact_L_G_wetland_peat_minrl_soil_ord_CO2e_per_ha_2018"
         )
-        g_grove_org_high.CO2e_pb_per_t = (
-            fact('Fact_L_G_grass_woody_org_soil_bog_CO2e_per_ha_2018')
+        g_grove_org_high.CO2e_pb_per_t = fact(
+            "Fact_L_G_grass_woody_org_soil_bog_CO2e_per_ha_2018"
         )
-        g_grove_org_high.demand_change = (ass('Ass_L_G_area_rewetting_2050'))
+        g_grove_org_high.demand_change = ass("Ass_L_G_area_rewetting_2050")
 
-        g_wet_org_high.invest_per_x = (
-            ass('Ass_L_G_wet_rewetting_invest_per_ha_2016')
-        )
-        g_grove_org_high.area_ha_change = (
-            l18.g_grove_org_high.area_ha * (g_grove_org_high.demand_change)
+        g_wet_org_high.invest_per_x = ass("Ass_L_G_wet_rewetting_invest_per_ha_2016")
+        g_grove_org_high.area_ha_change = l18.g_grove_org_high.area_ha * (
+            g_grove_org_high.demand_change
         )
         g_grove_org_high.area_ha = (
-            l18.g_grove_org_high.area_ha +
-            g_grove_org_high.area_ha_change
+            l18.g_grove_org_high.area_ha + g_grove_org_high.area_ha_change
         )
-        g_grove_org_low.demand_change = (ass('Ass_L_G_area_rewetting_2050'))
+        g_grove_org_low.demand_change = ass("Ass_L_G_area_rewetting_2050")
 
         g_grove_org_high.CO2e_pb = (
-            g_grove_org_high.CO2e_pb_per_t *
-            g_grove_org_high.area_ha
+            g_grove_org_high.CO2e_pb_per_t * g_grove_org_high.area_ha
         )
-        g_grove_org_low.area_ha_change = (
-            l18.g_grove_org_low.area_ha * (g_grove_org_low.demand_change)
+        g_grove_org_low.area_ha_change = l18.g_grove_org_low.area_ha * (
+            g_grove_org_low.demand_change
         )
         g_grove_org_low.area_ha = (
-            l18.g_grove_org_low.area_ha +
-            g_grove_org_low.area_ha_change
+            l18.g_grove_org_low.area_ha + g_grove_org_low.area_ha_change
         )
-        g_grove_org_low.CO2e_pb_per_t = (
-            fact('Fact_L_G_grass_woody_org_soil_fen_CO2e_per_ha_2018')
+        g_grove_org_low.CO2e_pb_per_t = fact(
+            "Fact_L_G_grass_woody_org_soil_fen_CO2e_per_ha_2018"
         )
         g_grove_org_low.to_wet_low = g_grove_org_low.area_ha_change
 
         g_grove_org_low.CO2e_pb = (
-            g_grove_org_low.CO2e_pb_per_t *
-            g_grove_org_low.area_ha
+            g_grove_org_low.CO2e_pb_per_t * g_grove_org_low.area_ha
         )
         g_grove.CO2e_pb = (
-            g_grove_min.CO2e_pb +
-            g_grove_org_low.CO2e_pb +
-            g_grove_org_high.CO2e_pb
+            g_grove_min.CO2e_pb + g_grove_org_low.CO2e_pb + g_grove_org_high.CO2e_pb
         )
         g_grove.CO2e_total = g_grove.CO2e_pb
 
-        g_grove_org_high.invest_per_x = (
-            ass('Ass_L_G_wet_rewetting_invest_per_ha_2016')
-        )
+        g_grove_org_high.invest_per_x = ass("Ass_L_G_wet_rewetting_invest_per_ha_2016")
         g_grove_org_low.invest = (
-            - g_grove_org_low.area_ha_change *
-            g_grove_org_low.invest_per_x
+            -g_grove_org_low.area_ha_change * g_grove_org_low.invest_per_x
         )
-        g_grove.change_CO2e_t = (g_grove.CO2e_total - l18.g_grove.CO2e_total)
+        g_grove.change_CO2e_t = g_grove.CO2e_total - l18.g_grove.CO2e_total
 
-        g_wet_min.area_ha_change = (
-            l18.g_wet_min.area_ha * (g_wet_min.demand_change)
-        )
+        g_wet_min.area_ha_change = l18.g_wet_min.area_ha * (g_wet_min.demand_change)
         g_grove_org_high.to_wet_high = g_grove_org_high.area_ha_change
 
         g_grove.area_ha = (
-            g_grove_min.area_ha +
-            g_grove_org_low.area_ha +
-            g_grove_org_high.area_ha
+            g_grove_min.area_ha + g_grove_org_low.area_ha + g_grove_org_high.area_ha
         )
-        g_wet_min.area_ha = (l18.g_wet_min.area_ha + g_wet_min.area_ha_change)
+        g_wet_min.area_ha = l18.g_wet_min.area_ha + g_wet_min.area_ha_change
 
-        g_wet_min.CO2e_pb = (g_wet_min.CO2e_pb_per_t * g_wet_min.area_ha)
+        g_wet_min.CO2e_pb = g_wet_min.CO2e_pb_per_t * g_wet_min.area_ha
 
         g_grove_org_high.invest = (
-            - g_grove_org_high.area_ha_change *
-            g_grove_org_high.invest_per_x
+            -g_grove_org_high.area_ha_change * g_grove_org_high.invest_per_x
         )
-        g_grove.invest = (g_grove_org_low.invest + g_grove_org_high.invest)
-        g_water_min.demand_change = (ass('Ass_L_G_no_LUC_203X'))
-        g_water_min.CO2e_pb_per_t = (
-            fact('Fact_L_G_wetland_water_minrl_soil_ord_CO2e_per_ha_2018')
+        g_grove.invest = g_grove_org_low.invest + g_grove_org_high.invest
+        g_water_min.demand_change = ass("Ass_L_G_no_LUC_203X")
+        g_water_min.CO2e_pb_per_t = fact(
+            "Fact_L_G_wetland_water_minrl_soil_ord_CO2e_per_ha_2018"
         )
-        g_wet_org_low_r.CO2e_pb_per_t = (
-            fact('Fact_L_G_fen_wet_CO2e_per_ha_203X')
-        )
-        g_wet_org_low.demand_change = (ass('Ass_L_G_area_rewetting_2050'))
+        g_wet_org_low_r.CO2e_pb_per_t = fact("Fact_L_G_fen_wet_CO2e_per_ha_203X")
+        g_wet_org_low.demand_change = ass("Ass_L_G_area_rewetting_2050")
 
-        g_wet_org_high.demand_change = (ass('Ass_L_G_area_rewetting_2050'))
+        g_wet_org_high.demand_change = ass("Ass_L_G_area_rewetting_2050")
 
-        g_wet_org_low.area_ha_change = (
-            l18.g_wet_org_low.area_ha * (g_wet_org_low.demand_change)
+        g_wet_org_low.area_ha_change = l18.g_wet_org_low.area_ha * (
+            g_wet_org_low.demand_change
         )
         g_wet_org_low.to_wet_low = g_wet_org_low.area_ha_change
-        g_wet_org_low_r.area_ha_change = (
-            - (g_crop_org_low.to_wet_low + g_grass_org_low.to_wet_low +
-               g_grove_org_low.to_wet_low + g_wet_org_low.to_wet_low)
+        g_wet_org_low_r.area_ha_change = -(
+            g_crop_org_low.to_wet_low
+            + g_grass_org_low.to_wet_low
+            + g_grove_org_low.to_wet_low
+            + g_wet_org_low.to_wet_low
         )
         g_wet_org_low_r.area_ha = g_wet_org_low_r.area_ha_change
 
         g_wet_org_low_r.CO2e_pb = (
-            g_wet_org_low_r.CO2e_pb_per_t *
-            g_wet_org_low_r.area_ha
+            g_wet_org_low_r.CO2e_pb_per_t * g_wet_org_low_r.area_ha
         )
-        g_wet_org_high_r.CO2e_pb_per_t = (
-            fact('Fact_L_G_bog_wet_CO2e_per_ha_203X')
-        )
-        g_wet_org_high.area_ha_change = (
-            l18.g_wet_org_high.area_ha * (g_wet_org_high.demand_change)
+        g_wet_org_high_r.CO2e_pb_per_t = fact("Fact_L_G_bog_wet_CO2e_per_ha_203X")
+        g_wet_org_high.area_ha_change = l18.g_wet_org_high.area_ha * (
+            g_wet_org_high.demand_change
         )
         g_wet_org_high.to_wet_high = g_wet_org_high.area_ha_change
 
-        g_wet_org_low.area_ha = (
-            l18.g_wet_org_low.area_ha +
-            g_wet_org_low.area_ha_change
+        g_wet_org_low.area_ha = l18.g_wet_org_low.area_ha + g_wet_org_low.area_ha_change
+        g_wet_org_low.CO2e_pb_per_t = fact(
+            "Fact_L_G_wetland_peat_org_soil_fen_CO2e_per_ha_2018"
         )
-        g_wet_org_low.CO2e_pb_per_t = (
-            fact('Fact_L_G_wetland_peat_org_soil_fen_CO2e_per_ha_2018')
-        )
-        g_wet_org_low.CO2e_pb = (
-            g_wet_org_low.CO2e_pb_per_t *
-            g_wet_org_low.area_ha
-        )
-        g_wet_org_low.invest_per_x = (
-            ass('Ass_L_G_wet_rewetting_invest_per_ha_2016')
-        )
+        g_wet_org_low.CO2e_pb = g_wet_org_low.CO2e_pb_per_t * g_wet_org_low.area_ha
+        g_wet_org_low.invest_per_x = ass("Ass_L_G_wet_rewetting_invest_per_ha_2016")
         g_wet_org_low.invest = (
-            - g_wet_org_low.area_ha_change *
-            g_wet_org_low.invest_per_x
+            -g_wet_org_low.area_ha_change * g_wet_org_low.invest_per_x
         )
-        g_wet_org_high_r.area_ha_change = (
-            - (g_crop_org_high.to_wet_high + g_grass_org_high.to_wet_high +
-               g_grove_org_high.to_wet_high + g_wet_org_high.to_wet_high)
+        g_wet_org_high_r.area_ha_change = -(
+            g_crop_org_high.to_wet_high
+            + g_grass_org_high.to_wet_high
+            + g_grove_org_high.to_wet_high
+            + g_wet_org_high.to_wet_high
         )
         g_wet_org_high.invest = (
-            - g_wet_org_high.area_ha_change *
-            g_wet_org_high.invest_per_x
+            -g_wet_org_high.area_ha_change * g_wet_org_high.invest_per_x
         )
         g_wet_org_high_r.area_ha = g_wet_org_high_r.area_ha_change
 
         g_wet_org_high.area_ha = (
-            l18.g_wet_org_high.area_ha +
-            g_wet_org_high.area_ha_change
+            l18.g_wet_org_high.area_ha + g_wet_org_high.area_ha_change
         )
-        g_wet_org_high.CO2e_pb_per_t = (
-            fact('Fact_L_G_wetland_peat_org_soil_bog_CO2e_per_ha_2018')
+        g_wet_org_high.CO2e_pb_per_t = fact(
+            "Fact_L_G_wetland_peat_org_soil_bog_CO2e_per_ha_2018"
         )
-        g_wet_org_high.CO2e_pb = (
-            g_wet_org_high.CO2e_pb_per_t *
-            g_wet_org_high.area_ha)
-        g_wet_org_low_rp.invest_per_x = (
-            ass('Ass_L_G_wet_paludi_invest_per_ha_2016')
-        )
-        g_wet_org_low_rp.invest = (- 0 * g_wet_org_low_rp.invest_per_x)
+        g_wet_org_high.CO2e_pb = g_wet_org_high.CO2e_pb_per_t * g_wet_org_high.area_ha
+        g_wet_org_low_rp.invest_per_x = ass("Ass_L_G_wet_paludi_invest_per_ha_2016")
+        g_wet_org_low_rp.invest = -0 * g_wet_org_low_rp.invest_per_x
 
         g_wet_org_high_r.CO2e_pb = (
-            g_wet_org_high_r.CO2e_pb_per_t *
-            g_wet_org_high_r.area_ha
+            g_wet_org_high_r.CO2e_pb_per_t * g_wet_org_high_r.area_ha
         )
         g_wet.CO2e_pb = (
-            g_wet_min.CO2e_pb +
-            g_wet_org_low_r.CO2e_pb +
-            g_wet_org_high_r.CO2e_pb
+            g_wet_min.CO2e_pb + g_wet_org_low_r.CO2e_pb + g_wet_org_high_r.CO2e_pb
         )
         g_wet.CO2e_total = g_wet.CO2e_pb
 
-        g_wet.change_CO2e_t = (g_wet.CO2e_total - l18.g_wet.CO2e_total)
+        g_wet.change_CO2e_t = g_wet.CO2e_total - l18.g_wet.CO2e_total
 
-        g_wet_org_low_rp.pct_x = (ass('Ass_L_G_wet_paludi_pct_2012'))
+        g_wet_org_low_rp.pct_x = ass("Ass_L_G_wet_paludi_pct_2012")
 
-        g_wet_org_low_rp.area_ha = (
-            g_wet_org_low_r.area_ha *
-            g_wet_org_low_rp.pct_x
-        )
-        g_wet_org_low_rp.CO2e_pb_per_t = (
-            fact('Fact_L_G_wetland_peat_org_soil_paludi_CO2e_per_ha_203X')
+        g_wet_org_low_rp.area_ha = g_wet_org_low_r.area_ha * g_wet_org_low_rp.pct_x
+        g_wet_org_low_rp.CO2e_pb_per_t = fact(
+            "Fact_L_G_wetland_peat_org_soil_paludi_CO2e_per_ha_203X"
         )
         g_wet_org_low_rp.CO2e_pb = (
-            g_wet_org_low_rp.CO2e_pb_per_t *
-            g_wet_org_low_rp.area_ha
+            g_wet_org_low_rp.CO2e_pb_per_t * g_wet_org_low_rp.area_ha
         )
-        g_wet_org_high_rp.invest_per_x = (
-            ass('Ass_L_G_wet_paludi_invest_per_ha_2016')
-        )
-        g_wet_org_high_rp.invest = (- 0 * g_wet_org_high_rp.invest_per_x)
+        g_wet_org_high_rp.invest_per_x = ass("Ass_L_G_wet_paludi_invest_per_ha_2016")
+        g_wet_org_high_rp.invest = -0 * g_wet_org_high_rp.invest_per_x
 
-        g_water_min.area_ha_change = (
-            l18.g_water_min.area_ha * (g_water_min.demand_change)
+        g_water_min.area_ha_change = l18.g_water_min.area_ha * (
+            g_water_min.demand_change
         )
         g_wet.area_ha = (
-            g_wet_min.area_ha +
-            g_wet_org_low_r.area_ha +
-            g_wet_org_high_r.area_ha
+            g_wet_min.area_ha + g_wet_org_low_r.area_ha + g_wet_org_high_r.area_ha
         )
-        g_water_min.area_ha = (
-            l18.g_water_min.area_ha +
-            g_water_min.area_ha_change
-        )
-        g_water_min.CO2e_pb = (g_water_min.CO2e_pb_per_t * g_water_min.area_ha)
+        g_water_min.area_ha = l18.g_water_min.area_ha + g_water_min.area_ha_change
+        g_water_min.CO2e_pb = g_water_min.CO2e_pb_per_t * g_water_min.area_ha
 
-        g_wet_org_high_rp.pct_x = (ass('Ass_L_G_wet_paludi_pct_2012'))
+        g_wet_org_high_rp.pct_x = ass("Ass_L_G_wet_paludi_pct_2012")
 
-        g_wet_org_high_rp.area_ha = (
-            g_wet_org_high_r.area_ha *
-            g_wet_org_high_rp.pct_x
-        )
-        g_wet_org_high_rp.CO2e_pb_per_t = (
-            fact('Fact_L_G_wetland_peat_org_soil_paludi_CO2e_per_ha_203X')
+        g_wet_org_high_rp.area_ha = g_wet_org_high_r.area_ha * g_wet_org_high_rp.pct_x
+        g_wet_org_high_rp.CO2e_pb_per_t = fact(
+            "Fact_L_G_wetland_peat_org_soil_paludi_CO2e_per_ha_203X"
         )
         g_wet_org_high_rp.CO2e_pb = (
-            g_wet_org_high_rp.CO2e_pb_per_t *
-            g_wet_org_high_rp.area_ha
+            g_wet_org_high_rp.CO2e_pb_per_t * g_wet_org_high_rp.area_ha
         )
         g_wet.invest = (
-            g_wet_org_high.invest +
-            g_wet_org_low_rp.invest +
-            g_wet_org_high_rp.invest
+            g_wet_org_high.invest + g_wet_org_low_rp.invest + g_wet_org_high_rp.invest
         )
         g.invest = (
-            g_forest.invest +
-            g_crop.invest +
-            g_grass.invest +
-            g_grove.invest +
-            g_wet.invest
+            g_forest.invest
+            + g_crop.invest
+            + g_grass.invest
+            + g_grove.invest
+            + g_wet.invest
         )
-        g_settlement_min.demand_change = (ass('Ass_L_G_no_LUC_203X'))
+        g_settlement_min.demand_change = ass("Ass_L_G_no_LUC_203X")
 
-        g_settlement_min.CO2e_pb_per_t = (
-            fact('Fact_L_G_settl_minrl_soil_no_LUC_CO2e_per_ha_203X')
+        g_settlement_min.CO2e_pb_per_t = fact(
+            "Fact_L_G_settl_minrl_soil_no_LUC_CO2e_per_ha_203X"
         )
-        g_water_min_low.CO2e_pb_per_t = (
-            fact('Fact_L_G_wetland_water_org_soil_fen_CO2e_per_ha_2018')
+        g_water_min_low.CO2e_pb_per_t = fact(
+            "Fact_L_G_wetland_water_org_soil_fen_CO2e_per_ha_2018"
         )
-        g_water_min_low.demand_change = (ass('Ass_L_G_no_LUC_203X'))
+        g_water_min_low.demand_change = ass("Ass_L_G_no_LUC_203X")
 
-        g_water_min_low.area_ha_change = (
-            l18.g_water_min_low.area_ha * (g_water_min_low.demand_change)
+        g_water_min_low.area_ha_change = l18.g_water_min_low.area_ha * (
+            g_water_min_low.demand_change
         )
         g_water_min_low.area_ha = (
-            l18.g_water_min_low.area_ha +
-            g_water_min_low.area_ha_change)
+            l18.g_water_min_low.area_ha + g_water_min_low.area_ha_change
+        )
         g_water_min_low.CO2e_pb = (
-            g_water_min_low.CO2e_pb_per_t *
-            g_water_min_low.area_ha
+            g_water_min_low.CO2e_pb_per_t * g_water_min_low.area_ha
         )
-        g_water_min_high.CO2e_pb_per_t = (
-            fact('Fact_L_G_wetland_water_org_soil_bog_CO2e_per_ha_2018')
+        g_water_min_high.CO2e_pb_per_t = fact(
+            "Fact_L_G_wetland_water_org_soil_bog_CO2e_per_ha_2018"
         )
-        g_water_min_high.demand_change = ass('Ass_L_G_no_LUC_203X')
+        g_water_min_high.demand_change = ass("Ass_L_G_no_LUC_203X")
 
-        g_water_min_high.area_ha_change = (
-            l18.g_water_min_high.area_ha * (g_water_min_high.demand_change)
+        g_water_min_high.area_ha_change = l18.g_water_min_high.area_ha * (
+            g_water_min_high.demand_change
         )
         g_water_min_high.area_ha = (
-            l18.g_water_min_high.area_ha +
-            g_water_min_high.area_ha_change
+            l18.g_water_min_high.area_ha + g_water_min_high.area_ha_change
         )
         g_water_min_high.CO2e_pb = (
-            g_water_min_high.CO2e_pb_per_t *
-            g_water_min_high.area_ha
+            g_water_min_high.CO2e_pb_per_t * g_water_min_high.area_ha
         )
         g_water.CO2e_pb = (
-            g_water_min.CO2e_pb +
-            g_water_min_low.CO2e_pb +
-            g_water_min_high.CO2e_pb
+            g_water_min.CO2e_pb + g_water_min_low.CO2e_pb + g_water_min_high.CO2e_pb
         )
         g_water.CO2e_total = g_water.CO2e_pb
 
-        g_water.change_CO2e_t = (g_water.CO2e_total - l18.g_water.CO2e_total)
+        g_water.change_CO2e_t = g_water.CO2e_total - l18.g_water.CO2e_total
 
-        g_settlement_min.area_ha_change = (
-            l18.g_settlement_min.area_ha * (g_settlement_min.demand_change)
+        g_settlement_min.area_ha_change = l18.g_settlement_min.area_ha * (
+            g_settlement_min.demand_change
         )
         g_water.area_ha = (
-            g_water_min.area_ha +
-            g_water_min_low.area_ha +
-            g_water_min_high.area_ha
+            g_water_min.area_ha + g_water_min_low.area_ha + g_water_min_high.area_ha
         )
         g_settlement_min.area_ha = (
-            l18.g_settlement_min.area_ha +
-            g_settlement_min.area_ha_change
+            l18.g_settlement_min.area_ha + g_settlement_min.area_ha_change
         )
         g_settlement_min.CO2e_pb = (
-            g_settlement_min.CO2e_pb_per_t *
-            g_settlement_min.area_ha
+            g_settlement_min.CO2e_pb_per_t * g_settlement_min.area_ha
         )
-        g_other.demand_change = (ass('Ass_L_G_no_LUC_203X')
-                                 )
-        g_other.CO2e_pb_per_t = (
-            fact('Fact_L_G_other_minrl_soil_CO2e_per_ha_2018')
+        g_other.demand_change = ass("Ass_L_G_no_LUC_203X")
+        g_other.CO2e_pb_per_t = fact("Fact_L_G_other_minrl_soil_CO2e_per_ha_2018")
+        g_settlement_org_low.CO2e_pb_per_t = fact(
+            "Fact_L_G_settl_org_soil_fen_CO2e_per_ha_2018"
         )
-        g_settlement_org_low.CO2e_pb_per_t = (
-            fact('Fact_L_G_settl_org_soil_fen_CO2e_per_ha_2018')
-        )
-        g_settlement_org_low.demand_change = (
-            ass('Ass_L_G_settl_rewetting_2050')
-        )
-        g_settlement_org_low.area_ha_change = (
-            l18.g_settlement_org_low.area_ha * (g_settlement_org_low.demand_change)
+        g_settlement_org_low.demand_change = ass("Ass_L_G_settl_rewetting_2050")
+        g_settlement_org_low.area_ha_change = l18.g_settlement_org_low.area_ha * (
+            g_settlement_org_low.demand_change
         )
         g_settlement_org_low.area_ha = (
-            l18.g_settlement_org_low.area_ha +
-            g_settlement_org_low.area_ha_change
+            l18.g_settlement_org_low.area_ha + g_settlement_org_low.area_ha_change
         )
         g_settlement_org_low.CO2e_pb = (
-            g_settlement_org_low.CO2e_pb_per_t *
-            g_settlement_org_low.area_ha
+            g_settlement_org_low.CO2e_pb_per_t * g_settlement_org_low.area_ha
         )
-        g_settlement_org_high.CO2e_pb_per_t = (
-            fact('Fact_L_G_settl_org_soil_bog_CO2e_per_ha_2018')
+        g_settlement_org_high.CO2e_pb_per_t = fact(
+            "Fact_L_G_settl_org_soil_bog_CO2e_per_ha_2018"
         )
-        g_settlement_org_high.demand_change = (
-            ass('Ass_L_G_settl_rewetting_2050')
-        )
-        g_settlement_org_high.area_ha_change = (
-            l18.g_settlement_org_high.area_ha * (g_settlement_org_high.demand_change)
+        g_settlement_org_high.demand_change = ass("Ass_L_G_settl_rewetting_2050")
+        g_settlement_org_high.area_ha_change = l18.g_settlement_org_high.area_ha * (
+            g_settlement_org_high.demand_change
         )
         g_settlement_org_high.area_ha = (
-            l18.g_settlement_org_high.area_ha +
-            g_settlement_org_high.area_ha_change
+            l18.g_settlement_org_high.area_ha + g_settlement_org_high.area_ha_change
         )
         g_settlement_org_high.CO2e_pb = (
-            g_settlement_org_high.CO2e_pb_per_t *
-            g_settlement_org_high.area_ha
+            g_settlement_org_high.CO2e_pb_per_t * g_settlement_org_high.area_ha
         )
         g_settlement.CO2e_pb = (
-            g_settlement_min.CO2e_pb +
-            g_settlement_org_low.CO2e_pb +
-            g_settlement_org_high.CO2e_pb
+            g_settlement_min.CO2e_pb
+            + g_settlement_org_low.CO2e_pb
+            + g_settlement_org_high.CO2e_pb
         )
         g_settlement.CO2e_total = g_settlement.CO2e_pb
 
         g_settlement.change_CO2e_t = (
-            g_settlement.CO2e_total -
-            l18.g_settlement.CO2e_total
+            g_settlement.CO2e_total - l18.g_settlement.CO2e_total
         )
-        g_other.area_ha = ((1 + g_other.demand_change) * l18.g_other.area_ha)
+        g_other.area_ha = (1 + g_other.demand_change) * l18.g_other.area_ha
 
         g_settlement.area_ha = (
-            g_settlement_min.area_ha +
-            g_settlement_org_low.area_ha +
-            g_settlement_org_high.area_ha
+            g_settlement_min.area_ha
+            + g_settlement_org_low.area_ha
+            + g_settlement_org_high.area_ha
         )
-        g_other.CO2e_pb = (g_other.CO2e_pb_per_t * g_other.area_ha)
+        g_other.CO2e_pb = g_other.CO2e_pb_per_t * g_other.area_ha
 
-        g_wood.CO2e_pb_per_t = (fact('Fact_L_G_wood_CO2e_per_ha_2018'))
+        g_wood.CO2e_pb_per_t = fact("Fact_L_G_wood_CO2e_per_ha_2018")
 
         g_wood.area_ha = g_forest_managed.area_ha
 
-        g_other.area_ha_change = (
-            l18.g_other.area_ha * (g_other.demand_change)
-        )
+        g_other.area_ha_change = l18.g_other.area_ha * (g_other.demand_change)
         g.area_ha = (
-            g_forest.area_ha +
-            g_crop.area_ha +
-            g_grass.area_ha +
-            g_grove.area_ha +
-            g_wet.area_ha +
-            g_water.area_ha +
-            g_settlement.area_ha +
-            g_other.area_ha
+            g_forest.area_ha
+            + g_crop.area_ha
+            + g_grass.area_ha
+            + g_grove.area_ha
+            + g_wet.area_ha
+            + g_water.area_ha
+            + g_settlement.area_ha
+            + g_other.area_ha
         )
-        g_wood.CO2e_pb = (g_wood.CO2e_pb_per_t * g_wood.area_ha)
+        g_wood.CO2e_pb = g_wood.CO2e_pb_per_t * g_wood.area_ha
 
         g.CO2e_pb = (
-            g_forest.CO2e_pb +
-            g_crop.CO2e_pb +
-            g_grass.CO2e_pb +
-            g_grove.CO2e_pb +
-            g_wet.CO2e_pb +
-            g_water.CO2e_pb +
-            g_settlement.CO2e_pb +
-            g_other.CO2e_pb +
-            g_wood.CO2e_pb
+            g_forest.CO2e_pb
+            + g_crop.CO2e_pb
+            + g_grass.CO2e_pb
+            + g_grove.CO2e_pb
+            + g_wet.CO2e_pb
+            + g_water.CO2e_pb
+            + g_settlement.CO2e_pb
+            + g_other.CO2e_pb
+            + g_wood.CO2e_pb
         )
         g_other.CO2e_total = g_other.CO2e_pb
 
-        g_other.change_CO2e_t = (g_other.CO2e_total - l18.g_other.CO2e_total)
+        g_other.change_CO2e_t = g_other.CO2e_total - l18.g_other.CO2e_total
 
-        g.CO2e_total = (g.CO2e_pb + g.CO2e_cb)
+        g.CO2e_total = g.CO2e_pb + g.CO2e_cb
 
         pyrolysis.CO2e_total = 0  # Todo: not defined in Excel
 
-        L.CO2e_total = (g.CO2e_total + pyrolysis.CO2e_total)
+        L.CO2e_total = g.CO2e_total + pyrolysis.CO2e_total
 
-        g.change_CO2e_t = (g.CO2e_total - l18.g.CO2e_total)
+        g.change_CO2e_t = g.CO2e_total - l18.g.CO2e_total
 
         g_wood.CO2e_total = g_wood.CO2e_pb
 
-        g_wood.change_CO2e_t = (g_wood.CO2e_total - l18.g_wood.CO2e_total)
+        g_wood.change_CO2e_t = g_wood.CO2e_total - l18.g_wood.CO2e_total
 
     except Exception as e:
         print(e)

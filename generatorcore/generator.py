@@ -56,61 +56,61 @@ class Generator:
 
     # search value
     def search_value(self, var: str):
-        sep = '.'
+        sep = "."
         gen = self.dict
         for k in gen:
             for l in gen[k]:
                 if type(gen[k][l]) == dict:
                     for m in gen[k][l]:
-                        if l+sep+m == var:
-                            print(k+sep+l+sep+m+"=", gen[k][l][m])
+                        if l + sep + m == var:
+                            print(k + sep + l + sep + m + "=", gen[k][l][m])
 
     # Hier werden alle fertigen Kalkulationsfunktionen pro Sektor hinzugefügt
     def calculate(self):
         start_t = time.time()
         # 2018
-        print('Residence2018_calc')
+        print("Residence2018_calc")
         Residence2018_calc(self)
-        print('Business2018_calc')
+        print("Business2018_calc")
         Business2018_calc(self)
-        print('Industry2018_calc')
+        print("Industry2018_calc")
         Industry2018_calc(self)
-        print('Transport2018_calc')
+        print("Transport2018_calc")
         Transport2018_calc(self)
-        print('Fuels2018_calc')
+        print("Fuels2018_calc")
         Fuels2018_calc(self)
-        print('Electricity2018_calc')
+        print("Electricity2018_calc")
         Electricity2018_calc(self)
-        print('Heat2018_calc')
+        print("Heat2018_calc")
         Heat2018_calc(self)
-        print('Lulucf2018_calc')
+        print("Lulucf2018_calc")
         Lulucf2018_calc(self)
-        print('Agri2018_calc')
+        print("Agri2018_calc")
         Agri2018_calc(self)
         end_t = time.time()
-        print('elapsed time for 18-sectors: {:5.3f}s'.format(end_t-start_t))
+        print("elapsed time for 18-sectors: {:5.3f}s".format(end_t - start_t))
 
         # Zieljahr
         # print('Prequel_calc')
         # Prequel_calc(self)
-        print('Transport2030')
+        print("Transport2030")
         Transport2030_calc(self)
-        print('Industry2030')
+        print("Industry2030")
         Industry2030_calc(self)
-        print('Residenctial2030')
+        print("Residenctial2030")
         Residence2030_calc(self)
-        print('Business2030_calc')
+        print("Business2030_calc")
         Business2030_calc(self)
-        print('Lulucf2030_calc')
+        print("Lulucf2030_calc")
         Lulucf2030_calc(self)
-        print('Transport2030_calc')
-        print('Agri2030_calc')
+        print("Transport2030_calc")
+        print("Agri2030_calc")
         Agri2030_calc(self)
-        print('Heat2030_calc')
+        print("Heat2030_calc")
         Heat2030_calc(self)
-        print('Fuels2030_calc')
+        print("Fuels2030_calc")
         Fuels2030_calc(self)
-        print('Electricity2030_calc')
+        print("Electricity2030_calc")
         Electricity2030_calc(self)
         # print('Pyrolyse')
 

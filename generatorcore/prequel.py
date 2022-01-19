@@ -15,11 +15,25 @@ def Prequel_calc(root):
 
         # real calculations
 
-        e30.p_local_pv_roof.area_ha_available = ((4 / 3) * ((
-            entry('In_R_area_m2_1flat') / 100 * ass('Ass_S_DurchschnittlichtePVFläche_Gebäude_1Wohnung') +
-            entry('In_R_area_m2_2flat') / 100 * ass('Ass_S_DurchschnittlichtePVFläche_Gebäude_2Wohnungen') +
-            entry('In_R_area_m2_3flat') / 100 * ass('Ass_S_DurchschnittlichtePVFläche_Gebäude_3odermehrWohnungen') +
-            entry('In_R_area_m2_dorm') / 100 * ass('Ass_S_DurchschnittlichtePVFläche_Wohnheim'))) / 10000
+        e30.p_local_pv_roof.area_ha_available = (
+            (4 / 3)
+            * (
+                (
+                    entry("In_R_area_m2_1flat")
+                    / 100
+                    * ass("Ass_S_DurchschnittlichtePVFläche_Gebäude_1Wohnung")
+                    + entry("In_R_area_m2_2flat")
+                    / 100
+                    * ass("Ass_S_DurchschnittlichtePVFläche_Gebäude_2Wohnungen")
+                    + entry("In_R_area_m2_3flat")
+                    / 100
+                    * ass("Ass_S_DurchschnittlichtePVFläche_Gebäude_3odermehrWohnungen")
+                    + entry("In_R_area_m2_dorm")
+                    / 100
+                    * ass("Ass_S_DurchschnittlichtePVFläche_Wohnheim")
+                )
+            )
+            / 10000
         )
 
         # mock values
