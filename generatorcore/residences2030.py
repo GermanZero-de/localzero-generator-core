@@ -3,12 +3,14 @@
 
 
 #from dataclasses import dataclass, field, InitVar, asdict
-from Electricity2018 import *
-from Residences2018 import *
-from Business2018 import *
+from electricity2018 import *
+from residences2018 import *
+from business2018 import *
 from setup import *
 
 # Definition der relevanten Spaltennamen für den Sektor R30
+
+
 @dataclass
 class RColVars2030:
     energy: float = None
@@ -67,6 +69,7 @@ class RColVars2030:
     emplo_existing: float = None
     fec_factor_averaged: float = None
     action: float = None
+
 
 @dataclass
 class R30:
@@ -173,55 +176,55 @@ def Residence2030_calc(root: Generator):
         p_buildings_2011_today.area_m2 = r18.p_buildings_2011_today.area_m2
 
         p_buildings_total.area_m2 = (
-                p_buildings_until_1919.area_m2 +
-                p_buildings_1919_1948.area_m2 +
-                p_buildings_1949_1978.area_m2 +
-                p_buildings_1979_1995.area_m2 +
-                p_buildings_1996_2004.area_m2
-        ) #SUM(p_buildings_until_1919.area_m2:p_buildings_1996_2004.area_m2)
+            p_buildings_until_1919.area_m2 +
+            p_buildings_1919_1948.area_m2 +
+            p_buildings_1949_1978.area_m2 +
+            p_buildings_1979_1995.area_m2 +
+            p_buildings_1996_2004.area_m2
+        )  # SUM(p_buildings_until_1919.area_m2:p_buildings_1996_2004.area_m2)
 
         p_buildings_until_1919.pct_rehab = (
-            min(1., fact('Fact_R_P_ratio_renovated_buildings to_not_renovated_2021')  +
-                p_buildings_total.rate_rehab_pa * Kalkulationszeitraum  *
+            min(1., fact('Fact_R_P_ratio_renovated_buildings to_not_renovated_2021') +
+                p_buildings_total.rate_rehab_pa * Kalkulationszeitraum *
                 r18.p_buildings_until_1919.relative_heat_ratio_buildings_until_2004 * p_buildings_total.area_m2 /
                 p_buildings_until_1919.area_m2)
         )
         p_buildings_1919_1948.pct_rehab = (
-            min(1., fact('Fact_R_P_ratio_renovated_buildings to_not_renovated_2021')  +
-            p_buildings_total.rate_rehab_pa * Kalkulationszeitraum *
-            r18.p_buildings_1919_1948.relative_heat_ratio_buildings_until_2004 * p_buildings_total.area_m2 /
-            p_buildings_1919_1948.area_m2)
+            min(1., fact('Fact_R_P_ratio_renovated_buildings to_not_renovated_2021') +
+                p_buildings_total.rate_rehab_pa * Kalkulationszeitraum *
+                r18.p_buildings_1919_1948.relative_heat_ratio_buildings_until_2004 * p_buildings_total.area_m2 /
+                p_buildings_1919_1948.area_m2)
         )
         p_buildings_1919_1948.pct_rehab = (
-            min(1., fact('Fact_R_P_ratio_renovated_buildings to_not_renovated_2021')  +
-            p_buildings_total.rate_rehab_pa * Kalkulationszeitraum *
-            p_buildings_total.area_m2 * r18.p_buildings_1919_1948.relative_heat_ratio_buildings_until_2004 /
-            p_buildings_1919_1948.area_m2)
+            min(1., fact('Fact_R_P_ratio_renovated_buildings to_not_renovated_2021') +
+                p_buildings_total.rate_rehab_pa * Kalkulationszeitraum *
+                p_buildings_total.area_m2 * r18.p_buildings_1919_1948.relative_heat_ratio_buildings_until_2004 /
+                p_buildings_1919_1948.area_m2)
         )
 
         p_buildings_1949_1978.pct_rehab = (
-            min(1. ,fact('Fact_R_P_ratio_renovated_buildings to_not_renovated_2021')  +
-            p_buildings_total.rate_rehab_pa * Kalkulationszeitraum *
-            r18.p_buildings_1949_1978.relative_heat_ratio_buildings_until_2004 * p_buildings_total.area_m2 /
-            p_buildings_1949_1978.area_m2)
+            min(1., fact('Fact_R_P_ratio_renovated_buildings to_not_renovated_2021') +
+                p_buildings_total.rate_rehab_pa * Kalkulationszeitraum *
+                r18.p_buildings_1949_1978.relative_heat_ratio_buildings_until_2004 * p_buildings_total.area_m2 /
+                p_buildings_1949_1978.area_m2)
         )
         p_buildings_1949_1978.pct_rehab = (
-            min(1.,fact('Fact_R_P_ratio_renovated_buildings to_not_renovated_2021')  +
-            p_buildings_total.rate_rehab_pa * Kalkulationszeitraum *
-            p_buildings_total.area_m2 * r18.p_buildings_1949_1978.relative_heat_ratio_buildings_until_2004 /
-            p_buildings_1949_1978.area_m2)
+            min(1., fact('Fact_R_P_ratio_renovated_buildings to_not_renovated_2021') +
+                p_buildings_total.rate_rehab_pa * Kalkulationszeitraum *
+                p_buildings_total.area_m2 * r18.p_buildings_1949_1978.relative_heat_ratio_buildings_until_2004 /
+                p_buildings_1949_1978.area_m2)
         )
         p_buildings_1979_1995.pct_rehab = (
-            min(1., fact('Fact_R_P_ratio_renovated_buildings to_not_renovated_2021')  +
-            p_buildings_total.rate_rehab_pa * Kalkulationszeitraum *
-            r18.p_buildings_1979_1995.relative_heat_ratio_buildings_until_2004 * p_buildings_total.area_m2 /
-            p_buildings_1979_1995.area_m2)
+            min(1., fact('Fact_R_P_ratio_renovated_buildings to_not_renovated_2021') +
+                p_buildings_total.rate_rehab_pa * Kalkulationszeitraum *
+                r18.p_buildings_1979_1995.relative_heat_ratio_buildings_until_2004 * p_buildings_total.area_m2 /
+                p_buildings_1979_1995.area_m2)
         )
         p_buildings_1996_2004.pct_rehab = (
-            min(1., fact('Fact_R_P_ratio_renovated_buildings to_not_renovated_2021')  +
-            p_buildings_total.rate_rehab_pa * Kalkulationszeitraum *
-            r18.p_buildings_1996_2004.relative_heat_ratio_buildings_until_2004 * p_buildings_total.area_m2 /
-            p_buildings_1996_2004.area_m2)
+            min(1., fact('Fact_R_P_ratio_renovated_buildings to_not_renovated_2021') +
+                p_buildings_total.rate_rehab_pa * Kalkulationszeitraum *
+                r18.p_buildings_1996_2004.relative_heat_ratio_buildings_until_2004 * p_buildings_total.area_m2 /
+                p_buildings_1996_2004.area_m2)
         )
         p_buildings_2005_2011.pct_nonrehab = 0
         p_buildings_2011_today.pct_nonrehab = 0
@@ -329,7 +332,7 @@ def Residence2030_calc(root: Generator):
             p_buildings_2005_2011.area_m2_rehab * r18.p_buildings_2005_2011.factor_adapted_to_fec
         )
         p_buildings_2011_today.demand_heat_rehab = (
-                p_buildings_2011_today.area_m2_rehab * r18.p_buildings_2011_today.factor_adapted_to_fec
+            p_buildings_2011_today.area_m2_rehab * r18.p_buildings_2011_today.factor_adapted_to_fec
         )
         p_buildings_total.demand_heat_rehab = (
             p_buildings_until_1919.demand_heat_rehab +
@@ -339,7 +342,6 @@ def Residence2030_calc(root: Generator):
             p_buildings_1996_2004.demand_heat_rehab +
             p_buildings_2005_2011.demand_heat_rehab +
             p_buildings_2011_today.demand_heat_rehab)
-
 
         p_buildings_until_1919.energy = p_buildings_until_1919.demand_heat_nonrehab + p_buildings_until_1919.demand_heat_rehab
         p_buildings_1919_1948.energy = p_buildings_1919_1948.demand_heat_nonrehab + p_buildings_1919_1948.demand_heat_rehab
@@ -351,15 +353,22 @@ def Residence2030_calc(root: Generator):
 
         p_buildings_total.fec_factor_averaged = (
             (p_buildings_total.demand_heat_rehab + p_buildings_total.demand_heat_nonrehab) /
-             r18.p_buildings_total.area_m2
+            r18.p_buildings_total.area_m2
         )
-        p_buildings_until_1919.fec_factor_averaged = (p_buildings_until_1919.demand_heat_rehab + p_buildings_until_1919.demand_heat_nonrehab) / p_buildings_until_1919.area_m2
-        p_buildings_1919_1948.fec_factor_averaged = (p_buildings_1919_1948.demand_heat_rehab + p_buildings_1919_1948.demand_heat_nonrehab) / p_buildings_1919_1948.area_m2
-        p_buildings_1949_1978.fec_factor_averaged = (p_buildings_1949_1978.demand_heat_rehab + p_buildings_1949_1978.demand_heat_nonrehab) / p_buildings_1949_1978.area_m2
-        p_buildings_1979_1995.fec_factor_averaged = (p_buildings_1979_1995.demand_heat_rehab + p_buildings_1979_1995.demand_heat_nonrehab) / p_buildings_1979_1995.area_m2
-        p_buildings_1996_2004.fec_factor_averaged = (p_buildings_1996_2004.demand_heat_rehab + p_buildings_1996_2004.demand_heat_nonrehab) / p_buildings_1996_2004.area_m2
-        p_buildings_2005_2011.fec_factor_averaged = (p_buildings_2005_2011.demand_heat_rehab + p_buildings_2005_2011.demand_heat_nonrehab) / p_buildings_2005_2011.area_m2
-        p_buildings_2011_today.fec_factor_averaged = (p_buildings_2011_today.demand_heat_rehab + p_buildings_2011_today.demand_heat_nonrehab) / p_buildings_2011_today.area_m2
+        p_buildings_until_1919.fec_factor_averaged = (p_buildings_until_1919.demand_heat_rehab +
+                                                      p_buildings_until_1919.demand_heat_nonrehab) / p_buildings_until_1919.area_m2
+        p_buildings_1919_1948.fec_factor_averaged = (p_buildings_1919_1948.demand_heat_rehab +
+                                                     p_buildings_1919_1948.demand_heat_nonrehab) / p_buildings_1919_1948.area_m2
+        p_buildings_1949_1978.fec_factor_averaged = (p_buildings_1949_1978.demand_heat_rehab +
+                                                     p_buildings_1949_1978.demand_heat_nonrehab) / p_buildings_1949_1978.area_m2
+        p_buildings_1979_1995.fec_factor_averaged = (p_buildings_1979_1995.demand_heat_rehab +
+                                                     p_buildings_1979_1995.demand_heat_nonrehab) / p_buildings_1979_1995.area_m2
+        p_buildings_1996_2004.fec_factor_averaged = (p_buildings_1996_2004.demand_heat_rehab +
+                                                     p_buildings_1996_2004.demand_heat_nonrehab) / p_buildings_1996_2004.area_m2
+        p_buildings_2005_2011.fec_factor_averaged = (p_buildings_2005_2011.demand_heat_rehab +
+                                                     p_buildings_2005_2011.demand_heat_nonrehab) / p_buildings_2005_2011.area_m2
+        p_buildings_2011_today.fec_factor_averaged = (p_buildings_2011_today.demand_heat_rehab +
+                                                      p_buildings_2011_today.demand_heat_nonrehab) / p_buildings_2011_today.area_m2
         p_buildings_area_m2_com.fec_factor_averaged = p_buildings_total.fec_factor_averaged
         p_buildings_new.fec_factor_averaged = ass('Ass_R_P_heat_consumption_new_building_2021')
 
@@ -375,11 +384,11 @@ def Residence2030_calc(root: Generator):
             p_buildings_1996_2004.energy +
             p_buildings_2005_2011.energy +
             p_buildings_2011_today.energy
-        ) #SUM(p_buildings_until_1919.energy:p_buildings_2011_today.energy)
+        )  # SUM(p_buildings_until_1919.energy:p_buildings_2011_today.energy)
 
         p_elec_elcon.demand_change = (ass('Ass_R_D_fec_elec_elcon_change'))
         p_elec_elcon.energy = (
-                r18.p_elec_elcon.energy * (1 + p_elec_elcon.demand_change)
+            r18.p_elec_elcon.energy * (1 + p_elec_elcon.demand_change)
         )
         p_elec_elcon.demand_electricity = p_elec_elcon.energy
 
@@ -416,7 +425,7 @@ def Residence2030_calc(root: Generator):
             p_buildings_2011_today.pct_rehab * r18.p_buildings_2011_today.number_of_buildings
         )
         p_buildings_area_m2_com.number_of_buildings_rehab = (
-                r18.p_buildings_area_m2_com.pct_x * p_buildings_total.number_of_buildings_rehab
+            r18.p_buildings_area_m2_com.pct_x * p_buildings_total.number_of_buildings_rehab
         )
 
         p_buildings_until_1919.rate_rehab_pa = (
@@ -434,7 +443,6 @@ def Residence2030_calc(root: Generator):
         p_buildings_1996_2004.rate_rehab_pa = (
             (p_buildings_1996_2004.pct_rehab - fact('Fact_R_P_ratio_renovated_buildings to_not_renovated_2021')) / Kalkulationszeitraum
         )
-
 
     ### S - Section ###
 
@@ -480,10 +488,10 @@ def Residence2030_calc(root: Generator):
 
         # formula from e30 not still calc here
         e30.p_local_pv_roof.area_ha_available = ((4 / 3) * ((
-                entry('In_R_area_m2_1flat') / 100 * ass('Ass_E_P_local_pv_roof_area_building1') +
-                entry('In_R_area_m2_2flat') / 100 * ass('Ass_E_P_local_pv_roof_area_building2') +
-                entry('In_R_area_m2_3flat') / 100 * ass('Ass_E_P_local_pv_roof_area_building3') +
-                entry('In_R_area_m2_dorm') / 100 * ass('Ass_E_P_local_pv_roof_area_buildingD'))) / 10000
+            entry('In_R_area_m2_1flat') / 100 * ass('Ass_E_P_local_pv_roof_area_building1') +
+            entry('In_R_area_m2_2flat') / 100 * ass('Ass_E_P_local_pv_roof_area_building2') +
+            entry('In_R_area_m2_3flat') / 100 * ass('Ass_E_P_local_pv_roof_area_building3') +
+            entry('In_R_area_m2_dorm') / 100 * ass('Ass_E_P_local_pv_roof_area_buildingD'))) / 10000
         )
         s_solarth.area_ha_available = e30.p_local_pv_roof.area_ha_available
         s_solarth.area_ha_available_pct_of_action = ass('Ass_E_P_local_pv_roof_potential')
@@ -506,23 +514,23 @@ def Residence2030_calc(root: Generator):
         )
 
         p_elec_heatpump.demand_electricity = (
-                s_heatpump.energy / fact('Fact_R_S_heatpump_mean_annual_performance_factor_all')
+            s_heatpump.energy / fact('Fact_R_S_heatpump_mean_annual_performance_factor_all')
         )
         p_elec_heatpump.energy = p_elec_heatpump.demand_electricity
         p_vehicles.demand_change = ass('Ass_R_D_fec_vehicles_change')
         p_vehicles.energy = (
-                r18.p_vehicles.energy * (1 + p_vehicles.demand_change)
+            r18.p_vehicles.energy * (1 + p_vehicles.demand_change)
         )
         p_other.energy = (
-                p_elec_heatpump.energy + p_elec_elcon.energy + p_vehicles.energy
+            p_elec_heatpump.energy + p_elec_elcon.energy + p_vehicles.energy
         )
         p.energy = (
-                p_buildings_total.energy + p_other.energy
+            p_buildings_total.energy + p_other.energy
         )
         p_other.demand_electricity = (
-                p_elec_heatpump.demand_electricity +
-                p_elec_elcon.demand_electricity
-        ) #SUM(p_elec_heatpump.demand_electricity:p_elec_elcon.demand_electricity)
+            p_elec_heatpump.demand_electricity +
+            p_elec_elcon.demand_electricity
+        )  # SUM(p_elec_heatpump.demand_electricity:p_elec_elcon.demand_electricity)
 
         p.demand_electricity = p_other.demand_electricity
         s_elec.energy = p.demand_electricity
@@ -548,17 +556,17 @@ def Residence2030_calc(root: Generator):
         s_elec.pct_energy = s_elec.energy / s.energy
 
         s.pct_energy = (
-                s_fueloil.pct_energy +
-                s_lpg.pct_energy +
-                s_biomass.pct_energy +
-                s_coal.pct_energy +
-                s_petrol.pct_energy +
-                s_heatnet.pct_energy +
-                s_solarth.pct_energy +
-                s_heatpump.pct_energy +
-                s_emethan.pct_energy +
-                s_elec.pct_energy
-        )#SUM(s_fueloil.pct_energy:s_elec.pct_energy)
+            s_fueloil.pct_energy +
+            s_lpg.pct_energy +
+            s_biomass.pct_energy +
+            s_coal.pct_energy +
+            s_petrol.pct_energy +
+            s_heatnet.pct_energy +
+            s_solarth.pct_energy +
+            s_heatpump.pct_energy +
+            s_emethan.pct_energy +
+            s_elec.pct_energy
+        )  # SUM(s_fueloil.pct_energy:s_elec.pct_energy)
 
         s.demand_heat_nonrehab = p_buildings_total.demand_heat_nonrehab
         s.demand_heat_rehab = p_buildings_total.demand_heat_rehab
@@ -566,7 +574,7 @@ def Residence2030_calc(root: Generator):
         s_fueloil.cost_fuel_per_MWh = ass('Ass_R_S_fueloil_energy_cost_factor_2035')
         s_lpg.cost_fuel_per_MWh = 0
         s_coal.cost_fuel_per_MWh = ass('Ass_R_S_coal_energy_cost_factor_2035')
-        s_biomass.cost_fuel_per_MWh = 48 # €/MWh
+        s_biomass.cost_fuel_per_MWh = 48  # €/MWh
         s_petrol.cost_fuel_per_MWh = 0
         s_heatnet.cost_fuel_per_MWh = 0
         s_solarth.cost_fuel_per_MWh = 0
@@ -590,7 +598,7 @@ def Residence2030_calc(root: Generator):
             s_petrol.cost_fuel +
             s_heatnet.cost_fuel +
             s_solarth.cost_fuel
-        ) #SUM(s_fueloil.cost_fuel:s_solarth.cost_fuel)
+        )  # SUM(s_fueloil.cost_fuel:s_solarth.cost_fuel)
 
         s_fueloil.CO2e_cb_per_MWh = r18.s_fueloil.CO2e_cb_per_MWh
         s_lpg.CO2e_cb_per_MWh = 0
@@ -703,47 +711,47 @@ def Residence2030_calc(root: Generator):
         s_heatpump.CO2e_pb = 0
 
         s_fueloil.cost_climate_saved = (
-            (s_fueloil.CO2e_total_2021_estimated - (s_fueloil.CO2e_pb + s_fueloil.CO2e_cb) ) *
+            (s_fueloil.CO2e_total_2021_estimated - (s_fueloil.CO2e_pb + s_fueloil.CO2e_cb)) *
             KlimaneutraleJahre * fact('Fact_M_cost_per_CO2e_2020')
         )
 
         s_lpg.cost_climate_saved = (
-            (s_lpg.CO2e_total_2021_estimated - (s_lpg.CO2e_pb + s_lpg.CO2e_cb) ) *
+            (s_lpg.CO2e_total_2021_estimated - (s_lpg.CO2e_pb + s_lpg.CO2e_cb)) *
             KlimaneutraleJahre * fact('Fact_M_cost_per_CO2e_2020')
         )
 
         s_biomass.cost_climate_saved = (
-            (s_biomass.CO2e_total_2021_estimated - (s_biomass.CO2e_pb + s_biomass.CO2e_cb) ) *
+            (s_biomass.CO2e_total_2021_estimated - (s_biomass.CO2e_pb + s_biomass.CO2e_cb)) *
             KlimaneutraleJahre * fact('Fact_M_cost_per_CO2e_2020')
         )
 
         s_coal.cost_climate_saved = (
-                (s_coal.CO2e_total_2021_estimated - (s_coal.CO2e_pb + s_coal.CO2e_cb) ) *
-                KlimaneutraleJahre * fact('Fact_M_cost_per_CO2e_2020')
+            (s_coal.CO2e_total_2021_estimated - (s_coal.CO2e_pb + s_coal.CO2e_cb)) *
+            KlimaneutraleJahre * fact('Fact_M_cost_per_CO2e_2020')
         )
 
         s_petrol.cost_climate_saved = (
-                (s_petrol.CO2e_total_2021_estimated - (s_petrol.CO2e_pb + s_petrol.CO2e_cb) ) *
-                KlimaneutraleJahre * fact('Fact_M_cost_per_CO2e_2020')
+            (s_petrol.CO2e_total_2021_estimated - (s_petrol.CO2e_pb + s_petrol.CO2e_cb)) *
+            KlimaneutraleJahre * fact('Fact_M_cost_per_CO2e_2020')
         )
 
         s_heatnet.cost_climate_saved = (
-                (s_heatnet.CO2e_total_2021_estimated - (s_heatnet.CO2e_pb + s_heatnet.CO2e_cb) ) *
-                KlimaneutraleJahre * fact('Fact_M_cost_per_CO2e_2020')
+            (s_heatnet.CO2e_total_2021_estimated - (s_heatnet.CO2e_pb + s_heatnet.CO2e_cb)) *
+            KlimaneutraleJahre * fact('Fact_M_cost_per_CO2e_2020')
         )
 
         s_solarth.cost_climate_saved = (
-                (s_solarth.CO2e_total_2021_estimated - (s_solarth.CO2e_pb + s_solarth.CO2e_cb) ) *
-                KlimaneutraleJahre * fact('Fact_M_cost_per_CO2e_2020')
+            (s_solarth.CO2e_total_2021_estimated - (s_solarth.CO2e_pb + s_solarth.CO2e_cb)) *
+            KlimaneutraleJahre * fact('Fact_M_cost_per_CO2e_2020')
         )
 
         s_heatpump.cost_climate_saved = (
-                (s_heatpump.CO2e_total_2021_estimated - (s_heatpump.CO2e_pb + s_heatpump.CO2e_cb) ) *
-                KlimaneutraleJahre * fact('Fact_M_cost_per_CO2e_2020')
+            (s_heatpump.CO2e_total_2021_estimated - (s_heatpump.CO2e_pb + s_heatpump.CO2e_cb)) *
+            KlimaneutraleJahre * fact('Fact_M_cost_per_CO2e_2020')
         )
 
         s_gas.cost_climate_saved = (
-            (s_gas.CO2e_total_2021_estimated - (0 + s_gas.CO2e_cb) ) * KlimaneutraleJahre *
+            (s_gas.CO2e_total_2021_estimated - (0 + s_gas.CO2e_cb)) * KlimaneutraleJahre *
             fact('Fact_M_cost_per_CO2e_2020')
         )
 
@@ -769,15 +777,15 @@ def Residence2030_calc(root: Generator):
         s_heatpump.change_cost_energy = s_heatpump.cost_fuel - r18.s_heatpump.cost_fuel
         s_emethan.change_cost_energy = s_emethan.cost_fuel - r18.s_gas.cost_fuel
 
-        #s_solarth.action Ausbau Solarthermie
-        #s_heatpump.action Ausbau Wärmepumpe
+        # s_solarth.action Ausbau Solarthermie
+        # s_heatpump.action Ausbau Wärmepumpe
 
         # formula from e30 not still calc here
         e30.p_local_pv_roof.area_ha_available = ((4 / 3) * ((
-                entry('In_R_area_m2_1flat') / 100 * ass('Ass_E_P_local_pv_roof_area_building1') +
-                entry('In_R_area_m2_2flat') / 100 * ass('Ass_E_P_local_pv_roof_area_building2') +
-                entry('In_R_area_m2_3flat') / 100 * ass('Ass_E_P_local_pv_roof_area_building3') +
-                entry('In_R_area_m2_dorm') / 100 * ass('Ass_E_P_local_pv_roof_area_buildingD'))) / 10000
+            entry('In_R_area_m2_1flat') / 100 * ass('Ass_E_P_local_pv_roof_area_building1') +
+            entry('In_R_area_m2_2flat') / 100 * ass('Ass_E_P_local_pv_roof_area_building2') +
+            entry('In_R_area_m2_3flat') / 100 * ass('Ass_E_P_local_pv_roof_area_building3') +
+            entry('In_R_area_m2_dorm') / 100 * ass('Ass_E_P_local_pv_roof_area_buildingD'))) / 10000
         )
         p_buildings_until_1919.invest_per_x = (
             (
@@ -789,9 +797,9 @@ def Residence2030_calc(root: Generator):
         )
         p_buildings_1919_1948.invest_per_x = p_buildings_until_1919.invest_per_x
         p_buildings_1949_1978.invest_per_x = (
-               fact('Fact_R_P_energetical_renovation_cost_detached_house_1949_1979') *
-                (entry('In_R_area_m2_1flat') + entry('In_R_area_m2_2flat')) / entry('In_R_area_m2') +
-                fact('Fact_R_P_energetical_renovation_cost_apartm_building_1949_1979') *
+            fact('Fact_R_P_energetical_renovation_cost_detached_house_1949_1979') *
+            (entry('In_R_area_m2_1flat') + entry('In_R_area_m2_2flat')) / entry('In_R_area_m2') +
+            fact('Fact_R_P_energetical_renovation_cost_apartm_building_1949_1979') *
                 (entry('In_R_area_m2_3flat') + entry('In_R_area_m2_dorm')) / entry('In_R_area_m2')
         )
 
@@ -809,8 +817,8 @@ def Residence2030_calc(root: Generator):
         s_heatpump.invest_per_x = fact('Fact_R_S_heatpump_cost')
 
         s_solarth.invest = (
-                r18.p_buildings_total.area_m2 / (r18.p_buildings_total.area_m2 + b18.p_nonresi.area_m2) *
-                e30.p_local_pv_roof.area_ha_available * entry('In_H_solartherm_to_be_inst') * s_solarth.invest_per_x * 10000
+            r18.p_buildings_total.area_m2 / (r18.p_buildings_total.area_m2 + b18.p_nonresi.area_m2) *
+            e30.p_local_pv_roof.area_ha_available * entry('In_H_solartherm_to_be_inst') * s_solarth.invest_per_x * 10000
         )
 
         p_buildings_until_1919.invest = (
@@ -837,8 +845,8 @@ def Residence2030_calc(root: Generator):
         s_heatpump.full_load_hour = fact('Fact_R_S_fhou')
         s_heatpump.power_installed = r18.s_heatpump.energy / s_heatpump.full_load_hour
         s_heatpump.power_to_be_installed = (
-                p_buildings_total.area_m2_rehab * ass('Ass_R_S_heating_power_renovated') / Million  -
-                s_heatpump.power_installed
+            p_buildings_total.area_m2_rehab * ass('Ass_R_S_heating_power_renovated') / Million -
+            s_heatpump.power_installed
         )
         s_heatpump.invest = s_heatpump.invest_per_x * s_heatpump.power_to_be_installed * 1000
 
@@ -848,10 +856,10 @@ def Residence2030_calc(root: Generator):
             p_buildings_1949_1978.invest +
             p_buildings_1979_1995.invest +
             p_buildings_1996_2004.invest
-        ) #SUM(p_buildings_until_1919.invest:p_buildings_1996_2004.invest)
+        )  # SUM(p_buildings_until_1919.invest:p_buildings_1996_2004.invest)
         p_buildings_total.cost_mro = 0
         g_consult.invest = (
-            entry('In_R_buildings_le_2_apts') * fact('Fact_R_G_energy_consulting_cost_detached_house')  +
+            entry('In_R_buildings_le_2_apts') * fact('Fact_R_G_energy_consulting_cost_detached_house') +
             entry('In_R_buildings_ge_3_apts') * fact('Fact_R_G_energy_consulting_cost_appt_building_ge_3_flats')
         )
         g.invest = g_consult.invest
@@ -864,7 +872,6 @@ def Residence2030_calc(root: Generator):
         s_solarth.pct_of_wage = fact('Fact_B_P_plumbing_ratio_wage_to_main_revenue_2017')
         s_heatpump.pct_of_wage = fact('Fact_B_P_plumbing_ratio_wage_to_main_revenue_2017')
         p_buildings_total.pct_of_wage = fact('Fact_B_P_renovations_ratio_wage_to_main_revenue_2017')
-
 
         s_solarth.cost_wage = s_solarth.invest_pa * s_solarth.pct_of_wage
         s_heatpump.cost_wage = s_heatpump.invest_pa * s_heatpump.pct_of_wage
@@ -918,7 +925,7 @@ def Residence2030_calc(root: Generator):
             max(0, s_solarth.demand_emplo - s_solarth.emplo_existing)
         )
         s_heatpump.demand_emplo_new = (
-            max(0,s_heatpump.demand_emplo - s_heatpump.emplo_existing)
+            max(0, s_heatpump.demand_emplo - s_heatpump.emplo_existing)
         )
         s.demand_emplo_new = (s_solarth.demand_emplo_new + s_heatpump.demand_emplo_new)
 
@@ -941,7 +948,7 @@ def Residence2030_calc(root: Generator):
         s_solarth.invest_com = s_solarth.invest * entry('In_R_pct_of_area_m2_com')
         s_heatpump.invest_com = s_heatpump.invest * entry('In_R_pct_of_area_m2_com')
         s.invest_com = (
-                s_solarth.invest_com + s_heatpump.invest_com
+            s_solarth.invest_com + s_heatpump.invest_com
         )
 
         p_buildings_total.invest_pa_com = p_buildings_total.invest_com / Kalkulationszeitraum
@@ -1001,7 +1008,8 @@ def Residence2030_calc(root: Generator):
         p_buildings_area_m2_com.change_energy_MWh = (p_buildings_area_m2_com.energy - r18.p_buildings_area_m2_com.energy)
         p_buildings_area_m2_com.change_energy_pct = (p_buildings_area_m2_com.change_energy_MWh / r18.p_buildings_area_m2_com.energy)
         p_buildings_area_m2_com.invest_per_x = (fact('Fact_R_P_energetical_renovation_cost_housing_complex'))
-        p_buildings_area_m2_com.invest = ((p_buildings_until_1919.area_m2_rehab + p_buildings_1919_1948.area_m2_rehab + p_buildings_1949_1978.area_m2_rehab + p_buildings_1979_1995.area_m2_rehab +p_buildings_1996_2004.area_m2_rehab) * (1 - fact('Fact_R_P_ratio_renovated_buildings to_not_renovated_2021')) * r18.p_buildings_area_m2_com.pct_x * p_buildings_area_m2_com.invest_per_x)
+        p_buildings_area_m2_com.invest = ((p_buildings_until_1919.area_m2_rehab + p_buildings_1919_1948.area_m2_rehab + p_buildings_1949_1978.area_m2_rehab + p_buildings_1979_1995.area_m2_rehab +
+                                          p_buildings_1996_2004.area_m2_rehab) * (1 - fact('Fact_R_P_ratio_renovated_buildings to_not_renovated_2021')) * r18.p_buildings_area_m2_com.pct_x * p_buildings_area_m2_com.invest_per_x)
         p_buildings_area_m2_com.invest_com = (p_buildings_area_m2_com.invest)
         p_buildings_area_m2_com.invest_pa = (p_buildings_area_m2_com.invest / entry('In_M_duration_target'))
         p_buildings_area_m2_com.invest_pa_com = (p_buildings_area_m2_com.invest_com / entry('In_M_duration_target'))
@@ -1052,11 +1060,13 @@ def Residence2030_calc(root: Generator):
         s_elec.CO2e_total = (s_elec.CO2e_cb)
         s_emethan.CO2e_total_2021_estimated = (0 * fact('Fact_M_CO2e_wo_lulucf_2021_vs_2018'))
         s_elec.CO2e_cb_per_MWh = (r18.s_elec.CO2e_cb_per_MWh)
-        s.CO2e_total = (s_fueloil.CO2e_total+ s_lpg.CO2e_total + s_biomass.CO2e_total + s_coal.CO2e_total + s_petrol.CO2e_total + s_heatnet.CO2e_total + s_solarth.CO2e_total + s_heatpump.CO2e_total + s_gas.CO2e_total + s_emethan.CO2e_total + s_elec.CO2e_total)
+        s.CO2e_total = (s_fueloil.CO2e_total + s_lpg.CO2e_total + s_biomass.CO2e_total + s_coal.CO2e_total + s_petrol.CO2e_total +
+                        s_heatnet.CO2e_total + s_solarth.CO2e_total + s_heatpump.CO2e_total + s_gas.CO2e_total + s_emethan.CO2e_total + s_elec.CO2e_total)
         s_elec.CO2e_total_2021_estimated = (r18.s_elec.CO2e_cb * fact('Fact_M_CO2e_wo_lulucf_2021_vs_2018'))
         s_elec.change_CO2e_t = (s_elec.CO2e_cb - r18.s_elec.CO2e_cb)
         s_elec.CO2e_total_2021_estimated = (r18.s_elec.CO2e_cb * fact('Fact_M_CO2e_wo_lulucf_2021_vs_2018'))
-        s_elec.cost_climate_saved = ((s_elec.CO2e_total_2021_estimated - s_elec.CO2e_cb) * entry('In_M_duration_neutral') * fact('Fact_M_cost_per_CO2e_2020'))
+        s_elec.cost_climate_saved = ((s_elec.CO2e_total_2021_estimated - s_elec.CO2e_cb) *
+                                     entry('In_M_duration_neutral') * fact('Fact_M_cost_per_CO2e_2020'))
         s_elec.change_cost_energy = 0
         s_elec_heating.CO2e_cb_per_MWh = (r18.s_elec_heating.CO2e_cb_per_MWh)
         s_elec_heating.CO2e_cb_per_MWh = (r18.s_elec_heating.CO2e_cb_per_MWh)

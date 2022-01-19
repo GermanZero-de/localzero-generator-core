@@ -2,27 +2,27 @@
 # coding: utf-8
 
 # hier Sektoren Files importieren:
-from Prequel import *
-from Electricity2018 import *
-from Business2018 import *
-from Industry2018 import *
-from Transport2018 import *
-from Residences2018 import *
-from Agri2018 import *
-from Heat2018 import *
-from Lulucf2018 import *
-from Fuels2018 import *
+from prequel import *
+from electricity2018 import *
+from business2018 import *
+from industry2018 import *
+from transport2018 import *
+from residences2018 import *
+from agri2018 import *
+from heat2018 import *
+from lulucf2018 import *
+from fuels2018 import *
 
-from Residences2030 import *
-from Business2030 import *
-from Heat2030 import *
-from Fuels2030 import *
-from Transport2030 import *
-from Electricity2030 import *
-from Heat2030 import *
-from Agri2030 import *
-from Lulucf2030 import *
-from Industry2030 import *
+from residences2030 import *
+from business2030 import *
+from heat2030 import *
+from fuels2030 import *
+from transport2030 import *
+from electricity2030 import *
+from heat2030 import *
+from agri2030 import *
+from lulucf2030 import *
+from industry2030 import *
 from setup import *
 import time
 
@@ -37,11 +37,11 @@ class Generator:
     b18: B18 = B18()  # Gewerbe Handel Dienstleisung
     i18: I18 = I18()  # Industry
     t18: T18 = T18()  # Transport
-    a18: A18 = A18() #Agriculture
-    f18: F18 = F18() #Fuels
+    a18: A18 = A18()  # Agriculture
+    f18: F18 = F18()  # Fuels
     e18: E18 = E18()  # Electricity
     h18: H18 = H18()  # Heat
-    l18: L18 = L18() #Lulucf
+    l18: L18 = L18()  # Lulucf
     a18: A18 = A18()
 
     # Zieljahr
@@ -57,7 +57,7 @@ class Generator:
     h30: H30 = H30()
 
     # search value
-    def search_value(self, var:str):
+    def search_value(self, var: str):
         sep = '.'
         gen = self.dict
         for k in gen:
@@ -66,7 +66,7 @@ class Generator:
                     for m in gen[k][l]:
                         if l+sep+m == var:
                             print(k+sep+l+sep+m+"=", gen[k][l][m])
-    
+
     # Hier werden alle fertigen Kalkulationsfunktionen pro Sektor hinzugefügt
     def calculate(self):
         start_t = time.time()
@@ -92,10 +92,9 @@ class Generator:
         end_t = time.time()
         print('elapsed time for 18-sectors: {:5.3f}s'.format(end_t-start_t))
 
-
         # Zieljahr
-        #print('Prequel_calc')
-        #Prequel_calc(self)
+        # print('Prequel_calc')
+        # Prequel_calc(self)
         print('Transport2030')
         Transport2030_calc(self)
         print('Industry2030')
@@ -115,7 +114,7 @@ class Generator:
         Fuels2030_calc(self)
         print('Electricity2030_calc')
         Electricity2030_calc(self)
-        #print('Pyrolyse')
+        # print('Pyrolyse')
 
     # Berechnung im post init Konstruktor
     def __post_init__(self):
@@ -126,5 +125,3 @@ class Generator:
 
 # Generator Object
 g = Generator()
-
-

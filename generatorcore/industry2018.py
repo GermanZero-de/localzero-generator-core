@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field, InitVar, asdict
 from setup import *
 
+
 @dataclass
 class IColVars:
     energy: float = None
@@ -63,9 +64,9 @@ class I18:
 
 # for mineral industry the energy_use_factor still needs to be added to facts
 def Industry2018_calc(root):
-    
+
     i18 = root.i18
-    
+
     i18.p_miner.energy = entry('In_I_miner_fec')
 
     i18.p_miner_cement.pct_energy = fact("Fact_I_P_miner_fec_pct_of_cement_2018")
@@ -197,7 +198,6 @@ def Industry2018_calc(root):
     i18.p_chem_basic.CO2e_total = (
         i18.p_chem_basic.CO2e_pb + i18.p_chem_basic.CO2e_cb
     )
-
 
     # chem ammonia
     i18.p_chem_ammonia.pct_energy = fact(
@@ -423,7 +423,7 @@ def Industry2018_calc(root):
 
     i18.p_other_food.CO2e_pb_per_t = fact('Fact_I_P_other_food_ratio_CO2e_pb_to_prodvol_2018')
     i18.p_other_food.CO2e_pb = i18.p_other_food.prod_volume * i18.p_other_food.CO2e_pb_per_t
-    
+
     i18.p_other_food.CO2e_cb_per_t = fact("Fact_I_P_other_food_ratio_CO2e_cb_to_prodvol_2018")
     i18.p_other_food.CO2e_cb = (i18.p_other_food.prod_volume * i18.p_other_food.CO2e_cb_per_t)
 
@@ -452,40 +452,38 @@ def Industry2018_calc(root):
     i18.p_other_further.CO2e_total = (
         i18.p_other_further.CO2e_pb + i18.p_other_further.CO2e_cb
     )
-    i18.p_other_further.prod_volume= fact('Fact_I_P_other_further_prodvol_2018')
-    
+    i18.p_other_further.prod_volume = fact('Fact_I_P_other_further_prodvol_2018')
 
     # energy of further_other_industries
 
     i18.p_other_2efgh.CO2e_pb_per_MWh = fact("Fact_I_P_other_2efgh_ratio_CO2e_pb_to_fec_2018")
-    i18.p_other_2efgh.CO2e_pb = ( i18.p_other_further.energy * i18.p_other_2efgh.CO2e_pb_per_MWh )
-    i18.p_other_2efgh.CO2e_total = ( i18.p_other_2efgh.CO2e_pb )
-
+    i18.p_other_2efgh.CO2e_pb = (i18.p_other_further.energy * i18.p_other_2efgh.CO2e_pb_per_MWh)
+    i18.p_other_2efgh.CO2e_total = (i18.p_other_2efgh.CO2e_pb)
 
     i18.p_miner.prod_volume = (
-            i18.p_miner_cement.prod_volume +
-            i18.p_miner_chalk.prod_volume +
-            i18.p_miner_glas.prod_volume +
-            i18.p_miner_ceram.prod_volume
-    ) 
+        i18.p_miner_cement.prod_volume +
+        i18.p_miner_chalk.prod_volume +
+        i18.p_miner_glas.prod_volume +
+        i18.p_miner_ceram.prod_volume
+    )
 
     i18.p_chem.prod_volume = (
         i18.p_chem_basic.prod_volume +
         i18.p_chem_ammonia.prod_volume +
         i18.p_chem_other.prod_volume
-    ) 
+    )
     i18.p_miner.CO2e_pb = (
-            i18.p_miner_cement.CO2e_pb +
-            i18.p_miner_chalk.CO2e_pb +
-            i18.p_miner_glas.CO2e_pb +
-            i18.p_miner_ceram.CO2e_pb
-    ) 
+        i18.p_miner_cement.CO2e_pb +
+        i18.p_miner_chalk.CO2e_pb +
+        i18.p_miner_glas.CO2e_pb +
+        i18.p_miner_ceram.CO2e_pb
+    )
 
     i18.p_chem.CO2e_pb = (
         i18.p_chem_basic.CO2e_pb +
         i18.p_chem_ammonia.CO2e_pb +
         i18.p_chem_other.CO2e_pb
-    ) 
+    )
     i18.p_metal.CO2e_pb = (
         i18.p_metal_steel.CO2e_pb + i18.p_metal_nonfe.CO2e_pb
     )
@@ -496,14 +494,14 @@ def Industry2018_calc(root):
         i18.p_other_food.CO2e_pb +
         i18.p_other_further.CO2e_pb +
         i18.p_other_2efgh.CO2e_pb
-    ) 
+    )
 
     i18.p_miner.CO2e_cb = (
         i18.p_miner_cement.CO2e_cb +
         i18.p_miner_chalk.CO2e_cb +
         i18.p_miner_glas.CO2e_cb +
         i18.p_miner_ceram.CO2e_cb
-    ) 
+    )
 
     i18.p_chem.CO2e_cb = (
         i18.p_chem_basic.CO2e_cb +
@@ -526,7 +524,7 @@ def Industry2018_calc(root):
         i18.p_chem.CO2e_cb +
         i18.p_metal.CO2e_cb +
         i18.p_other.CO2e_cb
-    ) 
+    )
 
     i18.p_metal.prod_volume = (
         i18.p_metal_steel.prod_volume + i18.p_metal_nonfe.prod_volume
@@ -535,7 +533,7 @@ def Industry2018_calc(root):
     i18.p_other.prod_volume = (
         i18.p_other_paper.prod_volume +
         i18.p_other_food.prod_volume
-    ) 
+    )
 
     i18.p.energy = entry('In_I_energy_total')
     i18.p.prod_volume = (
@@ -543,27 +541,27 @@ def Industry2018_calc(root):
         i18.p_chem.prod_volume +
         i18.p_metal.prod_volume +
         i18.p_other.prod_volume
-    ) 
+    )
 
     i18.p.CO2e_pb = (
         i18.p_miner.CO2e_pb +
         i18.p_chem.CO2e_pb +
         i18.p_metal.CO2e_pb +
         i18.p_other.CO2e_pb
-    ) 
+    )
 
     i18.p_miner.CO2e_total = (
         i18.p_miner_cement.CO2e_total +
         i18.p_miner_chalk.CO2e_total +
         i18.p_miner_glas.CO2e_total +
         i18.p_miner_ceram.CO2e_total
-    ) 
+    )
 
     i18.p_chem.CO2e_total = (
         i18.p_chem_basic.CO2e_total +
         i18.p_chem_ammonia.CO2e_total +
         i18.p_chem_other.CO2e_total
-    ) 
+    )
 
     i18.p_metal.CO2e_total = (
         i18.p_metal_steel.CO2e_total + i18.p_metal_nonfe.CO2e_total
@@ -574,14 +572,14 @@ def Industry2018_calc(root):
         i18.p_other_food.CO2e_total +
         i18.p_other_further.CO2e_total +
         i18.p_other_2efgh.CO2e_total
-    ) 
+    )
 
     i18.p.CO2e_total = (
         i18.p_miner.CO2e_total +
         i18.p_chem.CO2e_total +
         i18.p_metal.CO2e_total +
         i18.p_other.CO2e_total
-    ) 
+    )
 
     i18.s.energy = entry('In_I_energy_total')
 
@@ -599,35 +597,34 @@ def Industry2018_calc(root):
     i18.s_renew_solarth.energy = (entry('In_I_orenew_fec') * fact('Fact_R_S_ratio_solarth_to_orenew_2018'))
     i18.s_renew_elec.energy = entry('In_I_elec_fec')
 
-    i18.s_renew.energy =  (i18.s_renew_biomass.energy + 
-                          i18.s_renew_heatnet.energy + 
-                          i18.s_renew_orenew.energy + 
-                          i18.s_renew_solarth.energy + 
+    i18.s_renew.energy = (i18.s_renew_biomass.energy +
+                          i18.s_renew_heatnet.energy +
+                          i18.s_renew_orenew.energy +
+                          i18.s_renew_solarth.energy +
                           i18.s_renew_elec.energy)
 
+    i18.s_fossil.energy = (
+        i18.s_fossil_gas.energy +
+        i18.s_fossil_coal.energy +
+        i18.s_fossil_diesel.energy +
+        i18.s_fossil_fueloil.energy +
+        i18.s_fossil_lpg.energy +
+        i18.s_fossil_opetpro.energy +
+        i18.s_fossil_ofossil.energy)
 
-    i18.s_fossil.energy =(
-            i18.s_fossil_gas.energy +
-            i18.s_fossil_coal.energy +
-            i18.s_fossil_diesel.energy +
-            i18.s_fossil_fueloil.energy +
-            i18.s_fossil_lpg.energy +
-            i18.s_fossil_opetpro.energy +
-            i18.s_fossil_ofossil.energy)
+    i18.s_fossil_gas.pct_energy = (i18.s_fossil_gas.energy / i18.s.energy)
+    i18.s_fossil_coal.pct_energy = (i18.s_fossil_coal.energy / i18.s.energy)
+    i18.s_fossil_diesel.pct_energy = (i18.s_fossil_diesel.energy / i18.s.energy)
+    i18.s_fossil_fueloil.pct_energy = (i18.s_fossil_fueloil.energy / i18.s.energy)
+    i18.s_fossil_lpg.pct_energy = (i18.s_fossil_lpg.energy / i18.s.energy)
+    i18.s_fossil_opetpro.pct_energy = (i18.s_fossil_opetpro.energy / i18.s.energy)
+    i18.s_fossil_ofossil.pct_energy = (i18.s_fossil_ofossil.energy / i18.s.energy)
 
-    i18.s_fossil_gas.pct_energy = ( i18.s_fossil_gas.energy / i18.s.energy )
-    i18.s_fossil_coal.pct_energy = ( i18.s_fossil_coal.energy / i18.s.energy )
-    i18.s_fossil_diesel.pct_energy = ( i18.s_fossil_diesel.energy / i18.s.energy )
-    i18.s_fossil_fueloil.pct_energy = ( i18.s_fossil_fueloil.energy / i18.s.energy )
-    i18.s_fossil_lpg.pct_energy = ( i18.s_fossil_lpg.energy / i18.s.energy )
-    i18.s_fossil_opetpro.pct_energy = ( i18.s_fossil_opetpro.energy / i18.s.energy )
-    i18.s_fossil_ofossil.pct_energy = ( i18.s_fossil_ofossil.energy / i18.s.energy )
-
-    i18.s_renew_biomass.pct_energy = ( i18.s_renew_biomass.energy / i18.s.energy )
-    i18.s_renew_heatnet.pct_energy = ( i18.s_renew_heatnet.energy / i18.s.energy )
-    i18.s_renew_orenew.pct_energy = ( i18.s_renew_orenew.energy  / i18.s.energy )
-    i18.s_renew_solarth.pct_energy = ( i18.s_renew_solarth.energy  / i18.s.energy )
-    i18.s_renew_elec.pct_energy = ( i18.s_renew_elec.energy / i18.s.energy )
+    i18.s_renew_biomass.pct_energy = (i18.s_renew_biomass.energy / i18.s.energy)
+    i18.s_renew_heatnet.pct_energy = (i18.s_renew_heatnet.energy / i18.s.energy)
+    i18.s_renew_orenew.pct_energy = (i18.s_renew_orenew.energy / i18.s.energy)
+    i18.s_renew_solarth.pct_energy = (i18.s_renew_solarth.energy / i18.s.energy)
+    i18.s_renew_elec.pct_energy = (i18.s_renew_elec.energy / i18.s.energy)
 
     i18.s.pct_energy = (
         i18.s_fossil_gas.pct_energy +
@@ -641,6 +638,6 @@ def Industry2018_calc(root):
         i18.s_renew_biomass.pct_energy +
         i18.s_renew_heatnet.pct_energy +
         i18.s_renew_orenew.pct_energy +
-        i18.s_renew_solarth.pct_energy + 
+        i18.s_renew_solarth.pct_energy +
         i18.s_renew_elec.pct_energy
-    ) 
+    )

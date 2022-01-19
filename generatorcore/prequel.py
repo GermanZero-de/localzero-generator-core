@@ -13,7 +13,7 @@ def Prequel_calc(root):
         e30 = root.e30
         t30 = root.t30
 
-        #real calculations
+        # real calculations
 
         e30.p_local_pv_roof.area_ha_available = ((4 / 3) * ((
             entry('In_R_area_m2_1flat') / 100 * ass('Ass_S_DurchschnittlichtePVFläche_Gebäude_1Wohnung') +
@@ -22,14 +22,9 @@ def Prequel_calc(root):
             entry('In_R_area_m2_dorm') / 100 * ass('Ass_S_DurchschnittlichtePVFläche_Wohnheim'))) / 10000
         )
 
-        #mock values
+        # mock values
         t30.s_elec.demand_electricity = 103530852
-
 
     except Exception as e:
         print(e)
         raise
-
-
-
-

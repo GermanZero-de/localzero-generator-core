@@ -32,6 +32,7 @@ class LColVars2030:
     area_ha_available_pct_of_action: float = None
     area_ha_available: float = None
 
+
 @dataclass
 class L30:
     # Klassenvariablen für L18
@@ -281,8 +282,8 @@ def Lulucf2030_calc(root):
             ass('Ass_L_G_wet_rewetting_invest_per_ha_2016')
         )
         g_crop_org_low.invest = (
-                - g_crop_org_low.area_ha_change *
-                g_crop_org_low.invest_per_x
+            - g_crop_org_low.area_ha_change *
+            g_crop_org_low.invest_per_x
         )
         g_crop.area_ha = (
             g_crop_min_conv.area_ha +
@@ -305,8 +306,8 @@ def Lulucf2030_calc(root):
             g_grass_min_conv.area_ha
         )
         g_crop_org_high.invest = (
-                - g_crop_org_high.area_ha_change *
-                g_crop_org_high.invest_per_x
+            - g_crop_org_high.area_ha_change *
+            g_crop_org_high.invest_per_x
         )
         g_crop.invest = (
             g_crop_org_low.invest +
@@ -370,8 +371,8 @@ def Lulucf2030_calc(root):
             ass('Ass_L_G_wet_rewetting_invest_per_ha_2016')
         )
         g_grass_org_low.invest = (
-                - g_grass_org_low.area_ha_change *
-                g_grass_org_low.invest_per_x
+            - g_grass_org_low.area_ha_change *
+            g_grass_org_low.invest_per_x
         )
         g_grass.area_ha = (
             g_grass_min_conv.area_ha +
@@ -391,8 +392,8 @@ def Lulucf2030_calc(root):
         g_grove_min.CO2e_pb = (g_grove_min.CO2e_pb_per_t * g_grove_min.area_ha)
 
         g_grass_org_high.invest = (
-                - g_grass_org_high.area_ha_change *
-                g_grass_org_high.invest_per_x
+            - g_grass_org_high.area_ha_change *
+            g_grass_org_high.invest_per_x
         )
         g_grass.invest = (g_grass_org_low.invest + g_grass_org_high.invest)
 
@@ -449,8 +450,8 @@ def Lulucf2030_calc(root):
             ass('Ass_L_G_wet_rewetting_invest_per_ha_2016')
         )
         g_grove_org_low.invest = (
-                - g_grove_org_low.area_ha_change *
-                g_grove_org_low.invest_per_x
+            - g_grove_org_low.area_ha_change *
+            g_grove_org_low.invest_per_x
         )
         g_grove.change_CO2e_t = (g_grove.CO2e_total - l18.g_grove.CO2e_total)
 
@@ -469,8 +470,8 @@ def Lulucf2030_calc(root):
         g_wet_min.CO2e_pb = (g_wet_min.CO2e_pb_per_t * g_wet_min.area_ha)
 
         g_grove_org_high.invest = (
-                - g_grove_org_high.area_ha_change *
-                g_grove_org_high.invest_per_x
+            - g_grove_org_high.area_ha_change *
+            g_grove_org_high.invest_per_x
         )
         g_grove.invest = (g_grove_org_low.invest + g_grove_org_high.invest)
         g_water_min.demand_change = (ass('Ass_L_G_no_LUC_203X'))
@@ -490,7 +491,7 @@ def Lulucf2030_calc(root):
         g_wet_org_low.to_wet_low = g_wet_org_low.area_ha_change
         g_wet_org_low_r.area_ha_change = (
             - (g_crop_org_low.to_wet_low + g_grass_org_low.to_wet_low +
-            g_grove_org_low.to_wet_low + g_wet_org_low.to_wet_low)
+               g_grove_org_low.to_wet_low + g_wet_org_low.to_wet_low)
         )
         g_wet_org_low_r.area_ha = g_wet_org_low_r.area_ha_change
 
@@ -521,16 +522,16 @@ def Lulucf2030_calc(root):
             ass('Ass_L_G_wet_rewetting_invest_per_ha_2016')
         )
         g_wet_org_low.invest = (
-                - g_wet_org_low.area_ha_change *
-                g_wet_org_low.invest_per_x
+            - g_wet_org_low.area_ha_change *
+            g_wet_org_low.invest_per_x
         )
         g_wet_org_high_r.area_ha_change = (
             - (g_crop_org_high.to_wet_high + g_grass_org_high.to_wet_high +
-            g_grove_org_high.to_wet_high + g_wet_org_high.to_wet_high)
+               g_grove_org_high.to_wet_high + g_wet_org_high.to_wet_high)
         )
         g_wet_org_high.invest = (
-                - g_wet_org_high.area_ha_change *
-                g_wet_org_high.invest_per_x
+            - g_wet_org_high.area_ha_change *
+            g_wet_org_high.invest_per_x
         )
         g_wet_org_high_r.area_ha = g_wet_org_high_r.area_ha_change
 

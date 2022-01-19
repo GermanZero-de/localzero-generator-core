@@ -161,7 +161,6 @@ def Agri2030_calc(root):
     #root.r30.s_solarth.demand_emplo = exl['r30']['s_solarth']['demand_emplo']
     #root.r30.s_heatpump.demand_emplo = exl['r30']['s_heatpump']['demand_emplo']
 
-
     Million = 1000000
 
     a30 = root.a30
@@ -451,7 +450,7 @@ def Agri2030_calc(root):
         p_fermen_poultry.change_CO2e_t = (
             p_fermen_poultry.CO2e_total -
             a18.p_fermen_poultry.CO2e_total)
-        #p_fermen_poultry.change_CO2e_pct = (p_fermen_poultry.change_CO2e_t /a18.p_fermen_poultry.CO2e_total) #Todo not calculted div 0
+        # p_fermen_poultry.change_CO2e_pct = (p_fermen_poultry.change_CO2e_t /a18.p_fermen_poultry.CO2e_total) #Todo not calculted div 0
         p_fermen_poultry.CO2e_total_2021_estimated = (
             a18.p_fermen_poultry.CO2e_total *
             fact('Fact_M_CO2e_wo_lulucf_2021_vs_2018'))
@@ -1000,8 +999,8 @@ def Agri2030_calc(root):
             p_other_liming_calcit.CO2e_pb +
             p_other_liming_calcit.CO2e_cb)
         p_other_liming_calcit.change_CO2e_t = (
-           p_other_liming_calcit.CO2e_total -
-           a18.p_other_liming_calcit.CO2e_total)
+            p_other_liming_calcit.CO2e_total -
+            a18.p_other_liming_calcit.CO2e_total)
         p_other_liming_calcit.change_CO2e_pct = (
             p_other_liming_calcit.change_CO2e_t /
             a18.p_other_liming_calcit.CO2e_total)
@@ -1083,7 +1082,7 @@ def Agri2030_calc(root):
             p_other_kas.CO2e_total -
             a18.p_other.CO2e_total)
         p_other_kas.change_CO2e_pct = (
-            p_other_kas.change_CO2e_t / 1)#a18.p_other_kas.CO2e_total)
+            p_other_kas.change_CO2e_t / 1)  # a18.p_other_kas.CO2e_total)
         p_other_kas.CO2e_total_2021_estimated = (a18.p_other_kas.CO2e_total * fact('Fact_M_CO2e_wo_lulucf_2021_vs_2018'))
         p_other_kas.cost_climate_saved = (
             (p_other_kas.CO2e_total_2021_estimated -
@@ -1127,7 +1126,7 @@ def Agri2030_calc(root):
             p_operation_heat.rate_rehab_pa *
             entry('In_M_duration_target'))
         p_operation_vehicles.energy = (a18.p_operation_vehicles.energy *
-                             (1 + p_operation_vehicles.demand_change))
+                                       (1 + p_operation_vehicles.demand_change))
         p_operation_vehicles.demand_ediesel = (
             p_operation_vehicles.energy * a18.s_diesel.energy / (a18.s_petrol.energy + a18.s_diesel.energy))
         p_operation_heat.pct_nonrehab = (1 - p_operation_heat.pct_rehab)
@@ -1144,10 +1143,10 @@ def Agri2030_calc(root):
             p_operation_vehicles.demand_heatpump)
         p_operation_heat.area_m2 = (a18.p_operation_heat.area_m2)
         p_operation_heat.demand_heat_nonrehab = (p_operation_heat.area_m2_nonrehab *
-                                       (a18.p_operation_heat.factor_adapted_to_fec -
-                                        fact('Fact_B_P_ratio_renovated_to_not_renovated_2021') *
-                                           ass('Ass_B_D_ratio_fec_to_area_2050')) /
-                                       (1 - fact('Fact_B_P_ratio_renovated_to_not_renovated_2021')))
+                                                 (a18.p_operation_heat.factor_adapted_to_fec -
+                                                  fact('Fact_B_P_ratio_renovated_to_not_renovated_2021') *
+                                                     ass('Ass_B_D_ratio_fec_to_area_2050')) /
+                                                 (1 - fact('Fact_B_P_ratio_renovated_to_not_renovated_2021')))
         s_heatpump.energy = (p_other_energy.demand_heatpump)
         p_operation_heat.energy = (
             p_operation_heat.demand_heat_nonrehab +
@@ -1172,8 +1171,8 @@ def Agri2030_calc(root):
         p_operation_heat.invest_per_x = (
             fact('Fact_R_P_energetical_renovation_cost_business'))
         p_operation_heat.invest = (p_operation_heat.area_m2_rehab *
-                         (1 - fact('Fact_B_P_ratio_renovated_to_not_renovated_2021')) *
-                         p_operation_heat.invest_per_x)
+                                   (1 - fact('Fact_B_P_ratio_renovated_to_not_renovated_2021')) *
+                                   p_operation_heat.invest_per_x)
         p_operation_heat.pct_of_wage = (
             fact('Fact_B_P_renovations_ratio_wage_to_main_revenue_2017'))
         p_operation_heat.cost_wage = (
@@ -1199,7 +1198,7 @@ def Agri2030_calc(root):
             s_heatpump.energy /
             fact('Fact_R_S_heatpump_mean_annual_performance_factor_all'))
         p_operation_elec_elcon.energy = (a18.p_operation_elec_elcon.energy *
-                               (1 + p_operation_elec_elcon.demand_change))
+                                         (1 + p_operation_elec_elcon.demand_change))
         p_operation_elec_elcon.demand_electricity = (p_operation_elec_elcon.energy)
         p_elec_heatpump.demand_electricity = (p_elec_heatpump.energy)
         p_other_energy.energy = (
@@ -1381,7 +1380,7 @@ def Agri2030_calc(root):
         s.change_CO2e_t = (s.CO2e_total - a18.s.CO2e_total)
         s_elec.CO2e_total = (s_elec.CO2e_pb + s_elec.CO2e_cb)
         s_elec.change_CO2e_t = (s_elec.CO2e_total - a18.s_elec.CO2e_total)
-        s_elec.change_CO2e_pct = (s_elec.change_CO2e_t / 1 )#a18.s_elec.CO2e_total)
+        s_elec.change_CO2e_pct = (s_elec.change_CO2e_t / 1)  # a18.s_elec.CO2e_total)
         s_elec.CO2e_total_2021_estimated = (
             a18.s_elec.CO2e_total *
             fact('Fact_M_CO2e_wo_lulucf_2021_vs_2018'))
@@ -1416,7 +1415,7 @@ def Agri2030_calc(root):
             s_heatpump.CO2e_total -
             a18.s_heatpump.CO2e_total)
         s_heatpump.change_CO2e_pct = (
-            s_heatpump.change_CO2e_t / 1.)# a18.s_heatpump.CO2e_total)
+            s_heatpump.change_CO2e_t / 1.)  # a18.s_heatpump.CO2e_total)
         s_heatpump.CO2e_total_2021_estimated = (
             a18.s_heatpump.CO2e_total *
             fact('Fact_M_CO2e_wo_lulucf_2021_vs_2018'))
@@ -1468,13 +1467,14 @@ def Agri2030_calc(root):
         a.change_CO2e_t = (a.CO2e_total - a18.a.CO2e_total)
         a.change_CO2e_pct = (a.change_CO2e_t / a18.a.CO2e_total)
         a.CO2e_total_2021_estimated = (a18.a.CO2e_total * fact('Fact_M_CO2e_wo_lulucf_2021_vs_2018'))
-        a.cost_climate_saved = ((a.CO2e_total_2021_estimated - a.CO2e_total) * entry('In_M_duration_neutral') * fact('Fact_M_cost_per_CO2e_2020'))
+        a.cost_climate_saved = ((a.CO2e_total_2021_estimated - a.CO2e_total) *
+                                entry('In_M_duration_neutral') * fact('Fact_M_cost_per_CO2e_2020'))
         a.invest_pa = (g.invest_pa)
         a.invest_pa_com = (g.invest_pa_com)
         a.invest = (g.invest)
         a.invest_com = (g.invest_com)
         g.invest_pa = (g_consult.invest_pa + g_organic.invest_pa)
-        g.invest_pa_com = (g_consult.invest_pa_com )
+        g.invest_pa_com = (g_consult.invest_pa_com)
         g.invest = (g_consult.invest + g_organic.invest)
         g.invest_com = (g_consult.invest_com)
         g_organic.invest_pa = (g_organic.invest / entry('In_M_duration_target'))

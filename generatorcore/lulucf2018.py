@@ -1,6 +1,7 @@
 from setup import *
 from dataclasses import dataclass, asdict
 
+
 @dataclass
 class LColVars2018:
     area_ha: float = None
@@ -114,7 +115,7 @@ def Lulucf2018_calc(root):
             fact('Fact_L_G_crop_minrl_soil_ord_CO2e_per_ha_2018')
         )
         g_forest_managed.area_ha = (
-                g_forest.area_ha * g_forest_managed.pct_x
+            g_forest.area_ha * g_forest_managed.pct_x
         )
         g_crop_min_conv.pct_x = fact('Fact_L_G_fraction_minrl_soil_crop')
 
@@ -197,7 +198,7 @@ def Lulucf2018_calc(root):
         )
         g_crop.CO2e_pb = (
             g_crop_min_conv.CO2e_pb +
-            #g_crop_min_hum.CO2e_pb +
+            # g_crop_min_hum.CO2e_pb +
             g_crop_org_low.CO2e_pb +
             g_crop_org_high.CO2e_pb
         )
@@ -450,9 +451,9 @@ def Lulucf2018_calc(root):
             g_settlement_org_high.area_ha
         )
         g_settlement.CO2e_pb = (
-                g_settlement_min.CO2e_pb +
-                g_settlement_org_low.CO2e_pb +
-                g_settlement_org_high.CO2e_pb
+            g_settlement_min.CO2e_pb +
+            g_settlement_org_low.CO2e_pb +
+            g_settlement_org_high.CO2e_pb
         )
         g_settlement.CO2e_total = (g_settlement.CO2e_pb)
 
@@ -466,7 +467,7 @@ def Lulucf2018_calc(root):
             g_settlement.area_ha +
             g_other.area_ha
         )
-        g_wood.CO2e_pb_per_t = -0.313283 #Todo(fact('Fact_L_G_wood_CO2e_per_ha_2018'))
+        g_wood.CO2e_pb_per_t = -0.313283  # Todo(fact('Fact_L_G_wood_CO2e_per_ha_2018'))
 
         g_other.CO2e_total = g_other.CO2e_pb
 
@@ -504,7 +505,7 @@ def Lulucf2018_calc(root):
         l.CO2e_total = g.CO2e_total
         g_forest.pct_x = 1.
         g_forest_managed.CO2e_total = (
-                g_forest_managed.CO2e_pb + g_forest_managed.CO2e_cb
+            g_forest_managed.CO2e_pb + g_forest_managed.CO2e_cb
         )
         g_forest_natural.CO2e_total = g_forest_natural.CO2e_pb
         g_crop_min_conv.CO2e_total = g_crop_min_conv.CO2e_pb
