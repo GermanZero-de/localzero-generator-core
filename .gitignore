@@ -170,4 +170,4 @@ cython_debug/
 .vscode/
 # It might actually be a code idea to check a "good" config file in. But for that I need
 # to figure out what the right subset of my global settings to include is
-generator-core.code-workspace
+localzero-generator-core.code-workspace
