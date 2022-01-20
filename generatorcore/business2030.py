@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from .setup import *
+from .setup import ass, entry, fact
 import time
 
 

@@ -1,28 +1,27 @@
 import time
+from dataclasses import dataclass, asdict
 
 # hier Sektoren Files importieren:
-from .prequel import *
-from .electricity2018 import *
-from .business2018 import *
-from .industry2018 import *
-from .transport2018 import *
-from .residences2018 import *
-from .agri2018 import *
-from .heat2018 import *
-from .lulucf2018 import *
-from .fuels2018 import *
+from . import electricity2018
+from . import business2018
+from . import industry2018
+from . import transport2018
+from . import residences2018
+from . import agri2018
+from . import heat2018
+from . import lulucf2018
+from . import fuels2018
 
-from .residences2030 import *
-from .business2030 import *
-from .heat2030 import *
-from .fuels2030 import *
-from .transport2030 import *
-from .electricity2030 import *
-from .heat2030 import *
-from .agri2030 import *
-from .lulucf2030 import *
-from .industry2030 import *
-from .setup import *
+from . import residences2030
+from . import business2030
+from . import heat2030
+from . import fuels2030
+from . import transport2030
+from . import electricity2030
+from . import heat2030
+from . import agri2030
+from . import lulucf2030
+from . import industry2030
 
 
 @dataclass
@@ -31,28 +30,27 @@ class Generator:
     # Definition der Sektoren als Klassenvariablen. (Bitte Auskommentieren, wenn fertig)
 
     # 2018
-    r18: R18 = R18()  # Residences
-    b18: B18 = B18()  # Gewerbe Handel Dienstleisung
-    i18: I18 = I18()  # Industry
-    t18: T18 = T18()  # Transport
-    a18: A18 = A18()  # Agriculture
-    f18: F18 = F18()  # Fuels
-    e18: E18 = E18()  # Electricity
-    h18: H18 = H18()  # Heat
-    l18: L18 = L18()  # Lulucf
-    a18: A18 = A18()
+    r18: residences2018.R18 = residences2018.R18()  # Residences
+    b18: business2018.B18 = business2018.B18()  # Gewerbe Handel Dienstleisung
+    i18: industry2018.I18 = industry2018.I18()  # Industry
+    t18: transport2018.T18 = transport2018.T18()  # Transport
+    a18: agri2018.A18 = agri2018.A18()  # Agriculture
+    f18: fuels2018.F18 = fuels2018.F18()  # Fuels
+    e18: electricity2018.E18 = electricity2018.E18()  # Electricity
+    h18: heat2018.H18 = heat2018.H18()  # Heat
+    l18: lulucf2018.L18 = lulucf2018.L18()  # Lulucf
 
     # Zieljahr
-    r30: R30 = R30()
-    b30: B30 = B30()
-    i30: I30 = I30()
-    t30: T30 = T30()
-    f30: F30 = F30()
-    e30: E30 = E30()
-    h30: H30 = H30()
-    l30: L30 = L30()
-    a30: A30 = A30()
-    h30: H30 = H30()
+    r30: residences2030.R30 = residences2030.R30()
+    b30: business2030.B30 = business2030.B30()
+    i30: industry2030.I30 = industry2030.I30()
+    t30: transport2030.T30 = transport2030.T30()
+    f30: fuels2030.F30 = fuels2030.F30()
+    e30: electricity2030.E30 = electricity2030.E30()
+    h30: heat2030.H30 = heat2030.H30()
+    l30: lulucf2030.L30 = lulucf2030.L30()
+    a30: agri2030.A30 = agri2030.A30()
+    h30: heat2030.H30 = heat2030.H30()
 
     # search value
     def search_value(self, var: str):
@@ -70,23 +68,23 @@ class Generator:
         start_t = time.time()
         # 2018
         print("Residence2018_calc")
-        Residence2018_calc(self)
+        residences2018.Residence2018_calc(self)
         print("Business2018_calc")
-        Business2018_calc(self)
+        business2018.Business2018_calc(self)
         print("Industry2018_calc")
-        Industry2018_calc(self)
+        industry2018.Industry2018_calc(self)
         print("Transport2018_calc")
-        Transport2018_calc(self)
+        transport2018.Transport2018_calc(self)
         print("Fuels2018_calc")
-        Fuels2018_calc(self)
+        fuels2018.Fuels2018_calc(self)
         print("Electricity2018_calc")
-        Electricity2018_calc(self)
+        electricity2018.Electricity2018_calc(self)
         print("Heat2018_calc")
-        Heat2018_calc(self)
+        heat2018.Heat2018_calc(self)
         print("Lulucf2018_calc")
-        Lulucf2018_calc(self)
+        lulucf2018.Lulucf2018_calc(self)
         print("Agri2018_calc")
-        Agri2018_calc(self)
+        agri2018.Agri2018_calc(self)
         end_t = time.time()
         print("elapsed time for 18-sectors: {:5.3f}s".format(end_t - start_t))
 
@@ -94,24 +92,24 @@ class Generator:
         # print('Prequel_calc')
         # Prequel_calc(self)
         print("Transport2030")
-        Transport2030_calc(self)
+        transport2030.Transport2030_calc(self)
         print("Industry2030")
-        Industry2030_calc(self)
+        industry2030.Industry2030_calc(self)
         print("Residenctial2030")
-        Residence2030_calc(self)
+        residences2030.Residence2030_calc(self)
         print("Business2030_calc")
-        Business2030_calc(self)
+        business2030.Business2030_calc(self)
         print("Lulucf2030_calc")
-        Lulucf2030_calc(self)
+        lulucf2030.Lulucf2030_calc(self)
         print("Transport2030_calc")
         print("Agri2030_calc")
-        Agri2030_calc(self)
+        agri2030.Agri2030_calc(self)
         print("Heat2030_calc")
-        Heat2030_calc(self)
+        heat2030.Heat2030_calc(self)
         print("Fuels2030_calc")
-        Fuels2030_calc(self)
+        fuels2030.Fuels2030_calc(self)
         print("Electricity2030_calc")
-        Electricity2030_calc(self)
+        electricity2030.Electricity2030_calc(self)
         # print('Pyrolyse')
 
     # Berechnung im post init Konstruktor

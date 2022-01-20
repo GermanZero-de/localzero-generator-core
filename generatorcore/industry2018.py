@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field, InitVar, asdict
-from .setup import *
+from .setup import ass, entry, fact
 
 
 @dataclass
