@@ -1,5 +1,6 @@
 import time
 from dataclasses import dataclass, asdict
+import sys
 
 # hier Sektoren Files importieren:
 from . import electricity2018
@@ -67,48 +68,51 @@ class Generator:
     def calculate(self):
         start_t = time.time()
         # 2018
-        print("Residence2018_calc")
+        print("Residence2018_calc", file=sys.stderr)
         residences2018.Residence2018_calc(self)
-        print("Business2018_calc")
+        print("Business2018_calc", file=sys.stderr)
         business2018.Business2018_calc(self)
-        print("Industry2018_calc")
+        print("Industry2018_calc", file=sys.stderr)
         industry2018.Industry2018_calc(self)
-        print("Transport2018_calc")
+        print("Transport2018_calc", file=sys.stderr)
         transport2018.Transport2018_calc(self)
-        print("Fuels2018_calc")
+        print("Fuels2018_calc", file=sys.stderr)
         fuels2018.Fuels2018_calc(self)
-        print("Electricity2018_calc")
+        print("Electricity2018_calc", file=sys.stderr)
         electricity2018.Electricity2018_calc(self)
-        print("Heat2018_calc")
+        print("Heat2018_calc", file=sys.stderr)
         heat2018.Heat2018_calc(self)
-        print("Lulucf2018_calc")
+        print("Lulucf2018_calc", file=sys.stderr)
         lulucf2018.Lulucf2018_calc(self)
-        print("Agri2018_calc")
+        print("Agri2018_calc", file=sys.stderr)
         agri2018.Agri2018_calc(self)
         end_t = time.time()
-        print("elapsed time for 18-sectors: {:5.3f}s".format(end_t - start_t))
+        print(
+            "elapsed time for 18-sectors: {:5.3f}s".format(end_t - start_t),
+            file=sys.stderr,
+        )
 
         # Zieljahr
         # print('Prequel_calc')
         # Prequel_calc(self)
-        print("Transport2030")
+        print("Transport2030", file=sys.stderr)
         transport2030.Transport2030_calc(self)
-        print("Industry2030")
+        print("Industry2030", file=sys.stderr)
         industry2030.Industry2030_calc(self)
-        print("Residenctial2030")
+        print("Residenctial2030", file=sys.stderr)
         residences2030.Residence2030_calc(self)
-        print("Business2030_calc")
+        print("Business2030_calc", file=sys.stderr)
         business2030.Business2030_calc(self)
-        print("Lulucf2030_calc")
+        print("Lulucf2030_calc", file=sys.stderr)
         lulucf2030.Lulucf2030_calc(self)
-        print("Transport2030_calc")
-        print("Agri2030_calc")
+        print("Transport2030_calc", file=sys.stderr)
+        print("Agri2030_calc", file=sys.stderr)
         agri2030.Agri2030_calc(self)
-        print("Heat2030_calc")
+        print("Heat2030_calc", file=sys.stderr)
         heat2030.Heat2030_calc(self)
-        print("Fuels2030_calc")
+        print("Fuels2030_calc", file=sys.stderr)
         fuels2030.Fuels2030_calc(self)
-        print("Electricity2030_calc")
+        print("Electricity2030_calc", file=sys.stderr)
         electricity2030.Electricity2030_calc(self)
         # print('Pyrolyse')
 
@@ -117,3 +121,6 @@ class Generator:
         self.calculate()
         # dictionary from DataClass
         self.dict = asdict(self)
+
+    def result_dict(self):
+        return self.dict
