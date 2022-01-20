@@ -1,7 +1,7 @@
 Localzero Generator Core
 =========================
-TODO: Write some text
-
+This contains the calcuation. It should neither contain reference data
+nor anything that is specific to the website.
 
 How to get coding
 =================
@@ -43,3 +43,11 @@ data available.
 
 Therefore you will have to checkout the proprietary and the public data
 repositories into :code:`data/public` and :code:`data/proprietary` respectively.
+
+Testing
+-------
+
+We use :code:`pytest` (the tests are in the directory `tests`). For now the
+tests are also run inside a pre-commit hook, as that currently takes less
+than 5seconds.  But if it will ever take longer we will change it to only run
+when you try to push.

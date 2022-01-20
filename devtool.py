@@ -10,13 +10,16 @@ This is a simple wrapper around the generator to
       See https://mail.python.org/pipermail/python-3000/2007-April/006793.html
 """
 import argparse
+import json
+import sys
 
 from generatorcore.generator import Generator
 
 
 def run_cmd(args):
     # TODO: pass ags in here
-    Generator()
+    g = Generator()
+    json.dump(g.result_dict(), indent=4, fp=sys.stdout)
 
 
 def main():
