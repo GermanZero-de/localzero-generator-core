@@ -2,7 +2,7 @@
 """
 This is a simple wrapper around the generator to
 
-    - Make sure we eat our own dogfood(TM) and try the API.
+    - Make sure we eat our own dog food(TM) and try the API.
 
     - Give us a quick way to run the generator as
       just running Generator.py as a script runs into the
