@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from .setup import ass, entry, fact
+from .inputs import Inputs
 import time
 
 
@@ -115,7 +115,16 @@ class B30:
 # Berechnungsfunktion im Sektor GHD für 2018
 
 
-def Business2030_calc(root):
+def calc(root, inputs: Inputs):
+    def fact(n):
+        return inputs.fact(n)
+
+    def ass(n):
+        return inputs.ass(n)
+
+    def entry(n):
+        return inputs.entry(n)
+
     """"""
     """ import external values"""
     import json

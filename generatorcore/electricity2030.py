@@ -1,4 +1,4 @@
-from .setup import ass, entry, fact
+from .inputs import Inputs
 from dataclasses import dataclass, asdict
 
 
@@ -135,7 +135,16 @@ class E30:
 
 # Berechnungsfunktion im Sektor E für 2018
 # Parameter root: oberste Generator Instanz
-def Electricity2030_calc(root):
+def calc(root, inputs: Inputs):
+    def fact(n):
+        return inputs.fact(n)
+
+    def ass(n):
+        return inputs.ass(n)
+
+    def entry(n):
+        return inputs.entry(n)
+
     """"""
     """ import external values"""
     import json

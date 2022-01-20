@@ -13,12 +13,12 @@ import argparse
 import json
 import sys
 
-from generatorcore.generator import Generator
+from generatorcore.generator import calculate_with_default_inputs
 
 
 def run_cmd(args):
     # TODO: pass ags in here
-    g = Generator()
+    g = calculate_with_default_inputs(ags=args.ags, year=args.year)
     json.dump(g.result_dict(), indent=4, fp=sys.stdout)
 
 
@@ -28,8 +28,8 @@ def main():
     subcmd_parsers = parser.add_subparsers(dest="subcmd")
 
     cmd_run_parser = subcmd_parsers.add_parser("run", help="Run the generator")
-    # TODO: Add the below when the generator can actually use that
-    # cmd_run_parser.add_argument('-ags', default='03159016')
+    cmd_run_parser.add_argument("-ags", default="03159016")
+    cmd_run_parser.add_argument("-year", default=2035)
     cmd_run_parser.set_defaults(func=run_cmd)
 
     args = parser.parse_args()

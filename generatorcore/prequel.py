@@ -5,7 +5,16 @@ from .setup import ass, entry
 
 
 # this function brings forward als calculations that are needed prior to
-def Prequel_calc(root):
+def calc(root, inputs: Inputs):
+    def fact(n):
+        return inputs.fact(n)
+
+    def ass(n):
+        return inputs.ass(n)
+
+    def entry(n):
+        return inputs.entry(n)
+
     try:
 
         # Declarations

@@ -1,6 +1,9 @@
 import time
 from dataclasses import dataclass, asdict
 import sys
+from .refdata import RefData
+from .inputs import Inputs
+from .makeentries import make_entries
 
 # hier Sektoren Files importieren:
 from . import electricity2018
@@ -26,7 +29,7 @@ from . import industry2030
 
 
 @dataclass
-class Generator:
+class Result:
 
     # Definition der Sektoren als Klassenvariablen. (Bitte Auskommentieren, wenn fertig)
 
@@ -56,7 +59,7 @@ class Generator:
     # search value
     def search_value(self, var: str):
         sep = "."
-        gen = self.dict
+        gen = self.result_dict()
         for k in gen:
             for l in gen[k]:
                 if type(gen[k][l]) == dict:
@@ -64,63 +67,71 @@ class Generator:
                         if l + sep + m == var:
                             print(k + sep + l + sep + m + "=", gen[k][l][m])
 
-    # Hier werden alle fertigen Kalkulationsfunktionen pro Sektor hinzugefügt
-    def calculate(self):
-        start_t = time.time()
-        # 2018
-        print("Residence2018_calc", file=sys.stderr)
-        residences2018.Residence2018_calc(self)
-        print("Business2018_calc", file=sys.stderr)
-        business2018.Business2018_calc(self)
-        print("Industry2018_calc", file=sys.stderr)
-        industry2018.Industry2018_calc(self)
-        print("Transport2018_calc", file=sys.stderr)
-        transport2018.Transport2018_calc(self)
-        print("Fuels2018_calc", file=sys.stderr)
-        fuels2018.Fuels2018_calc(self)
-        print("Electricity2018_calc", file=sys.stderr)
-        electricity2018.Electricity2018_calc(self)
-        print("Heat2018_calc", file=sys.stderr)
-        heat2018.Heat2018_calc(self)
-        print("Lulucf2018_calc", file=sys.stderr)
-        lulucf2018.Lulucf2018_calc(self)
-        print("Agri2018_calc", file=sys.stderr)
-        agri2018.Agri2018_calc(self)
-        end_t = time.time()
-        print(
-            "elapsed time for 18-sectors: {:5.3f}s".format(end_t - start_t),
-            file=sys.stderr,
-        )
-
-        # Zieljahr
-        # print('Prequel_calc')
-        # Prequel_calc(self)
-        print("Transport2030", file=sys.stderr)
-        transport2030.Transport2030_calc(self)
-        print("Industry2030", file=sys.stderr)
-        industry2030.Industry2030_calc(self)
-        print("Residenctial2030", file=sys.stderr)
-        residences2030.Residence2030_calc(self)
-        print("Business2030_calc", file=sys.stderr)
-        business2030.Business2030_calc(self)
-        print("Lulucf2030_calc", file=sys.stderr)
-        lulucf2030.Lulucf2030_calc(self)
-        print("Transport2030_calc", file=sys.stderr)
-        print("Agri2030_calc", file=sys.stderr)
-        agri2030.Agri2030_calc(self)
-        print("Heat2030_calc", file=sys.stderr)
-        heat2030.Heat2030_calc(self)
-        print("Fuels2030_calc", file=sys.stderr)
-        fuels2030.Fuels2030_calc(self)
-        print("Electricity2030_calc", file=sys.stderr)
-        electricity2030.Electricity2030_calc(self)
-        # print('Pyrolyse')
-
-    # Berechnung im post init Konstruktor
-    def __post_init__(self):
-        self.calculate()
-        # dictionary from DataClass
-        self.dict = asdict(self)
-
     def result_dict(self):
-        return self.dict
+        return asdict(self)
+
+
+# Hier werden alle fertigen Kalkulationsfunktionen pro Sektor hinzugefügt
+def calculate(inputs: Inputs) -> Result:
+    result = Result()
+    """Given a set of inputs do the actual calculation"""
+    start_t = time.time()
+    # 2018
+    print("Residence2018_calc", file=sys.stderr)
+    residences2018.calc(result, inputs)
+    print("Business2018_calc", file=sys.stderr)
+    business2018.calc(result, inputs)
+    print("Industry2018_calc", file=sys.stderr)
+    industry2018.calc(result, inputs)
+    print("Transport2018_calc", file=sys.stderr)
+    transport2018.calc(result, inputs)
+    print("Fuels2018_calc", file=sys.stderr)
+    fuels2018.calc(result, inputs)
+    print("Electricity2018_calc", file=sys.stderr)
+    electricity2018.calc(result, inputs)
+    print("Heat2018_calc", file=sys.stderr)
+    heat2018.calc(result, inputs)
+    print("Lulucf2018_calc", file=sys.stderr)
+    lulucf2018.calc(result, inputs)
+    print("Agri2018_calc", file=sys.stderr)
+    agri2018.calc(result, inputs)
+    end_t = time.time()
+    print(
+        "elapsed time for 18-sectors: {:5.3f}s".format(end_t - start_t),
+        file=sys.stderr,
+    )
+
+    # Zieljahr
+    # print('Prequel_calc')
+    # Prequel_calc(self)
+    print("Transport2030", file=sys.stderr)
+    transport2030.calc(result, inputs)
+    print("Industry2030", file=sys.stderr)
+    industry2030.calc(result, inputs)
+    print("Residenctial2030", file=sys.stderr)
+    residences2030.calc(result, inputs)
+    print("Business2030_calc", file=sys.stderr)
+    business2030.calc(result, inputs)
+    print("Lulucf2030_calc", file=sys.stderr)
+    lulucf2030.calc(result, inputs)
+    print("Transport2030_calc", file=sys.stderr)
+    print("Agri2030_calc", file=sys.stderr)
+    agri2030.calc(result, inputs)
+    print("Heat2030_calc", file=sys.stderr)
+    heat2030.calc(result, inputs)
+    print("Fuels2030_calc", file=sys.stderr)
+    fuels2030.calc(result, inputs)
+    print("Electricity2030_calc", file=sys.stderr)
+    electricity2030.calc(result, inputs)
+    # print('Pyrolyse')
+    return result
+
+
+def calculate_with_default_inputs(ags: str, year: int) -> Result:
+    """Calculate without the ability to override entries."""
+    refdata = RefData.load()
+    entries = make_entries(refdata, ags=ags, year=year)
+    inputs = Inputs(
+        facts_and_assumptions=refdata.facts_and_assumptions(), entries=entries
+    )
+    return calculate(inputs)

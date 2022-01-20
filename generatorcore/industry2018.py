@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field, InitVar, asdict
-from .setup import ass, entry, fact
+from .inputs import Inputs
 
 
 @dataclass
@@ -63,7 +63,15 @@ class I18:
 
 
 # for mineral industry the energy_use_factor still needs to be added to facts
-def Industry2018_calc(root):
+def calc(root, inputs: Inputs):
+    def fact(n):
+        return inputs.fact(n)
+
+    def ass(n):
+        return inputs.ass(n)
+
+    def entry(n):
+        return inputs.entry(n)
 
     i18 = root.i18
 

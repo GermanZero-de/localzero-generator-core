@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field, InitVar, asdict
-from .setup import ass, entry, fact
+from .inputs import Inputs
 
 
 # Definition der relevanten Spaltennamen für den Sektor T
@@ -128,7 +128,16 @@ class T30:
 
 # Berechnungsfunktion im Sektor T für 203X
 # Parameter root: oberste Generator Instanz
-def Transport2030_calc(root):
+def calc(root, inputs: Inputs):
+    def fact(n):
+        return inputs.fact(n)
+
+    def ass(n):
+        return inputs.ass(n)
+
+    def entry(n):
+        return inputs.entry(n)
+
     air = root.t30.air
     air_dmstc = root.t30.air_dmstc
     air_inter = root.t30.air_inter

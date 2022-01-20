@@ -1,7 +1,7 @@
 # # Laden der Datentabellen und deren Suchfunktionen
 
 from dataclasses import dataclass, field, InitVar, asdict
-from .setup import ass, entry, fact
+from .inputs import Inputs
 
 # Es gibt 5 Datentabellen:
 # * Fakten: <span class="mark">facts</span>
@@ -187,7 +187,16 @@ class T18:
 # Berechnungsfunktion Transport 2018
 
 
-def Transport2018_calc(root):
+def calc(root, inputs: Inputs):
+    def fact(n):
+        return inputs.fact(n)
+
+    def ass(n):
+        return inputs.ass(n)
+
+    def entry(n):
+        return inputs.entry(n)
+
     # Todo remove after impl.
 
     if entry("In_M_AGS_com") == "DG000000":

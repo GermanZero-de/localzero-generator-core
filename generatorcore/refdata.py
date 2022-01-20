@@ -68,6 +68,34 @@ class Row:
         return str(self._series[attr])
 
 
+class FactsAndAssumptions:
+    def __init__(self, facts: pd.DataFrame, assumptions: pd.DataFrame):
+        self._facts = facts
+        self._assumptions = assumptions
+
+    def fact(self, keyname: str) -> float:
+        """Statistics about the past. Must be able to give a source for each fact."""
+        # TODO: Kill the exception handler
+        try:
+            value = float(self._facts[self._facts["label"] == keyname]["value"])  # type: ignore
+            return value
+
+        except:
+            print("could not find " + keyname, file=sys.stderr)
+            return 1.0
+
+    def ass(self, keyname: str) -> float:
+        """Similar to fact, but these try to describe the future. And are therefore based on various assumptions."""
+        # TODO: Kill the exception handler
+        try:
+            value = float(self._assumptions[self._assumptions["label"] == keyname]["value"])  # type: ignore
+            return value
+
+        except:
+            print("could not find " + keyname, file=sys.stderr)
+            return 1.0
+
+
 class RefData:
     """This class gives you a single handle around all the reference data."""
 
@@ -90,10 +118,9 @@ class RefData:
     ):
         self._area = area
         self._area_kinds = area_kinds
-        self._assumptions = assumptions
+        self._facts_and_assumptions = FactsAndAssumptions(facts, assumptions)
         self._buildings = buildings
         self._destatis = destatis
-        self._facts = facts
         self._flats = flats
         self._nat_agri = nat_agri
         self._nat_organic_agri = nat_organic_agri
@@ -102,6 +129,15 @@ class RefData:
         self._population = population
         self._renewable_energy = renewable_energy
         self._traffic = traffic
+
+    def facts_and_assumptions(self) -> FactsAndAssumptions:
+        return self._facts_and_assumptions
+
+    def fact(self, keyname: str) -> float:
+        return self._facts_and_assumptions.fact(keyname)
+
+    def ass(self, keyname: str) -> float:
+        return self._facts_and_assumptions.ass(keyname)
 
     def area(self, ags: str):
         """How many hectare of land are used for what (e.g. farmland, traffic, ...) in each community / administrative district and federal state."""
@@ -149,28 +185,6 @@ class RefData:
     def traffic(self, ags: str):
         """TODO"""
         return Row(self._traffic, ags)
-
-    def fact(self, keyname: str) -> float:
-        """Statistics about the past. Must be able to give a source for each fact."""
-        # TODO: Kill the exception handler
-        try:
-            value = float(self._facts[self._facts["label"] == keyname]["value"])  # type: ignore
-            return value
-
-        except:
-            print("could not find " + keyname, file=sys.stderr)
-            return 1.0
-
-    def ass(self, keyname: str) -> float:
-        """Similar to fact, but these try to describe the future. And are therefore based on various assumptions."""
-        # TODO: Kill the exception handler
-        try:
-            value = float(self._assumptions[self._assumptions["label"] == keyname]["value"])  # type: ignore
-            return value
-
-        except:
-            print("could not find " + keyname, file=sys.stderr)
-            return 1.0
 
     @classmethod
     def load(cls, datadir: str | None = None) -> "RefData":
