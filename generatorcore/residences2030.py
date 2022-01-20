@@ -1,12 +1,9 @@
-#!/usr/bin/env python
-# coding: utf-8
+from dataclasses import dataclass, asdict
 
-
-# from dataclasses import dataclass, field, InitVar, asdict
 from .electricity2018 import *
 from .residences2018 import *
 from .business2018 import *
-from .setup import *
+from .setup import ass, entry, fact
 
 # Definition der relevanten Spaltennamen für den Sektor R30
 

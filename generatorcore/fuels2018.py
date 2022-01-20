@@ -1,7 +1,4 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-from .setup import *
+from .setup import entry, fact
 from dataclasses import dataclass, asdict
 
 

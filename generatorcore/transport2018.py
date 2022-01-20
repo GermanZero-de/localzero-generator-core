@@ -1,10 +1,7 @@
-#!/usr/bin/env python
-# coding: utf-8
-
 # # Laden der Datentabellen und deren Suchfunktionen
 
 from dataclasses import dataclass, field, InitVar, asdict
-from .setup import *
+from .setup import ass, entry, fact
 
 # Es gibt 5 Datentabellen:
 # * Fakten: <span class="mark">facts</span>

@@ -1,8 +1,5 @@
-#!/usr/bin/env python
-# coding: utf-8
-
 from dataclasses import dataclass, field, InitVar, asdict
-from .setup import *
+from .setup import ass, entry, fact
 
 # Definition der relevanten Spaltennamen für den Sektor E
 

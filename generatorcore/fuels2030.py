@@ -1,7 +1,5 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-from .setup import *
+from dataclasses import dataclass, asdict
+from .setup import ass, entry, fact
 
 #  Definition der relevanten Spaltennamen für den Sektor F (30)
 

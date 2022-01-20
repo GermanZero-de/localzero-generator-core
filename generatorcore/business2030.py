@@ -1,8 +1,5 @@
-#!/usr/bin/env python
-# coding: utf-8
-
 from dataclasses import dataclass
-from .setup import *
+from .setup import ass, entry, fact
 import time
 
 
