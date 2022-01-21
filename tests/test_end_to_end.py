@@ -11,7 +11,7 @@ import typing
 
 from generatorcore.generator import calculate_with_default_inputs
 
-CURRENT_PUBLIC_DATA_HASH = "c64c73ff852777ba0fdab2e9a6d7b44eca847af6"
+CURRENT_PUBLIC_DATA_HASH = "a95344c5ac6a855a77cbab99984120e4c1a3366c"
 
 CURRENT_PROPRIETARY_DATA_HASH = "b8dc6c23d1bf7372693887ea0856cd74d8bfc263"
 
