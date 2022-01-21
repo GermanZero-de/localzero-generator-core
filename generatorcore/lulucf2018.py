@@ -1,4 +1,4 @@
-from .setup import ass, entry, fact
+from .inputs import Inputs
 from dataclasses import dataclass, asdict
 
 
@@ -62,7 +62,15 @@ class L18:
         return asdict(self)
 
 
-def Lulucf2018_calc(root):
+def calc(root, inputs: Inputs):
+    def fact(n):
+        return inputs.fact(n)
+
+    def ass(n):
+        return inputs.ass(n)
+
+    def entry(n):
+        return inputs.entry(n)
 
     g = root.l18.g
     l = root.l18.l

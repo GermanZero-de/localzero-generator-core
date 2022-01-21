@@ -1,4 +1,4 @@
-from .setup import entry, fact
+from .inputs import Inputs
 from dataclasses import dataclass, asdict
 
 
@@ -45,7 +45,16 @@ class F18:
 # Berechnungsfunktion Fuels 2018
 
 
-def Fuels2018_calc(root):
+def calc(root, inputs: Inputs):
+    def fact(n):
+        return inputs.fact(n)
+
+    def ass(n):
+        return inputs.ass(n)
+
+    def entry(n):
+        return inputs.entry(n)
+
     try:
         f = root.f18
         t18 = root.t18

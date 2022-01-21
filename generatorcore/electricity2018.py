@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field, InitVar, asdict
-from .setup import ass, entry, fact
+from .inputs import Inputs
 
 # Definition der relevanten Spaltennamen für den Sektor E
 
@@ -96,7 +96,16 @@ class E18:
 # Parameter root: oberste Generator Instanz
 
 
-def Electricity2018_calc(root):
+def calc(root, inputs: Inputs):
+    def fact(n):
+        return inputs.fact(n)
+
+    def ass(n):
+        return inputs.ass(n)
+
+    def entry(n):
+        return inputs.entry(n)
+
     try:
         Million = 1000000
 

@@ -1,4 +1,4 @@
-from .setup import ass, entry, fact
+from .inputs import Inputs
 from dataclasses import dataclass, asdict
 
 
@@ -81,7 +81,16 @@ class A18:
         return asdict(self)
 
 
-def Agri2018_calc(root):
+def calc(root, inputs: Inputs):
+    def fact(n):
+        return inputs.fact(n)
+
+    def ass(n):
+        return inputs.ass(n)
+
+    def entry(n):
+        return inputs.entry(n)
+
     l18 = root.l18
     b18 = root.b18
     a = root.a18.a

@@ -3,7 +3,7 @@ from dataclasses import dataclass, asdict
 from .electricity2018 import *
 from .residences2018 import *
 from .business2018 import *
-from .setup import ass, entry, fact
+from .inputs import Inputs
 
 # Definition der relevanten Spaltennamen für den Sektor R30
 
@@ -109,7 +109,16 @@ class R30:
         return asdict(self)
 
 
-def Residence2030_calc(root: Generator):
+def calc(root, inputs: Inputs):
+    def fact(n):
+        return inputs.fact(n)
+
+    def ass(n):
+        return inputs.ass(n)
+
+    def entry(n):
+        return inputs.entry(n)
+
     """"""
     """ import external values"""
     import json

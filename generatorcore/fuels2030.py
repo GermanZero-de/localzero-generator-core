@@ -1,5 +1,5 @@
 from dataclasses import dataclass, asdict
-from .setup import ass, entry, fact
+from .inputs import Inputs
 
 #  Definition der relevanten Spaltennamen für den Sektor F (30)
 
@@ -65,7 +65,15 @@ class F30:
         return asdict(self)
 
 
-def Fuels2030_calc(root):
+def calc(root, inputs: Inputs):
+    def fact(n):
+        return inputs.fact(n)
+
+    def ass(n):
+        return inputs.ass(n)
+
+    def entry(n):
+        return inputs.entry(n)
 
     if entry("In_M_AGS_com") == "DG000000":
         root.b30.p.demand_ediesel = 6846703.356780987

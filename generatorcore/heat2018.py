@@ -1,4 +1,4 @@
-from .setup import ass, entry, fact
+from .inputs import Inputs
 from dataclasses import dataclass, asdict
 
 
@@ -81,7 +81,16 @@ class H18:
 # Parameter root: oberste Generator Instanz
 
 
-def Heat2018_calc(root):
+def calc(root, inputs: Inputs):
+    def fact(n):
+        return inputs.fact(n)
+
+    def ass(n):
+        return inputs.ass(n)
+
+    def entry(n):
+        return inputs.entry(n)
+
     # todo
 
     if entry("In_M_AGS_com") == "03159016":

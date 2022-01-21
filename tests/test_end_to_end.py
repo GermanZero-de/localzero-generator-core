@@ -9,7 +9,7 @@ import subprocess
 import sys
 import typing
 
-from generatorcore.generator import Generator
+from generatorcore.generator import calculate_with_default_inputs
 
 CURRENT_PUBLIC_DATA_HASH = "c64c73ff852777ba0fdab2e9a6d7b44eca847af6"
 
@@ -93,7 +93,7 @@ def end_to_end(ags):
     fname = f"{public_hash}_{proprietary_hash}_{ags}.json"
     with open(os.path.join(root, "tests", "end_to_end_expected", fname)) as fp:
         expected = json.load(fp)
-        g = Generator()
+        g = calculate_with_default_inputs(ags=ags, year=2035)
         got = g.result_dict()
         diffs = find_diffs("", expected, got)
         if diffs:
