@@ -1,6 +1,9 @@
 import time
 from dataclasses import dataclass, asdict
 import sys
+from generatorcore import methodology183x
+
+from generatorcore.methodology183x import M183X
 from .refdata import RefData
 from .inputs import Inputs
 from .makeentries import make_entries
@@ -56,6 +59,8 @@ class Result:
     a30: agri2030.A30 = agri2030.A30()
     h30: heat2030.H30 = heat2030.H30()
 
+    m183X: methodology183x.M183X = None
+
     # search value
     def search_value(self, var: str):
         sep = "."
@@ -77,6 +82,7 @@ def calculate(inputs: Inputs) -> Result:
     """Given a set of inputs do the actual calculation"""
     start_t = time.time()
     # 2018
+    result.m183X = methodology183x.calc_18(inputs)
     print("Residence2018_calc", file=sys.stderr)
     residences2018.calc(result, inputs)
     print("Business2018_calc", file=sys.stderr)
@@ -123,6 +129,8 @@ def calculate(inputs: Inputs) -> Result:
     fuels2030.calc(result, inputs)
     print("Electricity2030_calc", file=sys.stderr)
     electricity2030.calc(result, inputs)
+    # TODO: Fix the below
+    # methodology183x.calc_3X(result, inputs)
     # print('Pyrolyse')
     return result
 
