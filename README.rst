@@ -3,6 +3,47 @@ Localzero Generator Core
 This contains the calcuation. It should neither contain reference data
 nor anything that is specific to the website.
 
+#TODO: nach Englisch übersetzen
+Grundinstallation auf Windows
+=========================
+- Python 3.10. installieren
+- Git installieren
+- Poetry installieren
+	- Windows PowerShell Kommando: (Invoke-WebRequest -Uri https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py -UseBasicParsing).Content | python
+	
+Git einrichten:
+- Token: 
+	- https://github.com/settings/tokens: 
+		- Personal Access Token anlegen (repo, workflow, admin:org:read, gist)
+		- Token abspeichern
+	- Token in den Windows Anmeldeinformationen hinzufügen
+		- Generische Anmeldeinformationen hinzufügen (Adresse: git:https://github.com, Benutzername: Git Nutzername, Passwort: Token)
+		
+Git Repo runterladen:
+- Auf der Kommandozeile in das gewünschte Code Verzeichnis gehen
+	- git clone https://github.com/GermanZero-de/localzero-generator-core
+- in das Verzeichnis \localzero-generator-core\data wechseln
+	- git clone https://github.com/GermanZero-de/localzero-data-public public
+	- git clone https://github.com/GermanZero-de/localzero-data-proprietary proprietary
+	
+Poetry einrichten:
+- Auf der Kommandozeile in das Verzeichnis \localzero-generator-core gehen
+- poetry shell
+- poetry install
+- Bei Fehlern
+	- could not find cleo
+		- pip install cleo tomlkit poetry.core requests cachecontrol cachy html5lib pkginfo virtualenv lockfile
+	- could not find pexpect (analog für alles was sonst noch fehlt)
+		- pip install pexpect
+		
+Generator laufen lassen:
+- Auf der Kommandozeile in das Verzeichnis \localzero-generator-core gehen
+- poetry shell
+- python devtool.py run 
+oder
+- python devtool.py > Output.json
+
+
 How to get coding
 =================
 
