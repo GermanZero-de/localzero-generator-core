@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field, InitVar, asdict
 from . import industry2018
-from .setup import ass, entry, fact
+from .inputs import Inputs
 
 
 # mineral     todo
@@ -99,7 +99,15 @@ class Generator:
     pass
 
 
-def Industry2030_calc(root: Generator):
+def calc(root, inputs: Inputs):
+    def fact(n):
+        return inputs.fact(n)
+
+    def ass(n):
+        return inputs.ass(n)
+
+    def entry(n):
+        return inputs.entry(n)
 
     i18 = root.i18
 

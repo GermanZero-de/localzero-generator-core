@@ -1,5 +1,5 @@
 from dataclasses import dataclass, asdict
-from .setup import entry, fact
+from .inputs import Inputs
 
 
 # Definition der relevanten Spaltennamen für den Sektor R18
@@ -74,7 +74,15 @@ class Generator:
     pass
 
 
-def Residence2018_calc(root: Generator):
+def calc(root, inputs: Inputs):
+    def fact(n):
+        return inputs.fact(n)
+
+    def ass(n):
+        return inputs.ass(n)
+
+    def entry(n):
+        return inputs.entry(n)
 
     ### P - Section ###
     r18 = root.r18

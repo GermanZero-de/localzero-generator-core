@@ -1,4 +1,4 @@
-from .setup import ass, entry, fact
+from .inputs import Inputs
 from dataclasses import dataclass, asdict
 
 
@@ -72,7 +72,15 @@ class H30:
         return asdict(self)
 
 
-def Heat2030_calc(root):
+def calc(root, inputs: Inputs):
+    def fact(n):
+        return inputs.fact(n)
+
+    def ass(n):
+        return inputs.ass(n)
+
+    def entry(n):
+        return inputs.entry(n)
 
     Million = 1000000
     ags = entry("In_M_AGS_com")

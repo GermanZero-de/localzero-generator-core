@@ -5,48 +5,44 @@ from dataclasses import dataclass, asdict
 @dataclass
 class LColVars2030:
 
-    area_ha: float = -1
-    CO2e_pb_per_t: float = -1
-    pct_x: float = -1
-    CO2e_pb_per_MWh: float = -1
-    CO2e_cb: float = -1
-    CO2e_pb: float = -1
-    CO2e_total: float = -1
-    invest: float = -1
-    change_CO2e_t: float = -1
-    change_CO2e_pct: float = -1
-    CO2e_total_2021_estimated: float = -1
-    cost_climate_saved: float = -1
-    invest_pa: float = -1
-    cost_wage: float = -1
-    demand_emplo: float = -1
-    demand_emplo_new: float = -1
-    demand_change: float = -1
-    area_ha_change: float = -1
-    CO2e_cb_per_t: float = -1
-    action: float = -1
-    pct_of_wage: float = -1
-    ratio_wage_to_emplo: float = -1
-    emplo_existing: float = -1
-    invest_per_x: float = -1
-    area_ha_available_pct_of_action: float = -1
-    area_ha_available: float = -1
-    change_within_category: float = -1
-    change_wet_org_low: float = -1
-    change_wet_org_high: float = -1
+    area_ha: float = None
+    CO2e_pb_per_t: float = None
+    pct_x: float = None
+    CO2e_pb_per_MWh: float = None
+    CO2e_cb: float = None
+    CO2e_pb: float = None
+    CO2e_total: float = None
+    invest: float = None
+    change_CO2e_t: float = None
+    change_CO2e_pct: float = None
+    CO2e_total_2021_estimated: float = None
+    cost_climate_saved: float = None
+    invest_pa: float = None
+    cost_wage: float = None
+    demand_emplo: float = None
+    demand_emplo_new: float = None
+    demand_change: float = None
+    area_ha_change: float = None
+    CO2e_cb_per_t: float = None
+    action: float = None
+    pct_of_wage: float = None
+    ratio_wage_to_emplo: float = None
+    emplo_existing: float = None
+    invest_per_x: float = None
+    area_ha_available_pct_of_action: float = None
+    area_ha_available: float = None
 
 
 @dataclass
 class L30:
     # Klassenvariablen für L18
-    l: LColVars2030 = LColVars2030()
+    L: LColVars2030 = LColVars2030()
     e: LColVars2030 = LColVars2030()
     g: LColVars2030 = LColVars2030()
     g_forest: LColVars2030 = LColVars2030()
     g_forest_managed: LColVars2030 = LColVars2030()
     g_forest_natural: LColVars2030 = LColVars2030()
     g_crop: LColVars2030 = LColVars2030()
-    g_crop_org: LColVars2030 = LColVars2030()
     g_crop_min_conv: LColVars2030 = LColVars2030()
     g_crop_min_hum: LColVars2030 = LColVars2030()
     g_crop_org_low: LColVars2030 = LColVars2030()
@@ -57,12 +53,10 @@ class L30:
     g_grass_org_high: LColVars2030 = LColVars2030()
     g_grove: LColVars2030 = LColVars2030()
     g_grove_min: LColVars2030 = LColVars2030()
-    g_grove_org: LColVars2030 = LColVars2030()
     g_grove_org_low: LColVars2030 = LColVars2030()
     g_grove_org_high: LColVars2030 = LColVars2030()
     g_wet: LColVars2030 = LColVars2030()
     g_wet_min: LColVars2030 = LColVars2030()
-    g_wet_org_rp: LColVars2030 = LColVars2030()
     g_wet_org_low: LColVars2030 = LColVars2030()
     g_wet_org_high: LColVars2030 = LColVars2030()
     g_wet_org_low_r: LColVars2030 = LColVars2030()
@@ -71,11 +65,9 @@ class L30:
     g_wet_org_high_rp: LColVars2030 = LColVars2030()
     g_water: LColVars2030 = LColVars2030()
     g_water_min: LColVars2030 = LColVars2030()
-    g_water_org: LColVars2030 = LColVars2030()
     g_water_min_low: LColVars2030 = LColVars2030()
     g_water_min_high: LColVars2030 = LColVars2030()
     g_settlement: LColVars2030 = LColVars2030()
-    g_settlement_org: LColVars2030 = LColVars2030()
     g_settlement_min: LColVars2030 = LColVars2030()
     g_settlement_org_low: LColVars2030 = LColVars2030()
     g_settlement_org_high: LColVars2030 = LColVars2030()
@@ -83,22 +75,22 @@ class L30:
     g_wood: LColVars2030 = LColVars2030()
     pyrolysis: LColVars2030 = LColVars2030()
     g_planning: LColVars2030 = LColVars2030()
-    g_crop_org: LColVars2030 = LColVars2030()
-    g_grass_org: LColVars2030 = LColVars2030()
-    g_grove_org: LColVars2030 = LColVars2030()
-    g_wet_org: LColVars2030 = LColVars2030()
-    g_wet_org_r: LColVars2030 = LColVars2030()
-    g_wet_org_rp: LColVars2030 = LColVars2030()
-    g_water_org_low: LColVars2030 = LColVars2030()
-    g_water_org_high: LColVars2030 = LColVars2030()
-
     # erzeuge dictionry
 
     def dict(self):
         return asdict(self)
 
 
-def Lulucf2030_calc(root):
+def calc(root, inputs: Inputs):
+    def fact(n):
+        return inputs.fact(n)
+
+    def ass(n):
+        return inputs.ass(n)
+
+    def entry(n):
+        return inputs.entry(n)
+    
     """"""
     """ import external values"""
     import json
