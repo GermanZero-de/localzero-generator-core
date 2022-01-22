@@ -45,14 +45,11 @@ jobs:
           git clone "https://${PA_TOKEN}@github.com/GermanZero-de/localzero-data-public" data/public
         shell: bash
       - name: Checkout data repo (proprietary)
-        uses: actions/checkout@v2
         env:
-          GITHUB_TRACE: 1
-        with:
-          repository: GermanZero-de/localzero-data-proprietary
-          token: $${{ secrets.LZ_PAT }}
-          path: data/proprietary
-          persist-credentials: false
+          PA_TOKEN: ${{ secrets.LZ_PAT }}
+        run: |
+          git clone "https://${PA_TOKEN}@github.com/GermanZero-de/localzero-data-proprietary" data/proprietary
+        shell: bash
       - name: Run pytest
         run: |
           source $VENV
