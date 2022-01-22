@@ -144,9 +144,9 @@ class T18:
     road_gds_mhd_it_ot: TColVars = TColVars()
     road_gds_mhd_ab: TColVars = TColVars()
     rail_ppl: TColVars = TColVars()
-    rail_ppl_: TColVars = TColVars()
     rail_ppl_metro: TColVars = TColVars()
     rail_ppl_metro_action_infra: TColVars = TColVars()
+    rail_ppl_distance: TColVars = TColVars()
     rail_gds: TColVars = TColVars()
     rail_action_invest_infra: TColVars = TColVars()
     rail_action_invest_station: TColVars = TColVars()
@@ -197,19 +197,69 @@ def Transport2018_calc(root):
         root.t18.rail_ppl_metro.mileage = 0
         root.t18.road_bus.mileage = 1752789.9193474643
 
+    # abbreviations
+    t = root.t18.t
+    g = root.t18.g
+    g_planning = root.t18.g_planning
+    air_inter = root.t18.air_inter
+    air_dmstc = root.t18.air_dmstc
+    road = root.t18.road
+    road_action_charger = root.t18.road_action_charger
+    road_car = root.t18.road_car
+    road_car_it_ot = root.t18.road_car_it_ot
+    road_car_ab = root.t18.road_car_ab
+    road_bus = root.t18.road_bus
+    road_bus_action_infra = root.t18.road_bus_action_infra
+    road_gds = root.t18.road_gds
+    road_gds_ldt = root.t18.road_gds_ldt
+    road_gds_ldt_it_ot = root.t18.road_gds_ldt_it_ot
+    road_gds_ldt_ab = root.t18.road_gds_ldt_ab
+    road_gds_mhd = root.t18.road_gds_mhd
+    road_ppl = root.t18.road_ppl
+    road_gds_mhd_it_ot = root.t18.road_gds_mhd_it_ot
+    road_gds_mhd_ab = root.t18.road_gds_mhd_ab
+    rail_ppl = root.t18.rail_ppl
+    # rail_ppl_ = root.t18.rail_ppl_
+    rail_ppl_distance = root.t18.rail_ppl_distance
+    rail_ppl_metro = root.t18.rail_ppl_metro
+    rail_ppl_metro_action_infra = root.t18.rail_ppl_metro_action_infra
+    rail_gds = root.t18.rail_gds
+    rail_action_invest_infra = root.t18.rail_action_invest_infra
+    rail_action_invest_station = root.t18.rail_action_invest_station
+    ship_dmstc = root.t18.ship_dmstc
+    ship_inter = root.t18.ship_inter
+    other_foot = root.t18.other_foot
+    other_cycl = root.t18.other_cycl
+    air = root.t18.air
+    rail = root.t18.rail
+    ship = root.t18.ship
+    other = root.t18.other
+    s = root.t18.s
+    s_petrol = root.t18.s_petrol
+    s_jetfuel = root.t18.s_jetfuel
+    s_diesel = root.t18.s_diesel
+    s_fueloil = root.t18.s_fueloil
+    s_lpg = root.t18.s_lpg
+    s_gas = root.t18.s_gas
+    s_biogas = root.t18.s_biogas
+    s_bioethanol = root.t18.s_bioethanol
+    s_biodiesel = root.t18.s_biodiesel
+    s_elec = root.t18.s_elec
+    s_hydrogen = root.t18.s_hydrogen
+    s_emethan = root.t18.s_emethan
+
     try:
         Million = 1000000
         ags = entry("In_M_AGS_com")
-        t = root.t18
         # res 61.700.000.000 Pers km
-        t.air_inter.transport_capacity_pkm = (
+        air_inter.transport_capacity_pkm = (
             fact("Fact_T_D_Air_nat_trnsprt_ppl_2019")
             * entry("In_M_population_com_2018")
             / entry("In_M_population_nat")
         )
 
         # res 1.507.745.000 t km
-        t.air_inter.transport_capacity_tkm = (
+        air_inter.transport_capacity_tkm = (
             fact("Fact_T_D_Air_dmstc_nat_trnsprt_gds_2019")
             * fact("Fact_T_D_Air_inter_nat_ratio_2018")
             * entry("In_M_population_com_2018")
@@ -217,32 +267,32 @@ def Transport2018_calc(root):
         )
 
         # res 113.722.222 MWh
-        t.air_inter.demand_jetfuel = (
+        air_inter.demand_jetfuel = (
             fact("Fact_T_S_Air_nat_EB_inter_2018")
             * entry("In_M_population_com_2018")
             / entry("In_M_population_nat")
         )
 
         # res 30.020.293  t/a
-        t.air_inter.CO2e_cb = (
-            t.air_inter.demand_jetfuel
+        air_inter.CO2e_cb = (
+            air_inter.demand_jetfuel
             # Todo: In der Excel werden   Emissionen durch Benzinverbrauch im nationalen Flugverkehr addiert: Prüfen (Ergebnis weicht daher ab)
             * fact("Fact_T_S_jetfuel_EmFa_tank_wheel_2018")
         )
         # res 113.722.222 MWh
-        t.air_inter.energy = t.air_inter.demand_jetfuel
+        air_inter.energy = air_inter.demand_jetfuel
 
         # -------------------
 
         # res 10.100.000.000 Pers km
-        t.air_dmstc.transport_capacity_pkm = (
+        air_dmstc.transport_capacity_pkm = (
             fact("Fact_T_D_Air_dmstc_nat_trnsprt_ppl_2019")
             * entry("In_M_population_com_2018")
             / entry("In_M_population_nat")
         )
 
         # res 79.355.000 t km
-        t.air_dmstc.transport_capacity_tkm = (
+        air_dmstc.transport_capacity_tkm = (
             fact("Fact_T_D_Air_dmstc_nat_trnsprt_gds_2019")
             * fact("Fact_T_D_Air_dmstc_nat_ratio_2018")
             * entry("In_M_population_com_2018")
@@ -250,205 +300,204 @@ def Transport2018_calc(root):
         )
 
         # res 108.056 MWh
-        t.air_dmstc.demand_petrol = (
+        air_dmstc.demand_petrol = (
             fact("Fact_T_S_Air_petrol_fec_2018")
             * entry("In_M_population_com_2018")
             / entry("In_M_population_nat")
         )
 
         # res 7.805.556 MWh
-        t.air_dmstc.demand_jetfuel = (
+        air_dmstc.demand_jetfuel = (
             fact("Fact_T_S_Air_nat_EB_dmstc_2018")
             * entry("In_M_population_com_2018")
             / entry("In_M_population_nat")
         )
 
         # res 2.085.724  t/a
-        t.air_dmstc.CO2e_cb = t.air_dmstc.demand_jetfuel * fact(
+        air_dmstc.CO2e_cb = air_dmstc.demand_jetfuel * fact(
             "Fact_T_S_jetfuel_EmFa_tank_wheel_2018"
-        ) + t.air_dmstc.demand_petrol * fact("Fact_T_S_petroljet_EmFa_tank_wheel_2018")
+        ) + air_dmstc.demand_petrol * fact("Fact_T_S_petroljet_EmFa_tank_wheel_2018")
 
         # res 7.913.611 MWh
-        t.air_dmstc.energy = t.air_dmstc.demand_jetfuel + t.air_dmstc.demand_petrol
+        air_dmstc.energy = air_dmstc.demand_jetfuel + air_dmstc.demand_petrol
 
-        t.air.energy = t.air_inter.energy + t.air_dmstc.energy
+        air.energy = air_inter.energy + air_dmstc.energy
 
         # -----------------------
         # res 456.061.500.000 Fz km
-        t.road_car_it_ot.mileage = entry("In_T_mil_car_it_at") * Million
+        road_car_it_ot.mileage = entry("In_T_mil_car_it_at") * Million
 
         # res 657.704.211.506 Pers km
-        t.road_car_it_ot.transport_capacity_pkm = t.road_car_it_ot.mileage * fact(
+        road_car_it_ot.transport_capacity_pkm = road_car_it_ot.mileage * fact(
             "Fact_T_D_lf_ppl_Car_2018"
         )
 
         # res 140.583.679 MWh
-        t.road_car_it_ot.demand_petrol = (
-            t.road_car_it_ot.mileage
+        road_car_it_ot.demand_petrol = (
+            road_car_it_ot.mileage
             * fact("Fact_T_S_Car_frac_petrol_with_phev_mlg_2018")
             * (1 - fact("Fact_T_S_Rl_Rd_benzin_bio_frac_2018"))
             * fact("Fact_T_S_Car_SEC_petrol_it_at_2018")
         )
 
         # res 137.907.651 MWh
-        t.road_car_it_ot.demand_diesel = (
-            t.road_car_it_ot.mileage
+        road_car_it_ot.demand_diesel = (
+            road_car_it_ot.mileage
             * fact("Fact_T_S_Car_frac_diesel_mlg_2018")
             * (1 - fact("Fact_T_S_Rl_Rd_diesel_bio_frac_2018"))
             * fact("Fact_T_S_Car_SEC_diesel_it_at_2018")
         )
 
         # res 3.211.348 MWh
-        t.road_car_it_ot.demand_lpg = (
-            t.road_car_it_ot.mileage
+        road_car_it_ot.demand_lpg = (
+            road_car_it_ot.mileage
             * fact("Fact_T_S_Car_frac_lpg_mlg_2018")
             * fact("Fact_T_S_Car_SEC_petrol_it_at_2018")
         )
 
         # res 550.841 MWh
-        t.road_car_it_ot.demand_gas = (
-            t.road_car_it_ot.mileage
+        road_car_it_ot.demand_gas = (
+            road_car_it_ot.mileage
             * fact("Fact_T_S_Car_frac_cng_mlg_2018")
             * (1 - fact("Fact_T_S_Rl_Rd_cng_bio_frac_2018"))
             * fact("Fact_T_S_Car_SEC_petrol_it_at_2018")
         )
 
         # res 129.210 MWh
-        t.road_car_it_ot.demand_biogas = (
-            t.road_car_it_ot.mileage
+        road_car_it_ot.demand_biogas = (
+            road_car_it_ot.mileage
             * fact("Fact_T_S_Car_frac_cng_mlg_2018")
             * fact("Fact_T_S_Rl_Rd_cng_bio_frac_2018")
             * fact("Fact_T_S_Car_SEC_petrol_it_at_2018")
         )
 
         # res  6.316.717 MWh
-        t.road_car_it_ot.demand_bioethanol = (
-            t.road_car_it_ot.mileage
+        road_car_it_ot.demand_bioethanol = (
+            road_car_it_ot.mileage
             * fact("Fact_T_S_Car_frac_petrol_with_phev_mlg_2018")
             * fact("Fact_T_S_Rl_Rd_benzin_bio_frac_2018")
             * fact("Fact_T_S_Car_SEC_petrol_it_at_2018")
         )
 
         # res 8.026.371 MWh
-        t.road_car_it_ot.demand_biodiesel = (
-            t.road_car_it_ot.mileage
+        road_car_it_ot.demand_biodiesel = (
+            road_car_it_ot.mileage
             * fact("Fact_T_S_Car_frac_diesel_mlg_2018")
             * fact("Fact_T_S_Rl_Rd_diesel_bio_frac_2018")
             * fact("Fact_T_S_Car_SEC_diesel_it_at_2018")
         )
 
         # res 121.985 MWh
-        t.road_car_it_ot.demand_electricity = (
-            t.road_car_it_ot.mileage
+        road_car_it_ot.demand_electricity = (
+            road_car_it_ot.mileage
             * fact("Fact_T_S_Car_frac_bev_with_phev_mlg_2018")
             * fact("Fact_T_S_Car_SEC_elec_it_at_2018")
         )
 
         # res 36.749.000.000 Fz km
-        t.road_gds_ldt_it_ot.mileage = entry("In_T_mil_ldt_it_at") * Million
+        road_gds_ldt_it_ot.mileage = entry("In_T_mil_ldt_it_at") * Million
 
-        t.road_gds_ldt_it_ot.demand_electricity = (
-            t.road_gds_ldt_it_ot.mileage
+        road_gds_ldt_it_ot.demand_electricity = (
+            road_gds_ldt_it_ot.mileage
             * fact("Fact_T_S_LDT_frac_bev_mlg_2018")
             * fact("Fact_T_S_LDT_SEC_elec_it_at_2018")
         )
 
         # 14.549.300.000 Fz km
 
-        t.road_gds_ldt_ab.mileage = entry("In_T_mil_ldt_ab") * Million
+        road_gds_ldt_ab.mileage = entry("In_T_mil_ldt_ab") * Million
 
-        t.road_gds_ldt_ab.demand_electricity = (
-            t.road_gds_ldt_ab.mileage
+        road_gds_ldt_ab.demand_electricity = (
+            road_gds_ldt_ab.mileage
             * fact("Fact_T_S_LDT_frac_bev_mlg_2018")
             * fact("Fact_T_S_LDT_SEC_elec_ab_2018")
         )
 
         # 28.430.600.000 Fz km
-        t.road_gds_mhd_it_ot.mileage = (
-            entry("In_T_mil_mhd_it_at") * Million - t.road_bus.mileage
+        road_gds_mhd_it_ot.mileage = (
+            entry("In_T_mil_mhd_it_at") * Million - road_bus.mileage
         )
 
-        t.road_gds_mhd_it_ot.demand_electricity = (
-            t.road_gds_mhd_it_ot.mileage
+        road_gds_mhd_it_ot.demand_electricity = (
+            road_gds_mhd_it_ot.mileage
             * fact("Fact_T_S_MHD_frac_bev_stock_2018")
             * fact("Fact_T_S_MHD_SEC_elec_it_at_2018")
         )
 
         # 35.937.900.000 Fz km
-        t.road_gds_mhd_ab.mileage = entry("In_T_mil_mhd_ab") * Million
+        road_gds_mhd_ab.mileage = entry("In_T_mil_mhd_ab") * Million
 
-        t.road_gds_mhd_ab.demand_electricity = (
-            t.road_gds_mhd_ab.mileage
+        road_gds_mhd_ab.demand_electricity = (
+            road_gds_mhd_ab.mileage
             * fact("Fact_T_S_MHD_frac_bev_stock_2018")
             * fact("Fact_T_S_MHD_SEC_elec_ab_2018")
         )
         # 308.900.000 Fz km
-        # t.rail_ppl_metro.mileage = (
+        # rail_ppl_metro.mileage = (
         # todo rail_ppl_metro.mileage = (VLOOKUP(LK&" *  *  * ",Verkehr_DestatisDaten!B4:I507,7,FALSE) * 10^6 * entry('In_M_population_com_2018') / entry('In_M_population_dis'))
         # )
-        t.rail_ppl_metro.demand_electricity = t.rail_ppl_metro.mileage * fact(
+        rail_ppl_metro.demand_electricity = rail_ppl_metro.mileage * fact(
             "Fact_T_S_Rl_Metro_SEC_fzkm_2018"
         )
 
         # res  75.732.141 t/a
 
-        t.road_car_it_ot.CO2e_cb = (
-            t.road_car_it_ot.demand_petrol
-            * fact("Fact_T_S_petrol_EmFa_tank_wheel_2018")
-            + t.road_car_it_ot.demand_diesel
+        road_car_it_ot.CO2e_cb = (
+            road_car_it_ot.demand_petrol * fact("Fact_T_S_petrol_EmFa_tank_wheel_2018")
+            + road_car_it_ot.demand_diesel
             * fact("Fact_T_S_diesel_EmFa_tank_wheel_2018")
-            + t.road_car_it_ot.demand_lpg * fact("Fact_T_S_lpg_EmFa_tank_wheel_2018")
-            + t.road_car_it_ot.demand_gas * fact("Fact_T_S_cng_EmFa_tank_wheel_2018")
+            + road_car_it_ot.demand_lpg * fact("Fact_T_S_lpg_EmFa_tank_wheel_2018")
+            + road_car_it_ot.demand_gas * fact("Fact_T_S_cng_EmFa_tank_wheel_2018")
         )
 
         # res 296.847.801 MWh
-        t.road_car_it_ot.energy = (
-            t.road_car_it_ot.demand_petrol
-            + t.road_car_it_ot.demand_diesel
-            + t.road_car_it_ot.demand_lpg
-            + t.road_car_it_ot.demand_gas
-            + t.road_car_it_ot.demand_biogas
-            + t.road_car_it_ot.demand_bioethanol
-            + t.road_car_it_ot.demand_biodiesel
-            + t.road_car_it_ot.demand_electricity
+        road_car_it_ot.energy = (
+            road_car_it_ot.demand_petrol
+            + road_car_it_ot.demand_diesel
+            + road_car_it_ot.demand_lpg
+            + road_car_it_ot.demand_gas
+            + road_car_it_ot.demand_biogas
+            + road_car_it_ot.demand_bioethanol
+            + road_car_it_ot.demand_biodiesel
+            + road_car_it_ot.demand_electricity
         )
 
         # --------------------
 
         # res 200.879.200.000 Fz km
-        t.road_car_ab.mileage = entry("In_T_mil_car_ab") * Million
+        road_car_ab.mileage = entry("In_T_mil_car_ab") * Million
 
         # res 289.695.788.494 Pers km
-        t.road_car_ab.transport_capacity_pkm = t.road_car_ab.mileage * fact(
+        road_car_ab.transport_capacity_pkm = road_car_ab.mileage * fact(
             "Fact_T_D_lf_ppl_Car_2018"
         )
 
         # res 71.637.731 MWh
-        t.road_car_ab.demand_petrol = (
-            t.road_car_ab.mileage
+        road_car_ab.demand_petrol = (
+            road_car_ab.mileage
             * fact("Fact_T_S_Car_frac_petrol_with_phev_mlg_2018")
             * (1 - fact("Fact_T_S_Rl_Rd_benzin_bio_frac_2018"))
             * fact("Fact_T_S_Car_SEC_petrol_ab_2018")
         )
 
         # res 68.266.402 MWh
-        t.road_car_ab.demand_diesel = (
-            t.road_car_ab.mileage
+        road_car_ab.demand_diesel = (
+            road_car_ab.mileage
             * fact("Fact_T_S_Car_frac_diesel_mlg_2018")
             * (1 - fact("Fact_T_S_Rl_Rd_diesel_bio_frac_2018"))
             * fact("Fact_T_S_Car_SEC_diesel_ab_2018")
         )
 
         # res 1.636.418 MWh
-        t.road_car_ab.demand_lpg = (
-            t.road_car_ab.mileage
+        road_car_ab.demand_lpg = (
+            road_car_ab.mileage
             * fact("Fact_T_S_Car_frac_lpg_mlg_2018")
             * fact("Fact_T_S_Car_SEC_petrol_ab_2018")
         )
 
         # res 242.626 MWh
-        t.road_car_ab.demand_gas = (
-            t.road_car_ab.mileage
+        road_car_ab.demand_gas = (
+            road_car_ab.mileage
             * fact("Fact_T_S_Car_frac_cng_mlg_2018")
             * (1 - fact("Fact_T_S_Rl_Rd_cng_bio_frac_2018"))
             # Todo Prüfen warum hier ...SEC_petrol_it_at verwendet wird und nicht ...SEC_petrol_ab
@@ -456,8 +505,8 @@ def Transport2018_calc(root):
         )
 
         # res 56.912 MWh
-        t.road_car_ab.demand_biogas = (
-            t.road_car_ab.mileage
+        road_car_ab.demand_biogas = (
+            road_car_ab.mileage
             * fact("Fact_T_S_Car_frac_cng_mlg_2018")
             * fact("Fact_T_S_Rl_Rd_cng_bio_frac_2018")
             # Todo Prüfen warum hier ...SEC_petrol_it_at verwendet wird und nicht ...SEC_petrol_ab
@@ -465,570 +514,577 @@ def Transport2018_calc(root):
         )
 
         # res  3.218.832 MWh
-        t.road_car_ab.demand_bioethanol = (
-            t.road_car_ab.mileage
+        road_car_ab.demand_bioethanol = (
+            road_car_ab.mileage
             * fact("Fact_T_S_Car_frac_petrol_with_phev_mlg_2018")
             * fact("Fact_T_S_Rl_Rd_benzin_bio_frac_2018")
             * fact("Fact_T_S_Car_SEC_petrol_ab_2018")
         )
 
         # res 3.973.177 MWh
-        t.road_car_ab.demand_biodiesel = (
-            t.road_car_ab.mileage
+        road_car_ab.demand_biodiesel = (
+            road_car_ab.mileage
             * fact("Fact_T_S_Car_frac_diesel_mlg_2018")
             * fact("Fact_T_S_Rl_Rd_diesel_bio_frac_2018")
             * fact("Fact_T_S_Car_SEC_diesel_ab_2018")
         )
 
         # res 85.897 MWh
-        t.road_car_ab.demand_electricity = (
-            t.road_car_ab.mileage
+        road_car_ab.demand_electricity = (
+            road_car_ab.mileage
             * fact("Fact_T_S_Car_frac_bev_with_phev_mlg_2018")
             * fact("Fact_T_S_Car_SEC_elec_ab_2018")
         )
 
         # 38.048.389 t/a
-        t.road_car_ab.CO2e_cb = (
-            t.road_car_ab.demand_petrol * fact("Fact_T_S_petrol_EmFa_tank_wheel_2018")
-            + t.road_car_ab.demand_diesel * fact("Fact_T_S_diesel_EmFa_tank_wheel_2018")
-            + t.road_car_ab.demand_lpg * fact("Fact_T_S_lpg_EmFa_tank_wheel_2018")
-            + t.road_car_ab.demand_gas * fact("Fact_T_S_cng_EmFa_tank_wheel_2018")
+        road_car_ab.CO2e_cb = (
+            road_car_ab.demand_petrol * fact("Fact_T_S_petrol_EmFa_tank_wheel_2018")
+            + road_car_ab.demand_diesel * fact("Fact_T_S_diesel_EmFa_tank_wheel_2018")
+            + road_car_ab.demand_lpg * fact("Fact_T_S_lpg_EmFa_tank_wheel_2018")
+            + road_car_ab.demand_gas * fact("Fact_T_S_cng_EmFa_tank_wheel_2018")
         )
 
         # res 149.117.995 MWh
-        t.road_car_ab.energy = (
-            t.road_car_ab.demand_petrol
-            + t.road_car_ab.demand_diesel
-            + t.road_car_ab.demand_lpg
-            + t.road_car_ab.demand_gas
-            + t.road_car_ab.demand_biogas
-            + t.road_car_ab.demand_bioethanol
-            + t.road_car_ab.demand_biodiesel
-            + t.road_car_ab.demand_electricity
+        road_car_ab.energy = (
+            road_car_ab.demand_petrol
+            + road_car_ab.demand_diesel
+            + road_car_ab.demand_lpg
+            + road_car_ab.demand_gas
+            + road_car_ab.demand_biogas
+            + road_car_ab.demand_bioethanol
+            + road_car_ab.demand_biodiesel
+            + road_car_ab.demand_electricity
         )
 
         # ----------------
 
         # res 2.343.000.000 Fz km
-        # todo t.road_bus.mileage = (VLOOKUP(LK&" *  *  * ",Verkehr_DestatisDaten!B4:I507,8,FALSE) * 10^6 * entry('In_M_population_com_2018') / entry('In_M_population_dis'))
+        # todo road_bus.mileage = (VLOOKUP(LK&" *  *  * ",Verkehr_DestatisDaten!B4:I507,8,FALSE) * 10^6 * entry('In_M_population_com_2018') / entry('In_M_population_dis'))
 
         # res 35.594.900.435 Pers km
-        t.road_bus.transport_capacity_pkm = t.road_bus.mileage * fact(
+        road_bus.transport_capacity_pkm = road_bus.mileage * fact(
             "Fact_T_D_lf_ppl_Bus_2018"
         )
 
         # res 8.426.134 MWh
-        t.road_bus.demand_diesel = (
-            t.road_bus.mileage
+        road_bus.demand_diesel = (
+            road_bus.mileage
             * fact("Fact_T_S_Bus_frac_diesel_with_hybrid_stock_2018")
             * (1 - fact("Fact_T_S_Rl_Rd_diesel_bio_frac_2018"))
             * fact("Fact_T_S_Bus_SEC_diesel_2018")
         )
 
         # res 162.136 MWh
-        t.road_bus.demand_gas = (
-            t.road_bus.mileage
+        road_bus.demand_gas = (
+            road_bus.mileage
             * fact("Fact_T_S_Bus_frac_cng_stock_2018")
             * (1 - fact("Fact_T_S_Rl_Rd_cng_bio_frac_2018"))
             * fact("Fact_T_S_Bus_SEC_diesel_2018")
         )
 
         # res 38.032 MWh
-        t.road_bus.demand_biogas = (
-            t.road_bus.mileage
+        road_bus.demand_biogas = (
+            road_bus.mileage
             * fact("Fact_T_S_Bus_frac_cng_stock_2018")
             * fact("Fact_T_S_Rl_Rd_cng_bio_frac_2018")
             * fact("Fact_T_S_Bus_SEC_diesel_2018")
         )
 
         # res 485.406 MWh
-        t.road_bus.demand_biodiesel = (
-            t.road_bus.mileage
+        road_bus.demand_biodiesel = (
+            road_bus.mileage
             * fact("Fact_T_S_Bus_frac_diesel_stock_2018")
             * fact("Fact_T_S_Rl_Rd_diesel_bio_frac_2018")
             * fact("Fact_T_S_Bus_SEC_diesel_2018")
         )
 
         # res 13.854 MWh
-        t.road_bus.demand_electricity = (
-            t.road_bus.mileage
+        road_bus.demand_electricity = (
+            road_bus.mileage
             * fact("Fact_T_S_Bus_frac_bev_stock_2018")
             * fact("Fact_T_S_Bus_SEC_elec_2018")
         )
 
-        t.road_bus.demand_lpg = 0
-
         # 2.278.190 t/a
 
-        t.road_bus.CO2e_cb = (
-            t.road_bus.demand_diesel * fact("Fact_T_S_diesel_EmFa_tank_wheel_2018")
-            + t.road_bus.demand_gas * fact("Fact_T_S_cng_EmFa_tank_wheel_2018")
-            + t.road_bus.demand_biogas * ass("Ass_T_S_biogas_EmFa_tank_wheel")
-            + t.road_bus.demand_biodiesel * ass("Ass_T_S_biodiesel_EmFa_tank_wheel")
-            + t.road_bus.demand_electricity
+        road_bus.CO2e_cb = (
+            road_bus.demand_diesel * fact("Fact_T_S_diesel_EmFa_tank_wheel_2018")
+            + road_bus.demand_gas * fact("Fact_T_S_cng_EmFa_tank_wheel_2018")
+            + road_bus.demand_biogas * ass("Ass_T_S_biogas_EmFa_tank_wheel")
+            + road_bus.demand_biodiesel * ass("Ass_T_S_biodiesel_EmFa_tank_wheel")
+            + road_bus.demand_electricity
             * fact("Fact_T_S_electricity_EmFa_tank_wheel_2018")
         )
 
         # res 9.125.561 MWh
-        t.road_bus.energy = (
-            t.road_bus.demand_diesel
-            + t.road_bus.demand_gas
-            + t.road_bus.demand_biogas
-            + t.road_bus.demand_biodiesel
-            + t.road_bus.demand_electricity
+        road_bus.energy = (
+            road_bus.demand_diesel
+            + road_bus.demand_gas
+            + road_bus.demand_biogas
+            + road_bus.demand_biodiesel
+            + road_bus.demand_electricity
         )
 
         # ---------------------
 
         # 5.516.114.569 t km
-        t.road_gds_ldt_it_ot.transport_capacity_tkm = (
-            t.road_gds_ldt_it_ot.mileage * fact("Fact_T_D_lf_gds_LDT_2018")
+        road_gds_ldt_it_ot.transport_capacity_tkm = road_gds_ldt_it_ot.mileage * fact(
+            "Fact_T_D_lf_gds_LDT_2018"
         )
 
         # 863.649 MWh
-        t.road_gds_ldt_it_ot.demand_petrol = (
-            t.road_gds_ldt_it_ot.mileage
+        road_gds_ldt_it_ot.demand_petrol = (
+            road_gds_ldt_it_ot.mileage
             * fact("Fact_T_S_LDT_frac_petrol_mlg_2018")
             * (1 - fact("Fact_T_S_Rl_Rd_benzin_bio_frac_2018"))
             * fact("Fact_T_S_LDT_SEC_petrol_it_at_2018")
         )
 
         # 30.129.512 MWh
-        t.road_gds_ldt_it_ot.demand_diesel = (
-            t.road_gds_ldt_it_ot.mileage
+        road_gds_ldt_it_ot.demand_diesel = (
+            road_gds_ldt_it_ot.mileage
             * fact("Fact_T_S_LDT_frac_diesel_mlg_2018")
             * (1 - fact("Fact_T_S_Rl_Rd_diesel_bio_frac_2018"))
             * fact("Fact_T_S_LDT_SEC_diesel_it_at_2018")
         )
 
         # 127.848 MWh
-        t.road_gds_ldt_it_ot.demand_lpg = (
-            t.road_gds_ldt_it_ot.mileage
+        road_gds_ldt_it_ot.demand_lpg = (
+            road_gds_ldt_it_ot.mileage
             * fact("Fact_T_S_LDT_frac_lpg_mlg_2018")
             * fact("Fact_T_S_LDT_SEC_petrol_it_at_2018")
         )
 
         # 38.806 MWh
-        t.road_gds_ldt_it_ot.demand_bioethanol = (
-            t.road_gds_ldt_it_ot.mileage
+        road_gds_ldt_it_ot.demand_bioethanol = (
+            road_gds_ldt_it_ot.mileage
             * fact("Fact_T_S_LDT_frac_petrol_mlg_2018")
             * fact("Fact_T_S_Rl_Rd_benzin_bio_frac_2018")
             * fact("Fact_T_S_LDT_SEC_petrol_it_at_2018")
         )
 
         # 1.753.569 MWh
-        t.road_gds_ldt_it_ot.demand_biodiesel = (
-            t.road_gds_ldt_it_ot.mileage
+        road_gds_ldt_it_ot.demand_biodiesel = (
+            road_gds_ldt_it_ot.mileage
             * fact("Fact_T_S_LDT_frac_diesel_mlg_2018")
             * fact("Fact_T_S_Rl_Rd_diesel_bio_frac_2018")
             * fact("Fact_T_S_LDT_SEC_diesel_it_at_2018")
         )
 
         # 29.887 MWh
-        t.road_gds_ldt_it_ot.demand_electricity = (
-            t.road_gds_ldt_it_ot.mileage
+        road_gds_ldt_it_ot.demand_electricity = (
+            road_gds_ldt_it_ot.mileage
             * fact("Fact_T_S_LDT_frac_bev_mlg_2018")
             * fact("Fact_T_S_LDT_SEC_elec_it_at_2018")
         )
 
         # 8.294.035 t/a
-        t.road_gds_ldt_it_ot.CO2e_cb = (
-            t.road_gds_ldt_it_ot.demand_petrol
+        road_gds_ldt_it_ot.CO2e_cb = (
+            road_gds_ldt_it_ot.demand_petrol
             * fact("Fact_T_S_petrol_EmFa_tank_wheel_2018")
-            + t.road_gds_ldt_it_ot.demand_diesel
+            + road_gds_ldt_it_ot.demand_diesel
             * fact("Fact_T_S_diesel_EmFa_tank_wheel_2018")
-            + t.road_gds_ldt_it_ot.demand_lpg
-            * fact("Fact_T_S_lpg_EmFa_tank_wheel_2018")
+            + road_gds_ldt_it_ot.demand_lpg * fact("Fact_T_S_lpg_EmFa_tank_wheel_2018")
         )
 
         # 32.943.271 MWh
-        t.road_gds_ldt_it_ot.energy = (
-            t.road_gds_ldt_it_ot.demand_petrol
-            + t.road_gds_ldt_it_ot.demand_diesel
-            + t.road_gds_ldt_it_ot.demand_lpg
-            + t.road_gds_ldt_it_ot.demand_bioethanol
-            + t.road_gds_ldt_it_ot.demand_biodiesel
-            + t.road_gds_ldt_it_ot.demand_electricity
+        road_gds_ldt_it_ot.energy = (
+            road_gds_ldt_it_ot.demand_petrol
+            + road_gds_ldt_it_ot.demand_diesel
+            + road_gds_ldt_it_ot.demand_lpg
+            + road_gds_ldt_it_ot.demand_bioethanol
+            + road_gds_ldt_it_ot.demand_biodiesel
+            + road_gds_ldt_it_ot.demand_electricity
         )
 
         # -------------------------
 
         # 2.183.885.431 t km
-        t.road_gds_ldt_ab.transport_capacity_tkm = t.road_gds_ldt_ab.mileage * fact(
+        road_gds_ldt_ab.transport_capacity_tkm = road_gds_ldt_ab.mileage * fact(
             "Fact_T_D_lf_gds_LDT_2018"
         )
 
         # 443.472 MWh
-        t.road_gds_ldt_ab.demand_petrol = (
-            t.road_gds_ldt_ab.mileage
+        road_gds_ldt_ab.demand_petrol = (
+            road_gds_ldt_ab.mileage
             * fact("Fact_T_S_LDT_frac_petrol_mlg_2018")
             * (1 - fact("Fact_T_S_Rl_Rd_benzin_bio_frac_2018"))
             * fact("Fact_T_S_LDT_SEC_petrol_ab_2018")
         )
 
         # 16.610.550 MWh
-        t.road_gds_ldt_ab.demand_diesel = (
-            t.road_gds_ldt_ab.mileage
+        road_gds_ldt_ab.demand_diesel = (
+            road_gds_ldt_ab.mileage
             * fact("Fact_T_S_LDT_frac_diesel_mlg_2018")
             * (1 - fact("Fact_T_S_Rl_Rd_diesel_bio_frac_2018"))
             * fact("Fact_T_S_LDT_SEC_diesel_ab_2018")
         )
 
         # 65.648 MWh
-        t.road_gds_ldt_ab.demand_lpg = (
-            t.road_gds_ldt_ab.mileage
+        road_gds_ldt_ab.demand_lpg = (
+            road_gds_ldt_ab.mileage
             * fact("Fact_T_S_LDT_frac_lpg_mlg_2018")
             * fact("Fact_T_S_LDT_SEC_petrol_ab_2018")
         )
 
         # 19.926 MWh
-        t.road_gds_ldt_ab.demand_bioethanol = (
-            t.road_gds_ldt_ab.mileage
+        road_gds_ldt_ab.demand_bioethanol = (
+            road_gds_ldt_ab.mileage
             * fact("Fact_T_S_LDT_frac_petrol_mlg_2018")
             * fact("Fact_T_S_Rl_Rd_benzin_bio_frac_2018")
             * fact("Fact_T_S_LDT_SEC_petrol_ab_2018")
         )
 
         # 966.752 MWh
-        t.road_gds_ldt_ab.demand_biodiesel = (
-            t.road_gds_ldt_ab.mileage
+        road_gds_ldt_ab.demand_biodiesel = (
+            road_gds_ldt_ab.mileage
             * fact("Fact_T_S_LDT_frac_diesel_mlg_2018")
             * fact("Fact_T_S_Rl_Rd_diesel_bio_frac_2018")
             * fact("Fact_T_S_LDT_SEC_diesel_ab_2018")
         )
 
         # 20.475 MWh
-        t.road_gds_ldt_ab.demand_electricity = (
-            t.road_gds_ldt_ab.mileage
+        road_gds_ldt_ab.demand_electricity = (
+            road_gds_ldt_ab.mileage
             * fact("Fact_T_S_LDT_frac_bev_mlg_2018")
             * fact("Fact_T_S_LDT_SEC_elec_ab_2018")
         )
 
         # 4.562.536 t/a
 
-        t.road_gds_ldt_ab.CO2e_cb = (
-            t.road_gds_ldt_ab.demand_petrol
-            * fact("Fact_T_S_petrol_EmFa_tank_wheel_2018")
-            + t.road_gds_ldt_ab.demand_diesel
+        road_gds_ldt_ab.CO2e_cb = (
+            road_gds_ldt_ab.demand_petrol * fact("Fact_T_S_petrol_EmFa_tank_wheel_2018")
+            + road_gds_ldt_ab.demand_diesel
             * fact("Fact_T_S_diesel_EmFa_tank_wheel_2018")
-            + t.road_gds_ldt_ab.demand_lpg * fact("Fact_T_S_lpg_EmFa_tank_wheel_2018")
+            + road_gds_ldt_ab.demand_lpg * fact("Fact_T_S_lpg_EmFa_tank_wheel_2018")
         )
 
         # 18.126.823 MWh
-        t.road_gds_ldt_ab.energy = (
-            t.road_gds_ldt_ab.demand_petrol
-            + t.road_gds_ldt_ab.demand_diesel
-            + t.road_gds_ldt_ab.demand_lpg
-            + t.road_gds_ldt_ab.demand_bioethanol
-            + t.road_gds_ldt_ab.demand_biodiesel
-            + t.road_gds_ldt_ab.demand_electricity
+        road_gds_ldt_ab.energy = (
+            road_gds_ldt_ab.demand_petrol
+            + road_gds_ldt_ab.demand_diesel
+            + road_gds_ldt_ab.demand_lpg
+            + road_gds_ldt_ab.demand_bioethanol
+            + road_gds_ldt_ab.demand_biodiesel
+            + road_gds_ldt_ab.demand_electricity
         )
 
         # -----------------------
 
         # 212.745.261.612 t km
-        t.road_gds_mhd_it_ot.transport_capacity_tkm = (
-            t.road_gds_mhd_it_ot.mileage * fact("Fact_T_D_lf_gds_MHD_2018")
+        road_gds_mhd_it_ot.transport_capacity_tkm = road_gds_mhd_it_ot.mileage * fact(
+            "Fact_T_D_lf_gds_MHD_2018"
         )
 
         # 75.928.091 MWh
-        t.road_gds_mhd_it_ot.demand_diesel = (
-            t.road_gds_mhd_it_ot.mileage
+        road_gds_mhd_it_ot.demand_diesel = (
+            road_gds_mhd_it_ot.mileage
             * fact("Fact_T_S_MHD_frac_diesel_stock_2018")
             * (1 - fact("Fact_T_S_Rl_Rd_diesel_bio_frac_2018"))
             * fact("Fact_T_S_MHD_SEC_diesel_it_at_2018")
         )
 
         # 58.690 MWh
-        t.road_gds_mhd_it_ot.demand_gas = (
-            t.road_gds_mhd_it_ot.mileage
+        road_gds_mhd_it_ot.demand_gas = (
+            road_gds_mhd_it_ot.mileage
             * fact("Fact_T_S_MHD_frac_cng_lngl_stock_2018")
             * (1 - fact("Fact_T_S_Rl_Rd_cng_bio_frac_2018"))
             * fact("Fact_T_S_MHD_SEC_diesel_it_at_2018")
         )
 
         # 13.767 MWh
-        t.road_gds_mhd_it_ot.demand_biogas = (
-            t.road_gds_mhd_it_ot.mileage
+        road_gds_mhd_it_ot.demand_biogas = (
+            road_gds_mhd_it_ot.mileage
             * fact("Fact_T_S_MHD_frac_cng_lngl_stock_2018")
             * fact("Fact_T_S_Rl_Rd_cng_bio_frac_2018")
             * fact("Fact_T_S_MHD_SEC_diesel_it_at_2018")
         )
 
         # 4.419.095 MWh
-        t.road_gds_mhd_it_ot.demand_biodiesel = (
-            t.road_gds_mhd_it_ot.mileage
+        road_gds_mhd_it_ot.demand_biodiesel = (
+            road_gds_mhd_it_ot.mileage
             * fact("Fact_T_S_MHD_frac_diesel_stock_2018")
             * fact("Fact_T_S_Rl_Rd_diesel_bio_frac_2018")
             * fact("Fact_T_S_MHD_SEC_diesel_it_at_2018")
         )
 
         # 13.271 MWh
-        t.road_gds_mhd_it_ot.demand_electricity = (
-            t.road_gds_mhd_it_ot.mileage
+        road_gds_mhd_it_ot.demand_electricity = (
+            road_gds_mhd_it_ot.mileage
             * fact("Fact_T_S_MHD_frac_bev_stock_2018")
             * fact("Fact_T_S_MHD_SEC_elec_it_at_2018")
         )
 
         # 20.246.442 t/a
 
-        t.road_gds_mhd_it_ot.CO2e_cb = t.road_gds_mhd_it_ot.demand_diesel * fact(
+        road_gds_mhd_it_ot.CO2e_cb = road_gds_mhd_it_ot.demand_diesel * fact(
             "Fact_T_S_diesel_EmFa_tank_wheel_2018"
-        ) + t.road_gds_mhd_it_ot.demand_gas * fact("Fact_T_S_cng_EmFa_tank_wheel_2018")
+        ) + road_gds_mhd_it_ot.demand_gas * fact("Fact_T_S_cng_EmFa_tank_wheel_2018")
 
         # 80.432.915 MWh
-        t.road_gds_mhd_it_ot.energy = (
-            t.road_gds_mhd_it_ot.demand_diesel
-            + t.road_gds_mhd_it_ot.demand_gas
-            + t.road_gds_mhd_it_ot.demand_biogas
-            + t.road_gds_mhd_it_ot.demand_biodiesel
-            + t.road_gds_mhd_it_ot.demand_electricity
+        road_gds_mhd_it_ot.energy = (
+            road_gds_mhd_it_ot.demand_diesel
+            + road_gds_mhd_it_ot.demand_gas
+            + road_gds_mhd_it_ot.demand_biogas
+            + road_gds_mhd_it_ot.demand_biodiesel
+            + road_gds_mhd_it_ot.demand_electricity
         )
 
         # --------------
 
         # 268.922.145.057 t km
-        t.road_gds_mhd_ab.transport_capacity_tkm = t.road_gds_mhd_ab.mileage * fact(
+        road_gds_mhd_ab.transport_capacity_tkm = road_gds_mhd_ab.mileage * fact(
             "Fact_T_D_lf_gds_MHD_2018"
         )
 
         # 98.546.344 MWh
-        t.road_gds_mhd_ab.demand_diesel = (
-            t.road_gds_mhd_ab.mileage
+        road_gds_mhd_ab.demand_diesel = (
+            road_gds_mhd_ab.mileage
             * fact("Fact_T_S_MHD_frac_diesel_stock_2018")
             * (1 - fact("Fact_T_S_Rl_Rd_diesel_bio_frac_2018"))
             * fact("Fact_T_S_MHD_SEC_diesel_ab_2018")
         )
 
         # 76.174 MWh
-        t.road_gds_mhd_ab.demand_gas = (
-            t.road_gds_mhd_ab.mileage
+        road_gds_mhd_ab.demand_gas = (
+            road_gds_mhd_ab.mileage
             * fact("Fact_T_S_MHD_frac_cng_lngl_stock_2018")
             * (1 - fact("Fact_T_S_Rl_Rd_cng_bio_frac_2018"))
             * fact("Fact_T_S_MHD_SEC_diesel_ab_2018")
         )
 
         # 17.868 MWh
-        t.road_gds_mhd_ab.demand_biogas = (
-            t.road_gds_mhd_ab.mileage
+        road_gds_mhd_ab.demand_biogas = (
+            road_gds_mhd_ab.mileage
             * fact("Fact_T_S_MHD_frac_cng_lngl_stock_2018")
             * fact("Fact_T_S_Rl_Rd_cng_bio_frac_2018")
             * fact("Fact_T_S_MHD_SEC_diesel_ab_2018")
         )
 
         # 5.735.502 MWh
-        t.road_gds_mhd_ab.demand_biodiesel = (
-            t.road_gds_mhd_ab.mileage
+        road_gds_mhd_ab.demand_biodiesel = (
+            road_gds_mhd_ab.mileage
             * fact("Fact_T_S_MHD_frac_diesel_stock_2018")
             * fact("Fact_T_S_Rl_Rd_diesel_bio_frac_2018")
             * fact("Fact_T_S_MHD_SEC_diesel_ab_2018")
         )
 
         # 23.251 MWh
-        t.road_gds_mhd_ab.demand_electricity = (
-            t.road_gds_mhd_ab.mileage
+        road_gds_mhd_ab.demand_electricity = (
+            road_gds_mhd_ab.mileage
             * fact("Fact_T_S_MHD_frac_bev_stock_2018")
             * fact("Fact_T_S_MHD_SEC_elec_ab_2018")
         )
 
         # 26.277.664 t/a
-        t.road_gds_mhd_ab.CO2e_cb = t.road_gds_mhd_ab.demand_diesel * fact(
+        road_gds_mhd_ab.CO2e_cb = road_gds_mhd_ab.demand_diesel * fact(
             "Fact_T_S_diesel_EmFa_tank_wheel_2018"
-        ) + t.road_gds_mhd_ab.demand_gas * fact("Fact_T_S_cng_EmFa_tank_wheel_2018")
+        ) + road_gds_mhd_ab.demand_gas * fact("Fact_T_S_cng_EmFa_tank_wheel_2018")
 
         # 104.399.138 MWh
-        t.road_gds_mhd_ab.energy = (
-            t.road_gds_mhd_ab.demand_diesel
-            + t.road_gds_mhd_ab.demand_gas
-            + t.road_gds_mhd_ab.demand_biogas
-            + t.road_gds_mhd_ab.demand_biodiesel
-            + t.road_gds_mhd_ab.demand_electricity
+        road_gds_mhd_ab.energy = (
+            road_gds_mhd_ab.demand_diesel
+            + road_gds_mhd_ab.demand_gas
+            + road_gds_mhd_ab.demand_biogas
+            + road_gds_mhd_ab.demand_biodiesel
+            + road_gds_mhd_ab.demand_electricity
         )
 
         # -----------------
 
-        t.rail_ppl_.demand_diesel = entry("In_T_ec_rail_ppl_diesel") * (
-            1 - fact("Fact_T_S_Rl_Rd_diesel_bio_frac_2018")
-        )
-        t.rail_ppl_.demand_biodiesel = entry("In_T_ec_rail_ppl_diesel") * fact(
-            "Fact_T_S_Rl_Rd_diesel_bio_frac_2018"
-        )
-        t.rail_ppl_.demand_electricity = entry("In_T_ec_rail_ppl_elec")
-        t.rail_ppl_.demand_petrol = 0
-        t.rail_ppl_.demand_jetfuel = 0
-        t.rail_ppl_.demand_lpg = 0
-        t.rail_ppl_.demand_gas = 0
-        t.rail_ppl_.demand_biogas = 0
-        t.rail_ppl_.demand_bioethanol = 0
-        t.rail_ppl_.CO2e_cb = (
-            t.rail_ppl_.demand_petrol * fact("Fact_T_S_petrol_EmFa_tank_wheel_2018")
-            + t.rail_ppl_.demand_jetfuel * fact("Fact_T_S_jetfuel_EmFa_tank_wheel_2018")
-            + t.rail_ppl_.demand_diesel * fact("Fact_T_S_diesel_EmFa_tank_wheel_2018")
-            + t.rail_ppl_.demand_lpg * fact("Fact_T_S_lpg_EmFa_tank_wheel_2018")
-            + t.rail_ppl_.demand_gas * fact("Fact_T_S_cng_EmFa_tank_wheel_2018")
-            + t.rail_ppl_.demand_biogas * ass("Ass_T_S_biogas_EmFa_tank_wheel")
-            + t.rail_ppl_.demand_bioethanol * ass("Ass_T_S_bioethanol_EmFa_tank_wheel")
-            + t.rail_ppl_.demand_biodiesel * ass("Ass_T_S_biodiesel_EmFa_tank_wheel")
-            + t.rail_ppl_.demand_electricity
-            * fact("Fact_T_S_electricity_EmFa_tank_wheel_2018")
-        )
-        t.rail_ppl_.CO2e_total = t.rail_ppl_.CO2e_cb
-
-        t.rail_ppl_.energy = (
-            t.rail_ppl_.demand_diesel
-            + t.rail_ppl_.demand_biodiesel
-            + t.rail_ppl_.demand_electricity
-        )
-
-        t.rail_ppl_.transport_capacity_pkm = (
-            t.rail_ppl_.demand_diesel + t.rail_ppl_.demand_biodiesel
-        ) / fact(
-            "Fact_T_S_Rl_Train_ppl_long_diesel_SEC_2018"
-        ) + t.rail_ppl_.demand_electricity / fact(
-            "Fact_T_S_Rl_Train_ppl_long_elec_SEC_2018"
-        )
-
-        t.rail_ppl_.mileage = t.rail_ppl_.transport_capacity_pkm / fact(
-            "Fact_T_D_rail_ppl_ratio_pkm_to_fzkm_2018"
-        )
-        t.rail_ppl_.transport_capacity_pkm = (
-            t.rail_ppl_.demand_diesel + t.rail_ppl_.demand_biodiesel
-        ) / fact(
-            "Fact_T_S_Rl_Train_ppl_long_diesel_SEC_2018"
-        ) + t.rail_ppl_.demand_electricity / fact(
-            "Fact_T_S_Rl_Train_ppl_long_elec_SEC_2018"
-        )
-
-        t.rail_ppl_metro.demand_electricity = t.rail_ppl_metro.mileage * fact(
+        # rail_ppl_.demand_diesel = entry("In_T_ec_rail_ppl_diesel") * (
+        #    1 - fact("Fact_T_S_Rl_Rd_diesel_bio_frac_2018")
+        # )
+        # rail_ppl_.demand_biodiesel = entry("In_T_ec_rail_ppl_diesel") * fact(
+        #    "Fact_T_S_Rl_Rd_diesel_bio_frac_2018"
+        # )
+        # rail_ppl_.demand_electricity = entry("In_T_ec_rail_ppl_elec")
+        # rail_ppl_.demand_petrol = 0
+        # rail_ppl_.demand_jetfuel = 0
+        # rail_ppl_.demand_lpg = 0
+        # rail_ppl_.demand_gas = 0
+        # rail_ppl_.demand_biogas = 0
+        # rail_ppl_.demand_bioethanol = 0
+        # rail_ppl_.CO2e_cb = (
+        #    rail_ppl_.demand_petrol * fact("Fact_T_S_petrol_EmFa_tank_wheel_2018")
+        #    + rail_ppl_.demand_jetfuel * fact("Fact_T_S_jetfuel_EmFa_tank_wheel_2018")
+        #    + rail_ppl_.demand_diesel * fact("Fact_T_S_diesel_EmFa_tank_wheel_2018")
+        #    + rail_ppl_.demand_lpg * fact("Fact_T_S_lpg_EmFa_tank_wheel_2018")
+        #    + rail_ppl_.demand_gas * fact("Fact_T_S_cng_EmFa_tank_wheel_2018")
+        #    + rail_ppl_.demand_biogas * ass("Ass_T_S_biogas_EmFa_tank_wheel")
+        #    + rail_ppl_.demand_bioethanol * ass("Ass_T_S_bioethanol_EmFa_tank_wheel")
+        #    + rail_ppl_.demand_biodiesel * ass("Ass_T_S_biodiesel_EmFa_tank_wheel")
+        #    + rail_ppl_.demand_electricity
+        #    * fact("Fact_T_S_electricity_EmFa_tank_wheel_2018")
+        # )
+        # rail_ppl_.CO2e_total = rail_ppl_.CO2e_cb
+        #
+        # rail_ppl_.energy = (
+        #    rail_ppl_.demand_diesel
+        #    + rail_ppl_.demand_biodiesel
+        #    + rail_ppl_.demand_electricity
+        # )
+        #
+        # rail_ppl_.transport_capacity_pkm = (
+        #    rail_ppl_.demand_diesel + rail_ppl_.demand_biodiesel
+        # ) / fact(
+        #    "Fact_T_S_Rl_Train_ppl_long_diesel_SEC_2018"
+        # ) + rail_ppl_.demand_electricity / fact(
+        #    "Fact_T_S_Rl_Train_ppl_long_elec_SEC_2018"
+        # )
+        #
+        # rail_ppl_.mileage = rail_ppl_.transport_capacity_pkm / fact(
+        #    "Fact_T_D_rail_ppl_ratio_pkm_to_fzkm_2018"
+        # )
+        # rail_ppl_.transport_capacity_pkm = (
+        #    rail_ppl_.demand_diesel + rail_ppl_.demand_biodiesel
+        # ) / fact(
+        #    "Fact_T_S_Rl_Train_ppl_long_diesel_SEC_2018"
+        # ) + rail_ppl_.demand_electricity / fact(
+        #    "Fact_T_S_Rl_Train_ppl_long_elec_SEC_2018"
+        # )
+        #
+        rail_ppl_metro.demand_electricity = rail_ppl_metro.mileage * fact(
             "Fact_T_S_Rl_Metro_SEC_fzkm_2018"
         )
-
-        t.rail_ppl.demand_electricity = (
-            t.rail_ppl_.demand_electricity + t.rail_ppl_metro.demand_electricity
+        #
+        rail_ppl_distance.demand_electricity = entry("In_T_ec_rail_ppl_elec")
+        rail_ppl.demand_electricity = (
+            rail_ppl_distance.demand_electricity + rail_ppl_metro.demand_electricity
         )
 
         # 3.164.605 MWh
-        t.rail_ppl.demand_diesel = entry("In_T_ec_rail_ppl_diesel") * (
+        rail_ppl.demand_diesel = entry("In_T_ec_rail_ppl_diesel") * (
             1 - fact("Fact_T_S_Rl_Rd_diesel_bio_frac_2018")
         )
 
         # 184.183 MWh
-        t.rail_ppl.demand_biodiesel = entry("In_T_ec_rail_ppl_diesel") * fact(
+        rail_ppl.demand_biodiesel = entry("In_T_ec_rail_ppl_diesel") * fact(
+            "Fact_T_S_Rl_Rd_diesel_bio_frac_2018"
+        )
+        rail_ppl_distance.demand_diesel = entry("In_T_ec_rail_ppl_diesel") * (
+            1 - fact("Fact_T_S_Rl_Rd_diesel_bio_frac_2018")
+        )
+        rail_ppl_distance.demand_biodiesel = entry("In_T_ec_rail_ppl_diesel") * fact(
             "Fact_T_S_Rl_Rd_diesel_bio_frac_2018"
         )
 
-        # 97.700.000.000 Pers km
-        t.rail_ppl.transport_capacity_pkm = (
-            t.rail_ppl.demand_diesel + t.rail_ppl.demand_biodiesel
+        rail_ppl_distance.transport_capacity_pkm = (
+            rail_ppl_distance.demand_diesel + rail_ppl_distance.demand_biodiesel
         ) / fact(
             "Fact_T_S_Rl_Train_ppl_long_diesel_SEC_2018"
-        ) + t.rail_ppl.demand_electricity / fact(
+        ) + rail_ppl_distance.demand_electricity / fact(
             "Fact_T_S_Rl_Train_ppl_long_elec_SEC_2018"
         )
+        # 17.700.000.000 Pers km
+        rail_ppl_metro.transport_capacity_pkm = rail_ppl_metro.mileage * fact(
+            "Fact_T_D_lf_Rl_Metro_2018"
+        )
+        rail_ppl.transport_capacity_pkm = (
+            rail_ppl_distance.transport_capacity_pkm
+            + rail_ppl_metro.transport_capacity_pkm
+        )
+        # 97.700.000.000 Pers km
+        rail.transport_capacity_pkm = rail_ppl.transport_capacity_pkm
 
         # 843.358 t/a
-        t.rail_ppl.CO2e_cb = t.rail_ppl.demand_diesel * fact(
+        rail_ppl.CO2e_cb = rail_ppl.demand_diesel * fact(
             "Fact_T_S_diesel_EmFa_tank_wheel_2018"
         )
 
         # 9.646.598 MWh
-        t.rail_ppl.energy = (
-            +t.rail_ppl.demand_diesel
-            + t.rail_ppl.demand_biodiesel
-            + t.rail_ppl.demand_electricity
+        rail_ppl.energy = (
+            +rail_ppl.demand_diesel
+            + rail_ppl.demand_biodiesel
+            + rail_ppl.demand_electricity
         )
 
         # --------------
 
-        # 17.700.000.000 Pers km
-        t.rail_ppl_metro.transport_capacity_pkm = t.rail_ppl_metro.mileage * fact(
-            "Fact_T_D_lf_Rl_Metro_2018"
-        )
-
         #  1.235.600 MWh
-        t.rail_ppl_metro.demand_electricity = t.rail_ppl_metro.mileage * fact(
+        rail_ppl_metro.demand_electricity = rail_ppl_metro.mileage * fact(
             "Fact_T_S_Rl_Metro_SEC_fzkm_2018"
         )
 
         # 1.235.600 MWh
-        t.rail_ppl_metro.energy = t.rail_ppl_metro.demand_electricity
+        rail_ppl_metro.energy = rail_ppl_metro.demand_electricity
         # --------------
 
         # 4.015.518 MWh
-        t.rail_gds.demand_electricity = entry("In_T_ec_rail_gds_elec")
+        rail_gds.demand_electricity = entry("In_T_ec_rail_gds_elec")
 
         # 995.430 MWh
-        t.rail_gds.demand_diesel = entry("In_T_ec_rail_gds_diesel") * (
+        rail_gds.demand_diesel = entry("In_T_ec_rail_gds_diesel") * (
             1 - fact("Fact_T_S_Rl_Rd_diesel_bio_frac_2018")
         )
 
         # 57.935 MWh
-        t.rail_gds.demand_biodiesel = entry("In_T_ec_rail_gds_diesel") * fact(
+        rail_gds.demand_biodiesel = entry("In_T_ec_rail_gds_diesel") * fact(
             "Fact_T_S_Rl_Rd_diesel_bio_frac_2018"
         )
 
         # 133.700.000.000 t km
-        t.rail_gds.transport_capacity_tkm = (
-            t.rail_gds.demand_diesel + t.rail_gds.demand_biodiesel
+        rail_gds.transport_capacity_tkm = (
+            rail_gds.demand_diesel + rail_gds.demand_biodiesel
         ) / fact(
             "Fact_T_S_Rl_Train_gds_diesel_SEC_2018"
-        ) + t.rail_gds.demand_electricity / fact(
+        ) + rail_gds.demand_electricity / fact(
             "Fact_T_S_Rl_Train_gds_elec_SEC_2018"
         )
 
         # 265.279 t/a
-        t.rail_gds.CO2e_cb = t.rail_gds.demand_diesel * fact(
+        rail_gds.CO2e_cb = rail_gds.demand_diesel * fact(
             "Fact_T_S_diesel_EmFa_tank_wheel_2018"
         )
 
         # 5.068.883 MWh
-        t.rail_gds.energy = (
-            +t.rail_gds.demand_diesel
-            + t.rail_gds.demand_biodiesel
-            + t.rail_gds.demand_electricity
+        rail_gds.energy = (
+            +rail_gds.demand_diesel
+            + rail_gds.demand_biodiesel
+            + rail_gds.demand_electricity
         )
 
         # -------------
 
         # res 2.949.722 MWh
 
-        t.ship_dmstc.transport_capacity_tkm = (
+        ship_dmstc.transport_capacity_tkm = (
             fact("Fact_T_D_Shp_dmstc_trnsprt_gds_2018")
             * entry("In_M_population_com_2018")
             / entry("In_M_population_nat")
         )
         # res: 46.900.000.000 t km
 
-        t.ship_dmstc.demand_diesel = (
+        ship_dmstc.demand_diesel = (
             entry("In_M_population_com_2018")
             / entry("In_M_population_nat")
             * fact("Fact_T_S_Shp_diesel_fec_2018")
         )
         # res: 2.949.722 MWh
-        t.ship_dmstc.energy = t.ship_dmstc.demand_diesel
+        ship_dmstc.energy = ship_dmstc.demand_diesel
 
-        t.ship_dmstc.CO2e_cb = t.ship_dmstc.demand_diesel * fact(
+        ship_dmstc.CO2e_cb = ship_dmstc.demand_diesel * fact(
             "Fact_T_S_diesel_EmFa_tank_wheel_2018"
         )
         # res: 786.093  t/a
 
         # ---------------------
 
-        t.ship_inter.transport_capacity_tkm = (
+        ship_inter.transport_capacity_tkm = (
             fact("Fact_T_D_Shp_sea_nat_mlg_2013")
             * entry("In_M_population_com_2018")
             / entry("In_M_population_nat")
         )
         # res: 1.982.900.000.000 t km
 
-        t.ship_inter.demand_fueloil = (
+        ship_inter.demand_fueloil = (
             entry("In_M_population_com_2018") / entry("In_M_population_nat")
         ) * fact("Fact_T_D_Shp_sea_nat_EC_2018")
 
-        t.ship_inter.energy = t.ship_inter.demand_fueloil
+        ship_inter.energy = ship_inter.demand_fueloil
         # res: 19.722.222 MWh
 
-        t.ship_inter.CO2e_cb = t.ship_inter.demand_fueloil * fact(
+        ship_inter.CO2e_cb = ship_inter.demand_fueloil * fact(
             "Fact_T_S_fueloil_EmFa_tank_wheel_2018"
         )
         # res: 5.396.000  t/a
@@ -1036,7 +1092,7 @@ def Transport2018_calc(root):
         # ------------------------
 
         if ags == "DG000000":
-            t.other_cycl.transport_capacity_pkm = (
+            other_cycl.transport_capacity_pkm = (
                 365
                 * entry("In_M_population_com_2018")
                 * fact("Fact_T_D_modal_split_cycl_nat")
@@ -1044,13 +1100,13 @@ def Transport2018_calc(root):
         else:
             if entry("In_T_rt7") in [71, 72, 73, 74, 75, 76, 77]:
 
-                t.other_foot.transport_capacity_pkm = (
+                other_foot.transport_capacity_pkm = (
                     entry("In_M_population_com_2018")
                     * 365
                     * fact("Fact_T_D_modal_split_foot_rt" + str(int(entry("In_T_rt7"))))
                 )
 
-                t.other_cycl.transport_capacity_pkm = (
+                other_cycl.transport_capacity_pkm = (
                     entry("In_M_population_com_2018")
                     * 365
                     * fact("Fact_T_D_modal_split_cycl_rt" + str(int(entry("In_T_rt7"))))
@@ -1061,732 +1117,751 @@ def Transport2018_calc(root):
 
         # ------------------------------ Berechnung der Oberklassensummen
         for i in range(len([a for a in dir(TColVars) if not a.startswith("_")])):
-            t.air._set(i, t.air_inter._get(i) + t.air_dmstc._get(i))
-            t.ship._set(i, t.ship_dmstc._get(i) + t.ship_inter._get(i))
+            air._set(i, air_inter._get(i) + air_dmstc._get(i))
+            ship._set(i, ship_dmstc._get(i) + ship_inter._get(i))
 
         # ----------------------------------------------------
-        t.air.demand_petrol = t.air_dmstc.demand_petrol
+        air.demand_petrol = air_dmstc.demand_petrol
 
-        t.road_car_it_ot.demand_petrol = (
-            t.road_car_it_ot.mileage
+        road_car_it_ot.demand_petrol = (
+            road_car_it_ot.mileage
             * fact("Fact_T_S_Car_frac_petrol_with_phev_mlg_2018")
             * (1 - fact("Fact_T_S_Rl_Rd_benzin_bio_frac_2018"))
             * fact("Fact_T_S_Car_SEC_petrol_it_at_2018")
         )
 
-        t.road_car_ab.demand_petrol = (
-            t.road_car_ab.mileage
+        road_car_ab.demand_petrol = (
+            road_car_ab.mileage
             * fact("Fact_T_S_Car_frac_petrol_with_phev_mlg_2018")
             * (1 - fact("Fact_T_S_Rl_Rd_benzin_bio_frac_2018"))
             * fact("Fact_T_S_Car_SEC_petrol_ab_2018")
         )
 
-        t.road_gds_ldt_it_ot.demand_petrol = (
-            t.road_gds_ldt_it_ot.mileage
+        road_gds_ldt_it_ot.demand_petrol = (
+            road_gds_ldt_it_ot.mileage
             * fact("Fact_T_S_LDT_frac_petrol_mlg_2018")
             * (1 - fact("Fact_T_S_Rl_Rd_benzin_bio_frac_2018"))
             * fact("Fact_T_S_LDT_SEC_petrol_it_at_2018")
         )
 
-        t.road_gds_ldt_ab.demand_petrol = (
-            t.road_gds_ldt_ab.mileage
+        road_gds_ldt_ab.demand_petrol = (
+            road_gds_ldt_ab.mileage
             * fact("Fact_T_S_LDT_frac_petrol_mlg_2018")
             * (1 - fact("Fact_T_S_Rl_Rd_benzin_bio_frac_2018"))
             * fact("Fact_T_S_LDT_SEC_petrol_ab_2018")
         )
 
-        t.road_car.demand_petrol = (
-            t.road_car_it_ot.demand_petrol + t.road_car_ab.demand_petrol
+        road_car.demand_petrol = (
+            road_car_it_ot.demand_petrol + road_car_ab.demand_petrol
         )
-        t.road_gds_ldt.demand_petrol = (
-            t.road_gds_ldt_it_ot.demand_petrol + t.road_gds_ldt_ab.demand_petrol
+        road_gds_ldt.demand_petrol = (
+            road_gds_ldt_it_ot.demand_petrol + road_gds_ldt_ab.demand_petrol
         )
-        t.road_ppl.demand_petrol = t.road_car.demand_petrol
-        t.road_gds.demand_petrol = t.road_gds_ldt.demand_petrol
+        road_ppl.demand_petrol = road_car.demand_petrol
+        road_gds.demand_petrol = road_gds_ldt.demand_petrol
 
-        t.road.demand_petrol = t.road_ppl.demand_petrol + t.road_gds.demand_petrol
-        t.demand_petrol = t.air.demand_petrol + t.road.demand_petrol
-        t.s_petrol.energy = t.demand_petrol
-        t.s_jetfuel.energy = t.air_inter.demand_jetfuel + t.air_dmstc.demand_jetfuel
-        t.s_diesel.energy = t.t.demand_diesel
+        road.demand_petrol = road_ppl.demand_petrol + road_gds.demand_petrol
+        demand_petrol = air.demand_petrol + road.demand_petrol
+        s_petrol.energy = demand_petrol
+        s_jetfuel.energy = air_inter.demand_jetfuel + air_dmstc.demand_jetfuel
+        s_diesel.energy = t.demand_diesel
 
-        t.s_fueloil.energy = t.ship_inter.demand_fueloil
+        s_fueloil.energy = ship_inter.demand_fueloil
 
-        t.s_gas.energy = t.t.demand_gas
+        s_gas.energy = t.demand_gas
 
-        t.s_biogas.energy = t.t.demand_biogas
+        s_biogas.energy = t.demand_biogas
 
-        t.s_bioethanol.energy = t.t.demand_bioethanol
+        s_bioethanol.energy = t.demand_bioethanol
 
-        t.s_biodiesel.energy = t.t.demand_biodiesel
+        s_biodiesel.energy = t.demand_biodiesel
 
-        t.s_elec.energy = t.t.demand_electricity
+        s_elec.energy = t.demand_electricity
 
-        t.road_car_it_ot.demand_diesel = (
-            t.road_car_it_ot.mileage
+        road_car_it_ot.demand_diesel = (
+            road_car_it_ot.mileage
             * fact("Fact_T_S_Car_frac_diesel_mlg_2018")
             * (1 - fact("Fact_T_S_Rl_Rd_diesel_bio_frac_2018"))
             * fact("Fact_T_S_Car_SEC_diesel_it_at_2018")
         )
-        t.road_car.mileage = t.road_car_it_ot.mileage + t.road_car_ab.mileage
-        t.road_car_it_ot.transport_capacity_pkm = t.road_car_it_ot.mileage * fact(
+        road_car.mileage = road_car_it_ot.mileage + road_car_ab.mileage
+        road_car_it_ot.transport_capacity_pkm = road_car_it_ot.mileage * fact(
             "Fact_T_D_lf_ppl_Car_2018"
         )
-        t.road_gds_ldt_it_ot.transport_capacity_tkm = (
-            t.road_gds_ldt_it_ot.mileage * fact("Fact_T_D_lf_gds_LDT_2018")
+        road_gds_ldt_it_ot.transport_capacity_tkm = road_gds_ldt_it_ot.mileage * fact(
+            "Fact_T_D_lf_gds_LDT_2018"
         )
-        t.road_car_it_ot.demand_lpg = (
-            t.road_car_it_ot.mileage
+        road_car_it_ot.demand_lpg = (
+            road_car_it_ot.mileage
             * fact("Fact_T_S_Car_frac_lpg_mlg_2018")
             * fact("Fact_T_S_Car_SEC_petrol_it_at_2018")
         )
-        t.road_car_it_ot.demand_gas = (
-            t.road_car_it_ot.mileage
+        road_car_it_ot.demand_gas = (
+            road_car_it_ot.mileage
             * fact("Fact_T_S_Car_frac_cng_mlg_2018")
             * (1 - fact("Fact_T_S_Rl_Rd_cng_bio_frac_2018"))
             * fact("Fact_T_S_Car_SEC_petrol_it_at_2018")
         )
-        t.g.CO2e_total = 0
+        g.CO2e_total = 0
 
-        t.g_planning.CO2e_total = 0
+        g_planning.CO2e_total = 0
 
-        t.air.CO2e_total = t.air.CO2e_cb
+        air.CO2e_total = air.CO2e_cb
 
-        t.air_inter.CO2e_total = t.air_inter.CO2e_cb
+        air_inter.CO2e_total = air_inter.CO2e_cb
 
-        t.air_dmstc.CO2e_total = t.air_dmstc.CO2e_cb
+        air_dmstc.CO2e_total = air_dmstc.CO2e_cb
 
-        t.rail_ppl_metro.energy = t.rail_ppl_metro.demand_electricity
+        rail_ppl_metro.energy = rail_ppl_metro.demand_electricity
+        rail_ppl_distance.mileage = rail_ppl_distance.transport_capacity_pkm / fact(
+            "Fact_T_D_rail_ppl_ratio_pkm_to_fzkm_2018"
+        )
+        rail_ppl.mileage = rail_ppl_distance.mileage + rail_ppl_metro.mileage
 
-        t.rail_ppl.mileage = t.rail_ppl_.mileage + t.rail_ppl_metro.mileage
+        rail.transport_capacity_pkm = rail_ppl.transport_capacity_pkm
 
-        t.rail.transport_capacity_pkm = t.rail_ppl.transport_capacity_pkm
+        rail.transport_capacity_tkm = rail_gds.transport_capacity_tkm
 
-        t.rail.transport_capacity_tkm = t.rail_gds.transport_capacity_tkm
-
-        t.road_car_ab.demand_diesel = (
-            t.road_car_ab.mileage
+        road_car_ab.demand_diesel = (
+            road_car_ab.mileage
             * fact("Fact_T_S_Car_frac_diesel_mlg_2018")
             * (1 - fact("Fact_T_S_Rl_Rd_diesel_bio_frac_2018"))
             * fact("Fact_T_S_Car_SEC_diesel_ab_2018")
         )
-        t.road_car_it_ot.demand_biogas = (
-            t.road_car_it_ot.mileage
+        road_car_it_ot.demand_biogas = (
+            road_car_it_ot.mileage
             * fact("Fact_T_S_Car_frac_cng_mlg_2018")
             * fact("Fact_T_S_Rl_Rd_cng_bio_frac_2018")
             * fact("Fact_T_S_Car_SEC_petrol_it_at_2018")
         )
-        t.road_car_it_ot.demand_bioethanol = (
-            t.road_car_it_ot.mileage
+        road_car_it_ot.demand_bioethanol = (
+            road_car_it_ot.mileage
             * fact("Fact_T_S_Car_frac_petrol_with_phev_mlg_2018")
             * fact("Fact_T_S_Rl_Rd_benzin_bio_frac_2018")
             * fact("Fact_T_S_Car_SEC_petrol_it_at_2018")
         )
-        t.road_car_it_ot.demand_biodiesel = (
-            t.road_car_it_ot.mileage
+        road_car_it_ot.demand_biodiesel = (
+            road_car_it_ot.mileage
             * fact("Fact_T_S_Car_frac_diesel_mlg_2018")
             * fact("Fact_T_S_Rl_Rd_diesel_bio_frac_2018")
             * fact("Fact_T_S_Car_SEC_diesel_it_at_2018")
         )
-        t.road_car_it_ot.demand_electricity = (
-            t.road_car_it_ot.mileage
+        road_car_it_ot.demand_electricity = (
+            road_car_it_ot.mileage
             * fact("Fact_T_S_Car_frac_bev_with_phev_mlg_2018")
             * fact("Fact_T_S_Car_SEC_elec_it_at_2018")
         )
-        t.road_car_it_ot.CO2e_cb = (
-            t.road_car_it_ot.demand_petrol
-            * fact("Fact_T_S_petrol_EmFa_tank_wheel_2018")
-            + t.road_car_it_ot.demand_diesel
+        road_car_it_ot.CO2e_cb = (
+            road_car_it_ot.demand_petrol * fact("Fact_T_S_petrol_EmFa_tank_wheel_2018")
+            + road_car_it_ot.demand_diesel
             * fact("Fact_T_S_diesel_EmFa_tank_wheel_2018")
-            + t.road_car_it_ot.demand_lpg * fact("Fact_T_S_lpg_EmFa_tank_wheel_2018")
-            + t.road_car_it_ot.demand_gas * fact("Fact_T_S_cng_EmFa_tank_wheel_2018")
-            + t.road_car_it_ot.demand_biogas * ass("Ass_T_S_biogas_EmFa_tank_wheel")
-            + t.road_car_it_ot.demand_bioethanol
+            + road_car_it_ot.demand_lpg * fact("Fact_T_S_lpg_EmFa_tank_wheel_2018")
+            + road_car_it_ot.demand_gas * fact("Fact_T_S_cng_EmFa_tank_wheel_2018")
+            + road_car_it_ot.demand_biogas * ass("Ass_T_S_biogas_EmFa_tank_wheel")
+            + road_car_it_ot.demand_bioethanol
             * ass("Ass_T_S_bioethanol_EmFa_tank_wheel")
-            + t.road_car_it_ot.demand_biodiesel
-            * ass("Ass_T_S_biodiesel_EmFa_tank_wheel")
-            + t.road_car_it_ot.demand_electricity
+            + road_car_it_ot.demand_biodiesel * ass("Ass_T_S_biodiesel_EmFa_tank_wheel")
+            + road_car_it_ot.demand_electricity
             * fact("Fact_T_S_electricity_EmFa_tank_wheel_2018")
         )
-        t.road_car_ab.demand_lpg = (
-            t.road_car_ab.mileage
+        road_car_ab.demand_lpg = (
+            road_car_ab.mileage
             * fact("Fact_T_S_Car_frac_lpg_mlg_2018")
             * fact("Fact_T_S_Car_SEC_petrol_ab_2018")
         )
-        t.rail.CO2e_cb = t.rail_ppl.CO2e_cb + t.rail_gds.CO2e_cb
-        t.road_car_ab.demand_gas = (
-            t.road_car_ab.mileage
+        rail.CO2e_cb = rail_ppl.CO2e_cb + rail_gds.CO2e_cb
+        road_car_ab.demand_gas = (
+            road_car_ab.mileage
             * fact("Fact_T_S_Car_frac_cng_mlg_2018")
             * (1 - fact("Fact_T_S_Rl_Rd_cng_bio_frac_2018"))
             * fact("Fact_T_S_Car_SEC_petrol_it_at_2018")
         )
-        t.road_action_charger.CO2e_total = 0
+        road_action_charger.CO2e_total = 0
 
-        t.road_gds_ldt_it_ot.demand_diesel = (
-            t.road_gds_ldt_it_ot.mileage
+        road_gds_ldt_it_ot.demand_diesel = (
+            road_gds_ldt_it_ot.mileage
             * fact("Fact_T_S_LDT_frac_diesel_mlg_2018")
             * (1 - fact("Fact_T_S_Rl_Rd_diesel_bio_frac_2018"))
             * fact("Fact_T_S_LDT_SEC_diesel_it_at_2018")
         )
-        t.road_gds_ldt.mileage = (
-            t.road_gds_ldt_it_ot.mileage + t.road_gds_ldt_ab.mileage
-        )
-        t.road_car_ab.transport_capacity_pkm = t.road_car_ab.mileage * fact(
+        road_gds_ldt.mileage = road_gds_ldt_it_ot.mileage + road_gds_ldt_ab.mileage
+        road_car_ab.transport_capacity_pkm = road_car_ab.mileage * fact(
             "Fact_T_D_lf_ppl_Car_2018"
         )
-        t.road_gds_ldt_ab.demand_diesel = (
-            t.road_gds_ldt_ab.mileage
+        road_gds_ldt_ab.demand_diesel = (
+            road_gds_ldt_ab.mileage
             * fact("Fact_T_S_LDT_frac_diesel_mlg_2018")
             * (1 - fact("Fact_T_S_Rl_Rd_diesel_bio_frac_2018"))
             * fact("Fact_T_S_LDT_SEC_diesel_ab_2018")
         )
-        t.road_gds_ldt_it_ot.demand_lpg = (
-            t.road_gds_ldt_it_ot.mileage
+        road_gds_ldt_it_ot.demand_lpg = (
+            road_gds_ldt_it_ot.mileage
             * fact("Fact_T_S_LDT_frac_lpg_mlg_2018")
             * fact("Fact_T_S_LDT_SEC_petrol_it_at_2018")
         )
-        t.road_gds_mhd_it_ot.demand_biogas = (
-            t.road_gds_mhd_it_ot.mileage
+        road_gds_mhd_it_ot.demand_biogas = (
+            road_gds_mhd_it_ot.mileage
             * fact("Fact_T_S_MHD_frac_cng_lngl_stock_2018")
             * fact("Fact_T_S_Rl_Rd_cng_bio_frac_2018")
             * fact("Fact_T_S_MHD_SEC_diesel_it_at_2018")
         )
-        t.road_gds_ldt_it_ot.demand_bioethanol = (
-            t.road_gds_ldt_it_ot.mileage
+        road_gds_ldt_it_ot.demand_bioethanol = (
+            road_gds_ldt_it_ot.mileage
             * fact("Fact_T_S_LDT_frac_petrol_mlg_2018")
             * fact("Fact_T_S_Rl_Rd_benzin_bio_frac_2018")
             * fact("Fact_T_S_LDT_SEC_petrol_it_at_2018")
         )
-        t.road_gds_ldt_it_ot.demand_biodiesel = (
-            t.road_gds_ldt_it_ot.mileage
+        road_gds_ldt_it_ot.demand_biodiesel = (
+            road_gds_ldt_it_ot.mileage
             * fact("Fact_T_S_LDT_frac_diesel_mlg_2018")
             * fact("Fact_T_S_Rl_Rd_diesel_bio_frac_2018")
             * fact("Fact_T_S_LDT_SEC_diesel_it_at_2018")
         )
-        t.road_gds_ldt_it_ot.demand_electricity = (
-            t.road_gds_ldt_it_ot.mileage
+        road_gds_ldt_it_ot.demand_electricity = (
+            road_gds_ldt_it_ot.mileage
             * fact("Fact_T_S_LDT_frac_bev_mlg_2018")
             * fact("Fact_T_S_LDT_SEC_elec_it_at_2018")
         )
-        t.road_gds_ldt_it_ot.CO2e_cb = (
-            t.road_gds_ldt_it_ot.demand_petrol
+        road_gds_ldt_it_ot.CO2e_cb = (
+            road_gds_ldt_it_ot.demand_petrol
             * fact("Fact_T_S_petrol_EmFa_tank_wheel_2018")
-            + t.road_gds_ldt_it_ot.demand_diesel
+            + road_gds_ldt_it_ot.demand_diesel
             * fact("Fact_T_S_diesel_EmFa_tank_wheel_2018")
-            + t.road_gds_ldt_it_ot.demand_lpg
-            * fact("Fact_T_S_lpg_EmFa_tank_wheel_2018")
-            + t.road_gds_ldt_it_ot.demand_bioethanol
+            + road_gds_ldt_it_ot.demand_lpg * fact("Fact_T_S_lpg_EmFa_tank_wheel_2018")
+            + road_gds_ldt_it_ot.demand_bioethanol
             * ass("Ass_T_S_bioethanol_EmFa_tank_wheel")
-            + t.road_gds_ldt_it_ot.demand_biodiesel
+            + road_gds_ldt_it_ot.demand_biodiesel
             * ass("Ass_T_S_biodiesel_EmFa_tank_wheel")
-            + t.road_gds_ldt_it_ot.demand_electricity
+            + road_gds_ldt_it_ot.demand_electricity
             * fact("Fact_T_S_electricity_EmFa_tank_wheel_2018")
         )
-        t.road_car_ab.demand_biogas = (
-            t.road_car_ab.mileage
+        road_car_ab.demand_biogas = (
+            road_car_ab.mileage
             * fact("Fact_T_S_Car_frac_cng_mlg_2018")
             * fact("Fact_T_S_Rl_Rd_cng_bio_frac_2018")
             * fact("Fact_T_S_Car_SEC_petrol_it_at_2018")
         )
-        t.road_ppl.mileage = t.road_car.mileage + t.road_bus.mileage
-        t.road_car_ab.demand_bioethanol = (
-            t.road_car_ab.mileage
+        road_ppl.mileage = road_car.mileage + road_bus.mileage
+        road_car_ab.demand_bioethanol = (
+            road_car_ab.mileage
             * fact("Fact_T_S_Car_frac_petrol_with_phev_mlg_2018")
             * fact("Fact_T_S_Rl_Rd_benzin_bio_frac_2018")
             * fact("Fact_T_S_Car_SEC_petrol_ab_2018")
         )
-        t.road_car_ab.demand_biodiesel = (
-            t.road_car_ab.mileage
+        road_car_ab.demand_biodiesel = (
+            road_car_ab.mileage
             * fact("Fact_T_S_Car_frac_diesel_mlg_2018")
             * fact("Fact_T_S_Rl_Rd_diesel_bio_frac_2018")
             * fact("Fact_T_S_Car_SEC_diesel_ab_2018")
         )
-        t.road_car_ab.demand_electricity = (
-            t.road_car_ab.mileage
+        road_car_ab.demand_electricity = (
+            road_car_ab.mileage
             * fact("Fact_T_S_Car_frac_bev_with_phev_mlg_2018")
             * fact("Fact_T_S_Car_SEC_elec_ab_2018")
         )
-        t.road_car_ab.CO2e_cb = (
-            t.road_car_ab.demand_petrol * fact("Fact_T_S_petrol_EmFa_tank_wheel_2018")
-            + t.road_car_ab.demand_diesel * fact("Fact_T_S_diesel_EmFa_tank_wheel_2018")
-            + t.road_car_ab.demand_lpg * fact("Fact_T_S_lpg_EmFa_tank_wheel_2018")
-            + t.road_car_ab.demand_gas * fact("Fact_T_S_cng_EmFa_tank_wheel_2018")
-            + t.road_car_ab.demand_biogas * ass("Ass_T_S_biogas_EmFa_tank_wheel")
-            + t.road_car_ab.demand_bioethanol
-            * ass("Ass_T_S_bioethanol_EmFa_tank_wheel")
-            + t.road_car_ab.demand_biodiesel * ass("Ass_T_S_biodiesel_EmFa_tank_wheel")
-            + t.road_car_ab.demand_electricity
+        road_car_ab.CO2e_cb = (
+            road_car_ab.demand_petrol * fact("Fact_T_S_petrol_EmFa_tank_wheel_2018")
+            + road_car_ab.demand_diesel * fact("Fact_T_S_diesel_EmFa_tank_wheel_2018")
+            + road_car_ab.demand_lpg * fact("Fact_T_S_lpg_EmFa_tank_wheel_2018")
+            + road_car_ab.demand_gas * fact("Fact_T_S_cng_EmFa_tank_wheel_2018")
+            + road_car_ab.demand_biogas * ass("Ass_T_S_biogas_EmFa_tank_wheel")
+            + road_car_ab.demand_bioethanol * ass("Ass_T_S_bioethanol_EmFa_tank_wheel")
+            + road_car_ab.demand_biodiesel * ass("Ass_T_S_biodiesel_EmFa_tank_wheel")
+            + road_car_ab.demand_electricity
             * fact("Fact_T_S_electricity_EmFa_tank_wheel_2018")
         )
-        t.road_car.demand_lpg = t.road_car_it_ot.demand_lpg + t.road_car_ab.demand_lpg
-        t.road_car.transport_capacity_pkm = (
-            t.road_car_it_ot.transport_capacity_pkm
-            + t.road_car_ab.transport_capacity_pkm
+        road_car.demand_lpg = road_car_it_ot.demand_lpg + road_car_ab.demand_lpg
+        road_car.transport_capacity_pkm = (
+            road_car_it_ot.transport_capacity_pkm + road_car_ab.transport_capacity_pkm
         )
-        t.road_car_it_ot.energy = (
-            t.road_car_it_ot.demand_petrol
-            + t.road_car_it_ot.demand_diesel
-            + t.road_car_it_ot.demand_lpg
-            + t.road_car_it_ot.demand_gas
-            + t.road_car_it_ot.demand_biogas
-            + t.road_car_it_ot.demand_bioethanol
-            + t.road_car_it_ot.demand_biodiesel
-            + t.road_car_it_ot.demand_electricity
+        road_car_it_ot.energy = (
+            road_car_it_ot.demand_petrol
+            + road_car_it_ot.demand_diesel
+            + road_car_it_ot.demand_lpg
+            + road_car_it_ot.demand_gas
+            + road_car_it_ot.demand_biogas
+            + road_car_it_ot.demand_bioethanol
+            + road_car_it_ot.demand_biodiesel
+            + road_car_it_ot.demand_electricity
         )
-        t.road_ppl.demand_lpg = t.road_car.demand_lpg
+        road_ppl.demand_lpg = road_car.demand_lpg
 
-        t.road_car.demand_gas = t.road_car_it_ot.demand_gas + t.road_car_ab.demand_gas
-        t.road_car.CO2e_cb = t.road_car_it_ot.CO2e_cb + t.road_car_ab.CO2e_cb
-        t.road_car.demand_bioethanol = (
-            t.road_car_it_ot.demand_bioethanol + t.road_car_ab.demand_bioethanol
+        road_car.demand_gas = road_car_it_ot.demand_gas + road_car_ab.demand_gas
+        road_car.CO2e_cb = road_car_it_ot.CO2e_cb + road_car_ab.CO2e_cb
+        road_car.demand_bioethanol = (
+            road_car_it_ot.demand_bioethanol + road_car_ab.demand_bioethanol
         )
-        t.road_car.CO2e_total = t.road_car.CO2e_cb
+        road_car.CO2e_total = road_car.CO2e_cb
 
-        t.road_ppl.CO2e_cb = t.road_car.CO2e_cb + t.road_bus.CO2e_cb
-        t.road_ppl.CO2e_total = t.road_ppl.CO2e_cb
+        road_ppl.CO2e_cb = road_car.CO2e_cb + road_bus.CO2e_cb
+        road_ppl.CO2e_total = road_ppl.CO2e_cb
 
-        t.road_car_it_ot.CO2e_total = t.road_car_it_ot.CO2e_cb
+        road_car_it_ot.CO2e_total = road_car_it_ot.CO2e_cb
 
-        t.road_car_ab.energy = (
-            t.road_car_ab.demand_petrol
-            + t.road_car_ab.demand_diesel
-            + t.road_car_ab.demand_lpg
-            + t.road_car_ab.demand_gas
-            + t.road_car_ab.demand_biogas
-            + t.road_car_ab.demand_bioethanol
-            + t.road_car_ab.demand_biodiesel
-            + t.road_car_ab.demand_electricity
+        road_car_ab.energy = (
+            road_car_ab.demand_petrol
+            + road_car_ab.demand_diesel
+            + road_car_ab.demand_lpg
+            + road_car_ab.demand_gas
+            + road_car_ab.demand_biogas
+            + road_car_ab.demand_bioethanol
+            + road_car_ab.demand_biodiesel
+            + road_car_ab.demand_electricity
         )
-        t.road_ppl.transport_capacity_pkm = (
-            t.road_car.transport_capacity_pkm + t.road_bus.transport_capacity_pkm
+        road_ppl.transport_capacity_pkm = (
+            road_car.transport_capacity_pkm + road_bus.transport_capacity_pkm
         )
-        t.road_car.demand_diesel = (
-            t.road_car_it_ot.demand_diesel + t.road_car_ab.demand_diesel
+        road_car.demand_diesel = (
+            road_car_it_ot.demand_diesel + road_car_ab.demand_diesel
         )
-        t.road_car.energy = t.road_car_it_ot.energy + t.road_car_ab.energy
-        t.road_ppl.demand_gas = t.road_car.demand_gas + t.road_bus.demand_gas
-        t.road_car.demand_biogas = (
-            t.road_car_it_ot.demand_biogas + t.road_car_ab.demand_biogas
+        road_car.energy = road_car_it_ot.energy + road_car_ab.energy
+        road_ppl.demand_gas = road_car.demand_gas + road_bus.demand_gas
+        road_car.demand_biogas = (
+            road_car_it_ot.demand_biogas + road_car_ab.demand_biogas
         )
-        t.road_ppl.demand_bioethanol = t.road_car.demand_bioethanol
+        road_ppl.demand_bioethanol = road_car.demand_bioethanol
 
-        t.road_car.demand_biodiesel = (
-            t.road_car_it_ot.demand_biodiesel + t.road_car_ab.demand_biodiesel
+        road_car.demand_biodiesel = (
+            road_car_it_ot.demand_biodiesel + road_car_ab.demand_biodiesel
         )
 
-        t.road_car.demand_electricity = (
-            t.road_car_it_ot.demand_electricity + t.road_car_ab.demand_electricity
+        road_car.demand_electricity = (
+            road_car_it_ot.demand_electricity + road_car_ab.demand_electricity
         )
-        t.road_gds_ldt_ab.demand_lpg = (
-            t.road_gds_ldt_ab.mileage
+        road_gds_ldt_ab.demand_lpg = (
+            road_gds_ldt_ab.mileage
             * fact("Fact_T_S_LDT_frac_lpg_mlg_2018")
             * fact("Fact_T_S_LDT_SEC_petrol_ab_2018")
         )
-        t.road_car_ab.CO2e_total = t.road_car_ab.CO2e_cb
+        road_car_ab.CO2e_total = road_car_ab.CO2e_cb
 
-        t.road_ppl.energy = t.road_car.energy + t.road_bus.energy
-        t.road.transport_capacity_pkm = t.road_ppl.transport_capacity_pkm
-        t.road_ppl.demand_diesel = t.road_car.demand_diesel + t.road_bus.demand_diesel
-        t.road_ppl.demand_biogas = t.road_car.demand_biogas + t.road_bus.demand_biogas
-        t.road_ppl.demand_biodiesel = (
-            t.road_car.demand_biodiesel + t.road_bus.demand_biodiesel
+        road_ppl.energy = road_car.energy + road_bus.energy
+        road.transport_capacity_pkm = road_ppl.transport_capacity_pkm
+        road_ppl.demand_diesel = road_car.demand_diesel + road_bus.demand_diesel
+        road_ppl.demand_biogas = road_car.demand_biogas + road_bus.demand_biogas
+        road_ppl.demand_biodiesel = (
+            road_car.demand_biodiesel + road_bus.demand_biodiesel
         )
-        t.road_ppl.demand_electricity = (
-            t.road_car.demand_electricity + t.road_bus.demand_electricity
+        road_ppl.demand_electricity = (
+            road_car.demand_electricity + road_bus.demand_electricity
         )
 
-        t.road_gds_ldt_ab.demand_bioethanol = (
-            t.road_gds_ldt_ab.mileage
+        road_gds_ldt_ab.demand_bioethanol = (
+            road_gds_ldt_ab.mileage
             * fact("Fact_T_S_LDT_frac_petrol_mlg_2018")
             * fact("Fact_T_S_Rl_Rd_benzin_bio_frac_2018")
             * fact("Fact_T_S_LDT_SEC_petrol_ab_2018")
         )
-        t.road_bus.CO2e_total = t.road_bus.CO2e_cb
+        road_bus.CO2e_total = road_bus.CO2e_cb
 
-        t.road_bus_action_infra.CO2e_total = 0
+        road_bus_action_infra.CO2e_total = 0
 
-        t.road_gds_ldt_it_ot.energy = (
-            t.road_gds_ldt_it_ot.demand_petrol
-            + t.road_gds_ldt_it_ot.demand_diesel
-            + t.road_gds_ldt_it_ot.demand_lpg
-            + t.road_gds_ldt_it_ot.demand_bioethanol
-            + t.road_gds_ldt_it_ot.demand_biodiesel
-            + t.road_gds_ldt_it_ot.demand_electricity
+        road_gds_ldt_it_ot.energy = (
+            road_gds_ldt_it_ot.demand_petrol
+            + road_gds_ldt_it_ot.demand_diesel
+            + road_gds_ldt_it_ot.demand_lpg
+            + road_gds_ldt_it_ot.demand_bioethanol
+            + road_gds_ldt_it_ot.demand_biodiesel
+            + road_gds_ldt_it_ot.demand_electricity
         )
-        t.road_gds_mhd_ab.mileage = entry("In_T_mil_mhd_ab") * Million
+        road_gds_mhd_ab.mileage = entry("In_T_mil_mhd_ab") * Million
 
-        t.road_gds_ldt_ab.transport_capacity_tkm = t.road_gds_ldt_ab.mileage * fact(
+        road_gds_ldt_ab.transport_capacity_tkm = road_gds_ldt_ab.mileage * fact(
             "Fact_T_D_lf_gds_LDT_2018"
         )
-        t.road_gds_ldt.demand_diesel = (
-            t.road_gds_ldt_it_ot.demand_diesel + t.road_gds_ldt_ab.demand_diesel
+        road_gds_ldt.demand_diesel = (
+            road_gds_ldt_it_ot.demand_diesel + road_gds_ldt_ab.demand_diesel
         )
-        t.road_gds_ldt_ab.demand_biodiesel = (
-            t.road_gds_ldt_ab.mileage
+        road_gds_ldt_ab.demand_biodiesel = (
+            road_gds_ldt_ab.mileage
             * fact("Fact_T_S_LDT_frac_diesel_mlg_2018")
             * fact("Fact_T_S_Rl_Rd_diesel_bio_frac_2018")
             * fact("Fact_T_S_LDT_SEC_diesel_ab_2018")
         )
-        t.road_gds_mhd_it_ot.demand_gas = (
-            t.road_gds_mhd_it_ot.mileage
+        road_gds_mhd_it_ot.demand_gas = (
+            road_gds_mhd_it_ot.mileage
             * fact("Fact_T_S_MHD_frac_cng_lngl_stock_2018")
             * (1 - fact("Fact_T_S_Rl_Rd_cng_bio_frac_2018"))
             * fact("Fact_T_S_MHD_SEC_diesel_it_at_2018")
         )
-        t.road_gds_mhd_ab.demand_biogas = (
-            t.road_gds_mhd_ab.mileage
+        road_gds_mhd_ab.demand_biogas = (
+            road_gds_mhd_ab.mileage
             * fact("Fact_T_S_MHD_frac_cng_lngl_stock_2018")
             * fact("Fact_T_S_Rl_Rd_cng_bio_frac_2018")
             * fact("Fact_T_S_MHD_SEC_diesel_ab_2018")
         )
-        t.road_gds_ldt_ab.demand_electricity = (
-            t.road_gds_ldt_ab.mileage
+        road_gds_ldt_ab.demand_electricity = (
+            road_gds_ldt_ab.mileage
             * fact("Fact_T_S_LDT_frac_bev_mlg_2018")
             * fact("Fact_T_S_LDT_SEC_elec_ab_2018")
         )
-        t.road_gds_ldt_ab.CO2e_cb = (
-            t.road_gds_ldt_ab.demand_petrol
-            * fact("Fact_T_S_petrol_EmFa_tank_wheel_2018")
-            + t.road_gds_ldt_ab.demand_diesel
+        road_gds_ldt_ab.CO2e_cb = (
+            road_gds_ldt_ab.demand_petrol * fact("Fact_T_S_petrol_EmFa_tank_wheel_2018")
+            + road_gds_ldt_ab.demand_diesel
             * fact("Fact_T_S_diesel_EmFa_tank_wheel_2018")
-            + t.road_gds_ldt_ab.demand_lpg * fact("Fact_T_S_lpg_EmFa_tank_wheel_2018")
-            + t.road_gds_ldt_ab.demand_bioethanol
+            + road_gds_ldt_ab.demand_lpg * fact("Fact_T_S_lpg_EmFa_tank_wheel_2018")
+            + road_gds_ldt_ab.demand_bioethanol
             * ass("Ass_T_S_bioethanol_EmFa_tank_wheel")
-            + t.road_gds_ldt_ab.demand_biodiesel
+            + road_gds_ldt_ab.demand_biodiesel
             * ass("Ass_T_S_biodiesel_EmFa_tank_wheel")
-            + t.road_gds_ldt_ab.demand_electricity
+            + road_gds_ldt_ab.demand_electricity
             * fact("Fact_T_S_electricity_EmFa_tank_wheel_2018")
         )
-        t.road_gds_ldt.CO2e_cb = (
-            t.road_gds_ldt_it_ot.CO2e_cb + t.road_gds_ldt_ab.CO2e_cb
-        )
-        t.other_foot.CO2e_cb = t.other_cycl.CO2e_cb = 0
+        road_gds_ldt.CO2e_cb = road_gds_ldt_it_ot.CO2e_cb + road_gds_ldt_ab.CO2e_cb
+        other_foot.CO2e_cb = other_cycl.CO2e_cb = 0
 
-        t.other.CO2e_cb = t.other_foot.CO2e_cb + t.other_cycl.CO2e_cb
-        t.road_gds_mhd_it_ot.demand_diesel = (
-            t.road_gds_mhd_it_ot.mileage
+        other.CO2e_cb = other_foot.CO2e_cb + other_cycl.CO2e_cb
+        road_gds_mhd_it_ot.demand_diesel = (
+            road_gds_mhd_it_ot.mileage
             * fact("Fact_T_S_MHD_frac_diesel_stock_2018")
             * (1 - fact("Fact_T_S_Rl_Rd_diesel_bio_frac_2018"))
             * fact("Fact_T_S_MHD_SEC_diesel_it_at_2018")
         )
-        t.road_gds_mhd_it_ot.demand_biodiesel = (
-            t.road_gds_mhd_it_ot.mileage
+        road_gds_mhd_it_ot.demand_biodiesel = (
+            road_gds_mhd_it_ot.mileage
             * fact("Fact_T_S_MHD_frac_diesel_stock_2018")
             * fact("Fact_T_S_Rl_Rd_diesel_bio_frac_2018")
             * fact("Fact_T_S_MHD_SEC_diesel_it_at_2018")
         )
-        t.road_gds_mhd_ab.demand_gas = (
-            t.road_gds_mhd_ab.mileage
+        road_gds_mhd_ab.demand_gas = (
+            road_gds_mhd_ab.mileage
             * fact("Fact_T_S_MHD_frac_cng_lngl_stock_2018")
             * (1 - fact("Fact_T_S_Rl_Rd_cng_bio_frac_2018"))
             * fact("Fact_T_S_MHD_SEC_diesel_ab_2018")
         )
-        t.road_gds_mhd_it_ot.transport_capacity_tkm = (
-            t.road_gds_mhd_it_ot.mileage * fact("Fact_T_D_lf_gds_MHD_2018")
+        road_gds_mhd_it_ot.transport_capacity_tkm = road_gds_mhd_it_ot.mileage * fact(
+            "Fact_T_D_lf_gds_MHD_2018"
         )
-        t.road_gds_mhd_ab.demand_diesel = (
-            t.road_gds_mhd_ab.mileage
+        road_gds_mhd_ab.demand_diesel = (
+            road_gds_mhd_ab.mileage
             * fact("Fact_T_S_MHD_frac_diesel_stock_2018")
             * (1 - fact("Fact_T_S_Rl_Rd_diesel_bio_frac_2018"))
             * fact("Fact_T_S_MHD_SEC_diesel_ab_2018")
         )
-        t.road_gds_ldt.demand_lpg = (
-            t.road_gds_ldt_it_ot.demand_lpg + t.road_gds_ldt_ab.demand_lpg
+        road_gds_ldt.demand_lpg = (
+            road_gds_ldt_it_ot.demand_lpg + road_gds_ldt_ab.demand_lpg
         )
-        t.road_gds_ldt.demand_bioethanol = (
-            t.road_gds_ldt_it_ot.demand_bioethanol + t.road_gds_ldt_ab.demand_bioethanol
+        road_gds_ldt.demand_bioethanol = (
+            road_gds_ldt_it_ot.demand_bioethanol + road_gds_ldt_ab.demand_bioethanol
         )
-        t.road_gds_mhd_it_ot.demand_electricity = (
-            t.road_gds_mhd_it_ot.mileage
+        road_gds_mhd_it_ot.demand_electricity = (
+            road_gds_mhd_it_ot.mileage
             * fact("Fact_T_S_MHD_frac_bev_stock_2018")
             * fact("Fact_T_S_MHD_SEC_elec_it_at_2018")
         )
-        t.road_gds_mhd_it_ot.CO2e_cb = (
-            t.road_gds_mhd_it_ot.demand_diesel
+        road_gds_mhd_it_ot.CO2e_cb = (
+            road_gds_mhd_it_ot.demand_diesel
             * fact("Fact_T_S_diesel_EmFa_tank_wheel_2018")
-            + t.road_gds_mhd_it_ot.demand_gas
-            * fact("Fact_T_S_cng_EmFa_tank_wheel_2018")
-            + t.road_gds_mhd_it_ot.demand_biogas * ass("Ass_T_S_biogas_EmFa_tank_wheel")
-            + t.road_gds_mhd_it_ot.demand_biodiesel
+            + road_gds_mhd_it_ot.demand_gas * fact("Fact_T_S_cng_EmFa_tank_wheel_2018")
+            + road_gds_mhd_it_ot.demand_biogas * ass("Ass_T_S_biogas_EmFa_tank_wheel")
+            + road_gds_mhd_it_ot.demand_biodiesel
             * ass("Ass_T_S_biodiesel_EmFa_tank_wheel")
-            + t.road_gds_mhd_it_ot.demand_electricity
+            + road_gds_mhd_it_ot.demand_electricity
             * fact("Fact_T_S_electricity_EmFa_tank_wheel_2018")
         )
-        t.road_gds_mhd_ab.demand_biodiesel = (
-            t.road_gds_mhd_ab.mileage
+        road_gds_mhd_ab.demand_biodiesel = (
+            road_gds_mhd_ab.mileage
             * fact("Fact_T_S_MHD_frac_diesel_stock_2018")
             * fact("Fact_T_S_Rl_Rd_diesel_bio_frac_2018")
             * fact("Fact_T_S_MHD_SEC_diesel_ab_2018")
         )
-        t.road_gds_ldt.CO2e_total = t.road_gds_ldt.CO2e_cb
+        road_gds_ldt.CO2e_total = road_gds_ldt.CO2e_cb
 
-        t.road_gds.demand_lpg = t.road_gds_ldt.demand_lpg
+        road_gds.demand_lpg = road_gds_ldt.demand_lpg
 
-        t.road_gds_ldt.transport_capacity_tkm = (
-            t.road_gds_ldt_it_ot.transport_capacity_tkm
-            + t.road_gds_ldt_ab.transport_capacity_tkm
+        road_gds_ldt.transport_capacity_tkm = (
+            road_gds_ldt_it_ot.transport_capacity_tkm
+            + road_gds_ldt_ab.transport_capacity_tkm
         )
-        t.road_gds_ldt_ab.energy = (
-            t.road_gds_ldt_ab.demand_petrol
-            + t.road_gds_ldt_ab.demand_diesel
-            + t.road_gds_ldt_ab.demand_lpg
-            + t.road_gds_ldt_ab.demand_bioethanol
-            + t.road_gds_ldt_ab.demand_biodiesel
-            + t.road_gds_ldt_ab.demand_electricity
+        road_gds_ldt_ab.energy = (
+            road_gds_ldt_ab.demand_petrol
+            + road_gds_ldt_ab.demand_diesel
+            + road_gds_ldt_ab.demand_lpg
+            + road_gds_ldt_ab.demand_bioethanol
+            + road_gds_ldt_ab.demand_biodiesel
+            + road_gds_ldt_ab.demand_electricity
         )
-        t.road.demand_lpg = t.road_ppl.demand_lpg + t.road_gds.demand_lpg
-        t.road_gds.demand_bioethanol = t.road_gds_ldt.demand_bioethanol
-        t.road_gds_ldt.demand_biodiesel = (
-            t.road_gds_ldt_it_ot.demand_biodiesel + t.road_gds_ldt_ab.demand_biodiesel
+        road.demand_lpg = road_ppl.demand_lpg + road_gds.demand_lpg
+        road_gds.demand_bioethanol = road_gds_ldt.demand_bioethanol
+        road_gds_ldt.demand_biodiesel = (
+            road_gds_ldt_it_ot.demand_biodiesel + road_gds_ldt_ab.demand_biodiesel
         )
-        t.road_gds_ldt.demand_electricity = (
-            t.road_gds_ldt_it_ot.demand_electricity
-            + t.road_gds_ldt_ab.demand_electricity
+        road_gds_ldt.demand_electricity = (
+            road_gds_ldt_it_ot.demand_electricity + road_gds_ldt_ab.demand_electricity
         )
-        t.road_gds_mhd_ab.demand_electricity = (
-            t.road_gds_mhd_ab.mileage
+        road_gds_mhd_ab.demand_electricity = (
+            road_gds_mhd_ab.mileage
             * fact("Fact_T_S_MHD_frac_bev_stock_2018")
             * fact("Fact_T_S_MHD_SEC_elec_ab_2018")
         )
-        t.road_gds_ldt_it_ot.CO2e_total = t.road_gds_ldt_it_ot.CO2e_cb
+        road_gds_ldt_it_ot.CO2e_total = road_gds_ldt_it_ot.CO2e_cb
 
-        t.road_gds_mhd_it_ot.energy = (
-            t.road_gds_mhd_it_ot.demand_diesel
-            + t.road_gds_mhd_it_ot.demand_gas
-            + t.road_gds_mhd_it_ot.demand_biogas
-            + t.road_gds_mhd_it_ot.demand_biodiesel
-            + t.road_gds_mhd_it_ot.demand_electricity
+        road_gds_mhd_it_ot.energy = (
+            road_gds_mhd_it_ot.demand_diesel
+            + road_gds_mhd_it_ot.demand_gas
+            + road_gds_mhd_it_ot.demand_biogas
+            + road_gds_mhd_it_ot.demand_biodiesel
+            + road_gds_mhd_it_ot.demand_electricity
         )
-        t.road_gds_mhd_ab.transport_capacity_tkm = t.road_gds_mhd_ab.mileage * fact(
+        road_gds_mhd_ab.transport_capacity_tkm = road_gds_mhd_ab.mileage * fact(
             "Fact_T_D_lf_gds_MHD_2018"
         )
-        t.road_gds_mhd.demand_diesel = (
-            t.road_gds_mhd_it_ot.demand_diesel + t.road_gds_mhd_ab.demand_diesel
+        road_gds_mhd.demand_diesel = (
+            road_gds_mhd_it_ot.demand_diesel + road_gds_mhd_ab.demand_diesel
         )
-        t.road_gds_ldt.energy = t.road_gds_ldt_it_ot.energy + t.road_gds_ldt_ab.energy
-        t.road.demand_bioethanol = (
-            t.road_ppl.demand_bioethanol + t.road_gds.demand_bioethanol
-        )
-        t.road_gds_mhd_ab.CO2e_cb = (
-            t.road_gds_mhd_ab.demand_diesel
-            * fact("Fact_T_S_diesel_EmFa_tank_wheel_2018")
-            + t.road_gds_mhd_ab.demand_gas * fact("Fact_T_S_cng_EmFa_tank_wheel_2018")
-            + t.road_gds_mhd_ab.demand_biogas * ass("Ass_T_S_biogas_EmFa_tank_wheel")
-            + t.road_gds_mhd_ab.demand_biodiesel
+        road_gds_ldt.energy = road_gds_ldt_it_ot.energy + road_gds_ldt_ab.energy
+        road.demand_bioethanol = road_ppl.demand_bioethanol + road_gds.demand_bioethanol
+        road_gds_mhd_ab.CO2e_cb = (
+            road_gds_mhd_ab.demand_diesel * fact("Fact_T_S_diesel_EmFa_tank_wheel_2018")
+            + road_gds_mhd_ab.demand_gas * fact("Fact_T_S_cng_EmFa_tank_wheel_2018")
+            + road_gds_mhd_ab.demand_biogas * ass("Ass_T_S_biogas_EmFa_tank_wheel")
+            + road_gds_mhd_ab.demand_biodiesel
             * ass("Ass_T_S_biodiesel_EmFa_tank_wheel")
-            + t.road_gds_mhd_ab.demand_electricity
+            + road_gds_mhd_ab.demand_electricity
             * fact("Fact_T_S_electricity_EmFa_tank_wheel_2018")
         )
-        t.road_gds_mhd.CO2e_cb = (
-            t.road_gds_mhd_it_ot.CO2e_cb + t.road_gds_mhd_ab.CO2e_cb
+        road_gds_mhd.CO2e_cb = road_gds_mhd_it_ot.CO2e_cb + road_gds_mhd_ab.CO2e_cb
+        road_gds.CO2e_cb = road_gds_ldt.CO2e_cb + road_gds_mhd.CO2e_cb
+        road_gds_ldt_ab.CO2e_total = road_gds_ldt_ab.CO2e_cb
+        road_gds_mhd_ab.energy = (
+            road_gds_mhd_ab.demand_diesel
+            + road_gds_mhd_ab.demand_gas
+            + road_gds_mhd_ab.demand_biogas
+            + road_gds_mhd_ab.demand_biodiesel
+            + road_gds_mhd_ab.demand_electricity
         )
-        t.road_gds.CO2e_cb = t.road_gds_ldt.CO2e_cb + t.road_gds_mhd.CO2e_cb
-        t.road_gds_ldt_ab.CO2e_total = t.road_gds_ldt_ab.CO2e_cb
-        t.road_gds_mhd_ab.energy = (
-            t.road_gds_mhd_ab.demand_diesel
-            + t.road_gds_mhd_ab.demand_gas
-            + t.road_gds_mhd_ab.demand_biogas
-            + t.road_gds_mhd_ab.demand_biodiesel
-            + t.road_gds_mhd_ab.demand_electricity
+        road_gds_mhd.mileage = road_gds_mhd_it_ot.mileage + road_gds_mhd_ab.mileage
+        road_gds_mhd.transport_capacity_tkm = (
+            road_gds_mhd_it_ot.transport_capacity_tkm
+            + road_gds_mhd_ab.transport_capacity_tkm
         )
-        t.road_gds_mhd.mileage = (
-            t.road_gds_mhd_it_ot.mileage + t.road_gds_mhd_ab.mileage
+        road_gds.demand_diesel = road_gds_ldt.demand_diesel + road_gds_mhd.demand_diesel
+        road_gds_mhd.demand_gas = (
+            road_gds_mhd_it_ot.demand_gas + road_gds_mhd_ab.demand_gas
         )
-        t.road_gds_mhd.transport_capacity_tkm = (
-            t.road_gds_mhd_it_ot.transport_capacity_tkm
-            + t.road_gds_mhd_ab.transport_capacity_tkm
+        road_gds_mhd.demand_biogas = (
+            road_gds_mhd_it_ot.demand_biogas + road_gds_mhd_ab.demand_biogas
         )
-        t.road_gds.demand_diesel = (
-            t.road_gds_ldt.demand_diesel + t.road_gds_mhd.demand_diesel
+        road_gds_mhd.demand_biodiesel = (
+            road_gds_mhd_it_ot.demand_biodiesel + road_gds_mhd_ab.demand_biodiesel
         )
-        t.road_gds_mhd.demand_gas = (
-            t.road_gds_mhd_it_ot.demand_gas + t.road_gds_mhd_ab.demand_gas
+        road_gds_mhd.demand_electricity = (
+            road_gds_mhd_it_ot.demand_electricity + road_gds_mhd_ab.demand_electricity
         )
-        t.road_gds_mhd.demand_biogas = (
-            t.road_gds_mhd_it_ot.demand_biogas + t.road_gds_mhd_ab.demand_biogas
-        )
-        t.road_gds_mhd.demand_biodiesel = (
-            t.road_gds_mhd_it_ot.demand_biodiesel + t.road_gds_mhd_ab.demand_biodiesel
-        )
-        t.road_gds_mhd.demand_electricity = (
-            t.road_gds_mhd_it_ot.demand_electricity
-            + t.road_gds_mhd_ab.demand_electricity
-        )
-        t.road.CO2e_cb = t.road_ppl.CO2e_cb + t.road_gds.CO2e_cb
-        t.road_gds_mhd.CO2e_total = t.road_gds_mhd.CO2e_cb
+        road.CO2e_cb = road_ppl.CO2e_cb + road_gds.CO2e_cb
+        road_gds_mhd.CO2e_total = road_gds_mhd.CO2e_cb
 
-        t.road_gds.demand_gas = t.road_gds_mhd.demand_gas
+        road_gds.demand_gas = road_gds_mhd.demand_gas
 
-        t.road_gds.mileage = t.road_gds_ldt.mileage + t.road_gds_mhd.mileage
-        t.road_gds.transport_capacity_tkm = (
-            t.road_gds_ldt.transport_capacity_tkm
-            + t.road_gds_mhd.transport_capacity_tkm
+        road_gds.mileage = road_gds_ldt.mileage + road_gds_mhd.mileage
+        road_gds.transport_capacity_tkm = (
+            road_gds_ldt.transport_capacity_tkm + road_gds_mhd.transport_capacity_tkm
         )
-        t.road_gds_mhd.energy = t.road_gds_mhd_it_ot.energy + t.road_gds_mhd_ab.energy
-        t.road.demand_gas = t.road_ppl.demand_gas + t.road_gds.demand_gas
-        t.road_gds.demand_biogas = t.road_gds_mhd.demand_biogas
+        road_gds_mhd.energy = road_gds_mhd_it_ot.energy + road_gds_mhd_ab.energy
+        road.demand_gas = road_ppl.demand_gas + road_gds.demand_gas
+        road_gds.demand_biogas = road_gds_mhd.demand_biogas
 
-        t.road_gds.demand_biodiesel = (
-            t.road_gds_ldt.demand_biodiesel + t.road_gds_mhd.demand_biodiesel
+        road_gds.demand_biodiesel = (
+            road_gds_ldt.demand_biodiesel + road_gds_mhd.demand_biodiesel
         )
-        t.road_gds.demand_electricity = (
-            t.road_gds_ldt.demand_electricity + t.road_gds_mhd.demand_electricity
+        road_gds.demand_electricity = (
+            road_gds_ldt.demand_electricity + road_gds_mhd.demand_electricity
         )
-        t.road_gds.CO2e_total = t.road_gds.CO2e_cb
+        road_gds.CO2e_total = road_gds.CO2e_cb
 
-        t.road_gds_mhd_it_ot.CO2e_total = t.road_gds_mhd_it_ot.CO2e_cb
+        road_gds_mhd_it_ot.CO2e_total = road_gds_mhd_it_ot.CO2e_cb
 
-        t.road_gds.energy = t.road_gds_ldt.energy + t.road_gds_mhd.energy
-        t.road.mileage = t.road_ppl.mileage + t.road_gds.mileage
-        t.road.transport_capacity_tkm = t.road_gds.transport_capacity_tkm
+        road_gds.energy = road_gds_ldt.energy + road_gds_mhd.energy
+        road.mileage = road_ppl.mileage + road_gds.mileage
+        road.transport_capacity_tkm = road_gds.transport_capacity_tkm
 
-        t.road.demand_diesel = t.road_ppl.demand_diesel + t.road_gds.demand_diesel
-        t.road.energy = t.road_ppl.energy + t.road_gds.energy
-        t.road.demand_biogas = t.road_ppl.demand_biogas + t.road_gds.demand_biogas
-        t.road.demand_biodiesel = (
-            t.road_ppl.demand_biodiesel + t.road_gds.demand_biodiesel
+        road.demand_diesel = road_ppl.demand_diesel + road_gds.demand_diesel
+        road.energy = road_ppl.energy + road_gds.energy
+        road.demand_biogas = road_ppl.demand_biogas + road_gds.demand_biogas
+        road.demand_biodiesel = road_ppl.demand_biodiesel + road_gds.demand_biodiesel
+        road.demand_electricity = (
+            road_ppl.demand_electricity + road_gds.demand_electricity
         )
-        t.road.demand_electricity = (
-            t.road_ppl.demand_electricity + t.road_gds.demand_electricity
+        road.CO2e_total = road.CO2e_cb
+
+        road_gds_mhd_ab.CO2e_total = road_gds_mhd_ab.CO2e_cb
+
+        rail_ppl_distance.energy = (
+            rail_ppl_distance.demand_diesel
+            + rail_ppl_distance.demand_biodiesel
+            + rail_ppl_distance.demand_electricity
         )
-        t.road.CO2e_total = t.road.CO2e_cb
-
-        t.road_gds_mhd_ab.CO2e_total = t.road_gds_mhd_ab.CO2e_cb
-
-        t.rail.energy = t.rail_ppl_.energy + t.rail_ppl_metro.energy + t.rail_gds.energy
-        t.other.mileage = 0
-        t.other_foot.transport_capacity_pkm = (
+        rail.energy = rail_ppl_distance.energy + rail_ppl_metro.energy + rail_gds.energy
+        other.mileage = 0
+        other_foot.transport_capacity_pkm = (
             365
             * entry("In_M_population_com_2018")
             * fact("Fact_T_D_modal_split_foot_nat")
             if (ags == "DG000000")
             else entry("In_M_population_com_2018") * 365
         )  # todo lookup list
-        t.other.transport_capacity_tkm = 0
+        other.transport_capacity_tkm = 0
 
-        t.rail.demand_diesel = t.rail_ppl.demand_diesel + t.rail_gds.demand_diesel
-        t.rail.demand_biodiesel = (
-            t.rail_ppl.demand_biodiesel + t.rail_gds.demand_biodiesel
+        rail.demand_diesel = rail_ppl.demand_diesel + rail_gds.demand_diesel
+        rail.demand_biodiesel = rail_ppl.demand_biodiesel + rail_gds.demand_biodiesel
+        rail.demand_electricity = (
+            rail_ppl.demand_electricity + rail_gds.demand_electricity
         )
-        t.rail.demand_electricity = (
-            t.rail_ppl.demand_electricity + t.rail_gds.demand_electricity
+        CO2e_cb = (
+            air.CO2e_cb + road.CO2e_cb + rail.CO2e_cb + ship.CO2e_cb + other.CO2e_cb
         )
-        t.t.CO2e_cb = (
-            t.air.CO2e_cb
-            + t.road.CO2e_cb
-            + t.rail.CO2e_cb
-            + t.ship.CO2e_cb
-            + t.other.CO2e_cb
-        )
-        t.rail.CO2e_total = t.rail.CO2e_cb
+        rail.CO2e_total = rail.CO2e_cb
 
-        t.rail_action_invest_infra.CO2e_total = 0
+        rail_action_invest_infra.CO2e_total = 0
 
-        t.rail_action_invest_station.CO2e_total = 0
+        rail_action_invest_station.CO2e_total = 0
 
-        t.rail_gds.mileage = t.rail_gds.transport_capacity_tkm / fact(
+        rail_gds.mileage = rail_gds.transport_capacity_tkm / fact(
             "Fact_T_D_rail_gds_ratio_tkm_to_fzkm_2018"
         )
-        t.rail_ppl.CO2e_total = t.rail_ppl.CO2e_cb
+        rail_ppl.CO2e_total = rail_ppl.CO2e_cb
 
-        t.t.energy = t.air.energy + t.road.energy + t.rail.energy + t.ship.energy
-        t.t.demand_electricity = t.road.demand_electricity + t.rail.demand_electricity
+        energy = air.energy + road.energy + rail.energy + ship.energy
+        demand_electricity = road.demand_electricity + rail.demand_electricity
 
-        t.rail_ppl_metro.transport_capacity_pkm = t.rail_ppl_metro.mileage * fact(
+        rail_ppl_metro.transport_capacity_pkm = rail_ppl_metro.mileage * fact(
             "Fact_T_D_lf_Rl_Metro_2018"
         )
-        t.rail_ppl_metro.CO2e_cb = t.rail_ppl_metro.demand_electricity * fact(
+        rail_ppl_metro.CO2e_cb = rail_ppl_metro.demand_electricity * fact(
             "Fact_T_S_electricity_EmFa_tank_wheel_2018"
         )
-        t.rail_ppl_metro.CO2e_total = t.rail_ppl_metro.CO2e_cb
+        rail_ppl_metro.CO2e_total = rail_ppl_metro.CO2e_cb
 
-        t.rail_ppl_metro_action_infra.CO2e_total = 0
+        rail_ppl_metro_action_infra.CO2e_total = 0
 
-        t.rail.mileage = t.rail_ppl.mileage + t.rail_gds.mileage
-        t.rail_gds.CO2e_total = t.rail_gds.CO2e_cb
+        rail.mileage = rail_ppl.mileage + rail_gds.mileage
+        rail_gds.CO2e_total = rail_gds.CO2e_cb
 
-        t.ship.CO2e_total = t.ship.CO2e_cb
+        ship.CO2e_total = ship.CO2e_cb
 
-        t.ship_dmstc.CO2e_total = t.ship_dmstc.CO2e_cb
+        ship_dmstc.CO2e_total = ship_dmstc.CO2e_cb
 
-        t.ship_inter.CO2e_total = t.ship_inter.CO2e_cb
-        t.t.mileage = t.road.mileage + t.rail.mileage + t.other.mileage
+        ship_inter.CO2e_total = ship_inter.CO2e_cb
+        mileage = road.mileage + rail.mileage + other.mileage
 
-        t.t.transport_capacity_tkm = (
-            t.air.transport_capacity_tkm
-            + t.road.transport_capacity_tkm
-            + t.rail.transport_capacity_tkm
-            + t.ship.transport_capacity_tkm
-            + t.other.transport_capacity_tkm
+        transport_capacity_tkm = (
+            air.transport_capacity_tkm
+            + road.transport_capacity_tkm
+            + rail.transport_capacity_tkm
+            + ship.transport_capacity_tkm
+            + other.transport_capacity_tkm
         )
-        t.t.CO2e_total = t.t.CO2e_cb
-        t.other.CO2e_total = t.other.CO2e_cb
-        t.other.transport_capacity_pkm = (
-            t.other_foot.transport_capacity_pkm + t.other_cycl.transport_capacity_pkm
+        CO2e_total = CO2e_cb
+        other.CO2e_total = other.CO2e_cb
+        other.transport_capacity_pkm = (
+            other_foot.transport_capacity_pkm + other_cycl.transport_capacity_pkm
         )
-        t.other_foot.CO2e_total = t.other_foot.CO2e_cb
+        other_foot.CO2e_total = other_foot.CO2e_cb
 
-        t.t.transport_capacity_pkm = (
-            t.air.transport_capacity_pkm
-            + t.road.transport_capacity_pkm
-            + t.rail.transport_capacity_pkm
-            + t.other.transport_capacity_pkm
+        transport_capacity_pkm = (
+            air.transport_capacity_pkm
+            + road.transport_capacity_pkm
+            + rail.transport_capacity_pkm
+            + other.transport_capacity_pkm
         )
 
-        t.other_cycl.CO2e_total = t.other_cycl.CO2e_cb
-        t.s_diesel.energy = t.t.demand_diesel
-        t.s_gas.energy = t.t.demand_gas
-        t.s_biogas.energy = t.t.demand_biogas
+        other_cycl.CO2e_total = other_cycl.CO2e_cb
+        s_diesel.energy = t.demand_diesel
+        s_gas.energy = t.demand_gas
+        s_biogas.energy = t.demand_biogas
 
-        t.t.demand_petrol = t.air.demand_petrol + t.road.demand_petrol
-        t.t.demand_jetfuel = t.air.demand_jetfuel
+        demand_petrol = air.demand_petrol + road.demand_petrol
+        demand_jetfuel = air.demand_jetfuel
 
-        t.t.demand_diesel = (
-            t.road.demand_diesel + t.rail.demand_diesel + t.ship.demand_diesel
+        demand_diesel = road.demand_diesel + rail.demand_diesel + ship.demand_diesel
+        ship.demand_fueloil = ship_inter.demand_fueloil
+
+        demand_fueloil = ship.demand_fueloil
+
+        demand_lpg = road.demand_lpg
+
+        s_lpg.energy = demand_lpg
+
+        demand_gas = road.demand_gas
+
+        demand_biogas = road.demand_biogas
+
+        demand_bioethanol = road.demand_bioethanol
+
+        demand_biodiesel = road.demand_biodiesel + rail.demand_biodiesel
+
+        demand_biogas = road.demand_biogas
+        demand_bioethanol = road.demand_bioethanol
+        demand_biodiesel = road.demand_biodiesel + rail.demand_biodiesel
+
+        s_diesel.energy = demand_diesel
+        s_gas.energy = demand_gas
+        s_biogas.energy = demand_biogas
+        s_bioethanol.energy = demand_bioethanol
+        s_biodiesel.energy = demand_biodiesel
+        s_elec.energy = demand_electricity
+
+        s_biogas.energy = demand_biogas
+        s_bioethanol.energy = demand_bioethanol
+        s_biodiesel.energy = demand_biodiesel
+
+        s.energy = (
+            s_petrol.energy
+            + s_jetfuel.energy
+            + s_diesel.energy
+            + s_fueloil.energy
+            + s_lpg.energy
+            + s_gas.energy
+            + s_biogas.energy
+            + s_bioethanol.energy
+            + s_biodiesel.energy
+            + s_elec.energy
         )
-        t.ship.demand_fueloil = t.ship_inter.demand_fueloil
 
-        t.t.demand_fueloil = t.ship.demand_fueloil
-
-        t.t.demand_lpg = t.road.demand_lpg
-
-        t.s_lpg.energy = t.t.demand_lpg
-
-        t.t.demand_gas = t.road.demand_gas
-
-        t.t.demand_biogas = t.road.demand_biogas
-
-        t.t.demand_bioethanol = t.road.demand_bioethanol
-
-        t.t.demand_biodiesel = t.road.demand_biodiesel + t.rail.demand_biodiesel
-
-        t.t.demand_biogas = t.road.demand_biogas
-        t.t.demand_bioethanol = t.road.demand_bioethanol
-        t.t.demand_biodiesel = t.road.demand_biodiesel + t.rail.demand_biodiesel
-
-        t.s_diesel.energy = t.t.demand_diesel
-        t.s_gas.energy = t.t.demand_gas
-        t.s_biogas.energy = t.t.demand_biogas
-        t.s_bioethanol.energy = t.t.demand_bioethanol
-        t.s_biodiesel.energy = t.t.demand_biodiesel
-        t.s_elec.energy = t.t.demand_electricity
-
-        t.s_biogas.energy = t.t.demand_biogas
-        t.s_bioethanol.energy = t.t.demand_bioethanol
-        t.s_biodiesel.energy = t.t.demand_biodiesel
-
-        t.s.energy = (
-            t.s_petrol.energy
-            + t.s_jetfuel.energy
-            + t.s_diesel.energy
-            + t.s_fueloil.energy
-            + t.s_lpg.energy
-            + t.s_gas.energy
-            + t.s_biogas.energy
-            + t.s_bioethanol.energy
-            + t.s_biodiesel.energy
-            + t.s_elec.energy
+        t.energy = air.energy + road.energy + rail.energy + ship.energy
+        t.mileage = road.mileage + rail.mileage + other.mileage
+        t.transport_capacity_pkm = (
+            air.transport_capacity_pkm
+            + road.transport_capacity_pkm
+            + rail.transport_capacity_pkm
+            + other.transport_capacity_pkm
         )
+        t.transport_capacity_tkm = (
+            air.transport_capacity_tkm
+            + road.transport_capacity_tkm
+            + rail.transport_capacity_tkm
+            + ship.transport_capacity_tkm
+            + other.transport_capacity_tkm
+        )
+        t.demand_petrol = air.demand_petrol + road.demand_petrol
+        t.demand_jetfuel = air.demand_jetfuel
+        t.demand_diesel = road.demand_diesel + rail.demand_diesel + ship.demand_diesel
+        t.demand_fueloil = ship.demand_fueloil
+        t.demand_lpg = road.demand_lpg
+        t.demand_gas = road.demand_gas
+        t.demand_biogas = road.demand_biogas
+        t.demand_bioethanol = road.demand_bioethanol
+        t.demand_biodiesel = road.demand_biodiesel + rail.demand_biodiesel
+        t.demand_electricity = road.demand_electricity + rail.demand_electricity
+        t.CO2e_cb = (
+            air.CO2e_cb + road.CO2e_cb + rail.CO2e_cb + ship.CO2e_cb + other.CO2e_cb
+        )
+        t.CO2e_total = t.CO2e_cb
+        rail_ppl_distance.CO2e_cb = (
+            0 * fact("Fact_T_S_petrol_EmFa_tank_wheel_2018")
+            + 0 * fact("Fact_T_S_jetfuel_EmFa_tank_wheel_2018")
+            + rail_ppl_distance.demand_diesel
+            * fact("Fact_T_S_diesel_EmFa_tank_wheel_2018")
+            + 0 * fact("Fact_T_S_lpg_EmFa_tank_wheel_2018")
+            + 0 * fact("Fact_T_S_cng_EmFa_tank_wheel_2018")
+            + 0 * ass("Ass_T_S_biogas_EmFa_tank_wheel")
+            + 0 * ass("Ass_T_S_bioethanol_EmFa_tank_wheel")
+            + rail_ppl_distance.demand_biodiesel
+            * ass("Ass_T_S_biodiesel_EmFa_tank_wheel")
+            + rail_ppl_distance.demand_electricity
+            * fact("Fact_T_S_electricity_EmFa_tank_wheel_2018")
+        )
+        rail_ppl_distance.CO2e_total = rail_ppl_distance.CO2e_cb
 
     except Exception as e:
         print("Transport: ")
