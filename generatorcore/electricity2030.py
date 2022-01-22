@@ -2133,3 +2133,7 @@ def Electricity2030_calc(root):
         p_renew_biomass.change_CO2e_pct = (
             p_renew_biomass.change_CO2e_t / e18.p_renew_biomass.CO2e_total
         )
+        p_local_pv_roof.pet_sites = (p_local_pv_roof.energy / p_local_pv.energy)
+        p_local_pv_facade.pet_sites = (p_local_pv_facade.energy / p_local_pv.energy)
+        p_local_pv_park.pet_sites = (p_local_pv_park.energy / p_local_pv.energy)
+        p_local_pv_agri.pet_sites = (p_local_pv_agri.energy / p_local_pv.energy)
