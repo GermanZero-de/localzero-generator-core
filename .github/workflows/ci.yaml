@@ -41,7 +41,7 @@ jobs:
       - name: Checkout data repo (public)
         uses: actions/checkout@v2
         env:
-          GITHUB_TRACE=1
+          GITHUB_TRACE: 1
         with:
           repository: GermanZero-de/localzero-data-public
           token: $${{ secrets.LZ_PAT }}
@@ -50,7 +50,7 @@ jobs:
       - name: Checkout data repo (proprietary)
         uses: actions/checkout@v2
         env:
-          GITHUB_TRACE=1
+          GITHUB_TRACE: 1
         with:
           repository: GermanZero-de/localzero-data-proprietary
           token: $${{ secrets.LZ_PAT }}
