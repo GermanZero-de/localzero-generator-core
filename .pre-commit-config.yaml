@@ -13,6 +13,7 @@ repos:
     - id: no-commit-to-branch # Work in branches please -- not in main
       args: ['--branch', 'main']
 -   repo: https://github.com/psf/black
-    rev: 20.8b1
+    rev: 21.12b0
     hooks:
       - id: black
+        args: ["--target-version", "py310"]
