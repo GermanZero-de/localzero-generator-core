@@ -7,6 +7,7 @@ from dataclasses import dataclass, asdict
 class EColVars2030:
     action: float = -1
     energy: float = -1
+    pet_sites: float = -1
     energy_installable: float = -1
     cost_fuel_per_MWh: float = -1
     cost_fuel: float = -1
@@ -150,22 +151,22 @@ def Electricity2030_calc(root):
     fp.close()
     """end"""
 
-    # root.h30.p.demand_electricity = exl['h30']['p']['demand_electricity']
-    # root.r30.p.demand_electricity = exl['r30']['p']['demand_electricity']
-    # root.b30.p.demand_electricity = exl['b30']['p']['demand_electricity']
-    # root.i30.p.demand_electricity = exl['i30']['p']['demand_electricity']
+    root.h30.p.demand_electricity = exl['h30']['p']['demand_electricity']
+    root.r30.p.demand_electricity = exl['r30']['p']['demand_electricity']
+    root.b30.p.demand_electricity = exl['b30']['p']['demand_electricity']
+    root.i30.p.demand_electricity = exl['i30']['p']['demand_electricity']
     root.t30.t.demand_electricity = exl["t30"]["t"]["demand_electricity"]
-    # root.h30.p.demand_electricity = exl['h30']['p']['demand_electricity']
+    root.h30.p.demand_electricity = exl['h30']['p']['demand_electricity']
     root.a30.p_operation.demand_electricity = exl["a30"]["p_operation"][
         "demand_electricity"
     ]
-    # root.f30.p_petrol.demand_electricity = exl['f30']['p_petrol']['demand_electricity']
-    # root.f30.p_jetfuel.demand_electricity = exl['f30']['p_jetfuel']['demand_electricity']
-    # root.f30.p_diesel.demand_electricity = exl['f30']['p_diesel']['demand_electricity']
-    # root.f30.p_hydrogen_reconv.demand_electricity = exl['f30']['p_hydrogen_reconv']['demand_electricity']
-    # root.f30.p_emethan.demand_electricity = exl['f30']['p_emethan']['demand_electricity']
-    # root.f30.p_hydrogen.demand_electricity = exl['f30']['p_hydrogen']['demand_electricity']
-    # root.f30.p_hydrogen_reconv.demand_electricity = exl['f30']['p_hydrogen_reconv']['demand_electricity']
+    root.f30.p_petrol.demand_electricity = exl['f30']['p_petrol']['demand_electricity']
+    root.f30.p_jetfuel.demand_electricity = exl['f30']['p_jetfuel']['demand_electricity']
+    root.f30.p_diesel.demand_electricity = exl['f30']['p_diesel']['demand_electricity']
+    root.f30.p_hydrogen_reconv.demand_electricity = exl['f30']['p_hydrogen_reconv']['demand_electricity']
+    root.f30.p_emethan.demand_electricity = exl['f30']['p_emethan']['demand_electricity']
+    root.f30.p_hydrogen.demand_electricity = exl['f30']['p_hydrogen']['demand_electricity']
+    root.f30.p_hydrogen_reconv.demand_electricity = exl['f30']['p_hydrogen_reconv']['demand_electricity']
 
     Million = 1000000
     ags = entry("In_M_AGS_com")
@@ -395,12 +396,7 @@ def Electricity2030_calc(root):
             - p_local_pv_roof.power_installed,
         )
         p_local_pv_roof.full_load_hour = entry("In_E_pv_full_load_hours_sta")
-        p_local_wind_onshore.cost_mro_per_MWh = (
-            ass("Ass_E_P_local_wind_onshore_ratio_invest_to_power_2020")
-            * ass("Ass_E_P_local_wind_onshore_mro_per_year")
-            / fact("Fact_E_P_wind_onshore_full_load_hours")
-            * 1000
-        )
+        p_local_wind_onshore.cost_mro_per_MWh = (ass('Ass_E_P_local_wind_onshore_ratio_invest_to_power_2030') * ass('Ass_E_P_local_wind_onshore_mro_per_year') / fact('Fact_E_P_wind_onshore_full_load_hours') * 1000)
         p_local_biomass.CO2e_cb_per_MWh = fact(
             "Fact_E_P_biomass_ratio_CO2e_cb_nonCO2_to_gep_2018"
         ) / (1 - ass("Ass_E_P_renew_loss_brutto_to_netto"))
@@ -624,8 +620,7 @@ def Electricity2030_calc(root):
                 + d_a.energy
                 + d_f_wo_hydrogen.energy
             )
-            * ass("Ass_E_P_renew_reverse_addon_to_demand_2035")
-            * (1 - ass("Ass_E_P_renew_loss_brutto_to_netto"))
+            * ass('Ass_E_P_renew_reverse_addon_to_demand_2035') * (1 - ass('Ass_E_P_renew_loss_brutto_to_netto'))
             if (ags == "DG000000")
             else (p_renew.energy * p_renew_reverse.pct_energy)
         )
@@ -1313,9 +1308,7 @@ def Electricity2030_calc(root):
         p_local_pv_agri.area_ha_available_pct_of_action = ass(
             "Ass_E_P_local_pv_agri_power_installable"
         ) / (ass("Ass_E_P_local_pv_agri_power_per_ha") * entry("In_M_area_agri_nat"))
-        p_local_wind_onshore.invest_per_x = (
-            ass("Ass_E_P_local_wind_onshore_ratio_invest_to_power_2020") * 1000
-        )
+        p_local_wind_onshore.invest_per_x = (ass('Ass_E_P_local_wind_onshore_ratio_invest_to_power_2030') * 1000)
         p_local_pv.emplo_existing = (
             fact("Fact_B_P_install_elec_emplo_2017")
             * entry("In_M_population_com_2018")
@@ -1624,7 +1617,7 @@ def Electricity2030_calc(root):
             + p_local_pv_park.power_to_be_installed
             + p_local_pv_agri.power_to_be_installed
         )
-        p_local_surplus.energy = p_local.energy - d.energy  # todo
+        p_local_surplus.energy = p_local.energy - d.energy
         p_local.invest = (
             p_local_pv_roof.invest
             + p_local_pv_facade.invest

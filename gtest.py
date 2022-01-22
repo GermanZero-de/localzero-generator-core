@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-from Generator import *
+from generatorcore.generator import Generator
 import json
 
-class gtest:
+class Gtest:
     
     gen:dict = None  # Generator dictionary
     xls:dict = None  # Excel dictionary
@@ -16,8 +16,6 @@ class gtest:
         with open(excel_path, 'r') as fp:
             self.xls = json.load(fp)
         fp.close()
-        #dictionary
-        self.gen = g.dict
         
     # set Generator dictionary
     def set_dict(self, gen):
@@ -113,4 +111,3 @@ class gtest:
         print('values correct: ' + str(vcc))
         print('sum: ' + str(vne + vn + vnc + vnz + vcc))
 
-        return sector_gen, sector_xls

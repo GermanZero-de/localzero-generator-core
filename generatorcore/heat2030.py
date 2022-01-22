@@ -119,38 +119,34 @@ def Heat2030_calc(root):
     root.r30.s_coal.energy = 0
     root.b30.s_coal.energy = 0
 
-    if ags == "DG000000":
-        root.e30.p_local_biomass_cogen.energy = 14672457.462717628
-        root.r30.s_heatnet.energy = 14652469.50365845
-        root.b30.s_heatnet.energy = 6574582.3389781965
-        root.i30.s_renew_heatnet.energy = 21000000.000000004
-        root.r30.s_biomass.energy = 35138681.16249137
-        root.r30.s_solarth.energy = 26830058.385647126
-        root.r30.s_heatpump.energy = 31193937.9277697
-        root.b30.s_biomass.energy = 14859992.6925866
-        root.b30.s_heatpump.energy = 42843028.244203754
-        root.b30.s_solarth.energy = 8790781.094049191
-        root.i30.s_renew_biomass.energy = 1480000.0000000002
-        root.i30.s_renew_heatnet.energy = 21000000.000000004
-        root.a30.s_biomass.energy = 5882820.440153334
-        root.a30.s_heatpump.energy = 7010446.316485014
-    elif ags == "03159016":
-        root.e30.p_local_biomass_cogen.energy = 15566.482779015369
-        root.r30.s_heatnet.energy = 33078.393249006316
-        root.b30.s_heatnet.energy = 13974.444555771768
-        root.i30.s_renew_heatnet.energy = 14335.145823035098
-        root.r30.s_biomass.energy = 57047.16233015588
-        root.r30.s_solarth.energy = 27595.71855898216
-        root.r30.s_heatpump.energy = 36397.478459776845
-        root.b30.s_biomass.energy = 22833.708079498032
-        root.b30.s_heatpump.energy = 55147.52832445518
-        root.b30.s_solarth.energy = 9469.022397976527
-        root.i30.s_renew_biomass.energy = 1010.2864675281878
-        root.i30.s_renew_heatnet.energy = 14335.145823035098
-        root.a30.s_biomass.energy = 579.8803521817608
-        root.a30.s_heatpump.energy = 9572.581732970028
-    else:
-        print("ags not goe nor dg")
+    """"""
+    """ import external values"""
+    import json
+
+    if entry("In_M_AGS_com") == "DG000000":
+        excel_path = "excel/germany_values.json"
+    elif entry("In_M_AGS_com") == "03159016":
+        excel_path = "excel/goettingen_values.json"
+
+    with open(excel_path, "r") as fp:
+        exl = json.load(fp)
+    fp.close()
+    """end"""
+
+    root.e30.p_local_biomass_cogen.energy = exl['e30']['p_local_biomass_cogen']['energy']
+    root.r30.s_heatnet.energy = exl['r30']['s_heatnet']['energy']
+    root.b30.s_heatnet.energy = exl['b30']['s_heatnet']['energy']
+    root.i30.s_renew_heatnet.energy = exl['i30']['s_renew_heatnet']['energy']
+    root.r30.s_biomass.energy = exl['r30']['s_biomass']['energy']
+    root.r30.s_solarth.energy = exl['r30']['s_solarth']['energy']
+    root.r30.s_heatpump.energy = exl['r30']['s_heatpump']['energy']
+    root.b30.s_biomass.energy = exl['b30']['s_biomass']['energy']
+    root.b30.s_heatpump.energy = exl['b30']['s_heatpump']['energy']
+    root.b30.s_solarth.energy = exl['b30']['s_solarth']['energy']
+    root.i30.s_renew_biomass.energy = exl['i30']['s_renew_biomass']['energy']
+    root.i30.s_renew_heatnet.energy = exl['i30']['s_renew_heatnet']['energy']
+    root.a30.s_biomass.energy = exl['a30']['s_biomass']['energy']
+    root.a30.s_heatpump.energy = exl['a30']['s_heatpump']['energy']
 
     try:
 

@@ -2011,10 +2011,10 @@
             "CO2e_total": -38047440.0519709
         },
         "g_grove_org": {
-            "pct_x": 0.019154594734501734,
-            "area_ha": 120638.9797315812,
-            "CO2e_pb": 3159855.565839024,
-            "CO2e_total": 3159855.565839024
+            "pct_x": 0.05086934832474197,
+            "area_ha": 320384.03143312066,
+            "CO2e_pb": 1057186.189752837,
+            "CO2e_total": 1057186.189752837
         },
         "g_grove_org_low": {
             "pct_x": 0.03882417493706523,
@@ -2082,6 +2082,12 @@
             "CO2e_pb_per_t": 0.3580095995395158,
             "CO2e_total": 2170840.5563756246
         },
+        "g_water_org": {
+            "pct_x": 0.037238827931222934,
+            "area_ha": 234536.63574153947,
+            "CO2e_pb": 83966.36703917383,
+            "CO2e_total": 83966.36703917383
+        },
         "g_water_org_low": {
             "pct_x": 0.02842117734285725,
             "area_ha": 179001.53383233774,
@@ -2108,6 +2114,12 @@
             "CO2e_pb": 3924674.057312396,
             "CO2e_pb_per_t": 0.6353138815862516,
             "CO2e_total": 3924674.057312396
+        },
+        "g_settlement_org": {
+            "pct_x": 0.019154594734501734,
+            "area_ha": 120638.9797315812,
+            "CO2e_pb": 3159855.565839024,
+            "CO2e_total": 3159855.565839024
         },
         "g_settlement_org_low": {
             "pct_x": 0.014619045875592233,
@@ -6859,19 +6871,19 @@
             "cost_climate_saved": 15440205051.933805
         },
         "g_grove_org": {
-            "area_ha_change": 0,
-            "area_ha": 120638.9797315812,
-            "CO2e_pb": 3159855.565839024,
-            "CO2e_total": 3159855.565839024,
-            "change_CO2e_t": 0,
-            "change_CO2e_pct": 0,
-            "CO2e_total_2021_estimated": 2853996.20066703,
-            "cost_climate_saved": -1282315388.4835832,
-            "invest_pa": 0,
-            "invest": 0,
-            "cost_wage": 0,
-            "demand_emplo": 0,
-            "demand_emplo_new": 0
+            "area_ha_change": -256307.22514649655,
+            "area_ha": 64076.806286624116,
+            "CO2e_pb": 211437.23795056733,
+            "CO2e_total": 211437.23795056733,
+            "change_CO2e_t": -845748.9518022696,
+            "change_CO2e_pct": -0.8,
+            "CO2e_total_2021_estimated": 954855.4692091139,
+            "cost_climate_saved": 3116780934.551456,
+            "invest_pa": 59147821.18765306,
+            "invest": 768921675.4394897,
+            "cost_wage": 25258404.326916218,
+            "demand_emplo": 476.573666545589,
+            "demand_emplo_new": 476.573666545589
         },
         "g_grove_org_low": {
             "change_wet_org_low": -195617.14223654388,
@@ -7110,6 +7122,21 @@
             "CO2e_total_2021_estimated": 1960713.2576342456,
             "cost_climate_saved": -880958699.9732317
         },
+        "g_water_org": {
+            "area_ha_change": 0,
+            "area_ha": 234536.63574153947,
+            "CO2e_pb": 83966.36703917383,
+            "CO2e_total": 83966.36703917383,
+            "change_CO2e_t": 0,
+            "change_CO2e_pct": 0,
+            "CO2e_total_2021_estimated": 75838.81209772476,
+            "cost_climate_saved": -34074774.09202521,
+            "invest_pa": 0,
+            "invest": 0,
+            "cost_wage": 0,
+            "demand_emplo": 0,
+            "demand_emplo_new": 0
+        },
         "g_water_org_low": {
             "demand_change": 0,
             "area_ha_change": 0,
@@ -7162,6 +7189,21 @@
             "CO2e_total_2021_estimated": 3544783.8089561155,
             "cost_climate_saved": 11405379778.223314,
             "action": "geringe Fl\u00e4chenversiegelungsrate"
+        },
+        "g_settlement_org": {
+            "area_ha_change": 0,
+            "area_ha": 120638.9797315812,
+            "CO2e_pb": 3159855.565839024,
+            "CO2e_total": 3159855.565839024,
+            "change_CO2e_t": 0,
+            "change_CO2e_pct": 0,
+            "CO2e_total_2021_estimated": 2853996.20066703,
+            "cost_climate_saved": -1282315388.4835832,
+            "invest_pa": 0,
+            "invest": 0,
+            "cost_wage": 0,
+            "demand_emplo": 0,
+            "demand_emplo_new": 0
         },
         "g_settlement_org_low": {
             "demand_change": 0,
