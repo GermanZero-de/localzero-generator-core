@@ -1,0 +1,52 @@
+name: test
+
+on: pull_request
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        os: [ "ubuntu-latest", "macos-latest", "windows-latest" ]
+    defaults:
+      run:
+        shell: bash
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+      - name: Set up python
+        id: setup-python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.10"
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+      - name: Load cached venv
+        id: cached-pip-wheels
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache
+          key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
+      - name: Install dependencies
+        run: poetry install --no-interaction --no-root
+      - name: Install library
+        run: poetry install --no-interaction
+      - name: Checkout data repo (public)
+        uses: actions/checkout@v2
+        with:
+          repository: GermanZero-de/localzero-data-public
+          token: $${{ secrets.LZ_PAT }}
+          path: data/public
+      - name: Checkout data repo (proprietary)
+        uses: actions/checkout@v2
+        with:
+          repository: GermanZero-de/localzero-data-proprietary
+          token: $${{ secrets.LZ_PAT }}
+          path: data/proprietary
+      - name: Run pytest
+        run: |
+          source $VENV
+          pytest tests/
