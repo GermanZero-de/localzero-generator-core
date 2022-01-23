@@ -1,4 +1,4 @@
-from .setup import ass, entry, fact
+from .inputs import Inputs
 from dataclasses import dataclass, asdict
 
 
@@ -90,7 +90,7 @@ def calc(root, inputs: Inputs):
 
     def entry(n):
         return inputs.entry(n)
-    
+
     """"""
     """ import external values"""
     import json
