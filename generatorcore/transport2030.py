@@ -344,7 +344,7 @@ def calc(root, inputs: Inputs):
             * t18.road_bus.transport_capacity_pkm
             / (
                 t18.road_bus.transport_capacity_pkm
-                + t18.rail_ppl_.transport_capacity_pkm
+                + t18.rail_ppl.transport_capacity_pkm
                 + t18.rail_ppl_metro.transport_capacity_pkm
             )
             * ass("Ass_T_D_trnsprt_ppl_city_pt_frac_2050")
