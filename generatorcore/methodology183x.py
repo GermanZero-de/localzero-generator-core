@@ -14,6 +14,8 @@ class M183X:
     nonCO2_budget_2016_to_year: float = None
     GHG_budget_2016_to_year: float = None
 
+    CO2e_w_lulucf_change_pa:float = None
+
     CO2e_lulucf_2015: float = None
     CO2e_lulucf_2016: float = None
     CO2e_lulucf_2017: float = None
@@ -68,6 +70,9 @@ class M183X:
     CO2e_w_lulucf_2050: float = None
     CO2e_w_lulucf_2051: float = None
 
+    GHG_budget_2022_to_year_target: float = None
+    GHG_budget_after_year_target: float = None
+
     CO2e_lulucf_203X: float = None
     CO2e_wo_lulucf_203X: float = None
     CO2e_w_lulucf_203X: float = None
@@ -91,11 +96,12 @@ def calc_18(inputs: Inputs) -> M183X:
 
     m183X = M183X()
 
-    # TODO: Understand the below better and figure out what to do with 2021
-    # and duration target etc...
-    m183X.year_today = 2021  # entry('In_M_year_today')
+    m183X.year_today = entry('In_M_year_today')
 
     m183X.year_target = entry("In_M_year_target")
+
+    #TODO: figure out where "duration target" entry variable  is used in other sector scripts, replace it with "m183X.duration_target" variable ?
+    #delete entry variable afterwards
 
     m183X.duration_target = m183X.year_target - m183X.year_today
 
@@ -155,41 +161,21 @@ def calc_3X(root, inputs: Inputs):
     ############################################
 
     # get the CO2e of LULUCF for 2018 as calculated
-    m183X.CO2e_lulucf_2018 = root.m183X.CO2e_lulucf_2018
     m183X.CO2e_lulucf_2018 = root.l18.CO2e_total
 
     # calculate the CO2e of LULUCF for 2015-2017 and 2019-2021 by multiplying 2018's value with percentage
-    m183X.CO2e_lulucf_2015 = (
-        root.m183X.CO2e_lulucf_2015
-    )  # 2015 just as a backup, probably not needed
-    m183X.CO2e_lulucf_2015 = m183X.CO2e_lulucf_2018 * fact(
-        "Fact_M_CO2e_lulucf_2015_vs_2018"
-    )
+    # 2015 just as a backup, probably not needed
+    m183X.CO2e_lulucf_2015 = m183X.CO2e_lulucf_2018 * fact("Fact_M_CO2e_lulucf_2015_vs_2018")
 
-    m183X.CO2e_lulucf_2016 = root.m183X.CO2e_lulucf_2016
-    m183X.CO2e_lulucf_2016 = m183X.CO2e_lulucf_2018 * fact(
-        "Fact_M_CO2e_lulucf_2016_vs_2018"
-    )
+    m183X.CO2e_lulucf_2016 = m183X.CO2e_lulucf_2018 * fact("Fact_M_CO2e_lulucf_2016_vs_2018")
 
-    m183X.CO2e_lulucf_2017 = root.m183X.CO2e_lulucf_2017
-    m183X.CO2e_lulucf_2017 = m183X.CO2e_lulucf_2018 * fact(
-        "Fact_M_CO2e_lulucf_2017_vs_2018"
-    )
+    m183X.CO2e_lulucf_2017 = m183X.CO2e_lulucf_2018 * fact("Fact_M_CO2e_lulucf_2017_vs_2018")
 
-    m183X.CO2e_lulucf_2019 = root.m183X.CO2e_lulucf_2019
-    m183X.CO2e_lulucf_2019 = m183X.CO2e_lulucf_2018 * fact(
-        "Fact_M_CO2e_lulucf_2019_vs_2018"
-    )
+    m183X.CO2e_lulucf_2019 = m183X.CO2e_lulucf_2018 * fact("Fact_M_CO2e_lulucf_2019_vs_2018")
 
-    m183X.CO2e_lulucf_2020 = root.m183X.CO2e_lulucf_2020
-    m183X.CO2e_lulucf_2020 = m183X.CO2e_lulucf_2018 * fact(
-        "Fact_M_CO2e_lulucf_2020_vs_2018"
-    )
+    m183X.CO2e_lulucf_2020 = m183X.CO2e_lulucf_2018 * fact("Fact_M_CO2e_lulucf_2020_vs_2018")
 
-    m183X.CO2e_lulucf_2021 = root.m183X.CO2e_lulucf_2021
-    m183X.CO2e_lulucf_2021 = m183X.CO2e_lulucf_2018 * fact(
-        "Fact_M_CO2e_lulucf_2021_vs_2018"
-    )
+    m183X.CO2e_lulucf_2021 = m183X.CO2e_lulucf_2018 * fact("Fact_M_CO2e_lulucf_2021_vs_2018")
 
     ############################################
     ### 2018 as base for emissions 2016-2021 ###
@@ -198,7 +184,6 @@ def calc_3X(root, inputs: Inputs):
     ############################################
 
     # get the CO2e of all sectors for 2018 excluding LULUCF since this is negative
-    m183X.CO2e_wo_lulucf_2018 = root.m183X.CO2e_wo_lulucf_2018
     m183X.CO2e_wo_lulucf_2018 = (
         root.h18.CO2e_total
         + root.e18.CO2e_total
@@ -211,72 +196,44 @@ def calc_3X(root, inputs: Inputs):
     )
 
     # calculate the CO2e of all sectors without LULUCF for 2015-2017 and 2019-2021 by multiplying 2018's value with percentage
-    m183X.CO2e_wo_lulucf_2015 = (
-        root.m183X.CO2e_wo_lulucf_2015
-    )  # 2015 just as a backup, probably not needed
-    m183X.CO2e_wo_lulucf_2015 = m183X.CO2e_wo_lulucf_2018 * fact(
-        "Fact_M_CO2e_wo_lulucf_2015_vs_2018"
-    )
+    # 2015 just as a backup, probably not needed
+    m183X.CO2e_wo_lulucf_2015 = m183X.CO2e_wo_lulucf_2018 * fact("Fact_M_CO2e_wo_lulucf_2015_vs_2018")
 
-    m183X.CO2e_wo_lulucf_2016 = root.m183X.CO2e_wo_lulucf_2016
-    m183X.CO2e_wo_lulucf_2016 = m183X.CO2e_wo_lulucf_2018 * fact(
-        "Fact_M_CO2e_wo_lulucf_2016_vs_2018"
-    )
+    m183X.CO2e_wo_lulucf_2016 = m183X.CO2e_wo_lulucf_2018 * fact("Fact_M_CO2e_wo_lulucf_2016_vs_2018")
 
-    m183X.CO2e_wo_lulucf_2017 = root.m183X.CO2e_wo_lulucf_2017
-    m183X.CO2e_wo_lulucf_2017 = m183X.CO2e_wo_lulucf_2018 * fact(
-        "Fact_M_CO2e_wo_lulucf_2017_vs_2018"
-    )
+    m183X.CO2e_wo_lulucf_2017 = m183X.CO2e_wo_lulucf_2018 * fact("Fact_M_CO2e_wo_lulucf_2017_vs_2018")
 
-    m183X.CO2e_wo_lulucf_2019 = root.m183X.CO2e_wo_lulucf_2019
-    m183X.CO2e_wo_lulucf_2019 = m183X.CO2e_wo_lulucf_2018 * fact(
-        "Fact_M_CO2e_wo_lulucf_2019_vs_2018"
-    )
+    m183X.CO2e_wo_lulucf_2019 = m183X.CO2e_wo_lulucf_2018 * fact("Fact_M_CO2e_wo_lulucf_2019_vs_2018")
 
-    CO2e_wo_lulucf_2020 = root.m183X.CO2e_wo_lulucf_2020
-    m183X.CO2e_wo_lulucf_2020 = m183X.CO2e_wo_lulucf_2018 * fact(
-        "Fact_M_CO2e_wo_lulucf_2020_vs_2018"
-    )
+    m183X.CO2e_wo_lulucf_2020 = m183X.CO2e_wo_lulucf_2018 * fact("Fact_M_CO2e_wo_lulucf_2020_vs_2018")
 
-    CO2e_wo_lulucf_2021 = root.m183X.CO2e_wo_lulucf_2021
-    m183X.CO2e_wo_lulucf_2021 = m183X.CO2e_wo_lulucf_2018 * fact(
-        "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
-    )
+    m183X.CO2e_wo_lulucf_2021 = m183X.CO2e_wo_lulucf_2018 * fact("Fact_M_CO2e_wo_lulucf_2021_vs_2018")
 
     #############################################
     ### 2018 as base for emissions 2016-2021  ###
     #############################################
     ### sum up CO2e_wo_lulucf and CO2e_lulucf ###
     #############################################
-
-    m183X.CO2e_w_lulucf_2015 = (
-        root.m183X.CO2e_w_lulucf_2015
-    )  # 2015 just as a backup, probably not needed
+    
+    # 2015 just as a backup, probably not needed
     m183X.CO2e_w_lulucf_2015 = m183X.CO2e_wo_lulucf_2015 + m183X.CO2_lulucf_2015
 
-    CO2e_w_lulucf_2016 = root.m183X.CO2e_w_lulucf_2016
     m183X.CO2e_w_lulucf_2016 = m183X.CO2e_wo_lulucf_2016 + m183X.CO2_lulucf_2016
 
-    CO2e_w_lulucf_2017 = root.m183X.CO2e_w_lulucf_2017
     m183X.CO2e_w_lulucf_2017 = m183X.CO2e_wo_lulucf_2017 + m183X.CO2_lulucf_2017
 
-    CO2e_w_lulucf_2018 = root.m183X.CO2e_w_lulucf_2018
     m183X.CO2e_w_lulucf_2018 = m183X.CO2e_wo_lulucf_2018 + m183X.CO2_lulucf_2018
 
-    CO2e_w_lulucf_2019 = root.m183X.CO2e_w_lulucf_2019
     m183X.CO2e_w_lulucf_2019 = m183X.CO2e_wo_lulucf_2019 + m183X.CO2_lulucf_2019
 
-    CO2e_w_lulucf_2020 = root.m183X.CO2e_w_lulucf_2020
     m183X.CO2e_w_lulucf_2020 = m183X.CO2e_wo_lulucf_2020 + m183X.CO2_lulucf_2020
 
-    CO2e_w_lulucf_2021 = root.m183X.CO2e_w_lulucf_2021
     m183X.CO2e_w_lulucf_2021 = m183X.CO2e_wo_lulucf_2021 + m183X.CO2_lulucf_2021
 
     ####################################################################
     ### remaining local greenhouse gas budget 2022 until target year ###
     ####################################################################
 
-    GHG_budget_2022_to_year_target = root.m183X.GHG_budget_2022_to_year_target
     m183X.GHG_budget_2022_to_year_target = (
         m183X.GHG_budget_2016_to_year_target
         - m183X.CO2e_w_lulucf_2016
@@ -294,22 +251,15 @@ def calc_3X(root, inputs: Inputs):
     #########################################################
 
     # calculating the yearly decrease of the emissions, going down linearly to 0 in target_year+1
-    CO2e_w_lulucf_change_pa = root.m183X.CO2e_w_lulucf_change_pa
-    m183X.CO2e_w_lulucf_change_pa = m183X.CO2e_w_lulucf_2021 / (
-        m183X.duration_target + 1
-    )  # +1 because we want to reach 0 in target_year+1
+    m183X.CO2e_w_lulucf_change_pa = m183X.CO2e_w_lulucf_2021 / (m183X.duration_target + 1)  # +1 because we want to reach 0 in target_year+1
 
     # reducing the yearly emissions year by year, starting with 2022
-    m183X.CO2e_w_lulucf_2022 = root.m183X.CO2e_w_lulucf_2022
     if m183X.CO2e_w_lulucf_2021 > 0:
-        m183X.CO2e_w_lulucf_2022 = (
-            m183X.CO2e_w_lulucf_2021 - m183X.CO2e_w_lulucf_change_pa
-        )
+        m183X.CO2e_w_lulucf_2022 = m183X.CO2e_w_lulucf_2021 - m183X.CO2e_w_lulucf_change_pa      )
     else:
         m183X.CO2e_w_lulucf_2022 = 0
 
     # 2023
-    m183X.CO2e_w_lulucf_2023 = root.m183X.CO2e_w_lulucf_2023
     if m183X.CO2e_w_lulucf_2022 > 0:
         m183X.CO2e_w_lulucf_2023 = (
             m183X.CO2e_w_lulucf_2022 - m183X.CO2e_w_lulucf_change_pa
@@ -318,7 +268,6 @@ def calc_3X(root, inputs: Inputs):
         m183X.CO2e_w_lulucf_2023 = 0
 
     # 2024
-    m183X.CO2e_w_lulucf_2024 = root.m183X.CO2e_w_lulucf_2024
     if m183X.CO2e_w_lulucf_2023 > 0:
         m183X.CO2e_w_lulucf_2024 = (
             m183X.CO2e_w_lulucf_2023 - m183X.CO2e_w_lulucf_change_pa
@@ -327,7 +276,6 @@ def calc_3X(root, inputs: Inputs):
         m183X.CO2e_w_lulucf_2024 = 0
 
     # 2025
-    m183X.CO2e_w_lulucf_2025 = root.m183X.CO2e_w_lulucf_2025
     if m183X.CO2e_w_lulucf_2024 > 0:
         m183X.CO2e_w_lulucf_2025 = (
             m183X.CO2e_w_lulucf_2024 - m183X.CO2e_w_lulucf_change_pa
@@ -336,7 +284,6 @@ def calc_3X(root, inputs: Inputs):
         m183X.CO2e_w_lulucf_2025 = 0
 
     # 2026
-    m183X.CO2e_w_lulucf_2026 = root.m183X.CO2e_w_lulucf_2026
     if m183X.CO2e_w_lulucf_2025 > 0:
         m183X.CO2e_w_lulucf_2026 = (
             m183X.CO2e_w_lulucf_2025 - m183X.CO2e_w_lulucf_change_pa
@@ -345,7 +292,6 @@ def calc_3X(root, inputs: Inputs):
         m183X.CO2e_w_lulucf_2026 = 0
 
     # 2027
-    CO2e_w_lulucf_2027 = root.m183X.CO2e_w_lulucf_2027
     if m183X.CO2e_w_lulucf_2026 > 0:
         m183X.CO2e_w_lulucf_2027 = (
             m183X.CO2e_w_lulucf_2026 - m183X.CO2e_w_lulucf_change_pa
@@ -354,7 +300,6 @@ def calc_3X(root, inputs: Inputs):
         m183X.CO2e_w_lulucf_2027 = 0
 
     # 2028
-    CO2e_w_lulucf_2028 = root.m183X.CO2e_w_lulucf_2028
     if m183X.CO2e_w_lulucf_2027 > 0:
         m183X.CO2e_w_lulucf_2028 = (
             m183X.CO2e_w_lulucf_2027 - m183X.CO2e_w_lulucf_change_pa
@@ -363,7 +308,6 @@ def calc_3X(root, inputs: Inputs):
         m183X.CO2e_w_lulucf_2028 = 0
 
     # 2029
-    CO2e_w_lulucf_2029 = root.m183X.CO2e_w_lulucf_2029
     if m183X.CO2e_w_lulucf_2028 > 0:
         m183X.CO2e_w_lulucf_2029 = (
             m183X.CO2e_w_lulucf_2028 - m183X.CO2e_w_lulucf_change_pa
@@ -372,7 +316,6 @@ def calc_3X(root, inputs: Inputs):
         m183X.CO2e_w_lulucf_2029 = 0
 
     # 2030
-    CO2e_w_lulucf_2030 = root.m183X.CO2e_w_lulucf_2030
     if m183X.CO2e_w_lulucf_2029 > 0:
         m183X.CO2e_w_lulucf_2030 = (
             m183X.CO2e_w_lulucf_2029 - m183X.CO2e_w_lulucf_change_pa
@@ -381,7 +324,6 @@ def calc_3X(root, inputs: Inputs):
         m183X.CO2e_w_lulucf_2030 = 0
 
     # 2031
-    CO2e_w_lulucf_2031 = root.m183X.CO2e_w_lulucf_2031
     if m183X.CO2e_w_lulucf_2030 > 0:
         m183X.CO2e_w_lulucf_2031 = (
             m183X.CO2e_w_lulucf_2030 - m183X.CO2e_w_lulucf_change_pa
@@ -390,7 +332,6 @@ def calc_3X(root, inputs: Inputs):
         m183X.CO2e_w_lulucf_2031 = 0
 
     # 2032
-    CO2e_w_lulucf_2032 = root.m183X.CO2e_w_lulucf_2032
     if m183X.CO2e_w_lulucf_2031 > 0:
         m183X.CO2e_w_lulucf_2032 = (
             m183X.CO2e_w_lulucf_2031 - m183X.CO2e_w_lulucf_change_pa
@@ -399,7 +340,6 @@ def calc_3X(root, inputs: Inputs):
         m183X.CO2e_w_lulucf_2032 = 0
 
     # 2033
-    CO2e_w_lulucf_2033 = root.m183X.CO2e_w_lulucf_2033
     if m183X.CO2e_w_lulucf_2032 > 0:
         m183X.CO2e_w_lulucf_2033 = (
             m183X.CO2e_w_lulucf_2032 - m183X.CO2e_w_lulucf_change_pa
@@ -408,7 +348,6 @@ def calc_3X(root, inputs: Inputs):
         m183X.CO2e_w_lulucf_2033 = 0
 
     # 2034
-    CO2e_w_lulucf_2034 = root.m183X.CO2e_w_lulucf_2034
     if m183X.CO2e_w_lulucf_2033 > 0:
         m183X.CO2e_w_lulucf_2034 = (
             m183X.CO2e_w_lulucf_2033 - m183X.CO2e_w_lulucf_change_pa
@@ -417,7 +356,6 @@ def calc_3X(root, inputs: Inputs):
         m183X.CO2e_w_lulucf_2034 = 0
 
     # 2035
-    CO2e_w_lulucf_2035 = root.m183X.CO2e_w_lulucf_2035
     if m183X.CO2e_w_lulucf_2034 > 0:
         m183X.CO2e_w_lulucf_2035 = (
             m183X.CO2e_w_lulucf_2034 - m183X.CO2e_w_lulucf_change_pa
@@ -426,7 +364,6 @@ def calc_3X(root, inputs: Inputs):
         m183X.CO2e_w_lulucf_2035 = 0
 
     # 2036
-    CO2e_w_lulucf_2036 = root.m183X.CO2e_w_lulucf_2036
     if m183X.CO2e_w_lulucf_2035 > 0:
         m183X.CO2e_w_lulucf_2036 = (
             m183X.CO2e_w_lulucf_2035 - m183X.CO2e_w_lulucf_change_pa
@@ -435,7 +372,6 @@ def calc_3X(root, inputs: Inputs):
         m183X.CO2e_w_lulucf_2036 = 0
 
     # 2037
-    CO2e_w_lulucf_2037 = root.m183X.CO2e_w_lulucf_2037
     if m183X.CO2e_w_lulucf_2036 > 0:
         m183X.CO2e_w_lulucf_2037 = (
             m183X.CO2e_w_lulucf_2036 - m183X.CO2e_w_lulucf_change_pa
@@ -444,7 +380,6 @@ def calc_3X(root, inputs: Inputs):
         m183X.CO2e_w_lulucf_2037 = 0
 
     # 2038
-    CO2e_w_lulucf_2038 = root.m183X.CO2e_w_lulucf_2038
     if m183X.CO2e_w_lulucf_2037 > 0:
         m183X.CO2e_w_lulucf_2038 = (
             m183X.CO2e_w_lulucf_2037 - m183X.CO2e_w_lulucf_change_pa
@@ -453,7 +388,6 @@ def calc_3X(root, inputs: Inputs):
         m183X.CO2e_w_lulucf_2038 = 0
 
     # 2039
-    CO2e_w_lulucf_2039 = root.m183X.CO2e_w_lulucf_2039
     if m183X.CO2e_w_lulucf_2038 > 0:
         m183X.CO2e_w_lulucf_2039 = (
             m183X.CO2e_w_lulucf_2038 - m183X.CO2e_w_lulucf_change_pa
@@ -462,7 +396,6 @@ def calc_3X(root, inputs: Inputs):
         m183X.CO2e_w_lulucf_2039 = 0
 
     # 2040
-    CO2e_w_lulucf_2040 = root.m183X.CO2e_w_lulucf_2040
     if m183X.CO2e_w_lulucf_2039 > 0:
         m183X.CO2e_w_lulucf_2040 = (
             m183X.CO2e_w_lulucf_2039 - m183X.CO2e_w_lulucf_change_pa
@@ -471,7 +404,6 @@ def calc_3X(root, inputs: Inputs):
         m183X.CO2e_w_lulucf_2040 = 0
 
     # 2041
-    CO2e_w_lulucf_2041 = root.m183X.CO2e_w_lulucf_2041
     if m183X.CO2e_w_lulucf_2040 > 0:
         m183X.CO2e_w_lulucf_2041 = (
             m183X.CO2e_w_lulucf_2040 - m183X.CO2e_w_lulucf_change_pa
@@ -480,7 +412,6 @@ def calc_3X(root, inputs: Inputs):
         m183X.CO2e_w_lulucf_2041 = 0
 
     # 2042
-    CO2e_w_lulucf_2042 = root.m183X.CO2e_w_lulucf_2042
     if m183X.CO2e_w_lulucf_2041 > 0:
         m183X.CO2e_w_lulucf_2042 = (
             m183X.CO2e_w_lulucf_2041 - m183X.CO2e_w_lulucf_change_pa
@@ -489,7 +420,6 @@ def calc_3X(root, inputs: Inputs):
         m183X.CO2e_w_lulucf_2042 = 0
 
     # 2043
-    CO2e_w_lulucf_2043 = root.m183X.CO2e_w_lulucf_2043
     if m183X.CO2e_w_lulucf_2042 > 0:
         m183X.CO2e_w_lulucf_2043 = (
             m183X.CO2e_w_lulucf_2042 - m183X.CO2e_w_lulucf_change_pa
@@ -498,7 +428,6 @@ def calc_3X(root, inputs: Inputs):
         m183X.CO2e_w_lulucf_2043 = 0
 
     # 2044
-    CO2e_w_lulucf_2044 = root.m183X.CO2e_w_lulucf_2044
     if m183X.CO2e_w_lulucf_2043 > 0:
         m183X.CO2e_w_lulucf_2044 = (
             m183X.CO2e_w_lulucf_2043 - m183X.CO2e_w_lulucf_change_pa
@@ -507,7 +436,6 @@ def calc_3X(root, inputs: Inputs):
         m183X.CO2e_w_lulucf_2044 = 0
 
     # 2045
-    CO2e_w_lulucf_2045 = root.m183X.CO2e_w_lulucf_2045
     if m183X.CO2e_w_lulucf_2044 > 0:
         m183X.CO2e_w_lulucf_2045 = (
             m183X.CO2e_w_lulucf_2044 - m183X.CO2e_w_lulucf_change_pa
@@ -516,7 +444,6 @@ def calc_3X(root, inputs: Inputs):
         m183X.CO2e_w_lulucf_2045 = 0
 
     # 2046
-    CO2e_w_lulucf_2046 = root.m183X.CO2e_w_lulucf_2046
     if m183X.CO2e_w_lulucf_2045 > 0:
         m183X.CO2e_w_lulucf_2046 = (
             m183X.CO2e_w_lulucf_2046 - m183X.CO2e_w_lulucf_change_pa
@@ -525,7 +452,6 @@ def calc_3X(root, inputs: Inputs):
         m183X.CO2e_w_lulucf_2046 = 0
 
     # 2047
-    CO2e_w_lulucf_2047 = root.m183X.CO2e_w_lulucf_2047
     if m183X.CO2e_w_lulucf_2046 > 0:
         m183X.CO2e_w_lulucf_2047 = (
             m183X.CO2e_w_lulucf_2046 - m183X.CO2e_w_lulucf_change_pa
