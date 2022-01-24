@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-from generatorcore.generator import Generator
+from generatorcore.generator import Result
 import json
 
 class Gtest:

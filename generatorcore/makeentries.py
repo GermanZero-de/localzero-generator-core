@@ -98,22 +98,22 @@ def make_entries(data: refdata.RefData, ags: str, year: int):
     entry["In_R_buildings_2005_2008"] = data_buildings_com.float("buildings_2005_2008")
     entry["In_R_buildings_2009_2011"] = data_buildings_com.float("buildings_2009_2011")
     entry["In_R_buildings_2011_today"] = (
-        data.fact("Fact_R_P_newbuilt_2011_2018")
-        * entry["In_M_population_com_2018"]
-        / entry["In_M_population_nat"]
+            data.fact("Fact_R_P_newbuilt_2011_2018")
+            * entry["In_M_population_com_2018"]
+            / entry["In_M_population_nat"]
     )
     entry["In_R_buildings_com"] = (
-        entry["In_R_buildings_until_1919"]
-        + entry["In_R_buildings_1919_1948"]
-        + entry["In_R_buildings_1949_1978"]
-        + entry["In_R_buildings_1979_1986"]
-        + entry["In_R_buildings_1987_1990"]
-        + entry["In_R_buildings_1991_1995"]
-        + entry["In_R_buildings_1996_2000"]
-        + entry["In_R_buildings_2001_2004"]
-        + entry["In_R_buildings_2005_2008"]
-        + entry["In_R_buildings_2009_2011"]
-        + entry["In_R_buildings_2011_today"]
+            entry["In_R_buildings_until_1919"]
+            + entry["In_R_buildings_1919_1948"]
+            + entry["In_R_buildings_1949_1978"]
+            + entry["In_R_buildings_1979_1986"]
+            + entry["In_R_buildings_1987_1990"]
+            + entry["In_R_buildings_1991_1995"]
+            + entry["In_R_buildings_1996_2000"]
+            + entry["In_R_buildings_2001_2004"]
+            + entry["In_R_buildings_2005_2008"]
+            + entry["In_R_buildings_2009_2011"]
+            + entry["In_R_buildings_2011_today"]
     )
     entry["In_R_buildings_nat"] = data.buildings(ags_germany).float(
         "buildings_total"
@@ -122,10 +122,10 @@ def make_entries(data: refdata.RefData, ags: str, year: int):
     entry["In_R_flats_com"] = data_buildings_com.float("flats_total")
     entry["In_R_flats_w_heatnet"] = data_buildings_com.float("flats_heatnet")
     entry["In_R_flats_wo_heatnet"] = (
-        entry["In_R_flats_com"] - entry["In_R_flats_w_heatnet"]
+            entry["In_R_flats_com"] - entry["In_R_flats_w_heatnet"]
     )
     entry["In_R_area_m2"] = (
-        data_flats_com.float("residential_buildings_area_total") * 1000.0
+            data_flats_com.float("residential_buildings_area_total") * 1000.0
     )
     entry["In_R_area_m2_1flat"] = data_flats_com.float("buildings_1flat") * data.fact(
         "Fact_R_buildings_livingspace_oneflat"
@@ -144,7 +144,7 @@ def make_entries(data: refdata.RefData, ags: str, year: int):
     )
     entry["In_R_rehab_rate_pa"] = data.ass("Ass_R_B_P_renovation_rate")
     entry["In_R_heatnet_ratio_year_target"] = (
-        data_buildings_com.float("buildings_heatnet") / entry["In_R_buildings_com"]
+            data_buildings_com.float("buildings_heatnet") / entry["In_R_buildings_com"]
     )
 
     if ags == ags_germany:
@@ -159,35 +159,35 @@ def make_entries(data: refdata.RefData, ags: str, year: int):
     data_renewable_energy_com = data.renewable_energy(ags)
     data_nat_energy_sta = data.nat_energy(ags_sta_padded)
     entry["In_E_PV_power_inst_roof"] = (
-        data_renewable_energy_com.float("pv")
-        / 1000.0
-        * data_nat_energy_sta.float("PV_roof_2017")
+            data_renewable_energy_com.float("pv")
+            / 1000.0
+            * data_nat_energy_sta.float("PV_roof_2017")
     )
     entry["In_E_PV_power_inst_facade"] = (
-        data_renewable_energy_com.float("pv")
-        / 1000.0
-        * data_nat_energy_sta.float("PV_others")
-        / 2.0
+            data_renewable_energy_com.float("pv")
+            / 1000.0
+            * data_nat_energy_sta.float("PV_others")
+            / 2.0
     )
     entry["In_E_PV_power_inst_park"] = (
-        data_renewable_energy_com.float("pv")
-        / 1000.0
-        * data_nat_energy_sta.float("PV_land_2017")
+            data_renewable_energy_com.float("pv")
+            / 1000.0
+            * data_nat_energy_sta.float("PV_land_2017")
     )
     entry["In_E_PV_power_inst_agripv"] = (
-        data_renewable_energy_com.float("pv")
-        / 1000.0
-        * data_nat_energy_sta.float("PV_others")
-        / 2.0
+            data_renewable_energy_com.float("pv")
+            / 1000.0
+            * data_nat_energy_sta.float("PV_others")
+            / 2.0
     )
     entry["In_E_PV_power_inst_wind_on"] = (
-        data_renewable_energy_com.float("wind_on") / 1000.0
+            data_renewable_energy_com.float("wind_on") / 1000.0
     )
     entry["In_E_PV_power_inst_biomass"] = (
-        data_renewable_energy_com.float("biomass") / 1000.0
+            data_renewable_energy_com.float("biomass") / 1000.0
     )
     entry["In_E_PV_power_inst_water"] = (
-        data_renewable_energy_com.float("water") / 1000.0
+            data_renewable_energy_com.float("water") / 1000.0
     )
 
     entry["In_E_PV_power_to_be_inst_roof"] = data.ass(
@@ -217,217 +217,217 @@ def make_entries(data: refdata.RefData, ags: str, year: int):
         "In_E_local_wind_onshore_ratio_power_to_area_sta"
     ] = data_nat_energy_sta.float("demand_2018")
     potential_electricity_from_bioenergy_sta = (
-        data_nat_energy_sta.float("bioenergy_potential")
-        * 1000.0
-        / 3.6
-        * data.ass("Ass_E_P_BHKW_efficiency_electric")
+            data_nat_energy_sta.float("bioenergy_potential")
+            * 1000.0
+            / 3.6
+            * data.ass("Ass_E_P_BHKW_efficiency_electric")
     )
     bioenergy_installable_capacity_sta = (
-        potential_electricity_from_bioenergy_sta
-        / data.fact("Fact_E_P_biomass_full_load_hours")
+            potential_electricity_from_bioenergy_sta
+            / data.fact("Fact_E_P_biomass_full_load_hours")
     )
     entry[
         "In_E_biomass_local_power_installable_sta"
     ] = bioenergy_installable_capacity_sta * (
-        entry["In_M_area_agri_com"] / entry["In_M_area_agri_sta"]
+            entry["In_M_area_agri_com"] / entry["In_M_area_agri_sta"]
     )
 
     entry["In_R_coal_fec"] = (
-        data.fact("Fact_R_S_coal_fec_2018")
-        * entry["In_R_flats_wo_heatnet"]
-        / data.fact("Fact_R_P_flats_wo_heatnet_2011")
+            data.fact("Fact_R_S_coal_fec_2018")
+            * entry["In_R_flats_wo_heatnet"]
+            / data.fact("Fact_R_P_flats_wo_heatnet_2011")
     )
     entry["In_R_petrol_fec"] = (
-        data.fact("Fact_R_S_petrol_fec_2018")
-        * entry["In_R_flats_wo_heatnet"]
-        / data.fact("Fact_R_P_flats_wo_heatnet_2011")
+            data.fact("Fact_R_S_petrol_fec_2018")
+            * entry["In_R_flats_wo_heatnet"]
+            / data.fact("Fact_R_P_flats_wo_heatnet_2011")
     )
     entry["In_R_fueloil_fec"] = (
-        data.fact("Fact_R_S_fueloil_fec_2018")
-        * entry["In_R_flats_wo_heatnet"]
-        / data.fact("Fact_R_P_flats_wo_heatnet_2011")
+            data.fact("Fact_R_S_fueloil_fec_2018")
+            * entry["In_R_flats_wo_heatnet"]
+            / data.fact("Fact_R_P_flats_wo_heatnet_2011")
     )
     entry["In_R_lpg_fec"] = (
-        data.fact("Fact_R_S_lpg_fec_2018")
-        * entry["In_R_flats_wo_heatnet"]
-        / data.fact("Fact_R_P_flats_wo_heatnet_2011")
+            data.fact("Fact_R_S_lpg_fec_2018")
+            * entry["In_R_flats_wo_heatnet"]
+            / data.fact("Fact_R_P_flats_wo_heatnet_2011")
     )
     entry["In_R_gas_fec"] = (
-        data.fact("Fact_R_S_gas_fec_2018")
-        * entry["In_R_flats_wo_heatnet"]
-        / data.fact("Fact_R_P_flats_wo_heatnet_2011")
+            data.fact("Fact_R_S_gas_fec_2018")
+            * entry["In_R_flats_wo_heatnet"]
+            / data.fact("Fact_R_P_flats_wo_heatnet_2011")
     )
     entry["In_R_biomass_fec"] = (
-        data.fact("Fact_R_S_biomass_fec_2018")
-        * entry["In_R_flats_wo_heatnet"]
-        / data.fact("Fact_R_P_flats_wo_heatnet_2011")
+            data.fact("Fact_R_S_biomass_fec_2018")
+            * entry["In_R_flats_wo_heatnet"]
+            / data.fact("Fact_R_P_flats_wo_heatnet_2011")
     )
     entry["In_R_orenew_fec"] = (
-        data.fact("Fact_R_S_orenew_fec_2018")
-        * entry["In_R_flats_wo_heatnet"]
-        / data.fact("Fact_R_P_flats_wo_heatnet_2011")
+            data.fact("Fact_R_S_orenew_fec_2018")
+            * entry["In_R_flats_wo_heatnet"]
+            / data.fact("Fact_R_P_flats_wo_heatnet_2011")
     )
     entry["In_R_elec_fec"] = (
-        data.fact("Fact_R_S_elec_fec_2018")
-        * entry["In_M_population_com_2018"]
-        / entry["In_M_population_nat"]
+            data.fact("Fact_R_S_elec_fec_2018")
+            * entry["In_M_population_com_2018"]
+            / entry["In_M_population_nat"]
     )
     entry["In_R_heatnet_fec"] = (
-        data.fact("Fact_R_S_heatnet_fec_2018")
-        * entry["In_R_flats_w_heatnet"]
-        / data.fact("Fact_R_P_flats_w_heatnet_2011")
+            data.fact("Fact_R_S_heatnet_fec_2018")
+            * entry["In_R_flats_w_heatnet"]
+            / data.fact("Fact_R_P_flats_w_heatnet_2011")
     )
     entry["In_R_energy_total"] = (
-        entry["In_R_coal_fec"]
-        + entry["In_R_petrol_fec"]
-        + entry["In_R_fueloil_fec"]
-        + entry["In_R_lpg_fec"]
-        + entry["In_R_gas_fec"]
-        + entry["In_R_biomass_fec"]
-        + entry["In_R_orenew_fec"]
-        + entry["In_R_elec_fec"]
-        + entry["In_R_heatnet_fec"]
+            entry["In_R_coal_fec"]
+            + entry["In_R_petrol_fec"]
+            + entry["In_R_fueloil_fec"]
+            + entry["In_R_lpg_fec"]
+            + entry["In_R_gas_fec"]
+            + entry["In_R_biomass_fec"]
+            + entry["In_R_orenew_fec"]
+            + entry["In_R_elec_fec"]
+            + entry["In_R_heatnet_fec"]
     )
 
     entry["In_B_coal_fec"] = (
-        data.fact("Fact_B_S_coal_fec_2018")
-        * entry["In_R_flats_wo_heatnet"]
-        / data.fact("Fact_R_P_flats_wo_heatnet_2011")
+            data.fact("Fact_B_S_coal_fec_2018")
+            * entry["In_R_flats_wo_heatnet"]
+            / data.fact("Fact_R_P_flats_wo_heatnet_2011")
     )
     entry["In_B_petrol_fec"] = (
-        data.fact("Fact_B_S_petrol_fec_2018")
-        * entry["In_M_population_com_2018"]
-        / entry["In_M_population_nat"]
+            data.fact("Fact_B_S_petrol_fec_2018")
+            * entry["In_M_population_com_2018"]
+            / entry["In_M_population_nat"]
     )
     entry["In_B_jetfuel_fec"] = (
-        data.fact("Fact_B_S_jetfuel_fec_2018")
-        * entry["In_M_population_com_2018"]
-        / entry["In_M_population_nat"]
+            data.fact("Fact_B_S_jetfuel_fec_2018")
+            * entry["In_M_population_com_2018"]
+            / entry["In_M_population_nat"]
     )
     entry["In_B_diesel_fec"] = (
-        data.fact("Fact_B_S_diesel_fec_2018")
-        * entry["In_M_population_com_2018"]
-        / entry["In_M_population_nat"]
+            data.fact("Fact_B_S_diesel_fec_2018")
+            * entry["In_M_population_com_2018"]
+            / entry["In_M_population_nat"]
     )
     entry["In_B_fueloil_fec"] = (
-        data.fact("Fact_B_S_fueloil_fec_2018")
-        * entry["In_R_flats_wo_heatnet"]
-        / data.fact("Fact_R_P_flats_wo_heatnet_2011")
+            data.fact("Fact_B_S_fueloil_fec_2018")
+            * entry["In_R_flats_wo_heatnet"]
+            / data.fact("Fact_R_P_flats_wo_heatnet_2011")
     )
     entry["In_B_lpg_fec"] = (
-        data.fact("Fact_B_S_lpg_fec_2018")
-        * entry["In_R_flats_wo_heatnet"]
-        / data.fact("Fact_R_P_flats_wo_heatnet_2011")
+            data.fact("Fact_B_S_lpg_fec_2018")
+            * entry["In_R_flats_wo_heatnet"]
+            / data.fact("Fact_R_P_flats_wo_heatnet_2011")
     )
     entry["In_B_gas_fec"] = (
-        data.fact("Fact_B_S_gas_fec_2018")
-        * entry["In_R_flats_wo_heatnet"]
-        / data.fact("Fact_R_P_flats_wo_heatnet_2011")
+            data.fact("Fact_B_S_gas_fec_2018")
+            * entry["In_R_flats_wo_heatnet"]
+            / data.fact("Fact_R_P_flats_wo_heatnet_2011")
     )
     entry["In_B_biomass_fec"] = (
-        data.fact("Fact_B_S_biomass_fec_2018")
-        * entry["In_R_flats_wo_heatnet"]
-        / data.fact("Fact_R_P_flats_wo_heatnet_2011")
+            data.fact("Fact_B_S_biomass_fec_2018")
+            * entry["In_R_flats_wo_heatnet"]
+            / data.fact("Fact_R_P_flats_wo_heatnet_2011")
     )
     entry["In_B_orenew_fec"] = (
-        data.fact("Fact_B_S_orenew_fec_2018")
-        * entry["In_R_flats_wo_heatnet"]
-        / data.fact("Fact_R_P_flats_wo_heatnet_2011")
+            data.fact("Fact_B_S_orenew_fec_2018")
+            * entry["In_R_flats_wo_heatnet"]
+            / data.fact("Fact_R_P_flats_wo_heatnet_2011")
     )
     entry["In_B_elec_fec"] = (
-        data.fact("Fact_B_S_elec_fec_2018")
-        * entry["In_M_population_com_2018"]
-        / entry["In_M_population_nat"]
+            data.fact("Fact_B_S_elec_fec_2018")
+            * entry["In_M_population_com_2018"]
+            / entry["In_M_population_nat"]
     )
     entry["In_B_heatnet_fec"] = (
-        data.fact("Fact_B_S_heatnet_fec_2018")
-        * entry["In_R_flats_w_heatnet"]
-        / data.fact("Fact_R_P_flats_w_heatnet_2011")
+            data.fact("Fact_B_S_heatnet_fec_2018")
+            * entry["In_R_flats_w_heatnet"]
+            / data.fact("Fact_R_P_flats_w_heatnet_2011")
     )
 
     entry["In_I_coal_fec"] = (
-        data.fact("Fact_I_S_coal_fec_2018")
-        * entry["In_M_area_industry_com"]
-        / entry["In_M_area_industry_nat"]
+            data.fact("Fact_I_S_coal_fec_2018")
+            * entry["In_M_area_industry_com"]
+            / entry["In_M_area_industry_nat"]
     )
     entry["In_I_diesel_fec"] = (
-        data.fact("Fact_I_S_diesel_fec_2018")
-        * entry["In_M_area_industry_com"]
-        / entry["In_M_area_industry_nat"]
+            data.fact("Fact_I_S_diesel_fec_2018")
+            * entry["In_M_area_industry_com"]
+            / entry["In_M_area_industry_nat"]
     )
     entry["In_I_fueloil_fec"] = (
-        data.fact("Fact_I_S_fueloil_fec_2018")
-        * entry["In_M_area_industry_com"]
-        / entry["In_M_area_industry_nat"]
+            data.fact("Fact_I_S_fueloil_fec_2018")
+            * entry["In_M_area_industry_com"]
+            / entry["In_M_area_industry_nat"]
     )
     entry["In_I_lpg_fec"] = (
-        data.fact("Fact_I_S_lpg_fec_2018")
-        * entry["In_M_area_industry_com"]
-        / entry["In_M_area_industry_nat"]
+            data.fact("Fact_I_S_lpg_fec_2018")
+            * entry["In_M_area_industry_com"]
+            / entry["In_M_area_industry_nat"]
     )
     entry["In_I_gas_fec"] = (
-        data.fact("Fact_I_S_gas_fec_2018")
-        * entry["In_M_area_industry_com"]
-        / entry["In_M_area_industry_nat"]
+            data.fact("Fact_I_S_gas_fec_2018")
+            * entry["In_M_area_industry_com"]
+            / entry["In_M_area_industry_nat"]
     )
     entry["In_I_opetpro_fec"] = (
-        data.fact("Fact_I_S_opetpro_fec_2018")
-        * entry["In_M_area_industry_com"]
-        / entry["In_M_area_industry_nat"]
+            data.fact("Fact_I_S_opetpro_fec_2018")
+            * entry["In_M_area_industry_com"]
+            / entry["In_M_area_industry_nat"]
     )
     entry["In_I_biomass_fec"] = (
-        data.fact("Fact_I_S_biomass_fec_2018")
-        * entry["In_M_area_industry_com"]
-        / entry["In_M_area_industry_nat"]
+            data.fact("Fact_I_S_biomass_fec_2018")
+            * entry["In_M_area_industry_com"]
+            / entry["In_M_area_industry_nat"]
     )
     entry["In_I_orenew_fec"] = (
-        data.fact("Fact_I_S_orenew_fec_2018")
-        * entry["In_M_area_industry_com"]
-        / entry["In_M_area_industry_nat"]
+            data.fact("Fact_I_S_orenew_fec_2018")
+            * entry["In_M_area_industry_com"]
+            / entry["In_M_area_industry_nat"]
     )
     entry["In_I_ofossil_fec"] = (
-        data.fact("Fact_I_S_ofossil_fec_2018")
-        * entry["In_M_area_industry_com"]
-        / entry["In_M_area_industry_nat"]
+            data.fact("Fact_I_S_ofossil_fec_2018")
+            * entry["In_M_area_industry_com"]
+            / entry["In_M_area_industry_nat"]
     )
     entry["In_I_elec_fec"] = (
-        data.fact("Fact_I_S_elec_fec_2018")
-        * entry["In_M_area_industry_com"]
-        / entry["In_M_area_industry_nat"]
+            data.fact("Fact_I_S_elec_fec_2018")
+            * entry["In_M_area_industry_com"]
+            / entry["In_M_area_industry_nat"]
     )
     entry["In_I_heatnet_fec"] = (
-        data.fact("Fact_I_S_heatnet_fec_2018")
-        * entry["In_M_area_industry_com"]
-        / entry["In_M_area_industry_nat"]
+            data.fact("Fact_I_S_heatnet_fec_2018")
+            * entry["In_M_area_industry_com"]
+            / entry["In_M_area_industry_nat"]
     )
 
     entry["In_I_energy_total"] = (
-        entry["In_I_coal_fec"]
-        + entry["In_I_diesel_fec"]
-        + entry["In_I_fueloil_fec"]
-        + entry["In_I_lpg_fec"]
-        + entry["In_I_gas_fec"]
-        + entry["In_I_opetpro_fec"]
-        + entry["In_I_biomass_fec"]
-        + entry["In_I_orenew_fec"]
-        + entry["In_I_ofossil_fec"]
-        + entry["In_I_elec_fec"]
-        + entry["In_I_heatnet_fec"]
+            entry["In_I_coal_fec"]
+            + entry["In_I_diesel_fec"]
+            + entry["In_I_fueloil_fec"]
+            + entry["In_I_lpg_fec"]
+            + entry["In_I_gas_fec"]
+            + entry["In_I_opetpro_fec"]
+            + entry["In_I_biomass_fec"]
+            + entry["In_I_orenew_fec"]
+            + entry["In_I_ofossil_fec"]
+            + entry["In_I_elec_fec"]
+            + entry["In_I_heatnet_fec"]
     )
 
     entry["In_I_miner_fec"] = (
-        data.fact("Fact_I_P_miner_EEV_2018/Fact_I_S_fec_2018")
-        * entry["In_I_energy_total"]
+            data.fact("Fact_I_P_miner_EEV_2018/Fact_I_S_fec_2018")
+            * entry["In_I_energy_total"]
     )
     entry["In_I_chem_fec"] = (
-        data.fact("Fact_I_S_chem_fec_ratio_to_industrie_2018")
-        * entry["In_I_energy_total"]
+            data.fact("Fact_I_S_chem_fec_ratio_to_industrie_2018")
+            * entry["In_I_energy_total"]
     )
     entry["In_I_metal_fec"] = (
-        data.fact("Fact_I_P_fec_pct_of_metal_2018") * entry["In_I_energy_total"]
+            data.fact("Fact_I_P_fec_pct_of_metal_2018") * entry["In_I_energy_total"]
     )
     entry["In_I_other_fec"] = (
-        data.fact("Fact_I_N_sonst_Anteil_EEV_2018") * entry["In_I_energy_total"]
+            data.fact("Fact_I_N_sonst_Anteil_EEV_2018") * entry["In_I_energy_total"]
     )
 
     data_traffic_com = data.traffic(ags)
@@ -444,93 +444,93 @@ def make_entries(data: refdata.RefData, ags: str, year: int):
     entry["In_T_mil_mhd_ab"] = data_traffic_com.float("mhd_ab")
 
     entry["In_A_petrol_fec"] = (
-        data.fact("Fact_A_S_petrol_fec_2018")
-        * entry["In_M_area_agri_com"]
-        / entry["In_M_area_agri_nat"]
+            data.fact("Fact_A_S_petrol_fec_2018")
+            * entry["In_M_area_agri_com"]
+            / entry["In_M_area_agri_nat"]
     )
     entry["In_A_diesel_fec"] = (
-        data.fact("Fact_A_S_diesel_fec_2018")
-        * entry["In_M_area_agri_com"]
-        / entry["In_M_area_agri_nat"]
+            data.fact("Fact_A_S_diesel_fec_2018")
+            * entry["In_M_area_agri_com"]
+            / entry["In_M_area_agri_nat"]
     )
     entry["In_A_fueloil_fec"] = (
-        data.fact("Fact_A_S_fueloil_fec_2018")
-        * entry["In_M_area_agri_com"]
-        / entry["In_M_area_agri_nat"]
+            data.fact("Fact_A_S_fueloil_fec_2018")
+            * entry["In_M_area_agri_com"]
+            / entry["In_M_area_agri_nat"]
     )
     entry["In_A_lpg_fec"] = (
-        data.fact("Fact_A_S_lpg_fec_2018")
-        * entry["In_M_area_agri_com"]
-        / entry["In_M_area_agri_nat"]
+            data.fact("Fact_A_S_lpg_fec_2018")
+            * entry["In_M_area_agri_com"]
+            / entry["In_M_area_agri_nat"]
     )
     entry["In_A_gas_fec"] = (
-        data.fact("Fact_A_S_gas_fec_2018")
-        * entry["In_M_area_agri_com"]
-        / entry["In_M_area_agri_nat"]
+            data.fact("Fact_A_S_gas_fec_2018")
+            * entry["In_M_area_agri_com"]
+            / entry["In_M_area_agri_nat"]
     )
     entry["In_A_biomass_fec"] = (
-        data.fact("Fact_A_S_biomass_fec_2018")
-        * entry["In_M_area_agri_com"]
-        / entry["In_M_area_agri_nat"]
+            data.fact("Fact_A_S_biomass_fec_2018")
+            * entry["In_M_area_agri_com"]
+            / entry["In_M_area_agri_nat"]
     )
     entry["In_A_elec_fec"] = (
-        data.fact("Fact_A_S_elec_fec_2018")
-        * entry["In_M_area_agri_com"]
-        / entry["In_M_area_agri_nat"]
+            data.fact("Fact_A_S_elec_fec_2018")
+            * entry["In_M_area_agri_com"]
+            / entry["In_M_area_agri_nat"]
     )
 
     data_nat_agri_sta = data.nat_agri(ags_sta_padded)
     entry["In_A_other_liming_calcit_prod_volume"] = (
-        data_nat_agri_sta.float("amount_sale_calcit")
-        * entry["In_M_area_agri_com"]
-        / entry["In_M_area_agri_sta"]
+            data_nat_agri_sta.float("amount_sale_calcit")
+            * entry["In_M_area_agri_com"]
+            / entry["In_M_area_agri_sta"]
     )
     entry["In_A_other_liming_dolomite_prod_volume"] = (
-        data_nat_agri_sta.float("amount_sale_dolomite")
-        * entry["In_M_area_agri_com"]
-        / entry["In_M_area_agri_sta"]
+            data_nat_agri_sta.float("amount_sale_dolomite")
+            * entry["In_M_area_agri_com"]
+            / entry["In_M_area_agri_sta"]
     )
     entry["In_A_other_kas_prod_volume"] = (
-        data_nat_agri_sta.float("amount_sale_kas")
-        * entry["In_M_area_agri_com"]
-        / entry["In_M_area_agri_sta"]
+            data_nat_agri_sta.float("amount_sale_kas")
+            * entry["In_M_area_agri_com"]
+            / entry["In_M_area_agri_sta"]
     )
     entry["In_A_other_urea_prod_volume"] = (
-        data_nat_agri_sta.float("amount_sale_urea")
-        * entry["In_M_area_agri_com"]
-        / entry["In_M_area_agri_sta"]
+            data_nat_agri_sta.float("amount_sale_urea")
+            * entry["In_M_area_agri_com"]
+            / entry["In_M_area_agri_sta"]
     )
     entry["In_A_other_ecrop_prod_volume"] = (
-        data_nat_agri_sta.float("drymass_ecrop")
-        * entry["In_M_area_agri_com"]
-        / entry["In_M_area_agri_sta"]
+            data_nat_agri_sta.float("drymass_ecrop")
+            * entry["In_M_area_agri_com"]
+            / entry["In_M_area_agri_sta"]
     )
 
     cows_density_sta = data_nat_agri_sta.float("cows") / entry["In_M_area_agri_sta"]
     entry["In_A_fermen_dairycow_amount"] = (
-        cows_density_sta * entry["In_M_area_agri_com"]
+            cows_density_sta * entry["In_M_area_agri_com"]
     )
 
     cattle_density_sta = data_nat_agri_sta.float("cattle") / entry["In_M_area_agri_sta"]
     entry["In_A_fermen_nondairy_amount"] = (
-        cattle_density_sta * entry["In_M_area_agri_com"]
+            cattle_density_sta * entry["In_M_area_agri_com"]
     )
 
     pig_density_sta = data_nat_agri_sta.float("pigs") / entry["In_M_area_agri_sta"]
     entry["In_A_fermen_pig_amount"] = pig_density_sta * entry["In_M_area_agri_com"]
 
     poultry_density_sta = (
-        data_nat_agri_sta.float("poultry") / entry["In_M_area_agri_sta"]
+            data_nat_agri_sta.float("poultry") / entry["In_M_area_agri_sta"]
     )
     entry["In_A_fermen_poultry_amount"] = (
-        poultry_density_sta * entry["In_M_area_agri_com"]
+            poultry_density_sta * entry["In_M_area_agri_com"]
     )
 
     other_animals_density_sta = (
-        data_nat_agri_sta.float("other_animals") / entry["In_M_area_agri_sta"]
+            data_nat_agri_sta.float("other_animals") / entry["In_M_area_agri_sta"]
     )
     entry["In_A_fermen_oanimal_amount"] = (
-        other_animals_density_sta * entry["In_M_area_agri_com"]
+            other_animals_density_sta * entry["In_M_area_agri_com"]
     )
 
     def compute_animal_efactor(what: str):
@@ -556,21 +556,21 @@ def make_entries(data: refdata.RefData, ags: str, year: int):
         "other_animals"
     )
     animal_wo_poultry_deposition_sta = (
-        data_nat_agri_sta.float("cows")
-        + data_nat_agri_sta.float("cattle")
-        + data_nat_agri_sta.float("pigs")
-        + data_nat_agri_sta.float("other_animals")
+            data_nat_agri_sta.float("cows")
+            + data_nat_agri_sta.float("cattle")
+            + data_nat_agri_sta.float("pigs")
+            + data_nat_agri_sta.float("other_animals")
     )
     if animal_wo_poultry_deposition_sta > 0:
         entry["In_A_manure_deposition_ratio_CO2e_to_amount"] = (
-            data_nat_agri_sta.float("animal_wo_poultry_deposition_co2e")
-            / animal_wo_poultry_deposition_sta
+                data_nat_agri_sta.float("animal_wo_poultry_deposition_co2e")
+                / animal_wo_poultry_deposition_sta
         )
     else:
         assert False, "TODO here we should compute the natoional factor instead"
 
     def compute_efactor_from_n2o(
-        what: str, area: float, data_nat_agri: refdata.Row = data_nat_agri_sta
+            what: str, area: float, data_nat_agri: refdata.Row = data_nat_agri_sta
     ):
         n2o = data_nat_agri.float(what + "_n2o")
         co2e = n2o * 298.0
@@ -592,11 +592,11 @@ def make_entries(data: refdata.RefData, ags: str, year: int):
         "fermentation_ecrop", farmland_area_total_sta
     )
     greenland_area_total_sta = (
-        entry["In_M_area_agri_sta"] * data.fact("Fact_L_G_factor_crop_to_grass")
-        + data_area_sta.float("veg_heath")
-        + data_area_sta.float("veg_marsh")
-        + data_area_sta.float("veg_plant_uncover_com")
-        * data.fact("Fact_L_G_factor_grass_strict")
+            entry["In_M_area_agri_sta"] * data.fact("Fact_L_G_factor_crop_to_grass")
+            + data_area_sta.float("veg_heath")
+            + data_area_sta.float("veg_marsh")
+            + data_area_sta.float("veg_plant_uncover_com")
+            * data.fact("Fact_L_G_factor_grass_strict")
     )
     entry["In_A_soil_crazing_ratio_CO2e_to_ha"] = compute_efactor_from_n2o(
         "pasturage", greenland_area_total_sta
@@ -605,20 +605,20 @@ def make_entries(data: refdata.RefData, ags: str, year: int):
         "crop_residues", farmland_area_total_sta
     )
     farmland_area_organic_sta = farmland_area_total_sta * (
-        data.fact("Fact_L_G_fraction_org_soil_fen_crop")
-        + data.fact("Fact_L_G_fraction_org_soil_bog_crop")
-    )
-    farmland_area_organic_germany = (
-        entry["In_M_area_agri_nat"]
-        * data.fact("Fact_L_G_factor_crop")
-        * (
             data.fact("Fact_L_G_fraction_org_soil_fen_crop")
             + data.fact("Fact_L_G_fraction_org_soil_bog_crop")
-        )
+    )
+    farmland_area_organic_germany = (
+            entry["In_M_area_agri_nat"]
+            * data.fact("Fact_L_G_factor_crop")
+            * (
+                    data.fact("Fact_L_G_fraction_org_soil_fen_crop")
+                    + data.fact("Fact_L_G_fraction_org_soil_bog_crop")
+            )
     )
     greenland_area_organic_sta = greenland_area_total_sta * (
-        data.fact("Fact_L_G_fraction_org_soil_fen_grass_strict")
-        + data.fact("Fact_L_G_fraction_org_soil_bog_grass_strict")
+            data.fact("Fact_L_G_fraction_org_soil_fen_grass_strict")
+            + data.fact("Fact_L_G_fraction_org_soil_bog_grass_strict")
     )
     entry["In_A_soil_orgfarm_ratio_CO2e_to_ha"] = compute_efactor_from_n2o(
         "farmed_soil", farmland_area_organic_sta + greenland_area_organic_sta
@@ -644,8 +644,8 @@ def make_entries(data: refdata.RefData, ags: str, year: int):
 
     entry["In_A_farm_amount"] = farming_density_sta * entry["In_M_area_agri_com"]
     entry["In_A_area_agri_com_pct_of_organic"] = (
-        data_nat_organic_agri_sta.float("organic_farms_area")
-        / entry["In_M_area_agri_sta"]
+            data_nat_organic_agri_sta.float("organic_farms_area")
+            / entry["In_M_area_agri_sta"]
     )
 
     return entry
