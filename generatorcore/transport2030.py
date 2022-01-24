@@ -23,7 +23,6 @@ class TColVars2030:
     change_energy_pct: float = None
     change_CO2e_t: float = None
     change_CO2e_pct: float = None
-    change_CO2e_pct: float = None
     pct_of_wage: float = None
     CO2e_total_2021_estimated: float = None
     cost_climate_saved: float = None
