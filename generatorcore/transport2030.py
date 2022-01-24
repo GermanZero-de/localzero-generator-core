@@ -41,9 +41,9 @@ class TColVars2030:
     demand_emplo_com: float = None
     emplo_existing: float = None
     demand_emplo_new: float = None
-    base_unit: float = None
     invest_per_x: float = None
     transport_capacity_pkm: float = None
+    base_unit: float = None
 
 
 # Definition der Zeilennamen für den Sektor T
@@ -78,10 +78,8 @@ class T30:
     ship_dmstc_action_infra: TColVars2030 = TColVars2030()
     ship_inter: TColVars2030 = TColVars2030()
 
-    foot: TColVars2030 = TColVars2030()
     other_foot: TColVars2030 = TColVars2030()
     other_foot_action_infra: TColVars2030 = TColVars2030()
-    cycl: TColVars2030 = TColVars2030()
     other_cycl: TColVars2030 = TColVars2030()
     other_cycl_action_infra: TColVars2030 = TColVars2030()
     g_planning: TColVars2030 = TColVars2030()
@@ -100,22 +98,12 @@ class T30:
     # übergeordnete Zeilen
     g: TColVars2030 = TColVars2030()
     t: TColVars2030 = TColVars2030()
-    planning: TColVars2030 = TColVars2030()
     air: TColVars2030 = TColVars2030()
     road: TColVars2030 = TColVars2030()
     rail: TColVars2030 = TColVars2030()
-    shp: TColVars2030 = TColVars2030()
     other: TColVars2030 = TColVars2030()
 
     # Maßnahmen
-    action_car: TColVars2030 = TColVars2030()
-    action_road_maintenance: TColVars2030 = TColVars2030()
-    action_charge_points: TColVars2030 = TColVars2030()
-    action_bus_infrastructure: TColVars2030 = TColVars2030()
-    action_bus_invest: TColVars2030 = TColVars2030()
-    action_mhd_engine_change: TColVars2030 = TColVars2030()
-    action_rail_maintenance: TColVars2030 = TColVars2030()
-    action_rail_invest: TColVars2030 = TColVars2030()
     rail_action_invest_infra: TColVars2030 = TColVars2030()
     rail_action_invest_station: TColVars2030 = TColVars2030()
     rail_ppl_metro_action_infra: TColVars2030 = TColVars2030()
@@ -123,11 +111,7 @@ class T30:
     road_bus_action_infra: TColVars2030 = TColVars2030()
 
     # Bereitstellung (Energieträgersummen)
-    s_epetrol: TColVars2030 = (
-        TColVars2030()
-    )  # Todo: in Excel ist die Bennenung "S_petrol, s_diesel ..." , ggf. umbenennen
-    s_ejetfuel: TColVars2030 = TColVars2030()
-    s_ediesel: TColVars2030 = TColVars2030()
+
     s_elec: TColVars2030 = TColVars2030()
     s_hydrogen: TColVars2030 = TColVars2030()
 
@@ -204,6 +188,12 @@ def calc(root, inputs: Inputs):
     t18 = root.t18
 
     try:
+        s_fueloil.energy = 0
+        s_lpg.energy = 0
+        s_gas.energy = 0
+        s_biogas.energy = 0
+        s_bioethanol.energy = 0
+        s_biodiesel.energy = 0
 
         t.transport_capacity_pkm = entry("In_M_population_com_203X") * (
             ass("Ass_T_D_ratio_trnsprt_ppl_to_ppl_city")
@@ -283,25 +273,27 @@ def calc(root, inputs: Inputs):
             t.transport_capacity_pkm
             * t18.road_car_ab.mileage
             / (t18.road_car_it_ot.mileage + t18.road_car_ab.mileage)
-            * (ass("Ass_T_D_trnsprt_ppl_city_car1_frac_2050")
-            + ass("Ass_T_D_trnsprt_ppl_city_car2_frac_2050")
-            + ass("Ass_T_D_trnsprt_ppl_city_car3_frac_2050")
-            + ass("Ass_T_D_trnsprt_ppl_city_car4_frac_2050")
-            if entry("In_T_rt3") == "city"
-            else ass("Ass_T_D_trnsprt_ppl_smcty_car1_frac_2050")
-            + ass("Ass_T_D_trnsprt_ppl_smcty_car2_frac_2050")
-            + ass("Ass_T_D_trnsprt_ppl_smcty_car3_frac_2050")
-            + ass("Ass_T_D_trnsprt_ppl_smcty_car4_frac_2050")
-            if entry("In_T_rt3") == "smcty"
-            else ass("Ass_T_D_trnsprt_ppl_rural_car1_frac_2050")
-            + ass("Ass_T_D_trnsprt_ppl_rural_car2_frac_2050")
-            + ass("Ass_T_D_trnsprt_ppl_rural_car3_frac_2050")
-            + ass("Ass_T_D_trnsprt_ppl_rural_car4_frac_2050")
-            if entry("In_T_rt3") == "rural"
-            else ass("Ass_T_D_trnsprt_ppl_nat_car1_frac_2050")
-            + ass("Ass_T_D_trnsprt_ppl_nat_car2_frac_2050")
-            + ass("Ass_T_D_trnsprt_ppl_nat_car3_frac_2050")
-            + ass("Ass_T_D_trnsprt_ppl_nat_car4_frac_2050"))
+            * (
+                ass("Ass_T_D_trnsprt_ppl_city_car1_frac_2050")
+                + ass("Ass_T_D_trnsprt_ppl_city_car2_frac_2050")
+                + ass("Ass_T_D_trnsprt_ppl_city_car3_frac_2050")
+                + ass("Ass_T_D_trnsprt_ppl_city_car4_frac_2050")
+                if entry("In_T_rt3") == "city"
+                else ass("Ass_T_D_trnsprt_ppl_smcty_car1_frac_2050")
+                + ass("Ass_T_D_trnsprt_ppl_smcty_car2_frac_2050")
+                + ass("Ass_T_D_trnsprt_ppl_smcty_car3_frac_2050")
+                + ass("Ass_T_D_trnsprt_ppl_smcty_car4_frac_2050")
+                if entry("In_T_rt3") == "smcty"
+                else ass("Ass_T_D_trnsprt_ppl_rural_car1_frac_2050")
+                + ass("Ass_T_D_trnsprt_ppl_rural_car2_frac_2050")
+                + ass("Ass_T_D_trnsprt_ppl_rural_car3_frac_2050")
+                + ass("Ass_T_D_trnsprt_ppl_rural_car4_frac_2050")
+                if entry("In_T_rt3") == "rural"
+                else ass("Ass_T_D_trnsprt_ppl_nat_car1_frac_2050")
+                + ass("Ass_T_D_trnsprt_ppl_nat_car2_frac_2050")
+                + ass("Ass_T_D_trnsprt_ppl_nat_car3_frac_2050")
+                + ass("Ass_T_D_trnsprt_ppl_nat_car4_frac_2050")
+            )
         )
         road_car_ab.mileage = road_car_ab.transport_capacity_pkm / ass(
             "Ass_T_D_lf_ppl_Car_2050"
@@ -319,7 +311,11 @@ def calc(root, inputs: Inputs):
         air_inter.CO2e_total_2021_estimated = t18.air_inter.CO2e_cb * fact(
             "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
         )
-        air_inter.cost_climate_saved = ((air_inter.CO2e_total_2021_estimated - air_inter.CO2e_cb) * entry('In_M_duration_neutral') * fact('Fact_M_cost_per_CO2e_2020'))
+        air_inter.cost_climate_saved = (
+            (air_inter.CO2e_total_2021_estimated - air_inter.CO2e_cb)
+            * entry("In_M_duration_neutral")
+            * fact("Fact_M_cost_per_CO2e_2020")
+        )
         road_car_ab.demand_electricity = (
             road_car_ab.mileage
             * ass("Ass_T_S_Car_frac_bev_with_phev_mlg_2050")
@@ -331,14 +327,14 @@ def calc(root, inputs: Inputs):
             road_car_it_ot.transport_capacity_pkm + road_car_ab.transport_capacity_pkm
         ) / fact("Fact_T_S_Car_ratio_mlg_to_stock_2018")
         air.invest_com = 0  # (SUM(DE235:DE236))
-        road_action_charger.base_unit = (
-            road_car.base_unit / (ass("Ass_S_ratio_bev_car_per_charge_point_city")
+        road_action_charger.base_unit = road_car.base_unit / (
+            ass("Ass_S_ratio_bev_car_per_charge_point_city")
             if entry("In_T_rt3") == "city"
             else ass("Ass_S_ratio_bev_car_per_charge_point_smcity_rural")
             if entry("In_T_rt3") == "smcty"
             else ass("Ass_S_ratio_bev_car_per_charge_point_smcity_rural")
             if entry("In_T_rt3") == "rural"
-            else ass("Ass_S_ratio_bev_car_per_charge_point_nat"))
+            else ass("Ass_S_ratio_bev_car_per_charge_point_nat")
         )
         road_action_charger.invest_per_x = ass("Ass_T_C_cost_per_charge_point")
 
@@ -365,13 +361,15 @@ def calc(root, inputs: Inputs):
                 + t18.rail_ppl_distance.transport_capacity_pkm
                 + t18.rail_ppl_metro.transport_capacity_pkm
             )
-            * (ass("Ass_T_D_trnsprt_ppl_city_pt_frac_2050")
-            if entry("In_T_rt3") == "city"
-            else ass("Ass_T_D_trnsprt_ppl_smcty_pt_frac_2050")
-            if entry("In_T_rt3") == "smcty"
-            else ass("Ass_T_D_trnsprt_ppl_rural_pt_frac_2050")
-            if entry("In_T_rt3") == "rural"
-            else ass("Ass_T_D_trnsprt_ppl_nat_pt_frac_2050"))
+            * (
+                ass("Ass_T_D_trnsprt_ppl_city_pt_frac_2050")
+                if entry("In_T_rt3") == "city"
+                else ass("Ass_T_D_trnsprt_ppl_smcty_pt_frac_2050")
+                if entry("In_T_rt3") == "smcty"
+                else ass("Ass_T_D_trnsprt_ppl_rural_pt_frac_2050")
+                if entry("In_T_rt3") == "rural"
+                else ass("Ass_T_D_trnsprt_ppl_nat_pt_frac_2050")
+            )
         )
         road_bus_action_infra.invest = (
             road_bus.transport_capacity_pkm * road_bus_action_infra.invest_per_x
@@ -540,13 +538,15 @@ def calc(root, inputs: Inputs):
                 + t18.rail_ppl_distance.transport_capacity_pkm
                 + t18.rail_ppl_metro.transport_capacity_pkm
             )
-            * (ass("Ass_T_D_trnsprt_ppl_city_pt_frac_2050")
-            if entry("In_T_rt3") == "city"
-            else ass("Ass_T_D_trnsprt_ppl_smcty_pt_frac_2050")
-            if entry("In_T_rt3") == "smcty"
-            else ass("Ass_T_D_trnsprt_ppl_rural_pt_frac_2050")
-            if entry("In_T_rt3") == "rural"
-            else ass("Ass_T_D_trnsprt_ppl_nat_pt_frac_2050"))
+            * (
+                ass("Ass_T_D_trnsprt_ppl_city_pt_frac_2050")
+                if entry("In_T_rt3") == "city"
+                else ass("Ass_T_D_trnsprt_ppl_smcty_pt_frac_2050")
+                if entry("In_T_rt3") == "smcty"
+                else ass("Ass_T_D_trnsprt_ppl_rural_pt_frac_2050")
+                if entry("In_T_rt3") == "rural"
+                else ass("Ass_T_D_trnsprt_ppl_nat_pt_frac_2050")
+            )
         )
         rail_ppl_distance.ratio_wage_to_emplo = ass("Ass_T_D_rail_wage_driver")
         rail_ppl_metro_action_infra.invest = (
@@ -556,7 +556,7 @@ def calc(root, inputs: Inputs):
         rail_action_invest_infra.invest_pa = rail_action_invest_infra.invest / entry(
             "In_M_duration_target"
         )
-        other_cycl.invest_per_x = (fact('Fact_T_D_cycl_vehicle_invest_hannah'))
+        other_cycl.invest_per_x = fact("Fact_T_D_cycl_vehicle_invest_hannah")
         rail_action_invest_infra.pct_of_wage = fact(
             "Fact_T_D_constr_roadrail_revenue_pct_of_wage_2018"
         )
@@ -653,11 +653,11 @@ def calc(root, inputs: Inputs):
             - t18.road_car_it_ot.transport_capacity_pkm
         )
         other_cycl.base_unit = (
-                other_cycl.transport_capacity_pkm
-                * ass("Ass_T_D_cycl_ratio_cargo_to_bikes")
-                / ass("Ass_T_D_cycl_cargo_mlg")
+            other_cycl.transport_capacity_pkm
+            * ass("Ass_T_D_cycl_ratio_cargo_to_bikes")
+            / ass("Ass_T_D_cycl_cargo_mlg")
         )
-        other_cycl.invest = (other_cycl.base_unit * other_cycl.invest_per_x)
+        other_cycl.invest = other_cycl.base_unit * other_cycl.invest_per_x
         g_planning.invest = ass("Ass_T_C_planer_cost_per_invest_cost") * (
             road_bus_action_infra.invest
             + road_gds_mhd_action_wire.invest
@@ -997,8 +997,8 @@ def calc(root, inputs: Inputs):
         road.invest_com = (
             road_action_charger.invest_com
             + road_ppl.invest_com
-            #+ road_bus.invest_com
-            #+ road_bus_action_infra.invest_com
+            # + road_bus.invest_com
+            # + road_bus_action_infra.invest_com
             + road_gds.invest_com
         )  # SUM(road_action_charger.invest_com:road_ppl.invest_com,road_gds.invest_com))
 
@@ -1244,13 +1244,15 @@ def calc(root, inputs: Inputs):
                 + t18.rail_ppl_distance.transport_capacity_pkm
                 + t18.rail_ppl_metro.transport_capacity_pkm
             )
-            * (ass("Ass_T_D_trnsprt_ppl_city_pt_frac_2050")
-            if entry("In_T_rt3") == "city"
-            else ass("Ass_T_D_trnsprt_ppl_smcty_pt_frac_2050")
-            if entry("In_T_rt3") == "smcty"
-            else ass("Ass_T_D_trnsprt_ppl_rural_pt_frac_2050")
-            if entry("In_T_rt3") == "rural"
-            else ass("Ass_T_D_trnsprt_ppl_nat_pt_frac_2050"))
+            * (
+                ass("Ass_T_D_trnsprt_ppl_city_pt_frac_2050")
+                if entry("In_T_rt3") == "city"
+                else ass("Ass_T_D_trnsprt_ppl_smcty_pt_frac_2050")
+                if entry("In_T_rt3") == "smcty"
+                else ass("Ass_T_D_trnsprt_ppl_rural_pt_frac_2050")
+                if entry("In_T_rt3") == "rural"
+                else ass("Ass_T_D_trnsprt_ppl_nat_pt_frac_2050")
+            )
         )
         rail_ppl_distance.demand_electricity = (
             rail_ppl_distance.transport_capacity_pkm
@@ -1717,10 +1719,10 @@ def calc(root, inputs: Inputs):
         rail_gds.invest_pa = rail_gds.invest / entry("In_M_duration_target")
         rail_gds.pct_of_wage = rail_gds.cost_wage / rail_gds.invest_pa
         rail.invest_pa = (
-            rail_action_invest_infra.invest_pa +
-            rail_action_invest_station.invest_pa +
-            rail_ppl.invest_pa +
-            rail_gds.invest_pa
+            rail_action_invest_infra.invest_pa
+            + rail_action_invest_station.invest_pa
+            + rail_ppl.invest_pa
+            + rail_gds.invest_pa
         )
         rail.demand_emplo = (
             rail_action_invest_infra.demand_emplo
@@ -1763,14 +1765,11 @@ def calc(root, inputs: Inputs):
             * entry("In_M_duration_neutral")
             * fact("Fact_M_cost_per_CO2e_2020")
         )
-        other_foot.invest_per_x = ass("Ass_T_D_invest_pedestrians")
+
         other_foot.invest_pa = 0
         other_foot.invest = 0
         other_foot.invest_com = other_foot.invest
-        other_foot.pct_of_wage = fact(
-            "Fact_T_D_constr_roadrail_revenue_pct_of_wage_2018"
-        )
-        other_foot.cost_wage = other_foot.invest_pa * other_foot.pct_of_wage
+
         ship_dmstc_action_infra.invest_pa = ship_dmstc_action_infra.invest / entry(
             "In_M_duration_target"
         )
@@ -1852,8 +1851,6 @@ def calc(root, inputs: Inputs):
         )
         # ship_dmstc_action_infra.emplo_existingnicht existent oder ausgelastet
 
-        other_foot.demand_emplo = other_foot.cost_wage / other_foot.ratio_wage_to_emplo
-
         ship_inter.energy = ship_inter.demand_ediesel  # SUM(AW264:BJ264)
         t.change_CO2e_pct = t.change_CO2e_t / t18.t.CO2e_cb
         ship_inter.CO2e_total = ship_inter.CO2e_cb
@@ -1880,14 +1877,14 @@ def calc(root, inputs: Inputs):
         # ship_inter.actionReduktion der Transportleistung
 
         t.change_energy_pct = t.change_energy_MWh / t18.t.energy
-        other_foot.transport_capacity_pkm = (
-            t.transport_capacity_pkm * (ass("Ass_T_D_trnsprt_ppl_city_foot_frac_2050")
+        other_foot.transport_capacity_pkm = t.transport_capacity_pkm * (
+            ass("Ass_T_D_trnsprt_ppl_city_foot_frac_2050")
             if entry("In_T_rt3") == "city"
             else ass("Ass_T_D_trnsprt_ppl_smcty_foot_frac_2050")
             if entry("In_T_rt3") == "smcty"
             else ass("Ass_T_D_trnsprt_ppl_rural_foot_frac_2050")
             if entry("In_T_rt3") == "rural"
-            else ass("Ass_T_D_trnsprt_ppl_nat_foot_frac_2050"))
+            else ass("Ass_T_D_trnsprt_ppl_nat_foot_frac_2050")
         )
         other.CO2e_total = 0  # CJ265 + CM265(
 
@@ -1903,28 +1900,32 @@ def calc(root, inputs: Inputs):
             other_foot.transport_capacity_pkm - t18.other_foot.transport_capacity_pkm
         )
         other_foot.invest_pa_com = other_foot.invest_pa
-        other_cycl_action_infra.invest_per_x = (ass('Ass_T_C_cost_per_trnsprt_ppl_cycle'))
+        other_cycl_action_infra.invest_per_x = ass("Ass_T_C_cost_per_trnsprt_ppl_cycle")
 
         other_cycl.invest_com = 0
-        other_cycl_action_infra.invest = (other_cycl.transport_capacity_pkm * other_cycl_action_infra.invest_per_x)
+        other_cycl_action_infra.invest = (
+            other_cycl.transport_capacity_pkm * other_cycl_action_infra.invest_per_x
+        )
         other_cycl_action_infra.invest_com = other_cycl_action_infra.invest * ass(
             "Ass_T_C_ratio_public_sector_100"
         )
         # other_foot.actionSchaffung fußgängerfreundlicher Städte und Gemeinden
-        other_foot_action_infra.invest_per_x = (ass('Ass_T_D_invest_pedestrians'))
-        other_foot_action_infra.invest_pa = (other_foot_action_infra.invest_per_x * entry('In_M_population_com_203X'))
-        other_foot_action_infra.invest = (other_foot_action_infra.invest_pa * entry('In_M_duration_target'))
-        other_foot_action_infra.invest_com = (other_foot_action_infra.invest)
+        other_foot_action_infra.invest_per_x = ass("Ass_T_D_invest_pedestrians")
+        other_foot_action_infra.invest_pa = (
+            other_foot_action_infra.invest_per_x * entry("In_M_population_com_203X")
+        )
+        other_foot_action_infra.invest = other_foot_action_infra.invest_pa * entry(
+            "In_M_duration_target"
+        )
+        other_foot_action_infra.invest_com = other_foot_action_infra.invest
         other.invest_com = (
             other_foot.invest_com
             + other_cycl.invest_com
             + other_foot_action_infra.invest_com
             + other_cycl_action_infra.invest_com
         )  # SUM(other_foot.invest_com:DE268)
-        other_cycl.invest_pa = (other_cycl.invest / entry('In_M_duration_target'))
-        other_cycl.pct_of_wage = fact(
-            "Fact_T_D_constr_roadrail_revenue_pct_of_wage_2018"
-        )
+        other_cycl.invest_pa = other_cycl.invest / entry("In_M_duration_target")
+
         other_foot.demand_emplo_new = other_foot.demand_emplo
         g_planning.demand_emplo_new = g_planning.demand_emplo
 
@@ -1941,15 +1942,22 @@ def calc(root, inputs: Inputs):
         )
 
         other.invest = (
-            other_foot.invest + other_cycl.invest + other_foot_action_infra.invest + other_cycl_action_infra.invest
+            other_foot.invest
+            + other_cycl.invest
+            + other_foot_action_infra.invest
+            + other_cycl_action_infra.invest
         )  # SUM(other_foot.invest:other_cycl_action_infra.invest)
 
         other_cycl.invest_pa_com = other_cycl.invest_com / entry("In_M_duration_target")
-        other_foot_action_infra.invest_pa_com = (other_foot_action_infra.invest_pa)
-        other_cycl_action_infra.invest_pa_com = (other_cycl_action_infra.invest_com / entry('In_M_duration_target'))
+        other_foot_action_infra.invest_pa_com = other_foot_action_infra.invest_pa
+        other_cycl_action_infra.invest_pa_com = (
+            other_cycl_action_infra.invest_com / entry("In_M_duration_target")
+        )
         other.invest_pa_com = (
-            other_foot.invest_pa_com + other_cycl.invest_pa_com + other_foot_action_infra.invest_pa_com +
-            other_cycl_action_infra.invest_pa_com
+            other_foot.invest_pa_com
+            + other_cycl.invest_pa_com
+            + other_foot_action_infra.invest_pa_com
+            + other_cycl_action_infra.invest_pa_com
         )  # SUM(other_foot.invest_pa_com:DB268)
         g.invest = g_planning.invest
         t.invest_com = (
@@ -1960,18 +1968,41 @@ def calc(root, inputs: Inputs):
             + air.invest_com
         )
         # other_foot.emplo_existingnicht existent oder ausgelastet
-        other_foot_action_infra.pct_of_wage = (fact('Fact_T_D_constr_roadrail_revenue_pct_of_wage_2018'))
-        other_foot_action_infra.cost_wage = (other_foot_action_infra.invest_pa * other_foot_action_infra.pct_of_wage)
-        other_foot_action_infra.ratio_wage_to_emplo = (fact('Fact_T_D_constr_roadrail_ratio_wage_to_emplo_2018'))
-        other_foot_action_infra.demand_emplo = (other_foot_action_infra.cost_wage / other_foot_action_infra.ratio_wage_to_emplo)
-        other_foot_action_infra.demand_emplo_new = (other_foot_action_infra.demand_emplo)
-        other_cycl_action_infra.ratio_wage_to_emplo = (fact('Fact_T_D_constr_roadrail_ratio_wage_to_emplo_2018'))
-        other_cycl_action_infra.pct_of_wage = (fact('Fact_T_D_constr_roadrail_revenue_pct_of_wage_2018'))
-        other_cycl_action_infra.invest_pa = (other_cycl_action_infra.invest / entry('In_M_duration_target'))
-        other_cycl_action_infra.cost_wage = (other_cycl_action_infra.invest_pa * other_cycl_action_infra.pct_of_wage)
-        other_cycl_action_infra.demand_emplo = (other_cycl_action_infra.cost_wage / other_cycl_action_infra.ratio_wage_to_emplo)
-        other_cycl_action_infra.demand_emplo_new = (other_cycl_action_infra.demand_emplo)
-        other.demand_emplo_new = (other_foot_action_infra.demand_emplo_new + other_cycl_action_infra.demand_emplo_new)
+        other_foot_action_infra.pct_of_wage = fact(
+            "Fact_T_D_constr_roadrail_revenue_pct_of_wage_2018"
+        )
+        other_foot_action_infra.cost_wage = (
+            other_foot_action_infra.invest_pa * other_foot_action_infra.pct_of_wage
+        )
+        other_foot_action_infra.ratio_wage_to_emplo = fact(
+            "Fact_T_D_constr_roadrail_ratio_wage_to_emplo_2018"
+        )
+        other_foot_action_infra.demand_emplo = (
+            other_foot_action_infra.cost_wage
+            / other_foot_action_infra.ratio_wage_to_emplo
+        )
+        other_foot_action_infra.demand_emplo_new = other_foot_action_infra.demand_emplo
+        other_cycl_action_infra.ratio_wage_to_emplo = fact(
+            "Fact_T_D_constr_roadrail_ratio_wage_to_emplo_2018"
+        )
+        other_cycl_action_infra.pct_of_wage = fact(
+            "Fact_T_D_constr_roadrail_revenue_pct_of_wage_2018"
+        )
+        other_cycl_action_infra.invest_pa = other_cycl_action_infra.invest / entry(
+            "In_M_duration_target"
+        )
+        other_cycl_action_infra.cost_wage = (
+            other_cycl_action_infra.invest_pa * other_cycl_action_infra.pct_of_wage
+        )
+        other_cycl_action_infra.demand_emplo = (
+            other_cycl_action_infra.cost_wage
+            / other_cycl_action_infra.ratio_wage_to_emplo
+        )
+        other_cycl_action_infra.demand_emplo_new = other_cycl_action_infra.demand_emplo
+        other.demand_emplo_new = (
+            other_foot_action_infra.demand_emplo_new
+            + other_cycl_action_infra.demand_emplo_new
+        )
         t.invest_pa_com = (
             road.invest_pa_com
             + rail.invest_pa_com
@@ -2012,7 +2043,9 @@ def calc(root, inputs: Inputs):
             + g.invest
         )
 
-        other.cost_wage = (other_foot_action_infra.cost_wage + other_cycl_action_infra.cost_wage)
+        other.cost_wage = (
+            other_foot_action_infra.cost_wage + other_cycl_action_infra.cost_wage
+        )
         t.cost_wage = (
             g.cost_wage
             + road.cost_wage
@@ -2022,10 +2055,16 @@ def calc(root, inputs: Inputs):
         )
 
         other_cycl_action_infra.invest_pa = other_cycl_action_infra.invest / entry(
-            "In_M_duration_target")
+            "In_M_duration_target"
+        )
 
-        other_cycl_action_infra.demand_emplo = (other_cycl_action_infra.cost_wage / other_cycl_action_infra.ratio_wage_to_emplo)
-        other.demand_emplo = (other_foot_action_infra.demand_emplo + other_cycl_action_infra.demand_emplo)
+        other_cycl_action_infra.demand_emplo = (
+            other_cycl_action_infra.cost_wage
+            / other_cycl_action_infra.ratio_wage_to_emplo
+        )
+        other.demand_emplo = (
+            other_foot_action_infra.demand_emplo + other_cycl_action_infra.demand_emplo
+        )
         t.demand_emplo = (
             g.demand_emplo
             + air.demand_emplo
@@ -2048,10 +2087,10 @@ def calc(root, inputs: Inputs):
         # other_cycl_action_infra.actionInvestitionen in (E - )Lastenräder
 
         other.invest_pa = (
-            other_foot.invest_pa +
-            other_cycl.invest_pa +
-            other_foot_action_infra.invest_pa +
-            other_cycl_action_infra.invest_pa
+            other_foot.invest_pa
+            + other_cycl.invest_pa
+            + other_foot_action_infra.invest_pa
+            + other_cycl_action_infra.invest_pa
         )
         other.base_unit = other_cycl.base_unit
         t.invest_pa = (
