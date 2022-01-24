@@ -8,7 +8,7 @@ class Gtest:
     
     gen:dict = None  # Generator dictionary
     xls:dict = None  # Excel dictionary
-    eps:float = 0.001 # max rel accuracy for test to pass
+    eps:float = 0.0005 # max rel accuracy for test to pass
     p_sector_gen = None
     
     # read excel-dictionary

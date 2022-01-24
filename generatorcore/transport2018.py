@@ -282,12 +282,16 @@ def calc(root, inputs: Inputs):
             / entry("In_M_population_nat")
         )
 
-        # res 30.020.293  t/a
-        air_inter.CO2e_cb = (
-            air_inter.demand_jetfuel
-            # Todo: In der Excel werden   Emissionen durch Benzinverbrauch im nationalen Flugverkehr addiert: Prüfen (Ergebnis weicht daher ab)
-            * fact("Fact_T_S_jetfuel_EmFa_tank_wheel_2018")
+        # res 108.056 MWh
+        air_dmstc.demand_petrol = (
+                fact("Fact_T_S_Air_petrol_fec_2018")
+                * entry("In_M_population_com_2018")
+                / entry("In_M_population_nat")
         )
+        # res 30.020.293  t/a
+        air_inter.CO2e_cb = (air_dmstc.demand_petrol * fact('Fact_T_S_petrol_EmFa_tank_wheel_2018') + air_inter.demand_jetfuel * fact('Fact_T_S_jetfuel_EmFa_tank_wheel_2018') + 0 * fact('Fact_T_S_diesel_EmFa_tank_wheel_2018') + 0 * fact('Fact_T_S_lpg_EmFa_tank_wheel_2018') + 0 * fact('Fact_T_S_cng_EmFa_tank_wheel_2018'))
+
+
         # res 113.722.222 MWh
         air_inter.energy = air_inter.demand_jetfuel
 
@@ -304,13 +308,6 @@ def calc(root, inputs: Inputs):
         air_dmstc.transport_capacity_tkm = (
             fact("Fact_T_D_Air_dmstc_nat_trnsprt_gds_2019")
             * fact("Fact_T_D_Air_dmstc_nat_ratio_2018")
-            * entry("In_M_population_com_2018")
-            / entry("In_M_population_nat")
-        )
-
-        # res 108.056 MWh
-        air_dmstc.demand_petrol = (
-            fact("Fact_T_S_Air_petrol_fec_2018")
             * entry("In_M_population_com_2018")
             / entry("In_M_population_nat")
         )
