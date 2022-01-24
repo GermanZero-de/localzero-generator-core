@@ -87,6 +87,7 @@ def find_diffs(path: str, d1, d2) -> list[tuple[str, typing.Any, typing.Any]]:
 
 
 def end_to_end(ags):
+    """This runs an end to end test. No entries are overriden, only AGS"""
     public_hash = get_hash_of_data_repo("public")
     proprietary_hash = get_hash_of_data_repo("proprietary")
     root = root_of_this_repo()
