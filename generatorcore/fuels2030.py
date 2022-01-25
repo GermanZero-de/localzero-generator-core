@@ -331,10 +331,7 @@ def calc(root, inputs: Inputs):
         f.p_hydrogen.power_to_be_installed = f.p_hydrogen.demand_electricity / ass(
             "Ass_F_P_electrolysis_full_load_hours"
         )
-        f.p_hydrogen_reconv.power_to_be_installed = (
-            f.p_hydrogen_reconv.demand_electricity
-            / ass("Ass_F_P_electrolysis_full_load_hours")
-        )
+        f.p_hydrogen_reconv.power_to_be_installed = (f.p_hydrogen_reconv.demand_electricity / ass('Ass_F_P_electrolysis_full_load_hours'))
         # ---------------------------------------
         f.p_hydrogen_reconv.invest_per_x = ass("Ass_S_electrolyses_invest_per_power")
         # ---------------------------------------

@@ -254,7 +254,7 @@ def calc_3X(root, inputs: Inputs):
 
     # reducing the yearly emissions year by year, starting with 2022
     if m183X.CO2e_w_lulucf_2021 > 0:
-        m183X.CO2e_w_lulucf_2022 = m183X.CO2e_w_lulucf_2021 - m183X.CO2e_w_lulucf_change_pa      )
+        m183X.CO2e_w_lulucf_2022 = (m183X.CO2e_w_lulucf_2021 - m183X.CO2e_w_lulucf_change_pa      )
     else:
         m183X.CO2e_w_lulucf_2022 = 0
 
