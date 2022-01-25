@@ -130,23 +130,19 @@ def calc_3X(root, inputs: Inputs):
     ######################################
 
     m183X = root.m183X
-    #TODO: add "GHG_budget_2016_to_year_target" to makeentries.py
     # local greenhouse gas budget from 2016 until target year in com!!
-    #m183X.GHG_budget_2016_to_year_target = (
-    #     entry("GHG_budget_2016_to_year_target")
-    #     * entry("In_M_population_com_2018")
-    #     / entry("In_M_population_nat")
-    #    )
-    m183X.GHG_budget_2016_to_year_target = 1
+    m183X.GHG_budget_2016_to_year_target = (
+        entry("GHG_budget_2016_to_year_target")
+        * entry("In_M_population_com_2018")
+        / entry("In_M_population_nat")
+        )
 
-    #TODO: add "nonCO2_budget_2016_to_year_target" to makeentries.py
     # local nonCO2 budget from 2016 until target year in com!!
-    #m183X.nonCO2_budget_2016_to_year_target = (
-    #    entry("nonCO2_budget_2016_to_year_target")
-    #    * entry("In_M_population_com_2018")
-    #    / entry("In_M_population_nat")
-    #)
-    m183X.nonCO2_budget_2016_to_year_target = 1
+    m183X.nonCO2_budget_2016_to_year_target = (
+        entry("nonCO2_budget_2016_to_year_target")
+        * entry("In_M_population_com_2018")
+        / entry("In_M_population_nat")
+    )
 
     # local CO2 budget from 2016 until infinity
     m183X.CO2_budget_2016_to_year_target = (
@@ -254,7 +250,7 @@ def calc_3X(root, inputs: Inputs):
 
     # reducing the yearly emissions year by year, starting with 2022
     if m183X.CO2e_w_lulucf_2021 > 0:
-        m183X.CO2e_w_lulucf_2022 = m183X.CO2e_w_lulucf_2021 - m183X.CO2e_w_lulucf_change_pa      )
+        m183X.CO2e_w_lulucf_2022 = m183X.CO2e_w_lulucf_2021 - m183X.CO2e_w_lulucf_change_pa
     else:
         m183X.CO2e_w_lulucf_2022 = 0
 
