@@ -34,21 +34,11 @@ jobs:
         run: poetry install --no-interaction --no-root
       - name: Install library
         run: poetry install --no-interaction
-      - name: Create places for public and proprietary data
-        run: |
-           mkdir data/public
-           mkdir data/proprietary
-      - name: Checkout data repo (public)
+      - name: Checkout data repositories
         env:
           PA_TOKEN: ${{ secrets.LZ_PAT }}
         run: |
-          git clone "https://${PA_TOKEN}@github.com/GermanZero-de/localzero-data-public" data/public
-        shell: bash
-      - name: Checkout data repo (proprietary)
-        env:
-          PA_TOKEN: ${{ secrets.LZ_PAT }}
-        run: |
-          git clone "https://${PA_TOKEN}@github.com/GermanZero-de/localzero-data-proprietary" data/proprietary
+          python devtool.py data checkout -pat ${PA_TOKEN}
         shell: bash
       - name: Run pytest
         run: |
