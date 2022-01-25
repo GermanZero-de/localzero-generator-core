@@ -34,6 +34,14 @@ jobs:
         run: poetry install --no-interaction --no-root
       - name: Install library
         run: poetry install --no-interaction
-      - run: |
+      - name: Checkout data repositories
+        env:
+          PA_TOKEN: ${{ secrets.LZ_PAT }}
+        run: |
+          source $VENV
+          python devtool.py data checkout -pat ${PA_TOKEN}
+        shell: bash
+      - name: Run pytest
+        run: |
           source $VENV
           pytest tests/
