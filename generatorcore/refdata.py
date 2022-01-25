@@ -1,9 +1,12 @@
 """Module refdata -- tools to read the reference data used by the generator.
 
 """
+from dataclasses import dataclass
 import os
-import pandas as pd
+import json
 import sys
+
+import pandas as pd
 
 # TODO: Write small wrappers classes for each data source so that we can document
 # the columns and get better type checking from pylance.
@@ -95,6 +98,29 @@ class FactsAndAssumptions:
         except:
             print("could not find " + keyname, file=sys.stderr)
             return 1.0
+
+
+def datadir_or_default(datadir: str | None = None) -> str:
+    """Return the normalized absolute path to the data directory."""
+    if datadir is None:
+        return os.path.normpath(os.path.join(os.getcwd(), "data"))
+    else:
+        return os.path.abspath(datadir)
+
+
+@dataclass
+class Version:
+    """This classes identifies a particular version of the reference data."""
+
+    public: str  # The git hash of the public repository
+    proprietary: str  # The git hash of the proprietary repository
+
+    @classmethod
+    def load(cls, name: str, datadir: str | None = None) -> "Version":
+        fname = os.path.join(datadir_or_default(datadir), name + ".json")
+        with open(fname) as fp:
+            d = json.load(fp)
+            return cls(public=d["public"], proprietary=d["proprietary"])
 
 
 class RefData:
@@ -204,8 +230,7 @@ class RefData:
         TODO: Provide a way to run this even when no proprietary data is available. As of right now unnecessary
         as we can't yet run the generator without the data.
         """
-        if datadir is None:
-            datadir = os.path.join(os.getcwd(), "data")
+        datadir = datadir_or_default(datadir)
         d = cls(
             area=_load(datadir, "area"),
             area_kinds=_load(datadir, "area_kinds"),
