@@ -14,8 +14,8 @@ import json
 import sys
 import collections.abc
 import typing
+import math
 import numbers
-import pytest
 import os.path
 from generatorcore.generator import calculate_with_default_inputs
 from generatorcore import refdatatools
@@ -48,6 +48,22 @@ def remove_null_values(r):
         return r
 
 
+def float_matches(actual, expected, rel):
+    if math.isnan(actual) and math.isnan(expected):
+        return True
+    elif math.isnan(actual):
+        return False
+    elif math.isnan(expected):
+        return False
+    diff = math.abs(actual - expected)
+    reltol = expected * rel
+    if diff < reltol:
+        return True
+    if diff < 1e-12:
+        return True
+    return False
+
+
 def find_diffs(
     path: str, d1, d2, *, rel
 ) -> typing.Iterator[tuple[str, typing.Any, typing.Any]]:
@@ -69,8 +85,8 @@ def find_diffs(
     elif isinstance(d2, collections.abc.Mapping) and d1 is None:
         for k in d2.keys():
             yield from find_diffs(path + "." + k, None, d2[k], rel=rel)
-    elif isinstance(d1, numbers.Number) and isinstance(d2, numbers.Number):
-        if d1 != pytest.approx(d2, rel=rel, nan_ok=True):
+    elif isinstance(d1, numbers.Real) and isinstance(d2, numbers.Real):
+        if float_matches(actual=d1, expected=d2, rel=rel):
             yield (path, d1, d2)
     elif d1 != d2:
         yield (path, d1, d2)
