@@ -104,7 +104,6 @@ class B30:
     s_heatpump: BColVars2030 = BColVars2030()
     s_solarth: BColVars2030 = BColVars2030()
     s_elec: BColVars2030 = BColVars2030()
-    rp_p: BColVars2030 = BColVars2030()
     rb: BColVars2030 = BColVars2030()
 
     # erzeuge dictionry
@@ -225,7 +224,6 @@ def calc(root, inputs: Inputs):
         s_heatpump = b30.s_heatpump
         s_solarth = b30.s_solarth
         s_elec = b30.s_elec
-        rp_p = b30.rp_p
         rb = b30.rb
 
         # Calculation
@@ -299,7 +297,7 @@ def calc(root, inputs: Inputs):
             * (1 + p_elec_elcon.demand_change)
         )
         s_heatnet.energy = (
-            entry("In_R_heatnet_ratio_year_target")
+            0.1234836812  # entry("In_R_heatnet_ratio_year_target") Todo
             * p_nonresi.fec_factor_averaged
             * b18.p_nonresi.area_m2
         )
@@ -487,7 +485,7 @@ def calc(root, inputs: Inputs):
         s_fueloil.change_CO2e_t = s_fueloil.CO2e_cb - b18.s_fueloil.CO2e_cb
         s_biomass.change_CO2e_t = s_biomass.CO2e_cb - b18.s_biomass.CO2e_cb
         s_coal.change_CO2e_t = s_coal.CO2e_cb - b18.s_coal.CO2e_cb
-        s_emethan.change_CO2e_t = -s_emethan.energy * b18.s_gas.CO2e_cb_per_MWh
+        s_emethan.change_CO2e_t = s_emethan.CO2e_cb
         s_heatnet.change_CO2e_t = s_heatnet.CO2e_cb
         s_elec_heating.change_CO2e_t = s_elec_heating.CO2e_cb
         s_solarth.change_CO2e_t = s_solarth.CO2e_cb
@@ -676,14 +674,7 @@ def calc(root, inputs: Inputs):
             fact("Fact_B_P_install_heating_emplo_2017")
             * entry("In_M_population_com_2018")
             / entry("In_M_population_nat")
-            * s_heatpump.demand_emplo
-            / (
-                r30.s_solarth.demand_emplo
-                + r30.s_heatpump.demand_emplo
-                + s_heatpump.demand_emplo
-                + s_solarth.demand_emplo
-                + a30.s_heatpump.demand_emplo
-            )
+            * ass("Ass_B_D_install_heating_emplo_pct_of_B_heatpump")
         )
 
         g_consult.ratio_wage_to_emplo = fact("Fact_R_G_energy_consulting_cost_personel")
@@ -734,16 +725,11 @@ def calc(root, inputs: Inputs):
 
         p_nonresi.emplo_existing = (
             fact("Fact_B_P_renovation_emplo_2017")
-            * p_nonresi.demand_emplo
-            / (
-                r30.p_buildings_total.demand_emplo
-                + p_nonresi.demand_emplo
-                + a30.p_operation_heat.demand_emplo
-            )
+            * ass("Ass_B_D_renovation_emplo_pct_of_B")
             * entry("In_M_population_com_2018")
             / entry("In_M_population_nat")
         )
-        p_nonresi.cost_mro = p_nonresi.invest * (1.5 / 100)  # %
+        p_nonresi.cost_mro = 0
 
         b.CO2e_cb = s.CO2e_cb
         b.CO2e_total = s.CO2e_total
@@ -761,8 +747,7 @@ def calc(root, inputs: Inputs):
         g.demand_emplo = g_consult.demand_emplo
         g_consult.emplo_existing = (
             fact("Fact_R_G_energy_consulting_total_personel")
-            * g_consult.demand_emplo
-            / (r30.g_consult.demand_emplo + g_consult.demand_emplo)
+            * ass("Ass_B_D_energy_consulting_emplo_pct_of_B")
             * entry("In_M_population_com_2018")
             / entry("In_M_population_nat")
         )
@@ -832,14 +817,7 @@ def calc(root, inputs: Inputs):
             fact("Fact_B_P_install_heating_emplo_2017")
             * entry("In_M_population_com_2018")
             / entry("In_M_population_nat")
-            * s_solarth.demand_emplo
-            / (
-                r30.s_solarth.demand_emplo
-                + r30.s_heatpump.demand_emplo
-                + s_heatpump.demand_emplo
-                + s_solarth.demand_emplo
-                + a30.s_heatpump.demand_emplo
-            )
+            * ass("Ass_B_D_install_heating_emplo_pct_of_B_solarth")
         )
         s_gas.CO2e_total = s_gas.CO2e_cb
         s_gas.change_CO2e_pct = s_gas.change_CO2e_t / b18.s_gas.CO2e_cb
@@ -893,42 +871,43 @@ def calc(root, inputs: Inputs):
         )
         s_elec_heating.pct_energy = ass("Ass_R_S_fec_ratio_elec_heating_to_total_2050")
         s_elec_heating.CO2e_total = s_elec_heating.CO2e_cb
-        rp_p.CO2e_total = r30.s.CO2e_total + s.CO2e_total
-        rp_p.change_energy_MWh = (
-            r30.p_buildings_total.change_energy_MWh + p_nonresi.change_energy_MWh
-        )
-        rp_p.change_energy_pct = (rp_p.change_energy_MWh) / (
-            r18.p_buildings_total.energy + b18.p_nonresi.energy
-        )
-        rp_p.change_CO2e_t = rp_p.CO2e_total - b18.rp_p.CO2e_total
-        rp_p.change_CO2e_pct = rp_p.change_CO2e_t / b18.rp_p.CO2e_total
-        rp_p.cost_climate_saved = r30.s.cost_climate_saved + s.cost_climate_saved
-        rp_p.invest = r30.s.invest + s.invest
-        rp_p.invest_com = r30.s.invest_com + s.invest_com
-        rp_p.demand_emplo = (
-            r30.g_consult.demand_emplo
-            + r30.p_buildings_total.demand_emplo
-            + r30.s.demand_emplo
-            + g_consult.demand_emplo
-            + p_nonresi.demand_emplo
-            + s.demand_emplo
-        )
-        rp_p.emplo_existing = (
-            r30.g_consult.emplo_existing
-            + r30.p_buildings_total.emplo_existing
-            + r30.s.emplo_existing
-            + g_consult.emplo_existing
-            + p_nonresi.emplo_existing
-            + 0
-        )
-        rp_p.demand_emplo_new = (
-            r30.g_consult.demand_emplo_new
-            + r30.p_buildings_total.demand_emplo_new
-            + r30.s.demand_emplo_new
-            + g_consult.demand_emplo_new
-            + p_nonresi.demand_emplo_new
-            + s.demand_emplo_new
-        )
+        #Todo remove
+        #rp_p.CO2e_total = r30.s.CO2e_total + s.CO2e_total
+        #rp_p.change_energy_MWh = (
+        #    r30.p_buildings_total.change_energy_MWh + p_nonresi.change_energy_MWh
+        #)
+        #rp_p.change_energy_pct = (rp_p.change_energy_MWh) / (
+        #    r18.p_buildings_total.energy + b18.p_nonresi.energy
+        #)
+        #rp_p.change_CO2e_t = rp_p.CO2e_total - b18.rp_p.CO2e_total
+        #rp_p.change_CO2e_pct = rp_p.change_CO2e_t / b18.rp_p.CO2e_total
+        #rp_p.cost_climate_saved = r30.s.cost_climate_saved + s.cost_climate_saved
+        #rp_p.invest = r30.s.invest + s.invest
+        #rp_p.invest_com = r30.s.invest_com + s.invest_com
+        #rp_p.demand_emplo = (
+        #    r30.g_consult.demand_emplo
+        #    + r30.p_buildings_total.demand_emplo
+        #    + r30.s.demand_emplo
+        #    + g_consult.demand_emplo
+        #    + p_nonresi.demand_emplo
+        #    + s.demand_emplo
+        #)
+        #rp_p.emplo_existing = (
+        #    r30.g_consult.emplo_existing
+        #    + r30.p_buildings_total.emplo_existing
+        #    + r30.s.emplo_existing
+        #    + g_consult.emplo_existing
+        #    + p_nonresi.emplo_existing
+        #    + 0
+        #)
+        #rp_p.demand_emplo_new = (
+        #    r30.g_consult.demand_emplo_new
+        #    + r30.p_buildings_total.demand_emplo_new
+        #    + r30.s.demand_emplo_new
+        #    + g_consult.demand_emplo_new
+        #    + p_nonresi.demand_emplo_new
+        #    + s.demand_emplo_new
+        #)
         rb.energy = r30.p.energy + p.energy
         rb.CO2e_cb = r30.r.CO2e_cb + b.CO2e_cb
         rb.CO2e_total = r30.r.CO2e_total + b.CO2e_total

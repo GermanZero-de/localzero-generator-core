@@ -756,7 +756,7 @@ def calc(root, inputs: Inputs):
         s_heatpump.cost_fuel = (
             s_heatpump.energy * s_heatpump.cost_fuel_per_MWh / Million
         )
-        s_emethan.cost_fuel = s_emethan.energy * s_emethan.cost_fuel_per_MWh / Million
+        s_emethan.cost_fuel = 0
         s.cost_fuel = (
             s_fueloil.cost_fuel
             + s_lpg.cost_fuel
