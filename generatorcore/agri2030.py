@@ -79,9 +79,9 @@ class A30:
     p_manure: AColVars2030 = AColVars2030()
     p_manure_dairycow: AColVars2030 = AColVars2030()
     p_manure_nondairy: AColVars2030 = AColVars2030()
-    p_manure_dswine: AColVars2030 = AColVars2030()
-    p_manure_dpoultry: AColVars2030 = AColVars2030()
-    p_manure_doanimal: AColVars2030 = AColVars2030()
+    p_manure_swine: AColVars2030 = AColVars2030()
+    p_manure_poultry: AColVars2030 = AColVars2030()
+    p_manure_oanimal: AColVars2030 = AColVars2030()
     p_manure_deposition: AColVars2030 = AColVars2030()
     p_soil: AColVars2030 = AColVars2030()
     p_soil_fertilizer: AColVars2030 = AColVars2030()
@@ -193,9 +193,9 @@ def calc(root, inputs: Inputs):
     p_manure = root.a30.p_manure
     p_manure_dairycow = root.a30.p_manure_dairycow
     p_manure_nondairy = root.a30.p_manure_nondairy
-    p_manure_dswine = root.a30.p_manure_dswine
-    p_manure_dpoultry = root.a30.p_manure_dpoultry
-    p_manure_doanimal = root.a30.p_manure_doanimal
+    p_manure_swine = root.a30.p_manure_swine
+    p_manure_poultry = root.a30.p_manure_poultry
+    p_manure_oanimal = root.a30.p_manure_oanimal
     p_manure_deposition = root.a30.p_manure_deposition
     p_soil = root.a30.p_soil
     p_soil_fertilizer = root.a30.p_soil_fertilizer
@@ -244,9 +244,9 @@ def calc(root, inputs: Inputs):
     p_manure.CO2e_cb = 0
     p_manure_dairycow.CO2e_cb = 0
     p_manure_nondairy.CO2e_cb = 0
-    p_manure_dswine.CO2e_cb = 0
-    p_manure_dpoultry.CO2e_cb = 0
-    p_manure_doanimal.CO2e_cb = 0
+    p_manure_swine.CO2e_cb = 0
+    p_manure_poultry.CO2e_cb = 0
+    p_manure_oanimal.CO2e_cb = 0
     p_manure_deposition.CO2e_cb = 0
     p_soil.CO2e_cb = 0
     p_soil_fertilizer.CO2e_cb = 0
@@ -506,15 +506,15 @@ def calc(root, inputs: Inputs):
         p_manure_nondairy.CO2e_pb = (
             p_manure_nondairy.pet_sites * p_manure_nondairy.CO2e_pb_per_t
         )
-        p_manure_dswine.pet_sites = p_fermen_swine.pet_sites
-        p_manure_dswine.demand_change = ass(
+        p_manure_swine.pet_sites = p_fermen_swine.pet_sites
+        p_manure_swine.demand_change = ass(
             "Ass_A_P_manure_ratio_CO2e_to_amount_change"
         )
-        p_manure_dswine.CO2e_pb_per_t = a18.p_manure_dswine.CO2e_pb_per_t * (
-            1 + p_manure_dswine.demand_change
+        p_manure_swine.CO2e_pb_per_t = a18.p_manure_swine.CO2e_pb_per_t * (
+            1 + p_manure_swine.demand_change
         )
-        p_manure_dswine.CO2e_pb = (
-            p_manure_dswine.pet_sites * p_manure_dswine.CO2e_pb_per_t
+        p_manure_swine.CO2e_pb = (
+            p_manure_swine.pet_sites * p_manure_swine.CO2e_pb_per_t
         )
         p_manure_dairycow.CO2e_total = (
             p_manure_dairycow.CO2e_pb + p_manure_dairycow.CO2e_cb
@@ -534,15 +534,15 @@ def calc(root, inputs: Inputs):
             * entry("In_M_duration_neutral")
             * fact("Fact_M_cost_per_CO2e_2020")
         )
-        p_manure_dpoultry.pet_sites = p_fermen_poultry.pet_sites
-        p_manure_dpoultry.demand_change = ass(
+        p_manure_poultry.pet_sites = p_fermen_poultry.pet_sites
+        p_manure_poultry.demand_change = ass(
             "Ass_A_P_manure_ratio_CO2e_to_amount_change"
         )
-        p_manure_dpoultry.CO2e_pb_per_t = a18.p_manure_dpoultry.CO2e_pb_per_t * (
-            1 + p_manure_dpoultry.demand_change
+        p_manure_poultry.CO2e_pb_per_t = a18.p_manure_poultry.CO2e_pb_per_t * (
+            1 + p_manure_poultry.demand_change
         )
-        p_manure_dpoultry.CO2e_pb = (
-            p_manure_dpoultry.pet_sites * p_manure_dpoultry.CO2e_pb_per_t
+        p_manure_poultry.CO2e_pb = (
+            p_manure_poultry.pet_sites * p_manure_poultry.CO2e_pb_per_t
         )
         p_manure_nondairy.CO2e_total = (
             p_manure_nondairy.CO2e_pb + p_manure_nondairy.CO2e_cb
@@ -562,28 +562,28 @@ def calc(root, inputs: Inputs):
             * entry("In_M_duration_neutral")
             * fact("Fact_M_cost_per_CO2e_2020")
         )
-        p_manure_doanimal.pet_sites = p_fermen_oanimal.pet_sites
-        p_manure_doanimal.demand_change = ass(
+        p_manure_oanimal.pet_sites = p_fermen_oanimal.pet_sites
+        p_manure_oanimal.demand_change = ass(
             "Ass_A_P_manure_ratio_CO2e_to_amount_change"
         )
-        p_manure_doanimal.CO2e_pb_per_t = a18.p_manure_doanimal.CO2e_pb_per_t * (
-            1 + p_manure_doanimal.demand_change
+        p_manure_oanimal.CO2e_pb_per_t = a18.p_manure_oanimal.CO2e_pb_per_t * (
+            1 + p_manure_oanimal.demand_change
         )
-        p_manure_doanimal.CO2e_pb = (
-            p_manure_doanimal.pet_sites * p_manure_doanimal.CO2e_pb_per_t
+        p_manure_oanimal.CO2e_pb = (
+            p_manure_oanimal.pet_sites * p_manure_oanimal.CO2e_pb_per_t
         )
-        p_manure_dswine.CO2e_total = p_manure_dswine.CO2e_pb + p_manure_dswine.CO2e_cb
-        p_manure_dswine.change_CO2e_t = (
-            p_manure_dswine.CO2e_total - a18.p_manure_dswine.CO2e_total
+        p_manure_swine.CO2e_total = p_manure_swine.CO2e_pb + p_manure_swine.CO2e_cb
+        p_manure_swine.change_CO2e_t = (
+            p_manure_swine.CO2e_total - a18.p_manure_swine.CO2e_total
         )
-        p_manure_dswine.change_CO2e_pct = (
-            p_manure_dswine.change_CO2e_t / a18.p_manure_dswine.CO2e_total
+        p_manure_swine.change_CO2e_pct = (
+            p_manure_swine.change_CO2e_t / a18.p_manure_swine.CO2e_total
         )
-        p_manure_dswine.CO2e_total_2021_estimated = (
-            a18.p_manure_dswine.CO2e_total * fact("Fact_M_CO2e_wo_lulucf_2021_vs_2018")
+        p_manure_swine.CO2e_total_2021_estimated = (
+            a18.p_manure_swine.CO2e_total * fact("Fact_M_CO2e_wo_lulucf_2021_vs_2018")
         )
-        p_manure_dswine.cost_climate_saved = (
-            (p_manure_dswine.CO2e_total_2021_estimated - p_manure_dswine.CO2e_total)
+        p_manure_swine.cost_climate_saved = (
+            (p_manure_swine.CO2e_total_2021_estimated - p_manure_swine.CO2e_total)
             * entry("In_M_duration_neutral")
             * fact("Fact_M_cost_per_CO2e_2020")
         )
@@ -602,30 +602,30 @@ def calc(root, inputs: Inputs):
         p_manure_deposition.CO2e_pb = (
             p_manure_deposition.pet_sites * p_manure_deposition.CO2e_pb_per_t
         )
-        p_manure_dpoultry.CO2e_total = (
-            p_manure_dpoultry.CO2e_pb + p_manure_dpoultry.CO2e_cb
+        p_manure_poultry.CO2e_total = (
+            p_manure_poultry.CO2e_pb + p_manure_poultry.CO2e_cb
         )
-        p_manure_dpoultry.change_CO2e_t = (
-            p_manure_dpoultry.CO2e_total - a18.p_manure_dpoultry.CO2e_total
+        p_manure_poultry.change_CO2e_t = (
+            p_manure_poultry.CO2e_total - a18.p_manure_poultry.CO2e_total
         )
-        p_manure_dpoultry.change_CO2e_pct = (
-            p_manure_dpoultry.change_CO2e_t / a18.p_manure_dpoultry.CO2e_total
+        p_manure_poultry.change_CO2e_pct = (
+            p_manure_poultry.change_CO2e_t / a18.p_manure_poultry.CO2e_total
         )
-        p_manure_dpoultry.CO2e_total_2021_estimated = (
-            a18.p_manure_dpoultry.CO2e_total
+        p_manure_poultry.CO2e_total_2021_estimated = (
+            a18.p_manure_poultry.CO2e_total
             * fact("Fact_M_CO2e_wo_lulucf_2021_vs_2018")
         )
-        p_manure_dpoultry.cost_climate_saved = (
-            (p_manure_dpoultry.CO2e_total_2021_estimated - p_manure_dpoultry.CO2e_total)
+        p_manure_poultry.cost_climate_saved = (
+            (p_manure_poultry.CO2e_total_2021_estimated - p_manure_poultry.CO2e_total)
             * entry("In_M_duration_neutral")
             * fact("Fact_M_cost_per_CO2e_2020")
         )
         p_manure.CO2e_pb = (
             p_manure_dairycow.CO2e_pb
             + p_manure_nondairy.CO2e_pb
-            + p_manure_dswine.CO2e_pb
-            + p_manure_dpoultry.CO2e_pb
-            + p_manure_doanimal.CO2e_pb
+            + p_manure_swine.CO2e_pb
+            + p_manure_poultry.CO2e_pb
+            + p_manure_oanimal.CO2e_pb
             + p_manure_deposition.CO2e_pb
         )
         p_manure.CO2e_total = p_manure.CO2e_pb + p_manure.CO2e_cb
@@ -635,21 +635,21 @@ def calc(root, inputs: Inputs):
             * fact("Fact_M_cost_per_CO2e_2020")
         )
         p_manure.change_CO2e_t = p_manure.CO2e_total - a18.p_manure.CO2e_total
-        p_manure_doanimal.CO2e_total = (
-            p_manure_doanimal.CO2e_pb + p_manure_doanimal.CO2e_cb
+        p_manure_oanimal.CO2e_total = (
+            p_manure_oanimal.CO2e_pb + p_manure_oanimal.CO2e_cb
         )
-        p_manure_doanimal.change_CO2e_t = (
-            p_manure_doanimal.CO2e_total - a18.p_manure_doanimal.CO2e_total
+        p_manure_oanimal.change_CO2e_t = (
+            p_manure_oanimal.CO2e_total - a18.p_manure_oanimal.CO2e_total
         )
-        p_manure_doanimal.change_CO2e_pct = (
-            p_manure_doanimal.change_CO2e_t / a18.p_manure_doanimal.CO2e_total
+        p_manure_oanimal.change_CO2e_pct = (
+            p_manure_oanimal.change_CO2e_t / a18.p_manure_oanimal.CO2e_total
         )
-        p_manure_doanimal.CO2e_total_2021_estimated = (
-            a18.p_manure_doanimal.CO2e_total
+        p_manure_oanimal.CO2e_total_2021_estimated = (
+            a18.p_manure_oanimal.CO2e_total
             * fact("Fact_M_CO2e_wo_lulucf_2021_vs_2018")
         )
-        p_manure_doanimal.cost_climate_saved = (
-            (p_manure_doanimal.CO2e_total_2021_estimated - p_manure_doanimal.CO2e_total)
+        p_manure_oanimal.cost_climate_saved = (
+            (p_manure_oanimal.CO2e_total_2021_estimated - p_manure_oanimal.CO2e_total)
             * entry("In_M_duration_neutral")
             * fact("Fact_M_cost_per_CO2e_2020")
         )
