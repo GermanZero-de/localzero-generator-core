@@ -130,23 +130,22 @@ def calc_3X(root, inputs: Inputs):
     ######################################
 
     m183X = root.m183X
-
-    # TODO: WTF
-    # local greenhouse gas budget from 2016 until target year
-    # m183X.GHG_budget_2016_to_year_target = (
+    #TODO: add "GHG_budget_2016_to_year_target" to makeentries.py
+    # local greenhouse gas budget from 2016 until target year in com!!
+    #m183X.GHG_budget_2016_to_year_target = (
     #     entry("GHG_budget_2016_to_year_target")
     #     * entry("In_M_population_com_2018")
     #     / entry("In_M_population_nat")
-    # )
+    #    )
     m183X.GHG_budget_2016_to_year_target = 1
 
-    # TODO: WTF
-    # local nonCO2 budget from 2016 until target year
-    # m183X.nonCO2_budget_2016_to_year_target = (
-    #     entry("nonCO2_budget_2016_to_year_target")
-    #     * entry("In_M_population_com_2018")
-    #     / entry("In_M_population_nat")
-    # )
+    #TODO: add "nonCO2_budget_2016_to_year_target" to makeentries.py
+    # local nonCO2 budget from 2016 until target year in com!!
+    #m183X.nonCO2_budget_2016_to_year_target = (
+    #    entry("nonCO2_budget_2016_to_year_target")
+    #    * entry("In_M_population_com_2018")
+    #    / entry("In_M_population_nat")
+    #)
     m183X.nonCO2_budget_2016_to_year_target = 1
 
     # local CO2 budget from 2016 until infinity
@@ -216,19 +215,19 @@ def calc_3X(root, inputs: Inputs):
     #############################################
     
     # 2015 just as a backup, probably not needed
-    m183X.CO2e_w_lulucf_2015 = m183X.CO2e_wo_lulucf_2015 + m183X.CO2_lulucf_2015
+    m183X.CO2e_w_lulucf_2015 = m183X.CO2e_wo_lulucf_2015 + m183X.CO2e_lulucf_2015
 
-    m183X.CO2e_w_lulucf_2016 = m183X.CO2e_wo_lulucf_2016 + m183X.CO2_lulucf_2016
+    m183X.CO2e_w_lulucf_2016 = m183X.CO2e_wo_lulucf_2016 + m183X.CO2e_lulucf_2016
 
-    m183X.CO2e_w_lulucf_2017 = m183X.CO2e_wo_lulucf_2017 + m183X.CO2_lulucf_2017
+    m183X.CO2e_w_lulucf_2017 = m183X.CO2e_wo_lulucf_2017 + m183X.CO2e_lulucf_2017
 
-    m183X.CO2e_w_lulucf_2018 = m183X.CO2e_wo_lulucf_2018 + m183X.CO2_lulucf_2018
+    m183X.CO2e_w_lulucf_2018 = m183X.CO2e_wo_lulucf_2018 + m183X.CO2e_lulucf_2018
 
-    m183X.CO2e_w_lulucf_2019 = m183X.CO2e_wo_lulucf_2019 + m183X.CO2_lulucf_2019
+    m183X.CO2e_w_lulucf_2019 = m183X.CO2e_wo_lulucf_2019 + m183X.CO2e_lulucf_2019
 
-    m183X.CO2e_w_lulucf_2020 = m183X.CO2e_wo_lulucf_2020 + m183X.CO2_lulucf_2020
+    m183X.CO2e_w_lulucf_2020 = m183X.CO2e_wo_lulucf_2020 + m183X.CO2e_lulucf_2020
 
-    m183X.CO2e_w_lulucf_2021 = m183X.CO2e_wo_lulucf_2021 + m183X.CO2_lulucf_2021
+    m183X.CO2e_w_lulucf_2021 = m183X.CO2e_wo_lulucf_2021 + m183X.CO2e_lulucf_2021
 
     ####################################################################
     ### remaining local greenhouse gas budget 2022 until target year ###
