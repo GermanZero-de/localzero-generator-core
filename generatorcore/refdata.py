@@ -1,9 +1,12 @@
 """Module refdata -- tools to read the reference data used by the generator.
 
 """
+from dataclasses import dataclass
 import os
-import pandas as pd
+import json
 import sys
+
+import pandas as pd
 
 # TODO: Write small wrappers classes for each data source so that we can document
 # the columns and get better type checking from pylance.
@@ -21,15 +24,16 @@ def _load(datadir: str, what: str, year: int = 2018) -> pd.DataFrame:
 
 
 class RowNotFound(Exception):
-    ags: str
+    column: str
     df: pd.DataFrame
 
-    def __init__(self, ags, df):
-        self.ags = ags
+    def __init__(self, column, key_value, df):
+        self.column = column
+        self.key_value = key_value
         self.df = df
 
     def __str__(self):
-        return f"Could not find ags={self.ags} in dataframe\n{self.df}"
+        return f"Could not find {self.column}={self.key_value} in dataframe\n{self.df}"
 
 
 # TODO: Good error messages when field is not populated
@@ -37,7 +41,7 @@ class RowNotFound(Exception):
 
 
 class Row:
-    def __init__(self, df: pd.DataFrame, ags: str):
+    def __init__(self, df: pd.DataFrame, key_value, *, column="ags"):
         try:
             # Basically this reduces the dataframe to a single row dataframe
             # and then takes the only dataframe row (a series object)
@@ -47,9 +51,9 @@ class Row:
             # and extract a very small number of rows. pandas is total overkill
             # in particular when we are publishing a package for others to use
             # it's nice to have a small list of dependencies
-            self._series = df[df["ags"] == ags].iloc[0]
+            self._series = df[df[column] == key_value].iloc[0]
         except:
-            raise RowNotFound(ags=ags, df=df)
+            raise RowNotFound(column=column, key_value=key_value, df=df)
 
     # TODO: All of the accessors below should not cast so forcefully but
     # only convert into the python type when the pandas type matches
@@ -96,15 +100,40 @@ class FactsAndAssumptions:
             return 1.0
 
 
+def datadir_or_default(datadir: str | None = None) -> str:
+    """Return the normalized absolute path to the data directory."""
+    if datadir is None:
+        return os.path.normpath(os.path.join(os.getcwd(), "data"))
+    else:
+        return os.path.abspath(datadir)
+
+
+@dataclass
+class Version:
+    """This classes identifies a particular version of the reference data."""
+
+    public: str  # The git hash of the public repository
+    proprietary: str  # The git hash of the proprietary repository
+
+    @classmethod
+    def load(cls, name: str, datadir: str | None = None) -> "Version":
+        fname = os.path.join(datadir_or_default(datadir), name + ".json")
+        with open(fname) as fp:
+            d = json.load(fp)
+            return cls(public=d["public"], proprietary=d["proprietary"])
+
+
 class RefData:
     """This class gives you a single handle around all the reference data."""
 
     def __init__(
         self,
+        *,
         area: pd.DataFrame,
         area_kinds: pd.DataFrame,
         assumptions: pd.DataFrame,
         buildings: pd.DataFrame,
+        co2path: pd.DataFrame,
         destatis: pd.DataFrame,
         facts: pd.DataFrame,
         flats: pd.DataFrame,
@@ -120,6 +149,7 @@ class RefData:
         self._area_kinds = area_kinds
         self._facts_and_assumptions = FactsAndAssumptions(facts, assumptions)
         self._buildings = buildings
+        self._co2path = co2path
         self._destatis = destatis
         self._flats = flats
         self._nat_agri = nat_agri
@@ -149,6 +179,9 @@ class RefData:
     def buildings(self, ags: str):
         """Number of flats. Number of buildings of different age brackets. Connections to heatnet."""
         return Row(self._buildings, ags)
+
+    def co2path(self, year: int):
+        return Row(self._co2path, year, column="year")
 
     def destatis(self, ags: str):
         """TODO"""
@@ -197,13 +230,13 @@ class RefData:
         TODO: Provide a way to run this even when no proprietary data is available. As of right now unnecessary
         as we can't yet run the generator without the data.
         """
-        if datadir is None:
-            datadir = os.path.join(os.getcwd(), "data")
+        datadir = datadir_or_default(datadir)
         d = cls(
             area=_load(datadir, "area"),
             area_kinds=_load(datadir, "area_kinds"),
             assumptions=_load(datadir, "assumptions"),
             buildings=_load(datadir, "buildings"),
+            co2path=_load(datadir, "co2path"),
             destatis=_load(datadir, "destatis"),
             facts=_load(datadir, "facts"),
             flats=_load(datadir, "flats"),
