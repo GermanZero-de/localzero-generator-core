@@ -117,10 +117,8 @@ class Version:
     @classmethod
     def load(cls, name: str, datadir: str | None = None) -> "Version":
         fname = os.path.join(datadir_or_default(datadir), name + ".json")
-        print(fname)
         with open(fname) as fp:
             d = json.load(fp)
-            print(d)
             return cls(public=d["public"], proprietary=d["proprietary"])
 
 

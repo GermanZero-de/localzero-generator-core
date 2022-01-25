@@ -14,9 +14,12 @@ import json
 import sys
 import collections.abc
 import typing
+import math
 import numbers
-import pytest
+import os.path
 from generatorcore.generator import calculate_with_default_inputs
+from generatorcore import refdatatools
+from generatorcore import refdata
 
 
 def run_cmd(args):
@@ -45,6 +48,22 @@ def remove_null_values(r):
         return r
 
 
+def float_matches(actual, expected, rel):
+    if math.isnan(actual) and math.isnan(expected):
+        return True
+    elif math.isnan(actual):
+        return False
+    elif math.isnan(expected):
+        return False
+    diff = math.fabs(actual - expected)
+    reltol = math.fabs(expected) * rel
+    if diff < reltol:
+        return True
+    if diff < 1e-12:
+        return True
+    return False
+
+
 def find_diffs(
     path: str, d1, d2, *, rel
 ) -> typing.Iterator[tuple[str, typing.Any, typing.Any]]:
@@ -67,7 +86,7 @@ def find_diffs(
         for k in d2.keys():
             yield from find_diffs(path + "." + k, None, d2[k], rel=rel)
     elif isinstance(d1, numbers.Number) and isinstance(d2, numbers.Number):
-        if d1 != pytest.approx(d2, rel=rel, nan_ok=True):
+        if not float_matches(actual=d1, expected=d2, rel=rel):
             yield (path, d1, d2)
     elif d1 != d2:
         yield (path, d1, d2)
@@ -97,10 +116,77 @@ def compare_to_excel_cmd(args):
                 pr3(p, r, x)
 
 
+def is_production_cmd(args):
+    ds = refdatatools.DataDirStatus.get(refdatatools.datadir())
+    # TODO: Add a verbose option that prints a json of DataDirStatus
+    if not ds.is_good():
+        exit(1)
+
+
+def data_checkout_cmd(args):
+    datadir = refdatatools.datadir()
+    production = refdata.Version.load("production", datadir=datadir)
+    status: refdatatools.DataDirStatus | None = None
+    status_error = None
+    freshly_cloned = False
+    try:
+        # This means we are loading the version file twice. Which is a bit
+        # silly but oh well...
+        status = refdatatools.DataDirStatus.get(datadir)
+    except Exception as e:
+        status_error = e
+
+    public_dir = os.path.join(datadir, "public")
+    proprietary_dir = os.path.join(datadir, "proprietary")
+
+    if status is None:
+        assert status_error is not None
+        if not os.path.exists(public_dir) and not os.path.exists(proprietary_dir):
+            print(
+                "Looks like there is no checkout at all yet -- cloning for you",
+                file=sys.stderr,
+            )
+            refdatatools.clone(datadir, "public", pa_token=args.pat)
+            refdatatools.clone(datadir, "proprietary", pa_token=args.pat)
+            # Retry getting the status. If this fails now, we are in some screwed up state anyway
+            status = refdatatools.DataDirStatus.get(datadir)
+            freshly_cloned = True
+        else:
+            print(
+                f"Hmm there already seems to be directories for the data repos, but data check-repos failed with {status_error}. Giving up..."
+            )
+            exit(1)
+    else:
+        # make sure we are not causing data loss
+        if not status.public_status.is_clean or not status.proprietary_status.is_clean:
+            print(
+                "There uncommitted changes or untracked files in at least one data repository. Fix that first."
+            )
+            exit(1)
+
+    if status is not None and status.public_status.rev == production.public:
+        if not freshly_cloned:
+            print(
+                f"public already contains a checkout of {production.public} -- not touching it",
+                file=sys.stderr,
+            )
+    else:
+        refdatatools.checkout(datadir, "public", production.public)
+
+    if status is not None and status.proprietary_status.rev == production.proprietary:
+        if not freshly_cloned:
+            print(
+                f"proprietary already contains a checkout of {production.proprietary} -- not touching it",
+                file=sys.stderr,
+            )
+    else:
+        refdatatools.checkout(datadir, "proprietary", production.proprietary)
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.set_defaults()
-    subcmd_parsers = parser.add_subparsers(dest="subcmd")
+    subcmd_parsers = parser.add_subparsers(dest="subcmd", title="Commands")
 
     cmd_run_parser = subcmd_parsers.add_parser("run", help="Run the generator")
     cmd_run_parser.add_argument("-ags", default="03159016")
@@ -120,6 +206,21 @@ def main():
     )
     cmd_compare_to_excel_parser.set_defaults(func=compare_to_excel_cmd)
 
+    data_cmd = subcmd_parsers.add_parser(name="data", help="Data Repository tools")
+    subcmd_data = data_cmd.add_subparsers(title="Data Repository tools", dest="subcmd")
+
+    cmd_is_production = subcmd_data.add_parser(
+        "is-production",
+        help="Check that the data dir contains clean checkouts of the production reference data set",
+    )
+    cmd_is_production.set_defaults(func=is_production_cmd)
+
+    cmd_data_checkout = subcmd_data.add_parser(
+        "checkout",
+        help="Checkout the production version of the reference data (if necessary clone them first)",
+    )
+    cmd_data_checkout.add_argument("-pat", action="store", default=None)
+    cmd_data_checkout.set_defaults(func=data_checkout_cmd)
     args = parser.parse_args()
     if args.subcmd is None:
         parser.print_help()
