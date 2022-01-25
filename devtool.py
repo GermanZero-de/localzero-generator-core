@@ -130,8 +130,8 @@ def data_checkout_cmd(args):
                 "Looks like there is no checkout at all yet -- cloning for you",
                 file=sys.stderr,
             )
-            refdatatools.clone(datadir, "public")
-            refdatatools.clone(datadir, "proprietary")
+            refdatatools.clone(datadir, "public", pa_token=args.pat)
+            refdatatools.clone(datadir, "proprietary", pa_token=args.pat)
             # Retry getting the status. If this fails now, we are in some screwed up state anyway
             status = refdatatools.DataDirStatus.get(datadir)
             freshly_cloned = True
@@ -203,6 +203,7 @@ def main():
         "checkout",
         help="Checkout the production version of the reference data (if necessary clone them first)",
     )
+    cmd_data_checkout.add_argument("-pat", action="store", default=None)
     cmd_data_checkout.set_defaults(func=data_checkout_cmd)
     args = parser.parse_args()
     if args.subcmd is None:

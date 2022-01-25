@@ -18,14 +18,22 @@ import typing
 from . import refdata
 
 MAIN_REPOS = {
-    "public": "https://github.com/GermanZero-de/localzero-data-public",
-    "proprietary": "https://github.com/GermanZero-de/localzero-data-proprietary",
+    "public": "github.com/GermanZero-de/localzero-data-public",
+    "proprietary": "github.com/GermanZero-de/localzero-data-proprietary",
 }
 
 
-def clone(datadir: str, repo: typing.Literal["public", "proprietary"]):
+def clone(
+    datadir: str,
+    repo: typing.Literal["public", "proprietary"],
+    pa_token: str | None = None,
+):
     """This function assumes that there is not data repository already in the datadir."""
-    url = MAIN_REPOS[repo]
+    if pa_token is not None:
+        url = "https://" + pa_token + "@" + MAIN_REPOS[repo]
+    else:
+        url = "https://" + MAIN_REPOS[repo]
+
     subprocess.run(["git", "clone", url, repo], check=True, cwd=datadir)
 
 
