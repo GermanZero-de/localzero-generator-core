@@ -24,15 +24,16 @@ def _load(datadir: str, what: str, year: int = 2018) -> pd.DataFrame:
 
 
 class RowNotFound(Exception):
-    ags: str
+    column: str
     df: pd.DataFrame
 
-    def __init__(self, ags, df):
-        self.ags = ags
+    def __init__(self, column, key_value, df):
+        self.column = column
+        self.key_value = key_value
         self.df = df
 
     def __str__(self):
-        return f"Could not find ags={self.ags} in dataframe\n{self.df}"
+        return f"Could not find {self.column}={self.key_value} in dataframe\n{self.df}"
 
 
 # TODO: Good error messages when field is not populated
@@ -40,7 +41,7 @@ class RowNotFound(Exception):
 
 
 class Row:
-    def __init__(self, df: pd.DataFrame, ags: str):
+    def __init__(self, df: pd.DataFrame, key_value, *, column="ags"):
         try:
             # Basically this reduces the dataframe to a single row dataframe
             # and then takes the only dataframe row (a series object)
@@ -50,9 +51,9 @@ class Row:
             # and extract a very small number of rows. pandas is total overkill
             # in particular when we are publishing a package for others to use
             # it's nice to have a small list of dependencies
-            self._series = df[df["ags"] == ags].iloc[0]
+            self._series = df[df[column] == key_value].iloc[0]
         except:
-            raise RowNotFound(ags=ags, df=df)
+            raise RowNotFound(column=column, key_value=key_value, df=df)
 
     # TODO: All of the accessors below should not cast so forcefully but
     # only convert into the python type when the pandas type matches
@@ -127,10 +128,12 @@ class RefData:
 
     def __init__(
         self,
+        *,
         area: pd.DataFrame,
         area_kinds: pd.DataFrame,
         assumptions: pd.DataFrame,
         buildings: pd.DataFrame,
+        co2path: pd.DataFrame,
         destatis: pd.DataFrame,
         facts: pd.DataFrame,
         flats: pd.DataFrame,
@@ -146,6 +149,7 @@ class RefData:
         self._area_kinds = area_kinds
         self._facts_and_assumptions = FactsAndAssumptions(facts, assumptions)
         self._buildings = buildings
+        self._co2path = co2path
         self._destatis = destatis
         self._flats = flats
         self._nat_agri = nat_agri
@@ -175,6 +179,9 @@ class RefData:
     def buildings(self, ags: str):
         """Number of flats. Number of buildings of different age brackets. Connections to heatnet."""
         return Row(self._buildings, ags)
+
+    def co2path(self, year: int):
+        return Row(self._co2path, year, column="year")
 
     def destatis(self, ags: str):
         """TODO"""
@@ -229,6 +236,7 @@ class RefData:
             area_kinds=_load(datadir, "area_kinds"),
             assumptions=_load(datadir, "assumptions"),
             buildings=_load(datadir, "buildings"),
+            co2path=_load(datadir, "co2path"),
             destatis=_load(datadir, "destatis"),
             facts=_load(datadir, "facts"),
             flats=_load(datadir, "flats"),
