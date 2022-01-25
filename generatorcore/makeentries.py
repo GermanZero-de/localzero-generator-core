@@ -144,7 +144,7 @@ def make_entries(data: refdata.RefData, ags: str, year: int):
     )
     entry["In_R_rehab_rate_pa"] = data.ass("Ass_R_B_P_renovation_rate")
     entry["In_R_heatnet_ratio_year_target"] = (
-        data_buildings_com.float("buildings_heatnet") / entry["In_R_buildings_com"]
+        entry["In_R_flats_w_heatnet"] / entry["In_R_flats_com"]
     )
 
     if ags == ags_germany:
