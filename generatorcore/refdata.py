@@ -24,13 +24,13 @@ class RowNotFound(Exception):
     column: str
     df: pd.DataFrame
 
-    def __init__(self, column, needle, df):
+    def __init__(self, column, key_value, df):
         self.column = column
-        self.needle = needle
+        self.key_value = key_value
         self.df = df
 
     def __str__(self):
-        return f"Could not find {self.column}={self.needle} in dataframe\n{self.df}"
+        return f"Could not find {self.column}={self.key_value} in dataframe\n{self.df}"
 
 
 # TODO: Good error messages when field is not populated
@@ -38,7 +38,7 @@ class RowNotFound(Exception):
 
 
 class Row:
-    def __init__(self, df: pd.DataFrame, needle, *, column="ags"):
+    def __init__(self, df: pd.DataFrame, key_value, *, column="ags"):
         try:
             # Basically this reduces the dataframe to a single row dataframe
             # and then takes the only dataframe row (a series object)
@@ -48,9 +48,9 @@ class Row:
             # and extract a very small number of rows. pandas is total overkill
             # in particular when we are publishing a package for others to use
             # it's nice to have a small list of dependencies
-            self._series = df[df[column] == needle].iloc[0]
+            self._series = df[df[column] == key_value].iloc[0]
         except:
-            raise RowNotFound(column=column, needle=needle, df=df)
+            raise RowNotFound(column=column, key_value=key_value, df=df)
 
     # TODO: All of the accessors below should not cast so forcefully but
     # only convert into the python type when the pandas type matches
