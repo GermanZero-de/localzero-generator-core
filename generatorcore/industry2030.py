@@ -940,6 +940,7 @@ def calc(root, inputs: Inputs):
     g_consult.cost_wage = g_consult.invest_pa * g_consult.pct_of_wage
     g_consult.ratio_wage_to_emplo = ass("Ass_T_C_yearly_costs_per_planer")
     g_consult.demand_emplo = g_consult.cost_wage / g_consult.ratio_wage_to_emplo
+    g_consult.demand_emplo_new = 0
     g_consult.emplo_existing = g_consult.demand_emplo
 
     g = root.i30.g
