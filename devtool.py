@@ -100,7 +100,7 @@ def compare_to_excel_cmd(args):
                 pr3(p, r, x)
 
 
-def data_check_repos_cmd(args):
+def is_production_cmd(args):
     ds = refdatatools.DataDirStatus.get(refdatatools.datadir())
     # TODO: Add a verbose option that prints a json of DataDirStatus
     if not ds.is_good():
@@ -170,7 +170,7 @@ def data_checkout_cmd(args):
 def main():
     parser = argparse.ArgumentParser()
     parser.set_defaults()
-    subcmd_parsers = parser.add_subparsers(dest="subcmd")
+    subcmd_parsers = parser.add_subparsers(dest="subcmd", title="Commands")
 
     cmd_run_parser = subcmd_parsers.add_parser("run", help="Run the generator")
     cmd_run_parser.add_argument("-ags", default="03159016")
@@ -190,15 +190,18 @@ def main():
     )
     cmd_compare_to_excel_parser.set_defaults(func=compare_to_excel_cmd)
 
-    cmd_data_check_repos = subcmd_parsers.add_parser(
-        "check-repos",
+    data_cmd = subcmd_parsers.add_parser(name="data", help="Data Repository tools")
+    subcmd_data = data_cmd.add_subparsers(title="Data Repository tools", dest="subcmd")
+
+    cmd_is_production = subcmd_data.add_parser(
+        "is-production",
         help="Check that the data dir contains clean checkouts of the production reference data set",
     )
-    cmd_data_check_repos.set_defaults(func=data_check_repos_cmd)
+    cmd_is_production.set_defaults(func=is_production_cmd)
 
-    cmd_data_checkout = subcmd_parsers.add_parser(
+    cmd_data_checkout = subcmd_data.add_parser(
         "checkout",
-        help="Checkout the production version of the data repositories (if necessary clone them first)",
+        help="Checkout the production version of the reference data (if necessary clone them first)",
     )
     cmd_data_checkout.set_defaults(func=data_checkout_cmd)
     args = parser.parse_args()
