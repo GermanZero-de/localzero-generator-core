@@ -85,7 +85,7 @@ def find_diffs(
     elif isinstance(d2, collections.abc.Mapping) and d1 is None:
         for k in d2.keys():
             yield from find_diffs(path + "." + k, None, d2[k], rel=rel)
-    elif isinstance(d1, numbers.Real) and isinstance(d2, numbers.Real):
+    elif isinstance(d1, numbers.Number) and isinstance(d2, numbers.Number):
         if not float_matches(actual=d1, expected=d2, rel=rel):
             yield (path, d1, d2)
     elif d1 != d2:
