@@ -16,7 +16,10 @@ import collections.abc
 import typing
 import numbers
 import pytest
+import os.path
 from generatorcore.generator import calculate_with_default_inputs
+from generatorcore import refdatatools
+from generatorcore import refdata
 
 
 def run_cmd(args):
@@ -97,6 +100,73 @@ def compare_to_excel_cmd(args):
                 pr3(p, r, x)
 
 
+def data_check_repos_cmd(args):
+    ds = refdatatools.DataDirStatus.get(refdatatools.datadir())
+    # TODO: Add a verbose option that prints a json of DataDirStatus
+    if not ds.is_good():
+        exit(1)
+
+
+def data_checkout_cmd(args):
+    datadir = refdatatools.datadir()
+    production = refdata.Version.load("production", datadir=datadir)
+    status: refdatatools.DataDirStatus | None = None
+    status_error = None
+    freshly_cloned = False
+    try:
+        # This means we are loading the version file twice. Which is a bit
+        # silly but oh well...
+        status = refdatatools.DataDirStatus.get(datadir)
+    except Exception as e:
+        status_error = e
+
+    public_dir = os.path.join(datadir, "public")
+    proprietary_dir = os.path.join(datadir, "proprietary")
+
+    if status is None:
+        assert status_error is not None
+        if not os.path.exists(public_dir) and not os.path.exists(proprietary_dir):
+            print(
+                "Looks like there is no checkout at all yet -- cloning for you",
+                file=sys.stderr,
+            )
+            refdatatools.clone(datadir, "public")
+            refdatatools.clone(datadir, "proprietary")
+            # Retry getting the status. If this fails now, we are in some screwed up state anyway
+            status = refdatatools.DataDirStatus.get(datadir)
+            freshly_cloned = True
+        else:
+            print(
+                f"Hmm there already seems to be directories for the data repos, but data check-repos failed with {status_error}. Giving up..."
+            )
+            exit(1)
+    else:
+        # make sure we are not causing data loss
+        if not status.public_status.is_clean or not status.proprietary_status.is_clean:
+            print(
+                "There uncommitted changes or untracked files in at least one data repository. Fix that first."
+            )
+            exit(1)
+
+    if status is not None and status.public_status.rev == production.public:
+        if not freshly_cloned:
+            print(
+                f"public already contains a checkout of {production.public} -- not touching it",
+                file=sys.stderr,
+            )
+    else:
+        refdatatools.checkout(datadir, "public", production.public)
+
+    if status is not None and status.proprietary_status.rev == production.proprietary:
+        if not freshly_cloned:
+            print(
+                f"proprietary already contains a checkout of {production.proprietary} -- not touching it",
+                file=sys.stderr,
+            )
+    else:
+        refdatatools.checkout(datadir, "proprietary", production.proprietary)
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.set_defaults()
@@ -120,6 +190,17 @@ def main():
     )
     cmd_compare_to_excel_parser.set_defaults(func=compare_to_excel_cmd)
 
+    cmd_data_check_repos = subcmd_parsers.add_parser(
+        "check-repos",
+        help="Check that the data dir contains clean checkouts of the production reference data set",
+    )
+    cmd_data_check_repos.set_defaults(func=data_check_repos_cmd)
+
+    cmd_data_checkout = subcmd_parsers.add_parser(
+        "checkout",
+        help="Checkout the production version of the data repositories (if necessary clone them first)",
+    )
+    cmd_data_checkout.set_defaults(func=data_checkout_cmd)
     args = parser.parse_args()
     if args.subcmd is None:
         parser.print_help()
