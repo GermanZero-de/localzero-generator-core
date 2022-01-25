@@ -155,6 +155,11 @@ class T18:
     other_foot: TColVars = TColVars()
     other_cycl: TColVars = TColVars()
 
+    road_gds_mhd_action_wire: TColVars = TColVars()
+    ship_dmstc_action_infra: TColVars = TColVars()
+    other_foot_action_infra: TColVars = TColVars()
+    other_cycl_action_infra: TColVars = TColVars()
+
     # übergeordnete Zeilen
     air: TColVars = TColVars()
     rail: TColVars = TColVars()
@@ -197,15 +202,13 @@ def calc(root, inputs: Inputs):
     def entry(n):
         return inputs.entry(n)
 
-    # Todo remove after impl.
-
+    # Todo vlookup Simulation
     if entry("In_M_AGS_com") == "DG000000":
         root.t18.rail_ppl_metro.mileage = 309000000
         root.t18.road_bus.mileage = 2531000000
     elif entry("In_M_AGS_com") == "03159016":
         root.t18.rail_ppl_metro.mileage = 0
         root.t18.road_bus.mileage = 1752789.9193474643
-
     # abbreviations
     t = root.t18.t
     g = root.t18.g
@@ -228,7 +231,6 @@ def calc(root, inputs: Inputs):
     road_gds_mhd_it_ot = root.t18.road_gds_mhd_it_ot
     road_gds_mhd_ab = root.t18.road_gds_mhd_ab
     rail_ppl = root.t18.rail_ppl
-    # rail_ppl_ = root.t18.rail_ppl_
     rail_ppl_distance = root.t18.rail_ppl_distance
     rail_ppl_metro = root.t18.rail_ppl_metro
     rail_ppl_metro_action_infra = root.t18.rail_ppl_metro_action_infra
@@ -254,8 +256,6 @@ def calc(root, inputs: Inputs):
     s_bioethanol = root.t18.s_bioethanol
     s_biodiesel = root.t18.s_biodiesel
     s_elec = root.t18.s_elec
-    s_hydrogen = root.t18.s_hydrogen
-    s_emethan = root.t18.s_emethan
 
     try:
         Million = 1000000
@@ -284,13 +284,18 @@ def calc(root, inputs: Inputs):
 
         # res 108.056 MWh
         air_dmstc.demand_petrol = (
-                fact("Fact_T_S_Air_petrol_fec_2018")
-                * entry("In_M_population_com_2018")
-                / entry("In_M_population_nat")
+            fact("Fact_T_S_Air_petrol_fec_2018")
+            * entry("In_M_population_com_2018")
+            / entry("In_M_population_nat")
         )
         # res 30.020.293  t/a
-        air_inter.CO2e_cb = (air_dmstc.demand_petrol * fact('Fact_T_S_petrol_EmFa_tank_wheel_2018') + air_inter.demand_jetfuel * fact('Fact_T_S_jetfuel_EmFa_tank_wheel_2018') + 0 * fact('Fact_T_S_diesel_EmFa_tank_wheel_2018') + 0 * fact('Fact_T_S_lpg_EmFa_tank_wheel_2018') + 0 * fact('Fact_T_S_cng_EmFa_tank_wheel_2018'))
-
+        air_inter.CO2e_cb = (
+            air_dmstc.demand_petrol * fact("Fact_T_S_petrol_EmFa_tank_wheel_2018")
+            + air_inter.demand_jetfuel * fact("Fact_T_S_jetfuel_EmFa_tank_wheel_2018")
+            + 0 * fact("Fact_T_S_diesel_EmFa_tank_wheel_2018")
+            + 0 * fact("Fact_T_S_lpg_EmFa_tank_wheel_2018")
+            + 0 * fact("Fact_T_S_cng_EmFa_tank_wheel_2018")
+        )
 
         # res 113.722.222 MWh
         air_inter.energy = air_inter.demand_jetfuel
@@ -1167,8 +1172,8 @@ def calc(root, inputs: Inputs):
         road_gds.demand_petrol = road_gds_ldt.demand_petrol
 
         road.demand_petrol = road_ppl.demand_petrol + road_gds.demand_petrol
-        demand_petrol = air.demand_petrol + road.demand_petrol
-        s_petrol.energy = demand_petrol
+        t.demand_petrol = air.demand_petrol + road.demand_petrol
+        s_petrol.energy = t.demand_petrol
         s_jetfuel.energy = air_inter.demand_jetfuel + air_dmstc.demand_jetfuel
         s_diesel.energy = t.demand_diesel
 
@@ -1713,7 +1718,7 @@ def calc(root, inputs: Inputs):
         rail.demand_electricity = (
             rail_ppl.demand_electricity + rail_gds.demand_electricity
         )
-        CO2e_cb = (
+        t.CO2e_cb = (
             air.CO2e_cb + road.CO2e_cb + rail.CO2e_cb + ship.CO2e_cb + other.CO2e_cb
         )
         rail.CO2e_total = rail.CO2e_cb
@@ -1727,8 +1732,8 @@ def calc(root, inputs: Inputs):
         )
         rail_ppl.CO2e_total = rail_ppl.CO2e_cb
 
-        energy = air.energy + road.energy + rail.energy + ship.energy
-        demand_electricity = road.demand_electricity + rail.demand_electricity
+        t.energy = air.energy + road.energy + rail.energy + ship.energy
+        t.demand_electricity = road.demand_electricity + rail.demand_electricity
 
         rail_ppl_metro.transport_capacity_pkm = rail_ppl_metro.mileage * fact(
             "Fact_T_D_lf_Rl_Metro_2018"
@@ -1748,23 +1753,23 @@ def calc(root, inputs: Inputs):
         ship_dmstc.CO2e_total = ship_dmstc.CO2e_cb
 
         ship_inter.CO2e_total = ship_inter.CO2e_cb
-        mileage = road.mileage + rail.mileage + other.mileage
+        t.mileage = road.mileage + rail.mileage + other.mileage
 
-        transport_capacity_tkm = (
+        t.transport_capacity_tkm = (
             air.transport_capacity_tkm
             + road.transport_capacity_tkm
             + rail.transport_capacity_tkm
             + ship.transport_capacity_tkm
             + other.transport_capacity_tkm
         )
-        CO2e_total = CO2e_cb
+        t.CO2e_total = t.CO2e_cb
         other.CO2e_total = other.CO2e_cb
         other.transport_capacity_pkm = (
             other_foot.transport_capacity_pkm + other_cycl.transport_capacity_pkm
         )
         other_foot.CO2e_total = other_foot.CO2e_cb
 
-        transport_capacity_pkm = (
+        t.transport_capacity_pkm = (
             air.transport_capacity_pkm
             + road.transport_capacity_pkm
             + rail.transport_capacity_pkm
@@ -1776,40 +1781,40 @@ def calc(root, inputs: Inputs):
         s_gas.energy = t.demand_gas
         s_biogas.energy = t.demand_biogas
 
-        demand_petrol = air.demand_petrol + road.demand_petrol
-        demand_jetfuel = air.demand_jetfuel
+        t.demand_petrol = air.demand_petrol + road.demand_petrol
+        t.demand_jetfuel = air.demand_jetfuel
 
-        demand_diesel = road.demand_diesel + rail.demand_diesel + ship.demand_diesel
+        t.demand_diesel = road.demand_diesel + rail.demand_diesel + ship.demand_diesel
         ship.demand_fueloil = ship_inter.demand_fueloil
 
-        demand_fueloil = ship.demand_fueloil
+        t.demand_fueloil = ship.demand_fueloil
 
-        demand_lpg = road.demand_lpg
+        t.demand_lpg = road.demand_lpg
 
-        s_lpg.energy = demand_lpg
+        s_lpg.energy = t.demand_lpg
 
-        demand_gas = road.demand_gas
+        t.demand_gas = road.demand_gas
 
-        demand_biogas = road.demand_biogas
+        t.demand_biogas = road.demand_biogas
 
-        demand_bioethanol = road.demand_bioethanol
+        t.demand_bioethanol = road.demand_bioethanol
 
-        demand_biodiesel = road.demand_biodiesel + rail.demand_biodiesel
+        t.demand_biodiesel = road.demand_biodiesel + rail.demand_biodiesel
 
-        demand_biogas = road.demand_biogas
-        demand_bioethanol = road.demand_bioethanol
-        demand_biodiesel = road.demand_biodiesel + rail.demand_biodiesel
+        t.demand_biogas = road.demand_biogas
+        t.demand_bioethanol = road.demand_bioethanol
+        t.demand_biodiesel = road.demand_biodiesel + rail.demand_biodiesel
 
-        s_diesel.energy = demand_diesel
-        s_gas.energy = demand_gas
-        s_biogas.energy = demand_biogas
-        s_bioethanol.energy = demand_bioethanol
-        s_biodiesel.energy = demand_biodiesel
-        s_elec.energy = demand_electricity
+        s_diesel.energy = t.demand_diesel
+        s_gas.energy = t.demand_gas
+        s_biogas.energy = t.demand_biogas
+        s_bioethanol.energy = t.demand_bioethanol
+        s_biodiesel.energy = t.demand_biodiesel
+        s_elec.energy = t.demand_electricity
 
-        s_biogas.energy = demand_biogas
-        s_bioethanol.energy = demand_bioethanol
-        s_biodiesel.energy = demand_biodiesel
+        s_biogas.energy = t.demand_biogas
+        s_bioethanol.energy = t.demand_bioethanol
+        s_biodiesel.energy = t.demand_biodiesel
 
         s.energy = (
             s_petrol.energy

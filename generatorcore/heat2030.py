@@ -142,12 +142,12 @@ def calc(root, inputs: Inputs):
     """end"""
 
     root.e30.p_local_biomass_cogen.energy = exl['e30']['p_local_biomass_cogen']['energy']
-    root.r30.s_heatnet.energy = exl['r30']['s_heatnet']['energy']
+    #root.r30.s_heatnet.energy = exl['r30']['s_heatnet']['energy']
     root.b30.s_heatnet.energy = exl['b30']['s_heatnet']['energy']
     root.i30.s_renew_heatnet.energy = exl['i30']['s_renew_heatnet']['energy']
-    root.r30.s_biomass.energy = exl['r30']['s_biomass']['energy']
-    root.r30.s_solarth.energy = exl['r30']['s_solarth']['energy']
-    root.r30.s_heatpump.energy = exl['r30']['s_heatpump']['energy']
+    #root.r30.s_biomass.energy = exl['r30']['s_biomass']['energy']
+    #root.r30.s_solarth.energy = exl['r30']['s_solarth']['energy']
+    #root.r30.s_heatpump.energy = exl['r30']['s_heatpump']['energy']
     root.b30.s_biomass.energy = exl['b30']['s_biomass']['energy']
     root.b30.s_heatpump.energy = exl['b30']['s_heatpump']['energy']
     root.b30.s_solarth.energy = exl['b30']['s_solarth']['energy']

@@ -157,7 +157,7 @@ def calc(root, inputs: Inputs):
     root.r30.p_buildings_total.change_energy_MWh = exl["r30"]["p_buildings_total"][
         "change_energy_MWh"
     ]
-    root.r18.p_buildings_total.energy = exl["r18"]["p_buildings_total"]["energy"]
+
     root.r30.s.cost_climate_saved = exl["r30"]["s"]["cost_climate_saved"]
     root.r30.s.invest = exl["r30"]["s"]["invest"]
     root.r30.s.invest_com = exl["r30"]["s"]["invest_com"]
