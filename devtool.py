@@ -86,7 +86,7 @@ def find_diffs(
         for k in d2.keys():
             yield from find_diffs(path + "." + k, None, d2[k], rel=rel)
     elif isinstance(d1, numbers.Real) and isinstance(d2, numbers.Real):
-        if float_matches(actual=d1, expected=d2, rel=rel):
+        if not float_matches(actual=d1, expected=d2, rel=rel):
             yield (path, d1, d2)
     elif d1 != d2:
         yield (path, d1, d2)
