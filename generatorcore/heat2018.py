@@ -45,7 +45,8 @@ class HColVars:
 class H18:
     # Klassenvariablen für H
     g: HColVars = HColVars()
-
+    g_storage: HColVars = HColVars()
+    g_planning: HColVars = HColVars()
     d: HColVars = HColVars()
     d_r: HColVars = HColVars()
     d_b: HColVars = HColVars()
@@ -118,17 +119,9 @@ def calc(root, inputs: Inputs):
         # Demand Residential:
         d_r = root.h18.d_r  # -> Abkürzung für weniger Schreibarbeit
         # 1
-        d_r.energy = (
-            entry("In_R_coal_fec")
-            + entry("In_R_petrol_fec")
-            + entry("In_R_fueloil_fec")
-            + entry("In_R_lpg_fec")
-            + entry("In_R_gas_fec")
-            + entry("In_R_biomass_fec")
-            + entry("In_R_orenew_fec")
-            + entry("In_R_heatnet_fec")
+        d_r.energy = (entry('In_R_coal_fec') + entry('In_R_fueloil_fec') + entry('In_R_lpg_fec') + entry('In_R_gas_fec') + entry('In_R_biomass_fec') + entry('In_R_orenew_fec') + entry('In_R_heatnet_fec'))
             # result: 516.686.389 MWh
-        )
+
 
         # Demand Business:
         d_b = root.h18.d_b
