@@ -443,6 +443,9 @@ def make_entries(data: refdata.RefData, ags: str, year: int):
     entry["In_T_mil_mhd_it_at"] = data_traffic_com.float("mhd_it_at")
     entry["In_T_mil_mhd_ab"] = data_traffic_com.float("mhd_ab")
 
+    data_destatis_com = data.destatis(ags_dis_padded)
+    entry["In_T_metro_mega_km_dis"] = data_destatis_com.float("metro_mega_km")
+
     entry["In_A_petrol_fec"] = (
         data.fact("Fact_A_S_petrol_fec_2018")
         * entry["In_M_area_agri_com"]
