@@ -3,44 +3,36 @@ Localzero Generator Core
 This contains the calcuation. It should neither contain reference data
 nor anything that is specific to the website.
 
-#TODO: nach Englisch übersetzen
-Grundinstallation auf Windows
+Install environment
 =========================
-- Python 3.10. installieren
-- Git installieren
-- Poetry installieren
-	- Windows PowerShell Kommando: (Invoke-WebRequest -Uri https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py -UseBasicParsing).Content | python
-	
-Git einrichten:
-- Token: 
-	- https://github.com/settings/tokens: 
-		- Personal Access Token anlegen (repo, workflow, admin:org:read, gist)
-		- Token abspeichern
-	- Token in den Windows Anmeldeinformationen hinzufügen
-		- Generische Anmeldeinformationen hinzufügen (Adresse: git:https://github.com, Benutzername: Git Nutzername, Passwort: Token)
-		
-Git Repo runterladen:
-- Auf der Kommandozeile in das gewünschte Code Verzeichnis gehen
-	- git clone https://github.com/GermanZero-de/localzero-generator-core
-- in das Verzeichnis \localzero-generator-core\data wechseln
-	- git clone https://github.com/GermanZero-de/localzero-data-public public
-	- git clone https://github.com/GermanZero-de/localzero-data-proprietary proprietary
-	
-Poetry einrichten:
-- Auf der Kommandozeile in das Verzeichnis \localzero-generator-core gehen
+- install Python 3.10.
+- install Git
+- install Poetry
+	- Windows PowerShell Command: (Invoke-WebRequest -Uri https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py -UseBasicParsing).Content | python
+
+- configure Git
+	- Token:
+		- https://github.com/settings/tokens:
+			- create personal access token (repo, workflow, admin:org:read, gist)
+			- save your token
+			- Token in den Windows Anmeldeinformationen hinzufügen
+				- Generische Anmeldeinformationen hinzufügen (Adresse: git:https://github.com, Benutzername: Git Nutzername, Passwort: Token)
+- get Git Repo
+	- in your code folder
+		- git clone https://github.com/GermanZero-de/localzero-generator-core
+	- in \localzero-generator-core\data
+		- git clone https://github.com/GermanZero-de/localzero-data-public public
+		- git clone https://github.com/GermanZero-de/localzero-data-proprietary proprietary
+
+- install poetry and pre-commit
+	- install-environment.sh
+
+
+Run the generator
+=========================
 - poetry shell
-- poetry install
-- Bei Fehlern
-	- could not find cleo
-		- pip install cleo tomlkit poetry.core requests cachecontrol cachy html5lib pkginfo virtualenv lockfile
-	- could not find pexpect (analog für alles was sonst noch fehlt)
-		- pip install pexpect
-		
-Generator laufen lassen:
-- Auf der Kommandozeile in das Verzeichnis \localzero-generator-core gehen
-- poetry shell
-- python devtool.py run 
-oder
+- python devtool.py run
+or
 - python devtool.py > Output.json
 
 
