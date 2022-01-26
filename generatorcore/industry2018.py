@@ -75,7 +75,7 @@ def calc(root, inputs: Inputs):
 
     i18 = root.i18
 
-    i18.p_miner.energy = entry("In_I_miner_fec")
+    i18.p_miner.energy = entry("In_I_fec_pct_of_miner") * entry("In_I_energy_total")
 
     i18.p_miner_cement.pct_energy = fact("Fact_I_P_miner_fec_pct_of_cement_2018")
     i18.p_miner_cement.energy = i18.p_miner_cement.pct_energy * i18.p_miner.energy
@@ -175,7 +175,7 @@ def calc(root, inputs: Inputs):
         "Fact_I_S_chem_basic_wo_ammonia_fec_ratio_to_chem_all_2018"
     )
 
-    i18.p_chem.energy = entry("In_I_chem_fec")
+    i18.p_chem.energy = entry("In_I_fec_pct_of_chem") * entry("In_I_energy_total")
     i18.p_chem_basic.energy = entry("In_I_chem_fec") * i18.p_chem_basic.pct_energy
     i18.p_chem_basic.energy_use_factor = fact(
         "Fact_I_P_chem_basic_wo_ammonia_ratio_prodvol_to_fec_2018"
@@ -249,7 +249,7 @@ def calc(root, inputs: Inputs):
 
     # Funktioniert erst mit aktualisierter Fakten pki (24.08.21)
     # metal
-    i18.p_metal.energy = entry("In_I_metal_fec")
+    i18.p_metal.energy = entry("In_I_fec_pct_of_metal") * entry("In_I_energy_total")
 
     # steel total (primary and secondary)
     i18.p_metal_steel.pct_energy = fact("Fact_I_P_metal_fec_pct_of_steel_2018")
@@ -477,7 +477,7 @@ def calc(root, inputs: Inputs):
         i18.p_chem_basic.CO2e_pb + i18.p_chem_ammonia.CO2e_pb + i18.p_chem_other.CO2e_pb
     )
     i18.p_metal.CO2e_pb = i18.p_metal_steel.CO2e_pb + i18.p_metal_nonfe.CO2e_pb
-    i18.p_other.energy = entry("In_I_other_fec")
+    i18.p_other.energy = entry("In_I_fec_pct_of_other") * entry("In_I_energy_total")
 
     i18.p_other.CO2e_pb = (
         i18.p_other_paper.CO2e_pb
