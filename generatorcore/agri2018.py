@@ -124,7 +124,6 @@ def calc(root, inputs: Inputs):
     p_other_kas = root.a18.p_other_kas
     p_other_liming = root.a18.p_other_liming
     p_other_liming_calcit = root.a18.p_other_liming_calcit
-    p_other_liming_dolomite = root.a18.p_other_liming_calcit
     p_other_liming_dolomite = root.a18.p_other_liming_dolomite
     p_other_urea = root.a18.p_other_urea
     p_other_ecrop = root.a18.p_other_ecrop

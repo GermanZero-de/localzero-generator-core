@@ -116,8 +116,6 @@ def calc(root, inputs: Inputs):
     g_grass_org = root.l18.g_grass_org
     g_grove_org = root.l18.g_grove_org
     g_wet_org = root.l18.g_wet_org
-    g_wet_org_r = root.l18.g_wet_org_r
-    g_wet_org_rp = root.l18.g_wet_org_rp
     g_water_org_low = root.l18.g_water_org_low
     g_water_org_high = root.l18.g_water_org_high
     pyrolysis = root.l18.pyrolysis
@@ -491,6 +489,7 @@ def calc(root, inputs: Inputs):
         g_settlement_min.CO2e_total = g_settlement_min.CO2e_pb
         g_settlement_org_low.CO2e_total = g_settlement_org_low.CO2e_pb
         g_settlement_org_high.CO2e_total = g_settlement_org_high.CO2e_pb
+        pyrolysis.CO2e_total = 0
 
     except Exception as e:
         print(e)

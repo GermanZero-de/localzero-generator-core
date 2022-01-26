@@ -1605,6 +1605,8 @@ def calc(root, inputs: Inputs):
         rail_ppl.change_energy_pct = rail_ppl.change_energy_MWh / t18.rail_ppl.energy
         rail_ppl_metro.change_energy_pct = (
             rail_ppl_metro.change_energy_MWh / t18.rail_ppl_metro.energy
+            if t18.rail_ppl_metro.energy != 0
+            else None
         )
         rail_ppl_metro.change_CO2e_t = (
             rail_ppl_metro.CO2e_cb - t18.rail_ppl_metro.CO2e_cb

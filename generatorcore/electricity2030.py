@@ -134,8 +134,9 @@ class E30:
         return edict
 
 
-# Berechnungsfunktion im Sektor E für 2018
-# Parameter root: oberste Generator Instanz
+# Berechnungsfunktion im Sektor E für 203X
+
+
 def calc(root, inputs: Inputs):
     def fact(n):
         return inputs.fact(n)
@@ -146,47 +147,13 @@ def calc(root, inputs: Inputs):
     def entry(n):
         return inputs.entry(n)
 
-    """"""
-    """ import external values"""
-    import json
-
-    if entry("In_M_AGS_com") == "DG000000":
-        excel_path = "excel/germany_values.json"
-    elif entry("In_M_AGS_com") == "03159016":
-        excel_path = "excel/goettingen_values.json"
-
-    with open(excel_path, "r") as fp:
-        exl = json.load(fp)
-    fp.close()
-    """end"""
-
-    root.h30.p.demand_electricity = exl['h30']['p']['demand_electricity']
-    root.r30.p.demand_electricity = exl['r30']['p']['demand_electricity']
-    root.b30.p.demand_electricity = exl['b30']['p']['demand_electricity']
-    root.i30.p.demand_electricity = exl['i30']['p']['demand_electricity']
-    root.t30.t.demand_electricity = exl["t30"]["t"]["demand_electricity"]
-    root.h30.p.demand_electricity = exl['h30']['p']['demand_electricity']
-    root.a30.p_operation.demand_electricity = exl["a30"]["p_operation"][
-        "demand_electricity"
-    ]
-    root.f30.p_petrol.demand_electricity = exl['f30']['p_petrol']['demand_electricity']
-    root.f30.p_jetfuel.demand_electricity = exl['f30']['p_jetfuel']['demand_electricity']
-    root.f30.p_diesel.demand_electricity = exl['f30']['p_diesel']['demand_electricity']
-    root.f30.p_hydrogen_reconv.demand_electricity = exl['f30']['p_hydrogen_reconv']['demand_electricity']
-    root.f30.p_emethan.demand_electricity = exl['f30']['p_emethan']['demand_electricity']
-    root.f30.p_hydrogen.demand_electricity = exl['f30']['p_hydrogen']['demand_electricity']
-    root.f30.p_hydrogen_reconv.demand_electricity = exl['f30']['p_hydrogen_reconv']['demand_electricity']
-
     Million = 1000000
     ags = entry("In_M_AGS_com")
     Kalkulationszeitraum = entry("In_M_duration_target")
     KlimaneutraleJahre = entry("In_M_duration_neutral")
 
-    f18 = root.f18
     e18 = root.e18
     r18 = root.r18
-    i18 = root.i18
-    #        f30 = root.f30
     e30 = root.e30
     b18 = root.b18
     b30 = root.b30
@@ -214,17 +181,14 @@ def calc(root, inputs: Inputs):
     d_f_wo_hydrogen = root.e30.d_f_wo_hydrogen
 
     p = e30.p
-    p_fossil_and_renew = e30.p_fossil_and_renew
     p_fossil = e30.p_fossil
     p_fossil_nuclear = e30.p_fossil_nuclear
     p_fossil_coal_brown = e30.p_fossil_coal_brown
     p_fossil_coal_black = e30.p_fossil_coal_black
     p_fossil_gas = e30.p_fossil_gas
-    p_fossil_gas_cogen = e30.p_fossil_gas_cogen
     p_fossil_ofossil = e30.p_fossil_ofossil
     p_renew = e30.p_renew
     p_renew_wind = e30.p_renew_wind
-    p_renew_wind_onshore = e30.p_renew_wind_onshore
     p_renew_geoth = e30.p_renew_geoth
     p_renew_hydro = e30.p_renew_hydro
     p_renew_pv = e30.p_renew_pv
@@ -235,7 +199,6 @@ def calc(root, inputs: Inputs):
     p_renew_wind_onshore = e30.p_renew_wind_onshore
     p_renew_wind_offshore = e30.p_renew_wind_offshore
     p_renew_biomass = e30.p_renew_biomass
-    p_renew_biomass_cogen = e30.p_local_biomass_cogen
     p_renew_reverse = e30.p_renew_reverse
 
     p_local = e30.p_local
@@ -247,11 +210,8 @@ def calc(root, inputs: Inputs):
     p_local_wind_onshore = e30.p_local_wind_onshore
     p_local_biomass = e30.p_local_biomass
     p_local_biomass_cogen = e30.p_local_biomass_cogen
-    p_local_biomass_gaseous = e30.p_local_biomass_gaseous
     p_local_hydro = e30.p_local_hydro
     p_local_surplus = e30.p_local_surplus
-    d_f_hydrogen_reconv = root.e30.d_f_hydrogen_reconv
-    d_e_hydrogen = root.e30.d_e_hydrogen
 
     p_local_pv_agri.invest_pa_com = 0
     p_fossil_and_renew = e30.p_fossil_and_renew
@@ -273,7 +233,7 @@ def calc(root, inputs: Inputs):
             + f30.p_diesel.demand_electricity
             + f30.p_emethan.demand_electricity
             + f30.p_hydrogen.demand_electricity
-        )  # (SUM(
+        )
         d_e_hydrogen.energy = f30.p_hydrogen_reconv.demand_electricity
         d_r.cost_fuel_per_MWh = fact("Fact_E_D_R_cost_fuel_per_MWh_2018")
         p_renew_wind_offshore.power_installed = fact(
@@ -405,7 +365,12 @@ def calc(root, inputs: Inputs):
             - p_local_pv_roof.power_installed,
         )
         p_local_pv_roof.full_load_hour = entry("In_E_pv_full_load_hours_sta")
-        p_local_wind_onshore.cost_mro_per_MWh = (ass('Ass_E_P_local_wind_onshore_ratio_invest_to_power_2030') * ass('Ass_E_P_local_wind_onshore_mro_per_year') / fact('Fact_E_P_wind_onshore_full_load_hours') * 1000)
+        p_local_wind_onshore.cost_mro_per_MWh = (
+            ass("Ass_E_P_local_wind_onshore_ratio_invest_to_power_2030")
+            * ass("Ass_E_P_local_wind_onshore_mro_per_year")
+            / fact("Fact_E_P_wind_onshore_full_load_hours")
+            * 1000
+        )
         p_local_biomass.CO2e_cb_per_MWh = fact(
             "Fact_E_P_biomass_ratio_CO2e_cb_nonCO2_to_gep_2018"
         ) / (1 - ass("Ass_E_P_renew_loss_brutto_to_netto"))
@@ -629,7 +594,8 @@ def calc(root, inputs: Inputs):
                 + d_a.energy
                 + d_f_wo_hydrogen.energy
             )
-            * ass('Ass_E_P_renew_reverse_addon_to_demand_2035') * (1 - ass('Ass_E_P_renew_loss_brutto_to_netto'))
+            * ass("Ass_E_P_renew_reverse_addon_to_demand_2035")
+            * (1 - ass("Ass_E_P_renew_loss_brutto_to_netto"))
             if (ags == "DG000000")
             else (p_renew.energy * p_renew_reverse.pct_energy)
         )
@@ -1313,11 +1279,15 @@ def calc(root, inputs: Inputs):
             * (1 - ass("Ass_E_P_renew_loss_brutto_to_netto"))
         )
         p_local_pv_agri.power_installed = entry("In_E_PV_power_inst_agripv")
-        p_local_pv_agri.ratio_power_to_area_ha = ass("Ass_E_P_local_pv_agri_power_per_ha")
+        p_local_pv_agri.ratio_power_to_area_ha = ass(
+            "Ass_E_P_local_pv_agri_power_per_ha"
+        )
         p_local_pv_agri.area_ha_available_pct_of_action = ass(
             "Ass_E_P_local_pv_agri_power_installable"
         ) / (ass("Ass_E_P_local_pv_agri_power_per_ha") * entry("In_M_area_agri_nat"))
-        p_local_wind_onshore.invest_per_x = (ass('Ass_E_P_local_wind_onshore_ratio_invest_to_power_2030') * 1000)
+        p_local_wind_onshore.invest_per_x = (
+            ass("Ass_E_P_local_wind_onshore_ratio_invest_to_power_2030") * 1000
+        )
         p_local_pv.emplo_existing = (
             fact("Fact_B_P_install_elec_emplo_2017")
             * entry("In_M_population_com_2018")
@@ -1676,7 +1646,9 @@ def calc(root, inputs: Inputs):
         p_local_wind_onshore.change_energy_MWh = (
             p_local_wind_onshore.energy - e18.p_local_wind_onshore.energy
         )
-        p_local_biomass.invest_per_x = ass("Ass_E_P_local_biomass_ratio_invest_to_power")  # invest
+        p_local_biomass.invest_per_x = ass(
+            "Ass_E_P_local_biomass_ratio_invest_to_power"
+        )  # invest
         p_local_biomass.invest = (
             p_local_biomass.power_to_be_installed * p_local_biomass.invest_per_x
         )
@@ -2095,13 +2067,20 @@ def calc(root, inputs: Inputs):
         )
         p.invest_pa_outside = p_fossil_and_renew.invest_pa_outside
         p.invest_outside = p_fossil_and_renew.invest_outside
-        # p_fossil_and_renew.CO2e_cb_per_MWh = (p_fossil_and_renew.CO2e_cb / p_fossil_and_renew.energy)
+        p_fossil_and_renew.CO2e_cb_per_MWh = (
+            p_fossil_and_renew.CO2e_cb / p_fossil_and_renew.energy
+        )
         p_fossil_and_renew.change_CO2e_pct = (
             p_fossil_and_renew.change_CO2e_t / e18.p_fossil_and_renew.CO2e_total
         )
         p_fossil_and_renew.invest_pa_outside = p_renew.invest_pa_outside
         p_fossil_and_renew.invest_outside = p_renew.invest_outside
-        # p_renew.CO2e_cb_per_MWh = (p_renew.CO2e_cb / p_renew.energy)
+        p_renew.CO2e_cb_per_MWh = p_renew.CO2e_cb / p_renew.energy
+        p_renew_pv.CO2e_total = 0
+        p_renew_wind.CO2e_total = 0
+        p_renew_geoth.CO2e_total = 0
+        p_renew_hydro.CO2e_total = 0
+        p_renew_reverse.CO2e_total = 0
         p_renew.CO2e_total = (
             p_renew_pv.CO2e_total
             + p_renew_wind.CO2e_total
@@ -2142,7 +2121,7 @@ def calc(root, inputs: Inputs):
         p_renew_biomass.change_CO2e_pct = (
             p_renew_biomass.change_CO2e_t / e18.p_renew_biomass.CO2e_total
         )
-        p_local_pv_roof.pet_sites = (p_local_pv_roof.energy / p_local_pv.energy)
-        p_local_pv_facade.pet_sites = (p_local_pv_facade.energy / p_local_pv.energy)
-        p_local_pv_park.pet_sites = (p_local_pv_park.energy / p_local_pv.energy)
-        p_local_pv_agri.pet_sites = (p_local_pv_agri.energy / p_local_pv.energy)
+        p_local_pv_roof.pet_sites = p_local_pv_roof.energy / p_local_pv.energy
+        p_local_pv_facade.pet_sites = p_local_pv_facade.energy / p_local_pv.energy
+        p_local_pv_park.pet_sites = p_local_pv_park.energy / p_local_pv.energy
+        p_local_pv_agri.pet_sites = p_local_pv_agri.energy / p_local_pv.energy

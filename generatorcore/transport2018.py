@@ -209,6 +209,7 @@ def calc(root, inputs: Inputs):
     elif entry("In_M_AGS_com") == "03159016":
         root.t18.rail_ppl_metro.mileage = 0
         root.t18.road_bus.mileage = 1752789.9193474643
+
     # abbreviations
     t = root.t18.t
     g = root.t18.g

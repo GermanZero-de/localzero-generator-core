@@ -2,13 +2,6 @@ from dataclasses import dataclass, field, InitVar, asdict
 from . import industry2018
 from .inputs import Inputs
 
-
-# mineral     todo
-# chem    --> done
-# metal   -   in progess
-# other   --> done
-
-
 @dataclass
 class IColVars2030:
     demand_electricity: float = None

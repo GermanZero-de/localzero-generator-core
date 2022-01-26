@@ -183,8 +183,6 @@ def calc(root, inputs: Inputs):
         p_buildings_1949_1978.area_m2 = r18.p_buildings_1949_1978.area_m2
         p_buildings_1979_1995.area_m2 = r18.p_buildings_1979_1995.area_m2
         p_buildings_1996_2004.area_m2 = r18.p_buildings_1996_2004.area_m2
-        p_buildings_2005_2011.area_m2 = r18.p_buildings_2005_2011.area_m2
-        p_buildings_2011_today.area_m2 = r18.p_buildings_2011_today.area_m2
 
         p_buildings_total.area_m2 = (
             p_buildings_until_1919.area_m2
@@ -285,10 +283,10 @@ def calc(root, inputs: Inputs):
             p_buildings_1996_2004.pct_rehab * p_buildings_1996_2004.area_m2
         )
         p_buildings_2005_2011.area_m2_rehab = (
-            p_buildings_2005_2011.pct_rehab * p_buildings_2005_2011.area_m2
+            p_buildings_2005_2011.pct_rehab * r18.p_buildings_2005_2011.area_m2
         )
         p_buildings_2011_today.area_m2_rehab = (
-            p_buildings_2011_today.pct_rehab * p_buildings_2011_today.area_m2
+            p_buildings_2011_today.pct_rehab * r18.p_buildings_2011_today.area_m2
         )
 
         p_buildings_total.area_m2_rehab = (
@@ -332,10 +330,10 @@ def calc(root, inputs: Inputs):
             p_buildings_1996_2004.pct_nonrehab * p_buildings_1996_2004.area_m2
         )
         p_buildings_2005_2011.area_m2_nonrehab = (
-            p_buildings_2005_2011.pct_nonrehab * p_buildings_2005_2011.area_m2
+            p_buildings_2005_2011.pct_nonrehab * r18.p_buildings_2005_2011.area_m2
         )
         p_buildings_2011_today.area_m2_nonrehab = (
-            p_buildings_2011_today.pct_nonrehab * p_buildings_2011_today.area_m2
+            p_buildings_2011_today.pct_nonrehab * r18.p_buildings_2011_today.area_m2
         )
 
         p_buildings_total.area_m2_nonrehab = (
@@ -479,11 +477,11 @@ def calc(root, inputs: Inputs):
         p_buildings_2005_2011.fec_factor_averaged = (
             p_buildings_2005_2011.demand_heat_rehab
             + p_buildings_2005_2011.demand_heat_nonrehab
-        ) / p_buildings_2005_2011.area_m2
+        ) / r18.p_buildings_2005_2011.area_m2
         p_buildings_2011_today.fec_factor_averaged = (
             p_buildings_2011_today.demand_heat_rehab
             + p_buildings_2011_today.demand_heat_nonrehab
-        ) / p_buildings_2011_today.area_m2
+        ) / r18.p_buildings_2011_today.area_m2
         p_buildings_area_m2_com.fec_factor_averaged = (
             p_buildings_total.fec_factor_averaged
         )
@@ -620,7 +618,7 @@ def calc(root, inputs: Inputs):
         s_petrol.pct_energy = 0
 
         s_heatnet.energy = (
-            0.123483681  # entry('In_R_heatnet_ratio_year_target')
+            entry('In_R_heatnet_ratio_year_target')
             * p_buildings_total.fec_factor_averaged
             * r18.p_buildings_total.area_m2
         )
@@ -744,7 +742,6 @@ def calc(root, inputs: Inputs):
         s_heatnet.cost_fuel_per_MWh = 0
         s_solarth.cost_fuel_per_MWh = 0
         s_heatpump.cost_fuel_per_MWh = 0
-        s_emethan.cost_fuel_per_MWh = ass("Ass_R_S_gas_energy_cost_factor_2035")
 
         s_fueloil.cost_fuel = s_fueloil.energy * s_fueloil.cost_fuel_per_MWh / Million
         s_lpg.cost_fuel = s_lpg.energy * s_lpg.cost_fuel_per_MWh / Million

@@ -90,37 +90,15 @@ def calc(root, inputs: Inputs):
     fp.close()
     """end"""
 
-    # root.b30.p.demand_ediesel = exl["b30"]["p"]["demand_ediesel"]
-    # root.b30.p.demand_emethan = exl["b30"]["p"]["demand_emethan"]
 
-    # root.a30.p_operation.demand_ediesel = exl["a30"]["p_operation"]["demand_ediesel"]
-    # root.a30.p_operation.demand_emethan = exl["a30"]["p_operation"]["demand_emethan"]
-    # root.a30.p_operation.demand_epetrol = exl["a30"]["p_operation"]["demand_epetrol"]
-
-    # root.r30.p.demand_emethan = exl["r30"]["p"]["demand_emethan"]
-
-    # root.i30.p.demand_emethan = exl["i30"]["p"]["demand_emethan"]
-    # root.i30.p.demand_hydrogen = exl["i30"]["p"]["demand_hydrogen"]
-    # root.t30.t.demand_epetrol = exl["t30"]["t"]["demand_epetrol"]
-    # root.t30.t.demand_ejetfuel = exl["t30"]["t"]["demand_ejetfuel"]
-    # root.t30.t.demand_ediesel = exl["t30"]["t"]["demand_ediesel"]
-    # root.t30.t.demand_hydrogen = exl["t30"]["t"]["demand_hydrogen"]
-
-    # root.e30.d_h.energy = exl["e30"]["d_h"]["energy"]
-    # root.e30.d_r.energy = exl["e30"]["d_r"]["energy"]
-    # root.e30.d_b.energy = exl["e30"]["d_b"]["energy"]
-    # root.e30.d_i.energy = exl["e30"]["d_i"]["energy"]
-    # root.e30.d_t.energy = exl["e30"]["d_t"]["energy"]
-    # root.e30.d_a.energy = exl["e30"]["d_a"]["energy"]
-    # root.e30.d_f_wo_hydrogen.energy = exl["e30"]["d_f_wo_hydrogen"]["energy"]
-    # root.e30.d.energy = exl["e30"]["d"]["energy"]
-
-    # root.h30.p.demand_electricity = exl['h30']['p']['demand_electricity']
-    # root.r30.p.demand_electricity = exl['r30']['p']['demand_electricity']
-    # root.b30.p.demand_electricity = exl['b30']['p']['demand_electricity']
-    # root.i30.p.demand_electricity = exl['i30']['p']['demand_electricity']
-    # root.t30.t.demand_electricity = exl['t30']['t']['demand_electricity']
-    # root.a30.p_operation.demand_electricity = exl['a30']['p_operation']['demand_electricity']
+    root.e30.d_h.energy = exl["e30"]["d_h"]["energy"]
+    root.e30.d_r.energy = exl["e30"]["d_r"]["energy"]
+    root.e30.d_b.energy = exl["e30"]["d_b"]["energy"]
+    root.e30.d_i.energy = exl["e30"]["d_i"]["energy"]
+    root.e30.d_t.energy = exl["e30"]["d_t"]["energy"]
+    root.e30.d_a.energy = exl["e30"]["d_a"]["energy"]
+    root.e30.d_f_wo_hydrogen.energy = exl["e30"]["d_f_wo_hydrogen"]["energy"]
+    root.e30.d.energy = exl["e30"]["d"]["energy"]
 
     Million = 1000000
 

@@ -126,9 +126,9 @@ def calc(root, inputs: Inputs):
     root.e30.e.CO2e_total = exl["e30"]["e"]["CO2e_total"]
     root.f30.f.CO2e_total = exl["f30"]["f"]["CO2e_total"]
     root.r30.r.CO2e_total = exl["r30"]["r"]["CO2e_total"]
-    root.b30.b.CO2e_total = exl["b30"]["b"]["CO2e_total"]
-    root.i30.i.CO2e_total = exl["i30"]["i"]["CO2e_total"]
-    root.t30.t.CO2e_total = exl["t30"]["t"]["CO2e_total"]
+    #root.b30.b.CO2e_total = exl["b30"]["b"]["CO2e_total"]
+    #root.i30.i.CO2e_total = exl["i30"]["i"]["CO2e_total"]
+    #root.t30.t.CO2e_total = exl["t30"]["t"]["CO2e_total"]
     root.a30.a.CO2e_total = exl["a30"]["a"]["CO2e_total"]
 
     l18 = root.l18
@@ -759,7 +759,6 @@ def calc(root, inputs: Inputs):
                 + g.CO2e_total,
                 0,
             )
-            l18.pyrolysis.CO2e_total = 0
             pyrolysis.change_CO2e_t = pyrolysis.CO2e_total - l18.pyrolysis.CO2e_total
             # div 0 pyrolysis.change_CO2e_pct = (pyrolysis.change_CO2e_t / AV395)
             pyrolysis.CO2e_total_2021_estimated = l18.pyrolysis.CO2e_total * fact(

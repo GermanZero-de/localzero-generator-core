@@ -92,21 +92,6 @@ def calc(root, inputs: Inputs):
     def entry(n):
         return inputs.entry(n)
 
-    # todo
-
-    if entry("In_M_AGS_com") == "03159016":
-        root.e18.p_fossil_coal_brown_cogen.energy = 7405.720316135069
-        root.e18.p_fossil_coal_black_cogen.energy = 24841.97321235181
-        root.e18.p_fossil_gas_cogen.energy = 36091.16862926584
-        root.e18.p_fossil_ofossil_cogen.energy = 8999.356333531223
-        root.e18.p_renew_biomass_cogen.energy = 13405.291205155881
-    elif entry("In_M_AGS_com") == "DG000000":
-        root.e18.p_fossil_coal_brown_cogen.energy = 6748160.2962558055
-        root.e18.p_fossil_coal_black_cogen.energy = 22636233.905161876
-        root.e18.p_fossil_gas_cogen.energy = 32886603.975423865
-        root.e18.p_fossil_ofossil_cogen.energy = 8200296.0562095875
-        root.e18.p_renew_biomass_cogen.energy = 12215024.333728863
-
     try:
 
         ###########################

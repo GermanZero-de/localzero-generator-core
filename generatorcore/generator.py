@@ -120,7 +120,6 @@ def calculate(inputs: Inputs) -> Result:
     business2030.calc(result, inputs)
     print("Lulucf2030_calc", file=sys.stderr)
     lulucf2030.calc(result, inputs)
-    print("Transport2030_calc", file=sys.stderr)
     print("Agri2030_calc", file=sys.stderr)
     agri2030.calc(result, inputs)
     print("Heat2030_calc", file=sys.stderr)
