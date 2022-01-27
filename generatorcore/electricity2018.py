@@ -148,6 +148,7 @@ def calc(root, inputs: Inputs):
         p_renew_biomass_gaseous = root.e18.p_renew_biomass_gaseous
         p_renew_biomass_cogen = root.e18.p_renew_biomass_cogen
         p_renew_pv_agri = root.e18.p_renew_pv_agri
+        p_renew_reverse = root.e18.p_renew_reverse
         p_fossil_and_renew = root.e18.p_fossil_and_renew
         p_local_pv_roof = root.e18.p_local_pv_roof
         p_local_pv_facade = root.e18.p_local_pv_facade
@@ -159,6 +160,28 @@ def calc(root, inputs: Inputs):
         p_local_biomass_cogen = root.e18.p_local_biomass_cogen
         p_local_hydro = root.e18.p_local_hydro
         p_local = root.e18.p_local
+
+        e.CO2e_pb = 0.
+        p_renew_pv.CO2e_cb = 0.
+        p_renew_wind.CO2e_cb = 0.
+        p_renew_wind_onshore.CO2e_cb = 0.
+        p_renew_wind_onshore.CO2e_cb_per_MWh = 0.
+        p_renew_wind_onshore.CO2e_total = 0.
+        p_renew_wind_offshore.CO2e_cb = 0.
+        p_renew_wind_offshore.CO2e_cb_per_MWh = 0.
+        p_renew_wind_offshore.CO2e_total = 0.
+        p_renew_reverse.energy = 0.
+        p_local.CO2e_total = 0.
+        p_local_pv.CO2e_cb = 0.
+        p_local_pv.CO2e_cb_per_MWh = 0.
+        p_local_pv.CO2e_total = 0.
+        p_local_wind_onshore.CO2e_cb = 0.
+        p_local_wind_onshore.CO2e_cb_per_MWh = 0.
+        p_local_wind_onshore.CO2e_total = 0.
+        p_local_biomass.CO2e_total = 0.
+        p_local_hydro.CO2e_cb = 0.
+        p_local_hydro.CO2e_cb_per_MWh = 0.
+        p_local_hydro.CO2e_total  = 0.
 
         # NACHFRAGE:
         d_h.energy = 0
@@ -346,12 +369,8 @@ def calc(root, inputs: Inputs):
             # result: 1.741,36 Mio €/d_a
         )
         # 5
-        p_fossil_coal_brown.cost_certificate_per_MWh = (
-            fact("Fact_E_P_coal_black_ratio_CO2e_cb_to_gep_2018")
-            * fact("Fact_M_cost_certificate_per_t_CO2_ETS_2018")
-            * 1000
+        p_fossil_coal_brown.cost_certificate_per_MWh = (fact('Fact_E_P_coal_brown_ratio_CO2e_cb_to_gep_2018') * fact('Fact_M_cost_certificate_per_t_CO2_ETS_2018') * 1000)
             # result: 20,9 €/MWh
-        )
         # 6
         p_fossil_coal_brown.cost_certificate = (
             p_fossil_coal_brown.cost_certificate_per_MWh

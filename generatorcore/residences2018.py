@@ -44,6 +44,7 @@ class R18:
     p_buildings_1996_2004: RColVars = RColVars()
     p_buildings_2005_2011: RColVars = RColVars()
     p_buildings_2011_today: RColVars = RColVars()
+    p_buildings_new: RColVars = RColVars()
     p_buildings_area_m2_com: RColVars = RColVars()
     p_elec_elcon: RColVars = RColVars()
     p_elec_heatpump: RColVars = RColVars()
@@ -96,17 +97,10 @@ def calc(root, inputs: Inputs):
     p_buildings_1996_2004 = r18.p_buildings_1996_2004
     p_buildings_2005_2011 = r18.p_buildings_2005_2011
     p_buildings_2011_today = r18.p_buildings_2011_today
+    p_buildings_new = r18.p_buildings_new
     p_buildings_area_m2_com = r18.p_buildings_area_m2_com
     p_other = r18.p_other
     p_vehicles = r18.p_vehicles
-
-    p_buildings_total.energy = (
-        entry("In_R_energy_total")
-        - entry("In_R_elec_fec")
-        + fact("Fact_R_S_elec_heating_fec_2018")
-        * entry("In_R_flats_wo_heatnet")
-        / fact("Fact_R_P_flats_wo_heatnet_2011")
-    )
 
     p_buildings_until_1919.number_of_buildings = entry("In_R_buildings_until_1919")
     p_buildings_1919_1948.number_of_buildings = entry("In_R_buildings_1919_1948")
@@ -285,33 +279,7 @@ def calc(root, inputs: Inputs):
         + p_buildings_2011_today.relative_heat_ratio_BMWi
     )
 
-    p_buildings_until_1919.energy = (
-        p_buildings_total.energy * p_buildings_until_1919.relative_heat_ratio_BMWi
-    )
-    p_buildings_1919_1948.energy = (
-        p_buildings_total.energy * p_buildings_1919_1948.relative_heat_ratio_BMWi
-    )
-    p_buildings_1949_1978.energy = (
-        p_buildings_total.energy * p_buildings_1949_1978.relative_heat_ratio_BMWi
-    )
-    p_buildings_1979_1995.energy = (
-        p_buildings_total.energy * p_buildings_1979_1995.relative_heat_ratio_BMWi
-    )
-    p_buildings_1996_2004.energy = (
-        p_buildings_total.energy * p_buildings_1996_2004.relative_heat_ratio_BMWi
-    )
-    p_buildings_2005_2011.energy = (
-        p_buildings_total.energy * p_buildings_2005_2011.relative_heat_ratio_BMWi
-    )
-    p_buildings_2011_today.energy = (
-        p_buildings_total.energy * p_buildings_2011_today.relative_heat_ratio_BMWi
-    )
-
     p_buildings_area_m2_com.pct_x = entry("In_R_pct_of_area_m2_com")
-    p_buildings_area_m2_com.energy = (
-        p_buildings_total.energy * p_buildings_area_m2_com.pct_x
-    )
-
     p_buildings_area_m2_com.area_m2 = (
         p_buildings_total.area_m2 * p_buildings_area_m2_com.pct_x
     )
@@ -364,7 +332,6 @@ def calc(root, inputs: Inputs):
         + p_buildings_1979_1995.relative_heat_ratio_buildings_until_2004
         + p_buildings_1996_2004.relative_heat_ratio_buildings_until_2004
     )
-
     p_buildings_until_1919.area_m2_relative_heat_ratio = (
         p_buildings_until_1919.area_m2
         * p_buildings_until_1919.relative_heat_ratio_buildings_until_2004
@@ -392,34 +359,6 @@ def calc(root, inputs: Inputs):
         + p_buildings_1949_1978.area_m2_relative_heat_ratio
         + p_buildings_1979_1995.area_m2_relative_heat_ratio
         + p_buildings_1996_2004.area_m2_relative_heat_ratio
-    )
-
-    p_buildings_total.factor_adapted_to_fec = (
-        p_buildings_total.energy / p_buildings_total.area_m2
-    )
-    p_buildings_until_1919.factor_adapted_to_fec = (
-        p_buildings_until_1919.energy / p_buildings_until_1919.area_m2
-    )
-    p_buildings_1919_1948.factor_adapted_to_fec = (
-        p_buildings_1919_1948.energy / p_buildings_1919_1948.area_m2
-    )
-    p_buildings_1949_1978.factor_adapted_to_fec = (
-        p_buildings_1949_1978.energy / p_buildings_1949_1978.area_m2
-    )
-    p_buildings_1979_1995.factor_adapted_to_fec = (
-        p_buildings_1979_1995.energy / p_buildings_1979_1995.area_m2
-    )
-    p_buildings_1996_2004.factor_adapted_to_fec = (
-        p_buildings_1996_2004.energy / p_buildings_1996_2004.area_m2
-    )
-    p_buildings_2005_2011.factor_adapted_to_fec = (
-        p_buildings_2005_2011.energy / p_buildings_2005_2011.area_m2
-    )
-    p_buildings_2011_today.factor_adapted_to_fec = (
-        p_buildings_2011_today.energy / p_buildings_2011_today.area_m2
-    )
-    p_buildings_area_m2_com.factor_adapted_to_fec = (
-        p_buildings_area_m2_com.energy / p_buildings_area_m2_com.area_m2
     )
 
     ### S - Section ###
@@ -465,19 +404,70 @@ def calc(root, inputs: Inputs):
         * entry("In_R_flats_wo_heatnet")
         / fact("Fact_R_P_flats_wo_heatnet_2011")
     )
+
     p_buildings_total.energy = (
         s_fueloil.energy
         + s_lpg.energy
         + s_biomass.energy
         + s_coal.energy
-        + s_petrol.energy
-        + s_petrol.energy
         + s_heatnet.energy
         + s_solarth.energy
         + s_heatpump.energy
         + s_gas.energy
         + s_elec_heating.energy
-        - s_petrol.energy
+    )
+
+    p_buildings_until_1919.energy = (
+        p_buildings_total.energy * p_buildings_until_1919.relative_heat_ratio_BMWi
+    )
+    p_buildings_1919_1948.energy = (
+        p_buildings_total.energy * p_buildings_1919_1948.relative_heat_ratio_BMWi
+    )
+    p_buildings_1949_1978.energy = (
+        p_buildings_total.energy * p_buildings_1949_1978.relative_heat_ratio_BMWi
+    )
+    p_buildings_1979_1995.energy = (
+        p_buildings_total.energy * p_buildings_1979_1995.relative_heat_ratio_BMWi
+    )
+    p_buildings_1996_2004.energy = (
+        p_buildings_total.energy * p_buildings_1996_2004.relative_heat_ratio_BMWi
+    )
+    p_buildings_2005_2011.energy = (
+        p_buildings_total.energy * p_buildings_2005_2011.relative_heat_ratio_BMWi
+    )
+    p_buildings_2011_today.energy = (
+        p_buildings_total.energy * p_buildings_2011_today.relative_heat_ratio_BMWi
+    )
+
+    p_buildings_area_m2_com.energy = (
+        p_buildings_total.energy * p_buildings_area_m2_com.pct_x
+    )
+    p_buildings_total.factor_adapted_to_fec = (
+        p_buildings_total.energy / p_buildings_total.area_m2
+    )
+    p_buildings_until_1919.factor_adapted_to_fec = (
+        p_buildings_until_1919.energy / p_buildings_until_1919.area_m2
+    )
+    p_buildings_1919_1948.factor_adapted_to_fec = (
+        p_buildings_1919_1948.energy / p_buildings_1919_1948.area_m2
+    )
+    p_buildings_1949_1978.factor_adapted_to_fec = (
+        p_buildings_1949_1978.energy / p_buildings_1949_1978.area_m2
+    )
+    p_buildings_1979_1995.factor_adapted_to_fec = (
+        p_buildings_1979_1995.energy / p_buildings_1979_1995.area_m2
+    )
+    p_buildings_1996_2004.factor_adapted_to_fec = (
+        p_buildings_1996_2004.energy / p_buildings_1996_2004.area_m2
+    )
+    p_buildings_2005_2011.factor_adapted_to_fec = (
+        p_buildings_2005_2011.energy / p_buildings_2005_2011.area_m2
+    )
+    p_buildings_2011_today.factor_adapted_to_fec = (
+        p_buildings_2011_today.energy / p_buildings_2011_today.area_m2
+    )
+    p_buildings_area_m2_com.factor_adapted_to_fec = (
+        p_buildings_area_m2_com.energy / p_buildings_area_m2_com.area_m2
     )
 
     s.energy = (

@@ -141,7 +141,9 @@ def calc(root, inputs: Inputs):
     root.b30.s_solarth.demand_emplo = exl["b30"]["s_solarth"]["demand_emplo"]
     root.b30.g_consult.demand_emplo = exl["b30"]["g_consult"]["demand_emplo"]
     root.a30.s_heatpump.demand_emplo = exl["a30"]["s_heatpump"]["demand_emplo"]
-    #    root.a30.p_operation_heat.demand_emplo = exl['a30']['p_operation_heat']['demand_emplo']
+    root.a30.p_operation_heat.demand_emplo = exl["a30"]["p_operation_heat"][
+        "demand_emplo"
+    ]
 
     try:
         ### P - Section ###
@@ -181,8 +183,6 @@ def calc(root, inputs: Inputs):
         p_buildings_1949_1978.area_m2 = r18.p_buildings_1949_1978.area_m2
         p_buildings_1979_1995.area_m2 = r18.p_buildings_1979_1995.area_m2
         p_buildings_1996_2004.area_m2 = r18.p_buildings_1996_2004.area_m2
-        p_buildings_2005_2011.area_m2 = r18.p_buildings_2005_2011.area_m2
-        p_buildings_2011_today.area_m2 = r18.p_buildings_2011_today.area_m2
 
         p_buildings_total.area_m2 = (
             p_buildings_until_1919.area_m2
@@ -283,10 +283,10 @@ def calc(root, inputs: Inputs):
             p_buildings_1996_2004.pct_rehab * p_buildings_1996_2004.area_m2
         )
         p_buildings_2005_2011.area_m2_rehab = (
-            p_buildings_2005_2011.pct_rehab * p_buildings_2005_2011.area_m2
+            p_buildings_2005_2011.pct_rehab * r18.p_buildings_2005_2011.area_m2
         )
         p_buildings_2011_today.area_m2_rehab = (
-            p_buildings_2011_today.pct_rehab * p_buildings_2011_today.area_m2
+            p_buildings_2011_today.pct_rehab * r18.p_buildings_2011_today.area_m2
         )
 
         p_buildings_total.area_m2_rehab = (
@@ -330,10 +330,10 @@ def calc(root, inputs: Inputs):
             p_buildings_1996_2004.pct_nonrehab * p_buildings_1996_2004.area_m2
         )
         p_buildings_2005_2011.area_m2_nonrehab = (
-            p_buildings_2005_2011.pct_nonrehab * p_buildings_2005_2011.area_m2
+            p_buildings_2005_2011.pct_nonrehab * r18.p_buildings_2005_2011.area_m2
         )
         p_buildings_2011_today.area_m2_nonrehab = (
-            p_buildings_2011_today.pct_nonrehab * p_buildings_2011_today.area_m2
+            p_buildings_2011_today.pct_nonrehab * r18.p_buildings_2011_today.area_m2
         )
 
         p_buildings_total.area_m2_nonrehab = (
@@ -477,11 +477,11 @@ def calc(root, inputs: Inputs):
         p_buildings_2005_2011.fec_factor_averaged = (
             p_buildings_2005_2011.demand_heat_rehab
             + p_buildings_2005_2011.demand_heat_nonrehab
-        ) / p_buildings_2005_2011.area_m2
+        ) / r18.p_buildings_2005_2011.area_m2
         p_buildings_2011_today.fec_factor_averaged = (
             p_buildings_2011_today.demand_heat_rehab
             + p_buildings_2011_today.demand_heat_nonrehab
-        ) / p_buildings_2011_today.area_m2
+        ) / r18.p_buildings_2011_today.area_m2
         p_buildings_area_m2_com.fec_factor_averaged = (
             p_buildings_total.fec_factor_averaged
         )
@@ -618,7 +618,7 @@ def calc(root, inputs: Inputs):
         s_petrol.pct_energy = 0
 
         s_heatnet.energy = (
-            entry("In_R_heatnet_ratio_year_target")
+            entry('In_R_heatnet_ratio_year_target')
             * p_buildings_total.fec_factor_averaged
             * r18.p_buildings_total.area_m2
         )
@@ -742,7 +742,6 @@ def calc(root, inputs: Inputs):
         s_heatnet.cost_fuel_per_MWh = 0
         s_solarth.cost_fuel_per_MWh = 0
         s_heatpump.cost_fuel_per_MWh = 0
-        s_emethan.cost_fuel_per_MWh = ass("Ass_R_S_gas_energy_cost_factor_2035")
 
         s_fueloil.cost_fuel = s_fueloil.energy * s_fueloil.cost_fuel_per_MWh / Million
         s_lpg.cost_fuel = s_lpg.energy * s_lpg.cost_fuel_per_MWh / Million
@@ -754,7 +753,7 @@ def calc(root, inputs: Inputs):
         s_heatpump.cost_fuel = (
             s_heatpump.energy * s_heatpump.cost_fuel_per_MWh / Million
         )
-        s_emethan.cost_fuel = s_emethan.energy * s_emethan.cost_fuel_per_MWh / Million
+        s_emethan.cost_fuel = 0
         s.cost_fuel = (
             s_fueloil.cost_fuel
             + s_lpg.cost_fuel
@@ -766,7 +765,7 @@ def calc(root, inputs: Inputs):
         )  # SUM(s_fueloil.cost_fuel:s_solarth.cost_fuel)
 
         s_fueloil.CO2e_cb_per_MWh = r18.s_fueloil.CO2e_cb_per_MWh
-        s_lpg.CO2e_cb_per_MWh = 0
+        s_lpg.CO2e_cb_per_MWh = r18.s_lpg.CO2e_cb_per_MWh
         s_biomass.CO2e_cb_per_MWh = r18.s_biomass.CO2e_cb_per_MWh
         s_coal.CO2e_cb_per_MWh = r18.s_coal.CO2e_cb_per_MWh
         s_petrol.CO2e_cb_per_MWh = r18.s_petrol.CO2e_cb_per_MWh
@@ -1169,54 +1168,39 @@ def calc(root, inputs: Inputs):
             p_buildings_total.cost_wage / p_buildings_total.ratio_wage_to_emplo
         )
         g_consult.demand_emplo = g_consult.cost_wage / g_consult.ratio_wage_to_emplo
-
-        p_buildings_total.emplo_existing = (
-            fact("Fact_B_P_renovation_emplo_2017")
-            * p_buildings_total.demand_emplo
-            / (
-                p_buildings_total.demand_emplo
-                + b30.p_nonresi.demand_emplo
-                + a30.p_operation_heat.demand_emplo
-            )
-            * entry("In_M_population_com_2018")
-            / entry("In_M_population_nat")
+        s_coal.emplo_existing = a30.s_heatpump.demand_emplo / (
+            s_solarth.demand_emplo
+            + s_heatpump.demand_emplo
+            + b30.s_heatpump.demand_emplo
+            + b30.s_solarth.demand_emplo
+            + a30.s_heatpump.demand_emplo
         )
-
         s_solarth.emplo_existing = (
             fact("Fact_B_P_install_heating_emplo_2017")
             * entry("In_M_population_com_2018")
             / entry("In_M_population_nat")
-            * s_solarth.demand_emplo
-            / (
-                s_solarth.demand_emplo
-                + s_heatpump.demand_emplo
-                + b30.s_heatpump.demand_emplo
-                + b30.s_solarth.demand_emplo
-                + a30.s_heatpump.demand_emplo
-            )
+            * ass("Ass_B_D_install_heating_emplo_pct_of_R_solarth")
         )
         s_heatpump.emplo_existing = (
             fact("Fact_B_P_install_heating_emplo_2017")
             * entry("In_M_population_com_2018")
             / entry("In_M_population_nat")
-            * s_heatpump.demand_emplo
-            / (
-                s_solarth.demand_emplo
-                + s_heatpump.demand_emplo
-                + b30.s_heatpump.demand_emplo
-                + b30.s_solarth.demand_emplo
-                + a30.s_heatpump.demand_emplo
-            )
+            * ass("Ass_B_D_install_heating_emplo_pct_of_R_heatpump")
         )
 
+        p_buildings_total.emplo_existing = (
+            fact("Fact_B_P_renovation_emplo_2017")
+            * ass("Ass_B_D_renovation_emplo_pct_of_R")
+            * entry("In_M_population_com_2018")
+            / entry("In_M_population_nat")
+        )
         p_buildings_total.demand_emplo_new = max(
             0, p_buildings_total.demand_emplo - p_buildings_total.emplo_existing
         )
 
         g_consult.emplo_existing = (
             fact("Fact_R_G_energy_consulting_total_personel")
-            * g_consult.demand_emplo
-            / (g_consult.demand_emplo + b30.g_consult.demand_emplo)
+            * ass("Ass_B_D_energy_consulting_emplo_pct_of_R")
             * entry("In_M_population_com_2018")
             / entry("In_M_population_nat")
         )
@@ -1276,7 +1260,6 @@ def calc(root, inputs: Inputs):
         g.invest_com = g_consult.invest_com
         g.cost_wage = g_consult.cost_wage
         g.demand_emplo = g_consult.demand_emplo
-        g.demand_emplo_new = g_consult.demand_emplo_new
         g.demand_emplo_new = g_consult.demand_emplo_new
         g.invest_pa_com = g_consult.invest_pa_com
         p.demand_heatnet = s_heatnet.energy

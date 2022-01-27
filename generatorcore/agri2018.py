@@ -37,9 +37,9 @@ class A18:
     p_manure: AColVars2018 = AColVars2018()
     p_manure_dairycow: AColVars2018 = AColVars2018()
     p_manure_nondairy: AColVars2018 = AColVars2018()
-    p_manure_dswine: AColVars2018 = AColVars2018()
-    p_manure_dpoultry: AColVars2018 = AColVars2018()
-    p_manure_doanimal: AColVars2018 = AColVars2018()
+    p_manure_swine: AColVars2018 = AColVars2018()
+    p_manure_poultry: AColVars2018 = AColVars2018()
+    p_manure_oanimal: AColVars2018 = AColVars2018()
     p_manure_deposition: AColVars2018 = AColVars2018()
     p_soil: AColVars2018 = AColVars2018()
     p_soil_fertilizer: AColVars2018 = AColVars2018()
@@ -105,9 +105,9 @@ def calc(root, inputs: Inputs):
     p_manure = root.a18.p_manure
     p_manure_dairycow = root.a18.p_manure_dairycow
     p_manure_nondairy = root.a18.p_manure_nondairy
-    p_manure_dswine = root.a18.p_manure_dswine
-    p_manure_dpoultry = root.a18.p_manure_dpoultry
-    p_manure_doanimal = root.a18.p_manure_doanimal
+    p_manure_swine = root.a18.p_manure_swine
+    p_manure_poultry = root.a18.p_manure_poultry
+    p_manure_oanimal = root.a18.p_manure_oanimal
     p_manure_deposition = root.a18.p_manure_deposition
     p_soil = root.a18.p_soil
     p_soil_fertilizer = root.a18.p_soil_fertilizer
@@ -124,7 +124,6 @@ def calc(root, inputs: Inputs):
     p_other_kas = root.a18.p_other_kas
     p_other_liming = root.a18.p_other_liming
     p_other_liming_calcit = root.a18.p_other_liming_calcit
-    p_other_liming_dolomite = root.a18.p_other_liming_calcit
     p_other_liming_dolomite = root.a18.p_other_liming_dolomite
     p_other_urea = root.a18.p_other_urea
     p_other_ecrop = root.a18.p_other_ecrop
@@ -154,9 +153,9 @@ def calc(root, inputs: Inputs):
     p_manure.CO2e_cb = 0.0
     p_manure_dairycow.CO2e_cb = 0.0
     p_manure_nondairy.CO2e_cb = 0.0
-    p_manure_dswine.CO2e_cb = 0.0
-    p_manure_dpoultry.CO2e_cb = 0.0
-    p_manure_doanimal.CO2e_cb = 0.0
+    p_manure_swine.CO2e_cb = 0.0
+    p_manure_poultry.CO2e_cb = 0.0
+    p_manure_oanimal.CO2e_cb = 0.0
     p_manure_deposition.CO2e_cb = 0.0
     p_soil.CO2e_cb = 0.0
     p_soil_fertilizer.CO2e_cb = 0.0
@@ -261,30 +260,30 @@ def calc(root, inputs: Inputs):
             p_manure_dairycow.CO2e_pb + p_manure_dairycow.CO2e_cb
         )
         p_manure_nondairy.amount = p_fermen_nondairy.amount
-        p_manure_dswine.CO2e_pb_per_t = entry("In_A_manure_swine_ratio_CO2e_to_amount")
-        p_manure_dswine.CO2e_pb = p_fermen_swine.amount * p_manure_dswine.CO2e_pb_per_t
+        p_manure_swine.CO2e_pb_per_t = entry("In_A_manure_swine_ratio_CO2e_to_amount")
+        p_manure_swine.CO2e_pb = p_fermen_swine.amount * p_manure_swine.CO2e_pb_per_t
         p_manure_nondairy.CO2e_total = (
             p_manure_nondairy.CO2e_pb + p_manure_nondairy.CO2e_cb
         )
-        p_manure_dswine.amount = p_fermen_swine.amount
-        p_manure_dpoultry.CO2e_pb_per_t = entry(
+        p_manure_swine.amount = p_fermen_swine.amount
+        p_manure_poultry.CO2e_pb_per_t = entry(
             "In_A_manure_poultry_ratio_CO2e_to_amount"
         )
-        p_manure_dpoultry.CO2e_pb = (
-            p_fermen_poultry.amount * p_manure_dpoultry.CO2e_pb_per_t
+        p_manure_poultry.CO2e_pb = (
+            p_fermen_poultry.amount * p_manure_poultry.CO2e_pb_per_t
         )
-        p_manure_dswine.CO2e_total = p_manure_dswine.CO2e_pb + p_manure_dswine.CO2e_cb
-        p_manure_dpoultry.amount = p_fermen_poultry.amount
-        p_manure_doanimal.CO2e_pb_per_t = entry(
+        p_manure_swine.CO2e_total = p_manure_swine.CO2e_pb + p_manure_swine.CO2e_cb
+        p_manure_poultry.amount = p_fermen_poultry.amount
+        p_manure_oanimal.CO2e_pb_per_t = entry(
             "In_A_manure_oanimal_ratio_CO2e_to_amount"
         )
-        p_manure_doanimal.CO2e_pb = (
-            p_fermen_oanimal.amount * p_manure_doanimal.CO2e_pb_per_t
+        p_manure_oanimal.CO2e_pb = (
+            p_fermen_oanimal.amount * p_manure_oanimal.CO2e_pb_per_t
         )
-        p_manure_dpoultry.CO2e_total = (
-            p_manure_dpoultry.CO2e_pb + p_manure_dpoultry.CO2e_cb
+        p_manure_poultry.CO2e_total = (
+            p_manure_poultry.CO2e_pb + p_manure_poultry.CO2e_cb
         )
-        p_manure_doanimal.amount = p_fermen_oanimal.amount
+        p_manure_oanimal.amount = p_fermen_oanimal.amount
         p_manure_deposition.CO2e_pb_per_t = entry(
             "In_A_manure_deposition_ratio_CO2e_to_amount"
         )
@@ -294,8 +293,8 @@ def calc(root, inputs: Inputs):
             + p_fermen_swine.amount
             + p_fermen_oanimal.amount
         )
-        p_manure_doanimal.CO2e_total = (
-            p_manure_doanimal.CO2e_pb + p_manure_doanimal.CO2e_cb
+        p_manure_oanimal.CO2e_total = (
+            p_manure_oanimal.CO2e_pb + p_manure_oanimal.CO2e_cb
         )
         p_manure_deposition.CO2e_pb = (
             p_manure_deposition.amount * p_manure_deposition.CO2e_pb_per_t
@@ -303,9 +302,9 @@ def calc(root, inputs: Inputs):
         p_manure.CO2e_pb = (
             p_manure_dairycow.CO2e_pb
             + p_manure_nondairy.CO2e_pb
-            + p_manure_dswine.CO2e_pb
-            + p_manure_dpoultry.CO2e_pb
-            + p_manure_doanimal.CO2e_pb
+            + p_manure_swine.CO2e_pb
+            + p_manure_poultry.CO2e_pb
+            + p_manure_oanimal.CO2e_pb
             + p_manure_deposition.CO2e_pb
         )
         p_manure.CO2e_total = p_manure.CO2e_pb + p_manure.CO2e_cb
