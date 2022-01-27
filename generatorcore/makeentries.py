@@ -45,10 +45,14 @@ USER_OVERRIDABLE_ENTRIES = [
     "In_I_ofossil_fec",
     "In_I_elec_fec",
     "In_I_heatnet_fec",
-    "In_I_miner_fec",
-    "In_I_chem_fec",
-    "In_I_metal_fec",
-    "In_I_other_fec",
+    # "In_I_miner_fec",
+    # "In_I_chem_fec",
+    # "In_I_metal_fec",
+    # "In_I_other_fec",
+    "In_I_fec_pct_of_miner",
+    "In_I_fec_pct_of_chem",
+    "In_I_fec_pct_of_metal",
+    "In_I_fec_pct_of_other",
     "In_A_petrol_fec",
     "In_A_diesel_fec",
     "In_A_fueloil_fec",
@@ -465,20 +469,32 @@ def make_entries(data: refdata.RefData, ags: str, year: int):
         + entry["In_I_heatnet_fec"]
     )
 
-    entry["In_I_miner_fec"] = (
-        data.fact("Fact_I_P_miner_EEV_2018/Fact_I_S_fec_2018")
-        * entry["In_I_energy_total"]
+    # entry["In_I_miner_fec"] = (
+    #     data.fact("Fact_I_P_miner_EEV_2018/Fact_I_S_fec_2018")
+    #     * entry["In_I_energy_total"]
+    # )
+    # entry["In_I_chem_fec"] = (
+    #     data.fact("Fact_I_S_chem_fec_ratio_to_industrie_2018")
+    #     * entry["In_I_energy_total"]
+    # )
+    # entry["In_I_metal_fec"] = (
+    #     data.fact("Fact_I_P_fec_pct_of_metal_2018") * entry["In_I_energy_total"]
+    # )
+    # entry["In_I_other_fec"] = (
+    #     data.fact("Fact_I_N_sonst_Anteil_EEV_2018") * entry["In_I_energy_total"]
+    # )
+
+    # new entries to fix tests JK TODO: Delete old entries above
+    entry["In_I_fec_pct_of_miner"] = data.fact(
+        "Fact_I_P_miner_EEV_2018/Fact_I_S_fec_2018"
     )
-    entry["In_I_chem_fec"] = (
-        data.fact("Fact_I_S_chem_fec_ratio_to_industrie_2018")
-        * entry["In_I_energy_total"]
+    entry["In_I_fec_pct_of_chem"] = data.fact(
+        "Fact_I_S_chem_fec_ratio_to_industrie_2018"
     )
-    entry["In_I_metal_fec"] = (
-        data.fact("Fact_I_P_fec_pct_of_metal_2018") * entry["In_I_energy_total"]
-    )
-    entry["In_I_other_fec"] = (
-        data.fact("Fact_I_N_sonst_Anteil_EEV_2018") * entry["In_I_energy_total"]
-    )
+    entry["In_I_fec_pct_of_metal"] = data.fact("Fact_I_P_fec_pct_of_metal_2018")
+    entry["In_I_fec_pct_of_other"] = data.fact(
+        "Fact_I_N_sonst_Anteil_EEV_2018"
+    )  # new (changed in excel 27.01.22"Fact_I_P_other_ratio_fec_to_industry_EEV_2018"
 
     data_traffic_com = data.traffic(ags)
     entry["In_T_ec_rail_ppl_elec"] = data_traffic_com.float("rail_ppl_elec")
