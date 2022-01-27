@@ -473,8 +473,8 @@ def make_entries(data: refdata.RefData, ags: str, year: int):
     )
     entry["In_I_fec_pct_of_metal"] = data.fact("Fact_I_P_fec_pct_of_metal_2018")
     entry["In_I_fec_pct_of_other"] = data.fact(
-        "Fact_I_N_sonst_Anteil_EEV_2018"
-    )  # new (changed in excel 27.01.22 "Fact_I_P_other_ratio_fec_to_industry_EEV_2018"
+        "Fact_I_P_other_ratio_fec_to_industry_2018"
+    )
 
     data_traffic_com = data.traffic(ags)
     entry["In_T_ec_rail_ppl_elec"] = data_traffic_com.float("rail_ppl_elec")
