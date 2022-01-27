@@ -176,7 +176,7 @@ def calc(root, inputs: Inputs):
     )
 
     i18.p_chem.energy = entry("In_I_fec_pct_of_chem") * entry("In_I_energy_total")
-    i18.p_chem_basic.energy = entry("In_I_chem_fec") * i18.p_chem_basic.pct_energy
+    i18.p_chem_basic.energy = i18.p_chem.energy * i18.p_chem_basic.pct_energy
     i18.p_chem_basic.energy_use_factor = fact(
         "Fact_I_P_chem_basic_wo_ammonia_ratio_prodvol_to_fec_2018"
     )
@@ -201,7 +201,7 @@ def calc(root, inputs: Inputs):
     i18.p_chem_ammonia.pct_energy = fact(
         "Fact_I_S_chem_ammonia_fec_ratio_to_chem_all_2018"
     )
-    i18.p_chem_ammonia.energy = entry("In_I_chem_fec") * i18.p_chem_ammonia.pct_energy
+    i18.p_chem_ammonia.energy = i18.p_chem.energy * i18.p_chem_ammonia.pct_energy
     i18.p_chem_ammonia.energy_use_factor = 1 / fact(
         "Fact_I_P_chem_ammonia_fec_ratio_per_t_product_2013"
     )
@@ -226,7 +226,7 @@ def calc(root, inputs: Inputs):
 
     # chem other
     i18.p_chem_other.pct_energy = fact("Fact_I_S_chem_other_fec_ratio_to_chem_all_2018")
-    i18.p_chem_other.energy = entry("In_I_chem_fec") * i18.p_chem_other.pct_energy
+    i18.p_chem_other.energy = i18.p_chem.energy * i18.p_chem_other.pct_energy
     i18.p_chem_other.energy_use_factor = fact(
         "Fact_I_P_chem_other_ratio_prodvol_to_fec_2018"
     )
