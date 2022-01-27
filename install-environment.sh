@@ -1,5 +1,6 @@
 #!/bin/bash
 # Install environmnet once (poetry and git pre-commit)
+set -e
 
 # Poetry
 pip install cleo tomlkit poetry.core requests cachecontrol cachy html5lib pkginfo virtualenv lockfile
@@ -9,5 +10,4 @@ poetry install
 
 # Git pre-commit
 pre-commit install
-
-read -p "Press enter to continue"
+echo "All done"
