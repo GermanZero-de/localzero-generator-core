@@ -137,6 +137,10 @@ class E30:
 # Berechnungsfunktion im Sektor E für 203X
 
 
+def div(a: float, b: float):
+    return 0 if b == 0 else a / b
+
+
 def calc(root, inputs: Inputs):
     def fact(n):
         return inputs.fact(n)
@@ -2067,11 +2071,11 @@ def calc(root, inputs: Inputs):
         )
         p.invest_pa_outside = p_fossil_and_renew.invest_pa_outside
         p.invest_outside = p_fossil_and_renew.invest_outside
-        p_fossil_and_renew.CO2e_cb_per_MWh = (
-            p_fossil_and_renew.CO2e_cb / p_fossil_and_renew.energy
+        p_fossil_and_renew.CO2e_cb_per_MWh = div(
+            p_fossil_and_renew.CO2e_cb, p_fossil_and_renew.energy
         )
-        p_fossil_and_renew.change_CO2e_pct = (
-            p_fossil_and_renew.change_CO2e_t / e18.p_fossil_and_renew.CO2e_total
+        p_fossil_and_renew.change_CO2e_pct = div(
+            p_fossil_and_renew.change_CO2e_t, e18.p_fossil_and_renew.CO2e_total
         )
         p_fossil_and_renew.invest_pa_outside = p_renew.invest_pa_outside
         p_fossil_and_renew.invest_outside = p_renew.invest_outside
