@@ -366,10 +366,13 @@ def calc(root, inputs: Inputs):
 
     i18.p_metal_nonfe.CO2e_total = i18.p_metal_nonfe.CO2e_pb + i18.p_metal_nonfe.CO2e_cb
 
+    # p_other
+    i18.p_other.energy = entry("In_I_fec_pct_of_other") * entry("In_I_energy_total")
+
     # p_other_paper
     i18.p_other_paper.pct_energy = fact("Fact_I_P_other_fec_pct_of_paper_2018")
 
-    i18.p_other_paper.energy = entry("In_I_other_fec") * i18.p_other_paper.pct_energy
+    i18.p_other_paper.energy = i18.p_other.energy * i18.p_other_paper.pct_energy
     i18.p_other_paper.energy_use_factor = 1 / fact(
         "Fact_I_P_other_paper_ratio_fec_to_prodvol_2018"
     )
@@ -395,7 +398,7 @@ def calc(root, inputs: Inputs):
 
     # p_other_food
     i18.p_other_food.pct_energy = fact("Fact_I_P_other_fec_pct_of_food_2018")
-    i18.p_other_food.energy = entry("In_I_other_fec") * i18.p_other_food.pct_energy
+    i18.p_other_food.energy = i18.p_other.energy * i18.p_other_food.pct_energy
     i18.p_other_food.energy_use_factor = 1 / fact(
         "Fact_I_P_other_food_ratio_fec_to_prodvol_2018"
     )
@@ -421,9 +424,7 @@ def calc(root, inputs: Inputs):
 
     # p_other_further
     i18.p_other_further.pct_energy = fact("Fact_I_P_other_fec_pct_of_further_2018")
-    i18.p_other_further.energy = (
-        entry("In_I_other_fec") * i18.p_other_further.pct_energy
-    )
+    i18.p_other_further.energy = i18.p_other.energy * i18.p_other_further.pct_energy
     # no prodvolume for other industries
     # i18.p_other_further.energy_use_factor =
     # i18.p_other_further.prod_volume = i18.p_other_further.energy * i18.p_other_further.energy_use_factor
@@ -477,7 +478,6 @@ def calc(root, inputs: Inputs):
         i18.p_chem_basic.CO2e_pb + i18.p_chem_ammonia.CO2e_pb + i18.p_chem_other.CO2e_pb
     )
     i18.p_metal.CO2e_pb = i18.p_metal_steel.CO2e_pb + i18.p_metal_nonfe.CO2e_pb
-    i18.p_other.energy = entry("In_I_fec_pct_of_other") * entry("In_I_energy_total")
 
     i18.p_other.CO2e_pb = (
         i18.p_other_paper.CO2e_pb
