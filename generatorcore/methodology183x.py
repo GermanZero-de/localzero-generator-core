@@ -156,7 +156,7 @@ def calc_3X(root, inputs: Inputs):
     ############################################
 
     # get the CO2e of LULUCF for 2018 as calculated
-    m183X.CO2e_lulucf_2018 = root.l18.CO2e_total
+    m183X.CO2e_lulucf_2018 = root.l18.l.CO2e_total
 
     # calculate the CO2e of LULUCF for 2015-2017 and 2019-2021 by multiplying 2018's value with percentage
     # 2015 just as a backup, probably not needed
@@ -192,14 +192,14 @@ def calc_3X(root, inputs: Inputs):
 
     # get the CO2e of all sectors for 2018 excluding LULUCF since this is negative
     m183X.CO2e_wo_lulucf_2018 = (
-        root.h18.CO2e_total
-        + root.e18.CO2e_total
-        + root.f18.CO2e_total
-        + root.r18.CO2e_total
-        + root.b18.CO2e_total
-        + root.i18.CO2e_total
-        + root.t18.CO2e_total
-        + root.a18.CO2e_total
+        root.h18.h.CO2e_total
+        + root.e18.e.CO2e_total
+        + root.f18.f.CO2e_total
+        + root.r18.r.CO2e_total
+        + root.b18.b.CO2e_total
+        + root.i18.p.CO2e_total
+        + root.t18.t.CO2e_total
+        + root.a18.a.CO2e_total
     )
 
     # calculate the CO2e of all sectors without LULUCF for 2015-2017 and 2019-2021 by multiplying 2018's value with percentage
@@ -559,15 +559,18 @@ def calc_3X(root, inputs: Inputs):
 
     # get the CO2e of all sectors for 203X (the target year) excluding LULUCF
     m183X.CO2e_wo_lulucf_203X = (
-        root.h30.CO2e_total
-        + root.e30.CO2e_total
-        + root.f30.CO2e_total
-        + root.r30.CO2e_total
-        + root.b30.CO2e_total
-        + root.i30.CO2e_total
-        + root.t30.CO2e_total
-        + root.a30.CO2e_total
+        root.h30.h.CO2e_total
+        + root.e30.e.CO2e_total
+        + root.f30.f.CO2e_total
+        + root.r30.r.CO2e_total
+        + root.b30.b.CO2e_total
+        + root.i30.i.CO2e_total
+        + root.t30.t.CO2e_total
+        + root.a30.a.CO2e_total
     )
+
+    #TODO: Check with Hauke if theis is correct: 
+    m183X.CO2e_lulucf_203X = root.l30.l.CO2e_total
 
     # get the CO2e of all sectors für 203X (the target year) which should be 0
     m183X.CO2e_w_lulucf_203X = m183X.CO2e_wo_lulucf_203X + m183X.CO2e_lulucf_203X
@@ -580,13 +583,13 @@ def calc_3X(root, inputs: Inputs):
 
     # get the total saved climate cost of all sectors until 2050
     m183X.cost_climate_saved = (
-        root.h30.cost_climate_saved
-        + root.e30.cost_climate_saved
-        + root.f30.cost_climate_saved
-        + root.r30.cost_climate_saved
-        + root.b30.cost_climate_saved
-        + root.i30.cost_climate_saved
-        + root.t30.cost_climate_saved
-        + root.a30.cost_climate_saved
-        + root.l30.cost_climate_saved
+        root.h30.h.cost_climate_saved
+        + root.e30.e.cost_climate_saved
+        + root.f30.f.cost_climate_saved
+        + root.r30.r.cost_climate_saved
+        + root.b30.b.cost_climate_saved
+        + root.i30.i.cost_climate_saved
+        + root.t30.t.cost_climate_saved
+        + root.a30.a.cost_climate_saved
+        + root.l30.l.cost_climate_saved
     )
