@@ -10,15 +10,15 @@ Install environment
 - install Poetry from https://python-poetry.org/docs/
 
   On windows run this inside a power shell:
-  :code:`(Invoke-WebRequest -Uri https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py -UseBasicParsing).Content | python`
+    - :code:`(Invoke-WebRequest -Uri https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py -UseBasicParsing).Content | python`
 
 - configure Git
 	- Token:
 		- https://github.com/settings/tokens:
-			- create personal access token (repo, workflow, admin:org:read, gist)
-			- save your token
-			- On Windows Token add the token Windows Anmeldeinformationen (similar tools exist on linux and mac)
-				- Generische Anmeldeinformationen hinzufügen (Adresse: git:https://github.com, Benutzername: Git Nutzername, Passwort: Token)
+		- create personal access token (repo, workflow, admin:org:read, gist)
+		- save your token
+		- On Windows Token add the token Windows Anmeldeinformationen (similar tools exist on linux and mac)
+			- Generische Anmeldeinformationen hinzufügen (Adresse: git:https://github.com, Benutzername: Git Nutzername, Passwort: Token)
 - get this Git Repo (if you haven't done so already)
 	- :code:`git clone https://github.com/GermanZero-de/localzero-generator-core`
 
