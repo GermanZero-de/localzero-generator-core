@@ -202,13 +202,13 @@ def calc(root, inputs: Inputs):
     def entry(n):
         return inputs.entry(n)
 
-    # Todo vlookup Simulation
-    if entry("In_M_AGS_com") == "DG000000":
-        root.t18.rail_ppl_metro.mileage = 309000000
-        root.t18.road_bus.mileage = 2531000000
-    elif entry("In_M_AGS_com") == "03159016":
-        root.t18.rail_ppl_metro.mileage = 0
-        root.t18.road_bus.mileage = 1752789.9193474643
+    ## Todo vlookup Simulation
+    #if entry("In_M_AGS_com") == "DG000000":
+    #    root.t18.rail_ppl_metro.mileage = 309000000
+    #    root.t18.road_bus.mileage = 2531000000
+    #elif entry("In_M_AGS_com") == "03159016":
+    #    root.t18.rail_ppl_metro.mileage = 0
+    #    root.t18.road_bus.mileage = 1752789.9193474643
 
     # abbreviations
     t = root.t18.t
@@ -425,6 +425,10 @@ def calc(root, inputs: Inputs):
             * fact("Fact_T_S_LDT_SEC_elec_ab_2018")
         )
 
+        # res 2.343.000.000 Fz km
+        road_bus.mileage = entry('In_T_bus_mega_km_dis') * Million * entry('In_M_population_com_2018') / entry('In_M_population_dis')
+        # todo road_bus.mileage = (VLOOKUP(LK&" *  *  * ",Verkehr_DestatisDaten!B4:I507,8,FALSE) * 10^6 * entry('In_M_population_com_2018') / entry('In_M_population_dis'))
+
         # 28.430.600.000 Fz km
         road_gds_mhd_it_ot.mileage = (
             entry("In_T_mil_mhd_it_at") * Million - road_bus.mileage
@@ -445,9 +449,9 @@ def calc(root, inputs: Inputs):
             * fact("Fact_T_S_MHD_SEC_elec_ab_2018")
         )
         # 308.900.000 Fz km
-        # rail_ppl_metro.mileage = (
-        # todo rail_ppl_metro.mileage = (VLOOKUP(LK&" *  *  * ",Verkehr_DestatisDaten!B4:I507,7,FALSE) * 10^6 * entry('In_M_population_com_2018') / entry('In_M_population_dis'))
-        # )
+        rail_ppl_metro.mileage = entry("In_T_metro_mega_km_dis") * Million * entry(
+            "In_M_population_com_2018"
+        ) / entry("In_M_population_dis")
         rail_ppl_metro.demand_electricity = rail_ppl_metro.mileage * fact(
             "Fact_T_S_Rl_Metro_SEC_fzkm_2018"
         )
@@ -569,9 +573,6 @@ def calc(root, inputs: Inputs):
         )
 
         # ----------------
-
-        # res 2.343.000.000 Fz km
-        # todo road_bus.mileage = (VLOOKUP(LK&" *  *  * ",Verkehr_DestatisDaten!B4:I507,8,FALSE) * 10^6 * entry('In_M_population_com_2018') / entry('In_M_population_dis'))
 
         # res 35.594.900.435 Pers km
         road_bus.transport_capacity_pkm = road_bus.mileage * fact(

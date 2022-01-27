@@ -8,6 +8,56 @@ from . import refdata
 # ags = 'DG000000'
 # test_year = 2035
 
+# This is the list of entries we expect the user to be able to
+# override on the website before we e.g. generate the report.
+USER_OVERRIDABLE_ENTRIES = [
+    "In_M_population_com_2018",
+    "In_M_population_com_203X",
+    "In_R_buildings_2011_today",
+    "In_R_coal_fec",
+    "In_R_petrol_fec",
+    "In_R_fueloil_fec",
+    "In_R_lpg_fec",
+    "In_R_gas_fec",
+    "In_R_biomass_fec",
+    "In_R_orenew_fec",
+    "In_R_elec_fec",
+    "In_R_heatnet_fec",
+    "In_B_coal_fec",
+    "In_B_petrol_fec",
+    "In_B_jetfuel_fec",
+    "In_B_diesel_fec",
+    "In_B_fueloil_fec",
+    "In_B_lpg_fec",
+    "In_B_gas_fec",
+    "In_B_biomass_fec",
+    "In_B_orenew_fec",
+    "In_B_elec_fec",
+    "In_B_heatnet_fec",
+    "In_I_coal_fec",
+    "In_I_diesel_fec",
+    "In_I_fueloil_fec",
+    "In_I_lpg_fec",
+    "In_I_gas_fec",
+    "In_I_opetpro_fec",
+    "In_I_biomass_fec",
+    "In_I_orenew_fec",
+    "In_I_ofossil_fec",
+    "In_I_elec_fec",
+    "In_I_heatnet_fec",
+    "In_I_miner_fec",
+    "In_I_chem_fec",
+    "In_I_metal_fec",
+    "In_I_other_fec",
+    "In_A_petrol_fec",
+    "In_A_diesel_fec",
+    "In_A_fueloil_fec",
+    "In_A_lpg_fec",
+    "In_A_gas_fec",
+    "In_A_biomass_fec",
+    "In_A_elec_fec",
+]
+
 
 def make_entries(data: refdata.RefData, ags: str, year: int):
     # ags identifies the community (Kommune)
@@ -445,6 +495,7 @@ def make_entries(data: refdata.RefData, ags: str, year: int):
 
     data_destatis_com = data.destatis(ags_dis_padded)
     entry["In_T_metro_mega_km_dis"] = data_destatis_com.float("metro_mega_km")
+    entry["In_T_bus_mega_km_dis"] = data_destatis_com.float("bus_mega_km")
 
     entry["In_A_petrol_fec"] = (
         data.fact("Fact_A_S_petrol_fec_2018")
