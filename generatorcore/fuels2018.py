@@ -160,7 +160,7 @@ def calc(root, inputs: Inputs):
 
         f.f.CO2e_total = f.p.CO2e_total
 
-        #Todo: kann erst am Ende berechnet werden
+        #TODO: kann erst am Ende berechnet werden
         #z_d.energy = (
         #    root.r18.p.energy + root.b18.p.energy + root.i18.p.energy + root.t18.t.energy + root.a18.p.energy
         #)
