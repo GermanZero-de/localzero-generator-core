@@ -7,57 +7,30 @@ Install environment
 =========================
 - install Python 3.10.
 - install Git
-- install Poetry
-	- Windows PowerShell Command: (Invoke-WebRequest -Uri https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py -UseBasicParsing).Content | python
+- install Poetry from https://python-poetry.org/docs/
+
+  On windows run this inside a power shell:
+  :code:`(Invoke-WebRequest -Uri https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py -UseBasicParsing).Content | python`
 
 - configure Git
 	- Token:
 		- https://github.com/settings/tokens:
 			- create personal access token (repo, workflow, admin:org:read, gist)
 			- save your token
-			- Token in den Windows Anmeldeinformationen hinzufügen
+			- On Windows Token add the token Windows Anmeldeinformationen (similar tools exist on linux and mac)
 				- Generische Anmeldeinformationen hinzufügen (Adresse: git:https://github.com, Benutzername: Git Nutzername, Passwort: Token)
-- get Git Repo
-	- in your code folder
-		- git clone https://github.com/GermanZero-de/localzero-generator-core
-	- in \localzero-generator-core\data
-		- git clone https://github.com/GermanZero-de/localzero-data-public public
-		- git clone https://github.com/GermanZero-de/localzero-data-proprietary proprietary
+- get this Git Repo (if you haven't done so already)
+	- :code:`git clone https://github.com/GermanZero-de/localzero-generator-core`
 
 - install poetry and pre-commit
-	- install-environment.sh
+	- :code:`install-environment.sh`
 
+- get the code repositories into your Data folder.
 
-Run the generator
-=========================
-- poetry shell
-- python devtool.py run
-or
-- python devtool.py > Output.json
+.. code-block:: console
 
-
-How to get coding
-=================
-
-Poetry
-------
-
-If you want to develop the generator, it is recommended that you first
-install poetry (https://python-poetry.org/docs/).  A good reasonably short
-overview over poetry can be found here:
-https://hackersandslackers.com/python-poetry-package-manager/
-
-Then run :code:`poetry shell` in this directory (this creates a new virtualenv
-containing the python 3.10 interpreter and activates it).  This step is
-needed in any new terminal where you want to run python.
-
-Then run :code:`poetry install` to (eh) install the dependencies. This step
-is obviously a one time operation.
-
-If you happen to use vscode (Visual Studio Code), then a good trick
-is to start vscode for the first time with :code:`code .` in this terminal.
-That way the editors builtin python support will pick up the virtualenv.
-Alternatively use the :code:`Python: Select Interpreter` command.
+	poetry shell
+	python devtool.py data checkout
 
 Black
 -----
@@ -69,18 +42,13 @@ How to run the generator
 ------------------------
 
 .. code-block:: console
-    python devtool.py run
 
-But this will immediately fail, complaining that you don't have the necessary
-data available.
-
-Therefore you will have to checkout the proprietary and the public data
-repositories into :code:`data/public` and :code:`data/proprietary` respectively.
+    poetry shell
+    python devtool.py run > output.json
 
 Testing
 -------
 
-We use :code:`pytest` (the tests are in the directory `tests`). For now the
-tests are also run inside a pre-commit hook, as that currently takes less
-than 5seconds.  But if it will ever take longer we will change it to only run
-when you try to push.
+We use :code:`pytest` (the tests are in the directory `tests`). We run tests automatically when a
+pull request is created, but you should run them yourself. Remember to run them in a poetry shell
+or use :code:`poetry run`.
