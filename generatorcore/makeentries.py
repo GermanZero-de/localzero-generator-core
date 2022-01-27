@@ -466,7 +466,7 @@ def make_entries(data: refdata.RefData, ags: str, year: int):
     )
 
     entry["In_I_fec_pct_of_miner"] = data.fact(
-        "Fact_I_P_miner_EEV_2018/Fact_I_S_fec_2018"
+        "Fact_I_P_miner_ratio_fec_to_industry_2018"
     )
     entry["In_I_fec_pct_of_chem"] = data.fact(
         "Fact_I_S_chem_fec_ratio_to_industrie_2018"
