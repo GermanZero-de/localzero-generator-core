@@ -132,6 +132,69 @@ def is_production_cmd(args):
         exit(1)
 
 
+def data_lookup_cmd(args):
+    ags = args.ags
+    ags_dis = ags[:5] + "000"  # This identifies the administrative district (Landkreis)
+    ags_sta = ags[:2] + "000000"  # This identifies the federal state (Bundesland)
+
+    def bold(s):
+        print(f"\033[1m{s}\033[0m")
+
+    def print_lookup(name, lookup_fn, key):
+        bold(name)
+        try:
+            record = lookup_fn(key)
+        except Exception as e:
+            record = None
+
+        if record is None:
+            print("", "MISSING", sep="\t")
+        else:
+            print(record)
+        print()
+
+    data = refdata.RefData.load()
+
+    by_ags = [
+        ("area", data.area),
+        ("area_kinds", data.area_kinds),
+        ("buildings", data.buildings),
+        ("population", data.population),
+        ("renewable_energy", data.renewable_energy),
+        ("flats", data.flats),
+        ("traffic", data.traffic),
+    ]
+
+    by_dis = [
+        ("destatis", data.destatis),
+    ]
+
+    by_sta = [
+        ("nat_agri", data.nat_agri),
+        ("nat_organic_agri", data.nat_organic_agri),
+        ("nat_energy", data.nat_energy),
+        ("nat_res_buildings", data.nat_res_buildings),
+    ]
+
+    bold(f"{ags} (commune level data)")
+    bold("-----------------------------------------")
+    print()
+    for (name, lookup_fn) in by_ags:
+        print_lookup(name, lookup_fn, key=ags)
+
+    bold(f"{ags_dis} (administrative district level data)")
+    bold("--------------------------------------------------")
+    print()
+    for (name, lookup_fn) in by_dis:
+        print_lookup(name, lookup_fn, key=ags_dis)
+
+    bold(f"{ags_sta} (federal state level data)")
+    bold("--------------------------------------------------")
+    print()
+    for (name, lookup_fn) in by_sta:
+        print_lookup(name, lookup_fn, key=ags_sta)
+
+
 def data_checkout_cmd(args):
     datadir = refdatatools.datadir()
     production = refdata.Version.load("production", datadir=datadir)
@@ -239,6 +302,14 @@ def main():
     )
     cmd_data_checkout.add_argument("-pat", action="store", default=None)
     cmd_data_checkout.set_defaults(func=data_checkout_cmd)
+
+    cmd_data_lookup = subcmd_data.add_parser(
+        "lookup",
+        help="Lookup all the reference data for a given AGS",
+    )
+    cmd_data_lookup.add_argument("ags")
+    cmd_data_lookup.set_defaults(func=data_lookup_cmd)
+
     args = parser.parse_args()
     if args.subcmd is None:
         parser.print_help()
