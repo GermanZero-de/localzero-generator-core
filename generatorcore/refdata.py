@@ -68,6 +68,9 @@ class Row:
             print("INT FAILED", self._series, attr, file=sys.stderr)
             raise e
 
+    def __str__(self):
+        return self._series.to_string()
+
     def str(self, attr: str) -> str:
         return str(self._series[attr])
 
