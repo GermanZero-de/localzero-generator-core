@@ -119,43 +119,13 @@ def calc(root, inputs: Inputs):
     def entry(n):
         return inputs.entry(n)
 
-    """"""
-    """ import external values"""
-    import json
-
-    if entry("In_M_AGS_com") == "DG000000":
-        excel_path = "excel/germany_values.json"
-    elif entry("In_M_AGS_com") == "03159016":
-        excel_path = "excel/goettingen_values.json"
-
-    with open(excel_path, "r") as fp:
-        exl = json.load(fp)
-    fp.close()
-    """end"""
-
-    root.e30.p_local_pv_roof.area_ha_available = exl["e30"]["p_local_pv_roof"][
-        "area_ha_available"
-    ]
-    root.b30.p_nonresi.demand_emplo = exl["b30"]["p_nonresi"]["demand_emplo"]
-    root.b30.s_heatpump.demand_emplo = exl["b30"]["s_heatpump"]["demand_emplo"]
-    root.b30.s_solarth.demand_emplo = exl["b30"]["s_solarth"]["demand_emplo"]
-    root.b30.g_consult.demand_emplo = exl["b30"]["g_consult"]["demand_emplo"]
-    root.a30.s_heatpump.demand_emplo = exl["a30"]["s_heatpump"]["demand_emplo"]
-    root.a30.p_operation_heat.demand_emplo = exl["a30"]["p_operation_heat"][
-        "demand_emplo"
-    ]
-
     try:
         ### P - Section ###
-        e30 = root.e30
         r30 = root.r30
         r18 = root.r18
-        b30 = root.b30
-        a30 = root.a30
         g = r30.g
         p = r30.p
         r = r30.r
-        s = r30.s
 
         Kalkulationszeitraum = entry("In_M_duration_target")
         g_consult = r30.g_consult
@@ -618,14 +588,14 @@ def calc(root, inputs: Inputs):
         s_petrol.pct_energy = 0
 
         s_heatnet.energy = (
-            entry('In_R_heatnet_ratio_year_target')
+            entry("In_R_heatnet_ratio_year_target")
             * p_buildings_total.fec_factor_averaged
             * r18.p_buildings_total.area_m2
         )
         s_gas.energy = 0
 
         # formula from e30 not still calc here
-        e30.p_local_pv_roof.area_ha_available = (
+        s_solarth.area_ha_available = (
             (4 / 3)
             * (
                 (
@@ -645,7 +615,6 @@ def calc(root, inputs: Inputs):
             )
             / 10000
         )
-        s_solarth.area_ha_available = e30.p_local_pv_roof.area_ha_available
         s_solarth.area_ha_available_pct_of_action = ass(
             "Ass_E_P_local_pv_roof_potential"
         )
@@ -1000,27 +969,6 @@ def calc(root, inputs: Inputs):
         # s_solarth.action Ausbau Solarthermie
         # s_heatpump.action Ausbau Wärmepumpe
 
-        # formula from e30 not still calc here
-        e30.p_local_pv_roof.area_ha_available = (
-            (4 / 3)
-            * (
-                (
-                    entry("In_R_area_m2_1flat")
-                    / 100
-                    * ass("Ass_E_P_local_pv_roof_area_building1")
-                    + entry("In_R_area_m2_2flat")
-                    / 100
-                    * ass("Ass_E_P_local_pv_roof_area_building2")
-                    + entry("In_R_area_m2_3flat")
-                    / 100
-                    * ass("Ass_E_P_local_pv_roof_area_building3")
-                    + entry("In_R_area_m2_dorm")
-                    / 100
-                    * ass("Ass_E_P_local_pv_roof_area_buildingD")
-                )
-            )
-            / 10000
-        )
         p_buildings_until_1919.invest_per_x = fact(
             "Fact_R_P_energetical_renovation_cost_detached_house_until_1949"
         ) * (entry("In_R_area_m2_1flat") + entry("In_R_area_m2_2flat")) / entry(
@@ -1066,7 +1014,7 @@ def calc(root, inputs: Inputs):
         s_solarth.invest = (
             r18.p_buildings_total.area_m2
             / (r18.p_buildings_total.area_m2 + b18.p_nonresi.area_m2)
-            * e30.p_local_pv_roof.area_ha_available
+            * s_solarth.area_ha_available
             * entry("In_H_solartherm_to_be_inst")
             * s_solarth.invest_per_x
             * 10000
@@ -1168,13 +1116,6 @@ def calc(root, inputs: Inputs):
             p_buildings_total.cost_wage / p_buildings_total.ratio_wage_to_emplo
         )
         g_consult.demand_emplo = g_consult.cost_wage / g_consult.ratio_wage_to_emplo
-        s_coal.emplo_existing = a30.s_heatpump.demand_emplo / (
-            s_solarth.demand_emplo
-            + s_heatpump.demand_emplo
-            + b30.s_heatpump.demand_emplo
-            + b30.s_solarth.demand_emplo
-            + a30.s_heatpump.demand_emplo
-        )
         s_solarth.emplo_existing = (
             fact("Fact_B_P_install_heating_emplo_2017")
             * entry("In_M_population_com_2018")

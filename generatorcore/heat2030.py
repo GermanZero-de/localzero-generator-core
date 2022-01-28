@@ -66,6 +66,8 @@ class H30:
     p_orenew: HColVars2030 = HColVars2030()
     p_solarth: HColVars2030 = HColVars2030()
     p_heatpump: HColVars2030 = HColVars2030()
+    p_local_biomass: HColVars2030 = HColVars2030()
+    p_local_biomass_cogen: HColVars2030 = HColVars2030()
 
     # erzeuge dictionry
     def dict(self):
@@ -118,6 +120,8 @@ def calc(root, inputs: Inputs):
     p_orenew = h30.p_orenew
     p_solarth = h30.p_solarth
     p_heatpump = h30.p_heatpump
+    p_local_biomass = h30.p_local_biomass
+    p_local_biomass_cogen = h30.p_local_biomass_cogen
 
     root.r30.s_gas.energy = 0
     root.b30.s_gas.energy = 0
@@ -127,22 +131,6 @@ def calc(root, inputs: Inputs):
     root.b30.s_fueloil.energy = 0
     root.r30.s_coal.energy = 0
     root.b30.s_coal.energy = 0
-
-    """"""
-    """ import external values"""
-    import json
-
-    if entry("In_M_AGS_com") == "DG000000":
-        excel_path = "excel/germany_values.json"
-    elif entry("In_M_AGS_com") == "03159016":
-        excel_path = "excel/goettingen_values.json"
-
-    with open(excel_path, "r") as fp:
-        exl = json.load(fp)
-    fp.close()
-    """end"""
-
-    root.e30.p_local_biomass_cogen.energy = exl['e30']['p_local_biomass_cogen']['energy']
 
     try:
 
@@ -181,9 +169,35 @@ def calc(root, inputs: Inputs):
         g_storage.invest_com = g_storage.invest
 
         p_heatnet_plant.pct_energy = ass("Ass_H_P_heatnet_fraction_solarth_2050")
+
+        # To avoid circle dependencies the formula p_local_biomass.energy_cogen and its ancestors
+        # were copied from electricity2030
+        p_local_biomass.full_load_hour = fact("Fact_E_P_biomass_full_load_hours")
+        p_local_biomass.power_installed = entry("In_E_PV_power_inst_biomass")
+        p_local_biomass.power_to_be_installed_pct = entry(
+            "In_E_PV_power_to_be_inst_local_biomass"
+        )
+        p_local_biomass.power_installable = entry(
+            "In_E_biomass_local_power_installable_sta"
+        )
+        p_local_biomass.power_to_be_installed = max(
+            0,
+            p_local_biomass.power_installable
+            * p_local_biomass.power_to_be_installed_pct
+            - p_local_biomass.power_installed,
+        )
+        p_local_biomass.energy = (
+            (p_local_biomass.power_to_be_installed + p_local_biomass.power_installed)
+            * p_local_biomass.full_load_hour
+            * (1 - ass("Ass_E_P_renew_loss_brutto_to_netto"))
+        )
+        p_local_biomass_cogen.pct_energy = fact("Fact_E_P_renew_cogen_ratio_2018")
+        p_local_biomass_cogen.energy = (
+            p_local_biomass.energy * p_local_biomass_cogen.pct_energy
+        )
         p_heatnet_cogen.energy = (
-            e30.p_local_biomass_cogen.energy
-            if (e30.p_local_biomass_cogen.energy < p_heatnet.energy)
+            p_local_biomass_cogen.energy
+            if (p_local_biomass_cogen.energy < p_heatnet.energy)
             else p_heatnet.energy
         )
         p_heatnet_plant.energy = (
@@ -238,7 +252,7 @@ def calc(root, inputs: Inputs):
         )
         d_i.energy = i30.s_renew_biomass.energy + i30.s_renew_heatnet.energy
         a_t.energy = a30.s_biomass.energy + a30.s_heatpump.energy
-        d_t.energy = 0.
+        d_t.energy = 0.0
         d.energy = d_r.energy + d_b.energy + d_i.energy + a_t.energy
         p_heatnet_lheatpump.pct_energy = ass("Ass_H_P_heatnet_fraction_lheatpump_2050")
         p_fueloil.energy = r30.s_fueloil.energy + b30.s_fueloil.energy

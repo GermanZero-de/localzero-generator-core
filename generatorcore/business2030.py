@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 from .inputs import Inputs
 import time
 
@@ -123,28 +123,6 @@ def calc(root, inputs: Inputs):
 
     def entry(n):
         return inputs.entry(n)
-
-    """"""
-    """ import external values"""
-    import json
-
-    if entry("In_M_AGS_com") == "DG000000":
-        excel_path = "excel/germany_values.json"
-    elif entry("In_M_AGS_com") == "03159016":
-        excel_path = "excel/goettingen_values.json"
-
-    with open(excel_path, "r") as fp:
-        exl = json.load(fp)
-    fp.close()
-    """end"""
-
-    root.a30.p_operation_heat.demand_emplo = exl["a30"]["p_operation_heat"][
-        "demand_emplo"
-    ]
-    root.a30.s_heatpump.demand_emplo = exl["a30"]["s_heatpump"]["demand_emplo"]
-    root.e30.p_local_pv_roof.area_ha_available = exl["e30"]["p_local_pv_roof"][
-        "area_ha_available"
-    ]
 
     start = time.time()
     try:
@@ -285,7 +263,26 @@ def calc(root, inputs: Inputs):
 
         s_elec_heating.energy = 0
 
-        s_solarth.area_ha_available = e30.p_local_pv_roof.area_ha_available
+        s_solarth.area_ha_available = (
+            (4 / 3)
+            * (
+                (
+                    entry("In_R_area_m2_1flat")
+                    / 100
+                    * ass("Ass_E_P_local_pv_roof_area_building1")
+                    + entry("In_R_area_m2_2flat")
+                    / 100
+                    * ass("Ass_E_P_local_pv_roof_area_building2")
+                    + entry("In_R_area_m2_3flat")
+                    / 100
+                    * ass("Ass_E_P_local_pv_roof_area_building3")
+                    + entry("In_R_area_m2_dorm")
+                    / 100
+                    * ass("Ass_E_P_local_pv_roof_area_buildingD")
+                )
+            )
+            / 10000
+        )
         s_solarth.area_ha_available_pct_of_action = ass(
             "Ass_E_P_local_pv_roof_potential"
         )
@@ -617,7 +614,7 @@ def calc(root, inputs: Inputs):
         s_solarth.invest = (
             b18.p_nonresi.area_m2
             / (r18.p_buildings_total.area_m2 + b18.p_nonresi.area_m2)
-            * e30.p_local_pv_roof.area_ha_available
+            * s_solarth.area_ha_available
             * entry("In_H_solartherm_to_be_inst")
             * r30.s_solarth.invest_per_x
             * 10000

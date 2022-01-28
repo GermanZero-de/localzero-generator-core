@@ -107,29 +107,6 @@ def calc(root, inputs: Inputs):
 
     def entry(n):
         return inputs.entry(n)
-    
-    """"""
-    """ import external values"""
-    import json
-
-    if entry("In_M_AGS_com") == "DG000000":
-        excel_path = "excel/germany_values.json"
-    elif entry("In_M_AGS_com") == "03159016":
-        excel_path = "excel/goettingen_values.json"
-
-    with open(excel_path, "r") as fp:
-        exl = json.load(fp)
-    fp.close()
-    """end"""
-
-    root.h30.h.CO2e_total = exl["h30"]["h"]["CO2e_total"]
-    root.e30.e.CO2e_total = exl["e30"]["e"]["CO2e_total"]
-    root.f30.f.CO2e_total = exl["f30"]["f"]["CO2e_total"]
-    root.r30.r.CO2e_total = exl["r30"]["r"]["CO2e_total"]
-    #root.b30.b.CO2e_total = exl["b30"]["b"]["CO2e_total"]
-    #root.i30.i.CO2e_total = exl["i30"]["i"]["CO2e_total"]
-    #root.t30.t.CO2e_total = exl["t30"]["t"]["CO2e_total"]
-    root.a30.a.CO2e_total = exl["a30"]["a"]["CO2e_total"]
 
     l18 = root.l18
     l = root.l30.l
@@ -742,47 +719,6 @@ def calc(root, inputs: Inputs):
             g_wood.CO2e_total = g_wood.CO2e_pb
 
             g_wood.change_CO2e_t = g_wood.CO2e_total - l18.g_wood.CO2e_total
-
-            pyrolysis.CO2e_pb = pyrolysis.CO2e_total
-            pyrolysis.CO2e_pb_per_t = fact("Fact_L_P_biochar_ratio_CO2e_pb_to_prodvol")
-            pyrolysis.prod_volume = pyrolysis.CO2e_pb / pyrolysis.CO2e_pb_per_t
-
-            pyrolysis.CO2e_total = min(
-                -h30.h.CO2e_total
-                + e30.e.CO2e_total
-                + f30.f.CO2e_total
-                + r30.r.CO2e_total
-                + b30.b.CO2e_total
-                + i30.i.CO2e_total
-                + t30.t.CO2e_total
-                + a30.a.CO2e_total
-                + g.CO2e_total,
-                0,
-            )
-            pyrolysis.change_CO2e_t = pyrolysis.CO2e_total - l18.pyrolysis.CO2e_total
-            # div 0 pyrolysis.change_CO2e_pct = (pyrolysis.change_CO2e_t / AV395)
-            pyrolysis.CO2e_total_2021_estimated = l18.pyrolysis.CO2e_total * fact(
-                "Fact_M_CO2e_lulucf_2021_vs_2018"
-            )
-            pyrolysis.cost_climate_saved = (
-                (pyrolysis.CO2e_total_2021_estimated - pyrolysis.CO2e_total)
-                * entry("In_M_duration_neutral")
-                * fact("Fact_M_cost_per_CO2e_2020")
-            )
-            pyrolysis.invest_pa = pyrolysis.invest / entry("In_M_duration_target")
-            pyrolysis.invest = pyrolysis.prod_volume * pyrolysis.invest_per_x
-            pyrolysis.pct_of_wage = fact(
-                "Fact_B_P_constr_main_revenue_pct_of_wage_2017"
-            )
-            pyrolysis.cost_wage = pyrolysis.invest_pa * pyrolysis.pct_of_wage
-            pyrolysis.ratio_wage_to_emplo = fact(
-                "Fact_B_P_constr_main_ratio_wage_to_emplo_2017"
-            )
-            pyrolysis.demand_emplo = pyrolysis.cost_wage / pyrolysis.ratio_wage_to_emplo
-            pyrolysis.demand_emplo_new = pyrolysis.demand_emplo
-            pyrolysis.invest_per_x = ass(
-                "Ass_L_P_pyrolysis_plant_ratio_invest_to_biochar_pa"
-            )
 
             l.CO2e_pb = g.CO2e_pb + pyrolysis.CO2e_pb
             l.CO2e_cb = g.CO2e_cb
