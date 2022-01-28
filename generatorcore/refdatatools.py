@@ -22,10 +22,23 @@ MAIN_REPOS = {
     "proprietary": "github.com/GermanZero-de/localzero-data-proprietary",
 }
 
+PUBLIC_OR_PROPRIETARY = typing.Literal["public", "proprietary"]
+
+
+def pull(datadir: str, repo: PUBLIC_OR_PROPRIETARY, pa_token: str | None = None):
+    if pa_token is not None:
+        url = "https://" + pa_token + "@" + MAIN_REPOS[repo]
+    else:
+        url = "https://" + MAIN_REPOS[repo]
+
+    subprocess.run(
+        ["git", "pull", "--ff-only", url], check=True, cwd=os.path.join(datadir, repo)
+    )
+
 
 def clone(
     datadir: str,
-    repo: typing.Literal["public", "proprietary"],
+    repo: PUBLIC_OR_PROPRIETARY,
     pa_token: str | None = None,
 ):
     """This function assumes that there is not data repository already in the datadir."""
