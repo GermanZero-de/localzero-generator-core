@@ -16,10 +16,10 @@ import pandas as pd
 PROPRIETARY_DATA_SOURCES = frozenset(["traffic"])
 
 
-def _load(datadir: str, what: str, year: int = 2018) -> pd.DataFrame:
+def _load(datadir: str, what: str, filename: str = "2018") -> pd.DataFrame:
     repo = "proprietary" if what in PROPRIETARY_DATA_SOURCES else "public"
     return pd.read_csv(
-        os.path.join(datadir, repo, what, str(year) + ".csv"), dtype={"ags": "str"}
+        os.path.join(datadir, repo, what, filename + ".csv"), dtype={"ags": "str"}
     )
 
 
@@ -132,6 +132,7 @@ class RefData:
     def __init__(
         self,
         *,
+        ags_master: pd.DataFrame,
         area: pd.DataFrame,
         area_kinds: pd.DataFrame,
         assumptions: pd.DataFrame,
@@ -149,6 +150,7 @@ class RefData:
         traffic: pd.DataFrame,
     ):
         self._area = area
+        self._ags_master = ags_master.set_index(keys="ags").to_dict()["description"]
         self._area_kinds = area_kinds
         self._facts_and_assumptions = FactsAndAssumptions(facts, assumptions)
         self._buildings = buildings
@@ -162,6 +164,11 @@ class RefData:
         self._population = population
         self._renewable_energy = renewable_energy
         self._traffic = traffic
+
+    def ags_master(self) -> dict[str, str]:
+        """Returns the complete dictionary of AGS, where no big
+        changes have happened to the relevant commune. Key is AGS value is description"""
+        return self._ags_master
 
     def facts_and_assumptions(self) -> FactsAndAssumptions:
         return self._facts_and_assumptions
@@ -235,6 +242,7 @@ class RefData:
         """
         datadir = datadir_or_default(datadir)
         d = cls(
+            ags_master=_load(datadir, "ags", filename="master"),
             area=_load(datadir, "area"),
             area_kinds=_load(datadir, "area_kinds"),
             assumptions=_load(datadir, "assumptions"),
@@ -244,7 +252,7 @@ class RefData:
             facts=_load(datadir, "facts"),
             flats=_load(datadir, "flats"),
             nat_agri=_load(datadir, "nat_agri"),
-            nat_organic_agri=_load(datadir, "nat_organic_agri", 2016),
+            nat_organic_agri=_load(datadir, "nat_organic_agri", filename="2016"),
             nat_energy=_load(datadir, "nat_energy"),
             nat_res_buildings=_load(datadir, "nat_res_buildings"),
             population=_load(datadir, "population"),

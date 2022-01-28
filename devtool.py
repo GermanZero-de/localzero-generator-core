@@ -20,6 +20,7 @@ import os.path
 from generatorcore.generator import calculate_with_default_inputs
 from generatorcore import refdatatools
 from generatorcore import refdata
+from generatorcore import makeentries
 
 
 def json_to_output(json_object, args):
@@ -263,6 +264,24 @@ def data_checkout_cmd(args):
         refdatatools.checkout(datadir, "proprietary", production.proprietary)
 
 
+def data_entries_user_overridables_generate_defaults_cmd(args):
+    data = refdata.RefData.load()
+    result = []
+    good = 0
+    errors = 0
+    for (ags, description) in list(data.ags_master().items()):
+        try:
+            entries = makeentries.make_entries(data, ags, 2035)
+            entries["city"] = description
+            result.append(entries)
+            good = good + 1
+        except Exception as e:
+            # print(f"{ags} {description}: Can't generate: {e}", file=sys.stderr)
+            errors = errors + 1
+        sys.stdout.write(f"\rOK {good:>5}    BAD {errors:>5}")
+    # json.dump(result, indent=4, fp=sys.stdout)
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.set_defaults()
@@ -310,6 +329,13 @@ def main():
     cmd_data_lookup.add_argument("ags")
     cmd_data_lookup.set_defaults(func=data_lookup_cmd)
 
+    cmd_data_entries_user_overrides_generate_defaults = subcmd_data.add_parser(
+        "entries-user-overrides-generate-defaults",
+        help="Generate a file of default values for user overridable entries as used by the website.",
+    )
+    cmd_data_entries_user_overrides_generate_defaults.set_defaults(
+        func=data_entries_user_overridables_generate_defaults_cmd
+    )
     args = parser.parse_args()
     if args.subcmd is None:
         parser.print_help()
