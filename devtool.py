@@ -184,7 +184,7 @@ def data_checkout_cmd(args):
         # trouble as we should merge on github
         refdatatools.checkout(datadir, "public", "main")
         # refdatatools.pull uses --ff-only
-        refdatatools.pull(datadir, "public")
+        refdatatools.pull(datadir, "public", pa_token=args.pat)
         # Now we should have all changes and can switch to whatever the production file
         # wants
         refdatatools.checkout(datadir, "public", production.public)
