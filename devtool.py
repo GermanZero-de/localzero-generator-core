@@ -23,10 +23,19 @@ from generatorcore import refdata
 from generatorcore import makeentries
 
 
+def json_to_output(json_object, args):
+    """Write json_object to stdout or a file depending on args"""
+    if args.o is not None:
+        with open(args.o, mode="w") as fp:
+            json.dump(json_object, indent=4, fp=fp)
+    else:
+        json.dump(json_object, indent=4, fp=sys.stdout)
+
+
 def run_cmd(args):
     # TODO: pass ags in here
     g = calculate_with_default_inputs(ags=args.ags, year=args.year)
-    json.dump(g.result_dict(), indent=4, fp=sys.stdout)
+    json_to_output(g.result_dict(), args)
 
 
 def sanitize_excel(e):
@@ -172,6 +181,13 @@ def data_checkout_cmd(args):
                 file=sys.stderr,
             )
     else:
+        # First switch to main before pulling -- this has the least chance of causing
+        # trouble as we should merge on github
+        refdatatools.checkout(datadir, "public", "main")
+        # refdatatools.pull uses --ff-only
+        refdatatools.pull(datadir, "public", pa_token=args.pat)
+        # Now we should have all changes and can switch to whatever the production file
+        # wants
         refdatatools.checkout(datadir, "public", production.public)
 
     if status is not None and status.proprietary_status.rev == production.proprietary:
@@ -181,6 +197,7 @@ def data_checkout_cmd(args):
                 file=sys.stderr,
             )
     else:
+        refdatatools.pull(datadir, "public")
         refdatatools.checkout(datadir, "proprietary", production.proprietary)
 
 
@@ -210,6 +227,7 @@ def main():
     cmd_run_parser = subcmd_parsers.add_parser("run", help="Run the generator")
     cmd_run_parser.add_argument("-ags", default="03159016")
     cmd_run_parser.add_argument("-year", default=2035)
+    cmd_run_parser.add_argument("-o", default=None)
     cmd_run_parser.set_defaults(func=run_cmd)
 
     cmd_compare_to_excel_parser = subcmd_parsers.add_parser(
