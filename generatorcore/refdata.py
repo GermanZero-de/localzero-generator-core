@@ -16,11 +16,16 @@ import pandas as pd
 PROPRIETARY_DATA_SOURCES = frozenset(["traffic"])
 
 
-def _load(datadir: str, what: str, year: int = 2018) -> pd.DataFrame:
+def _load(datadir: str, what: str, filename: str = "2018") -> pd.DataFrame:
     repo = "proprietary" if what in PROPRIETARY_DATA_SOURCES else "public"
     return pd.read_csv(
-        os.path.join(datadir, repo, what, str(year) + ".csv"), dtype={"ags": "str"}
+        os.path.join(datadir, repo, what, filename + ".csv"), dtype={"ags": "str"}
     )
+
+
+def set_nans_to_0(data: pd.DataFrame, *, columns):
+    for c in columns:
+        data[c] = data[c].fillna(0)
 
 
 class RowNotFound(Exception):
@@ -51,7 +56,7 @@ class Row:
             # and extract a very small number of rows. pandas is total overkill
             # in particular when we are publishing a package for others to use
             # it's nice to have a small list of dependencies
-            self._series = df[df[column] == key_value].iloc[0]
+            self._series = df[df[column] == key_value].iloc[0]  # type: ignore
         except:
             raise RowNotFound(column=column, key_value=key_value, df=df)
 
@@ -67,6 +72,9 @@ class Row:
         except Exception as e:
             print("INT FAILED", self._series, attr, file=sys.stderr)
             raise e
+
+    def __str__(self):
+        return self._series.to_string()
 
     def str(self, attr: str) -> str:
         return str(self._series[attr])
@@ -129,6 +137,7 @@ class RefData:
     def __init__(
         self,
         *,
+        ags_master: pd.DataFrame,
         area: pd.DataFrame,
         area_kinds: pd.DataFrame,
         assumptions: pd.DataFrame,
@@ -146,6 +155,7 @@ class RefData:
         traffic: pd.DataFrame,
     ):
         self._area = area
+        self._ags_master = ags_master.set_index(keys="ags").to_dict()["description"]
         self._area_kinds = area_kinds
         self._facts_and_assumptions = FactsAndAssumptions(facts, assumptions)
         self._buildings = buildings
@@ -159,6 +169,27 @@ class RefData:
         self._population = population
         self._renewable_energy = renewable_energy
         self._traffic = traffic
+
+        self._fix_missing_entries_in_area()
+
+    def _fix_missing_entries_in_area(self):
+        """Here we assume that the missing entries in the area sheet should actually be 0."""
+        set_nans_to_0(
+            self._area,
+            columns=[
+                "veg_forrest",
+                "veg_wood",
+                "veg_heath",
+                "veg_moor",
+                "veg_marsh",
+                "settlement_ghd",
+            ],
+        )
+
+    def ags_master(self) -> dict[str, str]:
+        """Returns the complete dictionary of AGS, where no big
+        changes have happened to the relevant commune. Key is AGS value is description"""
+        return self._ags_master
 
     def facts_and_assumptions(self) -> FactsAndAssumptions:
         return self._facts_and_assumptions
@@ -232,6 +263,7 @@ class RefData:
         """
         datadir = datadir_or_default(datadir)
         d = cls(
+            ags_master=_load(datadir, "ags", filename="master"),
             area=_load(datadir, "area"),
             area_kinds=_load(datadir, "area_kinds"),
             assumptions=_load(datadir, "assumptions"),
@@ -241,7 +273,7 @@ class RefData:
             facts=_load(datadir, "facts"),
             flats=_load(datadir, "flats"),
             nat_agri=_load(datadir, "nat_agri"),
-            nat_organic_agri=_load(datadir, "nat_organic_agri", 2016),
+            nat_organic_agri=_load(datadir, "nat_organic_agri", filename="2016"),
             nat_energy=_load(datadir, "nat_energy"),
             nat_res_buildings=_load(datadir, "nat_res_buildings"),
             population=_load(datadir, "population"),

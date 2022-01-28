@@ -92,547 +92,540 @@ def calc(root, inputs: Inputs):
     def entry(n):
         return inputs.entry(n)
 
-    try:
+    ###########################
+    ### Demand of Heat 2018 ###
+    ###########################
 
-        ###########################
-        ### Demand of Heat 2018 ###
-        ###########################
+    t18 = root.t18
+    i18 = root.i18
+    # starting with sectors
+    # Demand Residential:
+    d_r = root.h18.d_r  # -> Abkürzung für weniger Schreibarbeit
+    # 1
+    d_r.energy = (
+        entry("In_R_coal_fec")
+        + entry("In_R_fueloil_fec")
+        + entry("In_R_lpg_fec")
+        + entry("In_R_gas_fec")
+        + entry("In_R_biomass_fec")
+        + entry("In_R_orenew_fec")
+        + entry("In_R_heatnet_fec")
+    )
+    # result: 516.686.389 MWh
 
-        t18 = root.t18
-        i18 = root.i18
-        # starting with sectors
-        # Demand Residential:
-        d_r = root.h18.d_r  # -> Abkürzung für weniger Schreibarbeit
-        # 1
-        d_r.energy = (entry('In_R_coal_fec') + entry('In_R_fueloil_fec') + entry('In_R_lpg_fec') + entry('In_R_gas_fec') + entry('In_R_biomass_fec') + entry('In_R_orenew_fec') + entry('In_R_heatnet_fec'))
-            # result: 516.686.389 MWh
+    # Demand Business:
+    d_b = root.h18.d_b
+    # 1
+    d_b.energy = (
+        entry("In_B_coal_fec")
+        + entry("In_B_fueloil_fec")
+        + entry("In_B_lpg_fec")
+        + entry("In_B_gas_fec")
+        + entry("In_B_biomass_fec")
+        + entry("In_B_orenew_fec")
+        + entry("In_B_heatnet_fec")
+    )
 
+    # result: 164.713.333 MWh
 
-        # Demand Business:
-        d_b = root.h18.d_b
-        # 1
-        d_b.energy = (
-            entry("In_B_coal_fec")
-            + entry("In_B_fueloil_fec")
-            + entry("In_B_lpg_fec")
-            + entry("In_B_gas_fec")
-            + entry("In_B_biomass_fec")
-            + entry("In_B_orenew_fec")
-            + entry("In_B_heatnet_fec")
-        )
+    # Demand Industry:
+    d_i = root.h18.d_i
+    # 1
+    d_i.energy = (
+        entry("In_I_coal_fec")
+        + entry("In_I_fueloil_fec")
+        + entry("In_I_lpg_fec")
+        + entry("In_I_opetpro_fec")
+        + entry("In_I_gas_fec")
+        + entry("In_I_biomass_fec")
+        + entry("In_I_orenew_fec")
+        + entry("In_I_ofossil_fec")
+        + entry("In_I_heatnet_fec")
+        # result: 496.210.833 MWh
+    )
 
-        # result: 164.713.333 MWh
+    # Demand Transport:
+    d_t = root.h18.d_t
 
-        # Demand Industry:
-        d_i = root.h18.d_i
-        # 1
-        d_i.energy = (
-            entry("In_I_coal_fec")
-            + entry("In_I_fueloil_fec")
-            + entry("In_I_lpg_fec")
-            + entry("In_I_opetpro_fec")
-            + entry("In_I_gas_fec")
-            + entry("In_I_biomass_fec")
-            + entry("In_I_orenew_fec")
-            + entry("In_I_ofossil_fec")
-            + entry("In_I_heatnet_fec")
-            # result: 496.210.833 MWh
-        )
+    d_t.energy = t18.t.demand_fueloil + t18.t.demand_lpg + t18.t.demand_gas
+    # percentages of sectors of total heat demand 2018
 
-        # Demand Transport:
-        d_t = root.h18.d_t
+    a_t = root.h18.a_t
+    a_t.energy = (
+        entry("In_A_fueloil_fec")
+        + entry("In_A_lpg_fec")
+        + entry("In_A_gas_fec")
+        + entry("In_A_biomass_fec")
+    )
 
-        d_t.energy = t18.t.demand_fueloil + t18.t.demand_lpg + t18.t.demand_gas
-        # percentages of sectors of total heat demand 2018
+    # Demand Heat 2018 in total:
 
-        a_t = root.h18.a_t
-        a_t.energy = (
-            entry("In_A_fueloil_fec")
-            + entry("In_A_lpg_fec")
-            + entry("In_A_gas_fec")
-            + entry("In_A_biomass_fec")
-        )
+    d = root.h18.d
+    # 1
+    d.energy = (
+        d_r.energy
+        + d_b.energy
+        + d_i.energy
+        + d_t.energy
+        + a_t.energy
+        # result: 1.220.186.729 MWh
+    )
 
-        # Demand Heat 2018 in total:
+    ###############################
+    ### Production of Heat 2018 ###
+    ###############################
 
-        d = root.h18.d
-        # 1
-        d.energy = (
-            d_r.energy
-            + d_b.energy
-            + d_i.energy
-            + d_t.energy
-            + a_t.energy
-            # result: 1.220.186.729 MWh
-        )
+    # Production Heat 2018 in total:
 
-        ###############################
-        ### Production of Heat 2018 ###
-        ###############################
+    p = root.h18.p
+    # 1
+    p.energy = (
+        d.energy
+        # result: 1.220.186.729 MWh
+    )
 
-        # Production Heat 2018 in total:
+    ### calculating the energy sources ###
 
-        p = root.h18.p
-        # 1
-        p.energy = (
-            d.energy
-            # result: 1.220.186.729 MWh
-        )
+    # Production gas:
 
-        ### calculating the energy sources ###
+    p_gas = root.h18.p_gas
 
-        # Production gas:
+    # 1 final energy consumption
+    p_gas.energy = (
+        entry("In_R_gas_fec")
+        + entry("In_B_gas_fec")
+        + entry("In_I_gas_fec")
+        + entry("In_A_gas_fec")
+        + t18.t.demand_gas
+        # result: 607.734.356 MWh
+    )
 
-        p_gas = root.h18.p_gas
+    # 2 pct of total final energy consumption
+    p_gas.pct_energy = p_gas.energy / p.energy
 
-        # 1 final energy consumption
-        p_gas.energy = (
-            entry("In_R_gas_fec")
-            + entry("In_B_gas_fec")
-            + entry("In_I_gas_fec")
-            + entry("In_A_gas_fec")
-            + t18.t.demand_gas
-            # result: 607.734.356 MWh
-        )
+    # 3 process-based CO2e factor per MWh final energy
+    p_gas.CO2e_pb_per_MWh = fact("Fact_H_P_gas_ratio_CO2e_pb_to_fec_2018")
+    # 4 process-based CO2e
+    p_gas.CO2e_pb = p_gas.energy * p_gas.CO2e_pb_per_MWh
 
-        # 2 pct of total final energy consumption
-        p_gas.pct_energy = p_gas.energy / p.energy
+    # 5 combustion-based CO2e factor per MWh final energy
+    p_gas.CO2e_cb_per_MWh = fact("Fact_H_P_gas_ratio_CO2e_cb_to_fec_2018")
+    # 6 combustion-based CO2e
+    p_gas.CO2e_cb = p_gas.energy * p_gas.CO2e_cb_per_MWh
 
-        # 3 process-based CO2e factor per MWh final energy
-        p_gas.CO2e_pb_per_MWh = fact("Fact_H_P_gas_ratio_CO2e_pb_to_fec_2018")
-        # 4 process-based CO2e
-        p_gas.CO2e_pb = p_gas.energy * p_gas.CO2e_pb_per_MWh
+    # 7 total CO2e
+    p_gas.CO2e_total = p_gas.CO2e_pb + p_gas.CO2e_cb
 
-        # 5 combustion-based CO2e factor per MWh final energy
-        p_gas.CO2e_cb_per_MWh = fact("Fact_H_P_gas_ratio_CO2e_cb_to_fec_2018")
-        # 6 combustion-based CO2e
-        p_gas.CO2e_cb = p_gas.energy * p_gas.CO2e_cb_per_MWh
+    # Production lpg:
 
-        # 7 total CO2e
-        p_gas.CO2e_total = p_gas.CO2e_pb + p_gas.CO2e_cb
+    p_lpg = root.h18.p_lpg
 
-        # Production lpg:
+    # 1 final energy consumption
+    p_lpg.energy = (
+        entry("In_R_lpg_fec")
+        + entry("In_B_lpg_fec")
+        + entry("In_I_lpg_fec")
+        + entry("In_A_lpg_fec")
+        + t18.s_lpg.energy
+        # result: 21.907.374 MWh
+    )
 
-        p_lpg = root.h18.p_lpg
+    # 2 pct of total final energy consumption
+    p_lpg.pct_energy = p_lpg.energy / p.energy
 
-        # 1 final energy consumption
-        p_lpg.energy = (
-            entry("In_R_lpg_fec")
-            + entry("In_B_lpg_fec")
-            + entry("In_I_lpg_fec")
-            + entry("In_A_lpg_fec")
-            + t18.s_lpg.energy
-            # result: 21.907.374 MWh
-        )
+    # 4 no process-based CO2e
 
-        # 2 pct of total final energy consumption
-        p_lpg.pct_energy = p_lpg.energy / p.energy
+    # 5 combustion-based CO2e factor per MWh final energy
+    p_lpg.CO2e_cb_per_MWh = fact("Fact_H_P_lpg_ratio_CO2e_cb_to_fec_2018")
+    # 6 combustion-based CO2e
+    p_lpg.CO2e_cb = p_lpg.energy * p_lpg.CO2e_cb_per_MWh
 
-        # 4 no process-based CO2e
+    # 7 total CO2e
+    p_lpg.CO2e_total = p_lpg.CO2e_cb
 
-        # 5 combustion-based CO2e factor per MWh final energy
-        p_lpg.CO2e_cb_per_MWh = fact("Fact_H_P_lpg_ratio_CO2e_cb_to_fec_2018")
-        # 6 combustion-based CO2e
-        p_lpg.CO2e_cb = p_lpg.energy * p_lpg.CO2e_cb_per_MWh
+    # Production fueloil:
 
-        # 7 total CO2e
-        p_lpg.CO2e_total = p_lpg.CO2e_cb
+    p_fueloil = root.h18.p_fueloil
 
-        # Production fueloil:
+    # 1 final energy consumption
+    p_fueloil.energy = (
+        entry("In_R_fueloil_fec")
+        + entry("In_B_fueloil_fec")
+        + entry("In_I_fueloil_fec")
+        + entry("In_A_fueloil_fec")
+        + t18.s_fueloil.energy
+        # result: 170.176.389 MWh
+    )
 
-        p_fueloil = root.h18.p_fueloil
+    # 2 pct of total final energy consumption
+    p_fueloil.pct_energy = p_fueloil.energy / p.energy
 
-        # 1 final energy consumption
-        p_fueloil.energy = (
-            entry("In_R_fueloil_fec")
-            + entry("In_B_fueloil_fec")
-            + entry("In_I_fueloil_fec")
-            + entry("In_A_fueloil_fec")
-            + t18.s_fueloil.energy
-            # result: 170.176.389 MWh
-        )
+    # 4 no process-based CO2e
 
-        # 2 pct of total final energy consumption
-        p_fueloil.pct_energy = p_fueloil.energy / p.energy
+    # 5 combustion-based CO2e factor per MWh final energy
+    p_fueloil.CO2e_cb_per_MWh = fact("Fact_H_P_fueloil_ratio_CO2e_cb_to_fec_2018")
+    # 6 combustion-based CO2e
+    p_fueloil.CO2e_cb = p_fueloil.energy * p_fueloil.CO2e_cb_per_MWh
 
-        # 4 no process-based CO2e
+    # 7 total CO2e
+    p_fueloil.CO2e_total = p_fueloil.CO2e_cb
 
-        # 5 combustion-based CO2e factor per MWh final energy
-        p_fueloil.CO2e_cb_per_MWh = fact("Fact_H_P_fueloil_ratio_CO2e_cb_to_fec_2018")
-        # 6 combustion-based CO2e
-        p_fueloil.CO2e_cb = p_fueloil.energy * p_fueloil.CO2e_cb_per_MWh
+    # Production other petrol products (opetpro):
 
-        # 7 total CO2e
-        p_fueloil.CO2e_total = p_fueloil.CO2e_cb
+    p_opetpro = root.h18.p_opetpro
 
-        # Production other petrol products (opetpro):
+    # 1 final energy consumption
+    p_opetpro.energy = (
+        entry("In_I_opetpro_fec")
+        # result: 14.255.833 MWh
+    )
 
-        p_opetpro = root.h18.p_opetpro
+    # 2 pct of total final energy consumption
+    p_opetpro.pct_energy = p_opetpro.energy / p.energy
 
-        # 1 final energy consumption
-        p_opetpro.energy = (
-            entry("In_I_opetpro_fec")
-            # result: 14.255.833 MWh
-        )
+    # 3 process-based CO2e factor per MWh final energy
+    p_opetpro.CO2e_pb_per_MWh = fact("Fact_H_P_opetpro_ratio_CO2e_pb_to_fec_2018")
+    # 4 process-based CO2e
+    p_opetpro.CO2e_pb = p_opetpro.energy * p_opetpro.CO2e_pb_per_MWh
 
-        # 2 pct of total final energy consumption
-        p_opetpro.pct_energy = p_opetpro.energy / p.energy
+    # 5 combustion-based CO2e factor per MWh final energy
+    p_opetpro.CO2e_cb_per_MWh = fact("Fact_H_P_opetpro_ratio_CO2e_cb_to_fec_2018")
+    # 6 combustion-based CO2e
+    p_opetpro.CO2e_cb = p_opetpro.energy * p_opetpro.CO2e_cb_per_MWh
 
-        # 3 process-based CO2e factor per MWh final energy
-        p_opetpro.CO2e_pb_per_MWh = fact("Fact_H_P_opetpro_ratio_CO2e_pb_to_fec_2018")
-        # 4 process-based CO2e
-        p_opetpro.CO2e_pb = p_opetpro.energy * p_opetpro.CO2e_pb_per_MWh
+    # 7 total CO2e
+    p_opetpro.CO2e_total = p_opetpro.CO2e_pb + p_opetpro.CO2e_cb
 
-        # 5 combustion-based CO2e factor per MWh final energy
-        p_opetpro.CO2e_cb_per_MWh = fact("Fact_H_P_opetpro_ratio_CO2e_cb_to_fec_2018")
-        # 6 combustion-based CO2e
-        p_opetpro.CO2e_cb = p_opetpro.energy * p_opetpro.CO2e_cb_per_MWh
+    # Production coal:
 
-        # 7 total CO2e
-        p_opetpro.CO2e_total = p_opetpro.CO2e_pb + p_opetpro.CO2e_cb
+    p_coal = root.h18.p_coal
 
-        # Production coal:
+    # 1 final energy consumption
+    p_coal.energy = (
+        entry("In_R_coal_fec")
+        + entry("In_B_coal_fec")
+        + entry("In_I_coal_fec")
+        # result: 123.883.611 MWh
+    )
 
-        p_coal = root.h18.p_coal
+    # 2 pct of total final energy consumption
+    p_coal.pct_energy = p_coal.energy / p.energy
 
-        # 1 final energy consumption
-        p_coal.energy = (
-            entry("In_R_coal_fec")
-            + entry("In_B_coal_fec")
-            + entry("In_I_coal_fec")
-            # result: 123.883.611 MWh
-        )
+    # 3 process-based CO2e factor per MWh final energy
+    p_coal.CO2e_pb_per_MWh = fact("Fact_H_P_coal_ratio_CO2e_pb_to_fec_2018")
+    # 4 process-based CO2e
+    p_coal.CO2e_pb = p_coal.energy * p_coal.CO2e_pb_per_MWh
 
-        # 2 pct of total final energy consumption
-        p_coal.pct_energy = p_coal.energy / p.energy
+    # 5 combustion-based CO2e factor per MWh final energy
+    p_coal.CO2e_cb_per_MWh = fact("Fact_H_P_coal_ratio_CO2e_cb_to_fec_2018")
+    # 6 combustion-based CO2e
+    p_coal.CO2e_cb = p_coal.energy * p_coal.CO2e_cb_per_MWh
 
-        # 3 process-based CO2e factor per MWh final energy
-        p_coal.CO2e_pb_per_MWh = fact("Fact_H_P_coal_ratio_CO2e_pb_to_fec_2018")
-        # 4 process-based CO2e
-        p_coal.CO2e_pb = p_coal.energy * p_coal.CO2e_pb_per_MWh
+    # 7 total CO2e
+    p_coal.CO2e_total = p_coal.CO2e_pb + p_coal.CO2e_cb
 
-        # 5 combustion-based CO2e factor per MWh final energy
-        p_coal.CO2e_cb_per_MWh = fact("Fact_H_P_coal_ratio_CO2e_cb_to_fec_2018")
-        # 6 combustion-based CO2e
-        p_coal.CO2e_cb = p_coal.energy * p_coal.CO2e_cb_per_MWh
+    # Production heatnet:
 
-        # 7 total CO2e
-        p_coal.CO2e_total = p_coal.CO2e_pb + p_coal.CO2e_cb
+    p_heatnet = root.h18.p_heatnet
 
-        # Production heatnet:
+    # 1 final energy consumption
+    p_heatnet.energy = (
+        entry("In_R_heatnet_fec")
+        + entry("In_B_heatnet_fec")
+        + entry("In_I_heatnet_fec")
+        # result: 109.472.500 MWh
+    )
 
-        p_heatnet = root.h18.p_heatnet
+    # 2 pct of total final energy consumption
+    p_heatnet.pct_energy = p_heatnet.energy / p.energy
 
-        # 1 final energy consumption
-        p_heatnet.energy = (
-            entry("In_R_heatnet_fec")
-            + entry("In_B_heatnet_fec")
-            + entry("In_I_heatnet_fec")
-            # result: 109.472.500 MWh
-        )
+    # Production cogenerated heatnet:
 
-        # 2 pct of total final energy consumption
-        p_heatnet.pct_energy = p_heatnet.energy / p.energy
+    p_heatnet_cogen = root.h18.p_heatnet_cogen
 
-        # Production cogenerated heatnet:
+    # 1 final energy consumption
+    # if-sequence is necessary to avoid more cogenerated heat produced than used - and later negative heatnet_plant
+    if (
+        root.e18.p_fossil_coal_brown_cogen.energy
+        + root.e18.p_fossil_coal_black_cogen.energy
+        + root.e18.p_fossil_gas_cogen.energy
+        + root.e18.p_fossil_ofossil_cogen.energy
+        + root.e18.p_renew_biomass_cogen.energy
+    ) < p_heatnet.energy:
 
-        p_heatnet_cogen = root.h18.p_heatnet_cogen
-
-        # 1 final energy consumption
-        # if-sequence is necessary to avoid more cogenerated heat produced than used - and later negative heatnet_plant
-        if (
+        p_heatnet_cogen.energy = (
             root.e18.p_fossil_coal_brown_cogen.energy
             + root.e18.p_fossil_coal_black_cogen.energy
             + root.e18.p_fossil_gas_cogen.energy
             + root.e18.p_fossil_ofossil_cogen.energy
             + root.e18.p_renew_biomass_cogen.energy
-        ) < p_heatnet.energy:
-
-            p_heatnet_cogen.energy = (
-                root.e18.p_fossil_coal_brown_cogen.energy
-                + root.e18.p_fossil_coal_black_cogen.energy
-                + root.e18.p_fossil_gas_cogen.energy
-                + root.e18.p_fossil_ofossil_cogen.energy
-                + root.e18.p_renew_biomass_cogen.energy
-                # result: 82.686.089 MWh
-            )
-
-        else:
-            p_heatnet_cogen.energy = p_heatnet.energy
-
-        # 2 pct of total final energy consumption of heatnet
-        p_heatnet_cogen.pct_energy = p_heatnet_cogen.energy / p_heatnet.energy
-
-        # 4 no process-based CO2e
-
-        # 5 combustion-based CO2e factor per MWh final energy
-        p_heatnet_cogen.CO2e_cb_per_MWh = fact(
-            "Fact_H_P_heatnet_cogen_ratio_CO2e_cb_to_fec_2018"
-        )
-        # 6 combustion-based CO2e
-        p_heatnet_cogen.CO2e_cb = (
-            p_heatnet_cogen.energy * p_heatnet_cogen.CO2e_cb_per_MWh
-        )
-        # 7 total CO2e
-        p_heatnet_cogen.CO2e_total = p_heatnet_cogen.CO2e_cb
-
-        # Production heatnet in plants:
-
-        p_heatnet_plant = root.h18.p_heatnet_plant
-
-        # 1 final energy consumption
-        # due to the if-sequence in p_heatnet_cogen this value cannot become negative
-        p_heatnet_plant.energy = (
-            p_heatnet.energy
-            - p_heatnet_cogen.energy
-            # result: 26.786.411 MWh
+            # result: 82.686.089 MWh
         )
 
-        # 2 pct of total final energy consumption of heatnet
-        p_heatnet_plant.pct_energy = p_heatnet_plant.energy / p_heatnet.energy
+    else:
+        p_heatnet_cogen.energy = p_heatnet.energy
 
-        # 4 no process-based CO2e
+    # 2 pct of total final energy consumption of heatnet
+    p_heatnet_cogen.pct_energy = p_heatnet_cogen.energy / p_heatnet.energy
 
-        # 5 combustion-based CO2e factor per MWh final energy
-        p_heatnet_plant.CO2e_cb_per_MWh = fact(
-            "Fact_H_P_heatnet_plant_ratio_CO2e_cb_to_fec_2018"
-        )
-        # 6 combustion-based CO2e
-        p_heatnet_plant.CO2e_cb = (
-            p_heatnet_plant.energy * p_heatnet_plant.CO2e_cb_per_MWh
-        )
-        # 7 total CO2e
-        p_heatnet_plant.CO2e_total = p_heatnet_plant.CO2e_cb
+    # 4 no process-based CO2e
 
-        ## back to total heatnet ##
+    # 5 combustion-based CO2e factor per MWh final energy
+    p_heatnet_cogen.CO2e_cb_per_MWh = fact(
+        "Fact_H_P_heatnet_cogen_ratio_CO2e_cb_to_fec_2018"
+    )
+    # 6 combustion-based CO2e
+    p_heatnet_cogen.CO2e_cb = p_heatnet_cogen.energy * p_heatnet_cogen.CO2e_cb_per_MWh
+    # 7 total CO2e
+    p_heatnet_cogen.CO2e_total = p_heatnet_cogen.CO2e_cb
 
-        # 4 no process-based CO2e
+    # Production heatnet in plants:
 
-        # 6 combustion-based CO2e
-        p_heatnet.CO2e_cb = p_heatnet_cogen.CO2e_cb + p_heatnet_plant.CO2e_cb
+    p_heatnet_plant = root.h18.p_heatnet_plant
 
-        # 7 total CO2e
-        p_heatnet.CO2e_total = p_heatnet.CO2e_cb
+    # 1 final energy consumption
+    # due to the if-sequence in p_heatnet_cogen this value cannot become negative
+    p_heatnet_plant.energy = (
+        p_heatnet.energy
+        - p_heatnet_cogen.energy
+        # result: 26.786.411 MWh
+    )
 
-        p_heatnet_geoth = root.h18.p_heatnet_geoth
+    # 2 pct of total final energy consumption of heatnet
+    p_heatnet_plant.pct_energy = p_heatnet_plant.energy / p_heatnet.energy
 
-        p_heatnet_geoth.pct_energy = 0
-        p_heatnet_geoth.energy = p_heatnet_geoth.pct_energy * p_heatnet.energy
+    # 4 no process-based CO2e
 
-        p_heatnet_geoth.CO2e_cb = 0
-        p_heatnet_geoth.CO2e_pb = 0
-        p_heatnet_geoth.CO2e_total = p_heatnet_geoth.CO2e_pb + p_heatnet_geoth.CO2e_cb
+    # 5 combustion-based CO2e factor per MWh final energy
+    p_heatnet_plant.CO2e_cb_per_MWh = fact(
+        "Fact_H_P_heatnet_plant_ratio_CO2e_cb_to_fec_2018"
+    )
+    # 6 combustion-based CO2e
+    p_heatnet_plant.CO2e_cb = p_heatnet_plant.energy * p_heatnet_plant.CO2e_cb_per_MWh
+    # 7 total CO2e
+    p_heatnet_plant.CO2e_total = p_heatnet_plant.CO2e_cb
 
-        p_heatnet_lheatpump = root.h18.p_heatnet_lheatpump
-        p_heatnet_lheatpump.pct_energy = 0
-        p_heatnet_lheatpump.CO2e_pb = 0
-        p_heatnet_lheatpump.CO2e_cb = 0
-        p_heatnet_lheatpump.energy = p_heatnet_lheatpump.pct_energy * p_heatnet.energy
-        p_heatnet_lheatpump.CO2e_total = (
-            p_heatnet_lheatpump.CO2e_pb + p_heatnet_lheatpump.CO2e_cb
-        )
+    ## back to total heatnet ##
 
-        # Production biomass:
+    # 4 no process-based CO2e
 
-        p_biomass = root.h18.p_biomass
+    # 6 combustion-based CO2e
+    p_heatnet.CO2e_cb = p_heatnet_cogen.CO2e_cb + p_heatnet_plant.CO2e_cb
 
-        # 1 final energy consumption
-        p_biomass.energy = (
-            entry("In_R_biomass_fec")
-            + entry("In_B_biomass_fec")
-            + entry("In_I_biomass_fec")
-            + entry("In_A_biomass_fec")
-            # result: 128.372.500 MWh
-        )
+    # 7 total CO2e
+    p_heatnet.CO2e_total = p_heatnet.CO2e_cb
 
-        # 2 pct of total final energy consumption
-        p_biomass.pct_energy = p_biomass.energy / p.energy
+    p_heatnet_geoth = root.h18.p_heatnet_geoth
 
-        # 3 process-based CO2e factor per MWh final energy
-        p_biomass.CO2e_pb_per_MWh = fact("Fact_H_P_biomass_ratio_CO2e_pb_to_fec_2018")
-        # 4 process-based CO2e
-        p_biomass.CO2e_pb = p_biomass.energy * p_biomass.CO2e_pb_per_MWh
+    p_heatnet_geoth.pct_energy = 0
+    p_heatnet_geoth.energy = p_heatnet_geoth.pct_energy * p_heatnet.energy
 
-        # 6 no combustion-based CO2e
+    p_heatnet_geoth.CO2e_cb = 0
+    p_heatnet_geoth.CO2e_pb = 0
+    p_heatnet_geoth.CO2e_total = p_heatnet_geoth.CO2e_pb + p_heatnet_geoth.CO2e_cb
 
-        # 7 total CO2e
-        p_biomass.CO2e_total = p_biomass.CO2e_pb
+    p_heatnet_lheatpump = root.h18.p_heatnet_lheatpump
+    p_heatnet_lheatpump.pct_energy = 0
+    p_heatnet_lheatpump.CO2e_pb = 0
+    p_heatnet_lheatpump.CO2e_cb = 0
+    p_heatnet_lheatpump.energy = p_heatnet_lheatpump.pct_energy * p_heatnet.energy
+    p_heatnet_lheatpump.CO2e_total = (
+        p_heatnet_lheatpump.CO2e_pb + p_heatnet_lheatpump.CO2e_cb
+    )
 
-        # Production ofossil:
+    # Production biomass:
 
-        p_ofossil = root.h18.p_ofossil
+    p_biomass = root.h18.p_biomass
 
-        # 1 final energy consumption
-        """p_coal.energy = (
-            entry ('In_I_ofossil_fec')
+    # 1 final energy consumption
+    p_biomass.energy = (
+        entry("In_R_biomass_fec")
+        + entry("In_B_biomass_fec")
+        + entry("In_I_biomass_fec")
+        + entry("In_A_biomass_fec")
+        # result: 128.372.500 MWh
+    )
 
-           #result: 21.019.444 MWh
-        )"""
+    # 2 pct of total final energy consumption
+    p_biomass.pct_energy = p_biomass.energy / p.energy
 
-        p_ofossil.energy = entry("In_I_ofossil_fec")
+    # 3 process-based CO2e factor per MWh final energy
+    p_biomass.CO2e_pb_per_MWh = fact("Fact_H_P_biomass_ratio_CO2e_pb_to_fec_2018")
+    # 4 process-based CO2e
+    p_biomass.CO2e_pb = p_biomass.energy * p_biomass.CO2e_pb_per_MWh
 
-        # 2 pct of total final energy consumption
-        p_ofossil.pct_energy = p_ofossil.energy / p.energy
+    # 6 no combustion-based CO2e
 
-        # 3 process-based CO2e factor per MWh final energy
-        p_ofossil.CO2e_pb_per_MWh = fact("Fact_H_P_ofossil_ratio_CO2e_pb_to_fec_2018")
-        # 4 process-based CO2e
-        p_ofossil.CO2e_pb = p_ofossil.energy * p_ofossil.CO2e_pb_per_MWh
+    # 7 total CO2e
+    p_biomass.CO2e_total = p_biomass.CO2e_pb
 
-        # 6 no combustion-based CO2e
+    # Production ofossil:
 
-        # 7 total CO2e
-        p_ofossil.CO2e_total = p_ofossil.CO2e_pb
+    p_ofossil = root.h18.p_ofossil
 
-        # Production other renewables:
+    # 1 final energy consumption
+    """p_coal.energy = (
+        entry ('In_I_ofossil_fec')
 
-        p_orenew = root.h18.p_orenew
+        #result: 21.019.444 MWh
+    )"""
 
-        # 1 final energy consumption
-        p_orenew.energy = (
-            entry("In_R_orenew_fec")
-            + entry("In_B_orenew_fec")
-            + entry("In_I_orenew_fec")
-            # result: 123.883.611 MWh
-        )
+    p_ofossil.energy = entry("In_I_ofossil_fec")
 
-        # 2 pct of total final energy consumption
-        p_orenew.pct_energy = p_orenew.energy / p.energy
+    # 2 pct of total final energy consumption
+    p_ofossil.pct_energy = p_ofossil.energy / p.energy
 
-        # Production solarthermal energy within other renewables:
+    # 3 process-based CO2e factor per MWh final energy
+    p_ofossil.CO2e_pb_per_MWh = fact("Fact_H_P_ofossil_ratio_CO2e_pb_to_fec_2018")
+    # 4 process-based CO2e
+    p_ofossil.CO2e_pb = p_ofossil.energy * p_ofossil.CO2e_pb_per_MWh
 
-        p_solarth = root.h18.p_solarth
+    # 6 no combustion-based CO2e
 
-        # 2 pct of other renewables' final energy consumption
-        p_solarth.pct_energy = fact("Fact_R_S_ratio_solarth_to_orenew_2018")
+    # 7 total CO2e
+    p_ofossil.CO2e_total = p_ofossil.CO2e_pb
 
-        # 1 final energy consumption
-        p_solarth.energy = (
-            p_orenew.energy
-            * p_solarth.pct_energy
-            # result: 9.444.712 MWh
-        )
+    # Production other renewables:
 
-        # 3 process-based CO2e factor per MWh final energy
-        p_solarth.CO2e_pb_per_MWh = fact("Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018")
-        # 4 process-based CO2e
-        p_solarth.CO2e_pb = p_solarth.energy * p_solarth.CO2e_pb_per_MWh
+    p_orenew = root.h18.p_orenew
 
-        # 6 no combustion-based CO2e
+    # 1 final energy consumption
+    p_orenew.energy = (
+        entry("In_R_orenew_fec")
+        + entry("In_B_orenew_fec")
+        + entry("In_I_orenew_fec")
+        # result: 123.883.611 MWh
+    )
 
-        # 7 total CO2e
-        p_solarth.CO2e_total = p_solarth.CO2e_pb
+    # 2 pct of total final energy consumption
+    p_orenew.pct_energy = p_orenew.energy / p.energy
 
-        # Production heatpump energy within other renewables:
+    # Production solarthermal energy within other renewables:
 
-        p_heatpump = root.h18.p_heatpump
+    p_solarth = root.h18.p_solarth
 
-        # 2 pct of other renewables' final energy consumption
-        p_heatpump.pct_energy = fact("Fact_R_S_ratio_heatpump_to_orenew_2018")
+    # 2 pct of other renewables' final energy consumption
+    p_solarth.pct_energy = fact("Fact_R_S_ratio_solarth_to_orenew_2018")
 
-        # 1 final energy consumption
-        p_heatpump.energy = (
-            p_orenew.energy
-            * p_heatpump.pct_energy
-            # result: 13.920.010 MWh
-        )
+    # 1 final energy consumption
+    p_solarth.energy = (
+        p_orenew.energy
+        * p_solarth.pct_energy
+        # result: 9.444.712 MWh
+    )
 
-        # 3 process-based CO2e factor per MWh final energy
-        p_heatpump.CO2e_pb_per_MWh = fact("Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018")
-        # 4 process-based CO2e
-        p_heatpump.CO2e_pb = p_heatpump.energy * p_heatpump.CO2e_pb_per_MWh
+    # 3 process-based CO2e factor per MWh final energy
+    p_solarth.CO2e_pb_per_MWh = fact("Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018")
+    # 4 process-based CO2e
+    p_solarth.CO2e_pb = p_solarth.energy * p_solarth.CO2e_pb_per_MWh
 
-        # 6 no combustion-based CO2e
+    # 6 no combustion-based CO2e
 
-        # 7 total CO2e
-        p_heatpump.CO2e_total = p_heatpump.CO2e_pb
+    # 7 total CO2e
+    p_solarth.CO2e_total = p_solarth.CO2e_pb
 
-        # back to other renewables
+    # Production heatpump energy within other renewables:
 
-        # 4 process-based CO2e
-        p_orenew.CO2e_pb = p_solarth.CO2e_pb + p_heatpump.CO2e_pb
+    p_heatpump = root.h18.p_heatpump
 
-        # 6 no combustion-based CO2e
+    # 2 pct of other renewables' final energy consumption
+    p_heatpump.pct_energy = fact("Fact_R_S_ratio_heatpump_to_orenew_2018")
 
-        p_orenew.CO2e_total = p_orenew.CO2e_pb
+    # 1 final energy consumption
+    p_heatpump.energy = (
+        p_orenew.energy
+        * p_heatpump.pct_energy
+        # result: 13.920.010 MWh
+    )
 
-        p_orenew.CO2e_pb_per_MWh = 0
+    # 3 process-based CO2e factor per MWh final energy
+    p_heatpump.CO2e_pb_per_MWh = fact("Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018")
+    # 4 process-based CO2e
+    p_heatpump.CO2e_pb = p_heatpump.energy * p_heatpump.CO2e_pb_per_MWh
 
-        p_solarth = root.h18.p_solarth
+    # 6 no combustion-based CO2e
 
-        p_solarth.energy = p_orenew.energy * fact(
-            "Fact_R_S_ratio_solarth_to_orenew_2018"
-        )
-        p_solarth.pct_energy = p_solarth.energy / p_orenew.energy
-        p_solarth.CO2e_pb_per_MWh = fact("Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018")
-        p_solarth.CO2e_pb = p_solarth.energy * p_solarth.CO2e_pb_per_MWh
-        p_solarth.CO2e_total = p_solarth.CO2e_pb
+    # 7 total CO2e
+    p_heatpump.CO2e_total = p_heatpump.CO2e_pb
 
-        p_heatpump = root.h18.p_heatpump
-        p_heatpump.energy = p_orenew.energy * fact(
-            "Fact_R_S_ratio_heatpump_to_orenew_2018"
-        )
-        p_heatpump.pct_energy = p_heatpump.energy / p_orenew.energy
-        p_heatpump.CO2e_pb_per_MWh = fact("Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018")
+    # back to other renewables
 
-        p_heatpump.CO2e_pb = p_heatpump.energy * p_heatpump.CO2e_pb_per_MWh
-        p_heatpump.CO2e_total = p_heatpump.CO2e_pb
+    # 4 process-based CO2e
+    p_orenew.CO2e_pb = p_solarth.CO2e_pb + p_heatpump.CO2e_pb
 
-        # 7 total CO2e
-        # ### total CO2e of Heat 2018 ###
+    # 6 no combustion-based CO2e
 
-        # 4 process-based CO2e of Heat 2018
-        p.CO2e_pb = (
-            p_gas.CO2e_pb
-            + p_opetpro.CO2e_pb
-            + p_coal.CO2e_pb
-            + p_biomass.CO2e_pb
-            + p_ofossil.CO2e_pb
-            + p_orenew.CO2e_pb
-        )
+    p_orenew.CO2e_total = p_orenew.CO2e_pb
 
-        # 6 combustion-based CO2e of Heat 2018
-        p.CO2e_cb = (
-            p_gas.CO2e_cb
-            + p_lpg.CO2e_cb
-            + p_fueloil.CO2e_cb
-            + p_opetpro.CO2e_cb
-            + p_coal.CO2e_cb
-            + p_heatnet.CO2e_cb
-        )
-        # 7 total CO2e of Heat 2018
+    p_orenew.CO2e_pb_per_MWh = 0
 
-        p.CO2e_cb_per_MWh = p.CO2e_cb / p.energy
+    p_solarth = root.h18.p_solarth
 
-        p.CO2e_total = (
-            p_gas.CO2e_total
-            + p_lpg.CO2e_total
-            + p_fueloil.CO2e_total
-            + p_opetpro.CO2e_total
-            + p_coal.CO2e_total
-            + p_heatnet.CO2e_total
-            + p_biomass.CO2e_total
-            + p_ofossil.CO2e_total
-            + p_orenew.CO2e_total
-        )
+    p_solarth.energy = p_orenew.energy * fact("Fact_R_S_ratio_solarth_to_orenew_2018")
+    p_solarth.pct_energy = p_solarth.energy / p_orenew.energy
+    p_solarth.CO2e_pb_per_MWh = fact("Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018")
+    p_solarth.CO2e_pb = p_solarth.energy * p_solarth.CO2e_pb_per_MWh
+    p_solarth.CO2e_total = p_solarth.CO2e_pb
 
-        p.pct_energy = (
-            p_gas.pct_energy
-            + p_lpg.pct_energy
-            + p_fueloil.pct_energy
-            + p_opetpro.pct_energy
-            + p_coal.pct_energy
-            + p_heatnet.pct_energy
-            + p_biomass.pct_energy
-            + p_ofossil.pct_energy
-            + p_orenew.pct_energy
-        )
+    p_heatpump = root.h18.p_heatpump
+    p_heatpump.energy = p_orenew.energy * fact("Fact_R_S_ratio_heatpump_to_orenew_2018")
+    p_heatpump.pct_energy = p_heatpump.energy / p_orenew.energy
+    p_heatpump.CO2e_pb_per_MWh = fact("Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018")
 
-        h = root.h18.h
-        h.CO2e_cb = p.CO2e_cb
-        h.CO2e_total = p.CO2e_total
-        h.CO2e_pb = p.CO2e_pb
+    p_heatpump.CO2e_pb = p_heatpump.energy * p_heatpump.CO2e_pb_per_MWh
+    p_heatpump.CO2e_total = p_heatpump.CO2e_pb
 
-    except Exception as e:
-        print(e)
-        raise
+    # 7 total CO2e
+    # ### total CO2e of Heat 2018 ###
+
+    # 4 process-based CO2e of Heat 2018
+    p.CO2e_pb = (
+        p_gas.CO2e_pb
+        + p_opetpro.CO2e_pb
+        + p_coal.CO2e_pb
+        + p_biomass.CO2e_pb
+        + p_ofossil.CO2e_pb
+        + p_orenew.CO2e_pb
+    )
+
+    # 6 combustion-based CO2e of Heat 2018
+    p.CO2e_cb = (
+        p_gas.CO2e_cb
+        + p_lpg.CO2e_cb
+        + p_fueloil.CO2e_cb
+        + p_opetpro.CO2e_cb
+        + p_coal.CO2e_cb
+        + p_heatnet.CO2e_cb
+    )
+    # 7 total CO2e of Heat 2018
+
+    p.CO2e_cb_per_MWh = p.CO2e_cb / p.energy
+
+    p.CO2e_total = (
+        p_gas.CO2e_total
+        + p_lpg.CO2e_total
+        + p_fueloil.CO2e_total
+        + p_opetpro.CO2e_total
+        + p_coal.CO2e_total
+        + p_heatnet.CO2e_total
+        + p_biomass.CO2e_total
+        + p_ofossil.CO2e_total
+        + p_orenew.CO2e_total
+    )
+
+    p.pct_energy = (
+        p_gas.pct_energy
+        + p_lpg.pct_energy
+        + p_fueloil.pct_energy
+        + p_opetpro.pct_energy
+        + p_coal.pct_energy
+        + p_heatnet.pct_energy
+        + p_biomass.pct_energy
+        + p_ofossil.pct_energy
+        + p_orenew.pct_energy
+    )
+
+    h = root.h18.h
+    h.CO2e_cb = p.CO2e_cb
+    h.CO2e_total = p.CO2e_total
+    h.CO2e_pb = p.CO2e_pb
