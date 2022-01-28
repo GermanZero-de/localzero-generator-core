@@ -180,6 +180,13 @@ def data_checkout_cmd(args):
                 file=sys.stderr,
             )
     else:
+        # First switch to main before pulling -- this has the least chance of causing
+        # trouble as we should merge on github
+        refdatatools.checkout(datadir, "public", "main")
+        # refdatatools.pull uses --ff-only
+        refdatatools.pull(datadir, "public")
+        # Now we should have all changes and can switch to whatever the production file
+        # wants
         refdatatools.checkout(datadir, "public", production.public)
 
     if status is not None and status.proprietary_status.rev == production.proprietary:
@@ -189,6 +196,7 @@ def data_checkout_cmd(args):
                 file=sys.stderr,
             )
     else:
+        refdatatools.pull(datadir, "public")
         refdatatools.checkout(datadir, "proprietary", production.proprietary)
 
 
