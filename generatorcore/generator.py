@@ -130,7 +130,9 @@ def calculate(inputs: Inputs) -> Result:
     electricity2030.calc(result, inputs)
     # TODO: Fix the below
     #methodology183x.calc_3X(result, inputs)
+    # TODO: Fix the below
     # print('Pyrolyse')
+    #lulucf2030.calcPyr(result, inputs)
     return result
 
 
