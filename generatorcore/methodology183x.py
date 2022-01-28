@@ -569,7 +569,7 @@ def calc_3X(root, inputs: Inputs):
         + root.a30.a.CO2e_total
     )
 
-    #TODO: Check with Hauke if theis is correct: 
+    #TODO: Check with Hauke if this is correct: 
     m183X.CO2e_lulucf_203X = root.l30.l.CO2e_total
 
     # get the CO2e of all sectors für 203X (the target year) which should be 0
