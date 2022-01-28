@@ -1,5 +1,9 @@
 from dataclasses import dataclass, asdict
+
+import numpy as np
+
 from .inputs import Inputs
+from numpy import *
 
 #  Definition der relevanten Spaltennamen für den Sektor F (30)
 
@@ -75,29 +79,6 @@ def calc(root, inputs: Inputs):
 
     def entry(n):
         return inputs.entry(n)
-
-    """"""
-    """ import external values"""
-    import json
-
-    if entry("In_M_AGS_com") == "DG000000":
-        excel_path = "excel/germany_values.json"
-    elif entry("In_M_AGS_com") == "03159016":
-        excel_path = "excel/goettingen_values.json"
-
-    with open(excel_path, "r") as fp:
-        exl = json.load(fp)
-    fp.close()
-    """end"""
-
-    root.e30.d_h.energy = exl["e30"]["d_h"]["energy"]
-    root.e30.d_r.energy = exl["e30"]["d_r"]["energy"]
-    root.e30.d_b.energy = exl["e30"]["d_b"]["energy"]
-    root.e30.d_i.energy = exl["e30"]["d_i"]["energy"]
-    root.e30.d_t.energy = exl["e30"]["d_t"]["energy"]
-    root.e30.d_a.energy = exl["e30"]["d_a"]["energy"]
-    root.e30.d_f_wo_hydrogen.energy = exl["e30"]["d_f_wo_hydrogen"]["energy"]
-    root.e30.d.energy = exl["e30"]["d"]["energy"]
 
     Million = 1000000
 
@@ -352,40 +333,6 @@ def calc(root, inputs: Inputs):
             f.p_emethan.cost_wage / f.p_emethan.ratio_wage_to_emplo
         )
 
-        f.d_r.energy = root.r30.p.demand_emethan
-        f.d_b.energy = root.b30.p.demand_ediesel + root.b30.p.demand_emethan
-        f.d_i.energy = root.i30.p.demand_emethan + root.i30.p.demand_hydrogen
-        f.d_t.energy = (
-            root.t30.t.demand_epetrol
-            + root.t30.t.demand_ediesel
-            + root.t30.t.demand_ejetfuel
-            + root.t30.t.demand_hydrogen
-        )
-        f.d_a.energy = (
-            root.a30.p_operation.demand_epetrol
-            + root.a30.p_operation.demand_ediesel
-            + root.a30.p_operation.demand_emethan
-        )
-        f.d_e_hydrogen_reconv.energy = f.p_hydrogen_reconv.energy
-        f.p_hydrogen.demand_electricity = f.p_hydrogen.energy / ass(
-            "Ass_F_P_electrolysis_efficiency"
-        )
-        f.d.energy = (
-            f.d_r.energy
-            + f.d_b.energy
-            + f.d_i.energy
-            + f.d_t.energy
-            + f.d_a.energy
-            + f.d_e_hydrogen_reconv.energy
-        )  # SUM(d_r.energy:d_e_hydrogen_reconv.energy)
-        f.p.demand_electricity = (
-            f.p_petrol.demand_electricity
-            + f.p_jetfuel.demand_electricity
-            + f.p_diesel.demand_electricity
-            + f.p_emethan.demand_electricity
-            + f.p_hydrogen.demand_electricity
-            + f.p_hydrogen_reconv.demand_electricity
-        )  # (SUM(p_petrol.demand_electricity:p_hydrogen_reconv.demand_electricity))
         f.p_hydrogen_reconv.energy = (
             (
                 root.h30.p.demand_electricity
@@ -529,27 +476,10 @@ def calc(root, inputs: Inputs):
             + f.p_hydrogen_reconv.invest_pa
         )  # SUM(p_petrol.invest_pa:p_hydrogen_reconv.invest_pa)
         f.f.invest_pa = f.p.invest_pa
-        f.p_emethan.invest_pa_outside = (
-            0
-            if entry("In_M_AGS_com") == "DG000000"
-            else f.p_emethan.invest_pa
-            * root.e30.d.energy
-            / ass("Ass_E_P_renew_nep_total_2035")
-        )
-        f.p_hydrogen.invest_pa_outside = (
-            0
-            if entry("In_M_AGS_com") == "DG000000"
-            else f.p_hydrogen.invest_pa
-            * root.e30.d.energy
-            / ass("Ass_E_P_renew_nep_total_2035")
-        )
-        f.p_hydrogen_reconv.invest_pa_outside = (
-            0
-            if entry("In_M_AGS_com") == "DG000000"
-            else f.p_hydrogen_reconv.invest_pa
-            * root.e30.d_h.energy
-            / ass("Ass_E_P_renew_nep_total_2035")
-        )
+        f.p_emethan.invest_pa_outside = f.p_emethan.invest_pa
+        f.p_hydrogen.invest_pa_outside = f.p_hydrogen.invest_pa
+        f.p_hydrogen_reconv.invest_pa_outside = f.p_hydrogen_reconv.invest_pa
+
         f.p.invest_pa_outside = (
             f.p_emethan.invest_pa_outside
             + f.p_hydrogen.invest_pa_outside
@@ -565,27 +495,10 @@ def calc(root, inputs: Inputs):
             + f.p_hydrogen_reconv.invest
         )  # SUM(p_petrol.invest:p_hydrogen_reconv.invest)
         f.f.invest = f.p.invest
-        f.p_emethan.invest_outside = (
-            0
-            if entry("In_M_AGS_com") == "DG000000"
-            else f.p_emethan.invest
-            * root.e30.d.energy
-            / ass("Ass_E_P_renew_nep_total_2035")
-        )
-        f.p_hydrogen.invest_outside = (
-            0
-            if entry("In_M_AGS_com") == "DG000000"
-            else f.p_hydrogen.invest
-            * root.e30.d.energy
-            / ass("Ass_E_P_renew_nep_total_2035")
-        )
-        f.p_hydrogen_reconv.invest_outside = (
-            0
-            if entry("In_M_AGS_com") == "DG000000"
-            else f.p_hydrogen_reconv.invest
-            * root.e30.d_h.energy
-            / ass("Ass_E_P_renew_nep_total_2035")
-        )
+        f.p_emethan.invest_outside = f.p_emethan.invest
+        f.p_hydrogen.invest_outside = f.p_hydrogen.invest
+        f.p_hydrogen_reconv.invest_outside = f.p_hydrogen_reconv.invest
+
         f.p.invest_outside = (
             f.p_emethan.invest_outside
             + f.p_hydrogen.invest_outside
@@ -641,43 +554,38 @@ def calc(root, inputs: Inputs):
         f.p_emethan.invest_per_x = ass("Ass_S_methan_invest_per_power")
         f.p_hydrogen.invest_per_x = ass("Ass_S_electrolyses_invest_per_power")
 
-        f.z_d.energy = (
-            root.r30.p.energy
-            + root.b30.p.energy
-            + root.i30.p.energy
-            + root.t30.t.energy
-            + root.a30.p.energy
+        f.p.demand_electricity = (
+            f.p_petrol.demand_electricity
+            + f.p_jetfuel.demand_electricity
+            + f.p_diesel.demand_electricity
+            + f.p_emethan.demand_electricity
+            + f.p_hydrogen.demand_electricity
+            + f.p_hydrogen_reconv.demand_electricity
+        )  # (SUM(p_petrol.demand_electricity:p_hydrogen_reconv.demand_electricity))
+
+        f.d_r.energy = root.r30.p.demand_emethan
+        f.d_b.energy = root.b30.p.demand_ediesel + root.b30.p.demand_emethan
+        f.d_i.energy = root.i30.p.demand_emethan + root.i30.p.demand_hydrogen
+        f.d_t.energy = (
+            root.t30.t.demand_epetrol
+            + root.t30.t.demand_ediesel
+            + root.t30.t.demand_ejetfuel
+            + root.t30.t.demand_hydrogen
         )
-        f.z_d.CO2e_pb = root.i30.i.CO2e_pb + root.a30.a.CO2e_pb + root.l30.l.CO2e_pb
-        f.z_d.CO2e_cb = (
-            root.r30.r.CO2e_cb
-            + root.b30.b.CO2e_cb
-            + root.i30.i.CO2e_cb
-            + root.t30.t.CO2e_cb
-            + root.a30.a.CO2e_cb
-            + root.l30.l.CO2e_cb
+        f.d_a.energy = (
+            root.a30.p_operation.demand_epetrol
+            + root.a30.p_operation.demand_ediesel
+            + root.a30.p_operation.demand_emethan
         )
-        f.z_d.CO2e_total = (
-            root.r30.r.CO2e_total
-            + root.b30.b.CO2e_total
-            + root.i30.i.CO2e_total
-            + root.t30.t.CO2e_total
-            + root.a30.a.CO2e_total
-            + root.l30.l.CO2e_total
+        f.d_e_hydrogen_reconv.energy = f.p_hydrogen_reconv.energy
+        f.p_hydrogen.demand_electricity = f.p_hydrogen.energy / ass(
+            "Ass_F_P_electrolysis_efficiency"
         )
-        f.z_d.demand_emplo = (
-            root.r30.r.demand_emplo
-            + root.b30.b.demand_emplo
-            + root.i30.i.demand_emplo
-            + root.t30.t.demand_emplo
-            + root.a30.a.demand_emplo
-            + root.l30.l.demand_emplo
-        )
-        f.z_d.demand_emplo_new = (
-            root.r30.r.demand_emplo_new
-            + root.b30.b.demand_emplo_new
-            + root.i30.i.demand_emplo_new
-            + root.t30.t.demand_emplo_new
-            + root.a30.a.demand_emplo_new
-            + root.l30.l.demand_emplo_new
-        )
+        f.d.energy = (
+            f.d_r.energy
+            + f.d_b.energy
+            + f.d_i.energy
+            + f.d_t.energy
+            + f.d_a.energy
+            + f.d_e_hydrogen_reconv.energy
+        )  # SUM(d_r.energy:d_e_hydrogen_reconv.energy)
