@@ -3,6 +3,15 @@ Localzero Generator Core
 This contains the calcuation. It should neither contain reference data
 nor anything that is specific to the website.
 
+Special cases
+--------------
+Here are some interesting special cases to note that were found when we tried to run
+over all AGSes in Germany:
+
+03255508
+    https://de.wikipedia.org/wiki/Wenzen_(gemeindefreies_Gebiet). No population. But that is given
+	in the population datasets as blank not as 0.
+
 Install environment
 =========================
 - install Python 3.10.
