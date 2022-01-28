@@ -23,6 +23,11 @@ def _load(datadir: str, what: str, filename: str = "2018") -> pd.DataFrame:
     )
 
 
+def set_nans_to_0(data: pd.DataFrame, *, columns):
+    for c in columns:
+        data[c] = data[c].fillna(0)
+
+
 class RowNotFound(Exception):
     column: str
     df: pd.DataFrame
@@ -51,7 +56,7 @@ class Row:
             # and extract a very small number of rows. pandas is total overkill
             # in particular when we are publishing a package for others to use
             # it's nice to have a small list of dependencies
-            self._series = df[df[column] == key_value].iloc[0]
+            self._series = df[df[column] == key_value].iloc[0]  # type: ignore
         except:
             raise RowNotFound(column=column, key_value=key_value, df=df)
 
@@ -164,6 +169,22 @@ class RefData:
         self._population = population
         self._renewable_energy = renewable_energy
         self._traffic = traffic
+
+        self._fix_missing_entries_in_area()
+
+    def _fix_missing_entries_in_area(self):
+        """Here we assume that the missing entries in the area sheet should actually be 0."""
+        set_nans_to_0(
+            self._area,
+            columns=[
+                "veg_forrest",
+                "veg_wood",
+                "veg_heath",
+                "veg_moor",
+                "veg_marsh",
+                "settlement_ghd",
+            ],
+        )
 
     def ags_master(self) -> dict[str, str]:
         """Returns the complete dictionary of AGS, where no big
