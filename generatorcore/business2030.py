@@ -1,20 +1,8 @@
-from dataclasses import dataclass, asdict
 from .inputs import Inputs
+from .utils import div
+from dataclasses import dataclass, asdict
+
 import time
-
-
-@dataclass
-class f:
-    def __init__(self, value: float, unit: str):
-        self.value = value
-        self.unit = unit
-
-    def __add__(self, other):
-        print("operands: ", self.value, other.value)
-        if self.value is None or other.value is None:
-            return f(None)
-        else:
-            return f(self.value + other.value, self.unit)
 
 
 @dataclass
@@ -193,7 +181,7 @@ def calc(root, inputs: Inputs):
     )
     p_nonresi.energy = p_nonresi.demand_heat_nonrehab + p_nonresi.demand_heat_rehab
 
-    p_nonresi.fec_factor_averaged = p_nonresi.energy / b18.p_nonresi.area_m2
+    p_nonresi.fec_factor_averaged = div(p_nonresi.energy, b18.p_nonresi.area_m2)
     p_nonresi.invest_per_x = fact("Fact_R_P_energetical_renovation_cost_business")
     p_nonresi.change_energy_MWh = p_nonresi.energy - b18.p_nonresi.energy
     p_nonresi.area_m2 = b18.p_nonresi.area_m2
@@ -211,7 +199,7 @@ def calc(root, inputs: Inputs):
     p_nonresi.ratio_wage_to_emplo = fact(
         "Fact_B_P_renovations_wage_per_person_per_year_2017"
     )
-    p_nonresi.demand_emplo = p_nonresi.cost_wage / p_nonresi.ratio_wage_to_emplo
+    p_nonresi.demand_emplo = div(p_nonresi.cost_wage, p_nonresi.ratio_wage_to_emplo)
 
     p_nonresi_com.fec_factor_averaged = p_nonresi.fec_factor_averaged
     p_nonresi_com.area_m2_rehab = p_nonresi.area_m2_rehab * ass(
@@ -325,18 +313,18 @@ def calc(root, inputs: Inputs):
     p.energy = p_nonresi.energy + p_other.energy
     s.energy = p.energy
 
-    s_heatnet.pct_energy = s_heatnet.energy / s.energy
+    s_heatnet.pct_energy = div(s_heatnet.energy, s.energy)
 
     s_gas.pct_energy = ass("Ass_R_S_fec_ratio_fossil_to_total_2050")
 
-    s_biomass.pct_energy = s_biomass.energy / s.energy
-    s_heatpump.pct_energy = s_heatpump.energy / s.energy
-    s_solarth.pct_energy = s_solarth.energy / s.energy
-    s_emethan.pct_energy = s_emethan.energy / s.energy
-    s_diesel.pct_energy = s_diesel.energy / s.energy
+    s_biomass.pct_energy = div(s_biomass.energy, s.energy)
+    s_heatpump.pct_energy = div(s_heatpump.energy, s.energy)
+    s_solarth.pct_energy = div(s_solarth.energy, s.energy)
+    s_emethan.pct_energy = div(s_emethan.energy, s.energy)
+    s_diesel.pct_energy = div(s_diesel.energy, s.energy)
     s_fueloil.pct_energy = 0
-    s_heatnet.pct_energy = s_heatnet.energy / s.energy
-    s_elec.pct_energy = s_elec.energy / s.energy
+    s_heatnet.pct_energy = div(s_heatnet.energy, s.energy)
+    s_elec.pct_energy = div(s_elec.energy, s.energy)
 
     s_gas.cost_fuel_per_MWh = ass("Ass_R_S_gas_energy_cost_factor_2035")
     s_biomass.cost_fuel_per_MWh = b18.s_biomass.cost_fuel_per_MWh
@@ -410,21 +398,23 @@ def calc(root, inputs: Inputs):
     s_heatpump.change_energy_MWh = s_heatpump.energy - b18.s_heatpump.energy
     s_solarth.change_energy_MWh = s_solarth.energy - b18.s_solarth.energy
 
-    s.change_energy_pct = s.change_energy_MWh / b18.s.energy
-    s_gas.change_energy_pct = s_gas.change_energy_MWh / b18.s_gas.energy
-    s_lpg.change_energy_pct = s_lpg.change_energy_MWh / b18.s_lpg.energy
-    s_petrol.change_energy_pct = s_petrol.change_energy_MWh / b18.s_petrol.energy
-    s_jetfuel.change_energy_pct = s_jetfuel.change_energy_MWh / b18.s_jetfuel.energy
-    s_diesel.change_energy_pct = s_diesel.change_energy_MWh / b18.s_diesel.energy
-    s_fueloil.change_energy_pct = s_fueloil.change_energy_MWh / b18.s_fueloil.energy
-    s_biomass.change_energy_pct = s_biomass.change_energy_MWh / b18.s_biomass.energy
-    s_coal.change_energy_pct = s_coal.change_energy_MWh / b18.s_coal.energy
-    s_heatnet.change_energy_pct = s_heatnet.change_energy_MWh / b18.s_heatnet.energy
-    s_elec_heating.change_energy_pct = (
-        s_elec_heating.change_energy_MWh / b18.s_elec_heating.energy
+    s.change_energy_pct = div(s.change_energy_MWh, b18.s.energy)
+    s_gas.change_energy_pct = div(s_gas.change_energy_MWh, b18.s_gas.energy)
+    s_lpg.change_energy_pct = div(s_lpg.change_energy_MWh, b18.s_lpg.energy)
+    s_petrol.change_energy_pct = div(s_petrol.change_energy_MWh, b18.s_petrol.energy)
+    s_jetfuel.change_energy_pct = div(s_jetfuel.change_energy_MWh, b18.s_jetfuel.energy)
+    s_diesel.change_energy_pct = div(s_diesel.change_energy_MWh, b18.s_diesel.energy)
+    s_fueloil.change_energy_pct = div(s_fueloil.change_energy_MWh, b18.s_fueloil.energy)
+    s_biomass.change_energy_pct = div(s_biomass.change_energy_MWh, b18.s_biomass.energy)
+    s_coal.change_energy_pct = div(s_coal.change_energy_MWh, b18.s_coal.energy)
+    s_heatnet.change_energy_pct = div(s_heatnet.change_energy_MWh, b18.s_heatnet.energy)
+    s_elec_heating.change_energy_pct = div(
+        s_elec_heating.change_energy_MWh, b18.s_elec_heating.energy
     )
-    s_heatpump.change_energy_pct = s_heatpump.change_energy_MWh / b18.s_heatpump.energy
-    s_solarth.change_energy_pct = s_solarth.change_energy_MWh / b18.s_solarth.energy
+    s_heatpump.change_energy_pct = div(
+        s_heatpump.change_energy_MWh, b18.s_heatpump.energy
+    )
+    s_solarth.change_energy_pct = div(s_solarth.change_energy_MWh, b18.s_solarth.energy)
 
     s.change_CO2e_t = s.CO2e_cb - b18.s.CO2e_cb
     s_gas.change_CO2e_t = s_gas.CO2e_cb - b18.s_gas.CO2e_cb
@@ -439,7 +429,7 @@ def calc(root, inputs: Inputs):
     s_heatnet.change_CO2e_t = s_heatnet.CO2e_cb
     s_elec_heating.change_CO2e_t = s_elec_heating.CO2e_cb
     s_solarth.change_CO2e_t = s_solarth.CO2e_cb
-    s.change_CO2ee_pct = s.change_CO2e_t / b18.s.CO2e_cb
+    s.change_CO2ee_pct = div(s.change_CO2e_t, b18.s.CO2e_cb)
 
     p_nonresi.change_CO2e_t = 0
     s_heatpump.change_CO2e_t = s.change_CO2e_t - (
@@ -581,9 +571,9 @@ def calc(root, inputs: Inputs):
 
     s_gas.full_load_hour = fact("Fact_B_S_full_usage_hours_buildings")
     s_heatpump.full_load_hour = fact("Fact_B_S_full_usage_hours_buildings")
-    s_heatpump.power_installed = b18.s_heatpump.energy / s_heatpump.full_load_hour
+    s_heatpump.power_installed = div(b18.s_heatpump.energy, s_heatpump.full_load_hour)
     s_heatpump.power_to_be_installed = max(
-        s_heatpump.energy / s_heatpump.full_load_hour - s_heatpump.power_installed,
+        div(s_heatpump.energy, s_heatpump.full_load_hour) - s_heatpump.power_installed,
         0,
     )
     s_heatpump.invest_per_x = fact("Fact_R_S_heatpump_cost")
@@ -608,9 +598,9 @@ def calc(root, inputs: Inputs):
     s_solarth.invest_pa = s_solarth.invest / Kalkulationszeitraum
     s_solarth.cost_wage = s_solarth.invest_pa * s_solarth.pct_of_wage
     s_solarth.ratio_wage_to_emplo = fact("Fact_B_P_heating_wage_per_person_per_year")
-    s_solarth.demand_emplo = s_solarth.cost_wage / s_solarth.ratio_wage_to_emplo
+    s_solarth.demand_emplo = div(s_solarth.cost_wage, s_solarth.ratio_wage_to_emplo)
     s_heatpump.ratio_wage_to_emplo = fact("Fact_B_P_heating_wage_per_person_per_year")
-    s_heatpump.demand_emplo = s_heatpump.cost_wage / s_heatpump.ratio_wage_to_emplo
+    s_heatpump.demand_emplo = div(s_heatpump.cost_wage, s_heatpump.ratio_wage_to_emplo)
 
     s_heatpump.emplo_existing = (
         fact("Fact_B_P_install_heating_emplo_2017")
@@ -626,11 +616,11 @@ def calc(root, inputs: Inputs):
     )
     g_consult.invest_pa = g_consult.invest / Kalkulationszeitraum
     g_consult.cost_wage = g_consult.invest_pa
-    g_consult.demand_emplo = g_consult.cost_wage / g_consult.ratio_wage_to_emplo
+    g_consult.demand_emplo = div(g_consult.cost_wage, g_consult.ratio_wage_to_emplo)
     g_consult.invest_com = g_consult.invest
-    p_nonresi.change_energy_pct = p_nonresi.change_energy_MWh / b18.p_nonresi.energy
-    p_nonresi_com.change_energy_pct = (
-        p_nonresi_com.change_energy_MWh / b18.p_nonresi_com.energy
+    p_nonresi.change_energy_pct = div(p_nonresi.change_energy_MWh, b18.p_nonresi.energy)
+    p_nonresi_com.change_energy_pct = div(
+        p_nonresi_com.change_energy_MWh, b18.p_nonresi_com.energy
     )
 
     s.invest = s_heatpump.invest + s_solarth.invest
@@ -678,7 +668,7 @@ def calc(root, inputs: Inputs):
     b.change_energy_MWh = s.change_energy_MWh
     b.change_energy_pct = s.change_energy_pct
     b.change_CO2e_t = s.change_CO2e_t
-    s.change_CO2e_pct = s.change_CO2e_t / b18.s.CO2e_cb
+    s.change_CO2e_pct = div(s.change_CO2e_t, b18.s.CO2e_cb)
     b.CO2e_total_2021_estimated = s.CO2e_total_2021_estimated
     b.cost_climate_saved = s.cost_climate_saved
     g.invest_pa = g_consult.invest_pa
@@ -714,7 +704,7 @@ def calc(root, inputs: Inputs):
     p_other.demand_ediesel = p_vehicles.demand_ediesel
     p.demand_emethan = s_emethan.energy
     p.change_energy_MWh = p.energy - b18.p.energy
-    p.change_energy_pct = p.change_energy_MWh / b18.p.energy
+    p.change_energy_pct = div(p.change_energy_MWh, b18.p.energy)
     s.invest_pa = s_heatpump.invest_pa + s_solarth.invest_pa
     s.invest_pa_com = s_heatpump.invest_pa_com + s_solarth.invest_pa_com
     b.invest = g.invest + p.invest + s.invest
@@ -735,19 +725,21 @@ def calc(root, inputs: Inputs):
     p_nonresi_com.invest_pa = p_nonresi_com.invest / entry("In_M_duration_target")
     p.demand_ediesel = p_other.demand_ediesel
     p_other.change_energy_MWh = p_other.energy - b18.p_other.energy
-    p_other.change_energy_pct = p_other.change_energy_MWh / b18.p_other.energy
+    p_other.change_energy_pct = div(p_other.change_energy_MWh, b18.p_other.energy)
     p_elec_elcon.change_energy_MWh = p_elec_elcon.energy - b18.p_elec_elcon.energy
-    p_elec_elcon.change_energy_pct = (
-        p_elec_elcon.change_energy_MWh / b18.p_elec_elcon.energy
+    p_elec_elcon.change_energy_pct = div(
+        p_elec_elcon.change_energy_MWh, b18.p_elec_elcon.energy
     )
     p_elec_heatpump.change_energy_MWh = (
         p_elec_heatpump.energy - b18.p_elec_heatpump.energy
     )
-    p_elec_heatpump.change_energy_pct = (
-        p_elec_heatpump.change_energy_MWh / b18.p_elec_heatpump.energy
+    p_elec_heatpump.change_energy_pct = div(
+        p_elec_heatpump.change_energy_MWh, b18.p_elec_heatpump.energy
     )
     p_vehicles.change_energy_MWh = p_vehicles.energy - b18.p_vehicles.energy
-    p_vehicles.change_energy_pct = p_vehicles.change_energy_MWh / b18.p_vehicles.energy
+    p_vehicles.change_energy_pct = div(
+        p_vehicles.change_energy_MWh, b18.p_vehicles.energy
+    )
     b.change_CO2e_pct = s.change_CO2e_pct
     b.invest_pa = g.invest_pa + p.invest_pa + s.invest_pa
     b.invest_pa_com = g.invest_pa_com + p.invest_pa_com + s.invest_pa_com
@@ -760,7 +752,7 @@ def calc(root, inputs: Inputs):
         * ass("Ass_B_D_install_heating_emplo_pct_of_B_solarth")
     )
     s_gas.CO2e_total = s_gas.CO2e_cb
-    s_gas.change_CO2e_pct = s_gas.change_CO2e_t / b18.s_gas.CO2e_cb
+    s_gas.change_CO2e_pct = div(s_gas.change_CO2e_t, b18.s_gas.CO2e_cb)
     s_emethan.CO2e_total = s_emethan.CO2e_cb
     s_emethan.change_energy_MWh = s_emethan.energy - 0
     s_emethan.CO2e_total_2021_estimated = 0 * fact("Fact_M_CO2e_wo_lulucf_2021_vs_2018")
@@ -770,19 +762,19 @@ def calc(root, inputs: Inputs):
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     s_lpg.CO2e_total = s_lpg.CO2e_cb
-    s_lpg.change_CO2e_pct = s_lpg.change_CO2e_t / b18.s_lpg.CO2e_cb
+    s_lpg.change_CO2e_pct = div(s_lpg.change_CO2e_t, b18.s_lpg.CO2e_cb)
     s_petrol.CO2e_total = s_petrol.CO2e_cb
-    s_petrol.change_CO2e_pct = s_petrol.change_CO2e_t / b18.s_petrol.CO2e_cb
+    s_petrol.change_CO2e_pct = div(s_petrol.change_CO2e_t, b18.s_petrol.CO2e_cb)
     s_jetfuel.CO2e_total = s_jetfuel.CO2e_cb
-    s_jetfuel.change_CO2e_pct = s_jetfuel.change_CO2e_t / b18.s_jetfuel.CO2e_cb
+    s_jetfuel.change_CO2e_pct = div(s_jetfuel.change_CO2e_t, b18.s_jetfuel.CO2e_cb)
     s_diesel.CO2e_total = s_diesel.CO2e_cb
-    s_diesel.change_CO2e_pct = s_diesel.change_CO2e_t / b18.s_diesel.CO2e_cb
+    s_diesel.change_CO2e_pct = div(s_diesel.change_CO2e_t, b18.s_diesel.CO2e_cb)
     s_fueloil.CO2e_total = s_fueloil.CO2e_cb
-    s_fueloil.change_CO2e_pct = s_fueloil.change_CO2e_t / b18.s_fueloil.CO2e_cb
+    s_fueloil.change_CO2e_pct = div(s_fueloil.change_CO2e_t, b18.s_fueloil.CO2e_cb)
     s_biomass.CO2e_total = s_biomass.CO2e_cb
-    s_biomass.change_CO2e_pct = s_biomass.change_CO2e_t / b18.s_biomass.CO2e_cb
+    s_biomass.change_CO2e_pct = div(s_biomass.change_CO2e_t, b18.s_biomass.CO2e_cb)
     s_coal.CO2e_total = s_coal.CO2e_cb
-    s_coal.change_CO2e_pct = s_coal.change_CO2e_t / b18.s_coal.CO2e_cb
+    s_coal.change_CO2e_pct = div(s_coal.change_CO2e_t, b18.s_coal.CO2e_cb)
     s_heatnet.CO2e_total = s_heatnet.CO2e_cb
     s_heatpump.CO2e_total = s_heatpump.CO2e_cb
     s_solarth.demand_emplo_new = max(
@@ -795,7 +787,7 @@ def calc(root, inputs: Inputs):
     s_elec.CO2e_cb = s_elec.energy * s_elec.CO2e_cb_per_MWh
     s_elec.CO2e_total = s_elec.CO2e_cb
     s_elec.change_energy_MWh = s_elec.energy - b18.s_elec.energy
-    s_elec.change_energy_pct = s_elec.change_energy_MWh / b18.s_elec.energy
+    s_elec.change_energy_pct = div(s_elec.change_energy_MWh, b18.s_elec.energy)
     s_elec.change_CO2e_t = s_elec.CO2e_cb - b18.s_elec.CO2e_cb
     s_elec.CO2e_total_2021_estimated = b18.s_elec.CO2e_cb * fact(
         "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
@@ -812,9 +804,9 @@ def calc(root, inputs: Inputs):
     rb.CO2e_cb = r30.r.CO2e_cb + b.CO2e_cb
     rb.CO2e_total = r30.r.CO2e_total + b.CO2e_total
     rb.change_energy_MWh = rb.energy - b18.rb.energy
-    rb.change_energy_pct = rb.change_energy_MWh / b18.rb.energy
+    rb.change_energy_pct = div(rb.change_energy_MWh, b18.rb.energy)
     rb.change_CO2e_t = rb.CO2e_cb - b18.rb.CO2e_cb
-    rb.change_CO2e_pct = rb.change_CO2e_t / b18.rb.CO2e_cb
+    rb.change_CO2e_pct = div(rb.change_CO2e_t, b18.rb.CO2e_cb)
     rb.CO2e_total_2021_estimated = b18.rb.CO2e_cb * fact(
         "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
     )

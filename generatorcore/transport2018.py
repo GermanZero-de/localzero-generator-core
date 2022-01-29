@@ -202,14 +202,6 @@ def calc(root, inputs: Inputs):
     def entry(n):
         return inputs.entry(n)
 
-    ## Todo vlookup Simulation
-    # if entry("In_M_AGS_com") == "DG000000":
-    #    root.t18.rail_ppl_metro.mileage = 309000000
-    #    root.t18.road_bus.mileage = 2531000000
-    # elif entry("In_M_AGS_com") == "03159016":
-    #    root.t18.rail_ppl_metro.mileage = 0
-    #    root.t18.road_bus.mileage = 1752789.9193474643
-
     # abbreviations
     t = root.t18.t
     g = root.t18.g
@@ -431,7 +423,6 @@ def calc(root, inputs: Inputs):
         * entry("In_M_population_com_2018")
         / entry("In_M_population_dis")
     )
-    # todo road_bus.mileage = (VLOOKUP(LK&" *  *  * ",Verkehr_DestatisDaten!B4:I507,8,FALSE) * 10^6 * entry('In_M_population_com_2018') / entry('In_M_population_dis'))
 
     # 28.430.600.000 Fz km
     road_gds_mhd_it_ot.mileage = (

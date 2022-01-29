@@ -1,7 +1,4 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-from .setup import ass, entry
+from .inputs import Inputs
 
 
 # this function brings forward als calculations that are needed prior to

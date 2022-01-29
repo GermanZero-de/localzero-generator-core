@@ -1,5 +1,6 @@
 from dataclasses import dataclass, field, InitVar, asdict
 from .inputs import Inputs
+from .utils import div
 
 
 @dataclass
@@ -602,19 +603,19 @@ def calc(root, inputs: Inputs):
         + i18.s_fossil_ofossil.energy
     )
 
-    i18.s_fossil_gas.pct_energy = i18.s_fossil_gas.energy / i18.s.energy
-    i18.s_fossil_coal.pct_energy = i18.s_fossil_coal.energy / i18.s.energy
-    i18.s_fossil_diesel.pct_energy = i18.s_fossil_diesel.energy / i18.s.energy
-    i18.s_fossil_fueloil.pct_energy = i18.s_fossil_fueloil.energy / i18.s.energy
-    i18.s_fossil_lpg.pct_energy = i18.s_fossil_lpg.energy / i18.s.energy
-    i18.s_fossil_opetpro.pct_energy = i18.s_fossil_opetpro.energy / i18.s.energy
-    i18.s_fossil_ofossil.pct_energy = i18.s_fossil_ofossil.energy / i18.s.energy
+    i18.s_fossil_gas.pct_energy = div(i18.s_fossil_gas.energy, i18.s.energy)
+    i18.s_fossil_coal.pct_energy = div(i18.s_fossil_coal.energy, i18.s.energy)
+    i18.s_fossil_diesel.pct_energy = div(i18.s_fossil_diesel.energy, i18.s.energy)
+    i18.s_fossil_fueloil.pct_energy = div(i18.s_fossil_fueloil.energy, i18.s.energy)
+    i18.s_fossil_lpg.pct_energy = div(i18.s_fossil_lpg.energy, i18.s.energy)
+    i18.s_fossil_opetpro.pct_energy = div(i18.s_fossil_opetpro.energy, i18.s.energy)
+    i18.s_fossil_ofossil.pct_energy = div(i18.s_fossil_ofossil.energy, i18.s.energy)
 
-    i18.s_renew_biomass.pct_energy = i18.s_renew_biomass.energy / i18.s.energy
-    i18.s_renew_heatnet.pct_energy = i18.s_renew_heatnet.energy / i18.s.energy
-    i18.s_renew_orenew.pct_energy = i18.s_renew_orenew.energy / i18.s.energy
-    i18.s_renew_solarth.pct_energy = i18.s_renew_solarth.energy / i18.s.energy
-    i18.s_renew_elec.pct_energy = i18.s_renew_elec.energy / i18.s.energy
+    i18.s_renew_biomass.pct_energy = div(i18.s_renew_biomass.energy, i18.s.energy)
+    i18.s_renew_heatnet.pct_energy = div(i18.s_renew_heatnet.energy, i18.s.energy)
+    i18.s_renew_orenew.pct_energy = div(i18.s_renew_orenew.energy, i18.s.energy)
+    i18.s_renew_solarth.pct_energy = div(i18.s_renew_solarth.energy, i18.s.energy)
+    i18.s_renew_elec.pct_energy = div(i18.s_renew_elec.energy, i18.s.energy)
 
     i18.s.pct_energy = (
         i18.s_fossil_gas.pct_energy

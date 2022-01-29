@@ -1,5 +1,6 @@
 from dataclasses import dataclass, field, InitVar, asdict
 from .inputs import Inputs
+from .utils import div
 
 
 # Definition der relevanten Spaltennamen für den Sektor T
@@ -408,9 +409,9 @@ def calc(root, inputs: Inputs):
     )
     air.CO2e_total = air.CO2e_cb  # (CJ234 + air.CO2e_cb)
     air.change_energy_MWh = air.energy - t18.air.energy
-    air.change_energy_pct = air.change_energy_MWh / t18.air.energy
+    air.change_energy_pct = div(air.change_energy_MWh, t18.air.energy)
     air.change_CO2e_t = air.CO2e_cb - t18.air.CO2e_cb
-    air.change_CO2e_pct = air.change_CO2e_t / t18.air.CO2e_cb
+    air.change_CO2e_pct = div(air.change_CO2e_t, t18.air.CO2e_cb)
     road_ppl.CO2e_total_2021_estimated = t18.road_ppl.CO2e_cb * fact(
         "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
     )
@@ -449,9 +450,9 @@ def calc(root, inputs: Inputs):
     )
     air_inter.CO2e_total = air_inter.CO2e_cb  # (CJ235 + air_inter.CO2e_cb)
     air_inter.change_energy_MWh = air_inter.energy - t18.air_inter.energy
-    air_inter.change_energy_pct = air_inter.change_energy_MWh / t18.air_inter.energy
+    air_inter.change_energy_pct = div(air_inter.change_energy_MWh, t18.air_inter.energy)
     air_inter.change_CO2e_t = air_inter.CO2e_cb - t18.air_inter.CO2e_cb
-    air_inter.change_CO2e_pct = air_inter.change_CO2e_t / t18.air_inter.CO2e_cb
+    air_inter.change_CO2e_pct = div(air_inter.change_CO2e_t, t18.air_inter.CO2e_cb)
     air_dmstc.CO2e_total_2021_estimated = t18.air_dmstc.CO2e_cb * fact(
         "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
     )
@@ -465,9 +466,9 @@ def calc(root, inputs: Inputs):
     # air_inter.actionUmstellung auf e - Kerosin)
 
     air_dmstc.change_energy_MWh = -t18.air_dmstc.energy
-    air_dmstc.change_energy_pct = air_dmstc.change_energy_MWh / t18.air_dmstc.energy
+    air_dmstc.change_energy_pct = div(air_dmstc.change_energy_MWh, t18.air_dmstc.energy)
     air_dmstc.change_CO2e_t = -t18.air_dmstc.CO2e_cb
-    air_dmstc.change_CO2e_pct = air_dmstc.change_CO2e_t / t18.air_dmstc.CO2e_cb
+    air_dmstc.change_CO2e_pct = div(air_dmstc.change_CO2e_t, t18.air_dmstc.CO2e_cb)
     air.CO2e_total_2021_estimated = (
         air_inter.CO2e_total_2021_estimated + air_dmstc.CO2e_total_2021_estimated
     )
@@ -552,8 +553,8 @@ def calc(root, inputs: Inputs):
     rail_action_invest_infra.cost_wage = (
         rail_action_invest_infra.invest_pa * rail_action_invest_infra.pct_of_wage
     )
-    road_action_charger.demand_emplo = (
-        road_action_charger.cost_wage / road_action_charger.ratio_wage_to_emplo
+    road_action_charger.demand_emplo = div(
+        road_action_charger.cost_wage, road_action_charger.ratio_wage_to_emplo
     )
     road_bus_action_infra.invest_pa = road_bus_action_infra.invest / entry(
         "In_M_duration_target"
@@ -593,8 +594,8 @@ def calc(root, inputs: Inputs):
         "Fact_T_D_constr_roadrail_ratio_wage_to_emplo_2018"
     )
     # road_action_charger.emplo_existingnicht existent oder ausgelastet)
-    road_bus_action_infra.demand_emplo = (
-        road_bus_action_infra.cost_wage / road_bus_action_infra.ratio_wage_to_emplo
+    road_bus_action_infra.demand_emplo = div(
+        road_bus_action_infra.cost_wage, road_bus_action_infra.ratio_wage_to_emplo
     )
     road_gds_ldt_it_ot.CO2e_cb = road_gds_ldt_it_ot.demand_ediesel * ass(
         "Ass_T_S_diesel_EmFa_tank_wheel_2050"
@@ -626,7 +627,7 @@ def calc(root, inputs: Inputs):
         + road_car_ab.demand_epetrol  # SUM(road_car_ab.demand_electricity:BJ242))
     )
     road_ppl.change_CO2e_t = road_ppl.CO2e_cb - t18.road_ppl.CO2e_cb
-    road_ppl.change_CO2e_pct = road_ppl.change_CO2e_t / t18.road_ppl.CO2e_cb
+    road_ppl.change_CO2e_pct = div(road_ppl.change_CO2e_t, t18.road_ppl.CO2e_cb)
     road_gds_mhd_ab.CO2e_total_2021_estimated = t18.road_gds_mhd_ab.CO2e_cb * fact(
         "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
     )
@@ -692,7 +693,7 @@ def calc(root, inputs: Inputs):
     road_gds.demand_emplo_new = road_gds_mhd.demand_emplo_new  # (SUM(DM247:DM252))
 
     road_bus.emplo_existing = (
-        t18.road_bus.mileage / road_bus.mileage * road_bus.demand_emplo
+        div(t18.road_bus.mileage, road_bus.mileage) * road_bus.demand_emplo
     )
     road_bus.base_unit = road_bus.mileage / fact("Fact_T_S_Bus_ratio_mlg_to_stock_2018")
     road_ppl.demand_epetrol = road_car.demand_epetrol
@@ -715,7 +716,7 @@ def calc(root, inputs: Inputs):
 
     road_car_ab.change_energy_MWh = road_car_ab.energy - t18.road_car_ab.energy
     road_car.change_CO2e_t = road_car.CO2e_cb - t18.road_car.CO2e_cb
-    road_car.change_CO2e_pct = road_car.change_CO2e_t / t18.road_car.CO2e_cb
+    road_car.change_CO2e_pct = div(road_car.change_CO2e_t, t18.road_car.CO2e_cb)
     road_car.CO2e_total_2021_estimated = t18.road_car.CO2e_cb * fact(
         "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
     )
@@ -748,13 +749,13 @@ def calc(root, inputs: Inputs):
         * ass("Ass_T_S_MHD_SEC_elec_it_at_2030")
     )
     road_car_ab.CO2e_total = road_car_ab.CO2e_cb
-    road_car.change_energy_pct = road_car.change_energy_MWh / t18.road_car.energy
-    road_car_it_ot.change_energy_pct = (
-        road_car_it_ot.change_energy_MWh / t18.road_car_it_ot.energy
+    road_car.change_energy_pct = div(road_car.change_energy_MWh, t18.road_car.energy)
+    road_car_it_ot.change_energy_pct = div(
+        road_car_it_ot.change_energy_MWh, t18.road_car_it_ot.energy
     )
     road_car_it_ot.change_CO2e_t = road_car_it_ot.CO2e_cb - t18.road_car_it_ot.CO2e_cb
-    road_car_it_ot.change_CO2e_pct = (
-        road_car_it_ot.change_CO2e_t / t18.road_car_it_ot.CO2e_cb
+    road_car_it_ot.change_CO2e_pct = div(
+        road_car_it_ot.change_CO2e_t, t18.road_car_it_ot.CO2e_cb
     )
     road_car_it_ot.CO2e_total_2021_estimated = t18.road_car_it_ot.CO2e_cb * fact(
         "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
@@ -783,11 +784,13 @@ def calc(root, inputs: Inputs):
     )
     road_car.CO2e_total = road_car_it_ot.CO2e_total + road_car_ab.CO2e_total
     road_bus.change_energy_MWh = road_bus.energy - t18.road_bus.energy
-    road_car_ab.change_energy_pct = (
-        road_car_ab.change_energy_MWh / t18.road_car_ab.energy
+    road_car_ab.change_energy_pct = div(
+        road_car_ab.change_energy_MWh, t18.road_car_ab.energy
     )
     road_car_ab.change_CO2e_t = road_car_ab.CO2e_cb - t18.road_car_ab.CO2e_cb
-    road_car_ab.change_CO2e_pct = road_car_ab.change_CO2e_t / t18.road_car_ab.CO2e_cb
+    road_car_ab.change_CO2e_pct = div(
+        road_car_ab.change_CO2e_t, t18.road_car_ab.CO2e_cb
+    )
     road_car_ab.CO2e_total_2021_estimated = t18.road_car_ab.CO2e_cb * fact(
         "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
     )
@@ -807,10 +810,10 @@ def calc(root, inputs: Inputs):
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     road_ppl.CO2e_total = road_car.CO2e_total + road_bus.CO2e_total
-    road_ppl.change_energy_pct = road_ppl.change_energy_MWh / t18.road_ppl.energy
-    road_bus.change_energy_pct = road_bus.change_energy_MWh / t18.road_bus.energy
+    road_ppl.change_energy_pct = div(road_ppl.change_energy_MWh, t18.road_ppl.energy)
+    road_bus.change_energy_pct = div(road_bus.change_energy_MWh, t18.road_bus.energy)
     road_bus.change_CO2e_t = road_bus.CO2e_cb - t18.road_bus.CO2e_cb
-    road_bus.change_CO2e_pct = road_bus.change_CO2e_t / t18.road_bus.CO2e_cb
+    road_bus.change_CO2e_pct = div(road_bus.change_CO2e_t, t18.road_bus.CO2e_cb)
     road_bus.CO2e_total_2021_estimated = t18.road_bus.CO2e_cb * fact(
         "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
     )
@@ -835,7 +838,7 @@ def calc(root, inputs: Inputs):
     road_ppl.demand_emplo_new = (
         road_bus.demand_emplo_new + road_bus_action_infra.demand_emplo_new
     )  # (DM241:road_bus_action_infra.demand_emplo_new))
-    road_bus.pct_of_wage = road_bus.cost_wage / road_bus.invest_pa
+    road_bus.pct_of_wage = div(road_bus.cost_wage, road_bus.invest_pa)
     road.demand_emplo_new = (
         road_action_charger.demand_emplo_new
         + road_ppl.demand_emplo_new
@@ -853,7 +856,7 @@ def calc(root, inputs: Inputs):
     road_bus_action_infra.invest_pa_com = road_bus_action_infra.invest_com / entry(
         "In_M_duration_target"
     )
-    g_planning.demand_emplo = g_planning.cost_wage / g_planning.ratio_wage_to_emplo
+    g_planning.demand_emplo = div(g_planning.cost_wage, g_planning.ratio_wage_to_emplo)
     road_ppl.invest_pa_com = (
         road_bus.invest_pa_com + road_bus_action_infra.invest_pa_com
     )
@@ -1000,7 +1003,9 @@ def calc(root, inputs: Inputs):
         road_gds_ldt_ab.energy - t18.road_gds_ldt_ab.energy
     )
     road_gds_ldt.change_CO2e_t = road_gds_ldt.CO2e_cb - t18.road_gds_ldt.CO2e_cb
-    road_gds_ldt.change_CO2e_pct = road_gds_ldt.change_CO2e_t / t18.road_gds_ldt.CO2e_cb
+    road_gds_ldt.change_CO2e_pct = div(
+        road_gds_ldt.change_CO2e_t, t18.road_gds_ldt.CO2e_cb
+    )
     road_gds_ldt.CO2e_total_2021_estimated = t18.road_gds_ldt.CO2e_cb * fact(
         "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
     )
@@ -1058,21 +1063,21 @@ def calc(root, inputs: Inputs):
     road_gds_ldt.change_energy_MWh = (
         road_gds_ldt_it_ot.change_energy_MWh + road_gds_ldt_ab.change_energy_MWh
     )
-    road_gds.change_CO2e_pct = road_gds.change_CO2e_t / t18.road_gds.CO2e_cb
+    road_gds.change_CO2e_pct = div(road_gds.change_CO2e_t, t18.road_gds.CO2e_cb)
 
     road.CO2e_cb = road_ppl.CO2e_cb + road_gds.CO2e_cb
     road_gds_ldt_ab.CO2e_total = road_gds_ldt_ab.CO2e_cb
-    road_gds_ldt.change_energy_pct = (
-        road_gds_ldt.change_energy_MWh / t18.road_gds_ldt.energy
+    road_gds_ldt.change_energy_pct = div(
+        road_gds_ldt.change_energy_MWh, t18.road_gds_ldt.energy
     )
-    road_gds_ldt_it_ot.change_energy_pct = (
-        road_gds_ldt_it_ot.change_energy_MWh / t18.road_gds_ldt_it_ot.energy
+    road_gds_ldt_it_ot.change_energy_pct = div(
+        road_gds_ldt_it_ot.change_energy_MWh, t18.road_gds_ldt_it_ot.energy
     )
     road_gds_ldt_it_ot.change_CO2e_t = (
         road_gds_ldt_it_ot.CO2e_cb - t18.road_gds_ldt_it_ot.CO2e_cb
     )
-    road_gds_ldt_it_ot.change_CO2e_pct = (
-        road_gds_ldt_it_ot.change_CO2e_t / t18.road_gds_ldt_it_ot.CO2e_cb
+    road_gds_ldt_it_ot.change_CO2e_pct = div(
+        road_gds_ldt_it_ot.change_CO2e_t, t18.road_gds_ldt_it_ot.CO2e_cb
     )
     road_gds_ldt_it_ot.CO2e_total_2021_estimated = (
         t18.road_gds_ldt_it_ot.CO2e_cb * fact("Fact_M_CO2e_wo_lulucf_2021_vs_2018")
@@ -1091,21 +1096,21 @@ def calc(root, inputs: Inputs):
     road_gds.transport_capacity_tkm = (
         road_gds_ldt.transport_capacity_tkm + road_gds_mhd.transport_capacity_tkm
     )
-    road.change_CO2e_pct = road.change_CO2e_t / t18.road.CO2e_cb
+    road.change_CO2e_pct = div(road.change_CO2e_t, t18.road.CO2e_cb)
     road_gds_ldt.CO2e_total = road_gds_ldt_it_ot.CO2e_total + road_gds_ldt_ab.CO2e_total
     road_gds_mhd_ab.energy = (
         road_gds_mhd_ab.demand_electricity
         + road_gds_mhd_ab.demand_ediesel
         + road_gds_mhd_ab.demand_hydrogen
     )  # SUM(road_gds_mhd_ab.demand_electricity:BJ252))
-    road_gds_ldt_ab.change_energy_pct = (
-        road_gds_ldt_ab.change_energy_MWh / t18.road_gds_ldt_ab.energy
+    road_gds_ldt_ab.change_energy_pct = div(
+        road_gds_ldt_ab.change_energy_MWh, t18.road_gds_ldt_ab.energy
     )
     road_gds_ldt_ab.change_CO2e_t = (
         road_gds_ldt_ab.CO2e_cb - t18.road_gds_ldt_ab.CO2e_cb
     )
-    road_gds_ldt_ab.change_CO2e_pct = (
-        road_gds_ldt_ab.change_CO2e_t / t18.road_gds_ldt_ab.CO2e_cb
+    road_gds_ldt_ab.change_CO2e_pct = div(
+        road_gds_ldt_ab.change_CO2e_t, t18.road_gds_ldt_ab.CO2e_cb
     )
     road_gds_ldt_ab.CO2e_total_2021_estimated = t18.road_gds_ldt_ab.CO2e_cb * fact(
         "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
@@ -1132,11 +1137,13 @@ def calc(root, inputs: Inputs):
     road_gds_mhd.change_energy_MWh = (
         road_gds_mhd_it_ot.change_energy_MWh + road_gds_mhd_ab.change_energy_MWh
     )
-    road_gds_mhd.change_energy_pct = (
-        road_gds_mhd.change_energy_MWh / t18.road_gds_mhd.energy
+    road_gds_mhd.change_energy_pct = div(
+        road_gds_mhd.change_energy_MWh, t18.road_gds_mhd.energy
     )
     road_gds_mhd.change_CO2e_t = road_gds_mhd.CO2e_cb - t18.road_gds_mhd.CO2e_cb
-    road_gds_mhd.change_CO2e_pct = road_gds_mhd.change_CO2e_t / t18.road_gds_mhd.CO2e_cb
+    road_gds_mhd.change_CO2e_pct = div(
+        road_gds_mhd.change_CO2e_t, t18.road_gds_mhd.CO2e_cb
+    )
     road_gds_mhd.CO2e_total_2021_estimated = t18.road_gds_mhd.CO2e_cb * fact(
         "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
     )
@@ -1158,7 +1165,7 @@ def calc(root, inputs: Inputs):
     )
     # road_gds_mhd_action_wire.actionOberleitung - LKW - Infrastruktur)
     road.invest = road_action_charger.invest + road_ppl.invest + road_gds.invest
-    road.change_energy_pct = road.change_energy_MWh / t18.road.energy
+    road.change_energy_pct = div(road.change_energy_MWh, t18.road.energy)
     road_gds_mhd.energy = road_gds_mhd_it_ot.energy + road_gds_mhd_ab.energy
     road_gds.demand_emplo = (
         road_gds_mhd_action_wire.demand_emplo + road_gds_mhd.demand_emplo
@@ -1171,14 +1178,14 @@ def calc(root, inputs: Inputs):
     road_gds.change_energy_MWh = (
         road_gds_ldt.change_energy_MWh + road_gds_mhd.change_energy_MWh
     )
-    road_gds_mhd_it_ot.change_energy_pct = (
-        road_gds_mhd_it_ot.change_energy_MWh / t18.road_gds_mhd_it_ot.energy
+    road_gds_mhd_it_ot.change_energy_pct = div(
+        road_gds_mhd_it_ot.change_energy_MWh, t18.road_gds_mhd_it_ot.energy
     )
     road_gds_mhd_it_ot.change_CO2e_t = (
         road_gds_mhd_it_ot.CO2e_cb - t18.road_gds_mhd_it_ot.CO2e_cb
     )
-    road_gds_mhd_it_ot.change_CO2e_pct = (
-        road_gds_mhd_it_ot.change_CO2e_t / t18.road_gds_mhd_it_ot.CO2e_cb
+    road_gds_mhd_it_ot.change_CO2e_pct = div(
+        road_gds_mhd_it_ot.change_CO2e_t, t18.road_gds_mhd_it_ot.CO2e_cb
     )
     road_gds_mhd_it_ot.CO2e_total_2021_estimated = (
         t18.road_gds_mhd_it_ot.CO2e_cb * fact("Fact_M_CO2e_wo_lulucf_2021_vs_2018")
@@ -1229,15 +1236,15 @@ def calc(root, inputs: Inputs):
         "Fact_T_S_electricity_EmFa_tank_wheel_2018"
     )
     road_gds.CO2e_total = road_gds_ldt.CO2e_total + road_gds_mhd.CO2e_total
-    road_gds.change_energy_pct = road_gds.change_energy_MWh / t18.road_gds.energy
-    road_gds_mhd_ab.change_energy_pct = (
-        road_gds_mhd_ab.change_energy_MWh / t18.road_gds_mhd_ab.energy
+    road_gds.change_energy_pct = div(road_gds.change_energy_MWh, t18.road_gds.energy)
+    road_gds_mhd_ab.change_energy_pct = div(
+        road_gds_mhd_ab.change_energy_MWh, t18.road_gds_mhd_ab.energy
     )
     road_gds_mhd_ab.change_CO2e_t = (
         road_gds_mhd_ab.CO2e_cb - t18.road_gds_mhd_ab.CO2e_cb
     )
-    road_gds_mhd_ab.change_CO2e_pct = (
-        road_gds_mhd_ab.change_CO2e_t / t18.road_gds_mhd_ab.CO2e_cb
+    road_gds_mhd_ab.change_CO2e_pct = div(
+        road_gds_mhd_ab.change_CO2e_t, t18.road_gds_mhd_ab.CO2e_cb
     )
     road.CO2e_total_2021_estimated = (
         road_ppl.CO2e_total_2021_estimated
@@ -1388,7 +1395,7 @@ def calc(root, inputs: Inputs):
     )
     # rail_action_invest_station.emplo_existingnicht existent oder ausgelastet
 
-    rail.change_CO2e_pct = rail.change_CO2e_t / t18.rail.CO2e_cb
+    rail.change_CO2e_pct = div(rail.change_CO2e_t, t18.rail.CO2e_cb)
     rail_ppl_distance.energy = rail_ppl_distance.demand_electricity
     rail_gds.mileage = rail_gds.transport_capacity_tkm / fact(
         "Fact_T_D_rail_gds_ratio_tkm_to_fzkm_2018"
@@ -1407,7 +1414,7 @@ def calc(root, inputs: Inputs):
     )
     rail_ppl_metro.energy = rail_ppl_metro.demand_electricity
     rail_ppl.change_CO2e_t = rail_ppl.CO2e_cb - t18.rail_ppl.CO2e_cb
-    rail_ppl.change_CO2e_pct = rail_ppl.change_CO2e_t / t18.rail_ppl.CO2e_cb
+    rail_ppl.change_CO2e_pct = div(rail_ppl.change_CO2e_t, t18.rail_ppl.CO2e_cb)
     rail_gds.CO2e_total_2021_estimated = t18.rail_gds.CO2e_cb * fact(
         "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
     )
@@ -1439,7 +1446,7 @@ def calc(root, inputs: Inputs):
     rail_gds.change_km = (
         rail_gds.transport_capacity_tkm - t18.rail_gds.transport_capacity_tkm
     )
-    rail.change_energy_pct = rail.change_energy_MWh / t18.rail.energy
+    rail.change_energy_pct = div(rail.change_energy_MWh, t18.rail.energy)
     rail_ppl_metro.change_energy_MWh = rail_ppl_metro.energy - t18.rail_ppl_metro.energy
     rail_ppl.mileage = rail_ppl_distance.mileage + rail_ppl_metro.mileage
     rail.CO2e_total = rail.CO2e_cb
@@ -1450,14 +1457,14 @@ def calc(root, inputs: Inputs):
     rail_ppl.change_energy_MWh = (
         rail_ppl_distance.change_energy_MWh + rail_ppl_metro.change_energy_MWh
     )
-    rail_ppl_distance.change_energy_pct = (
-        rail_ppl_distance.change_energy_MWh / t18.rail_ppl_distance.energy
+    rail_ppl_distance.change_energy_pct = div(
+        rail_ppl_distance.change_energy_MWh, t18.rail_ppl_distance.energy
     )
     rail_ppl_distance.change_CO2e_t = (
         rail_ppl_distance.CO2e_cb - t18.rail_ppl_distance.CO2e_cb
     )
-    rail_ppl_distance.change_CO2e_pct = (
-        rail_ppl_distance.change_CO2e_t / t18.rail_ppl_distance.CO2e_cb
+    rail_ppl_distance.change_CO2e_pct = div(
+        rail_ppl_distance.change_CO2e_t, t18.rail_ppl_distance.CO2e_cb
     )
     rail_ppl_distance.CO2e_total_2021_estimated = t18.rail_ppl_distance.CO2e_cb * fact(
         "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
@@ -1522,8 +1529,8 @@ def calc(root, inputs: Inputs):
     rail_gds.base_unit = rail_gds.change_km / fact(
         "Fact_T_D_rail_gds_ratio_mlg_to_vehicle"
     )
-    rail_ppl_distance.pct_of_wage = (
-        rail_ppl_distance.cost_wage / rail_ppl_distance.invest_pa
+    rail_ppl_distance.pct_of_wage = div(
+        rail_ppl_distance.cost_wage, rail_ppl_distance.invest_pa
     )
     t.demand_change = (
         air.demand_change
@@ -1541,15 +1548,15 @@ def calc(root, inputs: Inputs):
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     rail_ppl.CO2e_total = rail_ppl_distance.CO2e_total + rail_ppl_metro.CO2e_total
-    rail_ppl.change_energy_pct = rail_ppl.change_energy_MWh / t18.rail_ppl.energy
+    rail_ppl.change_energy_pct = div(rail_ppl.change_energy_MWh, t18.rail_ppl.energy)
     rail_ppl_metro.change_energy_pct = (
-        rail_ppl_metro.change_energy_MWh / t18.rail_ppl_metro.energy
+        div(rail_ppl_metro.change_energy_MWh, t18.rail_ppl_metro.energy)
         if t18.rail_ppl_metro.energy != 0
         else None
     )
     rail_ppl_metro.change_CO2e_t = rail_ppl_metro.CO2e_cb - t18.rail_ppl_metro.CO2e_cb
     rail_ppl_metro.change_CO2e_pct = (
-        0  # rail_ppl_metro.change_CO2e_t / t18.rail_ppl_metro.CO2e_cb
+        0  # div(rail_ppl_metro.change_CO2e_t, t18.rail_ppl_metro.CO2e_cb)
     )
     rail_ppl_metro.CO2e_total_2021_estimated = t18.rail_ppl_metro.CO2e_cb * fact(
         "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
@@ -1567,7 +1574,9 @@ def calc(root, inputs: Inputs):
     rail_ppl_metro.invest_pa = rail_ppl_metro.invest / entry("In_M_duration_target")
     # dont calculate not for communes because of div 0
     if entry("In_M_AGS_com") == "DG000000":
-        rail_ppl_metro.pct_of_wage = rail_ppl_metro.cost_wage / rail_ppl_metro.invest_pa
+        rail_ppl_metro.pct_of_wage = div(
+            rail_ppl_metro.cost_wage, rail_ppl_metro.invest_pa
+        )
     # rail_ppl_metro_action_infra.actionInvesitionen in Verkehrsnetze für SSU Bahnen
     rail_ppl.invest_pa = (
         rail_ppl_distance.invest_pa
@@ -1635,9 +1644,9 @@ def calc(root, inputs: Inputs):
     ship.CO2e_cb = ship_dmstc.CO2e_cb + ship_inter.CO2e_cb
     rail_gds.CO2e_total = rail_gds.CO2e_cb
     rail_gds.change_energy_MWh = rail_gds.energy - t18.rail_gds.energy
-    rail_gds.change_energy_pct = rail_gds.change_energy_MWh / t18.rail_gds.energy
+    rail_gds.change_energy_pct = div(rail_gds.change_energy_MWh, t18.rail_gds.energy)
     rail_gds.change_CO2e_t = rail_gds.CO2e_cb - t18.rail_gds.CO2e_cb
-    rail_gds.change_CO2e_pct = rail_gds.change_CO2e_t / t18.rail_gds.CO2e_cb
+    rail_gds.change_CO2e_pct = div(rail_gds.change_CO2e_t, t18.rail_gds.CO2e_cb)
     rail.CO2e_total_2021_estimated = (
         rail_ppl.CO2e_total_2021_estimated + rail_gds.CO2e_total_2021_estimated
     )
@@ -1651,7 +1660,7 @@ def calc(root, inputs: Inputs):
         + rail_gds.cost_wage * entry("In_M_duration_target")
     )
     rail_gds.invest_pa = rail_gds.invest / entry("In_M_duration_target")
-    rail_gds.pct_of_wage = rail_gds.cost_wage / rail_gds.invest_pa
+    rail_gds.pct_of_wage = div(rail_gds.cost_wage, rail_gds.invest_pa)
     rail.invest_pa = (
         rail_action_invest_infra.invest_pa
         + rail_action_invest_station.invest_pa
@@ -1686,9 +1695,9 @@ def calc(root, inputs: Inputs):
     t.CO2e_total = t.CO2e_cb
     ship.CO2e_total = ship.CO2e_cb
     ship.change_energy_MWh = ship.energy - t18.ship.energy
-    ship.change_energy_pct = ship.change_energy_MWh / t18.ship.energy
+    ship.change_energy_pct = div(ship.change_energy_MWh, t18.ship.energy)
     ship.change_CO2e_t = ship.CO2e_cb - t18.ship.CO2e_cb
-    ship.change_CO2e_pct = ship.change_CO2e_t / t18.ship.CO2e_cb
+    ship.change_CO2e_pct = div(ship.change_CO2e_t, t18.ship.CO2e_cb)
     other_foot.CO2e_total_2021_estimated = t18.other_foot.CO2e_cb * fact(
         "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
     )
@@ -1719,9 +1728,11 @@ def calc(root, inputs: Inputs):
     t.change_CO2e_t = t.CO2e_cb - t18.t.CO2e_cb
     ship_dmstc.CO2e_total = ship_dmstc.CO2e_cb
     ship_dmstc.change_energy_MWh = ship_dmstc.energy - t18.ship_dmstc.energy
-    ship_dmstc.change_energy_pct = ship_dmstc.change_energy_MWh / t18.ship_dmstc.energy
+    ship_dmstc.change_energy_pct = div(
+        ship_dmstc.change_energy_MWh, t18.ship_dmstc.energy
+    )
     ship_dmstc.change_CO2e_t = ship_dmstc.CO2e_cb - t18.ship_dmstc.CO2e_cb
-    ship_dmstc.change_CO2e_pct = ship_dmstc.change_CO2e_t / t18.ship_dmstc.CO2e_cb
+    ship_dmstc.change_CO2e_pct = div(ship_dmstc.change_CO2e_t, t18.ship_dmstc.CO2e_cb)
     ship_inter.CO2e_total_2021_estimated = t18.ship_inter.CO2e_cb * fact(
         "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
     )
@@ -1753,7 +1764,7 @@ def calc(root, inputs: Inputs):
         "Fact_T_D_constr_roadrail_ratio_wage_to_emplo_2018"
     )
     ship.base_unit = ship_dmstc.base_unit
-    ship_dmstc.pct_of_wage = ship_dmstc.cost_wage / ship_dmstc.invest_pa
+    ship_dmstc.pct_of_wage = div(ship_dmstc.cost_wage, ship_dmstc.invest_pa)
     # ship_dmstc_action_infra.actionAus -  und Neubau der Bundeswasserstraßen
 
     ship.invest_pa = (
@@ -1762,8 +1773,8 @@ def calc(root, inputs: Inputs):
     ship_dmstc_action_infra.invest_pa_com = ship_dmstc_action_infra.invest_com / entry(
         "In_M_duration_target"
     )
-    ship_dmstc_action_infra.demand_emplo = (
-        ship_dmstc_action_infra.cost_wage / ship_dmstc_action_infra.ratio_wage_to_emplo
+    ship_dmstc_action_infra.demand_emplo = div(
+        ship_dmstc_action_infra.cost_wage, ship_dmstc_action_infra.ratio_wage_to_emplo
     )
     ship.invest_pa_com = (
         ship_dmstc_action_infra.invest_pa_com
@@ -1777,12 +1788,14 @@ def calc(root, inputs: Inputs):
     # ship_dmstc_action_infra.emplo_existingnicht existent oder ausgelastet
 
     ship_inter.energy = ship_inter.demand_ediesel  # SUM(AW264:BJ264)
-    t.change_CO2e_pct = t.change_CO2e_t / t18.t.CO2e_cb
+    t.change_CO2e_pct = div(t.change_CO2e_t, t18.t.CO2e_cb)
     ship_inter.CO2e_total = ship_inter.CO2e_cb
     ship_inter.change_energy_MWh = ship_inter.energy - t18.ship_inter.energy
-    ship_inter.change_energy_pct = ship_inter.change_energy_MWh / t18.ship_inter.energy
+    ship_inter.change_energy_pct = div(
+        ship_inter.change_energy_MWh, t18.ship_inter.energy
+    )
     ship_inter.change_CO2e_t = ship_inter.CO2e_cb - t18.ship_inter.CO2e_cb
-    ship_inter.change_CO2e_pct = ship_inter.change_CO2e_t / t18.ship_inter.CO2e_cb
+    ship_inter.change_CO2e_pct = div(ship_inter.change_CO2e_t, t18.ship_inter.CO2e_cb)
     ship_dmstc_action_infra.CO2e_total_2021_estimated = 0
     ship.CO2e_total_2021_estimated = (
         ship_dmstc.CO2e_total_2021_estimated
@@ -1799,7 +1812,7 @@ def calc(root, inputs: Inputs):
     ship_inter.change_km = -t18.ship_inter.transport_capacity_tkm
     # ship_inter.actionReduktion der Transportleistung
 
-    t.change_energy_pct = t.change_energy_MWh / t18.t.energy
+    t.change_energy_pct = div(t.change_energy_MWh, t18.t.energy)
     other_foot.transport_capacity_pkm = t.transport_capacity_pkm * (
         ass("Ass_T_D_trnsprt_ppl_city_foot_frac_2050")
         if entry("In_T_rt3") == "city"
@@ -1900,8 +1913,8 @@ def calc(root, inputs: Inputs):
     other_foot_action_infra.ratio_wage_to_emplo = fact(
         "Fact_T_D_constr_roadrail_ratio_wage_to_emplo_2018"
     )
-    other_foot_action_infra.demand_emplo = (
-        other_foot_action_infra.cost_wage / other_foot_action_infra.ratio_wage_to_emplo
+    other_foot_action_infra.demand_emplo = div(
+        other_foot_action_infra.cost_wage, other_foot_action_infra.ratio_wage_to_emplo
     )
     other_foot_action_infra.demand_emplo_new = other_foot_action_infra.demand_emplo
     other_cycl_action_infra.ratio_wage_to_emplo = fact(
@@ -1916,8 +1929,8 @@ def calc(root, inputs: Inputs):
     other_cycl_action_infra.cost_wage = (
         other_cycl_action_infra.invest_pa * other_cycl_action_infra.pct_of_wage
     )
-    other_cycl_action_infra.demand_emplo = (
-        other_cycl_action_infra.cost_wage / other_cycl_action_infra.ratio_wage_to_emplo
+    other_cycl_action_infra.demand_emplo = div(
+        other_cycl_action_infra.cost_wage, other_cycl_action_infra.ratio_wage_to_emplo
     )
     other_cycl_action_infra.demand_emplo_new = other_cycl_action_infra.demand_emplo
     other.demand_emplo_new = (
@@ -1970,8 +1983,8 @@ def calc(root, inputs: Inputs):
         "In_M_duration_target"
     )
 
-    other_cycl_action_infra.demand_emplo = (
-        other_cycl_action_infra.cost_wage / other_cycl_action_infra.ratio_wage_to_emplo
+    other_cycl_action_infra.demand_emplo = div(
+        other_cycl_action_infra.cost_wage, other_cycl_action_infra.ratio_wage_to_emplo
     )
     other.demand_emplo = (
         other_foot_action_infra.demand_emplo + other_cycl_action_infra.demand_emplo
