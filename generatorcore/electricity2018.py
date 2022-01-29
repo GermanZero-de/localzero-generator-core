@@ -1,5 +1,6 @@
 from dataclasses import dataclass, field, InitVar, asdict
 from .inputs import Inputs
+from .utils import div
 
 # Definition der relevanten Spaltennamen für den Sektor E
 
@@ -1029,7 +1030,9 @@ def calc(root, inputs: Inputs):
         # result: 3.517.441 d_t/d_a
     )  # SUM(p_renew_biomass_waste.CO2e_cb:p_renew_biomass_gaseous.CO2e_cb)
     # Zeile Geothermie
-    p_renew_biomass.CO2e_cb_per_MWh = p_renew_biomass.CO2e_cb / p_renew_biomass.energy
+    p_renew_biomass.CO2e_cb_per_MWh = div(
+        p_renew_biomass.CO2e_cb, p_renew_biomass.energy
+    )
     # 1
     p_renew_geoth.pct_energy = (
         fact("Fact_E_P_geothermal_pct_of_gep_2018")
@@ -1364,9 +1367,9 @@ def calc(root, inputs: Inputs):
         + p_fossil_gas.CO2e_cb
         + p_fossil_ofossil.CO2e_cb
     )
-    p_fossil.CO2e_cb_per_MWh = p_fossil.CO2e_cb / p_fossil.energy
+    p_fossil.CO2e_cb_per_MWh = div(p_fossil.CO2e_cb, p_fossil.energy)
     p.CO2e_cb = p_fossil.CO2e_cb + p_renew.CO2e_cb
-    p.CO2e_cb_per_MWh = p.CO2e_cb / p.energy
+    p.CO2e_cb_per_MWh = div(p.CO2e_cb, p.energy)
 
     p_renew_geoth.CO2e_cb_per_MWh = fact(
         "Fact_E_P_climate_neutral_ratio_CO2e_cb_to_fec"
@@ -1456,11 +1459,11 @@ def calc(root, inputs: Inputs):
 
     p_fossil_and_renew.energy = p.energy
     p_fossil_and_renew.CO2e_cb = p_fossil.CO2e_cb + p_renew.CO2e_cb
-    p_fossil_and_renew.CO2e_cb_per_MWh = (
-        p_fossil_and_renew.CO2e_cb / p_fossil_and_renew.energy
+    p_fossil_and_renew.CO2e_cb_per_MWh = div(
+        p_fossil_and_renew.CO2e_cb, p_fossil_and_renew.energy
     )
     p_fossil_and_renew.CO2e_total = p_fossil.CO2e_total + p_renew.CO2e_total
 
     p_fossil_and_renew.pct_energy = p_fossil.pct_energy + p_renew.pct_energy
-    p_renew.CO2e_cb_per_MWh = p_renew.CO2e_cb / p_renew.energy
-    p_local.pct_energy = p_local.energy / p.energy
+    p_renew.CO2e_cb_per_MWh = div(p_renew.CO2e_cb, p_renew.energy)
+    p_local.pct_energy = div(p_local.energy, p.energy)
