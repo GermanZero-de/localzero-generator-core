@@ -84,10 +84,8 @@ def find_diffs(path: str, d1, d2) -> list[tuple[str, typing.Any, typing.Any]]:
 
 def end_to_end(datadir_status: refdatatools.DataDirStatus, ags):
     """This runs an end to end test. No entries are overriden, only AGS"""
-    public_hash = datadir_status.production.public
-    proprietary_hash = datadir_status.production.proprietary
     root = refdatatools.root_of_this_repo()
-    fname = f"{public_hash}_{proprietary_hash}_{ags}.json"
+    fname = f"production_{ags}.json"
     with open(os.path.join(root, "tests", "end_to_end_expected", fname)) as fp:
         expected = json.load(fp)
         g = calculate_with_default_inputs(ags=ags, year=2035)
