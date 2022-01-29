@@ -5,6 +5,7 @@ from dataclasses import dataclass
 import os
 import json
 import sys
+import math
 
 import pandas as pd
 
@@ -31,6 +32,7 @@ def set_nans_to_0(data: pd.DataFrame, *, columns):
 class RowNotFound(Exception):
     column: str
     df: pd.DataFrame
+    key_value: object
 
     def __init__(self, column, key_value, df):
         self.column = column
@@ -38,15 +40,45 @@ class RowNotFound(Exception):
         self.df = df
 
     def __str__(self):
-        return f"Could not find {self.column}={self.key_value} in dataframe\n{self.df}"
+        return f"Could not find {self.column}={self.key_value} in:\n{self.df}"
 
 
-# TODO: Good error messages when field is not populated
-# TODO: Good error messages when field name is mistyped
+class FieldNotPopulated(Exception):
+    key_column: str
+    series: pd.Series
+    data_column: str
+    key_value: object
+
+    def __init__(self, key_column, key_value, data_column, series):
+        self.key_column = key_column
+        self.key_value = key_value
+        self.data_column = data_column
+        self.series = series
+
+    def __str__(self):
+        return f"For {self.key_column}={self.key_value} column {self.data_column} is blank in:\n{self.series}"
+
+
+class ExpectedIntGotFloat(Exception):
+    key_column: str
+    series: pd.Series
+    data_column: str
+    key_value: object
+
+    def __init__(self, key_column, key_value, data_column, series):
+        self.key_column = key_column
+        self.key_value = key_value
+        self.data_column = data_column
+        self.series = series
+
+    def __str__(self):
+        return f"For {self.key_column}={self.key_value} column {self.data_column} is expected to be an int in:\n{self.series}"
 
 
 class Row:
     def __init__(self, df: pd.DataFrame, key_value, *, column="ags"):
+        self.key_column = column
+        self.key_value = key_value
         try:
             # Basically this reduces the dataframe to a single row dataframe
             # and then takes the only dataframe row (a series object)
@@ -60,24 +92,37 @@ class Row:
         except:
             raise RowNotFound(column=column, key_value=key_value, df=df)
 
-    # TODO: All of the accessors below should not cast so forcefully but
-    # only convert into the python type when the pandas type matches
-
     def float(self, attr: str) -> float:
-        return float(self._series[attr])  # type: ignore
+        """Access a float attribute."""
+        f = float(self._series[attr])
+        if math.isnan(f):
+            raise FieldNotPopulated(
+                key_column=self.key_column,
+                key_value=self.key_value,
+                data_column=attr,
+                series=self._series,
+            )
+        return f
 
     def int(self, attr: str) -> int:
-        try:
-            return int(self._series[attr])  # type: ignore
-        except Exception as e:
-            print("INT FAILED", self._series, attr, file=sys.stderr)
-            raise e
+        """Access an integer attribute."""
+        f = self.float(attr)
+        if f.is_integer():
+            return int(f)
+        else:
+            raise ExpectedIntGotFloat(
+                key_column=self.key_column,
+                key_value=self.key_value,
+                data_column=attr,
+                series=self._series,
+            )
+
+    def str(self, attr: str) -> str:
+        """Access a str attribute."""
+        return str(self._series[attr])
 
     def __str__(self):
         return self._series.to_string()
-
-    def str(self, attr: str) -> str:
-        return str(self._series[attr])
 
 
 class FactsAndAssumptions:
