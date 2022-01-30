@@ -4,15 +4,16 @@ from .inputs import Inputs
 # definition of variable names for sector M(ethodology) - there are no rows or columns in the excel!
 @dataclass
 class M183X:
-    year_today: float = None
-    year_target: float = None
-    duration_target: float = None
-    duration_target_until_2050: float = None
-    duration_neutral: float = None
+    #year_target: float = None
+    #duration_target: float = None
+    #duration_target_until_2050: float = None
+    #duration_neutral: float = None
 
     CO2_budget_2016_to_year_target: float = None
-    nonCO2_budget_2016_to_year: float = None
-    GHG_budget_2016_to_year: float = None
+    nonCO2_budget_2016_to_year_target: float = None
+    GHG_budget_2016_to_year_target: float = None
+    GHG_budget_2022_to_year_target: float = None
+    GHG_budget_after_year_target: float = None
 
     CO2e_w_lulucf_change_pa: float = None
 
@@ -70,9 +71,6 @@ class M183X:
     CO2e_w_lulucf_2050: float = None
     CO2e_w_lulucf_2051: float = None
 
-    GHG_budget_2022_to_year_target: float = None
-    GHG_budget_after_year_target: float = None
-
     CO2e_lulucf_203X: float = None
     CO2e_wo_lulucf_203X: float = None
     CO2e_w_lulucf_203X: float = None
@@ -87,7 +85,7 @@ class M183X:
 
 
 # these budget calculations have to be done after all sector calculations
-def calc_3X(root, inputs: Inputs):
+def calc_3X(root, inputs: Inputs) -> M183X:
     def fact(n):
         return inputs.fact(n)
 
@@ -98,7 +96,7 @@ def calc_3X(root, inputs: Inputs):
     ### budgets 2016 until target year ###
     ######################################
 
-    m183X = root.m183X
+    m183X = M183X()
     # local greenhouse gas budget from 2016 until target year in com!!
     m183X.GHG_budget_2016_to_year_target = (
         entry("GHG_budget_2016_to_year_target")
@@ -519,11 +517,21 @@ def calc_3X(root, inputs: Inputs):
         - m183X.CO2e_w_lulucf_2050
         - m183X.CO2e_w_lulucf_2051
     )
+    
+    return m183X
 
+
+def calc_Z(root, inputs: Inputs):
+    def fact(n):
+        return inputs.fact(n)
+
+    def entry(n):
+        return inputs.entry(n)
     ##################################################################
     ### total emissions 203X, saved emissions, saved climate costs ###
     ##################################################################
 
+    m183X = root.m183X
     # get the CO2e of all sectors for 203X (the target year) excluding LULUCF
     m183X.CO2e_wo_lulucf_203X = (
         root.h30.h.CO2e_total
@@ -560,3 +568,4 @@ def calc_3X(root, inputs: Inputs):
         + root.a30.a.cost_climate_saved
         + root.l30.l.cost_climate_saved
     )
+
