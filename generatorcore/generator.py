@@ -130,6 +130,7 @@ def calculate(inputs: Inputs) -> Result:
     print("Electricity2030_calc", file=sys.stderr)
     electricity2030.calc(result, inputs)
     result.m183X = methodology183x.calc_3X(result, inputs)
+    methodology183x.calc_Z(result, inputs)
     # print('Pyrolyse')
     return result
 

@@ -21207,11 +21207,11 @@
         "CO2e_w_lulucf_2049": 0,
         "CO2e_w_lulucf_2050": 0,
         "CO2e_w_lulucf_2051": 0,
-        "CO2e_lulucf_203X": null,
-        "CO2e_wo_lulucf_203X": null,
-        "CO2e_w_lulucf_203X": null,
-        "change_CO2e_t": null,
-        "change_CO2e_pct": null,
-        "cost_climate_saved": null
+        "CO2e_lulucf_203X": -23783.064783247868,
+        "CO2e_wo_lulucf_203X": 22404.71786181381,
+        "CO2e_w_lulucf_203X": -1378.3469214340585,
+        "change_CO2e_t": -894971.5598927046,
+        "change_CO2e_pct": -1.0015424769362906,
+        "cost_climate_saved": 3504991689.4753222
     }
 }
