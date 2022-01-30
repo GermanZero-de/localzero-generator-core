@@ -1,5 +1,6 @@
 from dataclasses import dataclass, asdict
 from .inputs import Inputs
+from .utils import div
 
 
 # Definition der relevanten Spaltennamen für den Sektor R18
@@ -243,30 +244,30 @@ def calc(root, inputs: Inputs):
         + p_buildings_2005_2011.fec_after_BMWi
         + p_buildings_2011_today.fec_after_BMWi
     )
-    p_buildings_total.fec_factor_BMWi = (
-        p_buildings_total.fec_after_BMWi / p_buildings_total.area_m2
+    p_buildings_total.fec_factor_BMWi = div(
+        p_buildings_total.fec_after_BMWi, p_buildings_total.area_m2
     )
 
-    p_buildings_until_1919.relative_heat_ratio_BMWi = (
-        p_buildings_until_1919.fec_after_BMWi / p_buildings_total.fec_after_BMWi
+    p_buildings_until_1919.relative_heat_ratio_BMWi = div(
+        p_buildings_until_1919.fec_after_BMWi, p_buildings_total.fec_after_BMWi
     )
-    p_buildings_1919_1948.relative_heat_ratio_BMWi = (
-        p_buildings_1919_1948.fec_after_BMWi / p_buildings_total.fec_after_BMWi
+    p_buildings_1919_1948.relative_heat_ratio_BMWi = div(
+        p_buildings_1919_1948.fec_after_BMWi, p_buildings_total.fec_after_BMWi
     )
-    p_buildings_1949_1978.relative_heat_ratio_BMWi = (
-        p_buildings_1949_1978.fec_after_BMWi / p_buildings_total.fec_after_BMWi
+    p_buildings_1949_1978.relative_heat_ratio_BMWi = div(
+        p_buildings_1949_1978.fec_after_BMWi, p_buildings_total.fec_after_BMWi
     )
-    p_buildings_1979_1995.relative_heat_ratio_BMWi = (
-        p_buildings_1979_1995.fec_after_BMWi / p_buildings_total.fec_after_BMWi
+    p_buildings_1979_1995.relative_heat_ratio_BMWi = div(
+        p_buildings_1979_1995.fec_after_BMWi, p_buildings_total.fec_after_BMWi
     )
-    p_buildings_1996_2004.relative_heat_ratio_BMWi = (
-        p_buildings_1996_2004.fec_after_BMWi / p_buildings_total.fec_after_BMWi
+    p_buildings_1996_2004.relative_heat_ratio_BMWi = div(
+        p_buildings_1996_2004.fec_after_BMWi, p_buildings_total.fec_after_BMWi
     )
-    p_buildings_2005_2011.relative_heat_ratio_BMWi = (
-        p_buildings_2005_2011.fec_after_BMWi / p_buildings_total.fec_after_BMWi
+    p_buildings_2005_2011.relative_heat_ratio_BMWi = div(
+        p_buildings_2005_2011.fec_after_BMWi, p_buildings_total.fec_after_BMWi
     )
-    p_buildings_2011_today.relative_heat_ratio_BMWi = (
-        p_buildings_2011_today.fec_after_BMWi / p_buildings_total.fec_after_BMWi
+    p_buildings_2011_today.relative_heat_ratio_BMWi = div(
+        p_buildings_2011_today.fec_after_BMWi, p_buildings_total.fec_after_BMWi
     )
 
     p_buildings_total.relative_heat_ratio_BMWi = (
@@ -442,32 +443,32 @@ def calc(root, inputs: Inputs):
     p_buildings_area_m2_com.energy = (
         p_buildings_total.energy * p_buildings_area_m2_com.pct_x
     )
-    p_buildings_total.factor_adapted_to_fec = (
-        p_buildings_total.energy / p_buildings_total.area_m2
+    p_buildings_total.factor_adapted_to_fec = div(
+        p_buildings_total.energy, p_buildings_total.area_m2
     )
-    p_buildings_until_1919.factor_adapted_to_fec = (
-        p_buildings_until_1919.energy / p_buildings_until_1919.area_m2
+    p_buildings_until_1919.factor_adapted_to_fec = div(
+        p_buildings_until_1919.energy, p_buildings_until_1919.area_m2
     )
-    p_buildings_1919_1948.factor_adapted_to_fec = (
-        p_buildings_1919_1948.energy / p_buildings_1919_1948.area_m2
+    p_buildings_1919_1948.factor_adapted_to_fec = div(
+        p_buildings_1919_1948.energy, p_buildings_1919_1948.area_m2
     )
-    p_buildings_1949_1978.factor_adapted_to_fec = (
-        p_buildings_1949_1978.energy / p_buildings_1949_1978.area_m2
+    p_buildings_1949_1978.factor_adapted_to_fec = div(
+        p_buildings_1949_1978.energy, p_buildings_1949_1978.area_m2
     )
-    p_buildings_1979_1995.factor_adapted_to_fec = (
-        p_buildings_1979_1995.energy / p_buildings_1979_1995.area_m2
+    p_buildings_1979_1995.factor_adapted_to_fec = div(
+        p_buildings_1979_1995.energy, p_buildings_1979_1995.area_m2
     )
-    p_buildings_1996_2004.factor_adapted_to_fec = (
-        p_buildings_1996_2004.energy / p_buildings_1996_2004.area_m2
+    p_buildings_1996_2004.factor_adapted_to_fec = div(
+        p_buildings_1996_2004.energy, p_buildings_1996_2004.area_m2
     )
-    p_buildings_2005_2011.factor_adapted_to_fec = (
-        p_buildings_2005_2011.energy / p_buildings_2005_2011.area_m2
+    p_buildings_2005_2011.factor_adapted_to_fec = div(
+        p_buildings_2005_2011.energy, p_buildings_2005_2011.area_m2
     )
-    p_buildings_2011_today.factor_adapted_to_fec = (
-        p_buildings_2011_today.energy / p_buildings_2011_today.area_m2
+    p_buildings_2011_today.factor_adapted_to_fec = div(
+        p_buildings_2011_today.energy, p_buildings_2011_today.area_m2
     )
-    p_buildings_area_m2_com.factor_adapted_to_fec = (
-        p_buildings_area_m2_com.energy / p_buildings_area_m2_com.area_m2
+    p_buildings_area_m2_com.factor_adapted_to_fec = div(
+        p_buildings_area_m2_com.energy, p_buildings_area_m2_com.area_m2
     )
 
     s.energy = (
@@ -484,18 +485,18 @@ def calc(root, inputs: Inputs):
     )
 
     # pct_energy
-    s_fueloil.pct_energy = s_fueloil.energy / s.energy
-    s_lpg.pct_energy = s_lpg.energy / s.energy
-    s_biomass.pct_energy = s_biomass.energy / s.energy
-    s_coal.pct_energy = s_coal.energy / s.energy
-    s_petrol.pct_energy = s_petrol.energy / s.energy
-    s_heatnet.pct_energy = s_heatnet.energy / s.energy
-    s_solarth.pct_energy = s_solarth.energy / s.energy
-    s_heatpump.pct_energy = s_heatpump.energy / s.energy
-    s_elec_heating.pct_energy = s_elec_heating.energy / s_elec.energy
+    s_fueloil.pct_energy = div(s_fueloil.energy, s.energy)
+    s_lpg.pct_energy = div(s_lpg.energy, s.energy)
+    s_biomass.pct_energy = div(s_biomass.energy, s.energy)
+    s_coal.pct_energy = div(s_coal.energy, s.energy)
+    s_petrol.pct_energy = div(s_petrol.energy, s.energy)
+    s_heatnet.pct_energy = div(s_heatnet.energy, s.energy)
+    s_solarth.pct_energy = div(s_solarth.energy, s.energy)
+    s_heatpump.pct_energy = div(s_heatpump.energy, s.energy)
+    s_elec_heating.pct_energy = div(s_elec_heating.energy, s_elec.energy)
 
-    s_gas.pct_energy = s_gas.energy / s.energy
-    s_elec.pct_energy = s_elec.energy / s.energy
+    s_gas.pct_energy = div(s_gas.energy, s.energy)
+    s_elec.pct_energy = div(s_elec.energy, s.energy)
 
     s.pct_energy = (
         s_fueloil.pct_energy

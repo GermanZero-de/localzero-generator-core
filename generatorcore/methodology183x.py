@@ -1,5 +1,6 @@
 from dataclasses import dataclass, asdict
 from .inputs import Inputs
+from .utils import div
 
 # definition of variable names for sector M(ethodology) - there are no rows or columns in the excel!
 @dataclass
@@ -14,7 +15,7 @@ class M183X:
     nonCO2_budget_2016_to_year: float = None
     GHG_budget_2016_to_year: float = None
 
-    CO2e_w_lulucf_change_pa:float = None
+    CO2e_w_lulucf_change_pa: float = None
 
     CO2e_lulucf_2015: float = None
     CO2e_lulucf_2016: float = None
@@ -96,12 +97,12 @@ def calc_18(inputs: Inputs) -> M183X:
 
     m183X = M183X()
 
-    m183X.year_today = entry('In_M_year_today')
+    m183X.year_today = entry("In_M_year_today")
 
     m183X.year_target = entry("In_M_year_target")
 
-    #TODO: figure out where "duration target" entry variable  is used in other sector scripts, replace it with "m183X.duration_target" variable ?
-    #delete entry variable afterwards
+    # TODO: figure out where "duration target" entry variable  is used in other sector scripts, replace it with "m183X.duration_target" variable ?
+    # delete entry variable afterwards
 
     m183X.duration_target = m183X.year_target - m183X.year_today
 
@@ -130,22 +131,22 @@ def calc_3X(root, inputs: Inputs):
     ######################################
 
     m183X = root.m183X
-    #TODO: add "GHG_budget_2016_to_year_target" to makeentries.py
+    # TODO: add "GHG_budget_2016_to_year_target" to makeentries.py
     # local greenhouse gas budget from 2016 until target year in com!!
-    #m183X.GHG_budget_2016_to_year_target = (
+    # m183X.GHG_budget_2016_to_year_target = (
     #     entry("GHG_budget_2016_to_year_target")
     #     * entry("In_M_population_com_2018")
     #     / entry("In_M_population_nat")
     #    )
     m183X.GHG_budget_2016_to_year_target = 1
 
-    #TODO: add "nonCO2_budget_2016_to_year_target" to makeentries.py
+    # TODO: add "nonCO2_budget_2016_to_year_target" to makeentries.py
     # local nonCO2 budget from 2016 until target year in com!!
-    #m183X.nonCO2_budget_2016_to_year_target = (
+    # m183X.nonCO2_budget_2016_to_year_target = (
     #    entry("nonCO2_budget_2016_to_year_target")
     #    * entry("In_M_population_com_2018")
     #    / entry("In_M_population_nat")
-    #)
+    # )
     m183X.nonCO2_budget_2016_to_year_target = 1
 
     # local CO2 budget from 2016 until infinity
@@ -164,17 +165,29 @@ def calc_3X(root, inputs: Inputs):
 
     # calculate the CO2e of LULUCF for 2015-2017 and 2019-2021 by multiplying 2018's value with percentage
     # 2015 just as a backup, probably not needed
-    m183X.CO2e_lulucf_2015 = m183X.CO2e_lulucf_2018 * fact("Fact_M_CO2e_lulucf_2015_vs_2018")
+    m183X.CO2e_lulucf_2015 = m183X.CO2e_lulucf_2018 * fact(
+        "Fact_M_CO2e_lulucf_2015_vs_2018"
+    )
 
-    m183X.CO2e_lulucf_2016 = m183X.CO2e_lulucf_2018 * fact("Fact_M_CO2e_lulucf_2016_vs_2018")
+    m183X.CO2e_lulucf_2016 = m183X.CO2e_lulucf_2018 * fact(
+        "Fact_M_CO2e_lulucf_2016_vs_2018"
+    )
 
-    m183X.CO2e_lulucf_2017 = m183X.CO2e_lulucf_2018 * fact("Fact_M_CO2e_lulucf_2017_vs_2018")
+    m183X.CO2e_lulucf_2017 = m183X.CO2e_lulucf_2018 * fact(
+        "Fact_M_CO2e_lulucf_2017_vs_2018"
+    )
 
-    m183X.CO2e_lulucf_2019 = m183X.CO2e_lulucf_2018 * fact("Fact_M_CO2e_lulucf_2019_vs_2018")
+    m183X.CO2e_lulucf_2019 = m183X.CO2e_lulucf_2018 * fact(
+        "Fact_M_CO2e_lulucf_2019_vs_2018"
+    )
 
-    m183X.CO2e_lulucf_2020 = m183X.CO2e_lulucf_2018 * fact("Fact_M_CO2e_lulucf_2020_vs_2018")
+    m183X.CO2e_lulucf_2020 = m183X.CO2e_lulucf_2018 * fact(
+        "Fact_M_CO2e_lulucf_2020_vs_2018"
+    )
 
-    m183X.CO2e_lulucf_2021 = m183X.CO2e_lulucf_2018 * fact("Fact_M_CO2e_lulucf_2021_vs_2018")
+    m183X.CO2e_lulucf_2021 = m183X.CO2e_lulucf_2018 * fact(
+        "Fact_M_CO2e_lulucf_2021_vs_2018"
+    )
 
     ############################################
     ### 2018 as base for emissions 2016-2021 ###
@@ -196,24 +209,36 @@ def calc_3X(root, inputs: Inputs):
 
     # calculate the CO2e of all sectors without LULUCF for 2015-2017 and 2019-2021 by multiplying 2018's value with percentage
     # 2015 just as a backup, probably not needed
-    m183X.CO2e_wo_lulucf_2015 = m183X.CO2e_wo_lulucf_2018 * fact("Fact_M_CO2e_wo_lulucf_2015_vs_2018")
+    m183X.CO2e_wo_lulucf_2015 = m183X.CO2e_wo_lulucf_2018 * fact(
+        "Fact_M_CO2e_wo_lulucf_2015_vs_2018"
+    )
 
-    m183X.CO2e_wo_lulucf_2016 = m183X.CO2e_wo_lulucf_2018 * fact("Fact_M_CO2e_wo_lulucf_2016_vs_2018")
+    m183X.CO2e_wo_lulucf_2016 = m183X.CO2e_wo_lulucf_2018 * fact(
+        "Fact_M_CO2e_wo_lulucf_2016_vs_2018"
+    )
 
-    m183X.CO2e_wo_lulucf_2017 = m183X.CO2e_wo_lulucf_2018 * fact("Fact_M_CO2e_wo_lulucf_2017_vs_2018")
+    m183X.CO2e_wo_lulucf_2017 = m183X.CO2e_wo_lulucf_2018 * fact(
+        "Fact_M_CO2e_wo_lulucf_2017_vs_2018"
+    )
 
-    m183X.CO2e_wo_lulucf_2019 = m183X.CO2e_wo_lulucf_2018 * fact("Fact_M_CO2e_wo_lulucf_2019_vs_2018")
+    m183X.CO2e_wo_lulucf_2019 = m183X.CO2e_wo_lulucf_2018 * fact(
+        "Fact_M_CO2e_wo_lulucf_2019_vs_2018"
+    )
 
-    m183X.CO2e_wo_lulucf_2020 = m183X.CO2e_wo_lulucf_2018 * fact("Fact_M_CO2e_wo_lulucf_2020_vs_2018")
+    m183X.CO2e_wo_lulucf_2020 = m183X.CO2e_wo_lulucf_2018 * fact(
+        "Fact_M_CO2e_wo_lulucf_2020_vs_2018"
+    )
 
-    m183X.CO2e_wo_lulucf_2021 = m183X.CO2e_wo_lulucf_2018 * fact("Fact_M_CO2e_wo_lulucf_2021_vs_2018")
+    m183X.CO2e_wo_lulucf_2021 = m183X.CO2e_wo_lulucf_2018 * fact(
+        "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+    )
 
     #############################################
     ### 2018 as base for emissions 2016-2021  ###
     #############################################
     ### sum up CO2e_wo_lulucf and CO2e_lulucf ###
     #############################################
-    
+
     # 2015 just as a backup, probably not needed
     m183X.CO2e_w_lulucf_2015 = m183X.CO2e_wo_lulucf_2015 + m183X.CO2e_lulucf_2015
 
@@ -250,11 +275,15 @@ def calc_3X(root, inputs: Inputs):
     #########################################################
 
     # calculating the yearly decrease of the emissions, going down linearly to 0 in target_year+1
-    m183X.CO2e_w_lulucf_change_pa = m183X.CO2e_w_lulucf_2021 / (m183X.duration_target + 1)  # +1 because we want to reach 0 in target_year+1
+    m183X.CO2e_w_lulucf_change_pa = m183X.CO2e_w_lulucf_2021 / (
+        m183X.duration_target + 1
+    )  # +1 because we want to reach 0 in target_year+1
 
     # reducing the yearly emissions year by year, starting with 2022
     if m183X.CO2e_w_lulucf_2021 > 0:
-        m183X.CO2e_w_lulucf_2022 = (m183X.CO2e_w_lulucf_2021 - m183X.CO2e_w_lulucf_change_pa      )
+        m183X.CO2e_w_lulucf_2022 = (
+            m183X.CO2e_w_lulucf_2021 - m183X.CO2e_w_lulucf_change_pa
+        )
     else:
         m183X.CO2e_w_lulucf_2022 = 0
 
@@ -552,7 +581,7 @@ def calc_3X(root, inputs: Inputs):
     m183X.change_CO2e_t = m183X.CO2e_w_lulucf_203X - m183X.CO2e_w_lulucf_2018
 
     # calculate the total CO2e difference in % between 2018 and 203X
-    m183X.change_CO2e_pct = m183X.change_CO2e_t / m183X.CO2e_w_lulucf_2018
+    m183X.change_CO2e_pct = div(m183X.change_CO2e_t, m183X.CO2e_w_lulucf_2018)
 
     # get the total saved climate cost of all sectors until 2050
     m183X.cost_climate_saved = (

@@ -10,6 +10,9 @@ from . import refdata
 
 # This is the list of entries we expect the user to be able to
 # override on the website before we e.g. generate the report.
+# DO NOT MAKE CHANGES TO THIS LIST WITHOUT MAKING SURE THAT
+# THE NECESSARY CHANGES TO THE WEB FORM (in site-templates)
+# ARE DONE AND THE ROLLOUT OF BOTH CHANGES IS COORDINATED.
 USER_OVERRIDABLE_ENTRIES = [
     "In_M_population_com_2018",
     "In_M_population_com_203X",

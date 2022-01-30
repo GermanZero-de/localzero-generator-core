@@ -4,6 +4,7 @@ from generatorcore.makeentries import make_entries, USER_OVERRIDABLE_ENTRIES
 
 
 def test_user_overridable_entries():
+    """If this test fais read the comment in front of USER_OVERRIDABLE_ENTRIES"""
     refdata = RefData.load()
     entries = make_entries(refdata, ags="DG000000", year=2035)
     missing = frozenset(USER_OVERRIDABLE_ENTRIES) - frozenset(entries.keys())
