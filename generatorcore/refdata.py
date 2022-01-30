@@ -22,6 +22,7 @@ def _load(datadir: str, what: str, filename: str = "2018") -> pd.DataFrame:
     res = pd.read_csv(
         os.path.join(datadir, repo, what, filename + ".csv"), dtype={"ags": "str"}
     )
+    setattr(res, "refdata_dataset", what)
     return res  # type: ignore
 
 
@@ -30,23 +31,28 @@ def set_nans_to_0(data: pd.DataFrame, *, columns):
         data[c] = data[c].fillna(0)
 
 
+def get_dataset(df: pd.DataFrame) -> str:
+    return getattr(df, "refdata_dataset", "BUG-IN-DATAREF")
+
+
 @dataclass
 class LookupFailure(Exception):
     key_column: str
     key_value: object
+    dataset: str
 
-    def __init__(self, *, key_column, key_value):
+    def __init__(self, *, key_column: str, key_value, dataset: str):
         self.key_column = key_column
         self.key_value = key_value
+        self.dataset = dataset
 
 
 @dataclass
 class RowNotFound(LookupFailure):
-    df: pd.DataFrame
-
-    def __init__(self, *, key_column, key_value, df):
-        super().__init__(key_column=key_column, key_value=key_value)
-        self.df = df
+    def __init__(self, *, key_column, key_value, df: pd.DataFrame):
+        super().__init__(
+            key_column=key_column, key_value=key_value, dataset=get_dataset(df)
+        )
 
 
 @dataclass
@@ -54,8 +60,15 @@ class FieldNotPopulated(LookupFailure):
     series: pd.Series
     data_column: str
 
-    def __init__(self, key_column, key_value, data_column, series):
-        super().__init__(key_column=key_column, key_value=key_value)
+    def __init__(
+        self,
+        key_column: str,
+        key_value,
+        data_column: str,
+        series: pd.Series,
+        dataset: str,
+    ):
+        super().__init__(key_column=key_column, key_value=key_value, dataset=dataset)
         self.data_column = data_column
         self.series = series
 
@@ -65,16 +78,24 @@ class ExpectedIntGotFloat(LookupFailure):
     series: pd.Series
     data_column: str
 
-    def __init__(self, key_column, key_value, data_column, series):
-        super().__init__(key_column=key_column, key_value=key_value)
+    def __init__(
+        self,
+        key_column: str,
+        key_value,
+        data_column: str,
+        series: pd.Series,
+        dataset: str,
+    ):
+        super().__init__(key_column=key_column, key_value=key_value, dataset=dataset)
         self.data_column = data_column
         self.series = series
 
 
 class Row:
-    def __init__(self, df: pd.DataFrame, key_value, *, column="ags"):
-        self.key_column = column
+    def __init__(self, df: pd.DataFrame, key_value, *, key_column="ags"):
+        self.key_column = key_column
         self.key_value = key_value
+        self.dataset = get_dataset(df)
         try:
             # Basically this reduces the dataframe to a single row dataframe
             # and then takes the only dataframe row (a series object)
@@ -84,19 +105,20 @@ class Row:
             # and extract a very small number of rows. pandas is total overkill
             # in particular when we are publishing a package for others to use
             # it's nice to have a small list of dependencies
-            self._series = df[df[column] == key_value].iloc[0]  # type: ignore
+            self.series = df[df[key_column] == key_value].iloc[0]  # type: ignore
         except:
-            raise RowNotFound(key_column=column, key_value=key_value, df=df)
+            raise RowNotFound(key_column=key_column, key_value=key_value, df=df)
 
     def float(self, attr: str) -> float:
         """Access a float attribute."""
-        f = float(self._series[attr])
+        f = float(self.series[attr])
         if math.isnan(f):
             raise FieldNotPopulated(
                 key_column=self.key_column,
                 key_value=self.key_value,
                 data_column=attr,
-                series=self._series,
+                series=self.series,
+                dataset=self.dataset,
             )
         return f
 
@@ -110,15 +132,16 @@ class Row:
                 key_column=self.key_column,
                 key_value=self.key_value,
                 data_column=attr,
-                series=self._series,
+                series=self.series,
+                dataset=self.dataset,
             )
 
     def str(self, attr: str) -> str:
         """Access a str attribute."""
-        return str(self._series[attr])
+        return str(self.series[attr])
 
     def __str__(self):
-        return self._series.to_string()
+        return self.series.to_string()
 
 
 class FactsAndAssumptions:
@@ -278,7 +301,7 @@ class RefData:
         return Row(self._buildings, ags)
 
     def co2path(self, year: int):
-        return Row(self._co2path, year, column="year")
+        return Row(self._co2path, year, key_column="year")
 
     def destatis(self, ags: str):
         """TODO"""
