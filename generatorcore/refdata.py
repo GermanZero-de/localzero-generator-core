@@ -198,6 +198,7 @@ class RefData:
         population: pd.DataFrame,
         renewable_energy: pd.DataFrame,
         traffic: pd.DataFrame,
+        fix_missing_entries: bool,
     ):
         self._area = area
         self._ags_master = ags_master.set_index(keys="ags").to_dict()["description"]
@@ -215,21 +216,45 @@ class RefData:
         self._renewable_energy = renewable_energy
         self._traffic = traffic
 
-        self._fix_missing_entries_in_area()
+        if fix_missing_entries:
+            self._fix_missing_entries_in_area()
+            self._fix_missing_entries_in_flats()
+            self._fix_missing_entries_in_population()
 
     def _fix_missing_entries_in_area(self):
         """Here we assume that the missing entries in the area sheet should actually be 0."""
         set_nans_to_0(
             self._area,
             columns=[
+                "land_settlement",
+                "land_traffic",
                 "veg_forrest",
+                "veg_agri",
                 "veg_wood",
                 "veg_heath",
                 "veg_moor",
                 "veg_marsh",
+                "veg_plant_uncover_com",
                 "settlement_ghd",
+                "water_total",
             ],
         )
+
+    def _fix_missing_entries_in_flats(self):
+        set_nans_to_0(
+            self._flats,
+            columns=[
+                "residential_buildings_total",
+                "buildings_1flat",
+                "buildings_2flats",
+                "buildings_3flats",
+                "buildings_dorms",
+                "residential_buildings_area_total",
+            ],
+        )
+
+    def _fix_missing_entries_in_population(self):
+        set_nans_to_0(self._population, columns=["total"])
 
     def ags_master(self) -> dict[str, str]:
         """Returns the complete dictionary of AGS, where no big
@@ -296,7 +321,7 @@ class RefData:
         return Row(self._traffic, ags)
 
     @classmethod
-    def load(cls, datadir: str | None = None) -> "RefData":
+    def load(cls, datadir: str | None = None, *, fix_missing_entries=True) -> "RefData":
         """Load all the reference data into memory.  This assumes that the working directory has a subdirectory
         called 'data' that contains the reference data in two subfolders one called 'public' and the other
         'proprietary'.
@@ -324,5 +349,6 @@ class RefData:
             population=_load(datadir, "population"),
             renewable_energy=_load(datadir, "renewable_energy"),
             traffic=_load(datadir, "traffic"),
+            fix_missing_entries=fix_missing_entries,
         )
         return d

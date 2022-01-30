@@ -154,7 +154,7 @@ def data_lookup_cmd(args):
             print(record)
         print()
 
-    data = refdata.RefData.load()
+    data = refdata.RefData.load(fix_missing_entries=args.fix_missing_entries)
 
     by_ags = [
         ("area", data.area),
@@ -177,8 +177,10 @@ def data_lookup_cmd(args):
         ("nat_res_buildings", data.nat_res_buildings),
     ]
 
-    bold(f"{ags} (commune level data)")
-    bold("-----------------------------------------")
+    description = data.ags_master().get(ags, "MISSING IN MASTER")
+
+    bold(f"{ags} {description} (commune level data)")
+    bold("---------------------------------------------------------------")
     print()
     for (name, lookup_fn) in by_ags:
         print_lookup(name, lookup_fn, key=ags)
@@ -268,17 +270,17 @@ def data_entries_user_overridables_generate_defaults_cmd(args):
     data = refdata.RefData.load()
     result = []
     good = 0
-    errors = 0
+    rows_not_found = 0
     for (ags, description) in list(data.ags_master().items()):
         try:
             entries = makeentries.make_entries(data, ags, 2035)
             entries["city"] = description
             result.append(entries)
             good = good + 1
-        except Exception as e:
+        except refdata.RowNotFound as e:
             # print(f"{ags} {description}: Can't generate: {e}", file=sys.stderr)
-            errors = errors + 1
-        sys.stdout.write(f"\rOK {good:>5}    BAD {errors:>5}")
+            rows_not_found = rows_not_found + 1
+        sys.stdout.write(f"\rOK {good:>5}    ROWS-MISSING {rows_not_found:>5}")
     # json.dump(result, indent=4, fp=sys.stdout)
 
 
@@ -327,6 +329,9 @@ def main():
         help="Lookup all the reference data for a given AGS",
     )
     cmd_data_lookup.add_argument("ags")
+    cmd_data_lookup.add_argument(
+        "-no-fixes", action="store_false", dest="fix_missing_entries"
+    )
     cmd_data_lookup.set_defaults(func=data_lookup_cmd)
 
     cmd_data_entries_user_overrides_generate_defaults = subcmd_data.add_parser(
