@@ -1,9 +1,6 @@
 from dataclasses import dataclass, asdict
-
-import numpy as np
-
 from .inputs import Inputs
-from numpy import *
+from .utils import div
 
 #  Definition der relevanten Spaltennamen für den Sektor F (30)
 
@@ -176,24 +173,24 @@ def calc(root, inputs: Inputs):
         f.p_hydrogen.change_energy_MWh = f.p_hydrogen.energy
         f.p_hydrogen_reconv.change_energy_MWh = f.p_hydrogen_reconv.energy
         # ---------------------------------
-        f.p_petrol.change_energy_pct = (
-            f.p_petrol.change_energy_MWh / root.f18.p_petrol.energy
+        f.p_petrol.change_energy_pct = div(
+            f.p_petrol.change_energy_MWh, root.f18.p_petrol.energy
         )
-        f.p_jetfuel.change_energy_pct = (
-            f.p_jetfuel.change_energy_MWh / root.f18.p_jetfuel.energy
+        f.p_jetfuel.change_energy_pct = div(
+            f.p_jetfuel.change_energy_MWh, root.f18.p_jetfuel.energy
         )
-        f.p_diesel.change_energy_pct = (
-            f.p_diesel.change_energy_MWh / root.f18.p_diesel.energy
+        f.p_diesel.change_energy_pct = div(
+            f.p_diesel.change_energy_MWh, root.f18.p_diesel.energy
         )
 
-        f.p_bioethanol.change_energy_pct = (
-            f.p_bioethanol.change_energy_MWh / root.f18.p_bioethanol.energy
+        f.p_bioethanol.change_energy_pct = div(
+            f.p_bioethanol.change_energy_MWh, root.f18.p_bioethanol.energy
         )
-        f.p_biodiesel.change_energy_pct = (
-            f.p_biodiesel.change_energy_MWh / root.f18.p_biodiesel.energy
+        f.p_biodiesel.change_energy_pct = div(
+            f.p_biodiesel.change_energy_MWh, root.f18.p_biodiesel.energy
         )
-        f.p_biogas.change_energy_pct = (
-            f.p_biogas.change_energy_MWh / root.f18.p_biogas.energy
+        f.p_biogas.change_energy_pct = div(
+            f.p_biogas.change_energy_MWh, root.f18.p_biogas.energy
         )
         # -------------------------------------
         f.p_petrol.change_CO2e_t = f.p_petrol.CO2e_total - root.f18.p_petrol.CO2e_total
@@ -251,18 +248,18 @@ def calc(root, inputs: Inputs):
         f.p_hydrogen.full_load_hour = ass("Ass_F_P_electrolysis_full_load_hours")
         f.p_hydrogen_reconv.full_load_hour = ass("Ass_F_P_electrolysis_full_load_hours")
         # --------------------------------------
-        f.p_petrol.power_to_be_installed = (
-            f.p_petrol.demand_electricity / f.p_petrol.full_load_hour
+        f.p_petrol.power_to_be_installed = div(
+            f.p_petrol.demand_electricity, f.p_petrol.full_load_hour
         )
-        f.p_jetfuel.power_to_be_installed = (
-            f.p_jetfuel.demand_electricity / f.p_jetfuel.full_load_hour
+        f.p_jetfuel.power_to_be_installed = div(
+            f.p_jetfuel.demand_electricity, f.p_jetfuel.full_load_hour
         )
         f.p_diesel.power_to_be_installed = f.p_diesel.demand_electricity / ass(
             "Ass_S_power_to_x_full_load_hours2"
         )
 
-        f.p_emethan.power_to_be_installed = (
-            f.p_emethan.demand_electricity / f.p_emethan.full_load_hour
+        f.p_emethan.power_to_be_installed = div(
+            f.p_emethan.demand_electricity, f.p_emethan.full_load_hour
         )
 
         # ---------------------------------------
@@ -323,14 +320,18 @@ def calc(root, inputs: Inputs):
         f.p_emethan.cost_wage = f.p_emethan.invest_pa * f.p_emethan.pct_of_wage
 
         # --------------------------------------
-        f.p_petrol.demand_emplo = f.p_petrol.cost_wage / f.p_petrol.ratio_wage_to_emplo
-        f.p_jetfuel.demand_emplo = (
-            f.p_jetfuel.cost_wage / f.p_jetfuel.ratio_wage_to_emplo
+        f.p_petrol.demand_emplo = div(
+            f.p_petrol.cost_wage, f.p_petrol.ratio_wage_to_emplo
         )
-        f.p_diesel.demand_emplo = f.p_diesel.cost_wage / f.p_diesel.ratio_wage_to_emplo
+        f.p_jetfuel.demand_emplo = div(
+            f.p_jetfuel.cost_wage, f.p_jetfuel.ratio_wage_to_emplo
+        )
+        f.p_diesel.demand_emplo = div(
+            f.p_diesel.cost_wage, f.p_diesel.ratio_wage_to_emplo
+        )
 
-        f.p_emethan.demand_emplo = (
-            f.p_emethan.cost_wage / f.p_emethan.ratio_wage_to_emplo
+        f.p_emethan.demand_emplo = div(
+            f.p_emethan.cost_wage, f.p_emethan.ratio_wage_to_emplo
         )
 
         f.p_hydrogen_reconv.energy = (
@@ -379,7 +380,7 @@ def calc(root, inputs: Inputs):
         f.p_hydrogen.invest_pa = f.p_hydrogen.invest / entry("In_M_duration_target")
         f.p_hydrogen.cost_wage = f.p_hydrogen.invest_pa * f.p_hydrogen.pct_of_wage
         f.p_hydrogen.demand_emplo = (
-            f.p_hydrogen.cost_wage / f.p_hydrogen.ratio_wage_to_emplo
+            div(f.p_hydrogen.cost_wage, f.p_hydrogen.ratio_wage_to_emplo)
             if entry("In_M_AGS_com") == "DG000000"
             else 0
         )
@@ -393,7 +394,7 @@ def calc(root, inputs: Inputs):
             f.p_hydrogen_reconv.invest_pa * f.p_hydrogen_reconv.pct_of_wage
         )
         f.p_hydrogen_reconv.demand_emplo = (
-            f.p_hydrogen_reconv.cost_wage / f.p_hydrogen_reconv.ratio_wage_to_emplo
+            div(f.p_hydrogen_reconv.cost_wage, f.p_hydrogen_reconv.ratio_wage_to_emplo)
             if entry("In_M_AGS_com") == "DG000000"
             else 0
         )
@@ -426,7 +427,7 @@ def calc(root, inputs: Inputs):
             + f.p_hydrogen.change_energy_MWh
             + f.p_hydrogen_reconv.change_energy_MWh
         )  # SUM(p_petrol.change_energy_MWh:p_hydrogen_reconv.change_energy_MWh)
-        f.p.change_energy_pct = f.p.change_energy_MWh / root.f18.p.energy
+        f.p.change_energy_pct = div(f.p.change_energy_MWh, root.f18.p.energy)
         f.f.change_energy_MWh = f.p.change_energy_MWh
         f.f.change_energy_pct = f.p.change_energy_pct
         f.p.change_CO2e_t = (
@@ -441,7 +442,7 @@ def calc(root, inputs: Inputs):
             + f.p_hydrogen_reconv.change_CO2e_t
         )  # SUM(p_petrol.change_CO2e_t:p_hydrogen_reconv.change_CO2e_t)
         f.f.change_CO2e_t = f.p.change_CO2e_t
-        f.p.change_CO2e_pct = f.p.change_CO2e_t / root.f18.p.CO2e_total
+        f.p.change_CO2e_pct = div(f.p.change_CO2e_t, root.f18.p.CO2e_total)
         f.f.change_CO2e_pct = f.p.change_CO2e_pct
         f.p.CO2e_total_2021_estimated = (
             f.p_petrol.CO2e_total_2021_estimated
@@ -539,16 +540,16 @@ def calc(root, inputs: Inputs):
         )  # SUM(p_petrol.demand_emplo_new:p_hydrogen_reconv.demand_emplo_new)
         f.f.demand_emplo_new = f.p.demand_emplo_new
 
-        f.p_petrol.change_CO2e_pct = (
-            f.p_petrol.change_CO2e_t / root.f18.p_petrol.CO2e_total
+        f.p_petrol.change_CO2e_pct = div(
+            f.p_petrol.change_CO2e_t, root.f18.p_petrol.CO2e_total
         )
         f.p_petrol.invest_per_x = ass("Ass_S_power_to_x_invest_per_power")
-        f.p_jetfuel.change_CO2e_pct = (
-            f.p_jetfuel.change_CO2e_t / root.f18.p_jetfuel.CO2e_total
+        f.p_jetfuel.change_CO2e_pct = div(
+            f.p_jetfuel.change_CO2e_t, root.f18.p_jetfuel.CO2e_total
         )
         f.p_jetfuel.invest_per_x = ass("Ass_S_power_to_x_invest_per_power")
-        f.p_diesel.change_CO2e_pct = (
-            f.p_diesel.change_CO2e_t / root.f18.p_diesel.CO2e_total
+        f.p_diesel.change_CO2e_pct = div(
+            f.p_diesel.change_CO2e_t, root.f18.p_diesel.CO2e_total
         )
         f.p_diesel.invest_per_x = ass("Ass_S_power_to_x_invest_per_power")
         f.p_emethan.invest_per_x = ass("Ass_S_methan_invest_per_power")

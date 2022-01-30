@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field, InitVar, asdict
-from . import industry2018
 from .inputs import Inputs
+from .utils import div
+
 
 @dataclass
 class IColVars2030:
@@ -124,14 +125,14 @@ def calc(root, inputs: Inputs):
     p_chem_basic.CO2e_pb = ass("Ass_I_P_chem_all_co2e_factor_2050")
     p_chem_basic.CO2e_total = p_chem_basic.CO2e_cb + p_chem_basic.CO2e_pb
     p_chem_basic.change_energy_MWh = p_chem_basic.energy - root.i18.p_chem_basic.energy
-    p_chem_basic.change_energy_pct = (
-        p_chem_basic.change_energy_MWh / root.i18.p_chem_basic.energy
+    p_chem_basic.change_energy_pct = div(
+        p_chem_basic.change_energy_MWh, root.i18.p_chem_basic.energy
     )
     p_chem_basic.change_CO2e_t = (
         p_chem_basic.CO2e_total - root.i18.p_chem_basic.CO2e_total
     )
-    p_chem_basic.change_CO2e_pct = (
-        p_chem_basic.change_CO2e_t / root.i18.p_chem_basic.CO2e_total
+    p_chem_basic.change_CO2e_pct = div(
+        p_chem_basic.change_CO2e_t, root.i18.p_chem_basic.CO2e_total
     )
     p_chem_basic.CO2e_total_2021_estimated = root.i18.p_chem_basic.CO2e_total * fact(
         "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
@@ -154,8 +155,8 @@ def calc(root, inputs: Inputs):
     p_chem_basic.ratio_wage_to_emplo = fact(
         "Fact_I_P_constr_civil_ratio_wage_to_emplo_2018"
     )
-    p_chem_basic.demand_emplo = (
-        p_chem_basic.cost_wage / p_chem_basic.ratio_wage_to_emplo
+    p_chem_basic.demand_emplo = div(
+        p_chem_basic.cost_wage, p_chem_basic.ratio_wage_to_emplo
     )
 
     # p_chem_ammonia
@@ -171,14 +172,14 @@ def calc(root, inputs: Inputs):
     p_chem_ammonia.change_energy_MWh = (
         p_chem_ammonia.energy - root.i18.p_chem_ammonia.energy
     )
-    p_chem_ammonia.change_energy_pct = (
-        p_chem_ammonia.change_energy_MWh / root.i18.p_chem_ammonia.energy
+    p_chem_ammonia.change_energy_pct = div(
+        p_chem_ammonia.change_energy_MWh, root.i18.p_chem_ammonia.energy
     )
     p_chem_ammonia.change_CO2e_t = (
         p_chem_ammonia.CO2e_total - root.i18.p_chem_ammonia.CO2e_total
     )
-    p_chem_ammonia.change_CO2e_pct = (
-        p_chem_ammonia.change_CO2e_t / root.i18.p_chem_ammonia.CO2e_total
+    p_chem_ammonia.change_CO2e_pct = div(
+        p_chem_ammonia.change_CO2e_t, root.i18.p_chem_ammonia.CO2e_total
     )
     p_chem_ammonia.CO2e_total_2021_estimated = (
         root.i18.p_chem_ammonia.CO2e_total * fact("Fact_M_CO2e_wo_lulucf_2021_vs_2018")
@@ -201,8 +202,8 @@ def calc(root, inputs: Inputs):
     p_chem_ammonia.ratio_wage_to_emplo = fact(
         "Fact_I_P_constr_civil_ratio_wage_to_emplo_2018"
     )
-    p_chem_ammonia.demand_emplo = (
-        p_chem_ammonia.cost_wage / p_chem_ammonia.ratio_wage_to_emplo
+    p_chem_ammonia.demand_emplo = div(
+        p_chem_ammonia.cost_wage, p_chem_ammonia.ratio_wage_to_emplo
     )
 
     p_chem_ammonia.action = "Ammoniakproduktion aus elektrolytisch erzeugtem H2"
@@ -222,14 +223,14 @@ def calc(root, inputs: Inputs):
     p_chem_other.CO2e_total = p_chem_other.CO2e_cb + p_chem_other.CO2e_pb
     # change 2018 to 203X
     p_chem_other.change_energy_MWh = p_chem_other.energy - root.i18.p_chem_other.energy
-    p_chem_other.change_energy_pct = (
-        p_chem_other.change_energy_MWh / root.i18.p_chem_other.energy
+    p_chem_other.change_energy_pct = div(
+        p_chem_other.change_energy_MWh, root.i18.p_chem_other.energy
     )
     p_chem_other.change_CO2e_t = (
         p_chem_other.CO2e_total - root.i18.p_chem_other.CO2e_total
     )
-    p_chem_other.change_CO2e_pct = (
-        p_chem_other.change_CO2e_t / root.i18.p_chem_other.CO2e_total
+    p_chem_other.change_CO2e_pct = div(
+        p_chem_other.change_CO2e_t, root.i18.p_chem_other.CO2e_total
     )
     p_chem_other.CO2e_total_2021_estimated = root.i18.p_chem_other.CO2e_total * fact(
         "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
@@ -250,8 +251,8 @@ def calc(root, inputs: Inputs):
     p_chem_other.ratio_wage_to_emplo = fact(
         "Fact_I_P_constr_civil_ratio_wage_to_emplo_2018"
     )
-    p_chem_other.demand_emplo = (
-        p_chem_other.cost_wage / p_chem_other.ratio_wage_to_emplo
+    p_chem_other.demand_emplo = div(
+        p_chem_other.cost_wage, p_chem_other.ratio_wage_to_emplo
     )
 
     # chem total
@@ -275,13 +276,13 @@ def calc(root, inputs: Inputs):
         + p_chem_ammonia.change_energy_MWh
         + p_chem_other.change_energy_MWh
     )
-    p_chem.change_energy_pct = p_chem.change_energy_MWh / root.i18.p_chem.energy
+    p_chem.change_energy_pct = div(p_chem.change_energy_MWh, root.i18.p_chem.energy)
     p_chem.change_CO2e_t = (
         p_chem_basic.change_CO2e_t
         + p_chem_ammonia.change_CO2e_t
         + p_chem_other.change_CO2e_t
     )
-    p_chem.change_CO2e_pct = p_chem.change_CO2e_t / root.i18.p_chem.CO2e_total
+    p_chem.change_CO2e_pct = div(p_chem.change_CO2e_t, root.i18.p_chem.CO2e_total)
     p_chem.CO2e_total_2021_estimated = (
         p_chem_basic.CO2e_total_2021_estimated
         + p_chem_ammonia.CO2e_total_2021_estimated
@@ -341,14 +342,14 @@ def calc(root, inputs: Inputs):
     p_metal_steel_primary.change_energy_MWh = (
         p_metal_steel_primary.energy - root.i18.p_metal_steel_primary.energy
     )
-    p_metal_steel_primary.change_energy_pct = (
-        p_metal_steel_primary.change_energy_MWh / root.i18.p_metal_steel_primary.energy
+    p_metal_steel_primary.change_energy_pct = div(
+        p_metal_steel_primary.change_energy_MWh, root.i18.p_metal_steel_primary.energy
     )
     p_metal_steel_primary.change_CO2e_t = (
         p_metal_steel_primary.CO2e_total - root.i18.p_metal_steel_primary.CO2e_total
     )
-    p_metal_steel_primary.change_CO2e_pct = (
-        p_metal_steel_primary.change_CO2e_t / root.i18.p_metal_steel_primary.CO2e_total
+    p_metal_steel_primary.change_CO2e_pct = div(
+        p_metal_steel_primary.change_CO2e_t, root.i18.p_metal_steel_primary.CO2e_total
     )
     p_metal_steel_primary.CO2e_total_2021_estimated = (
         root.i18.p_metal_steel_primary.CO2e_total
@@ -383,8 +384,8 @@ def calc(root, inputs: Inputs):
     p_metal_steel_primary.ratio_wage_to_emplo = fact(
         "Fact_I_P_constr_civil_ratio_wage_to_emplo_2018"
     )
-    p_metal_steel_primary.demand_emplo = (
-        p_metal_steel_primary.cost_wage / p_metal_steel_primary.ratio_wage_to_emplo
+    p_metal_steel_primary.demand_emplo = div(
+        p_metal_steel_primary.cost_wage, p_metal_steel_primary.ratio_wage_to_emplo
     )
     p_metal_steel_primary.action = "Umstellung auf Wasserstoff-DRI"
 
@@ -473,8 +474,8 @@ def calc(root, inputs: Inputs):
     p_metal_steel_secondary.ratio_wage_to_emplo = fact(
         "Fact_I_P_constr_civil_ratio_wage_to_emplo_2018"
     )
-    p_metal_steel_secondary.demand_emplo = (
-        p_metal_steel_secondary.cost_wage / p_metal_steel_secondary.ratio_wage_to_emplo
+    p_metal_steel_secondary.demand_emplo = div(
+        p_metal_steel_secondary.cost_wage, p_metal_steel_secondary.ratio_wage_to_emplo
     )
     p_metal_steel_secondary.action = (
         "Umstellung (der Weiterverarbeitung) auf Elektroöfen"
@@ -498,14 +499,14 @@ def calc(root, inputs: Inputs):
     p_metal_steel.change_energy_MWh = (
         p_metal_steel.energy - root.i18.p_metal_steel.energy
     )
-    p_metal_steel.change_energy_pct = (
-        p_metal_steel.change_energy_MWh / root.i18.p_metal_steel.energy
+    p_metal_steel.change_energy_pct = div(
+        p_metal_steel.change_energy_MWh, root.i18.p_metal_steel.energy
     )
     p_metal_steel.change_CO2e_t = (
         p_metal_steel.CO2e_total - root.i18.p_metal_steel.CO2e_total
     )
-    p_metal_steel.change_CO2e_pct = (
-        p_metal_steel.change_CO2e_t / root.i18.p_metal_steel.CO2e_total
+    p_metal_steel.change_CO2e_pct = div(
+        p_metal_steel.change_CO2e_t, root.i18.p_metal_steel.CO2e_total
     )
     p_metal_steel.CO2e_total_2021_estimated = root.i18.p_metal_steel.CO2e_total * fact(
         "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
@@ -556,14 +557,14 @@ def calc(root, inputs: Inputs):
     p_metal_nonfe.change_energy_MWh = (
         p_metal_nonfe.energy - root.i18.p_metal_nonfe.energy
     )
-    p_metal_nonfe.change_energy_pct = (
-        p_metal_nonfe.change_energy_MWh / root.i18.p_metal_nonfe.energy
+    p_metal_nonfe.change_energy_pct = div(
+        p_metal_nonfe.change_energy_MWh, root.i18.p_metal_nonfe.energy
     )
     p_metal_nonfe.change_CO2e_t = (
         p_metal_nonfe.CO2e_total - root.i18.p_metal_nonfe.CO2e_total
     )
-    p_metal_nonfe.change_CO2e_pct = (
-        p_metal_nonfe.change_CO2e_t / root.i18.p_metal_nonfe.CO2e_total
+    p_metal_nonfe.change_CO2e_pct = div(
+        p_metal_nonfe.change_CO2e_t, root.i18.p_metal_nonfe.CO2e_total
     )
     p_metal_nonfe.CO2e_total_2021_estimated = root.i18.p_metal_nonfe.CO2e_total * fact(
         "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
@@ -586,8 +587,8 @@ def calc(root, inputs: Inputs):
     p_metal_nonfe.ratio_wage_to_emplo = fact(
         "Fact_I_P_constr_civil_ratio_wage_to_emplo_2018"
     )
-    p_metal_nonfe.demand_emplo = (
-        p_metal_nonfe.cost_wage / p_metal_nonfe.ratio_wage_to_emplo
+    p_metal_nonfe.demand_emplo = div(
+        p_metal_nonfe.cost_wage, p_metal_nonfe.ratio_wage_to_emplo
     )
 
     p_metal_nonfe.action = "Umstellung auf strombasierte Sekundärproduktion"
@@ -601,9 +602,9 @@ def calc(root, inputs: Inputs):
     p_metal.change_energy_MWh = (
         p_metal_steel.change_energy_MWh + p_metal_nonfe.change_energy_MWh
     )
-    p_metal.change_energy_pct = p_metal.change_energy_MWh / root.i18.p_metal.energy
+    p_metal.change_energy_pct = div(p_metal.change_energy_MWh, root.i18.p_metal.energy)
     p_metal.change_CO2e_t = p_metal_steel.change_CO2e_t + p_metal_nonfe.change_CO2e_t
-    p_metal.change_CO2e_pct = p_metal.change_CO2e_t / root.i18.p_metal.CO2e_total
+    p_metal.change_CO2e_pct = div(p_metal.change_CO2e_t, root.i18.p_metal.CO2e_total)
     p_metal.CO2e_total_2021_estimated = (
         p_metal_steel.CO2e_total_2021_estimated
         + p_metal_nonfe.CO2e_total_2021_estimated
@@ -639,14 +640,14 @@ def calc(root, inputs: Inputs):
     p_other_paper.change_energy_MWh = (
         p_other_paper.energy - root.i18.p_other_paper.energy
     )
-    p_other_paper.change_energy_pct = (
-        p_other_paper.change_energy_MWh / root.i18.p_other_paper.energy
+    p_other_paper.change_energy_pct = div(
+        p_other_paper.change_energy_MWh, root.i18.p_other_paper.energy
     )
     p_other_paper.change_CO2e_t = (
         p_other_paper.CO2e_total - root.i18.p_other_paper.CO2e_total
     )
-    p_other_paper.change_CO2e_pct = (
-        p_other_paper.change_CO2e_t / root.i18.p_other_paper.CO2e_total
+    p_other_paper.change_CO2e_pct = div(
+        p_other_paper.change_CO2e_t, root.i18.p_other_paper.CO2e_total
     )
     p_other_paper.CO2e_total_2021_estimated = root.i18.p_other_paper.CO2e_total * fact(
         "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
@@ -670,8 +671,8 @@ def calc(root, inputs: Inputs):
     p_other_paper.ratio_wage_to_emplo = fact(
         "Fact_I_P_constr_civil_ratio_wage_to_emplo_2018"
     )
-    p_other_paper.demand_emplo = (
-        p_other_paper.cost_wage / p_other_paper.ratio_wage_to_emplo
+    p_other_paper.demand_emplo = div(
+        p_other_paper.cost_wage, p_other_paper.ratio_wage_to_emplo
     )
 
     p_other_paper.action = "Umstellung auf strombasierte Produktion"
@@ -696,14 +697,14 @@ def calc(root, inputs: Inputs):
 
     # change 2018 to 203X
     p_other_food.change_energy_MWh = p_other_food.energy - root.i18.p_other_food.energy
-    p_other_food.change_energy_pct = (
-        p_other_food.change_energy_MWh / root.i18.p_other_food.energy
+    p_other_food.change_energy_pct = div(
+        p_other_food.change_energy_MWh, root.i18.p_other_food.energy
     )
     p_other_food.change_CO2e_t = (
         p_other_food.CO2e_total - root.i18.p_other_food.CO2e_total
     )
-    p_other_food.change_CO2e_pct = (
-        p_other_food.change_CO2e_t / root.i18.p_other_food.CO2e_total
+    p_other_food.change_CO2e_pct = div(
+        p_other_food.change_CO2e_t, root.i18.p_other_food.CO2e_total
     )
     p_other_food.CO2e_total_2021_estimated = root.i18.p_other_food.CO2e_total * fact(
         "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
@@ -726,8 +727,8 @@ def calc(root, inputs: Inputs):
     p_other_food.ratio_wage_to_emplo = fact(
         "Fact_I_P_constr_civil_ratio_wage_to_emplo_2018"
     )
-    p_other_food.demand_emplo = (
-        p_other_food.cost_wage / p_other_food.ratio_wage_to_emplo
+    p_other_food.demand_emplo = div(
+        p_other_food.cost_wage, p_other_food.ratio_wage_to_emplo
     )
 
     p_other_food.action = "Umstellung auf strombasierte Produktion"
@@ -759,14 +760,14 @@ def calc(root, inputs: Inputs):
     p_other_further.change_energy_MWh = (
         p_other_further.energy - root.i18.p_other_further.energy
     )
-    p_other_further.change_energy_pct = (
-        p_other_further.change_energy_MWh / root.i18.p_other_further.energy
+    p_other_further.change_energy_pct = div(
+        p_other_further.change_energy_MWh, root.i18.p_other_further.energy
     )
     p_other_further.change_CO2e_t = (
         p_other_further.CO2e_total - root.i18.p_other_further.CO2e_total
     )
-    p_other_further.change_CO2e_pct = (
-        p_other_further.change_CO2e_t / root.i18.p_other_further.CO2e_total
+    p_other_further.change_CO2e_pct = div(
+        p_other_further.change_CO2e_t, root.i18.p_other_further.CO2e_total
     )
     p_other_further.CO2e_total_2021_estimated = (
         root.i18.p_other_further.CO2e_total * fact("Fact_M_CO2e_wo_lulucf_2021_vs_2018")
@@ -789,8 +790,8 @@ def calc(root, inputs: Inputs):
     p_other_further.ratio_wage_to_emplo = fact(
         "Fact_I_P_constr_civil_ratio_wage_to_emplo_2018"
     )
-    p_other_further.demand_emplo = (
-        p_other_further.cost_wage / p_other_further.ratio_wage_to_emplo
+    p_other_further.demand_emplo = div(
+        p_other_further.cost_wage, p_other_further.ratio_wage_to_emplo
     )
 
     p_other_further.action = "Umstellung auf strombasierte Produktion"
@@ -808,8 +809,8 @@ def calc(root, inputs: Inputs):
     p_other_2efgh.change_CO2e_t = (
         p_other_2efgh.CO2e_total - root.i18.p_other_2efgh.CO2e_total
     )
-    p_other_2efgh.change_CO2e_pct = (
-        p_other_2efgh.change_CO2e_t / root.i18.p_other_2efgh.CO2e_total
+    p_other_2efgh.change_CO2e_pct = div(
+        p_other_2efgh.change_CO2e_t, root.i18.p_other_2efgh.CO2e_total
     )
     p_other_2efgh.CO2e_total_2021_estimated = root.i18.p_other_2efgh.CO2e_total * fact(
         "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
@@ -835,8 +836,8 @@ def calc(root, inputs: Inputs):
     p_other_2efgh.ratio_wage_to_emplo = fact(
         "Fact_I_P_constr_civil_ratio_wage_to_emplo_2018"
     )
-    p_other_2efgh.demand_emplo = (
-        p_other_2efgh.cost_wage / p_other_2efgh.ratio_wage_to_emplo
+    p_other_2efgh.demand_emplo = div(
+        p_other_2efgh.cost_wage, p_other_2efgh.ratio_wage_to_emplo
     )
 
     p_other_2efgh.action = "Umstellung auf natürliche Kühlgase"
@@ -861,14 +862,14 @@ def calc(root, inputs: Inputs):
         + p_other_food.change_energy_MWh
         + p_other_further.change_energy_MWh
     )
-    p_other.change_energy_pct = p_other.change_energy_MWh / root.i18.p_other.energy
+    p_other.change_energy_pct = div(p_other.change_energy_MWh, root.i18.p_other.energy)
     p_other.change_CO2e_t = (
         p_other_paper.change_CO2e_t
         + p_other_food.change_CO2e_t
         + p_other_further.change_CO2e_t
         + p_other_2efgh.change_CO2e_t
     )
-    p_other.change_CO2e_pct = p_other.change_CO2e_t / root.i18.p_other.CO2e_total
+    p_other.change_CO2e_pct = div(p_other.change_CO2e_t, root.i18.p_other.CO2e_total)
     p_other.CO2e_total_2021_estimated = (
         p_other_paper.CO2e_total_2021_estimated
         + p_other_food.CO2e_total_2021_estimated
@@ -932,7 +933,7 @@ def calc(root, inputs: Inputs):
     g_consult.pct_of_wage = ass("Ass_I_G_advice_invest_pct_of_wage")
     g_consult.cost_wage = g_consult.invest_pa * g_consult.pct_of_wage
     g_consult.ratio_wage_to_emplo = ass("Ass_T_C_yearly_costs_per_planer")
-    g_consult.demand_emplo = g_consult.cost_wage / g_consult.ratio_wage_to_emplo
+    g_consult.demand_emplo = div(g_consult.cost_wage, g_consult.ratio_wage_to_emplo)
     g_consult.demand_emplo_new = 0
     g_consult.emplo_existing = g_consult.demand_emplo
 
@@ -947,7 +948,7 @@ def calc(root, inputs: Inputs):
     g.invest_com = g_consult.invest
     p_miner_cement.invest = p_miner_cement.prod_volume * p_miner_cement.invest_per_x
     g.cost_wage = g_consult.invest_pa * ass("Ass_I_G_advice_invest_pct_of_wage")
-    g.demand_emplo = g_consult.cost_wage / g_consult.ratio_wage_to_emplo
+    g.demand_emplo = div(g_consult.cost_wage, g_consult.ratio_wage_to_emplo)
     g.demand_emplo_new = g_consult.demand_emplo - g_consult.emplo_existing
 
     p_miner_cement.invest_outside = p_miner_cement.invest
@@ -1058,8 +1059,8 @@ def calc(root, inputs: Inputs):
         * entry("In_M_population_com_2018")
         / entry("In_M_population_nat")
     )
-    p_miner_cement.demand_emplo = (
-        p_miner_cement.cost_wage / p_miner_cement.ratio_wage_to_emplo
+    p_miner_cement.demand_emplo = div(
+        p_miner_cement.cost_wage, p_miner_cement.ratio_wage_to_emplo
     )
     p_chem.demand_electricity = (
         p_chem_basic.demand_electricity
@@ -1166,14 +1167,14 @@ def calc(root, inputs: Inputs):
         + p_miner_glas.change_energy_MWh
         + p_miner_ceram.change_energy_MWh
     )  # SUM(p_miner_cement.change_energy_MWh:p_miner_ceram.change_energy_MWh)
-    p_miner.change_energy_pct = p_miner.change_energy_MWh / i18.p_miner.energy
+    p_miner.change_energy_pct = div(p_miner.change_energy_MWh, i18.p_miner.energy)
     p.change_energy_MWh = (
         p_miner.change_energy_MWh
         + p_chem.change_energy_MWh
         + p_metal.change_energy_MWh
         + p_other.change_energy_MWh
     )
-    p.change_energy_pct = p.change_energy_MWh / i18.p.energy
+    p.change_energy_pct = div(p.change_energy_MWh, i18.p.energy)
     p.change_CO2e_t = (p.CO2e_pb + p.CO2e_cb) - (i18.p.CO2e_pb + i18.p.CO2e_cb)
     p_miner_chalk.CO2e_total = p_miner_chalk.CO2e_pb + p_miner_chalk.CO2e_cb
     p_miner_glas.CO2e_total = p_miner_glas.CO2e_pb + p_miner_glas.CO2e_cb
@@ -1183,7 +1184,7 @@ def calc(root, inputs: Inputs):
         + p_miner_glas.CO2e_total
         + p_miner_ceram.CO2e_total
     )  # SUM(p_miner_cement.CO2e_total:p_miner_ceram.CO2e_total)
-    p.change_CO2e_pct = p.change_CO2e_t / i18.p.CO2e_total
+    p.change_CO2e_pct = div(p.change_CO2e_t, i18.p.CO2e_total)
     p_miner_chalk.cost_climate_saved = (
         (
             p_miner_chalk.CO2e_total_2021_estimated
@@ -1211,8 +1212,8 @@ def calc(root, inputs: Inputs):
         p_miner.CO2e_total + p_chem.CO2e_total + p_metal.CO2e_total + p_other.CO2e_total
     )
     i.change_energy_pct = p.change_energy_pct
-    p_miner_cement.change_energy_pct = (
-        p_miner_cement.change_energy_MWh / i18.p_miner_cement.energy
+    p_miner_cement.change_energy_pct = div(
+        p_miner_cement.change_energy_MWh, i18.p_miner_cement.energy
     )
     p_miner_chalk.change_CO2e_t = (p_miner_chalk.CO2e_pb + p_miner_chalk.CO2e_cb) - (
         i18.p_miner_chalk.CO2e_pb + i18.p_miner_chalk.CO2e_cb
@@ -1226,8 +1227,8 @@ def calc(root, inputs: Inputs):
         + p_miner_glas.change_CO2e_t
         + p_miner_ceram.change_CO2e_t
     )  # SUM(p_miner_cement.change_CO2e_t:p_miner_ceram.change_CO2e_t)
-    p_miner_cement.change_CO2e_pct = (
-        p_miner_cement.change_CO2e_t / i18.p_miner_cement.CO2e_total
+    p_miner_cement.change_CO2e_pct = div(
+        p_miner_cement.change_CO2e_t, i18.p_miner_cement.CO2e_total
     )
     p.CO2e_total_2021_estimated = (
         p_miner.CO2e_total_2021_estimated
@@ -1270,24 +1271,24 @@ def calc(root, inputs: Inputs):
     p_miner_ceram.ratio_wage_to_emplo = fact(
         "Fact_I_P_constr_civil_ratio_wage_to_emplo_2018"
     )
-    p_miner_ceram.demand_emplo = (
-        p_miner_ceram.cost_wage / p_miner_ceram.ratio_wage_to_emplo
+    p_miner_ceram.demand_emplo = div(
+        p_miner_ceram.cost_wage, p_miner_ceram.ratio_wage_to_emplo
     )
     p_miner_chalk.pct_of_wage = fact("Fact_I_P_constr_civil_revenue_pct_of_wage_2018")
     p_miner_chalk.cost_wage = p_miner_chalk.invest_pa * p_miner_chalk.pct_of_wage
     p_miner_chalk.ratio_wage_to_emplo = fact(
         "Fact_I_P_constr_civil_ratio_wage_to_emplo_2018"
     )
-    p_miner_chalk.demand_emplo = (
-        p_miner_chalk.cost_wage / p_miner_chalk.ratio_wage_to_emplo
+    p_miner_chalk.demand_emplo = div(
+        p_miner_chalk.cost_wage, p_miner_chalk.ratio_wage_to_emplo
     )
     p_miner_glas.ratio_wage_to_emplo = fact(
         "Fact_I_P_constr_civil_ratio_wage_to_emplo_2018"
     )
     p_miner_glas.pct_of_wage = fact("Fact_I_P_constr_civil_revenue_pct_of_wage_2018")
     p_miner_glas.cost_wage = p_miner_glas.invest_pa * p_miner_glas.pct_of_wage
-    p_miner_glas.demand_emplo = (
-        p_miner_glas.cost_wage / p_miner_glas.ratio_wage_to_emplo
+    p_miner_glas.demand_emplo = div(
+        p_miner_glas.cost_wage, p_miner_glas.ratio_wage_to_emplo
     )
     p_miner.demand_emplo = (
         p_miner_cement.demand_emplo
@@ -1304,17 +1305,17 @@ def calc(root, inputs: Inputs):
     p_miner.demand_emethan = (
         p_miner_cement.demand_emethan + p_miner_chalk.demand_emethan
     )  # SUM(p_miner_cement.demand_emethan:p_miner_chalk.demand_emethan)
-    p_miner_chalk.change_energy_pct = (
-        p_miner_chalk.change_energy_MWh / i18.p_miner_chalk.energy
+    p_miner_chalk.change_energy_pct = div(
+        p_miner_chalk.change_energy_MWh, i18.p_miner_chalk.energy
     )
-    p_miner_chalk.change_CO2e_pct = (
-        p_miner_chalk.change_CO2e_t / i18.p_miner_chalk.CO2e_total
+    p_miner_chalk.change_CO2e_pct = div(
+        p_miner_chalk.change_CO2e_t, i18.p_miner_chalk.CO2e_total
     )
-    p_miner_glas.change_energy_pct = (
-        p_miner_glas.change_energy_MWh / i18.p_miner_glas.energy
+    p_miner_glas.change_energy_pct = div(
+        p_miner_glas.change_energy_MWh, i18.p_miner_glas.energy
     )
-    p_miner_glas.change_CO2e_pct = (
-        p_miner_glas.change_CO2e_t / i18.p_miner_glas.CO2e_total
+    p_miner_glas.change_CO2e_pct = div(
+        p_miner_glas.change_CO2e_t, i18.p_miner_glas.CO2e_total
     )
     p_miner.demand_electricity = (
         p_miner_cement.demand_electricity
@@ -1345,12 +1346,12 @@ def calc(root, inputs: Inputs):
     i.change_CO2e_pct = p.change_CO2e_pct
     i.CO2e_total = p.CO2e_total
     i.change_energy_MWh = p.change_energy_MWh
-    p_miner_ceram.change_energy_pct = (
-        p_miner_ceram.change_energy_MWh / i18.p_miner_ceram.energy
+    p_miner_ceram.change_energy_pct = div(
+        p_miner_ceram.change_energy_MWh, i18.p_miner_ceram.energy
     )
-    p_miner.change_CO2e_pct = p_miner.change_CO2e_t / i18.p_miner.CO2e_total
-    p_miner_ceram.change_CO2e_pct = (
-        p_miner_ceram.change_CO2e_t / i18.p_miner_ceram.CO2e_total
+    p_miner.change_CO2e_pct = div(p_miner.change_CO2e_t, i18.p_miner.CO2e_total)
+    p_miner_ceram.change_CO2e_pct = div(
+        p_miner_ceram.change_CO2e_t, i18.p_miner_ceram.CO2e_total
     )
     i.CO2e_total_2021_estimated = p.CO2e_total_2021_estimated
     i.cost_climate_saved = p.cost_climate_saved
