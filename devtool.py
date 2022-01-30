@@ -271,7 +271,11 @@ def data_entries_user_overridables_generate_defaults_cmd(args):
     result = []
     good = 0
     errors = 0
-    with open("errors.txt", "w") as error_file:
+    crazy_errors = 0
+    with (
+        open("errors.txt", "w") as error_file,
+        open("crazy-errors.txt", "w") as crazy_error_file,
+    ):
         for (ags, description) in list(data.ags_master().items()):
             try:
                 entries = makeentries.make_entries(data, ags, 2035)
@@ -280,8 +284,14 @@ def data_entries_user_overridables_generate_defaults_cmd(args):
                 good = good + 1
             except refdata.LookupFailure as e:
                 errors = errors + 1
-                print(ags, str(e), sep="\t", file=error_file)
-        sys.stdout.write(f"\rOK {good:>5}    BAD {errors:>5}")
+                print(ags, repr(e), sep="\t", file=error_file)
+            except Exception as e:
+                crazy_errors = crazy_errors + 1
+                print(ags, repr(e), sep="\t", file=crazy_error_file)
+
+            sys.stdout.write(
+                f"\rOK {good:>5}    BAD {errors:>5}  CRAZY {crazy_errors:>5}"
+            )
     with open("output.json", "w") as output_file:
         json.dump(result, indent=4, fp=output_file)
 
