@@ -1,5 +1,6 @@
 from dataclasses import dataclass, field, InitVar, asdict
 from .inputs import Inputs
+from .utils import div
 
 
 @dataclass
@@ -75,7 +76,7 @@ def calc(root, inputs: Inputs):
 
     i18 = root.i18
 
-    i18.p_miner.energy = entry("In_I_miner_fec")
+    i18.p_miner.energy = entry("In_I_fec_pct_of_miner") * entry("In_I_energy_total")
 
     i18.p_miner_cement.pct_energy = fact("Fact_I_P_miner_fec_pct_of_cement_2018")
     i18.p_miner_cement.energy = i18.p_miner_cement.pct_energy * i18.p_miner.energy
@@ -175,8 +176,8 @@ def calc(root, inputs: Inputs):
         "Fact_I_S_chem_basic_wo_ammonia_fec_ratio_to_chem_all_2018"
     )
 
-    i18.p_chem.energy = entry("In_I_chem_fec")
-    i18.p_chem_basic.energy = entry("In_I_chem_fec") * i18.p_chem_basic.pct_energy
+    i18.p_chem.energy = entry("In_I_fec_pct_of_chem") * entry("In_I_energy_total")
+    i18.p_chem_basic.energy = i18.p_chem.energy * i18.p_chem_basic.pct_energy
     i18.p_chem_basic.energy_use_factor = fact(
         "Fact_I_P_chem_basic_wo_ammonia_ratio_prodvol_to_fec_2018"
     )
@@ -201,7 +202,7 @@ def calc(root, inputs: Inputs):
     i18.p_chem_ammonia.pct_energy = fact(
         "Fact_I_S_chem_ammonia_fec_ratio_to_chem_all_2018"
     )
-    i18.p_chem_ammonia.energy = entry("In_I_chem_fec") * i18.p_chem_ammonia.pct_energy
+    i18.p_chem_ammonia.energy = i18.p_chem.energy * i18.p_chem_ammonia.pct_energy
     i18.p_chem_ammonia.energy_use_factor = 1 / fact(
         "Fact_I_P_chem_ammonia_fec_ratio_per_t_product_2013"
     )
@@ -226,7 +227,7 @@ def calc(root, inputs: Inputs):
 
     # chem other
     i18.p_chem_other.pct_energy = fact("Fact_I_S_chem_other_fec_ratio_to_chem_all_2018")
-    i18.p_chem_other.energy = entry("In_I_chem_fec") * i18.p_chem_other.pct_energy
+    i18.p_chem_other.energy = i18.p_chem.energy * i18.p_chem_other.pct_energy
     i18.p_chem_other.energy_use_factor = fact(
         "Fact_I_P_chem_other_ratio_prodvol_to_fec_2018"
     )
@@ -249,7 +250,7 @@ def calc(root, inputs: Inputs):
 
     # Funktioniert erst mit aktualisierter Fakten pki (24.08.21)
     # metal
-    i18.p_metal.energy = entry("In_I_metal_fec")
+    i18.p_metal.energy = entry("In_I_fec_pct_of_metal") * entry("In_I_energy_total")
 
     # steel total (primary and secondary)
     i18.p_metal_steel.pct_energy = fact("Fact_I_P_metal_fec_pct_of_steel_2018")
@@ -366,10 +367,13 @@ def calc(root, inputs: Inputs):
 
     i18.p_metal_nonfe.CO2e_total = i18.p_metal_nonfe.CO2e_pb + i18.p_metal_nonfe.CO2e_cb
 
+    # p_other
+    i18.p_other.energy = entry("In_I_fec_pct_of_other") * entry("In_I_energy_total")
+
     # p_other_paper
     i18.p_other_paper.pct_energy = fact("Fact_I_P_other_fec_pct_of_paper_2018")
 
-    i18.p_other_paper.energy = entry("In_I_other_fec") * i18.p_other_paper.pct_energy
+    i18.p_other_paper.energy = i18.p_other.energy * i18.p_other_paper.pct_energy
     i18.p_other_paper.energy_use_factor = 1 / fact(
         "Fact_I_P_other_paper_ratio_fec_to_prodvol_2018"
     )
@@ -395,7 +399,7 @@ def calc(root, inputs: Inputs):
 
     # p_other_food
     i18.p_other_food.pct_energy = fact("Fact_I_P_other_fec_pct_of_food_2018")
-    i18.p_other_food.energy = entry("In_I_other_fec") * i18.p_other_food.pct_energy
+    i18.p_other_food.energy = i18.p_other.energy * i18.p_other_food.pct_energy
     i18.p_other_food.energy_use_factor = 1 / fact(
         "Fact_I_P_other_food_ratio_fec_to_prodvol_2018"
     )
@@ -421,9 +425,7 @@ def calc(root, inputs: Inputs):
 
     # p_other_further
     i18.p_other_further.pct_energy = fact("Fact_I_P_other_fec_pct_of_further_2018")
-    i18.p_other_further.energy = (
-        entry("In_I_other_fec") * i18.p_other_further.pct_energy
-    )
+    i18.p_other_further.energy = i18.p_other.energy * i18.p_other_further.pct_energy
     # no prodvolume for other industries
     # i18.p_other_further.energy_use_factor =
     # i18.p_other_further.prod_volume = i18.p_other_further.energy * i18.p_other_further.energy_use_factor
@@ -477,7 +479,6 @@ def calc(root, inputs: Inputs):
         i18.p_chem_basic.CO2e_pb + i18.p_chem_ammonia.CO2e_pb + i18.p_chem_other.CO2e_pb
     )
     i18.p_metal.CO2e_pb = i18.p_metal_steel.CO2e_pb + i18.p_metal_nonfe.CO2e_pb
-    i18.p_other.energy = entry("In_I_other_fec")
 
     i18.p_other.CO2e_pb = (
         i18.p_other_paper.CO2e_pb
@@ -602,19 +603,19 @@ def calc(root, inputs: Inputs):
         + i18.s_fossil_ofossil.energy
     )
 
-    i18.s_fossil_gas.pct_energy = i18.s_fossil_gas.energy / i18.s.energy
-    i18.s_fossil_coal.pct_energy = i18.s_fossil_coal.energy / i18.s.energy
-    i18.s_fossil_diesel.pct_energy = i18.s_fossil_diesel.energy / i18.s.energy
-    i18.s_fossil_fueloil.pct_energy = i18.s_fossil_fueloil.energy / i18.s.energy
-    i18.s_fossil_lpg.pct_energy = i18.s_fossil_lpg.energy / i18.s.energy
-    i18.s_fossil_opetpro.pct_energy = i18.s_fossil_opetpro.energy / i18.s.energy
-    i18.s_fossil_ofossil.pct_energy = i18.s_fossil_ofossil.energy / i18.s.energy
+    i18.s_fossil_gas.pct_energy = div(i18.s_fossil_gas.energy, i18.s.energy)
+    i18.s_fossil_coal.pct_energy = div(i18.s_fossil_coal.energy, i18.s.energy)
+    i18.s_fossil_diesel.pct_energy = div(i18.s_fossil_diesel.energy, i18.s.energy)
+    i18.s_fossil_fueloil.pct_energy = div(i18.s_fossil_fueloil.energy, i18.s.energy)
+    i18.s_fossil_lpg.pct_energy = div(i18.s_fossil_lpg.energy, i18.s.energy)
+    i18.s_fossil_opetpro.pct_energy = div(i18.s_fossil_opetpro.energy, i18.s.energy)
+    i18.s_fossil_ofossil.pct_energy = div(i18.s_fossil_ofossil.energy, i18.s.energy)
 
-    i18.s_renew_biomass.pct_energy = i18.s_renew_biomass.energy / i18.s.energy
-    i18.s_renew_heatnet.pct_energy = i18.s_renew_heatnet.energy / i18.s.energy
-    i18.s_renew_orenew.pct_energy = i18.s_renew_orenew.energy / i18.s.energy
-    i18.s_renew_solarth.pct_energy = i18.s_renew_solarth.energy / i18.s.energy
-    i18.s_renew_elec.pct_energy = i18.s_renew_elec.energy / i18.s.energy
+    i18.s_renew_biomass.pct_energy = div(i18.s_renew_biomass.energy, i18.s.energy)
+    i18.s_renew_heatnet.pct_energy = div(i18.s_renew_heatnet.energy, i18.s.energy)
+    i18.s_renew_orenew.pct_energy = div(i18.s_renew_orenew.energy, i18.s.energy)
+    i18.s_renew_solarth.pct_energy = div(i18.s_renew_solarth.energy, i18.s.energy)
+    i18.s_renew_elec.pct_energy = div(i18.s_renew_elec.energy, i18.s.energy)
 
     i18.s.pct_energy = (
         i18.s_fossil_gas.pct_energy

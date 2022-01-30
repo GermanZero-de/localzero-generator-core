@@ -1,5 +1,6 @@
 from dataclasses import dataclass, asdict
 from .inputs import Inputs
+from .utils import div
 
 # definition of variable names for sector M(ethodology) - there are no rows or columns in the excel!
 @dataclass
@@ -554,7 +555,7 @@ def calc_Z(root, inputs: Inputs):
     m183X.change_CO2e_t = m183X.CO2e_w_lulucf_203X - m183X.CO2e_w_lulucf_2018
 
     # calculate the total CO2e difference in % between 2018 and 203X
-    m183X.change_CO2e_pct = m183X.change_CO2e_t / m183X.CO2e_w_lulucf_2018
+    m183X.change_CO2e_pct = div(m183X.change_CO2e_t, m183X.CO2e_w_lulucf_2018)
 
     # get the total saved climate cost of all sectors until 2050
     m183X.cost_climate_saved = (

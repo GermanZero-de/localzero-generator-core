@@ -20,12 +20,22 @@ import os.path
 from generatorcore.generator import calculate_with_default_inputs
 from generatorcore import refdatatools
 from generatorcore import refdata
+from generatorcore import makeentries
+
+
+def json_to_output(json_object, args):
+    """Write json_object to stdout or a file depending on args"""
+    if args.o is not None:
+        with open(args.o, mode="w") as fp:
+            json.dump(json_object, indent=4, fp=fp)
+    else:
+        json.dump(json_object, indent=4, fp=sys.stdout)
 
 
 def run_cmd(args):
     # TODO: pass ags in here
     g = calculate_with_default_inputs(ags=args.ags, year=args.year)
-    json.dump(g.result_dict(), indent=4, fp=sys.stdout)
+    json_to_output(g.result_dict(), args)
 
 
 def sanitize_excel(e):
@@ -123,6 +133,71 @@ def is_production_cmd(args):
         exit(1)
 
 
+def data_lookup_cmd(args):
+    ags = args.ags
+    ags_dis = ags[:5] + "000"  # This identifies the administrative district (Landkreis)
+    ags_sta = ags[:2] + "000000"  # This identifies the federal state (Bundesland)
+
+    def bold(s):
+        print(f"\033[1m{s}\033[0m")
+
+    def print_lookup(name, lookup_fn, key):
+        bold(name)
+        try:
+            record = lookup_fn(key)
+        except Exception as e:
+            record = None
+
+        if record is None:
+            print("", "MISSING", sep="\t")
+        else:
+            print(record)
+        print()
+
+    data = refdata.RefData.load(fix_missing_entries=args.fix_missing_entries)
+
+    by_ags = [
+        ("area", data.area),
+        ("area_kinds", data.area_kinds),
+        ("buildings", data.buildings),
+        ("population", data.population),
+        ("renewable_energy", data.renewable_energy),
+        ("flats", data.flats),
+        ("traffic", data.traffic),
+    ]
+
+    by_dis = [
+        ("destatis", data.destatis),
+    ]
+
+    by_sta = [
+        ("nat_agri", data.nat_agri),
+        ("nat_organic_agri", data.nat_organic_agri),
+        ("nat_energy", data.nat_energy),
+        ("nat_res_buildings", data.nat_res_buildings),
+    ]
+
+    description = data.ags_master().get(ags, "MISSING IN MASTER")
+
+    bold(f"{ags} {description} (commune level data)")
+    bold("---------------------------------------------------------------")
+    print()
+    for (name, lookup_fn) in by_ags:
+        print_lookup(name, lookup_fn, key=ags)
+
+    bold(f"{ags_dis} (administrative district level data)")
+    bold("--------------------------------------------------")
+    print()
+    for (name, lookup_fn) in by_dis:
+        print_lookup(name, lookup_fn, key=ags_dis)
+
+    bold(f"{ags_sta} (federal state level data)")
+    bold("--------------------------------------------------")
+    print()
+    for (name, lookup_fn) in by_sta:
+        print_lookup(name, lookup_fn, key=ags_sta)
+
+
 def data_checkout_cmd(args):
     datadir = refdatatools.datadir()
     production = refdata.Version.load("production", datadir=datadir)
@@ -171,6 +246,13 @@ def data_checkout_cmd(args):
                 file=sys.stderr,
             )
     else:
+        # First switch to main before pulling -- this has the least chance of causing
+        # trouble as we should merge on github
+        refdatatools.checkout(datadir, "public", "main")
+        # refdatatools.pull uses --ff-only
+        refdatatools.pull(datadir, "public", pa_token=args.pat)
+        # Now we should have all changes and can switch to whatever the production file
+        # wants
         refdatatools.checkout(datadir, "public", production.public)
 
     if status is not None and status.proprietary_status.rev == production.proprietary:
@@ -180,7 +262,26 @@ def data_checkout_cmd(args):
                 file=sys.stderr,
             )
     else:
+        refdatatools.pull(datadir, "public")
         refdatatools.checkout(datadir, "proprietary", production.proprietary)
+
+
+def data_entries_user_overridables_generate_defaults_cmd(args):
+    data = refdata.RefData.load()
+    result = []
+    good = 0
+    rows_not_found = 0
+    for (ags, description) in list(data.ags_master().items()):
+        try:
+            entries = makeentries.make_entries(data, ags, 2035)
+            entries["city"] = description
+            result.append(entries)
+            good = good + 1
+        except refdata.RowNotFound as e:
+            # print(f"{ags} {description}: Can't generate: {e}", file=sys.stderr)
+            rows_not_found = rows_not_found + 1
+        sys.stdout.write(f"\rOK {good:>5}    ROWS-MISSING {rows_not_found:>5}")
+    # json.dump(result, indent=4, fp=sys.stdout)
 
 
 def main():
@@ -191,6 +292,7 @@ def main():
     cmd_run_parser = subcmd_parsers.add_parser("run", help="Run the generator")
     cmd_run_parser.add_argument("-ags", default="03159016")
     cmd_run_parser.add_argument("-year", default=2035)
+    cmd_run_parser.add_argument("-o", default=None)
     cmd_run_parser.set_defaults(func=run_cmd)
 
     cmd_compare_to_excel_parser = subcmd_parsers.add_parser(
@@ -221,6 +323,24 @@ def main():
     )
     cmd_data_checkout.add_argument("-pat", action="store", default=None)
     cmd_data_checkout.set_defaults(func=data_checkout_cmd)
+
+    cmd_data_lookup = subcmd_data.add_parser(
+        "lookup",
+        help="Lookup all the reference data for a given AGS",
+    )
+    cmd_data_lookup.add_argument("ags")
+    cmd_data_lookup.add_argument(
+        "-no-fixes", action="store_false", dest="fix_missing_entries"
+    )
+    cmd_data_lookup.set_defaults(func=data_lookup_cmd)
+
+    cmd_data_entries_user_overrides_generate_defaults = subcmd_data.add_parser(
+        "entries-user-overrides-generate-defaults",
+        help="Generate a file of default values for user overridable entries as used by the website.",
+    )
+    cmd_data_entries_user_overrides_generate_defaults.set_defaults(
+        func=data_entries_user_overridables_generate_defaults_cmd
+    )
     args = parser.parse_args()
     if args.subcmd is None:
         parser.print_help()

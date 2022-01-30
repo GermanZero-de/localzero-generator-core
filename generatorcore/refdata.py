@@ -5,6 +5,7 @@ from dataclasses import dataclass
 import os
 import json
 import sys
+import math
 
 import pandas as pd
 
@@ -16,16 +17,22 @@ import pandas as pd
 PROPRIETARY_DATA_SOURCES = frozenset(["traffic"])
 
 
-def _load(datadir: str, what: str, year: int = 2018) -> pd.DataFrame:
+def _load(datadir: str, what: str, filename: str = "2018") -> pd.DataFrame:
     repo = "proprietary" if what in PROPRIETARY_DATA_SOURCES else "public"
     return pd.read_csv(
-        os.path.join(datadir, repo, what, str(year) + ".csv"), dtype={"ags": "str"}
+        os.path.join(datadir, repo, what, filename + ".csv"), dtype={"ags": "str"}
     )
+
+
+def set_nans_to_0(data: pd.DataFrame, *, columns):
+    for c in columns:
+        data[c] = data[c].fillna(0)
 
 
 class RowNotFound(Exception):
     column: str
     df: pd.DataFrame
+    key_value: object
 
     def __init__(self, column, key_value, df):
         self.column = column
@@ -33,15 +40,45 @@ class RowNotFound(Exception):
         self.df = df
 
     def __str__(self):
-        return f"Could not find {self.column}={self.key_value} in dataframe\n{self.df}"
+        return f"Could not find {self.column}={self.key_value} in:\n{self.df}"
 
 
-# TODO: Good error messages when field is not populated
-# TODO: Good error messages when field name is mistyped
+class FieldNotPopulated(Exception):
+    key_column: str
+    series: pd.Series
+    data_column: str
+    key_value: object
+
+    def __init__(self, key_column, key_value, data_column, series):
+        self.key_column = key_column
+        self.key_value = key_value
+        self.data_column = data_column
+        self.series = series
+
+    def __str__(self):
+        return f"For {self.key_column}={self.key_value} column {self.data_column} is blank in:\n{self.series}"
+
+
+class ExpectedIntGotFloat(Exception):
+    key_column: str
+    series: pd.Series
+    data_column: str
+    key_value: object
+
+    def __init__(self, key_column, key_value, data_column, series):
+        self.key_column = key_column
+        self.key_value = key_value
+        self.data_column = data_column
+        self.series = series
+
+    def __str__(self):
+        return f"For {self.key_column}={self.key_value} column {self.data_column} is expected to be an int in:\n{self.series}"
 
 
 class Row:
     def __init__(self, df: pd.DataFrame, key_value, *, column="ags"):
+        self.key_column = column
+        self.key_value = key_value
         try:
             # Basically this reduces the dataframe to a single row dataframe
             # and then takes the only dataframe row (a series object)
@@ -51,25 +88,41 @@ class Row:
             # and extract a very small number of rows. pandas is total overkill
             # in particular when we are publishing a package for others to use
             # it's nice to have a small list of dependencies
-            self._series = df[df[column] == key_value].iloc[0]
+            self._series = df[df[column] == key_value].iloc[0]  # type: ignore
         except:
             raise RowNotFound(column=column, key_value=key_value, df=df)
 
-    # TODO: All of the accessors below should not cast so forcefully but
-    # only convert into the python type when the pandas type matches
-
     def float(self, attr: str) -> float:
-        return float(self._series[attr])  # type: ignore
+        """Access a float attribute."""
+        f = float(self._series[attr])
+        if math.isnan(f):
+            raise FieldNotPopulated(
+                key_column=self.key_column,
+                key_value=self.key_value,
+                data_column=attr,
+                series=self._series,
+            )
+        return f
 
     def int(self, attr: str) -> int:
-        try:
-            return int(self._series[attr])  # type: ignore
-        except Exception as e:
-            print("INT FAILED", self._series, attr, file=sys.stderr)
-            raise e
+        """Access an integer attribute."""
+        f = self.float(attr)
+        if f.is_integer():
+            return int(f)
+        else:
+            raise ExpectedIntGotFloat(
+                key_column=self.key_column,
+                key_value=self.key_value,
+                data_column=attr,
+                series=self._series,
+            )
 
     def str(self, attr: str) -> str:
+        """Access a str attribute."""
         return str(self._series[attr])
+
+    def __str__(self):
+        return self._series.to_string()
 
 
 class FactsAndAssumptions:
@@ -129,6 +182,7 @@ class RefData:
     def __init__(
         self,
         *,
+        ags_master: pd.DataFrame,
         area: pd.DataFrame,
         area_kinds: pd.DataFrame,
         assumptions: pd.DataFrame,
@@ -144,8 +198,10 @@ class RefData:
         population: pd.DataFrame,
         renewable_energy: pd.DataFrame,
         traffic: pd.DataFrame,
+        fix_missing_entries: bool,
     ):
         self._area = area
+        self._ags_master = ags_master.set_index(keys="ags").to_dict()["description"]
         self._area_kinds = area_kinds
         self._facts_and_assumptions = FactsAndAssumptions(facts, assumptions)
         self._buildings = buildings
@@ -159,6 +215,51 @@ class RefData:
         self._population = population
         self._renewable_energy = renewable_energy
         self._traffic = traffic
+
+        if fix_missing_entries:
+            self._fix_missing_entries_in_area()
+            self._fix_missing_entries_in_flats()
+            self._fix_missing_entries_in_population()
+
+    def _fix_missing_entries_in_area(self):
+        """Here we assume that the missing entries in the area sheet should actually be 0."""
+        set_nans_to_0(
+            self._area,
+            columns=[
+                "land_settlement",
+                "land_traffic",
+                "veg_forrest",
+                "veg_agri",
+                "veg_wood",
+                "veg_heath",
+                "veg_moor",
+                "veg_marsh",
+                "veg_plant_uncover_com",
+                "settlement_ghd",
+                "water_total",
+            ],
+        )
+
+    def _fix_missing_entries_in_flats(self):
+        set_nans_to_0(
+            self._flats,
+            columns=[
+                "residential_buildings_total",
+                "buildings_1flat",
+                "buildings_2flats",
+                "buildings_3flats",
+                "buildings_dorms",
+                "residential_buildings_area_total",
+            ],
+        )
+
+    def _fix_missing_entries_in_population(self):
+        set_nans_to_0(self._population, columns=["total"])
+
+    def ags_master(self) -> dict[str, str]:
+        """Returns the complete dictionary of AGS, where no big
+        changes have happened to the relevant commune. Key is AGS value is description"""
+        return self._ags_master
 
     def facts_and_assumptions(self) -> FactsAndAssumptions:
         return self._facts_and_assumptions
@@ -220,7 +321,7 @@ class RefData:
         return Row(self._traffic, ags)
 
     @classmethod
-    def load(cls, datadir: str | None = None) -> "RefData":
+    def load(cls, datadir: str | None = None, *, fix_missing_entries=True) -> "RefData":
         """Load all the reference data into memory.  This assumes that the working directory has a subdirectory
         called 'data' that contains the reference data in two subfolders one called 'public' and the other
         'proprietary'.
@@ -232,6 +333,7 @@ class RefData:
         """
         datadir = datadir_or_default(datadir)
         d = cls(
+            ags_master=_load(datadir, "ags", filename="master"),
             area=_load(datadir, "area"),
             area_kinds=_load(datadir, "area_kinds"),
             assumptions=_load(datadir, "assumptions"),
@@ -241,11 +343,12 @@ class RefData:
             facts=_load(datadir, "facts"),
             flats=_load(datadir, "flats"),
             nat_agri=_load(datadir, "nat_agri"),
-            nat_organic_agri=_load(datadir, "nat_organic_agri", 2016),
+            nat_organic_agri=_load(datadir, "nat_organic_agri", filename="2016"),
             nat_energy=_load(datadir, "nat_energy"),
             nat_res_buildings=_load(datadir, "nat_res_buildings"),
             population=_load(datadir, "population"),
             renewable_energy=_load(datadir, "renewable_energy"),
             traffic=_load(datadir, "traffic"),
+            fix_missing_entries=fix_missing_entries,
         )
         return d
