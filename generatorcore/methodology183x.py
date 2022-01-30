@@ -86,37 +86,6 @@ class M183X:
         return asdict(self)
 
 
-# these year calculations have to be done before all sector calculations
-def calc_18(inputs: Inputs) -> M183X:
-    ###########################
-    ### years and durations ###
-    ###########################
-    def entry(n):
-        return inputs.entry(n)
-
-    m183X = M183X()
-
-    m183X.year_today = entry("In_M_year_today")
-
-    m183X.year_target = entry("In_M_year_target")
-
-    # TODO: figure out where "duration target" entry variable  is used in other sector scripts, replace it with "m183X.duration_target" variable ?
-    # delete entry variable afterwards
-
-    m183X.duration_target = m183X.year_target - m183X.year_today
-
-    m183X.duration_target_until_2050 = 2050 - m183X.year_target
-
-    # the neutral duration is the average time of climate neutral years until 2050 if we reduce linearly
-    # from now to year_target and then stay at this 0 level
-    # this value is needed to calculate the saved emissions and climate costs
-    m183X.duration_neutral = (
-        m183X.duration_target_until_2050 + m183X.duration_target / 2
-    )
-
-    return m183X
-
-
 # these budget calculations have to be done after all sector calculations
 def calc_3X(root, inputs: Inputs):
     def fact(n):
@@ -270,9 +239,7 @@ def calc_3X(root, inputs: Inputs):
     #########################################################
 
     # calculating the yearly decrease of the emissions, going down linearly to 0 in target_year+1
-    m183X.CO2e_w_lulucf_change_pa = m183X.CO2e_w_lulucf_2021 / (
-        m183X.duration_target + 1
-    )  # +1 because we want to reach 0 in target_year+1
+    m183X.CO2e_w_lulucf_change_pa = m183X.CO2e_w_lulucf_2021 / ( entry("In_M_duration_target") + 1)  # +1 because we want to reach 0 in target_year+1
 
     # reducing the yearly emissions year by year, starting with 2022
     if m183X.CO2e_w_lulucf_2021 > 0:

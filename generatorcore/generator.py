@@ -82,7 +82,8 @@ def calculate(inputs: Inputs) -> Result:
     """Given a set of inputs do the actual calculation"""
     start_t = time.time()
     # 2018
-    result.m183X = methodology183x.calc_18(inputs)
+    #Leon: removed calc_18 function because all variables are already implemented/calculated in makeentries.py
+    #result.m183X = methodology183x.calc_18(inputs)
     print("Residence2018_calc", file=sys.stderr)
     residences2018.calc(result, inputs)
     print("Business2018_calc", file=sys.stderr)
