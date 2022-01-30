@@ -19,9 +19,10 @@ PROPRIETARY_DATA_SOURCES = frozenset(["traffic"])
 
 def _load(datadir: str, what: str, filename: str = "2018") -> pd.DataFrame:
     repo = "proprietary" if what in PROPRIETARY_DATA_SOURCES else "public"
-    return pd.read_csv(
+    res = pd.read_csv(
         os.path.join(datadir, repo, what, filename + ".csv"), dtype={"ags": "str"}
     )
+    return res  # type: ignore
 
 
 def set_nans_to_0(data: pd.DataFrame, *, columns):
@@ -29,50 +30,45 @@ def set_nans_to_0(data: pd.DataFrame, *, columns):
         data[c] = data[c].fillna(0)
 
 
-class RowNotFound(Exception):
-    column: str
-    df: pd.DataFrame
+@dataclass
+class LookupFailure(Exception):
+    key_column: str
     key_value: object
 
-    def __init__(self, column, key_value, df):
-        self.column = column
+    def __init__(self, *, key_column, key_value):
+        self.key_column = key_column
         self.key_value = key_value
+
+
+@dataclass
+class RowNotFound(LookupFailure):
+    df: pd.DataFrame
+
+    def __init__(self, *, key_column, key_value, df):
+        super().__init__(key_column=key_column, key_value=key_value)
         self.df = df
 
-    def __str__(self):
-        return f"Could not find {self.column}={self.key_value} in:\n{self.df}"
 
-
-class FieldNotPopulated(Exception):
-    key_column: str
+@dataclass
+class FieldNotPopulated(LookupFailure):
     series: pd.Series
     data_column: str
-    key_value: object
 
     def __init__(self, key_column, key_value, data_column, series):
-        self.key_column = key_column
-        self.key_value = key_value
+        super().__init__(key_column=key_column, key_value=key_value)
         self.data_column = data_column
         self.series = series
 
-    def __str__(self):
-        return f"For {self.key_column}={self.key_value} column {self.data_column} is blank in:\n{self.series}"
 
-
-class ExpectedIntGotFloat(Exception):
-    key_column: str
+@dataclass
+class ExpectedIntGotFloat(LookupFailure):
     series: pd.Series
     data_column: str
-    key_value: object
 
     def __init__(self, key_column, key_value, data_column, series):
-        self.key_column = key_column
-        self.key_value = key_value
+        super().__init__(key_column=key_column, key_value=key_value)
         self.data_column = data_column
         self.series = series
-
-    def __str__(self):
-        return f"For {self.key_column}={self.key_value} column {self.data_column} is expected to be an int in:\n{self.series}"
 
 
 class Row:
@@ -90,7 +86,7 @@ class Row:
             # it's nice to have a small list of dependencies
             self._series = df[df[column] == key_value].iloc[0]  # type: ignore
         except:
-            raise RowNotFound(column=column, key_value=key_value, df=df)
+            raise RowNotFound(key_column=column, key_value=key_value, df=df)
 
     def float(self, attr: str) -> float:
         """Access a float attribute."""

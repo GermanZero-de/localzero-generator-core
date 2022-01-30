@@ -270,18 +270,20 @@ def data_entries_user_overridables_generate_defaults_cmd(args):
     data = refdata.RefData.load()
     result = []
     good = 0
-    rows_not_found = 0
-    for (ags, description) in list(data.ags_master().items()):
-        try:
-            entries = makeentries.make_entries(data, ags, 2035)
-            entries["city"] = description
-            result.append(entries)
-            good = good + 1
-        except refdata.RowNotFound as e:
-            # print(f"{ags} {description}: Can't generate: {e}", file=sys.stderr)
-            rows_not_found = rows_not_found + 1
-        sys.stdout.write(f"\rOK {good:>5}    ROWS-MISSING {rows_not_found:>5}")
-    # json.dump(result, indent=4, fp=sys.stdout)
+    errors = 0
+    with open("errors.txt", "w") as error_file:
+        for (ags, description) in list(data.ags_master().items()):
+            try:
+                entries = makeentries.make_entries(data, ags, 2035)
+                entries["city"] = description
+                result.append(entries)
+                good = good + 1
+            except refdata.LookupFailure as e:
+                errors = errors + 1
+                print(ags, str(e), sep="\t", file=error_file)
+        sys.stdout.write(f"\rOK {good:>5}    BAD {errors:>5}")
+    with open("output.json", "w") as output_file:
+        json.dump(result, indent=4, fp=output_file)
 
 
 def main():
