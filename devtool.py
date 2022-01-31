@@ -279,8 +279,13 @@ def data_entries_user_overridables_generate_defaults_cmd(args):
         for (ags, description) in list(data.ags_master().items()):
             try:
                 entries = makeentries.make_entries(data, ags, 2035)
-                entries["city"] = description
-                result.append(entries)
+                default_values = {
+                    k: v
+                    for (k, v) in entries.items()
+                    if k in makeentries.USER_OVERRIDABLE_ENTRIES
+                }
+                default_values["city"] = description
+                result.append(default_values)
                 good = good + 1
             except refdata.LookupFailure as e:
                 errors = errors + 1
