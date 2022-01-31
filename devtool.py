@@ -15,7 +15,7 @@ from commands.cmd_compare_to_excel import cmd_compare_to_excel
 from commands.cmd_data import cmd_data_checkout
 from commands.cmd_data import cmd_data_entries_user_overrides_generate_defaults
 from commands.cmd_data import cmd_data_lookup
-from commands.cmd_data import cmd_is_production
+from commands.cmd_data import cmd_data_is_production
 
 
 def main():
@@ -53,7 +53,7 @@ def main():
         "is-production",
         help="Check that the data dir contains clean checkouts of the production reference data set",
     )
-    cmd_data_is_production_parser.set_defaults(func=cmd_is_production)
+    cmd_data_is_production_parser.set_defaults(func=cmd_data_is_production)
 
     cmd_data_checkout_parser = subcmd_data.add_parser(
         "checkout",
