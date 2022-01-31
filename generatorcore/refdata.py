@@ -57,7 +57,6 @@ class RowNotFound(LookupFailure):
 
 @dataclass
 class FieldNotPopulated(LookupFailure):
-    series: pd.Series
     data_column: str
 
     def __init__(
@@ -65,17 +64,14 @@ class FieldNotPopulated(LookupFailure):
         key_column: str,
         key_value,
         data_column: str,
-        series: pd.Series,
         dataset: str,
     ):
         super().__init__(key_column=key_column, key_value=key_value, dataset=dataset)
         self.data_column = data_column
-        self.series = series
 
 
 @dataclass
 class ExpectedIntGotFloat(LookupFailure):
-    series: pd.Series
     data_column: str
 
     def __init__(
@@ -83,12 +79,10 @@ class ExpectedIntGotFloat(LookupFailure):
         key_column: str,
         key_value,
         data_column: str,
-        series: pd.Series,
         dataset: str,
     ):
         super().__init__(key_column=key_column, key_value=key_value, dataset=dataset)
         self.data_column = data_column
-        self.series = series
 
 
 class Row:
@@ -117,7 +111,6 @@ class Row:
                 key_column=self.key_column,
                 key_value=self.key_value,
                 data_column=attr,
-                series=self.series,
                 dataset=self.dataset,
             )
         return f
@@ -132,7 +125,6 @@ class Row:
                 key_column=self.key_column,
                 key_value=self.key_value,
                 data_column=attr,
-                series=self.series,
                 dataset=self.dataset,
             )
 
