@@ -16556,17 +16556,17 @@
             "pct_x": -1,
             "CO2e_pb_per_MWh": -1,
             "CO2e_cb": 6800.113179647781,
-            "CO2e_pb": -30584.17796289565,
-            "CO2e_total": -23783.064783247868,
-            "invest": 1458589.9054656217,
-            "change_CO2e_t": -9299.299315159038,
-            "change_CO2e_pct": 0.6420498409510703,
+            "CO2e_pb": -52986.895824709456,
+            "CO2e_total": -46186.78264506168,
+            "invest": 11147430.396329341,
+            "change_CO2e_t": -31703.017176972848,
+            "change_CO2e_pct": 2.1888656818437244,
             "CO2e_total_2021_estimated": -13081.804138190699,
-            "cost_climate_saved": 44865035.25440218,
-            "invest_pa": 112197.30042043245,
+            "cost_climate_saved": 138792622.39005655,
+            "invest_pa": 857493.6458714878,
             "cost_wage": -1,
-            "demand_emplo": -0.0295976257648366,
-            "demand_emplo_new": -0.0295976257648366,
+            "demand_emplo": 4.997314996523845,
+            "demand_emplo_new": 4.997314996523845,
             "demand_change": -1,
             "area_ha_change": -1,
             "CO2e_cb_per_t": -1,
@@ -16579,7 +16579,8 @@
             "area_ha_available": -1,
             "change_within_category": -1,
             "change_wet_org_low": -1,
-            "change_wet_org_high": -1
+            "change_wet_org_high": -1,
+            "prod_volume": -1
         },
         "e": {
             "area_ha": -1,
@@ -16610,7 +16611,8 @@
             "area_ha_available": -1,
             "change_within_category": -1,
             "change_wet_org_low": -1,
-            "change_wet_org_high": -1
+            "change_wet_org_high": -1,
+            "prod_volume": -1
         },
         "g": {
             "area_ha": 11352.194999999998,
@@ -16641,7 +16643,8 @@
             "area_ha_available": -1,
             "change_within_category": -1,
             "change_wet_org_low": -1,
-            "change_wet_org_high": -1
+            "change_wet_org_high": -1,
+            "prod_volume": -1
         },
         "g_forest": {
             "area_ha": 3506.0000000000005,
@@ -16672,7 +16675,8 @@
             "area_ha_available": -1,
             "change_within_category": -1,
             "change_wet_org_low": -1,
-            "change_wet_org_high": -1
+            "change_wet_org_high": -1,
+            "prod_volume": -1
         },
         "g_forest_managed": {
             "area_ha": 3264.0860000000002,
@@ -16703,7 +16707,8 @@
             "area_ha_available": 108.68599999999999,
             "change_within_category": -1,
             "change_wet_org_low": -1,
-            "change_wet_org_high": -1
+            "change_wet_org_high": -1,
+            "prod_volume": -1
         },
         "g_forest_natural": {
             "area_ha": 241.91400000000002,
@@ -16734,7 +16739,8 @@
             "area_ha_available": -1,
             "change_within_category": -1,
             "change_wet_org_low": -1,
-            "change_wet_org_high": -1
+            "change_wet_org_high": -1,
+            "prod_volume": -1
         },
         "g_crop": {
             "area_ha": 2635.8969978422497,
@@ -16765,7 +16771,8 @@
             "area_ha_available": -1,
             "change_within_category": -1,
             "change_wet_org_low": -1,
-            "change_wet_org_high": -1
+            "change_wet_org_high": -1,
+            "prod_volume": -1
         },
         "g_crop_org": {
             "area_ha": 14.565750539437461,
@@ -16796,7 +16803,8 @@
             "area_ha_available": -1,
             "change_within_category": -1,
             "change_wet_org_low": -1,
-            "change_wet_org_high": -1
+            "change_wet_org_high": -1,
+            "prod_volume": -1
         },
         "g_crop_min_conv": {
             "area_ha": 1965.998435477109,
@@ -16827,7 +16835,8 @@
             "area_ha_available": -1,
             "change_within_category": -655.3328118257031,
             "change_wet_org_low": -1,
-            "change_wet_org_high": -1
+            "change_wet_org_high": -1,
+            "prod_volume": -1
         },
         "g_crop_min_hum": {
             "area_ha": 655.3328118257031,
@@ -16858,7 +16867,8 @@
             "area_ha_available": -1,
             "change_within_category": -1,
             "change_wet_org_low": -1,
-            "change_wet_org_high": -1
+            "change_wet_org_high": -1,
+            "prod_volume": -1
         },
         "g_crop_org_low": {
             "area_ha": 11.11677789584975,
@@ -16889,7 +16899,8 @@
             "area_ha_available": -1,
             "change_within_category": -1,
             "change_wet_org_low": -44.46711158339902,
-            "change_wet_org_high": -1
+            "change_wet_org_high": -1,
+            "prod_volume": -1
         },
         "g_crop_org_high": {
             "area_ha": 3.4489726435877106,
@@ -16920,7 +16931,8 @@
             "area_ha_available": -1,
             "change_within_category": -1,
             "change_wet_org_low": -1,
-            "change_wet_org_high": -13.795890574350848
+            "change_wet_org_high": -13.795890574350848,
+            "prod_volume": -1
         },
         "g_grass": {
             "area_ha": 1132.0072875634,
@@ -16951,7 +16963,8 @@
             "area_ha_available": -1,
             "change_within_category": -1,
             "change_wet_org_low": -1,
-            "change_wet_org_high": -1
+            "change_wet_org_high": -1,
+            "prod_volume": -1
         },
         "g_grass_min_conv": {
             "area_ha": 1093.4991094542502,
@@ -16982,7 +16995,8 @@
             "area_ha_available": -1,
             "change_within_category": -1,
             "change_wet_org_low": -1,
-            "change_wet_org_high": -1
+            "change_wet_org_high": -1,
+            "prod_volume": -1
         },
         "g_grass_org_low": {
             "area_ha": 29.389962573790967,
@@ -17013,7 +17027,8 @@
             "area_ha_available": -1,
             "change_within_category": -1,
             "change_wet_org_low": -117.55985029516387,
-            "change_wet_org_high": -1
+            "change_wet_org_high": -1,
+            "prod_volume": -1
         },
         "g_grass_org_high": {
             "area_ha": 9.11821553535897,
@@ -17044,7 +17059,8 @@
             "area_ha_available": -1,
             "change_within_category": -1,
             "change_wet_org_low": -1,
-            "change_wet_org_high": -36.472862141435876
+            "change_wet_org_high": -36.472862141435876,
+            "prod_volume": -1
         },
         "g_grove": {
             "area_ha": 1233.7039866243592,
@@ -17075,7 +17091,8 @@
             "area_ha_available": -1,
             "change_within_category": -1,
             "change_wet_org_low": -1,
-            "change_wet_org_high": -1
+            "change_wet_org_high": -1,
+            "prod_volume": -1
         },
         "g_grove_min": {
             "area_ha": 1220.6199832804489,
@@ -17106,7 +17123,8 @@
             "area_ha_available": -1,
             "change_within_category": -1,
             "change_wet_org_low": -1,
-            "change_wet_org_high": -1
+            "change_wet_org_high": -1,
+            "prod_volume": -1
         },
         "g_grove_org": {
             "area_ha": 13.08400334391021,
@@ -17137,7 +17155,8 @@
             "area_ha_available": -1,
             "change_within_category": -1,
             "change_wet_org_low": -1,
-            "change_wet_org_high": -1
+            "change_wet_org_high": -1,
+            "prod_volume": -1
         },
         "g_grove_org_low": {
             "area_ha": 9.985888387212661,
@@ -17168,7 +17187,8 @@
             "area_ha_available": -1,
             "change_within_category": -1,
             "change_wet_org_low": -39.943553548850666,
-            "change_wet_org_high": -1
+            "change_wet_org_high": -1,
+            "prod_volume": -1
         },
         "g_grove_org_high": {
             "area_ha": 3.0981149566975485,
@@ -17199,7 +17219,8 @@
             "area_ha_available": -1,
             "change_within_category": -1,
             "change_wet_org_low": -1,
-            "change_wet_org_high": -12.392459826790196
+            "change_wet_org_high": -12.392459826790196,
+            "prod_volume": -1
         },
         "g_wet": {
             "area_ha": 270.7067279699905,
@@ -17230,7 +17251,8 @@
             "area_ha_available": -1,
             "change_within_category": -1,
             "change_wet_org_low": -1,
-            "change_wet_org_high": -1
+            "change_wet_org_high": -1,
+            "prod_volume": -1
         },
         "g_wet_min": {
             "area_ha": 0.8334493518123365,
@@ -17261,7 +17283,8 @@
             "area_ha_available": -1,
             "change_within_category": -1,
             "change_wet_org_low": -1,
-            "change_wet_org_high": -1
+            "change_wet_org_high": -1,
+            "prod_volume": -1
         },
         "g_wet_org_rp": {
             "area_ha": 174.7362295175514,
@@ -17292,7 +17315,8 @@
             "area_ha_available": -1,
             "change_within_category": -1,
             "change_wet_org_low": -1,
-            "change_wet_org_high": -1
+            "change_wet_org_high": -1,
+            "prod_volume": -1
         },
         "g_wet_org_low": {
             "area_ha": 0.8000844752624721,
@@ -17323,7 +17347,8 @@
             "area_ha_available": -1,
             "change_within_category": -1,
             "change_wet_org_low": -3.2003379010498882,
-            "change_wet_org_high": -1
+            "change_wet_org_high": -1,
+            "prod_volume": -1
         },
         "g_wet_org_high": {
             "area_ha": 0.2482256543750605,
@@ -17354,7 +17379,8 @@
             "area_ha_available": -1,
             "change_within_category": -1,
             "change_wet_org_low": -1,
-            "change_wet_org_high": -0.9929026175002424
+            "change_wet_org_high": -0.9929026175002424,
+            "prod_volume": -1
         },
         "g_wet_org_low_r": {
             "area_ha": 205.17085332846344,
@@ -17385,7 +17411,8 @@
             "area_ha_available": -1,
             "change_within_category": -1,
             "change_wet_org_low": -1,
-            "change_wet_org_high": -1
+            "change_wet_org_high": -1,
+            "prod_volume": -1
         },
         "g_wet_org_low_rp": {
             "area_ha": 133.36105466350125,
@@ -17416,7 +17443,8 @@
             "area_ha_available": -1,
             "change_within_category": -1,
             "change_wet_org_low": -1,
-            "change_wet_org_high": -1
+            "change_wet_org_high": -1,
+            "prod_volume": -1
         },
         "g_wet_org_high_r": {
             "area_ha": 63.65411516007716,
@@ -17447,7 +17475,8 @@
             "area_ha_available": -1,
             "change_within_category": -1,
             "change_wet_org_low": -1,
-            "change_wet_org_high": -1
+            "change_wet_org_high": -1,
+            "prod_volume": -1
         },
         "g_wet_org_high_rp": {
             "area_ha": 41.37517485405016,
@@ -17478,7 +17507,8 @@
             "area_ha_available": -1,
             "change_within_category": -1,
             "change_wet_org_low": -1,
-            "change_wet_org_high": -1
+            "change_wet_org_high": -1,
+            "prod_volume": -1
         },
         "g_water": {
             "area_ha": 1286.04,
@@ -17509,7 +17539,8 @@
             "area_ha_available": -1,
             "change_within_category": -1,
             "change_wet_org_low": -1,
-            "change_wet_org_high": -1
+            "change_wet_org_high": -1,
+            "prod_volume": -1
         },
         "g_water_min": {
             "area_ha": 1238.1493777273301,
@@ -17540,7 +17571,8 @@
             "area_ha_available": -1,
             "change_within_category": -1,
             "change_wet_org_low": -1,
-            "change_wet_org_high": -1
+            "change_wet_org_high": -1,
+            "prod_volume": -1
         },
         "g_water_org": {
             "area_ha": 47.890622272669766,
@@ -17571,7 +17603,8 @@
             "area_ha_available": -1,
             "change_within_category": -1,
             "change_wet_org_low": -1,
-            "change_wet_org_high": -1
+            "change_wet_org_high": -1,
+            "prod_volume": -1
         },
         "g_water_min_low": {
             "area_ha": -1,
@@ -17602,7 +17635,8 @@
             "area_ha_available": -1,
             "change_within_category": -1,
             "change_wet_org_low": -1,
-            "change_wet_org_high": -1
+            "change_wet_org_high": -1,
+            "prod_volume": -1
         },
         "g_water_min_high": {
             "area_ha": -1,
@@ -17633,7 +17667,8 @@
             "area_ha_available": -1,
             "change_within_category": -1,
             "change_wet_org_low": -1,
-            "change_wet_org_high": -1
+            "change_wet_org_high": -1,
+            "prod_volume": -1
         },
         "g_settlement": {
             "area_ha": 1286.0399999999997,
@@ -17664,7 +17699,8 @@
             "area_ha_available": -1,
             "change_within_category": -1,
             "change_wet_org_low": -1,
-            "change_wet_org_high": -1
+            "change_wet_org_high": -1,
+            "prod_volume": -1
         },
         "g_settlement_org": {
             "area_ha": 24.633575012358566,
@@ -17695,7 +17731,8 @@
             "area_ha_available": -1,
             "change_within_category": -1,
             "change_wet_org_low": -1,
-            "change_wet_org_high": -1
+            "change_wet_org_high": -1,
+            "prod_volume": -1
         },
         "g_settlement_min": {
             "area_ha": 1261.4064249876412,
@@ -17726,7 +17763,8 @@
             "area_ha_available": -1,
             "change_within_category": -1,
             "change_wet_org_low": -1,
-            "change_wet_org_high": -1
+            "change_wet_org_high": -1,
+            "prod_volume": -1
         },
         "g_settlement_org_low": {
             "area_ha": 18.800677757846593,
@@ -17757,7 +17795,8 @@
             "area_ha_available": -1,
             "change_within_category": -1,
             "change_wet_org_low": -1,
-            "change_wet_org_high": -1
+            "change_wet_org_high": -1,
+            "prod_volume": -1
         },
         "g_settlement_org_high": {
             "area_ha": 5.832897254511973,
@@ -17788,7 +17827,8 @@
             "area_ha_available": -1,
             "change_within_category": -1,
             "change_wet_org_low": -1,
-            "change_wet_org_high": -1
+            "change_wet_org_high": -1,
+            "prod_volume": -1
         },
         "g_other": {
             "area_ha": 1.7999999999999998,
@@ -17819,7 +17859,8 @@
             "area_ha_available": -1,
             "change_within_category": -1,
             "change_wet_org_low": -1,
-            "change_wet_org_high": -1
+            "change_wet_org_high": -1,
+            "prod_volume": -1
         },
         "g_wood": {
             "area_ha": 3264.0860000000002,
@@ -17850,38 +17891,40 @@
             "area_ha_available": -1,
             "change_within_category": -1,
             "change_wet_org_low": -1,
-            "change_wet_org_high": -1
+            "change_wet_org_high": -1,
+            "prod_volume": -1
         },
-        "pyrolysis": {
+        "pyr": {
             "area_ha": -1,
-            "CO2e_pb_per_t": -1,
+            "CO2e_pb_per_t": -2.3816917825326787,
             "pct_x": -1,
             "CO2e_pb_per_MWh": -1,
             "CO2e_cb": -1,
-            "CO2e_pb": -1,
-            "CO2e_total": 0,
-            "invest": -1,
-            "change_CO2e_t": -1,
-            "change_CO2e_pct": -1,
-            "CO2e_total_2021_estimated": -1,
-            "cost_climate_saved": -1,
-            "invest_pa": -1,
-            "cost_wage": -1,
-            "demand_emplo": -1,
-            "demand_emplo_new": -1,
+            "CO2e_pb": -22403.71786181381,
+            "CO2e_total": -22403.71786181381,
+            "invest": 9688839.49086372,
+            "change_CO2e_t": -22403.71786181381,
+            "change_CO2e_pct": 0,
+            "CO2e_total_2021_estimated": 0,
+            "cost_climate_saved": 93927587.1356544,
+            "invest_pa": 745295.3454510553,
+            "cost_wage": 190050.3130900191,
+            "demand_emplo": 4.026912622288681,
+            "demand_emplo_new": 4.026912622288681,
             "demand_change": -1,
             "area_ha_change": -1,
             "CO2e_cb_per_t": -1,
             "action": -1,
-            "pct_of_wage": -1,
-            "ratio_wage_to_emplo": -1,
+            "pct_of_wage": 0.255,
+            "ratio_wage_to_emplo": 47195.04268309767,
             "emplo_existing": -1,
-            "invest_per_x": -1,
+            "invest_per_x": 1030.0,
             "area_ha_available_pct_of_action": -1,
             "area_ha_available": -1,
             "change_within_category": -1,
             "change_wet_org_low": -1,
-            "change_wet_org_high": -1
+            "change_wet_org_high": -1,
+            "prod_volume": 9406.640282391962
         },
         "g_planning": {
             "area_ha": -1,
@@ -17912,7 +17955,8 @@
             "area_ha_available": -1,
             "change_within_category": -1,
             "change_wet_org_low": -1,
-            "change_wet_org_high": -1
+            "change_wet_org_high": -1,
+            "prod_volume": -1
         },
         "g_grass_org": {
             "area_ha": 38.50817810914994,
@@ -17943,7 +17987,8 @@
             "area_ha_available": -1,
             "change_within_category": -1,
             "change_wet_org_low": -1,
-            "change_wet_org_high": -1
+            "change_wet_org_high": -1,
+            "prod_volume": -1
         },
         "g_wet_org": {
             "area_ha": 1.0483101296375326,
@@ -17974,7 +18019,8 @@
             "area_ha_available": -1,
             "change_within_category": -1,
             "change_wet_org_low": -1,
-            "change_wet_org_high": -1
+            "change_wet_org_high": -1,
+            "prod_volume": -1
         },
         "g_wet_org_r": {
             "area_ha": 268.8249684885406,
@@ -18005,7 +18051,8 @@
             "area_ha_available": -1,
             "change_within_category": -1,
             "change_wet_org_low": -1,
-            "change_wet_org_high": -1
+            "change_wet_org_high": -1,
+            "prod_volume": -1
         },
         "g_water_org_low": {
             "area_ha": 36.55077091000807,
@@ -18036,7 +18083,8 @@
             "area_ha_available": -1,
             "change_within_category": -1,
             "change_wet_org_low": -1,
-            "change_wet_org_high": -1
+            "change_wet_org_high": -1,
+            "prod_volume": -1
         },
         "g_water_org_high": {
             "area_ha": 11.339851362661697,
@@ -18067,7 +18115,8 @@
             "area_ha_available": -1,
             "change_within_category": -1,
             "change_wet_org_low": -1,
-            "change_wet_org_high": -1
+            "change_wet_org_high": -1,
+            "prod_volume": -1
         }
     },
     "a30": {
@@ -21198,6 +21247,7 @@
         "CO2e_w_lulucf_2039": 0,
         "CO2e_w_lulucf_2040": 0,
         "CO2e_w_lulucf_2041": 0,
+        "CO2e_w_lulucf_2042": 0,
         "CO2e_w_lulucf_2043": 0,
         "CO2e_w_lulucf_2044": 0,
         "CO2e_w_lulucf_2045": 0,
@@ -21207,11 +21257,11 @@
         "CO2e_w_lulucf_2049": 0,
         "CO2e_w_lulucf_2050": 0,
         "CO2e_w_lulucf_2051": 0,
-        "CO2e_lulucf_203X": -23783.064783247868,
+        "CO2e_lulucf_203X": -46186.78264506168,
         "CO2e_wo_lulucf_203X": 22404.71786181381,
-        "CO2e_w_lulucf_203X": -1378.3469214340585,
-        "change_CO2e_t": -894971.5598927046,
-        "change_CO2e_pct": -1.0015424769362906,
-        "cost_climate_saved": 3504991689.4753222
+        "CO2e_w_lulucf_203X": -23782.064783247868,
+        "change_CO2e_t": -917375.2777545184,
+        "change_CO2e_pct": -1.0266139720378702,
+        "cost_climate_saved": 3598919276.6109767
     }
 }

@@ -1543,7 +1543,9 @@ def calcPyr(root, inputs: Inputs):
         return inputs.entry(n)
 
     pyr = root.l30.pyr
-    l   = root.l30.l 
+    l   = root.l30.l
+    g   = root.l30.g
+    l18 = root.l18
 
     pyr.CO2e_total = min(
         -(root.h30.h.CO2e_total
@@ -1574,7 +1576,7 @@ def calcPyr(root, inputs: Inputs):
         * fact("Fact_M_cost_per_CO2e_2020")
     )
 
-    pyr.invest_per_x = ass("Ass_L_P_pyr_plant_ratio_invest_to_biochar_pa")
+    pyr.invest_per_x = ass("Ass_L_P_pyrolysis_plant_ratio_invest_to_biochar_pa")
     pyr.invest = pyr.prod_volume * pyr.invest_per_x
     pyr.invest_pa = pyr.invest / entry("In_M_duration_target")
     pyr.pct_of_wage = fact("Fact_B_P_constr_main_revenue_pct_of_wage_2017")
