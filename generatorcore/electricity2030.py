@@ -138,6 +138,10 @@ class E30:
 # Berechnungsfunktion im Sektor E für 203X
 
 
+def div(a: float, b: float):
+    return 0 if b == 0 else a / b
+
+
 def calc(root, inputs: Inputs):
     def fact(n):
         return inputs.fact(n)
