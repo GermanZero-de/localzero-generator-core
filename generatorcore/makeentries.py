@@ -701,10 +701,10 @@ def make_entries(data: refdata.RefData, ags: str, year: int):
         / entry["In_M_area_agri_sta"]
     )
 
-    entry["GHG_budget_2016_to_year_target"] = data.co2path(year).float(
+    entry["In_M_GHG_budget_2016_to_year_target"] = data.co2path(year).float(
         "GHG_budget_2016_to_year"
     )
-    entry["nonCO2_budget_2016_to_year_target"] = data.co2path(year).float(
+    entry["In_M_nonCO2_budget_2016_to_year_target"] = data.co2path(year).float(
         "nonCO2_budget_2016_to_year"
     )
 
