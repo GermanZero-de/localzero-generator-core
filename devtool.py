@@ -49,11 +49,11 @@ def main():
         title="Data Repository tools", dest="subcmd"
     )
 
-    cmd_is_production_parser = subcmd_data.add_parser(
+    cmd_data_is_production_parser = subcmd_data.add_parser(
         "is-production",
         help="Check that the data dir contains clean checkouts of the production reference data set",
     )
-    cmd_is_production_parser.set_defaults(func=cmd_is_production)
+    cmd_data_is_production_parser.set_defaults(func=cmd_is_production)
 
     cmd_data_checkout_parser = subcmd_data.add_parser(
         "checkout",

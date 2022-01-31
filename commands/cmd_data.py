@@ -6,7 +6,7 @@ from generatorcore import refdata
 from generatorcore import makeentries
 
 
-def cmd_is_production(args):
+def cmd_data_is_production(args):
     ds = refdatatools.DataDirStatus.get(refdatatools.datadir())
     # TODO: Add a verbose option that prints a json of DataDirStatus
     if not ds.is_good():
