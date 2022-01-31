@@ -82,7 +82,8 @@ def calculate(inputs: Inputs) -> Result:
     """Given a set of inputs do the actual calculation"""
     start_t = time.time()
     # 2018
-    result.m183X = methodology183x.calc_18(inputs)
+    #Leon: removed calc_18 function because all variables are already implemented/calculated in makeentries.py
+    #result.m183X = methodology183x.calc_18(inputs)
     print("Residence2018_calc", file=sys.stderr)
     residences2018.calc(result, inputs)
     print("Business2018_calc", file=sys.stderr)
@@ -128,8 +129,8 @@ def calculate(inputs: Inputs) -> Result:
     fuels2030.calc(result, inputs)
     print("Electricity2030_calc", file=sys.stderr)
     electricity2030.calc(result, inputs)
-    # TODO: Fix the below
-    #methodology183x.calc_3X(result, inputs)
+    result.m183X = methodology183x.calc_3X(result, inputs)
+    methodology183x.calc_Z(result, inputs)
     # print('Pyrolyse')
     return result
 
