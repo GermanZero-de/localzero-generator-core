@@ -1,20 +1,22 @@
 from dataclasses import dataclass, asdict
 from .inputs import Inputs
+from .utils import div
 
 # definition of variable names for sector M(ethodology) - there are no rows or columns in the excel!
 @dataclass
 class M183X:
-    year_today: float = None
-    year_target: float = None
-    duration_target: float = None
-    duration_target_until_2050: float = None
-    duration_neutral: float = None
+    #year_target: float = None
+    #duration_target: float = None
+    #duration_target_until_2050: float = None
+    #duration_neutral: float = None
 
     CO2_budget_2016_to_year_target: float = None
-    nonCO2_budget_2016_to_year: float = None
-    GHG_budget_2016_to_year: float = None
+    nonCO2_budget_2016_to_year_target: float = None
+    GHG_budget_2016_to_year_target: float = None
+    GHG_budget_2022_to_year_target: float = None
+    GHG_budget_after_year_target: float = None
 
-    CO2e_w_lulucf_change_pa:float = None
+    CO2e_w_lulucf_change_pa: float = None
 
     CO2e_lulucf_2015: float = None
     CO2e_lulucf_2016: float = None
@@ -59,7 +61,7 @@ class M183X:
     CO2e_w_lulucf_2039: float = None
     CO2e_w_lulucf_2040: float = None
     CO2e_w_lulucf_2041: float = None
-    CO2e_w_lulucf_2041: float = None
+    CO2e_w_lulucf_2042: float = None
     CO2e_w_lulucf_2043: float = None
     CO2e_w_lulucf_2044: float = None
     CO2e_w_lulucf_2045: float = None
@@ -69,9 +71,6 @@ class M183X:
     CO2e_w_lulucf_2049: float = None
     CO2e_w_lulucf_2050: float = None
     CO2e_w_lulucf_2051: float = None
-
-    GHG_budget_2022_to_year_target: float = None
-    GHG_budget_after_year_target: float = None
 
     CO2e_lulucf_203X: float = None
     CO2e_wo_lulucf_203X: float = None
@@ -86,39 +85,8 @@ class M183X:
         return asdict(self)
 
 
-# these year calculations have to be done before all sector calculations
-def calc_18(inputs: Inputs) -> M183X:
-    ###########################
-    ### years and durations ###
-    ###########################
-    def entry(n):
-        return inputs.entry(n)
-
-    m183X = M183X()
-
-    m183X.year_today = entry('In_M_year_today')
-
-    m183X.year_target = entry("In_M_year_target")
-
-    #TODO: figure out where "duration target" entry variable  is used in other sector scripts, replace it with "m183X.duration_target" variable ?
-    #delete entry variable afterwards
-
-    m183X.duration_target = m183X.year_target - m183X.year_today
-
-    m183X.duration_target_until_2050 = 2050 - m183X.year_target
-
-    # the neutral duration is the average time of climate neutral years until 2050 if we reduce linearly
-    # from now to year_target and then stay at this 0 level
-    # this value is needed to calculate the saved emissions and climate costs
-    m183X.duration_neutral = (
-        m183X.duration_target_until_2050 + m183X.duration_target / 2
-    )
-
-    return m183X
-
-
 # these budget calculations have to be done after all sector calculations
-def calc_3X(root, inputs: Inputs):
+def calc_3X(root, inputs: Inputs) -> M183X:
     def fact(n):
         return inputs.fact(n)
 
@@ -129,24 +97,20 @@ def calc_3X(root, inputs: Inputs):
     ### budgets 2016 until target year ###
     ######################################
 
-    m183X = root.m183X
-    #TODO: add "GHG_budget_2016_to_year_target" to makeentries.py
+    m183X = M183X()
     # local greenhouse gas budget from 2016 until target year in com!!
-    #m183X.GHG_budget_2016_to_year_target = (
-    #     entry("GHG_budget_2016_to_year_target")
-    #     * entry("In_M_population_com_2018")
-    #     / entry("In_M_population_nat")
-    #    )
-    m183X.GHG_budget_2016_to_year_target = 1
+    m183X.GHG_budget_2016_to_year_target = (
+        entry("In_M_GHG_budget_2016_to_year_target")
+        * entry("In_M_population_com_2018")
+        / entry("In_M_population_nat")
+    )
 
-    #TODO: add "nonCO2_budget_2016_to_year_target" to makeentries.py
     # local nonCO2 budget from 2016 until target year in com!!
-    #m183X.nonCO2_budget_2016_to_year_target = (
-    #    entry("nonCO2_budget_2016_to_year_target")
-    #    * entry("In_M_population_com_2018")
-    #    / entry("In_M_population_nat")
-    #)
-    m183X.nonCO2_budget_2016_to_year_target = 1
+    m183X.nonCO2_budget_2016_to_year_target = (
+        entry("In_M_nonCO2_budget_2016_to_year_target")
+        * entry("In_M_population_com_2018")
+        / entry("In_M_population_nat")
+    )
 
     # local CO2 budget from 2016 until infinity
     m183X.CO2_budget_2016_to_year_target = (
@@ -160,21 +124,33 @@ def calc_3X(root, inputs: Inputs):
     ############################################
 
     # get the CO2e of LULUCF for 2018 as calculated
-    m183X.CO2e_lulucf_2018 = root.l18.CO2e_total
+    m183X.CO2e_lulucf_2018 = root.l18.l.CO2e_total
 
     # calculate the CO2e of LULUCF for 2015-2017 and 2019-2021 by multiplying 2018's value with percentage
     # 2015 just as a backup, probably not needed
-    m183X.CO2e_lulucf_2015 = m183X.CO2e_lulucf_2018 * fact("Fact_M_CO2e_lulucf_2015_vs_2018")
+    m183X.CO2e_lulucf_2015 = m183X.CO2e_lulucf_2018 * fact(
+        "Fact_M_CO2e_lulucf_2015_vs_2018"
+    )
 
-    m183X.CO2e_lulucf_2016 = m183X.CO2e_lulucf_2018 * fact("Fact_M_CO2e_lulucf_2016_vs_2018")
+    m183X.CO2e_lulucf_2016 = m183X.CO2e_lulucf_2018 * fact(
+        "Fact_M_CO2e_lulucf_2016_vs_2018"
+    )
 
-    m183X.CO2e_lulucf_2017 = m183X.CO2e_lulucf_2018 * fact("Fact_M_CO2e_lulucf_2017_vs_2018")
+    m183X.CO2e_lulucf_2017 = m183X.CO2e_lulucf_2018 * fact(
+        "Fact_M_CO2e_lulucf_2017_vs_2018"
+    )
 
-    m183X.CO2e_lulucf_2019 = m183X.CO2e_lulucf_2018 * fact("Fact_M_CO2e_lulucf_2019_vs_2018")
+    m183X.CO2e_lulucf_2019 = m183X.CO2e_lulucf_2018 * fact(
+        "Fact_M_CO2e_lulucf_2019_vs_2018"
+    )
 
-    m183X.CO2e_lulucf_2020 = m183X.CO2e_lulucf_2018 * fact("Fact_M_CO2e_lulucf_2020_vs_2018")
+    m183X.CO2e_lulucf_2020 = m183X.CO2e_lulucf_2018 * fact(
+        "Fact_M_CO2e_lulucf_2020_vs_2018"
+    )
 
-    m183X.CO2e_lulucf_2021 = m183X.CO2e_lulucf_2018 * fact("Fact_M_CO2e_lulucf_2021_vs_2018")
+    m183X.CO2e_lulucf_2021 = m183X.CO2e_lulucf_2018 * fact(
+        "Fact_M_CO2e_lulucf_2021_vs_2018"
+    )
 
     ############################################
     ### 2018 as base for emissions 2016-2021 ###
@@ -184,36 +160,48 @@ def calc_3X(root, inputs: Inputs):
 
     # get the CO2e of all sectors for 2018 excluding LULUCF since this is negative
     m183X.CO2e_wo_lulucf_2018 = (
-        root.h18.CO2e_total
-        + root.e18.CO2e_total
-        + root.f18.CO2e_total
-        + root.r18.CO2e_total
-        + root.b18.CO2e_total
-        + root.i18.CO2e_total
-        + root.t18.CO2e_total
-        + root.a18.CO2e_total
+        root.h18.h.CO2e_total
+        + root.e18.e.CO2e_total
+        + root.f18.f.CO2e_total
+        + root.r18.r.CO2e_total
+        + root.b18.b.CO2e_total
+        + root.i18.p.CO2e_total
+        + root.t18.t.CO2e_total
+        + root.a18.a.CO2e_total
     )
 
     # calculate the CO2e of all sectors without LULUCF for 2015-2017 and 2019-2021 by multiplying 2018's value with percentage
     # 2015 just as a backup, probably not needed
-    m183X.CO2e_wo_lulucf_2015 = m183X.CO2e_wo_lulucf_2018 * fact("Fact_M_CO2e_wo_lulucf_2015_vs_2018")
+    m183X.CO2e_wo_lulucf_2015 = m183X.CO2e_wo_lulucf_2018 * fact(
+        "Fact_M_CO2e_wo_lulucf_2015_vs_2018"
+    )
 
-    m183X.CO2e_wo_lulucf_2016 = m183X.CO2e_wo_lulucf_2018 * fact("Fact_M_CO2e_wo_lulucf_2016_vs_2018")
+    m183X.CO2e_wo_lulucf_2016 = m183X.CO2e_wo_lulucf_2018 * fact(
+        "Fact_M_CO2e_wo_lulucf_2016_vs_2018"
+    )
 
-    m183X.CO2e_wo_lulucf_2017 = m183X.CO2e_wo_lulucf_2018 * fact("Fact_M_CO2e_wo_lulucf_2017_vs_2018")
+    m183X.CO2e_wo_lulucf_2017 = m183X.CO2e_wo_lulucf_2018 * fact(
+        "Fact_M_CO2e_wo_lulucf_2017_vs_2018"
+    )
 
-    m183X.CO2e_wo_lulucf_2019 = m183X.CO2e_wo_lulucf_2018 * fact("Fact_M_CO2e_wo_lulucf_2019_vs_2018")
+    m183X.CO2e_wo_lulucf_2019 = m183X.CO2e_wo_lulucf_2018 * fact(
+        "Fact_M_CO2e_wo_lulucf_2019_vs_2018"
+    )
 
-    m183X.CO2e_wo_lulucf_2020 = m183X.CO2e_wo_lulucf_2018 * fact("Fact_M_CO2e_wo_lulucf_2020_vs_2018")
+    m183X.CO2e_wo_lulucf_2020 = m183X.CO2e_wo_lulucf_2018 * fact(
+        "Fact_M_CO2e_wo_lulucf_2020_vs_2018"
+    )
 
-    m183X.CO2e_wo_lulucf_2021 = m183X.CO2e_wo_lulucf_2018 * fact("Fact_M_CO2e_wo_lulucf_2021_vs_2018")
+    m183X.CO2e_wo_lulucf_2021 = m183X.CO2e_wo_lulucf_2018 * fact(
+        "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+    )
 
     #############################################
     ### 2018 as base for emissions 2016-2021  ###
     #############################################
     ### sum up CO2e_wo_lulucf and CO2e_lulucf ###
     #############################################
-    
+
     # 2015 just as a backup, probably not needed
     m183X.CO2e_w_lulucf_2015 = m183X.CO2e_wo_lulucf_2015 + m183X.CO2e_lulucf_2015
 
@@ -250,11 +238,13 @@ def calc_3X(root, inputs: Inputs):
     #########################################################
 
     # calculating the yearly decrease of the emissions, going down linearly to 0 in target_year+1
-    m183X.CO2e_w_lulucf_change_pa = m183X.CO2e_w_lulucf_2021 / (m183X.duration_target + 1)  # +1 because we want to reach 0 in target_year+1
+    m183X.CO2e_w_lulucf_change_pa = m183X.CO2e_w_lulucf_2021 / ( entry("In_M_duration_target") + 1)  # +1 because we want to reach 0 in target_year+1
 
     # reducing the yearly emissions year by year, starting with 2022
     if m183X.CO2e_w_lulucf_2021 > 0:
-        m183X.CO2e_w_lulucf_2022 = (m183X.CO2e_w_lulucf_2021 - m183X.CO2e_w_lulucf_change_pa      )
+        m183X.CO2e_w_lulucf_2022 = (
+            m183X.CO2e_w_lulucf_2021 - m183X.CO2e_w_lulucf_change_pa
+        )
     else:
         m183X.CO2e_w_lulucf_2022 = 0
 
@@ -528,22 +518,35 @@ def calc_3X(root, inputs: Inputs):
         - m183X.CO2e_w_lulucf_2050
         - m183X.CO2e_w_lulucf_2051
     )
+    
+    return m183X
 
+
+def calc_Z(root, inputs: Inputs):
+    def fact(n):
+        return inputs.fact(n)
+
+    def entry(n):
+        return inputs.entry(n)
     ##################################################################
     ### total emissions 203X, saved emissions, saved climate costs ###
     ##################################################################
 
+    m183X = root.m183X
     # get the CO2e of all sectors for 203X (the target year) excluding LULUCF
     m183X.CO2e_wo_lulucf_203X = (
-        root.h30.CO2e_total
-        + root.e30.CO2e_total
-        + root.f30.CO2e_total
-        + root.r30.CO2e_total
-        + root.b30.CO2e_total
-        + root.i30.CO2e_total
-        + root.t30.CO2e_total
-        + root.a30.CO2e_total
+        root.h30.h.CO2e_total
+        + root.e30.e.CO2e_total
+        + root.f30.f.CO2e_total
+        + root.r30.r.CO2e_total
+        + root.b30.b.CO2e_total
+        + root.i30.i.CO2e_total
+        + root.t30.t.CO2e_total
+        + root.a30.a.CO2e_total
     )
+
+    #TODO: Check with Hauke if this is correct: 
+    m183X.CO2e_lulucf_203X = root.l30.l.CO2e_total
 
     # get the CO2e of all sectors für 203X (the target year) which should be 0
     m183X.CO2e_w_lulucf_203X = m183X.CO2e_wo_lulucf_203X + m183X.CO2e_lulucf_203X
@@ -552,17 +555,18 @@ def calc_3X(root, inputs: Inputs):
     m183X.change_CO2e_t = m183X.CO2e_w_lulucf_203X - m183X.CO2e_w_lulucf_2018
 
     # calculate the total CO2e difference in % between 2018 and 203X
-    m183X.change_CO2e_pct = m183X.change_CO2e_t / m183X.CO2e_w_lulucf_2018
+    m183X.change_CO2e_pct = div(m183X.change_CO2e_t, m183X.CO2e_w_lulucf_2018)
 
     # get the total saved climate cost of all sectors until 2050
     m183X.cost_climate_saved = (
-        root.h30.cost_climate_saved
-        + root.e30.cost_climate_saved
-        + root.f30.cost_climate_saved
-        + root.r30.cost_climate_saved
-        + root.b30.cost_climate_saved
-        + root.i30.cost_climate_saved
-        + root.t30.cost_climate_saved
-        + root.a30.cost_climate_saved
-        + root.l30.cost_climate_saved
+        root.h30.h.cost_climate_saved
+        + root.e30.e.cost_climate_saved
+        + root.f30.f.cost_climate_saved
+        + root.r30.r.cost_climate_saved
+        + root.b30.b.cost_climate_saved
+        + root.i30.i.cost_climate_saved
+        + root.t30.t.cost_climate_saved
+        + root.a30.a.cost_climate_saved
+        + root.l30.l.cost_climate_saved
     )
+

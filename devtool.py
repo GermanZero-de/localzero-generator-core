@@ -154,7 +154,7 @@ def data_lookup_cmd(args):
             print(record)
         print()
 
-    data = refdata.RefData.load()
+    data = refdata.RefData.load(fix_missing_entries=args.fix_missing_entries)
 
     by_ags = [
         ("area", data.area),
@@ -177,8 +177,10 @@ def data_lookup_cmd(args):
         ("nat_res_buildings", data.nat_res_buildings),
     ]
 
-    bold(f"{ags} (commune level data)")
-    bold("-----------------------------------------")
+    description = data.ags_master().get(ags, "MISSING IN MASTER")
+
+    bold(f"{ags} {description} (commune level data)")
+    bold("---------------------------------------------------------------")
     print()
     for (name, lookup_fn) in by_ags:
         print_lookup(name, lookup_fn, key=ags)
@@ -269,17 +271,34 @@ def data_entries_user_overridables_generate_defaults_cmd(args):
     result = []
     good = 0
     errors = 0
-    for (ags, description) in list(data.ags_master().items()):
-        try:
-            entries = makeentries.make_entries(data, ags, 2035)
-            entries["city"] = description
-            result.append(entries)
-            good = good + 1
-        except Exception as e:
-            # print(f"{ags} {description}: Can't generate: {e}", file=sys.stderr)
-            errors = errors + 1
-        sys.stdout.write(f"\rOK {good:>5}    BAD {errors:>5}")
-    # json.dump(result, indent=4, fp=sys.stdout)
+    crazy_errors = 0
+    with (
+        open("errors.txt", "w") as error_file,
+        open("crazy-errors.txt", "w") as crazy_error_file,
+    ):
+        for (ags, description) in list(data.ags_master().items()):
+            try:
+                entries = makeentries.make_entries(data, ags, 2035)
+                default_values = {
+                    k: v
+                    for (k, v) in entries.items()
+                    if k in makeentries.USER_OVERRIDABLE_ENTRIES
+                }
+                default_values["city"] = description
+                result.append(default_values)
+                good = good + 1
+            except refdata.LookupFailure as e:
+                errors = errors + 1
+                print(ags, repr(e), sep="\t", file=error_file)
+            except Exception as e:
+                crazy_errors = crazy_errors + 1
+                print(ags, repr(e), sep="\t", file=crazy_error_file)
+
+            sys.stdout.write(
+                f"\rOK {good:>5}    BAD {errors:>5}  CRAZY {crazy_errors:>5}"
+            )
+    with open("output.json", "w") as output_file:
+        json.dump(result, indent=4, fp=output_file)
 
 
 def main():
@@ -327,6 +346,9 @@ def main():
         help="Lookup all the reference data for a given AGS",
     )
     cmd_data_lookup.add_argument("ags")
+    cmd_data_lookup.add_argument(
+        "-no-fixes", action="store_false", dest="fix_missing_entries"
+    )
     cmd_data_lookup.set_defaults(func=data_lookup_cmd)
 
     cmd_data_entries_user_overrides_generate_defaults = subcmd_data.add_parser(

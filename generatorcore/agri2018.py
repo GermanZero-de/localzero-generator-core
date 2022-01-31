@@ -1,4 +1,5 @@
 from .inputs import Inputs
+from .utils import div
 from dataclasses import dataclass, asdict
 
 
@@ -436,32 +437,34 @@ def calc(root, inputs: Inputs):
     )
     s_petrol.CO2e_cb = s_petrol.energy * s_petrol.CO2e_cb_per_MWh
     s_diesel.CO2e_cb_per_MWh = fact("Fact_T_S_diesel_EmFa_tank_wheel_2018")
-    s_petrol.pct_energy = s_petrol.energy / s.energy
-    s_diesel.pct_energy = s_diesel.energy / s.energy
+    s_petrol.pct_energy = div(s_petrol.energy, s.energy)
+    s_diesel.pct_energy = div(s_diesel.energy, s.energy)
     s_diesel.CO2e_cb = s_diesel.energy * s_diesel.CO2e_cb_per_MWh
     s_fueloil.CO2e_cb_per_MWh = fact("Fact_H_P_fueloil_cb_EF")
     s_petrol.CO2e_total = s_petrol.CO2e_pb + s_petrol.CO2e_cb
-    s_fueloil.pct_energy = s_fueloil.energy / s.energy
+    s_fueloil.pct_energy = div(s_fueloil.energy, s.energy)
     s_fueloil.CO2e_cb = s_fueloil.energy * s_fueloil.CO2e_cb_per_MWh
     s_lpg.CO2e_cb_per_MWh = fact("Fact_T_S_lpg_EmFa_tank_wheel_2018")
     s_diesel.CO2e_total = s_diesel.CO2e_pb + s_diesel.CO2e_cb
     p_operation.energy = s.energy
-    p_operation_vehicles.pct_energy = p_operation_vehicles.energy / p_operation.energy
-    s_lpg.pct_energy = s_lpg.energy / s.energy
+    p_operation_vehicles.pct_energy = div(
+        p_operation_vehicles.energy, p_operation.energy
+    )
+    s_lpg.pct_energy = div(s_lpg.energy, s.energy)
     s_lpg.CO2e_cb = s_lpg.energy * s_lpg.CO2e_cb_per_MWh
     s_gas.CO2e_cb_per_MWh = fact("Fact_H_P_ngas_cb_EF")
     s_fueloil.CO2e_total = s_fueloil.CO2e_pb + s_fueloil.CO2e_cb
     p_operation_heat.energy = (
         s_fueloil.energy + s_lpg.energy + s_gas.energy + s_biomass.energy
     )
-    s_gas.pct_energy = s_gas.energy / s.energy
+    s_gas.pct_energy = div(s_gas.energy, s.energy)
     s_gas.CO2e_cb = s_gas.energy * s_gas.CO2e_cb_per_MWh
     s_biomass.CO2e_cb_per_MWh = fact("Fact_RB_S_biomass_CO2e_EF")
     s_lpg.CO2e_total = s_lpg.CO2e_pb + s_lpg.CO2e_cb
-    p_operation_heat.factor_adapted_to_fec = (
-        p_operation_heat.energy / p_operation_heat.area_m2
+    p_operation_heat.factor_adapted_to_fec = div(
+        p_operation_heat.energy, p_operation_heat.area_m2
     )
-    s_biomass.pct_energy = s_biomass.energy / s.energy
+    s_biomass.pct_energy = div(s_biomass.energy, s.energy)
     s_biomass.CO2e_cb = s_biomass.energy * s_biomass.CO2e_cb_per_MWh
     s.CO2e_cb = (
         s_petrol.CO2e_cb
@@ -472,13 +475,13 @@ def calc(root, inputs: Inputs):
         + s_biomass.CO2e_cb
     )
     s_gas.CO2e_total = s_gas.CO2e_pb + s_gas.CO2e_cb
-    p_operation_heat.pct_energy = p_operation_heat.energy / p_operation.energy
-    s_elec.pct_energy = s_elec.energy / s.energy
+    p_operation_heat.pct_energy = div(p_operation_heat.energy, p_operation.energy)
+    s_elec.pct_energy = div(s_elec.energy, s.energy)
     s.CO2e_total = s.CO2e_pb + s.CO2e_cb
     a.CO2e_total = g.CO2e_total + p.CO2e_total + s.CO2e_total
     s_biomass.CO2e_total = s_biomass.CO2e_pb + s_biomass.CO2e_cb
-    p_operation_elec_elcon.pct_energy = (
-        p_operation_elec_elcon.energy / p_operation.energy
+    p_operation_elec_elcon.pct_energy = div(
+        p_operation_elec_elcon.energy, p_operation.energy
     )
     s.pct_energy = (
         s_petrol.pct_energy
@@ -492,7 +495,7 @@ def calc(root, inputs: Inputs):
     s_elec.CO2e_cb_per_MWh = fact("Fact_RB_S_elec_ratio_CO2e_to_fec")
     s_elec.CO2e_cb = s_elec.energy * s_elec.CO2e_cb_per_MWh
     s_elec.CO2e_total = s_elec.CO2e_pb + s_elec.CO2e_cb
-    s_heatpump.pct_energy = s_heatpump.energy / b18.s.energy
+    s_heatpump.pct_energy = div(s_heatpump.energy, b18.s.energy)
     s_heatpump.CO2e_cb_per_MWh = fact("Fact_RB_S_heatpump_ratio_CO2e_to_fec")
     s_heatpump.CO2e_cb = s_heatpump.energy * s_heatpump.CO2e_cb_per_MWh
     s_heatpump.CO2e_total = s_heatpump.CO2e_cb
