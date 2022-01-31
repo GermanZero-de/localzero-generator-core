@@ -61,7 +61,7 @@ class M183X:
     CO2e_w_lulucf_2039: float = None
     CO2e_w_lulucf_2040: float = None
     CO2e_w_lulucf_2041: float = None
-    CO2e_w_lulucf_2041: float = None
+    CO2e_w_lulucf_2042: float = None
     CO2e_w_lulucf_2043: float = None
     CO2e_w_lulucf_2044: float = None
     CO2e_w_lulucf_2045: float = None
