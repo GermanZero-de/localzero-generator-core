@@ -100,14 +100,14 @@ def calc_3X(root, inputs: Inputs) -> M183X:
     m183X = M183X()
     # local greenhouse gas budget from 2016 until target year in com!!
     m183X.GHG_budget_2016_to_year_target = (
-        entry("GHG_budget_2016_to_year_target")
+        entry("In_M_GHG_budget_2016_to_year_target")
         * entry("In_M_population_com_2018")
         / entry("In_M_population_nat")
     )
 
     # local nonCO2 budget from 2016 until target year in com!!
     m183X.nonCO2_budget_2016_to_year_target = (
-        entry("nonCO2_budget_2016_to_year_target")
+        entry("In_M_nonCO2_budget_2016_to_year_target")
         * entry("In_M_population_com_2018")
         / entry("In_M_population_nat")
     )
