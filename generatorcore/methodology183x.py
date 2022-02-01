@@ -119,20 +119,20 @@ class M183X:
 
 
 
-    z: zColVars() = zColVars() 
-    s: zColVars() = zColVars()
-    d: zColVars() = zColVars()
+    z: zColVars = zColVars() 
+    s: zColVars = zColVars()
+    d: zColVars = zColVars()
 
-    e: zColVars() = zColVars()
-    h: zColVars() = zColVars()
-    f: zColVars() = zColVars()
-    rb: zColVars() = zColVars()
-    r: zColVars() = zColVars()
-    b: zColVars() = zColVars()
-    t: zColVars() = zColVars()
-    i: zColVars() = zColVars()
-    a: zColVars() = zColVars()
-    l: zColVars() = zColVars()
+    e: zColVars = zColVars()
+    h: zColVars = zColVars()
+    f: zColVars = zColVars()
+    rb: zColVars = zColVars()
+    r: zColVars = zColVars()
+    b: zColVars = zColVars()
+    t: zColVars = zColVars()
+    i: zColVars = zColVars()
+    a: zColVars = zColVars()
+    l: zColVars = zColVars()
 
     CO2e_per_capita_nat: float = None
     CO2e_per_capita_com: float = None
@@ -223,7 +223,7 @@ def calc_Budget(root, inputs: Inputs) -> M183X:
         + root.f18.f.CO2e_total
         + root.r18.r.CO2e_total
         + root.b18.b.CO2e_total
-        + root.i18.p.CO2e_total
+        + root.i18.i.CO2e_total
         + root.t18.t.CO2e_total
         + root.a18.a.CO2e_total
     )
@@ -659,17 +659,17 @@ def calc_Z(root, inputs: Inputs):
     z.energy_18 = s.energy_18
 
     s.CO2e_pb_18 = h18.h.CO2e_pb + e18.e.CO2e_pb + f18.f.CO2e_pb
-    #d.CO2e_pb_18 = r18.r.CO2e_pb + b18.p.CO2e_pb + i18.i.CO2e_pb + t18.t.CO2e_pb + a18.a.CO2e_pb + l18.l.CO2e_pb
+    #d.CO2e_pb_18 = r18.r.CO2e_pb + b18.b.CO2e_pb + i18.i.CO2e_pb + t18.t.CO2e_pb + a18.a.CO2e_pb + l18.l.CO2e_pb
     d.CO2e_pb_18 = i18.i.CO2e_pb + a18.a.CO2e_pb + l18.l.CO2e_pb
     z.CO2e_pb_18 = s.CO2e_pb_18 + d.CO2e_pb_18
 
     s.CO2e_cb_18 = h18.h.CO2e_cb + e18.e.CO2e_cb + f18.f.CO2e_cb
-    d.CO2e_cb_18 = r18.r.CO2e_cb + b18.p.CO2e_cb + i18.i.CO2e_cb + t18.t.CO2e_cb + a18.a.CO2e_cb + l18.l.CO2e_cb
+    d.CO2e_cb_18 = r18.r.CO2e_cb + b18.b.CO2e_cb + i18.i.CO2e_cb + t18.t.CO2e_cb + a18.a.CO2e_cb + l18.l.CO2e_cb
     z.CO2e_cb_18 = s.CO2e_cb_18 + d.CO2e_cb_18
 
-    s.CO2e_total = h18.h.CO2e_total + e18.e.CO2e_total + f18.f.CO2e_total
-    d.CO2e_total = r18.r.CO2e_total + b18.p.CO2e_total + i18.i.CO2e_total + t18.t.CO2e_total + a18.a.CO2e_total + l18.l.CO2e_total
-    z.CO2e_total = s.CO2e_total + d.CO2e_total
+    s.CO2e_total_18 = h18.h.CO2e_total + e18.e.CO2e_total + f18.f.CO2e_total
+    d.CO2e_total_18 = r18.r.CO2e_total + b18.b.CO2e_total + i18.i.CO2e_total + t18.t.CO2e_total + a18.a.CO2e_total + l18.l.CO2e_total
+    z.CO2e_total_18 = s.CO2e_total_18 + d.CO2e_total_18
 
     s.energy_30 = h30.p.energy + e30.p.energy + f30.p.energy
     d.energy_30 = r30.p.energy + b30.p.energy + i30.p.energy + t30.t.energy + a30.p.energy 
@@ -677,20 +677,20 @@ def calc_Z(root, inputs: Inputs):
 
     #s.CO2e_pb_30 = h30.h.CO2e_pb + e30.e.CO2e_pb + f30.f.CO2e_pb
     s.CO2e_pb_30 = h30.h.CO2e_pb + f30.f.CO2e_pb
-    #d.CO2e_pb_30 = r30.r.CO2e_pb + b30.p.CO2e_pb + i30.i.CO2e_pb + t30.t.CO2e_pb + a30.a.CO2e_pb + l30.l.CO2e_pb
+    #d.CO2e_pb_30 = r30.r.CO2e_pb + b30.b.CO2e_pb + i30.i.CO2e_pb + t30.t.CO2e_pb + a30.a.CO2e_pb + l30.l.CO2e_pb
     d.CO2e_pb_30 = i30.i.CO2e_pb + a30.a.CO2e_pb + l30.l.CO2e_pb
     z.CO2e_pb_30 = s.CO2e_pb_30 + d.CO2e_pb_30
 
     #s.CO2e_cb_30 = h30.h.CO2e_cb + e30.e.CO2e_cb + f30.f.CO2e_cb
     s.CO2e_cb_30 = h30.h.CO2e_cb + e30.e.CO2e_cb 
-    d.CO2e_cb_30 = r30.r.CO2e_cb + b30.p.CO2e_cb + i30.i.CO2e_cb + t30.t.CO2e_cb + a30.a.CO2e_cb + l30.l.CO2e_cb
+    d.CO2e_cb_30 = r30.r.CO2e_cb + b30.b.CO2e_cb + i30.i.CO2e_cb + t30.t.CO2e_cb + a30.a.CO2e_cb + l30.l.CO2e_cb
     z.CO2e_cb_30 = s.CO2e_cb_30 + d.CO2e_cb_30
 
     z.CO2e_cb_per_MWh = div(z.CO2e_cb_30,z.energy_30)
 
-    s.CO2e_total = h30.h.CO2e_total + e30.e.CO2e_total + f30.f.CO2e_total
-    d.CO2e_total = r30.r.CO2e_total + b30.p.CO2e_total + i30.i.CO2e_total + t30.t.CO2e_total + a30.a.CO2e_total + l30.l.CO2e_total
-    z.CO2e_total = s.CO2e_total + d.CO2e_total
+    s.CO2e_total_30 = h30.h.CO2e_total + e30.e.CO2e_total + f30.f.CO2e_total
+    d.CO2e_total_30 = r30.r.CO2e_total + b30.b.CO2e_total + i30.i.CO2e_total + t30.t.CO2e_total + a30.a.CO2e_total + l30.l.CO2e_total
+    z.CO2e_total_30 = s.CO2e_total_30 + d.CO2e_total_30
 
     s.change_energy_MWh = s.energy_30 - s.energy_18
     d.change_energy_MWh = d.energy_30 - d.energy_18
@@ -717,52 +717,53 @@ def calc_Z(root, inputs: Inputs):
     z.cost_climate_saved = s.cost_climate_saved + d.cost_climate_saved
 
     s.invest_pa = h30.h.invest_pa + e30.e.invest_pa + f30.f.invest_pa
-    d.invest_pa = r30.r.invest_pa + b30.p.invest_pa + i30.i.invest_pa + t30.t.invest_pa + a30.a.invest_pa + l30.l.invest_pa
+    d.invest_pa = r30.r.invest_pa + b30.b.invest_pa + i30.i.invest_pa + t30.t.invest_pa + a30.a.invest_pa + l30.l.invest_pa
     z.invest_pa = s.invest_pa + d.invest_pa
 
     #s.invest_pa_com = h30.h.invest_pa_com + e30.e.invest_pa_com + f30.f.invest_pa_com
     s.invest_pa_com = h30.h.invest_pa_com + e30.e.invest_pa_com
-    d.invest_pa_com = r30.r.invest_pa_com + b30.p.invest_pa_com + i30.i.invest_pa_com + t30.t.invest_pa_com + a30.a.invest_pa_com + l30.l.invest_pa_com
+    #d.invest_pa_com = r30.r.invest_pa_com + b30.b.invest_pa_com + i30.i.invest_pa_com + t30.t.invest_pa_com + a30.a.invest_pa_com + l30.l.invest_pa_com
+    d.invest_pa_com = r30.r.invest_pa_com + b30.b.invest_pa_com + i30.i.invest_pa_com + t30.t.invest_pa_com + a30.a.invest_pa_com 
     z.invest_pa_com = s.invest_pa_com + d.invest_pa_com
 
     #s.invest_pa_outside = h30.h.invest_pa_outside + e30.e.invest_pa_outside + f30.f.invest_pa_outside
     s.invest_pa_outside = e30.e.invest_pa_outside + f30.f.invest_pa_outside
-    #d.invest_pa_outside = r30.r.invest_pa_outside + b30.p.invest_pa_outside + i30.i.invest_pa_outside + t30.t.invest_pa_outside + a30.a.invest_pa_outside + l30.l.invest_pa_outside
+    #d.invest_pa_outside = r30.r.invest_pa_outside + b30.b.invest_pa_outside + i30.i.invest_pa_outside + t30.t.invest_pa_outside + a30.a.invest_pa_outside + l30.l.invest_pa_outside
     d.invest_pa_outside = i30.i.invest_pa_outside + a30.a.invest_pa_outside
     z.invest_pa_outside = s.invest_pa_outside + d.invest_pa_outside
 
     s.invest = h30.h.invest + e30.e.invest + f30.f.invest
-    d.invest = r30.r.invest + b30.p.invest + i30.i.invest + t30.t.invest + a30.a.invest + l30.l.invest
+    d.invest = r30.r.invest + b30.b.invest + i30.i.invest + t30.t.invest + a30.a.invest + l30.l.invest
     z.invest = s.invest + d.invest
     
     #s.invest_com = h30.h.invest_com + e30.e.invest_com + f30.f.invest_com
     s.invest_com = h30.h.invest_com + e30.e.invest_com
-    #d.invest_com = r30.r.invest_com + b30.p.invest_com + i30.i.invest_com + t30.t.invest_com + a30.a.invest_com + l30.l.invest_com
-    d.invest_com = r30.r.invest_com + b30.p.invest_com + i30.i.invest_com + t30.t.invest_com + a30.a.invest_com
+    #d.invest_com = r30.r.invest_com + b30.b.invest_com + i30.i.invest_com + t30.t.invest_com + a30.a.invest_com + l30.l.invest_com
+    d.invest_com = r30.r.invest_com + b30.b.invest_com + i30.i.invest_com + t30.t.invest_com + a30.a.invest_com
     z.invest_com = s.invest_com + d.invest_com
 
     #s.invest_outside = h30.h.invest_outside + e30.e.invest_outside + f30.f.invest_outside
     s.invest_outside = e30.e.invest_outside + f30.f.invest_outside
-    #d.invest_outside = r30.r.invest_outside + b30.p.invest_outside + i30.i.invest_outside + t30.t.invest_outside + a30.a.invest_outside + l30.l.invest_outside
+    #d.invest_outside = r30.r.invest_outside + b30.b.invest_outside + i30.i.invest_outside + t30.t.invest_outside + a30.a.invest_outside + l30.l.invest_outside
     d.invest_outside = i30.i.invest_outside + a30.a.invest_outside
     z.invest_outside = s.invest_outside + d.invest_outside
 
     s.cost_wage = h30.h.cost_wage + e30.e.cost_wage + f30.f.cost_wage
-    d.cost_wage = r30.r.cost_wage + b30.p.cost_wage + i30.i.cost_wage + t30.t.cost_wage + a30.a.cost_wage + l30.l.cost_wage
+    d.cost_wage = r30.r.cost_wage + b30.b.cost_wage + i30.i.cost_wage + t30.t.cost_wage + a30.a.cost_wage + l30.l.cost_wage
     z.cost_wage = s.cost_wage + d.cost_wage
 
     s.demand_emplo = h30.h.demand_emplo + e30.e.demand_emplo + f30.f.demand_emplo
-    d.demand_emplo = r30.r.demand_emplo + b30.p.demand_emplo + i30.i.demand_emplo + t30.t.demand_emplo + a30.a.demand_emplo + l30.l.demand_emplo
+    d.demand_emplo = r30.r.demand_emplo + b30.b.demand_emplo + i30.i.demand_emplo + t30.t.demand_emplo + a30.a.demand_emplo + l30.l.demand_emplo
     z.demand_emplo = s.demand_emplo + d.demand_emplo
 
     s.demand_emplo_new = h30.h.demand_emplo_new + e30.e.demand_emplo_new + f30.f.demand_emplo_new
-    d.demand_emplo_new = r30.r.demand_emplo_new + b30.p.demand_emplo_new + i30.i.demand_emplo_new + t30.t.demand_emplo_new + a30.a.demand_emplo_new + l30.l.demand_emplo_new
+    d.demand_emplo_new = r30.r.demand_emplo_new + b30.b.demand_emplo_new + i30.i.demand_emplo_new + t30.t.demand_emplo_new + a30.a.demand_emplo_new + l30.l.demand_emplo_new
     z.demand_emplo_new = s.demand_emplo_new + d.demand_emplo_new
 
     #s.demand_emplo_com = h30.h.demand_emplo_com + e30.e.demand_emplo_com + f30.f.demand_emplo_com
     s.demand_emplo_com = h30.h.demand_emplo_com 
-    #d.demand_emplo_com = r30.r.demand_emplo_com + b30.p.demand_emplo_com + i30.i.demand_emplo_com + t30.t.demand_emplo_com + a30.a.demand_emplo_com + l30.l.demand_emplo_com
-    d.demand_emplo_com = r30.r.demand_emplo_com + b30.p.demand_emplo_com + t30.t.demand_emplo_com + a30.a.demand_emplo_com 
+    #d.demand_emplo_com = r30.r.demand_emplo_com + b30.b.demand_emplo_com + i30.i.demand_emplo_com + t30.t.demand_emplo_com + a30.a.demand_emplo_com + l30.l.demand_emplo_com
+    d.demand_emplo_com = r30.r.demand_emplo_com + b30.b.demand_emplo_com + t30.t.demand_emplo_com + a30.a.demand_emplo_com 
     z.demand_emplo_com = s.demand_emplo_com + d.demand_emplo_com
 
 
