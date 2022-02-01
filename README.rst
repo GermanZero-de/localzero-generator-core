@@ -53,7 +53,7 @@ How to run the generator
 .. code-block:: console
 
     poetry shell
-    python devtool.py run > output.json
+    python devtool.py run -o output.json
 
 Testing
 -------
