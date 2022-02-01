@@ -141,6 +141,7 @@ def calc(root, inputs: Inputs):
     s_biomass = root.a18.s_biomass
     s_elec = root.a18.s_elec
     s_heatpump = root.a18.s_heatpump
+    p_operation_elec_heatpump = root.a18.p_operation_elec_heatpump
 
     """ unused variables """
     s_heatpump.energy = 0.0
@@ -184,6 +185,7 @@ def calc(root, inputs: Inputs):
     s_biomass.CO2e_pb = 0.0
     s_elec.CO2e_pb = 0.0
     s_heatpump.CO2e_pb = 0.0
+    p_operation_elec_heatpump.energy = 0
 
     p_fermen_dairycow.CO2e_pb_per_t = fact(
         "Fact_A_P_fermen_dairycow_ratio_CO2e_to_amount_2018"
