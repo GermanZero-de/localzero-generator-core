@@ -782,3 +782,9 @@ def calc(root, inputs: Inputs):
         * entry("In_M_duration_neutral")
         * fact("Fact_M_cost_per_CO2e_2020")
     )
+
+    g_planning.demand_emplo_com = g_planning.demand_emplo_new
+    g.demand_emplo_com = g_planning.demand_emplo_com
+
+    #TODO: Check demand_emplo_new in Heat with Hauke 
+    h.demand_emplo_com = g.demand_emplo_com + p_heatnet.demand_emplo_com
