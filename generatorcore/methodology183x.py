@@ -650,9 +650,21 @@ def calc_Z(root, inputs: Inputs):
         + l30.l.cost_climate_saved
     )
 
+    #==========Excel-Z-Script Calclulations=====================
     s = m183X.s
     d = m183X.d
     z = m183X.z
+
+    e = m183X.e
+    h = m183X.h
+    f = m183X.f
+    r = m183X.r
+    b = m183X.b
+    rb = m183X.rb
+    i = m183X.i
+    t = m183X.t
+    a = m183X.a
+    l = m183X.l
 
     s.energy_18 = h18.p.energy + e18.p.energy + f18.p.energy
     d.energy_18 = r18.p.energy + b18.p.energy + i18.p.energy + t18.t.energy + a18.p.energy 
@@ -765,7 +777,69 @@ def calc_Z(root, inputs: Inputs):
     #d.demand_emplo_com = r30.r.demand_emplo_com + b30.b.demand_emplo_com + i30.i.demand_emplo_com + t30.t.demand_emplo_com + a30.a.demand_emplo_com + l30.l.demand_emplo_com
     d.demand_emplo_com = r30.r.demand_emplo_com + b30.b.demand_emplo_com + t30.t.demand_emplo_com + a30.a.demand_emplo_com 
     z.demand_emplo_com = s.demand_emplo_com + d.demand_emplo_com
+    
+    #==========Extra Calculations=====================
 
+    m183X.CO2e_per_capita_nat = div(fact("Fact_M_CO2e_w_lulucf_2018") , entry("In_M_population_nat"))
+    m183X.CO2e_per_capita_com = div(z.CO2e_total_18 , entry("In_M_population_com_2018"))
+    m183X.CO2e_per_capita_com_pct_of_nat = div(m183X.CO2e_per_capita_com, m183X.CO2e_per_capita_nat)
 
+    s.pct_energy_18 = 1
+    d.pct_energy_18 = 1
 
+    e.pct_energy_18 = div(e18.p.energy,s.energy_18)
+    h.pct_energy_18 = div(h18.p.energy,s.energy_18)
+    f.pct_energy_18 = div(f18.p.energy,s.energy_18)
+    
+    rb.pct_energy_18 = div(b18.rb.energy,d.energy_18)
+    r.pct_energy_18 = div(r18.p.energy,d.energy_18)
+    b.pct_energy_18 = div(b18.p.energy,d.energy_18)
+    i.pct_energy_18 = div(i18.p.energy,d.energy_18)
+    t.pct_energy_18 = div(t18.t.energy,d.energy_18)
+    a.pct_energy_18 = div(a18.p.energy,d.energy_18)
+
+    z.pct_CO2e_total_18 = 1
+    s.pct_CO2e_total_18 = div(s.CO2e_total_18,z.CO2e_total_18)
+    d.pct_CO2e_total_18 = div(d.CO2e_total_18,z.CO2e_total_18)
+
+    e.pct_CO2e_total_18 = div(e18.e.CO2e_total,z.CO2e_total_18)
+    h.pct_CO2e_total_18 = div(h18.h.CO2e_total,z.CO2e_total_18)
+    f.pct_CO2e_total_18 = div(f18.f.CO2e_total,z.CO2e_total_18)
+    
+    rb.pct_CO2e_total_18 = div(b18.rb.CO2e_total,z.CO2e_total_18)
+    r.pct_CO2e_total_18 = div(r18.r.CO2e_total,z.CO2e_total_18)
+    b.pct_CO2e_total_18 = div(b18.b.CO2e_total,z.CO2e_total_18)
+    i.pct_CO2e_total_18 = div(i18.i.CO2e_total,z.CO2e_total_18)
+    t.pct_CO2e_total_18 = div(t18.t.CO2e_total,z.CO2e_total_18)
+    a.pct_CO2e_total_18 = div(a18.a.CO2e_total,z.CO2e_total_18)
+    l.pct_CO2e_total_18 = div(l18.l.CO2e_total,z.CO2e_total_18)     
+
+    s.pct_energy_30 = 1
+    d.pct_energy_30 = 1
+
+    e.pct_energy_30 = div(e30.p.energy,s.energy_30)
+    h.pct_energy_30 = div(h30.p.energy,s.energy_30)
+    f.pct_energy_30 = div(f30.p.energy,s.energy_30)
+    
+    rb.pct_energy_30 = div(b30.rb.energy,d.energy_30)
+    r.pct_energy_30 = div(r30.p.energy,d.energy_30)
+    b.pct_energy_30 = div(b30.p.energy,d.energy_30)
+    i.pct_energy_30 = div(i30.p.energy,d.energy_30)
+    t.pct_energy_30 = div(t30.t.energy,d.energy_30)
+    a.pct_energy_30 = div(a30.p.energy,d.energy_30)
+
+    z.pct_CO2e_total_30 = 1
+    s.pct_CO2e_total_30 = div(s.CO2e_total_30,z.CO2e_total_30)
+    d.pct_CO2e_total_30 = div(d.CO2e_total_30,z.CO2e_total_30)
+
+    e.pct_CO2e_total_30 = div(e30.e.CO2e_total,z.CO2e_total_30)
+    h.pct_CO2e_total_30 = div(h30.h.CO2e_total,z.CO2e_total_30)
+    f.pct_CO2e_total_30 = div(f30.f.CO2e_total,z.CO2e_total_30)
+    
+    rb.pct_CO2e_total_30 = div(b30.rb.CO2e_total,z.CO2e_total_30)
+    r.pct_CO2e_total_30 = div(r30.r.CO2e_total,z.CO2e_total_30)
+    b.pct_CO2e_total_30 = div(b30.b.CO2e_total,z.CO2e_total_30)
+    i.pct_CO2e_total_30 = div(i30.i.CO2e_total,z.CO2e_total_30)
+    t.pct_CO2e_total_30 = div(t30.t.CO2e_total,z.CO2e_total_30)
+    a.pct_CO2e_total_30 = div(a30.a.CO2e_total,z.CO2e_total_30)
 
