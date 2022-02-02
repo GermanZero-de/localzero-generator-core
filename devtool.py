@@ -16,6 +16,8 @@ from commands.cmd_data import cmd_data_checkout
 from commands.cmd_data import cmd_data_entries_user_overrides_generate_defaults
 from commands.cmd_data import cmd_data_lookup
 from commands.cmd_data import cmd_data_is_production
+from commands.cmd_test_end_to_end import cmd_test_end_to_end_update_expectations
+from commands.cmd_test_end_to_end import cmd_test_end_to_end_create_expectation
 
 
 def main():
@@ -79,6 +81,33 @@ def main():
     cmd_data_entries_user_overrides_generate_defaults_parser.set_defaults(
         func=cmd_data_entries_user_overrides_generate_defaults
     )
+
+    cmd_test_end_to_end_parser = subcmd_parsers.add_parser(
+        name="test_end_to_end", help="Test tools for end to end tests"
+    )
+    subcmd_test_end_to_end = cmd_test_end_to_end_parser.add_subparsers(
+        title="Test tools", dest="subcmd"
+    )
+
+    cmd_test_end_to_end_update_expectations_parser = subcmd_test_end_to_end.add_parser(
+        "update_expectations",
+        help="Update the expectations for the end to end tests.",
+    )
+    cmd_test_end_to_end_update_expectations_parser.set_defaults(
+        func=cmd_test_end_to_end_update_expectations
+    )
+
+    cmd_test_end_to_end_create_expectation_parser = subcmd_test_end_to_end.add_parser(
+        "create_expectation",
+        help="Create an expectation for the end to end tests.",
+    )
+    cmd_test_end_to_end_create_expectation_parser.add_argument(
+        "-ags", default="03159016"
+    )
+    cmd_test_end_to_end_create_expectation_parser.set_defaults(
+        func=cmd_test_end_to_end_create_expectation
+    )
+
     args = parser.parse_args()
     if args.subcmd is None:
         parser.print_help()
