@@ -1442,3 +1442,17 @@ def calc(root, inputs: Inputs):
     g_consult.demand_emplo_com = g_consult.demand_emplo_new
     g.demand_emplo_com = g.demand_emplo_new
     a.demand_emplo_com = g.demand_emplo_com
+
+    p_operation_heat.cost_wage = div( p_operation_heat.invest, entry("In_M_duration_target")) * p_operation_heat.pct_of_wage
+    p_operation.cost_wage = p_operation_heat.cost_wage
+    p.cost_wage = p_operation.cost_wage
+
+    s_heatpump.cost_wage = s_heatpump.invest_pa * s_heatpump.pct_of_wage
+    s.cost_wage = s_heatpump.cost_wage
+
+    g_consult.cost_wage =  g_consult.invest_pa * g_consult.pct_of_wage
+    g_organic.cost_wage =   g_organic.invest_pa * g_organic.pct_of_wage
+    g.cost_wage = g_consult.cost_wage + g_organic.cost_wage
+    a.cost_wage = g.cost_wage + p.cost_wage + s.cost_wage
+
+

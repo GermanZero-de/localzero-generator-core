@@ -1416,7 +1416,7 @@ def calcPyr(root, inputs: Inputs):
         + root.i30.i.CO2e_total
         + root.t30.t.CO2e_total
         + root.a30.a.CO2e_total
-        + root.l30.l.CO2e_total)
+        + root.l30.g.CO2e_total)
         ,
         0,
     )
@@ -1463,5 +1463,6 @@ def calcPyr(root, inputs: Inputs):
     )
     l.invest_pa = g.invest_pa + pyr.invest_pa
     l.invest = g.invest + pyr.invest
+    l.cost_wage = g.cost_wage + pyr.cost_wage 
     l.demand_emplo = g.demand_emplo + pyr.demand_emplo
     l.demand_emplo_new = g.demand_emplo_new + pyr.demand_emplo_new
