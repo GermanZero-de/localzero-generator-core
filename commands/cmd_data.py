@@ -142,7 +142,7 @@ def cmd_data_checkout(args):
                 file=sys.stderr,
             )
     else:
-        refdatatools.pull(datadir, "public")
+        refdatatools.checkout(datadir, "public", production.proprietary)
         refdatatools.checkout(datadir, "proprietary", production.proprietary)
 
 
