@@ -80,7 +80,7 @@ class L30:
     g_settlement_org_high: LColVars2030 = LColVars2030()
     g_other: LColVars2030 = LColVars2030()
     g_wood: LColVars2030 = LColVars2030()
-    pyrolysis: LColVars2030 = LColVars2030()
+    pyr: LColVars2030 = LColVars2030()
     g_planning: LColVars2030 = LColVars2030()
     g_crop_org: LColVars2030 = LColVars2030()
     g_grass_org: LColVars2030 = LColVars2030()
@@ -152,7 +152,6 @@ def calc(root, inputs: Inputs):
     g_settlement_org_high = root.l30.g_settlement_org_high
     g_other = root.l30.g_other
     g_wood = root.l30.g_wood
-    pyrolysis = root.l30.pyrolysis
 
     """S T A R T"""
     l.CO2e_total_2021_estimated = l18.l.CO2e_total * fact(
@@ -1003,7 +1002,6 @@ def calc(root, inputs: Inputs):
         * entry("In_M_duration_neutral")
         * fact("Fact_M_cost_per_CO2e_2020")
     )
-    l.CO2e_cb = g.CO2e_cb
     g_forest_managed.change_CO2e_pct = div(
         g_forest_managed.change_CO2e_t, l18.g_forest_managed.CO2e_total
     )
@@ -1199,23 +1197,6 @@ def calc(root, inputs: Inputs):
         g_settlement_org_high.change_CO2e_t, l18.g_settlement_org_high.CO2e_total
     )
 
-    """ Pyrolyse """
-    pyrolysis.CO2e_total = 0
-    pyrolysis.CO2e_pb_per_t = fact("Fact_L_P_biochar_ratio_CO2e_pb_to_prodvol")
-    pyrolysis.CO2e_pb = pyrolysis.CO2e_total
-    pyrolysis.invest_per_x = ass("Ass_L_P_pyrolysis_plant_ratio_invest_to_biochar_pa")
-    pyrolysis.prod_volume = div(pyrolysis.CO2e_pb, pyrolysis.CO2e_pb_per_t)
-    pyrolysis.invest = pyrolysis.prod_volume * pyrolysis.invest_per_x
-    pyrolysis.invest_pa = pyrolysis.invest / entry("In_M_duration_target")
-    pyrolysis.pct_of_wage = fact("Fact_B_P_constr_main_revenue_pct_of_wage_2017")
-    pyrolysis.cost_wage = pyrolysis.invest_pa * pyrolysis.pct_of_wage
-    pyrolysis.ratio_wage_to_emplo = fact(
-        "Fact_B_P_constr_main_ratio_wage_to_emplo_2017"
-    )
-    pyrolysis.demand_emplo = div(pyrolysis.cost_wage, pyrolysis.ratio_wage_to_emplo)
-    pyrolysis.demand_emplo_new = pyrolysis.demand_emplo
-
-    l.invest = g.invest + pyrolysis.invest
     g.invest_pa = (
         g_forest.invest_pa
         + g_crop.invest_pa
@@ -1292,7 +1273,7 @@ def calc(root, inputs: Inputs):
     g_settlement.change_CO2e_pct = div(
         g_settlement.change_CO2e_t, l18.g_settlement.CO2e_total
     )
-    l.invest_pa = g.invest_pa + pyrolysis.invest_pa
+
     g.cost_wage = (
         g_forest.cost_wage
         + g_crop.cost_wage
@@ -1312,7 +1293,7 @@ def calc(root, inputs: Inputs):
     g_grass.demand_emplo_new = g_grass_org.demand_emplo_new
     g_grove.demand_emplo_new = g_grove_org.demand_emplo_new
     g_wet.demand_emplo_new = g_wet_org.demand_emplo_new
-    l.CO2e_pb = g.CO2e_pb + pyrolysis.CO2e_pb
+
     g.CO2e_total = g.CO2e_pb + g.CO2e_cb
     g_wet.change_CO2e_t = g_wet.CO2e_total - l18.g_wet.CO2e_total
     g_wet.cost_climate_saved = (
@@ -1329,7 +1310,7 @@ def calc(root, inputs: Inputs):
     )
     g_forest.demand_emplo_new = g_forest_managed.demand_emplo_new
     g_crop.change_CO2e_pct = div(g_crop.change_CO2e_t, l18.g_crop.CO2e_total)
-    l.CO2e_total = g.CO2e_total + pyrolysis.CO2e_total
+
     g.change_CO2e_t = g.CO2e_total - l18.g.CO2e_total
     g.cost_climate_saved = (
         (g.CO2e_total_2021_estimated - g.CO2e_total)
@@ -1338,7 +1319,6 @@ def calc(root, inputs: Inputs):
     )
     g_wet.change_CO2e_pct = div(g_wet.change_CO2e_t, l18.g_wet.CO2e_total)
 
-    l.demand_emplo = g.demand_emplo + pyrolysis.demand_emplo
     g.demand_emplo_new = (
         g_forest.demand_emplo_new
         + g_crop.demand_emplo_new
@@ -1346,16 +1326,8 @@ def calc(root, inputs: Inputs):
         + g_grove.demand_emplo_new
         + g_wet.demand_emplo_new
     )
-    l.change_CO2e_t = l.CO2e_total - l18.l.CO2e_total
-    l.cost_climate_saved = (
-        (l.CO2e_total_2021_estimated - l.CO2e_total)
-        * entry("In_M_duration_neutral")
-        * fact("Fact_M_cost_per_CO2e_2020")
-    )
+    
     g.change_CO2e_pct = div(g.change_CO2e_t, l18.g.CO2e_total)
-
-    l.demand_emplo_new = g.demand_emplo_new + pyrolysis.demand_emplo_new
-    l.change_CO2e_pct = div(l.change_CO2e_t, l18.l.CO2e_total)
     g_water.demand_emplo_new = g_water_org.demand_emplo_new
     g_water_org.area_ha_change = (
         g_water_org_low.area_ha_change + g_water_org_high.area_ha_change
@@ -1419,3 +1391,77 @@ def calc(root, inputs: Inputs):
     g_settlement.cost_wage = g_settlement_org.cost_wage
     g_settlement.demand_emplo = g_settlement_org.demand_emplo
     g_settlement.demand_emplo_new = g_settlement_org.demand_emplo_new
+
+def calcPyr(root, inputs: Inputs):
+    def fact(n):
+        return inputs.fact(n)
+
+    def ass(n):
+        return inputs.ass(n)
+
+    def entry(n):
+        return inputs.entry(n)
+
+    pyr = root.l30.pyr
+    l   = root.l30.l
+    g   = root.l30.g
+    l18 = root.l18
+
+    pyr.CO2e_total = min(
+        -(root.h30.h.CO2e_total
+        + root.e30.e.CO2e_total
+        + root.f30.f.CO2e_total
+        + root.r30.r.CO2e_total
+        + root.b30.b.CO2e_total
+        + root.i30.i.CO2e_total
+        + root.t30.t.CO2e_total
+        + root.a30.a.CO2e_total
+        + root.l30.l.CO2e_total)
+        ,
+        0,
+    )
+
+    pyr.CO2e_pb = pyr.CO2e_total
+    pyr.CO2e_pb_per_t = fact("Fact_L_P_biochar_ratio_CO2e_pb_to_prodvol")
+    pyr.prod_volume = div(pyr.CO2e_pb , pyr.CO2e_pb_per_t)
+
+    pyr.change_CO2e_t = pyr.CO2e_pb
+
+    pyr.change_CO2e_pct = 0
+    pyr.CO2e_total_2021_estimated = 0
+
+    pyr.cost_climate_saved = (
+        (pyr.CO2e_total_2021_estimated - pyr.CO2e_total)
+        * entry("In_M_duration_neutral")
+        * fact("Fact_M_cost_per_CO2e_2020")
+    )
+
+    pyr.invest_per_x = ass("Ass_L_P_pyrolysis_plant_ratio_invest_to_biochar_pa")
+    pyr.invest = pyr.prod_volume * pyr.invest_per_x
+    pyr.invest_pa = div(pyr.invest, entry("In_M_duration_target"))
+    pyr.pct_of_wage = fact("Fact_B_P_constr_main_revenue_pct_of_wage_2017")
+    pyr.cost_wage = pyr.invest_pa * pyr.pct_of_wage
+
+    pyr.ratio_wage_to_emplo = fact("Fact_B_P_constr_main_ratio_wage_to_emplo_2017")
+    pyr.demand_emplo = div(pyr.cost_wage, pyr.ratio_wage_to_emplo)
+    pyr.demand_emplo_new = pyr.demand_emplo
+
+
+    l.CO2e_total = g.CO2e_total + pyr.CO2e_total
+    l.CO2e_pb = g.CO2e_pb + pyr.CO2e_pb
+    l.CO2e_cb = g.CO2e_cb
+    l.change_CO2e_t = l.CO2e_total - l18.l.CO2e_total
+    l.change_CO2e_pct = div(l.change_CO2e_t , l18.l.CO2e_total)
+    l.CO2e_total_2021_estimated = l18.l.CO2e_total * fact(
+        "Fact_M_CO2e_lulucf_2021_vs_2018"
+    )
+
+    l.cost_climate_saved = (
+        (l.CO2e_total_2021_estimated - l.CO2e_total)
+        * entry("In_M_duration_neutral")
+        * fact("Fact_M_cost_per_CO2e_2020")
+    )
+    l.invest_pa = g.invest_pa + pyr.invest_pa
+    l.invest = g.invest + pyr.invest
+    l.demand_emplo = g.demand_emplo + pyr.demand_emplo
+    l.demand_emplo_new = g.demand_emplo_new + pyr.demand_emplo_new

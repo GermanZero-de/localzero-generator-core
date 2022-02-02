@@ -53,6 +53,7 @@ class AColVars2030:
     demand_emplo: float = None
     emplo_existing: float = None
     demand_emplo_new: float = None
+    demand_emplo_com: float = None
     cost_fuel: float = None
     cost_fuel_per_MWh: float = None
     power_to_be_installed: float = None
@@ -1437,3 +1438,7 @@ def calc(root, inputs: Inputs):
     )
     s.change_CO2e_pct = div(s.change_CO2e_t, a18.s.CO2e_total)
     a.change_CO2e_pct = div(a.change_CO2e_t, a18.a.CO2e_total)
+    
+    g_consult.demand_emplo_com = g_consult.demand_emplo_new
+    g.demand_emplo_com = g.demand_emplo_new
+    a.demand_emplo_com = g.demand_emplo_com

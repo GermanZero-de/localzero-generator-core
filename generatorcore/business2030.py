@@ -24,6 +24,7 @@ class BColVars2030:
     demand_ediesel: float = None
     demand_emethan: float = None
     demand_emplo_new: float = None
+    demand_emplo_com: float = None
     demand_ediesel: float = None
     demand_heat_nonrehab: float = None
     demand_heat_rehab: float = None
@@ -822,3 +823,7 @@ def calc(root, inputs: Inputs):
     rb.cost_wage = r30.r.cost_wage + b.cost_wage
     rb.demand_emplo = r30.r.demand_emplo + b.demand_emplo
     rb.demand_emplo_new = r30.r.demand_emplo_new + b.demand_emplo_new
+
+    g_consult.demand_emplo_com = g_consult.demand_emplo_new
+    g.demand_emplo_com = g.demand_emplo_new
+    b.demand_emplo_com = g.demand_emplo_com
