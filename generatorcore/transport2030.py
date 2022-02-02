@@ -2031,3 +2031,7 @@ def calc(root, inputs: Inputs):
     s_elec.energy = t.demand_electricity
     s_hydrogen.energy = t.demand_hydrogen
     s_emethan.energy = 0
+
+    g_planning.demand_emplo_com = g_planning.demand_emplo_new
+    g.demand_emplo_com = g.demand_emplo_new
+    t.demand_emplo_com = g.demand_emplo_com

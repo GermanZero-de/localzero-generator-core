@@ -28,6 +28,7 @@ class RColVars2030:
     demand_emethan: float = None
     demand_emplo: float = None
     demand_emplo_new: float = None
+    demand_emplo_com:float = None
     demand_change: float = None
     demand_electricity: float = None
     energy_installable: float = None
@@ -1375,3 +1376,7 @@ def calc(root, inputs: Inputs):
     r.cost_wage = g.cost_wage + p.cost_wage + s.cost_wage
     r.demand_emplo = g.demand_emplo + p.demand_emplo + s.demand_emplo
     r.demand_emplo_new = g.demand_emplo_new + p.demand_emplo_new + s.demand_emplo_new
+
+    g_consult.demand_emplo_com = g_consult.demand_emplo_new
+    g.demand_emplo_com = g.demand_emplo_new
+    r.demand_emplo_com = g.demand_emplo_com

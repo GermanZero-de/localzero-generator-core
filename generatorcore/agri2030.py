@@ -53,6 +53,7 @@ class AColVars2030:
     demand_emplo: float = -1
     emplo_existing: float = -1
     demand_emplo_new: float = -1
+    demand_emplo_com: float = -1
     cost_fuel: float = -1
     cost_fuel_per_MWh: float = -1
     power_to_be_installed: float = -1
@@ -1598,3 +1599,7 @@ def calc(root, inputs: Inputs):
         s_elec.change_energy_MWh = s_elec.energy - a18.s_elec.energy
         s_elec.change_energy_pct = div(s_elec.change_energy_MWh, a18.s_elec.energy)
         s.demand_emplo = s_heatpump.demand_emplo
+
+        g_consult.demand_emplo_com = g_consult.demand_emplo_new
+        g.demand_emplo_com = g.demand_emplo_new
+        a.demand_emplo_com = g.demand_emplo_com
