@@ -61,7 +61,7 @@ class F30:
     p_hydrogen_reconv: FColVars2030 = FColVars2030()
 
     #only medded for fuels pdf text
-    p_hydrogen_total = FColVars2030 = FColVars2030()
+    p_hydrogen_total: FColVars2030 = FColVars2030()
     p_efuels: FColVars2030 = FColVars2030()
 
     # erzeuge dictionry
