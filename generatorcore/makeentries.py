@@ -78,7 +78,9 @@ def make_entries(data: refdata.RefData, ags: str, year: int):
     currentDateTime = datetime.datetime.now()
     date = currentDateTime.date()
 
-    entry["In_M_year_today"] = 2022  # int(date.strftime("%Y"))
+    entry[
+        "In_M_year_today"
+    ] = 2022  # int(date.strftime("%Y")) # TODO update accordingly
 
     entry["In_M_AGS_com"] = ags
     entry["In_M_AGS_dis"] = ags_dis
