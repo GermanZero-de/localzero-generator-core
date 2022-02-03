@@ -60,6 +60,10 @@ class F30:
     p_hydrogen: FColVars2030 = FColVars2030()
     p_hydrogen_reconv: FColVars2030 = FColVars2030()
 
+    #only medded for fuels pdf text
+    p_hydrogen_total: FColVars2030 = FColVars2030()
+    p_efuels: FColVars2030 = FColVars2030()
+
     # erzeuge dictionry
     def dict(self):
         return asdict(self)
@@ -528,3 +532,9 @@ def calc(root, inputs: Inputs):
         + f.p_hydrogen_reconv.demand_emplo_new
     )  # SUM(p_petrol.demand_emplo_new:p_hydrogen_reconv.demand_emplo_new)
     f.f.demand_emplo_new = f.p.demand_emplo_new
+
+    #only for fuel pdf text
+    f.p_hydrogen_total.energy = f.p_hydrogen.energy + f.p_hydrogen_reconv.energy
+    f.p_efuels.energy = f.p_petrol.energy + f.p_diesel.energy + f.p_jetfuel.energy
+    f.p_efuels.change_CO2e_t = f.p_petrol.change_CO2e_t + f.p_diesel.change_CO2e_t + f.p_jetfuel.change_CO2e_t
+    #------------
