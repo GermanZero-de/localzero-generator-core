@@ -136,6 +136,9 @@ class M183X:
     CO2e_per_capita_com: float = None
     CO2e_per_capita_com_pct_of_nat: float = None
 
+    GHG_budget_2022_to_year_target_nat: float = None
+    CO2e_2022_to_year_target: float = None
+
     # erzeuge dictionry
     def dict(self):
         return asdict(self)
@@ -575,6 +578,20 @@ def calc_Budget(root, inputs: Inputs) -> M183X:
         - m183X.CO2e_w_lulucf_2050
         - m183X.CO2e_w_lulucf_2051
     )
+
+    m183X.GHG_budget_2022_to_year_target_nat = (
+        entry("In_M_GHG_budget_2016_to_year_target")
+        -fact("Fact_M_CO2e_w_lulucf_2015")
+        -fact("Fact_M_CO2e_w_lulucf_2016")
+        -fact("Fact_M_CO2e_w_lulucf_2017")
+        -fact("Fact_M_CO2e_w_lulucf_2018")
+        -fact("Fact_M_CO2e_w_lulucf_2019")
+        -fact("Fact_M_CO2e_w_lulucf_2020")
+        -fact("Fact_M_CO2e_w_lulucf_2021")
+    )
+
+
+    m183X.CO2e_2022_to_year_target = m183X.GHG_budget_2022_to_year_target - m183X.GHG_budget_after_year_target 
 
     return m183X
 
