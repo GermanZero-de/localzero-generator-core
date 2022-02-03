@@ -1381,3 +1381,17 @@ def calc(root, inputs: Inputs):
     g_consult.demand_emplo_com = g_consult.demand_emplo_new
     g.demand_emplo_com = g.demand_emplo_new
     r.demand_emplo_com = g.demand_emplo_com
+
+    p_buildings_area_m2_com.invest_pa = p_buildings_area_m2_com.invest / entry("In_M_duration_target") 
+    p_buildings_until_1919.invest_pa = p_buildings_until_1919.invest / entry("In_M_duration_target") 
+    p_buildings_1919_1948.invest_pa = p_buildings_1919_1948.invest / entry("In_M_duration_target") 
+    p_buildings_1949_1978.invest_pa = p_buildings_1949_1978.invest / entry("In_M_duration_target") 
+    p_buildings_1979_1995.invest_pa =  p_buildings_1979_1995.invest / entry("In_M_duration_target") 
+    p_buildings_1996_2004.invest_pa = p_buildings_1996_2004.invest / entry("In_M_duration_target") 
+
+    s_emethan.change_CO2e_pct = div(s_emethan.change_CO2e_t, 0)
+    s_heatnet.change_CO2e_pct = div(s_heatnet.change_CO2e_t, 0)
+    s_solarth.change_CO2e_pct = div(s_solarth.change_CO2e_t, 0)
+    s_heatpump.change_CO2e_pct = div(s_heatpump.change_CO2e_t, 0)
+    s_elec.change_CO2e_pct = div(s_elec.change_CO2e_t, 0)
+    s_elec_heating.change_CO2e_pct = div(s_elec_heating.change_CO2e_t, 0)
