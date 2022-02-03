@@ -152,10 +152,10 @@ def cmd_data_entries_user_overrides_generate_defaults(args):
     good = 0
     errors = 0
     crazy_errors = 0
-    with (
-        open("errors.txt", "w") as error_file,
-        open("crazy-errors.txt", "w") as crazy_error_file,
-    ):
+    with open("errors.txt", "w") as error_file, open(
+        "crazy-errors.txt", "w"
+    ) as crazy_error_file:
+
         for (ags, description) in list(data.ags_master().items()):
             try:
                 entries = makeentries.make_entries(data, ags, 2035)
