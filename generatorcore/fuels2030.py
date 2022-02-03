@@ -7,7 +7,6 @@ from .utils import div
 
 @dataclass
 class FColVars2030:
-
     demand_electricity: float = None
     demand_hydrogen: float = None
     energy: float = None
@@ -21,7 +20,7 @@ class FColVars2030:
     CO2e_total_2021_estimated: float = None
     cost_climate_saved: float = None
     invest_pa: float = None
-    invest_per_x = None
+    invest_per_x: float = None
     invest: float = None
     pct_of_wage: float = None
     cost_wage: float = None
@@ -60,7 +59,10 @@ class F30:
     p_emethan: FColVars2030 = FColVars2030()
     p_hydrogen: FColVars2030 = FColVars2030()
     p_hydrogen_reconv: FColVars2030 = FColVars2030()
-    z_d: FColVars2030 = FColVars2030()
+
+    #only medded for fuels pdf text
+    p_hydrogen_total: FColVars2030 = FColVars2030()
+    p_efuels: FColVars2030 = FColVars2030()
 
     # erzeuge dictionry
     def dict(self):
@@ -530,3 +532,9 @@ def calc(root, inputs: Inputs):
         + f.p_hydrogen_reconv.demand_emplo_new
     )  # SUM(p_petrol.demand_emplo_new:p_hydrogen_reconv.demand_emplo_new)
     f.f.demand_emplo_new = f.p.demand_emplo_new
+
+    #only for fuel pdf text
+    f.p_hydrogen_total.energy = f.p_hydrogen.energy + f.p_hydrogen_reconv.energy
+    f.p_efuels.energy = f.p_petrol.energy + f.p_diesel.energy + f.p_jetfuel.energy
+    f.p_efuels.change_CO2e_t = f.p_petrol.change_CO2e_t + f.p_diesel.change_CO2e_t + f.p_jetfuel.change_CO2e_t
+    #------------

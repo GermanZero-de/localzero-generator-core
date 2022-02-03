@@ -635,6 +635,6 @@ def calc(root, inputs: Inputs):
 
     i18.i.prod_volume = i18.p.prod_volume
     i18.i.CO2e_pb = i18.p.CO2e_pb
-    i18.i.CO2e_cb = i18.p.prod_volume
+    i18.i.CO2e_cb = i18.p.CO2e_cb
     i18.i.CO2e_total = i18.p.CO2e_total
-    
+    i18.i.energy = i18.p.energy

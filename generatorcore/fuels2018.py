@@ -152,21 +152,3 @@ def calc(root, inputs: Inputs):
     )
 
     f.f.CO2e_total = f.p.CO2e_total
-
-    # Todo: kann erst am Ende berechnet werden
-    # z_d.energy = (
-    #    root.r18.p.energy + root.b18.p.energy + root.i18.p.energy + root.t18.t.energy + root.a18.p.energy
-    # )
-    # z_d.CO2e_pb = root.b18.b.CO2e_pb + root.i18.i.CO2e_pb + root.a18.a.CO2e_pb + root.l18.l.CO2e_pb
-    # z_d.CO2e_cb = (
-    #    root.r18.r.CO2e_cb + root.b18.b.CO2e_cb + root.i18.i.CO2e_cb + root.t18.t.CO2e_cb+
-    #    root.a18.a.CO2e_cb + root.l18.l.CO2e_cb
-    # )
-    # z_d.CO2e_total = (
-    #    root.r18.r.CO2e_total
-    #    + root.b18.b.CO2e_total
-    #    + root.i18.i.CO2e_total
-    #    + root.t18.t.CO2e_total
-    #    + root.a18.a.CO2e_total
-    #    + root.l18.l.CO2e_total
-    # )

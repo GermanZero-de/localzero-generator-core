@@ -498,6 +498,7 @@ def calc(root, inputs: Inputs):
     p_fossil_nuclear.CO2e_cb = (
         p_fossil_nuclear.energy * p_fossil_nuclear.CO2e_cb_per_MWh
     )
+    p_fossil_nuclear.CO2e_total = p_fossil_nuclear.CO2e_cb
     p_fossil_coal_brown.cost_fuel = (
         p_fossil_coal_brown.cost_fuel_per_MWh * p_fossil_coal_brown.energy / 1000000
     )
@@ -677,9 +678,11 @@ def calc(root, inputs: Inputs):
         p_fossil_nuclear.change_energy_MWh, e18.p_fossil_nuclear.energy
     )
     p_fossil_nuclear.change_CO2e_t = (
-        e18.p_fossil_nuclear.CO2e_cb_per_MWh
-        * p_fossil_nuclear.change_energy_MWh
-        * fact("Fact_E_P_ratio_gross_electricity_prod_to_fec_electricity_2018")
+        p_fossil_nuclear.CO2e_total
+        - e18.p_fossil_nuclear.CO2e_cb  # Need to fix 2018 as well
+    )
+    p_fossil_nuclear.change_CO2e_pct = div(
+        p_fossil_nuclear.change_CO2e_t, e18.p_fossil_nuclear.CO2e_total
     )
     p_fossil_coal_brown.change_energy_pct = div(
         p_fossil_coal_brown.change_energy_MWh, e18.p_fossil_coal_brown.energy
@@ -932,10 +935,19 @@ def calc(root, inputs: Inputs):
     p_fossil_coal_brown.change_CO2e_t = (
         p_fossil_coal_brown.CO2e_total - e18.p_fossil_coal_brown.CO2e_total
     )
+    p_fossil_coal_brown.change_CO2e_pct = div(
+        p_fossil_coal_brown.change_CO2e_t, e18.p_fossil_coal_brown.CO2e_total
+    )
     p_fossil_coal_black.change_CO2e_t = (
         p_fossil_coal_black.CO2e_total - e18.p_fossil_coal_black.CO2e_total
     )
+    p_fossil_coal_black.change_CO2e_pct = div(
+        p_fossil_coal_black.change_CO2e_t, e18.p_fossil_coal_black.CO2e_total
+    )
     p_fossil_gas.change_CO2e_t = p_fossil_gas.CO2e_total - e18.p_fossil_gas.CO2e_total
+    p_fossil_gas.change_CO2e_pct = div(
+        p_fossil_gas.change_CO2e_t, e18.p_fossil_gas.CO2e_total
+    )
     p_fossil.change_cost_energy = (
         p_fossil_nuclear.change_cost_energy
         + p_fossil_coal_brown.change_cost_energy
@@ -952,6 +964,9 @@ def calc(root, inputs: Inputs):
     )
     p_fossil_ofossil.change_CO2e_t = (
         p_fossil_ofossil.CO2e_total - e18.p_fossil_ofossil.CO2e_total
+    )
+    p_fossil_ofossil.change_CO2e_pct = div(
+        p_fossil_ofossil.change_CO2e_t, e18.p_fossil_ofossil.CO2e_total
     )
     p_fossil.cost_climate_saved = (
         p_fossil_coal_brown.cost_climate_saved
@@ -1059,6 +1074,7 @@ def calc(root, inputs: Inputs):
         + p_fossil_gas.change_CO2e_t
         + p_fossil_ofossil.change_CO2e_t
     )
+    p_fossil.change_CO2e_pct = div(p_fossil.change_CO2e_t, e18.p_fossil.CO2e_total)
     e.CO2e_total_2021_estimated = p.CO2e_total_2021_estimated
     p_fossil_and_renew.invest_pa = p_renew.invest_pa
     p_renew.cost_wage = (

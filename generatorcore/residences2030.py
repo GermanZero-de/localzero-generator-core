@@ -28,7 +28,7 @@ class RColVars2030:
     demand_emethan: float = None
     demand_emplo: float = None
     demand_emplo_new: float = None
-    demand_emplo_com:float = None
+    demand_emplo_com: float = None
     demand_change: float = None
     demand_electricity: float = None
     energy_installable: float = None
@@ -795,7 +795,7 @@ def calc(root, inputs: Inputs):
 
     s_elec_heating.change_CO2e_t = 0
     s_emethan.change_CO2e_t = s_emethan.CO2e_cb - 0
-    s_heatpump.change_CO2e_t = s.change_CO2e_t - s_emethan.change_CO2e_t
+    s_heatpump.change_CO2e_t = s_heatpump.CO2e_cb - r18.s_heatpump.CO2e_cb
 
     s.change_CO2ee_pct = div(s.change_CO2e_t, r18.s.CO2e_cb)
 
@@ -922,7 +922,8 @@ def calc(root, inputs: Inputs):
     s_heatnet.change_cost_energy = s_heatnet.cost_fuel - r18.s_heatnet.cost_fuel
     s_solarth.change_cost_energy = s_solarth.cost_fuel - r18.s_solarth.cost_fuel
     s_heatpump.change_cost_energy = s_heatpump.cost_fuel - r18.s_heatpump.cost_fuel
-    s_emethan.change_cost_energy = s_emethan.cost_fuel - r18.s_gas.cost_fuel
+    s_gas.change_cost_energy = 0 - r18.s_gas.cost_fuel  # no more gas in target year
+    s_emethan.change_cost_energy = s_emethan.cost_fuel - 0  # no emethan in 2018
 
     # s_solarth.action Ausbau Solarthermie
     # s_heatpump.action Ausbau Wärmepumpe
