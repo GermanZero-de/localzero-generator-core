@@ -433,9 +433,7 @@ def calc(root, inputs: Inputs):
     s.change_CO2ee_pct = div(s.change_CO2e_t, b18.s.CO2e_cb)
 
     p_nonresi.change_CO2e_t = 0
-    s_heatpump.change_CO2e_t = s.change_CO2e_t - (
-        s_emethan.change_CO2e_t + p_nonresi.change_CO2e_t
-    )
+    s_heatpump.change_CO2e_t = s_heatpump.CO2e_cb - b18.s_heatpump.CO2e_cb
 
     s_gas.CO2e_total_2021_estimated = b18.s_gas.CO2e_cb * fact(
         "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
