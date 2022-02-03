@@ -7,7 +7,6 @@ from .utils import div
 
 @dataclass
 class FColVars2030:
-
     demand_electricity: float = None
     demand_hydrogen: float = None
     energy: float = None
@@ -21,7 +20,7 @@ class FColVars2030:
     CO2e_total_2021_estimated: float = None
     cost_climate_saved: float = None
     invest_pa: float = None
-    invest_per_x = None
+    invest_per_x: float = None
     invest: float = None
     pct_of_wage: float = None
     cost_wage: float = None
@@ -60,7 +59,6 @@ class F30:
     p_emethan: FColVars2030 = FColVars2030()
     p_hydrogen: FColVars2030 = FColVars2030()
     p_hydrogen_reconv: FColVars2030 = FColVars2030()
-    z_d: FColVars2030 = FColVars2030()
 
     # erzeuge dictionry
     def dict(self):
