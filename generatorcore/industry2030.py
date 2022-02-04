@@ -104,6 +104,7 @@ def calc(root, inputs: Inputs):
         return inputs.entry(n)
 
     i18 = root.i18
+    i30 = root.i30
 
     # p_chem_basic
     p_chem_basic = root.i30.p_chem_basic
@@ -1513,4 +1514,3 @@ def calc(root, inputs: Inputs):
     i30.s_fossil_ofossil.energy = 0
     i30.s_renew_heatpump.energy = 0
 
-    i30.g_wet_org_rp.change_CO2e_pct = 0
