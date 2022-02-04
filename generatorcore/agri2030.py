@@ -1460,3 +1460,4 @@ def calc(root, inputs: Inputs):
     g_organic.cost_wage = g_organic.invest_pa * g_organic.pct_of_wage
     g.cost_wage = g_consult.cost_wage + g_organic.cost_wage
     a.cost_wage = g.cost_wage + p.cost_wage + s.cost_wage
+
