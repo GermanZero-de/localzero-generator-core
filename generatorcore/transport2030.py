@@ -1814,7 +1814,11 @@ def calc(root, inputs: Inputs):
         + ship_dmstc_action_infra.cost_climate_saved
         + ship_inter.cost_climate_saved
     )  # SUM(ship_dmstc.cost_climate_saved:ship_inter.cost_climate_saved)
-    ship_inter.change_km = -t18.ship_inter.transport_capacity_tkm
+
+    #TODO: hier evtl. nochmal bessere Daten rausfinden
+    ship_inter.transport_capacity_tkm = t18.ship_inter.transport_capacity_tkm * ship_inter.energy/t18.ship_inter.energy
+
+    ship_inter.change_km = ship_inter.transport_capacity_tkm - t18.ship_inter.transport_capacity_tkm
     # ship_inter.actionReduktion der Transportleistung
 
     t.change_energy_pct = div(t.change_energy_MWh, t18.t.energy)
