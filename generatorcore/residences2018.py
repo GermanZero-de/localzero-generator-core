@@ -562,6 +562,8 @@ def calc(root, inputs: Inputs):
     s_heatpump.CO2e_total = s_heatpump.CO2e_cb
     s_gas.CO2e_total = s_gas.CO2e_cb
     s_elec.CO2e_total = s_elec.CO2e_cb
+    s_elec_heating.CO2e_total = s_elec_heating.CO2e_cb
+
 
     # cost_fuel_per_MW
     s_fueloil.cost_fuel_per_MWh = fact("Fact_R_S_fueloil_energy_cost_factor_2018")
@@ -623,3 +625,7 @@ def calc(root, inputs: Inputs):
         * p_buildings_total.number_of_buildings
         / (p_buildings_total.factor_adapted_to_fec * p_buildings_total.area_m2)
     )
+
+
+    
+

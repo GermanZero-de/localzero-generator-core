@@ -1171,15 +1171,14 @@ def calc(root, inputs: Inputs):
         * entry("In_M_duration_neutral")
         * fact("Fact_M_cost_per_CO2e_2020")
     )
-    p_other_liming_dolomite.change_CO2e_pct = (
-        p_other_liming_dolomite.change_CO2e_t / a18.p_other_liming_dolomite.CO2e_total
-    )
+    p_other_liming_dolomite.change_CO2e_pct = div(p_other_liming_dolomite.change_CO2e_t , a18.p_other_liming_dolomite.CO2e_total)
+
     p_other_urea.change_CO2e_pct = div(
         p_other_urea.change_CO2e_t, a18.p_other_urea.CO2e_total
     )
-    p_other_kas.change_CO2e_pct = (
-        p_other_kas.change_CO2e_t / 1
-    )  # a18.p_other_kas.CO2e_total)
+
+    p_other_kas.change_CO2e_pct = div(p_other_kas.change_CO2e_t , a18.p_other_kas.CO2e_total)
+    
     p_other_ecrop.change_CO2e_pct = div(
         p_other_ecrop.change_CO2e_t, a18.p_other_ecrop.CO2e_total
     )
@@ -1431,7 +1430,9 @@ def calc(root, inputs: Inputs):
         * entry("In_M_duration_neutral")
         * fact("Fact_M_cost_per_CO2e_2020")
     )
-    s_elec.change_CO2e_pct = s_elec.change_CO2e_t / 1  # a18.s_elec.CO2e_total)
+    
+    s_elec.change_CO2e_pct = div(s_elec.change_CO2e_t, a18.s_elec.CO2e_total)
+
     a.demand_emplo_new = g.demand_emplo_new + p.demand_emplo_new + s.demand_emplo_new
     a.change_CO2e_t = a.CO2e_total - a18.a.CO2e_total
     a.cost_climate_saved = (

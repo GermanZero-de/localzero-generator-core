@@ -70,6 +70,9 @@ class H30:
     p_local_biomass: HColVars2030 = HColVars2030()
     p_local_biomass_cogen: HColVars2030 = HColVars2030()
 
+    #for pdf
+    p_fossil_change_CO2e_t : float = None
+
     # erzeuge dictionry
     def dict(self):
         return asdict(self)
@@ -786,4 +789,4 @@ def calc(root, inputs: Inputs):
     #TODO: Check demand_emplo_new in Heat with Hauke 
     h.demand_emplo_com = g.demand_emplo_com 
 
-    p_fossil.change_CO2e_t = H30.p.change_CO2e_t - H30.p_heatnet.change_CO2e_t
+    h30.p_fossil_change_CO2e_t = p.change_CO2e_t - p_heatnet.change_CO2e_t

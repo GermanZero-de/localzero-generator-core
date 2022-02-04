@@ -1373,7 +1373,7 @@ def calc(root, inputs: Inputs):
     p_metal_steel.cost_wage = (
         p_metal_steel_primary.cost_wage + p_metal_steel_secondary.cost_wage
     )
-    p.demand_emplo_new = p.demand_emplo - p.emplo_existing
+    p.demand_emplo_new = max(0, p.demand_emplo - p.emplo_existing)
     i.demand_emplo = g.demand_emplo + p.demand_emplo
     i.demand_emplo_new = g.demand_emplo_new + p.demand_emplo_new
     p_metal_steel.demand_electricity = (
