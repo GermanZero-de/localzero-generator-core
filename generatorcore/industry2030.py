@@ -83,7 +83,7 @@ class I30:
     s_renew_emethan: IColVars2030 = IColVars2030()
     s_renew_biomass: IColVars2030 = IColVars2030()
     s_renew_heatnet: IColVars2030 = IColVars2030()
-    s_renew_orenew: IColVars2030 = IColVars2030()
+    s_renew_heatpump: IColVars2030 = IColVars2030()
     s_renew_solarth: IColVars2030 = IColVars2030()
     s_renew_elec: IColVars2030 = IColVars2030()
 
@@ -1503,3 +1503,14 @@ def calc(root, inputs: Inputs):
     )
     s = root.i30.s
     s.energy = s_renew.energy
+
+    i30.s_fossil_diesel.energy = 0
+    i30.s_fossil_fueloil.energy = 0
+    i30.s_fossil_opetpro.energy = 0
+    i30.s_fossil_coal.energy = 0
+    i30.s_fossil_lpg.energy = 0
+    i30.s_fossil_gas.energy = 0
+    i30.s_fossil_ofossil.energy = 0
+    i30.s_renew_heatpump.energy = 0
+
+    i30.g_wet_org_rp.change_CO2e_pct = 0
