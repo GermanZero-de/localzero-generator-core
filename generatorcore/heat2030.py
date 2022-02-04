@@ -530,7 +530,7 @@ def calc(root, inputs: Inputs):
     )
     p_heatnet_lheatpump.demand_emplo_new = p_heatnet_lheatpump.demand_emplo
     p_heatnet_geoth.cost_wage = p_heatnet_geoth.pct_of_wage * p_heatnet_geoth.invest_pa
-    p_heatnet_plant.demand_emplo_com = p_heatnet_plant.demand_emplo
+   
 
     p_heatnet.invest_pa_com = p_heatnet.invest_pa
 
@@ -594,14 +594,13 @@ def calc(root, inputs: Inputs):
         + p_heatnet_lheatpump.demand_emplo_new
         + p_heatnet_geoth.demand_emplo_new
     )
-    p_heatnet_lheatpump.demand_emplo_com = p_heatnet_lheatpump.demand_emplo
+   
     p.demand_emplo_new = p_heatnet.demand_emplo_new
 
     p.invest_pa_com = p_heatnet.invest_pa_com
 
     p.invest_pa = p_heatnet.invest_pa
 
-    p_heatnet.demand_emplo_com = p_heatnet.demand_emplo
 
     p.invest_com = p_heatnet.invest_com
 
@@ -651,10 +650,8 @@ def calc(root, inputs: Inputs):
     p.cost_wage = p_heatnet.cost_wage
 
     h.cost_wage = g.cost_wage + p.cost_wage
-    p.demand_emplo_com = p_heatnet.demand_emplo_com
 
     h.demand_emplo = g.demand_emplo + p.demand_emplo
-    p_heatnet_geoth.demand_emplo_com = p_heatnet_geoth.demand_emplo
 
     h.demand_emplo_new = g.demand_emplo_new + p.demand_emplo_new
     h.invest_com = g.invest_com + p.invest_com
@@ -787,4 +784,6 @@ def calc(root, inputs: Inputs):
     g.demand_emplo_com = g_planning.demand_emplo_com
 
     #TODO: Check demand_emplo_new in Heat with Hauke 
-    h.demand_emplo_com = g.demand_emplo_com + p_heatnet.demand_emplo_com
+    h.demand_emplo_com = g.demand_emplo_com 
+
+    p_fossil.change_CO2e_t = H30.p.change_CO2e_t - H30.p_heatnet.change_CO2e_t
