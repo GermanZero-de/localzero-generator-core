@@ -769,9 +769,9 @@ def calc_Z(root, inputs: Inputs):
     d.change_CO2e_t = d.CO2e_total_30 - d.CO2e_total_18
     z.change_CO2e_t = z.CO2e_total_30 - z.CO2e_total_18
 
-    s.change_CO2e_t_pct = div(s.CO2e_total_30, s.CO2e_total_18)
-    d.change_CO2e_t_pct = div(d.CO2e_total_30, d.CO2e_total_18)
-    z.change_CO2e_t_pct = div(z.CO2e_total_30, z.CO2e_total_18)
+    s.change_CO2e_pct = div(s.CO2e_total_30, s.CO2e_total_18)
+    d.change_CO2e_pct = div(d.CO2e_total_30, d.CO2e_total_18)
+    z.change_CO2e_pct = div(z.CO2e_total_30, z.CO2e_total_18)
 
     s.CO2e_total_2021_estimated = s.CO2e_total_18 * fact(
         "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
@@ -967,3 +967,34 @@ def calc_Z(root, inputs: Inputs):
     i.pct_CO2e_total_30 = div(i30.i.CO2e_total, z.CO2e_total_30)
     t.pct_CO2e_total_30 = div(t30.t.CO2e_total, z.CO2e_total_30)
     a.pct_CO2e_total_30 = div(a30.a.CO2e_total, z.CO2e_total_30)
+
+    h.invest_pct = div(h30.h.invest,z.invest)
+    e.invest_pct = div(e30.e.invest,z.invest)
+    f.invest_pct = div(f30.f.invest,z.invest)
+    r.invest_pct = div(r30.r.invest,z.invest) 
+    b.invest_pct = div(b30.b.invest,z.invest)   
+    i.invest_pct = div(i30.i.invest,z.invest)  
+    t.invest_pct = div(t30.t.invest,z.invest)  
+    a.invest_pct = div(a30.a.invest,z.invest) 
+    l.invest_pct = div(l30.l.invest,z.invest)
+
+    h.cost_climate_saved_pct = div(h30.h.cost_climate_saved,z.cost_climate_saved)
+    e.cost_climate_saved_pct = div(e30.e.cost_climate_saved,z.cost_climate_saved)
+    f.cost_climate_saved_pct = div(f30.f.cost_climate_saved,z.cost_climate_saved)
+    r.cost_climate_saved_pct = div(r30.r.cost_climate_saved,z.cost_climate_saved) 
+    b.cost_climate_saved_pct = div(b30.b.cost_climate_saved,z.cost_climate_saved)   
+    i.cost_climate_saved_pct = div(i30.i.cost_climate_saved,z.cost_climate_saved)  
+    t.cost_climate_saved_pct = div(t30.t.cost_climate_saved,z.cost_climate_saved)  
+    a.cost_climate_saved_pct = div(a30.a.cost_climate_saved,z.cost_climate_saved) 
+    l.cost_climate_saved_pct = div(l30.l.cost_climate_saved,z.cost_climate_saved) 
+
+    h.demand_emplo_new_pct = div(h30.h.demand_emplo_new,z.demand_emplo_new)
+    e.demand_emplo_new_pct = div(e30.e.demand_emplo_new,z.demand_emplo_new)
+    f.demand_emplo_new_pct = div(f30.f.demand_emplo_new,z.demand_emplo_new)
+    r.demand_emplo_new_pct = div(r30.r.demand_emplo_new,z.demand_emplo_new) 
+    b.demand_emplo_new_pct = div(b30.b.demand_emplo_new,z.demand_emplo_new)   
+    i.demand_emplo_new_pct = div(i30.i.demand_emplo_new,z.demand_emplo_new)  
+    t.demand_emplo_new_pct = div(t30.t.demand_emplo_new,z.demand_emplo_new)  
+    a.demand_emplo_new_pct = div(a30.a.demand_emplo_new,z.demand_emplo_new) 
+    l.demand_emplo_new_pct = div(l30.l.demand_emplo_new,z.demand_emplo_new)  
+
