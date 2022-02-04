@@ -60,7 +60,7 @@ class AColVars2030:
     power_installed: float = None
     full_load_hour: float = None
     power_to_be_installed_pct: float = None
-    pet_sites: float = None
+    amount: float = None
 
 
 @dataclass
@@ -513,28 +513,28 @@ def calc(root, inputs: Inputs):
     g_organic.power_to_be_installed = g_organic.area_ha_available * (
         g_organic.power_to_be_installed_pct - g_organic.power_installed
     )
-    p_fermen_dairycow.pet_sites = a18.p_fermen_dairycow.amount * (
+    p_fermen_dairycow.amount = a18.p_fermen_dairycow.amount * (
         1 + p_fermen_dairycow.demand_change
     )
-    p_fermen_dairycow.pet_sites = a18.p_fermen_dairycow.amount * (
+    p_fermen_dairycow.amount = a18.p_fermen_dairycow.amount * (
         1 + p_fermen_dairycow.demand_change
     )
-    p_fermen_nondairy.pet_sites = a18.p_fermen_nondairy.amount * (
+    p_fermen_nondairy.amount = a18.p_fermen_nondairy.amount * (
         1 + p_fermen_nondairy.demand_change
     )
-    p_fermen_nondairy.pet_sites = a18.p_fermen_nondairy.amount * (
+    p_fermen_nondairy.amount = a18.p_fermen_nondairy.amount * (
         1 + p_fermen_nondairy.demand_change
     )
-    p_fermen_swine.pet_sites = a18.p_fermen_swine.amount * (
+    p_fermen_swine.amount = a18.p_fermen_swine.amount * (
         1 + p_fermen_swine.demand_change
     )
-    p_fermen_poultry.pet_sites = a18.p_fermen_poultry.amount * (
+    p_fermen_poultry.amount = a18.p_fermen_poultry.amount * (
         1 + p_fermen_poultry.demand_change
     )
-    p_fermen_oanimal.pet_sites = a18.p_fermen_oanimal.amount * (
+    p_fermen_oanimal.amount = a18.p_fermen_oanimal.amount * (
         1 + p_fermen_oanimal.demand_change
     )
-    p_fermen_oanimal.pet_sites = a18.p_fermen_oanimal.amount * (
+    p_fermen_oanimal.amount = a18.p_fermen_oanimal.amount * (
         1 + p_fermen_oanimal.demand_change
     )
     p_manure_dairycow.CO2e_pb_per_t = a18.p_manure_dairycow.CO2e_pb_per_t * (
@@ -649,35 +649,35 @@ def calc(root, inputs: Inputs):
     )
     g_organic.invest = g_organic.power_to_be_installed * g_organic.invest_per_x
     p_fermen_dairycow.CO2e_pb = (
-        p_fermen_dairycow.pet_sites * p_fermen_dairycow.CO2e_pb_per_t
+        p_fermen_dairycow.amount * p_fermen_dairycow.CO2e_pb_per_t
     )
-    p_manure_dairycow.pet_sites = p_fermen_dairycow.pet_sites
+    p_manure_dairycow.amount = p_fermen_dairycow.amount
     p_fermen_nondairy.CO2e_pb = (
-        p_fermen_nondairy.pet_sites * p_fermen_nondairy.CO2e_pb_per_t
+        p_fermen_nondairy.amount * p_fermen_nondairy.CO2e_pb_per_t
     )
-    p_manure_nondairy.pet_sites = p_fermen_nondairy.pet_sites
-    p_fermen_swine.CO2e_pb = p_fermen_swine.pet_sites * p_fermen_swine.CO2e_pb_per_t
-    p_manure_swine.pet_sites = p_fermen_swine.pet_sites
+    p_manure_nondairy.amount = p_fermen_nondairy.amount
+    p_fermen_swine.CO2e_pb = p_fermen_swine.amount * p_fermen_swine.CO2e_pb_per_t
+    p_manure_swine.amount = p_fermen_swine.amount
     p_fermen_poultry.CO2e_pb = (
-        p_fermen_poultry.pet_sites * p_fermen_poultry.CO2e_pb_per_t
+        p_fermen_poultry.amount * p_fermen_poultry.CO2e_pb_per_t
     )
-    p_manure_poultry.pet_sites = p_fermen_poultry.pet_sites
+    p_manure_poultry.amount = p_fermen_poultry.amount
     p_fermen_oanimal.CO2e_pb = (
-        p_fermen_oanimal.pet_sites * p_fermen_oanimal.CO2e_pb_per_t
+        p_fermen_oanimal.amount * p_fermen_oanimal.CO2e_pb_per_t
     )
-    p_manure_oanimal.pet_sites = p_fermen_oanimal.pet_sites
-    p_manure_deposition.pet_sites = (
-        p_fermen_dairycow.pet_sites
-        + p_fermen_nondairy.pet_sites
-        + p_fermen_swine.pet_sites
-        + p_fermen_oanimal.pet_sites
+    p_manure_oanimal.amount = p_fermen_oanimal.amount
+    p_manure_deposition.amount = (
+        p_fermen_dairycow.amount
+        + p_fermen_nondairy.amount
+        + p_fermen_swine.amount
+        + p_fermen_oanimal.amount
     )
     p_soil_grazing.CO2e_pb_per_t = (
         a18.p_soil_grazing.CO2e_pb_per_t
         * (
-            p_fermen_dairycow.pet_sites
-            + p_fermen_nondairy.pet_sites
-            + p_fermen_oanimal.pet_sites
+            p_fermen_dairycow.amount
+            + p_fermen_nondairy.amount
+            + p_fermen_oanimal.amount
         )
         / (
             a18.p_fermen_dairycow.amount
@@ -743,17 +743,17 @@ def calc(root, inputs: Inputs):
     g_organic.invest_pa = g_organic.invest / entry("In_M_duration_target")
     p_fermen_dairycow.CO2e_total = p_fermen_dairycow.CO2e_pb + p_fermen_dairycow.CO2e_cb
     p_manure_dairycow.CO2e_pb = (
-        p_manure_dairycow.pet_sites * p_manure_dairycow.CO2e_pb_per_t
+        p_manure_dairycow.amount * p_manure_dairycow.CO2e_pb_per_t
     )
     p_fermen_nondairy.CO2e_total = p_fermen_nondairy.CO2e_pb + p_fermen_nondairy.CO2e_cb
     p_manure_nondairy.CO2e_pb = (
-        p_manure_nondairy.pet_sites * p_manure_nondairy.CO2e_pb_per_t
+        p_manure_nondairy.amount * p_manure_nondairy.CO2e_pb_per_t
     )
     p_fermen_swine.CO2e_total = p_fermen_swine.CO2e_pb + p_fermen_swine.CO2e_cb
-    p_manure_swine.CO2e_pb = p_manure_swine.pet_sites * p_manure_swine.CO2e_pb_per_t
+    p_manure_swine.CO2e_pb = p_manure_swine.amount * p_manure_swine.CO2e_pb_per_t
     p_fermen_poultry.CO2e_total = p_fermen_poultry.CO2e_pb + p_fermen_poultry.CO2e_cb
     p_manure_poultry.CO2e_pb = (
-        p_manure_poultry.pet_sites * p_manure_poultry.CO2e_pb_per_t
+        p_manure_poultry.amount * p_manure_poultry.CO2e_pb_per_t
     )
     p_fermen.CO2e_pb = (
         p_fermen_dairycow.CO2e_pb
@@ -764,10 +764,10 @@ def calc(root, inputs: Inputs):
     )
     p_fermen_oanimal.CO2e_total = p_fermen_oanimal.CO2e_pb + p_fermen_oanimal.CO2e_cb
     p_manure_oanimal.CO2e_pb = (
-        p_manure_oanimal.pet_sites * p_manure_oanimal.CO2e_pb_per_t
+        p_manure_oanimal.amount * p_manure_oanimal.CO2e_pb_per_t
     )
     p_manure_deposition.CO2e_pb = (
-        p_manure_deposition.pet_sites * p_manure_deposition.CO2e_pb_per_t
+        p_manure_deposition.amount * p_manure_deposition.CO2e_pb_per_t
     )
     p_soil_grazing.demand_change = (
         div(p_soil_grazing.CO2e_pb_per_t, a18.p_soil_grazing.CO2e_pb_per_t) - 1
