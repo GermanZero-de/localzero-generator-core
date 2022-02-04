@@ -826,6 +826,7 @@ def calc(root, inputs: Inputs):
         * (1 - fact("Fact_B_P_ratio_renovated_to_not_renovated_2021"))
         * p_operation_heat.invest_per_x
     )
+
     p_operation_elec_elcon.change_energy_pct = div(
         p_operation_elec_elcon.change_energy_MWh, a18.p_operation_elec_elcon.energy
     )
@@ -856,8 +857,7 @@ def calc(root, inputs: Inputs):
     )
     g.invest_pa_com = g_consult.invest_pa_com
     g_consult.demand_emplo = div(g_consult.cost_wage, g_consult.ratio_wage_to_emplo)
-    a.invest_com = g.invest_com
-    a.invest = g.invest
+    
     g.invest_pa = g_consult.invest_pa + g_organic.invest_pa
     g_organic.cost_wage = g_organic.invest_pa * g_organic.pct_of_wage
     p_fermen_dairycow.change_CO2e_t = (
@@ -1057,9 +1057,11 @@ def calc(root, inputs: Inputs):
     s_fueloil.change_CO2e_pct = div(s_fueloil.change_CO2e_t, a18.s_fueloil.CO2e_total)
     s_lpg.change_CO2e_pct = div(s_lpg.change_CO2e_t, a18.s_lpg.CO2e_total)
     s_gas.change_CO2e_pct = div(s_gas.change_CO2e_t, a18.s_gas.CO2e_total)
-    a.invest_pa_com = g.invest_pa_com
+
     g_consult.demand_emplo_new = g_consult.demand_emplo
-    a.invest_pa = g.invest_pa
+
+    
+
     g_organic.demand_emplo = div(g_organic.cost_wage, g_organic.ratio_wage_to_emplo)
     p_fermen_dairycow.change_CO2e_pct = div(
         p_fermen_dairycow.change_CO2e_t, a18.p_fermen_dairycow.CO2e_total
@@ -1317,6 +1319,22 @@ def calc(root, inputs: Inputs):
     s_heatpump.invest = (
         s_heatpump.invest_per_x * s_heatpump.power_to_be_installed * 1000
     )
+
+    p_operation.invest = p_operation_heat.invest
+    p_operation.invest_pa = p_operation.invest / entry("In_M_duration_target")
+
+    p.invest = p_operation.invest
+    p.invest_pa = p.invest / entry("In_M_duration_target")
+
+    s.invest = s_heatpump.invest
+    s.invest_pa = s.invest / entry("In_M_duration_target") 
+
+    a.invest_com = g.invest_com
+    a.invest = g.invest + s.invest +p.invest
+        
+    a.invest_pa_com = g.invest_pa_com
+    a.invest_pa = a.invest / entry("In_M_duration_target")
+
     p.demand_emplo_new = p_operation.demand_emplo_new
     s_biomass.energy = p_operation.demand_biomass
     p.energy = p_operation.energy
