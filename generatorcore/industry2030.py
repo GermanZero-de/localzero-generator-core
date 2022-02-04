@@ -83,7 +83,7 @@ class I30:
     s_renew_emethan: IColVars2030 = IColVars2030()
     s_renew_biomass: IColVars2030 = IColVars2030()
     s_renew_heatnet: IColVars2030 = IColVars2030()
-    s_renew_orenew: IColVars2030 = IColVars2030()
+    s_renew_heatpump: IColVars2030 = IColVars2030()
     s_renew_solarth: IColVars2030 = IColVars2030()
     s_renew_elec: IColVars2030 = IColVars2030()
 
@@ -104,6 +104,7 @@ def calc(root, inputs: Inputs):
         return inputs.entry(n)
 
     i18 = root.i18
+    i30 = root.i30
 
     # p_chem_basic
     p_chem_basic = root.i30.p_chem_basic
@@ -1372,7 +1373,7 @@ def calc(root, inputs: Inputs):
     p_metal_steel.cost_wage = (
         p_metal_steel_primary.cost_wage + p_metal_steel_secondary.cost_wage
     )
-    p.demand_emplo_new = p.demand_emplo - p.emplo_existing
+    p.demand_emplo_new = max(0, p.demand_emplo - p.emplo_existing)
     i.demand_emplo = g.demand_emplo + p.demand_emplo
     i.demand_emplo_new = g.demand_emplo_new + p.demand_emplo_new
     p_metal_steel.demand_electricity = (
@@ -1503,3 +1504,13 @@ def calc(root, inputs: Inputs):
     )
     s = root.i30.s
     s.energy = s_renew.energy
+
+    i30.s_fossil_diesel.energy = 0
+    i30.s_fossil_fueloil.energy = 0
+    i30.s_fossil_opetpro.energy = 0
+    i30.s_fossil_coal.energy = 0
+    i30.s_fossil_lpg.energy = 0
+    i30.s_fossil_gas.energy = 0
+    i30.s_fossil_ofossil.energy = 0
+    i30.s_renew_heatpump.energy = 0
+

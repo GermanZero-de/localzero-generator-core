@@ -136,8 +136,8 @@ class M183X:
     CO2e_per_capita_com: float = None
     CO2e_per_capita_com_pct_of_nat: float = None
 
-    GHG_budget_2022_to_year_target_nat: float = None
-    CO2e_2022_to_year_target: float = None
+    GHG_budget_2022_to_year_target_nat: float = None  # INFO THG Budget Deutschland
+    CO2e_2022_to_year_target: float = None  # INFO CO2e sind Emissionen für Kommune
 
     # erzeuge dictionry
     def dict(self):
@@ -298,10 +298,14 @@ def calc_Budget(root, inputs: Inputs) -> M183X:
 
     # calculating the yearly decrease of the emissions, going down linearly to 0 in target_year+1
     m183X.CO2e_w_lulucf_change_pa = m183X.CO2e_w_lulucf_2021 / (
-        entry("In_M_duration_target") + 1
+        entry("In_M_year_target")
+        - 2021
+        + 1  # TODO end of 2022,  substract year 2021 as emissions are only known until that year
     )  # +1 because we want to reach 0 in target_year+1
     # reducing the yearly emissions year by year, starting with 2022
-    if m183X.CO2e_w_lulucf_2021 > 0:
+
+    # INFO  '> 1' instead '> 0' to avoid having very small numbers such as 0.00000001 and unwanted additional substraction of CO2e_w_lulucf_change_pa
+    if m183X.CO2e_w_lulucf_2021 > 1:
         m183X.CO2e_w_lulucf_2022 = (
             m183X.CO2e_w_lulucf_2021 - m183X.CO2e_w_lulucf_change_pa
         )
@@ -309,7 +313,7 @@ def calc_Budget(root, inputs: Inputs) -> M183X:
         m183X.CO2e_w_lulucf_2022 = 0
 
     # 2023
-    if m183X.CO2e_w_lulucf_2022 > 0:
+    if m183X.CO2e_w_lulucf_2022 > 1:
         m183X.CO2e_w_lulucf_2023 = (
             m183X.CO2e_w_lulucf_2022 - m183X.CO2e_w_lulucf_change_pa
         )
@@ -317,7 +321,7 @@ def calc_Budget(root, inputs: Inputs) -> M183X:
         m183X.CO2e_w_lulucf_2023 = 0
 
     # 2024
-    if m183X.CO2e_w_lulucf_2023 > 0:
+    if m183X.CO2e_w_lulucf_2023 > 1:
         m183X.CO2e_w_lulucf_2024 = (
             m183X.CO2e_w_lulucf_2023 - m183X.CO2e_w_lulucf_change_pa
         )
@@ -325,7 +329,7 @@ def calc_Budget(root, inputs: Inputs) -> M183X:
         m183X.CO2e_w_lulucf_2024 = 0
 
     # 2025
-    if m183X.CO2e_w_lulucf_2024 > 0:
+    if m183X.CO2e_w_lulucf_2024 > 1:
         m183X.CO2e_w_lulucf_2025 = (
             m183X.CO2e_w_lulucf_2024 - m183X.CO2e_w_lulucf_change_pa
         )
@@ -333,7 +337,7 @@ def calc_Budget(root, inputs: Inputs) -> M183X:
         m183X.CO2e_w_lulucf_2025 = 0
 
     # 2026
-    if m183X.CO2e_w_lulucf_2025 > 0:
+    if m183X.CO2e_w_lulucf_2025 > 1:
         m183X.CO2e_w_lulucf_2026 = (
             m183X.CO2e_w_lulucf_2025 - m183X.CO2e_w_lulucf_change_pa
         )
@@ -341,7 +345,7 @@ def calc_Budget(root, inputs: Inputs) -> M183X:
         m183X.CO2e_w_lulucf_2026 = 0
 
     # 2027
-    if m183X.CO2e_w_lulucf_2026 > 0:
+    if m183X.CO2e_w_lulucf_2026 > 1:
         m183X.CO2e_w_lulucf_2027 = (
             m183X.CO2e_w_lulucf_2026 - m183X.CO2e_w_lulucf_change_pa
         )
@@ -349,7 +353,7 @@ def calc_Budget(root, inputs: Inputs) -> M183X:
         m183X.CO2e_w_lulucf_2027 = 0
 
     # 2028
-    if m183X.CO2e_w_lulucf_2027 > 0:
+    if m183X.CO2e_w_lulucf_2027 > 1:
         m183X.CO2e_w_lulucf_2028 = (
             m183X.CO2e_w_lulucf_2027 - m183X.CO2e_w_lulucf_change_pa
         )
@@ -357,7 +361,7 @@ def calc_Budget(root, inputs: Inputs) -> M183X:
         m183X.CO2e_w_lulucf_2028 = 0
 
     # 2029
-    if m183X.CO2e_w_lulucf_2028 > 0:
+    if m183X.CO2e_w_lulucf_2028 > 1:
         m183X.CO2e_w_lulucf_2029 = (
             m183X.CO2e_w_lulucf_2028 - m183X.CO2e_w_lulucf_change_pa
         )
@@ -365,7 +369,7 @@ def calc_Budget(root, inputs: Inputs) -> M183X:
         m183X.CO2e_w_lulucf_2029 = 0
 
     # 2030
-    if m183X.CO2e_w_lulucf_2029 > 0:
+    if m183X.CO2e_w_lulucf_2029 > 1:
         m183X.CO2e_w_lulucf_2030 = (
             m183X.CO2e_w_lulucf_2029 - m183X.CO2e_w_lulucf_change_pa
         )
@@ -373,7 +377,7 @@ def calc_Budget(root, inputs: Inputs) -> M183X:
         m183X.CO2e_w_lulucf_2030 = 0
 
     # 2031
-    if m183X.CO2e_w_lulucf_2030 > 0:
+    if m183X.CO2e_w_lulucf_2030 > 1:
         m183X.CO2e_w_lulucf_2031 = (
             m183X.CO2e_w_lulucf_2030 - m183X.CO2e_w_lulucf_change_pa
         )
@@ -381,7 +385,7 @@ def calc_Budget(root, inputs: Inputs) -> M183X:
         m183X.CO2e_w_lulucf_2031 = 0
 
     # 2032
-    if m183X.CO2e_w_lulucf_2031 > 0:
+    if m183X.CO2e_w_lulucf_2031 > 1:
         m183X.CO2e_w_lulucf_2032 = (
             m183X.CO2e_w_lulucf_2031 - m183X.CO2e_w_lulucf_change_pa
         )
@@ -389,7 +393,7 @@ def calc_Budget(root, inputs: Inputs) -> M183X:
         m183X.CO2e_w_lulucf_2032 = 0
 
     # 2033
-    if m183X.CO2e_w_lulucf_2032 > 0:
+    if m183X.CO2e_w_lulucf_2032 > 1:
         m183X.CO2e_w_lulucf_2033 = (
             m183X.CO2e_w_lulucf_2032 - m183X.CO2e_w_lulucf_change_pa
         )
@@ -397,7 +401,7 @@ def calc_Budget(root, inputs: Inputs) -> M183X:
         m183X.CO2e_w_lulucf_2033 = 0
 
     # 2034
-    if m183X.CO2e_w_lulucf_2033 > 0:
+    if m183X.CO2e_w_lulucf_2033 > 1:
         m183X.CO2e_w_lulucf_2034 = (
             m183X.CO2e_w_lulucf_2033 - m183X.CO2e_w_lulucf_change_pa
         )
@@ -405,7 +409,7 @@ def calc_Budget(root, inputs: Inputs) -> M183X:
         m183X.CO2e_w_lulucf_2034 = 0
 
     # 2035
-    if m183X.CO2e_w_lulucf_2034 > 0:
+    if m183X.CO2e_w_lulucf_2034 > 1:
         m183X.CO2e_w_lulucf_2035 = (
             m183X.CO2e_w_lulucf_2034 - m183X.CO2e_w_lulucf_change_pa
         )
@@ -413,7 +417,7 @@ def calc_Budget(root, inputs: Inputs) -> M183X:
         m183X.CO2e_w_lulucf_2035 = 0
 
     # 2036
-    if m183X.CO2e_w_lulucf_2035 > 0:
+    if m183X.CO2e_w_lulucf_2035 > 1:
         m183X.CO2e_w_lulucf_2036 = (
             m183X.CO2e_w_lulucf_2035 - m183X.CO2e_w_lulucf_change_pa
         )
@@ -421,7 +425,7 @@ def calc_Budget(root, inputs: Inputs) -> M183X:
         m183X.CO2e_w_lulucf_2036 = 0
 
     # 2037
-    if m183X.CO2e_w_lulucf_2036 > 0:
+    if m183X.CO2e_w_lulucf_2036 > 1:
         m183X.CO2e_w_lulucf_2037 = (
             m183X.CO2e_w_lulucf_2036 - m183X.CO2e_w_lulucf_change_pa
         )
@@ -429,7 +433,7 @@ def calc_Budget(root, inputs: Inputs) -> M183X:
         m183X.CO2e_w_lulucf_2037 = 0
 
     # 2038
-    if m183X.CO2e_w_lulucf_2037 > 0:
+    if m183X.CO2e_w_lulucf_2037 > 1:
         m183X.CO2e_w_lulucf_2038 = (
             m183X.CO2e_w_lulucf_2037 - m183X.CO2e_w_lulucf_change_pa
         )
@@ -437,7 +441,7 @@ def calc_Budget(root, inputs: Inputs) -> M183X:
         m183X.CO2e_w_lulucf_2038 = 0
 
     # 2039
-    if m183X.CO2e_w_lulucf_2038 > 0:
+    if m183X.CO2e_w_lulucf_2038 > 1:
         m183X.CO2e_w_lulucf_2039 = (
             m183X.CO2e_w_lulucf_2038 - m183X.CO2e_w_lulucf_change_pa
         )
@@ -445,7 +449,7 @@ def calc_Budget(root, inputs: Inputs) -> M183X:
         m183X.CO2e_w_lulucf_2039 = 0
 
     # 2040
-    if m183X.CO2e_w_lulucf_2039 > 0:
+    if m183X.CO2e_w_lulucf_2039 > 1:
         m183X.CO2e_w_lulucf_2040 = (
             m183X.CO2e_w_lulucf_2039 - m183X.CO2e_w_lulucf_change_pa
         )
@@ -453,7 +457,7 @@ def calc_Budget(root, inputs: Inputs) -> M183X:
         m183X.CO2e_w_lulucf_2040 = 0
 
     # 2041
-    if m183X.CO2e_w_lulucf_2040 > 0:
+    if m183X.CO2e_w_lulucf_2040 > 1:
         m183X.CO2e_w_lulucf_2041 = (
             m183X.CO2e_w_lulucf_2040 - m183X.CO2e_w_lulucf_change_pa
         )
@@ -461,7 +465,7 @@ def calc_Budget(root, inputs: Inputs) -> M183X:
         m183X.CO2e_w_lulucf_2041 = 0
 
     # 2042
-    if m183X.CO2e_w_lulucf_2041 > 0:
+    if m183X.CO2e_w_lulucf_2041 > 1:
         m183X.CO2e_w_lulucf_2042 = (
             m183X.CO2e_w_lulucf_2041 - m183X.CO2e_w_lulucf_change_pa
         )
@@ -469,7 +473,7 @@ def calc_Budget(root, inputs: Inputs) -> M183X:
         m183X.CO2e_w_lulucf_2042 = 0
 
     # 2043
-    if m183X.CO2e_w_lulucf_2042 > 0:
+    if m183X.CO2e_w_lulucf_2042 > 1:
         m183X.CO2e_w_lulucf_2043 = (
             m183X.CO2e_w_lulucf_2042 - m183X.CO2e_w_lulucf_change_pa
         )
@@ -477,7 +481,7 @@ def calc_Budget(root, inputs: Inputs) -> M183X:
         m183X.CO2e_w_lulucf_2043 = 0
 
     # 2044
-    if m183X.CO2e_w_lulucf_2043 > 0:
+    if m183X.CO2e_w_lulucf_2043 > 1:
         m183X.CO2e_w_lulucf_2044 = (
             m183X.CO2e_w_lulucf_2043 - m183X.CO2e_w_lulucf_change_pa
         )
@@ -485,7 +489,7 @@ def calc_Budget(root, inputs: Inputs) -> M183X:
         m183X.CO2e_w_lulucf_2044 = 0
 
     # 2045
-    if m183X.CO2e_w_lulucf_2044 > 0:
+    if m183X.CO2e_w_lulucf_2044 > 1:
         m183X.CO2e_w_lulucf_2045 = (
             m183X.CO2e_w_lulucf_2044 - m183X.CO2e_w_lulucf_change_pa
         )
@@ -493,7 +497,7 @@ def calc_Budget(root, inputs: Inputs) -> M183X:
         m183X.CO2e_w_lulucf_2045 = 0
 
     # 2046
-    if m183X.CO2e_w_lulucf_2045 > 0:
+    if m183X.CO2e_w_lulucf_2045 > 1:
         m183X.CO2e_w_lulucf_2046 = (
             m183X.CO2e_w_lulucf_2046 - m183X.CO2e_w_lulucf_change_pa
         )
@@ -501,7 +505,7 @@ def calc_Budget(root, inputs: Inputs) -> M183X:
         m183X.CO2e_w_lulucf_2046 = 0
 
     # 2047
-    if m183X.CO2e_w_lulucf_2046 > 0:
+    if m183X.CO2e_w_lulucf_2046 > 1:
         m183X.CO2e_w_lulucf_2047 = (
             m183X.CO2e_w_lulucf_2046 - m183X.CO2e_w_lulucf_change_pa
         )
@@ -509,7 +513,7 @@ def calc_Budget(root, inputs: Inputs) -> M183X:
         m183X.CO2e_w_lulucf_2047 = 0
 
     # 2048
-    if m183X.CO2e_w_lulucf_2047 > 0:
+    if m183X.CO2e_w_lulucf_2047 > 1:
         m183X.CO2e_w_lulucf_2048 = (
             m183X.CO2e_w_lulucf_2047 - m183X.CO2e_w_lulucf_change_pa
         )
@@ -517,7 +521,7 @@ def calc_Budget(root, inputs: Inputs) -> M183X:
         m183X.CO2e_w_lulucf_2048 = 0
 
     # 2049
-    if m183X.CO2e_w_lulucf_2048 > 0:
+    if m183X.CO2e_w_lulucf_2048 > 1:
         m183X.CO2e_w_lulucf_2049 = (
             m183X.CO2e_w_lulucf_2048 - m183X.CO2e_w_lulucf_change_pa
         )
@@ -525,7 +529,7 @@ def calc_Budget(root, inputs: Inputs) -> M183X:
         m183X.CO2e_w_lulucf_2049 = 0
 
     # 2050
-    if m183X.CO2e_w_lulucf_2049 > 0:
+    if m183X.CO2e_w_lulucf_2049 > 1:
         m183X.CO2e_w_lulucf_2050 = (
             m183X.CO2e_w_lulucf_2049 - m183X.CO2e_w_lulucf_change_pa
         )
@@ -533,7 +537,7 @@ def calc_Budget(root, inputs: Inputs) -> M183X:
         m183X.CO2e_w_lulucf_2050 = 0
 
     # 2051
-    if m183X.CO2e_w_lulucf_2050 > 0:
+    if m183X.CO2e_w_lulucf_2050 > 1:
         m183X.CO2e_w_lulucf_2051 = (
             m183X.CO2e_w_lulucf_2050 - m183X.CO2e_w_lulucf_change_pa
         )
@@ -581,17 +585,18 @@ def calc_Budget(root, inputs: Inputs) -> M183X:
 
     m183X.GHG_budget_2022_to_year_target_nat = (
         entry("In_M_GHG_budget_2016_to_year_target")
-        -fact("Fact_M_CO2e_w_lulucf_2015")
-        -fact("Fact_M_CO2e_w_lulucf_2016")
-        -fact("Fact_M_CO2e_w_lulucf_2017")
-        -fact("Fact_M_CO2e_w_lulucf_2018")
-        -fact("Fact_M_CO2e_w_lulucf_2019")
-        -fact("Fact_M_CO2e_w_lulucf_2020")
-        -fact("Fact_M_CO2e_w_lulucf_2021")
+        - fact("Fact_M_CO2e_w_lulucf_2015")
+        - fact("Fact_M_CO2e_w_lulucf_2016")
+        - fact("Fact_M_CO2e_w_lulucf_2017")
+        - fact("Fact_M_CO2e_w_lulucf_2018")
+        - fact("Fact_M_CO2e_w_lulucf_2019")
+        - fact("Fact_M_CO2e_w_lulucf_2020")
+        - fact("Fact_M_CO2e_w_lulucf_2021")
     )
 
-
-    m183X.CO2e_2022_to_year_target = m183X.GHG_budget_2022_to_year_target - m183X.GHG_budget_after_year_target 
+    m183X.CO2e_2022_to_year_target = (
+        m183X.GHG_budget_2022_to_year_target - m183X.GHG_budget_after_year_target
+    )
 
     return m183X
 
@@ -764,9 +769,9 @@ def calc_Z(root, inputs: Inputs):
     d.change_CO2e_t = d.CO2e_total_30 - d.CO2e_total_18
     z.change_CO2e_t = z.CO2e_total_30 - z.CO2e_total_18
 
-    s.change_CO2e_t_pct = div(s.CO2e_total_30, s.CO2e_total_18)
-    d.change_CO2e_t_pct = div(d.CO2e_total_30, d.CO2e_total_18)
-    z.change_CO2e_t_pct = div(z.CO2e_total_30, z.CO2e_total_18)
+    s.change_CO2e_pct = div(s.CO2e_total_30, s.CO2e_total_18)
+    d.change_CO2e_pct = div(d.CO2e_total_30, d.CO2e_total_18)
+    z.change_CO2e_pct = div(z.CO2e_total_30, z.CO2e_total_18)
 
     s.CO2e_total_2021_estimated = s.CO2e_total_18 * fact(
         "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
@@ -962,3 +967,34 @@ def calc_Z(root, inputs: Inputs):
     i.pct_CO2e_total_30 = div(i30.i.CO2e_total, z.CO2e_total_30)
     t.pct_CO2e_total_30 = div(t30.t.CO2e_total, z.CO2e_total_30)
     a.pct_CO2e_total_30 = div(a30.a.CO2e_total, z.CO2e_total_30)
+
+    h.invest_pct = div(h30.h.invest,z.invest)
+    e.invest_pct = div(e30.e.invest,z.invest)
+    f.invest_pct = div(f30.f.invest,z.invest)
+    r.invest_pct = div(r30.r.invest,z.invest) 
+    b.invest_pct = div(b30.b.invest,z.invest)   
+    i.invest_pct = div(i30.i.invest,z.invest)  
+    t.invest_pct = div(t30.t.invest,z.invest)  
+    a.invest_pct = div(a30.a.invest,z.invest) 
+    l.invest_pct = div(l30.l.invest,z.invest)
+
+    h.cost_climate_saved_pct = div(h30.h.cost_climate_saved,z.cost_climate_saved)
+    e.cost_climate_saved_pct = div(e30.e.cost_climate_saved,z.cost_climate_saved)
+    f.cost_climate_saved_pct = div(f30.f.cost_climate_saved,z.cost_climate_saved)
+    r.cost_climate_saved_pct = div(r30.r.cost_climate_saved,z.cost_climate_saved) 
+    b.cost_climate_saved_pct = div(b30.b.cost_climate_saved,z.cost_climate_saved)   
+    i.cost_climate_saved_pct = div(i30.i.cost_climate_saved,z.cost_climate_saved)  
+    t.cost_climate_saved_pct = div(t30.t.cost_climate_saved,z.cost_climate_saved)  
+    a.cost_climate_saved_pct = div(a30.a.cost_climate_saved,z.cost_climate_saved) 
+    l.cost_climate_saved_pct = div(l30.l.cost_climate_saved,z.cost_climate_saved) 
+
+    h.demand_emplo_new_pct = div(h30.h.demand_emplo_new,z.demand_emplo_new)
+    e.demand_emplo_new_pct = div(e30.e.demand_emplo_new,z.demand_emplo_new)
+    f.demand_emplo_new_pct = div(f30.f.demand_emplo_new,z.demand_emplo_new)
+    r.demand_emplo_new_pct = div(r30.r.demand_emplo_new,z.demand_emplo_new) 
+    b.demand_emplo_new_pct = div(b30.b.demand_emplo_new,z.demand_emplo_new)   
+    i.demand_emplo_new_pct = div(i30.i.demand_emplo_new,z.demand_emplo_new)  
+    t.demand_emplo_new_pct = div(t30.t.demand_emplo_new,z.demand_emplo_new)  
+    a.demand_emplo_new_pct = div(a30.a.demand_emplo_new,z.demand_emplo_new) 
+    l.demand_emplo_new_pct = div(l30.l.demand_emplo_new,z.demand_emplo_new)  
+

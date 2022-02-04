@@ -825,3 +825,12 @@ def calc(root, inputs: Inputs):
     g_consult.demand_emplo_com = g_consult.demand_emplo_new
     g.demand_emplo_com = g.demand_emplo_new
     b.demand_emplo_com = g.demand_emplo_com
+
+    rb.demand_emplo_com = b.demand_emplo_com + r30.r.demand_emplo_com
+
+    s_emethan.change_CO2e_pct = div(s_emethan.change_CO2e_t,0) #b18.s_emethan.CO2e_total)
+    s_heatnet.change_CO2e_pct = div(s_heatnet.change_CO2e_t, b18.s_heatnet.CO2e_total)
+    s_solarth.change_CO2e_pct = div(s_solarth.change_CO2e_t, b18.s_solarth.CO2e_total)
+    s_heatpump.change_CO2e_pct = div(s_heatpump.change_CO2e_t, b18.s_heatpump.CO2e_total)
+    s_elec.change_CO2e_pct = div(s_elec.change_CO2e_t, b18.s_elec.CO2e_total)
+    s_elec_heating.change_CO2e_pct = div(s_elec_heating.change_CO2e_t, b18.s_elec_heating.CO2e_total)

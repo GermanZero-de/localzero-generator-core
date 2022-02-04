@@ -1390,6 +1390,8 @@ def calc(root, inputs: Inputs):
     g_settlement.demand_emplo = g_settlement_org.demand_emplo
     g_settlement.demand_emplo_new = g_settlement_org.demand_emplo_new
 
+    g_wet_org_rp.change_CO2e_pct = 0
+
 
 def calcPyr(root, inputs: Inputs):
     def fact(n):

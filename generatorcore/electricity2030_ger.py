@@ -484,6 +484,7 @@ def calc(root, inputs: Inputs):
         + p_fossil_gas.energy
         + p_fossil_ofossil.energy
     )
+
     p_fossil_ofossil.change_energy_MWh = (
         p_fossil_ofossil.energy - e18.p_fossil_ofossil.energy
     )
@@ -905,6 +906,7 @@ def calc(root, inputs: Inputs):
         p_local_hydro.energy * p_local_hydro.cost_mro_per_MWh / Million
     )
     p_local_hydro.CO2e_cb = p_local_hydro.energy * p_local_hydro.CO2e_cb_per_MWh
+    p_local_hydro.CO2e_total = p_local_hydro.CO2e_cb
     p_local_hydro.change_energy_MWh = p_local_hydro.energy - e18.p_local_hydro.energy
     p_renew_reverse.change_cost_mro = p_renew_reverse.cost_mro - 0
     d.change_energy_pct = div(d.change_energy_MWh, e18.d.energy)
@@ -1395,6 +1397,8 @@ def calc(root, inputs: Inputs):
         + p_local_hydro.energy
     )
     p_local_pv.CO2e_cb = p_local_pv.energy * p_local_pv.CO2e_cb_per_MWh
+    p_local_pv.CO2e_total = p_local_pv.CO2e_cb
+    p_local_pv.change_CO2e_t = p_local_pv.CO2e_total - e18.p_local_pv.CO2e_total
     p_local_pv.change_energy_MWh = p_local_pv.energy - e18.p_local_pv.energy
     p_local_pv_roof.pct_energy = div(p_local_pv_roof.energy, p_local_pv.energy)
     p_local_pv_roof.pet_sites = div(p_local_pv_roof.energy, p_local_pv.energy)
@@ -1732,3 +1736,127 @@ def calc(root, inputs: Inputs):
     e.demand_emplo = g.demand_emplo + p.demand_emplo
     p.demand_emplo_new = p_fossil_and_renew.demand_emplo_new + p_local.demand_emplo_new
     e.demand_emplo_new = g.demand_emplo_new + p.demand_emplo_new
+
+    p_local.power_installed= (
+        p_local_pv.power_installed
+        +p_local_wind_onshore.power_installed
+        +p_local_biomass.power_installed
+        +p_local_hydro.power_installed
+    )
+
+    p_local.power_installable= (
+        p_local_pv.power_installable
+        +p_local_wind_onshore.power_installable
+        +p_local_biomass.power_installable
+        #p_local_hydro.power_installable
+    )
+
+    p_local.power_to_be_installed= (
+        p_local_pv.power_to_be_installed
+        +p_local_wind_onshore.power_to_be_installed
+        +p_local_biomass.power_to_be_installed
+        #p_local_hydro.power_to_be_installed
+    )
+
+    #TODO: correct excel calculations and reimport these somehow missing variabels to python
+    p_local_pv.cost_climate_saved=0 
+    p_local_pv_park.change_CO2e_t=0                                                        
+    p_local_pv_park.cost_climate_saved=0
+    p_local_pv_facade.change_CO2e_t=0                                                     
+    p_local_pv_facade.cost_climate_saved=0 
+    p_local_pv_agri.change_CO2e_t=0                                                    
+    p_local_pv_agri.cost_climate_saved=0
+    p_local_pv_roof.change_CO2e_t=0                                                      
+    p_local_pv_roof.cost_climate_saved=0  
+                                                
+    p_local_wind_onshore.CO2e_total=0                                                  
+    p_local_wind_onshore.cost_climate_saved=0
+
+                                                            
+    p_local_hydro.cost_climate_saved=0                                                     
+    p_local_hydro.change_CO2e_t=0 
+
+    p_fossil.CO2e_total = 0    
+
+    p_renew_wind.change_CO2e_t=0                                                      
+    p_renew_wind.cost_climate_saved=0    
+
+    p_renew_wind_onshore.CO2e_total=0                                                  
+    p_renew_wind_onshore.cost_climate_saved=0                                              
+    p_renew_wind_onshore.change_CO2e_t=0
+    p_renew_wind_offshore.change_CO2e_t=0                                                   
+    p_renew_wind_offshore.CO2e_total=0                                                      
+    p_renew_wind_offshore.cost_climate_saved=0      
+
+    p_renew_hydro.cost_climate_saved=0                                                    
+    p_renew_hydro.change_CO2e_t=0                                          
+                          
+    p_renew_reverse.change_CO2e_t=0                                                       
+    p_renew_reverse.cost_climate_saved=0                                               
+
+    p_renew_pv.cost_climate_saved=0                                                         
+    p_renew_pv.change_CO2e_t=0
+
+    p_renew_pv_roof.change_CO2e_t=0  
+    p_renew_pv_agri.change_CO2e_t=0  
+    p_renew_pv_facade.change_CO2e_t=0  
+    p_renew_pv_park.change_CO2e_t=0  
+
+    p_renew_geoth.change_CO2e_t=0                                                         
+    p_renew_geoth.cost_climate_saved=0 
+
+    p_local_pv_agri.CO2e_total = 0
+    p_local_pv_roof.CO2e_total = 0 
+    p_local_pv_facade.CO2e_total = 0 
+    p_local_pv_park.CO2e_total = 0
+
+    #---copy
+    p_renew_pv.change_CO2e_pct = 0
+    p_renew_pv_roof.change_CO2e_pct = 0
+    p_renew_pv_agri.change_CO2e_pct = 0
+    p_renew_pv_facade.change_CO2e_pct = 0
+    p_renew_pv_park.change_CO2e_pct = 0
+
+    p_renew_wind.change_CO2e_pct = 0
+    p_renew_wind_onshore.change_CO2e_pct = 0
+    p_renew_wind_offshore.change_CO2e_pct = 0
+
+    p_renew_geoth.change_CO2e_pct = 0
+    p_renew_hydro.change_CO2e_pct = 0
+
+    p_local.change_CO2e_pct = 0
+    p_local_pv.change_CO2e_pct = 0
+    p_local_pv_roof.change_CO2e_pct = 0
+    p_local_pv_agri.change_CO2e_pct = 0
+    p_local_pv_facade.change_CO2e_pct = 0
+    p_local_pv_park.change_CO2e_pct = 0
+    p_local_wind_onshore.change_CO2e_pct = 0
+    p_local_biomass.change_CO2e_pct = div(
+        p_local_biomass.change_CO2e_t, e18.p_local_biomass.CO2e_total
+    )
+    p_local_hydro.change_CO2e_pct = 0
+
+    p_renew_pv.cost_climate_saved = 0
+    p_renew_pv_roof.cost_climate_saved = 0
+    p_renew_pv_agri.cost_climate_saved = 0
+    p_renew_pv_facade.cost_climate_saved = 0
+    p_renew_pv_park.cost_climate_saved = 0
+
+    p_renew_wind.cost_climate_saved = 0
+    p_renew_wind_onshore.cost_climate_saved = 0
+    p_renew_wind_offshore.cost_climate_saved = 0
+
+    p_renew_geoth.cost_climate_saved = 0
+    p_renew_hydro.cost_climate_saved = 0
+
+    p_local.cost_climate_saved = 0
+    p_local_pv.cost_climate_saved = 0
+    p_local_pv_roof.cost_climate_saved = 0
+    p_local_pv_agri.cost_climate_saved = 0
+    p_local_pv_facade.cost_climate_saved = 0
+    p_local_pv_park.cost_climate_saved = 0
+    p_local_wind_onshore.cost_climate_saved = 0
+    
+    p_local_hydro.cost_climate_saved = 0    
+
+

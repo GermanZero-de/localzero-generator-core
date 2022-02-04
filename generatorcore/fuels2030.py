@@ -401,6 +401,17 @@ def calc(root, inputs: Inputs):
     f.p_diesel.change_CO2e_pct = div(
         f.p_diesel.change_CO2e_t, root.f18.p_diesel.CO2e_total
     )
+    f.p_emethan.change_CO2e_pct = div(
+        f.p_emethan.change_CO2e_t, 0
+    )
+    f.p_hydrogen.change_CO2e_pct = div(
+        f.p_hydrogen.change_CO2e_t, 0
+    )
+    f.p_hydrogen_reconv.change_CO2e_pct = div(
+        f.p_hydrogen_reconv.change_CO2e_t, 0
+    )
+
+
     f.f.CO2e_total = f.p.CO2e_total
     f.p.change_CO2e_t = (
         f.p_petrol.change_CO2e_t

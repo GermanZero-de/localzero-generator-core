@@ -56,7 +56,7 @@ class I18:
     s_renew_emethan: IColVars = IColVars()
     s_renew_biomass: IColVars = IColVars()
     s_renew_heatnet: IColVars = IColVars()
-    s_renew_orenew: IColVars = IColVars()
+    s_renew_heatpump: IColVars = IColVars()
     s_renew_solarth: IColVars = IColVars()
     s_renew_elec: IColVars = IColVars()
 
@@ -578,7 +578,7 @@ def calc(root, inputs: Inputs):
 
     i18.s_renew_biomass.energy = entry("In_I_biomass_fec")
     i18.s_renew_heatnet.energy = entry("In_I_heatnet_fec")
-    i18.s_renew_orenew.energy = entry("In_I_orenew_fec") * fact(
+    i18.s_renew_heatpump.energy = entry("In_I_orenew_fec") * fact(
         "Fact_R_S_ratio_heatpump_to_orenew_2018"
     )
     i18.s_renew_solarth.energy = entry("In_I_orenew_fec") * fact(
@@ -589,7 +589,7 @@ def calc(root, inputs: Inputs):
     i18.s_renew.energy = (
         i18.s_renew_biomass.energy
         + i18.s_renew_heatnet.energy
-        + i18.s_renew_orenew.energy
+        + i18.s_renew_heatpump.energy
         + i18.s_renew_solarth.energy
         + i18.s_renew_elec.energy
     )
@@ -614,7 +614,7 @@ def calc(root, inputs: Inputs):
 
     i18.s_renew_biomass.pct_energy = div(i18.s_renew_biomass.energy, i18.s.energy)
     i18.s_renew_heatnet.pct_energy = div(i18.s_renew_heatnet.energy, i18.s.energy)
-    i18.s_renew_orenew.pct_energy = div(i18.s_renew_orenew.energy, i18.s.energy)
+    i18.s_renew_heatpump.pct_energy = div(i18.s_renew_heatpump.energy, i18.s.energy)
     i18.s_renew_solarth.pct_energy = div(i18.s_renew_solarth.energy, i18.s.energy)
     i18.s_renew_elec.pct_energy = div(i18.s_renew_elec.energy, i18.s.energy)
 
@@ -628,7 +628,7 @@ def calc(root, inputs: Inputs):
         + i18.s_fossil_ofossil.pct_energy
         + i18.s_renew_biomass.pct_energy
         + i18.s_renew_heatnet.pct_energy
-        + i18.s_renew_orenew.pct_energy
+        + i18.s_renew_heatpump.pct_energy
         + i18.s_renew_solarth.pct_energy
         + i18.s_renew_elec.pct_energy
     )
