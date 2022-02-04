@@ -14985,7 +14985,7 @@
             "change_energy_MWh": 51527.04955834608,
             "change_energy_pct": null,
             "change_CO2e_t": 0,
-            "change_CO2e_pct": null,
+            "change_CO2e_pct": 0,
             "change_cost_energy": null,
             "change_cost_mro": 1.610220298698315,
             "invest": 0,
@@ -15355,7 +15355,7 @@
             "cost_mro_pa": null,
             "change_energy_MWh": 92290.19951004679,
             "change_energy_pct": 30.992911999999997,
-            "change_CO2e_t": null,
+            "change_CO2e_t": 0,
             "change_CO2e_pct": 0,
             "change_cost_energy": null,
             "change_cost_mro": 1.8325468373353584,
@@ -18181,7 +18181,7 @@
             "power_installed": null,
             "full_load_hour": null,
             "power_to_be_installed_pct": null,
-            "pet_sites": null
+            "amount": null
         },
         "p": {
             "area_m2": null,
@@ -18239,7 +18239,7 @@
             "power_installed": null,
             "full_load_hour": null,
             "power_to_be_installed_pct": null,
-            "pet_sites": null
+            "amount": null
         },
         "g": {
             "area_m2": null,
@@ -18297,7 +18297,7 @@
             "power_installed": null,
             "full_load_hour": null,
             "power_to_be_installed_pct": null,
-            "pet_sites": null
+            "amount": null
         },
         "g_consult": {
             "area_m2": null,
@@ -18355,7 +18355,7 @@
             "power_installed": null,
             "full_load_hour": null,
             "power_to_be_installed_pct": null,
-            "pet_sites": null
+            "amount": null
         },
         "g_organic": {
             "area_m2": null,
@@ -18413,7 +18413,7 @@
             "power_installed": 0.03009296042506901,
             "full_load_hour": null,
             "power_to_be_installed_pct": 0.2,
-            "pet_sites": null
+            "amount": null
         },
         "p_fermen": {
             "area_m2": null,
@@ -18471,7 +18471,7 @@
             "power_installed": null,
             "full_load_hour": null,
             "power_to_be_installed_pct": null,
-            "pet_sites": null
+            "amount": null
         },
         "p_fermen_dairycow": {
             "area_m2": null,
@@ -18529,7 +18529,7 @@
             "power_installed": null,
             "full_load_hour": null,
             "power_to_be_installed_pct": null,
-            "pet_sites": 540.9929375670463
+            "amount": 540.9929375670463
         },
         "p_fermen_nondairy": {
             "area_m2": null,
@@ -18587,7 +18587,7 @@
             "power_installed": null,
             "full_load_hour": null,
             "power_to_be_installed_pct": null,
-            "pet_sites": 498.78449976497916
+            "amount": 498.78449976497916
         },
         "p_fermen_swine": {
             "area_m2": null,
@@ -18645,7 +18645,7 @@
             "power_installed": null,
             "full_load_hour": null,
             "power_to_be_installed_pct": null,
-            "pet_sites": 1743.3052427329396
+            "amount": 1743.3052427329396
         },
         "p_fermen_poultry": {
             "area_m2": null,
@@ -18703,7 +18703,7 @@
             "power_installed": null,
             "full_load_hour": null,
             "power_to_be_installed_pct": null,
-            "pet_sites": 46611.49396105915
+            "amount": 46611.49396105915
         },
         "p_fermen_oanimal": {
             "area_m2": null,
@@ -18761,7 +18761,7 @@
             "power_installed": null,
             "full_load_hour": null,
             "power_to_be_installed_pct": null,
-            "pet_sites": 218.18581411873987
+            "amount": 218.18581411873987
         },
         "p_manure": {
             "area_m2": null,
@@ -18819,7 +18819,7 @@
             "power_installed": null,
             "full_load_hour": null,
             "power_to_be_installed_pct": null,
-            "pet_sites": null
+            "amount": null
         },
         "p_manure_dairycow": {
             "area_m2": null,
@@ -18877,7 +18877,7 @@
             "power_installed": null,
             "full_load_hour": null,
             "power_to_be_installed_pct": null,
-            "pet_sites": 540.9929375670463
+            "amount": 540.9929375670463
         },
         "p_manure_nondairy": {
             "area_m2": null,
@@ -18935,7 +18935,7 @@
             "power_installed": null,
             "full_load_hour": null,
             "power_to_be_installed_pct": null,
-            "pet_sites": 498.78449976497916
+            "amount": 498.78449976497916
         },
         "p_manure_swine": {
             "area_m2": null,
@@ -18993,7 +18993,7 @@
             "power_installed": null,
             "full_load_hour": null,
             "power_to_be_installed_pct": null,
-            "pet_sites": 1743.3052427329396
+            "amount": 1743.3052427329396
         },
         "p_manure_poultry": {
             "area_m2": null,
@@ -19051,7 +19051,7 @@
             "power_installed": null,
             "full_load_hour": null,
             "power_to_be_installed_pct": null,
-            "pet_sites": 46611.49396105915
+            "amount": 46611.49396105915
         },
         "p_manure_oanimal": {
             "area_m2": null,
@@ -19109,7 +19109,7 @@
             "power_installed": null,
             "full_load_hour": null,
             "power_to_be_installed_pct": null,
-            "pet_sites": 218.18581411873987
+            "amount": 218.18581411873987
         },
         "p_manure_deposition": {
             "area_m2": null,
@@ -19167,7 +19167,7 @@
             "power_installed": null,
             "full_load_hour": null,
             "power_to_be_installed_pct": null,
-            "pet_sites": 3001.2684941837047
+            "amount": 3001.2684941837047
         },
         "p_soil": {
             "area_m2": null,
@@ -19225,7 +19225,7 @@
             "power_installed": null,
             "full_load_hour": null,
             "power_to_be_installed_pct": null,
-            "pet_sites": null
+            "amount": null
         },
         "p_soil_fertilizer": {
             "area_m2": null,
@@ -19283,7 +19283,7 @@
             "power_installed": null,
             "full_load_hour": null,
             "power_to_be_installed_pct": null,
-            "pet_sites": null
+            "amount": null
         },
         "p_soil_manure": {
             "area_m2": null,
@@ -19341,7 +19341,7 @@
             "power_installed": null,
             "full_load_hour": null,
             "power_to_be_installed_pct": null,
-            "pet_sites": null
+            "amount": null
         },
         "p_soil_sludge": {
             "area_m2": null,
@@ -19399,7 +19399,7 @@
             "power_installed": null,
             "full_load_hour": null,
             "power_to_be_installed_pct": null,
-            "pet_sites": null
+            "amount": null
         },
         "p_soil_ecrop": {
             "area_m2": null,
@@ -19457,7 +19457,7 @@
             "power_installed": null,
             "full_load_hour": null,
             "power_to_be_installed_pct": null,
-            "pet_sites": null
+            "amount": null
         },
         "p_soil_grazing": {
             "area_m2": null,
@@ -19515,7 +19515,7 @@
             "power_installed": null,
             "full_load_hour": null,
             "power_to_be_installed_pct": null,
-            "pet_sites": null
+            "amount": null
         },
         "p_soil_residue": {
             "area_m2": null,
@@ -19573,7 +19573,7 @@
             "power_installed": null,
             "full_load_hour": null,
             "power_to_be_installed_pct": null,
-            "pet_sites": null
+            "amount": null
         },
         "p_soil_orgfarm": {
             "area_m2": null,
@@ -19631,7 +19631,7 @@
             "power_installed": null,
             "full_load_hour": null,
             "power_to_be_installed_pct": null,
-            "pet_sites": null
+            "amount": null
         },
         "p_soil_orgloss": {
             "area_m2": null,
@@ -19689,7 +19689,7 @@
             "power_installed": null,
             "full_load_hour": null,
             "power_to_be_installed_pct": null,
-            "pet_sites": null
+            "amount": null
         },
         "p_soil_leaching": {
             "area_m2": null,
@@ -19747,7 +19747,7 @@
             "power_installed": null,
             "full_load_hour": null,
             "power_to_be_installed_pct": null,
-            "pet_sites": null
+            "amount": null
         },
         "p_soil_deposition": {
             "area_m2": null,
@@ -19805,7 +19805,7 @@
             "power_installed": null,
             "full_load_hour": null,
             "power_to_be_installed_pct": null,
-            "pet_sites": null
+            "amount": null
         },
         "p_other": {
             "area_m2": null,
@@ -19863,7 +19863,7 @@
             "power_installed": null,
             "full_load_hour": null,
             "power_to_be_installed_pct": null,
-            "pet_sites": null
+            "amount": null
         },
         "p_other_liming": {
             "area_m2": null,
@@ -19921,7 +19921,7 @@
             "power_installed": null,
             "full_load_hour": null,
             "power_to_be_installed_pct": null,
-            "pet_sites": null
+            "amount": null
         },
         "p_other_liming_calcit": {
             "area_m2": null,
@@ -19979,7 +19979,7 @@
             "power_installed": null,
             "full_load_hour": null,
             "power_to_be_installed_pct": null,
-            "pet_sites": null
+            "amount": null
         },
         "p_other_liming_dolomite": {
             "area_m2": null,
@@ -20037,7 +20037,7 @@
             "power_installed": null,
             "full_load_hour": null,
             "power_to_be_installed_pct": null,
-            "pet_sites": null
+            "amount": null
         },
         "p_other_urea": {
             "area_m2": null,
@@ -20095,7 +20095,7 @@
             "power_installed": null,
             "full_load_hour": null,
             "power_to_be_installed_pct": null,
-            "pet_sites": null
+            "amount": null
         },
         "p_other_kas": {
             "area_m2": null,
@@ -20153,7 +20153,7 @@
             "power_installed": null,
             "full_load_hour": null,
             "power_to_be_installed_pct": null,
-            "pet_sites": null
+            "amount": null
         },
         "p_other_ecrop": {
             "area_m2": null,
@@ -20211,7 +20211,7 @@
             "power_installed": null,
             "full_load_hour": null,
             "power_to_be_installed_pct": null,
-            "pet_sites": null
+            "amount": null
         },
         "p_operation": {
             "area_m2": null,
@@ -20269,7 +20269,7 @@
             "power_installed": null,
             "full_load_hour": null,
             "power_to_be_installed_pct": null,
-            "pet_sites": null
+            "amount": null
         },
         "p_operation_heat": {
             "area_m2": 230442.506811989,
@@ -20327,7 +20327,7 @@
             "power_installed": null,
             "full_load_hour": null,
             "power_to_be_installed_pct": null,
-            "pet_sites": null
+            "amount": null
         },
         "p_operation_elec_elcon": {
             "area_m2": null,
@@ -20385,7 +20385,7 @@
             "power_installed": null,
             "full_load_hour": null,
             "power_to_be_installed_pct": null,
-            "pet_sites": null
+            "amount": null
         },
         "p_operation_elec_heatpump": {
             "area_m2": null,
@@ -20443,7 +20443,7 @@
             "power_installed": null,
             "full_load_hour": null,
             "power_to_be_installed_pct": null,
-            "pet_sites": null
+            "amount": null
         },
         "p_operation_vehicles": {
             "area_m2": null,
@@ -20501,7 +20501,7 @@
             "power_installed": null,
             "full_load_hour": null,
             "power_to_be_installed_pct": null,
-            "pet_sites": null
+            "amount": null
         },
         "s": {
             "area_m2": null,
@@ -20559,7 +20559,7 @@
             "power_installed": null,
             "full_load_hour": null,
             "power_to_be_installed_pct": null,
-            "pet_sites": null
+            "amount": null
         },
         "s_petrol": {
             "area_m2": null,
@@ -20617,7 +20617,7 @@
             "power_installed": null,
             "full_load_hour": null,
             "power_to_be_installed_pct": null,
-            "pet_sites": null
+            "amount": null
         },
         "s_diesel": {
             "area_m2": null,
@@ -20675,7 +20675,7 @@
             "power_installed": null,
             "full_load_hour": null,
             "power_to_be_installed_pct": null,
-            "pet_sites": null
+            "amount": null
         },
         "s_fueloil": {
             "area_m2": 0,
@@ -20733,7 +20733,7 @@
             "power_installed": null,
             "full_load_hour": null,
             "power_to_be_installed_pct": null,
-            "pet_sites": null
+            "amount": null
         },
         "s_lpg": {
             "area_m2": null,
@@ -20791,7 +20791,7 @@
             "power_installed": null,
             "full_load_hour": null,
             "power_to_be_installed_pct": null,
-            "pet_sites": null
+            "amount": null
         },
         "s_gas": {
             "area_m2": 0,
@@ -20849,7 +20849,7 @@
             "power_installed": null,
             "full_load_hour": null,
             "power_to_be_installed_pct": null,
-            "pet_sites": null
+            "amount": null
         },
         "s_biomass": {
             "area_m2": null,
@@ -20907,7 +20907,7 @@
             "power_installed": null,
             "full_load_hour": null,
             "power_to_be_installed_pct": null,
-            "pet_sites": null
+            "amount": null
         },
         "s_elec": {
             "area_m2": null,
@@ -20965,7 +20965,7 @@
             "power_installed": null,
             "full_load_hour": null,
             "power_to_be_installed_pct": null,
-            "pet_sites": null
+            "amount": null
         },
         "s_heatpump": {
             "area_m2": null,
@@ -21023,7 +21023,7 @@
             "power_installed": 0.0,
             "full_load_hour": 1650.0,
             "power_to_be_installed_pct": null,
-            "pet_sites": null
+            "amount": null
         },
         "s_emethan": {
             "area_m2": null,
@@ -21081,7 +21081,7 @@
             "power_installed": null,
             "full_load_hour": null,
             "power_to_be_installed_pct": null,
-            "pet_sites": null
+            "amount": null
         }
     },
     "m183X": {
