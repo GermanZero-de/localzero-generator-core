@@ -443,6 +443,9 @@ def calc(root, inputs: Inputs):
     s_emethan.CO2e_cb = 0
     s_emethan.CO2e_total = s_emethan.CO2e_cb
     s_emethan.change_CO2e_t = s_emethan.CO2e_total
+    s_emethan.change_CO2e_pct = div(
+        s_emethan.change_CO2e_t, 0
+    )
     s_emethan.CO2e_total_2021_estimated = 0 * fact("Fact_M_CO2e_wo_lulucf_2021_vs_2018")
     s_emethan.cost_climate_saved = (
         (s_emethan.CO2e_total_2021_estimated - s_emethan.CO2e_total)
