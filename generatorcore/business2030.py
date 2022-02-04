@@ -825,3 +825,5 @@ def calc(root, inputs: Inputs):
     g_consult.demand_emplo_com = g_consult.demand_emplo_new
     g.demand_emplo_com = g.demand_emplo_new
     b.demand_emplo_com = g.demand_emplo_com
+
+    rb.demand_emplo_com = b.demand_emplo_com + r30.r.demand_emplo_com
