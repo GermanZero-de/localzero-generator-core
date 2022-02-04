@@ -652,6 +652,10 @@ def calc(root, inputs: Inputs):
         + rail_action_invest_infra.invest
         + other_cycl.invest
     )
+    g_planning.invest_com = g_planning.invest * ass("Ass_T_C_ratio_public_sector_100")
+    g.invest_com = g_planning.invest_com
+    g_planning.invest_pa_com = g_planning.invest_com / entry("In_M_duration_target")
+    g.invest_pa_com = g_planning.invest_pa_com
     road_gds_ldt.base_unit = (
         road_gds_ldt_it_ot.transport_capacity_tkm
         + road_gds_ldt_ab.transport_capacity_tkm
@@ -1358,6 +1362,9 @@ def calc(root, inputs: Inputs):
     rail_action_invest_station.invest = rail_action_invest_station.invest_per_x * entry(
         "In_M_population_com_203X"
     )
+    rail_action_invest_station.invest_com = rail_action_invest_station.invest * ass("Ass_T_C_ratio_public_sector_100")
+    rail_action_invest_station.invest_pa_com = rail_action_invest_station.invest_com / entry("In_M_duration_target") 
+
     # rail_action_invest_infra.emplo_existingnicht existent oder ausgelastet
 
     rail_action_invest_station.invest_pa = rail_action_invest_station.invest / entry(
@@ -1587,9 +1594,8 @@ def calc(root, inputs: Inputs):
     g.invest_pa = g_planning.invest_pa
     rail.invest_com = (
         rail_action_invest_infra.invest_com
-        +
-        # rail_action_invest_station.invest_com +
-        rail_ppl.invest_com
+        + rail_action_invest_station.invest_com 
+        + rail_ppl.invest_com
     )  # SUM(rail_action_invest_infra.invest_com:rail_ppl.invest_com,DE260)
     rail_ppl.cost_wage = (
         rail_ppl_distance.cost_wage
@@ -1615,9 +1621,8 @@ def calc(root, inputs: Inputs):
     )
     rail.invest_pa_com = (
         rail_action_invest_infra.invest_pa_com
-        +
-        # rail_action_invest_station.invest_pa_com +
-        rail_ppl.invest_pa_com
+        + rail_action_invest_station.invest_pa_com 
+        + rail_ppl.invest_pa_com
     )  # SUM(rail_action_invest_infra.invest_pa_com:rail_ppl.invest_pa_com,DB260)
 
     ship_dmstc_action_infra.demand_ediesel = 0
@@ -1897,7 +1902,8 @@ def calc(root, inputs: Inputs):
     )  # SUM(other_foot.invest_pa_com:DB268)
     g.invest = g_planning.invest
     t.invest_com = (
-        road.invest_com
+        g.invest_com
+        + road.invest_com
         + rail.invest_com
         + ship.invest_com
         + other.invest_com
@@ -1938,7 +1944,8 @@ def calc(root, inputs: Inputs):
         + other_cycl_action_infra.demand_emplo_new
     )
     t.invest_pa_com = (
-        road.invest_pa_com
+        g.invest_pa_com
+        + road.invest_pa_com
         + rail.invest_pa_com
         + ship.invest_pa_com
         + other.invest_pa_com
