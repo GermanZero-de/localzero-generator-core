@@ -1513,4 +1513,5 @@ def calc(root, inputs: Inputs):
     i30.s_fossil_gas.energy = 0
     i30.s_fossil_ofossil.energy = 0
     i30.s_renew_heatpump.energy = 0
+    i30.s_renew_solarth.energy = 0
 
