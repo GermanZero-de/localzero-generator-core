@@ -1,5 +1,9 @@
 Localzero Generator Core
 =========================
+
+.. image:: https://github.com/GermanZero-de/localzero-generator-core/workflows/test/badge.svg
+    :target: https://github.com/GermanZero-de/localzero-generator-core/actions?query=workflow%3Atest+branch%3Amain
+
 This contains the calcuation. It should neither contain reference data
 nor anything that is specific to the website.
 
