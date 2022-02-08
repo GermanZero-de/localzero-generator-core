@@ -125,14 +125,18 @@ def cmd_data_checkout(args):
         exit(1)
 
     # Alright now pull and checkout the wanted hashes
+    # fmt: off
     update_existing(
-        "public", current=status.public_status.rev, wanted=status.production.public
+        "public",
+        current=status.public_status.rev,
+        wanted=status.production.public
     )
     update_existing(
         "proprietary",
         current=status.proprietary_status.rev,
-        wanted=status.production.proprietary,
+        wanted=status.production.proprietary
     )
+    # fmt: on
 
 
 def cmd_data_entries_user_overrides_generate_defaults(args):
