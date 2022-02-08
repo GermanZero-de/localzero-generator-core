@@ -79,71 +79,64 @@ def cmd_data_lookup(args):
 
 
 def cmd_data_checkout(args):
-    datadir = refdatatools.datadir()
-    production = refdata.Version.load("production", datadir=datadir)
-    status: refdatatools.DataDirStatus | None = None
-    status_error = None
-    freshly_cloned = False
-    try:
-        # This means we are loading the version file twice. Which is a bit
-        # silly but oh well...
-        status = refdatatools.DataDirStatus.get(datadir)
-    except Exception as e:
-        status_error = e
+    def update_existing(
+        repo: refdatatools.PUBLIC_OR_PROPRIETARY, *, current: str, wanted: str
+    ):
+        if current == wanted:
+            if not freshly_cloned:
+                print(
+                    f"{repo} already contains a checkout of {wanted} -- not touching it",
+                    file=sys.stderr,
+                )
+        else:
+            print(f"switching {repo} from {current} to {wanted}")
+            # First switch to main before pulling -- this has the least chance of causing
+            # trouble as we should merge on github
+            refdatatools.checkout(datadir, repo, "main")
+            # refdatatools.pull uses --ff-only
+            refdatatools.pull(datadir, repo, pa_token=args.pat)
+            # Now we should have all changes and can switch to whatever the production file
+            # wants
+            refdatatools.checkout(datadir, repo, wanted)
 
+    datadir = refdatatools.datadir()
     public_dir = os.path.join(datadir, "public")
     proprietary_dir = os.path.join(datadir, "proprietary")
+    freshly_cloned = False
 
-    if status is None:
-        assert status_error is not None
-        if not os.path.exists(public_dir) and not os.path.exists(proprietary_dir):
-            print(
-                "Looks like there is no checkout at all yet -- cloning for you",
-                file=sys.stderr,
-            )
-            refdatatools.clone(datadir, "public", pa_token=args.pat)
-            refdatatools.clone(datadir, "proprietary", pa_token=args.pat)
-            # Retry getting the status. If this fails now, we are in some screwed up state anyway
-            status = refdatatools.DataDirStatus.get(datadir)
-            freshly_cloned = True
-        else:
-            print(
-                f"Hmm there already seems to be directories for the data repos, but data check-repos failed with {status_error}. Giving up..."
-            )
-            exit(1)
-    else:
-        # make sure we are not causing data loss
-        if not status.public_status.is_clean or not status.proprietary_status.is_clean:
-            print(
-                "There uncommitted changes or untracked files in at least one data repository. Fix that first."
-            )
-            exit(1)
+    # Clone the repos if there is nothing at all
+    if not os.path.exists(public_dir) and not os.path.exists(proprietary_dir):
+        print(
+            "Looks like there is no checkout at all yet -- cloning for you",
+            file=sys.stderr,
+        )
+        refdatatools.clone(datadir, "public", pa_token=args.pat)
+        refdatatools.clone(datadir, "proprietary", pa_token=args.pat)
+        freshly_cloned = True
 
-    if status is not None and status.public_status.rev == production.public:
-        if not freshly_cloned:
-            print(
-                f"public already contains a checkout of {production.public} -- not touching it",
-                file=sys.stderr,
-            )
-    else:
-        # First switch to main before pulling -- this has the least chance of causing
-        # trouble as we should merge on github
-        refdatatools.checkout(datadir, "public", "main")
-        # refdatatools.pull uses --ff-only
-        refdatatools.pull(datadir, "public", pa_token=args.pat)
-        # Now we should have all changes and can switch to whatever the production file
-        # wants
-        refdatatools.checkout(datadir, "public", production.public)
+    # now figure out the current state
+    status = refdatatools.DataDirStatus.get(datadir)
 
-    if status is not None and status.proprietary_status.rev == production.proprietary:
-        if not freshly_cloned:
-            print(
-                f"proprietary already contains a checkout of {production.proprietary} -- not touching it",
-                file=sys.stderr,
-            )
-    else:
-        refdatatools.checkout(datadir, "public", production.public)
-        refdatatools.checkout(datadir, "proprietary", production.proprietary)
+    # make sure we are not causing data loss
+    if not status.public_status.is_clean or not status.proprietary_status.is_clean:
+        print(
+            "There uncommitted changes or untracked files in at least one data repository. Fix that first."
+        )
+        exit(1)
+
+    # Alright now pull and checkout the wanted hashes
+    # fmt: off
+    update_existing(
+        "public",
+        current=status.public_status.rev,
+        wanted=status.production.public
+    )
+    update_existing(
+        "proprietary",
+        current=status.proprietary_status.rev,
+        wanted=status.production.proprietary
+    )
+    # fmt: on
 
 
 def cmd_data_entries_user_overrides_generate_defaults(args):
