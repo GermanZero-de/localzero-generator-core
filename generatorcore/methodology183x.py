@@ -35,6 +35,9 @@ class zColVars:
     demand_emplo: float = None
     demand_emplo_new: float = None
     demand_emplo_com: float = None
+    invest_pct: float = None
+    cost_climate_saved_pct: float = None
+    demand_emplo_new_pct: float = None
 
 
 # definition of variable names for sector M(ethodology) - there are no rows or columns in the excel!
@@ -968,33 +971,32 @@ def calc_Z(root, inputs: Inputs):
     t.pct_CO2e_total_30 = div(t30.t.CO2e_total, z.CO2e_total_30)
     a.pct_CO2e_total_30 = div(a30.a.CO2e_total, z.CO2e_total_30)
 
-    h.invest_pct = div(h30.h.invest,z.invest)
-    e.invest_pct = div(e30.e.invest,z.invest)
-    f.invest_pct = div(f30.f.invest,z.invest)
-    r.invest_pct = div(r30.r.invest,z.invest) 
-    b.invest_pct = div(b30.b.invest,z.invest)   
-    i.invest_pct = div(i30.i.invest,z.invest)  
-    t.invest_pct = div(t30.t.invest,z.invest)  
-    a.invest_pct = div(a30.a.invest,z.invest) 
-    l.invest_pct = div(l30.l.invest,z.invest)
+    h.invest_pct = div(h30.h.invest, z.invest)
+    e.invest_pct = div(e30.e.invest, z.invest)
+    f.invest_pct = div(f30.f.invest, z.invest)
+    r.invest_pct = div(r30.r.invest, z.invest)
+    b.invest_pct = div(b30.b.invest, z.invest)
+    i.invest_pct = div(i30.i.invest, z.invest)
+    t.invest_pct = div(t30.t.invest, z.invest)
+    a.invest_pct = div(a30.a.invest, z.invest)
+    l.invest_pct = div(l30.l.invest, z.invest)
 
-    h.cost_climate_saved_pct = div(h30.h.cost_climate_saved,z.cost_climate_saved)
-    e.cost_climate_saved_pct = div(e30.e.cost_climate_saved,z.cost_climate_saved)
-    f.cost_climate_saved_pct = div(f30.f.cost_climate_saved,z.cost_climate_saved)
-    r.cost_climate_saved_pct = div(r30.r.cost_climate_saved,z.cost_climate_saved) 
-    b.cost_climate_saved_pct = div(b30.b.cost_climate_saved,z.cost_climate_saved)   
-    i.cost_climate_saved_pct = div(i30.i.cost_climate_saved,z.cost_climate_saved)  
-    t.cost_climate_saved_pct = div(t30.t.cost_climate_saved,z.cost_climate_saved)  
-    a.cost_climate_saved_pct = div(a30.a.cost_climate_saved,z.cost_climate_saved) 
-    l.cost_climate_saved_pct = div(l30.l.cost_climate_saved,z.cost_climate_saved) 
+    h.cost_climate_saved_pct = div(h30.h.cost_climate_saved, z.cost_climate_saved)
+    e.cost_climate_saved_pct = div(e30.e.cost_climate_saved, z.cost_climate_saved)
+    f.cost_climate_saved_pct = div(f30.f.cost_climate_saved, z.cost_climate_saved)
+    r.cost_climate_saved_pct = div(r30.r.cost_climate_saved, z.cost_climate_saved)
+    b.cost_climate_saved_pct = div(b30.b.cost_climate_saved, z.cost_climate_saved)
+    i.cost_climate_saved_pct = div(i30.i.cost_climate_saved, z.cost_climate_saved)
+    t.cost_climate_saved_pct = div(t30.t.cost_climate_saved, z.cost_climate_saved)
+    a.cost_climate_saved_pct = div(a30.a.cost_climate_saved, z.cost_climate_saved)
+    l.cost_climate_saved_pct = div(l30.l.cost_climate_saved, z.cost_climate_saved)
 
-    h.demand_emplo_new_pct = div(h30.h.demand_emplo_new,z.demand_emplo_new)
-    e.demand_emplo_new_pct = div(e30.e.demand_emplo_new,z.demand_emplo_new)
-    f.demand_emplo_new_pct = div(f30.f.demand_emplo_new,z.demand_emplo_new)
-    r.demand_emplo_new_pct = div(r30.r.demand_emplo_new,z.demand_emplo_new) 
-    b.demand_emplo_new_pct = div(b30.b.demand_emplo_new,z.demand_emplo_new)   
-    i.demand_emplo_new_pct = div(i30.i.demand_emplo_new,z.demand_emplo_new)  
-    t.demand_emplo_new_pct = div(t30.t.demand_emplo_new,z.demand_emplo_new)  
-    a.demand_emplo_new_pct = div(a30.a.demand_emplo_new,z.demand_emplo_new) 
-    l.demand_emplo_new_pct = div(l30.l.demand_emplo_new,z.demand_emplo_new)  
-
+    h.demand_emplo_new_pct = div(h30.h.demand_emplo_new, z.demand_emplo_new)
+    e.demand_emplo_new_pct = div(e30.e.demand_emplo_new, z.demand_emplo_new)
+    f.demand_emplo_new_pct = div(f30.f.demand_emplo_new, z.demand_emplo_new)
+    r.demand_emplo_new_pct = div(r30.r.demand_emplo_new, z.demand_emplo_new)
+    b.demand_emplo_new_pct = div(b30.b.demand_emplo_new, z.demand_emplo_new)
+    i.demand_emplo_new_pct = div(i30.i.demand_emplo_new, z.demand_emplo_new)
+    t.demand_emplo_new_pct = div(t30.t.demand_emplo_new, z.demand_emplo_new)
+    a.demand_emplo_new_pct = div(a30.a.demand_emplo_new, z.demand_emplo_new)
+    l.demand_emplo_new_pct = div(l30.l.demand_emplo_new, z.demand_emplo_new)
