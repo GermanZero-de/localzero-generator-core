@@ -1,6 +1,7 @@
 name: test
 
-on: 
+on:
+  workflow_dispatch:
   pull_request:
   push:
     branches:
@@ -15,29 +16,40 @@ jobs:
       run:
         shell: bash
     runs-on: ${{ matrix.os }}
+
+    env:
+      # Required coverage
+      COVERAGE_REQ: 90
+
     steps:
       - name: Check out repository
         uses: actions/checkout@v2
+
       - name: Set up python
         id: setup-python
         uses: actions/setup-python@v2
         with:
           python-version: "3.10"
+
       - name: Install Poetry
         uses: snok/install-poetry@v1
         with:
           virtualenvs-create: true
           virtualenvs-in-project: true
+
       - name: Load cached venv
         id: cached-pip-wheels
         uses: actions/cache@v2
         with:
           path: ~/.cache
           key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
+
       - name: Install dependencies
         run: poetry install --no-interaction --no-root
+
       - name: Install library
         run: poetry install --no-interaction
+
       - name: Checkout data repositories
         env:
           PA_TOKEN: ${{ secrets.LZ_PAT }}
@@ -45,7 +57,13 @@ jobs:
           source $VENV
           python devtool.py data checkout -pat ${PA_TOKEN}
         shell: bash
+
       - name: Run pytest
         run: |
           source $VENV
           pytest tests/
+
+      - name: Run pytest coverage
+        run: |
+          source $VENV
+          pytest --cov=generatorcore tests/ --cov-fail-under=${{ env.COVERAGE_REQ }}
