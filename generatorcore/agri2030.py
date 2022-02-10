@@ -1462,7 +1462,7 @@ def calc(root, inputs: Inputs):
     a.change_CO2e_pct = div(a.change_CO2e_t, a18.a.CO2e_total)
 
     g_consult.demand_emplo_com = g_consult.demand_emplo_new
-    g.demand_emplo_com = g.demand_emplo_new
+    g.demand_emplo_com = g_consult.demand_emplo_com
     a.demand_emplo_com = g.demand_emplo_com
 
     p_operation_heat.cost_wage = (

@@ -105,6 +105,9 @@ def calc(root, inputs: Inputs):
 
     i18 = root.i18
     i30 = root.i30
+    
+    i = root.i30.i
+    g = root.i30.g
 
     # p_chem_basic
     p_chem_basic = root.i30.p_chem_basic
@@ -935,10 +938,15 @@ def calc(root, inputs: Inputs):
     g_consult.cost_wage = g_consult.invest_pa * g_consult.pct_of_wage
     g_consult.ratio_wage_to_emplo = ass("Ass_T_C_yearly_costs_per_planer")
     g_consult.demand_emplo = div(g_consult.cost_wage, g_consult.ratio_wage_to_emplo)
-    g_consult.demand_emplo_new = 0
-    g_consult.emplo_existing = g_consult.demand_emplo
 
-    g = root.i30.g
+    g_consult.emplo_existing = 0
+
+    g_consult.demand_emplo_new = g_consult.demand_emplo - g_consult.emplo_existing
+    g_consult.demand_emplo_com = g_consult.demand_emplo_new
+    g.demand_emplo_com = g_consult.demand_emplo_com
+    i.demand_emplo_com = g.demand_emplo_com 
+
+    
 
     g.invest_pa = g_consult.invest_pa
     g.invest_pa_com = g_consult.invest_pa
@@ -954,7 +962,7 @@ def calc(root, inputs: Inputs):
 
     p_miner_cement.invest_outside = p_miner_cement.invest
 
-    i = root.i30.i
+    
 
     i.invest_pa_com = g.invest_pa_com
     p_miner_ceram.invest_per_x = ass("Ass_I_P_miner_ceramic_ratio_invest_to_prodvol")
