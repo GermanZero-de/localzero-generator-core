@@ -40,6 +40,7 @@ class IColVars2030:
     ratio_wage_to_emplo: float = None
     demand_emplo: float = None
     demand_emplo_new: float = None
+    demand_emplo_com: float = None
     emplo_existing: float = None
     invest_per_x: float = None
 
