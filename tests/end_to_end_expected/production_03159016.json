@@ -8430,6 +8430,7 @@
             "ratio_wage_to_emplo": null,
             "demand_emplo": 0.901907188640779,
             "demand_emplo_new": 0.901907188640779,
+            "demand_emplo_com": 0.901907188640779,
             "emplo_existing": null,
             "invest_per_x": null
         },
@@ -8469,6 +8470,7 @@
             "ratio_wage_to_emplo": 112000.0,
             "demand_emplo": 0.901907188640779,
             "demand_emplo_new": 0.901907188640779,
+            "demand_emplo_com": 0.901907188640779,
             "emplo_existing": 0,
             "invest_per_x": null
         },
@@ -8508,6 +8510,7 @@
             "ratio_wage_to_emplo": null,
             "demand_emplo": 37.15031871275512,
             "demand_emplo_new": 0.901907188640779,
+            "demand_emplo_com": 0.901907188640779,
             "emplo_existing": null,
             "invest_per_x": null
         },
@@ -8547,6 +8550,7 @@
             "ratio_wage_to_emplo": null,
             "demand_emplo": 36.248411524114346,
             "demand_emplo_new": 0,
+            "demand_emplo_com": null,
             "emplo_existing": 51.63526883831096,
             "invest_per_x": null
         },
@@ -8586,6 +8590,7 @@
             "ratio_wage_to_emplo": null,
             "demand_emplo": 3.1286771424278923,
             "demand_emplo_new": null,
+            "demand_emplo_com": null,
             "emplo_existing": null,
             "invest_per_x": null
         },
@@ -8625,6 +8630,7 @@
             "ratio_wage_to_emplo": 49833.26812363759,
             "demand_emplo": 0.49836237337273503,
             "demand_emplo_new": null,
+            "demand_emplo_com": null,
             "emplo_existing": null,
             "invest_per_x": 104.0
         },
@@ -8664,6 +8670,7 @@
             "ratio_wage_to_emplo": 49833.26812363759,
             "demand_emplo": 0.09848477765447514,
             "demand_emplo_new": null,
+            "demand_emplo_com": null,
             "emplo_existing": null,
             "invest_per_x": 100.0
         },
@@ -8703,6 +8710,7 @@
             "ratio_wage_to_emplo": 49833.26812363759,
             "demand_emplo": 1.8424365478193567,
             "demand_emplo_new": null,
+            "demand_emplo_com": null,
             "emplo_existing": null,
             "invest_per_x": 1027.3972602739725
         },
@@ -8742,6 +8750,7 @@
             "ratio_wage_to_emplo": 49833.26812363759,
             "demand_emplo": 0.6893934435813255,
             "demand_emplo_new": null,
+            "demand_emplo_com": null,
             "emplo_existing": null,
             "invest_per_x": 305.78049003116485
         },
@@ -8781,6 +8790,7 @@
             "ratio_wage_to_emplo": null,
             "demand_emplo": 19.990939941803887,
             "demand_emplo_new": null,
+            "demand_emplo_com": null,
             "emplo_existing": null,
             "invest_per_x": null
         },
@@ -8820,6 +8830,7 @@
             "ratio_wage_to_emplo": 49833.26812363759,
             "demand_emplo": 11.774075656900663,
             "demand_emplo_new": null,
+            "demand_emplo_com": null,
             "emplo_existing": null,
             "invest_per_x": 7476.199365316408
         },
@@ -8859,6 +8870,7 @@
             "ratio_wage_to_emplo": 49833.26812363759,
             "demand_emplo": 1.4552228339989608,
             "demand_emplo_new": null,
+            "demand_emplo_com": null,
             "emplo_existing": null,
             "invest_per_x": 1581.4696485623003
         },
@@ -8898,6 +8910,7 @@
             "ratio_wage_to_emplo": 49833.26812363759,
             "demand_emplo": 6.761641450904261,
             "demand_emplo_new": null,
+            "demand_emplo_com": null,
             "emplo_existing": null,
             "invest_per_x": 6031.995803829006
         },
@@ -8937,6 +8950,7 @@
             "ratio_wage_to_emplo": null,
             "demand_emplo": 7.508851828630999,
             "demand_emplo_new": null,
+            "demand_emplo_com": null,
             "emplo_existing": null,
             "invest_per_x": null
         },
@@ -8976,6 +8990,7 @@
             "ratio_wage_to_emplo": null,
             "demand_emplo": 6.57790119408621,
             "demand_emplo_new": null,
+            "demand_emplo_com": null,
             "emplo_existing": null,
             "invest_per_x": null
         },
@@ -9015,6 +9030,7 @@
             "ratio_wage_to_emplo": 49833.26812363759,
             "demand_emplo": 2.6752581392708175,
             "demand_emplo_new": null,
+            "demand_emplo_com": null,
             "emplo_existing": null,
             "invest_per_x": 650.0
         },
@@ -9054,6 +9070,7 @@
             "ratio_wage_to_emplo": 49833.26812363759,
             "demand_emplo": 3.9026430548153925,
             "demand_emplo_new": null,
+            "demand_emplo_com": null,
             "emplo_existing": null,
             "invest_per_x": 750.0
         },
@@ -9093,6 +9110,7 @@
             "ratio_wage_to_emplo": 49833.26812363759,
             "demand_emplo": 0.9309506345447895,
             "demand_emplo_new": null,
+            "demand_emplo_com": null,
             "emplo_existing": null,
             "invest_per_x": 333.3333333333333
         },
@@ -9132,6 +9150,7 @@
             "ratio_wage_to_emplo": null,
             "demand_emplo": 5.619942611251568,
             "demand_emplo_new": null,
+            "demand_emplo_com": null,
             "emplo_existing": null,
             "invest_per_x": null
         },
@@ -9171,6 +9190,7 @@
             "ratio_wage_to_emplo": 49833.26812363759,
             "demand_emplo": 0.15679168581806982,
             "demand_emplo_new": null,
+            "demand_emplo_com": null,
             "emplo_existing": null,
             "invest_per_x": 31.37254901960784
         },
@@ -9210,6 +9230,7 @@
             "ratio_wage_to_emplo": 49833.26812363759,
             "demand_emplo": 0.6893701179756316,
             "demand_emplo_new": null,
+            "demand_emplo_com": null,
             "emplo_existing": null,
             "invest_per_x": 17.46512807737303
         },
@@ -9249,6 +9270,7 @@
             "ratio_wage_to_emplo": 49833.26812363759,
             "demand_emplo": 0.5111838523931592,
             "demand_emplo_new": null,
+            "demand_emplo_com": null,
             "emplo_existing": null,
             "invest_per_x": 31.050228310502284
         },
@@ -9288,6 +9310,7 @@
             "ratio_wage_to_emplo": 49833.26812363759,
             "demand_emplo": 4.262596955064707,
             "demand_emplo_new": null,
+            "demand_emplo_com": null,
             "emplo_existing": null,
             "invest_per_x": 1041.6666666666667
         },
@@ -9327,6 +9350,7 @@
             "ratio_wage_to_emplo": null,
             "demand_emplo": null,
             "demand_emplo_new": null,
+            "demand_emplo_com": null,
             "emplo_existing": null,
             "invest_per_x": null
         },
@@ -9366,6 +9390,7 @@
             "ratio_wage_to_emplo": null,
             "demand_emplo": null,
             "demand_emplo_new": null,
+            "demand_emplo_com": null,
             "emplo_existing": null,
             "invest_per_x": null
         },
@@ -9405,6 +9430,7 @@
             "ratio_wage_to_emplo": null,
             "demand_emplo": null,
             "demand_emplo_new": null,
+            "demand_emplo_com": null,
             "emplo_existing": null,
             "invest_per_x": null
         },
@@ -9444,6 +9470,7 @@
             "ratio_wage_to_emplo": null,
             "demand_emplo": null,
             "demand_emplo_new": null,
+            "demand_emplo_com": null,
             "emplo_existing": null,
             "invest_per_x": null
         },
@@ -9483,6 +9510,7 @@
             "ratio_wage_to_emplo": null,
             "demand_emplo": null,
             "demand_emplo_new": null,
+            "demand_emplo_com": null,
             "emplo_existing": null,
             "invest_per_x": null
         },
@@ -9522,6 +9550,7 @@
             "ratio_wage_to_emplo": null,
             "demand_emplo": null,
             "demand_emplo_new": null,
+            "demand_emplo_com": null,
             "emplo_existing": null,
             "invest_per_x": null
         },
@@ -9561,6 +9590,7 @@
             "ratio_wage_to_emplo": null,
             "demand_emplo": null,
             "demand_emplo_new": null,
+            "demand_emplo_com": null,
             "emplo_existing": null,
             "invest_per_x": null
         },
@@ -9600,6 +9630,7 @@
             "ratio_wage_to_emplo": null,
             "demand_emplo": null,
             "demand_emplo_new": null,
+            "demand_emplo_com": null,
             "emplo_existing": null,
             "invest_per_x": null
         },
@@ -9639,6 +9670,7 @@
             "ratio_wage_to_emplo": null,
             "demand_emplo": null,
             "demand_emplo_new": null,
+            "demand_emplo_com": null,
             "emplo_existing": null,
             "invest_per_x": null
         },
@@ -9678,6 +9710,7 @@
             "ratio_wage_to_emplo": null,
             "demand_emplo": null,
             "demand_emplo_new": null,
+            "demand_emplo_com": null,
             "emplo_existing": null,
             "invest_per_x": null
         },
@@ -9717,6 +9750,7 @@
             "ratio_wage_to_emplo": null,
             "demand_emplo": null,
             "demand_emplo_new": null,
+            "demand_emplo_com": null,
             "emplo_existing": null,
             "invest_per_x": null
         },
@@ -9756,6 +9790,7 @@
             "ratio_wage_to_emplo": null,
             "demand_emplo": null,
             "demand_emplo_new": null,
+            "demand_emplo_com": null,
             "emplo_existing": null,
             "invest_per_x": null
         },
@@ -9795,6 +9830,7 @@
             "ratio_wage_to_emplo": null,
             "demand_emplo": null,
             "demand_emplo_new": null,
+            "demand_emplo_com": null,
             "emplo_existing": null,
             "invest_per_x": null
         },
@@ -9834,6 +9870,7 @@
             "ratio_wage_to_emplo": null,
             "demand_emplo": null,
             "demand_emplo_new": null,
+            "demand_emplo_com": null,
             "emplo_existing": null,
             "invest_per_x": null
         },
@@ -9873,6 +9910,7 @@
             "ratio_wage_to_emplo": null,
             "demand_emplo": null,
             "demand_emplo_new": null,
+            "demand_emplo_com": null,
             "emplo_existing": null,
             "invest_per_x": null
         },
@@ -9912,6 +9950,7 @@
             "ratio_wage_to_emplo": null,
             "demand_emplo": null,
             "demand_emplo_new": null,
+            "demand_emplo_com": null,
             "emplo_existing": null,
             "invest_per_x": null
         },
@@ -9951,6 +9990,7 @@
             "ratio_wage_to_emplo": null,
             "demand_emplo": null,
             "demand_emplo_new": null,
+            "demand_emplo_com": null,
             "emplo_existing": null,
             "invest_per_x": null
         }
