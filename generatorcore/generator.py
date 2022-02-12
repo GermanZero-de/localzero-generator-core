@@ -83,9 +83,9 @@ def calculate(inputs: Inputs) -> Result:
     start_t = time.time()
     # 2018
     print("Residence2018_calc", file=sys.stderr)
-    residences2018.calc(result, inputs)
+    r18 = residences2018.calc(inputs)
     print("Business2018_calc", file=sys.stderr)
-    business2018.calc(result, inputs)
+    business2018.calc(inputs, r18=r18)
     print("Industry2018_calc", file=sys.stderr)
     industry2018.calc(result, inputs)
     print("Transport2018_calc", file=sys.stderr)

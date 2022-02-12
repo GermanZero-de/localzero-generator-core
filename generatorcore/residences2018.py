@@ -76,7 +76,7 @@ class Generator:
     pass
 
 
-def calc(root, inputs: Inputs):
+def calc(inputs: Inputs) -> R18:
     def fact(n):
         return inputs.fact(n)
 
@@ -87,7 +87,7 @@ def calc(root, inputs: Inputs):
         return inputs.entry(n)
 
     ### P - Section ###
-    r18 = root.r18
+    r18 = R18()
     p = r18.p
     r = r18.r
     p_buildings_total = r18.p_buildings_total
@@ -370,20 +370,20 @@ def calc(root, inputs: Inputs):
 
     s = r18.s
 
-    s_fueloil = root.r18.s_fueloil
-    s_lpg = root.r18.s_lpg
-    s_biomass = root.r18.s_biomass
-    s_coal = root.r18.s_coal
-    s_petrol = root.r18.s_petrol
-    s_heatnet = root.r18.s_heatnet
-    s_solarth = root.r18.s_solarth
-    s_heatpump = root.r18.s_heatpump
-    s_elec_heating = root.r18.s_elec_heating
-    s_gas = root.r18.s_gas
-    s_elec = root.r18.s_elec
-    s_emethan = root.r18.s_emethan
-    p_elec_elcon = root.r18.p_elec_elcon
-    p_elec_heatpump = root.r18.p_elec_heatpump
+    s_fueloil = r18.s_fueloil
+    s_lpg = r18.s_lpg
+    s_biomass = r18.s_biomass
+    s_coal = r18.s_coal
+    s_petrol = r18.s_petrol
+    s_heatnet = r18.s_heatnet
+    s_solarth = r18.s_solarth
+    s_heatpump = r18.s_heatpump
+    s_elec_heating = r18.s_elec_heating
+    s_gas = r18.s_gas
+    s_elec = r18.s_elec
+    s_emethan = r18.s_emethan
+    p_elec_elcon = r18.p_elec_elcon
+    p_elec_heatpump = r18.p_elec_heatpump
 
     # Energy
     s_fueloil.energy = entry("In_R_fueloil_fec")
@@ -564,7 +564,6 @@ def calc(root, inputs: Inputs):
     s_elec.CO2e_total = s_elec.CO2e_cb
     s_elec_heating.CO2e_total = s_elec_heating.CO2e_cb
 
-
     # cost_fuel_per_MW
     s_fueloil.cost_fuel_per_MWh = fact("Fact_R_S_fueloil_energy_cost_factor_2018")
     s_lpg.cost_fuel_per_MWh = fact("Fact_R_S_lpg_energy_cost_factor_2018")
@@ -626,6 +625,4 @@ def calc(root, inputs: Inputs):
         / (p_buildings_total.factor_adapted_to_fec * p_buildings_total.area_m2)
     )
 
-
-    
-
+    return r18
