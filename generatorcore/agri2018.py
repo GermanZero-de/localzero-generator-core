@@ -1,6 +1,8 @@
+from dataclasses import dataclass, asdict
+
+from . import business2018, lulucf2018
 from .inputs import Inputs
 from .utils import div
-from dataclasses import dataclass, asdict
 
 
 @dataclass
@@ -82,7 +84,7 @@ class A18:
         return asdict(self)
 
 
-def calc(root, inputs: Inputs):
+def calc(inputs: Inputs, l18: lulucf2018.L18, b18: business2018.B18) -> A18:
     def fact(n):
         return inputs.fact(n)
 
@@ -92,56 +94,58 @@ def calc(root, inputs: Inputs):
     def entry(n):
         return inputs.entry(n)
 
-    l18 = root.l18
-    b18 = root.b18
-    a = root.a18.a
-    p = root.a18.p
-    g = root.a18.g
-    p_fermen = root.a18.p_fermen
-    p_fermen_dairycow = root.a18.p_fermen_dairycow
-    p_fermen_nondairy = root.a18.p_fermen_nondairy
-    p_fermen_swine = root.a18.p_fermen_swine
-    p_fermen_poultry = root.a18.p_fermen_poultry
-    p_fermen_oanimal = root.a18.p_fermen_oanimal
-    p_manure = root.a18.p_manure
-    p_manure_dairycow = root.a18.p_manure_dairycow
-    p_manure_nondairy = root.a18.p_manure_nondairy
-    p_manure_swine = root.a18.p_manure_swine
-    p_manure_poultry = root.a18.p_manure_poultry
-    p_manure_oanimal = root.a18.p_manure_oanimal
-    p_manure_deposition = root.a18.p_manure_deposition
-    p_soil = root.a18.p_soil
-    p_soil_fertilizer = root.a18.p_soil_fertilizer
-    p_soil_manure = root.a18.p_soil_manure
-    p_soil_sludge = root.a18.p_soil_sludge
-    p_soil_ecrop = root.a18.p_soil_ecrop
-    p_soil_grazing = root.a18.p_soil_grazing
-    p_soil_residue = root.a18.p_soil_residue
-    p_soil_orgfarm = root.a18.p_soil_orgfarm
-    p_soil_orgloss = root.a18.p_soil_orgloss
-    p_soil_leaching = root.a18.p_soil_leaching
-    p_soil_deposition = root.a18.p_soil_deposition
-    p_other = root.a18.p_other
-    p_other_kas = root.a18.p_other_kas
-    p_other_liming = root.a18.p_other_liming
-    p_other_liming_calcit = root.a18.p_other_liming_calcit
-    p_other_liming_dolomite = root.a18.p_other_liming_dolomite
-    p_other_urea = root.a18.p_other_urea
-    p_other_ecrop = root.a18.p_other_ecrop
-    p_operation = root.a18.p_operation
-    p_operation_heat = root.a18.p_operation_heat
-    p_operation_elec_elcon = root.a18.p_operation_elec_elcon
-    p_operation_vehicles = root.a18.p_operation_vehicles
-    s = root.a18.s
-    s_petrol = root.a18.s_petrol
-    s_diesel = root.a18.s_diesel
-    s_fueloil = root.a18.s_fueloil
-    s_lpg = root.a18.s_lpg
-    s_gas = root.a18.s_gas
-    s_biomass = root.a18.s_biomass
-    s_elec = root.a18.s_elec
-    s_heatpump = root.a18.s_heatpump
-    p_operation_elec_heatpump = root.a18.p_operation_elec_heatpump
+    a18 = A18()
+
+    # Most of the "shortcuts" below should probably just die. They don't save
+    # that much typing anymore and make it harder to recognize the data flow.
+    a = a18.a
+    p = a18.p
+    g = a18.g
+    p_fermen = a18.p_fermen
+    p_fermen_dairycow = a18.p_fermen_dairycow
+    p_fermen_nondairy = a18.p_fermen_nondairy
+    p_fermen_swine = a18.p_fermen_swine
+    p_fermen_poultry = a18.p_fermen_poultry
+    p_fermen_oanimal = a18.p_fermen_oanimal
+    p_manure = a18.p_manure
+    p_manure_dairycow = a18.p_manure_dairycow
+    p_manure_nondairy = a18.p_manure_nondairy
+    p_manure_swine = a18.p_manure_swine
+    p_manure_poultry = a18.p_manure_poultry
+    p_manure_oanimal = a18.p_manure_oanimal
+    p_manure_deposition = a18.p_manure_deposition
+    p_soil = a18.p_soil
+    p_soil_fertilizer = a18.p_soil_fertilizer
+    p_soil_manure = a18.p_soil_manure
+    p_soil_sludge = a18.p_soil_sludge
+    p_soil_ecrop = a18.p_soil_ecrop
+    p_soil_grazing = a18.p_soil_grazing
+    p_soil_residue = a18.p_soil_residue
+    p_soil_orgfarm = a18.p_soil_orgfarm
+    p_soil_orgloss = a18.p_soil_orgloss
+    p_soil_leaching = a18.p_soil_leaching
+    p_soil_deposition = a18.p_soil_deposition
+    p_other = a18.p_other
+    p_other_kas = a18.p_other_kas
+    p_other_liming = a18.p_other_liming
+    p_other_liming_calcit = a18.p_other_liming_calcit
+    p_other_liming_dolomite = a18.p_other_liming_dolomite
+    p_other_urea = a18.p_other_urea
+    p_other_ecrop = a18.p_other_ecrop
+    p_operation = a18.p_operation
+    p_operation_heat = a18.p_operation_heat
+    p_operation_elec_elcon = a18.p_operation_elec_elcon
+    p_operation_vehicles = a18.p_operation_vehicles
+    s = a18.s
+    s_petrol = a18.s_petrol
+    s_diesel = a18.s_diesel
+    s_fueloil = a18.s_fueloil
+    s_lpg = a18.s_lpg
+    s_gas = a18.s_gas
+    s_biomass = a18.s_biomass
+    s_elec = a18.s_elec
+    s_heatpump = a18.s_heatpump
+    p_operation_elec_heatpump = a18.p_operation_elec_heatpump
 
     """ unused variables """
     s_heatpump.energy = 0.0
@@ -505,3 +509,5 @@ def calc(root, inputs: Inputs):
     a.CO2e_pb = p.CO2e_pb
     a.CO2e_cb = s.CO2e_cb
     p.energy = p_operation.energy
+
+    return a18

@@ -192,7 +192,7 @@ class T18:
 # Berechnungsfunktion Transport 2018
 
 
-def calc(root, inputs: Inputs):
+def calc(inputs: Inputs) -> T18:
     def fact(n):
         return inputs.fact(n)
 
@@ -202,53 +202,54 @@ def calc(root, inputs: Inputs):
     def entry(n):
         return inputs.entry(n)
 
+    t18 = T18()
     # abbreviations
-    t = root.t18.t
-    g = root.t18.g
-    g_planning = root.t18.g_planning
-    air_inter = root.t18.air_inter
-    air_dmstc = root.t18.air_dmstc
-    road = root.t18.road
-    road_action_charger = root.t18.road_action_charger
-    road_car = root.t18.road_car
-    road_car_it_ot = root.t18.road_car_it_ot
-    road_car_ab = root.t18.road_car_ab
-    road_bus = root.t18.road_bus
-    road_bus_action_infra = root.t18.road_bus_action_infra
-    road_gds = root.t18.road_gds
-    road_gds_ldt = root.t18.road_gds_ldt
-    road_gds_ldt_it_ot = root.t18.road_gds_ldt_it_ot
-    road_gds_ldt_ab = root.t18.road_gds_ldt_ab
-    road_gds_mhd = root.t18.road_gds_mhd
-    road_ppl = root.t18.road_ppl
-    road_gds_mhd_it_ot = root.t18.road_gds_mhd_it_ot
-    road_gds_mhd_ab = root.t18.road_gds_mhd_ab
-    rail_ppl = root.t18.rail_ppl
-    rail_ppl_distance = root.t18.rail_ppl_distance
-    rail_ppl_metro = root.t18.rail_ppl_metro
-    rail_ppl_metro_action_infra = root.t18.rail_ppl_metro_action_infra
-    rail_gds = root.t18.rail_gds
-    rail_action_invest_infra = root.t18.rail_action_invest_infra
-    rail_action_invest_station = root.t18.rail_action_invest_station
-    ship_dmstc = root.t18.ship_dmstc
-    ship_inter = root.t18.ship_inter
-    other_foot = root.t18.other_foot
-    other_cycl = root.t18.other_cycl
-    air = root.t18.air
-    rail = root.t18.rail
-    ship = root.t18.ship
-    other = root.t18.other
-    s = root.t18.s
-    s_petrol = root.t18.s_petrol
-    s_jetfuel = root.t18.s_jetfuel
-    s_diesel = root.t18.s_diesel
-    s_fueloil = root.t18.s_fueloil
-    s_lpg = root.t18.s_lpg
-    s_gas = root.t18.s_gas
-    s_biogas = root.t18.s_biogas
-    s_bioethanol = root.t18.s_bioethanol
-    s_biodiesel = root.t18.s_biodiesel
-    s_elec = root.t18.s_elec
+    t = t18.t
+    g = t18.g
+    g_planning = t18.g_planning
+    air_inter = t18.air_inter
+    air_dmstc = t18.air_dmstc
+    road = t18.road
+    road_action_charger = t18.road_action_charger
+    road_car = t18.road_car
+    road_car_it_ot = t18.road_car_it_ot
+    road_car_ab = t18.road_car_ab
+    road_bus = t18.road_bus
+    road_bus_action_infra = t18.road_bus_action_infra
+    road_gds = t18.road_gds
+    road_gds_ldt = t18.road_gds_ldt
+    road_gds_ldt_it_ot = t18.road_gds_ldt_it_ot
+    road_gds_ldt_ab = t18.road_gds_ldt_ab
+    road_gds_mhd = t18.road_gds_mhd
+    road_ppl = t18.road_ppl
+    road_gds_mhd_it_ot = t18.road_gds_mhd_it_ot
+    road_gds_mhd_ab = t18.road_gds_mhd_ab
+    rail_ppl = t18.rail_ppl
+    rail_ppl_distance = t18.rail_ppl_distance
+    rail_ppl_metro = t18.rail_ppl_metro
+    rail_ppl_metro_action_infra = t18.rail_ppl_metro_action_infra
+    rail_gds = t18.rail_gds
+    rail_action_invest_infra = t18.rail_action_invest_infra
+    rail_action_invest_station = t18.rail_action_invest_station
+    ship_dmstc = t18.ship_dmstc
+    ship_inter = t18.ship_inter
+    other_foot = t18.other_foot
+    other_cycl = t18.other_cycl
+    air = t18.air
+    rail = t18.rail
+    ship = t18.ship
+    other = t18.other
+    s = t18.s
+    s_petrol = t18.s_petrol
+    s_jetfuel = t18.s_jetfuel
+    s_diesel = t18.s_diesel
+    s_fueloil = t18.s_fueloil
+    s_lpg = t18.s_lpg
+    s_gas = t18.s_gas
+    s_biogas = t18.s_biogas
+    s_bioethanol = t18.s_bioethanol
+    s_biodiesel = t18.s_biodiesel
+    s_elec = t18.s_elec
 
     Million = 1000000
     ags = entry("In_M_AGS_com")
@@ -1835,3 +1836,5 @@ def calc(root, inputs: Inputs):
         * fact("Fact_T_S_electricity_EmFa_tank_wheel_2018")
     )
     rail_ppl_distance.CO2e_total = rail_ppl_distance.CO2e_cb
+
+    return t18

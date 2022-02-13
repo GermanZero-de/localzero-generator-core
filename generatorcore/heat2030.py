@@ -1,6 +1,7 @@
+from dataclasses import dataclass, asdict
 from .inputs import Inputs
 from .utils import div
-from dataclasses import dataclass, asdict
+from . import residences2030, business2030, heat2018, agri2030, industry2030
 
 
 @dataclass
@@ -70,15 +71,23 @@ class H30:
     p_local_biomass: HColVars2030 = HColVars2030()
     p_local_biomass_cogen: HColVars2030 = HColVars2030()
 
-    #for pdf
-    p_fossil_change_CO2e_t : float = None
+    # for pdf
+    p_fossil_change_CO2e_t: float = None
 
     # erzeuge dictionry
     def dict(self):
         return asdict(self)
 
 
-def calc(root, inputs: Inputs):
+def calc(
+    inputs: Inputs,
+    *,
+    h18: heat2018.H18,
+    r30: residences2030.R30,
+    b30: business2030.B30,
+    a30: agri2030.A30,
+    i30: industry2030.I30,
+) -> H30:
     def fact(n):
         return inputs.fact(n)
 
@@ -88,15 +97,10 @@ def calc(root, inputs: Inputs):
     def entry(n):
         return inputs.entry(n)
 
+    h30 = H30()
+
     Million = 1000000
     ags = entry("In_M_AGS_com")
-    h18 = root.h18
-    h30 = root.h30
-    r30 = root.r30
-    b30 = root.b30
-    i30 = root.i30
-    e30 = root.e30
-    a30 = root.a30
 
     h = h30.h
     g = h30.g
@@ -127,14 +131,15 @@ def calc(root, inputs: Inputs):
     p_local_biomass = h30.p_local_biomass
     p_local_biomass_cogen = h30.p_local_biomass_cogen
 
-    root.r30.s_gas.energy = 0
-    root.b30.s_gas.energy = 0
-    root.r30.s_lpg.energy = 0
-    root.b30.s_lpg.energy = 0
-    root.r30.s_fueloil.energy = 0
-    root.b30.s_fueloil.energy = 0
-    root.r30.s_coal.energy = 0
-    root.b30.s_coal.energy = 0
+    # TODO bgrundmann: Why are we doing this here?
+    r30.s_gas.energy = 0
+    b30.s_gas.energy = 0
+    r30.s_lpg.energy = 0
+    b30.s_lpg.energy = 0
+    r30.s_fueloil.energy = 0
+    b30.s_fueloil.energy = 0
+    r30.s_coal.energy = 0
+    b30.s_coal.energy = 0
 
     ###########################
     ### Demand of Heat 2018 ###
@@ -533,7 +538,6 @@ def calc(root, inputs: Inputs):
     )
     p_heatnet_lheatpump.demand_emplo_new = p_heatnet_lheatpump.demand_emplo
     p_heatnet_geoth.cost_wage = p_heatnet_geoth.pct_of_wage * p_heatnet_geoth.invest_pa
-   
 
     p_heatnet.invest_pa_com = p_heatnet.invest_pa
 
@@ -597,13 +601,12 @@ def calc(root, inputs: Inputs):
         + p_heatnet_lheatpump.demand_emplo_new
         + p_heatnet_geoth.demand_emplo_new
     )
-   
+
     p.demand_emplo_new = p_heatnet.demand_emplo_new
 
     p.invest_pa_com = p_heatnet.invest_pa_com
 
     p.invest_pa = p_heatnet.invest_pa
-
 
     p.invest_com = p_heatnet.invest_com
 
@@ -786,7 +789,9 @@ def calc(root, inputs: Inputs):
     g_planning.demand_emplo_com = g_planning.demand_emplo_new
     g.demand_emplo_com = g_planning.demand_emplo_com
 
-    #TODO: Check demand_emplo_new in Heat with Hauke 
-    h.demand_emplo_com = g.demand_emplo_com 
+    # TODO: Check demand_emplo_new in Heat with Hauke
+    h.demand_emplo_com = g.demand_emplo_com
 
     h30.p_fossil_change_CO2e_t = p.change_CO2e_t - p_heatnet.change_CO2e_t
+
+    return h30

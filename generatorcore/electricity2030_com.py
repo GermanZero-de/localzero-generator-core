@@ -1,11 +1,36 @@
 from .inputs import Inputs
 from .utils import div
+from . import electricity2030_core
+from . import (
+    electricity2018,
+    residences2018,
+    business2018,
+    agri2030,
+    business2030,
+    fuels2030,
+    heat2030,
+    industry2030,
+    residences2030,
+    transport2030,
+)
 
 
 # Berechnungsfunktion im Sektor E für 203X
 
 
-def calc(root, inputs: Inputs):
+def calc(
+    inputs: Inputs,
+    e18: electricity2018.E18,
+    r18: residences2018.R18,
+    b18: business2018.B18,
+    a30: agri2030.A30,
+    b30: business2030.B30,
+    f30: fuels2030.F30,
+    h30: heat2030.H30,
+    i30: industry2030.I30,
+    r30: residences2030.R30,
+    t30: transport2030.T30,
+) -> electricity2030_core.E30:
     def fact(n):
         return inputs.fact(n)
 
@@ -19,33 +44,23 @@ def calc(root, inputs: Inputs):
     Kalkulationszeitraum = entry("In_M_duration_target")
     KlimaneutraleJahre = entry("In_M_duration_neutral")
 
-    e18 = root.e18
-    r18 = root.r18
-    e30 = root.e30
-    b18 = root.b18
-    b30 = root.b30
-    h30 = root.h30
-    f30 = root.f30
-    i30 = root.i30
-    t30 = root.t30
-    r30 = root.r30
-    a30 = root.a30
+    e30 = electricity2030_core.E30()
 
-    e = root.e30.e
-    g = root.e30.g
-    g_grid_offshore = root.e30.g_grid_offshore
-    g_grid_onshore = root.e30.g_grid_onshore
-    g_grid_pv = root.e30.g_grid_pv
-    d = root.e30.d
-    d_r = root.e30.d_r
-    d_b = root.e30.d_b
-    d_h = root.e30.d_h
-    d_i = root.e30.d_i
-    d_t = root.e30.d_t
-    d_a = root.e30.d_a
-    d_f_hydrogen_reconv = root.e30.d_f_hydrogen_reconv
-    d_e_hydrogen = root.e30.d_e_hydrogen
-    d_f_wo_hydrogen = root.e30.d_f_wo_hydrogen
+    e = e30.e
+    g = e30.g
+    g_grid_offshore = e30.g_grid_offshore
+    g_grid_onshore = e30.g_grid_onshore
+    g_grid_pv = e30.g_grid_pv
+    d = e30.d
+    d_r = e30.d_r
+    d_b = e30.d_b
+    d_h = e30.d_h
+    d_i = e30.d_i
+    d_t = e30.d_t
+    d_a = e30.d_a
+    d_f_hydrogen_reconv = e30.d_f_hydrogen_reconv
+    d_e_hydrogen = e30.d_e_hydrogen
+    d_f_wo_hydrogen = e30.d_f_wo_hydrogen
 
     p = e30.p
     p_fossil = e30.p_fossil
@@ -1732,75 +1747,74 @@ def calc(root, inputs: Inputs):
     e.CO2e_total = p.CO2e_total
     e.change_CO2e_pct = p.change_CO2e_pct
 
-    p_local.power_installed= (
+    p_local.power_installed = (
         p_local_pv.power_installed
-        +p_local_wind_onshore.power_installed
-        +p_local_biomass.power_installed
-        +p_local_hydro.power_installed
+        + p_local_wind_onshore.power_installed
+        + p_local_biomass.power_installed
+        + p_local_hydro.power_installed
     )
 
-    p_local.power_installable= (
+    p_local.power_installable = (
         p_local_pv.power_installable
-        +p_local_wind_onshore.power_installable
-        +p_local_biomass.power_installable
-        #p_local_hydro.power_installable
+        + p_local_wind_onshore.power_installable
+        + p_local_biomass.power_installable
+        # p_local_hydro.power_installable
     )
 
-    p_local.power_to_be_installed= (
+    p_local.power_to_be_installed = (
         p_local_pv.power_to_be_installed
-        +p_local_wind_onshore.power_to_be_installed
-        +p_local_biomass.power_to_be_installed
-        #p_local_hydro.power_to_be_installed
+        + p_local_wind_onshore.power_to_be_installed
+        + p_local_biomass.power_to_be_installed
+        # p_local_hydro.power_to_be_installed
     )
 
-    #TODO: correct excel calculations and reimport these somehow missing variabels to python
-    p_local_pv.cost_climate_saved=0 
-    p_local_pv_park.change_CO2e_t=0                                                        
-    p_local_pv_park.cost_climate_saved=0
-    p_local_pv_facade.change_CO2e_t=0                                                     
-    p_local_pv_facade.cost_climate_saved=0 
-    p_local_pv_agri.change_CO2e_t=0                                                    
-    p_local_pv_agri.cost_climate_saved=0
-    p_local_pv_roof.change_CO2e_t=0                                                      
-    p_local_pv_roof.cost_climate_saved=0  
-                                                
-    p_local_wind_onshore.CO2e_total=0                                                                                                     
-                                                     
-    p_local_hydro.change_CO2e_t=0 
+    # TODO: correct excel calculations and reimport these somehow missing variabels to python
+    p_local_pv.cost_climate_saved = 0
+    p_local_pv_park.change_CO2e_t = 0
+    p_local_pv_park.cost_climate_saved = 0
+    p_local_pv_facade.change_CO2e_t = 0
+    p_local_pv_facade.cost_climate_saved = 0
+    p_local_pv_agri.change_CO2e_t = 0
+    p_local_pv_agri.cost_climate_saved = 0
+    p_local_pv_roof.change_CO2e_t = 0
+    p_local_pv_roof.cost_climate_saved = 0
 
-    p_fossil.CO2e_total = 0    
+    p_local_wind_onshore.CO2e_total = 0
 
-    p_renew_wind.change_CO2e_t=0                                                      
-    p_renew_wind.cost_climate_saved=0    
+    p_local_hydro.change_CO2e_t = 0
 
-    p_renew_wind_onshore.CO2e_total=0                                                  
-                                             
-    p_renew_wind_onshore.change_CO2e_t=0
-    p_renew_wind_offshore.change_CO2e_t=0                                                   
-    p_renew_wind_offshore.CO2e_total=0                                                           
+    p_fossil.CO2e_total = 0
 
-    p_renew_hydro.cost_climate_saved=0                                                    
-    p_renew_hydro.change_CO2e_t=0                                          
-                          
-    p_renew_reverse.change_CO2e_t=0                                                       
-    p_renew_reverse.cost_climate_saved=0                                               
-                                                        
-    p_renew_pv.change_CO2e_t=0
+    p_renew_wind.change_CO2e_t = 0
+    p_renew_wind.cost_climate_saved = 0
 
-    p_renew_pv_roof.change_CO2e_t=0  
-    p_renew_pv_agri.change_CO2e_t=0  
-    p_renew_pv_facade.change_CO2e_t=0  
-    p_renew_pv_park.change_CO2e_t=0  
+    p_renew_wind_onshore.CO2e_total = 0
 
-    p_renew_geoth.change_CO2e_t=0                                                         
+    p_renew_wind_onshore.change_CO2e_t = 0
+    p_renew_wind_offshore.change_CO2e_t = 0
+    p_renew_wind_offshore.CO2e_total = 0
 
+    p_renew_hydro.cost_climate_saved = 0
+    p_renew_hydro.change_CO2e_t = 0
+
+    p_renew_reverse.change_CO2e_t = 0
+    p_renew_reverse.cost_climate_saved = 0
+
+    p_renew_pv.change_CO2e_t = 0
+
+    p_renew_pv_roof.change_CO2e_t = 0
+    p_renew_pv_agri.change_CO2e_t = 0
+    p_renew_pv_facade.change_CO2e_t = 0
+    p_renew_pv_park.change_CO2e_t = 0
+
+    p_renew_geoth.change_CO2e_t = 0
 
     p_local_pv_agri.CO2e_total = 0
-    p_local_pv_roof.CO2e_total = 0 
-    p_local_pv_facade.CO2e_total = 0 
-    p_local_pv_park.CO2e_total = 0 
+    p_local_pv_roof.CO2e_total = 0
+    p_local_pv_facade.CO2e_total = 0
+    p_local_pv_park.CO2e_total = 0
 
-    #---copy
+    # ---copy
     p_renew_pv.change_CO2e_pct = 0
     p_renew_pv_roof.change_CO2e_pct = 0
     p_renew_pv_agri.change_CO2e_pct = 0
@@ -1846,17 +1860,10 @@ def calc(root, inputs: Inputs):
     p_local_pv_facade.cost_climate_saved = 0
     p_local_pv_park.cost_climate_saved = 0
     p_local_wind_onshore.cost_climate_saved = 0
-    
+
     p_local_hydro.cost_climate_saved = 0
 
     p_renew_reverse.change_CO2e_pct = 0
-    p_local_wind_onshore.change_CO2e_t  = 0
-    
+    p_local_wind_onshore.change_CO2e_t = 0
 
-    
-
-
-
-
-                                                       
-                                              
+    return e30

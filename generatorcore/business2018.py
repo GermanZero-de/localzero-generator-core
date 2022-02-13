@@ -1,3 +1,4 @@
+from . import residences2018
 from .inputs import Inputs
 from .utils import div
 from dataclasses import dataclass, asdict
@@ -60,7 +61,7 @@ class B18:
 # Berechnungsfunktion im Sektor GHD für 2018
 
 
-def calc(root, inputs: Inputs):
+def calc(inputs: Inputs, *, r18: residences2018.R18) -> B18:
     def fact(n):
         return inputs.fact(n)
 
@@ -73,8 +74,8 @@ def calc(root, inputs: Inputs):
     Million = 1000000.0
     Kalkulationszeitraum = entry("In_M_duration_target")
 
-    b = root.b18
-    r = root.r18
+    b = B18()
+    r = r18
 
     b.s_gas.energy = entry("In_B_gas_fec")  # 98.602.500 MWh
 
@@ -361,3 +362,5 @@ def calc(root, inputs: Inputs):
     b.s_elec_heating.CO2e_cb = 0
     b.s_elec_heating.CO2e_cb_per_MWh = 0
     b.s_elec_heating.CO2e_total = 0
+
+    return b

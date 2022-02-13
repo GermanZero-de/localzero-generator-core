@@ -1,11 +1,13 @@
+from dataclasses import dataclass, asdict
 from .inputs import Inputs
 from .utils import div
-from dataclasses import dataclass, asdict
+from . import (
+    lulucf2018,
+)
 
 
 @dataclass
 class LColVars2030:
-
     area_ha: float = None
     CO2e_pb_per_t: float = None
     pct_x: float = None
@@ -95,7 +97,14 @@ class L30:
         return asdict(self)
 
 
-def calc(root, inputs: Inputs):
+def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
+    """Calculates lulucf. Note that this calculation consists of two steps, because we need to
+    compute most of lulucf early for other sectors calculations, but can only finish the
+    lulucf calculations when those sectors are done.
+
+    Most notably the pyr sector and most of l are computed in lulucf2030_pyr.calc
+    """
+
     def fact(n):
         return inputs.fact(n)
 
@@ -105,51 +114,52 @@ def calc(root, inputs: Inputs):
     def entry(n):
         return inputs.entry(n)
 
-    l18 = root.l18
-    l = root.l30.l
-    g = root.l30.g
-    g_forest = root.l30.g_forest
-    g_forest_managed = root.l30.g_forest_managed
-    g_forest_natural = root.l30.g_forest_natural
-    g_crop = root.l30.g_crop
-    g_crop_org = root.l30.g_crop_org
-    g_crop_min_conv = root.l30.g_crop_min_conv
-    g_crop_min_hum = root.l30.g_crop_min_hum
-    g_crop_org_low = root.l30.g_crop_org_low
-    g_crop_org_high = root.l30.g_crop_org_high
-    g_grass = root.l30.g_grass
-    g_grass_org = root.l30.g_grass_org
-    g_grass_min_conv = root.l30.g_grass_min_conv
-    g_grass_org_low = root.l30.g_grass_org_low
-    g_grass_org_high = root.l30.g_grass_org_high
-    g_grove = root.l30.g_grove
-    g_grove_min = root.l30.g_grove_min
-    g_grove_org = root.l30.g_grove_org
-    g_grove_org_low = root.l30.g_grove_org_low
-    g_grove_org_high = root.l30.g_grove_org_high
-    g_wet = root.l30.g_wet
-    g_wet_min = root.l30.g_wet_min
-    g_wet_org = root.l30.g_wet_org
-    g_wet_org_rp = root.l30.g_wet_org_rp
-    g_wet_org_r = root.l30.g_wet_org_r
-    g_wet_org_low = root.l30.g_wet_org_low
-    g_wet_org_high = root.l30.g_wet_org_high
-    g_wet_org_low_r = root.l30.g_wet_org_low_r
-    g_wet_org_low_rp = root.l30.g_wet_org_low_rp
-    g_wet_org_high_r = root.l30.g_wet_org_high_r
-    g_wet_org_high_rp = root.l30.g_wet_org_high_rp
-    g_water = root.l30.g_water
-    g_water_org = root.l30.g_water_org
-    g_water_min = root.l30.g_water_min
-    g_water_org_low = root.l30.g_water_org_low
-    g_water_org_high = root.l30.g_water_org_high
-    g_settlement = root.l30.g_settlement
-    g_settlement_org = root.l30.g_settlement_org
-    g_settlement_min = root.l30.g_settlement_min
-    g_settlement_org_low = root.l30.g_settlement_org_low
-    g_settlement_org_high = root.l30.g_settlement_org_high
-    g_other = root.l30.g_other
-    g_wood = root.l30.g_wood
+    l30 = L30()
+
+    l = l30.l
+    g = l30.g
+    g_forest = l30.g_forest
+    g_forest_managed = l30.g_forest_managed
+    g_forest_natural = l30.g_forest_natural
+    g_crop = l30.g_crop
+    g_crop_org = l30.g_crop_org
+    g_crop_min_conv = l30.g_crop_min_conv
+    g_crop_min_hum = l30.g_crop_min_hum
+    g_crop_org_low = l30.g_crop_org_low
+    g_crop_org_high = l30.g_crop_org_high
+    g_grass = l30.g_grass
+    g_grass_org = l30.g_grass_org
+    g_grass_min_conv = l30.g_grass_min_conv
+    g_grass_org_low = l30.g_grass_org_low
+    g_grass_org_high = l30.g_grass_org_high
+    g_grove = l30.g_grove
+    g_grove_min = l30.g_grove_min
+    g_grove_org = l30.g_grove_org
+    g_grove_org_low = l30.g_grove_org_low
+    g_grove_org_high = l30.g_grove_org_high
+    g_wet = l30.g_wet
+    g_wet_min = l30.g_wet_min
+    g_wet_org = l30.g_wet_org
+    g_wet_org_rp = l30.g_wet_org_rp
+    g_wet_org_r = l30.g_wet_org_r
+    g_wet_org_low = l30.g_wet_org_low
+    g_wet_org_high = l30.g_wet_org_high
+    g_wet_org_low_r = l30.g_wet_org_low_r
+    g_wet_org_low_rp = l30.g_wet_org_low_rp
+    g_wet_org_high_r = l30.g_wet_org_high_r
+    g_wet_org_high_rp = l30.g_wet_org_high_rp
+    g_water = l30.g_water
+    g_water_org = l30.g_water_org
+    g_water_min = l30.g_water_min
+    g_water_org_low = l30.g_water_org_low
+    g_water_org_high = l30.g_water_org_high
+    g_settlement = l30.g_settlement
+    g_settlement_org = l30.g_settlement_org
+    g_settlement_min = l30.g_settlement_min
+    g_settlement_org_low = l30.g_settlement_org_low
+    g_settlement_org_high = l30.g_settlement_org_high
+    g_other = l30.g_other
+    g_wood = l30.g_wood
 
     """S T A R T"""
     l.CO2e_total_2021_estimated = l18.l.CO2e_total * fact(
@@ -1392,78 +1402,4 @@ def calc(root, inputs: Inputs):
 
     g_wet_org_rp.change_CO2e_pct = 0
 
-
-def calcPyr(root, inputs: Inputs):
-    def fact(n):
-        return inputs.fact(n)
-
-    def ass(n):
-        return inputs.ass(n)
-
-    def entry(n):
-        return inputs.entry(n)
-
-    pyr = root.l30.pyr
-    l = root.l30.l
-    g = root.l30.g
-    l18 = root.l18
-
-    pyr.CO2e_total = min(
-        -(
-            root.h30.h.CO2e_total
-            + root.e30.e.CO2e_total
-            + root.f30.f.CO2e_total
-            + root.r30.r.CO2e_total
-            + root.b30.b.CO2e_total
-            + root.i30.i.CO2e_total
-            + root.t30.t.CO2e_total
-            + root.a30.a.CO2e_total
-            + root.l30.g.CO2e_total
-        ),
-        0,
-    )
-
-    pyr.CO2e_pb = pyr.CO2e_total
-    pyr.CO2e_pb_per_t = fact("Fact_L_P_biochar_ratio_CO2e_pb_to_prodvol")
-    pyr.prod_volume = div(pyr.CO2e_pb, pyr.CO2e_pb_per_t)
-
-    pyr.change_CO2e_t = pyr.CO2e_pb
-
-    pyr.change_CO2e_pct = 0
-    pyr.CO2e_total_2021_estimated = 0
-
-    pyr.cost_climate_saved = (
-        (pyr.CO2e_total_2021_estimated - pyr.CO2e_total)
-        * entry("In_M_duration_neutral")
-        * fact("Fact_M_cost_per_CO2e_2020")
-    )
-
-    pyr.invest_per_x = ass("Ass_L_P_pyrolysis_plant_ratio_invest_to_biochar_pa")
-    pyr.invest = pyr.prod_volume * pyr.invest_per_x
-    pyr.invest_pa = div(pyr.invest, entry("In_M_duration_target"))
-    pyr.pct_of_wage = fact("Fact_B_P_constr_main_revenue_pct_of_wage_2017")
-    pyr.cost_wage = pyr.invest_pa * pyr.pct_of_wage
-
-    pyr.ratio_wage_to_emplo = fact("Fact_B_P_constr_main_ratio_wage_to_emplo_2017")
-    pyr.demand_emplo = div(pyr.cost_wage, pyr.ratio_wage_to_emplo)
-    pyr.demand_emplo_new = pyr.demand_emplo
-
-    l.CO2e_total = g.CO2e_total + pyr.CO2e_total
-    l.CO2e_pb = g.CO2e_pb + pyr.CO2e_pb
-    l.CO2e_cb = g.CO2e_cb
-    l.change_CO2e_t = l.CO2e_total - l18.l.CO2e_total
-    l.change_CO2e_pct = div(l.change_CO2e_t, l18.l.CO2e_total)
-    l.CO2e_total_2021_estimated = l18.l.CO2e_total * fact(
-        "Fact_M_CO2e_lulucf_2021_vs_2018"
-    )
-
-    l.cost_climate_saved = (
-        (l.CO2e_total_2021_estimated - l.CO2e_total)
-        * entry("In_M_duration_neutral")
-        * fact("Fact_M_cost_per_CO2e_2020")
-    )
-    l.invest_pa = g.invest_pa + pyr.invest_pa
-    l.invest = g.invest + pyr.invest
-    l.cost_wage = g.cost_wage + pyr.cost_wage
-    l.demand_emplo = g.demand_emplo + pyr.demand_emplo
-    l.demand_emplo_new = g.demand_emplo_new + pyr.demand_emplo_new
+    return l30
