@@ -1,4 +1,7 @@
 from dataclasses import dataclass, asdict
+
+from . import residences2018
+from . import business2018
 from .inputs import Inputs
 from .utils import div
 
@@ -105,7 +108,7 @@ class R30:
         return asdict(self)
 
 
-def calc(root, inputs: Inputs):
+def calc(inputs: Inputs, *, r18: residences2018.R18, b18: business2018.B18) -> R30:
     def fact(n):
         return inputs.fact(n)
 
@@ -116,8 +119,8 @@ def calc(root, inputs: Inputs):
         return inputs.entry(n)
 
     ### P - Section ###
-    r30 = root.r30
-    r18 = root.r18
+    r30 = R30()
+
     g = r30.g
     p = r30.p
     r = r30.r
@@ -536,22 +539,20 @@ def calc(root, inputs: Inputs):
     Million = 1000000
 
     # Definitions
-    b18 = root.b18
-    e18 = root.e18
     s = r30.s
 
-    s_fueloil = root.r30.s_fueloil
-    s_lpg = root.r30.s_lpg
-    s_biomass = root.r30.s_biomass
-    s_coal = root.r30.s_coal
-    s_petrol = root.r30.s_petrol
-    s_heatnet = root.r30.s_heatnet
-    s_solarth = root.r30.s_solarth
-    s_heatpump = root.r30.s_heatpump
-    s_elec_heating = root.r30.s_elec_heating
-    s_gas = root.r30.s_gas
-    s_emethan = root.r30.s_emethan
-    s_elec = root.r30.s_elec
+    s_fueloil = r30.s_fueloil
+    s_lpg = r30.s_lpg
+    s_biomass = r30.s_biomass
+    s_coal = r30.s_coal
+    s_petrol = r30.s_petrol
+    s_heatnet = r30.s_heatnet
+    s_solarth = r30.s_solarth
+    s_heatpump = r30.s_heatpump
+    s_elec_heating = r30.s_elec_heating
+    s_gas = r30.s_gas
+    s_emethan = r30.s_emethan
+    s_elec = r30.s_elec
 
     # pct_energy
     s_fueloil.pct_energy = 0
@@ -1382,16 +1383,36 @@ def calc(root, inputs: Inputs):
     g.demand_emplo_com = g.demand_emplo_new
     r.demand_emplo_com = g.demand_emplo_com
 
-    p_buildings_area_m2_com.invest_pa = p_buildings_area_m2_com.invest / entry("In_M_duration_target") 
-    p_buildings_until_1919.invest_pa = p_buildings_until_1919.invest / entry("In_M_duration_target") 
-    p_buildings_1919_1948.invest_pa = p_buildings_1919_1948.invest / entry("In_M_duration_target") 
-    p_buildings_1949_1978.invest_pa = p_buildings_1949_1978.invest / entry("In_M_duration_target") 
-    p_buildings_1979_1995.invest_pa =  p_buildings_1979_1995.invest / entry("In_M_duration_target") 
-    p_buildings_1996_2004.invest_pa = p_buildings_1996_2004.invest / entry("In_M_duration_target") 
+    p_buildings_area_m2_com.invest_pa = p_buildings_area_m2_com.invest / entry(
+        "In_M_duration_target"
+    )
+    p_buildings_until_1919.invest_pa = p_buildings_until_1919.invest / entry(
+        "In_M_duration_target"
+    )
+    p_buildings_1919_1948.invest_pa = p_buildings_1919_1948.invest / entry(
+        "In_M_duration_target"
+    )
+    p_buildings_1949_1978.invest_pa = p_buildings_1949_1978.invest / entry(
+        "In_M_duration_target"
+    )
+    p_buildings_1979_1995.invest_pa = p_buildings_1979_1995.invest / entry(
+        "In_M_duration_target"
+    )
+    p_buildings_1996_2004.invest_pa = p_buildings_1996_2004.invest / entry(
+        "In_M_duration_target"
+    )
 
-    s_emethan.change_CO2e_pct = div(s_emethan.change_CO2e_t,0) #r18.s_emethan.CO2e_total)
+    s_emethan.change_CO2e_pct = div(
+        s_emethan.change_CO2e_t, 0
+    )  # r18.s_emethan.CO2e_total)
     s_heatnet.change_CO2e_pct = div(s_heatnet.change_CO2e_t, r18.s_heatnet.CO2e_total)
     s_solarth.change_CO2e_pct = div(s_solarth.change_CO2e_t, r18.s_solarth.CO2e_total)
-    s_heatpump.change_CO2e_pct = div(s_heatpump.change_CO2e_t, r18.s_heatpump.CO2e_total)
+    s_heatpump.change_CO2e_pct = div(
+        s_heatpump.change_CO2e_t, r18.s_heatpump.CO2e_total
+    )
     s_elec.change_CO2e_pct = div(s_elec.change_CO2e_t, r18.s_elec.CO2e_total)
-    s_elec_heating.change_CO2e_pct = div(s_elec_heating.change_CO2e_t, r18.s_elec_heating.CO2e_total)
+    s_elec_heating.change_CO2e_pct = div(
+        s_elec_heating.change_CO2e_t, r18.s_elec_heating.CO2e_total
+    )
+
+    return r30

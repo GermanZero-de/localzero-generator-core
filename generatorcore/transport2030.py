@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field, InitVar, asdict
 from .inputs import Inputs
 from .utils import div
+from . import transport2018
 
 
 # Definition der relevanten Spaltennamen für den Sektor T
@@ -122,7 +123,7 @@ class T30:
 
 # Berechnungsfunktion im Sektor T für 203X
 # Parameter root: oberste Generator Instanz
-def calc(root, inputs: Inputs):
+def calc(inputs: Inputs, *, t18: transport2018.T18) -> T30:
     def fact(n):
         return inputs.fact(n)
 
@@ -132,60 +133,61 @@ def calc(root, inputs: Inputs):
     def entry(n):
         return inputs.entry(n)
 
-    air = root.t30.air
-    air_dmstc = root.t30.air_dmstc
-    air_inter = root.t30.air_inter
-    g = root.t30.g
-    g_planning = root.t30.g_planning
-    other = root.t30.other
-    other_cycl = root.t30.other_cycl
-    other_cycl_action_infra = root.t30.other_cycl_action_infra
-    other_foot = root.t30.other_foot
-    other_foot_action_infra = root.t30.other_foot_action_infra
-    rail = root.t30.rail
-    rail_action_invest_infra = root.t30.rail_action_invest_infra
-    rail_action_invest_station = root.t30.rail_action_invest_station
-    rail_gds = root.t30.rail_gds
-    rail_ppl = root.t30.rail_ppl
-    rail_ppl_distance = root.t30.rail_ppl_distance
-    rail_ppl_metro = root.t30.rail_ppl_metro
-    rail_ppl_metro_action_infra = root.t30.rail_ppl_metro_action_infra
-    road = root.t30.road
-    road_action_charger = root.t30.road_action_charger
-    road_bus = root.t30.road_bus
-    road_bus_action_infra = root.t30.road_bus_action_infra
-    road_car = root.t30.road_car
-    road_car_ab = root.t30.road_car_ab
-    road_car_it_ot = root.t30.road_car_it_ot
-    road_gds = root.t30.road_gds
-    road_gds_ldt = root.t30.road_gds_ldt
-    road_gds_ldt_ab = root.t30.road_gds_ldt_ab
-    road_gds_ldt_it_ot = root.t30.road_gds_ldt_it_ot
-    road_gds_mhd = root.t30.road_gds_mhd
-    road_gds_mhd_ab = root.t30.road_gds_mhd_ab
-    road_gds_mhd_action_wire = root.t30.road_gds_mhd_action_wire
-    road_gds_mhd_it_ot = root.t30.road_gds_mhd_it_ot
-    road_ppl = root.t30.road_ppl
-    rail_ppl_distance = root.t30.rail_ppl_distance
-    s = root.t30.s
-    s_diesel = root.t30.s_diesel
-    s_elec = root.t30.s_elec
-    s_emethan = root.t30.s_emethan
-    s_hydrogen = root.t30.s_hydrogen
-    s_jetfuel = root.t30.s_jetfuel
-    s_petrol = root.t30.s_petrol
-    s_fueloil = root.t30.s_fueloil
-    s_lpg = root.t30.s_lpg
-    s_gas = root.t30.s_gas
-    s_biogas = root.t30.s_biogas
-    s_bioethanol = root.t30.s_bioethanol
-    s_biodiesel = root.t30.s_biodiesel
-    ship = root.t30.ship
-    ship_dmstc = root.t30.ship_dmstc
-    ship_dmstc_action_infra = root.t30.ship_dmstc_action_infra
-    ship_inter = root.t30.ship_inter
-    t = root.t30.t
-    t18 = root.t18
+    t30 = T30()
+
+    air = t30.air
+    air_dmstc = t30.air_dmstc
+    air_inter = t30.air_inter
+    g = t30.g
+    g_planning = t30.g_planning
+    other = t30.other
+    other_cycl = t30.other_cycl
+    other_cycl_action_infra = t30.other_cycl_action_infra
+    other_foot = t30.other_foot
+    other_foot_action_infra = t30.other_foot_action_infra
+    rail = t30.rail
+    rail_action_invest_infra = t30.rail_action_invest_infra
+    rail_action_invest_station = t30.rail_action_invest_station
+    rail_gds = t30.rail_gds
+    rail_ppl = t30.rail_ppl
+    rail_ppl_distance = t30.rail_ppl_distance
+    rail_ppl_metro = t30.rail_ppl_metro
+    rail_ppl_metro_action_infra = t30.rail_ppl_metro_action_infra
+    road = t30.road
+    road_action_charger = t30.road_action_charger
+    road_bus = t30.road_bus
+    road_bus_action_infra = t30.road_bus_action_infra
+    road_car = t30.road_car
+    road_car_ab = t30.road_car_ab
+    road_car_it_ot = t30.road_car_it_ot
+    road_gds = t30.road_gds
+    road_gds_ldt = t30.road_gds_ldt
+    road_gds_ldt_ab = t30.road_gds_ldt_ab
+    road_gds_ldt_it_ot = t30.road_gds_ldt_it_ot
+    road_gds_mhd = t30.road_gds_mhd
+    road_gds_mhd_ab = t30.road_gds_mhd_ab
+    road_gds_mhd_action_wire = t30.road_gds_mhd_action_wire
+    road_gds_mhd_it_ot = t30.road_gds_mhd_it_ot
+    road_ppl = t30.road_ppl
+    rail_ppl_distance = t30.rail_ppl_distance
+    s = t30.s
+    s_diesel = t30.s_diesel
+    s_elec = t30.s_elec
+    s_emethan = t30.s_emethan
+    s_hydrogen = t30.s_hydrogen
+    s_jetfuel = t30.s_jetfuel
+    s_petrol = t30.s_petrol
+    s_fueloil = t30.s_fueloil
+    s_lpg = t30.s_lpg
+    s_gas = t30.s_gas
+    s_biogas = t30.s_biogas
+    s_bioethanol = t30.s_bioethanol
+    s_biodiesel = t30.s_biodiesel
+    ship = t30.ship
+    ship_dmstc = t30.ship_dmstc
+    ship_dmstc_action_infra = t30.ship_dmstc_action_infra
+    ship_inter = t30.ship_inter
+    t = t30.t
 
     s_fueloil.energy = 0
     s_lpg.energy = 0
@@ -1362,8 +1364,12 @@ def calc(root, inputs: Inputs):
     rail_action_invest_station.invest = rail_action_invest_station.invest_per_x * entry(
         "In_M_population_com_203X"
     )
-    rail_action_invest_station.invest_com = rail_action_invest_station.invest * ass("Ass_T_C_ratio_public_sector_100")
-    rail_action_invest_station.invest_pa_com = rail_action_invest_station.invest_com / entry("In_M_duration_target") 
+    rail_action_invest_station.invest_com = rail_action_invest_station.invest * ass(
+        "Ass_T_C_ratio_public_sector_100"
+    )
+    rail_action_invest_station.invest_pa_com = (
+        rail_action_invest_station.invest_com / entry("In_M_duration_target")
+    )
 
     # rail_action_invest_infra.emplo_existingnicht existent oder ausgelastet
 
@@ -1594,7 +1600,7 @@ def calc(root, inputs: Inputs):
     g.invest_pa = g_planning.invest_pa
     rail.invest_com = (
         rail_action_invest_infra.invest_com
-        + rail_action_invest_station.invest_com 
+        + rail_action_invest_station.invest_com
         + rail_ppl.invest_com
     )  # SUM(rail_action_invest_infra.invest_com:rail_ppl.invest_com,DE260)
     rail_ppl.cost_wage = (
@@ -1621,7 +1627,7 @@ def calc(root, inputs: Inputs):
     )
     rail.invest_pa_com = (
         rail_action_invest_infra.invest_pa_com
-        + rail_action_invest_station.invest_pa_com 
+        + rail_action_invest_station.invest_pa_com
         + rail_ppl.invest_pa_com
     )  # SUM(rail_action_invest_infra.invest_pa_com:rail_ppl.invest_pa_com,DB260)
 
@@ -1815,10 +1821,16 @@ def calc(root, inputs: Inputs):
         + ship_inter.cost_climate_saved
     )  # SUM(ship_dmstc.cost_climate_saved:ship_inter.cost_climate_saved)
 
-    #TODO: hier evtl. nochmal bessere Daten rausfinden
-    ship_inter.transport_capacity_tkm = t18.ship_inter.transport_capacity_tkm * ship_inter.energy/t18.ship_inter.energy
+    # TODO: hier evtl. nochmal bessere Daten rausfinden
+    ship_inter.transport_capacity_tkm = (
+        t18.ship_inter.transport_capacity_tkm
+        * ship_inter.energy
+        / t18.ship_inter.energy
+    )
 
-    ship_inter.change_km = ship_inter.transport_capacity_tkm - t18.ship_inter.transport_capacity_tkm
+    ship_inter.change_km = (
+        ship_inter.transport_capacity_tkm - t18.ship_inter.transport_capacity_tkm
+    )
     # ship_inter.actionReduktion der Transportleistung
 
     t.change_energy_pct = div(t.change_energy_MWh, t18.t.energy)
@@ -2046,3 +2058,5 @@ def calc(root, inputs: Inputs):
     g_planning.demand_emplo_com = g_planning.demand_emplo_new
     g.demand_emplo_com = g.demand_emplo_new
     t.demand_emplo_com = g.demand_emplo_com
+
+    return t30

@@ -1,6 +1,7 @@
+from dataclasses import dataclass, asdict
 from .inputs import Inputs
 from .utils import div
-from dataclasses import dataclass, asdict
+from . import business2018, residences2018, residences2030
 
 import time
 
@@ -103,7 +104,13 @@ class B30:
 # Berechnungsfunktion im Sektor GHD für 2018
 
 
-def calc(root, inputs: Inputs):
+def calc(
+    inputs: Inputs,
+    *,
+    b18: business2018.B18,
+    r18: residences2018.R18,
+    r30: residences2030.R30,
+) -> B30:
     def fact(n):
         return inputs.fact(n)
 
@@ -118,10 +125,8 @@ def calc(root, inputs: Inputs):
     Million = 1000000.0
     Kalkulationszeitraum = entry("In_M_duration_target")
 
+    b30 = B30()
     # Definitions production
-    b18 = root.b18
-    b30 = root.b30
-    a30 = root.a30
 
     p = b30.p
     b = b30.b
@@ -136,11 +141,6 @@ def calc(root, inputs: Inputs):
 
     # Definitions supply
     s = b30.s
-    b18 = root.b18
-    r18 = root.r18
-    r30 = root.r30
-    e18 = root.e18
-    e30 = root.e30
     s_gas = b30.s_gas
     s_emethan = b30.s_emethan
     s_lpg = b30.s_lpg
@@ -828,9 +828,17 @@ def calc(root, inputs: Inputs):
 
     rb.demand_emplo_com = b.demand_emplo_com + r30.r.demand_emplo_com
 
-    s_emethan.change_CO2e_pct = div(s_emethan.change_CO2e_t,0) #b18.s_emethan.CO2e_total)
+    s_emethan.change_CO2e_pct = div(
+        s_emethan.change_CO2e_t, 0
+    )  # b18.s_emethan.CO2e_total)
     s_heatnet.change_CO2e_pct = div(s_heatnet.change_CO2e_t, b18.s_heatnet.CO2e_total)
     s_solarth.change_CO2e_pct = div(s_solarth.change_CO2e_t, b18.s_solarth.CO2e_total)
-    s_heatpump.change_CO2e_pct = div(s_heatpump.change_CO2e_t, b18.s_heatpump.CO2e_total)
+    s_heatpump.change_CO2e_pct = div(
+        s_heatpump.change_CO2e_t, b18.s_heatpump.CO2e_total
+    )
     s_elec.change_CO2e_pct = div(s_elec.change_CO2e_t, b18.s_elec.CO2e_total)
-    s_elec_heating.change_CO2e_pct = div(s_elec_heating.change_CO2e_t, b18.s_elec_heating.CO2e_total)
+    s_elec_heating.change_CO2e_pct = div(
+        s_elec_heating.change_CO2e_t, b18.s_elec_heating.CO2e_total
+    )
+
+    return b30

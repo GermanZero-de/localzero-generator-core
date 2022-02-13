@@ -28,6 +28,7 @@ from . import heat2030
 from . import agri2030
 from . import lulucf2030
 from . import industry2030
+from . import lulucf2030_pyr
 
 
 @dataclass
@@ -44,18 +45,18 @@ class Result:
     l18: lulucf2018.L18
 
     # Zieljahr
-    r30: residences2030.R30 = residences2030.R30()
-    b30: business2030.B30 = business2030.B30()
-    i30: industry2030.I30 = industry2030.I30()
-    t30: transport2030.T30 = transport2030.T30()
-    f30: fuels2030.F30 = fuels2030.F30()
-    e30: electricity2030.E30 = electricity2030.E30()
-    h30: heat2030.H30 = heat2030.H30()
-    l30: lulucf2030.L30 = lulucf2030.L30()
-    a30: agri2030.A30 = agri2030.A30()
-    h30: heat2030.H30 = heat2030.H30()
+    r30: residences2030.R30
+    b30: business2030.B30
+    i30: industry2030.I30
+    t30: transport2030.T30
+    f30: fuels2030.F30
+    e30: electricity2030.E30
+    h30: heat2030.H30
+    l30: lulucf2030.L30
+    a30: agri2030.A30
+    h30: heat2030.H30
 
-    m183X: methodology183x.M183X = None
+    m183X: methodology183x.M183X
 
     # search value
     def search_value(self, var: str):
@@ -103,7 +104,108 @@ def calculate(inputs: Inputs) -> Result:
     print("Heat2018_calc", file=sys.stderr)
     h18 = heat2018.calc(inputs, t18=t18, e18=e18)
 
-    result = Result(
+    end_t = time.time()
+    print(
+        "elapsed time for 18-sectors: {:5.3f}s".format(end_t - start_t),
+        file=sys.stderr,
+    )
+
+    # target year
+    print("Transport2030", file=sys.stderr)
+    t30 = transport2030.calc(inputs, t18=t18)
+
+    print("Industry2030", file=sys.stderr)
+    i30 = industry2030.calc(inputs, i18=i18)
+
+    print("Residenctial2030", file=sys.stderr)
+    r30 = residences2030.calc(inputs, r18=r18, b18=b18)
+
+    print("Business2030_calc", file=sys.stderr)
+    b30 = business2030.calc(inputs, b18=b18, r18=r18, r30=r30)
+
+    print("Lulucf2030_calc", file=sys.stderr)
+    l30 = lulucf2030.calc(inputs, l18=l18)
+
+    print("Agri2030_calc", file=sys.stderr)
+    a30 = agri2030.calc(inputs, a18=a18, l30=l30)
+
+    print("Heat2030_calc", file=sys.stderr)
+    h30 = heat2030.calc(inputs, h18=h18, r30=r30, b30=b30, a30=a30, i30=i30)
+
+    print("Fuels2030_calc", file=sys.stderr)
+    f30 = fuels2030.calc(
+        inputs, f18=f18, a30=a30, b30=b30, h30=h30, i30=i30, r30=r30, t30=t30
+    )
+
+    print("Electricity2030_calc", file=sys.stderr)
+    e30 = electricity2030.calc(
+        inputs,
+        e18=e18,
+        r18=r18,
+        b18=b18,
+        a30=a30,
+        b30=b30,
+        f30=f30,
+        h30=h30,
+        i30=i30,
+        r30=r30,
+        t30=t30,
+    )
+
+    print("Methodology2030_calc", file=sys.stderr)
+    m183X = methodology183x.calc_budget(
+        inputs,
+        a18=a18,
+        b18=b18,
+        e18=e18,
+        f18=f18,
+        h18=h18,
+        i18=i18,
+        l18=l18,
+        r18=r18,
+        t18=t18,
+    )
+
+    print("Lulucf2030_calcPyr", file=sys.stderr)
+    lulucf2030_pyr.calc(
+        inputs,
+        l18=l18,
+        l30=l30,
+        a30=a30,
+        b30=b30,
+        e30=e30,
+        f30=f30,
+        h30=h30,
+        i30=i30,
+        r30=r30,
+        t30=t30,
+    )
+
+    print("Methodology2030_calcZ", file=sys.stderr)
+    methodology183x.calc_z(
+        inputs,
+        m183X=m183X,
+        a18=a18,
+        b18=b18,
+        e18=e18,
+        f18=f18,
+        h18=h18,
+        i18=i18,
+        l18=l18,
+        r18=r18,
+        t18=t18,
+        a30=a30,
+        b30=b30,
+        e30=e30,
+        f30=f30,
+        h30=h30,
+        i30=i30,
+        l30=l30,
+        r30=r30,
+        t30=t30,
+    )
+
+    return Result(
         r18=r18,
         b18=b18,
         i18=i18,
@@ -113,42 +215,17 @@ def calculate(inputs: Inputs) -> Result:
         a18=a18,
         e18=e18,
         h18=h18,
+        t30=t30,
+        i30=i30,
+        r30=r30,
+        b30=b30,
+        f30=f30,
+        e30=e30,
+        l30=l30,
+        a30=a30,
+        h30=h30,
+        m183X=m183X,
     )
-
-    end_t = time.time()
-    print(
-        "elapsed time for 18-sectors: {:5.3f}s".format(end_t - start_t),
-        file=sys.stderr,
-    )
-
-    # Zieljahr
-    # print('Prequel_calc')
-    # Prequel_calc(self)
-    print("Transport2030", file=sys.stderr)
-    transport2030.calc(result, inputs)
-    print("Industry2030", file=sys.stderr)
-    industry2030.calc(result, inputs)
-    print("Residenctial2030", file=sys.stderr)
-    residences2030.calc(result, inputs)
-    print("Business2030_calc", file=sys.stderr)
-    business2030.calc(result, inputs)
-    print("Lulucf2030_calc", file=sys.stderr)
-    lulucf2030.calc(result, inputs)
-    print("Agri2030_calc", file=sys.stderr)
-    agri2030.calc(result, inputs)
-    print("Heat2030_calc", file=sys.stderr)
-    heat2030.calc(result, inputs)
-    print("Fuels2030_calc", file=sys.stderr)
-    fuels2030.calc(result, inputs)
-    print("Electricity2030_calc", file=sys.stderr)
-    electricity2030.calc(result, inputs)
-    print("Methodology2030_calc", file=sys.stderr)
-    result.m183X = methodology183x.calc_Budget(result, inputs)
-    print("Lulucf2030_calcPyr", file=sys.stderr)
-    lulucf2030.calcPyr(result, inputs)
-    print("Methodology2030_calcZ", file=sys.stderr)
-    methodology183x.calc_Z(result, inputs)
-    return result
 
 
 def calculate_with_default_inputs(ags: str, year: int) -> Result:

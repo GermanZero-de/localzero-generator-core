@@ -1,6 +1,26 @@
 from dataclasses import dataclass, asdict
 from .inputs import Inputs
 from .utils import div
+from . import (
+    agri2018,
+    electricity2018,
+    business2018,
+    fuels2018,
+    heat2018,
+    industry2018,
+    lulucf2018,
+    residences2018,
+    transport2018,
+    agri2030,
+    business2030,
+    electricity2030,
+    fuels2030,
+    heat2030,
+    industry2030,
+    lulucf2030,
+    residences2030,
+    transport2030,
+)
 
 
 @dataclass
@@ -147,8 +167,21 @@ class M183X:
         return asdict(self)
 
 
-# these budget calculations have to be done after all sector calculations
-def calc_Budget(root, inputs: Inputs) -> M183X:
+def calc_budget(
+    inputs: Inputs,
+    *,
+    a18: agri2018.A18,
+    b18: business2018.B18,
+    e18: electricity2018.E18,
+    f18: fuels2018.F18,
+    h18: heat2018.H18,
+    i18: industry2018.I18,
+    l18: lulucf2018.L18,
+    r18: residences2018.R18,
+    t18: transport2018.T18,
+) -> M183X:
+    """Calculate the budget needed."""
+
     def fact(n):
         return inputs.fact(n)
 
@@ -186,7 +219,7 @@ def calc_Budget(root, inputs: Inputs) -> M183X:
     ############################################
 
     # get the CO2e of LULUCF for 2018 as calculated
-    m183X.CO2e_lulucf_2018 = root.l18.l.CO2e_total
+    m183X.CO2e_lulucf_2018 = l18.l.CO2e_total
 
     # calculate the CO2e of LULUCF for 2015-2017 and 2019-2021 by multiplying 2018's value with percentage
     # 2015 just as a backup, probably not needed
@@ -222,14 +255,14 @@ def calc_Budget(root, inputs: Inputs) -> M183X:
 
     # get the CO2e of all sectors for 2018 excluding LULUCF since this is negative
     m183X.CO2e_wo_lulucf_2018 = (
-        root.h18.h.CO2e_total
-        + root.e18.e.CO2e_total
-        + root.f18.f.CO2e_total
-        + root.r18.r.CO2e_total
-        + root.b18.b.CO2e_total
-        + root.i18.i.CO2e_total
-        + root.t18.t.CO2e_total
-        + root.a18.a.CO2e_total
+        h18.h.CO2e_total
+        + e18.e.CO2e_total
+        + f18.f.CO2e_total
+        + r18.r.CO2e_total
+        + b18.b.CO2e_total
+        + i18.i.CO2e_total
+        + t18.t.CO2e_total
+        + a18.a.CO2e_total
     )
 
     # calculate the CO2e of all sectors without LULUCF for 2015-2017 and 2019-2021 by multiplying 2018's value with percentage
@@ -604,7 +637,31 @@ def calc_Budget(root, inputs: Inputs) -> M183X:
     return m183X
 
 
-def calc_Z(root, inputs: Inputs):
+def calc_z(
+    inputs: Inputs,
+    *,
+    m183X: M183X,
+    a18: agri2018.A18,
+    b18: business2018.B18,
+    e18: electricity2018.E18,
+    f18: fuels2018.F18,
+    h18: heat2018.H18,
+    i18: industry2018.I18,
+    l18: lulucf2018.L18,
+    r18: residences2018.R18,
+    t18: transport2018.T18,
+    a30: agri2030.A30,
+    b30: business2030.B30,
+    e30: electricity2030.E30,
+    f30: fuels2030.F30,
+    h30: heat2030.H30,
+    i30: industry2030.I30,
+    l30: lulucf2030.L30,
+    r30: residences2030.R30,
+    t30: transport2030.T30,
+):
+    """This updates several values in m183X inplace."""
+
     def fact(n):
         return inputs.fact(n)
 
@@ -614,28 +671,6 @@ def calc_Z(root, inputs: Inputs):
     ##################################################################
     ### total emissions 203X, saved emissions, saved climate costs ###
     ##################################################################
-
-    m183X = root.m183X
-
-    e18 = root.e18
-    h18 = root.h18
-    f18 = root.f18
-    r18 = root.r18
-    b18 = root.b18
-    i18 = root.i18
-    t18 = root.t18
-    a18 = root.a18
-    l18 = root.l18
-
-    e30 = root.e30
-    h30 = root.h30
-    f30 = root.f30
-    r30 = root.r30
-    b30 = root.b30
-    i30 = root.i30
-    t30 = root.t30
-    a30 = root.a30
-    l30 = root.l30
 
     # get the CO2e of all sectors for 203X (the target year) excluding LULUCF
     m183X.CO2e_wo_lulucf_203X = (
