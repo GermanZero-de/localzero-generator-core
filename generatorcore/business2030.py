@@ -1,4 +1,4 @@
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass, field, asdict
 from .inputs import Inputs
 from .utils import div
 from . import business2018, residences2018, residences2030
@@ -69,32 +69,32 @@ class BColVars2030:
 @dataclass
 class B30:
     # Klassenvariablen für GHD
-    b: BColVars2030 = BColVars2030()
-    g: BColVars2030 = BColVars2030()
-    g_consult: BColVars2030 = BColVars2030()
-    p: BColVars2030 = BColVars2030()
-    p_nonresi: BColVars2030 = BColVars2030()
-    p_nonresi_com: BColVars2030 = BColVars2030()
-    p_elec_elcon: BColVars2030 = BColVars2030()
-    p_elec_heatpump: BColVars2030 = BColVars2030()
-    p_vehicles: BColVars2030 = BColVars2030()
-    p_other: BColVars2030 = BColVars2030()
-    s: BColVars2030 = BColVars2030()
-    s_gas: BColVars2030 = BColVars2030()
-    s_emethan: BColVars2030 = BColVars2030()
-    s_lpg: BColVars2030 = BColVars2030()
-    s_petrol: BColVars2030 = BColVars2030()
-    s_jetfuel: BColVars2030 = BColVars2030()
-    s_diesel: BColVars2030 = BColVars2030()
-    s_fueloil: BColVars2030 = BColVars2030()
-    s_biomass: BColVars2030 = BColVars2030()
-    s_coal: BColVars2030 = BColVars2030()
-    s_heatnet: BColVars2030 = BColVars2030()
-    s_elec_heating: BColVars2030 = BColVars2030()
-    s_heatpump: BColVars2030 = BColVars2030()
-    s_solarth: BColVars2030 = BColVars2030()
-    s_elec: BColVars2030 = BColVars2030()
-    rb: BColVars2030 = BColVars2030()
+    b: BColVars2030 = field(default_factory=BColVars2030)
+    g: BColVars2030 = field(default_factory=BColVars2030)
+    g_consult: BColVars2030 = field(default_factory=BColVars2030)
+    p: BColVars2030 = field(default_factory=BColVars2030)
+    p_nonresi: BColVars2030 = field(default_factory=BColVars2030)
+    p_nonresi_com: BColVars2030 = field(default_factory=BColVars2030)
+    p_elec_elcon: BColVars2030 = field(default_factory=BColVars2030)
+    p_elec_heatpump: BColVars2030 = field(default_factory=BColVars2030)
+    p_vehicles: BColVars2030 = field(default_factory=BColVars2030)
+    p_other: BColVars2030 = field(default_factory=BColVars2030)
+    s: BColVars2030 = field(default_factory=BColVars2030)
+    s_gas: BColVars2030 = field(default_factory=BColVars2030)
+    s_emethan: BColVars2030 = field(default_factory=BColVars2030)
+    s_lpg: BColVars2030 = field(default_factory=BColVars2030)
+    s_petrol: BColVars2030 = field(default_factory=BColVars2030)
+    s_jetfuel: BColVars2030 = field(default_factory=BColVars2030)
+    s_diesel: BColVars2030 = field(default_factory=BColVars2030)
+    s_fueloil: BColVars2030 = field(default_factory=BColVars2030)
+    s_biomass: BColVars2030 = field(default_factory=BColVars2030)
+    s_coal: BColVars2030 = field(default_factory=BColVars2030)
+    s_heatnet: BColVars2030 = field(default_factory=BColVars2030)
+    s_elec_heating: BColVars2030 = field(default_factory=BColVars2030)
+    s_heatpump: BColVars2030 = field(default_factory=BColVars2030)
+    s_solarth: BColVars2030 = field(default_factory=BColVars2030)
+    s_elec: BColVars2030 = field(default_factory=BColVars2030)
+    rb: BColVars2030 = field(default_factory=BColVars2030)
 
     # erzeuge dictionry
     def dict(self):
