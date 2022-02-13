@@ -1,7 +1,7 @@
-from . import residences2018
+from dataclasses import dataclass, asdict, field
 from .inputs import Inputs
 from .utils import div
-from dataclasses import dataclass, asdict
+from . import residences2018
 
 # Definition der relevanten Spaltennamen für den Sektor E
 
@@ -24,36 +24,34 @@ class BColVars:
 
 @dataclass
 class B18:
-    # Klassenvariablen für GHD
-    b: BColVars = BColVars()
-    g: BColVars = BColVars()
-    g_consult: BColVars = BColVars()
-    p: BColVars = BColVars()
-    p_nonresi: BColVars = BColVars()
-    p_nonresi_com: BColVars = BColVars()
-    p_elec_elcon: BColVars = BColVars()
-    p_elec_heatpump: BColVars = BColVars()
-    p_vehicles: BColVars = BColVars()
-    p_other: BColVars = BColVars()
-    s: BColVars = BColVars()
-    s_gas: BColVars = BColVars()
-    s_emethan: BColVars = BColVars()
-    s_lpg: BColVars = BColVars()
-    s_petrol: BColVars = BColVars()
-    s_jetfuel: BColVars = BColVars()
-    s_diesel: BColVars = BColVars()
-    s_fueloil: BColVars = BColVars()
-    s_biomass: BColVars = BColVars()
-    s_coal: BColVars = BColVars()
-    s_heatnet: BColVars = BColVars()
-    s_elec_heating: BColVars = BColVars()
-    s_heatpump: BColVars = BColVars()
-    s_solarth: BColVars = BColVars()
-    s_elec: BColVars = BColVars()
-    rb: BColVars = BColVars()
-    rp_p: BColVars = BColVars()
+    b: BColVars = field(default_factory=BColVars)
+    g: BColVars = field(default_factory=BColVars)
+    g_consult: BColVars = field(default_factory=BColVars)
+    p: BColVars = field(default_factory=BColVars)
+    p_nonresi: BColVars = field(default_factory=BColVars)
+    p_nonresi_com: BColVars = field(default_factory=BColVars)
+    p_elec_elcon: BColVars = field(default_factory=BColVars)
+    p_elec_heatpump: BColVars = field(default_factory=BColVars)
+    p_vehicles: BColVars = field(default_factory=BColVars)
+    p_other: BColVars = field(default_factory=BColVars)
+    s: BColVars = field(default_factory=BColVars)
+    s_gas: BColVars = field(default_factory=BColVars)
+    s_emethan: BColVars = field(default_factory=BColVars)
+    s_lpg: BColVars = field(default_factory=BColVars)
+    s_petrol: BColVars = field(default_factory=BColVars)
+    s_jetfuel: BColVars = field(default_factory=BColVars)
+    s_diesel: BColVars = field(default_factory=BColVars)
+    s_fueloil: BColVars = field(default_factory=BColVars)
+    s_biomass: BColVars = field(default_factory=BColVars)
+    s_coal: BColVars = field(default_factory=BColVars)
+    s_heatnet: BColVars = field(default_factory=BColVars)
+    s_elec_heating: BColVars = field(default_factory=BColVars)
+    s_heatpump: BColVars = field(default_factory=BColVars)
+    s_solarth: BColVars = field(default_factory=BColVars)
+    s_elec: BColVars = field(default_factory=BColVars)
+    rb: BColVars = field(default_factory=BColVars)
+    rp_p: BColVars = field(default_factory=BColVars)
 
-    # erzeuge dictionry
     def dict(self):
         return asdict(self)
 

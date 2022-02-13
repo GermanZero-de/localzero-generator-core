@@ -1,4 +1,4 @@
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass, asdict, field
 from .inputs import Inputs
 from .utils import div
 from . import (
@@ -46,30 +46,30 @@ class FColVars2030:
 
 @dataclass
 class F30:
-    f: FColVars2030 = FColVars2030()
-    g: FColVars2030 = FColVars2030()
-    d: FColVars2030 = FColVars2030()
-    d_r: FColVars2030 = FColVars2030()
-    d_b: FColVars2030 = FColVars2030()
-    d_i: FColVars2030 = FColVars2030()
-    d_t: FColVars2030 = FColVars2030()
-    d_a: FColVars2030 = FColVars2030()
-    p: FColVars2030 = FColVars2030()
+    f: FColVars2030 = field(default_factory=FColVars2030)
+    g: FColVars2030 = field(default_factory=FColVars2030)
+    d: FColVars2030 = field(default_factory=FColVars2030)
+    d_r: FColVars2030 = field(default_factory=FColVars2030)
+    d_b: FColVars2030 = field(default_factory=FColVars2030)
+    d_i: FColVars2030 = field(default_factory=FColVars2030)
+    d_t: FColVars2030 = field(default_factory=FColVars2030)
+    d_a: FColVars2030 = field(default_factory=FColVars2030)
+    p: FColVars2030 = field(default_factory=FColVars2030)
 
-    d_e_hydrogen_reconv: FColVars2030 = FColVars2030()
-    p_petrol: FColVars2030 = FColVars2030()
-    p_jetfuel: FColVars2030 = FColVars2030()
-    p_diesel: FColVars2030 = FColVars2030()
-    p_bioethanol: FColVars2030 = FColVars2030()
-    p_biodiesel: FColVars2030 = FColVars2030()
-    p_biogas: FColVars2030 = FColVars2030()
-    p_emethan: FColVars2030 = FColVars2030()
-    p_hydrogen: FColVars2030 = FColVars2030()
-    p_hydrogen_reconv: FColVars2030 = FColVars2030()
+    d_e_hydrogen_reconv: FColVars2030 = field(default_factory=FColVars2030)
+    p_petrol: FColVars2030 = field(default_factory=FColVars2030)
+    p_jetfuel: FColVars2030 = field(default_factory=FColVars2030)
+    p_diesel: FColVars2030 = field(default_factory=FColVars2030)
+    p_bioethanol: FColVars2030 = field(default_factory=FColVars2030)
+    p_biodiesel: FColVars2030 = field(default_factory=FColVars2030)
+    p_biogas: FColVars2030 = field(default_factory=FColVars2030)
+    p_emethan: FColVars2030 = field(default_factory=FColVars2030)
+    p_hydrogen: FColVars2030 = field(default_factory=FColVars2030)
+    p_hydrogen_reconv: FColVars2030 = field(default_factory=FColVars2030)
 
     # only medded for fuels pdf text
-    p_hydrogen_total: FColVars2030 = FColVars2030()
-    p_efuels: FColVars2030 = FColVars2030()
+    p_hydrogen_total: FColVars2030 = field(default_factory=FColVars2030)
+    p_efuels: FColVars2030 = field(default_factory=FColVars2030)
 
     def dict(self):
         return asdict(self)

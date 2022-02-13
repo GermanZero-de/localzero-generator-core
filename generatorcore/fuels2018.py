@@ -1,4 +1,4 @@
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass, asdict, field
 
 from . import transport2018
 from .inputs import Inputs
@@ -17,27 +17,27 @@ class FColVars:
 
 @dataclass
 class F18:
-    f: FColVars = FColVars()
-    g: FColVars = FColVars()
-    d: FColVars = FColVars()
-    d_r: FColVars = FColVars()
-    d_b: FColVars = FColVars()
-    d_i: FColVars = FColVars()
-    d_t: FColVars = FColVars()
-    d_a: FColVars = FColVars()
+    f: FColVars = field(default_factory=FColVars)
+    g: FColVars = field(default_factory=FColVars)
+    d: FColVars = field(default_factory=FColVars)
+    d_r: FColVars = field(default_factory=FColVars)
+    d_b: FColVars = field(default_factory=FColVars)
+    d_i: FColVars = field(default_factory=FColVars)
+    d_t: FColVars = field(default_factory=FColVars)
+    d_a: FColVars = field(default_factory=FColVars)
 
-    d_e_hydrogen_reconv: FColVars = FColVars()
+    d_e_hydrogen_reconv: FColVars = field(default_factory=FColVars)
 
-    p: FColVars = FColVars()
-    p_petrol: FColVars = FColVars()
-    p_jetfuel: FColVars = FColVars()
-    p_diesel: FColVars = FColVars()
-    p_bioethanol: FColVars = FColVars()
-    p_biodiesel: FColVars = FColVars()
-    p_biogas: FColVars = FColVars()
-    p_emethan: FColVars = FColVars()
-    p_hydrogen: FColVars = FColVars()
-    p_hydrogen_reconv: FColVars = FColVars()
+    p: FColVars = field(default_factory=FColVars)
+    p_petrol: FColVars = field(default_factory=FColVars)
+    p_jetfuel: FColVars = field(default_factory=FColVars)
+    p_diesel: FColVars = field(default_factory=FColVars)
+    p_bioethanol: FColVars = field(default_factory=FColVars)
+    p_biodiesel: FColVars = field(default_factory=FColVars)
+    p_biogas: FColVars = field(default_factory=FColVars)
+    p_emethan: FColVars = field(default_factory=FColVars)
+    p_hydrogen: FColVars = field(default_factory=FColVars)
+    p_hydrogen_reconv: FColVars = field(default_factory=FColVars)
 
     # erzeuge dictionry
     def dict(self):
