@@ -1,4 +1,4 @@
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass, asdict, field
 
 from . import transport2018, electricity2018
 from .inputs import Inputs
@@ -46,36 +46,33 @@ class HColVars:
 # Definition der Zeilennamen für den Sektor H
 @dataclass
 class H18:
-    # Klassenvariablen für H
-    g: HColVars = HColVars()
-    g_storage: HColVars = HColVars()
-    g_planning: HColVars = HColVars()
-    d: HColVars = HColVars()
-    d_r: HColVars = HColVars()
-    d_b: HColVars = HColVars()
-    d_i: HColVars = HColVars()
-    d_t: HColVars = HColVars()
-    a_t: HColVars = HColVars()
-    h: HColVars = HColVars()
-    p: HColVars = HColVars()
-    p_gas: HColVars = HColVars()
-    p_lpg: HColVars = HColVars()
-    p_fueloil: HColVars = HColVars()
-    p_opetpro: HColVars = HColVars()
-    p_coal: HColVars = HColVars()
-    p_heatnet: HColVars = HColVars()
-    p_heatnet_cogen: HColVars = HColVars()
-    p_heatnet_plant: HColVars = HColVars()
-    p_heatnet_geoth: HColVars = HColVars()
-    p_heatnet_lheatpump: HColVars = HColVars()
-    p_biomass: HColVars = HColVars()
-    p_ofossil: HColVars = HColVars()
-    p_orenew: HColVars = HColVars()
-    p_solarth: HColVars = HColVars()
-    p_heatpump: HColVars = HColVars()
-    p_solarth: HColVars = HColVars()
-
-    # erzeuge dictionry
+    g: HColVars = field(default_factory=HColVars)
+    g_storage: HColVars = field(default_factory=HColVars)
+    g_planning: HColVars = field(default_factory=HColVars)
+    d: HColVars = field(default_factory=HColVars)
+    d_r: HColVars = field(default_factory=HColVars)
+    d_b: HColVars = field(default_factory=HColVars)
+    d_i: HColVars = field(default_factory=HColVars)
+    d_t: HColVars = field(default_factory=HColVars)
+    a_t: HColVars = field(default_factory=HColVars)
+    h: HColVars = field(default_factory=HColVars)
+    p: HColVars = field(default_factory=HColVars)
+    p_gas: HColVars = field(default_factory=HColVars)
+    p_lpg: HColVars = field(default_factory=HColVars)
+    p_fueloil: HColVars = field(default_factory=HColVars)
+    p_opetpro: HColVars = field(default_factory=HColVars)
+    p_coal: HColVars = field(default_factory=HColVars)
+    p_heatnet: HColVars = field(default_factory=HColVars)
+    p_heatnet_cogen: HColVars = field(default_factory=HColVars)
+    p_heatnet_plant: HColVars = field(default_factory=HColVars)
+    p_heatnet_geoth: HColVars = field(default_factory=HColVars)
+    p_heatnet_lheatpump: HColVars = field(default_factory=HColVars)
+    p_biomass: HColVars = field(default_factory=HColVars)
+    p_ofossil: HColVars = field(default_factory=HColVars)
+    p_orenew: HColVars = field(default_factory=HColVars)
+    p_solarth: HColVars = field(default_factory=HColVars)
+    p_heatpump: HColVars = field(default_factory=HColVars)
+    p_solarth: HColVars = field(default_factory=HColVars)
 
     def dict(self):
         return asdict(self)

@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field, InitVar, asdict
+from dataclasses import dataclass, field, asdict
 from .inputs import Inputs
 from .utils import div
 from . import transport2018
@@ -50,73 +50,73 @@ class TColVars2030:
 # Definition der Zeilennamen für den Sektor T
 @dataclass
 class T30:
-    # Klassenvariablen für T
-    air_inter: TColVars2030 = TColVars2030()
-    air_dmstc: TColVars2030 = TColVars2030()  # ggf. löschen, da 0 in Szenario
+    air_inter: TColVars2030 = field(default_factory=TColVars2030)
+    air_dmstc: TColVars2030 = field(
+        default_factory=TColVars2030
+    )  # ggf. löschen, da 0 in Szenario
 
-    road_ppl: TColVars2030 = TColVars2030()
-    road_car: TColVars2030 = TColVars2030()
-    road_car_it_ot: TColVars2030 = TColVars2030()
-    road_car_ab: TColVars2030 = TColVars2030()
-    road_bus: TColVars2030 = TColVars2030()
-    road_gds: TColVars2030 = TColVars2030()
-    road_gds_ldt: TColVars2030 = TColVars2030()
+    road_ppl: TColVars2030 = field(default_factory=TColVars2030)
+    road_car: TColVars2030 = field(default_factory=TColVars2030)
+    road_car_it_ot: TColVars2030 = field(default_factory=TColVars2030)
+    road_car_ab: TColVars2030 = field(default_factory=TColVars2030)
+    road_bus: TColVars2030 = field(default_factory=TColVars2030)
+    road_gds: TColVars2030 = field(default_factory=TColVars2030)
+    road_gds_ldt: TColVars2030 = field(default_factory=TColVars2030)
 
-    road_gds_ldt_it_ot: TColVars2030 = TColVars2030()
-    road_gds_ldt_ab: TColVars2030 = TColVars2030()
-    road_gds_mhd: TColVars2030 = TColVars2030()
-    road_gds_mhd_it_ot: TColVars2030 = TColVars2030()
-    road_gds_mhd_ab: TColVars2030 = TColVars2030()
-    road_gds_mhd_action_wire: TColVars2030 = TColVars2030()
+    road_gds_ldt_it_ot: TColVars2030 = field(default_factory=TColVars2030)
+    road_gds_ldt_ab: TColVars2030 = field(default_factory=TColVars2030)
+    road_gds_mhd: TColVars2030 = field(default_factory=TColVars2030)
+    road_gds_mhd_it_ot: TColVars2030 = field(default_factory=TColVars2030)
+    road_gds_mhd_ab: TColVars2030 = field(default_factory=TColVars2030)
+    road_gds_mhd_action_wire: TColVars2030 = field(default_factory=TColVars2030)
 
-    rail_ppl: TColVars2030 = TColVars2030()
-    rail_ppl_distance: TColVars2030 = TColVars2030()
-    rail_ppl_metro: TColVars2030 = TColVars2030()
-    rail_gds: TColVars2030 = TColVars2030()
+    rail_ppl: TColVars2030 = field(default_factory=TColVars2030)
+    rail_ppl_distance: TColVars2030 = field(default_factory=TColVars2030)
+    rail_ppl_metro: TColVars2030 = field(default_factory=TColVars2030)
+    rail_gds: TColVars2030 = field(default_factory=TColVars2030)
 
-    ship: TColVars2030 = TColVars2030()
-    ship_dmstc: TColVars2030 = TColVars2030()
-    ship_dmstc_action_infra: TColVars2030 = TColVars2030()
-    ship_inter: TColVars2030 = TColVars2030()
+    ship: TColVars2030 = field(default_factory=TColVars2030)
+    ship_dmstc: TColVars2030 = field(default_factory=TColVars2030)
+    ship_dmstc_action_infra: TColVars2030 = field(default_factory=TColVars2030)
+    ship_inter: TColVars2030 = field(default_factory=TColVars2030)
 
-    other_foot: TColVars2030 = TColVars2030()
-    other_foot_action_infra: TColVars2030 = TColVars2030()
-    other_cycl: TColVars2030 = TColVars2030()
-    other_cycl_action_infra: TColVars2030 = TColVars2030()
-    g_planning: TColVars2030 = TColVars2030()
+    other_foot: TColVars2030 = field(default_factory=TColVars2030)
+    other_foot_action_infra: TColVars2030 = field(default_factory=TColVars2030)
+    other_cycl: TColVars2030 = field(default_factory=TColVars2030)
+    other_cycl_action_infra: TColVars2030 = field(default_factory=TColVars2030)
+    g_planning: TColVars2030 = field(default_factory=TColVars2030)
 
-    s: TColVars2030 = TColVars2030()
-    s_diesel: TColVars2030 = TColVars2030()
-    s_emethan: TColVars2030 = TColVars2030()
-    s_jetfuel: TColVars2030 = TColVars2030()
-    s_petrol: TColVars2030 = TColVars2030()
-    s_fueloil: TColVars2030 = TColVars2030()
-    s_lpg: TColVars2030 = TColVars2030()
-    s_gas: TColVars2030 = TColVars2030()
-    s_biogas: TColVars2030 = TColVars2030()
-    s_bioethanol: TColVars2030 = TColVars2030()
-    s_biodiesel: TColVars2030 = TColVars2030()
+    s: TColVars2030 = field(default_factory=TColVars2030)
+    s_diesel: TColVars2030 = field(default_factory=TColVars2030)
+    s_emethan: TColVars2030 = field(default_factory=TColVars2030)
+    s_jetfuel: TColVars2030 = field(default_factory=TColVars2030)
+    s_petrol: TColVars2030 = field(default_factory=TColVars2030)
+    s_fueloil: TColVars2030 = field(default_factory=TColVars2030)
+    s_lpg: TColVars2030 = field(default_factory=TColVars2030)
+    s_gas: TColVars2030 = field(default_factory=TColVars2030)
+    s_biogas: TColVars2030 = field(default_factory=TColVars2030)
+    s_bioethanol: TColVars2030 = field(default_factory=TColVars2030)
+    s_biodiesel: TColVars2030 = field(default_factory=TColVars2030)
     # übergeordnete Zeilen
-    g: TColVars2030 = TColVars2030()
-    t: TColVars2030 = TColVars2030()
-    air: TColVars2030 = TColVars2030()
-    road: TColVars2030 = TColVars2030()
-    rail: TColVars2030 = TColVars2030()
-    other: TColVars2030 = TColVars2030()
+    g: TColVars2030 = field(default_factory=TColVars2030)
+    t: TColVars2030 = field(default_factory=TColVars2030)
+    air: TColVars2030 = field(default_factory=TColVars2030)
+    road: TColVars2030 = field(default_factory=TColVars2030)
+    rail: TColVars2030 = field(default_factory=TColVars2030)
+    other: TColVars2030 = field(default_factory=TColVars2030)
 
     # Maßnahmen
-    rail_action_invest_infra: TColVars2030 = TColVars2030()
-    rail_action_invest_station: TColVars2030 = TColVars2030()
-    rail_ppl_metro_action_infra: TColVars2030 = TColVars2030()
-    road_action_charger: TColVars2030 = TColVars2030()
-    road_bus_action_infra: TColVars2030 = TColVars2030()
+    rail_action_invest_infra: TColVars2030 = field(default_factory=TColVars2030)
+    rail_action_invest_station: TColVars2030 = field(default_factory=TColVars2030)
+    rail_ppl_metro_action_infra: TColVars2030 = field(default_factory=TColVars2030)
+    road_action_charger: TColVars2030 = field(default_factory=TColVars2030)
+    road_bus_action_infra: TColVars2030 = field(default_factory=TColVars2030)
 
     # Bereitstellung (Energieträgersummen)
 
-    s_elec: TColVars2030 = TColVars2030()
-    s_hydrogen: TColVars2030 = TColVars2030()
+    s_elec: TColVars2030 = field(default_factory=TColVars2030)
+    s_hydrogen: TColVars2030 = field(default_factory=TColVars2030)
 
-    # erzeuge dictionry
     def dict(self):
         return asdict(self)
 

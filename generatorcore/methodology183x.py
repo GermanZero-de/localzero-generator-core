@@ -1,4 +1,4 @@
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass, asdict, field
 from .inputs import Inputs
 from .utils import div
 from . import (
@@ -140,20 +140,20 @@ class M183X:
     change_CO2e_pct: float = None
     cost_climate_saved: float = None
 
-    z: zColVars = zColVars()
-    s: zColVars = zColVars()
-    d: zColVars = zColVars()
+    z: zColVars = field(default_factory=zColVars)
+    s: zColVars = field(default_factory=zColVars)
+    d: zColVars = field(default_factory=zColVars)
 
-    e: zColVars = zColVars()
-    h: zColVars = zColVars()
-    f: zColVars = zColVars()
-    rb: zColVars = zColVars()
-    r: zColVars = zColVars()
-    b: zColVars = zColVars()
-    t: zColVars = zColVars()
-    i: zColVars = zColVars()
-    a: zColVars = zColVars()
-    l: zColVars = zColVars()
+    e: zColVars = field(default_factory=zColVars)
+    h: zColVars = field(default_factory=zColVars)
+    f: zColVars = field(default_factory=zColVars)
+    rb: zColVars = field(default_factory=zColVars)
+    r: zColVars = field(default_factory=zColVars)
+    b: zColVars = field(default_factory=zColVars)
+    t: zColVars = field(default_factory=zColVars)
+    i: zColVars = field(default_factory=zColVars)
+    a: zColVars = field(default_factory=zColVars)
+    l: zColVars = field(default_factory=zColVars)
 
     CO2e_per_capita_nat: float = None
     CO2e_per_capita_com: float = None
@@ -162,7 +162,6 @@ class M183X:
     GHG_budget_2022_to_year_target_nat: float = None  # INFO THG Budget Deutschland
     CO2e_2022_to_year_target: float = None  # INFO CO2e sind Emissionen für Kommune
 
-    # erzeuge dictionry
     def dict(self):
         return asdict(self)
 

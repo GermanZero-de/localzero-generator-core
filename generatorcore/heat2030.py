@@ -1,4 +1,4 @@
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass, asdict, field
 from .inputs import Inputs
 from .utils import div
 from . import residences2030, business2030, heat2018, agri2030, industry2030
@@ -42,34 +42,34 @@ class HColVars2030:
 
 @dataclass
 class H30:
-    h: HColVars2030 = HColVars2030()
-    g: HColVars2030 = HColVars2030()
-    g_storage: HColVars2030 = HColVars2030()
-    g_planning: HColVars2030 = HColVars2030()
-    d: HColVars2030 = HColVars2030()
-    d_r: HColVars2030 = HColVars2030()
-    d_b: HColVars2030 = HColVars2030()
-    d_i: HColVars2030 = HColVars2030()
-    d_t: HColVars2030 = HColVars2030()
-    a_t: HColVars2030 = HColVars2030()
-    p: HColVars2030 = HColVars2030()
-    p_gas: HColVars2030 = HColVars2030()
-    p_lpg: HColVars2030 = HColVars2030()
-    p_fueloil: HColVars2030 = HColVars2030()
-    p_opetpro: HColVars2030 = HColVars2030()
-    p_coal: HColVars2030 = HColVars2030()
-    p_heatnet: HColVars2030 = HColVars2030()
-    p_heatnet_cogen: HColVars2030 = HColVars2030()
-    p_heatnet_plant: HColVars2030 = HColVars2030()
-    p_heatnet_lheatpump: HColVars2030 = HColVars2030()
-    p_heatnet_geoth: HColVars2030 = HColVars2030()
-    p_biomass: HColVars2030 = HColVars2030()
-    p_ofossil: HColVars2030 = HColVars2030()
-    p_orenew: HColVars2030 = HColVars2030()
-    p_solarth: HColVars2030 = HColVars2030()
-    p_heatpump: HColVars2030 = HColVars2030()
-    p_local_biomass: HColVars2030 = HColVars2030()
-    p_local_biomass_cogen: HColVars2030 = HColVars2030()
+    h: HColVars2030 = field(default_factory=HColVars2030)
+    g: HColVars2030 = field(default_factory=HColVars2030)
+    g_storage: HColVars2030 = field(default_factory=HColVars2030)
+    g_planning: HColVars2030 = field(default_factory=HColVars2030)
+    d: HColVars2030 = field(default_factory=HColVars2030)
+    d_r: HColVars2030 = field(default_factory=HColVars2030)
+    d_b: HColVars2030 = field(default_factory=HColVars2030)
+    d_i: HColVars2030 = field(default_factory=HColVars2030)
+    d_t: HColVars2030 = field(default_factory=HColVars2030)
+    a_t: HColVars2030 = field(default_factory=HColVars2030)
+    p: HColVars2030 = field(default_factory=HColVars2030)
+    p_gas: HColVars2030 = field(default_factory=HColVars2030)
+    p_lpg: HColVars2030 = field(default_factory=HColVars2030)
+    p_fueloil: HColVars2030 = field(default_factory=HColVars2030)
+    p_opetpro: HColVars2030 = field(default_factory=HColVars2030)
+    p_coal: HColVars2030 = field(default_factory=HColVars2030)
+    p_heatnet: HColVars2030 = field(default_factory=HColVars2030)
+    p_heatnet_cogen: HColVars2030 = field(default_factory=HColVars2030)
+    p_heatnet_plant: HColVars2030 = field(default_factory=HColVars2030)
+    p_heatnet_lheatpump: HColVars2030 = field(default_factory=HColVars2030)
+    p_heatnet_geoth: HColVars2030 = field(default_factory=HColVars2030)
+    p_biomass: HColVars2030 = field(default_factory=HColVars2030)
+    p_ofossil: HColVars2030 = field(default_factory=HColVars2030)
+    p_orenew: HColVars2030 = field(default_factory=HColVars2030)
+    p_solarth: HColVars2030 = field(default_factory=HColVars2030)
+    p_heatpump: HColVars2030 = field(default_factory=HColVars2030)
+    p_local_biomass: HColVars2030 = field(default_factory=HColVars2030)
+    p_local_biomass_cogen: HColVars2030 = field(default_factory=HColVars2030)
 
     # for pdf
     p_fossil_change_CO2e_t: float = None
