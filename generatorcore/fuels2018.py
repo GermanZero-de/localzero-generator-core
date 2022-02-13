@@ -1,5 +1,7 @@
-from .inputs import Inputs
 from dataclasses import dataclass, asdict
+
+from . import transport2018
+from .inputs import Inputs
 
 
 #  Definition der relevanten Spaltennamen für den Sektor F (18)
@@ -45,7 +47,7 @@ class F18:
 # Berechnungsfunktion Fuels 2018
 
 
-def calc(root, inputs: Inputs):
+def calc(inputs: Inputs, *, t18: transport2018.T18) -> F18:
     def fact(n):
         return inputs.fact(n)
 
@@ -55,8 +57,7 @@ def calc(root, inputs: Inputs):
     def entry(n):
         return inputs.entry(n)
 
-    f = root.f18
-    t18 = root.t18
+    f = F18()
 
     # ------------------------------------------------
     f.f.CO2e_cb = 0
@@ -88,9 +89,9 @@ def calc(root, inputs: Inputs):
         entry("In_R_petrol_fec")
         + entry("In_B_petrol_fec")
         + entry("In_A_petrol_fec")
-        + root.t18.t.demand_petrol
+        + t18.t.demand_petrol
     )
-    f.p_jetfuel.energy = entry("In_B_jetfuel_fec") + root.t18.s_jetfuel.energy
+    f.p_jetfuel.energy = entry("In_B_jetfuel_fec") + t18.s_jetfuel.energy
     f.p_diesel.energy = (
         entry("In_B_diesel_fec")
         + entry("In_I_diesel_fec")
@@ -152,3 +153,5 @@ def calc(root, inputs: Inputs):
     )
 
     f.f.CO2e_total = f.p.CO2e_total
+
+    return f

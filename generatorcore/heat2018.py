@@ -1,6 +1,8 @@
+from dataclasses import dataclass, asdict
+
+from . import transport2018, electricity2018
 from .inputs import Inputs
 from .utils import div
-from dataclasses import dataclass, asdict
 
 
 # Es gibt 5 Datentabellen:
@@ -79,11 +81,7 @@ class H18:
         return asdict(self)
 
 
-# Berechnungsfunktion im Sektor H für 2018
-# Parameter root: oberste Generator Instanz
-
-
-def calc(root, inputs: Inputs):
+def calc(inputs: Inputs, t18: transport2018.T18, e18: electricity2018.E18) -> H18:
     def fact(n):
         return inputs.fact(n)
 
@@ -97,11 +95,11 @@ def calc(root, inputs: Inputs):
     ### Demand of Heat 2018 ###
     ###########################
 
-    t18 = root.t18
-    i18 = root.i18
+    h18 = H18()
+
     # starting with sectors
     # Demand Residential:
-    d_r = root.h18.d_r  # -> Abkürzung für weniger Schreibarbeit
+    d_r = h18.d_r  # -> Abkürzung für weniger Schreibarbeit
     # 1
     d_r.energy = (
         entry("In_R_coal_fec")
@@ -115,7 +113,7 @@ def calc(root, inputs: Inputs):
     # result: 516.686.389 MWh
 
     # Demand Business:
-    d_b = root.h18.d_b
+    d_b = h18.d_b
     # 1
     d_b.energy = (
         entry("In_B_coal_fec")
@@ -130,7 +128,7 @@ def calc(root, inputs: Inputs):
     # result: 164.713.333 MWh
 
     # Demand Industry:
-    d_i = root.h18.d_i
+    d_i = h18.d_i
     # 1
     d_i.energy = (
         entry("In_I_coal_fec")
@@ -146,12 +144,12 @@ def calc(root, inputs: Inputs):
     )
 
     # Demand Transport:
-    d_t = root.h18.d_t
+    d_t = h18.d_t
 
     d_t.energy = t18.t.demand_fueloil + t18.t.demand_lpg + t18.t.demand_gas
     # percentages of sectors of total heat demand 2018
 
-    a_t = root.h18.a_t
+    a_t = h18.a_t
     a_t.energy = (
         entry("In_A_fueloil_fec")
         + entry("In_A_lpg_fec")
@@ -161,7 +159,7 @@ def calc(root, inputs: Inputs):
 
     # Demand Heat 2018 in total:
 
-    d = root.h18.d
+    d = h18.d
     # 1
     d.energy = (
         d_r.energy
@@ -178,7 +176,7 @@ def calc(root, inputs: Inputs):
 
     # Production Heat 2018 in total:
 
-    p = root.h18.p
+    p = h18.p
     # 1
     p.energy = (
         d.energy
@@ -189,7 +187,7 @@ def calc(root, inputs: Inputs):
 
     # Production gas:
 
-    p_gas = root.h18.p_gas
+    p_gas = h18.p_gas
 
     # 1 final energy consumption
     p_gas.energy = (
@@ -219,7 +217,7 @@ def calc(root, inputs: Inputs):
 
     # Production lpg:
 
-    p_lpg = root.h18.p_lpg
+    p_lpg = h18.p_lpg
 
     # 1 final energy consumption
     p_lpg.energy = (
@@ -246,7 +244,7 @@ def calc(root, inputs: Inputs):
 
     # Production fueloil:
 
-    p_fueloil = root.h18.p_fueloil
+    p_fueloil = h18.p_fueloil
 
     # 1 final energy consumption
     p_fueloil.energy = (
@@ -273,7 +271,7 @@ def calc(root, inputs: Inputs):
 
     # Production other petrol products (opetpro):
 
-    p_opetpro = root.h18.p_opetpro
+    p_opetpro = h18.p_opetpro
 
     # 1 final energy consumption
     p_opetpro.energy = (
@@ -299,7 +297,7 @@ def calc(root, inputs: Inputs):
 
     # Production coal:
 
-    p_coal = root.h18.p_coal
+    p_coal = h18.p_coal
 
     # 1 final energy consumption
     p_coal.energy = (
@@ -327,7 +325,7 @@ def calc(root, inputs: Inputs):
 
     # Production heatnet:
 
-    p_heatnet = root.h18.p_heatnet
+    p_heatnet = h18.p_heatnet
 
     # 1 final energy consumption
     p_heatnet.energy = (
@@ -342,24 +340,24 @@ def calc(root, inputs: Inputs):
 
     # Production cogenerated heatnet:
 
-    p_heatnet_cogen = root.h18.p_heatnet_cogen
+    p_heatnet_cogen = h18.p_heatnet_cogen
 
     # 1 final energy consumption
     # if-sequence is necessary to avoid more cogenerated heat produced than used - and later negative heatnet_plant
     if (
-        root.e18.p_fossil_coal_brown_cogen.energy
-        + root.e18.p_fossil_coal_black_cogen.energy
-        + root.e18.p_fossil_gas_cogen.energy
-        + root.e18.p_fossil_ofossil_cogen.energy
-        + root.e18.p_renew_biomass_cogen.energy
+        e18.p_fossil_coal_brown_cogen.energy
+        + e18.p_fossil_coal_black_cogen.energy
+        + e18.p_fossil_gas_cogen.energy
+        + e18.p_fossil_ofossil_cogen.energy
+        + e18.p_renew_biomass_cogen.energy
     ) < p_heatnet.energy:
 
         p_heatnet_cogen.energy = (
-            root.e18.p_fossil_coal_brown_cogen.energy
-            + root.e18.p_fossil_coal_black_cogen.energy
-            + root.e18.p_fossil_gas_cogen.energy
-            + root.e18.p_fossil_ofossil_cogen.energy
-            + root.e18.p_renew_biomass_cogen.energy
+            e18.p_fossil_coal_brown_cogen.energy
+            + e18.p_fossil_coal_black_cogen.energy
+            + e18.p_fossil_gas_cogen.energy
+            + e18.p_fossil_ofossil_cogen.energy
+            + e18.p_renew_biomass_cogen.energy
             # result: 82.686.089 MWh
         )
 
@@ -382,7 +380,7 @@ def calc(root, inputs: Inputs):
 
     # Production heatnet in plants:
 
-    p_heatnet_plant = root.h18.p_heatnet_plant
+    p_heatnet_plant = h18.p_heatnet_plant
 
     # 1 final energy consumption
     # due to the if-sequence in p_heatnet_cogen this value cannot become negative
@@ -416,7 +414,7 @@ def calc(root, inputs: Inputs):
     # 7 total CO2e
     p_heatnet.CO2e_total = p_heatnet.CO2e_cb
 
-    p_heatnet_geoth = root.h18.p_heatnet_geoth
+    p_heatnet_geoth = h18.p_heatnet_geoth
 
     p_heatnet_geoth.pct_energy = 0
     p_heatnet_geoth.energy = p_heatnet_geoth.pct_energy * p_heatnet.energy
@@ -425,7 +423,7 @@ def calc(root, inputs: Inputs):
     p_heatnet_geoth.CO2e_pb = 0
     p_heatnet_geoth.CO2e_total = p_heatnet_geoth.CO2e_pb + p_heatnet_geoth.CO2e_cb
 
-    p_heatnet_lheatpump = root.h18.p_heatnet_lheatpump
+    p_heatnet_lheatpump = h18.p_heatnet_lheatpump
     p_heatnet_lheatpump.pct_energy = 0
     p_heatnet_lheatpump.CO2e_pb = 0
     p_heatnet_lheatpump.CO2e_cb = 0
@@ -436,7 +434,7 @@ def calc(root, inputs: Inputs):
 
     # Production biomass:
 
-    p_biomass = root.h18.p_biomass
+    p_biomass = h18.p_biomass
 
     # 1 final energy consumption
     p_biomass.energy = (
@@ -462,7 +460,7 @@ def calc(root, inputs: Inputs):
 
     # Production ofossil:
 
-    p_ofossil = root.h18.p_ofossil
+    p_ofossil = h18.p_ofossil
 
     # 1 final energy consumption
     """p_coal.energy = (
@@ -488,7 +486,7 @@ def calc(root, inputs: Inputs):
 
     # Production other renewables:
 
-    p_orenew = root.h18.p_orenew
+    p_orenew = h18.p_orenew
 
     # 1 final energy consumption
     p_orenew.energy = (
@@ -503,7 +501,7 @@ def calc(root, inputs: Inputs):
 
     # Production solarthermal energy within other renewables:
 
-    p_solarth = root.h18.p_solarth
+    p_solarth = h18.p_solarth
 
     # 2 pct of other renewables' final energy consumption
     p_solarth.pct_energy = fact("Fact_R_S_ratio_solarth_to_orenew_2018")
@@ -527,7 +525,7 @@ def calc(root, inputs: Inputs):
 
     # Production heatpump energy within other renewables:
 
-    p_heatpump = root.h18.p_heatpump
+    p_heatpump = h18.p_heatpump
 
     # 2 pct of other renewables' final energy consumption
     p_heatpump.pct_energy = fact("Fact_R_S_ratio_heatpump_to_orenew_2018")
@@ -560,7 +558,7 @@ def calc(root, inputs: Inputs):
 
     p_orenew.CO2e_pb_per_MWh = 0
 
-    p_solarth = root.h18.p_solarth
+    p_solarth = h18.p_solarth
 
     p_solarth.energy = p_orenew.energy * fact("Fact_R_S_ratio_solarth_to_orenew_2018")
     p_solarth.pct_energy = div(p_solarth.energy, p_orenew.energy)
@@ -568,7 +566,7 @@ def calc(root, inputs: Inputs):
     p_solarth.CO2e_pb = p_solarth.energy * p_solarth.CO2e_pb_per_MWh
     p_solarth.CO2e_total = p_solarth.CO2e_pb
 
-    p_heatpump = root.h18.p_heatpump
+    p_heatpump = h18.p_heatpump
     p_heatpump.energy = p_orenew.energy * fact("Fact_R_S_ratio_heatpump_to_orenew_2018")
     p_heatpump.pct_energy = div(p_heatpump.energy, p_orenew.energy)
     p_heatpump.CO2e_pb_per_MWh = fact("Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018")
@@ -626,7 +624,9 @@ def calc(root, inputs: Inputs):
         + p_orenew.pct_energy
     )
 
-    h = root.h18.h
+    h = h18.h
     h.CO2e_cb = p.CO2e_cb
     h.CO2e_total = p.CO2e_total
     h.CO2e_pb = p.CO2e_pb
+
+    return h18

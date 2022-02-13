@@ -65,7 +65,7 @@ class I18:
 
 
 # for mineral industry the energy_use_factor still needs to be added to facts
-def calc(root, inputs: Inputs):
+def calc(inputs: Inputs) -> I18:
     def fact(n):
         return inputs.fact(n)
 
@@ -75,7 +75,7 @@ def calc(root, inputs: Inputs):
     def entry(n):
         return inputs.entry(n)
 
-    i18 = root.i18
+    i18 = I18()
 
     i18.p_miner.energy = entry("In_I_fec_pct_of_miner") * entry("In_I_energy_total")
 
@@ -638,3 +638,5 @@ def calc(root, inputs: Inputs):
     i18.i.CO2e_cb = i18.p.CO2e_cb
     i18.i.CO2e_total = i18.p.CO2e_total
     i18.i.energy = i18.p.energy
+
+    return i18

@@ -1,5 +1,6 @@
-from .inputs import Inputs
 from dataclasses import dataclass, asdict
+
+from .inputs import Inputs
 
 
 @dataclass
@@ -71,7 +72,7 @@ class L18:
         return asdict(self)
 
 
-def calc(root, inputs: Inputs):
+def calc(inputs: Inputs) -> L18:
     def fact(n):
         return inputs.fact(n)
 
@@ -81,44 +82,46 @@ def calc(root, inputs: Inputs):
     def entry(n):
         return inputs.entry(n)
 
-    g = root.l18.g
-    l = root.l18.l
-    g_forest = root.l18.g_forest
-    g_forest_managed = root.l18.g_forest_managed
-    g_forest_natural = root.l18.g_forest_natural
-    g_crop = root.l18.g_crop
-    g_crop_min_conv = root.l18.g_crop_min_conv
-    g_crop_org_low = root.l18.g_crop_org_low
-    g_crop_org_high = root.l18.g_crop_org_high
-    g_grass = root.l18.g_grass
-    g_grass_min_conv = root.l18.g_grass_min_conv
-    g_grass_org_low = root.l18.g_grass_org_low
-    g_grass_org_high = root.l18.g_grass_org_high
-    g_grove = root.l18.g_grove
-    g_grove_min = root.l18.g_grove_min
-    g_grove_org_low = root.l18.g_grove_org_low
-    g_grove_org_high = root.l18.g_grove_org_high
-    g_wet = root.l18.g_wet
-    g_wet_min = root.l18.g_wet_min
-    g_wet_org_low = root.l18.g_wet_org_low
-    g_wet_org_high = root.l18.g_wet_org_high
-    g_water = root.l18.g_water
-    g_water_org = root.l18.g_water_org
-    g_water_min = root.l18.g_water_min
-    g_settlement = root.l18.g_settlement
-    g_settlement_org = root.l18.g_settlement_org
-    g_settlement_min = root.l18.g_settlement_min
-    g_settlement_org_low = root.l18.g_settlement_org_low
-    g_settlement_org_high = root.l18.g_settlement_org_high
-    g_other = root.l18.g_other
-    g_wood = root.l18.g_wood
-    g_crop_org = root.l18.g_crop_org
-    g_grass_org = root.l18.g_grass_org
-    g_grove_org = root.l18.g_grove_org
-    g_wet_org = root.l18.g_wet_org
-    g_water_org_low = root.l18.g_water_org_low
-    g_water_org_high = root.l18.g_water_org_high
-    pyrolysis = root.l18.pyrolysis
+    l18 = L18()
+
+    g = l18.g
+    l = l18.l
+    g_forest = l18.g_forest
+    g_forest_managed = l18.g_forest_managed
+    g_forest_natural = l18.g_forest_natural
+    g_crop = l18.g_crop
+    g_crop_min_conv = l18.g_crop_min_conv
+    g_crop_org_low = l18.g_crop_org_low
+    g_crop_org_high = l18.g_crop_org_high
+    g_grass = l18.g_grass
+    g_grass_min_conv = l18.g_grass_min_conv
+    g_grass_org_low = l18.g_grass_org_low
+    g_grass_org_high = l18.g_grass_org_high
+    g_grove = l18.g_grove
+    g_grove_min = l18.g_grove_min
+    g_grove_org_low = l18.g_grove_org_low
+    g_grove_org_high = l18.g_grove_org_high
+    g_wet = l18.g_wet
+    g_wet_min = l18.g_wet_min
+    g_wet_org_low = l18.g_wet_org_low
+    g_wet_org_high = l18.g_wet_org_high
+    g_water = l18.g_water
+    g_water_org = l18.g_water_org
+    g_water_min = l18.g_water_min
+    g_settlement = l18.g_settlement
+    g_settlement_org = l18.g_settlement_org
+    g_settlement_min = l18.g_settlement_min
+    g_settlement_org_low = l18.g_settlement_org_low
+    g_settlement_org_high = l18.g_settlement_org_high
+    g_other = l18.g_other
+    g_wood = l18.g_wood
+    g_crop_org = l18.g_crop_org
+    g_grass_org = l18.g_grass_org
+    g_grove_org = l18.g_grove_org
+    g_wet_org = l18.g_wet_org
+    g_water_org_low = l18.g_water_org_low
+    g_water_org_high = l18.g_water_org_high
+    pyrolysis = l18.pyrolysis
 
     g_forest.area_ha = entry("In_M_area_wood_com")
 
@@ -449,3 +452,5 @@ def calc(root, inputs: Inputs):
     g_settlement_org_low.CO2e_total = g_settlement_org_low.CO2e_pb
     g_settlement_org_high.CO2e_total = g_settlement_org_high.CO2e_pb
     pyrolysis.CO2e_total = 0
+
+    return l18

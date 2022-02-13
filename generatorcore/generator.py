@@ -3,7 +3,6 @@ from dataclasses import dataclass, asdict
 import sys
 from generatorcore import methodology183x
 
-from generatorcore.methodology183x import M183X
 from .refdata import RefData
 from .inputs import Inputs
 from .makeentries import make_entries
@@ -33,19 +32,16 @@ from . import industry2030
 
 @dataclass
 class Result:
-
-    # Definition der Sektoren als Klassenvariablen. (Bitte Auskommentieren, wenn fertig)
-
     # 2018
-    r18: residences2018.R18 = residences2018.R18()  # Residences
-    b18: business2018.B18 = business2018.B18()  # Gewerbe Handel Dienstleisung
-    i18: industry2018.I18 = industry2018.I18()  # Industry
-    t18: transport2018.T18 = transport2018.T18()  # Transport
-    a18: agri2018.A18 = agri2018.A18()  # Agriculture
-    f18: fuels2018.F18 = fuels2018.F18()  # Fuels
-    e18: electricity2018.E18 = electricity2018.E18()  # Electricity
-    h18: heat2018.H18 = heat2018.H18()  # Heat
-    l18: lulucf2018.L18 = lulucf2018.L18()  # Lulucf
+    r18: residences2018.R18
+    b18: business2018.B18
+    i18: industry2018.I18
+    t18: transport2018.T18
+    a18: agri2018.A18
+    f18: fuels2018.F18
+    e18: electricity2018.E18
+    h18: heat2018.H18
+    l18: lulucf2018.L18
 
     # Zieljahr
     r30: residences2030.R30 = residences2030.R30()
@@ -76,30 +72,49 @@ class Result:
         return asdict(self)
 
 
-# Hier werden alle fertigen Kalkulationsfunktionen pro Sektor hinzugefügt
 def calculate(inputs: Inputs) -> Result:
-    result = Result()
-    """Given a set of inputs do the actual calculation"""
+    """This is the entry point to the actual calculation."""
     start_t = time.time()
     # 2018
     print("Residence2018_calc", file=sys.stderr)
     r18 = residences2018.calc(inputs)
+
     print("Business2018_calc", file=sys.stderr)
-    business2018.calc(inputs, r18=r18)
+    b18 = business2018.calc(inputs, r18=r18)
+
     print("Industry2018_calc", file=sys.stderr)
-    industry2018.calc(result, inputs)
+    i18 = industry2018.calc(inputs)
+
     print("Transport2018_calc", file=sys.stderr)
-    transport2018.calc(result, inputs)
+    t18 = transport2018.calc(inputs)
+
     print("Fuels2018_calc", file=sys.stderr)
-    fuels2018.calc(result, inputs)
-    print("Electricity2018_calc", file=sys.stderr)
-    electricity2018.calc(result, inputs)
-    print("Heat2018_calc", file=sys.stderr)
-    heat2018.calc(result, inputs)
+    f18 = fuels2018.calc(inputs, t18=t18)
+
     print("Lulucf2018_calc", file=sys.stderr)
-    lulucf2018.calc(result, inputs)
+    l18 = lulucf2018.calc(inputs)
+
     print("Agri2018_calc", file=sys.stderr)
-    agri2018.calc(result, inputs)
+    a18 = agri2018.calc(inputs, l18=l18, b18=b18)
+
+    print("Electricity2018_calc", file=sys.stderr)
+    e18 = electricity2018.calc(inputs, t18=t18)
+
+    print("Heat2018_calc", file=sys.stderr)
+    h18 = heat2018.calc(inputs, t18=t18, e18=e18)
+
+    result = Result(
+        r18=r18,
+        b18=b18,
+        i18=i18,
+        t18=t18,
+        f18=f18,
+        l18=l18,
+        a18=a18,
+        e18=e18,
+        h18=h18,
+    )
+
     end_t = time.time()
     print(
         "elapsed time for 18-sectors: {:5.3f}s".format(end_t - start_t),
