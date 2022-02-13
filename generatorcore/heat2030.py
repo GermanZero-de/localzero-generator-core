@@ -131,15 +131,6 @@ def calc(
     p_local_biomass = h30.p_local_biomass
     p_local_biomass_cogen = h30.p_local_biomass_cogen
 
-    # TODO bgrundmann: Why are we doing this here?
-    r30.s_gas.energy = 0
-    b30.s_gas.energy = 0
-    r30.s_lpg.energy = 0
-    b30.s_lpg.energy = 0
-    r30.s_fueloil.energy = 0
-    b30.s_fueloil.energy = 0
-    r30.s_coal.energy = 0
-    b30.s_coal.energy = 0
 
     ###########################
     ### Demand of Heat 2018 ###
