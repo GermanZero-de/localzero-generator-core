@@ -14,5 +14,5 @@ def json_to_output(json_object, args):
 
 def cmd_run(args):
     # TODO: pass ags in here
-    g = calculate_with_default_inputs(ags=args.ags, year=args.year)
+    g = calculate_with_default_inputs(ags=args.ags, year=int(args.year))
     json_to_output(g.result_dict(), args)
