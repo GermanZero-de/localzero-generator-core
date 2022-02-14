@@ -100,3 +100,7 @@ def end_to_end(datadir_status: refdatatools.DataDirStatus, ags):
 
 def test_end_to_end_goettingen(datadir_status):
     end_to_end(datadir_status, "03159016")
+
+
+def test_end_to_end_germany(datadir_status):
+    end_to_end(datadir_status, "DG000000")
