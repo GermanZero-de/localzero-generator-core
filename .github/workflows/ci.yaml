@@ -19,7 +19,7 @@ jobs:
 
     env:
       # Required coverage
-      COVERAGE_REQ: 90
+      COVERAGE_REQ: 98
 
     steps:
       - name: Check out repository
