@@ -240,7 +240,7 @@ class RefData:
         #get list of gemfr. Communes in the Master list
         gemfrCommunes = []
         for (k,v) in self._ags_master.items():
-            if v.find("gemfr.") != -1:
+            if v.find("gemfr.") != -1 or v.find("gemeindefreies Gebiet") != -1:
                 gemfrCommunes.append(k)
 
 
