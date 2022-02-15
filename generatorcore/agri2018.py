@@ -82,7 +82,7 @@ class A18:
         return asdict(self)
 
 
-def calc(inputs: Inputs, l18: lulucf2018.L18, b18: business2018.B18) -> A18:
+def calc(inputs: Inputs, *, l18: lulucf2018.L18, b18: business2018.B18) -> A18:
     def fact(n):
         return inputs.fact(n)
 
