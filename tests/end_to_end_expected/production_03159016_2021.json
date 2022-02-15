@@ -6023,7 +6023,7 @@
             "action": null
         },
         "s_fueloil": {
-            "energy": 0,
+            "energy": 0.0,
             "pct_energy": 0,
             "pct_x": null,
             "area_m2": null,
@@ -6080,7 +6080,7 @@
             "action": null
         },
         "s_lpg": {
-            "energy": 0,
+            "energy": 0.0,
             "pct_energy": 0,
             "pct_x": null,
             "area_m2": null,
@@ -6194,7 +6194,7 @@
             "action": null
         },
         "s_coal": {
-            "energy": 0,
+            "energy": 0.0,
             "pct_energy": 0,
             "pct_x": null,
             "area_m2": null,
@@ -16161,7 +16161,7 @@
             "cost_wage": null,
             "demand_emplo": null,
             "demand_emplo_new": null,
-            "energy": 0,
+            "energy": 0.0,
             "pct_energy": 0.0,
             "pct_of_wage": null,
             "ratio_wage_to_emplo": null,
@@ -16195,7 +16195,7 @@
             "cost_wage": null,
             "demand_emplo": null,
             "demand_emplo_new": null,
-            "energy": 0,
+            "energy": 0.0,
             "pct_energy": 0.0,
             "pct_of_wage": null,
             "ratio_wage_to_emplo": null,
@@ -16263,7 +16263,7 @@
             "cost_wage": null,
             "demand_emplo": null,
             "demand_emplo_new": null,
-            "energy": 0,
+            "energy": 0.0,
             "pct_energy": 0.0,
             "pct_of_wage": null,
             "ratio_wage_to_emplo": null,
