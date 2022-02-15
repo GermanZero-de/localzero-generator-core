@@ -198,7 +198,7 @@ def make_entries(data: refdata.RefData, ags: str, year: int):
         div(entry["In_R_flats_w_heatnet"] , entry["In_R_flats_com"])
     )
 
-    if ags == ags_germany or ags == ags_sta or ags == ags_dis:
+    if ags == ags_germany or ags == ags_sta_padded or ags == ags_dis_padded:
         entry["In_T_rt7"] = "nd"
         entry["In_T_rt3"] = "nd"
     else:
