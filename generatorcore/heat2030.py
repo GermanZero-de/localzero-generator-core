@@ -100,7 +100,6 @@ def calc(
     h30 = H30()
 
     Million = 1000000
-    ags = entry("In_M_AGS_com")
 
     h = h30.h
     g = h30.g
@@ -130,7 +129,6 @@ def calc(
     p_heatpump = h30.p_heatpump
     p_local_biomass = h30.p_local_biomass
     p_local_biomass_cogen = h30.p_local_biomass_cogen
-
 
     ###########################
     ### Demand of Heat 2018 ###

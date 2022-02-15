@@ -33,6 +33,21 @@ class Inputs:
         """Similar to fact, but these try to describe the future. And are therefore based on various assumptions."""
         return self._facts_and_assumptions.ass(keyname)
 
-    def entry(self, keyname: str):
+    def entry(self, keyname: str) -> int | float:
         """An entry"""
-        return self._entries[keyname]
+        v = self._entries[keyname]
+        if isinstance(v, (int, float)):
+            return v
+        else:
+            assert (
+                False
+            ), f"{keyname} = {v} is NOT a numeric entry. You probably meant to use str_entry."
+
+    def str_entry(self, keyname: str) -> str:
+        v = self._entries[keyname]
+        if isinstance(v, str):
+            return v
+        else:
+            assert (
+                False
+            ), f"{keyname} = {v} is NOT a str entry. You probably meant to use entry."

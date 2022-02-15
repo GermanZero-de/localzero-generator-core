@@ -250,7 +250,7 @@ def calc(inputs: Inputs) -> T18:
     s_elec = t18.s_elec
 
     Million = 1000000
-    ags = entry("In_M_AGS_com")
+    ags = inputs.str_entry("In_M_AGS_com")
     # res 61.700.000.000 Pers km
     air_inter.transport_capacity_pkm = (
         fact("Fact_T_D_Air_nat_trnsprt_ppl_2019")
