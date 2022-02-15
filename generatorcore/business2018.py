@@ -70,7 +70,6 @@ def calc(inputs: Inputs, *, r18: residences2018.R18) -> B18:
         return inputs.entry(n)
 
     Million = 1000000.0
-    Kalkulationszeitraum = entry("In_M_duration_target")
 
     b18 = B18()
 

@@ -120,8 +120,6 @@ def calc(
     def entry(n):
         return inputs.entry(n)
 
-    start = time.time()
-
     Million = 1000000.0
     Kalkulationszeitraum = entry("In_M_duration_target")
 

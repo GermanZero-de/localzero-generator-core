@@ -74,9 +74,6 @@ def calc(inputs: Inputs) -> L18:
     def fact(n):
         return inputs.fact(n)
 
-    def ass(n):
-        return inputs.ass(n)
-
     def entry(n):
         return inputs.entry(n)
 
