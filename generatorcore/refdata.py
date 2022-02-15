@@ -231,6 +231,32 @@ class RefData:
             self._fix_missing_entries_in_area()
             self._fix_missing_entries_in_flats()
             self._fix_missing_entries_in_population()
+            self._fix_missing_gemfr_ags_in_buildings()
+
+    def _fix_missing_gemfr_ags_in_buildings(self):
+        """Some gemeindefreie Communes are not listed in the buildings list. Gemeindefreie Communes are usueally forests ore lakes and do not have any (they may have some, but we are going to ignore that)
+            buildings. Therefore we just add them with 0 to the buildings list. 
+        """
+        #get list of gemfr. Communes in the Master list
+        gemfrCommunes = []
+        for (k,v) in self._ags_master.items():
+            if v.find("gemfr.") != -1:
+                gemfrCommunes.append(k)
+
+
+        #create a 2D list with ags keys and zeros
+        numBuildingCols = len(self._buildings.columns)
+        numGemfrAGS = len(gemfrCommunes)        
+        zeros2D = []
+        for i in range(numGemfrAGS):
+            zeros2D.append( [gemfrCommunes[i]] + [0]* (numBuildingCols-1))
+
+        #create a data frame that has the buldings columns and contains the gemfr. Ags and zeros 
+        zerosDF = pd.DataFrame(columns = self._buildings.columns , data=zeros2D)
+
+        #append to the buildings data frame
+        self._buildings = self._buildings.append(zerosDF)
+
 
     def _fix_missing_entries_in_area(self):
         """Here we assume that the missing entries in the area sheet should actually be 0."""
