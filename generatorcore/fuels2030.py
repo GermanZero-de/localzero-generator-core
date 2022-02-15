@@ -95,8 +95,6 @@ def calc(
     def entry(n):
         return inputs.entry(n)
 
-    Million = 1000000
-
     f30 = F30()
 
     """ Start"""

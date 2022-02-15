@@ -121,8 +121,6 @@ class T30:
         return asdict(self)
 
 
-# Berechnungsfunktion im Sektor T für 203X
-# Parameter root: oberste Generator Instanz
 def calc(inputs: Inputs, *, t18: transport2018.T18) -> T30:
     def fact(n):
         return inputs.fact(n)

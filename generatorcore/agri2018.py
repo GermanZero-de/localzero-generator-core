@@ -86,9 +86,6 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18, b18: business2018.B18) -> A18:
     def fact(n):
         return inputs.fact(n)
 
-    def ass(n):
-        return inputs.ass(n)
-
     def entry(n):
         return inputs.entry(n)
 
@@ -145,7 +142,6 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18, b18: business2018.B18) -> A18:
     s_heatpump = a18.s_heatpump
     p_operation_elec_heatpump = a18.p_operation_elec_heatpump
 
-    """ unused variables """
     s_heatpump.energy = 0.0
     g.CO2e_total = 0.0
     p_fermen.CO2e_cb = 0.0
