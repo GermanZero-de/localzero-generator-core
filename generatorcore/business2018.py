@@ -73,7 +73,6 @@ def calc(inputs: Inputs, *, r18: residences2018.R18) -> B18:
     Kalkulationszeitraum = entry("In_M_duration_target")
 
     b18 = B18()
-    r = r18
 
     b18.s_gas.energy = entry("In_B_gas_fec")  # 98.602.500 MWh
 
@@ -350,17 +349,17 @@ def calc(inputs: Inputs, *, r18: residences2018.R18) -> B18:
         / (b18.p_nonresi.factor_adapted_to_fec * b18.p_nonresi.area_m2)
     )
     b18.rp_p.CO2e_cb = (
-        r.s.CO2e_cb
-        - r.s_petrol.CO2e_cb
+        r18.s.CO2e_cb
+        - r18.s_petrol.CO2e_cb
         + b18.s.CO2e_cb
         - b18.s_petrol.CO2e_cb
         - b18.s_jetfuel.CO2e_cb
         - b18.s_diesel.CO2e_cb
     )
-    b18.rp_p.CO2e_total = r.s.CO2e_cb + b18.s.CO2e_cb
-    b18.rb.energy = r.p.energy + b18.p.energy
+    b18.rp_p.CO2e_total = r18.s.CO2e_cb + b18.s.CO2e_cb
+    b18.rb.energy = r18.p.energy + b18.p.energy
     b18.b.CO2e_cb = b18.s.CO2e_cb
-    b18.rb.CO2e_cb = r.r.CO2e_cb + b18.b.CO2e_cb
+    b18.rb.CO2e_cb = r18.r.CO2e_cb + b18.b.CO2e_cb
     b18.rb.CO2e_total = b18.rb.CO2e_cb
     b18.b.CO2e_total = b18.s.CO2e_total
 

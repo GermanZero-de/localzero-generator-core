@@ -20,6 +20,7 @@ from . import (
 
 def calc(
     inputs: Inputs,
+    *,
     e18: electricity2018.E18,
     r18: residences2018.R18,
     b18: business2018.B18,

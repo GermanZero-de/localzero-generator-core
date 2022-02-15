@@ -91,7 +91,7 @@ class E18:
         return asdict(self)
 
 
-def calc(inputs: Inputs, t18: transport2018.T18) -> E18:
+def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
     def fact(n):
         return inputs.fact(n)
 
