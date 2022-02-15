@@ -35,7 +35,7 @@ def calc(
     than else sides. Hence  we have to hold two files for the 2 situations
     Each change of variable calculus has to be consistently edited within the 2 files"""
 
-    if inputs.entry("In_M_AGS_com") == "DG000000":
+    if inputs.str_entry("In_M_AGS_com") == "DG000000":
         return electricity2030_ger.calc(
             inputs,
             e18=e18,
