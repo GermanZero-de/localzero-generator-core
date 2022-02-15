@@ -534,7 +534,7 @@ def calc_budget(
     # 2046
     if m183X.CO2e_w_lulucf_2045 > 1:
         m183X.CO2e_w_lulucf_2046 = (
-            m183X.CO2e_w_lulucf_2046 - m183X.CO2e_w_lulucf_change_pa
+            m183X.CO2e_w_lulucf_2045 - m183X.CO2e_w_lulucf_change_pa
         )
     else:
         m183X.CO2e_w_lulucf_2046 = 0
