@@ -164,8 +164,7 @@ def calc(inputs: Inputs, *, r18: residences2018.R18, b18: business2018.B18) -> R
         + p_buildings_total.rate_rehab_pa
         * Kalkulationszeitraum
         * r18.p_buildings_until_1919.relative_heat_ratio_buildings_until_2004
-        * p_buildings_total.area_m2
-        / p_buildings_until_1919.area_m2,
+        * div(p_buildings_total.area_m2, p_buildings_until_1919.area_m2)
     )
     p_buildings_1919_1948.pct_rehab = min(
         1.0,
@@ -173,8 +172,7 @@ def calc(inputs: Inputs, *, r18: residences2018.R18, b18: business2018.B18) -> R
         + p_buildings_total.rate_rehab_pa
         * Kalkulationszeitraum
         * r18.p_buildings_1919_1948.relative_heat_ratio_buildings_until_2004
-        * p_buildings_total.area_m2
-        / p_buildings_1919_1948.area_m2,
+        * div (p_buildings_total.area_m2, p_buildings_1919_1948.area_m2 )
     )
     p_buildings_1919_1948.pct_rehab = min(
         1.0,
@@ -182,8 +180,7 @@ def calc(inputs: Inputs, *, r18: residences2018.R18, b18: business2018.B18) -> R
         + p_buildings_total.rate_rehab_pa
         * Kalkulationszeitraum
         * p_buildings_total.area_m2
-        * r18.p_buildings_1919_1948.relative_heat_ratio_buildings_until_2004
-        / p_buildings_1919_1948.area_m2,
+        * div(r18.p_buildings_1919_1948.relative_heat_ratio_buildings_until_2004, p_buildings_1919_1948.area_m2) 
     )
 
     p_buildings_1949_1978.pct_rehab = min(
@@ -192,8 +189,7 @@ def calc(inputs: Inputs, *, r18: residences2018.R18, b18: business2018.B18) -> R
         + p_buildings_total.rate_rehab_pa
         * Kalkulationszeitraum
         * r18.p_buildings_1949_1978.relative_heat_ratio_buildings_until_2004
-        * p_buildings_total.area_m2
-        / p_buildings_1949_1978.area_m2,
+        * div( p_buildings_total.area_m2, p_buildings_1949_1978.area_m2)
     )
     p_buildings_1949_1978.pct_rehab = min(
         1.0,
@@ -201,8 +197,7 @@ def calc(inputs: Inputs, *, r18: residences2018.R18, b18: business2018.B18) -> R
         + p_buildings_total.rate_rehab_pa
         * Kalkulationszeitraum
         * p_buildings_total.area_m2
-        * r18.p_buildings_1949_1978.relative_heat_ratio_buildings_until_2004
-        / p_buildings_1949_1978.area_m2,
+        * div( r18.p_buildings_1949_1978.relative_heat_ratio_buildings_until_2004, p_buildings_1949_1978.area_m2)     
     )
     p_buildings_1979_1995.pct_rehab = min(
         1.0,
@@ -210,8 +205,7 @@ def calc(inputs: Inputs, *, r18: residences2018.R18, b18: business2018.B18) -> R
         + p_buildings_total.rate_rehab_pa
         * Kalkulationszeitraum
         * r18.p_buildings_1979_1995.relative_heat_ratio_buildings_until_2004
-        * p_buildings_total.area_m2
-        / p_buildings_1979_1995.area_m2,
+        * div( p_buildings_total.area_m2, p_buildings_1979_1995.area_m2) 
     )
     p_buildings_1996_2004.pct_rehab = min(
         1.0,
@@ -219,8 +213,7 @@ def calc(inputs: Inputs, *, r18: residences2018.R18, b18: business2018.B18) -> R
         + p_buildings_total.rate_rehab_pa
         * Kalkulationszeitraum
         * r18.p_buildings_1996_2004.relative_heat_ratio_buildings_until_2004
-        * p_buildings_total.area_m2
-        / p_buildings_1996_2004.area_m2,
+        * div( p_buildings_total.area_m2, p_buildings_1996_2004.area_m2 )
     )
     p_buildings_2005_2011.pct_nonrehab = 0
     p_buildings_2011_today.pct_nonrehab = 0
@@ -413,37 +406,39 @@ def calc(inputs: Inputs, *, r18: residences2018.R18, b18: business2018.B18) -> R
         + p_buildings_2011_today.demand_heat_rehab
     )
 
-    p_buildings_total.fec_factor_averaged = (
+    p_buildings_total.fec_factor_averaged = div(
         p_buildings_total.demand_heat_rehab + p_buildings_total.demand_heat_nonrehab
-    ) / r18.p_buildings_total.area_m2
-    p_buildings_until_1919.fec_factor_averaged = (
+    , r18.p_buildings_total.area_m2 )
+
+    p_buildings_until_1919.fec_factor_averaged = div(
         p_buildings_until_1919.demand_heat_rehab
         + p_buildings_until_1919.demand_heat_nonrehab
-    ) / p_buildings_until_1919.area_m2
-    p_buildings_1919_1948.fec_factor_averaged = (
+     , p_buildings_until_1919.area_m2)
+    p_buildings_1919_1948.fec_factor_averaged = div(
         p_buildings_1919_1948.demand_heat_rehab
         + p_buildings_1919_1948.demand_heat_nonrehab
-    ) / p_buildings_1919_1948.area_m2
-    p_buildings_1949_1978.fec_factor_averaged = (
+     , p_buildings_1919_1948.area_m2)
+    p_buildings_1949_1978.fec_factor_averaged = div(
         p_buildings_1949_1978.demand_heat_rehab
         + p_buildings_1949_1978.demand_heat_nonrehab
-    ) / p_buildings_1949_1978.area_m2
-    p_buildings_1979_1995.fec_factor_averaged = (
+     , p_buildings_1949_1978.area_m2)
+    p_buildings_1979_1995.fec_factor_averaged = div(
         p_buildings_1979_1995.demand_heat_rehab
         + p_buildings_1979_1995.demand_heat_nonrehab
-    ) / p_buildings_1979_1995.area_m2
-    p_buildings_1996_2004.fec_factor_averaged = (
+     , p_buildings_1979_1995.area_m2)
+    p_buildings_1996_2004.fec_factor_averaged = div(
         p_buildings_1996_2004.demand_heat_rehab
         + p_buildings_1996_2004.demand_heat_nonrehab
-    ) / p_buildings_1996_2004.area_m2
-    p_buildings_2005_2011.fec_factor_averaged = (
+     , p_buildings_1996_2004.area_m2)
+    p_buildings_2005_2011.fec_factor_averaged = div(
         p_buildings_2005_2011.demand_heat_rehab
         + p_buildings_2005_2011.demand_heat_nonrehab
-    ) / r18.p_buildings_2005_2011.area_m2
-    p_buildings_2011_today.fec_factor_averaged = (
+     , r18.p_buildings_2005_2011.area_m2 )
+    p_buildings_2011_today.fec_factor_averaged = div(
         p_buildings_2011_today.demand_heat_rehab
         + p_buildings_2011_today.demand_heat_nonrehab
-    ) / r18.p_buildings_2011_today.area_m2
+     , r18.p_buildings_2011_today.area_m2 )
+
     p_buildings_area_m2_com.fec_factor_averaged = p_buildings_total.fec_factor_averaged
     p_buildings_new.fec_factor_averaged = ass(
         "Ass_R_P_heat_consumption_new_building_2021"
@@ -560,8 +555,7 @@ def calc(inputs: Inputs, *, r18: residences2018.R18, b18: business2018.B18) -> R
     s_biomass.energy = (
         r18.s_biomass.number_of_buildings
         * p_buildings_total.fec_factor_averaged
-        * r18.p_buildings_total.area_m2
-        / r18.p_buildings_total.number_of_buildings
+        * div( r18.p_buildings_total.area_m2, r18.p_buildings_total.number_of_buildings)
     )
 
     s_coal.pct_energy = 0
@@ -605,10 +599,10 @@ def calc(inputs: Inputs, *, r18: residences2018.R18, b18: business2018.B18) -> R
     )
     s_solarth.power_to_be_installed_pct = entry("In_H_solartherm_to_be_inst")
     s_solarth.energy = max(
+        div( r18.p_buildings_total.number_of_buildings
+        ,
         r18.p_buildings_total.number_of_buildings
-        / (
-            r18.p_buildings_total.number_of_buildings
-            + b18.p_nonresi.number_of_buildings
+        + b18.p_nonresi.number_of_buildings
         )
         * s_solarth.energy_installable
         * s_solarth.power_to_be_installed_pct,
@@ -927,41 +921,34 @@ def calc(inputs: Inputs, *, r18: residences2018.R18, b18: business2018.B18) -> R
     # s_solarth.action Ausbau Solarthermie
     # s_heatpump.action Ausbau Wärmepumpe
 
-    p_buildings_until_1919.invest_per_x = fact(
-        "Fact_R_P_energetical_renovation_cost_detached_house_until_1949"
-    ) * (entry("In_R_area_m2_1flat") + entry("In_R_area_m2_2flat")) / entry(
-        "In_R_area_m2"
+    p_buildings_until_1919.invest_per_x = fact("Fact_R_P_energetical_renovation_cost_detached_house_until_1949"
+    )* div (entry("In_R_area_m2_1flat") + entry("In_R_area_m2_2flat") , entry("In_R_area_m2")
     ) + fact(
         "Fact_R_P_energetical_renovation_cost_apartm_building_until_1949"
-    ) * (
-        entry("In_R_area_m2_3flat") + entry("In_R_area_m2_dorm")
-    ) / entry(
-        "In_R_area_m2"
-    )
+    ) * div(entry("In_R_area_m2_3flat") + entry("In_R_area_m2_dorm"), entry("In_R_area_m2"))
+
     p_buildings_1919_1948.invest_per_x = p_buildings_until_1919.invest_per_x
     p_buildings_1949_1978.invest_per_x = fact(
         "Fact_R_P_energetical_renovation_cost_detached_house_1949_1979"
-    ) * (entry("In_R_area_m2_1flat") + entry("In_R_area_m2_2flat")) / entry(
-        "In_R_area_m2"
+    ) * div(entry("In_R_area_m2_1flat") + entry("In_R_area_m2_2flat") , entry("In_R_area_m2")
     ) + fact(
         "Fact_R_P_energetical_renovation_cost_apartm_building_1949_1979"
-    ) * (
+    ) * div(
         entry("In_R_area_m2_3flat") + entry("In_R_area_m2_dorm")
-    ) / entry(
+     , entry(
         "In_R_area_m2"
-    )
+    ))
 
     p_buildings_1979_1995.invest_per_x = fact(
         "Fact_R_P_energetical_renovation_cost_detached_house_1980+"
-    ) * (entry("In_R_area_m2_1flat") + entry("In_R_area_m2_2flat")) / entry(
+    ) * div(entry("In_R_area_m2_1flat") + entry("In_R_area_m2_2flat") , entry(
         "In_R_area_m2"
-    ) + fact(
+    )) + fact(
         "Fact_R_P_energetical_renovation_cost_apartm_building_1980+"
-    ) * (
-        entry("In_R_area_m2_3flat") + entry("In_R_area_m2_dorm")
-    ) / entry(
+    ) * div(
+        entry("In_R_area_m2_3flat") + entry("In_R_area_m2_dorm"), entry(
         "In_R_area_m2"
-    )
+    ))
     p_buildings_1996_2004.invest_per_x = p_buildings_1979_1995.invest_per_x
     p_buildings_area_m2_com.invest_per_x = fact(
         "Fact_R_P_energetical_renovation_cost_housing_complex"
@@ -970,8 +957,7 @@ def calc(inputs: Inputs, *, r18: residences2018.R18, b18: business2018.B18) -> R
     s_heatpump.invest_per_x = fact("Fact_R_S_heatpump_cost")
 
     s_solarth.invest = (
-        r18.p_buildings_total.area_m2
-        / (r18.p_buildings_total.area_m2 + b18.p_nonresi.area_m2)
+        div(r18.p_buildings_total.area_m2, r18.p_buildings_total.area_m2 + b18.p_nonresi.area_m2)
         * s_solarth.area_ha_available
         * entry("In_H_solartherm_to_be_inst")
         * s_solarth.invest_per_x
