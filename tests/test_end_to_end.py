@@ -82,13 +82,13 @@ def find_diffs(path: str, d1, d2) -> list[tuple[str, typing.Any, typing.Any]]:
         return [(path, d1, d2)]
 
 
-def end_to_end(datadir_status: refdatatools.DataDirStatus, ags):
+def end_to_end(datadir_status: refdatatools.DataDirStatus, ags, year=2035):
     """This runs an end to end test. No entries are overriden, only AGS"""
     root = refdatatools.root_of_this_repo()
-    fname = f"production_{ags}.json"
+    fname = f"production_{ags}_{year}.json"
     with open(os.path.join(root, "tests", "end_to_end_expected", fname)) as fp:
         expected = json.load(fp)
-        g = calculate_with_default_inputs(ags=ags, year=2035)
+        g = calculate_with_default_inputs(ags=ags, year=year)
         got = g.result_dict()
         diffs = find_diffs("", expected, got)
         if diffs:
@@ -98,9 +98,26 @@ def end_to_end(datadir_status: refdatatools.DataDirStatus, ags):
             assert False, "End to end test failed"
 
 
+# Default year = 2035
 def test_end_to_end_goettingen(datadir_status):
     end_to_end(datadir_status, "03159016")
 
 
+# Default year = 2035
 def test_end_to_end_germany(datadir_status):
     end_to_end(datadir_status, "DG000000")
+
+
+# Min year for the generator = 2021
+def test_end_to_end_goettingen_2021(datadir_status):
+    end_to_end(datadir_status, ags="03159016", year=2021)
+
+
+# Min year for the website = 2025
+def test_end_to_end_goettingen_2025(datadir_status):
+    end_to_end(datadir_status, ags="03159016", year=2025)
+
+
+# Max year for the generator and website = 2050
+def test_end_to_end_goettingen_2050(datadir_status):
+    end_to_end(datadir_status, ags="03159016", year=2050)

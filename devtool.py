@@ -104,6 +104,7 @@ def main():
     cmd_test_end_to_end_create_expectation_parser.add_argument(
         "-ags", default="03159016"
     )
+    cmd_test_end_to_end_create_expectation_parser.add_argument("-year", default=2035)
     cmd_test_end_to_end_create_expectation_parser.set_defaults(
         func=cmd_test_end_to_end_create_expectation
     )
