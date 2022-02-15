@@ -1,5 +1,3 @@
-from dataclasses import dataclass
-import datetime
 from . import refdata
 
 # FIXME: This block should die
@@ -74,9 +72,6 @@ def make_entries(data: refdata.RefData, ags: str, year: int):
     entry = {}
 
     entry["ags"] = ags
-
-    currentDateTime = datetime.datetime.now()
-    date = currentDateTime.date()
 
     entry[
         "In_M_year_today"

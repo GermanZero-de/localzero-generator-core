@@ -16,6 +16,7 @@ from . import (
 
 def calc(
     inputs: Inputs,
+    *,
     l18: lulucf2018.L18,
     l30: lulucf2030.L30,
     a30: agri2030.A30,
