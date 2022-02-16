@@ -1097,23 +1097,23 @@ def calc(inputs: Inputs) -> T18:
 
     # ------------------------
 
-    if entry("In_T_rt7") in [71, 72, 73, 74, 75, 76, 77]:
+    if inputs.str_entry("In_T_rt7") in ["71", "72", "73", "74", "75", "76", "77"]:
 
         other_foot.transport_capacity_pkm = (
             entry("In_M_population_com_2018")
             * 365
-            * fact("Fact_T_D_modal_split_foot_rt" + str(int(entry("In_T_rt7"))))
+            * fact("Fact_T_D_modal_split_foot_rt" + inputs.str_entry("In_T_rt7"))
         )
 
         other_cycl.transport_capacity_pkm = (
             entry("In_M_population_com_2018")
             * 365
-            * fact("Fact_T_D_modal_split_cycl_rt" + str(int(entry("In_T_rt7"))))
+            * fact("Fact_T_D_modal_split_cycl_rt" + inputs.str_entry("In_T_rt7"))
         )
 
     # This happens if we run Local Zero for a Landkreis a Bundesland or Germany.
     # We do not have a area_kind entry in this case and just use the mean mean modal split of germany.
-    elif entry("In_T_rt7") == 0:
+    elif inputs.str_entry("In_T_rt7") == "nd":
 
         other_cycl.transport_capacity_pkm = (
             365
