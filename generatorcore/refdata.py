@@ -235,29 +235,32 @@ class RefData:
 
     def _fix_missing_gemfr_ags_in_buildings(self):
         """Some gemeindefreie Communes are not listed in the buildings list. Gemeindefreie Communes are usueally forests ore lakes and do not have any (they may have some, but we are going to ignore that)
-            buildings. Therefore we just add them with 0 to the buildings list. 
+        buildings. Therefore we just add them with 0 to the buildings list.
         """
-        #get list of gemfr. Communes in the Master list
+        # get list of gemfr. Communes in the Master list
         gemfrCommunes = []
-        for (k,v) in self._ags_master.items():
-            if (v.find("gemfr. Geb") != -1 or v.find("gemeindefreies Gebiet") != -1 or v.find("gemfr.Geb.") != -1) and not self._buildings['ags'].isin([k]).any().any():
+        for (k, v) in self._ags_master.items():
+            if (
+                v.find("gemfr. Geb") != -1
+                or v.find("gemeindefreies Gebiet") != -1
+                or v.find("gemfr.Geb.") != -1
+            ) and not self._buildings["ags"].isin([k]).any().any():
                 gemfrCommunes.append(k)
 
-        #TODO: make sure ags is first column of self._buildings
+        # TODO: make sure ags is first column of self._buildings
 
-        #create a 2D list with ags keys and zeros
+        # create a 2D list with ags keys and zeros
         numBuildingCols = len(self._buildings.columns)
-        numGemfrAGS = len(gemfrCommunes)        
+        numGemfrAGS = len(gemfrCommunes)
         zeros2D = []
         for i in range(numGemfrAGS):
-            zeros2D.append( [gemfrCommunes[i]] + [0]* (numBuildingCols-1))
+            zeros2D.append([gemfrCommunes[i]] + [0] * (numBuildingCols - 1))
 
-        #create a data frame that has the buldings columns and contains the gemfr. Ags and zeros 
-        zerosDF = pd.DataFrame(columns = self._buildings.columns , data=zeros2D)
+        # create a data frame that has the buldings columns and contains the gemfr. Ags and zeros
+        zerosDF = pd.DataFrame(columns=self._buildings.columns, data=zeros2D)
 
-        #append to the buildings data frame
+        # append to the buildings data frame
         self._buildings = self._buildings.append(zerosDF)
-
 
     def _fix_missing_entries_in_area(self):
         """Here we assume that the missing entries in the area sheet should actually be 0."""

@@ -1097,7 +1097,6 @@ def calc(inputs: Inputs) -> T18:
 
     # ------------------------
 
-  
     if entry("In_T_rt7") in [71, 72, 73, 74, 75, 76, 77]:
 
         other_foot.transport_capacity_pkm = (
@@ -1112,7 +1111,7 @@ def calc(inputs: Inputs) -> T18:
             * fact("Fact_T_D_modal_split_cycl_rt" + str(int(entry("In_T_rt7"))))
         )
 
-    # This happens if we run Local Zero for a Landkreis a Bundesland or Germany. 
+    # This happens if we run Local Zero for a Landkreis a Bundesland or Germany.
     # We do not have a area_kind entry in this case and just use the mean mean modal split of germany.
     elif entry("In_T_rt7") == 0:
 
@@ -1128,10 +1127,7 @@ def calc(inputs: Inputs) -> T18:
             * fact("Fact_T_D_modal_split_foot_nat")
         )
 
-
-    
-    #TODO: Throw a more suffisticated error message if we ? 
-
+    # TODO: Throw a more suffisticated error message if we ?
 
     # ------------------------------ Berechnung der Oberklassensummen
     for i in range(len([a for a in dir(TColVars) if not a.startswith("_")])):
