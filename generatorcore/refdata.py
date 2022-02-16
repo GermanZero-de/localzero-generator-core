@@ -232,10 +232,13 @@ class RefData:
             self._fix_missing_entries_in_flats()
             self._fix_missing_entries_in_population()
             self._fix_missing_gemfr_ags_in_buildings()
+            self._fix_add_derived_rows_for_renewables()
 
     def _fix_missing_gemfr_ags_in_buildings(self):
-        """Some gemeindefreie Communes are not listed in the buildings list. Gemeindefreie Communes are usueally forests ore lakes and do not have any (they may have some, but we are going to ignore that)
-        buildings. Therefore we just add them with 0 to the buildings list.
+        """Some gemeindefreie Communes are not listed in the buildings list.
+        Gemeindefreie Communes are usueally forests ore lakes and do not have any
+        (they may have some, but we are going to ignore that) buildings.
+        Therefore we just add them with 0 to the buildings list.
         """
         # get list of gemfr. Communes in the Master list
         gemfrCommunes = []
@@ -246,8 +249,6 @@ class RefData:
                 or v.find("gemfr.Geb.") != -1
             ) and not self._buildings["ags"].isin([k]).any().any():
                 gemfrCommunes.append(k)
-
-        # TODO: make sure ags is first column of self._buildings
 
         # create a 2D list with ags keys and zeros
         numBuildingCols = len(self._buildings.columns)
@@ -260,7 +261,7 @@ class RefData:
         zerosDF = pd.DataFrame(columns=self._buildings.columns, data=zeros2D)
 
         # append to the buildings data frame
-        self._buildings = self._buildings.append(zerosDF)
+        self._buildings = pd.concat([self._buildings, zerosDF])
 
     def _fix_missing_entries_in_area(self):
         """Here we assume that the missing entries in the area sheet should actually be 0."""
@@ -296,6 +297,52 @@ class RefData:
 
     def _fix_missing_entries_in_population(self):
         set_nans_to_0(self._population, columns=["total"])
+
+    def _fix_add_derived_rows_for_renewables(self):
+        """Note that this implementation does not make use of all the good stuff in pandas.
+        Why? Because I still suspect that all in we are better of if we get rid of the
+        pandas requirement -- we are not actually using it inside the generator.
+        """
+
+        def add_to(d, ags, e):
+            if ags in d:
+                for column in range(1, len(e)):
+                    d[ags][column] += e[column]
+            else:
+                d[ags] = e
+            d[ags][0] = ags
+
+        sums_by_sta = {}
+        sums_by_dis = {}
+        already_in_raw_data = set()
+
+        for e in self._renewable_energy.values.tolist():
+            ags = e[0]
+            ags_sta = ags[:2] + "000000"
+            ags_dis = ags[:5] + "000"
+            if ags == ags_sta or ags == ags_dis:
+                # Some rows look like aggregates but are actually in
+                # the raw data (and therefore we do not need to
+                # compute them (e.g. Berlin)
+                # If so remember that we have seen them, so we
+                # can delete any potentially created rows later.
+                already_in_raw_data.add(ags)
+            add_to(sums_by_dis, ags_dis, e)
+            add_to(sums_by_sta, ags_sta, e)
+
+        for a in already_in_raw_data:
+            if a in sums_by_dis:
+                del sums_by_dis[a]
+            if a in sums_by_sta:
+                del sums_by_sta[a]
+
+        additional = pd.DataFrame(
+            list(sums_by_dis.values()) + list(sums_by_sta.values()),
+            columns=self._renewable_energy.columns,
+        )
+        self._renewable_energy = pd.concat(
+            [self._renewable_energy, additional], ignore_index=True
+        )
 
     def ags_master(self) -> dict[str, str]:
         """Returns the complete dictionary of AGS, where no big
