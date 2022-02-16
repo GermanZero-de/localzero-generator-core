@@ -131,7 +131,6 @@ def calc(
     p_local_biomass = h30.p_local_biomass
     p_local_biomass_cogen = h30.p_local_biomass_cogen
 
-
     ###########################
     ### Demand of Heat 2018 ###
     ###########################
