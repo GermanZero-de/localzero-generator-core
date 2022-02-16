@@ -72,10 +72,6 @@ class R18:
         return asdict(self)
 
 
-class Generator:
-    pass
-
-
 def calc(inputs: Inputs) -> R18:
     def fact(n):
         return inputs.fact(n)

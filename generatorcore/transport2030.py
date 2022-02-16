@@ -121,8 +121,6 @@ class T30:
         return asdict(self)
 
 
-# Berechnungsfunktion im Sektor T für 203X
-# Parameter root: oberste Generator Instanz
 def calc(inputs: Inputs, *, t18: transport2018.T18) -> T30:
     def fact(n):
         return inputs.fact(n)
@@ -198,11 +196,11 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> T30:
 
     t.transport_capacity_pkm = entry("In_M_population_com_203X") * (
         ass("Ass_T_D_ratio_trnsprt_ppl_to_ppl_city")
-        if entry("In_T_rt3") == "city"
+        if inputs.str_entry("In_T_rt3") == "city"
         else ass("Ass_T_D_ratio_trnsprt_ppl_to_ppl_smcity")
-        if entry("In_T_rt3") == "smcty"
+        if inputs.str_entry("In_T_rt3") == "smcty"
         else ass("Ass_T_D_ratio_trnsprt_ppl_to_ppl_rural")
-        if entry("In_T_rt3") == "rural"
+        if inputs.str_entry("In_T_rt3") == "rural"
         else ass("Ass_T_D_trnsprt_ppl_nat") / entry("In_M_population_nat")
     )
     road_car_it_ot.transport_capacity_pkm = (
@@ -215,17 +213,17 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> T30:
                 + ass("Ass_T_D_trnsprt_ppl_city_car2_frac_2050")
                 + ass("Ass_T_D_trnsprt_ppl_city_car3_frac_2050")
                 + ass("Ass_T_D_trnsprt_ppl_city_car4_frac_2050")
-                if entry("In_T_rt3") == "city"
+                if inputs.str_entry("In_T_rt3") == "city"
                 else ass("Ass_T_D_trnsprt_ppl_smcty_car1_frac_2050")
                 + ass("Ass_T_D_trnsprt_ppl_smcty_car2_frac_2050")
                 + ass("Ass_T_D_trnsprt_ppl_smcty_car3_frac_2050")
                 + ass("Ass_T_D_trnsprt_ppl_smcty_car4_frac_2050")
-                if entry("In_T_rt3") == "smcty"
+                if inputs.str_entry("In_T_rt3") == "smcty"
                 else ass("Ass_T_D_trnsprt_ppl_rural_car1_frac_2050")
                 + ass("Ass_T_D_trnsprt_ppl_rural_car2_frac_2050")
                 + ass("Ass_T_D_trnsprt_ppl_rural_car3_frac_2050")
                 + ass("Ass_T_D_trnsprt_ppl_rural_car4_frac_2050")
-                if entry("In_T_rt3") == "rural"
+                if inputs.str_entry("In_T_rt3") == "rural"
                 else ass("Ass_T_D_trnsprt_ppl_nat_car1_frac_2050")
                 + ass("Ass_T_D_trnsprt_ppl_nat_car2_frac_2050")
                 + ass("Ass_T_D_trnsprt_ppl_nat_car3_frac_2050")
@@ -279,17 +277,17 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> T30:
             + ass("Ass_T_D_trnsprt_ppl_city_car2_frac_2050")
             + ass("Ass_T_D_trnsprt_ppl_city_car3_frac_2050")
             + ass("Ass_T_D_trnsprt_ppl_city_car4_frac_2050")
-            if entry("In_T_rt3") == "city"
+            if inputs.str_entry("In_T_rt3") == "city"
             else ass("Ass_T_D_trnsprt_ppl_smcty_car1_frac_2050")
             + ass("Ass_T_D_trnsprt_ppl_smcty_car2_frac_2050")
             + ass("Ass_T_D_trnsprt_ppl_smcty_car3_frac_2050")
             + ass("Ass_T_D_trnsprt_ppl_smcty_car4_frac_2050")
-            if entry("In_T_rt3") == "smcty"
+            if inputs.str_entry("In_T_rt3") == "smcty"
             else ass("Ass_T_D_trnsprt_ppl_rural_car1_frac_2050")
             + ass("Ass_T_D_trnsprt_ppl_rural_car2_frac_2050")
             + ass("Ass_T_D_trnsprt_ppl_rural_car3_frac_2050")
             + ass("Ass_T_D_trnsprt_ppl_rural_car4_frac_2050")
-            if entry("In_T_rt3") == "rural"
+            if inputs.str_entry("In_T_rt3") == "rural"
             else ass("Ass_T_D_trnsprt_ppl_nat_car1_frac_2050")
             + ass("Ass_T_D_trnsprt_ppl_nat_car2_frac_2050")
             + ass("Ass_T_D_trnsprt_ppl_nat_car3_frac_2050")
@@ -330,11 +328,11 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> T30:
     air.invest_com = 0  # (SUM(DE235:DE236))
     road_action_charger.base_unit = road_car.base_unit / (
         ass("Ass_S_ratio_bev_car_per_charge_point_city")
-        if entry("In_T_rt3") == "city"
+        if inputs.str_entry("In_T_rt3") == "city"
         else ass("Ass_S_ratio_bev_car_per_charge_point_smcity_rural")
-        if entry("In_T_rt3") == "smcty"
+        if inputs.str_entry("In_T_rt3") == "smcty"
         else ass("Ass_S_ratio_bev_car_per_charge_point_smcity_rural")
-        if entry("In_T_rt3") == "rural"
+        if inputs.str_entry("In_T_rt3") == "rural"
         else ass("Ass_S_ratio_bev_car_per_charge_point_nat")
     )
     road_action_charger.invest_per_x = ass("Ass_T_C_cost_per_charge_point")
@@ -364,11 +362,11 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> T30:
         )
         * (
             ass("Ass_T_D_trnsprt_ppl_city_pt_frac_2050")
-            if entry("In_T_rt3") == "city"
+            if inputs.str_entry("In_T_rt3") == "city"
             else ass("Ass_T_D_trnsprt_ppl_smcty_pt_frac_2050")
-            if entry("In_T_rt3") == "smcty"
+            if inputs.str_entry("In_T_rt3") == "smcty"
             else ass("Ass_T_D_trnsprt_ppl_rural_pt_frac_2050")
-            if entry("In_T_rt3") == "rural"
+            if inputs.str_entry("In_T_rt3") == "rural"
             else ass("Ass_T_D_trnsprt_ppl_nat_pt_frac_2050")
         )
     )
@@ -533,11 +531,11 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> T30:
         )
         * (
             ass("Ass_T_D_trnsprt_ppl_city_pt_frac_2050")
-            if entry("In_T_rt3") == "city"
+            if inputs.str_entry("In_T_rt3") == "city"
             else ass("Ass_T_D_trnsprt_ppl_smcty_pt_frac_2050")
-            if entry("In_T_rt3") == "smcty"
+            if inputs.str_entry("In_T_rt3") == "smcty"
             else ass("Ass_T_D_trnsprt_ppl_rural_pt_frac_2050")
-            if entry("In_T_rt3") == "rural"
+            if inputs.str_entry("In_T_rt3") == "rural"
             else ass("Ass_T_D_trnsprt_ppl_nat_pt_frac_2050")
         )
     )
@@ -584,11 +582,11 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> T30:
     )
     other_cycl.transport_capacity_pkm = t.transport_capacity_pkm * (
         ass("Ass_T_D_trnsprt_ppl_city_cycl_frac_2050")
-        if entry("In_T_rt3") == "city"
+        if inputs.str_entry("In_T_rt3") == "city"
         else ass("Ass_T_D_trnsprt_ppl_smcty_cycl_frac_2050")
-        if entry("In_T_rt3") == "smcty"
+        if inputs.str_entry("In_T_rt3") == "smcty"
         else ass("Ass_T_D_trnsprt_ppl_rural_cycl_frac_2050")
-        if entry("In_T_rt3") == "rural"
+        if inputs.str_entry("In_T_rt3") == "rural"
         else ass("Ass_T_D_trnsprt_ppl_nat_cycl_frac_2050")
     )
     road_action_charger.demand_emplo_new = road_action_charger.demand_emplo
@@ -1212,11 +1210,11 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> T30:
         )
         * (
             ass("Ass_T_D_trnsprt_ppl_city_pt_frac_2050")
-            if entry("In_T_rt3") == "city"
+            if inputs.str_entry("In_T_rt3") == "city"
             else ass("Ass_T_D_trnsprt_ppl_smcty_pt_frac_2050")
-            if entry("In_T_rt3") == "smcty"
+            if inputs.str_entry("In_T_rt3") == "smcty"
             else ass("Ass_T_D_trnsprt_ppl_rural_pt_frac_2050")
-            if entry("In_T_rt3") == "rural"
+            if inputs.str_entry("In_T_rt3") == "rural"
             else ass("Ass_T_D_trnsprt_ppl_nat_pt_frac_2050")
         )
     )
@@ -1586,7 +1584,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> T30:
     )
     rail_ppl_metro.invest_pa = rail_ppl_metro.invest / entry("In_M_duration_target")
     # dont calculate not for communes because of div 0
-    if entry("In_M_AGS_com") == "DG000000":
+    if inputs.str_entry("In_M_AGS_com") == "DG000000":
         rail_ppl_metro.pct_of_wage = div(
             rail_ppl_metro.cost_wage, rail_ppl_metro.invest_pa
         )
@@ -1836,11 +1834,11 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> T30:
     t.change_energy_pct = div(t.change_energy_MWh, t18.t.energy)
     other_foot.transport_capacity_pkm = t.transport_capacity_pkm * (
         ass("Ass_T_D_trnsprt_ppl_city_foot_frac_2050")
-        if entry("In_T_rt3") == "city"
+        if inputs.str_entry("In_T_rt3") == "city"
         else ass("Ass_T_D_trnsprt_ppl_smcty_foot_frac_2050")
-        if entry("In_T_rt3") == "smcty"
+        if inputs.str_entry("In_T_rt3") == "smcty"
         else ass("Ass_T_D_trnsprt_ppl_rural_foot_frac_2050")
-        if entry("In_T_rt3") == "rural"
+        if inputs.str_entry("In_T_rt3") == "rural"
         else ass("Ass_T_D_trnsprt_ppl_nat_foot_frac_2050")
     )
     other.CO2e_total = 0  # CJ265 + CM265(

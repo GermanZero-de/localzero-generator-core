@@ -51,9 +51,6 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> F18:
     def fact(n):
         return inputs.fact(n)
 
-    def ass(n):
-        return inputs.ass(n)
-
     def entry(n):
         return inputs.entry(n)
 
