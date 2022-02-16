@@ -1114,7 +1114,7 @@ def calc(inputs: Inputs) -> T18:
 
     # This happens if we run Local Zero for a Landkreis a Bundesland or Germany. 
     # We do not have a area_kind entry in this case and just use the mean mean modal split of germany.
-    elif entry("In_T_rt7") == "nd":
+    elif entry("In_T_rt7") == 0:
 
         other_cycl.transport_capacity_pkm = (
             365
