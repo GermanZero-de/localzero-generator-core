@@ -24,19 +24,18 @@ def update_expectation(ags: str, year: int, file_path: str):
 
 
 def cmd_test_end_to_end_update_expectations(args):
-    year = 2035
-    expect_file_pattern = r"production_((\d+)|(DG000000))\.json"
+    expect_file_pattern = r"production_((\d+)|(DG000000))_(20\d\d)\.json"
 
     for filename in os.listdir(test_dir):
         m = re.match(expect_file_pattern, filename)
         if m is not None:
             ags = m.group(1)
+            year = int(m.group(4))
             file_path = os.path.join(test_dir, filename)
             update_expectation(ags=ags, year=year, file_path=file_path)
 
 
 def cmd_test_end_to_end_create_expectation(args):
-    year = 2035
-    filename = "production_" + args.ags + ".json"
+    filename = "production_" + args.ags + "_" + str(args.year) + ".json"
     filepath = os.path.join(test_dir, filename)
-    update_expectation(args.ags, year, filepath)
+    update_expectation(args.ags, int(args.year), filepath)

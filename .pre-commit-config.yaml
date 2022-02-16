@@ -9,7 +9,7 @@ repos:
     -   id: check-case-conflict
     -   id: check-yaml
     -   id: check-added-large-files
-        args: ['--maxkb=800'] # Our expected results files are fairly large
+        args: ['--maxkb=810'] # Our expected results files are fairly large
     - id: no-commit-to-branch # Work in branches please -- not in main
       args: ['--branch', 'main']
 -   repo: https://github.com/psf/black
@@ -17,3 +17,4 @@ repos:
     hooks:
       - id: black
         args: ["--target-version", "py310"]
+        exclude: ^tests/end_to_end_expected
