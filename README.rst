@@ -62,6 +62,34 @@ How to run the generator
 Testing
 -------
 
-We use :code:`pytest` (the tests are in the directory `tests`). We run tests automatically when a
-pull request is created, but you should run them yourself. Remember to run them in a poetry shell
-or use :code:`poetry run`.
+We use :code:`pytest` (the tests are in the directory `tests`).  We used to run a lot of
+tests automatically in github actions, but sadly it turned out that they easily used more
+than 2000 minutes every month (mostly because of the overhead involved in recreating
+the local development environment inside github).
+
+So now we rely on a little discipline enforced by peer pressure. When you make changes
+you should run :code:`ready-to-rock.sh` before you push.  And you are only ready to push
+if it outputs: :code:`I'm ready to rock and save the climate`. Please include the output
+of the tool in your feature description like this:
+
+.. code-block:: console
+
+	(generatorcore-s105jb49-py3.10) --- localzero/localzero-generator-core ‹disable-github-actions› » ./ready-to-rock.sh
+	============================================================== test session starts ==============================================================
+	platform darwin -- Python 3.10.1, pytest-6.2.5, py-1.11.0, pluggy-1.0.0
+	rootdir: /Users/benediktgrundmann/SynologyDrive/Programming/localzero/localzero-generator-core
+	collected 7 items
+
+	tests/test_end_to_end.py ......                                                                                                           [ 85%]
+	tests/test_entries.py .                                                                                                                   [100%]
+
+	=============================================================== 7 passed in 2.43s ===============================================================
+	Trim Trailing Whitespace.................................................Passed
+	Mixed line ending........................................................Passed
+	Check for case conflicts.................................................Passed
+	Check Yaml...............................................................Passed
+	Check for added large files..............................................Passed
+	Don't commit to branch...................................................Passed
+	black....................................................................Passed
+	I'm ready to rock and save the climate
+
