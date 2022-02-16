@@ -240,9 +240,10 @@ class RefData:
         #get list of gemfr. Communes in the Master list
         gemfrCommunes = []
         for (k,v) in self._ags_master.items():
-            if v.find("gemfr.") != -1 or v.find("gemeindefreies Gebiet") != -1:
+            if (v.find("gemfr. Geb") != -1 or v.find("gemeindefreies Gebiet") != -1 or v.find("gemfr.Geb.") != -1) and not self._buildings['ags'].isin([k]).any().any():
                 gemfrCommunes.append(k)
 
+        #TODO: make sure ags is first column of self._buildings
 
         #create a 2D list with ags keys and zeros
         numBuildingCols = len(self._buildings.columns)
