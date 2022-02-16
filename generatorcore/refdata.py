@@ -6,7 +6,6 @@ import os
 import json
 import sys
 import math
-
 import pandas as pd
 
 # TODO: Write small wrappers classes for each data source so that we can document
@@ -172,6 +171,56 @@ def datadir_or_default(datadir: str | None = None) -> str:
         return os.path.abspath(datadir)
 
 
+def _add_derived_rows_for_summable(df: pd.DataFrame) -> pd.DataFrame:
+    """Add a bunch of rows by computing the sum over all columns but the first column (which must contain the AGS).
+    This is done over for all rows that contain a federal state or administrative district level AGS (by summing
+    up the corresponding municipal district level entries).
+
+    If however an entry for the federal state or administrative district level AGS is contained in the
+    data, we do NOT override or duplicate it.
+    """
+    # Note that this implementation does not make use of all the good stuff in pandas.
+    # Why? Because I still suspect that all in we are better of if we get rid of the
+    # pandas requirement -- we are not actually using it inside the generator.
+    def add_to(d, ags, e):
+        if ags in d:
+            for column in range(1, len(e)):
+                d[ags][column] += e[column]
+        else:
+            d[ags] = e
+        d[ags][0] = ags
+
+    sums_by_sta = {}
+    sums_by_dis = {}
+    already_in_raw_data = set()
+
+    for e in df.values.tolist():
+        ags = e[0]
+        ags_sta = ags[:2] + "000000"
+        ags_dis = ags[:5] + "000"
+        if ags == ags_sta or ags == ags_dis:
+            # Some rows look like aggregates but are actually in
+            # the raw data (and therefore we do not need to
+            # compute them (e.g. Berlin)
+            # If so remember that we have seen them, so we
+            # can delete any potentially created rows later.
+            already_in_raw_data.add(ags)
+        add_to(sums_by_dis, ags_dis, e)
+        add_to(sums_by_sta, ags_sta, e)
+
+    for a in already_in_raw_data:
+        if a in sums_by_dis:
+            del sums_by_dis[a]
+        if a in sums_by_sta:
+            del sums_by_sta[a]
+
+    additional_rows = pd.DataFrame(
+        list(sums_by_dis.values()) + list(sums_by_sta.values()),
+        columns=df.columns,
+    )
+    return pd.concat([df, additional_rows], ignore_index=True)
+
+
 @dataclass
 class Version:
     """This classes identifies a particular version of the reference data."""
@@ -233,6 +282,7 @@ class RefData:
             self._fix_missing_entries_in_population()
             self._fix_missing_gemfr_ags_in_buildings()
             self._fix_add_derived_rows_for_renewables()
+            self._fix_add_derived_rows_for_traffic()
 
     def _fix_missing_gemfr_ags_in_buildings(self):
         """Some gemeindefreie Communes are not listed in the buildings list.
@@ -299,50 +349,10 @@ class RefData:
         set_nans_to_0(self._population, columns=["total"])
 
     def _fix_add_derived_rows_for_renewables(self):
-        """Note that this implementation does not make use of all the good stuff in pandas.
-        Why? Because I still suspect that all in we are better of if we get rid of the
-        pandas requirement -- we are not actually using it inside the generator.
-        """
+        self._renewable_energy = _add_derived_rows_for_summable(self._renewable_energy)
 
-        def add_to(d, ags, e):
-            if ags in d:
-                for column in range(1, len(e)):
-                    d[ags][column] += e[column]
-            else:
-                d[ags] = e
-            d[ags][0] = ags
-
-        sums_by_sta = {}
-        sums_by_dis = {}
-        already_in_raw_data = set()
-
-        for e in self._renewable_energy.values.tolist():
-            ags = e[0]
-            ags_sta = ags[:2] + "000000"
-            ags_dis = ags[:5] + "000"
-            if ags == ags_sta or ags == ags_dis:
-                # Some rows look like aggregates but are actually in
-                # the raw data (and therefore we do not need to
-                # compute them (e.g. Berlin)
-                # If so remember that we have seen them, so we
-                # can delete any potentially created rows later.
-                already_in_raw_data.add(ags)
-            add_to(sums_by_dis, ags_dis, e)
-            add_to(sums_by_sta, ags_sta, e)
-
-        for a in already_in_raw_data:
-            if a in sums_by_dis:
-                del sums_by_dis[a]
-            if a in sums_by_sta:
-                del sums_by_sta[a]
-
-        additional = pd.DataFrame(
-            list(sums_by_dis.values()) + list(sums_by_sta.values()),
-            columns=self._renewable_energy.columns,
-        )
-        self._renewable_energy = pd.concat(
-            [self._renewable_energy, additional], ignore_index=True
-        )
+    def _fix_add_derived_rows_for_traffic(self):
+        self._traffic = _add_derived_rows_for_summable(self._traffic)
 
     def ags_master(self) -> dict[str, str]:
         """Returns the complete dictionary of AGS, where no big
