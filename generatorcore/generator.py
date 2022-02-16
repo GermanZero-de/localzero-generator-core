@@ -70,7 +70,9 @@ class Result:
                             print(k + sep + l + sep + m + "=", gen[k][l][m])
 
     def result_dict(self):
-        return asdict(self)
+        d = asdict(self)
+        d["b18"] = self.b18.dict()
+        return d
 
 
 def calculate(inputs: Inputs) -> Result:
