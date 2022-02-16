@@ -1,4 +1,5 @@
 from . import refdata
+from .utils import div
 
 # FIXME: This block should die
 
@@ -193,12 +194,12 @@ def make_entries(data: refdata.RefData, ags: str, year: int):
         "communal"
     )
     entry["In_R_rehab_rate_pa"] = data.ass("Ass_R_B_P_renovation_rate")
-    entry["In_R_heatnet_ratio_year_target"] = (
-        entry["In_R_flats_w_heatnet"] / entry["In_R_flats_com"]
+    entry["In_R_heatnet_ratio_year_target"] = div(
+        entry["In_R_flats_w_heatnet"], entry["In_R_flats_com"]
     )
 
-    if ags == ags_germany:
-        entry["In_T_rt7"] = "nd"
+    if ags == ags_germany or ags == ags_sta_padded or ags == ags_dis_padded:
+        entry["In_T_rt7"] = 0
         entry["In_T_rt3"] = "nd"
     else:
         # entry['In_T_rt7'] = list(raumtypen[raumtypen['ags'] == entry['In_M_AGS_com']]['RegioStaR7'])[0]
@@ -272,60 +273,42 @@ def make_entries(data: refdata.RefData, ags: str, year: int):
         / 3.6
         * data.ass("Ass_E_P_BHKW_efficiency_electric")
     )
-    bioenergy_installable_capacity_sta = (
-        potential_electricity_from_bioenergy_sta
-        / data.fact("Fact_E_P_biomass_full_load_hours")
+    bioenergy_installable_capacity_sta = div(
+        potential_electricity_from_bioenergy_sta,
+        data.fact("Fact_E_P_biomass_full_load_hours"),
     )
     entry[
         "In_E_biomass_local_power_installable_sta"
     ] = bioenergy_installable_capacity_sta * (
-        entry["In_M_area_agri_com"] / entry["In_M_area_agri_sta"]
+        div(entry["In_M_area_agri_com"], entry["In_M_area_agri_sta"])
     )
 
-    entry["In_R_coal_fec"] = (
-        data.fact("Fact_R_S_coal_fec_2018")
-        * entry["In_R_flats_wo_heatnet"]
-        / data.fact("Fact_R_P_flats_wo_heatnet_2011")
+    entry["In_R_coal_fec"] = data.fact("Fact_R_S_coal_fec_2018") * div(
+        entry["In_R_flats_wo_heatnet"], data.fact("Fact_R_P_flats_wo_heatnet_2011")
     )
-    entry["In_R_petrol_fec"] = (
-        data.fact("Fact_R_S_petrol_fec_2018")
-        * entry["In_R_flats_wo_heatnet"]
-        / data.fact("Fact_R_P_flats_wo_heatnet_2011")
+    entry["In_R_petrol_fec"] = data.fact("Fact_R_S_petrol_fec_2018") * div(
+        entry["In_R_flats_wo_heatnet"], data.fact("Fact_R_P_flats_wo_heatnet_2011")
     )
-    entry["In_R_fueloil_fec"] = (
-        data.fact("Fact_R_S_fueloil_fec_2018")
-        * entry["In_R_flats_wo_heatnet"]
-        / data.fact("Fact_R_P_flats_wo_heatnet_2011")
+    entry["In_R_fueloil_fec"] = data.fact("Fact_R_S_fueloil_fec_2018") * div(
+        entry["In_R_flats_wo_heatnet"], data.fact("Fact_R_P_flats_wo_heatnet_2011")
     )
-    entry["In_R_lpg_fec"] = (
-        data.fact("Fact_R_S_lpg_fec_2018")
-        * entry["In_R_flats_wo_heatnet"]
-        / data.fact("Fact_R_P_flats_wo_heatnet_2011")
+    entry["In_R_lpg_fec"] = data.fact("Fact_R_S_lpg_fec_2018") * div(
+        entry["In_R_flats_wo_heatnet"], data.fact("Fact_R_P_flats_wo_heatnet_2011")
     )
-    entry["In_R_gas_fec"] = (
-        data.fact("Fact_R_S_gas_fec_2018")
-        * entry["In_R_flats_wo_heatnet"]
-        / data.fact("Fact_R_P_flats_wo_heatnet_2011")
+    entry["In_R_gas_fec"] = data.fact("Fact_R_S_gas_fec_2018") * div(
+        entry["In_R_flats_wo_heatnet"], data.fact("Fact_R_P_flats_wo_heatnet_2011")
     )
-    entry["In_R_biomass_fec"] = (
-        data.fact("Fact_R_S_biomass_fec_2018")
-        * entry["In_R_flats_wo_heatnet"]
-        / data.fact("Fact_R_P_flats_wo_heatnet_2011")
+    entry["In_R_biomass_fec"] = data.fact("Fact_R_S_biomass_fec_2018") * div(
+        entry["In_R_flats_wo_heatnet"], data.fact("Fact_R_P_flats_wo_heatnet_2011")
     )
-    entry["In_R_orenew_fec"] = (
-        data.fact("Fact_R_S_orenew_fec_2018")
-        * entry["In_R_flats_wo_heatnet"]
-        / data.fact("Fact_R_P_flats_wo_heatnet_2011")
+    entry["In_R_orenew_fec"] = data.fact("Fact_R_S_orenew_fec_2018") * div(
+        entry["In_R_flats_wo_heatnet"], data.fact("Fact_R_P_flats_wo_heatnet_2011")
     )
-    entry["In_R_elec_fec"] = (
-        data.fact("Fact_R_S_elec_fec_2018")
-        * entry["In_M_population_com_2018"]
-        / entry["In_M_population_nat"]
+    entry["In_R_elec_fec"] = data.fact("Fact_R_S_elec_fec_2018") * div(
+        entry["In_M_population_com_2018"], entry["In_M_population_nat"]
     )
-    entry["In_R_heatnet_fec"] = (
-        data.fact("Fact_R_S_heatnet_fec_2018")
-        * entry["In_R_flats_w_heatnet"]
-        / data.fact("Fact_R_P_flats_w_heatnet_2011")
+    entry["In_R_heatnet_fec"] = data.fact("Fact_R_S_heatnet_fec_2018") * div(
+        entry["In_R_flats_w_heatnet"], data.fact("Fact_R_P_flats_w_heatnet_2011")
     )
     entry["In_R_energy_total"] = (
         entry["In_R_coal_fec"]
@@ -530,31 +513,21 @@ def make_entries(data: refdata.RefData, ags: str, year: int):
     )
 
     data_nat_agri_sta = data.nat_agri(ags_sta_padded)
-    entry["In_A_other_liming_calcit_prod_volume"] = (
-        data_nat_agri_sta.float("amount_sale_calcit")
-        * entry["In_M_area_agri_com"]
-        / entry["In_M_area_agri_sta"]
-    )
-    entry["In_A_other_liming_dolomite_prod_volume"] = (
-        data_nat_agri_sta.float("amount_sale_dolomite")
-        * entry["In_M_area_agri_com"]
-        / entry["In_M_area_agri_sta"]
-    )
-    entry["In_A_other_kas_prod_volume"] = (
-        data_nat_agri_sta.float("amount_sale_kas")
-        * entry["In_M_area_agri_com"]
-        / entry["In_M_area_agri_sta"]
-    )
-    entry["In_A_other_urea_prod_volume"] = (
-        data_nat_agri_sta.float("amount_sale_urea")
-        * entry["In_M_area_agri_com"]
-        / entry["In_M_area_agri_sta"]
-    )
-    entry["In_A_other_ecrop_prod_volume"] = (
-        data_nat_agri_sta.float("drymass_ecrop")
-        * entry["In_M_area_agri_com"]
-        / entry["In_M_area_agri_sta"]
-    )
+    entry["In_A_other_liming_calcit_prod_volume"] = data_nat_agri_sta.float(
+        "amount_sale_calcit"
+    ) * div(entry["In_M_area_agri_com"], entry["In_M_area_agri_sta"])
+    entry["In_A_other_liming_dolomite_prod_volume"] = data_nat_agri_sta.float(
+        "amount_sale_dolomite"
+    ) * div(entry["In_M_area_agri_com"], entry["In_M_area_agri_sta"])
+    entry["In_A_other_kas_prod_volume"] = data_nat_agri_sta.float(
+        "amount_sale_kas"
+    ) * div(entry["In_M_area_agri_com"], entry["In_M_area_agri_sta"])
+    entry["In_A_other_urea_prod_volume"] = data_nat_agri_sta.float(
+        "amount_sale_urea"
+    ) * div(entry["In_M_area_agri_com"], entry["In_M_area_agri_sta"])
+    entry["In_A_other_ecrop_prod_volume"] = data_nat_agri_sta.float(
+        "drymass_ecrop"
+    ) * div(entry["In_M_area_agri_com"], entry["In_M_area_agri_sta"])
 
     cows_density_sta = data_nat_agri_sta.float("cows") / entry["In_M_area_agri_sta"]
     entry["In_A_fermen_dairycow_amount"] = (
