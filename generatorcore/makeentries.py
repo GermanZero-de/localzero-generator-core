@@ -199,12 +199,10 @@ def make_entries(data: refdata.RefData, ags: str, year: int):
     )
 
     if ags == ags_germany or ags == ags_sta_padded or ags == ags_dis_padded:
-        entry["In_T_rt7"] = 0
+        entry["In_T_rt7"] = "nd"
         entry["In_T_rt3"] = "nd"
     else:
-        # entry['In_T_rt7'] = list(raumtypen[raumtypen['ags'] == entry['In_M_AGS_com']]['RegioStaR7'])[0]
-        # entry['In_T_rt3'] = list(raumtypen[raumtypen['ags'] == entry['In_M_AGS_com']]['Raumtyp3'])[0]
-        entry["In_T_rt7"] = data.area_kinds(ags).int("rt7")
+        entry["In_T_rt7"] = data.area_kinds(ags).str("rt7")
         entry["In_T_rt3"] = data.area_kinds(ags).str("rt3")
 
     data_renewable_energy_com = data.renewable_energy(ags)
