@@ -291,35 +291,35 @@ class RefData:
             self._fix_missing_entries_in_area()
             self._fix_missing_entries_in_flats()
             self._fix_missing_entries_in_population()
-            self._fix_missing_gemfr_ags_in_buildings()
+            self._fix_missing_gemfr_ags()
             self._fix_add_derived_rows_for_renewables()
             self._fix_add_derived_rows_for_traffic()
 
-    def _fix_missing_gemfr_ags_in_buildings(self):
-        """Some gemeindefreie Communes are not listed in the buildings list.
-        Gemeindefreie Communes are usueally forests ore lakes and do not have any
-        (they may have some, but we are going to ignore that) buildings.
-        Therefore we just add them with 0 to the buildings list.
-        """
-        # get list of gemfr. Communes in the Master list
-        gemfrCommunes = []
+    def _fix_missing_gemfr_ags(self):
+        all_gemfr = []
         for (k, v) in self._ags_master.items():
             if (
                 v.find("gemfr. Geb") != -1
                 or v.find("gemeindefreies Gebiet") != -1
                 or v.find("gemfr.Geb.") != -1
-            ) and not self._buildings["ags"].isin([k]).any().any():
-                gemfrCommunes.append(k)
+            ):
+                all_gemfr.append(k)
 
-        # create a 2D list with ags keys and zeros
-        numBuildingCols = len(self._buildings.columns)
-        numGemfrAGS = len(gemfrCommunes)
-        zeros2D = []
-        for i in range(numGemfrAGS):
-            zeros2D.append([gemfrCommunes[i]] + [0] * (numBuildingCols - 1))
+        def add_zero_rows(df: pd.DataFrame):
+            num_columns = len(df.columns)
+            missing_ags = [ags for ags in all_gemfr if not df["ags"].isin([ags]).any()]
+            new_rows = map(lambda ags: [ags] + [0] * (num_columns - 1), missing_ags)
+            return append_rows(df, list(new_rows))
 
-        # append to the buildings data frame
-        self._buildings = append_rows(self._buildings, zeros2D)
+        # Some gemeindefreie Communes are not listed in the buildings list.
+        # Gemeindefreie Communes are usueally forests ore lakes and do not have any
+        # (they may have some, but we are going to ignore that) buildings.
+        # Therefore we just add them with 0 to the buildings list.
+        self._buildings = add_zero_rows(self._buildings)
+        # Similar logic to renewable installations. If they are not listed in the
+        # reference data they are probably unlikely to actually have anything.
+        # which seems like a big pity.
+        self._renewable_energy = add_zero_rows(self._renewable_energy)
 
     def _fix_missing_entries_in_area(self):
         """Here we assume that the missing entries in the area sheet should actually be 0."""
