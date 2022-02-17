@@ -7,6 +7,7 @@ import json
 import sys
 import math
 import pandas as pd
+from typing import Any, Sequence
 
 # TODO: Write small wrappers classes for each data source so that we can document
 # the columns and get better type checking from pylance.
@@ -21,6 +22,7 @@ def _load(datadir: str, what: str, filename: str = "2018") -> pd.DataFrame:
     res = pd.read_csv(
         os.path.join(datadir, repo, what, filename + ".csv"), dtype={"ags": "str"}
     )
+    # Remember the source name for debugging
     setattr(res, "refdata_dataset", what)
     return res  # type: ignore
 
@@ -32,6 +34,18 @@ def set_nans_to_0(data: pd.DataFrame, *, columns):
 
 def get_dataset(df: pd.DataFrame) -> str:
     return getattr(df, "refdata_dataset", "BUG-IN-DATAREF")
+
+
+def append_rows(df: pd.DataFrame, rows: Sequence[list[Any]]) -> pd.DataFrame:
+    res = pd.concat(
+        [df, pd.DataFrame(data=rows, columns=df.columns)], ignore_index=True
+    )
+    try:
+        # Keep the source name for debugging
+        setattr(res, "refdata_dataset", getattr(df, "refdata_dataset"))
+    except:
+        pass
+    return res
 
 
 @dataclass
@@ -214,11 +228,8 @@ def _add_derived_rows_for_summable(df: pd.DataFrame) -> pd.DataFrame:
         if a in sums_by_sta:
             del sums_by_sta[a]
 
-    additional_rows = pd.DataFrame(
-        list(sums_by_dis.values()) + list(sums_by_sta.values()),
-        columns=df.columns,
-    )
-    return pd.concat([df, additional_rows], ignore_index=True)
+    additional_rows = list(sums_by_dis.values()) + list(sums_by_sta.values())
+    return append_rows(df, additional_rows)
 
 
 @dataclass
@@ -307,11 +318,8 @@ class RefData:
         for i in range(numGemfrAGS):
             zeros2D.append([gemfrCommunes[i]] + [0] * (numBuildingCols - 1))
 
-        # create a data frame that has the buldings columns and contains the gemfr. Ags and zeros
-        zerosDF = pd.DataFrame(columns=self._buildings.columns, data=zeros2D)
-
         # append to the buildings data frame
-        self._buildings = pd.concat([self._buildings, zerosDF])
+        self._buildings = append_rows(self._buildings, zeros2D)
 
     def _fix_missing_entries_in_area(self):
         """Here we assume that the missing entries in the area sheet should actually be 0."""
