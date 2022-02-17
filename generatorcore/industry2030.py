@@ -421,14 +421,14 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
     p_metal_steel_secondary.change_energy_MWh = (
         p_metal_steel_secondary.energy - i18.p_metal_steel_secondary.energy
     )
-    p_metal_steel_secondary.change_energy_pct = (
-        p_metal_steel_secondary.change_energy_MWh / i18.p_metal_steel_secondary.energy
+    p_metal_steel_secondary.change_energy_pct = div(
+        p_metal_steel_secondary.change_energy_MWh, i18.p_metal_steel_secondary.energy
     )
     p_metal_steel_secondary.change_CO2e_t = (
         p_metal_steel_secondary.CO2e_pb + p_metal_steel_secondary.CO2e_cb
     ) - (i18.p_metal_steel_secondary.CO2e_pb + i18.p_metal_steel_secondary.CO2e_cb)
-    p_metal_steel_secondary.change_CO2e_pct = (
-        p_metal_steel_secondary.change_CO2e_t / i18.p_metal_steel_secondary.CO2e_total
+    p_metal_steel_secondary.change_CO2e_pct = div(
+        p_metal_steel_secondary.change_CO2e_t, i18.p_metal_steel_secondary.CO2e_total
     )
     p_metal_steel_secondary.CO2e_total_2021_estimated = (
         i18.p_metal_steel_secondary.CO2e_total
