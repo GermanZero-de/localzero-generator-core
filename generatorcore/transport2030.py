@@ -519,10 +519,9 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> T30:
 
     rail_ppl_metro_action_infra.invest_per_x = ass("Ass_T_C_cost_per_trnsprt_ppl_metro")
 
-    rail_ppl_metro.transport_capacity_pkm = (
-        t.transport_capacity_pkm
-        * t18.rail_ppl_metro.transport_capacity_pkm
-        / (
+    rail_ppl_metro.transport_capacity_pkm = div(
+        t.transport_capacity_pkm * t18.rail_ppl_metro.transport_capacity_pkm,
+        (
             t18.road_bus.transport_capacity_pkm
             + t18.rail_ppl_distance.transport_capacity_pkm
             + t18.rail_ppl_metro.transport_capacity_pkm
@@ -535,7 +534,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> T30:
             else ass("Ass_T_D_trnsprt_ppl_rural_pt_frac_2050")
             if inputs.str_entry("In_T_rt3") == "rural"
             else ass("Ass_T_D_trnsprt_ppl_nat_pt_frac_2050")
-        )
+        ),
     )
     rail_ppl_distance.ratio_wage_to_emplo = ass("Ass_T_D_rail_wage_driver")
     rail_ppl_metro_action_infra.invest = (
