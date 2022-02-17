@@ -566,6 +566,9 @@ def calc(inputs: Inputs, *, r18: residences2018.R18, b18: business2018.B18) -> R
 
     s_lpg.pct_energy = 0
 
+    #=IF(BK128-BK149-BK150<F145+F148+F154; F145*((BK128-BK149-BK150)/(F145+F148+F154));F145)
+    #if p_buildings_total.energy - :
+
     s_biomass.energy = (
         r18.s_biomass.number_of_buildings
         * p_buildings_total.fec_factor_averaged
@@ -612,6 +615,7 @@ def calc(inputs: Inputs, *, r18: residences2018.R18, b18: business2018.B18) -> R
         * 10000
     )
     s_solarth.power_to_be_installed_pct = entry("In_H_solartherm_to_be_inst")
+
     s_solarth.energy = max(
         div(
             r18.p_buildings_total.number_of_buildings,
@@ -623,11 +627,18 @@ def calc(inputs: Inputs, *, r18: residences2018.R18, b18: business2018.B18) -> R
         r18.s_solarth.energy,
     )
 
-    s_heatpump.energy = (
-        p_buildings_total.demand_heat_rehab
-        - (s_biomass.energy + s_heatnet.energy + s_solarth.energy)
-        * p_buildings_total.pct_rehab
+    #=MIN(BW128-BK149;(F128-F145-F148-F154)*ASS_R_P_heat_consumption_after_renovation_per_area/T128-BK149)
+    s_heatpump.energy = min(
+        p_buildings_total.demand_heat_rehab - s_solarth.energy,
+        (r18.p_buildings_total.energy-r18.s_biomass.energy-r18.s_heatnet.energy-r18.s_elec_heating.energy)
+        * div( ass("ASS_R_P_heat_consumption_after_renovation_per_area"),r18.p_buildings_total.factor_adapted_to_fec) - s_solarth.energy
     )
+
+    #s_heatpump.energy = (
+    #    p_buildings_total.demand_heat_rehab
+    #    - (s_biomass.energy + s_heatnet.energy + s_solarth.energy)
+    #    * p_buildings_total.pct_rehab
+    #)
 
     p_elec_heatpump.demand_electricity = s_heatpump.energy / fact(
         "Fact_R_S_heatpump_mean_annual_performance_factor_all"
