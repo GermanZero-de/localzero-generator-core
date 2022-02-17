@@ -18,6 +18,7 @@ from commands.cmd_data import cmd_data_lookup
 from commands.cmd_data import cmd_data_is_production
 from commands.cmd_test_end_to_end import cmd_test_end_to_end_update_expectations
 from commands.cmd_test_end_to_end import cmd_test_end_to_end_create_expectation
+from commands.cmd_test_end_to_end import cmd_test_end_to_end_run_all_ags
 
 
 def main():
@@ -107,6 +108,15 @@ def main():
     cmd_test_end_to_end_create_expectation_parser.add_argument("-year", default=2035)
     cmd_test_end_to_end_create_expectation_parser.set_defaults(
         func=cmd_test_end_to_end_create_expectation
+    )
+
+    cmd_test_end_to_end_run_all_ags_parser = subcmd_test_end_to_end.add_parser(
+        "run_all_ags",
+        help="Runs the generator for all ags.",
+    )
+    cmd_test_end_to_end_run_all_ags_parser.add_argument("-year", default=2035)
+    cmd_test_end_to_end_run_all_ags_parser.set_defaults(
+        func=cmd_test_end_to_end_run_all_ags
     )
 
     args = parser.parse_args()
