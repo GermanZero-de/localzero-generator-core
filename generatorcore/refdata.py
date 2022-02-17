@@ -316,6 +316,9 @@ class RefData:
         # (they may have some, but we are going to ignore that) buildings.
         # Therefore we just add them with 0 to the buildings list.
         self._buildings = add_zero_rows(self._buildings)
+        # Similar logic to renewable installations. If they are not listed in the
+        # reference data they are probably unlikely to actually have anything.
+        # which seems like a big pity.
         self._renewable_energy = add_zero_rows(self._renewable_energy)
 
     def _fix_missing_entries_in_area(self):
