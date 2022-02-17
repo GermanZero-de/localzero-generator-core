@@ -125,33 +125,28 @@ def calc(inputs: Inputs) -> R18:
         + p_buildings_2011_today.number_of_buildings
     )
 
-    p_buildings_until_1919.relative_building_ratio = (
-        p_buildings_until_1919.number_of_buildings
-        / p_buildings_total.number_of_buildings
+    p_buildings_until_1919.relative_building_ratio = div(
+        p_buildings_until_1919.number_of_buildings,
+        p_buildings_total.number_of_buildings,
     )
-    p_buildings_1919_1948.relative_building_ratio = (
-        p_buildings_1919_1948.number_of_buildings
-        / p_buildings_total.number_of_buildings
+    p_buildings_1919_1948.relative_building_ratio = div(
+        p_buildings_1919_1948.number_of_buildings, p_buildings_total.number_of_buildings
     )
-    p_buildings_1949_1978.relative_building_ratio = (
-        p_buildings_1949_1978.number_of_buildings
-        / p_buildings_total.number_of_buildings
+    p_buildings_1949_1978.relative_building_ratio = div(
+        p_buildings_1949_1978.number_of_buildings, p_buildings_total.number_of_buildings
     )
-    p_buildings_1979_1995.relative_building_ratio = (
-        p_buildings_1979_1995.number_of_buildings
-        / p_buildings_total.number_of_buildings
+    p_buildings_1979_1995.relative_building_ratio = div(
+        p_buildings_1979_1995.number_of_buildings, p_buildings_total.number_of_buildings
     )
-    p_buildings_1996_2004.relative_building_ratio = (
-        p_buildings_1996_2004.number_of_buildings
-        / p_buildings_total.number_of_buildings
+    p_buildings_1996_2004.relative_building_ratio = div(
+        p_buildings_1996_2004.number_of_buildings, p_buildings_total.number_of_buildings
     )
-    p_buildings_2005_2011.relative_building_ratio = (
-        p_buildings_2005_2011.number_of_buildings
-        / p_buildings_total.number_of_buildings
+    p_buildings_2005_2011.relative_building_ratio = div(
+        p_buildings_2005_2011.number_of_buildings, p_buildings_total.number_of_buildings
     )
-    p_buildings_2011_today.relative_building_ratio = (
-        p_buildings_2011_today.number_of_buildings
-        / p_buildings_total.number_of_buildings
+    p_buildings_2011_today.relative_building_ratio = div(
+        p_buildings_2011_today.number_of_buildings,
+        p_buildings_total.number_of_buildings,
     )
 
     p_buildings_total.relative_building_ratio = (
@@ -281,45 +276,45 @@ def calc(inputs: Inputs) -> R18:
         p_buildings_total.area_m2 * p_buildings_area_m2_com.pct_x
     )
 
-    p_buildings_until_1919.relative_heat_ratio_buildings_until_2004 = (
-        p_buildings_until_1919.fec_after_BMWi
-        / (
+    p_buildings_until_1919.relative_heat_ratio_buildings_until_2004 = div(
+        p_buildings_until_1919.fec_after_BMWi,
+        (
             p_buildings_total.fec_after_BMWi
             - p_buildings_2005_2011.fec_after_BMWi
             - p_buildings_2011_today.fec_after_BMWi
-        )
+        ),
     )
-    p_buildings_1919_1948.relative_heat_ratio_buildings_until_2004 = (
-        p_buildings_1919_1948.fec_after_BMWi
-        / (
+    p_buildings_1919_1948.relative_heat_ratio_buildings_until_2004 = div(
+        p_buildings_1919_1948.fec_after_BMWi,
+        (
             p_buildings_total.fec_after_BMWi
             - p_buildings_2005_2011.fec_after_BMWi
             - p_buildings_2011_today.fec_after_BMWi
-        )
+        ),
     )
-    p_buildings_1949_1978.relative_heat_ratio_buildings_until_2004 = (
-        p_buildings_1949_1978.fec_after_BMWi
-        / (
+    p_buildings_1949_1978.relative_heat_ratio_buildings_until_2004 = div(
+        p_buildings_1949_1978.fec_after_BMWi,
+        (
             p_buildings_total.fec_after_BMWi
             - p_buildings_2005_2011.fec_after_BMWi
             - p_buildings_2011_today.fec_after_BMWi
-        )
+        ),
     )
-    p_buildings_1979_1995.relative_heat_ratio_buildings_until_2004 = (
-        p_buildings_1979_1995.fec_after_BMWi
-        / (
+    p_buildings_1979_1995.relative_heat_ratio_buildings_until_2004 = div(
+        p_buildings_1979_1995.fec_after_BMWi,
+        (
             p_buildings_total.fec_after_BMWi
             - p_buildings_2005_2011.fec_after_BMWi
             - p_buildings_2011_today.fec_after_BMWi
-        )
+        ),
     )
-    p_buildings_1996_2004.relative_heat_ratio_buildings_until_2004 = (
-        p_buildings_1996_2004.fec_after_BMWi
-        / (
+    p_buildings_1996_2004.relative_heat_ratio_buildings_until_2004 = div(
+        p_buildings_1996_2004.fec_after_BMWi,
+        (
             p_buildings_total.fec_after_BMWi
             - p_buildings_2005_2011.fec_after_BMWi
             - p_buildings_2011_today.fec_after_BMWi
-        )
+        ),
     )
 
     p_buildings_total.relative_heat_ratio_buildings_until_2004 = (
@@ -615,10 +610,9 @@ def calc(inputs: Inputs) -> R18:
 
     p.energy = p_buildings_total.energy + p_other.energy
 
-    s_biomass.number_of_buildings = (
-        s_biomass.energy
-        * p_buildings_total.number_of_buildings
-        / (p_buildings_total.factor_adapted_to_fec * p_buildings_total.area_m2)
+    s_biomass.number_of_buildings = div(
+        s_biomass.energy * p_buildings_total.number_of_buildings,
+        (p_buildings_total.factor_adapted_to_fec * p_buildings_total.area_m2),
     )
 
     return r18
