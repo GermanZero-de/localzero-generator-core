@@ -218,7 +218,7 @@ def calc(
     p_elec_elcon.demand_change = ass("Ass_B_D_fec_elec_elcon_change")
     p_elec_elcon.energy = (
         b18.p_elec_elcon.energy
-        * (entry("In_M_population_com_203X") / entry("In_M_population_com_2018"))
+        * (div(entry("In_M_population_com_203X"), entry("In_M_population_com_2018")))
         * (1 + p_elec_elcon.demand_change)
     )
     s_heatnet.energy = (

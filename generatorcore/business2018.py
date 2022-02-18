@@ -328,7 +328,7 @@ def calc(inputs: Inputs, *, r18: residences2018.R18) -> B18:
 
     b18.p_elec_elcon.demand_electricity = (
         b18.p_elec_elcon.energy
-        * (entry("In_M_population_com_203X") / entry("In_M_population_com_2018"))
+        * div(entry("In_M_population_com_203X"), entry("In_M_population_com_2018"))
         * (1 + b18.p_elec_elcon.demand_change)
     )
 
