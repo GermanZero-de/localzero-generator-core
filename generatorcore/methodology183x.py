@@ -620,7 +620,6 @@ def calc_budget(
 
     m183X.GHG_budget_2022_to_year_target_nat = (
         entry("In_M_GHG_budget_2016_to_year_target")
-        - fact("Fact_M_CO2e_w_lulucf_2015")
         - fact("Fact_M_CO2e_w_lulucf_2016")
         - fact("Fact_M_CO2e_w_lulucf_2017")
         - fact("Fact_M_CO2e_w_lulucf_2018")
