@@ -201,7 +201,9 @@ def _add_derived_rows_for_summable(df: pd.DataFrame) -> pd.DataFrame:
             for column in range(1, len(e)):
                 d[ags][column] += e[column]
         else:
-            d[ags] = e
+            # need to make a copy of the row because otherwise
+            # will mutate it in the second call to add_to
+            d[ags] = list(e)
         d[ags][0] = ags
 
     sums_by_sta = {}
