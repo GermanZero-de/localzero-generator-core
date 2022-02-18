@@ -615,16 +615,29 @@ def calc(inputs: Inputs, *, r18: residences2018.R18, b18: business2018.B18) -> R
 
     s_heatpump.energy = min(
         p_buildings_total.demand_heat_rehab - s_solarth.energy,
-        (r18.p_buildings_total.energy-r18.s_biomass.energy-r18.s_heatnet.energy-r18.s_elec_heating.energy)
-        * div( ass("Ass_R_P_heat_consumption_after_renovation_per_area"),r18.p_buildings_total.factor_adapted_to_fec) - s_solarth.energy
+        (
+            r18.p_buildings_total.energy
+            - r18.s_biomass.energy
+            - r18.s_heatnet.energy
+            - r18.s_elec_heating.energy
+        )
+        * div(
+            ass("Ass_R_P_heat_consumption_after_renovation_per_area"),
+            r18.p_buildings_total.factor_adapted_to_fec,
+        )
+        - s_solarth.energy,
     )
 
-
-    if p_buildings_total.energy-s_solarth.energy-s_heatpump.energy < r18.s_biomass.energy+r18.s_heatnet.energy+r18.s_elec_heating.energy:
-        s_biomass.energy = r18.s_biomass.energy * div(p_buildings_total.energy-s_solarth.energy-s_heatpump.energy,r18.s_biomass.energy+r18.s_heatnet.energy+r18.s_elec_heating.energy)
+    if (
+        p_buildings_total.energy - s_solarth.energy - s_heatpump.energy
+        < r18.s_biomass.energy + r18.s_heatnet.energy + r18.s_elec_heating.energy
+    ):
+        s_biomass.energy = r18.s_biomass.energy * div(
+            p_buildings_total.energy - s_solarth.energy - s_heatpump.energy,
+            r18.s_biomass.energy + r18.s_heatnet.energy + r18.s_elec_heating.energy,
+        )
     else:
         s_biomass.energy = r18.s_biomass.energy
-
 
     p_elec_heatpump.demand_electricity = s_heatpump.energy / fact(
         "Fact_R_S_heatpump_mean_annual_performance_factor_all"
@@ -638,14 +651,21 @@ def calc(inputs: Inputs, *, r18: residences2018.R18, b18: business2018.B18) -> R
         p_elec_heatpump.demand_electricity + p_elec_elcon.demand_electricity
     )  # SUM(p_elec_heatpump.demand_electricity:p_elec_elcon.demand_electricity)
 
-
-    if p_buildings_total.energy-s_solarth.energy-s_heatpump.energy < r18.s_biomass.energy+r18.s_heatnet.energy+r18.s_elec_heating.energy:
-        s_elec_heating.energy = r18.s_elec_heating.energy * div(p_buildings_total.energy-s_solarth.energy-s_heatpump.energy,r18.s_biomass.energy+r18.s_heatnet.energy+r18.s_elec_heating.energy)
+    if (
+        p_buildings_total.energy - s_solarth.energy - s_heatpump.energy
+        < r18.s_biomass.energy + r18.s_heatnet.energy + r18.s_elec_heating.energy
+    ):
+        s_elec_heating.energy = r18.s_elec_heating.energy * div(
+            p_buildings_total.energy - s_solarth.energy - s_heatpump.energy,
+            r18.s_biomass.energy + r18.s_heatnet.energy + r18.s_elec_heating.energy,
+        )
     else:
         s_elec_heating.energy = r18.s_elec_heating.energy
 
     p_buildings_total.demand_electricity = s_elec_heating.energy
-    p.demand_electricity = p_other.demand_electricity + p_buildings_total.demand_electricity
+    p.demand_electricity = (
+        p_other.demand_electricity + p_buildings_total.demand_electricity
+    )
     s_elec.energy = p.demand_electricity
     s.energy = p_buildings_total.energy + p_other.energy
     s_fueloil.energy = s_fueloil.pct_energy * s.energy
@@ -654,9 +674,14 @@ def calc(inputs: Inputs, *, r18: residences2018.R18, b18: business2018.B18) -> R
     s_coal.energy = s_coal.pct_energy * s.energy
     s_petrol.energy = s_petrol.pct_energy * s.energy
 
-
-    if p_buildings_total.energy-s_solarth.energy-s_heatpump.energy < r18.s_biomass.energy+r18.s_heatnet.energy+r18.s_elec_heating.energy:
-        s_heatnet.energy = r18.s_heatnet.energy * div(p_buildings_total.energy-s_solarth.energy-s_heatpump.energy,r18.s_biomass.energy+r18.s_heatnet.energy+r18.s_elec_heating.energy)
+    if (
+        p_buildings_total.energy - s_solarth.energy - s_heatpump.energy
+        < r18.s_biomass.energy + r18.s_heatnet.energy + r18.s_elec_heating.energy
+    ):
+        s_heatnet.energy = r18.s_heatnet.energy * div(
+            p_buildings_total.energy - s_solarth.energy - s_heatpump.energy,
+            r18.s_biomass.energy + r18.s_heatnet.energy + r18.s_elec_heating.energy,
+        )
     else:
         s_heatnet.energy = r18.s_heatnet.energy
 
@@ -674,12 +699,14 @@ def calc(inputs: Inputs, *, r18: residences2018.R18, b18: business2018.B18) -> R
         + s_solarth.energy
         + s_heatpump.energy
     )
-    
-
 
     s_elec_heating.pct_energy = div(s_elec_heating.energy, s.energy)
 
-    s_emethan.energy = max(0, p_buildings_total.energy - (sum_fueloil_to_heatpump_energy + s_elec_heating.energy))
+    s_emethan.energy = max(
+        0,
+        p_buildings_total.energy
+        - (sum_fueloil_to_heatpump_energy + s_elec_heating.energy),
+    )
 
     s_emethan.pct_energy = div(s_emethan.energy, s.energy)
 
@@ -1161,7 +1188,6 @@ def calc(inputs: Inputs, *, r18: residences2018.R18, b18: business2018.B18) -> R
     s_gas.change_CO2e_t = s_gas.CO2e_cb - r18.s_gas.CO2e_cb
     s_gas.change_cost_energy = s_gas.cost_fuel - r18.s_gas.cost_fuel
     p_buildings_total.invest_pa = p_buildings_total.invest / Kalkulationszeitraum
-
 
     g.invest_pa = g_consult.invest_pa
     g_consult.invest_pa_com = g_consult.invest_pa
