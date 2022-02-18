@@ -1196,23 +1196,19 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> T30:
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     road_gds.change_km = road_gds_ldt.change_km + road_gds_mhd.change_km
-    rail_ppl_distance.transport_capacity_pkm = (
-        t.transport_capacity_pkm
-        * t18.rail_ppl_distance.transport_capacity_pkm
-        / (
-            t18.road_bus.transport_capacity_pkm
-            + t18.rail_ppl_distance.transport_capacity_pkm
-            + t18.rail_ppl_metro.transport_capacity_pkm
-        )
-        * (
-            ass("Ass_T_D_trnsprt_ppl_city_pt_frac_2050")
-            if inputs.str_entry("In_T_rt3") == "city"
-            else ass("Ass_T_D_trnsprt_ppl_smcty_pt_frac_2050")
-            if inputs.str_entry("In_T_rt3") == "smcty"
-            else ass("Ass_T_D_trnsprt_ppl_rural_pt_frac_2050")
-            if inputs.str_entry("In_T_rt3") == "rural"
-            else ass("Ass_T_D_trnsprt_ppl_nat_pt_frac_2050")
-        )
+    rail_ppl_distance.transport_capacity_pkm = div(
+        t.transport_capacity_pkm * t18.rail_ppl_distance.transport_capacity_pkm,
+        t18.road_bus.transport_capacity_pkm
+        + t18.rail_ppl_distance.transport_capacity_pkm
+        + t18.rail_ppl_metro.transport_capacity_pkm,
+    ) * (
+        ass("Ass_T_D_trnsprt_ppl_city_pt_frac_2050")
+        if inputs.str_entry("In_T_rt3") == "city"
+        else ass("Ass_T_D_trnsprt_ppl_smcty_pt_frac_2050")
+        if inputs.str_entry("In_T_rt3") == "smcty"
+        else ass("Ass_T_D_trnsprt_ppl_rural_pt_frac_2050")
+        if inputs.str_entry("In_T_rt3") == "rural"
+        else ass("Ass_T_D_trnsprt_ppl_nat_pt_frac_2050")
     )
     rail_ppl_distance.demand_electricity = (
         rail_ppl_distance.transport_capacity_pkm
