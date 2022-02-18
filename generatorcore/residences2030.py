@@ -227,7 +227,7 @@ def calc(inputs: Inputs, *, r18: residences2018.R18, b18: business2018.B18) -> R
     p_buildings_2011_today.pct_rehab = 1 - p_buildings_2011_today.pct_nonrehab
 
     p_buildings_new.pct_x = max(
-        entry("In_M_population_com_203X") / entry("In_M_population_com_2018") - 1, 0
+        div(entry("In_M_population_com_203X"), entry("In_M_population_com_2018")) - 1, 0
     )
 
     p_buildings_new.area_m2 = p_buildings_total.area_m2 * p_buildings_new.pct_x
