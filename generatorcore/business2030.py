@@ -273,7 +273,7 @@ def calc(
     s_heatpump.energy = min(
         p_nonresi.demand_heat_rehab-s_solarth.energy,
         (b18.p_nonresi.energy-b18.s_biomass.energy-b18.s_heatnet.energy-b18.s_elec_heating.energy)
-        *div(fact("Fact_B_P_ratio_fec_to_area_2020"),b18.p_nonresi.factor_adapted_to_fec) - s_solarth.energy 
+        *div(ass("Ass_B_D_ratio_fec_to_area_2050"),b18.p_nonresi.factor_adapted_to_fec) - s_solarth.energy 
     )
 
     p_elec_heatpump.energy = s_heatpump.energy / fact(
@@ -334,6 +334,7 @@ def calc(
     s_fueloil.pct_energy = 0
     s_heatnet.pct_energy = div(s_heatnet.energy, s.energy)
     s_elec.pct_energy = div(s_elec.energy, s.energy)
+    s_elec_heating.pct_energy = div(s_elec_heating.energy,s.energy)
 
     s_gas.cost_fuel_per_MWh = ass("Ass_R_S_gas_energy_cost_factor_2035")
     s_biomass.cost_fuel_per_MWh = b18.s_biomass.cost_fuel_per_MWh
@@ -804,7 +805,7 @@ def calc(
         * entry("In_M_duration_neutral")
         * fact("Fact_M_cost_per_CO2e_2020")
     )
-    s_elec_heating.pct_energy = ass("Ass_R_S_fec_ratio_elec_heating_to_total_2050")
+    
     s_elec_heating.CO2e_total = s_elec_heating.CO2e_cb
 
     rb.energy = r30.p.energy + p.energy
