@@ -205,7 +205,10 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> T30:
     )
     road_car_it_ot.transport_capacity_pkm = (
         t.transport_capacity_pkm
-        * div( t18.road_car_it_ot.mileage, t18.road_car_it_ot.mileage + t18.road_car_ab.mileage)
+        * div(
+            t18.road_car_it_ot.mileage,
+            t18.road_car_it_ot.mileage + t18.road_car_ab.mileage,
+        )
         * (
             (
                 ass("Ass_T_D_trnsprt_ppl_city_car1_frac_2050")
@@ -255,9 +258,8 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> T30:
         * ass("Ass_T_S_Car_frac_bev_with_phev_mlg_2050")
         * ass("Ass_T_S_Car_SEC_elec_it_at_2030")
     )
-    air_inter.transport_capacity_tkm = (
-        t18.air_inter.transport_capacity_tkm
-        *div(air_inter.demand_ejetfuel,t18.air_inter.demand_jetfuel) 
+    air_inter.transport_capacity_tkm = t18.air_inter.transport_capacity_tkm * div(
+        air_inter.demand_ejetfuel, t18.air_inter.demand_jetfuel
     )
     air_inter.CO2e_cb = air_inter.demand_ejetfuel * ass(
         "Ass_T_S_jetfuel_EmFa_tank_wheel_2050"
@@ -268,8 +270,10 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> T30:
     )
     road_car_ab.transport_capacity_pkm = (
         t.transport_capacity_pkm
-        *div( t18.road_car_ab.mileage,
-        (t18.road_car_it_ot.mileage + t18.road_car_ab.mileage))
+        * div(
+            t18.road_car_ab.mileage,
+            (t18.road_car_it_ot.mileage + t18.road_car_ab.mileage),
+        )
         * (
             ass("Ass_T_D_trnsprt_ppl_city_car1_frac_2050")
             + ass("Ass_T_D_trnsprt_ppl_city_car2_frac_2050")
@@ -388,9 +392,8 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> T30:
     road.demand_change = 0  # (SUM(BJ239:BJ252))
 
     air.energy = air.demand_ejetfuel + air.demand_change  # SUM(AW234:air.demand_change)
-    air_inter.transport_capacity_pkm = (
-        t18.air_inter.transport_capacity_pkm
-        * div(air_inter.demand_ejetfuel,t18.air_inter.demand_jetfuel)
+    air_inter.transport_capacity_pkm = t18.air_inter.transport_capacity_pkm * div(
+        air_inter.demand_ejetfuel, t18.air_inter.demand_jetfuel
     )
     road_gds_ldt_ab.transport_capacity_tkm = (
         ass("Ass_T_D_trnsprt_gds_Rd_2050")
@@ -951,7 +954,9 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> T30:
         + road_ppl.invest_pa_com
         + road_gds.invest_pa_com
     )
-    road_gds_mhd_action_wire.demand_emplo = div(road_gds_mhd_action_wire.cost_wage, road_gds_mhd_action_wire.ratio_wage_to_emplo)
+    road_gds_mhd_action_wire.demand_emplo = div(
+        road_gds_mhd_action_wire.cost_wage, road_gds_mhd_action_wire.ratio_wage_to_emplo
+    )
 
     # road.ratio_wage_to_emploDauerstellen!)
 
@@ -1333,8 +1338,10 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> T30:
         "Ass_T_C_ratio_public_sector_100"
     )
 
-    rail_action_invest_infra.demand_emplo = div(rail_action_invest_infra.cost_wage,rail_action_invest_infra.ratio_wage_to_emplo)
-        
+    rail_action_invest_infra.demand_emplo = div(
+        rail_action_invest_infra.cost_wage, rail_action_invest_infra.ratio_wage_to_emplo
+    )
+
     rail_action_invest_infra.invest_com = rail_action_invest_infra.invest * ass(
         "Ass_T_C_ratio_public_sector_100"
     )
@@ -1375,8 +1382,11 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> T30:
         "Fact_T_D_constr_roadrail_ratio_wage_to_emplo_2018"
     )
 
-    rail_action_invest_station.demand_emplo = div(rail_action_invest_station.cost_wage,rail_action_invest_station.ratio_wage_to_emplo)
-        
+    rail_action_invest_station.demand_emplo = div(
+        rail_action_invest_station.cost_wage,
+        rail_action_invest_station.ratio_wage_to_emplo,
+    )
+
     rail_action_invest_station.demand_emplo_new = (
         rail_action_invest_station.demand_emplo
     )
@@ -1805,9 +1815,8 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> T30:
     )  # SUM(ship_dmstc.cost_climate_saved:ship_inter.cost_climate_saved)
 
     # TODO: hier evtl. nochmal bessere Daten rausfinden
-    ship_inter.transport_capacity_tkm = (
-        t18.ship_inter.transport_capacity_tkm
-        * div( ship_inter.energy, t18.ship_inter.energy)
+    ship_inter.transport_capacity_tkm = t18.ship_inter.transport_capacity_tkm * div(
+        ship_inter.energy, t18.ship_inter.energy
     )
 
     ship_inter.change_km = (
