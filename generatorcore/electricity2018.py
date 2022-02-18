@@ -660,72 +660,29 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
         + p_fossil_coal_black.energy
         + p_fossil_gas.energy
         + p_fossil_ofossil.energy
-        # result: 330.630.906 MWh
     )
-    # 2
-    p_fossil.pct_energy = (
-        p_fossil.energy
-        / p.energy
-        # result: 64,6%
-    )
+    p_fossil.pct_energy = div(p_fossil.energy, p.energy)
 
-    # Zeile Photovoltaik 1
+    p_renew_pv.pct_energy = fact("Fact_E_P_pv_pct_of_gep_2018")
+    p_renew_pv.energy = p.energy * p_renew_pv.pct_energy
 
-    # 1
-    p_renew_pv.pct_energy = (
-        fact("Fact_E_P_pv_pct_of_gep_2018")
-        # result: 7,3%
-    )
-    # 2
-    p_renew_pv.energy = (
-        p.energy
-        * p_renew_pv.pct_energy
-        # result: 37.362.316 MWh
-    )
-    # Zeile Photovoltaik Dach
-
-    # 1
-    p_renew_pv_roof.pct_energy = (
-        fact("Fact_E_P_pv_roof_pct_of_gep_pv_2017")
-        # result: 73,2%
-    )
-    # 2
-    p_renew_pv_roof.energy = (
-        p_renew_pv.energy
-        * p_renew_pv_roof.pct_energy
-        # result: 27.349.215 MWh
-    )
-    # 7
+    p_renew_pv_roof.pct_energy = fact("Fact_E_P_pv_roof_pct_of_gep_pv_2017")
+    p_renew_pv_roof.energy = p_renew_pv.energy * p_renew_pv_roof.pct_energy
     p_renew_pv_roof.cost_mro_per_MWh = (
         ass("Ass_E_P_local_pv_roof_ratio_invest_to_power_2020")
         * ass("Ass_E_P_local_pv_roof_mro_per_year")
         / entry("In_E_pv_full_load_hours_sta")
         * 1000
-        # result: 18,4 €/MWh
     )
-    # 8
     p_renew_pv_roof.cost_mro = (
         p_renew_pv_roof.energy
         * p_renew_pv_roof.cost_mro_per_MWh
         * fact("Fact_E_P_ratio_gross_electricity_prod_to_fec_electricity_2018")
         / Million
-        # result: 502,77 Mio €/d_a
     )
-    # Zeile PV Fassade
 
-    # 1
-    p_renew_pv_facade.pct_energy = (
-        fact("Fact_E_P_pv_rest_pct_of_gep_pv_2017")
-        / 2
-        # result: 0,7%
-    )
-    # 2
-    p_renew_pv_facade.energy = (
-        p_renew_pv.energy
-        * p_renew_pv_facade.pct_energy
-        # result: 242.855 MWh
-    )
-    # 7
+    p_renew_pv_facade.pct_energy = fact("Fact_E_P_pv_rest_pct_of_gep_pv_2017") / 2
+    p_renew_pv_facade.energy = p_renew_pv.energy * p_renew_pv_facade.pct_energy
     p_renew_pv_facade.cost_mro_per_MWh = (
         ass("Ass_E_S_local_pv_facade_ratio_invest_to_power")
         * ass("Ass_E_P_local_pv_roof_mro_per_year")
@@ -740,19 +697,11 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
         * fact("Fact_E_P_ratio_gross_electricity_prod_to_fec_electricity_2018")
         / Million
     )
-    # Zeile PV Freifläche
 
     # 1
-    p_renew_pv_park.pct_energy = (
-        fact("Fact_E_P_pv_park_pct_of_gep_pv_2017")
-        # result: 25,5%
-    )
+    p_renew_pv_park.pct_energy = fact("Fact_E_P_pv_park_pct_of_gep_pv_2017")
     # 2
-    p_renew_pv_park.energy = (
-        p_renew_pv.energy
-        * p_renew_pv_park.pct_energy
-        # result: 9.527.391 MWh
-    )
+    p_renew_pv_park.energy = p_renew_pv.energy * p_renew_pv_park.pct_energy
     # 7
     p_renew_pv_park.cost_mro_per_MWh = (
         ass("Ass_E_S_local_pv_park_ratio_invest_to_power_2020")
