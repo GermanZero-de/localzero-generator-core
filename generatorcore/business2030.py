@@ -263,8 +263,9 @@ def calc(
     )
     s_solarth.power_to_be_installed_pct = entry("In_H_solartherm_to_be_inst")
     s_solarth.energy = max(
-        b18.p_nonresi.area_m2
-        / (r18.p_buildings_total.area_m2 + b18.p_nonresi.area_m2)
+        div(
+            b18.p_nonresi.area_m2, r18.p_buildings_total.area_m2 + b18.p_nonresi.area_m2
+        )
         * s_solarth.energy_installable
         * s_solarth.power_to_be_installed_pct,
         b18.s_solarth.energy,
@@ -620,8 +621,9 @@ def calc(
     s_solarth.pct_of_wage = fact("Fact_B_P_plumbing_ratio_wage_to_main_revenue_2017")
 
     s_solarth.invest = (
-        b18.p_nonresi.area_m2
-        / (r18.p_buildings_total.area_m2 + b18.p_nonresi.area_m2)
+        div(
+            b18.p_nonresi.area_m2, r18.p_buildings_total.area_m2 + b18.p_nonresi.area_m2
+        )
         * s_solarth.area_ha_available
         * entry("In_H_solartherm_to_be_inst")
         * r30.s_solarth.invest_per_x
