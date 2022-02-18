@@ -221,11 +221,7 @@ def calc(
         * (entry("In_M_population_com_203X") / entry("In_M_population_com_2018"))
         * (1 + p_elec_elcon.demand_change)
     )
-    s_heatnet.energy = (
-        entry("In_R_heatnet_ratio_year_target")
-        * p_nonresi.fec_factor_averaged
-        * b18.p_nonresi.area_m2
-    )
+    
     p_vehicles.demand_change = ass("Ass_B_D_fec_vehicles_change")
     p_vehicles.energy = b18.p_vehicles.energy * (1 + p_vehicles.demand_change)
     p_vehicles.demand_ediesel = p_vehicles.energy
@@ -237,14 +233,6 @@ def calc(
     s_jetfuel.energy = 0
     s_diesel.energy = p_vehicles.demand_ediesel
     s_fueloil.energy = 0
-    s_biomass.energy = (
-        b18.s_biomass.number_of_buildings
-        * p_nonresi.fec_factor_averaged
-        * b18.p_nonresi.area_m2
-        / b18.p_nonresi.number_of_buildings
-    )
-
-    s_elec_heating.energy = 0
 
     s_solarth.area_ha_available = (
         (4 / 3)
@@ -281,10 +269,13 @@ def calc(
         * s_solarth.power_to_be_installed_pct,
         b18.s_solarth.energy,
     )
-    s_heatpump.energy = (
-        p_nonresi.demand_heat_rehab
-        - (s_biomass.energy + s_heatnet.energy + s_solarth.energy) * p_nonresi.pct_rehab
+
+    s_heatpump.energy = min(
+        p_nonresi.demand_heat_rehab-s_solarth.energy,
+        (b18.p_nonresi.energy-b18.s_biomass.energy-b18.s_heatnet.energy-b18.s_elec_heating.energy)
+        *div(fact("Fact_B_P_ratio_fec_to_area_2020"),b18.p_nonresi.factor_adapted_to_fec) - s_solarth.energy 
     )
+
     p_elec_heatpump.energy = s_heatpump.energy / fact(
         "Fact_R_S_heatpump_mean_annual_performance_factor_all"
     )
@@ -294,8 +285,26 @@ def calc(
     p_other.demand_electricity = (
         p_elec_elcon.demand_electricity + p_elec_heatpump.demand_electricity
     )
-    p.demand_electricity = p_other.demand_electricity
-    s_elec.energy = p.demand_electricity
+
+
+    if p_nonresi.energy-s_heatpump.energy-s_solarth.energy < b18.s_biomass.energy+b18.s_heatnet.energy+b18.s_elec_heating.energy:
+        s_biomass.energy = b18.s_biomass.energy * div(p_nonresi.energy-s_heatpump.energy-s_solarth.energy,b18.s_biomass.energy+b18.s_heatnet.energy+b18.s_elec_heating.energy)
+    else:
+        s_biomass.energy = b18.s_biomass.energy
+
+    if p_nonresi.energy-s_heatpump.energy-s_solarth.energy < b18.s_biomass.energy+b18.s_heatnet.energy+b18.s_elec_heating.energy:
+        s_heatnet.energy = b18.s_heatnet.energy * div(p_nonresi.energy-s_heatpump.energy-s_solarth.energy,b18.s_biomass.energy+b18.s_heatnet.energy+b18.s_elec_heating.energy)
+    else:
+        s_heatnet.energy = b18.s_heatnet.energy
+
+    if p_nonresi.energy-s_heatpump.energy-s_solarth.energy < b18.s_biomass.energy+b18.s_heatnet.energy+b18.s_elec_heating.energy:
+        s_elec_heating.energy = b18.s_elec_heating.energy * div(p_nonresi.energy-s_heatpump.energy-s_solarth.energy,b18.s_biomass.energy+b18.s_heatnet.energy+b18.s_elec_heating.energy)
+    else:
+        s_elec_heating.energy = b18.s_elec_heating.energy
+
+    p_nonresi.demand_electricity = s_elec_heating.energy
+    p.demand_electricity = p_other.demand_electricity + p_nonresi.demand_electricity
+    s_elec.energy = p.demand_electricity    
 
     s_emethan.energy = max(
         0,
@@ -303,7 +312,8 @@ def calc(
         - s_biomass.energy
         - s_heatnet.energy
         - s_heatpump.energy
-        - s_solarth.energy,
+        - s_solarth.energy
+        - s_elec_heating.energy,
     )
     p_other.energy = (
         p_elec_elcon.energy + p_elec_heatpump.energy + p_vehicles.energy
