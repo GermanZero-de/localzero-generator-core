@@ -225,13 +225,6 @@ def calc(inputs: Inputs, *, r18: residences2018.R18) -> B18:
         b18.p_nonresi.energy, b18.p_nonresi.area_m2
     )
 
-    b18.p_elec_elcon.demand_change = ass("Ass_R_D_fec_elec_elcon_change")
-
-    b18.p_vehicles.demand_change = ass("Ass_B_D_fec_vehicles_change")
-
-    b18.p_vehicles.demand_ediesel = b18.p_vehicles.energy * (
-        1 + b18.p_vehicles.demand_change
-    )
 
     # Primärenergiekosten
     b18.s_gas.cost_fuel_per_MWh = fact("Fact_R_S_gas_energy_cost_factor_2018")
@@ -326,14 +319,6 @@ def calc(inputs: Inputs, *, r18: residences2018.R18) -> B18:
     )
     b18.s.CO2e_total = b18.s.CO2e_cb
 
-    b18.p_elec_elcon.demand_electricity = (
-        b18.p_elec_elcon.energy
-        * div(entry("In_M_population_com_203X"), entry("In_M_population_com_2018"))
-        * (1 + b18.p_elec_elcon.demand_change)
-    )
-
-    b18.CO2e_cb = b18.s.CO2e_cb
-    b18.CO2e_total = b18.s.CO2e_total
     b18.s_gas.CO2e_total = b18.s_gas.CO2e_cb
     b18.s_lpg.CO2e_total = b18.s_lpg.CO2e_cb
     b18.s_petrol.CO2e_total = b18.s_petrol.CO2e_cb
@@ -344,8 +329,8 @@ def calc(inputs: Inputs, *, r18: residences2018.R18) -> B18:
     b18.s_coal.CO2e_total = b18.s_coal.CO2e_cb
     b18.s_biomass.number_of_buildings = (
         b18.s_biomass.energy
-        * b18.p_nonresi.number_of_buildings
-        / (b18.p_nonresi.factor_adapted_to_fec * b18.p_nonresi.area_m2)
+        *div( b18.p_nonresi.number_of_buildings,
+        (b18.p_nonresi.factor_adapted_to_fec * b18.p_nonresi.area_m2))
     )
     b18.rp_p.CO2e_cb = (
         r18.s.CO2e_cb
