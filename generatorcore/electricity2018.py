@@ -1028,41 +1028,24 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
 
     # Zeile Erneuerbare
 
-    # 1
     p_renew.energy = (
         p_renew_pv.energy
         + p_renew_wind.energy
         + p_renew_biomass.energy
         + p_renew_geoth.energy
         + p_renew_hydro.energy
-        # result: 181.335.186 MWh
     )
-    # 2
-    p_renew.pct_energy = (
-        p_renew.energy
-        / p.energy
-        # result: 35,4%
-    )
-    # 3
-    p_renew.cost_fuel = (
-        p_renew_biomass.cost_fuel
-        # result: 3.887,81 Mio €/d_a
-    )
-    # 4
+    p_renew.pct_energy = div(p_renew.energy, p.energy)
+    p_renew.cost_fuel = p_renew_biomass.cost_fuel
     p_renew.cost_mro = (
         p_renew_pv.cost_mro
         + p_renew_wind.cost_mro
         + p_renew_biomass.cost_mro
         + p_renew_geoth.cost_mro
         + p_renew_hydro.cost_mro
-        # result: 4.114,02 Mio €/d_a
     )
 
-    # 5
-    p_renew.CO2e_cb = (
-        p_renew_biomass.CO2e_cb
-        # result: 3.517.441 d_t/d_a
-    )
+    p_renew.CO2e_cb = p_renew_biomass.CO2e_cb
 
     p_renew_pv_agri = p_renew_pv_agri
     p_renew_pv_park = p_renew_pv_park

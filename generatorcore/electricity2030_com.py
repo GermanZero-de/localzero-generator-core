@@ -1112,8 +1112,9 @@ def calc(
         + p_renew_geoth.invest_outside
         + p_renew_reverse.invest_outside
     )
-    p_local_pv_roof.pct_x = p_local_pv_roof.energy / (
-        d_r.energy + d_b.energy + d_i.energy + d_t.energy + d_a.energy
+    p_local_pv_roof.pct_x = div(
+        p_local_pv_roof.energy,
+        d_r.energy + d_b.energy + d_i.energy + d_t.energy + d_a.energy,
     )
     p_local_pv_roof.cost_mro = (
         p_local_pv_roof.energy * p_local_pv_roof.cost_mro_per_MWh / Million
@@ -1122,10 +1123,10 @@ def calc(
         p_local_pv_roof.energy - e18.p_local_pv_roof.energy
     )
     p_local_pv_roof.invest_pa = p_local_pv_roof.invest / Kalkulationszeitraum
-    p_local_pv_roof.invest_com = (
+    p_local_pv_roof.invest_com = div(
         p_local_pv_roof.invest
-        * (r18.p_buildings_area_m2_com.area_m2 + b18.p_nonresi_com.area_m2)
-        / (b18.p_nonresi.area_m2 + r18.p_buildings_total.area_m2)
+        * (r18.p_buildings_area_m2_com.area_m2 + b18.p_nonresi_com.area_m2),
+        b18.p_nonresi.area_m2 + r18.p_buildings_total.area_m2,
     )
     p_local_pv_facade.cost_mro = (
         p_local_pv_facade.energy * p_local_pv_facade.cost_mro_per_MWh / Million
@@ -1134,10 +1135,10 @@ def calc(
         p_local_pv_facade.energy - e18.p_local_pv_facade.energy
     )
     p_local_pv_facade.invest_pa = p_local_pv_facade.invest / Kalkulationszeitraum
-    p_local_pv_facade.invest_com = (
+    p_local_pv_facade.invest_com = div(
         p_local_pv_facade.invest
-        * (r18.p_buildings_area_m2_com.area_m2 + b18.p_nonresi_com.area_m2)
-        / (b18.p_nonresi.area_m2 + r18.p_buildings_total.area_m2)
+        * (r18.p_buildings_area_m2_com.area_m2 + b18.p_nonresi_com.area_m2),
+        b18.p_nonresi.area_m2 + r18.p_buildings_total.area_m2,
     )
     p_local_pv_park.cost_mro = (
         p_local_pv_park.energy * p_local_pv_park.cost_mro_per_MWh / Million

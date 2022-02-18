@@ -665,18 +665,16 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
         + p_fermen_swine.amount
         + p_fermen_oanimal.amount
     )
-    p_soil_grazing.CO2e_pb_per_t = (
+    p_soil_grazing.CO2e_pb_per_t = div(
         a18.p_soil_grazing.CO2e_pb_per_t
         * (
             p_fermen_dairycow.amount
             + p_fermen_nondairy.amount
             + p_fermen_oanimal.amount
-        )
-        / (
-            a18.p_fermen_dairycow.amount
-            + a18.p_fermen_nondairy.amount
-            + a18.p_fermen_oanimal.amount
-        )
+        ),
+        a18.p_fermen_dairycow.amount
+        + a18.p_fermen_nondairy.amount
+        + a18.p_fermen_oanimal.amount,
     )
     p_soil_fertilizer.CO2e_pb = (
         p_soil_fertilizer.area_ha * p_soil_fertilizer.CO2e_pb_per_t
@@ -711,15 +709,13 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
     p_operation_elec_elcon.change_energy_MWh = (
         p_operation_elec_elcon.energy - a18.p_operation_elec_elcon.energy
     )
-    p_operation_vehicles.demand_epetrol = (
-        p_operation_vehicles.energy
-        * a18.s_petrol.energy
-        / (a18.s_petrol.energy + a18.s_diesel.energy)
+    p_operation_vehicles.demand_epetrol = div(
+        p_operation_vehicles.energy * a18.s_petrol.energy,
+        a18.s_petrol.energy + a18.s_diesel.energy,
     )
-    p_operation_vehicles.demand_ediesel = (
-        p_operation_vehicles.energy
-        * a18.s_diesel.energy
-        / (a18.s_petrol.energy + a18.s_diesel.energy)
+    p_operation_vehicles.demand_ediesel = div(
+        p_operation_vehicles.energy * a18.s_diesel.energy,
+        a18.s_petrol.energy + a18.s_diesel.energy,
     )
     p_operation_vehicles.change_energy_MWh = (
         p_operation_vehicles.energy - a18.p_operation_vehicles.energy
