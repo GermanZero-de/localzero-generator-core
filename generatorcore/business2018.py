@@ -225,7 +225,6 @@ def calc(inputs: Inputs, *, r18: residences2018.R18) -> B18:
         b18.p_nonresi.energy, b18.p_nonresi.area_m2
     )
 
-
     # Primärenergiekosten
     b18.s_gas.cost_fuel_per_MWh = fact("Fact_R_S_gas_energy_cost_factor_2018")
     b18.s_lpg.cost_fuel_per_MWh = fact("Fact_R_S_lpg_energy_cost_factor_2018")
@@ -327,10 +326,9 @@ def calc(inputs: Inputs, *, r18: residences2018.R18) -> B18:
     b18.s_fueloil.CO2e_total = b18.s_fueloil.CO2e_cb
     b18.s_biomass.CO2e_total = b18.s_biomass.CO2e_cb
     b18.s_coal.CO2e_total = b18.s_coal.CO2e_cb
-    b18.s_biomass.number_of_buildings = (
-        b18.s_biomass.energy
-        *div( b18.p_nonresi.number_of_buildings,
-        (b18.p_nonresi.factor_adapted_to_fec * b18.p_nonresi.area_m2))
+    b18.s_biomass.number_of_buildings = b18.s_biomass.energy * div(
+        b18.p_nonresi.number_of_buildings,
+        (b18.p_nonresi.factor_adapted_to_fec * b18.p_nonresi.area_m2),
     )
     b18.rp_p.CO2e_cb = (
         r18.s.CO2e_cb
