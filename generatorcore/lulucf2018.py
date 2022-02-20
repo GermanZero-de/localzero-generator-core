@@ -5,15 +5,15 @@ from .inputs import Inputs
 
 @dataclass
 class LColVars2018:
-    area_ha: float = None
-    CO2e_pb_per_t: float = None
-    pct_x: float = None
-    CO2e_pb_per_MWh: float = None
-    CO2e_cb_per_t: float = None
-    CO2e_cb: float = None
-    CO2e_pb: float = None
-    CO2e_total: float = None
-    cost_certificate: float = None
+    area_ha: float = None  # type: ignore
+    CO2e_pb_per_t: float = None  # type: ignore
+    pct_x: float = None  # type: ignore
+    CO2e_pb_per_MWh: float = None  # type: ignore
+    CO2e_cb_per_t: float = None  # type: ignore
+    CO2e_cb: float = None  # type: ignore
+    CO2e_pb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    cost_certificate: float = None  # type: ignore
 
 
 @dataclass

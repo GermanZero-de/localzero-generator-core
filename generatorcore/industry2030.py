@@ -7,44 +7,44 @@ from .utils import div
 
 @dataclass
 class IColVars2030:
-    demand_electricity: float = None
-    demand_heatnet: float = None
-    demand_gas: float = None
-    demand_biomass: float = None
-    demand_emethan: float = None
-    demand_hydrogen: float = None
-    demand_change: float = None
-    demand_change_pa: float = None
-    energy: float = None
-    prod_volume: float = None
-    CO2e_pb: float = None
-    CO2e_pb_per_MWh: float = None
-    CO2e_pb_per_t: float = None
-    CO2e_cb: float = None
-    CO2e_cb_per_MWh: float = None
-    CO2e_cb_per_t: float = None
-    CO2e_total: float = None
-    change_energy_MWh: float = None
-    change_energy_pct: float = None
-    change_CO2e_t: float = None
-    change_CO2e_pct: float = None
-    CO2e_total_2021_estimated: float = None
-    cost_climate_saved: float = None
-    action: float = None
-    invest_pa: float = None
-    invest_pa_com: float = None
-    invest_pa_outside: float = None
-    invest: float = None
-    invest_com: float = None
-    invest_outside: float = None
-    pct_of_wage: float = None
-    cost_wage: float = None
-    ratio_wage_to_emplo: float = None
-    demand_emplo: float = None
-    demand_emplo_new: float = None
-    demand_emplo_com: float = None
-    emplo_existing: float = None
-    invest_per_x: float = None
+    demand_electricity: float = None  # type: ignore
+    demand_heatnet: float = None  # type: ignore
+    demand_gas: float = None  # type: ignore
+    demand_biomass: float = None  # type: ignore
+    demand_emethan: float = None  # type: ignore
+    demand_hydrogen: float = None  # type: ignore
+    demand_change: float = None  # type: ignore
+    demand_change_pa: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    prod_volume: float = None  # type: ignore
+    CO2e_pb: float = None  # type: ignore
+    CO2e_pb_per_MWh: float = None  # type: ignore
+    CO2e_pb_per_t: float = None  # type: ignore
+    CO2e_cb: float = None  # type: ignore
+    CO2e_cb_per_MWh: float = None  # type: ignore
+    CO2e_cb_per_t: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    change_energy_MWh: float = None  # type: ignore
+    change_energy_pct: float = None  # type: ignore
+    change_CO2e_t: float = None  # type: ignore
+    change_CO2e_pct: float = None  # type: ignore
+    CO2e_total_2021_estimated: float = None  # type: ignore
+    cost_climate_saved: float = None  # type: ignore
+    action: float = None  # type: ignore
+    invest_pa: float = None  # type: ignore
+    invest_pa_com: float = None  # type: ignore
+    invest_pa_outside: float = None  # type: ignore
+    invest: float = None  # type: ignore
+    invest_com: float = None  # type: ignore
+    invest_outside: float = None  # type: ignore
+    pct_of_wage: float = None  # type: ignore
+    cost_wage: float = None  # type: ignore
+    ratio_wage_to_emplo: float = None  # type: ignore
+    demand_emplo: float = None  # type: ignore
+    demand_emplo_new: float = None  # type: ignore
+    demand_emplo_com: float = None  # type: ignore
+    emplo_existing: float = None  # type: ignore
+    invest_per_x: float = None  # type: ignore
 
 
 @dataclass
@@ -203,7 +203,6 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
         p_chem_ammonia.cost_wage, p_chem_ammonia.ratio_wage_to_emplo
     )
 
-    p_chem_ammonia.action = "Ammoniakproduktion aus elektrolytisch erzeugtem H2"
     # p chem other
     p_chem_other = i30.p_chem_other
     p_chem_other.prod_volume = i18.p_chem_other.prod_volume
@@ -382,7 +381,6 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
     p_metal_steel_primary.demand_emplo = div(
         p_metal_steel_primary.cost_wage, p_metal_steel_primary.ratio_wage_to_emplo
     )
-    p_metal_steel_primary.action = "Umstellung auf Wasserstoff-DRI"
 
     # p_metal_steel_secondary
     p_metal_steel_secondary = i30.p_metal_steel_secondary
@@ -465,9 +463,6 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
     )
     p_metal_steel_secondary.demand_emplo = div(
         p_metal_steel_secondary.cost_wage, p_metal_steel_secondary.ratio_wage_to_emplo
-    )
-    p_metal_steel_secondary.action = (
-        "Umstellung (der Weiterverarbeitung) auf Elektroöfen"
     )
 
     # metal steel
@@ -576,8 +571,6 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
         p_metal_nonfe.cost_wage, p_metal_nonfe.ratio_wage_to_emplo
     )
 
-    p_metal_nonfe.action = "Umstellung auf strombasierte Sekundärproduktion"
-
     # metal summary
     p_metal = i30.p_metal
     p_metal.energy = p_metal_steel.energy + p_metal_nonfe.energy
@@ -658,8 +651,6 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
         p_other_paper.cost_wage, p_other_paper.ratio_wage_to_emplo
     )
 
-    p_other_paper.action = "Umstellung auf strombasierte Produktion"
-
     # p_other_food
     p_other_food = i30.p_other_food
     p_other_food.demand_change = ass("Ass_I_P_other_food_prodvol_change")
@@ -711,8 +702,6 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
     p_other_food.demand_emplo = div(
         p_other_food.cost_wage, p_other_food.ratio_wage_to_emplo
     )
-
-    p_other_food.action = "Umstellung auf strombasierte Produktion"
 
     # p_other_futther_2030
     p_other_further = i30.p_other_further
@@ -775,8 +764,6 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
         p_other_further.cost_wage, p_other_further.ratio_wage_to_emplo
     )
 
-    p_other_further.action = "Umstellung auf strombasierte Produktion"
-
     # has to be calculatet after p_other_further_2030
     # p_other_2efgh
     p_other_2efgh = i30.p_other_2efgh
@@ -820,8 +807,6 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
     p_other_2efgh.demand_emplo = div(
         p_other_2efgh.cost_wage, p_other_2efgh.ratio_wage_to_emplo
     )
-
-    p_other_2efgh.action = "Umstellung auf natürliche Kühlgase"
 
     # sum other industries
     p_other = i30.p_other

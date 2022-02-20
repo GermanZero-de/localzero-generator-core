@@ -5,17 +5,17 @@ from .utils import div
 
 @dataclass
 class IColVars:
-    energy: float = None
-    pct_energy: float = None
-    prod_volume: float = None
-    energy_use_factor: float = None
-    CO2e_pb: float = None
-    CO2e_pb_per_MWh: float = None
-    CO2e_pb_per_t: float = None
-    CO2e_cb: float = None
-    CO2e_cb_per_MWh: float = None
-    CO2e_cb_per_t: float = None
-    CO2e_total: float = None
+    energy: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
+    prod_volume: float = None  # type: ignore
+    energy_use_factor: float = None  # type: ignore
+    CO2e_pb: float = None  # type: ignore
+    CO2e_pb_per_MWh: float = None  # type: ignore
+    CO2e_pb_per_t: float = None  # type: ignore
+    CO2e_cb: float = None  # type: ignore
+    CO2e_cb_per_MWh: float = None  # type: ignore
+    CO2e_cb_per_t: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
 
 
 @dataclass

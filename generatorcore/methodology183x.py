@@ -25,39 +25,39 @@ from . import (
 
 @dataclass
 class zColVars:
-    energy_18: float = None
-    pct_energy_18: float = None
-    CO2e_pb_18: float = None
-    CO2e_cb_18: float = None
-    CO2e_total_18: float = None
-    pct_CO2e_total_18: float = None
+    energy_18: float = None  # type: ignore
+    pct_energy_18: float = None  # type: ignore
+    CO2e_pb_18: float = None  # type: ignore
+    CO2e_cb_18: float = None  # type: ignore
+    CO2e_total_18: float = None  # type: ignore
+    pct_CO2e_total_18: float = None  # type: ignore
 
-    energy_30: float = None
-    pct_energy_30: float = None
-    CO2e_pb_30: float = None
-    CO2e_cb_30: float = None
-    CO2e_cb_per_MWh: float = None
-    CO2e_total_30: float = None
-    pct_CO2e_total_30: float = None
-    change_energy_MWh: float = None
-    change_energy_pct: float = None
-    change_CO2e_t: float = None
-    change_CO2e_pct: float = None
-    CO2e_total_2021_estimated: float = None
-    cost_climate_saved: float = None
-    invest_pa: float = None
-    invest_pa_com: float = None
-    invest_pa_outside: float = None
-    invest: float = None
-    invest_com: float = None
-    invest_outside: float = None
-    cost_wage: float = None
-    demand_emplo: float = None
-    demand_emplo_new: float = None
-    demand_emplo_com: float = None
-    invest_pct: float = None
-    cost_climate_saved_pct: float = None
-    demand_emplo_new_pct: float = None
+    energy_30: float = None  # type: ignore
+    pct_energy_30: float = None  # type: ignore
+    CO2e_pb_30: float = None  # type: ignore
+    CO2e_cb_30: float = None  # type: ignore
+    CO2e_cb_per_MWh: float = None  # type: ignore
+    CO2e_total_30: float = None  # type: ignore
+    pct_CO2e_total_30: float = None  # type: ignore
+    change_energy_MWh: float = None  # type: ignore
+    change_energy_pct: float = None  # type: ignore
+    change_CO2e_t: float = None  # type: ignore
+    change_CO2e_pct: float = None  # type: ignore
+    CO2e_total_2021_estimated: float = None  # type: ignore
+    cost_climate_saved: float = None  # type: ignore
+    invest_pa: float = None  # type: ignore
+    invest_pa_com: float = None  # type: ignore
+    invest_pa_outside: float = None  # type: ignore
+    invest: float = None  # type: ignore
+    invest_com: float = None  # type: ignore
+    invest_outside: float = None  # type: ignore
+    cost_wage: float = None  # type: ignore
+    demand_emplo: float = None  # type: ignore
+    demand_emplo_new: float = None  # type: ignore
+    demand_emplo_com: float = None  # type: ignore
+    invest_pct: float = None  # type: ignore
+    cost_climate_saved_pct: float = None  # type: ignore
+    demand_emplo_new_pct: float = None  # type: ignore
 
 
 # definition of variable names for sector M(ethodology) - there are no rows or columns in the excel!

@@ -31,22 +31,22 @@ from .inputs import Inputs
 @dataclass
 class TColVars:
 
-    energy: float = None
-    mileage: float = None
-    transport_capacity_pkm: float = None
-    transport_capacity_tkm: float = None
-    demand_petrol: float = None
-    demand_jetfuel: float = None
-    demand_diesel: float = None
-    demand_fueloil: float = None
-    demand_lpg: float = None
-    demand_gas: float = None
-    demand_biogas: float = None
-    demand_bioethanol: float = None
-    demand_biodiesel: float = None
-    demand_electricity: float = None
-    CO2e_cb: float = None
-    CO2e_total: float = None
+    energy: float = None  # type: ignore
+    mileage: float = None  # type: ignore
+    transport_capacity_pkm: float = None  # type: ignore
+    transport_capacity_tkm: float = None  # type: ignore
+    demand_petrol: float = None  # type: ignore
+    demand_jetfuel: float = None  # type: ignore
+    demand_diesel: float = None  # type: ignore
+    demand_fueloil: float = None  # type: ignore
+    demand_lpg: float = None  # type: ignore
+    demand_gas: float = None  # type: ignore
+    demand_biogas: float = None  # type: ignore
+    demand_bioethanol: float = None  # type: ignore
+    demand_biodiesel: float = None  # type: ignore
+    demand_electricity: float = None  # type: ignore
+    CO2e_cb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
 
     def _get(self, i):
 

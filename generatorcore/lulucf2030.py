@@ -8,36 +8,36 @@ from . import (
 
 @dataclass
 class LColVars2030:
-    area_ha: float = None
-    CO2e_pb_per_t: float = None
-    pct_x: float = None
-    CO2e_pb_per_MWh: float = None
-    CO2e_cb: float = None
-    CO2e_pb: float = None
-    CO2e_total: float = None
-    invest: float = None
-    change_CO2e_t: float = None
-    change_CO2e_pct: float = None
-    CO2e_total_2021_estimated: float = None
-    cost_climate_saved: float = None
-    invest_pa: float = None
-    cost_wage: float = None
-    demand_emplo: float = None
-    demand_emplo_new: float = None
-    demand_change: float = None
-    area_ha_change: float = None
-    CO2e_cb_per_t: float = None
-    action: float = None
-    pct_of_wage: float = None
-    ratio_wage_to_emplo: float = None
-    emplo_existing: float = None
-    invest_per_x: float = None
-    area_ha_available_pct_of_action: float = None
-    area_ha_available: float = None
-    change_within_category: float = None
-    change_wet_org_low: float = None
-    change_wet_org_high: float = None
-    prod_volume: float = None
+    area_ha: float = None  # type: ignore
+    CO2e_pb_per_t: float = None  # type: ignore
+    pct_x: float = None  # type: ignore
+    CO2e_pb_per_MWh: float = None  # type: ignore
+    CO2e_cb: float = None  # type: ignore
+    CO2e_pb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    invest: float = None  # type: ignore
+    change_CO2e_t: float = None  # type: ignore
+    change_CO2e_pct: float = None  # type: ignore
+    CO2e_total_2021_estimated: float = None  # type: ignore
+    cost_climate_saved: float = None  # type: ignore
+    invest_pa: float = None  # type: ignore
+    cost_wage: float = None  # type: ignore
+    demand_emplo: float = None  # type: ignore
+    demand_emplo_new: float = None  # type: ignore
+    demand_change: float = None  # type: ignore
+    area_ha_change: float = None  # type: ignore
+    CO2e_cb_per_t: float = None  # type: ignore
+    action: float = None  # type: ignore
+    pct_of_wage: float = None  # type: ignore
+    ratio_wage_to_emplo: float = None  # type: ignore
+    emplo_existing: float = None  # type: ignore
+    invest_per_x: float = None  # type: ignore
+    area_ha_available_pct_of_action: float = None  # type: ignore
+    area_ha_available: float = None  # type: ignore
+    change_within_category: float = None  # type: ignore
+    change_wet_org_low: float = None  # type: ignore
+    change_wet_org_high: float = None  # type: ignore
+    prod_volume: float = None  # type: ignore
 
 
 @dataclass
