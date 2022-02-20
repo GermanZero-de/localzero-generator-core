@@ -470,11 +470,10 @@ def calc(
     f30.p_emethan.demand_emplo = div(
         f30.p_emethan.cost_wage, f30.p_emethan.ratio_wage_to_emplo
     )
-    f30.p_hydrogen.demand_emplo = (
-        div(f30.p_hydrogen.cost_wage, f30.p_hydrogen.ratio_wage_to_emplo)
-        if inputs.str_entry("In_M_AGS_com") == "DG000000"
-        else 0
+    f30.p_hydrogen.demand_emplo = div(
+        f30.p_hydrogen.cost_wage, f30.p_hydrogen.ratio_wage_to_emplo
     )
+
     f30.p.invest = (
         f30.p_petrol.invest
         + f30.p_jetfuel.invest
@@ -526,10 +525,8 @@ def calc(
         + f30.p_hydrogen.cost_wage
         + f30.p_hydrogen_reconv.cost_wage
     )  # SUM(p_petrol.cost_wage:p_hydrogen_reconv.cost_wage)
-    f30.p_hydrogen_reconv.demand_emplo = (
-        div(f30.p_hydrogen_reconv.cost_wage, f30.p_hydrogen_reconv.ratio_wage_to_emplo)
-        if inputs.str_entry("In_M_AGS_com") == "DG000000"
-        else 0
+    f30.p_hydrogen_reconv.demand_emplo = div(
+        f30.p_hydrogen_reconv.cost_wage, f30.p_hydrogen_reconv.ratio_wage_to_emplo
     )
     f30.f.invest_outside = f30.p.invest_outside
     f30.f.invest_pa_outside = f30.p.invest_pa_outside
