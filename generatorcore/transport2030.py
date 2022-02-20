@@ -29,7 +29,6 @@ class TColVars2030:
     CO2e_total_2021_estimated: float = None
     cost_climate_saved: float = None
     change_km: float = None
-    action: str = None  # Todo: Prüfen, wie gehen wir mit den Maßnahmen in der Spalte action in Python um (?)
     invest_pa: float = None
     invest_pa_com: float = None
     invest_pa_outside: float = None

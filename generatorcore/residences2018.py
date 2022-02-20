@@ -6,27 +6,27 @@ from .utils import div
 # Definition der relevanten Spaltennamen für den Sektor R18
 @dataclass
 class RColVars:
-    energy: float = None
-    number_of_buildings: float = None
-    relative_building_ratio: float = None
-    area_m2: float = None
-    area_m2_relative_heat_ratio: float = None
-    relative_building_ratio: float = None
-    fec_after_BMWi: float = None
-    fec_factor_BMWi: float = None
-    factor_adapted_to_fec: float = None
-    relative_heat_ratio_buildings_until_2004: float = None
-    relative_heat_ratio_BMWi: float = None
-    demand_change: float = None
-    demand_change_pa: float = None
-    demand_electricity: float = None
-    cost_fuel: float = None
-    cost_fuel_per_MWh: float = None
-    CO2e_cb: float = None
-    CO2e_cb_per_MWh: float = None
-    CO2e_total: float = None
-    pct_x: float = None
-    pct_energy: float = None
+    energy: float = None  # type: ignore
+    number_of_buildings: float = None  # type: ignore
+    relative_building_ratio: float = None  # type: ignore
+    area_m2: float = None  # type: ignore
+    area_m2_relative_heat_ratio: float = None  # type: ignore
+    relative_building_ratio: float = None  # type: ignore
+    fec_after_BMWi: float = None  # type: ignore
+    fec_factor_BMWi: float = None  # type: ignore
+    factor_adapted_to_fec: float = None  # type: ignore
+    relative_heat_ratio_buildings_until_2004: float = None  # type: ignore
+    relative_heat_ratio_BMWi: float = None  # type: ignore
+    demand_change: float = None  # type: ignore
+    demand_change_pa: float = None  # type: ignore
+    demand_electricity: float = None  # type: ignore
+    cost_fuel: float = None  # type: ignore
+    cost_fuel_per_MWh: float = None  # type: ignore
+    CO2e_cb: float = None  # type: ignore
+    CO2e_cb_per_MWh: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    pct_x: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
 
 
 @dataclass

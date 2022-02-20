@@ -8,18 +8,18 @@ from . import residences2018
 
 @dataclass
 class BColVars:
-    energy: float = None
-    pct_x: float = None
-    pct_energy: float = None
-    area_m2: float = None
-    factor_adapted_to_fec: float = None
-    cost_fuel: float = None
-    cost_fuel_per_MWh: float = None
-    CO2e_cb: float = None
-    CO2e_cb_per_MWh: float = None
-    CO2e_pb: float = None
-    CO2e_total: float = None
-    number_of_buildings: float = None
+    energy: float = None  # type: ignore
+    pct_x: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
+    area_m2: float = None  # type: ignore
+    factor_adapted_to_fec: float = None  # type: ignore
+    cost_fuel: float = None  # type: ignore
+    cost_fuel_per_MWh: float = None  # type: ignore
+    CO2e_cb: float = None  # type: ignore
+    CO2e_cb_per_MWh: float = None  # type: ignore
+    CO2e_pb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    number_of_buildings: float = None  # type: ignore
 
 
 @dataclass

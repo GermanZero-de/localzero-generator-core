@@ -14,34 +14,33 @@ from . import (
 
 @dataclass
 class FColVars2030:
-    demand_electricity: float = None
-    demand_hydrogen: float = None
-    energy: float = None
-    CO2e_cb: float = None
-    CO2e_pb: float = None
-    CO2e_pb_per_MWh: float = None
-    CO2e_total: float = None
-    change_energy_MWh: float = None
-    change_energy_pct: float = None
-    change_CO2e_t: float = None
-    CO2e_total_2021_estimated: float = None
-    cost_climate_saved: float = None
-    invest_pa: float = None
-    invest_per_x: float = None
-    invest: float = None
-    pct_of_wage: float = None
-    cost_wage: float = None
-    ratio_wage_to_emplo: float = None
-    demand_emplo: float = None
-    power_to_be_installed: float = None
-    full_load_hour: float = None
-    change_CO2e_pct: float = None
-    action: float = None
-    emplo_existing: float = None
-    demand_emplo_new: float = None
-    invest_pa_outside: float = None
-    invest_outside: float = None
-    cost_mro_pa: float = None
+    demand_electricity: float = None  # type: ignore
+    demand_hydrogen: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    CO2e_cb: float = None  # type: ignore
+    CO2e_pb: float = None  # type: ignore
+    CO2e_pb_per_MWh: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    change_energy_MWh: float = None  # type: ignore
+    change_energy_pct: float = None  # type: ignore
+    change_CO2e_t: float = None  # type: ignore
+    CO2e_total_2021_estimated: float = None  # type: ignore
+    cost_climate_saved: float = None  # type: ignore
+    invest_pa: float = None  # type: ignore
+    invest_per_x: float = None  # type: ignore
+    invest: float = None  # type: ignore
+    pct_of_wage: float = None  # type: ignore
+    cost_wage: float = None  # type: ignore
+    ratio_wage_to_emplo: float = None  # type: ignore
+    demand_emplo: float = None  # type: ignore
+    power_to_be_installed: float = None  # type: ignore
+    full_load_hour: float = None  # type: ignore
+    change_CO2e_pct: float = None  # type: ignore
+    emplo_existing: float = None  # type: ignore
+    demand_emplo_new: float = None  # type: ignore
+    invest_pa_outside: float = None  # type: ignore
+    invest_outside: float = None  # type: ignore
+    cost_mro_pa: float = None  # type: ignore
 
 
 @dataclass

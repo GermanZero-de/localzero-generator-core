@@ -7,12 +7,11 @@ from .inputs import Inputs
 #  Definition der relevanten Spaltennamen für den Sektor F (18)
 @dataclass
 class FColVars:
-
-    energy: float = None
-    CO2e_cb: float = None
-    CO2e_pb: float = None
-    CO2e_pb_per_MWh: float = None
-    CO2e_total: float = None
+    energy: float = None  # type: ignore
+    CO2e_cb: float = None  # type: ignore
+    CO2e_pb: float = None  # type: ignore
+    CO2e_pb_per_MWh: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
 
 
 @dataclass

@@ -8,22 +8,22 @@ from . import transport2018
 
 @dataclass
 class EColVars:
-    energy: float = field(default=None)
-    cost_fuel_per_MWh: float = None
-    cost_fuel: float = None
-    pct_energy: float = None
-    mro_per_MWh: float = None
-    cost_mro: float = None
-    CO2e_cb: float = None
-    CO2e_cb_per_MWh: float = None
-    CO2e_pb: float = None
-    CO2e_total: float = None
-    cost_certificate_per_MWh: float = None
-    cost_certificate: float = None
-    cost_mro_per_MWh: float = None
-    demand_electricity: float = None
-    area_ha_available: float = None
-    factor_adapted_to_fec: float = None
+    energy: float = None  # type: ignore
+    cost_fuel_per_MWh: float = None  # type: ignore
+    cost_fuel: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
+    mro_per_MWh: float = None  # type: ignore
+    cost_mro: float = None  # type: ignore
+    CO2e_cb: float = None  # type: ignore
+    CO2e_cb_per_MWh: float = None  # type: ignore
+    CO2e_pb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    cost_certificate_per_MWh: float = None  # type: ignore
+    cost_certificate: float = None  # type: ignore
+    cost_mro_per_MWh: float = None  # type: ignore
+    demand_electricity: float = None  # type: ignore
+    area_ha_available: float = None  # type: ignore
+    factor_adapted_to_fec: float = None  # type: ignore
 
 
 # Definition der Zeilennamen für den Sektor E
