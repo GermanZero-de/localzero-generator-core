@@ -2047,11 +2047,11 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> T30:
 
     s.energy = (
         s_petrol.energy
-        +s_jetfuel.energy
-        +s_diesel.energy
-        +s_elec.energy
-        +s_hydrogen.energy
-        +s_emethan.energy
+        + s_jetfuel.energy
+        + s_diesel.energy
+        + s_elec.energy
+        + s_hydrogen.energy
+        + s_emethan.energy
     )
 
     g_planning.demand_emplo_com = g_planning.demand_emplo_new
