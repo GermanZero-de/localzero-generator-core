@@ -27,7 +27,6 @@ class LColVars2030:
     demand_change: float = None  # type: ignore
     area_ha_change: float = None  # type: ignore
     CO2e_cb_per_t: float = None  # type: ignore
-    action: float = None  # type: ignore
     pct_of_wage: float = None  # type: ignore
     ratio_wage_to_emplo: float = None  # type: ignore
     emplo_existing: float = None  # type: ignore

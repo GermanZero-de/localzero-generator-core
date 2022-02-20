@@ -36,7 +36,6 @@ class HColVars2030:
     CO2e_cb_per_MWh: float = None  # type: ignore
     area_ha_available: float = None  # type: ignore
     full_load_hour: float = None  # type: ignore
-    action: float = None  # type: ignore
     emplo_existing: float = None  # type: ignore
 
 

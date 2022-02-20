@@ -64,7 +64,6 @@ class RColVars2030:
     full_load_hour: float = None  # type: ignore
     emplo_existing: float = None  # type: ignore
     fec_factor_averaged: float = None  # type: ignore
-    action: float = None  # type: ignore
 
 
 @dataclass
@@ -973,9 +972,6 @@ def calc(inputs: Inputs, *, r18: residences2018.R18, b18: business2018.B18) -> R
     s_heatpump.change_cost_energy = s_heatpump.cost_fuel - r18.s_heatpump.cost_fuel
     s_gas.change_cost_energy = 0 - r18.s_gas.cost_fuel  # no more gas in target year
     s_emethan.change_cost_energy = s_emethan.cost_fuel - 0  # no emethan in 2018
-
-    # s_solarth.action Ausbau Solarthermie
-    # s_heatpump.action Ausbau Wärmepumpe
 
     p_buildings_until_1919.invest_per_x = fact(
         "Fact_R_P_energetical_renovation_cost_detached_house_until_1949"

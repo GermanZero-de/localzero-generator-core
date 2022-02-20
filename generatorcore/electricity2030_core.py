@@ -3,7 +3,6 @@ from dataclasses import dataclass, field, asdict
 # Definition der relevanten Spaltennamen für den Sektor E
 @dataclass
 class EColVars2030:
-    action: float = None  # type: ignore
     energy: float = None  # type: ignore
     pet_sites: float = None  # type: ignore
     energy_installable: float = None  # type: ignore

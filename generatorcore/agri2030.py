@@ -37,7 +37,6 @@ class AColVars2030:
     invest_per_x: float = None  # type: ignore
     area_ha_available: float = None  # type: ignore
     demand_change: float = None  # type: ignore
-    action: float = None  # type: ignore
     area_ha_change: float = None  # type: ignore
     area_ha: float = None  # type: ignore
     pct_nonrehab: float = None  # type: ignore

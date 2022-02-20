@@ -45,7 +45,6 @@ class BColVars2030:
     change_CO2e_t: float = None  # type: ignore
     cost_climate_saved: float = None  # type: ignore
     change_cost_energy: float = None  # type: ignore
-    action: float = None  # type: ignore
     invest_pa: float = None  # type: ignore
     invest_pa_com: float = None  # type: ignore
     invest: float = None  # type: ignore
@@ -596,9 +595,6 @@ def calc(
     s_coal.change_cost_energy = s_coal.cost_fuel - b18.s_coal.cost_fuel
     s_heatnet.change_cost_energy = s_heatnet.cost_fuel - b18.s_heatnet.cost_fuel
     s_heatpump.change_cost_energy = s_heatpump.cost_fuel - b18.s_heatpump.cost_fuel
-
-    # s_heatpump.actionAusbau
-    # s_solarth.actionAusbau
 
     s_gas.full_load_hour = fact("Fact_B_S_full_usage_hours_buildings")
     s_heatpump.full_load_hour = fact("Fact_B_S_full_usage_hours_buildings")

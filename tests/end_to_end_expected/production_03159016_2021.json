@@ -948,7 +948,7 @@
             "CO2e_cb_per_MWh": 0.018382,
             "CO2e_pb": null,
             "CO2e_total": 645.5087138898125,
-            "number_of_buildings": 455.68683735477407
+            "number_of_buildings": 455.6868373547741
         },
         "s_coal": {
             "energy": 391.8598592465048,
@@ -5221,8 +5221,7 @@
             "power_to_be_installed_pct": null,
             "full_load_hour": null,
             "emplo_existing": null,
-            "fec_factor_averaged": null,
-            "action": null
+            "fec_factor_averaged": null
         },
         "g_consult": {
             "energy": null,
@@ -5278,8 +5277,7 @@
             "power_to_be_installed_pct": null,
             "full_load_hour": null,
             "emplo_existing": 14.665010887299065,
-            "fec_factor_averaged": null,
-            "action": null
+            "fec_factor_averaged": null
         },
         "p": {
             "energy": 1000078.2133138723,
@@ -5335,8 +5333,7 @@
             "power_to_be_installed_pct": null,
             "full_load_hour": null,
             "emplo_existing": null,
-            "fec_factor_averaged": null,
-            "action": null
+            "fec_factor_averaged": null
         },
         "p_buildings_total": {
             "energy": 895534.8904062847,
@@ -5392,8 +5389,7 @@
             "power_to_be_installed_pct": null,
             "full_load_hour": null,
             "emplo_existing": 392.652339552195,
-            "fec_factor_averaged": 0.1747180604039107,
-            "action": null
+            "fec_factor_averaged": 0.1747180604039107
         },
         "p_buildings_until_1919": {
             "energy": 117127.54959108432,
@@ -5449,8 +5445,7 @@
             "power_to_be_installed_pct": null,
             "full_load_hour": null,
             "emplo_existing": null,
-            "fec_factor_averaged": 0.17030731755009682,
-            "action": null
+            "fec_factor_averaged": 0.17030731755009682
         },
         "p_buildings_1919_1948": {
             "energy": 111912.11708355299,
@@ -5506,8 +5501,7 @@
             "power_to_be_installed_pct": null,
             "full_load_hour": null,
             "emplo_existing": null,
-            "fec_factor_averaged": 0.1889808429140186,
-            "action": null
+            "fec_factor_averaged": 0.1889808429140186
         },
         "p_buildings_1949_1978": {
             "energy": 493806.14425007935,
@@ -5563,8 +5557,7 @@
             "power_to_be_installed_pct": null,
             "full_load_hour": null,
             "emplo_existing": null,
-            "fec_factor_averaged": 0.21095267690555008,
-            "action": null
+            "fec_factor_averaged": 0.21095267690555008
         },
         "p_buildings_1979_1995": {
             "energy": 118862.03063155778,
@@ -5620,8 +5613,7 @@
             "power_to_be_installed_pct": null,
             "full_load_hour": null,
             "emplo_existing": null,
-            "fec_factor_averaged": 0.14666092561618818,
-            "action": null
+            "fec_factor_averaged": 0.14666092561618818
         },
         "p_buildings_1996_2004": {
             "energy": 30473.30718968712,
@@ -5677,8 +5669,7 @@
             "power_to_be_installed_pct": null,
             "full_load_hour": null,
             "emplo_existing": null,
-            "fec_factor_averaged": 0.1020940547146058,
-            "action": null
+            "fec_factor_averaged": 0.1020940547146058
         },
         "p_buildings_2005_2011": {
             "energy": 9635.023242479263,
@@ -5734,8 +5725,7 @@
             "power_to_be_installed_pct": null,
             "full_load_hour": null,
             "emplo_existing": null,
-            "fec_factor_averaged": 0.07354389465494844,
-            "action": null
+            "fec_factor_averaged": 0.07354389465494844
         },
         "p_buildings_2011_today": {
             "energy": 13718.718417843824,
@@ -5791,8 +5781,7 @@
             "power_to_be_installed_pct": null,
             "full_load_hour": null,
             "emplo_existing": null,
-            "fec_factor_averaged": 0.05179147510911863,
-            "action": null
+            "fec_factor_averaged": 0.05179147510911863
         },
         "p_buildings_new": {
             "energy": 0.0,
@@ -5848,8 +5837,7 @@
             "power_to_be_installed_pct": null,
             "full_load_hour": null,
             "emplo_existing": null,
-            "fec_factor_averaged": 0.035,
-            "action": null
+            "fec_factor_averaged": 0.035
         },
         "p_buildings_area_m2_com": {
             "energy": 25617.315581915725,
@@ -5905,8 +5893,7 @@
             "power_to_be_installed_pct": null,
             "full_load_hour": null,
             "emplo_existing": null,
-            "fec_factor_averaged": 0.1747180604039107,
-            "action": null
+            "fec_factor_averaged": 0.1747180604039107
         },
         "r": {
             "energy": null,
@@ -5962,8 +5949,7 @@
             "power_to_be_installed_pct": null,
             "full_load_hour": null,
             "emplo_existing": null,
-            "fec_factor_averaged": null,
-            "action": null
+            "fec_factor_averaged": null
         },
         "s": {
             "energy": 1000078.2133138723,
@@ -6019,8 +6005,7 @@
             "power_to_be_installed_pct": null,
             "full_load_hour": null,
             "emplo_existing": 293.6637873566086,
-            "fec_factor_averaged": null,
-            "action": null
+            "fec_factor_averaged": null
         },
         "s_fueloil": {
             "energy": 0.0,
@@ -6076,8 +6061,7 @@
             "power_to_be_installed_pct": null,
             "full_load_hour": null,
             "emplo_existing": null,
-            "fec_factor_averaged": null,
-            "action": null
+            "fec_factor_averaged": null
         },
         "s_lpg": {
             "energy": 0.0,
@@ -6133,8 +6117,7 @@
             "power_to_be_installed_pct": null,
             "full_load_hour": null,
             "emplo_existing": null,
-            "fec_factor_averaged": null,
-            "action": null
+            "fec_factor_averaged": null
         },
         "s_biomass": {
             "energy": 113184.83915381624,
@@ -6190,8 +6173,7 @@
             "power_to_be_installed_pct": null,
             "full_load_hour": null,
             "emplo_existing": null,
-            "fec_factor_averaged": null,
-            "action": null
+            "fec_factor_averaged": null
         },
         "s_coal": {
             "energy": 0.0,
@@ -6247,8 +6229,7 @@
             "power_to_be_installed_pct": null,
             "full_load_hour": null,
             "emplo_existing": null,
-            "fec_factor_averaged": null,
-            "action": null
+            "fec_factor_averaged": null
         },
         "s_petrol": {
             "energy": 0.0,
@@ -6304,8 +6285,7 @@
             "power_to_be_installed_pct": null,
             "full_load_hour": null,
             "emplo_existing": null,
-            "fec_factor_averaged": null,
-            "action": null
+            "fec_factor_averaged": null
         },
         "s_heatnet": {
             "energy": 91770.96793808899,
@@ -6361,8 +6341,7 @@
             "power_to_be_installed_pct": null,
             "full_load_hour": null,
             "emplo_existing": null,
-            "fec_factor_averaged": null,
-            "action": null
+            "fec_factor_averaged": null
         },
         "s_solarth": {
             "energy": 27595.71855898216,
@@ -6418,8 +6397,7 @@
             "power_to_be_installed_pct": 0.05,
             "full_load_hour": null,
             "emplo_existing": 155.19450484143954,
-            "fec_factor_averaged": null,
-            "action": null
+            "fec_factor_averaged": null
         },
         "s_heatpump": {
             "energy": 142.4603520191704,
@@ -6475,8 +6453,7 @@
             "power_to_be_installed_pct": null,
             "full_load_hour": 1800.0,
             "emplo_existing": 138.4692825151691,
-            "fec_factor_averaged": null,
-            "action": null
+            "fec_factor_averaged": null
         },
         "s_gas": {
             "energy": 0,
@@ -6532,8 +6509,7 @@
             "power_to_be_installed_pct": null,
             "full_load_hour": null,
             "emplo_existing": null,
-            "fec_factor_averaged": null,
-            "action": null
+            "fec_factor_averaged": null
         },
         "s_elec_heating": {
             "energy": 39139.22460493133,
@@ -6589,8 +6565,7 @@
             "power_to_be_installed_pct": null,
             "full_load_hour": null,
             "emplo_existing": null,
-            "fec_factor_averaged": null,
-            "action": null
+            "fec_factor_averaged": null
         },
         "s_emethan": {
             "energy": 623701.6797984468,
@@ -6646,8 +6621,7 @@
             "power_to_be_installed_pct": null,
             "full_load_hour": null,
             "emplo_existing": null,
-            "fec_factor_averaged": null,
-            "action": null
+            "fec_factor_averaged": null
         },
         "s_elec": {
             "energy": 143682.54751251897,
@@ -6703,8 +6677,7 @@
             "power_to_be_installed_pct": null,
             "full_load_hour": null,
             "emplo_existing": null,
-            "fec_factor_averaged": null,
-            "action": null
+            "fec_factor_averaged": null
         },
         "p_elec_elcon": {
             "energy": 104500.23145204646,
@@ -6760,8 +6733,7 @@
             "power_to_be_installed_pct": null,
             "full_load_hour": null,
             "emplo_existing": null,
-            "fec_factor_averaged": null,
-            "action": null
+            "fec_factor_averaged": null
         },
         "p_elec_heatpump": {
             "energy": 43.091455541188864,
@@ -6817,8 +6789,7 @@
             "power_to_be_installed_pct": null,
             "full_load_hour": null,
             "emplo_existing": null,
-            "fec_factor_averaged": null,
-            "action": null
+            "fec_factor_averaged": null
         },
         "p_other": {
             "energy": 104543.32290758764,
@@ -6874,8 +6845,7 @@
             "power_to_be_installed_pct": null,
             "full_load_hour": null,
             "emplo_existing": null,
-            "fec_factor_averaged": null,
-            "action": null
+            "fec_factor_averaged": null
         },
         "p_vehicles": {
             "energy": 0.0,
@@ -6931,8 +6901,7 @@
             "power_to_be_installed_pct": null,
             "full_load_hour": null,
             "emplo_existing": null,
-            "fec_factor_averaged": null,
-            "action": null
+            "fec_factor_averaged": null
         }
     },
     "b30": {
@@ -6973,7 +6942,6 @@
             "change_CO2e_t": -9422.392719291107,
             "cost_climate_saved": 32230890.56867608,
             "change_cost_energy": null,
-            "action": null,
             "invest_pa": -170276190.1675089,
             "invest_pa_com": -38528597.60583572,
             "invest": 170276190.1675089,
@@ -7029,7 +6997,6 @@
             "change_CO2e_t": null,
             "cost_climate_saved": null,
             "change_cost_energy": null,
-            "action": null,
             "invest_pa": -4334565.948607583,
             "invest_pa_com": -4334565.948607583,
             "invest": 4334565.948607583,
@@ -7085,7 +7052,6 @@
             "change_CO2e_t": null,
             "cost_climate_saved": null,
             "change_cost_energy": null,
-            "action": null,
             "invest_pa": -4334565.948607583,
             "invest_pa_com": -4334565.948607583,
             "invest": 4334565.948607583,
@@ -7141,7 +7107,6 @@
             "change_CO2e_t": null,
             "cost_climate_saved": null,
             "change_cost_energy": null,
-            "action": null,
             "invest_pa": -92692502.612534,
             "invest_pa_com": -19100273.26561306,
             "invest": 92692502.612534,
@@ -7197,7 +7162,6 @@
             "change_CO2e_t": 0,
             "cost_climate_saved": null,
             "change_cost_energy": null,
-            "action": null,
             "invest_pa": -92692502.612534,
             "invest_pa_com": -19100273.26561306,
             "invest": 92692502.612534,
@@ -7253,7 +7217,6 @@
             "change_CO2e_t": null,
             "cost_climate_saved": null,
             "change_cost_energy": null,
-            "action": null,
             "invest_pa": -19100273.26561306,
             "invest_pa_com": -19100273.26561306,
             "invest": 19100273.26561306,
@@ -7309,7 +7272,6 @@
             "change_CO2e_t": null,
             "cost_climate_saved": null,
             "change_cost_energy": null,
-            "action": null,
             "invest_pa": null,
             "invest_pa_com": null,
             "invest": null,
@@ -7365,7 +7327,6 @@
             "change_CO2e_t": null,
             "cost_climate_saved": null,
             "change_cost_energy": null,
-            "action": null,
             "invest_pa": null,
             "invest_pa_com": null,
             "invest": null,
@@ -7421,7 +7382,6 @@
             "change_CO2e_t": null,
             "cost_climate_saved": null,
             "change_cost_energy": null,
-            "action": null,
             "invest_pa": null,
             "invest_pa_com": null,
             "invest": null,
@@ -7477,7 +7437,6 @@
             "change_CO2e_t": null,
             "cost_climate_saved": null,
             "change_cost_energy": null,
-            "action": null,
             "invest_pa": null,
             "invest_pa_com": null,
             "invest": null,
@@ -7533,7 +7492,6 @@
             "change_CO2e_t": -9422.392719291107,
             "cost_climate_saved": 32230890.56867608,
             "change_cost_energy": -17.848744336090846,
-            "action": null,
             "invest_pa": -73249121.60636732,
             "invest_pa_com": -15093758.391615078,
             "invest": 73249121.60636732,
@@ -7589,7 +7547,6 @@
             "change_CO2e_t": -33363.62598777016,
             "cost_climate_saved": 173093812.04383633,
             "change_cost_energy": -11.253999213785157,
-            "action": null,
             "invest_pa": null,
             "invest_pa_com": null,
             "invest": null,
@@ -7645,7 +7602,6 @@
             "change_CO2e_t": 44436.784335348006,
             "cost_climate_saved": -246957428.94369653,
             "change_cost_energy": null,
-            "action": null,
             "invest_pa": null,
             "invest_pa_com": null,
             "invest": null,
@@ -7701,7 +7657,6 @@
             "change_CO2e_t": -1209.9089329981337,
             "cost_climate_saved": 6277127.957114307,
             "change_cost_energy": null,
-            "action": null,
             "invest_pa": null,
             "invest_pa_com": null,
             "invest": null,
@@ -7757,7 +7712,6 @@
             "change_CO2e_t": -635.0771532030784,
             "cost_climate_saved": 3294843.4750516536,
             "change_cost_energy": null,
-            "action": null,
             "invest_pa": null,
             "invest_pa_com": null,
             "invest": null,
@@ -7813,7 +7767,6 @@
             "change_CO2e_t": -103.5389452559614,
             "cost_climate_saved": 537170.3524048,
             "change_cost_energy": null,
-            "action": null,
             "invest_pa": null,
             "invest_pa_com": null,
             "invest": null,
@@ -7869,7 +7822,6 @@
             "change_CO2e_t": -3467.3537265470763,
             "cost_climate_saved": 17988976.21177139,
             "change_cost_energy": null,
-            "action": null,
             "invest_pa": null,
             "invest_pa_com": null,
             "invest": null,
@@ -7925,7 +7877,6 @@
             "change_CO2e_t": -14942.75647404398,
             "cost_climate_saved": 77524507.72236505,
             "change_cost_energy": -3.7076012304018895,
-            "action": null,
             "invest_pa": null,
             "invest_pa_com": null,
             "invest": null,
@@ -7981,7 +7932,6 @@
             "change_CO2e_t": 0.0,
             "cost_climate_saved": -238451.22737701327,
             "change_cost_energy": 0.0,
-            "action": null,
             "invest_pa": null,
             "invest_pa_com": null,
             "invest": null,
@@ -8037,7 +7987,6 @@
             "change_CO2e_t": -136.91583482072878,
             "cost_climate_saved": 710332.9772061175,
             "change_cost_energy": -0.03295541416263105,
-            "action": null,
             "invest_pa": null,
             "invest_pa_com": null,
             "invest": null,
@@ -8093,7 +8042,6 @@
             "change_CO2e_t": 0.0,
             "cost_climate_saved": 0.0,
             "change_cost_energy": -1.0819918319207218,
-            "action": null,
             "invest_pa": null,
             "invest_pa_com": null,
             "invest": null,
@@ -8149,7 +8097,6 @@
             "change_CO2e_t": 0.0,
             "cost_climate_saved": 0.0,
             "change_cost_energy": null,
-            "action": null,
             "invest_pa": null,
             "invest_pa_com": null,
             "invest": null,
@@ -8205,7 +8152,6 @@
             "change_CO2e_t": 0.0,
             "cost_climate_saved": 0.0,
             "change_cost_energy": -0.1763358407501515,
-            "action": null,
             "invest_pa": -2053464.4787242836,
             "invest_pa_com": -423138.13500985224,
             "invest": 2053464.4787242836,
@@ -8261,7 +8207,6 @@
             "change_CO2e_t": 0.0,
             "cost_climate_saved": 0.0,
             "change_cost_energy": null,
-            "action": null,
             "invest_pa": -71195657.12764303,
             "invest_pa_com": -14670620.256605227,
             "invest": 71195657.12764303,
@@ -8317,7 +8262,6 @@
             "change_CO2e_t": 0.0,
             "cost_climate_saved": 0.0,
             "change_cost_energy": null,
-            "action": null,
             "invest_pa": null,
             "invest_pa_com": null,
             "invest": null,
@@ -8373,7 +8317,6 @@
             "change_CO2e_t": -28707.10731982469,
             "cost_climate_saved": 86034801.97917242,
             "change_cost_energy": null,
-            "action": null,
             "invest_pa": -454587860.8236214,
             "invest_pa_com": -61258448.47458191,
             "invest": 454587860.8236214,
@@ -8418,7 +8361,6 @@
             "change_CO2e_pct": null,
             "CO2e_total_2021_estimated": null,
             "cost_climate_saved": null,
-            "action": null,
             "invest_pa": 1010136.0512776724,
             "invest_pa_com": 1010136.0512776724,
             "invest_pa_outside": null,
@@ -8458,7 +8400,6 @@
             "change_CO2e_pct": null,
             "CO2e_total_2021_estimated": null,
             "cost_climate_saved": null,
-            "action": null,
             "invest_pa": 1010136.0512776724,
             "invest_pa_com": 1010136.0512776724,
             "invest_pa_outside": null,
@@ -8498,7 +8439,6 @@
             "change_CO2e_pct": -0.8691308675133088,
             "CO2e_total_2021_estimated": 99199.2860418653,
             "cost_climate_saved": 474014818.0940982,
-            "action": null,
             "invest_pa": -83157959.06335631,
             "invest_pa_com": 1010136.0512776724,
             "invest_pa_outside": -84168095.11463398,
@@ -8538,7 +8478,6 @@
             "change_CO2e_pct": -0.8691308675133088,
             "CO2e_total_2021_estimated": 99199.2860418653,
             "cost_climate_saved": 474014818.0940982,
-            "action": null,
             "invest_pa": -84168095.11463398,
             "invest_pa_com": null,
             "invest_pa_outside": -84168095.11463398,
@@ -8578,7 +8517,6 @@
             "change_CO2e_pct": -0.6860755687434651,
             "CO2e_total_2021_estimated": 21289.71684059712,
             "cost_climate_saved": 78530193.50643814,
-            "action": null,
             "invest_pa": -7264726.486888065,
             "invest_pa_com": null,
             "invest_pa_outside": -7264726.486888065,
@@ -8618,7 +8556,6 @@
             "change_CO2e_pct": -0.6487677520818006,
             "CO2e_total_2021_estimated": 12338.508309352741,
             "cost_climate_saved": 42771974.02078268,
-            "action": null,
             "invest_pa": -1157187.5809147188,
             "invest_pa_com": null,
             "invest_pa_outside": -1157187.5809147188,
@@ -8658,7 +8595,6 @@
             "change_CO2e_pct": -0.5157015317198432,
             "CO2e_total_2021_estimated": 4382.116727567827,
             "cost_climate_saved": 11719415.632496607,
-            "action": null,
             "invest_pa": -228679.70717698845,
             "invest_pa_com": null,
             "invest_pa_outside": -228679.70717698845,
@@ -8698,7 +8634,6 @@
             "change_CO2e_pct": -0.9176102263903597,
             "CO2e_total_2021_estimated": 2760.3889705701977,
             "cost_climate_saved": 13986937.85817027,
-            "action": null,
             "invest_pa": -4278101.24855744,
             "invest_pa_com": null,
             "invest_pa_outside": -4278101.24855744,
@@ -8738,7 +8673,6 @@
             "change_CO2e_pct": -1.0,
             "CO2e_total_2021_estimated": 1808.702833106357,
             "cost_climate_saved": 10051865.99498858,
-            "action": null,
             "invest_pa": -1600757.9502389182,
             "invest_pa_com": null,
             "invest_pa_outside": -1600757.9502389182,
@@ -8778,7 +8712,6 @@
             "change_CO2e_pct": -0.7734526631432151,
             "CO2e_total_2021_estimated": 16768.408042042345,
             "cost_climate_saved": 70575175.29453428,
-            "action": null,
             "invest_pa": -46418567.426970735,
             "invest_pa_com": null,
             "invest_pa_outside": -46418567.426970735,
@@ -8818,7 +8751,6 @@
             "change_CO2e_pct": -0.7219080240578788,
             "CO2e_total_2021_estimated": 11451.522451974612,
             "cost_climate_saved": 44683407.696855985,
-            "action": null,
             "invest_pa": -27339170.962502602,
             "invest_pa_com": null,
             "invest_pa_outside": -27339170.962502602,
@@ -8858,7 +8790,6 @@
             "change_CO2e_pct": -1.0,
             "CO2e_total_2021_estimated": 3646.359640959983,
             "cost_climate_saved": 20264643.704635106,
-            "action": "Ammoniakproduktion aus elektrolytisch erzeugtem H2",
             "invest_pa": -3378998.6582868444,
             "invest_pa_com": null,
             "invest_pa_outside": -3378998.6582868444,
@@ -8898,7 +8829,6 @@
             "change_CO2e_pct": -0.6322944403434809,
             "CO2e_total_2021_estimated": 1670.5259491077495,
             "cost_climate_saved": 5627123.893043193,
-            "action": null,
             "invest_pa": -15700397.80618129,
             "invest_pa_com": null,
             "invest_pa_outside": -15700397.80618129,
@@ -8938,7 +8868,6 @@
             "change_CO2e_pct": -0.9907834010421088,
             "CO2e_total_2021_estimated": 38095.77313171818,
             "cost_climate_saved": 209627009.6879625,
-            "action": null,
             "invest_pa": -17435405.53476292,
             "invest_pa_com": null,
             "invest_pa_outside": -17435405.53476292,
@@ -8978,7 +8907,6 @@
             "change_CO2e_pct": -0.9900913006628951,
             "CO2e_total_2021_estimated": 35434.868997491656,
             "cost_climate_saved": 194839034.96199855,
-            "action": null,
             "invest_pa": -15273756.561448105,
             "invest_pa_com": null,
             "invest_pa_outside": -15273756.561448105,
@@ -9018,7 +8946,6 @@
             "change_CO2e_pct": -0.9909112114129202,
             "CO2e_total_2021_estimated": 29447.94114153944,
             "cost_climate_saved": 162063581.4358751,
-            "action": "Umstellung auf Wasserstoff-DRI",
             "invest_pa": -6211896.523315209,
             "invest_pa_com": null,
             "invest_pa_outside": -6211896.523315209,
@@ -9058,7 +8985,6 @@
             "change_CO2e_pct": -0.986058400302479,
             "CO2e_total_2021_estimated": 5986.927855952216,
             "cost_climate_saved": 32775453.526123468,
-            "action": "Umstellung (der Weiterverarbeitung) auf Elektro\u00f6fen",
             "invest_pa": -9061860.038132895,
             "invest_pa_com": null,
             "invest_pa_outside": -9061860.038132895,
@@ -9098,7 +9024,6 @@
             "change_CO2e_pct": -1.0,
             "CO2e_total_2021_estimated": 2660.9041342265295,
             "cost_climate_saved": 14787974.725963937,
-            "action": "Umstellung auf strombasierte Sekund\u00e4rproduktion",
             "invest_pa": -2161648.973314815,
             "invest_pa_com": null,
             "invest_pa_outside": -2161648.973314815,
@@ -9138,7 +9063,6 @@
             "change_CO2e_pct": -0.9067574559370573,
             "CO2e_total_2021_estimated": 23045.38802750766,
             "cost_climate_saved": 115282439.60516335,
-            "action": null,
             "invest_pa": -13049395.666012254,
             "invest_pa_com": null,
             "invest_pa_outside": -13049395.666012254,
@@ -9178,7 +9102,6 @@
             "change_CO2e_pct": -1.0,
             "CO2e_total_2021_estimated": 4177.191095157757,
             "cost_climate_saved": 23214739.511339236,
-            "action": "Umstellung auf strombasierte Produktion",
             "invest_pa": -364067.19550565316,
             "invest_pa_com": null,
             "invest_pa_outside": -364067.19550565316,
@@ -9218,7 +9141,6 @@
             "change_CO2e_pct": -1.0,
             "CO2e_total_2021_estimated": 5671.548550252333,
             "cost_climate_saved": 31519631.06802734,
-            "action": "Umstellung auf strombasierte Produktion",
             "invest_pa": -1600703.788643524,
             "invest_pa_com": null,
             "invest_pa_outside": -1600703.788643524,
@@ -9258,7 +9180,6 @@
             "change_CO2e_pct": -0.6009232728829776,
             "CO2e_total_2021_estimated": 3623.839132446947,
             "cost_climate_saved": 11530025.10684606,
-            "action": "Umstellung auf strombasierte Produktion",
             "invest_pa": -1186958.8017855545,
             "invest_pa_com": null,
             "invest_pa_outside": -1186958.8017855545,
@@ -9298,7 +9219,6 @@
             "change_CO2e_pct": -0.9266024497403809,
             "CO2e_total_2021_estimated": 9572.809249650621,
             "cost_climate_saved": 49018043.91895071,
-            "action": "Umstellung auf nat\u00fcrliche K\u00fchlgase",
             "invest_pa": -9897665.880077522,
             "invest_pa_com": null,
             "invest_pa_outside": -9897665.880077522,
@@ -9338,7 +9258,6 @@
             "change_CO2e_pct": null,
             "CO2e_total_2021_estimated": null,
             "cost_climate_saved": null,
-            "action": null,
             "invest_pa": null,
             "invest_pa_com": null,
             "invest_pa_outside": null,
@@ -9378,7 +9297,6 @@
             "change_CO2e_pct": null,
             "CO2e_total_2021_estimated": null,
             "cost_climate_saved": null,
-            "action": null,
             "invest_pa": null,
             "invest_pa_com": null,
             "invest_pa_outside": null,
@@ -9418,7 +9336,6 @@
             "change_CO2e_pct": null,
             "CO2e_total_2021_estimated": null,
             "cost_climate_saved": null,
-            "action": null,
             "invest_pa": null,
             "invest_pa_com": null,
             "invest_pa_outside": null,
@@ -9458,7 +9375,6 @@
             "change_CO2e_pct": null,
             "CO2e_total_2021_estimated": null,
             "cost_climate_saved": null,
-            "action": null,
             "invest_pa": null,
             "invest_pa_com": null,
             "invest_pa_outside": null,
@@ -9498,7 +9414,6 @@
             "change_CO2e_pct": null,
             "CO2e_total_2021_estimated": null,
             "cost_climate_saved": null,
-            "action": null,
             "invest_pa": null,
             "invest_pa_com": null,
             "invest_pa_outside": null,
@@ -9538,7 +9453,6 @@
             "change_CO2e_pct": null,
             "CO2e_total_2021_estimated": null,
             "cost_climate_saved": null,
-            "action": null,
             "invest_pa": null,
             "invest_pa_com": null,
             "invest_pa_outside": null,
@@ -9578,7 +9492,6 @@
             "change_CO2e_pct": null,
             "CO2e_total_2021_estimated": null,
             "cost_climate_saved": null,
-            "action": null,
             "invest_pa": null,
             "invest_pa_com": null,
             "invest_pa_outside": null,
@@ -9618,7 +9531,6 @@
             "change_CO2e_pct": null,
             "CO2e_total_2021_estimated": null,
             "cost_climate_saved": null,
-            "action": null,
             "invest_pa": null,
             "invest_pa_com": null,
             "invest_pa_outside": null,
@@ -9658,7 +9570,6 @@
             "change_CO2e_pct": null,
             "CO2e_total_2021_estimated": null,
             "cost_climate_saved": null,
-            "action": null,
             "invest_pa": null,
             "invest_pa_com": null,
             "invest_pa_outside": null,
@@ -9698,7 +9609,6 @@
             "change_CO2e_pct": null,
             "CO2e_total_2021_estimated": null,
             "cost_climate_saved": null,
-            "action": null,
             "invest_pa": null,
             "invest_pa_com": null,
             "invest_pa_outside": null,
@@ -9738,7 +9648,6 @@
             "change_CO2e_pct": null,
             "CO2e_total_2021_estimated": null,
             "cost_climate_saved": null,
-            "action": null,
             "invest_pa": null,
             "invest_pa_com": null,
             "invest_pa_outside": null,
@@ -9778,7 +9687,6 @@
             "change_CO2e_pct": null,
             "CO2e_total_2021_estimated": null,
             "cost_climate_saved": null,
-            "action": null,
             "invest_pa": null,
             "invest_pa_com": null,
             "invest_pa_outside": null,
@@ -9818,7 +9726,6 @@
             "change_CO2e_pct": null,
             "CO2e_total_2021_estimated": null,
             "cost_climate_saved": null,
-            "action": null,
             "invest_pa": null,
             "invest_pa_com": null,
             "invest_pa_outside": null,
@@ -9858,7 +9765,6 @@
             "change_CO2e_pct": null,
             "CO2e_total_2021_estimated": null,
             "cost_climate_saved": null,
-            "action": null,
             "invest_pa": null,
             "invest_pa_com": null,
             "invest_pa_outside": null,
@@ -9898,7 +9804,6 @@
             "change_CO2e_pct": null,
             "CO2e_total_2021_estimated": null,
             "cost_climate_saved": null,
-            "action": null,
             "invest_pa": null,
             "invest_pa_com": null,
             "invest_pa_outside": null,
@@ -9938,7 +9843,6 @@
             "change_CO2e_pct": null,
             "CO2e_total_2021_estimated": null,
             "cost_climate_saved": null,
-            "action": null,
             "invest_pa": null,
             "invest_pa_com": null,
             "invest_pa_outside": null,
@@ -9978,7 +9882,6 @@
             "change_CO2e_pct": null,
             "CO2e_total_2021_estimated": null,
             "cost_climate_saved": null,
-            "action": null,
             "invest_pa": null,
             "invest_pa_com": null,
             "invest_pa_outside": null,
@@ -10017,7 +9920,6 @@
             "CO2e_total_2021_estimated": 40441.34397092021,
             "cost_climate_saved": 135923457.85035202,
             "change_km": -56153314.3441326,
-            "action": null,
             "invest_pa": null,
             "invest_pa_com": null,
             "invest_pa_outside": null,
@@ -10054,7 +9956,6 @@
             "CO2e_total_2021_estimated": 2809.7482762089926,
             "cost_climate_saved": 15615176.045031477,
             "change_km": -14574820.168434987,
-            "action": null,
             "invest_pa": null,
             "invest_pa_com": null,
             "invest_pa_outside": null,
@@ -10091,7 +9992,6 @@
             "CO2e_total_2021_estimated": 95058.74175659483,
             "cost_climate_saved": 516498613.14236104,
             "change_km": -238896959.9231574,
-            "action": null,
             "invest_pa": -744630874.0912614,
             "invest_pa_com": -71530854.08130272,
             "invest_pa_outside": null,
@@ -10128,7 +10028,6 @@
             "CO2e_total_2021_estimated": 93467.71905302629,
             "cost_climate_saved": 507656504.46727884,
             "change_km": -319176775.0156961,
-            "action": null,
             "invest_pa": -673100020.0099586,
             "invest_pa_com": null,
             "invest_pa_outside": null,
@@ -10165,7 +10064,6 @@
             "CO2e_total_2021_estimated": 69872.63198163842,
             "cost_climate_saved": 379534797.68573844,
             "change_km": -246268234.37977296,
-            "action": null,
             "invest_pa": null,
             "invest_pa_com": null,
             "invest_pa_outside": null,
@@ -10202,7 +10100,6 @@
             "CO2e_total_2021_estimated": 23595.08707138786,
             "cost_climate_saved": 128121706.78154047,
             "change_km": -72908540.63592315,
-            "action": null,
             "invest_pa": null,
             "invest_pa_com": null,
             "invest_pa_outside": null,
@@ -10239,7 +10136,6 @@
             "CO2e_total_2021_estimated": 1591.0227035685473,
             "cost_climate_saved": 8842108.675082201,
             "change_km": 80279815.0925387,
-            "action": null,
             "invest_pa": -62072903.58106908,
             "invest_pa_com": -62072903.58106908,
             "invest_pa_outside": null,
@@ -10276,7 +10172,6 @@
             "CO2e_total_2021_estimated": 44671.3393556213,
             "cost_climate_saved": 239043474.4957858,
             "change_km": -152807328.08614993,
-            "action": null,
             "invest_pa": -160066360.52763495,
             "invest_pa_com": -37519339.0474564,
             "invest_pa_outside": null,
@@ -10313,7 +10208,6 @@
             "CO2e_total_2021_estimated": 9613.229200398839,
             "cost_climate_saved": 51364056.89424641,
             "change_km": -2478540.246597335,
-            "action": null,
             "invest_pa": -72200886.13415743,
             "invest_pa_com": null,
             "invest_pa_outside": null,
@@ -10350,7 +10244,6 @@
             "CO2e_total_2021_estimated": 7433.006590559028,
             "cost_climate_saved": 39715789.93570314,
             "change_km": -2046516.4294485054,
-            "action": null,
             "invest_pa": null,
             "invest_pa_com": null,
             "invest_pa_outside": null,
@@ -10387,7 +10280,6 @@
             "CO2e_total_2021_estimated": 2180.2226098398105,
             "cost_climate_saved": 11648266.958543267,
             "change_km": -432023.8171488299,
-            "action": null,
             "invest_pa": null,
             "invest_pa_com": null,
             "invest_pa_outside": null,
@@ -10424,7 +10316,6 @@
             "CO2e_total_2021_estimated": 35058.110155222465,
             "cost_climate_saved": 187679417.60153943,
             "change_km": -150328787.83955258,
-            "action": null,
             "invest_pa": -50346135.34602111,
             "invest_pa_com": null,
             "invest_pa_outside": null,
@@ -10461,7 +10352,6 @@
             "CO2e_total_2021_estimated": 15870.405997912172,
             "cost_climate_saved": 84960328.48320635,
             "change_km": -69037099.31433389,
-            "action": null,
             "invest_pa": null,
             "invest_pa_com": null,
             "invest_pa_outside": null,
@@ -10498,7 +10388,6 @@
             "CO2e_total_2021_estimated": 19187.70415731029,
             "cost_climate_saved": 102719089.11833304,
             "change_km": -81291688.52521868,
-            "action": null,
             "invest_pa": null,
             "invest_pa_com": null,
             "invest_pa_outside": null,
@@ -10535,7 +10424,6 @@
             "CO2e_total_2021_estimated": null,
             "cost_climate_saved": null,
             "change_km": null,
-            "action": null,
             "invest_pa": -37519339.0474564,
             "invest_pa_com": -37519339.0474564,
             "invest_pa_outside": null,
@@ -10572,7 +10460,6 @@
             "CO2e_total_2021_estimated": 375.67131358002445,
             "cost_climate_saved": 2087793.325220986,
             "change_km": 371610985.00176257,
-            "action": null,
             "invest_pa": -112753107.66260922,
             "invest_pa_com": -0.0,
             "invest_pa_outside": null,
@@ -10609,7 +10496,6 @@
             "CO2e_total_2021_estimated": 375.67131358002445,
             "cost_climate_saved": 2087793.325220986,
             "change_km": 371610985.00176257,
-            "action": null,
             "invest_pa": -112753107.66260922,
             "invest_pa_com": null,
             "invest_pa_outside": null,
@@ -10646,7 +10532,6 @@
             "CO2e_total_2021_estimated": 0.0,
             "cost_climate_saved": 0.0,
             "change_km": 0.0,
-            "action": null,
             "invest_pa": -0.0,
             "invest_pa_com": null,
             "invest_pa_outside": null,
@@ -10683,7 +10568,6 @@
             "CO2e_total_2021_estimated": 62.185053614914565,
             "cost_climate_saved": 345593.4354648877,
             "change_km": 151137971.91932487,
-            "action": null,
             "invest_pa": -26171282.640335772,
             "invest_pa_com": null,
             "invest_pa_outside": null,
@@ -10720,7 +10604,6 @@
             "CO2e_total_2021_estimated": 8328.104617369207,
             "cost_climate_saved": 18499279.239977986,
             "change_km": null,
-            "action": null,
             "invest_pa": -8946919.311316526,
             "invest_pa_com": -8946919.311316526,
             "invest_pa_outside": null,
@@ -10757,7 +10640,6 @@
             "CO2e_total_2021_estimated": 1058.9718816492273,
             "cost_climate_saved": -526493.499515508,
             "change_km": 34777541.19398843,
-            "action": null,
             "invest_pa": -14524680.132956333,
             "invest_pa_com": null,
             "invest_pa_outside": null,
@@ -10794,7 +10676,6 @@
             "CO2e_total_2021_estimated": 0,
             "cost_climate_saved": 0,
             "change_km": null,
-            "action": null,
             "invest_pa": -8946919.311316526,
             "invest_pa_com": -8946919.311316526,
             "invest_pa_outside": null,
@@ -10831,7 +10712,6 @@
             "CO2e_total_2021_estimated": 7269.132735719979,
             "cost_climate_saved": 19025772.739493493,
             "change_km": -1410562518.3651383,
-            "action": null,
             "invest_pa": null,
             "invest_pa_com": null,
             "invest_pa_outside": null,
@@ -10868,7 +10748,6 @@
             "CO2e_total_2021_estimated": 0.0,
             "cost_climate_saved": 0.0,
             "change_km": 21683585.430660397,
-            "action": null,
             "invest_pa": 0,
             "invest_pa_com": 0,
             "invest_pa_outside": null,
@@ -10905,7 +10784,6 @@
             "CO2e_total_2021_estimated": null,
             "cost_climate_saved": null,
             "change_km": null,
-            "action": null,
             "invest_pa": 556452.7322404371,
             "invest_pa_com": 556452.7322404371,
             "invest_pa_outside": null,
@@ -10942,7 +10820,6 @@
             "CO2e_total_2021_estimated": 0.0,
             "cost_climate_saved": 0.0,
             "change_km": 43367170.86132079,
-            "action": null,
             "invest_pa": -28577715.695002683,
             "invest_pa_com": -0.0,
             "invest_pa_outside": null,
@@ -10979,7 +10856,6 @@
             "CO2e_total_2021_estimated": null,
             "cost_climate_saved": null,
             "change_km": null,
-            "action": null,
             "invest_pa": -11367909.355345909,
             "invest_pa_com": -11367909.355345909,
             "invest_pa_outside": null,
@@ -11016,7 +10892,6 @@
             "CO2e_total_2021_estimated": null,
             "cost_climate_saved": null,
             "change_km": null,
-            "action": null,
             "invest_pa": -24869972.092295364,
             "invest_pa_com": -24869972.092295364,
             "invest_pa_outside": null,
@@ -11053,7 +10928,6 @@
             "CO2e_total_2021_estimated": null,
             "cost_climate_saved": null,
             "change_km": null,
-            "action": null,
             "invest_pa": null,
             "invest_pa_com": null,
             "invest_pa_outside": null,
@@ -11090,7 +10964,6 @@
             "CO2e_total_2021_estimated": null,
             "cost_climate_saved": null,
             "change_km": null,
-            "action": null,
             "invest_pa": null,
             "invest_pa_com": null,
             "invest_pa_outside": null,
@@ -11127,7 +11000,6 @@
             "CO2e_total_2021_estimated": null,
             "cost_climate_saved": null,
             "change_km": null,
-            "action": null,
             "invest_pa": null,
             "invest_pa_com": null,
             "invest_pa_outside": null,
@@ -11164,7 +11036,6 @@
             "CO2e_total_2021_estimated": null,
             "cost_climate_saved": null,
             "change_km": null,
-            "action": null,
             "invest_pa": null,
             "invest_pa_com": null,
             "invest_pa_outside": null,
@@ -11201,7 +11072,6 @@
             "CO2e_total_2021_estimated": null,
             "cost_climate_saved": null,
             "change_km": null,
-            "action": null,
             "invest_pa": null,
             "invest_pa_com": null,
             "invest_pa_outside": null,
@@ -11238,7 +11108,6 @@
             "CO2e_total_2021_estimated": null,
             "cost_climate_saved": null,
             "change_km": null,
-            "action": null,
             "invest_pa": null,
             "invest_pa_com": null,
             "invest_pa_outside": null,
@@ -11275,7 +11144,6 @@
             "CO2e_total_2021_estimated": null,
             "cost_climate_saved": null,
             "change_km": null,
-            "action": null,
             "invest_pa": null,
             "invest_pa_com": null,
             "invest_pa_outside": null,
@@ -11312,7 +11180,6 @@
             "CO2e_total_2021_estimated": null,
             "cost_climate_saved": null,
             "change_km": null,
-            "action": null,
             "invest_pa": null,
             "invest_pa_com": null,
             "invest_pa_outside": null,
@@ -11349,7 +11216,6 @@
             "CO2e_total_2021_estimated": null,
             "cost_climate_saved": null,
             "change_km": null,
-            "action": null,
             "invest_pa": null,
             "invest_pa_com": null,
             "invest_pa_outside": null,
@@ -11386,7 +11252,6 @@
             "CO2e_total_2021_estimated": null,
             "cost_climate_saved": null,
             "change_km": null,
-            "action": null,
             "invest_pa": null,
             "invest_pa_com": null,
             "invest_pa_outside": null,
@@ -11423,7 +11288,6 @@
             "CO2e_total_2021_estimated": null,
             "cost_climate_saved": null,
             "change_km": null,
-            "action": null,
             "invest_pa": null,
             "invest_pa_com": null,
             "invest_pa_outside": null,
@@ -11460,7 +11324,6 @@
             "CO2e_total_2021_estimated": null,
             "cost_climate_saved": null,
             "change_km": null,
-            "action": null,
             "invest_pa": -24869972.092295364,
             "invest_pa_com": -24869972.092295364,
             "invest_pa_outside": null,
@@ -11497,7 +11360,6 @@
             "CO2e_total_2021_estimated": 469616.2738647732,
             "cost_climate_saved": 928013387.5341942,
             "change_km": null,
-            "action": null,
             "invest_pa": -1570419258.2869313,
             "invest_pa_com": -586389854.1385067,
             "invest_pa_outside": null,
@@ -11534,7 +11396,6 @@
             "CO2e_total_2021_estimated": 43251.0922471292,
             "cost_climate_saved": 151538633.8953835,
             "change_km": -70728134.5125676,
-            "action": null,
             "invest_pa": 0,
             "invest_pa_com": 0,
             "invest_pa_outside": null,
@@ -11571,7 +11432,6 @@
             "CO2e_total_2021_estimated": 417599.2206330799,
             "cost_climate_saved": 755542087.6381469,
             "change_km": null,
-            "action": null,
             "invest_pa": -931145559.7219934,
             "invest_pa_com": -114618261.5715164,
             "invest_pa_outside": null,
@@ -11608,7 +11468,6 @@
             "CO2e_total_2021_estimated": 437.856367194939,
             "cost_climate_saved": 2433386.7606858737,
             "change_km": null,
-            "action": null,
             "invest_pa": -566067634.8432178,
             "invest_pa_com": -427143244.5402729,
             "invest_pa_outside": null,
@@ -11645,7 +11504,6 @@
             "CO2e_total_2021_estimated": 0.0,
             "cost_climate_saved": 0.0,
             "change_km": 65050756.29198119,
-            "action": null,
             "invest_pa": -39389172.31810816,
             "invest_pa_com": -10811456.623105472,
             "invest_pa_outside": null,
@@ -11682,7 +11540,6 @@
             "CO2e_total_2021_estimated": null,
             "cost_climate_saved": null,
             "change_km": null,
-            "action": null,
             "invest_pa": -395396111.5001175,
             "invest_pa_com": -395396111.5001175,
             "invest_pa_outside": null,
@@ -11719,7 +11576,6 @@
             "CO2e_total_2021_estimated": null,
             "cost_climate_saved": null,
             "change_km": null,
-            "action": null,
             "invest_pa": -31747133.040155414,
             "invest_pa_com": -31747133.040155414,
             "invest_pa_outside": null,
@@ -11756,7 +11612,6 @@
             "CO2e_total_2021_estimated": null,
             "cost_climate_saved": null,
             "change_km": null,
-            "action": null,
             "invest_pa": -0.0,
             "invest_pa_com": -0.0,
             "invest_pa_outside": null,
@@ -11793,7 +11648,6 @@
             "CO2e_total_2021_estimated": null,
             "cost_climate_saved": null,
             "change_km": null,
-            "action": null,
             "invest_pa": -26448325.103097096,
             "invest_pa_com": -5568068.442757281,
             "invest_pa_outside": null,
@@ -11830,7 +11684,6 @@
             "CO2e_total_2021_estimated": null,
             "cost_climate_saved": null,
             "change_km": null,
-            "action": null,
             "invest_pa": -9457950.500233639,
             "invest_pa_com": -9457950.500233639,
             "invest_pa_outside": null,
@@ -11867,7 +11720,6 @@
             "CO2e_total_2021_estimated": null,
             "cost_climate_saved": null,
             "change_km": null,
-            "action": null,
             "invest_pa": null,
             "invest_pa_com": null,
             "invest_pa_outside": null,
@@ -11904,7 +11756,6 @@
             "CO2e_total_2021_estimated": null,
             "cost_climate_saved": null,
             "change_km": null,
-            "action": null,
             "invest_pa": null,
             "invest_pa_com": null,
             "invest_pa_outside": null,
@@ -11945,7 +11796,6 @@
             "power_to_be_installed": null,
             "full_load_hour": null,
             "change_CO2e_pct": -19.364619888112575,
-            "action": null,
             "emplo_existing": null,
             "demand_emplo_new": -4395.354777639711,
             "invest_pa_outside": -785424810.7905451,
@@ -11975,7 +11825,6 @@
             "power_to_be_installed": null,
             "full_load_hour": null,
             "change_CO2e_pct": null,
-            "action": null,
             "emplo_existing": null,
             "demand_emplo_new": null,
             "invest_pa_outside": null,
@@ -12005,7 +11854,6 @@
             "power_to_be_installed": null,
             "full_load_hour": null,
             "change_CO2e_pct": null,
-            "action": null,
             "emplo_existing": null,
             "demand_emplo_new": null,
             "invest_pa_outside": null,
@@ -12035,7 +11883,6 @@
             "power_to_be_installed": null,
             "full_load_hour": null,
             "change_CO2e_pct": null,
-            "action": null,
             "emplo_existing": null,
             "demand_emplo_new": null,
             "invest_pa_outside": null,
@@ -12065,7 +11912,6 @@
             "power_to_be_installed": null,
             "full_load_hour": null,
             "change_CO2e_pct": null,
-            "action": null,
             "emplo_existing": null,
             "demand_emplo_new": null,
             "invest_pa_outside": null,
@@ -12095,7 +11941,6 @@
             "power_to_be_installed": null,
             "full_load_hour": null,
             "change_CO2e_pct": null,
-            "action": null,
             "emplo_existing": null,
             "demand_emplo_new": null,
             "invest_pa_outside": null,
@@ -12125,7 +11970,6 @@
             "power_to_be_installed": null,
             "full_load_hour": null,
             "change_CO2e_pct": null,
-            "action": null,
             "emplo_existing": null,
             "demand_emplo_new": null,
             "invest_pa_outside": null,
@@ -12155,7 +11999,6 @@
             "power_to_be_installed": null,
             "full_load_hour": null,
             "change_CO2e_pct": null,
-            "action": null,
             "emplo_existing": null,
             "demand_emplo_new": null,
             "invest_pa_outside": null,
@@ -12185,7 +12028,6 @@
             "power_to_be_installed": null,
             "full_load_hour": null,
             "change_CO2e_pct": -19.364619888112575,
-            "action": null,
             "emplo_existing": null,
             "demand_emplo_new": -4395.354777639711,
             "invest_pa_outside": -785424810.7905451,
@@ -12215,7 +12057,6 @@
             "power_to_be_installed": null,
             "full_load_hour": null,
             "change_CO2e_pct": null,
-            "action": null,
             "emplo_existing": null,
             "demand_emplo_new": null,
             "invest_pa_outside": null,
@@ -12245,7 +12086,6 @@
             "power_to_be_installed": 6.862973575492365,
             "full_load_hour": 2500.0,
             "change_CO2e_pct": -1.5265858602565905,
-            "action": null,
             "emplo_existing": null,
             "demand_emplo_new": -41.44111331354401,
             "invest_pa_outside": null,
@@ -12275,7 +12115,6 @@
             "power_to_be_installed": 52.83401513532036,
             "full_load_hour": 2500.0,
             "change_CO2e_pct": -12.015770124196388,
-            "action": null,
             "emplo_existing": null,
             "demand_emplo_new": -319.03086671512216,
             "invest_pa_outside": null,
@@ -12305,7 +12144,6 @@
             "power_to_be_installed": 32.656192371928476,
             "full_load_hour": 2500.0,
             "change_CO2e_pct": -2.800238399949217,
-            "action": null,
             "emplo_existing": null,
             "demand_emplo_new": -197.18988476170696,
             "invest_pa_outside": null,
@@ -12335,7 +12173,6 @@
             "power_to_be_installed": null,
             "full_load_hour": null,
             "change_CO2e_pct": null,
-            "action": null,
             "emplo_existing": null,
             "demand_emplo_new": null,
             "invest_pa_outside": null,
@@ -12365,7 +12202,6 @@
             "power_to_be_installed": null,
             "full_load_hour": null,
             "change_CO2e_pct": null,
-            "action": null,
             "emplo_existing": null,
             "demand_emplo_new": null,
             "invest_pa_outside": null,
@@ -12395,7 +12231,6 @@
             "power_to_be_installed": null,
             "full_load_hour": null,
             "change_CO2e_pct": null,
-            "action": null,
             "emplo_existing": null,
             "demand_emplo_new": null,
             "invest_pa_outside": null,
@@ -12425,7 +12260,6 @@
             "power_to_be_installed": 583.3537237352315,
             "full_load_hour": 2500.0,
             "change_CO2e_pct": 0.0,
-            "action": null,
             "emplo_existing": null,
             "demand_emplo_new": -3837.6929128493375,
             "invest_pa_outside": -710274826.7707683,
@@ -12455,7 +12289,6 @@
             "power_to_be_installed": 17.96296890174388,
             "full_load_hour": 2300.0,
             "change_CO2e_pct": 0.0,
-            "action": null,
             "emplo_existing": null,
             "demand_emplo_new": 0,
             "invest_pa_outside": -10739289.264828306,
@@ -12485,7 +12318,6 @@
             "power_to_be_installed": 107.73592910027232,
             "full_load_hour": 2300.0,
             "change_CO2e_pct": 0.0,
-            "action": null,
             "emplo_existing": null,
             "demand_emplo_new": 0,
             "invest_pa_outside": -64410694.75494852,
@@ -12515,7 +12347,6 @@
             "power_to_be_installed": null,
             "full_load_hour": null,
             "change_CO2e_pct": null,
-            "action": null,
             "emplo_existing": null,
             "demand_emplo_new": null,
             "invest_pa_outside": null,
@@ -12545,7 +12376,6 @@
             "power_to_be_installed": null,
             "full_load_hour": null,
             "change_CO2e_pct": null,
-            "action": null,
             "emplo_existing": null,
             "demand_emplo_new": null,
             "invest_pa_outside": null,
@@ -12555,7 +12385,6 @@
     },
     "e30": {
         "e": {
-            "action": null,
             "energy": null,
             "pet_sites": null,
             "energy_installable": null,
@@ -12608,7 +12437,6 @@
             "lifecycle": null
         },
         "g": {
-            "action": null,
             "energy": null,
             "pet_sites": null,
             "energy_installable": null,
@@ -12661,7 +12489,6 @@
             "lifecycle": null
         },
         "g_grid_offshore": {
-            "action": null,
             "energy": null,
             "pet_sites": null,
             "energy_installable": null,
@@ -12714,7 +12541,6 @@
             "lifecycle": null
         },
         "g_grid_onshore": {
-            "action": null,
             "energy": null,
             "pet_sites": null,
             "energy_installable": null,
@@ -12767,7 +12593,6 @@
             "lifecycle": null
         },
         "g_grid_pv": {
-            "action": null,
             "energy": null,
             "pet_sites": null,
             "energy_installable": null,
@@ -12820,7 +12645,6 @@
             "lifecycle": null
         },
         "d": {
-            "action": null,
             "energy": 2559786.4368637023,
             "pet_sites": null,
             "energy_installable": null,
@@ -12873,7 +12697,6 @@
             "lifecycle": null
         },
         "d_r": {
-            "action": null,
             "energy": 143682.54751251897,
             "pet_sites": null,
             "energy_installable": null,
@@ -12926,7 +12749,6 @@
             "lifecycle": null
         },
         "d_b": {
-            "action": null,
             "energy": 179663.81021302321,
             "pet_sites": null,
             "energy_installable": null,
@@ -12979,7 +12801,6 @@
             "lifecycle": null
         },
         "d_h": {
-            "action": null,
             "energy": 20721.277769569602,
             "pet_sites": null,
             "energy_installable": null,
@@ -13032,7 +12853,6 @@
             "lifecycle": null
         },
         "d_i": {
-            "action": null,
             "energy": 105727.70755360962,
             "pet_sites": null,
             "energy_installable": null,
@@ -13085,7 +12905,6 @@
             "lifecycle": null
         },
         "d_t": {
-            "action": null,
             "energy": 130175.07089765111,
             "pet_sites": null,
             "energy_installable": null,
@@ -13138,7 +12957,6 @@
             "lifecycle": null
         },
         "d_a": {
-            "action": null,
             "energy": 1441.295467760249,
             "pet_sites": null,
             "energy_installable": null,
@@ -13191,7 +13009,6 @@
             "lifecycle": null
         },
         "d_f_hydrogen_reconv": {
-            "action": null,
             "energy": 247792.63693062632,
             "pet_sites": null,
             "energy_installable": null,
@@ -13244,7 +13061,6 @@
             "lifecycle": null
         },
         "d_e_hydrogen": {
-            "action": null,
             "energy": null,
             "pet_sites": null,
             "energy_installable": null,
@@ -13297,7 +13113,6 @@
             "lifecycle": null
         },
         "d_e_hydrogen_local": {
-            "action": null,
             "energy": null,
             "pet_sites": null,
             "energy_installable": null,
@@ -13350,7 +13165,6 @@
             "lifecycle": null
         },
         "d_f_wo_hydrogen": {
-            "action": null,
             "energy": 1730582.0905189428,
             "pet_sites": null,
             "energy_installable": null,
@@ -13403,7 +13217,6 @@
             "lifecycle": null
         },
         "p": {
-            "action": null,
             "energy": 2559786.4368637023,
             "pet_sites": null,
             "energy_installable": null,
@@ -13456,7 +13269,6 @@
             "lifecycle": null
         },
         "p_fossil_and_renew": {
-            "action": null,
             "energy": 2132466.7719758535,
             "pet_sites": null,
             "energy_installable": null,
@@ -13509,7 +13321,6 @@
             "lifecycle": null
         },
         "p_fossil": {
-            "action": null,
             "energy": 0,
             "pet_sites": null,
             "energy_installable": null,
@@ -13562,7 +13373,6 @@
             "lifecycle": null
         },
         "p_fossil_nuclear": {
-            "action": null,
             "energy": 0,
             "pet_sites": null,
             "energy_installable": null,
@@ -13615,7 +13425,6 @@
             "lifecycle": null
         },
         "p_fossil_coal_brown": {
-            "action": null,
             "energy": 0,
             "pet_sites": null,
             "energy_installable": null,
@@ -13668,7 +13477,6 @@
             "lifecycle": null
         },
         "p_fossil_coal_brown_cogen": {
-            "action": null,
             "energy": null,
             "pet_sites": null,
             "energy_installable": null,
@@ -13721,7 +13529,6 @@
             "lifecycle": null
         },
         "p_fossil_coal_black": {
-            "action": null,
             "energy": 0,
             "pet_sites": null,
             "energy_installable": null,
@@ -13774,7 +13581,6 @@
             "lifecycle": null
         },
         "p_fossil_coal_black_cogen": {
-            "action": null,
             "energy": null,
             "pet_sites": null,
             "energy_installable": null,
@@ -13827,7 +13633,6 @@
             "lifecycle": null
         },
         "p_fossil_gas": {
-            "action": null,
             "energy": 0,
             "pet_sites": null,
             "energy_installable": null,
@@ -13880,7 +13685,6 @@
             "lifecycle": null
         },
         "p_fossil_gas_cogen": {
-            "action": null,
             "energy": null,
             "pet_sites": null,
             "energy_installable": null,
@@ -13933,7 +13737,6 @@
             "lifecycle": null
         },
         "p_fossil_ofossil": {
-            "action": null,
             "energy": 0,
             "pet_sites": null,
             "energy_installable": null,
@@ -13986,7 +13789,6 @@
             "lifecycle": null
         },
         "p_fossil_ofossil_cogen": {
-            "action": null,
             "energy": null,
             "pet_sites": null,
             "energy_installable": null,
@@ -14039,7 +13841,6 @@
             "lifecycle": null
         },
         "p_renew": {
-            "action": null,
             "energy": 2132466.7719758535,
             "pet_sites": null,
             "energy_installable": null,
@@ -14092,7 +13893,6 @@
             "lifecycle": null
         },
         "p_renew_pv": {
-            "action": null,
             "energy": 1017408.4267767676,
             "pet_sites": null,
             "energy_installable": null,
@@ -14145,7 +13945,6 @@
             "lifecycle": null
         },
         "p_renew_pv_roof": {
-            "action": null,
             "energy": 225172.8330142342,
             "pet_sites": null,
             "energy_installable": null,
@@ -14198,7 +13997,6 @@
             "lifecycle": null
         },
         "p_renew_pv_facade": {
-            "action": null,
             "energy": 12341.164216802192,
             "pet_sites": null,
             "energy_installable": null,
@@ -14251,7 +14049,6 @@
             "lifecycle": null
         },
         "p_renew_pv_park": {
-            "action": null,
             "energy": 536255.6335854987,
             "pet_sites": null,
             "energy_installable": null,
@@ -14304,7 +14101,6 @@
             "lifecycle": null
         },
         "p_renew_pv_agri": {
-            "action": null,
             "energy": 243638.79596023253,
             "pet_sites": null,
             "energy_installable": null,
@@ -14357,7 +14153,6 @@
             "lifecycle": null
         },
         "p_renew_wind": {
-            "action": null,
             "energy": 891725.1001700547,
             "pet_sites": null,
             "energy_installable": null,
@@ -14410,7 +14205,6 @@
             "lifecycle": null
         },
         "p_renew_wind_onshore": {
-            "action": null,
             "energy": 492866.38267291914,
             "pet_sites": null,
             "energy_installable": null,
@@ -14463,7 +14257,6 @@
             "lifecycle": null
         },
         "p_renew_wind_offshore": {
-            "action": null,
             "energy": 398858.7174971356,
             "pet_sites": null,
             "energy_installable": 408875845.3168465,
@@ -14516,7 +14309,6 @@
             "lifecycle": null
         },
         "p_renew_biomass": {
-            "action": null,
             "energy": 80225.53242850359,
             "pet_sites": null,
             "energy_installable": null,
@@ -14569,7 +14361,6 @@
             "lifecycle": null
         },
         "p_renew_biomass_waste": {
-            "action": null,
             "energy": null,
             "pet_sites": null,
             "energy_installable": null,
@@ -14622,7 +14413,6 @@
             "lifecycle": null
         },
         "p_renew_biomass_solid": {
-            "action": null,
             "energy": null,
             "pet_sites": null,
             "energy_installable": null,
@@ -14675,7 +14465,6 @@
             "lifecycle": null
         },
         "p_renew_biomass_gaseous": {
-            "action": null,
             "energy": null,
             "pet_sites": null,
             "energy_installable": null,
@@ -14728,7 +14517,6 @@
             "lifecycle": null
         },
         "p_renew_biomass_cogen": {
-            "action": null,
             "energy": null,
             "pet_sites": null,
             "energy_installable": null,
@@ -14781,7 +14569,6 @@
             "lifecycle": null
         },
         "p_renew_geoth": {
-            "action": null,
             "energy": 26406.336037376994,
             "pet_sites": null,
             "energy_installable": 23202670.455305226,
@@ -14834,7 +14621,6 @@
             "lifecycle": null
         },
         "p_renew_hydro": {
-            "action": null,
             "energy": 28082.454920150016,
             "pet_sites": null,
             "energy_installable": null,
@@ -14887,7 +14673,6 @@
             "lifecycle": null
         },
         "p_renew_geoth_local": {
-            "action": null,
             "energy": null,
             "pet_sites": null,
             "energy_installable": null,
@@ -14940,7 +14725,6 @@
             "lifecycle": null
         },
         "p_renew_hydro_local": {
-            "action": null,
             "energy": null,
             "pet_sites": null,
             "energy_installable": null,
@@ -14993,7 +14777,6 @@
             "lifecycle": null
         },
         "p_renew_reverse": {
-            "action": null,
             "energy": 88618.92164300053,
             "pet_sites": null,
             "energy_installable": null,
@@ -15046,7 +14829,6 @@
             "lifecycle": null
         },
         "p_local": {
-            "action": null,
             "energy": 427319.66488784866,
             "pet_sites": null,
             "energy_installable": null,
@@ -15099,7 +14881,6 @@
             "lifecycle": null
         },
         "p_local_pv": {
-            "action": null,
             "energy": 278213.425910216,
             "pet_sites": null,
             "energy_installable": 698917.4256559697,
@@ -15152,7 +14933,6 @@
             "lifecycle": null
         },
         "p_local_pv_roof": {
-            "action": null,
             "energy": 139247.63741541703,
             "pet_sites": 0.5005065336435436,
             "energy_installable": 174059.54676927128,
@@ -15205,7 +14985,6 @@
             "lifecycle": null
         },
         "p_local_pv_facade": {
-            "action": null,
             "energy": 7874.147908802238,
             "pet_sites": 0.028302544649097393,
             "energy_installable": 78741.47908802239,
@@ -15258,7 +15037,6 @@
             "lifecycle": null
         },
         "p_local_pv_park": {
-            "action": null,
             "energy": 100671.1431869783,
             "pet_sites": 0.3618486162471056,
             "energy_installable": 143815.9188385404,
@@ -15311,7 +15089,6 @@
             "lifecycle": null
         },
         "p_local_pv_agri": {
-            "action": null,
             "energy": 30420.497399018444,
             "pet_sites": 0.1093423054602535,
             "energy_installable": 302300.4809601356,
@@ -15364,7 +15141,6 @@
             "lifecycle": null
         },
         "p_local_wind_onshore": {
-            "action": null,
             "energy": 95267.98357596634,
             "pet_sites": null,
             "energy_installable": 105853.31508440705,
@@ -15417,7 +15193,6 @@
             "lifecycle": null
         },
         "p_local_biomass": {
-            "action": null,
             "energy": 52350.579686988596,
             "pet_sites": null,
             "energy_installable": 30550.48769524393,
@@ -15470,7 +15245,6 @@
             "lifecycle": null
         },
         "p_local_biomass_solid": {
-            "action": null,
             "energy": null,
             "pet_sites": null,
             "energy_installable": null,
@@ -15523,7 +15297,6 @@
             "lifecycle": null
         },
         "p_local_biomass_gaseous": {
-            "action": null,
             "energy": null,
             "pet_sites": null,
             "energy_installable": null,
@@ -15576,7 +15349,6 @@
             "lifecycle": null
         },
         "p_local_biomass_cogen": {
-            "action": null,
             "energy": 15566.482779015369,
             "pet_sites": null,
             "energy_installable": null,
@@ -15629,7 +15401,6 @@
             "lifecycle": null
         },
         "p_local_hydro": {
-            "action": null,
             "energy": 1487.6757146776977,
             "pet_sites": null,
             "energy_installable": null,
@@ -15682,7 +15453,6 @@
             "lifecycle": null
         },
         "p_local_surplus": {
-            "action": null,
             "energy": -2132466.7719758535,
             "pet_sites": null,
             "energy_installable": null,
@@ -15767,7 +15537,6 @@
             "CO2e_cb_per_MWh": null,
             "area_ha_available": null,
             "full_load_hour": null,
-            "action": null,
             "emplo_existing": null
         },
         "g": {
@@ -15801,7 +15570,6 @@
             "CO2e_cb_per_MWh": null,
             "area_ha_available": null,
             "full_load_hour": null,
-            "action": null,
             "emplo_existing": null
         },
         "g_storage": {
@@ -15835,7 +15603,6 @@
             "CO2e_cb_per_MWh": null,
             "area_ha_available": null,
             "full_load_hour": null,
-            "action": null,
             "emplo_existing": null
         },
         "g_planning": {
@@ -15869,7 +15636,6 @@
             "CO2e_cb_per_MWh": null,
             "area_ha_available": null,
             "full_load_hour": null,
-            "action": null,
             "emplo_existing": null
         },
         "d": {
@@ -15903,7 +15669,6 @@
             "CO2e_cb_per_MWh": null,
             "area_ha_available": null,
             "full_load_hour": null,
-            "action": null,
             "emplo_existing": null
         },
         "d_r": {
@@ -15937,7 +15702,6 @@
             "CO2e_cb_per_MWh": null,
             "area_ha_available": null,
             "full_load_hour": null,
-            "action": null,
             "emplo_existing": null
         },
         "d_b": {
@@ -15971,7 +15735,6 @@
             "CO2e_cb_per_MWh": null,
             "area_ha_available": null,
             "full_load_hour": null,
-            "action": null,
             "emplo_existing": null
         },
         "d_i": {
@@ -16005,7 +15768,6 @@
             "CO2e_cb_per_MWh": null,
             "area_ha_available": null,
             "full_load_hour": null,
-            "action": null,
             "emplo_existing": null
         },
         "d_t": {
@@ -16039,7 +15801,6 @@
             "CO2e_cb_per_MWh": null,
             "area_ha_available": null,
             "full_load_hour": null,
-            "action": null,
             "emplo_existing": null
         },
         "a_t": {
@@ -16073,7 +15834,6 @@
             "CO2e_cb_per_MWh": null,
             "area_ha_available": null,
             "full_load_hour": null,
-            "action": null,
             "emplo_existing": null
         },
         "p": {
@@ -16107,7 +15867,6 @@
             "CO2e_cb_per_MWh": null,
             "area_ha_available": null,
             "full_load_hour": null,
-            "action": null,
             "emplo_existing": null
         },
         "p_gas": {
@@ -16141,7 +15900,6 @@
             "CO2e_cb_per_MWh": 0.002206046641658,
             "area_ha_available": null,
             "full_load_hour": null,
-            "action": null,
             "emplo_existing": null
         },
         "p_lpg": {
@@ -16175,7 +15933,6 @@
             "CO2e_cb_per_MWh": 0.0284197603758379,
             "area_ha_available": null,
             "full_load_hour": null,
-            "action": null,
             "emplo_existing": null
         },
         "p_fueloil": {
@@ -16209,7 +15966,6 @@
             "CO2e_cb_per_MWh": 0.0191776334412139,
             "area_ha_available": null,
             "full_load_hour": null,
-            "action": null,
             "emplo_existing": null
         },
         "p_opetpro": {
@@ -16243,7 +15999,6 @@
             "CO2e_cb_per_MWh": 0.3118825518140825,
             "area_ha_available": null,
             "full_load_hour": null,
-            "action": null,
             "emplo_existing": null
         },
         "p_coal": {
@@ -16277,7 +16032,6 @@
             "CO2e_cb_per_MWh": 0.0808272370347615,
             "area_ha_available": null,
             "full_load_hour": null,
-            "action": null,
             "emplo_existing": null
         },
         "p_heatnet": {
@@ -16311,7 +16065,6 @@
             "CO2e_cb_per_MWh": null,
             "area_ha_available": null,
             "full_load_hour": null,
-            "action": null,
             "emplo_existing": null
         },
         "p_heatnet_cogen": {
@@ -16345,7 +16098,6 @@
             "CO2e_cb_per_MWh": 0.0445548939337551,
             "area_ha_available": null,
             "full_load_hour": null,
-            "action": null,
             "emplo_existing": null
         },
         "p_heatnet_plant": {
@@ -16379,7 +16131,6 @@
             "CO2e_cb_per_MWh": null,
             "area_ha_available": 2.5042827678731157,
             "full_load_hour": null,
-            "action": null,
             "emplo_existing": null
         },
         "p_heatnet_lheatpump": {
@@ -16413,7 +16164,6 @@
             "CO2e_cb_per_MWh": null,
             "area_ha_available": null,
             "full_load_hour": 4380.0,
-            "action": null,
             "emplo_existing": null
         },
         "p_heatnet_geoth": {
@@ -16447,7 +16197,6 @@
             "CO2e_cb_per_MWh": null,
             "area_ha_available": null,
             "full_load_hour": 3000.0,
-            "action": null,
             "emplo_existing": null
         },
         "p_biomass": {
@@ -16481,7 +16230,6 @@
             "CO2e_cb_per_MWh": null,
             "area_ha_available": null,
             "full_load_hour": null,
-            "action": null,
             "emplo_existing": null
         },
         "p_ofossil": {
@@ -16515,7 +16263,6 @@
             "CO2e_cb_per_MWh": null,
             "area_ha_available": null,
             "full_load_hour": null,
-            "action": null,
             "emplo_existing": null
         },
         "p_orenew": {
@@ -16549,7 +16296,6 @@
             "CO2e_cb_per_MWh": null,
             "area_ha_available": null,
             "full_load_hour": null,
-            "action": null,
             "emplo_existing": null
         },
         "p_solarth": {
@@ -16583,7 +16329,6 @@
             "CO2e_cb_per_MWh": null,
             "area_ha_available": null,
             "full_load_hour": null,
-            "action": null,
             "emplo_existing": null
         },
         "p_heatpump": {
@@ -16617,7 +16362,6 @@
             "CO2e_cb_per_MWh": null,
             "area_ha_available": null,
             "full_load_hour": null,
-            "action": null,
             "emplo_existing": null
         },
         "p_local_biomass": {
@@ -16651,7 +16395,6 @@
             "CO2e_cb_per_MWh": null,
             "area_ha_available": null,
             "full_load_hour": 6343.026121241992,
-            "action": null,
             "emplo_existing": null
         },
         "p_local_biomass_cogen": {
@@ -16685,7 +16428,6 @@
             "CO2e_cb_per_MWh": null,
             "area_ha_available": null,
             "full_load_hour": null,
-            "action": null,
             "emplo_existing": null
         },
         "p_fossil_change_CO2e_t": -27112.601736625664
@@ -16711,7 +16453,6 @@
             "demand_change": null,
             "area_ha_change": null,
             "CO2e_cb_per_t": null,
-            "action": null,
             "pct_of_wage": null,
             "ratio_wage_to_emplo": null,
             "emplo_existing": null,
@@ -16743,7 +16484,6 @@
             "demand_change": null,
             "area_ha_change": null,
             "CO2e_cb_per_t": null,
-            "action": null,
             "pct_of_wage": null,
             "ratio_wage_to_emplo": null,
             "emplo_existing": null,
@@ -16775,7 +16515,6 @@
             "demand_change": null,
             "area_ha_change": 4.547473508864641e-13,
             "CO2e_cb_per_t": null,
-            "action": null,
             "pct_of_wage": null,
             "ratio_wage_to_emplo": null,
             "emplo_existing": null,
@@ -16807,7 +16546,6 @@
             "demand_change": -0.0421810699588476,
             "area_ha_change": -143.74599999999953,
             "CO2e_cb_per_t": 2.083313117254809,
-            "action": null,
             "pct_of_wage": 0.53,
             "ratio_wage_to_emplo": 56500.0,
             "emplo_existing": null,
@@ -16839,7 +16577,6 @@
             "demand_change": 1.4642857142857144,
             "area_ha_change": 143.746,
             "CO2e_cb_per_t": null,
-            "action": null,
             "pct_of_wage": null,
             "ratio_wage_to_emplo": null,
             "emplo_existing": null,
@@ -16871,7 +16608,6 @@
             "demand_change": -0.021625665200934847,
             "area_ha_change": -58.263002157750634,
             "CO2e_cb_per_t": null,
-            "action": null,
             "pct_of_wage": null,
             "ratio_wage_to_emplo": null,
             "emplo_existing": null,
@@ -16903,7 +16639,6 @@
             "demand_change": null,
             "area_ha_change": -58.26300215774987,
             "CO2e_cb_per_t": null,
-            "action": null,
             "pct_of_wage": null,
             "ratio_wage_to_emplo": null,
             "emplo_existing": null,
@@ -16935,7 +16670,6 @@
             "demand_change": -0.25,
             "area_ha_change": -655.3328118257031,
             "CO2e_cb_per_t": null,
-            "action": null,
             "pct_of_wage": null,
             "ratio_wage_to_emplo": null,
             "emplo_existing": null,
@@ -16967,7 +16701,6 @@
             "demand_change": null,
             "area_ha_change": 655.3328118257031,
             "CO2e_cb_per_t": null,
-            "action": null,
             "pct_of_wage": null,
             "ratio_wage_to_emplo": null,
             "emplo_existing": null,
@@ -16999,7 +16732,6 @@
             "demand_change": -0.8,
             "area_ha_change": -44.46711158339902,
             "CO2e_cb_per_t": null,
-            "action": null,
             "pct_of_wage": 0.4270386266094421,
             "ratio_wage_to_emplo": 53000.0,
             "emplo_existing": null,
@@ -17031,7 +16763,6 @@
             "demand_change": -0.8,
             "area_ha_change": -13.795890574350848,
             "CO2e_cb_per_t": null,
-            "action": null,
             "pct_of_wage": 0.4270386266094421,
             "ratio_wage_to_emplo": 53000.0,
             "emplo_existing": null,
@@ -17063,7 +16794,6 @@
             "demand_change": -0.11977287832151405,
             "area_ha_change": -154.03271243659992,
             "CO2e_cb_per_t": null,
-            "action": null,
             "pct_of_wage": null,
             "ratio_wage_to_emplo": null,
             "emplo_existing": null,
@@ -17095,7 +16825,6 @@
             "demand_change": 0.0,
             "area_ha_change": 0.0,
             "CO2e_cb_per_t": null,
-            "action": null,
             "pct_of_wage": null,
             "ratio_wage_to_emplo": null,
             "emplo_existing": null,
@@ -17127,7 +16856,6 @@
             "demand_change": -0.8,
             "area_ha_change": -117.55985029516387,
             "CO2e_cb_per_t": null,
-            "action": null,
             "pct_of_wage": 0.4270386266094421,
             "ratio_wage_to_emplo": 53000.0,
             "emplo_existing": null,
@@ -17159,7 +16887,6 @@
             "demand_change": -0.8,
             "area_ha_change": -36.472862141435876,
             "CO2e_cb_per_t": null,
-            "action": null,
             "pct_of_wage": 0.4270386266094421,
             "ratio_wage_to_emplo": 53000.0,
             "emplo_existing": null,
@@ -17191,7 +16918,6 @@
             "demand_change": -0.04069547865979342,
             "area_ha_change": -52.33601337564073,
             "CO2e_cb_per_t": null,
-            "action": null,
             "pct_of_wage": null,
             "ratio_wage_to_emplo": null,
             "emplo_existing": null,
@@ -17223,7 +16949,6 @@
             "demand_change": 0.0,
             "area_ha_change": 0.0,
             "CO2e_cb_per_t": null,
-            "action": null,
             "pct_of_wage": null,
             "ratio_wage_to_emplo": null,
             "emplo_existing": null,
@@ -17255,7 +16980,6 @@
             "demand_change": null,
             "area_ha_change": -52.33601337564086,
             "CO2e_cb_per_t": null,
-            "action": null,
             "pct_of_wage": null,
             "ratio_wage_to_emplo": null,
             "emplo_existing": null,
@@ -17287,7 +17011,6 @@
             "demand_change": -0.8,
             "area_ha_change": -39.943553548850666,
             "CO2e_cb_per_t": null,
-            "action": null,
             "pct_of_wage": 0.4270386266094421,
             "ratio_wage_to_emplo": 53000.0,
             "emplo_existing": null,
@@ -17319,7 +17042,6 @@
             "demand_change": -0.8,
             "area_ha_change": -12.392459826790196,
             "CO2e_cb_per_t": null,
-            "action": null,
             "pct_of_wage": 0.4270386266094421,
             "ratio_wage_to_emplo": 53000.0,
             "emplo_existing": null,
@@ -17351,7 +17073,6 @@
             "demand_change": null,
             "area_ha_change": 264.6317279699905,
             "CO2e_cb_per_t": null,
-            "action": null,
             "pct_of_wage": null,
             "ratio_wage_to_emplo": null,
             "emplo_existing": null,
@@ -17383,7 +17104,6 @@
             "demand_change": 0.0,
             "area_ha_change": 0.0,
             "CO2e_cb_per_t": null,
-            "action": null,
             "pct_of_wage": null,
             "ratio_wage_to_emplo": null,
             "emplo_existing": null,
@@ -17415,7 +17135,6 @@
             "demand_change": -0.8,
             "area_ha_change": -3.2003379010498882,
             "CO2e_cb_per_t": null,
-            "action": null,
             "pct_of_wage": 0.4270386266094421,
             "ratio_wage_to_emplo": 53000.0,
             "emplo_existing": null,
@@ -17447,7 +17166,6 @@
             "demand_change": -0.8,
             "area_ha_change": -0.9929026175002424,
             "CO2e_cb_per_t": null,
-            "action": null,
             "pct_of_wage": 0.4270386266094421,
             "ratio_wage_to_emplo": 53000.0,
             "emplo_existing": null,
@@ -17479,7 +17197,6 @@
             "demand_change": null,
             "area_ha_change": 205.17085332846344,
             "CO2e_cb_per_t": null,
-            "action": null,
             "pct_of_wage": null,
             "ratio_wage_to_emplo": null,
             "emplo_existing": null,
@@ -17511,7 +17228,6 @@
             "demand_change": null,
             "area_ha_change": null,
             "CO2e_cb_per_t": null,
-            "action": null,
             "pct_of_wage": null,
             "ratio_wage_to_emplo": null,
             "emplo_existing": null,
@@ -17543,7 +17259,6 @@
             "demand_change": null,
             "area_ha_change": 63.65411516007716,
             "CO2e_cb_per_t": null,
-            "action": null,
             "pct_of_wage": null,
             "ratio_wage_to_emplo": null,
             "emplo_existing": null,
@@ -17575,7 +17290,6 @@
             "demand_change": null,
             "area_ha_change": null,
             "CO2e_cb_per_t": null,
-            "action": null,
             "pct_of_wage": null,
             "ratio_wage_to_emplo": null,
             "emplo_existing": null,
@@ -17607,7 +17321,6 @@
             "demand_change": 0.0,
             "area_ha_change": 0.0,
             "CO2e_cb_per_t": null,
-            "action": null,
             "pct_of_wage": null,
             "ratio_wage_to_emplo": null,
             "emplo_existing": null,
@@ -17639,7 +17352,6 @@
             "demand_change": 0.0,
             "area_ha_change": 0.0,
             "CO2e_cb_per_t": null,
-            "action": null,
             "pct_of_wage": null,
             "ratio_wage_to_emplo": null,
             "emplo_existing": null,
@@ -17671,7 +17383,6 @@
             "demand_change": null,
             "area_ha_change": 0.0,
             "CO2e_cb_per_t": null,
-            "action": null,
             "pct_of_wage": null,
             "ratio_wage_to_emplo": null,
             "emplo_existing": null,
@@ -17703,7 +17414,6 @@
             "demand_change": -1.7680140232281427e-16,
             "area_ha_change": -2.2737367544323206e-13,
             "CO2e_cb_per_t": null,
-            "action": null,
             "pct_of_wage": null,
             "ratio_wage_to_emplo": null,
             "emplo_existing": null,
@@ -17735,7 +17445,6 @@
             "demand_change": null,
             "area_ha_change": 0.0,
             "CO2e_cb_per_t": null,
-            "action": null,
             "pct_of_wage": null,
             "ratio_wage_to_emplo": null,
             "emplo_existing": null,
@@ -17767,7 +17476,6 @@
             "demand_change": 0.0,
             "area_ha_change": 0.0,
             "CO2e_cb_per_t": null,
-            "action": null,
             "pct_of_wage": null,
             "ratio_wage_to_emplo": null,
             "emplo_existing": null,
@@ -17799,7 +17507,6 @@
             "demand_change": 0.0,
             "area_ha_change": 0.0,
             "CO2e_cb_per_t": null,
-            "action": null,
             "pct_of_wage": null,
             "ratio_wage_to_emplo": null,
             "emplo_existing": null,
@@ -17831,7 +17538,6 @@
             "demand_change": 0.0,
             "area_ha_change": 0.0,
             "CO2e_cb_per_t": null,
-            "action": null,
             "pct_of_wage": null,
             "ratio_wage_to_emplo": null,
             "emplo_existing": null,
@@ -17863,7 +17569,6 @@
             "demand_change": 0.0,
             "area_ha_change": 0.0,
             "CO2e_cb_per_t": null,
-            "action": null,
             "pct_of_wage": null,
             "ratio_wage_to_emplo": null,
             "emplo_existing": null,
@@ -17895,7 +17600,6 @@
             "demand_change": null,
             "area_ha_change": null,
             "CO2e_cb_per_t": null,
-            "action": null,
             "pct_of_wage": null,
             "ratio_wage_to_emplo": null,
             "emplo_existing": null,
@@ -17927,7 +17631,6 @@
             "demand_change": null,
             "area_ha_change": null,
             "CO2e_cb_per_t": null,
-            "action": null,
             "pct_of_wage": 0.255,
             "ratio_wage_to_emplo": 47195.04268309767,
             "emplo_existing": null,
@@ -17959,7 +17662,6 @@
             "demand_change": null,
             "area_ha_change": null,
             "CO2e_cb_per_t": null,
-            "action": null,
             "pct_of_wage": null,
             "ratio_wage_to_emplo": null,
             "emplo_existing": null,
@@ -17991,7 +17693,6 @@
             "demand_change": null,
             "area_ha_change": -154.03271243659975,
             "CO2e_cb_per_t": null,
-            "action": null,
             "pct_of_wage": null,
             "ratio_wage_to_emplo": null,
             "emplo_existing": null,
@@ -18023,7 +17724,6 @@
             "demand_change": null,
             "area_ha_change": -4.19324051855013,
             "CO2e_cb_per_t": null,
-            "action": null,
             "pct_of_wage": null,
             "ratio_wage_to_emplo": null,
             "emplo_existing": null,
@@ -18055,7 +17755,6 @@
             "demand_change": null,
             "area_ha_change": 268.8249684885406,
             "CO2e_cb_per_t": null,
-            "action": null,
             "pct_of_wage": null,
             "ratio_wage_to_emplo": null,
             "emplo_existing": null,
@@ -18087,7 +17786,6 @@
             "demand_change": null,
             "area_ha_change": null,
             "CO2e_cb_per_t": null,
-            "action": null,
             "pct_of_wage": null,
             "ratio_wage_to_emplo": null,
             "emplo_existing": null,
@@ -18119,7 +17817,6 @@
             "demand_change": 0.0,
             "area_ha_change": 0.0,
             "CO2e_cb_per_t": null,
-            "action": null,
             "pct_of_wage": null,
             "ratio_wage_to_emplo": null,
             "emplo_existing": null,
@@ -18151,7 +17848,6 @@
             "demand_change": 0.0,
             "area_ha_change": 0.0,
             "CO2e_cb_per_t": null,
-            "action": null,
             "pct_of_wage": null,
             "ratio_wage_to_emplo": null,
             "emplo_existing": null,
@@ -18197,7 +17893,6 @@
             "invest_per_x": null,
             "area_ha_available": null,
             "demand_change": null,
-            "action": null,
             "area_ha_change": null,
             "area_ha": null,
             "pct_nonrehab": null,
@@ -18255,7 +17950,6 @@
             "invest_per_x": null,
             "area_ha_available": null,
             "demand_change": null,
-            "action": null,
             "area_ha_change": null,
             "area_ha": null,
             "pct_nonrehab": null,
@@ -18313,7 +18007,6 @@
             "invest_per_x": null,
             "area_ha_available": null,
             "demand_change": null,
-            "action": null,
             "area_ha_change": null,
             "area_ha": null,
             "pct_nonrehab": null,
@@ -18371,7 +18064,6 @@
             "invest_per_x": 9520.0,
             "area_ha_available": 52.79303216591413,
             "demand_change": null,
-            "action": null,
             "area_ha_change": null,
             "area_ha": null,
             "pct_nonrehab": null,
@@ -18429,7 +18121,6 @@
             "invest_per_x": 366.8225290276236,
             "area_ha_available": 3962,
             "demand_change": null,
-            "action": null,
             "area_ha_change": null,
             "area_ha": null,
             "pct_nonrehab": null,
@@ -18487,7 +18178,6 @@
             "invest_per_x": null,
             "area_ha_available": null,
             "demand_change": null,
-            "action": null,
             "area_ha_change": null,
             "area_ha": null,
             "pct_nonrehab": null,
@@ -18545,7 +18235,6 @@
             "invest_per_x": null,
             "area_ha_available": null,
             "demand_change": -0.5537564924772611,
-            "action": null,
             "area_ha_change": null,
             "area_ha": null,
             "pct_nonrehab": null,
@@ -18603,7 +18292,6 @@
             "invest_per_x": null,
             "area_ha_available": null,
             "demand_change": -0.7935872134159138,
-            "action": null,
             "area_ha_change": null,
             "area_ha": null,
             "pct_nonrehab": null,
@@ -18661,7 +18349,6 @@
             "invest_per_x": null,
             "area_ha_available": null,
             "demand_change": -0.8540446827456993,
-            "action": null,
             "area_ha_change": null,
             "area_ha": null,
             "pct_nonrehab": null,
@@ -18719,7 +18406,6 @@
             "invest_per_x": null,
             "area_ha_available": null,
             "demand_change": -0.648972121879619,
-            "action": null,
             "area_ha_change": null,
             "area_ha": null,
             "pct_nonrehab": null,
@@ -18777,7 +18463,6 @@
             "invest_per_x": null,
             "area_ha_available": null,
             "demand_change": -0.4503130529158412,
-            "action": null,
             "area_ha_change": null,
             "area_ha": null,
             "pct_nonrehab": null,
@@ -18835,7 +18520,6 @@
             "invest_per_x": null,
             "area_ha_available": null,
             "demand_change": null,
-            "action": null,
             "area_ha_change": null,
             "area_ha": null,
             "pct_nonrehab": null,
@@ -18893,7 +18577,6 @@
             "invest_per_x": null,
             "area_ha_available": null,
             "demand_change": -0.6084273809583487,
-            "action": null,
             "area_ha_change": null,
             "area_ha": null,
             "pct_nonrehab": null,
@@ -18951,7 +18634,6 @@
             "invest_per_x": null,
             "area_ha_available": null,
             "demand_change": -0.6084273809583487,
-            "action": null,
             "area_ha_change": null,
             "area_ha": null,
             "pct_nonrehab": null,
@@ -19009,7 +18691,6 @@
             "invest_per_x": null,
             "area_ha_available": null,
             "demand_change": -0.6084273809583487,
-            "action": null,
             "area_ha_change": null,
             "area_ha": null,
             "pct_nonrehab": null,
@@ -19067,7 +18748,6 @@
             "invest_per_x": null,
             "area_ha_available": null,
             "demand_change": -0.6084273809583487,
-            "action": null,
             "area_ha_change": null,
             "area_ha": null,
             "pct_nonrehab": null,
@@ -19125,7 +18805,6 @@
             "invest_per_x": null,
             "area_ha_available": null,
             "demand_change": -0.6084273809583487,
-            "action": null,
             "area_ha_change": null,
             "area_ha": null,
             "pct_nonrehab": null,
@@ -19183,7 +18862,6 @@
             "invest_per_x": null,
             "area_ha_available": null,
             "demand_change": -0.6084273809583487,
-            "action": null,
             "area_ha_change": null,
             "area_ha": null,
             "pct_nonrehab": null,
@@ -19241,7 +18919,6 @@
             "invest_per_x": null,
             "area_ha_available": null,
             "demand_change": null,
-            "action": null,
             "area_ha_change": null,
             "area_ha": null,
             "pct_nonrehab": null,
@@ -19299,7 +18976,6 @@
             "invest_per_x": null,
             "area_ha_available": null,
             "demand_change": -0.4897959183673469,
-            "action": null,
             "area_ha_change": -58.263002157750634,
             "area_ha": 2635.8969978422497,
             "pct_nonrehab": null,
@@ -19357,7 +19033,6 @@
             "invest_per_x": null,
             "area_ha_available": null,
             "demand_change": -0.4897959183673469,
-            "action": null,
             "area_ha_change": -58.263002157750634,
             "area_ha": 2635.8969978422497,
             "pct_nonrehab": null,
@@ -19415,7 +19090,6 @@
             "invest_per_x": null,
             "area_ha_available": null,
             "demand_change": -0.4897959183673469,
-            "action": null,
             "area_ha_change": -58.263002157750634,
             "area_ha": 2635.8969978422497,
             "pct_nonrehab": null,
@@ -19473,7 +19147,6 @@
             "invest_per_x": null,
             "area_ha_available": null,
             "demand_change": -0.4897959183673469,
-            "action": null,
             "area_ha_change": -58.263002157750634,
             "area_ha": 2635.8969978422497,
             "pct_nonrehab": null,
@@ -19531,7 +19204,6 @@
             "invest_per_x": null,
             "area_ha_available": null,
             "demand_change": -0.6875165819363498,
-            "action": null,
             "area_ha_change": -154.03271243659992,
             "area_ha": 1132.0072875634,
             "pct_nonrehab": null,
@@ -19589,7 +19261,6 @@
             "invest_per_x": null,
             "area_ha_available": null,
             "demand_change": 0.0,
-            "action": null,
             "area_ha_change": -58.263002157750634,
             "area_ha": 2635.8969978422497,
             "pct_nonrehab": null,
@@ -19647,7 +19318,6 @@
             "invest_per_x": null,
             "area_ha_available": null,
             "demand_change": 0.0,
-            "action": null,
             "area_ha_change": -212.2957145943496,
             "area_ha": 53.0739286485874,
             "pct_nonrehab": null,
@@ -19705,7 +19375,6 @@
             "invest_per_x": null,
             "area_ha_available": null,
             "demand_change": 0.0,
-            "action": null,
             "area_ha_change": -58.26300215774987,
             "area_ha": 14.565750539437461,
             "pct_nonrehab": null,
@@ -19763,7 +19432,6 @@
             "invest_per_x": null,
             "area_ha_available": null,
             "demand_change": -0.4897959183673469,
-            "action": null,
             "area_ha_change": -212.29571459435056,
             "area_ha": 3767.9042854056497,
             "pct_nonrehab": null,
@@ -19821,7 +19489,6 @@
             "invest_per_x": null,
             "area_ha_available": null,
             "demand_change": -0.4897959183673469,
-            "action": null,
             "area_ha_change": -212.29571459435056,
             "area_ha": 3767.9042854056497,
             "pct_nonrehab": null,
@@ -19879,7 +19546,6 @@
             "invest_per_x": null,
             "area_ha_available": null,
             "demand_change": null,
-            "action": null,
             "area_ha_change": null,
             "area_ha": null,
             "pct_nonrehab": null,
@@ -19937,7 +19603,6 @@
             "invest_per_x": null,
             "area_ha_available": null,
             "demand_change": null,
-            "action": null,
             "area_ha_change": null,
             "area_ha": null,
             "pct_nonrehab": null,
@@ -19995,7 +19660,6 @@
             "invest_per_x": null,
             "area_ha_available": null,
             "demand_change": 0.0,
-            "action": null,
             "area_ha_change": null,
             "area_ha": null,
             "pct_nonrehab": null,
@@ -20053,7 +19717,6 @@
             "invest_per_x": null,
             "area_ha_available": null,
             "demand_change": 0.0,
-            "action": null,
             "area_ha_change": null,
             "area_ha": null,
             "pct_nonrehab": null,
@@ -20111,7 +19774,6 @@
             "invest_per_x": null,
             "area_ha_available": null,
             "demand_change": -0.4897959183673469,
-            "action": null,
             "area_ha_change": null,
             "area_ha": null,
             "pct_nonrehab": null,
@@ -20169,7 +19831,6 @@
             "invest_per_x": null,
             "area_ha_available": null,
             "demand_change": 0.0,
-            "action": null,
             "area_ha_change": null,
             "area_ha": null,
             "pct_nonrehab": null,
@@ -20227,7 +19888,6 @@
             "invest_per_x": null,
             "area_ha_available": null,
             "demand_change": -1.0,
-            "action": null,
             "area_ha_change": null,
             "area_ha": null,
             "pct_nonrehab": null,
@@ -20285,7 +19945,6 @@
             "invest_per_x": null,
             "area_ha_available": null,
             "demand_change": null,
-            "action": null,
             "area_ha_change": null,
             "area_ha": null,
             "pct_nonrehab": null,
@@ -20343,7 +20002,6 @@
             "invest_per_x": 478.0,
             "area_ha_available": null,
             "demand_change": null,
-            "action": null,
             "area_ha_change": null,
             "area_ha": null,
             "pct_nonrehab": 0.89,
@@ -20401,7 +20059,6 @@
             "invest_per_x": null,
             "area_ha_available": null,
             "demand_change": -0.1540217537263327,
-            "action": null,
             "area_ha_change": null,
             "area_ha": null,
             "pct_nonrehab": null,
@@ -20459,7 +20116,6 @@
             "invest_per_x": null,
             "area_ha_available": null,
             "demand_change": null,
-            "action": null,
             "area_ha_change": null,
             "area_ha": null,
             "pct_nonrehab": null,
@@ -20517,7 +20173,6 @@
             "invest_per_x": null,
             "area_ha_available": null,
             "demand_change": -0.3767540182964609,
-            "action": null,
             "area_ha_change": null,
             "area_ha": null,
             "pct_nonrehab": null,
@@ -20575,7 +20230,6 @@
             "invest_per_x": null,
             "area_ha_available": null,
             "demand_change": null,
-            "action": null,
             "area_ha_change": null,
             "area_ha": null,
             "pct_nonrehab": null,
@@ -20633,7 +20287,6 @@
             "invest_per_x": null,
             "area_ha_available": null,
             "demand_change": null,
-            "action": null,
             "area_ha_change": null,
             "area_ha": null,
             "pct_nonrehab": null,
@@ -20691,7 +20344,6 @@
             "invest_per_x": null,
             "area_ha_available": null,
             "demand_change": null,
-            "action": null,
             "area_ha_change": null,
             "area_ha": null,
             "pct_nonrehab": null,
@@ -20749,7 +20401,6 @@
             "invest_per_x": null,
             "area_ha_available": null,
             "demand_change": null,
-            "action": null,
             "area_ha_change": null,
             "area_ha": null,
             "pct_nonrehab": null,
@@ -20807,7 +20458,6 @@
             "invest_per_x": null,
             "area_ha_available": null,
             "demand_change": null,
-            "action": null,
             "area_ha_change": null,
             "area_ha": null,
             "pct_nonrehab": null,
@@ -20865,7 +20515,6 @@
             "invest_per_x": null,
             "area_ha_available": null,
             "demand_change": null,
-            "action": null,
             "area_ha_change": null,
             "area_ha": null,
             "pct_nonrehab": null,
@@ -20923,7 +20572,6 @@
             "invest_per_x": null,
             "area_ha_available": null,
             "demand_change": null,
-            "action": null,
             "area_ha_change": null,
             "area_ha": null,
             "pct_nonrehab": null,
@@ -20981,7 +20629,6 @@
             "invest_per_x": null,
             "area_ha_available": null,
             "demand_change": null,
-            "action": null,
             "area_ha_change": null,
             "area_ha": null,
             "pct_nonrehab": null,
@@ -21039,7 +20686,6 @@
             "invest_per_x": 1328.186,
             "area_ha_available": null,
             "demand_change": null,
-            "action": null,
             "area_ha_change": null,
             "area_ha": null,
             "pct_nonrehab": null,
@@ -21097,7 +20743,6 @@
             "invest_per_x": null,
             "area_ha_available": null,
             "demand_change": null,
-            "action": null,
             "area_ha_change": null,
             "area_ha": null,
             "pct_nonrehab": null,

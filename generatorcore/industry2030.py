@@ -30,7 +30,6 @@ class IColVars2030:
     change_CO2e_pct: float = None  # type: ignore
     CO2e_total_2021_estimated: float = None  # type: ignore
     cost_climate_saved: float = None  # type: ignore
-    action: float = None  # type: ignore
     invest_pa: float = None  # type: ignore
     invest_pa_com: float = None  # type: ignore
     invest_pa_outside: float = None  # type: ignore

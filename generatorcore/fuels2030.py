@@ -36,7 +36,6 @@ class FColVars2030:
     power_to_be_installed: float = None  # type: ignore
     full_load_hour: float = None  # type: ignore
     change_CO2e_pct: float = None  # type: ignore
-    action: float = None  # type: ignore
     emplo_existing: float = None  # type: ignore
     demand_emplo_new: float = None  # type: ignore
     invest_pa_outside: float = None  # type: ignore
