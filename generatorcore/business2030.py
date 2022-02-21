@@ -391,7 +391,9 @@ def calc(
     s_lpg.CO2e_cb = s_lpg.energy * s_lpg.CO2e_cb_per_MWh
     s_petrol.CO2e_cb = s_petrol.energy * s_petrol.CO2e_cb_per_MWh
     s_jetfuel.CO2e_cb = s_jetfuel.energy * s_jetfuel.CO2e_cb_per_MWh
-    s_diesel.CO2e_cb = 0
+
+    s_diesel.CO2e_cb = s_diesel.energy * s_diesel.CO2e_cb_per_MWh
+
     s_fueloil.CO2e_cb = s_fueloil.energy * s_fueloil.CO2e_cb_per_MWh
     s_biomass.CO2e_cb = s_biomass.energy * s_biomass.CO2e_cb_per_MWh
     s_coal.CO2e_cb = s_coal.energy * s_coal.CO2e_cb_per_MWh
