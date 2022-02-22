@@ -1,9 +1,19 @@
+import csv
 import sys
 import os.path
 import json
 from generatorcore import refdatatools
 from generatorcore import refdata
 from generatorcore import makeentries
+
+
+def cmd_data_normalize(args):
+    with open(args.file, "r") as fp:
+        rows = list(csv.reader(fp))
+    with open(args.file, "w") as fp:
+        writer = csv.writer(fp, lineterminator="\n")
+        for row in rows:
+            writer.writerow(row)
 
 
 def cmd_data_is_production(args):
