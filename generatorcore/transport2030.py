@@ -9,41 +9,41 @@ from . import transport2018
 
 @dataclass
 class TColVars2030:
-    energy: float = None
-    mileage: float = None
-    transport_capacity_pkm: float = None
-    transport_capacity_tkm: float = None
-    demand_electricity: float = None
-    demand_epetrol: float = None
-    demand_ejetfuel: float = None
-    demand_ediesel: float = None
-    demand_hydrogen: float = None
-    demand_change: float = None
-    CO2e_cb: float = None
-    CO2e_total: float = None
-    change_energy_MWh: float = None
-    change_energy_pct: float = None
-    change_CO2e_t: float = None
-    change_CO2e_pct: float = None
-    pct_of_wage: float = None
-    CO2e_total_2021_estimated: float = None
-    cost_climate_saved: float = None
-    change_km: float = None
-    invest_pa: float = None
-    invest_pa_com: float = None
-    invest_pa_outside: float = None
-    invest: float = None
-    invest_com: float = None
-    invest_outside: float = None
-    cost_wage: float = None
-    ratio_wage_to_emplo: float = None
-    demand_emplo: float = None
-    demand_emplo_com: float = None
-    emplo_existing: float = None
-    demand_emplo_new: float = None
-    invest_per_x: float = None
-    transport_capacity_pkm: float = None
-    base_unit: float = None
+    energy: float = None  # type: ignore
+    mileage: float = None  # type: ignore
+    transport_capacity_pkm: float = None  # type: ignore
+    transport_capacity_tkm: float = None  # type: ignore
+    demand_electricity: float = None  # type: ignore
+    demand_epetrol: float = None  # type: ignore
+    demand_ejetfuel: float = None  # type: ignore
+    demand_ediesel: float = None  # type: ignore
+    demand_hydrogen: float = None  # type: ignore
+    demand_change: float = None  # type: ignore
+    CO2e_cb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    change_energy_MWh: float = None  # type: ignore
+    change_energy_pct: float = None  # type: ignore
+    change_CO2e_t: float = None  # type: ignore
+    change_CO2e_pct: float = None  # type: ignore
+    pct_of_wage: float = None  # type: ignore
+    CO2e_total_2021_estimated: float = None  # type: ignore
+    cost_climate_saved: float = None  # type: ignore
+    change_km: float = None  # type: ignore
+    invest_pa: float = None  # type: ignore
+    invest_pa_com: float = None  # type: ignore
+    invest_pa_outside: float = None  # type: ignore
+    invest: float = None  # type: ignore
+    invest_com: float = None  # type: ignore
+    invest_outside: float = None  # type: ignore
+    cost_wage: float = None  # type: ignore
+    ratio_wage_to_emplo: float = None  # type: ignore
+    demand_emplo: float = None  # type: ignore
+    demand_emplo_com: float = None  # type: ignore
+    emplo_existing: float = None  # type: ignore
+    demand_emplo_new: float = None  # type: ignore
+    invest_per_x: float = None  # type: ignore
+    transport_capacity_pkm: float = None  # type: ignore
+    base_unit: float = None  # type: ignore
 
 
 # Definition der Zeilennamen für den Sektor T
