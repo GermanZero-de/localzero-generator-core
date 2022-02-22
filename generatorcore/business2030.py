@@ -466,7 +466,6 @@ def calc(
     s_heatnet.change_CO2e_t = s_heatnet.CO2e_cb
     s_elec_heating.change_CO2e_t = s_elec_heating.CO2e_cb
     s_solarth.change_CO2e_t = s_solarth.CO2e_cb
-    s.change_CO2ee_pct = div(s.change_CO2e_t, b18.s.CO2e_cb)
 
     p_nonresi.change_CO2e_t = 0
     s_heatpump.change_CO2e_t = s_heatpump.CO2e_cb - b18.s_heatpump.CO2e_cb
