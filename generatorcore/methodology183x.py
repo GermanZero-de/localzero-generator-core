@@ -68,77 +68,77 @@ class M183X:
     # duration_target_until_2050: float = None
     # duration_neutral: float = None
 
-    CO2_budget_2016_to_year_target: float = None
-    nonCO2_budget_2016_to_year_target: float = None
-    GHG_budget_2016_to_year_target: float = None
-    GHG_budget_2022_to_year_target: float = None
-    GHG_budget_after_year_target: float = None
+    CO2_budget_2016_to_year_target: float = None  # type: ignore
+    nonCO2_budget_2016_to_year_target: float = None  # type: ignore
+    GHG_budget_2016_to_year_target: float = None  # type: ignore
+    GHG_budget_2022_to_year_target: float = None  # type: ignore
+    GHG_budget_after_year_target: float = None  # type: ignore
 
-    CO2e_w_lulucf_change_pa: float = None
+    CO2e_w_lulucf_change_pa: float = None  # type: ignore
 
-    CO2e_lulucf_2015: float = None
-    CO2e_lulucf_2016: float = None
-    CO2e_lulucf_2017: float = None
-    CO2e_lulucf_2018: float = None
-    CO2e_lulucf_2019: float = None
-    CO2e_lulucf_2020: float = None
-    CO2e_lulucf_2021: float = None
+    CO2e_lulucf_2015: float = None  # type: ignore
+    CO2e_lulucf_2016: float = None  # type: ignore
+    CO2e_lulucf_2017: float = None  # type: ignore
+    CO2e_lulucf_2018: float = None  # type: ignore
+    CO2e_lulucf_2019: float = None  # type: ignore
+    CO2e_lulucf_2020: float = None  # type: ignore
+    CO2e_lulucf_2021: float = None  # type: ignore
 
-    CO2e_wo_lulucf_2015: float = None
-    CO2e_wo_lulucf_2016: float = None
-    CO2e_wo_lulucf_2017: float = None
-    CO2e_wo_lulucf_2018: float = None
-    CO2e_wo_lulucf_2019: float = None
-    CO2e_wo_lulucf_2020: float = None
-    CO2e_wo_lulucf_2021: float = None
+    CO2e_wo_lulucf_2015: float = None  # type: ignore
+    CO2e_wo_lulucf_2016: float = None  # type: ignore
+    CO2e_wo_lulucf_2017: float = None  # type: ignore
+    CO2e_wo_lulucf_2018: float = None  # type: ignore
+    CO2e_wo_lulucf_2019: float = None  # type: ignore
+    CO2e_wo_lulucf_2020: float = None  # type: ignore
+    CO2e_wo_lulucf_2021: float = None  # type: ignore
 
-    CO2e_w_lulucf_2015: float = None
-    CO2e_w_lulucf_2016: float = None
-    CO2e_w_lulucf_2017: float = None
-    CO2e_w_lulucf_2018: float = None
-    CO2e_w_lulucf_2019: float = None
-    CO2e_w_lulucf_2020: float = None
-    CO2e_w_lulucf_2021: float = None
-    CO2e_w_lulucf_2022: float = None
-    CO2e_w_lulucf_2023: float = None
-    CO2e_w_lulucf_2024: float = None
-    CO2e_w_lulucf_2025: float = None
-    CO2e_w_lulucf_2026: float = None
-    CO2e_w_lulucf_2027: float = None
-    CO2e_w_lulucf_2028: float = None
-    CO2e_w_lulucf_2029: float = None
-    CO2e_w_lulucf_2030: float = None
-    CO2e_w_lulucf_2031: float = None
-    CO2e_w_lulucf_2032: float = None
-    CO2e_w_lulucf_2033: float = None
-    CO2e_w_lulucf_2034: float = None
-    CO2e_w_lulucf_2035: float = None
-    CO2e_w_lulucf_2036: float = None
-    CO2e_w_lulucf_2037: float = None
-    CO2e_w_lulucf_2038: float = None
-    CO2e_w_lulucf_2039: float = None
-    CO2e_w_lulucf_2040: float = None
-    CO2e_w_lulucf_2041: float = None
-    CO2e_w_lulucf_2042: float = None
-    CO2e_w_lulucf_2043: float = None
-    CO2e_w_lulucf_2044: float = None
-    CO2e_w_lulucf_2045: float = None
-    CO2e_w_lulucf_2046: float = None
-    CO2e_w_lulucf_2047: float = None
-    CO2e_w_lulucf_2048: float = None
-    CO2e_w_lulucf_2049: float = None
-    CO2e_w_lulucf_2050: float = None
-    CO2e_w_lulucf_2051: float = None
+    CO2e_w_lulucf_2015: float = None  # type: ignore
+    CO2e_w_lulucf_2016: float = None  # type: ignore
+    CO2e_w_lulucf_2017: float = None  # type: ignore
+    CO2e_w_lulucf_2018: float = None  # type: ignore
+    CO2e_w_lulucf_2019: float = None  # type: ignore
+    CO2e_w_lulucf_2020: float = None  # type: ignore
+    CO2e_w_lulucf_2021: float = None  # type: ignore
+    CO2e_w_lulucf_2022: float = None  # type: ignore
+    CO2e_w_lulucf_2023: float = None  # type: ignore
+    CO2e_w_lulucf_2024: float = None  # type: ignore
+    CO2e_w_lulucf_2025: float = None  # type: ignore
+    CO2e_w_lulucf_2026: float = None  # type: ignore
+    CO2e_w_lulucf_2027: float = None  # type: ignore
+    CO2e_w_lulucf_2028: float = None  # type: ignore
+    CO2e_w_lulucf_2029: float = None  # type: ignore
+    CO2e_w_lulucf_2030: float = None  # type: ignore
+    CO2e_w_lulucf_2031: float = None  # type: ignore
+    CO2e_w_lulucf_2032: float = None  # type: ignore
+    CO2e_w_lulucf_2033: float = None  # type: ignore
+    CO2e_w_lulucf_2034: float = None  # type: ignore
+    CO2e_w_lulucf_2035: float = None  # type: ignore
+    CO2e_w_lulucf_2036: float = None  # type: ignore
+    CO2e_w_lulucf_2037: float = None  # type: ignore
+    CO2e_w_lulucf_2038: float = None  # type: ignore
+    CO2e_w_lulucf_2039: float = None  # type: ignore
+    CO2e_w_lulucf_2040: float = None  # type: ignore
+    CO2e_w_lulucf_2041: float = None  # type: ignore
+    CO2e_w_lulucf_2042: float = None  # type: ignore
+    CO2e_w_lulucf_2043: float = None  # type: ignore
+    CO2e_w_lulucf_2044: float = None  # type: ignore
+    CO2e_w_lulucf_2045: float = None  # type: ignore
+    CO2e_w_lulucf_2046: float = None  # type: ignore
+    CO2e_w_lulucf_2047: float = None  # type: ignore
+    CO2e_w_lulucf_2048: float = None  # type: ignore
+    CO2e_w_lulucf_2049: float = None  # type: ignore
+    CO2e_w_lulucf_2050: float = None  # type: ignore
+    CO2e_w_lulucf_2051: float = None  # type: ignore
 
     # =======Z-Script Varaibles=============================
 
-    CO2e_lulucf_203X: float = None
-    CO2e_wo_lulucf_203X: float = None
-    CO2e_w_lulucf_203X: float = None
+    CO2e_lulucf_203X: float = None  # type: ignore
+    CO2e_wo_lulucf_203X: float = None  # type: ignore
+    CO2e_w_lulucf_203X: float = None  # type: ignore
 
-    change_CO2e_t: float = None
-    change_CO2e_pct: float = None
-    cost_climate_saved: float = None
+    change_CO2e_t: float = None  # type: ignore
+    change_CO2e_pct: float = None  # type: ignore
+    cost_climate_saved: float = None  # type: ignore
 
     z: zColVars = field(default_factory=zColVars)
     s: zColVars = field(default_factory=zColVars)
@@ -155,12 +155,12 @@ class M183X:
     a: zColVars = field(default_factory=zColVars)
     l: zColVars = field(default_factory=zColVars)
 
-    CO2e_per_capita_nat: float = None
-    CO2e_per_capita_com: float = None
-    CO2e_per_capita_com_pct_of_nat: float = None
+    CO2e_per_capita_nat: float = None  # type: ignore
+    CO2e_per_capita_com: float = None  # type: ignore
+    CO2e_per_capita_com_pct_of_nat: float = None  # type: ignore
 
-    GHG_budget_2022_to_year_target_nat: float = None  # INFO THG Budget Deutschland
-    CO2e_2022_to_year_target: float = None  # INFO CO2e sind Emissionen für Kommune
+    GHG_budget_2022_to_year_target_nat: float = None  # type: ignore  # INFO THG Budget Deutschland
+    CO2e_2022_to_year_target: float = None  # type: ignore  # INFO CO2e sind Emissionen für Kommune
 
     def dict(self):
         return asdict(self)
