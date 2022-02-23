@@ -31,6 +31,8 @@ def calc(
     i30: industry2030.I30,
     r30: residences2030.R30,
     t30: transport2030.T30,
+    p_local_biomass_cogen: electricity2030_core.EColVars2030,
+    p_local_biomass: electricity2030_core.EColVars2030,
 ) -> electricity2030_core.E30:
     def fact(n):
         return inputs.fact(n)
@@ -46,6 +48,9 @@ def calc(
     KlimaneutraleJahre = entry("In_M_duration_neutral")
 
     e30 = electricity2030_core.E30()
+
+    e30.p_local_biomass = p_local_biomass
+    e30.p_local_biomass_cogen = p_local_biomass_cogen
 
     e = e30.e
     g = e30.g
@@ -90,8 +95,7 @@ def calc(
     p_local_pv_park = e30.p_local_pv_park
     p_local_pv_agri = e30.p_local_pv_agri
     p_local_wind_onshore = e30.p_local_wind_onshore
-    p_local_biomass = e30.p_local_biomass
-    p_local_biomass_cogen = e30.p_local_biomass_cogen
+
     p_local_hydro = e30.p_local_hydro
     p_local_surplus = e30.p_local_surplus
     p_fossil_and_renew = e30.p_fossil_and_renew
@@ -416,8 +420,7 @@ def calc(
     p_local_wind_onshore.area_ha_available_pct_of_action = ass(
         "Ass_E_P_local_wind_onshore_pct_action"
     )
-    p_local_biomass.power_installed = entry("In_E_PV_power_inst_biomass")
-    p_local_biomass.full_load_hour = fact("Fact_E_P_biomass_full_load_hours")
+
     p_local_biomass.cost_fuel_per_MWh = ass(
         "Ass_E_P_local_biomass_material_costs"
     ) / ass("Ass_E_P_local_biomass_efficiency")
@@ -439,13 +442,7 @@ def calc(
         * entry("In_M_population_com_2018")
         / entry("In_M_population_nat")
     )
-    p_local_biomass.power_installable = entry(
-        "In_E_biomass_local_power_installable_sta"
-    )
-    p_local_biomass.power_to_be_installed_pct = entry(
-        "In_E_PV_power_to_be_inst_local_biomass"
-    )
-    p_local_biomass_cogen.pct_energy = fact("Fact_E_P_renew_cogen_ratio_2018")
+
     p_local_hydro.power_installed = entry("In_E_PV_power_inst_water")
     p_local_hydro.full_load_hour = fact("Fact_E_P_hydro_full_load_hours")  # energy
     p_local_hydro.cost_mro_per_MWh = ass("Ass_E_P_local_hydro_mro_per_MWh")  # cost_mro
@@ -658,11 +655,7 @@ def calc(
         * p_local_biomass.full_load_hour
         * (1 - ass("Ass_E_P_renew_loss_brutto_to_netto"))
     )
-    p_local_biomass.power_to_be_installed = max(
-        0,
-        p_local_biomass.power_installable * p_local_biomass.power_to_be_installed_pct
-        - p_local_biomass.power_installed,
-    )
+
     p_local_hydro.energy = (
         p_local_hydro.power_installed
         * p_local_hydro.full_load_hour
@@ -920,11 +913,7 @@ def calc(
         * p_local_wind_onshore.power_installable
         * (1 - ass("Ass_E_P_renew_loss_brutto_to_netto"))
     )
-    p_local_biomass.energy = (
-        (p_local_biomass.power_to_be_installed + p_local_biomass.power_installed)
-        * p_local_biomass.full_load_hour
-        * (1 - ass("Ass_E_P_renew_loss_brutto_to_netto"))
-    )
+
     p_local_biomass.invest = (
         p_local_biomass.power_to_be_installed * p_local_biomass.invest_per_x
     )
@@ -1078,9 +1067,6 @@ def calc(
     p_local_biomass.CO2e_cb = p_local_biomass.energy * p_local_biomass.CO2e_cb_per_MWh
     p_local_biomass.change_energy_MWh = (
         p_local_biomass.energy - e18.p_local_biomass.energy
-    )
-    p_local_biomass_cogen.energy = (
-        p_local_biomass.energy * p_local_biomass_cogen.pct_energy
     )
     p_local_biomass.invest_pa = p_local_biomass.invest / Kalkulationszeitraum
     g_grid_offshore.demand_emplo_new = g_grid_offshore.demand_emplo

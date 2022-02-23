@@ -29,6 +29,8 @@ def calc(
     i30: industry2030.I30,
     r30: residences2030.R30,
     t30: transport2030.T30,
+    p_local_biomass_cogen: electricity2030_core.EColVars2030,
+    p_local_biomass: electricity2030_core.EColVars2030,
 ) -> E30:
 
     """For electricity 203X unfortunately if-sides of conditional statements require a different sorting of formulas
@@ -48,6 +50,8 @@ def calc(
             i30=i30,
             r30=r30,
             t30=t30,
+            p_local_biomass_cogen=p_local_biomass_cogen,
+            p_local_biomass=p_local_biomass,
         )
     else:
         return electricity2030_com.calc(
@@ -62,4 +66,6 @@ def calc(
             i30=i30,
             r30=r30,
             t30=t30,
+            p_local_biomass_cogen=p_local_biomass_cogen,
+            p_local_biomass=p_local_biomass,
         )
