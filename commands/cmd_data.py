@@ -1,9 +1,52 @@
+import csv
 import sys
 import os.path
 import json
-from generatorcore import refdatatools
-from generatorcore import refdata
-from generatorcore import makeentries
+from generatorcore import ags, refdatatools, refdata, makeentries
+
+
+def cmd_data_normalize(args):
+    def sortby_and_check_ags_column(rows):
+        header = rows[0]
+        if header[0] != "ags":
+            # All files that have an AGS have it in the first column.
+            return rows
+        rows_with_invalid_ags = list(filter(lambda r: not ags.is_valid(r[0]), rows))
+        if len(rows_with_invalid_ags) > 0:
+            print(f"Found {len(rows_with_invalid_ags)} rows with invalid ags:\n")
+            for r in rows_with_invalid_ags:
+                print("\t", *r)
+            exit(1)
+        return sorted(rows, key=lambda r: r[0])
+
+    def find_duplicate_ags_in_sorted(rows):
+        dups = []
+        current = []
+        for r in rows:
+            if len(current) > 0 and r[0] == current[0][0]:
+                current.append(r)
+            else:
+                if len(current) > 1:
+                    dups.append(current)
+                current = [r]
+        return dups
+
+    with open(args.file, "r") as fp:
+        rows_with_header = list(csv.reader(fp))
+
+    sorted_rows = sortby_and_check_ags_column(rows_with_header[1:])
+    dups = find_duplicate_ags_in_sorted(sorted_rows)
+    if len(dups) > 0:
+        print(f"Found {len(dups)} AGS that had more dataset\n")
+        for d in dups:
+            print("\t", d[0][0])
+            for r in d:
+                print("\t\t", *(r[1:]))
+    with open(args.file, "w") as fp:
+        writer = csv.writer(fp, lineterminator="\n")
+        writer.writerow(rows_with_header[0])
+        for row in sorted_rows:
+            writer.writerow(row)
 
 
 def cmd_data_is_production(args):

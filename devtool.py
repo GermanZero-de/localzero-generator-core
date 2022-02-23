@@ -12,13 +12,18 @@ This is a simple wrapper around the generator to
 import argparse
 from commands.cmd_run import cmd_run
 from commands.cmd_compare_to_excel import cmd_compare_to_excel
-from commands.cmd_data import cmd_data_checkout
-from commands.cmd_data import cmd_data_entries_user_overrides_generate_defaults
-from commands.cmd_data import cmd_data_lookup
-from commands.cmd_data import cmd_data_is_production
-from commands.cmd_test_end_to_end import cmd_test_end_to_end_update_expectations
-from commands.cmd_test_end_to_end import cmd_test_end_to_end_create_expectation
-from commands.cmd_test_end_to_end import cmd_test_end_to_end_run_all_ags
+from commands.cmd_data import (
+    cmd_data_normalize,
+    cmd_data_checkout,
+    cmd_data_entries_user_overrides_generate_defaults,
+    cmd_data_lookup,
+    cmd_data_is_production,
+)
+from commands.cmd_test_end_to_end import (
+    cmd_test_end_to_end_update_expectations,
+    cmd_test_end_to_end_create_expectation,
+    cmd_test_end_to_end_run_all_ags,
+)
 
 
 def main():
@@ -57,6 +62,13 @@ def main():
         help="Check that the data dir contains clean checkouts of the production reference data set",
     )
     cmd_data_is_production_parser.set_defaults(func=cmd_data_is_production)
+
+    cmd_data_normalize_parser = subcmd_data.add_parser(
+        "normalize",
+        help="Normalize csv files",
+    )
+    cmd_data_normalize_parser.add_argument("file")
+    cmd_data_normalize_parser.set_defaults(func=cmd_data_normalize)
 
     cmd_data_checkout_parser = subcmd_data.add_parser(
         "checkout",

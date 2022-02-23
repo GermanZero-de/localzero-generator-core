@@ -845,8 +845,6 @@ def calc(inputs: Inputs, *, r18: residences2018.R18, b18: business2018.B18) -> R
     s_emethan.change_CO2e_t = s_emethan.CO2e_cb - 0
     s_heatpump.change_CO2e_t = s_heatpump.CO2e_cb - r18.s_heatpump.CO2e_cb
 
-    s.change_CO2ee_pct = div(s.change_CO2e_t, r18.s.CO2e_cb)
-
     s_fueloil.CO2e_total_2021_estimated = r18.s_fueloil.CO2e_cb * fact(
         "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
     )
