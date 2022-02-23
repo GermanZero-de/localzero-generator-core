@@ -133,7 +133,7 @@ class E30:
         return edict
 
 
-def calc_biomass(inputs=Inputs) -> EColVars2030:
+def calc_biomass(inputs: Inputs) -> EColVars2030:
     def fact(n):
         return inputs.fact(n)
 
