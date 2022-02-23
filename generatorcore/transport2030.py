@@ -1554,10 +1554,8 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> T30:
     )
     rail_ppl.CO2e_total = rail_ppl_distance.CO2e_total + rail_ppl_metro.CO2e_total
     rail_ppl.change_energy_pct = div(rail_ppl.change_energy_MWh, t18.rail_ppl.energy)
-    rail_ppl_metro.change_energy_pct = (
-        div(rail_ppl_metro.change_energy_MWh, t18.rail_ppl_metro.energy)
-        if t18.rail_ppl_metro.energy != 0
-        else None
+    rail_ppl_metro.change_energy_pct = div(
+        rail_ppl_metro.change_energy_MWh, t18.rail_ppl_metro.energy
     )
     rail_ppl_metro.change_CO2e_t = rail_ppl_metro.CO2e_cb - t18.rail_ppl_metro.CO2e_cb
     rail_ppl_metro.change_CO2e_pct = (
