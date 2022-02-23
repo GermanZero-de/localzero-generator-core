@@ -133,7 +133,7 @@ class E30:
         return edict
 
 
-def calc_biomass(inputs = Inputs) -> EColVars2030:
+def calc_biomass(inputs=Inputs) -> EColVars2030:
     def fact(n):
         return inputs.fact(n)
 
@@ -142,9 +142,9 @@ def calc_biomass(inputs = Inputs) -> EColVars2030:
 
     def entry(n):
         return inputs.entry(n)
-    
+
     p_local_biomass = EColVars2030()
-    
+
     p_local_biomass.full_load_hour = fact("Fact_E_P_biomass_full_load_hours")
 
     p_local_biomass.power_installed = entry("In_E_PV_power_inst_biomass")
@@ -165,17 +165,21 @@ def calc_biomass(inputs = Inputs) -> EColVars2030:
         * p_local_biomass.full_load_hour
         * (1 - ass("Ass_E_P_renew_loss_brutto_to_netto"))
     )
-    
+
     return p_local_biomass
 
-def calc_biomass_cogen(inputs: Inputs,*,p_local_biomass:EColVars2030) -> EColVars2030:
+
+def calc_biomass_cogen(
+    inputs: Inputs, *, p_local_biomass: EColVars2030
+) -> EColVars2030:
     def fact(n):
-        return inputs.fact(n)     
-    
+        return inputs.fact(n)
+
     p_local_biomass_cogen = EColVars2030()
 
     p_local_biomass_cogen.pct_energy = fact("Fact_E_P_renew_cogen_ratio_2018")
     p_local_biomass_cogen.energy = (
-        p_local_biomass.energy * p_local_biomass_cogen.pct_energy)
+        p_local_biomass.energy * p_local_biomass_cogen.pct_energy
+    )
 
     return p_local_biomass_cogen

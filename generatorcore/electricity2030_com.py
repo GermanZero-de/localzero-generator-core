@@ -32,7 +32,7 @@ def calc(
     r30: residences2030.R30,
     t30: transport2030.T30,
     p_local_biomass_cogen: electricity2030_core.EColVars2030,
-    p_local_biomass : electricity2030_core.EColVars2030,
+    p_local_biomass: electricity2030_core.EColVars2030,
 ) -> electricity2030_core.E30:
     def fact(n):
         return inputs.fact(n)
@@ -655,7 +655,7 @@ def calc(
         * p_local_biomass.full_load_hour
         * (1 - ass("Ass_E_P_renew_loss_brutto_to_netto"))
     )
- 
+
     p_local_hydro.energy = (
         p_local_hydro.power_installed
         * p_local_hydro.full_load_hour

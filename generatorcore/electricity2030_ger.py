@@ -32,7 +32,7 @@ def calc(
     r30: residences2030.R30,
     t30: transport2030.T30,
     p_local_biomass_cogen: electricity2030_core.EColVars2030,
-    p_local_biomass : electricity2030_core.EColVars2030,
+    p_local_biomass: electricity2030_core.EColVars2030,
 ) -> electricity2030_core.E30:
     def fact(n):
         return inputs.fact(n)

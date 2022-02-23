@@ -131,10 +131,20 @@ def calculate(inputs: Inputs) -> Result:
 
     print("Electricity2030_calc_biomass", file=sys.stderr)
     p_local_biomass = electricity2030_core.calc_biomass(inputs)
-    p_local_biomass_cogen = electricity2030_core.calc_biomass_cogen(inputs,p_local_biomass=p_local_biomass)
+    p_local_biomass_cogen = electricity2030_core.calc_biomass_cogen(
+        inputs, p_local_biomass=p_local_biomass
+    )
 
     print("Heat2030_calc", file=sys.stderr)
-    h30 = heat2030.calc(inputs, h18=h18, r30=r30, b30=b30, a30=a30, i30=i30, p_local_biomass_cogen = p_local_biomass_cogen)
+    h30 = heat2030.calc(
+        inputs,
+        h18=h18,
+        r30=r30,
+        b30=b30,
+        a30=a30,
+        i30=i30,
+        p_local_biomass_cogen=p_local_biomass_cogen,
+    )
 
     print("Fuels2030_calc", file=sys.stderr)
     f30 = fuels2030.calc(
@@ -154,8 +164,8 @@ def calculate(inputs: Inputs) -> Result:
         i30=i30,
         r30=r30,
         t30=t30,
-        p_local_biomass_cogen = p_local_biomass_cogen,
-        p_local_biomass = p_local_biomass,
+        p_local_biomass_cogen=p_local_biomass_cogen,
+        p_local_biomass=p_local_biomass,
     )
 
     print("Methodology2030_calc", file=sys.stderr)

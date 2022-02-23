@@ -162,8 +162,6 @@ def calc(
 
     p_heatnet_plant.pct_energy = ass("Ass_H_P_heatnet_fraction_solarth_2050")
 
-
-
     p_heatnet_cogen.energy = (
         p_local_biomass_cogen.energy
         if (p_local_biomass_cogen.energy < p_heatnet.energy)

@@ -50,8 +50,8 @@ def calc(
             i30=i30,
             r30=r30,
             t30=t30,
-            p_local_biomass_cogen = p_local_biomass_cogen,
-            p_local_biomass = p_local_biomass,
+            p_local_biomass_cogen=p_local_biomass_cogen,
+            p_local_biomass=p_local_biomass,
         )
     else:
         return electricity2030_com.calc(
@@ -66,6 +66,6 @@ def calc(
             i30=i30,
             r30=r30,
             t30=t30,
-            p_local_biomass_cogen = p_local_biomass_cogen,
-            p_local_biomass = p_local_biomass,
+            p_local_biomass_cogen=p_local_biomass_cogen,
+            p_local_biomass=p_local_biomass,
         )
