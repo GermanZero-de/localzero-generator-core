@@ -1300,7 +1300,7 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
     p_operation_elec_heatpump.change_energy_MWh = (
         p_operation_elec_heatpump.energy - a18.p_operation_elec_heatpump.energy
     )
-    
+
     s_heatpump.CO2e_total = s_heatpump.CO2e_pb + s_heatpump.CO2e_cb
     s_heatpump.invest = (
         s_heatpump.invest_per_x * s_heatpump.power_to_be_installed * 1000

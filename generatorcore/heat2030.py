@@ -165,15 +165,13 @@ def calc(
 
     # To avoid circle dependencies the formula p_local_biomass.energy_cogen and its ancestors
     # were copied from electricity2030
-    #TODO: find a better solution for this
+    # TODO: find a better solution for this
     p_local_biomass.full_load_hour = fact("Fact_E_P_biomass_full_load_hours")
-
 
     p_local_biomass.power_installed = entry("In_E_PV_power_inst_biomass")
     p_local_biomass.power_to_be_installed_pct = entry(
         "In_E_PV_power_to_be_inst_local_biomass"
     )
-
 
     p_local_biomass.power_installable = entry(
         "In_E_biomass_local_power_installable_sta"

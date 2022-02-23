@@ -533,13 +533,13 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
     g_crop_min_conv.area_ha = (
         l18.g_crop_min_conv.area_ha + g_crop_min_conv.area_ha_change
     )
-    
+
     g_crop_org_low.area_ha = l18.g_crop_org_low.area_ha + g_crop_org_low.area_ha_change
     g_crop_org_low.invest = -g_crop_org_low.area_ha_change * g_crop_org_low.invest_per_x
     g_crop_org.area_ha_change = (
         g_crop_org_low.area_ha_change + g_crop_org_high.area_ha_change
     )
-  
+
     g_crop_org_high.area_ha = (
         l18.g_crop_org_high.area_ha + g_crop_org_high.area_ha_change
     )
@@ -549,7 +549,7 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
     g_grass_min_conv.area_ha = (
         l18.g_grass_min_conv.area_ha + g_grass_min_conv.area_ha_change
     )
-  
+
     g_grass_org_low.area_ha = (
         l18.g_grass_org_low.area_ha + g_grass_org_low.area_ha_change
     )
@@ -559,7 +559,7 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
     g_grass_org.area_ha_change = (
         g_grass_org_low.area_ha_change + g_grass_org_high.area_ha_change
     )
-    
+
     g_grass_org_high.area_ha = (
         l18.g_grass_org_high.area_ha + g_grass_org_high.area_ha_change
     )
@@ -567,7 +567,7 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
         -g_grass_org_high.area_ha_change * g_grass_org_high.invest_per_x
     )
     g_grove_min.area_ha = l18.g_grove_min.area_ha + g_grove_min.area_ha_change
-   
+
     g_grove_org_low.area_ha = (
         l18.g_grove_org_low.area_ha + g_grove_org_low.area_ha_change
     )
@@ -577,7 +577,7 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
     g_grove_org.area_ha_change = (
         g_grove_org_low.area_ha_change + g_grove_org_high.area_ha_change
     )
-   
+
     g_grove_org_high.area_ha = (
         l18.g_grove_org_high.area_ha + g_grove_org_high.area_ha_change
     )
@@ -585,13 +585,13 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
         -g_grove_org_high.area_ha_change * g_grove_org_high.invest_per_x
     )
     g_wet_min.area_ha = l18.g_wet_min.area_ha + g_wet_min.area_ha_change
-   
+
     g_wet_org_low.area_ha = l18.g_wet_org_low.area_ha + g_wet_org_low.area_ha_change
     g_wet_org_low.invest = -g_wet_org_low.area_ha_change * g_wet_org_low.invest_per_x
     g_wet_org.area_ha_change = (
         g_wet_org_low.area_ha_change + g_wet_org_high.area_ha_change
     )
-    
+
     g_wet_org_high.area_ha = l18.g_wet_org_high.area_ha + g_wet_org_high.area_ha_change
     g_wet_org_high.invest = -g_wet_org_high.area_ha_change * g_wet_org_high.invest_per_x
     g_wet_org_low_r.area_ha = g_wet_org_low_r.area_ha_change
