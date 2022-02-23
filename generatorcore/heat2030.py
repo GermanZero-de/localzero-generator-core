@@ -71,7 +71,7 @@ class H30:
     p_heatpump: HColVars2030 = field(default_factory=HColVars2030)
 
     # for pdf
-    p_fossil_change_CO2e_t: float = None
+    p_fossil_change_CO2e_t: float = None  # type: ignore
 
     # erzeuge dictionry
     def dict(self):
