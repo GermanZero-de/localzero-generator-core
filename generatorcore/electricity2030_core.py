@@ -1,5 +1,7 @@
 from dataclasses import dataclass, field, asdict
 
+from generatorcore.inputs import Inputs
+
 # Definition der relevanten Spaltennamen für den Sektor E
 @dataclass
 class EColVars2030:
@@ -129,3 +131,51 @@ class E30:
     def convergence_check(self):
         edict = self.dict().copy()
         return edict
+
+
+def calc_biomass(inputs = Inputs) -> EColVars2030:
+    def fact(n):
+        return inputs.fact(n)
+
+    def ass(n):
+        return inputs.ass(n)
+
+    def entry(n):
+        return inputs.entry(n)
+    
+    p_local_biomass = EColVars2030()
+    
+    p_local_biomass.full_load_hour = fact("Fact_E_P_biomass_full_load_hours")
+
+    p_local_biomass.power_installed = entry("In_E_PV_power_inst_biomass")
+    p_local_biomass.power_to_be_installed_pct = entry(
+        "In_E_PV_power_to_be_inst_local_biomass"
+    )
+
+    p_local_biomass.power_installable = entry(
+        "In_E_biomass_local_power_installable_sta"
+    )
+    p_local_biomass.power_to_be_installed = max(
+        0,
+        p_local_biomass.power_installable * p_local_biomass.power_to_be_installed_pct
+        - p_local_biomass.power_installed,
+    )
+    p_local_biomass.energy = (
+        (p_local_biomass.power_to_be_installed + p_local_biomass.power_installed)
+        * p_local_biomass.full_load_hour
+        * (1 - ass("Ass_E_P_renew_loss_brutto_to_netto"))
+    )
+    
+    return p_local_biomass
+
+def calc_biomass_cogen(inputs: Inputs,*,p_local_biomass:EColVars2030) -> EColVars2030:
+    def fact(n):
+        return inputs.fact(n)     
+    
+    p_local_biomass_cogen = EColVars2030()
+
+    p_local_biomass_cogen.pct_energy = fact("Fact_E_P_renew_cogen_ratio_2018")
+    p_local_biomass_cogen.energy = (
+        p_local_biomass.energy * p_local_biomass_cogen.pct_energy)
+
+    return p_local_biomass_cogen

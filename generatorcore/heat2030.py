@@ -1,4 +1,6 @@
 from dataclasses import dataclass, asdict, field
+
+from generatorcore.electricity2030_core import EColVars2030
 from .inputs import Inputs
 from .utils import div
 from . import residences2030, business2030, heat2018, agri2030, industry2030
@@ -67,8 +69,6 @@ class H30:
     p_orenew: HColVars2030 = field(default_factory=HColVars2030)
     p_solarth: HColVars2030 = field(default_factory=HColVars2030)
     p_heatpump: HColVars2030 = field(default_factory=HColVars2030)
-    p_local_biomass: HColVars2030 = field(default_factory=HColVars2030)
-    p_local_biomass_cogen: HColVars2030 = field(default_factory=HColVars2030)
 
     # for pdf
     p_fossil_change_CO2e_t: float = None
@@ -86,6 +86,7 @@ def calc(
     b30: business2030.B30,
     a30: agri2030.A30,
     i30: industry2030.I30,
+    p_local_biomass_cogen: EColVars2030,
 ) -> H30:
     def fact(n):
         return inputs.fact(n)
@@ -126,8 +127,6 @@ def calc(
     p_orenew = h30.p_orenew
     p_solarth = h30.p_solarth
     p_heatpump = h30.p_heatpump
-    p_local_biomass = h30.p_local_biomass
-    p_local_biomass_cogen = h30.p_local_biomass_cogen
 
     ###########################
     ### Demand of Heat 2018 ###
@@ -163,33 +162,8 @@ def calc(
 
     p_heatnet_plant.pct_energy = ass("Ass_H_P_heatnet_fraction_solarth_2050")
 
-    # To avoid circle dependencies the formula p_local_biomass.energy_cogen and its ancestors
-    # were copied from electricity2030
-    # TODO: find a better solution for this
-    p_local_biomass.full_load_hour = fact("Fact_E_P_biomass_full_load_hours")
 
-    p_local_biomass.power_installed = entry("In_E_PV_power_inst_biomass")
-    p_local_biomass.power_to_be_installed_pct = entry(
-        "In_E_PV_power_to_be_inst_local_biomass"
-    )
 
-    p_local_biomass.power_installable = entry(
-        "In_E_biomass_local_power_installable_sta"
-    )
-    p_local_biomass.power_to_be_installed = max(
-        0,
-        p_local_biomass.power_installable * p_local_biomass.power_to_be_installed_pct
-        - p_local_biomass.power_installed,
-    )
-    p_local_biomass.energy = (
-        (p_local_biomass.power_to_be_installed + p_local_biomass.power_installed)
-        * p_local_biomass.full_load_hour
-        * (1 - ass("Ass_E_P_renew_loss_brutto_to_netto"))
-    )
-    p_local_biomass_cogen.pct_energy = fact("Fact_E_P_renew_cogen_ratio_2018")
-    p_local_biomass_cogen.energy = (
-        p_local_biomass.energy * p_local_biomass_cogen.pct_energy
-    )
     p_heatnet_cogen.energy = (
         p_local_biomass_cogen.energy
         if (p_local_biomass_cogen.energy < p_heatnet.energy)
