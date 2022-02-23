@@ -11,13 +11,13 @@ def cmd_data_normalize(args):
         if header[0] != "ags":
             # All files that have an AGS have it in the first column.
             return rows
-        rows_with_invalid_ags = list(filter(lambda r: not ags.is_valid(r[0]), rows[1:]))
+        rows_with_invalid_ags = list(filter(lambda r: not ags.is_valid(r[0]), rows))
         if len(rows_with_invalid_ags) > 0:
             print(f"Found {len(rows_with_invalid_ags)} rows with invalid ags:\n")
             for r in rows_with_invalid_ags:
                 print("\t", *r)
             exit(1)
-        return rows[:1] + sorted(rows[1:], key=lambda r: r[0])
+        return sorted(rows, key=lambda r: r[0])
 
     def find_duplicate_ags_in_sorted(rows):
         dups = []
@@ -32,10 +32,10 @@ def cmd_data_normalize(args):
         return dups
 
     with open(args.file, "r") as fp:
-        rows = list(csv.reader(fp))
+        rows_with_header = list(csv.reader(fp))
 
-    sorted_rows = sortby_and_check_ags_column(rows)
-    dups = find_duplicate_ags_in_sorted(rows)
+    sorted_rows = sortby_and_check_ags_column(rows_with_header[1:])
+    dups = find_duplicate_ags_in_sorted(sorted_rows)
     if len(dups) > 0:
         print(f"Found {len(dups)} AGS that had more dataset\n")
         for d in dups:
@@ -44,6 +44,7 @@ def cmd_data_normalize(args):
                 print("\t\t", *(r[1:]))
     with open(args.file, "w") as fp:
         writer = csv.writer(fp, lineterminator="\n")
+        writer.writerow(rows_with_header[0])
         for row in sorted_rows:
             writer.writerow(row)
 
