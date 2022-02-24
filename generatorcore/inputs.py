@@ -14,16 +14,17 @@ Note: Of course some of the calculation use results from previous steps of the
 calculation (most famously electricity basically depends on everything else).
 """
 from . import refdata
+from .makeentries import Entries
 
 
 class Inputs:
     def __init__(
         self,
         facts_and_assumptions: refdata.FactsAndAssumptions,
-        entries: dict[str, str | int | float],
+        entries: Entries,
     ):
         self._facts_and_assumptions = facts_and_assumptions
-        self._entries = entries
+        self.entries = entries
 
     def fact(self, keyname: str) -> float:
         """Statistics about the past. Must be able to give a source for each fact."""
@@ -32,22 +33,3 @@ class Inputs:
     def ass(self, keyname: str) -> float:
         """Similar to fact, but these try to describe the future. And are therefore based on various assumptions."""
         return self._facts_and_assumptions.ass(keyname)
-
-    def entry(self, keyname: str) -> int | float:
-        """An entry"""
-        v = self._entries[keyname]
-        if isinstance(v, (int, float)):
-            return v
-        else:
-            assert (
-                False
-            ), f"{keyname} = {v} is NOT a numeric entry. You probably meant to use str_entry."
-
-    def str_entry(self, keyname: str) -> str:
-        v = self._entries[keyname]
-        if isinstance(v, str):
-            return v
-        else:
-            assert (
-                False
-            ), f"{keyname} = {v} is NOT a str entry. You probably meant to use entry."
