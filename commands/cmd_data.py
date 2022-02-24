@@ -2,6 +2,7 @@ import csv
 import sys
 import os.path
 import json
+from dataclasses import asdict
 from generatorcore import ags, refdatatools, refdata, makeentries
 
 
@@ -193,7 +194,7 @@ def cmd_data_entries_user_overrides_generate_defaults(args):
                 entries = makeentries.make_entries(data, ags, 2035)
                 default_values = {
                     k: v
-                    for (k, v) in entries.items()
+                    for (k, v) in asdict(entries).items()
                     if k in makeentries.USER_OVERRIDABLE_ENTRIES
                 }
                 default_values["city"] = description
