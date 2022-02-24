@@ -4,6 +4,9 @@ version = "0.1.0"
 description = ""
 # TODO: Ask the others to add themselves here
 authors = ["Benedikt Grundmann <benedikt.grundmann@gmail.com>"]
+include = [
+  "generatorcore/py.typed"
+]
 
 [tool.poetry.dependencies]
 python = "^3.10"
