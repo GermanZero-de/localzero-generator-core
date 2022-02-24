@@ -66,46 +66,45 @@ def calc(inputs: Inputs, *, r18: residences2018.R18) -> B18:
     def ass(n):
         return inputs.ass(n)
 
-    def entry(n):
-        return inputs.entry(n)
+    entries = inputs.entries
 
     Million = 1000000.0
 
     b18 = B18()
 
-    b18.s_gas.energy = entry("In_B_gas_fec")  # 98.602.500 MWh
+    b18.s_gas.energy = entries.b_gas_fec  # 98.602.500 MWh
 
-    b18.s_lpg.energy = entry("In_B_lpg_fec")  # 3.007.222 MWh
+    b18.s_lpg.energy = entries.b_lpg_fec  # 3.007.222 MWh
 
-    b18.s_petrol.energy = entry("In_B_petrol_fec")  # 1.667.778 MWh
+    b18.s_petrol.energy = entries.b_petrol_fec  # 1.667.778 MWh
 
-    b18.s_jetfuel.energy = entry("In_B_jetfuel_fec")  # 284.722 MWh
+    b18.s_jetfuel.energy = entries.b_jetfuel_fec  # 284.722 MWh
 
-    b18.s_diesel.energy = entry("In_B_diesel_fec")  # 9.033.056 MWh
+    b18.s_diesel.energy = entries.b_diesel_fec  # 9.033.056 MWh
 
-    b18.s_fueloil.energy = entry("In_B_fueloil_fec")  # 33.370.278 MWh
+    b18.s_fueloil.energy = entries.b_fueloil_fec  # 33.370.278 MWh
 
-    b18.s_biomass.energy = entry("In_B_biomass_fec")  # 20.860.278 MWh
+    b18.s_biomass.energy = entries.b_biomass_fec  # 20.860.278 MWh
 
-    b18.s_coal.energy = entry("In_B_coal_fec")  # 232.778 MWh
+    b18.s_coal.energy = entries.b_coal_fec  # 232.778 MWh
 
-    b18.s_heatnet.energy = entry("In_B_heatnet_fec")  # 6.521.944 MWh
+    b18.s_heatnet.energy = entries.b_heatnet_fec  # 6.521.944 MWh
 
     b18.s_elec_heating.energy = (
         fact("Fact_B_S_elec_heating_fec_2018")
-        * entry("In_R_flats_wo_heatnet")
+        * entries.r_flats_wo_heatnet
         / fact("Fact_R_P_flats_wo_heatnet_2011")
     )  # 13.027.778 MWh
 
-    b18.s_heatpump.energy = entry("In_B_orenew_fec") * fact(
+    b18.s_heatpump.energy = entries.b_orenew_fec * fact(
         "Fact_R_S_ratio_heatpump_to_orenew_2018"
     )  # 1.262.040 MWh
 
-    b18.s_solarth.energy = entry("In_B_orenew_fec") * (
+    b18.s_solarth.energy = entries.b_orenew_fec * (
         1 - fact("Fact_R_S_ratio_heatpump_to_orenew_2018")
     )  # 1.262.040 MWh
 
-    b18.s_elec.energy = entry("In_B_elec_fec")
+    b18.s_elec.energy = entries.b_elec_fec
     # 856.293 MWh
 
     b18.s.energy = (
@@ -168,7 +167,7 @@ def calc(inputs: Inputs, *, r18: residences2018.R18) -> B18:
 
     # NACHFRAGE:
     b18.p_nonresi.area_m2 = (
-        entry("In_R_area_m2")
+        entries.r_area_m2
         * fact("Fact_B_P_ratio_buisness_buildings_to_all_buildings_area_2016")
         / (1 - fact("Fact_B_P_ratio_buisness_buildings_to_all_buildings_area_2016"))
         * (1 - fact("Fact_A_P_energy_buildings_ratio_A_to_B"))
@@ -196,8 +195,8 @@ def calc(inputs: Inputs, *, r18: residences2018.R18) -> B18:
 
     b18.p_nonresi.number_of_buildings = (
         fact("Fact_B_P_number_business_buildings_2016")
-        * entry("In_M_population_com_2018")
-        / entry("In_M_population_nat")
+        * entries.m_population_com_2018
+        / entries.m_population_nat
     )
 
     b18.p_nonresi_com.factor_adapted_to_fec = div(

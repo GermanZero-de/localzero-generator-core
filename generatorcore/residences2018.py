@@ -76,11 +76,7 @@ def calc(inputs: Inputs) -> R18:
     def fact(n):
         return inputs.fact(n)
 
-    def ass(n):
-        return inputs.ass(n)
-
-    def entry(n):
-        return inputs.entry(n)
+    entries = inputs.entries
 
     ### P - Section ###
     r18 = R18()
@@ -99,21 +95,21 @@ def calc(inputs: Inputs) -> R18:
     p_other = r18.p_other
     p_vehicles = r18.p_vehicles
 
-    p_buildings_until_1919.number_of_buildings = entry("In_R_buildings_until_1919")
-    p_buildings_1919_1948.number_of_buildings = entry("In_R_buildings_1919_1948")
-    p_buildings_1949_1978.number_of_buildings = entry("In_R_buildings_1949_1978")
+    p_buildings_until_1919.number_of_buildings = entries.r_buildings_until_1919
+    p_buildings_1919_1948.number_of_buildings = entries.r_buildings_1919_1948
+    p_buildings_1949_1978.number_of_buildings = entries.r_buildings_1949_1978
     p_buildings_1979_1995.number_of_buildings = (
-        entry("In_R_buildings_1979_1986")
-        + entry("In_R_buildings_1987_1990")
-        + entry("In_R_buildings_1991_1995")
+        entries.r_buildings_1979_1986
+        + entries.r_buildings_1987_1990
+        + entries.r_buildings_1991_1995
     )
-    p_buildings_1996_2004.number_of_buildings = entry(
-        "In_R_buildings_1996_2000"
-    ) + entry("In_R_buildings_2001_2004")
-    p_buildings_2005_2011.number_of_buildings = entry(
-        "In_R_buildings_2005_2008"
-    ) + entry("In_R_buildings_2009_2011")
-    p_buildings_2011_today.number_of_buildings = entry("In_R_buildings_2011_today")
+    p_buildings_1996_2004.number_of_buildings = (
+        entries.r_buildings_1996_2000 + entries.r_buildings_2001_2004
+    )
+    p_buildings_2005_2011.number_of_buildings = (
+        entries.r_buildings_2005_2008 + entries.r_buildings_2009_2011
+    )
+    p_buildings_2011_today.number_of_buildings = entries.r_buildings_2011_today
 
     p_buildings_total.number_of_buildings = (
         p_buildings_until_1919.number_of_buildings
@@ -159,7 +155,7 @@ def calc(inputs: Inputs) -> R18:
         + p_buildings_2011_today.relative_building_ratio
     )
 
-    p_buildings_total.area_m2 = entry("In_R_area_m2")
+    p_buildings_total.area_m2 = entries.r_area_m2
     p_buildings_until_1919.area_m2 = (
         p_buildings_until_1919.relative_building_ratio * p_buildings_total.area_m2
     )
@@ -271,7 +267,7 @@ def calc(inputs: Inputs) -> R18:
         + p_buildings_2011_today.relative_heat_ratio_BMWi
     )
 
-    p_buildings_area_m2_com.pct_x = entry("In_R_pct_of_area_m2_com")
+    p_buildings_area_m2_com.pct_x = entries.r_pct_of_area_m2_com
     p_buildings_area_m2_com.area_m2 = (
         p_buildings_total.area_m2 * p_buildings_area_m2_com.pct_x
     )
@@ -377,23 +373,23 @@ def calc(inputs: Inputs) -> R18:
     p_elec_heatpump = r18.p_elec_heatpump
 
     # Energy
-    s_fueloil.energy = entry("In_R_fueloil_fec")
-    s_lpg.energy = entry("In_R_lpg_fec")
-    s_biomass.energy = entry("In_R_biomass_fec")
-    s_coal.energy = entry("In_R_coal_fec")
-    s_petrol.energy = entry("In_R_petrol_fec")
-    s_heatnet.energy = entry("In_R_heatnet_fec")
-    s_solarth.energy = entry("In_R_orenew_fec") * fact(
+    s_fueloil.energy = entries.r_fueloil_fec
+    s_lpg.energy = entries.r_lpg_fec
+    s_biomass.energy = entries.r_biomass_fec
+    s_coal.energy = entries.r_coal_fec
+    s_petrol.energy = entries.r_petrol_fec
+    s_heatnet.energy = entries.r_heatnet_fec
+    s_solarth.energy = entries.r_orenew_fec * fact(
         "Fact_R_S_ratio_solarth_to_orenew_2018"
     )
-    s_heatpump.energy = entry("In_R_orenew_fec") * fact(
+    s_heatpump.energy = entries.r_orenew_fec * fact(
         "Fact_R_S_ratio_heatpump_to_orenew_2018"
     )
-    s_gas.energy = entry("In_R_gas_fec")
-    s_elec.energy = entry("In_R_elec_fec")
+    s_gas.energy = entries.r_gas_fec
+    s_elec.energy = entries.r_elec_fec
     s_elec_heating.energy = (
         fact("Fact_R_S_elec_heating_fec_2018")
-        * entry("In_R_flats_wo_heatnet")
+        * entries.r_flats_wo_heatnet
         / fact("Fact_R_P_flats_wo_heatnet_2011")
     )
 

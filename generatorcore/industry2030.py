@@ -97,8 +97,7 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
     def ass(n):
         return inputs.ass(n)
 
-    def entry(n):
-        return inputs.entry(n)
+    entries = inputs.entries
 
     i30 = I30()
 
@@ -137,7 +136,7 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
     )
     p_chem_basic.cost_climate_saved = (
         (p_chem_basic.CO2e_total_2021_estimated - p_chem_basic.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     # investment calculation
@@ -146,7 +145,7 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
     )
     p_chem_basic.invest = p_chem_basic.invest_per_x * p_chem_basic.prod_volume
     p_chem_basic.invest_outside = p_chem_basic.invest
-    p_chem_basic.invest_pa = p_chem_basic.invest / entry("In_M_duration_target")
+    p_chem_basic.invest_pa = p_chem_basic.invest / entries.m_duration_target
     p_chem_basic.invest_pa_outside = p_chem_basic.invest_pa
     p_chem_basic.pct_of_wage = fact("Fact_I_P_constr_civil_revenue_pct_of_wage_2018")
     p_chem_basic.cost_wage = p_chem_basic.invest_pa * p_chem_basic.pct_of_wage
@@ -182,7 +181,7 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
     )
     p_chem_ammonia.cost_climate_saved = (
         (p_chem_ammonia.CO2e_total_2021_estimated - p_chem_ammonia.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     # investment calculation
@@ -191,7 +190,7 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
     )
     p_chem_ammonia.invest = p_chem_ammonia.invest_per_x * p_chem_ammonia.prod_volume
     p_chem_ammonia.invest_outside = p_chem_ammonia.invest
-    p_chem_ammonia.invest_pa = p_chem_ammonia.invest / entry("In_M_duration_target")
+    p_chem_ammonia.invest_pa = p_chem_ammonia.invest / entries.m_duration_target
     p_chem_ammonia.invest_pa_outside = p_chem_ammonia.invest_pa
     p_chem_ammonia.pct_of_wage = fact("Fact_I_P_constr_civil_revenue_pct_of_wage_2018")
     p_chem_ammonia.cost_wage = p_chem_ammonia.invest_pa * p_chem_ammonia.pct_of_wage
@@ -230,14 +229,14 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
     )
     p_chem_other.cost_climate_saved = (
         (p_chem_other.CO2e_total_2021_estimated - p_chem_other.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     # investment calculation
     p_chem_other.invest_per_x = ass("Ass_I_P_chem_other_factor_invest_per_prodvol_2050")
     p_chem_other.invest = p_chem_other.invest_per_x * p_chem_other.prod_volume
     p_chem_other.invest_outside = p_chem_other.invest
-    p_chem_other.invest_pa = p_chem_other.invest / entry("In_M_duration_target")
+    p_chem_other.invest_pa = p_chem_other.invest / entries.m_duration_target
     p_chem_other.invest_pa_outside = p_chem_other.invest_pa
     p_chem_other.pct_of_wage = fact("Fact_I_P_constr_civil_revenue_pct_of_wage_2018")
     p_chem_other.cost_wage = p_chem_other.invest_pa * p_chem_other.pct_of_wage
@@ -353,7 +352,7 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
             p_metal_steel_primary.CO2e_total_2021_estimated
             - p_metal_steel_primary.CO2e_total
         )
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     # investment calculation
@@ -364,8 +363,8 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
         p_metal_steel_primary.invest_per_x * p_metal_steel_primary.prod_volume
     )
     p_metal_steel_primary.invest_outside = p_metal_steel_primary.invest
-    p_metal_steel_primary.invest_pa = p_metal_steel_primary.invest / entry(
-        "In_M_duration_target"
+    p_metal_steel_primary.invest_pa = (
+        p_metal_steel_primary.invest / entries.m_duration_target
     )
     p_metal_steel_primary.invest_pa_outside = p_metal_steel_primary.invest_pa
     p_metal_steel_primary.pct_of_wage = fact(
@@ -436,7 +435,7 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
             p_metal_steel_secondary.CO2e_total_2021_estimated
             - p_metal_steel_secondary.CO2e_total
         )
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     # investment calculation
@@ -447,8 +446,8 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
         p_metal_steel_secondary.invest_per_x * p_metal_steel_secondary.prod_volume
     )
     p_metal_steel_secondary.invest_outside = p_metal_steel_secondary.invest
-    p_metal_steel_secondary.invest_pa = p_metal_steel_secondary.invest / entry(
-        "In_M_duration_target"
+    p_metal_steel_secondary.invest_pa = (
+        p_metal_steel_secondary.invest / entries.m_duration_target
     )
     p_metal_steel_secondary.invest_pa_outside = p_metal_steel_secondary.invest_pa
     p_metal_steel_secondary.pct_of_wage = fact(
@@ -494,7 +493,7 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
     )
     p_metal_steel.cost_climate_saved = (
         (p_metal_steel.CO2e_total_2021_estimated - p_metal_steel.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     p_metal_steel.invest_pa = (
@@ -550,7 +549,7 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
     )
     p_metal_nonfe.cost_climate_saved = (
         (p_metal_nonfe.CO2e_total_2021_estimated - p_metal_nonfe.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     # investment calculation
@@ -559,7 +558,7 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
     )
     p_metal_nonfe.invest = p_metal_nonfe.invest_per_x * p_metal_nonfe.prod_volume
     p_metal_nonfe.invest_outside = p_metal_nonfe.invest
-    p_metal_nonfe.invest_pa = p_metal_nonfe.invest / entry("In_M_duration_target")
+    p_metal_nonfe.invest_pa = p_metal_nonfe.invest / entries.m_duration_target
     p_metal_nonfe.invest_pa_outside = p_metal_nonfe.invest_pa
     p_metal_nonfe.pct_of_wage = fact("Fact_I_P_constr_civil_revenue_pct_of_wage_2018")
     p_metal_nonfe.cost_wage = p_metal_nonfe.invest_pa * p_metal_nonfe.pct_of_wage
@@ -629,7 +628,7 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
     )
     p_other_paper.cost_climate_saved = (
         (p_other_paper.CO2e_total_2021_estimated - p_other_paper.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
 
@@ -639,7 +638,7 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
     )
     p_other_paper.invest = p_other_paper.invest_per_x * p_other_paper.prod_volume
     p_other_paper.invest_outside = p_other_paper.invest
-    p_other_paper.invest_pa = p_other_paper.invest / entry("In_M_duration_target")
+    p_other_paper.invest_pa = p_other_paper.invest / entries.m_duration_target
     p_other_paper.invest_pa_outside = p_other_paper.invest_pa
     p_other_paper.pct_of_wage = fact("Fact_I_P_constr_civil_revenue_pct_of_wage_2018")
     p_other_paper.cost_wage = p_other_paper.invest_pa * p_other_paper.pct_of_wage
@@ -682,7 +681,7 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
     )
     p_other_food.cost_climate_saved = (
         (p_other_food.CO2e_total_2021_estimated - p_other_food.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
 
@@ -691,7 +690,7 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
         "Ass_I_P_other_food_coke_ratio_invest_to_prodvol_2019"
     )
     p_other_food.invest = p_other_food.invest_per_x * p_other_food.prod_volume
-    p_other_food.invest_pa = p_other_food.invest / entry("In_M_duration_target")
+    p_other_food.invest_pa = p_other_food.invest / entries.m_duration_target
     p_other_food.invest_pa_outside = p_other_food.invest_pa
     p_other_food.pct_of_wage = fact("Fact_I_P_constr_civil_revenue_pct_of_wage_2018")
     p_other_food.cost_wage = p_other_food.invest_pa * p_other_food.pct_of_wage
@@ -743,7 +742,7 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
     )
     p_other_further.cost_climate_saved = (
         (p_other_further.CO2e_total_2021_estimated - p_other_further.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
 
@@ -752,7 +751,7 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
         "Ass_I_P_other_further_boiler_ratio_invest_to_fec_2050"
     )
     p_other_further.invest = p_other_further.energy * p_other_further.invest_per_x
-    p_other_further.invest_pa = p_other_further.invest / entry("In_M_duration_target")
+    p_other_further.invest_pa = p_other_further.invest / entries.m_duration_target
     p_other_further.invest_pa_outside = p_other_further.invest_pa
     p_other_further.pct_of_wage = fact("Fact_I_P_constr_civil_revenue_pct_of_wage_2018")
     p_other_further.cost_wage = p_other_further.invest_pa * p_other_further.pct_of_wage
@@ -784,7 +783,7 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
     )
     p_other_2efgh.cost_climate_saved = (
         (p_other_2efgh.CO2e_total_2021_estimated - p_other_2efgh.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
 
@@ -796,7 +795,7 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
     p_other_2efgh.invest = (
         i18.p_other_2efgh.CO2e_pb - p_other_2efgh.CO2e_pb
     ) * p_other_2efgh.invest_per_x
-    p_other_2efgh.invest_pa = p_other_2efgh.invest / entry("In_M_duration_target")
+    p_other_2efgh.invest_pa = p_other_2efgh.invest / entries.m_duration_target
     p_other_2efgh.invest_pa_outside = p_other_2efgh.invest_pa
     p_other_2efgh.pct_of_wage = fact("Fact_I_P_constr_civil_revenue_pct_of_wage_2018")
     p_other_2efgh.cost_wage = p_other_2efgh.invest_pa * p_other_2efgh.pct_of_wage
@@ -889,11 +888,11 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
 
     g_consult = i30.g_consult
 
-    g_consult.invest_pa = ass("Ass_I_G_advice_invest_pa_per_capita") * entry(
-        "In_M_population_com_2018"
+    g_consult.invest_pa = (
+        ass("Ass_I_G_advice_invest_pa_per_capita") * entries.m_population_com_2018
     )
     g_consult.invest_pa_com = g_consult.invest_pa
-    g_consult.invest = g_consult.invest_pa * entry("In_M_duration_target")
+    g_consult.invest = g_consult.invest_pa * entries.m_duration_target
     g_consult.invest_com = g_consult.invest
     g_consult.pct_of_wage = ass("Ass_I_G_advice_invest_pct_of_wage")
     g_consult.cost_wage = g_consult.invest_pa * g_consult.pct_of_wage
@@ -912,7 +911,7 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
     p_miner_cement.invest_per_x = ass(
         "Ass_I_P_miner_cement_kirchdorf_ratio_invest_to_prodvol_2020"
     )
-    g.invest = g_consult.invest_pa * entry("In_M_duration_target")
+    g.invest = g_consult.invest_pa * entries.m_duration_target
     g.invest_com = g_consult.invest
     p_miner_cement.invest = p_miner_cement.prod_volume * p_miner_cement.invest_per_x
     g.cost_wage = g_consult.invest_pa * ass("Ass_I_G_advice_invest_pct_of_wage")
@@ -925,7 +924,7 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
     p_miner_ceram.invest_per_x = ass("Ass_I_P_miner_ceramic_ratio_invest_to_prodvol")
     i.invest_com = g.invest_com
     p_miner_cement.pct_of_wage = fact("Fact_I_P_constr_civil_revenue_pct_of_wage_2018")
-    p_miner_cement.invest_pa = p_miner_cement.invest / entry("In_M_duration_target")
+    p_miner_cement.invest_pa = p_miner_cement.invest / entries.m_duration_target
     p_miner_cement.cost_wage = p_miner_cement.invest_pa * p_miner_cement.pct_of_wage
     p_miner_cement.demand_electricity = (
         ass("Ass_I_P_miner_cement_ratio_fec_elec_to_prodvol_2050")
@@ -995,7 +994,7 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
             p_miner_cement.CO2e_total_2021_estimated
             - (p_miner_cement.CO2e_pb + p_miner_cement.CO2e_cb)
         )
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     p_miner_ceram.invest = p_miner_ceram.prod_volume * p_miner_ceram.invest_per_x
@@ -1016,14 +1015,14 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
         + p_miner_ceram.invest
     )  # SUM(p_miner_cement.invest:p_miner_ceram.invest)
     p_miner_ceram.invest_outside = p_miner_ceram.invest
-    p_miner_ceram.invest_pa = p_miner_ceram.invest / entry("In_M_duration_target")
+    p_miner_ceram.invest_pa = p_miner_ceram.invest / entries.m_duration_target
     p_miner_cement.ratio_wage_to_emplo = fact(
         "Fact_I_P_constr_civil_ratio_wage_to_emplo_2018"
     )
     p.emplo_existing = (
         fact("Fact_I_P_constr_civil_emplo_2018")
-        * entry("In_M_population_com_2018")
-        / entry("In_M_population_nat")
+        * entries.m_population_com_2018
+        / entries.m_population_nat
     )
     p_miner_cement.demand_emplo = div(
         p_miner_cement.cost_wage, p_miner_cement.ratio_wage_to_emplo
@@ -1091,7 +1090,7 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
             p_miner_ceram.CO2e_total_2021_estimated
             - (p_miner_ceram.CO2e_pb + p_miner_ceram.CO2e_cb)
         )
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     p_chem.invest_pa = (
@@ -1156,7 +1155,7 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
             p_miner_chalk.CO2e_total_2021_estimated
             - (p_miner_chalk.CO2e_pb + p_miner_chalk.CO2e_cb)
         )
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     p_miner_glas.cost_climate_saved = (
@@ -1164,7 +1163,7 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
             p_miner_glas.CO2e_total_2021_estimated
             - (p_miner_glas.CO2e_pb + p_miner_glas.CO2e_cb)
         )
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
 
@@ -1208,8 +1207,8 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
         + p_metal.cost_climate_saved
         + p_other.cost_climate_saved
     )
-    p_miner_chalk.invest_pa = p_miner_chalk.invest / entry("In_M_duration_target")
-    p_miner_glas.invest_pa = p_miner_glas.invest / entry("In_M_duration_target")
+    p_miner_chalk.invest_pa = p_miner_chalk.invest / entries.m_duration_target
+    p_miner_glas.invest_pa = p_miner_glas.invest / entries.m_duration_target
     p_miner.invest_pa = (
         p_miner_cement.invest_pa
         + p_miner_chalk.invest_pa

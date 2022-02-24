@@ -36,8 +36,7 @@ def calc(
     def ass(n):
         return inputs.ass(n)
 
-    def entry(n):
-        return inputs.entry(n)
+    entries = inputs.entries
 
     pyr = l30.pyr
     l = l30.l
@@ -69,13 +68,13 @@ def calc(
 
     pyr.cost_climate_saved = (
         (pyr.CO2e_total_2021_estimated - pyr.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
 
     pyr.invest_per_x = ass("Ass_L_P_pyrolysis_plant_ratio_invest_to_biochar_pa")
     pyr.invest = pyr.prod_volume * pyr.invest_per_x
-    pyr.invest_pa = div(pyr.invest, entry("In_M_duration_target"))
+    pyr.invest_pa = div(pyr.invest, entries.m_duration_target)
     pyr.pct_of_wage = fact("Fact_B_P_constr_main_revenue_pct_of_wage_2017")
     pyr.cost_wage = pyr.invest_pa * pyr.pct_of_wage
 
@@ -94,7 +93,7 @@ def calc(
 
     l.cost_climate_saved = (
         (l.CO2e_total_2021_estimated - l.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     l.invest_pa = g.invest_pa + pyr.invest_pa

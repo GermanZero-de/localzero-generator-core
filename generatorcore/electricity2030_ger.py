@@ -40,12 +40,11 @@ def calc(
     def ass(n):
         return inputs.ass(n)
 
-    def entry(n):
-        return inputs.entry(n)
+    entries = inputs.entries
 
     Million = 1000000
-    Kalkulationszeitraum = entry("In_M_duration_target")
-    KlimaneutraleJahre = entry("In_M_duration_neutral")
+    Kalkulationszeitraum = entries.m_duration_target
+    KlimaneutraleJahre = entries.m_duration_neutral
 
     e30 = electricity2030_core.E30()
 
@@ -194,7 +193,7 @@ def calc(
     p_renew_pv.energy = 0
     p_renew_pv.CO2e_cb_per_MWh = fact("Fact_E_P_climate_neutral_ratio_CO2e_cb_to_fec")
     p_renew_pv_roof.pct_energy = 0
-    p_local_pv_roof.full_load_hour = entry("In_E_pv_full_load_hours_sta")
+    p_local_pv_roof.full_load_hour = entries.e_pv_full_load_hours_sta
     p_renew_pv_facade.pct_energy = 0
     p_local_pv_facade.full_load_hour = ass("Ass_E_P_local_pv_facade_full_load_hours")
     p_renew_pv_park.pct_energy = 0
@@ -283,13 +282,13 @@ def calc(
     p_local_pv.CO2e_cb_per_MWh = fact("Fact_E_P_climate_neutral_ratio_CO2e_cb_to_fec")
     p_local_pv.emplo_existing = (
         fact("Fact_B_P_install_elec_emplo_2017")
-        * entry("In_M_population_com_2018")
-        / entry("In_M_population_nat")
+        * entries.m_population_com_2018
+        / entries.m_population_nat
     )
-    p_local_pv_roof.power_installed = entry("In_E_PV_power_inst_roof")
-    p_local_pv_facade.power_installed = entry("In_E_PV_power_inst_facade")
-    p_local_pv_park.power_installed = entry("In_E_PV_power_inst_park")
-    p_local_pv_agri.power_installed = entry("In_E_PV_power_inst_agripv")
+    p_local_pv_roof.power_installed = entries.e_PV_power_inst_roof
+    p_local_pv_facade.power_installed = entries.e_PV_power_inst_facade
+    p_local_pv_park.power_installed = entries.e_PV_power_inst_park
+    p_local_pv_agri.power_installed = entries.e_PV_power_inst_agripv
     p_local_pv_roof.invest_per_x = (
         ass("Ass_E_P_local_pv_roof_ratio_invest_to_power_2030") * 1000
     )
@@ -297,21 +296,21 @@ def calc(
     p_local_pv_roof.ratio_wage_to_emplo = ass(
         "Ass_E_P_constr_elec_ratio_wage_to_emplo_2017"
     )
-    p_local_pv_roof.power_to_be_installed_pct = entry("In_E_PV_power_to_be_inst_roof")
+    p_local_pv_roof.power_to_be_installed_pct = entries.e_PV_power_to_be_inst_roof
     p_local_pv_roof.area_ha_available = (
         (4 / 3)
         * (
             (
-                entry("In_R_area_m2_1flat")
+                entries.r_area_m2_1flat
                 / 100
                 * ass("Ass_E_P_local_pv_roof_area_building1")
-                + entry("In_R_area_m2_2flat")
+                + entries.r_area_m2_2flat
                 / 100
                 * ass("Ass_E_P_local_pv_roof_area_building2")
-                + entry("In_R_area_m2_3flat")
+                + entries.r_area_m2_3flat
                 / 100
                 * ass("Ass_E_P_local_pv_roof_area_buildingD")
-                + entry("In_R_area_m2_dorm")
+                + entries.r_area_m2_dorm
                 / 100
                 * ass("Ass_E_P_local_pv_roof_area_buildingD")
             )
@@ -337,16 +336,14 @@ def calc(
     p_local_pv_facade.ratio_wage_to_emplo = ass(
         "Ass_E_P_constr_elec_ratio_wage_to_emplo_2017"
     )
-    p_local_pv_facade.power_to_be_installed_pct = entry(
-        "In_E_PV_power_to_be_inst_facade"
-    )
+    p_local_pv_facade.power_to_be_installed_pct = entries.e_PV_power_to_be_inst_facade
     p_local_pv_facade.ratio_power_to_area_ha = ass(
         "Ass_E_P_local_pv_facade_ratio_power_to_area_ha"
     )
     p_local_pv_facade.area_ha_available = (
         ass("Ass_E_P_lcoal_pv_facade_potential")
-        * entry("In_R_buildings_com")
-        / entry("In_R_buildings_nat")
+        * entries.r_buildings_com
+        / entries.r_buildings_nat
     )
     p_local_pv_facade.area_ha_available_pct_of_action = ass(
         "Ass_E_P_local_pv_facade_potential_usable"
@@ -358,12 +355,12 @@ def calc(
     p_local_pv_park.ratio_wage_to_emplo = ass(
         "Ass_E_P_constr_elec_ratio_wage_to_emplo_2017"
     )
-    p_local_pv_park.power_to_be_installed_pct = entry("In_E_PV_power_to_be_inst_park")
+    p_local_pv_park.power_to_be_installed_pct = entries.e_PV_power_to_be_inst_park
     p_local_pv_park.ratio_power_to_area_ha = ass("Ass_E_P_local_pv_park_power_per_ha")
     p_local_pv_park.area_ha_available_pct_of_action = ass(
         "Ass_E_P_local_pv_park_area_pct_of_available"
     )
-    p_local_pv_park.area_ha_available = entry("In_M_area_total_com")
+    p_local_pv_park.area_ha_available = entries.m_area_total_com
     p_local_pv_agri.invest_per_x = (
         ass("Ass_E_P_local_pv_agri_ratio_invest_to_power") * 1000
     )
@@ -374,9 +371,9 @@ def calc(
     p_local_pv_agri.ratio_power_to_area_ha = ass("Ass_E_P_local_pv_agri_power_per_ha")
     p_local_pv_agri.area_ha_available_pct_of_action = ass(
         "Ass_E_P_local_pv_agri_power_installable"
-    ) / (ass("Ass_E_P_local_pv_agri_power_per_ha") * entry("In_M_area_agri_nat"))
-    p_local_pv_agri.area_ha_available = entry("In_M_area_agri_com")
-    p_local_wind_onshore.power_installed = entry("In_E_PV_power_inst_wind_on")
+    ) / (ass("Ass_E_P_local_pv_agri_power_per_ha") * entries.m_area_agri_nat)
+    p_local_pv_agri.area_ha_available = entries.m_area_agri_com
+    p_local_wind_onshore.power_installed = entries.e_PV_power_inst_wind_on
     p_local_wind_onshore.full_load_hour = fact("Fact_E_P_wind_onshore_full_load_hours")
     p_local_wind_onshore.cost_mro_per_MWh = (
         ass("Ass_E_P_local_wind_onshore_ratio_invest_to_power_2030")
@@ -398,17 +395,17 @@ def calc(
     )
     p_local_wind_onshore.emplo_existing = (
         fact("Fact_E_P_wind_onshore_emplo_2018")
-        * entry("In_M_population_com_2018")
-        / entry("In_M_population_nat")
+        * entries.m_population_com_2018
+        / entries.m_population_nat
     )
-    p_local_wind_onshore.power_to_be_installed_pct = entry(
-        "In_E_PV_power_to_be_inst_local_wind_onshore"
+    p_local_wind_onshore.power_to_be_installed_pct = (
+        entries.e_PV_power_to_be_inst_local_wind_onshore
     )
-    p_local_wind_onshore.ratio_power_to_area_ha = entry(
-        "In_E_local_wind_onshore_ratio_power_to_area_sta"
+    p_local_wind_onshore.ratio_power_to_area_ha = (
+        entries.e_local_wind_onshore_ratio_power_to_area_sta
     )
-    p_local_wind_onshore.area_ha_available = entry("In_M_area_agri_com") + entry(
-        "In_M_area_wood_com"
+    p_local_wind_onshore.area_ha_available = (
+        entries.m_area_agri_com + entries.m_area_wood_com
     )
     p_local_wind_onshore.area_ha_available_pct_of_action = ass(
         "Ass_E_P_local_wind_onshore_pct_action"
@@ -431,18 +428,18 @@ def calc(
     )  # demand_emplo
     p_local_biomass.emplo_existing = (
         fact("Fact_E_P_biomass_emplo_2018")
-        * entry("In_M_population_com_2018")
-        / entry("In_M_population_nat")
+        * entries.m_population_com_2018
+        / entries.m_population_nat
     )
-    p_local_hydro.power_installed = entry("In_E_PV_power_inst_water")
+    p_local_hydro.power_installed = entries.e_PV_power_inst_water
     p_local_hydro.full_load_hour = fact("Fact_E_P_hydro_full_load_hours")  # energy
     p_local_hydro.cost_mro_per_MWh = ass("Ass_E_P_local_hydro_mro_per_MWh")  # cost_mro
     p_local_hydro.CO2e_cb_per_MWh = fact(
         "Fact_E_P_climate_neutral_ratio_CO2e_cb_to_fec"
     )
     g.invest_outside = g_grid_offshore.invest_outside
-    g_grid_offshore.invest_pa_outside = g_grid_offshore.invest_outside / entry(
-        "In_M_duration_target"
+    g_grid_offshore.invest_pa_outside = (
+        g_grid_offshore.invest_outside / entries.m_duration_target
     )
     d_h.change_energy_MWh = d_h.energy - e18.d_h.energy  #
     d_r.change_energy_MWh = d_r.energy - e18.d_r.energy
@@ -1093,7 +1090,7 @@ def calc(
     g_grid_offshore.cost_mro = (
         g_grid_offshore.invest * ass("Ass_E_G_grid_offshore_mro") / Million
     )
-    g_grid_offshore.invest_pa = g_grid_offshore.invest / entry("In_M_duration_target")
+    g_grid_offshore.invest_pa = g_grid_offshore.invest / entries.m_duration_target
     p_renew_wind_offshore.change_cost_mro = (
         p_renew_wind_offshore.cost_mro - e18.p_renew_wind_offshore.cost_mro
     )
@@ -1274,7 +1271,7 @@ def calc(
     g_grid_onshore.cost_mro = (
         g_grid_onshore.invest * ass("Ass_E_G_grid_onshore_mro") / Million
     )
-    g_grid_onshore.invest_pa = g_grid_onshore.invest / entry("In_M_duration_target")
+    g_grid_onshore.invest_pa = g_grid_onshore.invest / entries.m_duration_target
     p_local_pv.energy = (
         p_local_pv_roof.energy
         + p_local_pv_facade.energy
@@ -1672,7 +1669,7 @@ def calc(
     e.change_energy_pct = p.change_energy_pct
     g.invest = g_grid_offshore.invest + g_grid_onshore.invest + g_grid_pv.invest
     g_grid_pv.cost_mro = g_grid_pv.invest * ass("Ass_E_G_grid_pv_mro") / Million
-    g_grid_pv.invest_pa = g_grid_pv.invest / entry("In_M_duration_target")
+    g_grid_pv.invest_pa = g_grid_pv.invest / entries.m_duration_target
     p.invest_pa = p_fossil_and_renew.invest_pa + p_local.invest_pa
     p_local_pv.cost_wage = (
         p_local_pv_roof.cost_wage

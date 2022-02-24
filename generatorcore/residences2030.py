@@ -112,8 +112,7 @@ def calc(inputs: Inputs, *, r18: residences2018.R18, b18: business2018.B18) -> R
     def ass(n):
         return inputs.ass(n)
 
-    def entry(n):
-        return inputs.entry(n)
+    entries = inputs.entries
 
     ### P - Section ###
     r30 = R30()
@@ -122,7 +121,7 @@ def calc(inputs: Inputs, *, r18: residences2018.R18, b18: business2018.B18) -> R
     p = r30.p
     r = r30.r
 
-    Kalkulationszeitraum = entry("In_M_duration_target")
+    Kalkulationszeitraum = entries.m_duration_target
     g_consult = r30.g_consult
 
     p_buildings_total = r30.p_buildings_total
@@ -141,7 +140,7 @@ def calc(inputs: Inputs, *, r18: residences2018.R18, b18: business2018.B18) -> R
     p_other = r30.p_other
     p_vehicles = r30.p_vehicles
 
-    p_buildings_total.rate_rehab_pa = entry("In_R_rehab_rate_pa")
+    p_buildings_total.rate_rehab_pa = entries.r_rehab_rate_pa
 
     p_buildings_until_1919.area_m2 = r18.p_buildings_until_1919.area_m2
     p_buildings_1919_1948.area_m2 = r18.p_buildings_1919_1948.area_m2
@@ -226,7 +225,7 @@ def calc(inputs: Inputs, *, r18: residences2018.R18, b18: business2018.B18) -> R
     p_buildings_2011_today.pct_rehab = 1 - p_buildings_2011_today.pct_nonrehab
 
     p_buildings_new.pct_x = max(
-        div(entry("In_M_population_com_203X"), entry("In_M_population_com_2018")) - 1, 0
+        div(entries.m_population_com_203X, entries.m_population_com_2018) - 1, 0
     )
 
     p_buildings_new.area_m2 = p_buildings_total.area_m2 * p_buildings_new.pct_x
@@ -576,16 +575,16 @@ def calc(inputs: Inputs, *, r18: residences2018.R18, b18: business2018.B18) -> R
         (4 / 3)
         * (
             (
-                entry("In_R_area_m2_1flat")
+                entries.r_area_m2_1flat
                 / 100
                 * ass("Ass_E_P_local_pv_roof_area_building1")
-                + entry("In_R_area_m2_2flat")
+                + entries.r_area_m2_2flat
                 / 100
                 * ass("Ass_E_P_local_pv_roof_area_building2")
-                + entry("In_R_area_m2_3flat")
+                + entries.r_area_m2_3flat
                 / 100
                 * ass("Ass_E_P_local_pv_roof_area_building3")
-                + entry("In_R_area_m2_dorm")
+                + entries.r_area_m2_dorm
                 / 100
                 * ass("Ass_E_P_local_pv_roof_area_buildingD")
             )
@@ -599,7 +598,7 @@ def calc(inputs: Inputs, *, r18: residences2018.R18, b18: business2018.B18) -> R
         * ass("Ass_R_P_soltherm_specific_yield_per_sqm")
         * 10000
     )
-    s_solarth.power_to_be_installed_pct = entry("In_H_solartherm_to_be_inst")
+    s_solarth.power_to_be_installed_pct = entries.h_solartherm_to_be_inst
 
     s_solarth.energy = max(
         div(
@@ -878,7 +877,7 @@ def calc(inputs: Inputs, *, r18: residences2018.R18, b18: business2018.B18) -> R
         "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
     )
 
-    KlimaneutraleJahre = entry("In_M_duration_neutral")
+    KlimaneutraleJahre = entries.m_duration_neutral
 
     s_fueloil.CO2e_pb = 0
     s_lpg.CO2e_pb = 0
@@ -948,14 +947,14 @@ def calc(inputs: Inputs, *, r18: residences2018.R18, b18: business2018.B18) -> R
 
     s_emethan.cost_climate_saved = (
         (s_emethan.CO2e_total_2021_estimated - s_emethan.CO2e_cb)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     s_elec_heating.cost_climate_saved = 0
 
     s.cost_climate_saved = (
         (s.CO2e_total_2021_estimated - s.CO2e_cb)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
 
@@ -974,32 +973,32 @@ def calc(inputs: Inputs, *, r18: residences2018.R18, b18: business2018.B18) -> R
     p_buildings_until_1919.invest_per_x = fact(
         "Fact_R_P_energetical_renovation_cost_detached_house_until_1949"
     ) * div(
-        entry("In_R_area_m2_1flat") + entry("In_R_area_m2_2flat"), entry("In_R_area_m2")
+        entries.r_area_m2_1flat + entries.r_area_m2_2flat, entries.r_area_m2
     ) + fact(
         "Fact_R_P_energetical_renovation_cost_apartm_building_until_1949"
     ) * div(
-        entry("In_R_area_m2_3flat") + entry("In_R_area_m2_dorm"), entry("In_R_area_m2")
+        entries.r_area_m2_3flat + entries.r_area_m2_dorm, entries.r_area_m2
     )
 
     p_buildings_1919_1948.invest_per_x = p_buildings_until_1919.invest_per_x
     p_buildings_1949_1978.invest_per_x = fact(
         "Fact_R_P_energetical_renovation_cost_detached_house_1949_1979"
     ) * div(
-        entry("In_R_area_m2_1flat") + entry("In_R_area_m2_2flat"), entry("In_R_area_m2")
+        entries.r_area_m2_1flat + entries.r_area_m2_2flat, entries.r_area_m2
     ) + fact(
         "Fact_R_P_energetical_renovation_cost_apartm_building_1949_1979"
     ) * div(
-        entry("In_R_area_m2_3flat") + entry("In_R_area_m2_dorm"), entry("In_R_area_m2")
+        entries.r_area_m2_3flat + entries.r_area_m2_dorm, entries.r_area_m2
     )
 
     p_buildings_1979_1995.invest_per_x = fact(
         "Fact_R_P_energetical_renovation_cost_detached_house_1980+"
     ) * div(
-        entry("In_R_area_m2_1flat") + entry("In_R_area_m2_2flat"), entry("In_R_area_m2")
+        entries.r_area_m2_1flat + entries.r_area_m2_2flat, entries.r_area_m2
     ) + fact(
         "Fact_R_P_energetical_renovation_cost_apartm_building_1980+"
     ) * div(
-        entry("In_R_area_m2_3flat") + entry("In_R_area_m2_dorm"), entry("In_R_area_m2")
+        entries.r_area_m2_3flat + entries.r_area_m2_dorm, entries.r_area_m2
     )
     p_buildings_1996_2004.invest_per_x = p_buildings_1979_1995.invest_per_x
     p_buildings_area_m2_com.invest_per_x = fact(
@@ -1014,7 +1013,7 @@ def calc(inputs: Inputs, *, r18: residences2018.R18, b18: business2018.B18) -> R
             r18.p_buildings_total.area_m2 + b18.p_nonresi.area_m2,
         )
         * s_solarth.area_ha_available
-        * entry("In_H_solartherm_to_be_inst")
+        * entries.h_solartherm_to_be_inst
         * s_solarth.invest_per_x
         * 10000
     )
@@ -1065,9 +1064,9 @@ def calc(inputs: Inputs, *, r18: residences2018.R18, b18: business2018.B18) -> R
         + p_buildings_1996_2004.invest
     )  # SUM(p_buildings_until_1919.invest:p_buildings_1996_2004.invest)
     p_buildings_total.cost_mro = 0
-    g_consult.invest = entry("In_R_buildings_le_2_apts") * fact(
+    g_consult.invest = entries.r_buildings_le_2_apts * fact(
         "Fact_R_G_energy_consulting_cost_detached_house"
-    ) + entry("In_R_buildings_ge_3_apts") * fact(
+    ) + entries.r_buildings_ge_3_apts * fact(
         "Fact_R_G_energy_consulting_cost_appt_building_ge_3_flats"
     )
     g.invest = g_consult.invest
@@ -1107,22 +1106,22 @@ def calc(inputs: Inputs, *, r18: residences2018.R18, b18: business2018.B18) -> R
     g_consult.demand_emplo = div(g_consult.cost_wage, g_consult.ratio_wage_to_emplo)
     s_solarth.emplo_existing = (
         fact("Fact_B_P_install_heating_emplo_2017")
-        * entry("In_M_population_com_2018")
-        / entry("In_M_population_nat")
+        * entries.m_population_com_2018
+        / entries.m_population_nat
         * ass("Ass_B_D_install_heating_emplo_pct_of_R_solarth")
     )
     s_heatpump.emplo_existing = (
         fact("Fact_B_P_install_heating_emplo_2017")
-        * entry("In_M_population_com_2018")
-        / entry("In_M_population_nat")
+        * entries.m_population_com_2018
+        / entries.m_population_nat
         * ass("Ass_B_D_install_heating_emplo_pct_of_R_heatpump")
     )
 
     p_buildings_total.emplo_existing = (
         fact("Fact_B_P_renovation_emplo_2017")
         * ass("Ass_B_D_renovation_emplo_pct_of_R")
-        * entry("In_M_population_com_2018")
-        / entry("In_M_population_nat")
+        * entries.m_population_com_2018
+        / entries.m_population_nat
     )
     p_buildings_total.demand_emplo_new = max(
         0, p_buildings_total.demand_emplo - p_buildings_total.emplo_existing
@@ -1131,8 +1130,8 @@ def calc(inputs: Inputs, *, r18: residences2018.R18, b18: business2018.B18) -> R
     g_consult.emplo_existing = (
         fact("Fact_R_G_energy_consulting_total_personel")
         * ass("Ass_B_D_energy_consulting_emplo_pct_of_R")
-        * entry("In_M_population_com_2018")
-        / entry("In_M_population_nat")
+        * entries.m_population_com_2018
+        / entries.m_population_nat
     )
     g_consult.demand_emplo_new = max(
         0, g_consult.demand_emplo - g_consult.emplo_existing
@@ -1163,8 +1162,8 @@ def calc(inputs: Inputs, *, r18: residences2018.R18, b18: business2018.B18) -> R
     p_buildings_total.invest_com = p_buildings_area_m2_com.invest_com
 
     g_consult.invest_com = g_consult.invest
-    s_solarth.invest_com = s_solarth.invest * entry("In_R_pct_of_area_m2_com")
-    s_heatpump.invest_com = s_heatpump.invest * entry("In_R_pct_of_area_m2_com")
+    s_solarth.invest_com = s_solarth.invest * entries.r_pct_of_area_m2_com
+    s_heatpump.invest_com = s_heatpump.invest * entries.r_pct_of_area_m2_com
     s.invest_com = s_solarth.invest_com + s_heatpump.invest_com
 
     p_buildings_total.invest_pa_com = (
@@ -1271,20 +1270,20 @@ def calc(inputs: Inputs, *, r18: residences2018.R18, b18: business2018.B18) -> R
         * p_buildings_area_m2_com.invest_per_x
     )
     p_buildings_area_m2_com.invest_com = p_buildings_area_m2_com.invest
-    p_buildings_area_m2_com.invest_pa = p_buildings_area_m2_com.invest / entry(
-        "In_M_duration_target"
+    p_buildings_area_m2_com.invest_pa = (
+        p_buildings_area_m2_com.invest / entries.m_duration_target
     )
-    p_buildings_area_m2_com.invest_pa_com = p_buildings_area_m2_com.invest_com / entry(
-        "In_M_duration_target"
+    p_buildings_area_m2_com.invest_pa_com = (
+        p_buildings_area_m2_com.invest_com / entries.m_duration_target
     )
-    p_buildings_area_m2_com.invest_pa = p_buildings_area_m2_com.invest / entry(
-        "In_M_duration_target"
+    p_buildings_area_m2_com.invest_pa = (
+        p_buildings_area_m2_com.invest / entries.m_duration_target
     )
-    p_buildings_area_m2_com.invest_pa_com = p_buildings_area_m2_com.invest_com / entry(
-        "In_M_duration_target"
+    p_buildings_area_m2_com.invest_pa_com = (
+        p_buildings_area_m2_com.invest_com / entries.m_duration_target
     )
-    p_buildings_area_m2_com.invest_pa_com = p_buildings_area_m2_com.invest_com / entry(
-        "In_M_duration_target"
+    p_buildings_area_m2_com.invest_pa_com = (
+        p_buildings_area_m2_com.invest_com / entries.m_duration_target
     )
     p_buildings_new.change_energy_MWh = p_buildings_new.energy - 0
     p_other.change_energy_MWh = p_other.energy - r18.p_other.energy
@@ -1382,7 +1381,7 @@ def calc(inputs: Inputs, *, r18: residences2018.R18, b18: business2018.B18) -> R
     )
     s_elec.cost_climate_saved = (
         (s_elec.CO2e_total_2021_estimated - s_elec.CO2e_cb)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     s_elec.change_cost_energy = 0
@@ -1421,23 +1420,23 @@ def calc(inputs: Inputs, *, r18: residences2018.R18, b18: business2018.B18) -> R
     g.demand_emplo_com = g.demand_emplo_new
     r.demand_emplo_com = g.demand_emplo_com
 
-    p_buildings_area_m2_com.invest_pa = p_buildings_area_m2_com.invest / entry(
-        "In_M_duration_target"
+    p_buildings_area_m2_com.invest_pa = (
+        p_buildings_area_m2_com.invest / entries.m_duration_target
     )
-    p_buildings_until_1919.invest_pa = p_buildings_until_1919.invest / entry(
-        "In_M_duration_target"
+    p_buildings_until_1919.invest_pa = (
+        p_buildings_until_1919.invest / entries.m_duration_target
     )
-    p_buildings_1919_1948.invest_pa = p_buildings_1919_1948.invest / entry(
-        "In_M_duration_target"
+    p_buildings_1919_1948.invest_pa = (
+        p_buildings_1919_1948.invest / entries.m_duration_target
     )
-    p_buildings_1949_1978.invest_pa = p_buildings_1949_1978.invest / entry(
-        "In_M_duration_target"
+    p_buildings_1949_1978.invest_pa = (
+        p_buildings_1949_1978.invest / entries.m_duration_target
     )
-    p_buildings_1979_1995.invest_pa = p_buildings_1979_1995.invest / entry(
-        "In_M_duration_target"
+    p_buildings_1979_1995.invest_pa = (
+        p_buildings_1979_1995.invest / entries.m_duration_target
     )
-    p_buildings_1996_2004.invest_pa = p_buildings_1996_2004.invest / entry(
-        "In_M_duration_target"
+    p_buildings_1996_2004.invest_pa = (
+        p_buildings_1996_2004.invest / entries.m_duration_target
     )
 
     s_emethan.change_CO2e_pct = div(

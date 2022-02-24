@@ -184,8 +184,7 @@ def calc_budget(
     def fact(n):
         return inputs.fact(n)
 
-    def entry(n):
-        return inputs.entry(n)
+    entries = inputs.entries
 
     ######################################
     ### budgets 2016 until target year ###
@@ -194,16 +193,16 @@ def calc_budget(
     m183X = M183X()
     # local greenhouse gas budget from 2016 until target year in com!!
     m183X.GHG_budget_2016_to_year_target = (
-        entry("In_M_GHG_budget_2016_to_year_target")
-        * entry("In_M_population_com_2018")
-        / entry("In_M_population_nat")
+        entries.m_GHG_budget_2016_to_year_target
+        * entries.m_population_com_2018
+        / entries.m_population_nat
     )
 
     # local nonCO2 budget from 2016 until target year in com!!
     m183X.nonCO2_budget_2016_to_year_target = (
-        entry("In_M_nonCO2_budget_2016_to_year_target")
-        * entry("In_M_population_com_2018")
-        / entry("In_M_population_nat")
+        entries.m_nonCO2_budget_2016_to_year_target
+        * entries.m_population_com_2018
+        / entries.m_population_nat
     )
 
     # local CO2 budget from 2016 until infinity
@@ -333,7 +332,7 @@ def calc_budget(
 
     # calculating the yearly decrease of the emissions, going down linearly to 0 in target_year+1
     m183X.CO2e_w_lulucf_change_pa = m183X.CO2e_w_lulucf_2021 / (
-        entry("In_M_year_target")
+        entries.m_year_target
         - 2021
         + 1  # TODO end of 2022,  substract year 2021 as emissions are only known until that year
     )  # +1 because we want to reach 0 in target_year+1
@@ -619,7 +618,7 @@ def calc_budget(
     )
 
     m183X.GHG_budget_2022_to_year_target_nat = (
-        entry("In_M_GHG_budget_2016_to_year_target")
+        entries.m_GHG_budget_2016_to_year_target
         - fact("Fact_M_CO2e_w_lulucf_2016")
         - fact("Fact_M_CO2e_w_lulucf_2017")
         - fact("Fact_M_CO2e_w_lulucf_2018")
@@ -663,8 +662,7 @@ def calc_z(
     def fact(n):
         return inputs.fact(n)
 
-    def entry(n):
-        return inputs.entry(n)
+    entries = inputs.entries
 
     ##################################################################
     ### total emissions 203X, saved emissions, saved climate costs ###
@@ -821,12 +819,12 @@ def calc_z(
 
     s.cost_climate_saved = (
         (s.CO2e_total_2021_estimated - s.CO2e_total_30)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     d.cost_climate_saved = (
         (d.CO2e_total_2021_estimated - d.CO2e_total_30)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     z.cost_climate_saved = s.cost_climate_saved + d.cost_climate_saved
@@ -938,9 +936,9 @@ def calc_z(
     # ==========Extra Calculations=====================
 
     m183X.CO2e_per_capita_nat = div(
-        fact("Fact_M_CO2e_w_lulucf_2018"), entry("In_M_population_nat")
+        fact("Fact_M_CO2e_w_lulucf_2018"), entries.m_population_nat
     )
-    m183X.CO2e_per_capita_com = div(z.CO2e_total_18, entry("In_M_population_com_2018"))
+    m183X.CO2e_per_capita_com = div(z.CO2e_total_18, entries.m_population_com_2018)
     m183X.CO2e_per_capita_com_pct_of_nat = div(
         m183X.CO2e_per_capita_com, m183X.CO2e_per_capita_nat
     )

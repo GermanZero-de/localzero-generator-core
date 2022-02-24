@@ -98,8 +98,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
     def ass(n):
         return inputs.ass(n)
 
-    def entry(n):
-        return inputs.entry(n)
+    entries = inputs.entries
 
     Million = 1000000
 
@@ -184,7 +183,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
 
     # 1
     d_r.energy = (
-        entry("In_R_elec_fec")
+        entries.r_elec_fec
         # result: 126.600.000 MWh
     )
     # 2
@@ -204,7 +203,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
     # Zeile GHD+sonstiges
     # 1
     d_b.energy = (
-        entry("In_B_elec_fec")
+        entries.b_elec_fec
         # result: 143.690.000 MWh
     )
     # 2
@@ -223,7 +222,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
 
     # 1
     d_i.energy = (
-        entry("In_I_elec_fec")
+        entries.i_elec_fec
         # result: 226.095.000 MWh
     )
     # 2
@@ -257,7 +256,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
 
     # 1
     d_a.energy = (
-        entry("In_A_elec_fec")
+        entries.a_elec_fec
         # result: 3.570.000 MWh
     )
 
@@ -671,7 +670,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
     p_renew_pv_roof.cost_mro_per_MWh = (
         ass("Ass_E_P_local_pv_roof_ratio_invest_to_power_2020")
         * ass("Ass_E_P_local_pv_roof_mro_per_year")
-        / entry("In_E_pv_full_load_hours_sta")
+        / entries.e_pv_full_load_hours_sta
         * 1000
     )
     p_renew_pv_roof.cost_mro = (
@@ -706,7 +705,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
     p_renew_pv_park.cost_mro_per_MWh = (
         ass("Ass_E_S_local_pv_park_ratio_invest_to_power_2020")
         * ass("Ass_E_P_local_pv_park_mro_per_year")
-        / entry("In_E_pv_full_load_hours_sta")
+        / entries.e_pv_full_load_hours_sta
         * 1000
     )
     # 8
@@ -735,7 +734,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
     p_renew_pv_agri.cost_mro_per_MWh = (
         ass("Ass_E_P_local_pv_agri_ratio_invest_to_power")
         * ass("Ass_E_P_local_pv_roof_mro_per_year")
-        / entry("In_E_pv_full_load_hours_sta")
+        / entries.e_pv_full_load_hours_sta
         * 1000
         # result: 28,3 €/MWh
     )
@@ -1065,8 +1064,8 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
 
     # PV Lokal Dach
     p_local_pv_roof.energy = (
-        entry("In_E_PV_power_inst_roof")
-        * entry("In_E_pv_full_load_hours_sta")
+        entries.e_PV_power_inst_roof
+        * entries.e_pv_full_load_hours_sta
         * (1 - ass("Ass_E_P_renew_loss_brutto_to_netto"))
     )
     # result: 34.951.317 MWh
@@ -1083,7 +1082,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
 
     # PV Lokal Fassade
     p_local_pv_facade.energy = (
-        entry("In_E_PV_power_inst_facade")
+        entries.e_PV_power_inst_facade
         * ass("Ass_E_P_local_pv_facade_full_load_hours")
         * (1 - ass("Ass_E_P_renew_loss_brutto_to_netto"))
     )
@@ -1104,8 +1103,8 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
 
     # PV Lokal Freifläche
     p_local_pv_park.energy = (
-        entry("In_E_PV_power_inst_park")
-        * entry("In_E_pv_full_load_hours_sta")
+        entries.e_PV_power_inst_park
+        * entries.e_pv_full_load_hours_sta
         * (1 - ass("Ass_E_P_renew_loss_brutto_to_netto"))
     )
     # result: 12.175.664 MWh
@@ -1122,8 +1121,8 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
 
     # PV Lokal Agrar
     p_local_pv_agri.energy = (
-        entry("In_E_PV_power_inst_agripv")
-        * entry("In_E_pv_full_load_hours_sta")
+        entries.e_PV_power_inst_agripv
+        * entries.e_pv_full_load_hours_sta
         * (1 - ass("Ass_E_P_renew_loss_brutto_to_netto"))
     )
     # result: 310.360 MWh
@@ -1154,7 +1153,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
 
     # Wind Lokal Onshore
     p_local_wind_onshore.energy = (
-        entry("In_E_PV_power_inst_wind_on")
+        entries.e_PV_power_inst_wind_on
         * fact("Fact_E_P_wind_onshore_full_load_hours")
         * (1 - ass("Ass_E_P_renew_loss_brutto_to_netto"))
     )
@@ -1175,7 +1174,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
 
     # Biomasse Lokal
     p_local_biomass.energy = (
-        entry("In_E_PV_power_inst_biomass")
+        entries.e_PV_power_inst_biomass
         * fact("Fact_E_P_biomass_full_load_hours")
         * (1 - ass("Ass_E_P_renew_loss_brutto_to_netto"))
     )
@@ -1220,7 +1219,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
     # Laufwasser
 
     p_local_hydro.energy = (
-        entry("In_E_PV_power_inst_water")
+        entries.e_PV_power_inst_water
         * fact("Fact_E_P_hydro_full_load_hours")
         * (1 - ass("Ass_E_P_renew_loss_brutto_to_netto"))
     )
