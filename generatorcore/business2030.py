@@ -116,11 +116,10 @@ def calc(
     def ass(n):
         return inputs.ass(n)
 
-    def entry(n):
-        return inputs.entry(n)
+    entries = inputs.entries
 
     Million = 1000000.0
-    Kalkulationszeitraum = entry("In_M_duration_target")
+    Kalkulationszeitraum = entries.m_duration_target
 
     b30 = B30()
     # Definitions production
@@ -155,11 +154,11 @@ def calc(
     rb = b30.rb
 
     # Calculation
-    p_nonresi.rate_rehab_pa = entry("In_R_rehab_rate_pa")
+    p_nonresi.rate_rehab_pa = entries.r_rehab_rate_pa
     p_nonresi.pct_rehab = min(
         1.0,
         fact("Fact_B_P_ratio_renovated_to_not_renovated_2021")
-        + p_nonresi.rate_rehab_pa * entry("In_M_duration_target"),
+        + p_nonresi.rate_rehab_pa * entries.m_duration_target,
     )
     p_nonresi.pct_nonrehab = 1 - p_nonresi.pct_rehab
     p_nonresi.area_m2_nonrehab = p_nonresi.pct_nonrehab * b18.p_nonresi.area_m2
@@ -217,7 +216,7 @@ def calc(
     p_elec_elcon.demand_change = ass("Ass_B_D_fec_elec_elcon_change")
     p_elec_elcon.energy = (
         b18.p_elec_elcon.energy
-        * (div(entry("In_M_population_com_203X"), entry("In_M_population_com_2018")))
+        * (div(entries.m_population_com_203X, entries.m_population_com_2018))
         * (1 + p_elec_elcon.demand_change)
     )
 
@@ -237,16 +236,16 @@ def calc(
         (4 / 3)
         * (
             (
-                entry("In_R_area_m2_1flat")
+                entries.r_area_m2_1flat
                 / 100
                 * ass("Ass_E_P_local_pv_roof_area_building1")
-                + entry("In_R_area_m2_2flat")
+                + entries.r_area_m2_2flat
                 / 100
                 * ass("Ass_E_P_local_pv_roof_area_building2")
-                + entry("In_R_area_m2_3flat")
+                + entries.r_area_m2_3flat
                 / 100
                 * ass("Ass_E_P_local_pv_roof_area_building3")
-                + entry("In_R_area_m2_dorm")
+                + entries.r_area_m2_dorm
                 / 100
                 * ass("Ass_E_P_local_pv_roof_area_buildingD")
             )
@@ -260,7 +259,7 @@ def calc(
         * ass("Ass_R_P_soltherm_specific_yield_per_sqm")
         * 10000
     )
-    s_solarth.power_to_be_installed_pct = entry("In_H_solartherm_to_be_inst")
+    s_solarth.power_to_be_installed_pct = entries.h_solartherm_to_be_inst
     s_solarth.energy = max(
         div(
             b18.p_nonresi.area_m2, r18.p_buildings_total.area_m2 + b18.p_nonresi.area_m2
@@ -521,7 +520,7 @@ def calc(
 
     #    SUM(s_gas.CO2e_total_2021_estimated:s_solarth.CO2e_total_2021_estimated)
 
-    KlimaneutraleJahre = entry("In_M_duration_neutral")
+    KlimaneutraleJahre = entries.m_duration_neutral
 
     # todo: CO2e_pb not definied
     s_gas.cost_climate_saved = (
@@ -586,7 +585,7 @@ def calc(
     )
     s.cost_climate_saved = (
         (s.CO2e_total_2021_estimated - s.CO2e_cb)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     s.change_cost_energy = s.cost_fuel - b18.s.cost_fuel
@@ -622,7 +621,7 @@ def calc(
             b18.p_nonresi.area_m2, r18.p_buildings_total.area_m2 + b18.p_nonresi.area_m2
         )
         * s_solarth.area_ha_available
-        * entry("In_H_solartherm_to_be_inst")
+        * entries.h_solartherm_to_be_inst
         * r30.s_solarth.invest_per_x
         * 10000
     )
@@ -636,8 +635,8 @@ def calc(
 
     s_heatpump.emplo_existing = (
         fact("Fact_B_P_install_heating_emplo_2017")
-        * entry("In_M_population_com_2018")
-        / entry("In_M_population_nat")
+        * entries.m_population_com_2018
+        / entries.m_population_nat
         * ass("Ass_B_D_install_heating_emplo_pct_of_B_heatpump")
     )
 
@@ -690,8 +689,8 @@ def calc(
     p_nonresi.emplo_existing = (
         fact("Fact_B_P_renovation_emplo_2017")
         * ass("Ass_B_D_renovation_emplo_pct_of_B")
-        * entry("In_M_population_com_2018")
-        / entry("In_M_population_nat")
+        * entries.m_population_com_2018
+        / entries.m_population_nat
     )
     p_nonresi.cost_mro = 0
 
@@ -704,7 +703,7 @@ def calc(
     b.CO2e_total_2021_estimated = s.CO2e_total_2021_estimated
     b.cost_climate_saved = s.cost_climate_saved
     g.invest_pa = g_consult.invest_pa
-    g_consult.invest_pa_com = g_consult.invest_com / entry("In_M_duration_target")
+    g_consult.invest_pa_com = g_consult.invest_com / entries.m_duration_target
     g.invest = g_consult.invest
     g.invest_com = g_consult.invest_com
     g.cost_wage = g_consult.cost_wage
@@ -712,8 +711,8 @@ def calc(
     g_consult.emplo_existing = (
         fact("Fact_R_G_energy_consulting_total_personel")
         * ass("Ass_B_D_energy_consulting_emplo_pct_of_B")
-        * entry("In_M_population_com_2018")
-        / entry("In_M_population_nat")
+        * entries.m_population_com_2018
+        / entries.m_population_nat
     )
     p.invest_pa = p_nonresi.invest_pa
     p_nonresi.invest_pa_com = p_nonresi_com.invest_pa_com
@@ -754,7 +753,7 @@ def calc(
         * (1 - fact("Fact_B_P_ratio_renovated_to_not_renovated_2021"))
         * p_nonresi_com.invest_per_x
     )
-    p_nonresi_com.invest_pa = p_nonresi_com.invest / entry("In_M_duration_target")
+    p_nonresi_com.invest_pa = p_nonresi_com.invest / entries.m_duration_target
     p.demand_ediesel = p_other.demand_ediesel
     p_other.change_energy_MWh = p_other.energy - b18.p_other.energy
     p_other.change_energy_pct = div(p_other.change_energy_MWh, b18.p_other.energy)
@@ -779,8 +778,8 @@ def calc(
     b.demand_emplo = g.demand_emplo + p.demand_emplo + s.demand_emplo
     s_solarth.emplo_existing = (
         fact("Fact_B_P_install_heating_emplo_2017")
-        * entry("In_M_population_com_2018")
-        / entry("In_M_population_nat")
+        * entries.m_population_com_2018
+        / entries.m_population_nat
         * ass("Ass_B_D_install_heating_emplo_pct_of_B_solarth")
     )
     s_gas.CO2e_total = s_gas.CO2e_cb
@@ -790,7 +789,7 @@ def calc(
     s_emethan.CO2e_total_2021_estimated = 0 * fact("Fact_M_CO2e_wo_lulucf_2021_vs_2018")
     s_emethan.cost_climate_saved = (
         (s_emethan.CO2e_total_2021_estimated - s_emethan.CO2e_cb)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     s_lpg.CO2e_total = s_lpg.CO2e_cb
@@ -826,7 +825,7 @@ def calc(
     )
     s_elec.cost_climate_saved = (
         (s_elec.CO2e_total_2021_estimated - s_elec.CO2e_cb)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
 
@@ -844,7 +843,7 @@ def calc(
     )
     rb.cost_climate_saved = (
         (rb.CO2e_total_2021_estimated - rb.CO2e_cb)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     rb.invest_pa = r30.r.invest_pa + b.invest_pa

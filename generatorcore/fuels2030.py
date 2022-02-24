@@ -91,8 +91,7 @@ def calc(
     def ass(n):
         return inputs.ass(n)
 
-    def entry(n):
-        return inputs.entry(n)
+    entries = inputs.entries
 
     f30 = F30()
 
@@ -330,19 +329,19 @@ def calc(
     f30.p_petrol.change_CO2e_t = f30.p_petrol.CO2e_total - f18.p_petrol.CO2e_total
     f30.p_petrol.cost_climate_saved = (
         (f30.p_petrol.CO2e_total_2021_estimated - f30.p_petrol.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     f30.p_jetfuel.change_CO2e_t = f30.p_jetfuel.CO2e_total - f18.p_jetfuel.CO2e_total
     f30.p_jetfuel.cost_climate_saved = (
         (f30.p_jetfuel.CO2e_total_2021_estimated - f30.p_jetfuel.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     f30.p_diesel.change_CO2e_t = f30.p_diesel.CO2e_total - f18.p_diesel.CO2e_total
     f30.p_diesel.cost_climate_saved = (
         (f30.p_diesel.CO2e_total_2021_estimated - f30.p_diesel.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     f30.f.CO2e_pb = f30.p.CO2e_pb
@@ -358,7 +357,7 @@ def calc(
     # --------------------------------------
     f30.p_emethan.cost_climate_saved = (
         -f30.p_emethan.CO2e_total
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     f30.p_bioethanol.cost_climate_saved = (
@@ -366,13 +365,13 @@ def calc(
     ) = (
         f30.p_biogas.cost_climate_saved
     ) = f30.p_hydrogen.cost_climate_saved = f30.p_hydrogen_reconv.cost_climate_saved = 0
-    f30.p_petrol.invest_pa = f30.p_petrol.invest / entry("In_M_duration_target")
-    f30.p_jetfuel.invest_pa = f30.p_jetfuel.invest / entry("In_M_duration_target")
-    f30.p_diesel.invest_pa = f30.p_diesel.invest / entry("In_M_duration_target")
-    f30.p_emethan.invest_pa = f30.p_emethan.invest / entry("In_M_duration_target")
+    f30.p_petrol.invest_pa = f30.p_petrol.invest / entries.m_duration_target
+    f30.p_jetfuel.invest_pa = f30.p_jetfuel.invest / entries.m_duration_target
+    f30.p_diesel.invest_pa = f30.p_diesel.invest / entries.m_duration_target
+    f30.p_emethan.invest_pa = f30.p_emethan.invest / entries.m_duration_target
     # --------------------------------------
     f30.p_emethan.invest_outside = f30.p_emethan.invest
-    f30.p_hydrogen.invest_pa = f30.p_hydrogen.invest / entry("In_M_duration_target")
+    f30.p_hydrogen.invest_pa = f30.p_hydrogen.invest / entries.m_duration_target
     f30.p_hydrogen.invest_outside = f30.p_hydrogen.invest
     f30.d.energy = (
         f30.d_r.energy
@@ -482,8 +481,8 @@ def calc(
         + f30.p_hydrogen.invest
         + f30.p_hydrogen_reconv.invest
     )  # SUM(p_petrol.invest:p_hydrogen_reconv.invest)
-    f30.p_hydrogen_reconv.invest_pa = f30.p_hydrogen_reconv.invest / entry(
-        "In_M_duration_target"
+    f30.p_hydrogen_reconv.invest_pa = (
+        f30.p_hydrogen_reconv.invest / entries.m_duration_target
     )
     f30.p_hydrogen_reconv.invest_outside = f30.p_hydrogen_reconv.invest
     f30.f.change_energy_pct = f30.p.change_energy_pct

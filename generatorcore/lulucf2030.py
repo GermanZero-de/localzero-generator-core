@@ -107,8 +107,7 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
     def ass(n):
         return inputs.ass(n)
 
-    def entry(n):
-        return inputs.entry(n)
+    entries = inputs.entries
 
     l30 = L30()
 
@@ -383,7 +382,7 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
         "Fact_M_CO2e_lulucf_2021_vs_2018"
     )
     g_water_org.invest = 0
-    g_water_org.invest_pa = g_water_org.invest / entry("In_M_duration_target")
+    g_water_org.invest_pa = g_water_org.invest / entries.m_duration_target
     g_water_org.demand_emplo_new = 0
     g_water_min.demand_change = ass("Ass_L_G_no_LUC_203X")
     g_water_min.CO2e_pb_per_t = fact(
@@ -507,7 +506,7 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
         g_water_org_high.demand_change
     )
     g_settlement_org.invest = 0
-    g_settlement_org.invest_pa = g_settlement_org.invest / entry("In_M_duration_target")
+    g_settlement_org.invest_pa = g_settlement_org.invest / entries.m_duration_target
     g_settlement.invest_pa = g_settlement_org.invest_pa
     g_settlement.cost_wage = g_settlement_org.cost_wage
     g_settlement.demand_emplo = g_settlement_org.demand_emplo
@@ -599,11 +598,9 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
         g_wet_org_low_r.area_ha_change + g_wet_org_high_r.area_ha_change
     )
     g_wet_org_high_r.area_ha = g_wet_org_high_r.area_ha_change
-    g_wet_org_low_rp.invest_pa = g_wet_org_low_rp.invest / entry("In_M_duration_target")
+    g_wet_org_low_rp.invest_pa = g_wet_org_low_rp.invest / entries.m_duration_target
     g_wet_org_rp.invest = g_wet_org_low_rp.invest + g_wet_org_high_rp.invest
-    g_wet_org_high_rp.invest_pa = g_wet_org_high_rp.invest / entry(
-        "In_M_duration_target"
-    )
+    g_wet_org_high_rp.invest_pa = g_wet_org_high_rp.invest / entries.m_duration_target
     g_water_min.area_ha = l18.g_water_min.area_ha + g_water_min.area_ha_change
     g_water_org_low.area_ha = (
         l18.g_water_org_low.area_ha + g_water_org_low.area_ha_change
@@ -632,14 +629,14 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
     g_crop_min_hum.area_ha_change = -g_crop_min_conv.change_within_category
     g_crop_min_conv.CO2e_pb = g_crop_min_conv.CO2e_pb_per_t * g_crop_min_conv.area_ha
     g_crop_org_low.CO2e_pb = g_crop_org_low.CO2e_pb_per_t * g_crop_org_low.area_ha
-    g_crop_org_low.invest_pa = g_crop_org_low.invest / entry("In_M_duration_target")
+    g_crop_org_low.invest_pa = g_crop_org_low.invest / entries.m_duration_target
     g_crop_org.area_ha = g_crop_org_low.area_ha + g_crop_org_high.area_ha
     g_crop_org_high.CO2e_pb = g_crop_org_high.CO2e_pb_per_t * g_crop_org_high.area_ha
     g_crop_org.invest = g_crop_org_low.invest + g_crop_org_high.invest
-    g_crop_org_high.invest_pa = g_crop_org_high.invest / entry("In_M_duration_target")
+    g_crop_org_high.invest_pa = g_crop_org_high.invest / entries.m_duration_target
     g_grass_min_conv.CO2e_pb = g_grass_min_conv.CO2e_pb_per_t * g_grass_min_conv.area_ha
     g_grass_org_low.CO2e_pb = g_grass_org_low.CO2e_pb_per_t * g_grass_org_low.area_ha
-    g_grass_org_low.invest_pa = g_grass_org_low.invest / entry("In_M_duration_target")
+    g_grass_org_low.invest_pa = g_grass_org_low.invest / entries.m_duration_target
     g_grass.area_ha = (
         g_grass_min_conv.area_ha + g_grass_org_low.area_ha + g_grass_org_high.area_ha
     )
@@ -647,10 +644,10 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
     g_grass_org_high.CO2e_pb = g_grass_org_high.CO2e_pb_per_t * g_grass_org_high.area_ha
     g_grass.invest = g_grass_org_low.invest + g_grass_org_high.invest
     g_grass_org.invest = g_grass_org_low.invest + g_grass_org_high.invest
-    g_grass_org_high.invest_pa = g_grass_org_high.invest / entry("In_M_duration_target")
+    g_grass_org_high.invest_pa = g_grass_org_high.invest / entries.m_duration_target
     g_grove_min.CO2e_pb = g_grove_min.CO2e_pb_per_t * g_grove_min.area_ha
     g_grove_org_low.CO2e_pb = g_grove_org_low.CO2e_pb_per_t * g_grove_org_low.area_ha
-    g_grove_org_low.invest_pa = g_grove_org_low.invest / entry("In_M_duration_target")
+    g_grove_org_low.invest_pa = g_grove_org_low.invest / entries.m_duration_target
     g_grove.area_ha = (
         g_grove_min.area_ha + g_grove_org_low.area_ha + g_grove_org_high.area_ha
     )
@@ -658,20 +655,20 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
     g_grove_org_high.CO2e_pb = g_grove_org_high.CO2e_pb_per_t * g_grove_org_high.area_ha
     g_grove.invest = g_grove_org_low.invest + g_grove_org_high.invest
     g_grove_org.invest = g_grove_org_low.invest + g_grove_org_high.invest
-    g_grove_org_high.invest_pa = g_grove_org_high.invest / entry("In_M_duration_target")
+    g_grove_org_high.invest_pa = g_grove_org_high.invest / entries.m_duration_target
     g_wet_min.CO2e_pb = g_wet_min.CO2e_pb_per_t * g_wet_min.area_ha
     g_wet_org_low.CO2e_pb = g_wet_org_low.CO2e_pb_per_t * g_wet_org_low.area_ha
-    g_wet_org_low.invest_pa = g_wet_org_low.invest / entry("In_M_duration_target")
+    g_wet_org_low.invest_pa = g_wet_org_low.invest / entries.m_duration_target
     g_wet_org.area_ha = g_wet_org_low.area_ha + g_wet_org_high.area_ha
     g_wet_org_high.CO2e_pb = g_wet_org_high.CO2e_pb_per_t * g_wet_org_high.area_ha
     g_wet_org.invest = g_wet_org_low.invest + g_wet_org_high.invest
-    g_wet_org_high.invest_pa = g_wet_org_high.invest / entry("In_M_duration_target")
+    g_wet_org_high.invest_pa = g_wet_org_high.invest / entries.m_duration_target
     g_wet_org_low_r.CO2e_pb = g_wet_org_low_r.CO2e_pb_per_t * g_wet_org_low_r.area_ha
     g_wet_org_low_rp.area_ha = g_wet_org_low_r.area_ha * g_wet_org_low_rp.pct_x
     g_wet_org_r.area_ha = g_wet_org_low_r.area_ha + g_wet_org_high_r.area_ha
     g_wet_org_high_r.CO2e_pb = g_wet_org_high_r.CO2e_pb_per_t * g_wet_org_high_r.area_ha
     g_wet_org_high_rp.area_ha = g_wet_org_high_r.area_ha * g_wet_org_high_rp.pct_x
-    g_wet_org_rp.invest_pa = g_wet_org_rp.invest / entry("In_M_duration_target")
+    g_wet_org_rp.invest_pa = g_wet_org_rp.invest / entries.m_duration_target
 
     g_water_min.CO2e_pb = g_water_min.CO2e_pb_per_t * g_water_min.area_ha
     g_water_org_low.CO2e_pb = g_water_org_low.CO2e_pb_per_t * g_water_org_low.area_ha
@@ -707,7 +704,7 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
     g_crop_org.CO2e_pb = g_crop_org_low.CO2e_pb + g_crop_org_high.CO2e_pb
     g_crop_org_high.CO2e_total = g_crop_org_high.CO2e_pb
     g_crop.invest = g_crop_org.invest
-    g_crop_org.invest_pa = g_crop_org.invest / entry("In_M_duration_target")
+    g_crop_org.invest_pa = g_crop_org.invest / entries.m_duration_target
     g_crop_org_high.cost_wage = g_crop_org_high.invest_pa * g_crop_org_high.pct_of_wage
     g_grass_min_conv.CO2e_total = g_grass_min_conv.CO2e_pb
     g_grass_org_low.CO2e_total = g_grass_org_low.CO2e_pb
@@ -718,7 +715,7 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
     )
     g_grass_org.CO2e_pb = g_grass_org_low.CO2e_pb + g_grass_org_high.CO2e_pb
     g_grass_org_high.CO2e_total = g_grass_org_high.CO2e_pb
-    g_grass_org.invest_pa = g_grass_org.invest / entry("In_M_duration_target")
+    g_grass_org.invest_pa = g_grass_org.invest / entries.m_duration_target
     g_grass_org_high.cost_wage = (
         g_grass_org_high.invest_pa * g_grass_org_high.pct_of_wage
     )
@@ -731,7 +728,7 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
     )
     g_grove_org.CO2e_pb = g_grove_org_low.CO2e_pb + g_grove_org_high.CO2e_pb
     g_grove_org_high.CO2e_total = g_grove_org_high.CO2e_pb
-    g_grove_org.invest_pa = g_grove_org.invest / entry("In_M_duration_target")
+    g_grove_org.invest_pa = g_grove_org.invest / entries.m_duration_target
     g_grove_org_high.cost_wage = (
         g_grove_org_high.invest_pa * g_grove_org_high.pct_of_wage
     )
@@ -741,7 +738,7 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
     g_wet_org.CO2e_pb = g_wet_org_low.CO2e_pb + g_wet_org_high.CO2e_pb
     g_wet_org_high.CO2e_total = g_wet_org_high.CO2e_pb
     g_wet.invest = g_wet_org.invest + g_wet_org_rp.invest
-    g_wet_org.invest_pa = g_wet_org.invest / entry("In_M_duration_target")
+    g_wet_org.invest_pa = g_wet_org.invest / entries.m_duration_target
     g_wet_org_high.cost_wage = g_wet_org_high.invest_pa * g_wet_org_high.pct_of_wage
     g_wet_org_low_r.CO2e_total = g_wet_org_low_r.CO2e_pb
     g_wet_org_low_rp.CO2e_pb = g_wet_org_low_rp.CO2e_pb_per_t * g_wet_org_low_rp.area_ha
@@ -770,7 +767,7 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
     g_other.change_CO2e_t = g_other.CO2e_total - l18.g_other.CO2e_total
     g_other.cost_climate_saved = (
         (g_other.CO2e_total_2021_estimated - g_other.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     g.CO2e_cb = g_forest.CO2e_cb
@@ -779,18 +776,18 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
     )
     g_forest_managed.cost_climate_saved = (
         (g_forest_managed.CO2e_total_2021_estimated - g_forest_managed.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     g_forest.invest = g_forest_managed.invest
-    g_forest_managed.invest_pa = g_forest_managed.invest / entry("In_M_duration_target")
+    g_forest_managed.invest_pa = g_forest_managed.invest / entries.m_duration_target
     g_forest.CO2e_total = g_forest.CO2e_cb + g_forest.CO2e_pb
     g_forest_natural.change_CO2e_t = (
         g_forest_natural.CO2e_total - l18.g_forest_natural.CO2e_total
     )
     g_forest_natural.cost_climate_saved = (
         (g_forest_natural.CO2e_total_2021_estimated - g_forest_natural.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     g_crop.area_ha = (
@@ -805,7 +802,7 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
     )
     g_crop_min_conv.cost_climate_saved = (
         (g_crop_min_conv.CO2e_total_2021_estimated - g_crop_min_conv.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     g_crop_org_low.change_CO2e_t = (
@@ -813,7 +810,7 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
     )
     g_crop_org_low.cost_climate_saved = (
         (g_crop_org_low.CO2e_total_2021_estimated - g_crop_org_low.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     g_crop_org_low.demand_emplo = div(
@@ -825,7 +822,7 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
     )
     g_crop_org_high.cost_climate_saved = (
         (g_crop_org_high.CO2e_total_2021_estimated - g_crop_org_high.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     g_crop.invest_pa = g_crop_org.invest_pa
@@ -838,7 +835,7 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
     )
     g_grass_min_conv.cost_climate_saved = (
         (g_grass_min_conv.CO2e_total_2021_estimated - g_grass_min_conv.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     g_grass_org_low.change_CO2e_t = (
@@ -846,7 +843,7 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
     )
     g_grass_org_low.cost_climate_saved = (
         (g_grass_org_low.CO2e_total_2021_estimated - g_grass_org_low.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     g_grass_org_low.demand_emplo = div(
@@ -860,7 +857,7 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
     )
     g_grass_org_high.cost_climate_saved = (
         (g_grass_org_high.CO2e_total_2021_estimated - g_grass_org_high.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     g_grass.invest_pa = g_grass_org.invest_pa
@@ -871,7 +868,7 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
     g_grove_min.change_CO2e_t = g_grove_min.CO2e_total - l18.g_grove_min.CO2e_total
     g_grove_min.cost_climate_saved = (
         (g_grove_min.CO2e_total_2021_estimated - g_grove_min.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     g_grove_org_low.change_CO2e_t = (
@@ -879,7 +876,7 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
     )
     g_grove_org_low.cost_climate_saved = (
         (g_grove_org_low.CO2e_total_2021_estimated - g_grove_org_low.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     g_grove_org_low.demand_emplo = div(
@@ -893,7 +890,7 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
     )
     g_grove_org_high.cost_climate_saved = (
         (g_grove_org_high.CO2e_total_2021_estimated - g_grove_org_high.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     g_grove.invest_pa = g_grove_org.invest_pa
@@ -904,7 +901,7 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
     g_wet_min.change_CO2e_t = g_wet_min.CO2e_total - l18.g_wet_min.CO2e_total
     g_wet_min.cost_climate_saved = (
         (g_wet_min.CO2e_total_2021_estimated - g_wet_min.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     g_wet_org_low.change_CO2e_t = (
@@ -912,7 +909,7 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
     )
     g_wet_org_low.cost_climate_saved = (
         (g_wet_org_low.CO2e_total_2021_estimated - g_wet_org_low.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     g_wet_org_low.demand_emplo = div(
@@ -924,7 +921,7 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
     )
     g_wet_org_high.cost_climate_saved = (
         (g_wet_org_high.CO2e_total_2021_estimated - g_wet_org_high.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     g_wet.invest_pa = g_wet_org.invest_pa + g_wet_org_rp.invest_pa
@@ -935,7 +932,7 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
     g_wet_org_low_r.change_CO2e_t = g_wet_org_low_r.CO2e_total
     g_wet_org_low_r.cost_climate_saved = (
         (g_wet_org_low_r.CO2e_total_2021_estimated - g_wet_org_low_r.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     g_wet_org_low_rp.CO2e_total = g_wet_org_low_rp.CO2e_pb
@@ -944,7 +941,7 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
     g_wet_org_high_r.change_CO2e_t = g_wet_org_high_r.CO2e_total
     g_wet_org_high_r.cost_climate_saved = (
         (g_wet_org_high_r.CO2e_total_2021_estimated - g_wet_org_high_r.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     g_wet_org_rp.CO2e_pb = g_wet_org_low_rp.CO2e_pb + g_wet_org_high_rp.CO2e_pb
@@ -954,7 +951,7 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
     g_water_min.change_CO2e_t = g_water_min.CO2e_total - l18.g_water_min.CO2e_total
     g_water_min.cost_climate_saved = (
         (g_water_min.CO2e_total_2021_estimated - g_water_min.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     g_water_org_low.change_CO2e_t = (
@@ -962,7 +959,7 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
     )
     g_water_org_low.cost_climate_saved = (
         (g_water_org_low.CO2e_total_2021_estimated - g_water_org_low.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     g_water_org_high.change_CO2e_t = (
@@ -970,7 +967,7 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
     )
     g_water_org_high.cost_climate_saved = (
         (g_water_org_high.CO2e_total_2021_estimated - g_water_org_high.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     g_settlement_min.change_CO2e_t = (
@@ -978,7 +975,7 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
     )
     g_settlement_min.cost_climate_saved = (
         (g_settlement_min.CO2e_total_2021_estimated - g_settlement_min.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     g_settlement_org_low.change_CO2e_t = (
@@ -989,7 +986,7 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
             g_settlement_org_low.CO2e_total_2021_estimated
             - g_settlement_org_low.CO2e_total
         )
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     g_settlement.demand_change = div(
@@ -1004,7 +1001,7 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
             g_settlement_org_high.CO2e_total_2021_estimated
             - g_settlement_org_high.CO2e_total
         )
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     g_forest_managed.change_CO2e_pct = div(
@@ -1026,7 +1023,7 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
     g_forest.change_CO2e_t = g_forest.CO2e_total - l18.g_forest.CO2e_total
     g_forest.cost_climate_saved = (
         (g_forest.CO2e_total_2021_estimated - g_forest.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     g_forest_natural.change_CO2e_pct = div(
@@ -1060,7 +1057,7 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
     g_crop_org.change_CO2e_t = g_crop_org.CO2e_total - l18.g_crop_org.CO2e_total
     g_crop_org.cost_climate_saved = (
         (g_crop_org.CO2e_total_2021_estimated - g_crop_org.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     g_crop_org_high.change_CO2e_pct = div(
@@ -1079,13 +1076,13 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
     g_grass.change_CO2e_t = g_grass.CO2e_total - l18.g_grass.CO2e_total
     g_grass.cost_climate_saved = (
         (g_grass.CO2e_total_2021_estimated - g_grass.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     g_grass_org.change_CO2e_t = g_grass_org.CO2e_total - l18.g_grass_org.CO2e_total
     g_grass_org.cost_climate_saved = (
         (g_grass_org.CO2e_total_2021_estimated - g_grass_org.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     g_grass_org_high.change_CO2e_pct = div(
@@ -1106,18 +1103,18 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
     g_grove.change_CO2e_t = g_grove.CO2e_total - l18.g_grove.CO2e_total
     g_grove.cost_climate_saved = (
         (g_grove.CO2e_total_2021_estimated - g_grove.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     g_grove_org.change_CO2e_t = g_grove_org.CO2e_total - l18.g_grove_org.CO2e_total
     g_grove_org.cost_climate_saved = (
         (g_grove_org.CO2e_total_2021_estimated - g_grove_org.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     g_grove_org.cost_climate_saved = (
         (g_grove_org.CO2e_total_2021_estimated - g_grove_org.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     g_grove_org_high.change_CO2e_pct = div(
@@ -1137,7 +1134,7 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
     g_wet_org.change_CO2e_t = g_wet_org.CO2e_total - l18.g_wet_org.CO2e_total
     g_wet_org.cost_climate_saved = (
         (g_wet_org.CO2e_total_2021_estimated - g_wet_org.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     g_wet_org_high.change_CO2e_pct = div(
@@ -1149,13 +1146,13 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
     g_wet_org_low_rp.change_CO2e_t = g_wet_org_low_rp.CO2e_total
     g_wet_org_low_rp.cost_climate_saved = (
         (g_wet_org_low_rp.CO2e_total_2021_estimated - g_wet_org_low_rp.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     g_wet_org_r.change_CO2e_t = g_wet_org_r.CO2e_total
     g_wet_org_r.cost_climate_saved = (
         (g_wet_org_r.CO2e_total_2021_estimated - g_wet_org_r.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     g_wet.CO2e_pb = (
@@ -1168,13 +1165,13 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
     g_wet_org_high_rp.change_CO2e_t = g_wet_org_high_rp.CO2e_total
     g_wet_org_high_rp.cost_climate_saved = (
         (g_wet_org_high_rp.CO2e_total_2021_estimated - g_wet_org_high_rp.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     g_water.change_CO2e_t = g_water.CO2e_total - l18.g_water.CO2e_total
     g_water.cost_climate_saved = (
         (g_water.CO2e_total_2021_estimated - g_water.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     g_water_min.change_CO2e_pct = div(
@@ -1195,7 +1192,7 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
     g_settlement.change_CO2e_t = g_settlement.CO2e_total - l18.g_settlement.CO2e_total
     g_settlement.cost_climate_saved = (
         (g_settlement.CO2e_total_2021_estimated - g_settlement.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     g_settlement_org_high.change_CO2e_pct = div(
@@ -1221,7 +1218,7 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
     g_crop_min_hum.change_CO2e_t = g_crop_min_hum.CO2e_total
     g_crop_min_hum.cost_climate_saved = (
         (g_crop_min_hum.CO2e_total_2021_estimated - g_crop_min_hum.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     g_crop_org.change_CO2e_pct = div(
@@ -1271,7 +1268,7 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
     g_wet_org_rp.change_CO2e_t = g_wet_org_rp.CO2e_total
     g_wet_org_rp.cost_climate_saved = (
         (g_wet_org_rp.CO2e_total_2021_estimated - g_wet_org_rp.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     g_water.change_CO2e_pct = div(g_water.change_CO2e_t, l18.g_water.CO2e_total)
@@ -1291,7 +1288,7 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
     g_crop.change_CO2e_t = g_crop.CO2e_total - l18.g_crop.CO2e_total
     g_crop.cost_climate_saved = (
         (g_crop.CO2e_total_2021_estimated - g_crop.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     g_crop.demand_emplo_new = g_crop_org.demand_emplo_new
@@ -1303,7 +1300,7 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
     g_wet.change_CO2e_t = g_wet.CO2e_total - l18.g_wet.CO2e_total
     g_wet.cost_climate_saved = (
         (g_wet.CO2e_total_2021_estimated - g_wet.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     g.demand_emplo = (
@@ -1319,7 +1316,7 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
     g.change_CO2e_t = g.CO2e_total - l18.g.CO2e_total
     g.cost_climate_saved = (
         (g.CO2e_total_2021_estimated - g.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     g_wet.change_CO2e_pct = div(g_wet.change_CO2e_t, l18.g_wet.CO2e_total)
@@ -1347,7 +1344,7 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
     )
     g_water_org.cost_climate_saved = (
         (g_water_org.CO2e_total_2021_estimated - g_water_org.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     g_water_org.cost_wage = 0
@@ -1376,7 +1373,7 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
     )
     g_settlement_org.cost_climate_saved = (
         (g_settlement_org.CO2e_total_2021_estimated - g_settlement_org.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     g_settlement_org.cost_wage = 0
@@ -1390,7 +1387,7 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
     )
     g_wood.cost_climate_saved = (
         (g_wood.CO2e_total_2021_estimated - g_wood.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     g_settlement.cost_wage = g_settlement_org.cost_wage

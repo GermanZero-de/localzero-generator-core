@@ -94,8 +94,7 @@ def calc(
     def ass(n):
         return inputs.ass(n)
 
-    def entry(n):
-        return inputs.entry(n)
+    entries = inputs.entries
 
     h30 = H30()
 
@@ -145,10 +144,11 @@ def calc(
     p_lpg.CO2e_cb_per_MWh = h18.p_lpg.CO2e_cb_per_MWh
     g_storage.invest_per_x = fact("Fact_H_P_storage_specific_cost")
 
-    g_planning.invest = fact("Fact_H_P_planning_cost_basis") + fact(
-        "Fact_H_P_planning_cost_per_capita"
-    ) * entry("In_M_population_com_2018")
-    g_planning.invest_pa = g_planning.invest / entry("In_M_duration_target")
+    g_planning.invest = (
+        fact("Fact_H_P_planning_cost_basis")
+        + fact("Fact_H_P_planning_cost_per_capita") * entries.m_population_com_2018
+    )
+    g_planning.invest_pa = g_planning.invest / entries.m_duration_target
     p_heatnet.energy = (
         r30.s_heatnet.energy + b30.s_heatnet.energy + i30.s_renew_heatnet.energy
     )
@@ -174,7 +174,7 @@ def calc(
     )
     g_planning.invest_com = g_planning.invest
 
-    g_storage.invest_pa = g_storage.invest / entry("In_M_duration_target")
+    g_storage.invest_pa = g_storage.invest / entries.m_duration_target
     g_planning.invest_pa_com = g_planning.invest_pa
 
     g_storage.invest_pa_com = g_storage.invest_pa
@@ -258,7 +258,7 @@ def calc(
     p_heatnet_lheatpump.power_to_be_installed = div(
         p_heatnet_lheatpump.energy, p_heatnet_lheatpump.full_load_hour
     )
-    p_heatnet_plant.invest_pa = p_heatnet_plant.invest / entry("In_M_duration_target")
+    p_heatnet_plant.invest_pa = p_heatnet_plant.invest / entries.m_duration_target
     p_heatnet_lheatpump.invest = (
         p_heatnet_lheatpump.invest_per_x * p_heatnet_lheatpump.power_to_be_installed
     )
@@ -282,7 +282,7 @@ def calc(
     )
     p_gas.cost_climate_saved = (
         (p_gas.CO2e_total_2021_estimated - p_gas.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     p_orenew.energy = p_solarth.energy + p_heatpump.energy
@@ -300,7 +300,7 @@ def calc(
     )
     p_lpg.cost_climate_saved = (
         (p_lpg.CO2e_total_2021_estimated - p_lpg.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     p.energy = (
@@ -329,7 +329,7 @@ def calc(
     )
     p_fueloil.cost_climate_saved = (
         (p_fueloil.CO2e_total_2021_estimated - p_fueloil.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     p_lpg.pct_energy = div(p_lpg.energy, p.energy)
@@ -351,15 +351,15 @@ def calc(
     )
     p_opetpro.cost_climate_saved = (
         (p_opetpro.CO2e_total_2021_estimated - p_opetpro.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     p.change_energy_MWh = p.energy - h18.p.energy
     p_heatnet.pct_energy = div(p_heatnet.energy, p.energy)
     p_biomass.cost_fuel_per_MWh = fact("Fact_R_S_wood_energy_cost_factor_2018")
     p_coal.cost_fuel = p_coal.energy * p_coal.cost_fuel_per_MWh / Million
-    p_heatnet_lheatpump.invest_pa = p_heatnet_lheatpump.invest / entry(
-        "In_M_duration_target"
+    p_heatnet_lheatpump.invest_pa = (
+        p_heatnet_lheatpump.invest / entries.m_duration_target
     )
     p_biomass.CO2e_pb = 0 * p_biomass.CO2e_pb_per_MWh
     p_biomass.CO2e_total = p_biomass.CO2e_pb
@@ -374,7 +374,7 @@ def calc(
     )
     p_coal.cost_climate_saved = (
         (p_coal.CO2e_total_2021_estimated - p_coal.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
 
@@ -393,7 +393,7 @@ def calc(
     )
     p_heatnet.cost_climate_saved = (
         (p_heatnet.CO2e_total_2021_estimated - p_heatnet.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     p_heatnet_geoth.pct_energy = ass("Ass_H_P_heatnet_fraction_geoth_2050")
@@ -409,7 +409,7 @@ def calc(
         p_heatnet_geoth.invest_per_x * p_heatnet_geoth.power_to_be_installed
     )
     p_heatnet_geoth.pct_of_wage = fact("Fact_B_P_constr_main_revenue_pct_of_wage_2017")
-    p_heatnet_geoth.invest_pa = p_heatnet_geoth.invest / entry("In_M_duration_target")
+    p_heatnet_geoth.invest_pa = p_heatnet_geoth.invest / entries.m_duration_target
     p_heatnet_plant.pct_of_wage = fact("Fact_B_P_constr_main_revenue_pct_of_wage_2017")
     p_heatnet_plant.cost_wage = p_heatnet_plant.pct_of_wage * p_heatnet_plant.invest_pa
     p_heatnet_lheatpump.cost_wage = (
@@ -447,7 +447,7 @@ def calc(
     )
     p_heatnet_cogen.cost_climate_saved = (
         (p_heatnet_cogen.CO2e_total_2021_estimated - p_heatnet_cogen.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     p_heatnet_plant.ratio_wage_to_emplo = fact(
@@ -480,7 +480,7 @@ def calc(
     )
     p_heatnet_plant.cost_climate_saved = (
         (p_heatnet_plant.CO2e_total_2021_estimated - p_heatnet_plant.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     p_heatnet.invest = (
@@ -539,7 +539,7 @@ def calc(
     )
     p_heatnet_lheatpump.cost_climate_saved = (
         (p_heatnet_lheatpump.CO2e_total_2021_estimated - p_heatnet_lheatpump.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     p_heatnet.invest_com = p_heatnet.invest
@@ -607,7 +607,7 @@ def calc(
     )
     p_heatnet_geoth.cost_climate_saved = (
         (p_heatnet_geoth.CO2e_total_2021_estimated - p_heatnet_geoth.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     h.invest_pa = g.invest_pa + p.invest_pa
@@ -634,7 +634,7 @@ def calc(
     )
     p.cost_climate_saved = (
         (p.CO2e_total_2021_estimated - p.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     p.change_CO2e_t = p.CO2e_total - h18.p.CO2e_total
@@ -649,7 +649,7 @@ def calc(
     )
     p_biomass.cost_climate_saved = (
         (p_biomass.CO2e_total_2021_estimated - p_biomass.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     p_orenew.pct_energy = div(p_orenew.energy, p.energy)
@@ -669,7 +669,7 @@ def calc(
     )
     p_ofossil.cost_climate_saved = (
         (p_ofossil.CO2e_total_2021_estimated - p_ofossil.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     h.change_energy_pct = p.change_energy_pct
@@ -696,7 +696,7 @@ def calc(
     )
     p_orenew.cost_climate_saved = (
         (p_orenew.CO2e_total_2021_estimated - p_orenew.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     p.pct_energy = (
@@ -723,7 +723,7 @@ def calc(
     )
     p_solarth.cost_climate_saved = (
         (p_solarth.CO2e_total_2021_estimated - p_solarth.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     h.change_energy_MWh = p.change_energy_MWh
@@ -745,7 +745,7 @@ def calc(
     )
     p_heatpump.cost_climate_saved = (
         (p_heatpump.CO2e_total_2021_estimated - p_heatpump.CO2e_total)
-        * entry("In_M_duration_neutral")
+        * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
 

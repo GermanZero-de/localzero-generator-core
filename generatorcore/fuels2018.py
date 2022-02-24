@@ -50,21 +50,18 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> F18:
     def fact(n):
         return inputs.fact(n)
 
-    def entry(n):
-        return inputs.entry(n)
+    entries = inputs.entries
 
     f18 = F18()
 
     # ------------------------------------------------
     f18.f.CO2e_cb = 0
 
-    f18.d_r.energy = entry("In_R_petrol_fec")
+    f18.d_r.energy = entries.r_petrol_fec
 
-    f18.d_b.energy = (
-        entry("In_B_petrol_fec") + entry("In_B_jetfuel_fec") + entry("In_B_diesel_fec")
-    )
+    f18.d_b.energy = entries.b_petrol_fec + entries.b_jetfuel_fec + entries.b_diesel_fec
 
-    f18.d_i.energy = entry("In_I_diesel_fec")
+    f18.d_i.energy = entries.i_diesel_fec
 
     f18.d_t.energy = (
         t18.t.demand_petrol
@@ -75,7 +72,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> F18:
         + t18.t.demand_biodiesel
     )
 
-    f18.d_a.energy = entry("In_A_petrol_fec") + entry("In_A_diesel_fec")
+    f18.d_a.energy = entries.a_petrol_fec + entries.a_diesel_fec
 
     f18.d.energy = (
         f18.d_r.energy
@@ -86,17 +83,17 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> F18:
     )
 
     f18.p_petrol.energy = (
-        entry("In_R_petrol_fec")
-        + entry("In_B_petrol_fec")
-        + entry("In_A_petrol_fec")
+        entries.r_petrol_fec
+        + entries.b_petrol_fec
+        + entries.a_petrol_fec
         + t18.t.demand_petrol
     )
-    f18.p_jetfuel.energy = entry("In_B_jetfuel_fec") + t18.s_jetfuel.energy
+    f18.p_jetfuel.energy = entries.b_jetfuel_fec + t18.s_jetfuel.energy
     f18.p_diesel.energy = (
-        entry("In_B_diesel_fec")
-        + entry("In_I_diesel_fec")
+        entries.b_diesel_fec
+        + entries.i_diesel_fec
         + t18.t.demand_diesel
-        + entry("In_A_diesel_fec")
+        + entries.a_diesel_fec
     )
     f18.p_bioethanol.energy = t18.t.demand_bioethanol
     f18.p_biodiesel.energy = t18.t.demand_biodiesel

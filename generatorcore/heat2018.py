@@ -84,8 +84,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18, e18: electricity2018.E18) ->
     def ass(n):
         return inputs.ass(n)
 
-    def entry(n):
-        return inputs.entry(n)
+    entries = inputs.entries
 
     ###########################
     ### Demand of Heat 2018 ###
@@ -98,13 +97,13 @@ def calc(inputs: Inputs, *, t18: transport2018.T18, e18: electricity2018.E18) ->
     d_r = h18.d_r  # -> Abkürzung für weniger Schreibarbeit
     # 1
     d_r.energy = (
-        entry("In_R_coal_fec")
-        + entry("In_R_fueloil_fec")
-        + entry("In_R_lpg_fec")
-        + entry("In_R_gas_fec")
-        + entry("In_R_biomass_fec")
-        + entry("In_R_orenew_fec")
-        + entry("In_R_heatnet_fec")
+        entries.r_coal_fec
+        + entries.r_fueloil_fec
+        + entries.r_lpg_fec
+        + entries.r_gas_fec
+        + entries.r_biomass_fec
+        + entries.r_orenew_fec
+        + entries.r_heatnet_fec
     )
     # result: 516.686.389 MWh
 
@@ -112,13 +111,13 @@ def calc(inputs: Inputs, *, t18: transport2018.T18, e18: electricity2018.E18) ->
     d_b = h18.d_b
     # 1
     d_b.energy = (
-        entry("In_B_coal_fec")
-        + entry("In_B_fueloil_fec")
-        + entry("In_B_lpg_fec")
-        + entry("In_B_gas_fec")
-        + entry("In_B_biomass_fec")
-        + entry("In_B_orenew_fec")
-        + entry("In_B_heatnet_fec")
+        entries.b_coal_fec
+        + entries.b_fueloil_fec
+        + entries.b_lpg_fec
+        + entries.b_gas_fec
+        + entries.b_biomass_fec
+        + entries.b_orenew_fec
+        + entries.b_heatnet_fec
     )
 
     # result: 164.713.333 MWh
@@ -127,15 +126,15 @@ def calc(inputs: Inputs, *, t18: transport2018.T18, e18: electricity2018.E18) ->
     d_i = h18.d_i
     # 1
     d_i.energy = (
-        entry("In_I_coal_fec")
-        + entry("In_I_fueloil_fec")
-        + entry("In_I_lpg_fec")
-        + entry("In_I_opetpro_fec")
-        + entry("In_I_gas_fec")
-        + entry("In_I_biomass_fec")
-        + entry("In_I_orenew_fec")
-        + entry("In_I_ofossil_fec")
-        + entry("In_I_heatnet_fec")
+        entries.i_coal_fec
+        + entries.i_fueloil_fec
+        + entries.i_lpg_fec
+        + entries.i_opetpro_fec
+        + entries.i_gas_fec
+        + entries.i_biomass_fec
+        + entries.i_orenew_fec
+        + entries.i_ofossil_fec
+        + entries.i_heatnet_fec
         # result: 496.210.833 MWh
     )
 
@@ -147,10 +146,10 @@ def calc(inputs: Inputs, *, t18: transport2018.T18, e18: electricity2018.E18) ->
 
     a_t = h18.a_t
     a_t.energy = (
-        entry("In_A_fueloil_fec")
-        + entry("In_A_lpg_fec")
-        + entry("In_A_gas_fec")
-        + entry("In_A_biomass_fec")
+        entries.a_fueloil_fec
+        + entries.a_lpg_fec
+        + entries.a_gas_fec
+        + entries.a_biomass_fec
     )
 
     # Demand Heat 2018 in total:
@@ -187,10 +186,10 @@ def calc(inputs: Inputs, *, t18: transport2018.T18, e18: electricity2018.E18) ->
 
     # 1 final energy consumption
     p_gas.energy = (
-        entry("In_R_gas_fec")
-        + entry("In_B_gas_fec")
-        + entry("In_I_gas_fec")
-        + entry("In_A_gas_fec")
+        entries.r_gas_fec
+        + entries.b_gas_fec
+        + entries.i_gas_fec
+        + entries.a_gas_fec
         + t18.t.demand_gas
         # result: 607.734.356 MWh
     )
@@ -217,10 +216,10 @@ def calc(inputs: Inputs, *, t18: transport2018.T18, e18: electricity2018.E18) ->
 
     # 1 final energy consumption
     p_lpg.energy = (
-        entry("In_R_lpg_fec")
-        + entry("In_B_lpg_fec")
-        + entry("In_I_lpg_fec")
-        + entry("In_A_lpg_fec")
+        entries.r_lpg_fec
+        + entries.b_lpg_fec
+        + entries.i_lpg_fec
+        + entries.a_lpg_fec
         + t18.s_lpg.energy
         # result: 21.907.374 MWh
     )
@@ -244,10 +243,10 @@ def calc(inputs: Inputs, *, t18: transport2018.T18, e18: electricity2018.E18) ->
 
     # 1 final energy consumption
     p_fueloil.energy = (
-        entry("In_R_fueloil_fec")
-        + entry("In_B_fueloil_fec")
-        + entry("In_I_fueloil_fec")
-        + entry("In_A_fueloil_fec")
+        entries.r_fueloil_fec
+        + entries.b_fueloil_fec
+        + entries.i_fueloil_fec
+        + entries.a_fueloil_fec
         + t18.s_fueloil.energy
         # result: 170.176.389 MWh
     )
@@ -271,7 +270,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18, e18: electricity2018.E18) ->
 
     # 1 final energy consumption
     p_opetpro.energy = (
-        entry("In_I_opetpro_fec")
+        entries.i_opetpro_fec
         # result: 14.255.833 MWh
     )
 
@@ -297,9 +296,9 @@ def calc(inputs: Inputs, *, t18: transport2018.T18, e18: electricity2018.E18) ->
 
     # 1 final energy consumption
     p_coal.energy = (
-        entry("In_R_coal_fec")
-        + entry("In_B_coal_fec")
-        + entry("In_I_coal_fec")
+        entries.r_coal_fec
+        + entries.b_coal_fec
+        + entries.i_coal_fec
         # result: 123.883.611 MWh
     )
 
@@ -325,9 +324,9 @@ def calc(inputs: Inputs, *, t18: transport2018.T18, e18: electricity2018.E18) ->
 
     # 1 final energy consumption
     p_heatnet.energy = (
-        entry("In_R_heatnet_fec")
-        + entry("In_B_heatnet_fec")
-        + entry("In_I_heatnet_fec")
+        entries.r_heatnet_fec
+        + entries.b_heatnet_fec
+        + entries.i_heatnet_fec
         # result: 109.472.500 MWh
     )
 
@@ -434,10 +433,10 @@ def calc(inputs: Inputs, *, t18: transport2018.T18, e18: electricity2018.E18) ->
 
     # 1 final energy consumption
     p_biomass.energy = (
-        entry("In_R_biomass_fec")
-        + entry("In_B_biomass_fec")
-        + entry("In_I_biomass_fec")
-        + entry("In_A_biomass_fec")
+        entries.r_biomass_fec
+        + entries.b_biomass_fec
+        + entries.i_biomass_fec
+        + entries.a_biomass_fec
         # result: 128.372.500 MWh
     )
 
@@ -465,7 +464,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18, e18: electricity2018.E18) ->
         #result: 21.019.444 MWh
     )"""
 
-    p_ofossil.energy = entry("In_I_ofossil_fec")
+    p_ofossil.energy = entries.i_ofossil_fec
 
     # 2 pct of total final energy consumption
     p_ofossil.pct_energy = div(p_ofossil.energy, p.energy)
@@ -486,9 +485,9 @@ def calc(inputs: Inputs, *, t18: transport2018.T18, e18: electricity2018.E18) ->
 
     # 1 final energy consumption
     p_orenew.energy = (
-        entry("In_R_orenew_fec")
-        + entry("In_B_orenew_fec")
-        + entry("In_I_orenew_fec")
+        entries.r_orenew_fec
+        + entries.b_orenew_fec
+        + entries.i_orenew_fec
         # result: 123.883.611 MWh
     )
 
