@@ -4766,7 +4766,7 @@
             "CO2e_cb_per_t": null,
             "CO2e_cb": null,
             "CO2e_pb": null,
-            "CO2e_total": null,
+            "CO2e_total": 0,
             "cost_certificate": null
         },
         "g_crop_org_low": {
@@ -4942,7 +4942,7 @@
             "CO2e_cb_per_t": null,
             "CO2e_cb": null,
             "CO2e_pb": null,
-            "CO2e_total": null,
+            "CO2e_total": 0,
             "cost_certificate": null
         },
         "g_wet_org_rp": {
@@ -16625,7 +16625,7 @@
             "CO2e_total": -3206734.638609913,
             "invest": null,
             "change_CO2e_t": -3206734.638609913,
-            "change_CO2e_pct": null,
+            "change_CO2e_pct": 0.0,
             "CO2e_total_2021_estimated": 0.0,
             "cost_climate_saved": 13444234972.37206,
             "invest_pa": null,
@@ -17250,7 +17250,7 @@
             "cost_climate_saved": -915033474.065256,
             "invest_pa": 0.0,
             "cost_wage": null,
-            "demand_emplo": null,
+            "demand_emplo": 0,
             "demand_emplo_new": 0,
             "demand_change": 0.0,
             "area_ha_change": 0.0,
@@ -17493,7 +17493,7 @@
             "CO2e_total": 0.0,
             "invest": null,
             "change_CO2e_t": 0.0,
-            "change_CO2e_pct": null,
+            "change_CO2e_pct": 0.0,
             "CO2e_total_2021_estimated": 0.0,
             "cost_climate_saved": 0.0,
             "invest_pa": null,
@@ -17679,7 +17679,7 @@
             "CO2e_total": 11489514.850104012,
             "invest": null,
             "change_CO2e_t": 11489514.850104012,
-            "change_CO2e_pct": null,
+            "change_CO2e_pct": 0.0,
             "CO2e_total_2021_estimated": 0.0,
             "cost_climate_saved": -48169791009.061066,
             "invest_pa": null,
