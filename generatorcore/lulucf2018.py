@@ -447,5 +447,6 @@ def calc(inputs: Inputs) -> L18:
     pyrolysis.CO2e_total = 0
 
     g_wet_org_r.CO2e_total = 0
+    l18.g_crop_min_hum.CO2e_total = 0
 
     return l18

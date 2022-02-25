@@ -1252,7 +1252,10 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
         g_grove_org.change_CO2e_t, l18.g_grove_org.CO2e_total
     )
     g_grove.demand_emplo = g_grove_org.demand_emplo
+
+    g_water_org.demand_emplo = 0
     g_water.demand_emplo = g_water_org.demand_emplo
+
     g_grove_org.demand_emplo_new = (
         g_grove_org_low.demand_emplo_new + g_grove_org_high.demand_emplo_new
     )
@@ -1359,7 +1362,7 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     g_water_org.cost_wage = 0
-    g_water_org.demand_emplo = 0
+    
     g_settlement.cost_wage = g_settlement_org.cost_wage
     g_settlement.demand_emplo = g_settlement_org.demand_emplo
     g_settlement.demand_emplo_new = g_settlement_org.demand_emplo_new
