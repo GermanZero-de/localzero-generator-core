@@ -99,6 +99,7 @@ def calc(inputs: Inputs) -> L18:
     g_wet_min = l18.g_wet_min
     g_wet_org_low = l18.g_wet_org_low
     g_wet_org_high = l18.g_wet_org_high
+    g_wet_org_r = l18.g_wet_org_r
     g_water = l18.g_water
     g_water_org = l18.g_water_org
     g_water_min = l18.g_water_min
@@ -116,6 +117,8 @@ def calc(inputs: Inputs) -> L18:
     g_water_org_low = l18.g_water_org_low
     g_water_org_high = l18.g_water_org_high
     pyrolysis = l18.pyrolysis
+
+    
 
     g_forest.area_ha = entries.m_area_wood_com
 
@@ -442,5 +445,7 @@ def calc(inputs: Inputs) -> L18:
     g_settlement_org_low.CO2e_total = g_settlement_org_low.CO2e_pb
     g_settlement_org_high.CO2e_total = g_settlement_org_high.CO2e_pb
     pyrolysis.CO2e_total = 0
+
+    g_wet_org_r.CO2e_total = 0
 
     return l18
