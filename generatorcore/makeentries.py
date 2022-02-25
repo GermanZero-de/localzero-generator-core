@@ -61,6 +61,11 @@ USER_OVERRIDABLE_ENTRIES = [
     "a_gas_fec",
     "a_biomass_fec",
     "a_elec_fec",
+    "a_fermen_dairycow_amount",
+    "a_fermen_nondairy_amount",
+    "a_fermen_pig_amount",
+    "a_fermen_poultry_amount",
+    "a_fermen_oanimal_amount",
 ]
 
 
@@ -240,8 +245,6 @@ def make_entries(data: refdata.RefData, ags: str, year: int):
     ags_dis_padded = ags_dis + "000"
     ags_sta_padded = ags_sta + "000000"
     ags_germany = "DG000000"
-
-    entry = {}
 
     ags = ags
 
