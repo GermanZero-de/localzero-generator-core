@@ -191,12 +191,13 @@ def calc(inputs: Inputs) -> L18:
     g_crop_org.area_ha = g_crop_org_low.area_ha + g_crop_org_high.area_ha
     g_grass_min_conv.area_ha = g_grass.area_ha * g_grass_min_conv.pct_x
 
-    g_grove.area_ha = (
-        entries.m_area_agri_com * fact("Fact_L_G_factor_crop_to_grass")
-        + entries.m_area_veg_plant_uncover_com * fact("Fact_L_G_factor_grass_strict")
-        + entries.m_area_veg_heath_com
-        + entries.m_area_veg_marsh_com
-    )
+    g_grove.area_ha = entries.m_area_veg_wood_com
+    #g_grove.area_ha = (
+    #    entries.m_area_agri_com * fact("Fact_L_G_factor_crop_to_grass")
+    #    + entries.m_area_veg_plant_uncover_com * fact("Fact_L_G_factor_grass_strict")
+    #    + entries.m_area_veg_heath_com
+    #    + entries.m_area_veg_marsh_com
+    #)
 
     g_grove_min.CO2e_pb_per_t = fact(
         "Fact_L_G_grass_woody_minrl_soil_ord_CO2e_per_ha_2018"
