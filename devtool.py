@@ -10,6 +10,7 @@ This is a simple wrapper around the generator to
       See https://mail.python.org/pipermail/python-3000/2007-April/006793.html
 """
 import argparse
+from commands.cmd_ready_to_rock import cmd_ready_to_rock
 from commands.cmd_run import cmd_run
 from commands.cmd_compare_to_excel import cmd_compare_to_excel
 from commands.cmd_data import (
@@ -36,6 +37,11 @@ def main():
     cmd_run_parser.add_argument("-year", default=2035)
     cmd_run_parser.add_argument("-o", default=None)
     cmd_run_parser.set_defaults(func=cmd_run)
+
+    cmd_ready_to_rock_parser = subcmd_parsers.add_parser(
+        "ready_to_rock", help="Check if all is well"
+    )
+    cmd_ready_to_rock_parser.set_defaults(func=cmd_ready_to_rock)
 
     cmd_compare_to_excel_parser = subcmd_parsers.add_parser(
         "compare_to_excel", help="Compare an end to end test file with an excel file"
