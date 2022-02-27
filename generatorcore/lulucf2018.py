@@ -118,8 +118,6 @@ def calc(inputs: Inputs) -> L18:
     g_water_org_high = l18.g_water_org_high
     pyrolysis = l18.pyrolysis
 
-    
-
     g_forest.area_ha = entries.m_area_wood_com
 
     g_forest_managed.CO2e_pb_per_t = fact("Fact_L_G_forest_conv_CO2e_per_ha_2018")
