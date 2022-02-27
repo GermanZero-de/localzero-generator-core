@@ -765,6 +765,9 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
     )
     g_settlement_org_high.CO2e_total = g_settlement_org_high.CO2e_pb
     g_other.change_CO2e_t = g_other.CO2e_total - l18.g_other.CO2e_total
+
+    g_other.change_CO2e_pct = div(g_other.change_CO2e_t, l18.g_other.CO2e_total)
+
     g_other.cost_climate_saved = (
         (g_other.CO2e_total_2021_estimated - g_other.CO2e_total)
         * entries.m_duration_neutral
@@ -1150,6 +1153,11 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     g_wet_org_r.change_CO2e_t = g_wet_org_r.CO2e_total
+
+    g_wet_org_r.change_CO2e_pct = div(
+        g_wet_org_r.change_CO2e_t, l18.g_wet_org_r.CO2e_total
+    )
+
     g_wet_org_r.cost_climate_saved = (
         (g_wet_org_r.CO2e_total_2021_estimated - g_wet_org_r.CO2e_total)
         * entries.m_duration_neutral
@@ -1216,6 +1224,9 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
     g_crop.demand_change = div(g_crop.area_ha_change, l18.g_crop.area_ha)
     g_crop.CO2e_total = g_crop.CO2e_pb
     g_crop_min_hum.change_CO2e_t = g_crop_min_hum.CO2e_total
+    g_crop_min_hum.change_CO2e_pct = div(
+        g_crop_min_hum.change_CO2e_t, l18.g_crop_min_hum.CO2e_total
+    )
     g_crop_min_hum.cost_climate_saved = (
         (g_crop_min_hum.CO2e_total_2021_estimated - g_crop_min_hum.CO2e_total)
         * entries.m_duration_neutral
@@ -1241,7 +1252,10 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
         g_grove_org.change_CO2e_t, l18.g_grove_org.CO2e_total
     )
     g_grove.demand_emplo = g_grove_org.demand_emplo
+
+    g_water_org.demand_emplo = 0
     g_water.demand_emplo = g_water_org.demand_emplo
+
     g_grove_org.demand_emplo_new = (
         g_grove_org_low.demand_emplo_new + g_grove_org_high.demand_emplo_new
     )
@@ -1348,7 +1362,7 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     g_water_org.cost_wage = 0
-    g_water_org.demand_emplo = 0
+
     g_settlement.cost_wage = g_settlement_org.cost_wage
     g_settlement.demand_emplo = g_settlement_org.demand_emplo
     g_settlement.demand_emplo_new = g_settlement_org.demand_emplo_new
