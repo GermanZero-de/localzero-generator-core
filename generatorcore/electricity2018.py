@@ -7,85 +7,257 @@ from . import transport2018
 
 
 @dataclass
-class EColVars:
-    energy: float = None  # type: ignore
-    cost_fuel_per_MWh: float = None  # type: ignore
-    cost_fuel: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
-    mro_per_MWh: float = None  # type: ignore
-    cost_mro: float = None  # type: ignore
+class Vars0:
+    # Used by e
     CO2e_cb: float = None  # type: ignore
-    CO2e_cb_per_MWh: float = None  # type: ignore
     CO2e_pb: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
-    cost_certificate_per_MWh: float = None  # type: ignore
+
+
+@dataclass
+class Vars1:
+    # Used by g, g_grid_offshore, g_grid_onshore, g_grid_pv, d_f_wo_hydrogen, p_local_biomass_gaseous, p_local_biomass_solid, p_local_surplus
+    pass
+
+
+@dataclass
+class Vars2:
+    # Used by d
+    cost_fuel: float = None  # type: ignore
+    energy: float = None  # type: ignore
+
+
+@dataclass
+class Vars3:
+    # Used by d_r, d_b, d_i, d_t
+    cost_fuel: float = None  # type: ignore
+    cost_fuel_per_MWh: float = None  # type: ignore
+    energy: float = None  # type: ignore
+
+
+@dataclass
+class Vars4:
+    # Used by d_a, d_h, d_f_hydrogen_reconv, p_renew_reverse
+    energy: float = None  # type: ignore
+
+
+@dataclass
+class Vars5:
+    # Used by p
+    CO2e_cb: float = None  # type: ignore
+    CO2e_cb_per_MWh: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
     cost_certificate: float = None  # type: ignore
+    cost_fuel: float = None  # type: ignore
+    cost_mro: float = None  # type: ignore
+    energy: float = None  # type: ignore
+
+
+@dataclass
+class Vars6:
+    # Used by p_fossil
+    CO2e_cb: float = None  # type: ignore
+    CO2e_cb_per_MWh: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    cost_certificate: float = None  # type: ignore
+    cost_fuel: float = None  # type: ignore
+    cost_mro: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
+
+
+@dataclass
+class Vars7:
+    # Used by p_fossil_nuclear, p_fossil_coal_brown, p_fossil_coal_black, p_fossil_gas, p_fossil_ofossil
+    CO2e_cb: float = None  # type: ignore
+    CO2e_cb_per_MWh: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    cost_certificate: float = None  # type: ignore
+    cost_certificate_per_MWh: float = None  # type: ignore
+    cost_fuel: float = None  # type: ignore
+    cost_fuel_per_MWh: float = None  # type: ignore
+    cost_mro: float = None  # type: ignore
     cost_mro_per_MWh: float = None  # type: ignore
-    demand_electricity: float = None  # type: ignore
-    area_ha_available: float = None  # type: ignore
-    factor_adapted_to_fec: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
 
 
-# Definition der Zeilennamen für den Sektor E
+@dataclass
+class Vars8:
+    # Used by p_fossil_coal_brown_cogen, p_fossil_coal_black_cogen, p_fossil_gas_cogen, p_fossil_ofossil_cogen, p_renew_biomass_cogen, p_local_biomass_cogen
+    energy: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
+
+
+@dataclass
+class Vars9:
+    # Used by p_renew
+    CO2e_cb: float = None  # type: ignore
+    CO2e_cb_per_MWh: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    cost_fuel: float = None  # type: ignore
+    cost_mro: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
+
+
+@dataclass
+class Vars10:
+    # Used by p_renew_pv, p_renew_wind
+    CO2e_cb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    cost_mro: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
+
+
+@dataclass
+class Vars11:
+    # Used by p_renew_pv_roof, p_renew_pv_facade, p_renew_pv_park, p_renew_pv_agri, p_renew_wind_onshore, p_renew_wind_offshore, p_renew_geoth, p_renew_hydro
+    CO2e_cb: float = None  # type: ignore
+    CO2e_cb_per_MWh: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    cost_mro: float = None  # type: ignore
+    cost_mro_per_MWh: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
+
+
+@dataclass
+class Vars12:
+    # Used by p_renew_biomass
+    CO2e_cb: float = None  # type: ignore
+    CO2e_cb_per_MWh: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    cost_fuel: float = None  # type: ignore
+    cost_fuel_per_MWh: float = None  # type: ignore
+    cost_mro: float = None  # type: ignore
+    cost_mro_per_MWh: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
+
+
+@dataclass
+class Vars13:
+    # Used by p_renew_biomass_waste, p_renew_biomass_solid, p_renew_biomass_gaseous, p_fossil_and_renew
+    CO2e_cb: float = None  # type: ignore
+    CO2e_cb_per_MWh: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
+
+
+@dataclass
+class Vars14:
+    # Used by p_local_pv_roof, p_local_pv_facade, p_local_pv_park, p_local_pv_agri
+    cost_mro: float = None  # type: ignore
+    cost_mro_per_MWh: float = None  # type: ignore
+    energy: float = None  # type: ignore
+
+
+@dataclass
+class Vars15:
+    # Used by p_local_pv
+    CO2e_cb: float = None  # type: ignore
+    CO2e_cb_per_MWh: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    cost_mro: float = None  # type: ignore
+    energy: float = None  # type: ignore
+
+
+@dataclass
+class Vars16:
+    # Used by p_local_wind_onshore, p_local_hydro
+    CO2e_cb: float = None  # type: ignore
+    CO2e_cb_per_MWh: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    cost_mro: float = None  # type: ignore
+    cost_mro_per_MWh: float = None  # type: ignore
+    energy: float = None  # type: ignore
+
+
+@dataclass
+class Vars17:
+    # Used by p_local_biomass
+    CO2e_cb: float = None  # type: ignore
+    CO2e_cb_per_MWh: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    cost_fuel: float = None  # type: ignore
+    cost_fuel_per_MWh: float = None  # type: ignore
+    cost_mro: float = None  # type: ignore
+    cost_mro_per_MWh: float = None  # type: ignore
+    energy: float = None  # type: ignore
+
+
+@dataclass
+class Vars18:
+    # Used by p_local
+    CO2e_cb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    cost_fuel: float = None  # type: ignore
+    cost_mro: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
+
+
 @dataclass
 class E18:
-    e: EColVars = field(default_factory=EColVars)
-    g: EColVars = field(default_factory=EColVars)
-    g_grid_offshore: EColVars = field(default_factory=EColVars)
-    g_grid_onshore: EColVars = field(default_factory=EColVars)
-    g_grid_pv: EColVars = field(default_factory=EColVars)
-    d: EColVars = field(default_factory=EColVars)
-    d_r: EColVars = field(default_factory=EColVars)
-    d_b: EColVars = field(default_factory=EColVars)
-    d_i: EColVars = field(default_factory=EColVars)
-    d_t: EColVars = field(default_factory=EColVars)
-    d_a: EColVars = field(default_factory=EColVars)
-    d_h: EColVars = field(default_factory=EColVars)
-    d_f_wo_hydrogen: EColVars = field(default_factory=EColVars)
-    d_f_hydrogen_reconv: EColVars = field(default_factory=EColVars)
-    p: EColVars = field(default_factory=EColVars)
-    p_fossil: EColVars = field(default_factory=EColVars)
-    p_fossil_nuclear: EColVars = field(default_factory=EColVars)
-    p_fossil_coal_brown: EColVars = field(default_factory=EColVars)
-    p_fossil_coal_brown_cogen: EColVars = field(default_factory=EColVars)
-    p_fossil_coal_black: EColVars = field(default_factory=EColVars)
-    p_fossil_coal_black_cogen: EColVars = field(default_factory=EColVars)
-    p_fossil_gas: EColVars = field(default_factory=EColVars)
-    p_fossil_gas_cogen: EColVars = field(default_factory=EColVars)
-    p_fossil_ofossil: EColVars = field(default_factory=EColVars)
-    p_fossil_ofossil_cogen: EColVars = field(default_factory=EColVars)
-    p_renew: EColVars = field(default_factory=EColVars)
-    p_renew_pv: EColVars = field(default_factory=EColVars)
-    p_renew_pv_roof: EColVars = field(default_factory=EColVars)
-    p_renew_pv_facade: EColVars = field(default_factory=EColVars)
-    p_renew_pv_park: EColVars = field(default_factory=EColVars)
-    p_renew_pv_agri: EColVars = field(default_factory=EColVars)
-    p_renew_wind: EColVars = field(default_factory=EColVars)
-    p_renew_wind_onshore: EColVars = field(default_factory=EColVars)
-    p_renew_wind_offshore: EColVars = field(default_factory=EColVars)
-    p_renew_biomass: EColVars = field(default_factory=EColVars)
-    p_renew_biomass_waste: EColVars = field(default_factory=EColVars)
-    p_renew_biomass_solid: EColVars = field(default_factory=EColVars)
-    p_renew_biomass_gaseous: EColVars = field(default_factory=EColVars)
-    p_renew_biomass_cogen: EColVars = field(default_factory=EColVars)
-    p_renew_geoth: EColVars = field(default_factory=EColVars)
-    p_renew_hydro: EColVars = field(default_factory=EColVars)
-    p_renew_pv_agri: EColVars = field(default_factory=EColVars)
-    p_renew_reverse: EColVars = field(default_factory=EColVars)
-    p_fossil_and_renew: EColVars = field(default_factory=EColVars)
-    p_local_pv_roof: EColVars = field(default_factory=EColVars)
-    p_local_pv_facade: EColVars = field(default_factory=EColVars)
-    p_local_pv_park: EColVars = field(default_factory=EColVars)
-    p_local_pv_agri: EColVars = field(default_factory=EColVars)
-    p_local_pv: EColVars = field(default_factory=EColVars)
-    p_local_wind_onshore: EColVars = field(default_factory=EColVars)
-    p_local_biomass: EColVars = field(default_factory=EColVars)
-    p_local_biomass_cogen: EColVars = field(default_factory=EColVars)
-    p_local_biomass_gaseous: EColVars = field(default_factory=EColVars)
-    p_local_biomass_solid: EColVars = field(default_factory=EColVars)
-    p_local_surplus: EColVars = field(default_factory=EColVars)
-    p_local_hydro: EColVars = field(default_factory=EColVars)
-    p_local: EColVars = field(default_factory=EColVars)
+    e: Vars0 = field(default_factory=Vars0)
+    g: Vars1 = field(default_factory=Vars1)
+    g_grid_offshore: Vars1 = field(default_factory=Vars1)
+    g_grid_onshore: Vars1 = field(default_factory=Vars1)
+    g_grid_pv: Vars1 = field(default_factory=Vars1)
+    d: Vars2 = field(default_factory=Vars2)
+    d_r: Vars3 = field(default_factory=Vars3)
+    d_b: Vars3 = field(default_factory=Vars3)
+    d_i: Vars3 = field(default_factory=Vars3)
+    d_t: Vars3 = field(default_factory=Vars3)
+    d_a: Vars4 = field(default_factory=Vars4)
+    d_h: Vars4 = field(default_factory=Vars4)
+    d_f_wo_hydrogen: Vars1 = field(default_factory=Vars1)
+    d_f_hydrogen_reconv: Vars4 = field(default_factory=Vars4)
+    p: Vars5 = field(default_factory=Vars5)
+    p_fossil: Vars6 = field(default_factory=Vars6)
+    p_fossil_nuclear: Vars7 = field(default_factory=Vars7)
+    p_fossil_coal_brown: Vars7 = field(default_factory=Vars7)
+    p_fossil_coal_brown_cogen: Vars8 = field(default_factory=Vars8)
+    p_fossil_coal_black: Vars7 = field(default_factory=Vars7)
+    p_fossil_coal_black_cogen: Vars8 = field(default_factory=Vars8)
+    p_fossil_gas: Vars7 = field(default_factory=Vars7)
+    p_fossil_gas_cogen: Vars8 = field(default_factory=Vars8)
+    p_fossil_ofossil: Vars7 = field(default_factory=Vars7)
+    p_fossil_ofossil_cogen: Vars8 = field(default_factory=Vars8)
+    p_renew: Vars9 = field(default_factory=Vars9)
+    p_renew_pv: Vars10 = field(default_factory=Vars10)
+    p_renew_pv_roof: Vars11 = field(default_factory=Vars11)
+    p_renew_pv_facade: Vars11 = field(default_factory=Vars11)
+    p_renew_pv_park: Vars11 = field(default_factory=Vars11)
+    p_renew_pv_agri: Vars11 = field(default_factory=Vars11)
+    p_renew_wind: Vars10 = field(default_factory=Vars10)
+    p_renew_wind_onshore: Vars11 = field(default_factory=Vars11)
+    p_renew_wind_offshore: Vars11 = field(default_factory=Vars11)
+    p_renew_biomass: Vars12 = field(default_factory=Vars12)
+    p_renew_biomass_waste: Vars13 = field(default_factory=Vars13)
+    p_renew_biomass_solid: Vars13 = field(default_factory=Vars13)
+    p_renew_biomass_gaseous: Vars13 = field(default_factory=Vars13)
+    p_renew_biomass_cogen: Vars8 = field(default_factory=Vars8)
+    p_renew_geoth: Vars11 = field(default_factory=Vars11)
+    p_renew_hydro: Vars11 = field(default_factory=Vars11)
+    p_renew_reverse: Vars4 = field(default_factory=Vars4)
+    p_fossil_and_renew: Vars13 = field(default_factory=Vars13)
+    p_local_pv_roof: Vars14 = field(default_factory=Vars14)
+    p_local_pv_facade: Vars14 = field(default_factory=Vars14)
+    p_local_pv_park: Vars14 = field(default_factory=Vars14)
+    p_local_pv_agri: Vars14 = field(default_factory=Vars14)
+    p_local_pv: Vars15 = field(default_factory=Vars15)
+    p_local_wind_onshore: Vars16 = field(default_factory=Vars16)
+    p_local_biomass: Vars17 = field(default_factory=Vars17)
+    p_local_biomass_cogen: Vars8 = field(default_factory=Vars8)
+    p_local_biomass_gaseous: Vars1 = field(default_factory=Vars1)
+    p_local_biomass_solid: Vars1 = field(default_factory=Vars1)
+    p_local_surplus: Vars1 = field(default_factory=Vars1)
+    p_local_hydro: Vars16 = field(default_factory=Vars16)
+    p_local: Vars18 = field(default_factory=Vars18)
 
     def dict(self):
         return asdict(self)
