@@ -4,67 +4,132 @@ from .inputs import Inputs
 
 
 @dataclass
-class LColVars2018:
-    area_ha: float = None  # type: ignore
-    CO2e_pb_per_t: float = None  # type: ignore
-    pct_x: float = None  # type: ignore
-    CO2e_pb_per_MWh: float = None  # type: ignore
-    CO2e_cb_per_t: float = None  # type: ignore
+class Vars0:
+    # Used by l
     CO2e_cb: float = None  # type: ignore
     CO2e_pb: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
-    cost_certificate: float = None  # type: ignore
+
+
+@dataclass
+class Vars1:
+    # Used by g
+    CO2e_cb: float = None  # type: ignore
+    CO2e_pb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    area_ha: float = None  # type: ignore
+
+
+@dataclass
+class Vars2:
+    # Used by g_planning, g_wet_org_rp, g_wet_org_low_r, g_wet_org_low_rp, g_wet_org_high_r, g_wet_org_high_rp
+    pass
+
+
+@dataclass
+class Vars3:
+    # Used by g_forest
+    CO2e_cb: float = None  # type: ignore
+    CO2e_pb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    area_ha: float = None  # type: ignore
+    pct_x: float = None  # type: ignore
+
+
+@dataclass
+class Vars4:
+    # Used by g_forest_managed
+    CO2e_cb: float = None  # type: ignore
+    CO2e_cb_per_t: float = None  # type: ignore
+    CO2e_pb: float = None  # type: ignore
+    CO2e_pb_per_t: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    area_ha: float = None  # type: ignore
+    pct_x: float = None  # type: ignore
+
+
+@dataclass
+class Vars5:
+    # Used by g_forest_natural, g_crop_min_conv, g_crop_org_low, g_crop_org_high, g_grass_min_conv, g_grass_org_low, g_grass_org_high, g_grove_min, g_grove_org_low, g_grove_org_high, g_wet_min, g_wet_org_low, g_wet_org_high, g_water_min, g_water_org_low, g_water_org_high, g_settlement_min, g_settlement_org_low, g_settlement_org_high
+    CO2e_pb: float = None  # type: ignore
+    CO2e_pb_per_t: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    area_ha: float = None  # type: ignore
+    pct_x: float = None  # type: ignore
+
+
+@dataclass
+class Vars6:
+    # Used by g_crop, g_crop_org, g_grass, g_grass_org, g_grove, g_grove_org, g_wet, g_wet_org, g_water, g_water_org, g_settlement, g_settlement_org
+    CO2e_pb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    area_ha: float = None  # type: ignore
+    pct_x: float = None  # type: ignore
+
+
+@dataclass
+class Vars7:
+    # Used by g_crop_min_hum, g_wet_org_r, pyrolysis
+    CO2e_total: float = None  # type: ignore
+
+
+@dataclass
+class Vars8:
+    # Used by g_other, g_wood
+    CO2e_pb: float = None  # type: ignore
+    CO2e_pb_per_t: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    area_ha: float = None  # type: ignore
 
 
 @dataclass
 class L18:
-    # Klassenvariablen für L18
-    l: LColVars2018 = field(default_factory=LColVars2018)
-    g: LColVars2018 = field(default_factory=LColVars2018)
-    g_planning: LColVars2018 = field(default_factory=LColVars2018)
-    g_forest: LColVars2018 = field(default_factory=LColVars2018)
-    g_forest_managed: LColVars2018 = field(default_factory=LColVars2018)
-    g_forest_natural: LColVars2018 = field(default_factory=LColVars2018)
-    g_crop: LColVars2018 = field(default_factory=LColVars2018)
-    g_crop_org: LColVars2018 = field(default_factory=LColVars2018)
-    g_crop_min_conv: LColVars2018 = field(default_factory=LColVars2018)
-    g_crop_min_hum: LColVars2018 = field(default_factory=LColVars2018)
-    g_crop_org_low: LColVars2018 = field(default_factory=LColVars2018)
-    g_crop_org_high: LColVars2018 = field(default_factory=LColVars2018)
-    g_grass: LColVars2018 = field(default_factory=LColVars2018)
-    g_grass_min_conv: LColVars2018 = field(default_factory=LColVars2018)
-    g_grass_org: LColVars2018 = field(default_factory=LColVars2018)
-    g_grass_org_low: LColVars2018 = field(default_factory=LColVars2018)
-    g_grass_org_high: LColVars2018 = field(default_factory=LColVars2018)
-    g_grove: LColVars2018 = field(default_factory=LColVars2018)
-    g_grove_min: LColVars2018 = field(default_factory=LColVars2018)
-    g_grove_org: LColVars2018 = field(default_factory=LColVars2018)
-    g_grove_org_low: LColVars2018 = field(default_factory=LColVars2018)
-    g_grove_org_high: LColVars2018 = field(default_factory=LColVars2018)
-    g_wet: LColVars2018 = field(default_factory=LColVars2018)
-    g_wet_min: LColVars2018 = field(default_factory=LColVars2018)
-    g_wet_org: LColVars2018 = field(default_factory=LColVars2018)
-    g_wet_org_r: LColVars2018 = field(default_factory=LColVars2018)
-    g_wet_org_rp: LColVars2018 = field(default_factory=LColVars2018)
-    g_wet_org_low: LColVars2018 = field(default_factory=LColVars2018)
-    g_wet_org_high: LColVars2018 = field(default_factory=LColVars2018)
-    g_wet_org_low_r: LColVars2018 = field(default_factory=LColVars2018)
-    g_wet_org_low_rp: LColVars2018 = field(default_factory=LColVars2018)
-    g_wet_org_high_r: LColVars2018 = field(default_factory=LColVars2018)
-    g_wet_org_high_rp: LColVars2018 = field(default_factory=LColVars2018)
-    g_water: LColVars2018 = field(default_factory=LColVars2018)
-    g_water_org: LColVars2018 = field(default_factory=LColVars2018)
-    g_water_min: LColVars2018 = field(default_factory=LColVars2018)
-    g_water_org_low: LColVars2018 = field(default_factory=LColVars2018)
-    g_water_org_high: LColVars2018 = field(default_factory=LColVars2018)
-    g_settlement: LColVars2018 = field(default_factory=LColVars2018)
-    g_settlement_org: LColVars2018 = field(default_factory=LColVars2018)
-    g_settlement_min: LColVars2018 = field(default_factory=LColVars2018)
-    g_settlement_org_low: LColVars2018 = field(default_factory=LColVars2018)
-    g_settlement_org_high: LColVars2018 = field(default_factory=LColVars2018)
-    g_other: LColVars2018 = field(default_factory=LColVars2018)
-    g_wood: LColVars2018 = field(default_factory=LColVars2018)
-    pyrolysis: LColVars2018 = field(default_factory=LColVars2018)
+    l: Vars0 = field(default_factory=Vars0)
+    g: Vars1 = field(default_factory=Vars1)
+    g_planning: Vars2 = field(default_factory=Vars2)
+    g_forest: Vars3 = field(default_factory=Vars3)
+    g_forest_managed: Vars4 = field(default_factory=Vars4)
+    g_forest_natural: Vars5 = field(default_factory=Vars5)
+    g_crop: Vars6 = field(default_factory=Vars6)
+    g_crop_org: Vars6 = field(default_factory=Vars6)
+    g_crop_min_conv: Vars5 = field(default_factory=Vars5)
+    g_crop_min_hum: Vars7 = field(default_factory=Vars7)
+    g_crop_org_low: Vars5 = field(default_factory=Vars5)
+    g_crop_org_high: Vars5 = field(default_factory=Vars5)
+    g_grass: Vars6 = field(default_factory=Vars6)
+    g_grass_min_conv: Vars5 = field(default_factory=Vars5)
+    g_grass_org: Vars6 = field(default_factory=Vars6)
+    g_grass_org_low: Vars5 = field(default_factory=Vars5)
+    g_grass_org_high: Vars5 = field(default_factory=Vars5)
+    g_grove: Vars6 = field(default_factory=Vars6)
+    g_grove_min: Vars5 = field(default_factory=Vars5)
+    g_grove_org: Vars6 = field(default_factory=Vars6)
+    g_grove_org_low: Vars5 = field(default_factory=Vars5)
+    g_grove_org_high: Vars5 = field(default_factory=Vars5)
+    g_wet: Vars6 = field(default_factory=Vars6)
+    g_wet_min: Vars5 = field(default_factory=Vars5)
+    g_wet_org: Vars6 = field(default_factory=Vars6)
+    g_wet_org_r: Vars7 = field(default_factory=Vars7)
+    g_wet_org_rp: Vars2 = field(default_factory=Vars2)
+    g_wet_org_low: Vars5 = field(default_factory=Vars5)
+    g_wet_org_high: Vars5 = field(default_factory=Vars5)
+    g_wet_org_low_r: Vars2 = field(default_factory=Vars2)
+    g_wet_org_low_rp: Vars2 = field(default_factory=Vars2)
+    g_wet_org_high_r: Vars2 = field(default_factory=Vars2)
+    g_wet_org_high_rp: Vars2 = field(default_factory=Vars2)
+    g_water: Vars6 = field(default_factory=Vars6)
+    g_water_org: Vars6 = field(default_factory=Vars6)
+    g_water_min: Vars5 = field(default_factory=Vars5)
+    g_water_org_low: Vars5 = field(default_factory=Vars5)
+    g_water_org_high: Vars5 = field(default_factory=Vars5)
+    g_settlement: Vars6 = field(default_factory=Vars6)
+    g_settlement_org: Vars6 = field(default_factory=Vars6)
+    g_settlement_min: Vars5 = field(default_factory=Vars5)
+    g_settlement_org_low: Vars5 = field(default_factory=Vars5)
+    g_settlement_org_high: Vars5 = field(default_factory=Vars5)
+    g_other: Vars8 = field(default_factory=Vars8)
+    g_wood: Vars8 = field(default_factory=Vars8)
+    pyrolysis: Vars7 = field(default_factory=Vars7)
 
     def dict(self):
         return asdict(self)
