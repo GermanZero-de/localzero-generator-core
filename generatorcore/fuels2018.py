@@ -4,41 +4,65 @@ from . import transport2018
 from .inputs import Inputs
 
 
-#  Definition der relevanten Spaltennamen für den Sektor F (18)
 @dataclass
-class FColVars:
-    energy: float = None  # type: ignore
+class Vars0:
+    # Used by f
     CO2e_cb: float = None  # type: ignore
     CO2e_pb: float = None  # type: ignore
-    CO2e_pb_per_MWh: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
 
 
 @dataclass
+class Vars1:
+    # Used by g, d_e_hydrogen_reconv, p_emethan, p_hydrogen, p_hydrogen_reconv
+    pass
+
+
+@dataclass
+class Vars2:
+    # Used by d, d_r, d_b, d_i, d_t, d_a
+    energy: float = None  # type: ignore
+
+
+@dataclass
+class Vars3:
+    # Used by p
+    CO2e_pb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    energy: float = None  # type: ignore
+
+
+@dataclass
+class Vars4:
+    # Used by p_petrol, p_jetfuel, p_diesel, p_bioethanol, p_biodiesel, p_biogas
+    CO2e_pb: float = None  # type: ignore
+    CO2e_pb_per_MWh: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    energy: float = None  # type: ignore
+
+
+@dataclass
 class F18:
-    f: FColVars = field(default_factory=FColVars)
-    g: FColVars = field(default_factory=FColVars)
-    d: FColVars = field(default_factory=FColVars)
-    d_r: FColVars = field(default_factory=FColVars)
-    d_b: FColVars = field(default_factory=FColVars)
-    d_i: FColVars = field(default_factory=FColVars)
-    d_t: FColVars = field(default_factory=FColVars)
-    d_a: FColVars = field(default_factory=FColVars)
+    f: Vars0 = field(default_factory=Vars0)
+    g: Vars1 = field(default_factory=Vars1)
+    d: Vars2 = field(default_factory=Vars2)
+    d_r: Vars2 = field(default_factory=Vars2)
+    d_b: Vars2 = field(default_factory=Vars2)
+    d_i: Vars2 = field(default_factory=Vars2)
+    d_t: Vars2 = field(default_factory=Vars2)
+    d_a: Vars2 = field(default_factory=Vars2)
+    d_e_hydrogen_reconv: Vars1 = field(default_factory=Vars1)
+    p: Vars3 = field(default_factory=Vars3)
+    p_petrol: Vars4 = field(default_factory=Vars4)
+    p_jetfuel: Vars4 = field(default_factory=Vars4)
+    p_diesel: Vars4 = field(default_factory=Vars4)
+    p_bioethanol: Vars4 = field(default_factory=Vars4)
+    p_biodiesel: Vars4 = field(default_factory=Vars4)
+    p_biogas: Vars4 = field(default_factory=Vars4)
+    p_emethan: Vars1 = field(default_factory=Vars1)
+    p_hydrogen: Vars1 = field(default_factory=Vars1)
+    p_hydrogen_reconv: Vars1 = field(default_factory=Vars1)
 
-    d_e_hydrogen_reconv: FColVars = field(default_factory=FColVars)
-
-    p: FColVars = field(default_factory=FColVars)
-    p_petrol: FColVars = field(default_factory=FColVars)
-    p_jetfuel: FColVars = field(default_factory=FColVars)
-    p_diesel: FColVars = field(default_factory=FColVars)
-    p_bioethanol: FColVars = field(default_factory=FColVars)
-    p_biodiesel: FColVars = field(default_factory=FColVars)
-    p_biogas: FColVars = field(default_factory=FColVars)
-    p_emethan: FColVars = field(default_factory=FColVars)
-    p_hydrogen: FColVars = field(default_factory=FColVars)
-    p_hydrogen_reconv: FColVars = field(default_factory=FColVars)
-
-    # erzeuge dictionry
     def dict(self):
         return asdict(self)
 
