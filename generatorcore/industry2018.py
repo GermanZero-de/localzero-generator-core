@@ -4,61 +4,121 @@ from .utils import div
 
 
 @dataclass
-class IColVars:
+class Vars0:
+    # Used by i, p, p_miner, p_chem, p_metal, p_other
+    CO2e_cb: float = None  # type: ignore
+    CO2e_pb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    prod_volume: float = None  # type: ignore
+
+
+@dataclass
+class Vars1:
+    # Used by g, s_renew_hydrogen, s_renew_emethan
+    pass
+
+
+@dataclass
+class Vars2:
+    # Used by p_miner_cement, p_miner_chalk, p_miner_glas, p_miner_ceram, p_chem_basic, p_chem_ammonia, p_chem_other, p_metal_steel_primary, p_metal_steel_secondary, p_metal_nonfe, p_other_paper, p_other_food
+    CO2e_cb: float = None  # type: ignore
+    CO2e_cb_per_t: float = None  # type: ignore
+    CO2e_pb: float = None  # type: ignore
+    CO2e_pb_per_t: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    energy_use_factor: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
+    prod_volume: float = None  # type: ignore
+
+
+@dataclass
+class Vars3:
+    # Used by p_metal_steel
+    CO2e_cb: float = None  # type: ignore
+    CO2e_pb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
     energy: float = None  # type: ignore
     pct_energy: float = None  # type: ignore
     prod_volume: float = None  # type: ignore
-    energy_use_factor: float = None  # type: ignore
-    CO2e_pb: float = None  # type: ignore
-    CO2e_pb_per_MWh: float = None  # type: ignore
-    CO2e_pb_per_t: float = None  # type: ignore
+
+
+@dataclass
+class Vars4:
+    # Used by p_other_further
     CO2e_cb: float = None  # type: ignore
     CO2e_cb_per_MWh: float = None  # type: ignore
-    CO2e_cb_per_t: float = None  # type: ignore
+    CO2e_pb: float = None  # type: ignore
+    CO2e_pb_per_MWh: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
+    prod_volume: float = None  # type: ignore
+
+
+@dataclass
+class Vars5:
+    # Used by p_other_2efgh
+    CO2e_pb: float = None  # type: ignore
+    CO2e_pb_per_MWh: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
 
 
 @dataclass
+class Vars6:
+    # Used by s, s_fossil_gas, s_fossil_coal, s_fossil_diesel, s_fossil_fueloil, s_fossil_lpg, s_fossil_opetpro, s_fossil_ofossil, s_renew_biomass, s_renew_heatnet, s_renew_heatpump, s_renew_solarth, s_renew_elec
+    energy: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
+
+
+@dataclass
+class Vars7:
+    # Used by s_fossil, s_renew
+    energy: float = None  # type: ignore
+
+
+@dataclass
 class I18:
-    i: IColVars = field(default_factory=IColVars)
-    g: IColVars = field(default_factory=IColVars)
-    p: IColVars = field(default_factory=IColVars)
-    p_miner: IColVars = field(default_factory=IColVars)
-    p_miner_cement: IColVars = field(default_factory=IColVars)
-    p_miner_chalk: IColVars = field(default_factory=IColVars)
-    p_miner_glas: IColVars = field(default_factory=IColVars)
-    p_miner_ceram: IColVars = field(default_factory=IColVars)
-    p_chem: IColVars = field(default_factory=IColVars)
-    p_chem_basic: IColVars = field(default_factory=IColVars)
-    p_chem_ammonia: IColVars = field(default_factory=IColVars)
-    p_chem_other: IColVars = field(default_factory=IColVars)
-    p_metal: IColVars = field(default_factory=IColVars)
-    p_metal_steel: IColVars = field(default_factory=IColVars)
-    p_metal_steel_primary: IColVars = field(default_factory=IColVars)
-    p_metal_steel_secondary: IColVars = field(default_factory=IColVars)
-    p_metal_nonfe: IColVars = field(default_factory=IColVars)
-    p_other: IColVars = field(default_factory=IColVars)
-    p_other_paper: IColVars = field(default_factory=IColVars)
-    p_other_food: IColVars = field(default_factory=IColVars)
-    p_other_further: IColVars = field(default_factory=IColVars)
-    p_other_2efgh: IColVars = field(default_factory=IColVars)
-    s: IColVars = field(default_factory=IColVars)
-    s_fossil: IColVars = field(default_factory=IColVars)
-    s_fossil_gas: IColVars = field(default_factory=IColVars)
-    s_fossil_coal: IColVars = field(default_factory=IColVars)
-    s_fossil_diesel: IColVars = field(default_factory=IColVars)
-    s_fossil_fueloil: IColVars = field(default_factory=IColVars)
-    s_fossil_lpg: IColVars = field(default_factory=IColVars)
-    s_fossil_opetpro: IColVars = field(default_factory=IColVars)
-    s_fossil_ofossil: IColVars = field(default_factory=IColVars)
-    s_renew: IColVars = field(default_factory=IColVars)
-    s_renew_hydrogen: IColVars = field(default_factory=IColVars)
-    s_renew_emethan: IColVars = field(default_factory=IColVars)
-    s_renew_biomass: IColVars = field(default_factory=IColVars)
-    s_renew_heatnet: IColVars = field(default_factory=IColVars)
-    s_renew_heatpump: IColVars = field(default_factory=IColVars)
-    s_renew_solarth: IColVars = field(default_factory=IColVars)
-    s_renew_elec: IColVars = field(default_factory=IColVars)
+    i: Vars0 = field(default_factory=Vars0)
+    g: Vars1 = field(default_factory=Vars1)
+    p: Vars0 = field(default_factory=Vars0)
+    p_miner: Vars0 = field(default_factory=Vars0)
+    p_miner_cement: Vars2 = field(default_factory=Vars2)
+    p_miner_chalk: Vars2 = field(default_factory=Vars2)
+    p_miner_glas: Vars2 = field(default_factory=Vars2)
+    p_miner_ceram: Vars2 = field(default_factory=Vars2)
+    p_chem: Vars0 = field(default_factory=Vars0)
+    p_chem_basic: Vars2 = field(default_factory=Vars2)
+    p_chem_ammonia: Vars2 = field(default_factory=Vars2)
+    p_chem_other: Vars2 = field(default_factory=Vars2)
+    p_metal: Vars0 = field(default_factory=Vars0)
+    p_metal_steel: Vars3 = field(default_factory=Vars3)
+    p_metal_steel_primary: Vars2 = field(default_factory=Vars2)
+    p_metal_steel_secondary: Vars2 = field(default_factory=Vars2)
+    p_metal_nonfe: Vars2 = field(default_factory=Vars2)
+    p_other: Vars0 = field(default_factory=Vars0)
+    p_other_paper: Vars2 = field(default_factory=Vars2)
+    p_other_food: Vars2 = field(default_factory=Vars2)
+    p_other_further: Vars4 = field(default_factory=Vars4)
+    p_other_2efgh: Vars5 = field(default_factory=Vars5)
+    s: Vars6 = field(default_factory=Vars6)
+    s_fossil: Vars7 = field(default_factory=Vars7)
+    s_fossil_gas: Vars6 = field(default_factory=Vars6)
+    s_fossil_coal: Vars6 = field(default_factory=Vars6)
+    s_fossil_diesel: Vars6 = field(default_factory=Vars6)
+    s_fossil_fueloil: Vars6 = field(default_factory=Vars6)
+    s_fossil_lpg: Vars6 = field(default_factory=Vars6)
+    s_fossil_opetpro: Vars6 = field(default_factory=Vars6)
+    s_fossil_ofossil: Vars6 = field(default_factory=Vars6)
+    s_renew: Vars7 = field(default_factory=Vars7)
+    s_renew_hydrogen: Vars1 = field(default_factory=Vars1)
+    s_renew_emethan: Vars1 = field(default_factory=Vars1)
+    s_renew_biomass: Vars6 = field(default_factory=Vars6)
+    s_renew_heatnet: Vars6 = field(default_factory=Vars6)
+    s_renew_heatpump: Vars6 = field(default_factory=Vars6)
+    s_renew_solarth: Vars6 = field(default_factory=Vars6)
+    s_renew_elec: Vars6 = field(default_factory=Vars6)
 
     def dict(self):
         return asdict(self)
