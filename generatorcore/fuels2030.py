@@ -13,62 +13,152 @@ from . import (
 
 
 @dataclass
-class FColVars2030:
-    demand_electricity: float = None  # type: ignore
-    demand_hydrogen: float = None  # type: ignore
+class Vars0:
+    # Used by f
+    CO2e_pb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    CO2e_total_2021_estimated: float = None  # type: ignore
+    change_CO2e_pct: float = None  # type: ignore
+    change_CO2e_t: float = None  # type: ignore
+    change_energy_MWh: float = None  # type: ignore
+    change_energy_pct: float = None  # type: ignore
+    cost_climate_saved: float = None  # type: ignore
+    cost_wage: float = None  # type: ignore
+    demand_emplo: float = None  # type: ignore
+    demand_emplo_new: float = None  # type: ignore
+    invest: float = None  # type: ignore
+    invest_outside: float = None  # type: ignore
+    invest_pa: float = None  # type: ignore
+    invest_pa_outside: float = None  # type: ignore
+
+
+@dataclass
+class Vars1:
+    # Used by g
+    pass
+
+
+@dataclass
+class Vars2:
+    # Used by d, d_r, d_b, d_i, d_t, d_a, d_e_hydrogen_reconv, p_hydrogen_total
     energy: float = None  # type: ignore
-    CO2e_cb: float = None  # type: ignore
+
+
+@dataclass
+class Vars3:
+    # Used by p
+    CO2e_pb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    CO2e_total_2021_estimated: float = None  # type: ignore
+    change_CO2e_pct: float = None  # type: ignore
+    change_CO2e_t: float = None  # type: ignore
+    change_energy_MWh: float = None  # type: ignore
+    change_energy_pct: float = None  # type: ignore
+    cost_climate_saved: float = None  # type: ignore
+    cost_wage: float = None  # type: ignore
+    demand_electricity: float = None  # type: ignore
+    demand_emplo: float = None  # type: ignore
+    demand_emplo_new: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    invest: float = None  # type: ignore
+    invest_outside: float = None  # type: ignore
+    invest_pa: float = None  # type: ignore
+    invest_pa_outside: float = None  # type: ignore
+
+
+@dataclass
+class Vars4:
+    # Used by p_petrol, p_jetfuel, p_diesel
     CO2e_pb: float = None  # type: ignore
     CO2e_pb_per_MWh: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
+    CO2e_total_2021_estimated: float = None  # type: ignore
+    change_CO2e_pct: float = None  # type: ignore
+    change_CO2e_t: float = None  # type: ignore
     change_energy_MWh: float = None  # type: ignore
     change_energy_pct: float = None  # type: ignore
-    change_CO2e_t: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
     cost_climate_saved: float = None  # type: ignore
+    cost_wage: float = None  # type: ignore
+    demand_electricity: float = None  # type: ignore
+    demand_emplo: float = None  # type: ignore
+    demand_emplo_new: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    full_load_hour: float = None  # type: ignore
+    invest: float = None  # type: ignore
     invest_pa: float = None  # type: ignore
     invest_per_x: float = None  # type: ignore
-    invest: float = None  # type: ignore
     pct_of_wage: float = None  # type: ignore
-    cost_wage: float = None  # type: ignore
-    ratio_wage_to_emplo: float = None  # type: ignore
-    demand_emplo: float = None  # type: ignore
     power_to_be_installed: float = None  # type: ignore
-    full_load_hour: float = None  # type: ignore
+    ratio_wage_to_emplo: float = None  # type: ignore
+
+
+@dataclass
+class Vars5:
+    # Used by p_bioethanol, p_biodiesel, p_biogas
+    CO2e_total_2021_estimated: float = None  # type: ignore
+    change_CO2e_t: float = None  # type: ignore
+    change_energy_MWh: float = None  # type: ignore
+    change_energy_pct: float = None  # type: ignore
+    cost_climate_saved: float = None  # type: ignore
+
+
+@dataclass
+class Vars6:
+    # Used by p_emethan, p_hydrogen, p_hydrogen_reconv
+    CO2e_pb: float = None  # type: ignore
+    CO2e_pb_per_MWh: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    CO2e_total_2021_estimated: float = None  # type: ignore
     change_CO2e_pct: float = None  # type: ignore
-    emplo_existing: float = None  # type: ignore
+    change_CO2e_t: float = None  # type: ignore
+    change_energy_MWh: float = None  # type: ignore
+    cost_climate_saved: float = None  # type: ignore
+    cost_wage: float = None  # type: ignore
+    demand_electricity: float = None  # type: ignore
+    demand_emplo: float = None  # type: ignore
     demand_emplo_new: float = None  # type: ignore
-    invest_pa_outside: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    full_load_hour: float = None  # type: ignore
+    invest: float = None  # type: ignore
     invest_outside: float = None  # type: ignore
-    cost_mro_pa: float = None  # type: ignore
+    invest_pa: float = None  # type: ignore
+    invest_pa_outside: float = None  # type: ignore
+    invest_per_x: float = None  # type: ignore
+    pct_of_wage: float = None  # type: ignore
+    power_to_be_installed: float = None  # type: ignore
+    ratio_wage_to_emplo: float = None  # type: ignore
+
+
+@dataclass
+class Vars7:
+    # Used by p_efuels
+    change_CO2e_t: float = None  # type: ignore
+    energy: float = None  # type: ignore
 
 
 @dataclass
 class F30:
-    f: FColVars2030 = field(default_factory=FColVars2030)
-    g: FColVars2030 = field(default_factory=FColVars2030)
-    d: FColVars2030 = field(default_factory=FColVars2030)
-    d_r: FColVars2030 = field(default_factory=FColVars2030)
-    d_b: FColVars2030 = field(default_factory=FColVars2030)
-    d_i: FColVars2030 = field(default_factory=FColVars2030)
-    d_t: FColVars2030 = field(default_factory=FColVars2030)
-    d_a: FColVars2030 = field(default_factory=FColVars2030)
-    p: FColVars2030 = field(default_factory=FColVars2030)
-
-    d_e_hydrogen_reconv: FColVars2030 = field(default_factory=FColVars2030)
-    p_petrol: FColVars2030 = field(default_factory=FColVars2030)
-    p_jetfuel: FColVars2030 = field(default_factory=FColVars2030)
-    p_diesel: FColVars2030 = field(default_factory=FColVars2030)
-    p_bioethanol: FColVars2030 = field(default_factory=FColVars2030)
-    p_biodiesel: FColVars2030 = field(default_factory=FColVars2030)
-    p_biogas: FColVars2030 = field(default_factory=FColVars2030)
-    p_emethan: FColVars2030 = field(default_factory=FColVars2030)
-    p_hydrogen: FColVars2030 = field(default_factory=FColVars2030)
-    p_hydrogen_reconv: FColVars2030 = field(default_factory=FColVars2030)
-
-    # only medded for fuels pdf text
-    p_hydrogen_total: FColVars2030 = field(default_factory=FColVars2030)
-    p_efuels: FColVars2030 = field(default_factory=FColVars2030)
+    f: Vars0 = field(default_factory=Vars0)
+    g: Vars1 = field(default_factory=Vars1)
+    d: Vars2 = field(default_factory=Vars2)
+    d_r: Vars2 = field(default_factory=Vars2)
+    d_b: Vars2 = field(default_factory=Vars2)
+    d_i: Vars2 = field(default_factory=Vars2)
+    d_t: Vars2 = field(default_factory=Vars2)
+    d_a: Vars2 = field(default_factory=Vars2)
+    p: Vars3 = field(default_factory=Vars3)
+    d_e_hydrogen_reconv: Vars2 = field(default_factory=Vars2)
+    p_petrol: Vars4 = field(default_factory=Vars4)
+    p_jetfuel: Vars4 = field(default_factory=Vars4)
+    p_diesel: Vars4 = field(default_factory=Vars4)
+    p_bioethanol: Vars5 = field(default_factory=Vars5)
+    p_biodiesel: Vars5 = field(default_factory=Vars5)
+    p_biogas: Vars5 = field(default_factory=Vars5)
+    p_emethan: Vars6 = field(default_factory=Vars6)
+    p_hydrogen: Vars6 = field(default_factory=Vars6)
+    p_hydrogen_reconv: Vars6 = field(default_factory=Vars6)
+    p_hydrogen_total: Vars2 = field(default_factory=Vars2)
+    p_efuels: Vars7 = field(default_factory=Vars7)
 
     def dict(self):
         return asdict(self)
