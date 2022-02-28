@@ -3,313 +3,183 @@
 from dataclasses import dataclass, field, asdict
 from .inputs import Inputs
 
+# Es gibt 5 Datentabellen:
+# * Fakten: <span class="mark">facts</span>
+# * Annahmen: <span class="mark">assumptions</span>
+# * Kommunenspezifische Daten: <span class="mark">rowCom</span>
+# * Landkreisdaten: <span class="mark">rowK</span>
+# * Bundesländerdaten: <span class="mark">rowBL</span>
+#
+# Auf die Daten könnt ihr mittels folgender Funktionen zugreifen:
+# * fact()
+# * ass()
+# * valCom()
+# * valK()
+# * valBL()
 
+# fact('Fact_A_S_biomass_fec_2018')
+# display(facts)
+# display(assumptions)
+# display(rowK)
+# display(rowBL)
+# display(rowCom)
+
+
+# # Template für die Sektor-Variablen (Excel-Spaltennamen)
+
+#  Definition der relevanten Spaltennamen für den Sektor T (18)
 @dataclass
-class Vars0:
-    # Used by t, air, ship
-    CO2e_cb: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    demand_biodiesel: float = None  # type: ignore
-    demand_bioethanol: float = None  # type: ignore
-    demand_biogas: float = None  # type: ignore
+class TColVars:
+
+    energy: float = None  # type: ignore
+    mileage: float = None  # type: ignore
+    transport_capacity_pkm: float = None  # type: ignore
+    transport_capacity_tkm: float = None  # type: ignore
+    demand_petrol: float = None  # type: ignore
+    demand_jetfuel: float = None  # type: ignore
     demand_diesel: float = None  # type: ignore
-    demand_electricity: float = None  # type: ignore
     demand_fueloil: float = None  # type: ignore
-    demand_gas: float = None  # type: ignore
-    demand_jetfuel: float = None  # type: ignore
     demand_lpg: float = None  # type: ignore
-    demand_petrol: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    mileage: float = None  # type: ignore
-    transport_capacity_pkm: float = None  # type: ignore
-    transport_capacity_tkm: float = None  # type: ignore
-
-
-@dataclass
-class Vars1:
-    # Used by g, g_planning, road_action_charger, road_bus_action_infra, rail_ppl_metro_action_infra, rail_action_invest_infra, rail_action_invest_station
-    CO2e_total: float = None  # type: ignore
-
-
-@dataclass
-class Vars2:
-    # Used by air_inter
-    CO2e_cb: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    demand_jetfuel: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    transport_capacity_pkm: float = None  # type: ignore
-    transport_capacity_tkm: float = None  # type: ignore
-
-
-@dataclass
-class Vars3:
-    # Used by air_dmstc
-    CO2e_cb: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    demand_jetfuel: float = None  # type: ignore
-    demand_petrol: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    transport_capacity_pkm: float = None  # type: ignore
-    transport_capacity_tkm: float = None  # type: ignore
-
-
-@dataclass
-class Vars4:
-    # Used by road
-    CO2e_cb: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    demand_biodiesel: float = None  # type: ignore
+    demand_gas: float = None  # type: ignore
+    demand_biogas: float = None  # type: ignore
     demand_bioethanol: float = None  # type: ignore
-    demand_biogas: float = None  # type: ignore
-    demand_diesel: float = None  # type: ignore
-    demand_electricity: float = None  # type: ignore
-    demand_gas: float = None  # type: ignore
-    demand_lpg: float = None  # type: ignore
-    demand_petrol: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    mileage: float = None  # type: ignore
-    transport_capacity_pkm: float = None  # type: ignore
-    transport_capacity_tkm: float = None  # type: ignore
-
-
-@dataclass
-class Vars5:
-    # Used by road_car, road_car_it_ot, road_car_ab, road_ppl
-    CO2e_cb: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
     demand_biodiesel: float = None  # type: ignore
-    demand_bioethanol: float = None  # type: ignore
-    demand_biogas: float = None  # type: ignore
-    demand_diesel: float = None  # type: ignore
     demand_electricity: float = None  # type: ignore
-    demand_gas: float = None  # type: ignore
-    demand_lpg: float = None  # type: ignore
-    demand_petrol: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    mileage: float = None  # type: ignore
-    transport_capacity_pkm: float = None  # type: ignore
-
-
-@dataclass
-class Vars6:
-    # Used by road_bus
     CO2e_cb: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
-    demand_biodiesel: float = None  # type: ignore
-    demand_biogas: float = None  # type: ignore
-    demand_diesel: float = None  # type: ignore
-    demand_electricity: float = None  # type: ignore
-    demand_gas: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    mileage: float = None  # type: ignore
-    transport_capacity_pkm: float = None  # type: ignore
 
+    def _get(self, i):
 
-@dataclass
-class Vars7:
-    # Used by road_gds
-    CO2e_cb: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    demand_biodiesel: float = None  # type: ignore
-    demand_bioethanol: float = None  # type: ignore
-    demand_biogas: float = None  # type: ignore
-    demand_diesel: float = None  # type: ignore
-    demand_electricity: float = None  # type: ignore
-    demand_gas: float = None  # type: ignore
-    demand_lpg: float = None  # type: ignore
-    demand_petrol: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    mileage: float = None  # type: ignore
-    transport_capacity_tkm: float = None  # type: ignore
+        if i == 0:
+            val = self.energy
+        elif i == 1:
+            val = self.mileage
+        elif i == 2:
+            val = self.transport_capacity_pkm
+        elif i == 3:
+            val = self.transport_capacity_tkm
+        elif i == 4:
+            val = self.demand_petrol
+        elif i == 5:
+            val = self.demand_jetfuel
+        elif i == 6:
+            val = self.demand_diesel
+        elif i == 7:
+            val = self.demand_fueloil
+        elif i == 8:
+            val = self.demand_lpg
+        elif i == 9:
+            val = self.demand_gas
+        elif i == 10:
+            val = self.demand_biogas
+        elif i == 11:
+            val = self.demand_bioethanol
+        elif i == 12:
+            val = self.demand_biodiesel
+        elif i == 13:
+            val = self.demand_electricity
+        elif i == 14:
+            val = self.CO2e_cb
+        else:
+            val = None
 
+        if val == None:
+            return 0
+        else:
+            return val
 
-@dataclass
-class Vars8:
-    # Used by road_gds_ldt, road_gds_ldt_it_ot, road_gds_ldt_ab
-    CO2e_cb: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    demand_biodiesel: float = None  # type: ignore
-    demand_bioethanol: float = None  # type: ignore
-    demand_diesel: float = None  # type: ignore
-    demand_electricity: float = None  # type: ignore
-    demand_lpg: float = None  # type: ignore
-    demand_petrol: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    mileage: float = None  # type: ignore
-    transport_capacity_tkm: float = None  # type: ignore
-
-
-@dataclass
-class Vars9:
-    # Used by road_gds_mhd, road_gds_mhd_it_ot, road_gds_mhd_ab
-    CO2e_cb: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    demand_biodiesel: float = None  # type: ignore
-    demand_biogas: float = None  # type: ignore
-    demand_diesel: float = None  # type: ignore
-    demand_electricity: float = None  # type: ignore
-    demand_gas: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    mileage: float = None  # type: ignore
-    transport_capacity_tkm: float = None  # type: ignore
-
-
-@dataclass
-class Vars10:
-    # Used by rail_ppl, rail_ppl_distance
-    CO2e_cb: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    demand_biodiesel: float = None  # type: ignore
-    demand_diesel: float = None  # type: ignore
-    demand_electricity: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    mileage: float = None  # type: ignore
-    transport_capacity_pkm: float = None  # type: ignore
-
-
-@dataclass
-class Vars11:
-    # Used by rail_ppl_metro
-    CO2e_cb: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    demand_electricity: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    mileage: float = None  # type: ignore
-    transport_capacity_pkm: float = None  # type: ignore
-
-
-@dataclass
-class Vars12:
-    # Used by rail_gds
-    CO2e_cb: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    demand_biodiesel: float = None  # type: ignore
-    demand_diesel: float = None  # type: ignore
-    demand_electricity: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    mileage: float = None  # type: ignore
-    transport_capacity_tkm: float = None  # type: ignore
-
-
-@dataclass
-class Vars13:
-    # Used by ship_dmstc
-    CO2e_cb: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    demand_diesel: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    transport_capacity_tkm: float = None  # type: ignore
-
-
-@dataclass
-class Vars14:
-    # Used by ship_inter
-    CO2e_cb: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    demand_fueloil: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    transport_capacity_tkm: float = None  # type: ignore
-
-
-@dataclass
-class Vars15:
-    # Used by other_foot, other_cycl
-    CO2e_cb: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    transport_capacity_pkm: float = None  # type: ignore
-
-
-@dataclass
-class Vars16:
-    # Used by road_gds_mhd_action_wire, ship_dmstc_action_infra, other_foot_action_infra, other_cycl_action_infra, s_hydrogen, s_emethan
-    pass
-
-
-@dataclass
-class Vars17:
-    # Used by rail
-    CO2e_cb: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    demand_biodiesel: float = None  # type: ignore
-    demand_diesel: float = None  # type: ignore
-    demand_electricity: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    mileage: float = None  # type: ignore
-    transport_capacity_pkm: float = None  # type: ignore
-    transport_capacity_tkm: float = None  # type: ignore
-
-
-@dataclass
-class Vars18:
-    # Used by other
-    CO2e_cb: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    mileage: float = None  # type: ignore
-    transport_capacity_pkm: float = None  # type: ignore
-    transport_capacity_tkm: float = None  # type: ignore
-
-
-@dataclass
-class Vars19:
-    # Used by s, s_petrol, s_jetfuel, s_diesel, s_fueloil, s_lpg, s_gas, s_biogas, s_bioethanol, s_biodiesel, s_elec
-    energy: float = None  # type: ignore
+    def _set(self, i, val):
+        if i == 0:
+            self.energy = val
+        elif i == 1:
+            self.mileage = val
+        elif i == 2:
+            self.transport_capacity_pkm = val
+        elif i == 3:
+            self.transport_capacity_tkm = val
+        elif i == 4:
+            self.demand_petrol = val
+        elif i == 5:
+            self.demand_jetfuel = val
+        elif i == 6:
+            self.demand_diesel = val
+        elif i == 7:
+            self.demand_fueloil = val
+        elif i == 8:
+            self.demand_lpg = val
+        elif i == 9:
+            self.demand_gas = val
+        elif i == 10:
+            self.demand_biogas = val
+        elif i == 11:
+            self.demand_bioethanol = val
+        elif i == 12:
+            self.demand_biodiesel = val
+        elif i == 13:
+            self.demand_electricity = val
+        elif i == 14:
+            self.CO2e_cb = val
 
 
 @dataclass
 class T18:
-    t: Vars0 = field(default_factory=Vars0)
-    g: Vars1 = field(default_factory=Vars1)
-    g_planning: Vars1 = field(default_factory=Vars1)
-    air_inter: Vars2 = field(default_factory=Vars2)
-    air_dmstc: Vars3 = field(default_factory=Vars3)
-    road: Vars4 = field(default_factory=Vars4)
-    road_action_charger: Vars1 = field(default_factory=Vars1)
-    road_car: Vars5 = field(default_factory=Vars5)
-    road_car_it_ot: Vars5 = field(default_factory=Vars5)
-    road_car_ab: Vars5 = field(default_factory=Vars5)
-    road_bus: Vars6 = field(default_factory=Vars6)
-    road_bus_action_infra: Vars1 = field(default_factory=Vars1)
-    road_gds: Vars7 = field(default_factory=Vars7)
-    road_gds_ldt: Vars8 = field(default_factory=Vars8)
-    road_gds_ldt_it_ot: Vars8 = field(default_factory=Vars8)
-    road_gds_ldt_ab: Vars8 = field(default_factory=Vars8)
-    road_gds_mhd: Vars9 = field(default_factory=Vars9)
-    road_ppl: Vars5 = field(default_factory=Vars5)
-    road_gds_mhd_it_ot: Vars9 = field(default_factory=Vars9)
-    road_gds_mhd_ab: Vars9 = field(default_factory=Vars9)
-    rail_ppl: Vars10 = field(default_factory=Vars10)
-    rail_ppl_metro: Vars11 = field(default_factory=Vars11)
-    rail_ppl_metro_action_infra: Vars1 = field(default_factory=Vars1)
-    rail_ppl_distance: Vars10 = field(default_factory=Vars10)
-    rail_gds: Vars12 = field(default_factory=Vars12)
-    rail_action_invest_infra: Vars1 = field(default_factory=Vars1)
-    rail_action_invest_station: Vars1 = field(default_factory=Vars1)
-    ship_dmstc: Vars13 = field(default_factory=Vars13)
-    ship_inter: Vars14 = field(default_factory=Vars14)
-    other_foot: Vars15 = field(default_factory=Vars15)
-    other_cycl: Vars15 = field(default_factory=Vars15)
-    road_gds_mhd_action_wire: Vars16 = field(default_factory=Vars16)
-    ship_dmstc_action_infra: Vars16 = field(default_factory=Vars16)
-    other_foot_action_infra: Vars16 = field(default_factory=Vars16)
-    other_cycl_action_infra: Vars16 = field(default_factory=Vars16)
-    air: Vars0 = field(default_factory=Vars0)
-    rail: Vars17 = field(default_factory=Vars17)
-    ship: Vars0 = field(default_factory=Vars0)
-    other: Vars18 = field(default_factory=Vars18)
-    s: Vars19 = field(default_factory=Vars19)
-    s_petrol: Vars19 = field(default_factory=Vars19)
-    s_jetfuel: Vars19 = field(default_factory=Vars19)
-    s_diesel: Vars19 = field(default_factory=Vars19)
-    s_fueloil: Vars19 = field(default_factory=Vars19)
-    s_lpg: Vars19 = field(default_factory=Vars19)
-    s_gas: Vars19 = field(default_factory=Vars19)
-    s_biogas: Vars19 = field(default_factory=Vars19)
-    s_bioethanol: Vars19 = field(default_factory=Vars19)
-    s_biodiesel: Vars19 = field(default_factory=Vars19)
-    s_elec: Vars19 = field(default_factory=Vars19)
-    s_hydrogen: Vars16 = field(default_factory=Vars16)
-    s_emethan: Vars16 = field(default_factory=Vars16)
+    t: TColVars = field(default_factory=TColVars)
+    g: TColVars = field(default_factory=TColVars)
+    g_planning: TColVars = field(default_factory=TColVars)
+    air_inter: TColVars = field(default_factory=TColVars)
+    air_dmstc: TColVars = field(default_factory=TColVars)
+    road: TColVars = field(default_factory=TColVars)
+    road_action_charger: TColVars = field(default_factory=TColVars)
+    road_car: TColVars = field(default_factory=TColVars)
+    road_car_it_ot: TColVars = field(default_factory=TColVars)
+    road_car_ab: TColVars = field(default_factory=TColVars)
+    road_bus: TColVars = field(default_factory=TColVars)
+    road_bus_action_infra: TColVars = field(default_factory=TColVars)
+    road_gds: TColVars = field(default_factory=TColVars)
+    road_gds_ldt: TColVars = field(default_factory=TColVars)
+    road_gds_ldt_it_ot: TColVars = field(default_factory=TColVars)
+    road_gds_ldt_ab: TColVars = field(default_factory=TColVars)
+    road_gds_mhd: TColVars = field(default_factory=TColVars)
+    road_ppl: TColVars = field(default_factory=TColVars)
+    road_gds_mhd_it_ot: TColVars = field(default_factory=TColVars)
+    road_gds_mhd_ab: TColVars = field(default_factory=TColVars)
+    rail_ppl: TColVars = field(default_factory=TColVars)
+    rail_ppl_metro: TColVars = field(default_factory=TColVars)
+    rail_ppl_metro_action_infra: TColVars = field(default_factory=TColVars)
+    rail_ppl_distance: TColVars = field(default_factory=TColVars)
+    rail_gds: TColVars = field(default_factory=TColVars)
+    rail_action_invest_infra: TColVars = field(default_factory=TColVars)
+    rail_action_invest_station: TColVars = field(default_factory=TColVars)
+    ship_dmstc: TColVars = field(default_factory=TColVars)
+    ship_inter: TColVars = field(default_factory=TColVars)
+    other_foot: TColVars = field(default_factory=TColVars)
+    other_cycl: TColVars = field(default_factory=TColVars)
+
+    road_gds_mhd_action_wire: TColVars = field(default_factory=TColVars)
+    ship_dmstc_action_infra: TColVars = field(default_factory=TColVars)
+    other_foot_action_infra: TColVars = field(default_factory=TColVars)
+    other_cycl_action_infra: TColVars = field(default_factory=TColVars)
+
+    # übergeordnete Zeilen
+    air: TColVars = field(default_factory=TColVars)
+    rail: TColVars = field(default_factory=TColVars)
+    ship: TColVars = field(default_factory=TColVars)
+    other: TColVars = field(default_factory=TColVars)
+
+    # Bereitstellung (Energieträgersummen)
+    s: TColVars = field(default_factory=TColVars)
+    s_petrol: TColVars = field(default_factory=TColVars)
+    s_jetfuel: TColVars = field(default_factory=TColVars)
+    s_diesel: TColVars = field(default_factory=TColVars)
+    s_fueloil: TColVars = field(default_factory=TColVars)
+    s_lpg: TColVars = field(default_factory=TColVars)
+    s_gas: TColVars = field(default_factory=TColVars)
+    s_biogas: TColVars = field(default_factory=TColVars)
+    s_bioethanol: TColVars = field(default_factory=TColVars)
+    s_biodiesel: TColVars = field(default_factory=TColVars)
+    s_elec: TColVars = field(default_factory=TColVars)
+    s_hydrogen: TColVars = field(default_factory=TColVars)
+    s_emethan: TColVars = field(default_factory=TColVars)
 
     def dict(self):
         return asdict(self)
