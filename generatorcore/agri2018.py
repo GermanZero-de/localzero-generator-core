@@ -6,77 +6,168 @@ from .utils import div
 
 
 @dataclass
-class AColVars2018:
-    area_m2: float = None  # type: ignore
-    area_ha: float = None  # type: ignore
+class Vars0:
+    # Used by a, p_fermen, p_manure, p_soil, p_other, p_other_liming
     CO2e_cb: float = None  # type: ignore
-    CO2e_cb_per_MWh: float = None  # type: ignore
+    CO2e_pb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+
+
+@dataclass
+class Vars1:
+    # Used by p
+    CO2e_pb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    energy: float = None  # type: ignore
+
+
+@dataclass
+class Vars2:
+    # Used by g
+    CO2e_total: float = None  # type: ignore
+
+
+@dataclass
+class Vars3:
+    # Used by g_consult, g_organic, s_emethan
+    pass
+
+
+@dataclass
+class Vars4:
+    # Used by p_fermen_dairycow, p_fermen_nondairy, p_fermen_swine, p_fermen_poultry, p_fermen_oanimal, p_manure_dairycow, p_manure_nondairy, p_manure_swine, p_manure_poultry, p_manure_oanimal, p_manure_deposition
+    CO2e_cb: float = None  # type: ignore
     CO2e_pb: float = None  # type: ignore
     CO2e_pb_per_t: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    energy_use_factor: float = None  # type: ignore
-    factor_adapted_to_fec: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
-    prod_volume: float = None  # type: ignore
     amount: float = None  # type: ignore
 
 
 @dataclass
+class Vars5:
+    # Used by p_soil_fertilizer, p_soil_manure, p_soil_sludge, p_soil_ecrop, p_soil_grazing, p_soil_residue, p_soil_orgfarm, p_soil_orgloss, p_soil_leaching, p_soil_deposition
+    CO2e_cb: float = None  # type: ignore
+    CO2e_pb: float = None  # type: ignore
+    CO2e_pb_per_t: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    area_ha: float = None  # type: ignore
+
+
+@dataclass
+class Vars6:
+    # Used by p_other_liming_dolomite, p_other_urea, p_other_ecrop, p_other_liming_calcit
+    CO2e_cb: float = None  # type: ignore
+    CO2e_pb: float = None  # type: ignore
+    CO2e_pb_per_t: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    prod_volume: float = None  # type: ignore
+
+
+@dataclass
+class Vars7:
+    # Used by p_other_kas
+    CO2e_pb: float = None  # type: ignore
+    CO2e_pb_per_t: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    prod_volume: float = None  # type: ignore
+
+
+@dataclass
+class Vars8:
+    # Used by p_operation, p_operation_elec_heatpump
+    energy: float = None  # type: ignore
+
+
+@dataclass
+class Vars9:
+    # Used by p_operation_heat
+    area_m2: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    factor_adapted_to_fec: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
+
+
+@dataclass
+class Vars10:
+    # Used by p_operation_elec_elcon, p_operation_vehicles
+    energy: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
+
+
+@dataclass
+class Vars11:
+    # Used by s
+    CO2e_cb: float = None  # type: ignore
+    CO2e_pb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
+
+
+@dataclass
+class Vars12:
+    # Used by s_petrol, s_diesel, s_fueloil, s_lpg, s_gas, s_biomass, s_elec, s_heatpump
+    CO2e_cb: float = None  # type: ignore
+    CO2e_cb_per_MWh: float = None  # type: ignore
+    CO2e_pb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
+
+
+@dataclass
 class A18:
-    a: AColVars2018 = field(default_factory=AColVars2018)
-    p: AColVars2018 = field(default_factory=AColVars2018)
-    g: AColVars2018 = field(default_factory=AColVars2018)
-    g_consult: AColVars2018 = field(default_factory=AColVars2018)
-    g_organic: AColVars2018 = field(default_factory=AColVars2018)
-    p: AColVars2018 = field(default_factory=AColVars2018)
-    p_fermen: AColVars2018 = field(default_factory=AColVars2018)
-    p_fermen_dairycow: AColVars2018 = field(default_factory=AColVars2018)
-    p_fermen_nondairy: AColVars2018 = field(default_factory=AColVars2018)
-    p_fermen_swine: AColVars2018 = field(default_factory=AColVars2018)
-    p_fermen_poultry: AColVars2018 = field(default_factory=AColVars2018)
-    p_fermen_oanimal: AColVars2018 = field(default_factory=AColVars2018)
-    p_manure: AColVars2018 = field(default_factory=AColVars2018)
-    p_manure_dairycow: AColVars2018 = field(default_factory=AColVars2018)
-    p_manure_nondairy: AColVars2018 = field(default_factory=AColVars2018)
-    p_manure_swine: AColVars2018 = field(default_factory=AColVars2018)
-    p_manure_poultry: AColVars2018 = field(default_factory=AColVars2018)
-    p_manure_oanimal: AColVars2018 = field(default_factory=AColVars2018)
-    p_manure_deposition: AColVars2018 = field(default_factory=AColVars2018)
-    p_soil: AColVars2018 = field(default_factory=AColVars2018)
-    p_soil_fertilizer: AColVars2018 = field(default_factory=AColVars2018)
-    p_soil_manure: AColVars2018 = field(default_factory=AColVars2018)
-    p_soil_sludge: AColVars2018 = field(default_factory=AColVars2018)
-    p_soil_ecrop: AColVars2018 = field(default_factory=AColVars2018)
-    p_soil_grazing: AColVars2018 = field(default_factory=AColVars2018)
-    p_soil_residue: AColVars2018 = field(default_factory=AColVars2018)
-    p_soil_orgfarm: AColVars2018 = field(default_factory=AColVars2018)
-    p_soil_orgloss: AColVars2018 = field(default_factory=AColVars2018)
-    p_soil_leaching: AColVars2018 = field(default_factory=AColVars2018)
-    p_soil_deposition: AColVars2018 = field(default_factory=AColVars2018)
-    p_other: AColVars2018 = field(default_factory=AColVars2018)
-    p_other_liming_dolomite: AColVars2018 = field(default_factory=AColVars2018)
-    p_other_urea: AColVars2018 = field(default_factory=AColVars2018)
-    p_other_ecrop: AColVars2018 = field(default_factory=AColVars2018)
-    p_other_liming: AColVars2018 = field(default_factory=AColVars2018)
-    p_other_liming_calcit: AColVars2018 = field(default_factory=AColVars2018)
-    p_other_liming_dolomite: AColVars2018 = field(default_factory=AColVars2018)
-    p_other_kas: AColVars2018 = field(default_factory=AColVars2018)
-    p_operation: AColVars2018 = field(default_factory=AColVars2018)
-    p_operation_heat: AColVars2018 = field(default_factory=AColVars2018)
-    p_operation_elec_elcon: AColVars2018 = field(default_factory=AColVars2018)
-    p_operation_elec_heatpump: AColVars2018 = field(default_factory=AColVars2018)
-    p_operation_vehicles: AColVars2018 = field(default_factory=AColVars2018)
-    s: AColVars2018 = field(default_factory=AColVars2018)
-    s_petrol: AColVars2018 = field(default_factory=AColVars2018)
-    s_diesel: AColVars2018 = field(default_factory=AColVars2018)
-    s_fueloil: AColVars2018 = field(default_factory=AColVars2018)
-    s_lpg: AColVars2018 = field(default_factory=AColVars2018)
-    s_gas: AColVars2018 = field(default_factory=AColVars2018)
-    s_emethan: AColVars2018 = field(default_factory=AColVars2018)
-    s_biomass: AColVars2018 = field(default_factory=AColVars2018)
-    s_elec: AColVars2018 = field(default_factory=AColVars2018)
-    s_heatpump: AColVars2018 = field(default_factory=AColVars2018)
+    a: Vars0 = field(default_factory=Vars0)
+    p: Vars1 = field(default_factory=Vars1)
+    g: Vars2 = field(default_factory=Vars2)
+    g_consult: Vars3 = field(default_factory=Vars3)
+    g_organic: Vars3 = field(default_factory=Vars3)
+    p_fermen: Vars0 = field(default_factory=Vars0)
+    p_fermen_dairycow: Vars4 = field(default_factory=Vars4)
+    p_fermen_nondairy: Vars4 = field(default_factory=Vars4)
+    p_fermen_swine: Vars4 = field(default_factory=Vars4)
+    p_fermen_poultry: Vars4 = field(default_factory=Vars4)
+    p_fermen_oanimal: Vars4 = field(default_factory=Vars4)
+    p_manure: Vars0 = field(default_factory=Vars0)
+    p_manure_dairycow: Vars4 = field(default_factory=Vars4)
+    p_manure_nondairy: Vars4 = field(default_factory=Vars4)
+    p_manure_swine: Vars4 = field(default_factory=Vars4)
+    p_manure_poultry: Vars4 = field(default_factory=Vars4)
+    p_manure_oanimal: Vars4 = field(default_factory=Vars4)
+    p_manure_deposition: Vars4 = field(default_factory=Vars4)
+    p_soil: Vars0 = field(default_factory=Vars0)
+    p_soil_fertilizer: Vars5 = field(default_factory=Vars5)
+    p_soil_manure: Vars5 = field(default_factory=Vars5)
+    p_soil_sludge: Vars5 = field(default_factory=Vars5)
+    p_soil_ecrop: Vars5 = field(default_factory=Vars5)
+    p_soil_grazing: Vars5 = field(default_factory=Vars5)
+    p_soil_residue: Vars5 = field(default_factory=Vars5)
+    p_soil_orgfarm: Vars5 = field(default_factory=Vars5)
+    p_soil_orgloss: Vars5 = field(default_factory=Vars5)
+    p_soil_leaching: Vars5 = field(default_factory=Vars5)
+    p_soil_deposition: Vars5 = field(default_factory=Vars5)
+    p_other: Vars0 = field(default_factory=Vars0)
+    p_other_liming_dolomite: Vars6 = field(default_factory=Vars6)
+    p_other_urea: Vars6 = field(default_factory=Vars6)
+    p_other_ecrop: Vars6 = field(default_factory=Vars6)
+    p_other_liming: Vars0 = field(default_factory=Vars0)
+    p_other_liming_calcit: Vars6 = field(default_factory=Vars6)
+    p_other_kas: Vars7 = field(default_factory=Vars7)
+    p_operation: Vars8 = field(default_factory=Vars8)
+    p_operation_heat: Vars9 = field(default_factory=Vars9)
+    p_operation_elec_elcon: Vars10 = field(default_factory=Vars10)
+    p_operation_elec_heatpump: Vars8 = field(default_factory=Vars8)
+    p_operation_vehicles: Vars10 = field(default_factory=Vars10)
+    s: Vars11 = field(default_factory=Vars11)
+    s_petrol: Vars12 = field(default_factory=Vars12)
+    s_diesel: Vars12 = field(default_factory=Vars12)
+    s_fueloil: Vars12 = field(default_factory=Vars12)
+    s_lpg: Vars12 = field(default_factory=Vars12)
+    s_gas: Vars12 = field(default_factory=Vars12)
+    s_emethan: Vars3 = field(default_factory=Vars3)
+    s_biomass: Vars12 = field(default_factory=Vars12)
+    s_elec: Vars12 = field(default_factory=Vars12)
+    s_heatpump: Vars12 = field(default_factory=Vars12)
 
     def dict(self):
         return asdict(self)
