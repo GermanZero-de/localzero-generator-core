@@ -5,73 +5,116 @@ from .inputs import Inputs
 from .utils import div
 
 
-# Es gibt 5 Datentabellen:
-# * Fakten: <span class="mark">facts</span>
-# * Annahmen: <span class="mark">assumptions</span>
-# * Kommunenspezifische Daten: <span class="mark">rowCom</span>
-# * Landkreisdaten: <span class="mark">rowK</span>
-# * Bundesländerdaten: <span class="mark">rowBL</span>
-#
-# Auf die Daten könnt ihr mittels folgender Funktionen zugreifen:
-# * fact()
-# * ass()
-# * valCom()
-# * valK()
-# * valBL()
-
-
-# fact('Fact_A_S_biomass_fec_2018')
-# display(facts)
-# display(assumptions)
-# display(rowK)
-# display(rowBL)
-# display(rowCom)
-
-
-# # Template für die Sektor-Variablen (Excel-Spaltennamen)
+@dataclass
+class Vars0:
+    # Used by g, g_storage, g_planning
+    pass
 
 
 @dataclass
-class HColVars:
+class Vars1:
+    # Used by d, d_r, d_b, d_i, d_t, a_t
     energy: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
-    CO2e_pb: float = None  # type: ignore
-    CO2e_pb_per_MWh: float = None  # type: ignore
+
+
+@dataclass
+class Vars2:
+    # Used by h
     CO2e_cb: float = None  # type: ignore
-    CO2e_cb_per_MWh: float = None  # type: ignore
+    CO2e_pb: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
 
 
-# Definition der Zeilennamen für den Sektor H
+@dataclass
+class Vars3:
+    # Used by p
+    CO2e_cb: float = None  # type: ignore
+    CO2e_cb_per_MWh: float = None  # type: ignore
+    CO2e_pb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
+
+
+@dataclass
+class Vars4:
+    # Used by p_gas, p_opetpro, p_coal
+    CO2e_cb: float = None  # type: ignore
+    CO2e_cb_per_MWh: float = None  # type: ignore
+    CO2e_pb: float = None  # type: ignore
+    CO2e_pb_per_MWh: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
+
+
+@dataclass
+class Vars5:
+    # Used by p_lpg, p_fueloil, p_heatnet_cogen, p_heatnet_plant
+    CO2e_cb: float = None  # type: ignore
+    CO2e_cb_per_MWh: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
+
+
+@dataclass
+class Vars6:
+    # Used by p_heatnet
+    CO2e_cb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
+
+
+@dataclass
+class Vars7:
+    # Used by p_heatnet_geoth, p_heatnet_lheatpump
+    CO2e_cb: float = None  # type: ignore
+    CO2e_pb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
+
+
+@dataclass
+class Vars8:
+    # Used by p_biomass, p_ofossil, p_orenew, p_solarth, p_heatpump
+    CO2e_pb: float = None  # type: ignore
+    CO2e_pb_per_MWh: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
+
+
 @dataclass
 class H18:
-    g: HColVars = field(default_factory=HColVars)
-    g_storage: HColVars = field(default_factory=HColVars)
-    g_planning: HColVars = field(default_factory=HColVars)
-    d: HColVars = field(default_factory=HColVars)
-    d_r: HColVars = field(default_factory=HColVars)
-    d_b: HColVars = field(default_factory=HColVars)
-    d_i: HColVars = field(default_factory=HColVars)
-    d_t: HColVars = field(default_factory=HColVars)
-    a_t: HColVars = field(default_factory=HColVars)
-    h: HColVars = field(default_factory=HColVars)
-    p: HColVars = field(default_factory=HColVars)
-    p_gas: HColVars = field(default_factory=HColVars)
-    p_lpg: HColVars = field(default_factory=HColVars)
-    p_fueloil: HColVars = field(default_factory=HColVars)
-    p_opetpro: HColVars = field(default_factory=HColVars)
-    p_coal: HColVars = field(default_factory=HColVars)
-    p_heatnet: HColVars = field(default_factory=HColVars)
-    p_heatnet_cogen: HColVars = field(default_factory=HColVars)
-    p_heatnet_plant: HColVars = field(default_factory=HColVars)
-    p_heatnet_geoth: HColVars = field(default_factory=HColVars)
-    p_heatnet_lheatpump: HColVars = field(default_factory=HColVars)
-    p_biomass: HColVars = field(default_factory=HColVars)
-    p_ofossil: HColVars = field(default_factory=HColVars)
-    p_orenew: HColVars = field(default_factory=HColVars)
-    p_solarth: HColVars = field(default_factory=HColVars)
-    p_heatpump: HColVars = field(default_factory=HColVars)
-    p_solarth: HColVars = field(default_factory=HColVars)
+    g: Vars0 = field(default_factory=Vars0)
+    g_storage: Vars0 = field(default_factory=Vars0)
+    g_planning: Vars0 = field(default_factory=Vars0)
+    d: Vars1 = field(default_factory=Vars1)
+    d_r: Vars1 = field(default_factory=Vars1)
+    d_b: Vars1 = field(default_factory=Vars1)
+    d_i: Vars1 = field(default_factory=Vars1)
+    d_t: Vars1 = field(default_factory=Vars1)
+    a_t: Vars1 = field(default_factory=Vars1)
+    h: Vars2 = field(default_factory=Vars2)
+    p: Vars3 = field(default_factory=Vars3)
+    p_gas: Vars4 = field(default_factory=Vars4)
+    p_lpg: Vars5 = field(default_factory=Vars5)
+    p_fueloil: Vars5 = field(default_factory=Vars5)
+    p_opetpro: Vars4 = field(default_factory=Vars4)
+    p_coal: Vars4 = field(default_factory=Vars4)
+    p_heatnet: Vars6 = field(default_factory=Vars6)
+    p_heatnet_cogen: Vars5 = field(default_factory=Vars5)
+    p_heatnet_plant: Vars5 = field(default_factory=Vars5)
+    p_heatnet_geoth: Vars7 = field(default_factory=Vars7)
+    p_heatnet_lheatpump: Vars7 = field(default_factory=Vars7)
+    p_biomass: Vars8 = field(default_factory=Vars8)
+    p_ofossil: Vars8 = field(default_factory=Vars8)
+    p_orenew: Vars8 = field(default_factory=Vars8)
+    p_solarth: Vars8 = field(default_factory=Vars8)
+    p_heatpump: Vars8 = field(default_factory=Vars8)
 
     def dict(self):
         return asdict(self)

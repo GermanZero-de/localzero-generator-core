@@ -7,50 +7,132 @@ from . import residences2018
 
 
 @dataclass
-class BColVars:
-    energy: float = None  # type: ignore
-    pct_x: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
-    area_m2: float = None  # type: ignore
-    factor_adapted_to_fec: float = None  # type: ignore
-    cost_fuel: float = None  # type: ignore
-    cost_fuel_per_MWh: float = None  # type: ignore
+class Vars0:
+    # Used by b
     CO2e_cb: float = None  # type: ignore
-    CO2e_cb_per_MWh: float = None  # type: ignore
     CO2e_pb: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
+
+
+@dataclass
+class Vars1:
+    # Used by g, g_consult, s_emethan
+    pass
+
+
+@dataclass
+class Vars2:
+    # Used by p, p_elec_elcon, p_elec_heatpump, p_vehicles, p_other
+    energy: float = None  # type: ignore
+
+
+@dataclass
+class Vars3:
+    # Used by p_nonresi
+    area_m2: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    factor_adapted_to_fec: float = None  # type: ignore
     number_of_buildings: float = None  # type: ignore
 
 
 @dataclass
+class Vars4:
+    # Used by p_nonresi_com
+    area_m2: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    factor_adapted_to_fec: float = None  # type: ignore
+    pct_x: float = None  # type: ignore
+
+
+@dataclass
+class Vars5:
+    # Used by s
+    CO2e_cb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    cost_fuel: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
+
+
+@dataclass
+class Vars6:
+    # Used by s_gas, s_lpg, s_petrol, s_jetfuel, s_diesel, s_fueloil, s_coal, s_heatnet, s_heatpump, s_solarth
+    CO2e_cb: float = None  # type: ignore
+    CO2e_cb_per_MWh: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    cost_fuel: float = None  # type: ignore
+    cost_fuel_per_MWh: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
+
+
+@dataclass
+class Vars7:
+    # Used by s_biomass
+    CO2e_cb: float = None  # type: ignore
+    CO2e_cb_per_MWh: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    cost_fuel: float = None  # type: ignore
+    cost_fuel_per_MWh: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    number_of_buildings: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
+
+
+@dataclass
+class Vars8:
+    # Used by s_elec_heating, s_elec
+    CO2e_cb: float = None  # type: ignore
+    CO2e_cb_per_MWh: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
+
+
+@dataclass
+class Vars9:
+    # Used by rb
+    CO2e_cb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    energy: float = None  # type: ignore
+
+
+@dataclass
+class Vars10:
+    # Used by rp_p
+    CO2e_cb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+
+
+@dataclass
 class B18:
-    b: BColVars = field(default_factory=BColVars)
-    g: BColVars = field(default_factory=BColVars)
-    g_consult: BColVars = field(default_factory=BColVars)
-    p: BColVars = field(default_factory=BColVars)
-    p_nonresi: BColVars = field(default_factory=BColVars)
-    p_nonresi_com: BColVars = field(default_factory=BColVars)
-    p_elec_elcon: BColVars = field(default_factory=BColVars)
-    p_elec_heatpump: BColVars = field(default_factory=BColVars)
-    p_vehicles: BColVars = field(default_factory=BColVars)
-    p_other: BColVars = field(default_factory=BColVars)
-    s: BColVars = field(default_factory=BColVars)
-    s_gas: BColVars = field(default_factory=BColVars)
-    s_emethan: BColVars = field(default_factory=BColVars)
-    s_lpg: BColVars = field(default_factory=BColVars)
-    s_petrol: BColVars = field(default_factory=BColVars)
-    s_jetfuel: BColVars = field(default_factory=BColVars)
-    s_diesel: BColVars = field(default_factory=BColVars)
-    s_fueloil: BColVars = field(default_factory=BColVars)
-    s_biomass: BColVars = field(default_factory=BColVars)
-    s_coal: BColVars = field(default_factory=BColVars)
-    s_heatnet: BColVars = field(default_factory=BColVars)
-    s_elec_heating: BColVars = field(default_factory=BColVars)
-    s_heatpump: BColVars = field(default_factory=BColVars)
-    s_solarth: BColVars = field(default_factory=BColVars)
-    s_elec: BColVars = field(default_factory=BColVars)
-    rb: BColVars = field(default_factory=BColVars)
-    rp_p: BColVars = field(default_factory=BColVars)
+    b: Vars0 = field(default_factory=Vars0)
+    g: Vars1 = field(default_factory=Vars1)
+    g_consult: Vars1 = field(default_factory=Vars1)
+    p: Vars2 = field(default_factory=Vars2)
+    p_nonresi: Vars3 = field(default_factory=Vars3)
+    p_nonresi_com: Vars4 = field(default_factory=Vars4)
+    p_elec_elcon: Vars2 = field(default_factory=Vars2)
+    p_elec_heatpump: Vars2 = field(default_factory=Vars2)
+    p_vehicles: Vars2 = field(default_factory=Vars2)
+    p_other: Vars2 = field(default_factory=Vars2)
+    s: Vars5 = field(default_factory=Vars5)
+    s_gas: Vars6 = field(default_factory=Vars6)
+    s_emethan: Vars1 = field(default_factory=Vars1)
+    s_lpg: Vars6 = field(default_factory=Vars6)
+    s_petrol: Vars6 = field(default_factory=Vars6)
+    s_jetfuel: Vars6 = field(default_factory=Vars6)
+    s_diesel: Vars6 = field(default_factory=Vars6)
+    s_fueloil: Vars6 = field(default_factory=Vars6)
+    s_biomass: Vars7 = field(default_factory=Vars7)
+    s_coal: Vars6 = field(default_factory=Vars6)
+    s_heatnet: Vars6 = field(default_factory=Vars6)
+    s_elec_heating: Vars8 = field(default_factory=Vars8)
+    s_heatpump: Vars6 = field(default_factory=Vars6)
+    s_solarth: Vars6 = field(default_factory=Vars6)
+    s_elec: Vars8 = field(default_factory=Vars8)
+    rb: Vars9 = field(default_factory=Vars9)
+    rp_p: Vars10 = field(default_factory=Vars10)
 
     def dict(self):
         return asdict(self)
