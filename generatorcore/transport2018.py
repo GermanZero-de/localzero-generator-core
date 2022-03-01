@@ -48,78 +48,6 @@ class TColVars:
     CO2e_cb: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
 
-    def _get(self, i):
-
-        if i == 0:
-            val = self.energy
-        elif i == 1:
-            val = self.mileage
-        elif i == 2:
-            val = self.transport_capacity_pkm
-        elif i == 3:
-            val = self.transport_capacity_tkm
-        elif i == 4:
-            val = self.demand_petrol
-        elif i == 5:
-            val = self.demand_jetfuel
-        elif i == 6:
-            val = self.demand_diesel
-        elif i == 7:
-            val = self.demand_fueloil
-        elif i == 8:
-            val = self.demand_lpg
-        elif i == 9:
-            val = self.demand_gas
-        elif i == 10:
-            val = self.demand_biogas
-        elif i == 11:
-            val = self.demand_bioethanol
-        elif i == 12:
-            val = self.demand_biodiesel
-        elif i == 13:
-            val = self.demand_electricity
-        elif i == 14:
-            val = self.CO2e_cb
-        else:
-            val = None
-
-        if val == None:
-            return 0
-        else:
-            return val
-
-    def _set(self, i, val):
-        if i == 0:
-            self.energy = val
-        elif i == 1:
-            self.mileage = val
-        elif i == 2:
-            self.transport_capacity_pkm = val
-        elif i == 3:
-            self.transport_capacity_tkm = val
-        elif i == 4:
-            self.demand_petrol = val
-        elif i == 5:
-            self.demand_jetfuel = val
-        elif i == 6:
-            self.demand_diesel = val
-        elif i == 7:
-            self.demand_fueloil = val
-        elif i == 8:
-            self.demand_lpg = val
-        elif i == 9:
-            self.demand_gas = val
-        elif i == 10:
-            self.demand_biogas = val
-        elif i == 11:
-            self.demand_bioethanol = val
-        elif i == 12:
-            self.demand_biodiesel = val
-        elif i == 13:
-            self.demand_electricity = val
-        elif i == 14:
-            self.CO2e_cb = val
-
 
 @dataclass
 class T18:
@@ -1122,10 +1050,82 @@ def calc(inputs: Inputs) -> T18:
 
     # TODO: Throw a more suffisticated error message if we ?
 
-    # ------------------------------ Berechnung der Oberklassensummen
-    for i in range(len([a for a in dir(TColVars) if not a.startswith("_")])):
-        air._set(i, air_inter._get(i) + air_dmstc._get(i))
-        ship._set(i, ship_dmstc._get(i) + ship_inter._get(i))
+    # Todo: Adding or_zero was the minimal patch required to unroll
+    # the calculations below (previously the test for none was encoded
+    # in a rather hard to read loop). But this of course just higlights
+    # that we have a bunch of calculations that we know we do not do
+    # and that are just statically None (and therefore 0).  And maybe
+    # we should lift that setting to 0 earlier in the code.
+    # That is explicitely write air_dmstc.mileage = 0 # 0 because ...add rationale here...
+    def or_zero(x: float | None) -> float:
+        if x is None:
+            return 0.0
+        else:
+            return x
+
+    air.energy = air_inter.energy + air_dmstc.energy
+    air.mileage = or_zero(air_inter.mileage) + or_zero(air_dmstc.mileage)
+    air.transport_capacity_pkm = (
+        air_inter.transport_capacity_pkm + air_dmstc.transport_capacity_pkm
+    )
+    air.transport_capacity_tkm = (
+        air_inter.transport_capacity_tkm + air_dmstc.transport_capacity_tkm
+    )
+    air.demand_petrol = or_zero(air_inter.demand_petrol) + air_dmstc.demand_petrol
+    air.demand_jetfuel = air_inter.demand_jetfuel + air_dmstc.demand_jetfuel
+    air.demand_diesel = or_zero(air_inter.demand_diesel) + or_zero(
+        air_dmstc.demand_diesel
+    )
+    air.demand_fueloil = or_zero(air_inter.demand_fueloil) + or_zero(
+        air_dmstc.demand_fueloil
+    )
+    air.demand_lpg = or_zero(air_inter.demand_lpg) + or_zero(air_dmstc.demand_lpg)
+    air.demand_gas = or_zero(air_inter.demand_gas) + or_zero(air_dmstc.demand_gas)
+    air.demand_biogas = or_zero(air_inter.demand_biogas) + or_zero(
+        air_dmstc.demand_biogas
+    )
+    air.demand_bioethanol = or_zero(air_inter.demand_bioethanol) + or_zero(
+        air_dmstc.demand_bioethanol
+    )
+    air.demand_biodiesel = or_zero(air_inter.demand_biodiesel) + or_zero(
+        air_dmstc.demand_biodiesel
+    )
+    air.demand_electricity = or_zero(air_inter.demand_electricity) + or_zero(
+        air_dmstc.demand_electricity
+    )
+    air.CO2e_cb = air_inter.CO2e_cb + air_dmstc.CO2e_cb
+
+    ship.energy = ship_inter.energy + ship_dmstc.energy
+    ship.mileage = or_zero(ship_inter.mileage) + or_zero(ship_dmstc.mileage)
+    ship.transport_capacity_pkm = or_zero(ship_inter.transport_capacity_pkm) + or_zero(
+        ship_dmstc.transport_capacity_pkm
+    )
+    ship.transport_capacity_tkm = or_zero(ship_inter.transport_capacity_tkm) + or_zero(
+        ship_dmstc.transport_capacity_tkm
+    )
+    ship.demand_petrol = or_zero(ship_inter.demand_petrol) + or_zero(
+        ship_dmstc.demand_petrol
+    )
+    ship.demand_jetfuel = or_zero(ship_inter.demand_jetfuel) + or_zero(
+        ship_dmstc.demand_jetfuel
+    )
+    ship.demand_diesel = or_zero(ship_inter.demand_diesel) + ship_dmstc.demand_diesel
+    ship.demand_fueloil = ship_inter.demand_fueloil + or_zero(ship_dmstc.demand_fueloil)
+    ship.demand_lpg = or_zero(ship_inter.demand_lpg) + or_zero(ship_dmstc.demand_lpg)
+    ship.demand_gas = or_zero(ship_inter.demand_gas) + or_zero(ship_dmstc.demand_gas)
+    ship.demand_biogas = or_zero(ship_inter.demand_biogas) + or_zero(
+        ship_dmstc.demand_biogas
+    )
+    ship.demand_bioethanol = or_zero(ship_inter.demand_bioethanol) + or_zero(
+        ship_dmstc.demand_bioethanol
+    )
+    ship.demand_biodiesel = or_zero(ship_inter.demand_biodiesel) + or_zero(
+        ship_dmstc.demand_biodiesel
+    )
+    ship.demand_electricity = or_zero(ship_inter.demand_electricity) + or_zero(
+        ship_dmstc.demand_electricity
+    )
+    ship.CO2e_cb = ship_inter.CO2e_cb + ship_dmstc.CO2e_cb
 
     # ----------------------------------------------------
     air.demand_petrol = air_dmstc.demand_petrol
