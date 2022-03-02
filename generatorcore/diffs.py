@@ -60,5 +60,5 @@ def all_helper(
         yield (path, d1, d2)
 
 
-def all(d1, d2, *, rel=1e6):
+def all(d1, d2, *, rel=1e-9):
     return all_helper("", d1, d2, rel=rel)
