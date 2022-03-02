@@ -320,8 +320,6 @@ def calc(inputs: Inputs) -> T18:
         "Fact_T_S_Rl_Metro_SEC_fzkm_2018"
     )
 
-    # res  75.732.141 t/a
-
     road_car_it_ot.CO2e_cb = (
         road_car_it_ot.demand_petrol * fact("Fact_T_S_petrol_EmFa_tank_wheel_2018")
         + road_car_it_ot.demand_diesel * fact("Fact_T_S_diesel_EmFa_tank_wheel_2018")
@@ -801,21 +799,16 @@ def calc(inputs: Inputs) -> T18:
         * entries.m_population_com_2018
         / entries.m_population_nat
     )
-    # res: 46.900.000.000 t km
-
     ship_dmstc.demand_diesel = (
         entries.m_population_com_2018
         / entries.m_population_nat
         * fact("Fact_T_S_Shp_diesel_fec_2018")
     )
-    # res: 2.949.722 MWh
     ship_dmstc.energy = ship_dmstc.demand_diesel
 
     ship_dmstc.CO2e_cb = ship_dmstc.demand_diesel * fact(
         "Fact_T_S_diesel_EmFa_tank_wheel_2018"
     )
-    # res: 786.093  t/a
-
     # ---------------------
 
     ship_inter.transport_capacity_tkm = (
@@ -823,20 +816,14 @@ def calc(inputs: Inputs) -> T18:
         * entries.m_population_com_2018
         / entries.m_population_nat
     )
-    # res: 1.982.900.000.000 t km
-
     ship_inter.demand_fueloil = (
         entries.m_population_com_2018 / entries.m_population_nat
     ) * fact("Fact_T_D_Shp_sea_nat_EC_2018")
 
     ship_inter.energy = ship_inter.demand_fueloil
-    # res: 19.722.222 MWh
-
     ship_inter.CO2e_cb = ship_inter.demand_fueloil * fact(
         "Fact_T_S_fueloil_EmFa_tank_wheel_2018"
     )
-    # res: 5.396.000  t/a
-
     # ------------------------
 
     if entries.t_rt7 in ["71", "72", "73", "74", "75", "76", "77"]:
