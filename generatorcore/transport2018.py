@@ -3,31 +3,7 @@
 from dataclasses import dataclass, field, asdict
 from .inputs import Inputs
 
-# Es gibt 5 Datentabellen:
-# * Fakten: <span class="mark">facts</span>
-# * Annahmen: <span class="mark">assumptions</span>
-# * Kommunenspezifische Daten: <span class="mark">rowCom</span>
-# * Landkreisdaten: <span class="mark">rowK</span>
-# * Bundesländerdaten: <span class="mark">rowBL</span>
-#
-# Auf die Daten könnt ihr mittels folgender Funktionen zugreifen:
-# * fact()
-# * ass()
-# * valCom()
-# * valK()
-# * valBL()
 
-# fact('Fact_A_S_biomass_fec_2018')
-# display(facts)
-# display(assumptions)
-# display(rowK)
-# display(rowBL)
-# display(rowCom)
-
-
-# # Template für die Sektor-Variablen (Excel-Spaltennamen)
-
-#  Definition der relevanten Spaltennamen für den Sektor T (18)
 @dataclass
 class TColVars:
 
@@ -88,13 +64,11 @@ class T18:
     other_foot_action_infra: TColVars = field(default_factory=TColVars)
     other_cycl_action_infra: TColVars = field(default_factory=TColVars)
 
-    # übergeordnete Zeilen
     air: TColVars = field(default_factory=TColVars)
     rail: TColVars = field(default_factory=TColVars)
     ship: TColVars = field(default_factory=TColVars)
     other: TColVars = field(default_factory=TColVars)
 
-    # Bereitstellung (Energieträgersummen)
     s: TColVars = field(default_factory=TColVars)
     s_petrol: TColVars = field(default_factory=TColVars)
     s_jetfuel: TColVars = field(default_factory=TColVars)
@@ -111,11 +85,6 @@ class T18:
 
     def dict(self):
         return asdict(self)
-
-
-# # Berechnungsfunktion Transport 2018
-
-# Berechnungsfunktion Transport 2018
 
 
 def calc(inputs: Inputs) -> T18:
@@ -178,14 +147,12 @@ def calc(inputs: Inputs) -> T18:
 
     Million = 1000000
     ags = entries.m_AGS_com
-    # res 61.700.000.000 Pers km
     air_inter.transport_capacity_pkm = (
         fact("Fact_T_D_Air_nat_trnsprt_ppl_2019")
         * entries.m_population_com_2018
         / entries.m_population_nat
     )
 
-    # res 1.507.745.000 t km
     air_inter.transport_capacity_tkm = (
         fact("Fact_T_D_Air_dmstc_nat_trnsprt_gds_2019")
         * fact("Fact_T_D_Air_inter_nat_ratio_2018")
@@ -193,20 +160,17 @@ def calc(inputs: Inputs) -> T18:
         / entries.m_population_nat
     )
 
-    # res 113.722.222 MWh
     air_inter.demand_jetfuel = (
         fact("Fact_T_S_Air_nat_EB_inter_2018")
         * entries.m_population_com_2018
         / entries.m_population_nat
     )
 
-    # res 108.056 MWh
     air_dmstc.demand_petrol = (
         fact("Fact_T_S_Air_petrol_fec_2018")
         * entries.m_population_com_2018
         / entries.m_population_nat
     )
-    # res 30.020.293  t/a
     air_inter.CO2e_cb = (
         air_dmstc.demand_petrol * fact("Fact_T_S_petrol_EmFa_tank_wheel_2018")
         + air_inter.demand_jetfuel * fact("Fact_T_S_jetfuel_EmFa_tank_wheel_2018")
@@ -215,19 +179,16 @@ def calc(inputs: Inputs) -> T18:
         + 0 * fact("Fact_T_S_cng_EmFa_tank_wheel_2018")
     )
 
-    # res 113.722.222 MWh
     air_inter.energy = air_inter.demand_jetfuel
 
     # -------------------
 
-    # res 10.100.000.000 Pers km
     air_dmstc.transport_capacity_pkm = (
         fact("Fact_T_D_Air_dmstc_nat_trnsprt_ppl_2019")
         * entries.m_population_com_2018
         / entries.m_population_nat
     )
 
-    # res 79.355.000 t km
     air_dmstc.transport_capacity_tkm = (
         fact("Fact_T_D_Air_dmstc_nat_trnsprt_gds_2019")
         * fact("Fact_T_D_Air_dmstc_nat_ratio_2018")
@@ -235,33 +196,27 @@ def calc(inputs: Inputs) -> T18:
         / entries.m_population_nat
     )
 
-    # res 7.805.556 MWh
     air_dmstc.demand_jetfuel = (
         fact("Fact_T_S_Air_nat_EB_dmstc_2018")
         * entries.m_population_com_2018
         / entries.m_population_nat
     )
 
-    # res 2.085.724  t/a
     air_dmstc.CO2e_cb = air_dmstc.demand_jetfuel * fact(
         "Fact_T_S_jetfuel_EmFa_tank_wheel_2018"
     ) + air_dmstc.demand_petrol * fact("Fact_T_S_petroljet_EmFa_tank_wheel_2018")
 
-    # res 7.913.611 MWh
     air_dmstc.energy = air_dmstc.demand_jetfuel + air_dmstc.demand_petrol
 
     air.energy = air_inter.energy + air_dmstc.energy
 
     # -----------------------
-    # res 456.061.500.000 Fz km
     road_car_it_ot.mileage = entries.t_mil_car_it_at * Million
 
-    # res 657.704.211.506 Pers km
     road_car_it_ot.transport_capacity_pkm = road_car_it_ot.mileage * fact(
         "Fact_T_D_lf_ppl_Car_2018"
     )
 
-    # res 140.583.679 MWh
     road_car_it_ot.demand_petrol = (
         road_car_it_ot.mileage
         * fact("Fact_T_S_Car_frac_petrol_with_phev_mlg_2018")
@@ -269,7 +224,6 @@ def calc(inputs: Inputs) -> T18:
         * fact("Fact_T_S_Car_SEC_petrol_it_at_2018")
     )
 
-    # res 137.907.651 MWh
     road_car_it_ot.demand_diesel = (
         road_car_it_ot.mileage
         * fact("Fact_T_S_Car_frac_diesel_mlg_2018")
@@ -277,14 +231,12 @@ def calc(inputs: Inputs) -> T18:
         * fact("Fact_T_S_Car_SEC_diesel_it_at_2018")
     )
 
-    # res 3.211.348 MWh
     road_car_it_ot.demand_lpg = (
         road_car_it_ot.mileage
         * fact("Fact_T_S_Car_frac_lpg_mlg_2018")
         * fact("Fact_T_S_Car_SEC_petrol_it_at_2018")
     )
 
-    # res 550.841 MWh
     road_car_it_ot.demand_gas = (
         road_car_it_ot.mileage
         * fact("Fact_T_S_Car_frac_cng_mlg_2018")
@@ -292,7 +244,6 @@ def calc(inputs: Inputs) -> T18:
         * fact("Fact_T_S_Car_SEC_petrol_it_at_2018")
     )
 
-    # res 129.210 MWh
     road_car_it_ot.demand_biogas = (
         road_car_it_ot.mileage
         * fact("Fact_T_S_Car_frac_cng_mlg_2018")
@@ -308,7 +259,6 @@ def calc(inputs: Inputs) -> T18:
         * fact("Fact_T_S_Car_SEC_petrol_it_at_2018")
     )
 
-    # res 8.026.371 MWh
     road_car_it_ot.demand_biodiesel = (
         road_car_it_ot.mileage
         * fact("Fact_T_S_Car_frac_diesel_mlg_2018")
@@ -316,14 +266,12 @@ def calc(inputs: Inputs) -> T18:
         * fact("Fact_T_S_Car_SEC_diesel_it_at_2018")
     )
 
-    # res 121.985 MWh
     road_car_it_ot.demand_electricity = (
         road_car_it_ot.mileage
         * fact("Fact_T_S_Car_frac_bev_with_phev_mlg_2018")
         * fact("Fact_T_S_Car_SEC_elec_it_at_2018")
     )
 
-    # res 36.749.000.000 Fz km
     road_gds_ldt_it_ot.mileage = entries.t_mil_ldt_it_at * Million
 
     road_gds_ldt_it_ot.demand_electricity = (
@@ -331,8 +279,6 @@ def calc(inputs: Inputs) -> T18:
         * fact("Fact_T_S_LDT_frac_bev_mlg_2018")
         * fact("Fact_T_S_LDT_SEC_elec_it_at_2018")
     )
-
-    # 14.549.300.000 Fz km
 
     road_gds_ldt_ab.mileage = entries.t_mil_ldt_ab * Million
 
@@ -342,7 +288,6 @@ def calc(inputs: Inputs) -> T18:
         * fact("Fact_T_S_LDT_SEC_elec_ab_2018")
     )
 
-    # res 2.343.000.000 Fz km
     road_bus.mileage = (
         entries.t_bus_mega_km_dis
         * Million
@@ -350,7 +295,6 @@ def calc(inputs: Inputs) -> T18:
         / entries.m_population_dis
     )
 
-    # 28.430.600.000 Fz km
     road_gds_mhd_it_ot.mileage = entries.t_mil_mhd_it_at * Million - road_bus.mileage
 
     road_gds_mhd_it_ot.demand_electricity = (
@@ -359,7 +303,6 @@ def calc(inputs: Inputs) -> T18:
         * fact("Fact_T_S_MHD_SEC_elec_it_at_2018")
     )
 
-    # 35.937.900.000 Fz km
     road_gds_mhd_ab.mileage = entries.t_mil_mhd_ab * Million
 
     road_gds_mhd_ab.demand_electricity = (
@@ -367,7 +310,6 @@ def calc(inputs: Inputs) -> T18:
         * fact("Fact_T_S_MHD_frac_bev_stock_2018")
         * fact("Fact_T_S_MHD_SEC_elec_ab_2018")
     )
-    # 308.900.000 Fz km
     rail_ppl_metro.mileage = (
         entries.t_metro_mega_km_dis
         * Million
@@ -378,8 +320,6 @@ def calc(inputs: Inputs) -> T18:
         "Fact_T_S_Rl_Metro_SEC_fzkm_2018"
     )
 
-    # res  75.732.141 t/a
-
     road_car_it_ot.CO2e_cb = (
         road_car_it_ot.demand_petrol * fact("Fact_T_S_petrol_EmFa_tank_wheel_2018")
         + road_car_it_ot.demand_diesel * fact("Fact_T_S_diesel_EmFa_tank_wheel_2018")
@@ -387,7 +327,6 @@ def calc(inputs: Inputs) -> T18:
         + road_car_it_ot.demand_gas * fact("Fact_T_S_cng_EmFa_tank_wheel_2018")
     )
 
-    # res 296.847.801 MWh
     road_car_it_ot.energy = (
         road_car_it_ot.demand_petrol
         + road_car_it_ot.demand_diesel
@@ -401,15 +340,12 @@ def calc(inputs: Inputs) -> T18:
 
     # --------------------
 
-    # res 200.879.200.000 Fz km
     road_car_ab.mileage = entries.t_mil_car_ab * Million
 
-    # res 289.695.788.494 Pers km
     road_car_ab.transport_capacity_pkm = road_car_ab.mileage * fact(
         "Fact_T_D_lf_ppl_Car_2018"
     )
 
-    # res 71.637.731 MWh
     road_car_ab.demand_petrol = (
         road_car_ab.mileage
         * fact("Fact_T_S_Car_frac_petrol_with_phev_mlg_2018")
@@ -417,7 +353,6 @@ def calc(inputs: Inputs) -> T18:
         * fact("Fact_T_S_Car_SEC_petrol_ab_2018")
     )
 
-    # res 68.266.402 MWh
     road_car_ab.demand_diesel = (
         road_car_ab.mileage
         * fact("Fact_T_S_Car_frac_diesel_mlg_2018")
@@ -425,14 +360,12 @@ def calc(inputs: Inputs) -> T18:
         * fact("Fact_T_S_Car_SEC_diesel_ab_2018")
     )
 
-    # res 1.636.418 MWh
     road_car_ab.demand_lpg = (
         road_car_ab.mileage
         * fact("Fact_T_S_Car_frac_lpg_mlg_2018")
         * fact("Fact_T_S_Car_SEC_petrol_ab_2018")
     )
 
-    # res 242.626 MWh
     road_car_ab.demand_gas = (
         road_car_ab.mileage
         * fact("Fact_T_S_Car_frac_cng_mlg_2018")
@@ -441,7 +374,6 @@ def calc(inputs: Inputs) -> T18:
         * fact("Fact_T_S_Car_SEC_petrol_it_at_2018")
     )
 
-    # res 56.912 MWh
     road_car_ab.demand_biogas = (
         road_car_ab.mileage
         * fact("Fact_T_S_Car_frac_cng_mlg_2018")
@@ -458,7 +390,6 @@ def calc(inputs: Inputs) -> T18:
         * fact("Fact_T_S_Car_SEC_petrol_ab_2018")
     )
 
-    # res 3.973.177 MWh
     road_car_ab.demand_biodiesel = (
         road_car_ab.mileage
         * fact("Fact_T_S_Car_frac_diesel_mlg_2018")
@@ -466,14 +397,12 @@ def calc(inputs: Inputs) -> T18:
         * fact("Fact_T_S_Car_SEC_diesel_ab_2018")
     )
 
-    # res 85.897 MWh
     road_car_ab.demand_electricity = (
         road_car_ab.mileage
         * fact("Fact_T_S_Car_frac_bev_with_phev_mlg_2018")
         * fact("Fact_T_S_Car_SEC_elec_ab_2018")
     )
 
-    # 38.048.389 t/a
     road_car_ab.CO2e_cb = (
         road_car_ab.demand_petrol * fact("Fact_T_S_petrol_EmFa_tank_wheel_2018")
         + road_car_ab.demand_diesel * fact("Fact_T_S_diesel_EmFa_tank_wheel_2018")
@@ -481,7 +410,6 @@ def calc(inputs: Inputs) -> T18:
         + road_car_ab.demand_gas * fact("Fact_T_S_cng_EmFa_tank_wheel_2018")
     )
 
-    # res 149.117.995 MWh
     road_car_ab.energy = (
         road_car_ab.demand_petrol
         + road_car_ab.demand_diesel
@@ -495,12 +423,10 @@ def calc(inputs: Inputs) -> T18:
 
     # ----------------
 
-    # res 35.594.900.435 Pers km
     road_bus.transport_capacity_pkm = road_bus.mileage * fact(
         "Fact_T_D_lf_ppl_Bus_2018"
     )
 
-    # res 8.426.134 MWh
     road_bus.demand_diesel = (
         road_bus.mileage
         * fact("Fact_T_S_Bus_frac_diesel_with_hybrid_stock_2018")
@@ -508,7 +434,6 @@ def calc(inputs: Inputs) -> T18:
         * fact("Fact_T_S_Bus_SEC_diesel_2018")
     )
 
-    # res 162.136 MWh
     road_bus.demand_gas = (
         road_bus.mileage
         * fact("Fact_T_S_Bus_frac_cng_stock_2018")
@@ -516,7 +441,6 @@ def calc(inputs: Inputs) -> T18:
         * fact("Fact_T_S_Bus_SEC_diesel_2018")
     )
 
-    # res 38.032 MWh
     road_bus.demand_biogas = (
         road_bus.mileage
         * fact("Fact_T_S_Bus_frac_cng_stock_2018")
@@ -524,7 +448,6 @@ def calc(inputs: Inputs) -> T18:
         * fact("Fact_T_S_Bus_SEC_diesel_2018")
     )
 
-    # res 485.406 MWh
     road_bus.demand_biodiesel = (
         road_bus.mileage
         * fact("Fact_T_S_Bus_frac_diesel_stock_2018")
@@ -532,14 +455,11 @@ def calc(inputs: Inputs) -> T18:
         * fact("Fact_T_S_Bus_SEC_diesel_2018")
     )
 
-    # res 13.854 MWh
     road_bus.demand_electricity = (
         road_bus.mileage
         * fact("Fact_T_S_Bus_frac_bev_stock_2018")
         * fact("Fact_T_S_Bus_SEC_elec_2018")
     )
-
-    # 2.278.190 t/a
 
     road_bus.CO2e_cb = (
         road_bus.demand_diesel * fact("Fact_T_S_diesel_EmFa_tank_wheel_2018")
@@ -550,7 +470,6 @@ def calc(inputs: Inputs) -> T18:
         * fact("Fact_T_S_electricity_EmFa_tank_wheel_2018")
     )
 
-    # res 9.125.561 MWh
     road_bus.energy = (
         road_bus.demand_diesel
         + road_bus.demand_gas
@@ -561,12 +480,10 @@ def calc(inputs: Inputs) -> T18:
 
     # ---------------------
 
-    # 5.516.114.569 t km
     road_gds_ldt_it_ot.transport_capacity_tkm = road_gds_ldt_it_ot.mileage * fact(
         "Fact_T_D_lf_gds_LDT_2018"
     )
 
-    # 863.649 MWh
     road_gds_ldt_it_ot.demand_petrol = (
         road_gds_ldt_it_ot.mileage
         * fact("Fact_T_S_LDT_frac_petrol_mlg_2018")
@@ -574,7 +491,6 @@ def calc(inputs: Inputs) -> T18:
         * fact("Fact_T_S_LDT_SEC_petrol_it_at_2018")
     )
 
-    # 30.129.512 MWh
     road_gds_ldt_it_ot.demand_diesel = (
         road_gds_ldt_it_ot.mileage
         * fact("Fact_T_S_LDT_frac_diesel_mlg_2018")
@@ -582,14 +498,12 @@ def calc(inputs: Inputs) -> T18:
         * fact("Fact_T_S_LDT_SEC_diesel_it_at_2018")
     )
 
-    # 127.848 MWh
     road_gds_ldt_it_ot.demand_lpg = (
         road_gds_ldt_it_ot.mileage
         * fact("Fact_T_S_LDT_frac_lpg_mlg_2018")
         * fact("Fact_T_S_LDT_SEC_petrol_it_at_2018")
     )
 
-    # 38.806 MWh
     road_gds_ldt_it_ot.demand_bioethanol = (
         road_gds_ldt_it_ot.mileage
         * fact("Fact_T_S_LDT_frac_petrol_mlg_2018")
@@ -597,7 +511,6 @@ def calc(inputs: Inputs) -> T18:
         * fact("Fact_T_S_LDT_SEC_petrol_it_at_2018")
     )
 
-    # 1.753.569 MWh
     road_gds_ldt_it_ot.demand_biodiesel = (
         road_gds_ldt_it_ot.mileage
         * fact("Fact_T_S_LDT_frac_diesel_mlg_2018")
@@ -605,14 +518,12 @@ def calc(inputs: Inputs) -> T18:
         * fact("Fact_T_S_LDT_SEC_diesel_it_at_2018")
     )
 
-    # 29.887 MWh
     road_gds_ldt_it_ot.demand_electricity = (
         road_gds_ldt_it_ot.mileage
         * fact("Fact_T_S_LDT_frac_bev_mlg_2018")
         * fact("Fact_T_S_LDT_SEC_elec_it_at_2018")
     )
 
-    # 8.294.035 t/a
     road_gds_ldt_it_ot.CO2e_cb = (
         road_gds_ldt_it_ot.demand_petrol * fact("Fact_T_S_petrol_EmFa_tank_wheel_2018")
         + road_gds_ldt_it_ot.demand_diesel
@@ -620,7 +531,6 @@ def calc(inputs: Inputs) -> T18:
         + road_gds_ldt_it_ot.demand_lpg * fact("Fact_T_S_lpg_EmFa_tank_wheel_2018")
     )
 
-    # 32.943.271 MWh
     road_gds_ldt_it_ot.energy = (
         road_gds_ldt_it_ot.demand_petrol
         + road_gds_ldt_it_ot.demand_diesel
@@ -632,12 +542,10 @@ def calc(inputs: Inputs) -> T18:
 
     # -------------------------
 
-    # 2.183.885.431 t km
     road_gds_ldt_ab.transport_capacity_tkm = road_gds_ldt_ab.mileage * fact(
         "Fact_T_D_lf_gds_LDT_2018"
     )
 
-    # 443.472 MWh
     road_gds_ldt_ab.demand_petrol = (
         road_gds_ldt_ab.mileage
         * fact("Fact_T_S_LDT_frac_petrol_mlg_2018")
@@ -645,7 +553,6 @@ def calc(inputs: Inputs) -> T18:
         * fact("Fact_T_S_LDT_SEC_petrol_ab_2018")
     )
 
-    # 16.610.550 MWh
     road_gds_ldt_ab.demand_diesel = (
         road_gds_ldt_ab.mileage
         * fact("Fact_T_S_LDT_frac_diesel_mlg_2018")
@@ -653,14 +560,12 @@ def calc(inputs: Inputs) -> T18:
         * fact("Fact_T_S_LDT_SEC_diesel_ab_2018")
     )
 
-    # 65.648 MWh
     road_gds_ldt_ab.demand_lpg = (
         road_gds_ldt_ab.mileage
         * fact("Fact_T_S_LDT_frac_lpg_mlg_2018")
         * fact("Fact_T_S_LDT_SEC_petrol_ab_2018")
     )
 
-    # 19.926 MWh
     road_gds_ldt_ab.demand_bioethanol = (
         road_gds_ldt_ab.mileage
         * fact("Fact_T_S_LDT_frac_petrol_mlg_2018")
@@ -668,7 +573,6 @@ def calc(inputs: Inputs) -> T18:
         * fact("Fact_T_S_LDT_SEC_petrol_ab_2018")
     )
 
-    # 966.752 MWh
     road_gds_ldt_ab.demand_biodiesel = (
         road_gds_ldt_ab.mileage
         * fact("Fact_T_S_LDT_frac_diesel_mlg_2018")
@@ -676,14 +580,11 @@ def calc(inputs: Inputs) -> T18:
         * fact("Fact_T_S_LDT_SEC_diesel_ab_2018")
     )
 
-    # 20.475 MWh
     road_gds_ldt_ab.demand_electricity = (
         road_gds_ldt_ab.mileage
         * fact("Fact_T_S_LDT_frac_bev_mlg_2018")
         * fact("Fact_T_S_LDT_SEC_elec_ab_2018")
     )
-
-    # 4.562.536 t/a
 
     road_gds_ldt_ab.CO2e_cb = (
         road_gds_ldt_ab.demand_petrol * fact("Fact_T_S_petrol_EmFa_tank_wheel_2018")
@@ -691,7 +592,6 @@ def calc(inputs: Inputs) -> T18:
         + road_gds_ldt_ab.demand_lpg * fact("Fact_T_S_lpg_EmFa_tank_wheel_2018")
     )
 
-    # 18.126.823 MWh
     road_gds_ldt_ab.energy = (
         road_gds_ldt_ab.demand_petrol
         + road_gds_ldt_ab.demand_diesel
@@ -703,12 +603,10 @@ def calc(inputs: Inputs) -> T18:
 
     # -----------------------
 
-    # 212.745.261.612 t km
     road_gds_mhd_it_ot.transport_capacity_tkm = road_gds_mhd_it_ot.mileage * fact(
         "Fact_T_D_lf_gds_MHD_2018"
     )
 
-    # 75.928.091 MWh
     road_gds_mhd_it_ot.demand_diesel = (
         road_gds_mhd_it_ot.mileage
         * fact("Fact_T_S_MHD_frac_diesel_stock_2018")
@@ -716,7 +614,6 @@ def calc(inputs: Inputs) -> T18:
         * fact("Fact_T_S_MHD_SEC_diesel_it_at_2018")
     )
 
-    # 58.690 MWh
     road_gds_mhd_it_ot.demand_gas = (
         road_gds_mhd_it_ot.mileage
         * fact("Fact_T_S_MHD_frac_cng_lngl_stock_2018")
@@ -724,7 +621,6 @@ def calc(inputs: Inputs) -> T18:
         * fact("Fact_T_S_MHD_SEC_diesel_it_at_2018")
     )
 
-    # 13.767 MWh
     road_gds_mhd_it_ot.demand_biogas = (
         road_gds_mhd_it_ot.mileage
         * fact("Fact_T_S_MHD_frac_cng_lngl_stock_2018")
@@ -732,7 +628,6 @@ def calc(inputs: Inputs) -> T18:
         * fact("Fact_T_S_MHD_SEC_diesel_it_at_2018")
     )
 
-    # 4.419.095 MWh
     road_gds_mhd_it_ot.demand_biodiesel = (
         road_gds_mhd_it_ot.mileage
         * fact("Fact_T_S_MHD_frac_diesel_stock_2018")
@@ -740,20 +635,16 @@ def calc(inputs: Inputs) -> T18:
         * fact("Fact_T_S_MHD_SEC_diesel_it_at_2018")
     )
 
-    # 13.271 MWh
     road_gds_mhd_it_ot.demand_electricity = (
         road_gds_mhd_it_ot.mileage
         * fact("Fact_T_S_MHD_frac_bev_stock_2018")
         * fact("Fact_T_S_MHD_SEC_elec_it_at_2018")
     )
 
-    # 20.246.442 t/a
-
     road_gds_mhd_it_ot.CO2e_cb = road_gds_mhd_it_ot.demand_diesel * fact(
         "Fact_T_S_diesel_EmFa_tank_wheel_2018"
     ) + road_gds_mhd_it_ot.demand_gas * fact("Fact_T_S_cng_EmFa_tank_wheel_2018")
 
-    # 80.432.915 MWh
     road_gds_mhd_it_ot.energy = (
         road_gds_mhd_it_ot.demand_diesel
         + road_gds_mhd_it_ot.demand_gas
@@ -764,12 +655,10 @@ def calc(inputs: Inputs) -> T18:
 
     # --------------
 
-    # 268.922.145.057 t km
     road_gds_mhd_ab.transport_capacity_tkm = road_gds_mhd_ab.mileage * fact(
         "Fact_T_D_lf_gds_MHD_2018"
     )
 
-    # 98.546.344 MWh
     road_gds_mhd_ab.demand_diesel = (
         road_gds_mhd_ab.mileage
         * fact("Fact_T_S_MHD_frac_diesel_stock_2018")
@@ -777,7 +666,6 @@ def calc(inputs: Inputs) -> T18:
         * fact("Fact_T_S_MHD_SEC_diesel_ab_2018")
     )
 
-    # 76.174 MWh
     road_gds_mhd_ab.demand_gas = (
         road_gds_mhd_ab.mileage
         * fact("Fact_T_S_MHD_frac_cng_lngl_stock_2018")
@@ -785,7 +673,6 @@ def calc(inputs: Inputs) -> T18:
         * fact("Fact_T_S_MHD_SEC_diesel_ab_2018")
     )
 
-    # 17.868 MWh
     road_gds_mhd_ab.demand_biogas = (
         road_gds_mhd_ab.mileage
         * fact("Fact_T_S_MHD_frac_cng_lngl_stock_2018")
@@ -793,7 +680,6 @@ def calc(inputs: Inputs) -> T18:
         * fact("Fact_T_S_MHD_SEC_diesel_ab_2018")
     )
 
-    # 5.735.502 MWh
     road_gds_mhd_ab.demand_biodiesel = (
         road_gds_mhd_ab.mileage
         * fact("Fact_T_S_MHD_frac_diesel_stock_2018")
@@ -801,19 +687,16 @@ def calc(inputs: Inputs) -> T18:
         * fact("Fact_T_S_MHD_SEC_diesel_ab_2018")
     )
 
-    # 23.251 MWh
     road_gds_mhd_ab.demand_electricity = (
         road_gds_mhd_ab.mileage
         * fact("Fact_T_S_MHD_frac_bev_stock_2018")
         * fact("Fact_T_S_MHD_SEC_elec_ab_2018")
     )
 
-    # 26.277.664 t/a
     road_gds_mhd_ab.CO2e_cb = road_gds_mhd_ab.demand_diesel * fact(
         "Fact_T_S_diesel_EmFa_tank_wheel_2018"
     ) + road_gds_mhd_ab.demand_gas * fact("Fact_T_S_cng_EmFa_tank_wheel_2018")
 
-    # 104.399.138 MWh
     road_gds_mhd_ab.energy = (
         road_gds_mhd_ab.demand_diesel
         + road_gds_mhd_ab.demand_gas
@@ -824,58 +707,6 @@ def calc(inputs: Inputs) -> T18:
 
     # -----------------
 
-    # rail_ppl_.demand_diesel = entries.t_ec_rail_ppl_diesel * (
-    #    1 - fact("Fact_T_S_Rl_Rd_diesel_bio_frac_2018")
-    # )
-    # rail_ppl_.demand_biodiesel = entries.t_ec_rail_ppl_diesel * fact(
-    #    "Fact_T_S_Rl_Rd_diesel_bio_frac_2018"
-    # )
-    # rail_ppl_.demand_electricity = entries.t_ec_rail_ppl_elec
-    # rail_ppl_.demand_petrol = 0
-    # rail_ppl_.demand_jetfuel = 0
-    # rail_ppl_.demand_lpg = 0
-    # rail_ppl_.demand_gas = 0
-    # rail_ppl_.demand_biogas = 0
-    # rail_ppl_.demand_bioethanol = 0
-    # rail_ppl_.CO2e_cb = (
-    #    rail_ppl_.demand_petrol * fact("Fact_T_S_petrol_EmFa_tank_wheel_2018")
-    #    + rail_ppl_.demand_jetfuel * fact("Fact_T_S_jetfuel_EmFa_tank_wheel_2018")
-    #    + rail_ppl_.demand_diesel * fact("Fact_T_S_diesel_EmFa_tank_wheel_2018")
-    #    + rail_ppl_.demand_lpg * fact("Fact_T_S_lpg_EmFa_tank_wheel_2018")
-    #    + rail_ppl_.demand_gas * fact("Fact_T_S_cng_EmFa_tank_wheel_2018")
-    #    + rail_ppl_.demand_biogas * ass("Ass_T_S_biogas_EmFa_tank_wheel")
-    #    + rail_ppl_.demand_bioethanol * ass("Ass_T_S_bioethanol_EmFa_tank_wheel")
-    #    + rail_ppl_.demand_biodiesel * ass("Ass_T_S_biodiesel_EmFa_tank_wheel")
-    #    + rail_ppl_.demand_electricity
-    #    * fact("Fact_T_S_electricity_EmFa_tank_wheel_2018")
-    # )
-    # rail_ppl_.CO2e_total = rail_ppl_.CO2e_cb
-    #
-    # rail_ppl_.energy = (
-    #    rail_ppl_.demand_diesel
-    #    + rail_ppl_.demand_biodiesel
-    #    + rail_ppl_.demand_electricity
-    # )
-    #
-    # rail_ppl_.transport_capacity_pkm = (
-    #    rail_ppl_.demand_diesel + rail_ppl_.demand_biodiesel
-    # ) / fact(
-    #    "Fact_T_S_Rl_Train_ppl_long_diesel_SEC_2018"
-    # ) + rail_ppl_.demand_electricity / fact(
-    #    "Fact_T_S_Rl_Train_ppl_long_elec_SEC_2018"
-    # )
-    #
-    # rail_ppl_.mileage = rail_ppl_.transport_capacity_pkm / fact(
-    #    "Fact_T_D_rail_ppl_ratio_pkm_to_fzkm_2018"
-    # )
-    # rail_ppl_.transport_capacity_pkm = (
-    #    rail_ppl_.demand_diesel + rail_ppl_.demand_biodiesel
-    # ) / fact(
-    #    "Fact_T_S_Rl_Train_ppl_long_diesel_SEC_2018"
-    # ) + rail_ppl_.demand_electricity / fact(
-    #    "Fact_T_S_Rl_Train_ppl_long_elec_SEC_2018"
-    # )
-    #
     rail_ppl_metro.demand_electricity = rail_ppl_metro.mileage * fact(
         "Fact_T_S_Rl_Metro_SEC_fzkm_2018"
     )
@@ -885,12 +716,10 @@ def calc(inputs: Inputs) -> T18:
         rail_ppl_distance.demand_electricity + rail_ppl_metro.demand_electricity
     )
 
-    # 3.164.605 MWh
     rail_ppl.demand_diesel = entries.t_ec_rail_ppl_diesel * (
         1 - fact("Fact_T_S_Rl_Rd_diesel_bio_frac_2018")
     )
 
-    # 184.183 MWh
     rail_ppl.demand_biodiesel = entries.t_ec_rail_ppl_diesel * fact(
         "Fact_T_S_Rl_Rd_diesel_bio_frac_2018"
     )
@@ -908,22 +737,18 @@ def calc(inputs: Inputs) -> T18:
     ) + rail_ppl_distance.demand_electricity / fact(
         "Fact_T_S_Rl_Train_ppl_long_elec_SEC_2018"
     )
-    # 17.700.000.000 Pers km
     rail_ppl_metro.transport_capacity_pkm = rail_ppl_metro.mileage * fact(
         "Fact_T_D_lf_Rl_Metro_2018"
     )
     rail_ppl.transport_capacity_pkm = (
         rail_ppl_distance.transport_capacity_pkm + rail_ppl_metro.transport_capacity_pkm
     )
-    # 97.700.000.000 Pers km
     rail.transport_capacity_pkm = rail_ppl.transport_capacity_pkm
 
-    # 843.358 t/a
     rail_ppl.CO2e_cb = rail_ppl.demand_diesel * fact(
         "Fact_T_S_diesel_EmFa_tank_wheel_2018"
     )
 
-    # 9.646.598 MWh
     rail_ppl.energy = (
         +rail_ppl.demand_diesel
         + rail_ppl.demand_biodiesel
@@ -932,29 +757,23 @@ def calc(inputs: Inputs) -> T18:
 
     # --------------
 
-    #  1.235.600 MWh
     rail_ppl_metro.demand_electricity = rail_ppl_metro.mileage * fact(
         "Fact_T_S_Rl_Metro_SEC_fzkm_2018"
     )
 
-    # 1.235.600 MWh
     rail_ppl_metro.energy = rail_ppl_metro.demand_electricity
     # --------------
 
-    # 4.015.518 MWh
     rail_gds.demand_electricity = entries.t_ec_rail_gds_elec
 
-    # 995.430 MWh
     rail_gds.demand_diesel = entries.t_ec_rail_gds_diesel * (
         1 - fact("Fact_T_S_Rl_Rd_diesel_bio_frac_2018")
     )
 
-    # 57.935 MWh
     rail_gds.demand_biodiesel = entries.t_ec_rail_gds_diesel * fact(
         "Fact_T_S_Rl_Rd_diesel_bio_frac_2018"
     )
 
-    # 133.700.000.000 t km
     rail_gds.transport_capacity_tkm = (
         rail_gds.demand_diesel + rail_gds.demand_biodiesel
     ) / fact(
@@ -963,12 +782,10 @@ def calc(inputs: Inputs) -> T18:
         "Fact_T_S_Rl_Train_gds_elec_SEC_2018"
     )
 
-    # 265.279 t/a
     rail_gds.CO2e_cb = rail_gds.demand_diesel * fact(
         "Fact_T_S_diesel_EmFa_tank_wheel_2018"
     )
 
-    # 5.068.883 MWh
     rail_gds.energy = (
         +rail_gds.demand_diesel
         + rail_gds.demand_biodiesel
@@ -977,28 +794,21 @@ def calc(inputs: Inputs) -> T18:
 
     # -------------
 
-    # res 2.949.722 MWh
-
     ship_dmstc.transport_capacity_tkm = (
         fact("Fact_T_D_Shp_dmstc_trnsprt_gds_2018")
         * entries.m_population_com_2018
         / entries.m_population_nat
     )
-    # res: 46.900.000.000 t km
-
     ship_dmstc.demand_diesel = (
         entries.m_population_com_2018
         / entries.m_population_nat
         * fact("Fact_T_S_Shp_diesel_fec_2018")
     )
-    # res: 2.949.722 MWh
     ship_dmstc.energy = ship_dmstc.demand_diesel
 
     ship_dmstc.CO2e_cb = ship_dmstc.demand_diesel * fact(
         "Fact_T_S_diesel_EmFa_tank_wheel_2018"
     )
-    # res: 786.093  t/a
-
     # ---------------------
 
     ship_inter.transport_capacity_tkm = (
@@ -1006,20 +816,14 @@ def calc(inputs: Inputs) -> T18:
         * entries.m_population_com_2018
         / entries.m_population_nat
     )
-    # res: 1.982.900.000.000 t km
-
     ship_inter.demand_fueloil = (
         entries.m_population_com_2018 / entries.m_population_nat
     ) * fact("Fact_T_D_Shp_sea_nat_EC_2018")
 
     ship_inter.energy = ship_inter.demand_fueloil
-    # res: 19.722.222 MWh
-
     ship_inter.CO2e_cb = ship_inter.demand_fueloil * fact(
         "Fact_T_S_fueloil_EmFa_tank_wheel_2018"
     )
-    # res: 5.396.000  t/a
-
     # ------------------------
 
     if entries.t_rt7 in ["71", "72", "73", "74", "75", "76", "77"]:

@@ -51,6 +51,38 @@ def test_proprietary_datadir_is_clean(datadir_status):
     ), "There seem to be uncommitted / untracked files in the proprietary data repository"
 
 
+def test_all_used_variables_are_populated():
+    """This tests that the variables that are actually used by knud haven't changed.
+    In principle this test is of course redundant, given the end to end tests. But
+    As long as we are cleaning up the Result type, it is good to have an explicit
+    reminder when we change that something that will need KNUD to be adjusted.
+    """
+    root = refdatatools.root_of_this_repo()
+    g = calculate_with_default_inputs(ags="03159016", year=2035)
+    result = g.result_dict()
+    with open(os.path.join(root, "tests", "usage.json")) as fp:
+        usage = json.load(fp)
+    missing = set()
+    populated_with_none = set()
+    for path in usage["generator"]:
+        next = result
+        for element in path.split("."):
+            if element in next:
+                next = next[element]
+                if next is None:
+                    populated_with_none.add(path)
+                    break
+            else:
+                missing.add(path)
+                break
+    assert (
+        len(missing) == 0
+    ), f"The following variables are used by KNUD but not populated: {missing}"
+    assert (
+        len(populated_with_none) == 0
+    ), f"The following variables are used by KNUD but populated with None: {populated_with_none}"
+
+
 def end_to_end(datadir_status: refdatatools.DataDirStatus, ags, year=2035):
     """This runs an end to end test. No entries are overriden, only AGS"""
     root = refdatatools.root_of_this_repo()
