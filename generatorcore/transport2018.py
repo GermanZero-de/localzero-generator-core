@@ -868,7 +868,6 @@ def calc(inputs: Inputs) -> T18:
             return x
 
     air.energy = air_inter.energy + air_dmstc.energy
-    air.mileage = or_zero(air_inter.mileage) + or_zero(air_dmstc.mileage)
     air.transport_capacity_pkm = (
         air_inter.transport_capacity_pkm + air_dmstc.transport_capacity_pkm
     )
@@ -877,58 +876,14 @@ def calc(inputs: Inputs) -> T18:
     )
     air.demand_petrol = or_zero(air_inter.demand_petrol) + air_dmstc.demand_petrol
     air.demand_jetfuel = air_inter.demand_jetfuel + air_dmstc.demand_jetfuel
-    air.demand_diesel = or_zero(air_inter.demand_diesel) + or_zero(
-        air_dmstc.demand_diesel
-    )
-    air.demand_fueloil = or_zero(air_inter.demand_fueloil) + or_zero(
-        air_dmstc.demand_fueloil
-    )
-    air.demand_lpg = or_zero(air_inter.demand_lpg) + or_zero(air_dmstc.demand_lpg)
-    air.demand_gas = or_zero(air_inter.demand_gas) + or_zero(air_dmstc.demand_gas)
-    air.demand_biogas = or_zero(air_inter.demand_biogas) + or_zero(
-        air_dmstc.demand_biogas
-    )
-    air.demand_bioethanol = or_zero(air_inter.demand_bioethanol) + or_zero(
-        air_dmstc.demand_bioethanol
-    )
-    air.demand_biodiesel = or_zero(air_inter.demand_biodiesel) + or_zero(
-        air_dmstc.demand_biodiesel
-    )
-    air.demand_electricity = or_zero(air_inter.demand_electricity) + or_zero(
-        air_dmstc.demand_electricity
-    )
     air.CO2e_cb = air_inter.CO2e_cb + air_dmstc.CO2e_cb
 
     ship.energy = ship_inter.energy + ship_dmstc.energy
-    ship.mileage = or_zero(ship_inter.mileage) + or_zero(ship_dmstc.mileage)
-    ship.transport_capacity_pkm = or_zero(ship_inter.transport_capacity_pkm) + or_zero(
-        ship_dmstc.transport_capacity_pkm
-    )
     ship.transport_capacity_tkm = or_zero(ship_inter.transport_capacity_tkm) + or_zero(
         ship_dmstc.transport_capacity_tkm
     )
-    ship.demand_petrol = or_zero(ship_inter.demand_petrol) + or_zero(
-        ship_dmstc.demand_petrol
-    )
-    ship.demand_jetfuel = or_zero(ship_inter.demand_jetfuel) + or_zero(
-        ship_dmstc.demand_jetfuel
-    )
     ship.demand_diesel = or_zero(ship_inter.demand_diesel) + ship_dmstc.demand_diesel
     ship.demand_fueloil = ship_inter.demand_fueloil + or_zero(ship_dmstc.demand_fueloil)
-    ship.demand_lpg = or_zero(ship_inter.demand_lpg) + or_zero(ship_dmstc.demand_lpg)
-    ship.demand_gas = or_zero(ship_inter.demand_gas) + or_zero(ship_dmstc.demand_gas)
-    ship.demand_biogas = or_zero(ship_inter.demand_biogas) + or_zero(
-        ship_dmstc.demand_biogas
-    )
-    ship.demand_bioethanol = or_zero(ship_inter.demand_bioethanol) + or_zero(
-        ship_dmstc.demand_bioethanol
-    )
-    ship.demand_biodiesel = or_zero(ship_inter.demand_biodiesel) + or_zero(
-        ship_dmstc.demand_biodiesel
-    )
-    ship.demand_electricity = or_zero(ship_inter.demand_electricity) + or_zero(
-        ship_dmstc.demand_electricity
-    )
     ship.CO2e_cb = ship_inter.CO2e_cb + ship_dmstc.CO2e_cb
 
     # ----------------------------------------------------
