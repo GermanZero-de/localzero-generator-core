@@ -5,83 +5,322 @@ from .inputs import Inputs
 
 
 @dataclass
-class TColVars:
-
+class Vars0:
+    # Used by t
+    CO2e_cb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    demand_biodiesel: float = None  # type: ignore
+    demand_bioethanol: float = None  # type: ignore
+    demand_biogas: float = None  # type: ignore
+    demand_diesel: float = None  # type: ignore
+    demand_electricity: float = None  # type: ignore
+    demand_fueloil: float = None  # type: ignore
+    demand_gas: float = None  # type: ignore
+    demand_jetfuel: float = None  # type: ignore
+    demand_lpg: float = None  # type: ignore
+    demand_petrol: float = None  # type: ignore
     energy: float = None  # type: ignore
     mileage: float = None  # type: ignore
     transport_capacity_pkm: float = None  # type: ignore
     transport_capacity_tkm: float = None  # type: ignore
-    demand_petrol: float = None  # type: ignore
-    demand_jetfuel: float = None  # type: ignore
-    demand_diesel: float = None  # type: ignore
-    demand_fueloil: float = None  # type: ignore
-    demand_lpg: float = None  # type: ignore
-    demand_gas: float = None  # type: ignore
-    demand_biogas: float = None  # type: ignore
-    demand_bioethanol: float = None  # type: ignore
-    demand_biodiesel: float = None  # type: ignore
-    demand_electricity: float = None  # type: ignore
-    CO2e_cb: float = None  # type: ignore
+
+
+@dataclass
+class Vars1:
+    # Used by g, g_planning, road_action_charger, road_bus_action_infra, rail_ppl_metro_action_infra, rail_action_invest_infra, rail_action_invest_station
     CO2e_total: float = None  # type: ignore
 
 
 @dataclass
+class Vars2:
+    # Used by air_inter
+    CO2e_cb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    demand_jetfuel: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    transport_capacity_pkm: float = None  # type: ignore
+    transport_capacity_tkm: float = None  # type: ignore
+
+
+@dataclass
+class Vars3:
+    # Used by air_dmstc, air
+    CO2e_cb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    demand_jetfuel: float = None  # type: ignore
+    demand_petrol: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    transport_capacity_pkm: float = None  # type: ignore
+    transport_capacity_tkm: float = None  # type: ignore
+
+
+@dataclass
+class Vars4:
+    # Used by road
+    CO2e_cb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    demand_biodiesel: float = None  # type: ignore
+    demand_bioethanol: float = None  # type: ignore
+    demand_biogas: float = None  # type: ignore
+    demand_diesel: float = None  # type: ignore
+    demand_electricity: float = None  # type: ignore
+    demand_gas: float = None  # type: ignore
+    demand_lpg: float = None  # type: ignore
+    demand_petrol: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    mileage: float = None  # type: ignore
+    transport_capacity_pkm: float = None  # type: ignore
+    transport_capacity_tkm: float = None  # type: ignore
+
+
+@dataclass
+class Vars5:
+    # Used by road_car, road_car_it_ot, road_car_ab, road_ppl
+    CO2e_cb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    demand_biodiesel: float = None  # type: ignore
+    demand_bioethanol: float = None  # type: ignore
+    demand_biogas: float = None  # type: ignore
+    demand_diesel: float = None  # type: ignore
+    demand_electricity: float = None  # type: ignore
+    demand_gas: float = None  # type: ignore
+    demand_lpg: float = None  # type: ignore
+    demand_petrol: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    mileage: float = None  # type: ignore
+    transport_capacity_pkm: float = None  # type: ignore
+
+
+@dataclass
+class Vars6:
+    # Used by road_bus
+    CO2e_cb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    demand_biodiesel: float = None  # type: ignore
+    demand_biogas: float = None  # type: ignore
+    demand_diesel: float = None  # type: ignore
+    demand_electricity: float = None  # type: ignore
+    demand_gas: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    mileage: float = None  # type: ignore
+    transport_capacity_pkm: float = None  # type: ignore
+
+
+@dataclass
+class Vars7:
+    # Used by road_gds
+    CO2e_cb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    demand_biodiesel: float = None  # type: ignore
+    demand_bioethanol: float = None  # type: ignore
+    demand_biogas: float = None  # type: ignore
+    demand_diesel: float = None  # type: ignore
+    demand_electricity: float = None  # type: ignore
+    demand_gas: float = None  # type: ignore
+    demand_lpg: float = None  # type: ignore
+    demand_petrol: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    mileage: float = None  # type: ignore
+    transport_capacity_tkm: float = None  # type: ignore
+
+
+@dataclass
+class Vars8:
+    # Used by road_gds_ldt, road_gds_ldt_it_ot, road_gds_ldt_ab
+    CO2e_cb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    demand_biodiesel: float = None  # type: ignore
+    demand_bioethanol: float = None  # type: ignore
+    demand_diesel: float = None  # type: ignore
+    demand_electricity: float = None  # type: ignore
+    demand_lpg: float = None  # type: ignore
+    demand_petrol: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    mileage: float = None  # type: ignore
+    transport_capacity_tkm: float = None  # type: ignore
+
+
+@dataclass
+class Vars9:
+    # Used by road_gds_mhd, road_gds_mhd_it_ot, road_gds_mhd_ab
+    CO2e_cb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    demand_biodiesel: float = None  # type: ignore
+    demand_biogas: float = None  # type: ignore
+    demand_diesel: float = None  # type: ignore
+    demand_electricity: float = None  # type: ignore
+    demand_gas: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    mileage: float = None  # type: ignore
+    transport_capacity_tkm: float = None  # type: ignore
+
+
+@dataclass
+class Vars10:
+    # Used by rail_ppl, rail_ppl_distance
+    CO2e_cb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    demand_biodiesel: float = None  # type: ignore
+    demand_diesel: float = None  # type: ignore
+    demand_electricity: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    mileage: float = None  # type: ignore
+    transport_capacity_pkm: float = None  # type: ignore
+
+
+@dataclass
+class Vars11:
+    # Used by rail_ppl_metro
+    CO2e_cb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    demand_electricity: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    mileage: float = None  # type: ignore
+    transport_capacity_pkm: float = None  # type: ignore
+
+
+@dataclass
+class Vars12:
+    # Used by rail_gds
+    CO2e_cb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    demand_biodiesel: float = None  # type: ignore
+    demand_diesel: float = None  # type: ignore
+    demand_electricity: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    mileage: float = None  # type: ignore
+    transport_capacity_tkm: float = None  # type: ignore
+
+
+@dataclass
+class Vars13:
+    # Used by ship_dmstc
+    CO2e_cb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    demand_diesel: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    transport_capacity_tkm: float = None  # type: ignore
+
+
+@dataclass
+class Vars14:
+    # Used by ship_inter
+    CO2e_cb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    demand_fueloil: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    transport_capacity_tkm: float = None  # type: ignore
+
+
+@dataclass
+class Vars15:
+    # Used by other_foot, other_cycl
+    CO2e_cb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    transport_capacity_pkm: float = None  # type: ignore
+
+
+@dataclass
+class Vars16:
+    # Used by road_gds_mhd_action_wire, ship_dmstc_action_infra, other_foot_action_infra, other_cycl_action_infra, s_hydrogen, s_emethan
+    pass
+
+
+@dataclass
+class Vars17:
+    # Used by rail
+    CO2e_cb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    demand_biodiesel: float = None  # type: ignore
+    demand_diesel: float = None  # type: ignore
+    demand_electricity: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    mileage: float = None  # type: ignore
+    transport_capacity_pkm: float = None  # type: ignore
+    transport_capacity_tkm: float = None  # type: ignore
+
+
+@dataclass
+class Vars18:
+    # Used by ship
+    CO2e_cb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    demand_diesel: float = None  # type: ignore
+    demand_fueloil: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    transport_capacity_tkm: float = None  # type: ignore
+
+
+@dataclass
+class Vars19:
+    # Used by other
+    CO2e_cb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    mileage: float = None  # type: ignore
+    transport_capacity_pkm: float = None  # type: ignore
+    transport_capacity_tkm: float = None  # type: ignore
+
+
+@dataclass
+class Vars20:
+    # Used by s, s_petrol, s_jetfuel, s_diesel, s_fueloil, s_lpg, s_gas, s_biogas, s_bioethanol, s_biodiesel, s_elec
+    energy: float = None  # type: ignore
+
+
+@dataclass
 class T18:
-    t: TColVars = field(default_factory=TColVars)
-    g: TColVars = field(default_factory=TColVars)
-    g_planning: TColVars = field(default_factory=TColVars)
-    air_inter: TColVars = field(default_factory=TColVars)
-    air_dmstc: TColVars = field(default_factory=TColVars)
-    road: TColVars = field(default_factory=TColVars)
-    road_action_charger: TColVars = field(default_factory=TColVars)
-    road_car: TColVars = field(default_factory=TColVars)
-    road_car_it_ot: TColVars = field(default_factory=TColVars)
-    road_car_ab: TColVars = field(default_factory=TColVars)
-    road_bus: TColVars = field(default_factory=TColVars)
-    road_bus_action_infra: TColVars = field(default_factory=TColVars)
-    road_gds: TColVars = field(default_factory=TColVars)
-    road_gds_ldt: TColVars = field(default_factory=TColVars)
-    road_gds_ldt_it_ot: TColVars = field(default_factory=TColVars)
-    road_gds_ldt_ab: TColVars = field(default_factory=TColVars)
-    road_gds_mhd: TColVars = field(default_factory=TColVars)
-    road_ppl: TColVars = field(default_factory=TColVars)
-    road_gds_mhd_it_ot: TColVars = field(default_factory=TColVars)
-    road_gds_mhd_ab: TColVars = field(default_factory=TColVars)
-    rail_ppl: TColVars = field(default_factory=TColVars)
-    rail_ppl_metro: TColVars = field(default_factory=TColVars)
-    rail_ppl_metro_action_infra: TColVars = field(default_factory=TColVars)
-    rail_ppl_distance: TColVars = field(default_factory=TColVars)
-    rail_gds: TColVars = field(default_factory=TColVars)
-    rail_action_invest_infra: TColVars = field(default_factory=TColVars)
-    rail_action_invest_station: TColVars = field(default_factory=TColVars)
-    ship_dmstc: TColVars = field(default_factory=TColVars)
-    ship_inter: TColVars = field(default_factory=TColVars)
-    other_foot: TColVars = field(default_factory=TColVars)
-    other_cycl: TColVars = field(default_factory=TColVars)
-
-    road_gds_mhd_action_wire: TColVars = field(default_factory=TColVars)
-    ship_dmstc_action_infra: TColVars = field(default_factory=TColVars)
-    other_foot_action_infra: TColVars = field(default_factory=TColVars)
-    other_cycl_action_infra: TColVars = field(default_factory=TColVars)
-
-    air: TColVars = field(default_factory=TColVars)
-    rail: TColVars = field(default_factory=TColVars)
-    ship: TColVars = field(default_factory=TColVars)
-    other: TColVars = field(default_factory=TColVars)
-
-    s: TColVars = field(default_factory=TColVars)
-    s_petrol: TColVars = field(default_factory=TColVars)
-    s_jetfuel: TColVars = field(default_factory=TColVars)
-    s_diesel: TColVars = field(default_factory=TColVars)
-    s_fueloil: TColVars = field(default_factory=TColVars)
-    s_lpg: TColVars = field(default_factory=TColVars)
-    s_gas: TColVars = field(default_factory=TColVars)
-    s_biogas: TColVars = field(default_factory=TColVars)
-    s_bioethanol: TColVars = field(default_factory=TColVars)
-    s_biodiesel: TColVars = field(default_factory=TColVars)
-    s_elec: TColVars = field(default_factory=TColVars)
-    s_hydrogen: TColVars = field(default_factory=TColVars)
-    s_emethan: TColVars = field(default_factory=TColVars)
+    t: Vars0 = field(default_factory=Vars0)
+    g: Vars1 = field(default_factory=Vars1)
+    g_planning: Vars1 = field(default_factory=Vars1)
+    air_inter: Vars2 = field(default_factory=Vars2)
+    air_dmstc: Vars3 = field(default_factory=Vars3)
+    road: Vars4 = field(default_factory=Vars4)
+    road_action_charger: Vars1 = field(default_factory=Vars1)
+    road_car: Vars5 = field(default_factory=Vars5)
+    road_car_it_ot: Vars5 = field(default_factory=Vars5)
+    road_car_ab: Vars5 = field(default_factory=Vars5)
+    road_bus: Vars6 = field(default_factory=Vars6)
+    road_bus_action_infra: Vars1 = field(default_factory=Vars1)
+    road_gds: Vars7 = field(default_factory=Vars7)
+    road_gds_ldt: Vars8 = field(default_factory=Vars8)
+    road_gds_ldt_it_ot: Vars8 = field(default_factory=Vars8)
+    road_gds_ldt_ab: Vars8 = field(default_factory=Vars8)
+    road_gds_mhd: Vars9 = field(default_factory=Vars9)
+    road_ppl: Vars5 = field(default_factory=Vars5)
+    road_gds_mhd_it_ot: Vars9 = field(default_factory=Vars9)
+    road_gds_mhd_ab: Vars9 = field(default_factory=Vars9)
+    rail_ppl: Vars10 = field(default_factory=Vars10)
+    rail_ppl_metro: Vars11 = field(default_factory=Vars11)
+    rail_ppl_metro_action_infra: Vars1 = field(default_factory=Vars1)
+    rail_ppl_distance: Vars10 = field(default_factory=Vars10)
+    rail_gds: Vars12 = field(default_factory=Vars12)
+    rail_action_invest_infra: Vars1 = field(default_factory=Vars1)
+    rail_action_invest_station: Vars1 = field(default_factory=Vars1)
+    ship_dmstc: Vars13 = field(default_factory=Vars13)
+    ship_inter: Vars14 = field(default_factory=Vars14)
+    other_foot: Vars15 = field(default_factory=Vars15)
+    other_cycl: Vars15 = field(default_factory=Vars15)
+    road_gds_mhd_action_wire: Vars16 = field(default_factory=Vars16)
+    ship_dmstc_action_infra: Vars16 = field(default_factory=Vars16)
+    other_foot_action_infra: Vars16 = field(default_factory=Vars16)
+    other_cycl_action_infra: Vars16 = field(default_factory=Vars16)
+    air: Vars3 = field(default_factory=Vars3)
+    rail: Vars17 = field(default_factory=Vars17)
+    ship: Vars18 = field(default_factory=Vars18)
+    other: Vars19 = field(default_factory=Vars19)
+    s: Vars20 = field(default_factory=Vars20)
+    s_petrol: Vars20 = field(default_factory=Vars20)
+    s_jetfuel: Vars20 = field(default_factory=Vars20)
+    s_diesel: Vars20 = field(default_factory=Vars20)
+    s_fueloil: Vars20 = field(default_factory=Vars20)
+    s_lpg: Vars20 = field(default_factory=Vars20)
+    s_gas: Vars20 = field(default_factory=Vars20)
+    s_biogas: Vars20 = field(default_factory=Vars20)
+    s_bioethanol: Vars20 = field(default_factory=Vars20)
+    s_biodiesel: Vars20 = field(default_factory=Vars20)
+    s_elec: Vars20 = field(default_factory=Vars20)
+    s_hydrogen: Vars16 = field(default_factory=Vars16)
+    s_emethan: Vars16 = field(default_factory=Vars16)
 
     def dict(self):
         return asdict(self)
@@ -951,19 +1190,6 @@ def calc(inputs: Inputs) -> T18:
 
     # TODO: Throw a more suffisticated error message if we ?
 
-    # Todo: Adding or_zero was the minimal patch required to unroll
-    # the calculations below (previously the test for none was encoded
-    # in a rather hard to read loop). But this of course just higlights
-    # that we have a bunch of calculations that we know we do not do
-    # and that are just statically None (and therefore 0).  And maybe
-    # we should lift that setting to 0 earlier in the code.
-    # That is explicitely write air_dmstc.mileage = 0 # 0 because ...add rationale here...
-    def or_zero(x: float | None) -> float:
-        if x is None:
-            return 0.0
-        else:
-            return x
-
     air.energy = air_inter.energy + air_dmstc.energy
     air.transport_capacity_pkm = (
         air_inter.transport_capacity_pkm + air_dmstc.transport_capacity_pkm
@@ -971,16 +1197,18 @@ def calc(inputs: Inputs) -> T18:
     air.transport_capacity_tkm = (
         air_inter.transport_capacity_tkm + air_dmstc.transport_capacity_tkm
     )
-    air.demand_petrol = or_zero(air_inter.demand_petrol) + air_dmstc.demand_petrol
+    # International air travel does not use petrol but jetfuel
+    air.demand_petrol = air_dmstc.demand_petrol
     air.demand_jetfuel = air_inter.demand_jetfuel + air_dmstc.demand_jetfuel
     air.CO2e_cb = air_inter.CO2e_cb + air_dmstc.CO2e_cb
 
     ship.energy = ship_inter.energy + ship_dmstc.energy
-    ship.transport_capacity_tkm = or_zero(ship_inter.transport_capacity_tkm) + or_zero(
-        ship_dmstc.transport_capacity_tkm
+    ship.transport_capacity_tkm = (
+        ship_inter.transport_capacity_tkm + ship_dmstc.transport_capacity_tkm
     )
-    ship.demand_diesel = or_zero(ship_inter.demand_diesel) + ship_dmstc.demand_diesel
-    ship.demand_fueloil = ship_inter.demand_fueloil + or_zero(ship_dmstc.demand_fueloil)
+    # TODO: Rationales
+    ship.demand_diesel = ship_dmstc.demand_diesel
+    ship.demand_fueloil = ship_inter.demand_fueloil
     ship.CO2e_cb = ship_inter.CO2e_cb + ship_dmstc.CO2e_cb
 
     # ----------------------------------------------------
