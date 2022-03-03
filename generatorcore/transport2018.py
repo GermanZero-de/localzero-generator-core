@@ -168,73 +168,18 @@ class RoadGoodsLightWeight:
             return inputs.fact(n)
 
         mileage = getattr(inputs.entries, "t_mil_ldt_" + section) * MILLION
-
-        demand_electricity = (
-            mileage
-            * fact("Fact_T_S_LDT_frac_bev_mlg_2018")
-            * fact(f"Fact_T_S_LDT_SEC_elec_{section}_2018")
-        )
-
         transport_capacity_tkm = mileage * fact("Fact_T_D_lf_gds_LDT_2018")
 
-        demand_petrol = (
-            mileage
-            * fact("Fact_T_S_LDT_frac_petrol_mlg_2018")
-            * (1 - fact("Fact_T_S_Rl_Rd_benzin_bio_frac_2018"))
-            * fact(f"Fact_T_S_LDT_SEC_petrol_{section}_2018")
-        )
-
-        demand_diesel = (
-            mileage
-            * fact("Fact_T_S_LDT_frac_diesel_mlg_2018")
-            * (1 - fact("Fact_T_S_Rl_Rd_diesel_bio_frac_2018"))
-            * fact(f"Fact_T_S_LDT_SEC_diesel_{section}_2018")
-        )
-
-        demand_lpg = (
-            mileage
-            * fact("Fact_T_S_LDT_frac_lpg_mlg_2018")
-            * fact(f"Fact_T_S_LDT_SEC_petrol_{section}_2018")
-        )
-
-        demand_bioethanol = (
-            mileage
-            * fact("Fact_T_S_LDT_frac_petrol_mlg_2018")
-            * fact("Fact_T_S_Rl_Rd_benzin_bio_frac_2018")
-            * fact(f"Fact_T_S_LDT_SEC_petrol_{section}_2018")
-        )
-
         demand_biodiesel = (
             mileage
             * fact("Fact_T_S_LDT_frac_diesel_mlg_2018")
             * fact("Fact_T_S_Rl_Rd_diesel_bio_frac_2018")
             * fact(f"Fact_T_S_LDT_SEC_diesel_{section}_2018")
         )
-
-        demand_electricity = (
-            mileage
-            * fact("Fact_T_S_LDT_frac_bev_mlg_2018")
-            * fact(f"Fact_T_S_LDT_SEC_elec_{section}_2018")
-        )
-
-        CO2e_cb = (
-            demand_petrol * fact("Fact_T_S_petrol_EmFa_tank_wheel_2018")
-            + demand_diesel * fact("Fact_T_S_diesel_EmFa_tank_wheel_2018")
-            + demand_lpg * fact("Fact_T_S_lpg_EmFa_tank_wheel_2018")
-        )
-
-        energy = (
-            demand_petrol
-            + demand_diesel
-            + demand_lpg
-            + demand_bioethanol
-            + demand_biodiesel
-            + demand_electricity
-        )
-        demand_petrol = (
+        demand_bioethanol = (
             mileage
             * fact("Fact_T_S_LDT_frac_petrol_mlg_2018")
-            * (1 - fact("Fact_T_S_Rl_Rd_benzin_bio_frac_2018"))
+            * fact("Fact_T_S_Rl_Rd_benzin_bio_frac_2018")
             * fact(f"Fact_T_S_LDT_SEC_petrol_{section}_2018")
         )
         demand_diesel = (
@@ -243,27 +188,21 @@ class RoadGoodsLightWeight:
             * (1 - fact("Fact_T_S_Rl_Rd_diesel_bio_frac_2018"))
             * fact(f"Fact_T_S_LDT_SEC_diesel_{section}_2018")
         )
+        demand_electricity = (
+            mileage
+            * fact("Fact_T_S_LDT_frac_bev_mlg_2018")
+            * fact(f"Fact_T_S_LDT_SEC_elec_{section}_2018")
+        )
         demand_lpg = (
             mileage
             * fact("Fact_T_S_LDT_frac_lpg_mlg_2018")
             * fact(f"Fact_T_S_LDT_SEC_petrol_{section}_2018")
         )
-        demand_bioethanol = (
+        demand_petrol = (
             mileage
             * fact("Fact_T_S_LDT_frac_petrol_mlg_2018")
-            * fact("Fact_T_S_Rl_Rd_benzin_bio_frac_2018")
+            * (1 - fact("Fact_T_S_Rl_Rd_benzin_bio_frac_2018"))
             * fact(f"Fact_T_S_LDT_SEC_petrol_{section}_2018")
-        )
-        demand_biodiesel = (
-            mileage
-            * fact("Fact_T_S_LDT_frac_diesel_mlg_2018")
-            * fact("Fact_T_S_Rl_Rd_diesel_bio_frac_2018")
-            * fact(f"Fact_T_S_LDT_SEC_diesel_{section}_2018")
-        )
-        demand_electricity = (
-            mileage
-            * fact("Fact_T_S_LDT_frac_bev_mlg_2018")
-            * fact(f"Fact_T_S_LDT_SEC_elec_{section}_2018")
         )
         CO2e_cb = (
             demand_petrol * fact("Fact_T_S_petrol_EmFa_tank_wheel_2018")
