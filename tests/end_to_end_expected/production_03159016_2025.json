@@ -4012,6 +4012,7 @@
             "invest": 0.0,
             "invest_pa": 0.0,
             "invest_per_x": 2656383.890317052,
+            "pct_of_wage": 0.0,
             "mileage": 0.0,
             "ratio_wage_to_emplo": 40320.0,
             "transport_capacity_pkm": 0.0
@@ -4036,8 +4037,8 @@
             "invest": 28117152.693118535,
             "invest_pa": 9372384.231039511,
             "invest_per_x": 9031802.629899144,
-            "mileage": 962864.8582115116,
             "pct_of_wage": 0.051904350184940676,
+            "mileage": 962864.8582115116,
             "ratio_wage_to_emplo": 53280.0,
             "transport_capacity_tkm": 446996637.3016635
         },

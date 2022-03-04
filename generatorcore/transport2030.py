@@ -324,6 +324,7 @@ class Vars13:
     invest: float = None  # type: ignore
     invest_pa: float = None  # type: ignore
     invest_per_x: float = None  # type: ignore
+    pct_of_wage: float = None  # type: ignore
     mileage: float = None  # type: ignore
     ratio_wage_to_emplo: float = None  # type: ignore
     transport_capacity_pkm: float = None  # type: ignore
@@ -351,8 +352,8 @@ class Vars14:
     invest: float = None  # type: ignore
     invest_pa: float = None  # type: ignore
     invest_per_x: float = None  # type: ignore
-    mileage: float = None  # type: ignore
     pct_of_wage: float = None  # type: ignore
+    mileage: float = None  # type: ignore
     ratio_wage_to_emplo: float = None  # type: ignore
     transport_capacity_tkm: float = None  # type: ignore
 
@@ -2181,6 +2182,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> T30:
         rail_ppl_metro_action_infra.demand_emplo
     )
     rail_ppl_metro.invest_pa = rail_ppl_metro.invest / entries.m_duration_target
+    rail_ppl_metro.pct_of_wage = div(rail_ppl_metro.cost_wage, rail_ppl_metro.invest_pa)
     # rail_ppl_metro_action_infra.actionInvesitionen in Verkehrsnetze für SSU Bahnen
     rail_ppl.invest_pa = (
         rail_ppl_distance.invest_pa
