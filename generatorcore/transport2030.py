@@ -4,117 +4,727 @@ from .utils import div
 from . import transport2018
 
 
-# Definition der relevanten Spaltennamen für den Sektor T
+@dataclass
+class Vars0:
+    # Used by air_inter
+    CO2e_cb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    CO2e_total_2021_estimated: float = None  # type: ignore
+    change_CO2e_pct: float = None  # type: ignore
+    change_CO2e_t: float = None  # type: ignore
+    change_energy_MWh: float = None  # type: ignore
+    change_energy_pct: float = None  # type: ignore
+    change_km: float = None  # type: ignore
+    cost_climate_saved: float = None  # type: ignore
+    demand_ejetfuel: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    transport_capacity_pkm: float = None  # type: ignore
+    transport_capacity_tkm: float = None  # type: ignore
 
 
 @dataclass
-class TColVars2030:
+class Vars1:
+    # Used by air_dmstc
+    CO2e_total_2021_estimated: float = None  # type: ignore
+    change_CO2e_pct: float = None  # type: ignore
+    change_CO2e_t: float = None  # type: ignore
+    change_energy_MWh: float = None  # type: ignore
+    change_energy_pct: float = None  # type: ignore
+    change_km: float = None  # type: ignore
+    cost_climate_saved: float = None  # type: ignore
+
+
+@dataclass
+class Vars2:
+    # Used by road_ppl
+    CO2e_cb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    CO2e_total_2021_estimated: float = None  # type: ignore
+    base_unit: float = None  # type: ignore
+    change_CO2e_pct: float = None  # type: ignore
+    change_CO2e_t: float = None  # type: ignore
+    change_energy_MWh: float = None  # type: ignore
+    change_energy_pct: float = None  # type: ignore
+    change_km: float = None  # type: ignore
+    cost_climate_saved: float = None  # type: ignore
+    cost_wage: float = None  # type: ignore
+    demand_electricity: float = None  # type: ignore
+    demand_emplo: float = None  # type: ignore
+    demand_emplo_new: float = None  # type: ignore
+    demand_epetrol: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    invest: float = None  # type: ignore
+    invest_com: float = None  # type: ignore
+    invest_pa: float = None  # type: ignore
+    invest_pa_com: float = None  # type: ignore
+    mileage: float = None  # type: ignore
+    transport_capacity_pkm: float = None  # type: ignore
+
+
+@dataclass
+class Vars3:
+    # Used by road_car
+    CO2e_cb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    CO2e_total_2021_estimated: float = None  # type: ignore
+    base_unit: float = None  # type: ignore
+    change_CO2e_pct: float = None  # type: ignore
+    change_CO2e_t: float = None  # type: ignore
+    change_energy_MWh: float = None  # type: ignore
+    change_energy_pct: float = None  # type: ignore
+    change_km: float = None  # type: ignore
+    cost_climate_saved: float = None  # type: ignore
+    demand_electricity: float = None  # type: ignore
+    demand_epetrol: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    invest: float = None  # type: ignore
+    invest_pa: float = None  # type: ignore
+    invest_per_x: float = None  # type: ignore
+    mileage: float = None  # type: ignore
+    transport_capacity_pkm: float = None  # type: ignore
+
+
+@dataclass
+class Vars4:
+    # Used by road_car_it_ot, road_car_ab
+    CO2e_cb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    CO2e_total_2021_estimated: float = None  # type: ignore
+    change_CO2e_pct: float = None  # type: ignore
+    change_CO2e_t: float = None  # type: ignore
+    change_energy_MWh: float = None  # type: ignore
+    change_energy_pct: float = None  # type: ignore
+    change_km: float = None  # type: ignore
+    cost_climate_saved: float = None  # type: ignore
+    demand_electricity: float = None  # type: ignore
+    demand_epetrol: float = None  # type: ignore
     energy: float = None  # type: ignore
     mileage: float = None  # type: ignore
     transport_capacity_pkm: float = None  # type: ignore
-    transport_capacity_tkm: float = None  # type: ignore
-    demand_electricity: float = None  # type: ignore
-    demand_epetrol: float = None  # type: ignore
-    demand_ejetfuel: float = None  # type: ignore
-    demand_ediesel: float = None  # type: ignore
-    demand_hydrogen: float = None  # type: ignore
-    demand_change: float = None  # type: ignore
+
+
+@dataclass
+class Vars5:
+    # Used by road_bus
     CO2e_cb: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
+    CO2e_total_2021_estimated: float = None  # type: ignore
+    base_unit: float = None  # type: ignore
+    change_CO2e_pct: float = None  # type: ignore
+    change_CO2e_t: float = None  # type: ignore
     change_energy_MWh: float = None  # type: ignore
     change_energy_pct: float = None  # type: ignore
-    change_CO2e_t: float = None  # type: ignore
-    change_CO2e_pct: float = None  # type: ignore
-    pct_of_wage: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
-    cost_climate_saved: float = None  # type: ignore
     change_km: float = None  # type: ignore
-    invest_pa: float = None  # type: ignore
-    invest_pa_com: float = None  # type: ignore
-    invest_pa_outside: float = None  # type: ignore
+    cost_climate_saved: float = None  # type: ignore
+    cost_wage: float = None  # type: ignore
+    demand_electricity: float = None  # type: ignore
+    demand_emplo: float = None  # type: ignore
+    demand_emplo_new: float = None  # type: ignore
+    emplo_existing: float = None  # type: ignore
+    energy: float = None  # type: ignore
     invest: float = None  # type: ignore
     invest_com: float = None  # type: ignore
-    invest_outside: float = None  # type: ignore
-    cost_wage: float = None  # type: ignore
+    invest_pa: float = None  # type: ignore
+    invest_pa_com: float = None  # type: ignore
+    invest_per_x: float = None  # type: ignore
+    mileage: float = None  # type: ignore
+    pct_of_wage: float = None  # type: ignore
     ratio_wage_to_emplo: float = None  # type: ignore
+    transport_capacity_pkm: float = None  # type: ignore
+
+
+@dataclass
+class Vars6:
+    # Used by road_gds
+    CO2e_cb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    CO2e_total_2021_estimated: float = None  # type: ignore
+    base_unit: float = None  # type: ignore
+    change_CO2e_pct: float = None  # type: ignore
+    change_CO2e_t: float = None  # type: ignore
+    change_energy_MWh: float = None  # type: ignore
+    change_energy_pct: float = None  # type: ignore
+    change_km: float = None  # type: ignore
+    cost_climate_saved: float = None  # type: ignore
+    cost_wage: float = None  # type: ignore
+    demand_ediesel: float = None  # type: ignore
+    demand_electricity: float = None  # type: ignore
     demand_emplo: float = None  # type: ignore
-    demand_emplo_com: float = None  # type: ignore
-    emplo_existing: float = None  # type: ignore
     demand_emplo_new: float = None  # type: ignore
+    demand_hydrogen: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    invest: float = None  # type: ignore
+    invest_com: float = None  # type: ignore
+    invest_pa: float = None  # type: ignore
+    invest_pa_com: float = None  # type: ignore
+    mileage: float = None  # type: ignore
+    transport_capacity_tkm: float = None  # type: ignore
+
+
+@dataclass
+class Vars7:
+    # Used by road_gds_ldt
+    CO2e_cb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    CO2e_total_2021_estimated: float = None  # type: ignore
+    base_unit: float = None  # type: ignore
+    change_CO2e_pct: float = None  # type: ignore
+    change_CO2e_t: float = None  # type: ignore
+    change_energy_MWh: float = None  # type: ignore
+    change_energy_pct: float = None  # type: ignore
+    change_km: float = None  # type: ignore
+    cost_climate_saved: float = None  # type: ignore
+    demand_ediesel: float = None  # type: ignore
+    demand_electricity: float = None  # type: ignore
+    demand_hydrogen: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    invest: float = None  # type: ignore
+    invest_pa: float = None  # type: ignore
+    invest_per_x: float = None  # type: ignore
+    mileage: float = None  # type: ignore
+    transport_capacity_tkm: float = None  # type: ignore
+
+
+@dataclass
+class Vars8:
+    # Used by road_gds_ldt_it_ot, road_gds_ldt_ab, road_gds_mhd_it_ot, road_gds_mhd_ab
+    CO2e_cb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    CO2e_total_2021_estimated: float = None  # type: ignore
+    change_CO2e_pct: float = None  # type: ignore
+    change_CO2e_t: float = None  # type: ignore
+    change_energy_MWh: float = None  # type: ignore
+    change_energy_pct: float = None  # type: ignore
+    change_km: float = None  # type: ignore
+    cost_climate_saved: float = None  # type: ignore
+    demand_ediesel: float = None  # type: ignore
+    demand_electricity: float = None  # type: ignore
+    demand_hydrogen: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    mileage: float = None  # type: ignore
+    transport_capacity_tkm: float = None  # type: ignore
+
+
+@dataclass
+class Vars9:
+    # Used by road_gds_mhd
+    CO2e_cb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    CO2e_total_2021_estimated: float = None  # type: ignore
+    base_unit: float = None  # type: ignore
+    change_CO2e_pct: float = None  # type: ignore
+    change_CO2e_t: float = None  # type: ignore
+    change_energy_MWh: float = None  # type: ignore
+    change_energy_pct: float = None  # type: ignore
+    change_km: float = None  # type: ignore
+    cost_climate_saved: float = None  # type: ignore
+    demand_ediesel: float = None  # type: ignore
+    demand_electricity: float = None  # type: ignore
+    demand_emplo: float = None  # type: ignore
+    demand_emplo_new: float = None  # type: ignore
+    demand_hydrogen: float = None  # type: ignore
+    emplo_existing: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    invest: float = None  # type: ignore
+    invest_pa: float = None  # type: ignore
+    invest_per_x: float = None  # type: ignore
+    mileage: float = None  # type: ignore
+    transport_capacity_tkm: float = None  # type: ignore
+
+
+@dataclass
+class Vars10:
+    # Used by road_gds_mhd_action_wire, other_foot_action_infra, other_cycl_action_infra, rail_action_invest_infra, rail_action_invest_station, road_bus_action_infra
+    cost_wage: float = None  # type: ignore
+    demand_emplo: float = None  # type: ignore
+    demand_emplo_new: float = None  # type: ignore
+    invest: float = None  # type: ignore
+    invest_com: float = None  # type: ignore
+    invest_pa: float = None  # type: ignore
+    invest_pa_com: float = None  # type: ignore
+    invest_per_x: float = None  # type: ignore
+    pct_of_wage: float = None  # type: ignore
+    ratio_wage_to_emplo: float = None  # type: ignore
+
+
+@dataclass
+class Vars11:
+    # Used by rail_ppl
+    CO2e_cb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    CO2e_total_2021_estimated: float = None  # type: ignore
+    base_unit: float = None  # type: ignore
+    change_CO2e_pct: float = None  # type: ignore
+    change_CO2e_t: float = None  # type: ignore
+    change_energy_MWh: float = None  # type: ignore
+    change_energy_pct: float = None  # type: ignore
+    change_km: float = None  # type: ignore
+    cost_climate_saved: float = None  # type: ignore
+    cost_wage: float = None  # type: ignore
+    demand_electricity: float = None  # type: ignore
+    demand_emplo: float = None  # type: ignore
+    demand_emplo_new: float = None  # type: ignore
+    emplo_existing: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    invest: float = None  # type: ignore
+    invest_com: float = None  # type: ignore
+    invest_pa: float = None  # type: ignore
+    invest_pa_com: float = None  # type: ignore
+    mileage: float = None  # type: ignore
+    transport_capacity_pkm: float = None  # type: ignore
+
+
+@dataclass
+class Vars12:
+    # Used by rail_ppl_distance
+    CO2e_cb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    CO2e_total_2021_estimated: float = None  # type: ignore
+    base_unit: float = None  # type: ignore
+    change_CO2e_pct: float = None  # type: ignore
+    change_CO2e_t: float = None  # type: ignore
+    change_energy_MWh: float = None  # type: ignore
+    change_energy_pct: float = None  # type: ignore
+    change_km: float = None  # type: ignore
+    cost_climate_saved: float = None  # type: ignore
+    cost_wage: float = None  # type: ignore
+    demand_electricity: float = None  # type: ignore
+    demand_emplo: float = None  # type: ignore
+    demand_emplo_new: float = None  # type: ignore
+    emplo_existing: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    invest: float = None  # type: ignore
+    invest_pa: float = None  # type: ignore
+    invest_per_x: float = None  # type: ignore
+    mileage: float = None  # type: ignore
+    pct_of_wage: float = None  # type: ignore
+    ratio_wage_to_emplo: float = None  # type: ignore
+    transport_capacity_pkm: float = None  # type: ignore
+
+
+@dataclass
+class Vars13:
+    # Used by rail_ppl_metro
+    CO2e_cb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    CO2e_total_2021_estimated: float = None  # type: ignore
+    base_unit: float = None  # type: ignore
+    change_CO2e_pct: float = None  # type: ignore
+    change_CO2e_t: float = None  # type: ignore
+    change_energy_MWh: float = None  # type: ignore
+    change_energy_pct: float = None  # type: ignore
+    change_km: float = None  # type: ignore
+    cost_climate_saved: float = None  # type: ignore
+    cost_wage: float = None  # type: ignore
+    demand_electricity: float = None  # type: ignore
+    demand_emplo: float = None  # type: ignore
+    demand_emplo_new: float = None  # type: ignore
+    emplo_existing: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    invest: float = None  # type: ignore
+    invest_pa: float = None  # type: ignore
+    invest_per_x: float = None  # type: ignore
+    pct_of_wage: float = None  # type: ignore
+    mileage: float = None  # type: ignore
+    ratio_wage_to_emplo: float = None  # type: ignore
+    transport_capacity_pkm: float = None  # type: ignore
+
+
+@dataclass
+class Vars14:
+    # Used by rail_gds
+    CO2e_cb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    CO2e_total_2021_estimated: float = None  # type: ignore
+    base_unit: float = None  # type: ignore
+    change_CO2e_pct: float = None  # type: ignore
+    change_CO2e_t: float = None  # type: ignore
+    change_energy_MWh: float = None  # type: ignore
+    change_energy_pct: float = None  # type: ignore
+    change_km: float = None  # type: ignore
+    cost_climate_saved: float = None  # type: ignore
+    cost_wage: float = None  # type: ignore
+    demand_electricity: float = None  # type: ignore
+    demand_emplo: float = None  # type: ignore
+    demand_emplo_new: float = None  # type: ignore
+    emplo_existing: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    invest: float = None  # type: ignore
+    invest_pa: float = None  # type: ignore
+    invest_per_x: float = None  # type: ignore
+    pct_of_wage: float = None  # type: ignore
+    mileage: float = None  # type: ignore
+    ratio_wage_to_emplo: float = None  # type: ignore
+    transport_capacity_tkm: float = None  # type: ignore
+
+
+@dataclass
+class Vars15:
+    # Used by ship
+    CO2e_cb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    CO2e_total_2021_estimated: float = None  # type: ignore
+    base_unit: float = None  # type: ignore
+    change_CO2e_pct: float = None  # type: ignore
+    change_CO2e_t: float = None  # type: ignore
+    change_energy_MWh: float = None  # type: ignore
+    change_energy_pct: float = None  # type: ignore
+    cost_climate_saved: float = None  # type: ignore
+    cost_wage: float = None  # type: ignore
+    demand_change: float = None  # type: ignore
+    demand_ediesel: float = None  # type: ignore
+    demand_emplo: float = None  # type: ignore
+    demand_emplo_new: float = None  # type: ignore
+    emplo_existing: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    invest: float = None  # type: ignore
+    invest_com: float = None  # type: ignore
+    invest_pa: float = None  # type: ignore
+    invest_pa_com: float = None  # type: ignore
+    transport_capacity_tkm: float = None  # type: ignore
+
+
+@dataclass
+class Vars16:
+    # Used by ship_dmstc
+    CO2e_cb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    CO2e_total_2021_estimated: float = None  # type: ignore
+    base_unit: float = None  # type: ignore
+    change_CO2e_pct: float = None  # type: ignore
+    change_CO2e_t: float = None  # type: ignore
+    change_energy_MWh: float = None  # type: ignore
+    change_energy_pct: float = None  # type: ignore
+    change_km: float = None  # type: ignore
+    cost_climate_saved: float = None  # type: ignore
+    cost_wage: float = None  # type: ignore
+    demand_ediesel: float = None  # type: ignore
+    demand_emplo: float = None  # type: ignore
+    demand_emplo_new: float = None  # type: ignore
+    emplo_existing: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    invest: float = None  # type: ignore
+    invest_pa: float = None  # type: ignore
+    invest_per_x: float = None  # type: ignore
+    pct_of_wage: float = None  # type: ignore
+    ratio_wage_to_emplo: float = None  # type: ignore
+    transport_capacity_tkm: float = None  # type: ignore
+
+
+@dataclass
+class Vars17:
+    # Used by ship_dmstc_action_infra
+    CO2e_total_2021_estimated: float = None  # type: ignore
+    cost_climate_saved: float = None  # type: ignore
+    cost_wage: float = None  # type: ignore
+    demand_ediesel: float = None  # type: ignore
+    demand_emplo: float = None  # type: ignore
+    demand_emplo_new: float = None  # type: ignore
+    invest: float = None  # type: ignore
+    invest_com: float = None  # type: ignore
+    invest_pa: float = None  # type: ignore
+    invest_pa_com: float = None  # type: ignore
+    pct_of_wage: float = None  # type: ignore
+    ratio_wage_to_emplo: float = None  # type: ignore
+
+
+@dataclass
+class Vars18:
+    # Used by ship_inter
+    CO2e_cb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    CO2e_total_2021_estimated: float = None  # type: ignore
+    change_CO2e_pct: float = None  # type: ignore
+    change_CO2e_t: float = None  # type: ignore
+    change_energy_MWh: float = None  # type: ignore
+    change_energy_pct: float = None  # type: ignore
+    change_km: float = None  # type: ignore
+    cost_climate_saved: float = None  # type: ignore
+    demand_ediesel: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    transport_capacity_tkm: float = None  # type: ignore
+
+
+@dataclass
+class Vars19:
+    # Used by other_foot
+    CO2e_total: float = None  # type: ignore
+    CO2e_total_2021_estimated: float = None  # type: ignore
+    change_km: float = None  # type: ignore
+    cost_climate_saved: float = None  # type: ignore
+    invest: float = None  # type: ignore
+    invest_com: float = None  # type: ignore
+    invest_pa: float = None  # type: ignore
+    invest_pa_com: float = None  # type: ignore
+    transport_capacity_pkm: float = None  # type: ignore
+
+
+@dataclass
+class Vars20:
+    # Used by other_cycl
+    CO2e_total: float = None  # type: ignore
+    CO2e_total_2021_estimated: float = None  # type: ignore
+    base_unit: float = None  # type: ignore
+    change_km: float = None  # type: ignore
+    cost_climate_saved: float = None  # type: ignore
+    invest: float = None  # type: ignore
+    invest_com: float = None  # type: ignore
+    invest_pa: float = None  # type: ignore
+    invest_pa_com: float = None  # type: ignore
     invest_per_x: float = None  # type: ignore
     transport_capacity_pkm: float = None  # type: ignore
+
+
+@dataclass
+class Vars21:
+    # Used by g_planning
+    cost_wage: float = None  # type: ignore
+    demand_emplo: float = None  # type: ignore
+    demand_emplo_com: float = None  # type: ignore
+    demand_emplo_new: float = None  # type: ignore
+    invest: float = None  # type: ignore
+    invest_com: float = None  # type: ignore
+    invest_pa: float = None  # type: ignore
+    invest_pa_com: float = None  # type: ignore
+    ratio_wage_to_emplo: float = None  # type: ignore
+
+
+@dataclass
+class Vars22:
+    # Used by s, s_diesel, s_emethan, s_jetfuel, s_petrol, s_fueloil, s_lpg, s_gas, s_biogas, s_bioethanol, s_biodiesel, s_elec, s_hydrogen
+    energy: float = None  # type: ignore
+
+
+@dataclass
+class Vars23:
+    # Used by g
+    cost_wage: float = None  # type: ignore
+    demand_emplo: float = None  # type: ignore
+    demand_emplo_com: float = None  # type: ignore
+    demand_emplo_new: float = None  # type: ignore
+    invest: float = None  # type: ignore
+    invest_com: float = None  # type: ignore
+    invest_pa: float = None  # type: ignore
+    invest_pa_com: float = None  # type: ignore
+
+
+@dataclass
+class Vars24:
+    # Used by t
+    CO2e_cb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    CO2e_total_2021_estimated: float = None  # type: ignore
+    change_CO2e_pct: float = None  # type: ignore
+    change_CO2e_t: float = None  # type: ignore
+    change_energy_MWh: float = None  # type: ignore
+    change_energy_pct: float = None  # type: ignore
+    cost_climate_saved: float = None  # type: ignore
+    cost_wage: float = None  # type: ignore
+    demand_change: float = None  # type: ignore
+    demand_ediesel: float = None  # type: ignore
+    demand_ejetfuel: float = None  # type: ignore
+    demand_electricity: float = None  # type: ignore
+    demand_emplo: float = None  # type: ignore
+    demand_emplo_com: float = None  # type: ignore
+    demand_emplo_new: float = None  # type: ignore
+    demand_epetrol: float = None  # type: ignore
+    demand_hydrogen: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    invest: float = None  # type: ignore
+    invest_com: float = None  # type: ignore
+    invest_pa: float = None  # type: ignore
+    invest_pa_com: float = None  # type: ignore
+    transport_capacity_pkm: float = None  # type: ignore
+    transport_capacity_tkm: float = None  # type: ignore
+
+
+@dataclass
+class Vars25:
+    # Used by air
+    CO2e_cb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    CO2e_total_2021_estimated: float = None  # type: ignore
+    change_CO2e_pct: float = None  # type: ignore
+    change_CO2e_t: float = None  # type: ignore
+    change_energy_MWh: float = None  # type: ignore
+    change_energy_pct: float = None  # type: ignore
+    change_km: float = None  # type: ignore
+    cost_climate_saved: float = None  # type: ignore
+    demand_change: float = None  # type: ignore
+    demand_ejetfuel: float = None  # type: ignore
+    demand_emplo: float = None  # type: ignore
+    demand_emplo_new: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    invest: float = None  # type: ignore
+    invest_com: float = None  # type: ignore
+    invest_pa: float = None  # type: ignore
+    invest_pa_com: float = None  # type: ignore
+    transport_capacity_pkm: float = None  # type: ignore
+    transport_capacity_tkm: float = None  # type: ignore
+
+
+@dataclass
+class Vars26:
+    # Used by road
+    CO2e_cb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    CO2e_total_2021_estimated: float = None  # type: ignore
+    change_CO2e_pct: float = None  # type: ignore
+    change_CO2e_t: float = None  # type: ignore
+    change_energy_MWh: float = None  # type: ignore
+    change_energy_pct: float = None  # type: ignore
+    cost_climate_saved: float = None  # type: ignore
+    cost_wage: float = None  # type: ignore
+    demand_change: float = None  # type: ignore
+    demand_ediesel: float = None  # type: ignore
+    demand_electricity: float = None  # type: ignore
+    demand_emplo: float = None  # type: ignore
+    demand_emplo_new: float = None  # type: ignore
+    demand_epetrol: float = None  # type: ignore
+    demand_hydrogen: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    invest: float = None  # type: ignore
+    invest_com: float = None  # type: ignore
+    invest_pa: float = None  # type: ignore
+    invest_pa_com: float = None  # type: ignore
+    mileage: float = None  # type: ignore
+    transport_capacity_pkm: float = None  # type: ignore
+    transport_capacity_tkm: float = None  # type: ignore
+
+
+@dataclass
+class Vars27:
+    # Used by rail
+    CO2e_cb: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    CO2e_total_2021_estimated: float = None  # type: ignore
     base_unit: float = None  # type: ignore
+    change_CO2e_pct: float = None  # type: ignore
+    change_CO2e_t: float = None  # type: ignore
+    change_energy_MWh: float = None  # type: ignore
+    change_energy_pct: float = None  # type: ignore
+    cost_climate_saved: float = None  # type: ignore
+    cost_wage: float = None  # type: ignore
+    demand_change: float = None  # type: ignore
+    demand_electricity: float = None  # type: ignore
+    demand_emplo: float = None  # type: ignore
+    demand_emplo_new: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    invest: float = None  # type: ignore
+    invest_com: float = None  # type: ignore
+    invest_pa: float = None  # type: ignore
+    invest_pa_com: float = None  # type: ignore
+    mileage: float = None  # type: ignore
+    transport_capacity_pkm: float = None  # type: ignore
+    transport_capacity_tkm: float = None  # type: ignore
 
 
-# Definition der Zeilennamen für den Sektor T
+@dataclass
+class Vars28:
+    # Used by other
+    CO2e_total: float = None  # type: ignore
+    CO2e_total_2021_estimated: float = None  # type: ignore
+    base_unit: float = None  # type: ignore
+    change_km: float = None  # type: ignore
+    cost_climate_saved: float = None  # type: ignore
+    cost_wage: float = None  # type: ignore
+    demand_change: float = None  # type: ignore
+    demand_emplo: float = None  # type: ignore
+    demand_emplo_new: float = None  # type: ignore
+    invest: float = None  # type: ignore
+    invest_com: float = None  # type: ignore
+    invest_pa: float = None  # type: ignore
+    invest_pa_com: float = None  # type: ignore
+    transport_capacity_pkm: float = None  # type: ignore
+
+
+@dataclass
+class Vars29:
+    # Used by rail_ppl_metro_action_infra
+    base_unit: float = None  # type: ignore
+    cost_wage: float = None  # type: ignore
+    demand_emplo: float = None  # type: ignore
+    demand_emplo_new: float = None  # type: ignore
+    emplo_existing: float = None  # type: ignore
+    invest: float = None  # type: ignore
+    invest_com: float = None  # type: ignore
+    invest_pa: float = None  # type: ignore
+    invest_pa_com: float = None  # type: ignore
+    invest_per_x: float = None  # type: ignore
+    pct_of_wage: float = None  # type: ignore
+    ratio_wage_to_emplo: float = None  # type: ignore
+
+
+@dataclass
+class Vars30:
+    # Used by road_action_charger
+    base_unit: float = None  # type: ignore
+    cost_wage: float = None  # type: ignore
+    demand_emplo: float = None  # type: ignore
+    demand_emplo_new: float = None  # type: ignore
+    invest: float = None  # type: ignore
+    invest_com: float = None  # type: ignore
+    invest_pa: float = None  # type: ignore
+    invest_pa_com: float = None  # type: ignore
+    invest_per_x: float = None  # type: ignore
+    pct_of_wage: float = None  # type: ignore
+    ratio_wage_to_emplo: float = None  # type: ignore
+
+
 @dataclass
 class T30:
-    air_inter: TColVars2030 = field(default_factory=TColVars2030)
-    air_dmstc: TColVars2030 = field(
-        default_factory=TColVars2030
-    )  # ggf. löschen, da 0 in Szenario
-
-    road_ppl: TColVars2030 = field(default_factory=TColVars2030)
-    road_car: TColVars2030 = field(default_factory=TColVars2030)
-    road_car_it_ot: TColVars2030 = field(default_factory=TColVars2030)
-    road_car_ab: TColVars2030 = field(default_factory=TColVars2030)
-    road_bus: TColVars2030 = field(default_factory=TColVars2030)
-    road_gds: TColVars2030 = field(default_factory=TColVars2030)
-    road_gds_ldt: TColVars2030 = field(default_factory=TColVars2030)
-
-    road_gds_ldt_it_ot: TColVars2030 = field(default_factory=TColVars2030)
-    road_gds_ldt_ab: TColVars2030 = field(default_factory=TColVars2030)
-    road_gds_mhd: TColVars2030 = field(default_factory=TColVars2030)
-    road_gds_mhd_it_ot: TColVars2030 = field(default_factory=TColVars2030)
-    road_gds_mhd_ab: TColVars2030 = field(default_factory=TColVars2030)
-    road_gds_mhd_action_wire: TColVars2030 = field(default_factory=TColVars2030)
-
-    rail_ppl: TColVars2030 = field(default_factory=TColVars2030)
-    rail_ppl_distance: TColVars2030 = field(default_factory=TColVars2030)
-    rail_ppl_metro: TColVars2030 = field(default_factory=TColVars2030)
-    rail_gds: TColVars2030 = field(default_factory=TColVars2030)
-
-    ship: TColVars2030 = field(default_factory=TColVars2030)
-    ship_dmstc: TColVars2030 = field(default_factory=TColVars2030)
-    ship_dmstc_action_infra: TColVars2030 = field(default_factory=TColVars2030)
-    ship_inter: TColVars2030 = field(default_factory=TColVars2030)
-
-    other_foot: TColVars2030 = field(default_factory=TColVars2030)
-    other_foot_action_infra: TColVars2030 = field(default_factory=TColVars2030)
-    other_cycl: TColVars2030 = field(default_factory=TColVars2030)
-    other_cycl_action_infra: TColVars2030 = field(default_factory=TColVars2030)
-    g_planning: TColVars2030 = field(default_factory=TColVars2030)
-
-    s: TColVars2030 = field(default_factory=TColVars2030)
-    s_diesel: TColVars2030 = field(default_factory=TColVars2030)
-    s_emethan: TColVars2030 = field(default_factory=TColVars2030)
-    s_jetfuel: TColVars2030 = field(default_factory=TColVars2030)
-    s_petrol: TColVars2030 = field(default_factory=TColVars2030)
-    s_fueloil: TColVars2030 = field(default_factory=TColVars2030)
-    s_lpg: TColVars2030 = field(default_factory=TColVars2030)
-    s_gas: TColVars2030 = field(default_factory=TColVars2030)
-    s_biogas: TColVars2030 = field(default_factory=TColVars2030)
-    s_bioethanol: TColVars2030 = field(default_factory=TColVars2030)
-    s_biodiesel: TColVars2030 = field(default_factory=TColVars2030)
-    # übergeordnete Zeilen
-    g: TColVars2030 = field(default_factory=TColVars2030)
-    t: TColVars2030 = field(default_factory=TColVars2030)
-    air: TColVars2030 = field(default_factory=TColVars2030)
-    road: TColVars2030 = field(default_factory=TColVars2030)
-    rail: TColVars2030 = field(default_factory=TColVars2030)
-    other: TColVars2030 = field(default_factory=TColVars2030)
-
-    # Maßnahmen
-    rail_action_invest_infra: TColVars2030 = field(default_factory=TColVars2030)
-    rail_action_invest_station: TColVars2030 = field(default_factory=TColVars2030)
-    rail_ppl_metro_action_infra: TColVars2030 = field(default_factory=TColVars2030)
-    road_action_charger: TColVars2030 = field(default_factory=TColVars2030)
-    road_bus_action_infra: TColVars2030 = field(default_factory=TColVars2030)
-
-    # Bereitstellung (Energieträgersummen)
-
-    s_elec: TColVars2030 = field(default_factory=TColVars2030)
-    s_hydrogen: TColVars2030 = field(default_factory=TColVars2030)
+    air_inter: Vars0 = field(default_factory=Vars0)
+    air_dmstc: Vars1 = field(default_factory=Vars1)
+    road_ppl: Vars2 = field(default_factory=Vars2)
+    road_car: Vars3 = field(default_factory=Vars3)
+    road_car_it_ot: Vars4 = field(default_factory=Vars4)
+    road_car_ab: Vars4 = field(default_factory=Vars4)
+    road_bus: Vars5 = field(default_factory=Vars5)
+    road_gds: Vars6 = field(default_factory=Vars6)
+    road_gds_ldt: Vars7 = field(default_factory=Vars7)
+    road_gds_ldt_it_ot: Vars8 = field(default_factory=Vars8)
+    road_gds_ldt_ab: Vars8 = field(default_factory=Vars8)
+    road_gds_mhd: Vars9 = field(default_factory=Vars9)
+    road_gds_mhd_it_ot: Vars8 = field(default_factory=Vars8)
+    road_gds_mhd_ab: Vars8 = field(default_factory=Vars8)
+    road_gds_mhd_action_wire: Vars10 = field(default_factory=Vars10)
+    rail_ppl: Vars11 = field(default_factory=Vars11)
+    rail_ppl_distance: Vars12 = field(default_factory=Vars12)
+    rail_ppl_metro: Vars13 = field(default_factory=Vars13)
+    rail_gds: Vars14 = field(default_factory=Vars14)
+    ship: Vars15 = field(default_factory=Vars15)
+    ship_dmstc: Vars16 = field(default_factory=Vars16)
+    ship_dmstc_action_infra: Vars17 = field(default_factory=Vars17)
+    ship_inter: Vars18 = field(default_factory=Vars18)
+    other_foot: Vars19 = field(default_factory=Vars19)
+    other_foot_action_infra: Vars10 = field(default_factory=Vars10)
+    other_cycl: Vars20 = field(default_factory=Vars20)
+    other_cycl_action_infra: Vars10 = field(default_factory=Vars10)
+    g_planning: Vars21 = field(default_factory=Vars21)
+    s: Vars22 = field(default_factory=Vars22)
+    s_diesel: Vars22 = field(default_factory=Vars22)
+    s_emethan: Vars22 = field(default_factory=Vars22)
+    s_jetfuel: Vars22 = field(default_factory=Vars22)
+    s_petrol: Vars22 = field(default_factory=Vars22)
+    s_fueloil: Vars22 = field(default_factory=Vars22)
+    s_lpg: Vars22 = field(default_factory=Vars22)
+    s_gas: Vars22 = field(default_factory=Vars22)
+    s_biogas: Vars22 = field(default_factory=Vars22)
+    s_bioethanol: Vars22 = field(default_factory=Vars22)
+    s_biodiesel: Vars22 = field(default_factory=Vars22)
+    g: Vars23 = field(default_factory=Vars23)
+    t: Vars24 = field(default_factory=Vars24)
+    air: Vars25 = field(default_factory=Vars25)
+    road: Vars26 = field(default_factory=Vars26)
+    rail: Vars27 = field(default_factory=Vars27)
+    other: Vars28 = field(default_factory=Vars28)
+    rail_action_invest_infra: Vars10 = field(default_factory=Vars10)
+    rail_action_invest_station: Vars10 = field(default_factory=Vars10)
+    rail_ppl_metro_action_infra: Vars29 = field(default_factory=Vars29)
+    road_action_charger: Vars30 = field(default_factory=Vars30)
+    road_bus_action_infra: Vars10 = field(default_factory=Vars10)
+    s_elec: Vars22 = field(default_factory=Vars22)
+    s_hydrogen: Vars22 = field(default_factory=Vars22)
 
     def dict(self):
         return asdict(self)
@@ -1572,11 +2182,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> T30:
         rail_ppl_metro_action_infra.demand_emplo
     )
     rail_ppl_metro.invest_pa = rail_ppl_metro.invest / entries.m_duration_target
-    # dont calculate not for communes because of div 0
-    if entries.m_AGS_com == "DG000000":
-        rail_ppl_metro.pct_of_wage = div(
-            rail_ppl_metro.cost_wage, rail_ppl_metro.invest_pa
-        )
+    rail_ppl_metro.pct_of_wage = div(rail_ppl_metro.cost_wage, rail_ppl_metro.invest_pa)
     # rail_ppl_metro_action_infra.actionInvesitionen in Verkehrsnetze für SSU Bahnen
     rail_ppl.invest_pa = (
         rail_ppl_distance.invest_pa
@@ -1868,7 +2474,6 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> T30:
     )  # SUM(other_foot.invest_com:DE268)
     other_cycl.invest_pa = other_cycl.invest / entries.m_duration_target
 
-    other_foot.demand_emplo_new = other_foot.demand_emplo
     g_planning.demand_emplo_new = g_planning.demand_emplo
 
     other_foot.CO2e_total = 0
