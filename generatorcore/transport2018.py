@@ -372,39 +372,6 @@ class Road:
 
 
 @dataclass
-class Vars7:
-    # Used by road_gds
-    CO2e_cb: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    demand_biodiesel: float = None  # type: ignore
-    demand_bioethanol: float = None  # type: ignore
-    demand_biogas: float = None  # type: ignore
-    demand_diesel: float = None  # type: ignore
-    demand_electricity: float = None  # type: ignore
-    demand_gas: float = None  # type: ignore
-    demand_lpg: float = None  # type: ignore
-    demand_petrol: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    mileage: float = None  # type: ignore
-    transport_capacity_tkm: float = None  # type: ignore
-
-
-@dataclass
-class Vars9:
-    # Used by road_gds_mhd, road_gds_mhd_it_ot, road_gds_mhd_ab
-    CO2e_cb: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    demand_biodiesel: float = None  # type: ignore
-    demand_biogas: float = None  # type: ignore
-    demand_diesel: float = None  # type: ignore
-    demand_electricity: float = None  # type: ignore
-    demand_gas: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    mileage: float = None  # type: ignore
-    transport_capacity_tkm: float = None  # type: ignore
-
-
-@dataclass
 class Vars10:
     # Used by rail_ppl, rail_ppl_distance
     CO2e_cb: float = None  # type: ignore
