@@ -1,6 +1,5 @@
-# # Laden der Datentabellen und deren Suchfunktionen
-
-from dataclasses import dataclass, field, asdict, fields
+# pyright: strict
+from dataclasses import dataclass, asdict, fields
 from .inputs import Inputs
 import typing
 
