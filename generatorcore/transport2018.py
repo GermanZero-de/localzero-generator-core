@@ -632,6 +632,9 @@ class Other:
                 * 365
                 * inputs.fact("Fact_T_D_modal_split_foot_rt" + t_rt7)
             )
+
+        # This happens if we run Local Zero for a Landkreis a Bundesland or Germany.
+        # We do not have a area_kind entry in this case and just use the mean mean modal split of germany.    
         elif t_rt7 == "nd":
             transport_capacity_pkm = (
                 inputs.entries.m_population_com_2018
