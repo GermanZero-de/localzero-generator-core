@@ -227,11 +227,11 @@ class Entries:
     t_ec_rail_ppl_elec: float
     t_metro_mega_km_dis: float
     t_mil_car_ab: float
-    t_mil_car_it_at: float
+    t_mil_car_it_ot: float
     t_mil_ldt_ab: float
-    t_mil_ldt_it_at: float
+    t_mil_ldt_it_ot: float
     t_mil_mhd_ab: float
-    t_mil_mhd_it_at: float
+    t_mil_mhd_it_ot: float
     t_rt3: str
     t_rt7: str
     ags: str
@@ -590,11 +590,11 @@ def make_entries(data: refdata.RefData, ags: str, year: int):
     t_ec_rail_gds_elec = data_traffic_com.float("gds_elec")
     t_ec_rail_gds_diesel = data_traffic_com.float("gds_diesel")
 
-    t_mil_car_it_at = data_traffic_com.float("car_it_at")
+    t_mil_car_it_ot = data_traffic_com.float("car_it_ot")
     t_mil_car_ab = data_traffic_com.float("car_ab")
-    t_mil_ldt_it_at = data_traffic_com.float("ldt_it_at")
+    t_mil_ldt_it_ot = data_traffic_com.float("ldt_it_ot")
     t_mil_ldt_ab = data_traffic_com.float("ldt_ab")
-    t_mil_mhd_it_at = data_traffic_com.float("mhd_it_at")
+    t_mil_mhd_it_ot = data_traffic_com.float("mhd_it_ot")
     t_mil_mhd_ab = data_traffic_com.float("mhd_ab")
 
     data_destatis_com = data.destatis(ags_dis_padded)
@@ -921,11 +921,11 @@ def make_entries(data: refdata.RefData, ags: str, year: int):
         t_ec_rail_ppl_elec=t_ec_rail_ppl_elec,
         t_metro_mega_km_dis=t_metro_mega_km_dis,
         t_mil_car_ab=t_mil_car_ab,
-        t_mil_car_it_at=t_mil_car_it_at,
+        t_mil_car_it_ot=t_mil_car_it_ot,
         t_mil_ldt_ab=t_mil_ldt_ab,
-        t_mil_ldt_it_at=t_mil_ldt_it_at,
+        t_mil_ldt_it_ot=t_mil_ldt_it_ot,
         t_mil_mhd_ab=t_mil_mhd_ab,
-        t_mil_mhd_it_at=t_mil_mhd_it_at,
+        t_mil_mhd_it_ot=t_mil_mhd_it_ot,
         t_rt3=t_rt3,
         t_rt7=t_rt7,
         ags=ags,

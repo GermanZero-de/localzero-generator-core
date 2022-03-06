@@ -222,7 +222,7 @@ class Road:
 
     @classmethod
     def calc_car(
-        cls, inputs: Inputs, subsection: typing.Literal["it_at", "ab"]
+        cls, inputs: Inputs, subsection: typing.Literal["it_ot", "ab"]
     ) -> "Road":
         def fact(n: str) -> float:
             return inputs.fact(n)
@@ -245,7 +245,7 @@ class Road:
             biogas=(
                 fact(f"Fact_T_S_Car_frac_cng_mlg_2018")
                 * fact("Fact_T_S_Rl_Rd_cng_bio_frac_2018")
-                * fact(f"Fact_T_S_Car_SEC_petrol_it_at_2018")
+                * fact(f"Fact_T_S_Car_SEC_petrol_it_ot_2018")
             ),
             diesel=(
                 fact(f"Fact_T_S_Car_frac_diesel_mlg_2018")
@@ -259,7 +259,7 @@ class Road:
             gas=(
                 fact(f"Fact_T_S_Car_frac_cng_mlg_2018")
                 * (1 - fact("Fact_T_S_Rl_Rd_cng_bio_frac_2018"))
-                * fact(f"Fact_T_S_Car_SEC_petrol_it_at_2018")
+                * fact(f"Fact_T_S_Car_SEC_petrol_it_ot_2018")
             ),
             lpg=(
                 fact(f"Fact_T_S_Car_frac_lpg_mlg_2018")
@@ -319,7 +319,7 @@ class Road:
 
     @classmethod
     def calc_goods_light_weight(
-        cls, inputs: Inputs, section: typing.Literal["it_at", "ab"]
+        cls, inputs: Inputs, section: typing.Literal["it_ot", "ab"]
     ) -> "Road":
         def fact(n: str) -> float:
             return inputs.fact(n)
@@ -363,38 +363,38 @@ class Road:
         )
 
     @classmethod
-    def calc_goods_mhd_it_at(cls, inputs: Inputs, road_bus_mileage: float):
+    def calc_goods_mhd_it_ot(cls, inputs: Inputs, road_bus_mileage: float):
         def fact(n: str) -> float:
             return inputs.fact(n)
 
         return cls.calc_road(
             inputs,
-            mileage=inputs.entries.t_mil_mhd_it_at * MILLION - road_bus_mileage,
+            mileage=inputs.entries.t_mil_mhd_it_ot * MILLION - road_bus_mileage,
             transport_capacity_tkm_factor=fact("Fact_T_D_lf_gds_MHD_2018"),
             transport_capacity_pkm_factor=0,
             biogas=(
                 fact("Fact_T_S_MHD_frac_cng_lngl_stock_2018")
                 * fact("Fact_T_S_Rl_Rd_cng_bio_frac_2018")
-                * fact("Fact_T_S_MHD_SEC_diesel_it_at_2018")
+                * fact("Fact_T_S_MHD_SEC_diesel_it_ot_2018")
             ),
             biodiesel=(
                 fact("Fact_T_S_MHD_frac_diesel_stock_2018")
                 * fact("Fact_T_S_Rl_Rd_diesel_bio_frac_2018")
-                * fact("Fact_T_S_MHD_SEC_diesel_it_at_2018")
+                * fact("Fact_T_S_MHD_SEC_diesel_it_ot_2018")
             ),
             diesel=(
                 fact("Fact_T_S_MHD_frac_diesel_stock_2018")
                 * (1 - fact("Fact_T_S_Rl_Rd_diesel_bio_frac_2018"))
-                * fact("Fact_T_S_MHD_SEC_diesel_it_at_2018")
+                * fact("Fact_T_S_MHD_SEC_diesel_it_ot_2018")
             ),
             electricity=(
                 fact("Fact_T_S_MHD_frac_bev_stock_2018")
-                * fact("Fact_T_S_MHD_SEC_elec_it_at_2018")
+                * fact("Fact_T_S_MHD_SEC_elec_it_ot_2018")
             ),
             gas=(
                 fact("Fact_T_S_MHD_frac_cng_lngl_stock_2018")
                 * (1 - fact("Fact_T_S_Rl_Rd_cng_bio_frac_2018"))
-                * fact("Fact_T_S_MHD_SEC_diesel_it_at_2018")
+                * fact("Fact_T_S_MHD_SEC_diesel_it_ot_2018")
             ),
             bioethanol=0,
             lpg=0,
@@ -823,17 +823,17 @@ def calc(inputs: Inputs) -> T18:
     air_inter = Air.calc_international(inputs)
     air = air_dmstc + air_inter
     # --- Road ---
-    road_car_it_ot = Road.calc_car(inputs, "it_at")
+    road_car_it_ot = Road.calc_car(inputs, "it_ot")
     road_car_ab = Road.calc_car(inputs, "ab")
     road_car = road_car_it_ot + road_car_ab
     road_bus = Road.calc_bus(inputs)
     road_ppl = road_car + road_bus
-    road_gds_mhd_it_ot = Road.calc_goods_mhd_it_at(
+    road_gds_mhd_it_ot = Road.calc_goods_mhd_it_ot(
         inputs, road_bus_mileage=road_bus.mileage
     )
     road_gds_mhd_ab = Road.calc_mhd_ab(inputs)
     road_gds_mhd = road_gds_mhd_ab + road_gds_mhd_it_ot
-    road_gds_ldt_it_ot = Road.calc_goods_light_weight(inputs, "it_at")
+    road_gds_ldt_it_ot = Road.calc_goods_light_weight(inputs, "it_ot")
     road_gds_ldt_ab = Road.calc_goods_light_weight(inputs, "ab")
     road_gds_ldt = road_gds_ldt_it_ot + road_gds_ldt_ab
     road_gds = road_gds_ldt + road_gds_mhd

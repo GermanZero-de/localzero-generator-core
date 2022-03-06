@@ -864,7 +864,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> T30:
     road_car_it_ot.demand_electricity = (
         road_car_it_ot.mileage
         * ass("Ass_T_S_Car_frac_bev_with_phev_mlg_2050")
-        * ass("Ass_T_S_Car_SEC_elec_it_at_2030")
+        * ass("Ass_T_S_Car_SEC_elec_it_ot_2030")
     )
     air_inter.transport_capacity_tkm = t18.air_inter.transport_capacity_tkm * div(
         air_inter.demand_ejetfuel, t18.air_inter.demand_jetfuel
@@ -910,7 +910,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> T30:
     road_car_it_ot.demand_epetrol = (
         road_car_it_ot.mileage
         * ass("Ass_T_S_Car_frac_petrol_with_phev_mlg_2050")
-        * ass("Ass_T_S_Car_SEC_petrol_it_at_2050")
+        * ass("Ass_T_S_Car_SEC_petrol_it_ot_2050")
     )
     road_car_it_ot.CO2e_cb = road_car_it_ot.demand_epetrol * ass(
         "Ass_T_S_petrol_EmFa_tank_wheel_2050"
@@ -1052,7 +1052,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> T30:
     road_gds_ldt_it_ot.demand_electricity = (
         road_gds_ldt_it_ot.mileage
         * ass("Ass_T_S_LDT_frac_bev_mlg_2050")
-        * ass("Ass_T_S_LDT_SEC_elec_it_at_2030")
+        * ass("Ass_T_S_LDT_SEC_elec_it_ot_2030")
     )
     air_inter.CO2e_total = air_inter.CO2e_cb  # (CJ235 + air_inter.CO2e_cb)
     air_inter.change_energy_MWh = air_inter.energy - t18.air_inter.energy
@@ -1179,7 +1179,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> T30:
     road_gds_ldt_it_ot.demand_ediesel = (
         road_gds_ldt_it_ot.mileage
         * ass("Ass_T_S_LDT_frac_diesel_mlg_2050")
-        * ass("Ass_T_S_LDT_SEC_diesel_it_at_2030")
+        * ass("Ass_T_S_LDT_SEC_diesel_it_ot_2030")
     )
     road_bus_action_infra.cost_wage = (
         road_bus_action_infra.invest_pa * road_bus_action_infra.pct_of_wage
@@ -1354,7 +1354,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> T30:
     road_gds_mhd_it_ot.demand_electricity = (
         road_gds_mhd_it_ot.mileage
         * ass("Ass_T_S_MHD_frac_bev_mlg_2050")
-        * ass("Ass_T_S_MHD_SEC_elec_it_at_2030")
+        * ass("Ass_T_S_MHD_SEC_elec_it_ot_2030")
     )
     road_car_ab.CO2e_total = road_car_ab.CO2e_cb
     road_car.change_energy_pct = div(road_car.change_energy_MWh, t18.road_car.energy)
@@ -1377,7 +1377,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> T30:
     road_gds_mhd_it_ot.demand_ediesel = (
         road_gds_mhd_it_ot.mileage
         * ass("Ass_T_S_MHD_frac_diesel_mlg_2050")
-        * ass("Ass_T_S_MHD_SEC_diesel_it_at_2030")
+        * ass("Ass_T_S_MHD_SEC_diesel_it_ot_2030")
     )
     t.demand_epetrol = (
         road.demand_epetrol
