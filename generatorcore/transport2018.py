@@ -98,9 +98,7 @@ class Air:
         )
 
     @classmethod
-    def calc_international(
-        cls, inputs: Inputs, air_dmstc_demand_petrol: float
-    ) -> "Air":
+    def calc_international(cls, inputs: Inputs ) -> "Air":
         transport_capacity_pkm = (
             inputs.fact("Fact_T_D_Air_nat_trnsprt_ppl_2019")
             * inputs.entries.m_population_com_2018
@@ -121,7 +119,7 @@ class Air:
         )
 
         CO2e_cb = co2e_from_demands(
-            inputs, demand_petrol=air_dmstc_demand_petrol, demand_jetfuel=demand_jetfuel
+            inputs, demand_jetfuel=demand_jetfuel
         )
         CO2e_total = CO2e_cb
         energy = demand_jetfuel
@@ -819,9 +817,7 @@ def calc(inputs: Inputs) -> T18:
 
     # --- Air ---
     air_dmstc = Air.calc_domestic(inputs)
-    air_inter = Air.calc_international(
-        inputs, air_dmstc_demand_petrol=air_dmstc.demand_petrol
-    )
+    air_inter = Air.calc_international(inputs)
     air = air_dmstc + air_inter
     # --- Road ---
     road_car_it_ot = Road.calc_car(inputs, "it_at")
