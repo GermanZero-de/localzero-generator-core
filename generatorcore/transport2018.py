@@ -758,72 +758,64 @@ class Transport:
 
 
 @dataclass
-class Vars20:
+class EnergySum:
     # Used by s, s_petrol, s_jetfuel, s_diesel, s_fueloil, s_lpg, s_gas, s_biogas, s_bioethanol, s_biodiesel, s_elec
-    energy: float = None  # type: ignore
+    energy: float
 
 
 @dataclass
 class T18:
-    t: Transport = None  # type: ignore
-    air_inter: Air = None  # type: ignore
-    air_dmstc: Air = None  # type: ignore
-    road: Road = None  # type: ignore
-    road_car: Road = None  # type: ignore
-    road_car_it_ot: Road = None  # type: ignore
-    road_car_ab: Road = None  # type: ignore
-    road_bus: Road = None  # type: ignore
-    road_gds: Road = None  # type: ignore
-    road_gds_ldt: Road = None  # type: ignore
-    road_gds_ldt_it_ot: Road = None  # type: ignore
-    road_gds_ldt_ab: Road = None  # type: ignore
-    road_gds_mhd: Road = None  # type: ignore
-    road_ppl: Road = None  # type: ignore
-    road_gds_mhd_it_ot: Road = None  # type: ignore
-    road_gds_mhd_ab: Road = None  # type: ignore
-    rail_ppl: Rail = None  # type: ignore
-    rail_ppl_metro: Rail = None  # type: ignore
-    rail_ppl_distance: Rail = None  # type: ignore
-    rail_gds: Rail = None  # type: ignore
-    ship_dmstc: Ship = None  # type: ignore
-    ship_inter: Ship = None  # type: ignore
-    other_foot: Other = None  # type: ignore
-    other_cycl: Other = None  # type: ignore
-    air: Air = None  # type: ignore
-    rail: Rail = None  # type: ignore
-    ship: Ship = None  # type: ignore
-    other: Other = None  # type: ignore
-    s: Vars20 = field(default_factory=Vars20)
-    s_petrol: Vars20 = field(default_factory=Vars20)
-    s_jetfuel: Vars20 = field(default_factory=Vars20)
-    s_diesel: Vars20 = field(default_factory=Vars20)
-    s_fueloil: Vars20 = field(default_factory=Vars20)
-    s_lpg: Vars20 = field(default_factory=Vars20)
-    s_gas: Vars20 = field(default_factory=Vars20)
-    s_biogas: Vars20 = field(default_factory=Vars20)
-    s_bioethanol: Vars20 = field(default_factory=Vars20)
-    s_biodiesel: Vars20 = field(default_factory=Vars20)
-    s_elec: Vars20 = field(default_factory=Vars20)
+    t: Transport
+
+    air_inter: Air
+    air_dmstc: Air
+    air: Air
+
+    road: Road
+    road_car: Road
+    road_car_it_ot: Road
+    road_car_ab: Road
+    road_bus: Road
+    road_gds: Road
+    road_gds_ldt: Road
+    road_gds_ldt_it_ot: Road
+    road_gds_ldt_ab: Road
+    road_gds_mhd: Road
+    road_ppl: Road
+    road_gds_mhd_it_ot: Road
+    road_gds_mhd_ab: Road
+
+    rail_ppl: Rail
+    rail_ppl_metro: Rail
+    rail_ppl_distance: Rail
+    rail_gds: Rail
+    rail: Rail
+
+    ship_dmstc: Ship
+    ship_inter: Ship
+    ship: Ship
+
+    other_foot: Other
+    other_cycl: Other
+    other: Other
+
+    s: EnergySum
+    s_petrol: EnergySum
+    s_jetfuel: EnergySum
+    s_diesel: EnergySum
+    s_fueloil: EnergySum
+    s_lpg: EnergySum
+    s_gas: EnergySum
+    s_biogas: EnergySum
+    s_bioethanol: EnergySum
+    s_biodiesel: EnergySum
+    s_elec: EnergySum
 
     def dict(self):
         return asdict(self)
 
 
 def calc(inputs: Inputs) -> T18:
-    # abbreviations
-    t18 = T18()
-    s = t18.s
-    s_petrol = t18.s_petrol
-    s_jetfuel = t18.s_jetfuel
-    s_diesel = t18.s_diesel
-    s_fueloil = t18.s_fueloil
-    s_lpg = t18.s_lpg
-    s_gas = t18.s_gas
-    s_biogas = t18.s_biogas
-    s_bioethanol = t18.s_bioethanol
-    s_biodiesel = t18.s_biodiesel
-    s_elec = t18.s_elec
-
     # TODO: Fix the it at confusion
 
     # --- Air ---
@@ -872,83 +864,69 @@ def calc(inputs: Inputs) -> T18:
     )
 
     # ----------------------------------------------------
-    s_petrol.energy = t.demand_petrol
-    s_jetfuel.energy = air_inter.demand_jetfuel + air_dmstc.demand_jetfuel
-    s_diesel.energy = t.demand_diesel
+    s_biodiesel = EnergySum(t.demand_biodiesel)
+    s_bioethanol = EnergySum(t.demand_bioethanol)
+    s_biogas = EnergySum(t.demand_biogas)
+    s_diesel = EnergySum(t.demand_diesel)
+    s_elec = EnergySum(t.demand_electricity)
+    s_fueloil = EnergySum(ship_inter.demand_fueloil)
+    s_gas = EnergySum(t.demand_gas)
+    s_jetfuel = EnergySum(t.demand_jetfuel)
+    s_lpg = EnergySum(t.demand_lpg)
+    s_petrol = EnergySum(t.demand_petrol)
 
-    s_fueloil.energy = ship_inter.demand_fueloil
-
-    s_gas.energy = t.demand_gas
-
-    s_biogas.energy = t.demand_biogas
-
-    s_bioethanol.energy = t.demand_bioethanol
-
-    s_biodiesel.energy = t.demand_biodiesel
-
-    s_elec.energy = t.demand_electricity
-
-    s_lpg.energy = t.demand_lpg
-
-    s_diesel.energy = t.demand_diesel
-    s_gas.energy = t.demand_gas
-    s_biogas.energy = t.demand_biogas
-
-    s_diesel.energy = t.demand_diesel
-    s_gas.energy = t.demand_gas
-    s_biogas.energy = t.demand_biogas
-    s_bioethanol.energy = t.demand_bioethanol
-    s_biodiesel.energy = t.demand_biodiesel
-    s_elec.energy = t.demand_electricity
-
-    s_biogas.energy = t.demand_biogas
-    s_bioethanol.energy = t.demand_bioethanol
-    s_biodiesel.energy = t.demand_biodiesel
-
-    s.energy = (
-        s_petrol.energy
-        + s_jetfuel.energy
-        + s_diesel.energy
-        + s_fueloil.energy
-        + s_lpg.energy
-        + s_gas.energy
-        + s_biogas.energy
+    s = EnergySum(
+        s_biodiesel.energy
         + s_bioethanol.energy
-        + s_biodiesel.energy
+        + s_biogas.energy
+        + s_diesel.energy
         + s_elec.energy
+        + s_fueloil.energy
+        + s_gas.energy
+        + s_jetfuel.energy
+        + s_lpg.energy
+        + s_petrol.energy
     )
-
-    t18.air_dmstc = air_dmstc
-    t18.air_inter = air_inter
-    t18.air = air
-
-    t18.road_car_it_ot = road_car_it_ot
-    t18.road_car_ab = road_car_ab
-    t18.road_car = road_car
-    t18.road_bus = road_bus
-    t18.road_ppl = road_ppl
-    t18.road_gds_mhd_it_ot = road_gds_mhd_it_ot
-    t18.road_gds_mhd_ab = road_gds_mhd_ab
-    t18.road_gds_mhd = road_gds_mhd
-    t18.road_gds_ldt_it_ot = road_gds_ldt_it_ot
-    t18.road_gds_ldt_ab = road_gds_ldt_ab
-    t18.road_gds_ldt = road_gds_ldt
-    t18.road_gds = road_gds
-    t18.road = road
-
-    t18.rail_ppl_distance = rail_ppl_distance
-    t18.rail_ppl_metro = rail_ppl_metro
-    t18.rail_ppl = rail_ppl
-    t18.rail_gds = rail_gds
-    t18.rail = rail
-
-    t18.ship_dmstc = ship_dmstc
-    t18.ship_inter = ship_inter
-    t18.ship = ship
-
-    t18.other_foot = other_foot
-    t18.other_cycl = other_cycl
-    t18.other = other
-    t18.t = t
+    return T18(
+        air_dmstc=air_dmstc,
+        air_inter=air_inter,
+        air=air,
+        road_car_it_ot=road_car_it_ot,
+        road_car_ab=road_car_ab,
+        road_car=road_car,
+        road_bus=road_bus,
+        road_ppl=road_ppl,
+        road_gds_mhd_it_ot=road_gds_mhd_it_ot,
+        road_gds_mhd_ab=road_gds_mhd_ab,
+        road_gds_mhd=road_gds_mhd,
+        road_gds_ldt_it_ot=road_gds_ldt_it_ot,
+        road_gds_ldt_ab=road_gds_ldt_ab,
+        road_gds_ldt=road_gds_ldt,
+        road_gds=road_gds,
+        road=road,
+        rail_ppl_distance=rail_ppl_distance,
+        rail_ppl_metro=rail_ppl_metro,
+        rail_ppl=rail_ppl,
+        rail_gds=rail_gds,
+        rail=rail,
+        ship_dmstc=ship_dmstc,
+        ship_inter=ship_inter,
+        ship=ship,
+        other_foot=other_foot,
+        other_cycl=other_cycl,
+        other=other,
+        t=t,
+        s_biodiesel=s_biodiesel,
+        s_bioethanol=s_bioethanol,
+        s_biogas=s_biogas,
+        s_diesel=s_diesel,
+        s_elec=s_elec,
+        s_fueloil=s_fueloil,
+        s_gas=s_gas,
+        s_jetfuel=s_jetfuel,
+        s_lpg=s_lpg,
+        s_petrol=s_petrol,
+        s=s,
+    )
 
     return t18
