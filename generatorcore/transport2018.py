@@ -98,7 +98,7 @@ class Air:
         )
 
     @classmethod
-    def calc_international(cls, inputs: Inputs ) -> "Air":
+    def calc_international(cls, inputs: Inputs) -> "Air":
         transport_capacity_pkm = (
             inputs.fact("Fact_T_D_Air_nat_trnsprt_ppl_2019")
             * inputs.entries.m_population_com_2018
@@ -118,9 +118,7 @@ class Air:
             / inputs.entries.m_population_nat
         )
 
-        CO2e_cb = co2e_from_demands(
-            inputs, demand_jetfuel=demand_jetfuel
-        )
+        CO2e_cb = co2e_from_demands(inputs, demand_jetfuel=demand_jetfuel)
         CO2e_total = CO2e_cb
         energy = demand_jetfuel
         return cls(
@@ -634,7 +632,7 @@ class Other:
             )
 
         # This happens if we run Local Zero for a Landkreis a Bundesland or Germany.
-        # We do not have a area_kind entry in this case and just use the mean mean modal split of germany.    
+        # We do not have a area_kind entry in this case and just use the mean mean modal split of germany.
         elif t_rt7 == "nd":
             transport_capacity_pkm = (
                 inputs.entries.m_population_com_2018
