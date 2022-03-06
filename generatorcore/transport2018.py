@@ -928,5 +928,3 @@ def calc(inputs: Inputs) -> T18:
         s_petrol=s_petrol,
         s=s,
     )
-
-    return t18
