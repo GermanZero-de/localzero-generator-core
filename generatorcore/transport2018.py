@@ -688,7 +688,6 @@ class Transport:
     demand_lpg: float = 0
     demand_petrol: float = 0
     energy: float = 0
-    mileage: float = 0  # We should delete this
     transport_capacity_pkm: float = 0
     transport_capacity_tkm: float = 0
 
@@ -732,7 +731,6 @@ class Transport:
             demand_lpg=r.demand_lpg,
             demand_petrol=r.demand_petrol,
             energy=r.energy,
-            mileage=r.mileage,
             transport_capacity_tkm=r.transport_capacity_tkm,
             transport_capacity_pkm=r.transport_capacity_pkm,
         )
@@ -745,7 +743,6 @@ class Transport:
             demand_biodiesel=r.demand_biodiesel,
             demand_diesel=r.demand_diesel,
             demand_electricity=r.demand_electricity,
-            mileage=r.mileage,
             energy=r.energy,
             transport_capacity_pkm=r.transport_capacity_pkm,
             transport_capacity_tkm=r.transport_capacity_tkm,
@@ -813,14 +810,6 @@ class T18:
 
 
 def calc(inputs: Inputs) -> T18:
-    def fact(n):
-        return inputs.fact(n)
-
-    def ass(n):
-        return inputs.ass(n)
-
-    entries = inputs.entries
-
     # abbreviations
     t18 = T18()
     s = t18.s
@@ -898,62 +887,6 @@ def calc(inputs: Inputs) -> T18:
     s_biodiesel.energy = t.demand_biodiesel
 
     s_elec.energy = t.demand_electricity
-
-    # t.demand_petrol = air.demand_petrol + road.demand_petrol
-    # t.CO2e_cb = air.CO2e_cb + road.CO2e_cb + rail.CO2e_cb + ship.CO2e_cb + other.CO2e_cb
-    # t.energy = air.energy + road.energy + rail.energy + ship.energy
-    # t.demand_electricity = road.demand_electricity + rail.demand_electricity
-    # t.mileage = road.mileage + rail.mileage
-    # t.transport_capacity_tkm = (
-    #     air.transport_capacity_tkm
-    #     + road.transport_capacity_tkm
-    #     + rail.transport_capacity_tkm
-    #     + ship.transport_capacity_tkm
-    # )
-    # t.CO2e_total = t.CO2e_cb
-    # t.transport_capacity_pkm = (
-    #     air.transport_capacity_pkm
-    #     + road.transport_capacity_pkm
-    #     + rail.transport_capacity_pkm
-    #     + other.transport_capacity_pkm
-    # )
-    # t.demand_petrol = air.demand_petrol + road.demand_petrol
-    # t.demand_jetfuel = air.demand_jetfuel
-    # t.demand_diesel = road.demand_diesel + rail.demand_diesel + ship.demand_diesel
-    # t.demand_fueloil = ship.demand_fueloil
-    # t.demand_lpg = road.demand_lpg
-    # t.demand_gas = road.demand_gas
-    # t.demand_biogas = road.demand_biogas
-    # t.demand_bioethanol = road.demand_bioethanol
-    # t.demand_biodiesel = road.demand_biodiesel + rail.demand_biodiesel
-    # t.demand_biogas = road.demand_biogas
-    # t.demand_bioethanol = road.demand_bioethanol
-    # t.demand_biodiesel = road.demand_biodiesel + rail.demand_biodiesel
-    # t.energy = air.energy + road.energy + rail.energy + ship.energy
-    # t.mileage = road.mileage + rail.mileage
-    # t.transport_capacity_pkm = (
-    #     air.transport_capacity_pkm
-    #     + road.transport_capacity_pkm
-    #     + rail.transport_capacity_pkm
-    # )
-    # t.transport_capacity_tkm = (
-    #     air.transport_capacity_tkm
-    #     + road.transport_capacity_tkm
-    #     + rail.transport_capacity_tkm
-    #     + ship.transport_capacity_tkm
-    # )
-    # t.demand_petrol = air.demand_petrol + road.demand_petrol
-    # t.demand_jetfuel = air.demand_jetfuel
-    # t.demand_diesel = road.demand_diesel + rail.demand_diesel + ship.demand_diesel
-    # t.demand_fueloil = ship.demand_fueloil
-    # t.demand_lpg = road.demand_lpg
-    # t.demand_gas = road.demand_gas
-    # t.demand_biogas = road.demand_biogas
-    # t.demand_bioethanol = road.demand_bioethanol
-    # t.demand_biodiesel = road.demand_biodiesel + rail.demand_biodiesel
-    # t.demand_electricity = road.demand_electricity + rail.demand_electricity
-    # t.CO2e_cb = air.CO2e_cb + road.CO2e_cb + rail.CO2e_cb + ship.CO2e_cb
-    # t.CO2e_total = t.CO2e_cb
 
     s_lpg.energy = t.demand_lpg
 
