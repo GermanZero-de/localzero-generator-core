@@ -44,12 +44,6 @@ def co2e_from_demands(
 
 
 @dataclass
-class Vars1:
-    # Used by g, g_planning, road_action_charger, road_bus_action_infra, rail_ppl_metro_action_infra, rail_action_invest_infra, rail_action_invest_station
-    CO2e_total: float = None  # type: ignore
-
-
-@dataclass
 class Air:
     # Used by air_dmstc, air, air_inter
     CO2e_cb: float
@@ -775,17 +769,13 @@ class Vars20:
 @dataclass
 class T18:
     t: Transport = None  # type: ignore
-    g: Vars1 = field(default_factory=Vars1)
-    g_planning: Vars1 = field(default_factory=Vars1)
     air_inter: Air = None  # type: ignore
     air_dmstc: Air = None  # type: ignore
     road: Road = None  # type: ignore
-    road_action_charger: Vars1 = field(default_factory=Vars1)
     road_car: Road = None  # type: ignore
     road_car_it_ot: Road = None  # type: ignore
     road_car_ab: Road = None  # type: ignore
     road_bus: Road = None  # type: ignore
-    road_bus_action_infra: Vars1 = field(default_factory=Vars1)
     road_gds: Road = None  # type: ignore
     road_gds_ldt: Road = None  # type: ignore
     road_gds_ldt_it_ot: Road = None  # type: ignore
@@ -796,11 +786,8 @@ class T18:
     road_gds_mhd_ab: Road = None  # type: ignore
     rail_ppl: Rail = None  # type: ignore
     rail_ppl_metro: Rail = None  # type: ignore
-    rail_ppl_metro_action_infra: Vars1 = field(default_factory=Vars1)
     rail_ppl_distance: Rail = None  # type: ignore
     rail_gds: Rail = None  # type: ignore
-    rail_action_invest_infra: Vars1 = field(default_factory=Vars1)
-    rail_action_invest_station: Vars1 = field(default_factory=Vars1)
     ship_dmstc: Ship = None  # type: ignore
     ship_inter: Ship = None  # type: ignore
     other_foot: Other = None  # type: ignore
@@ -836,13 +823,6 @@ def calc(inputs: Inputs) -> T18:
 
     # abbreviations
     t18 = T18()
-    g = t18.g
-    g_planning = t18.g_planning
-    road_action_charger = t18.road_action_charger
-    road_bus_action_infra = t18.road_bus_action_infra
-    rail_ppl_metro_action_infra = t18.rail_ppl_metro_action_infra
-    rail_action_invest_infra = t18.rail_action_invest_infra
-    rail_action_invest_station = t18.rail_action_invest_station
     s = t18.s
     s_petrol = t18.s_petrol
     s_jetfuel = t18.s_jetfuel
@@ -918,14 +898,6 @@ def calc(inputs: Inputs) -> T18:
     s_biodiesel.energy = t.demand_biodiesel
 
     s_elec.energy = t.demand_electricity
-
-    g.CO2e_total = 0
-    g_planning.CO2e_total = 0
-    road_action_charger.CO2e_total = 0
-    road_bus_action_infra.CO2e_total = 0
-    rail_action_invest_infra.CO2e_total = 0
-    rail_action_invest_station.CO2e_total = 0
-    rail_ppl_metro_action_infra.CO2e_total = 0
 
     # t.demand_petrol = air.demand_petrol + road.demand_petrol
     # t.CO2e_cb = air.CO2e_cb + road.CO2e_cb + rail.CO2e_cb + ship.CO2e_cb + other.CO2e_cb
