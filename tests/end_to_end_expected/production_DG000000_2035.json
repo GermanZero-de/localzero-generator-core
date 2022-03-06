@@ -669,20 +669,14 @@
             "demand_lpg": 5041261.908542362,
             "demand_petrol": 213636569.1269754,
             "energy": 851452900.9031411,
-            "mileage": 776353467192.2333,
             "transport_capacity_pkm": 1233660677839.057,
             "transport_capacity_tkm": 2653047314250.6274
-        },
-        "g": {
-            "CO2e_total": 0
-        },
-        "g_planning": {
-            "CO2e_total": 0
         },
         "air_inter": {
             "CO2e_cb": 30020292.654000003,
             "CO2e_total": 30020292.654000003,
             "demand_jetfuel": 113722222.22222222,
+            "demand_petrol": 0,
             "energy": 113722222.22222222,
             "transport_capacity_pkm": 61700000000.0,
             "transport_capacity_tkm": 1507745000.0
@@ -712,12 +706,9 @@
             "transport_capacity_pkm": 985850922394.9069,
             "transport_capacity_tkm": 487960213764.7967
         },
-        "road_action_charger": {
-            "CO2e_total": 0
-        },
         "road_car": {
-            "CO2e_cb": 113780520.77701244,
-            "CO2e_total": 113780520.77701244,
+            "CO2e_cb": 113780520.77701242,
+            "CO2e_total": 113780520.77701242,
             "demand_biodiesel": 11999547.045242006,
             "demand_bioethanol": 9535548.49004918,
             "demand_biogas": 186121.8294527618,
@@ -732,8 +723,8 @@
             "transport_capacity_tkm": 0.0
         },
         "road_car_it_ot": {
-            "CO2e_cb": 75732134.74900973,
-            "CO2e_total": 75732134.74900973,
+            "CO2e_cb": 75732134.74900971,
+            "CO2e_total": 75732134.74900971,
             "demand_biodiesel": 8026370.502998933,
             "demand_bioethanol": 6316716.488088643,
             "demand_biogas": 129209.53173083086,
@@ -778,9 +769,6 @@
             "mileage": 2531000000.0,
             "transport_capacity_pkm": 38451000000.0,
             "transport_capacity_tkm": 0.0
-        },
-        "road_bus_action_infra": {
-            "CO2e_total": 0
         },
         "road_gds": {
             "CO2e_cb": 59246750.208849326,
@@ -863,8 +851,8 @@
             "transport_capacity_tkm": 480260217779.906
         },
         "road_ppl": {
-            "CO2e_cb": 116241510.65922372,
-            "CO2e_total": 116241510.65922372,
+            "CO2e_cb": 116241510.6592237,
+            "CO2e_total": 116241510.6592237,
             "demand_biodiesel": 12523901.224662637,
             "demand_bioethanol": 9535548.49004918,
             "demand_biogas": 227205.24969602757,
@@ -918,18 +906,19 @@
             "demand_electricity": 7533809.687500017,
             "energy": 10882598.123753276,
             "mileage": 1115099999.5415716,
+            "transport_capacity_tkm": 0,
             "transport_capacity_pkm": 115405729954.14996
         },
         "rail_ppl_metro": {
             "CO2e_cb": 0.0,
             "CO2e_total": 0.0,
+            "demand_biodiesel": 0,
+            "demand_diesel": 0,
             "demand_electricity": 1236000.0,
             "energy": 1236000.0,
             "mileage": 309000000.0,
+            "transport_capacity_tkm": 0,
             "transport_capacity_pkm": 17705730009.711884
-        },
-        "rail_ppl_metro_action_infra": {
-            "CO2e_total": 0
         },
         "rail_ppl_distance": {
             "CO2e_cb": 843358.390862909,
@@ -939,6 +928,7 @@
             "demand_electricity": 6297809.687500017,
             "energy": 9646598.123753276,
             "mileage": 806099999.5415715,
+            "transport_capacity_tkm": 0,
             "transport_capacity_pkm": 97699999944.43808
         },
         "rail_gds": {
@@ -949,24 +939,21 @@
             "demand_electricity": 4015517.609374997,
             "energy": 5068882.648424478,
             "mileage": 288000001.0465165,
-            "transport_capacity_tkm": 133700000485.83072
-        },
-        "rail_action_invest_infra": {
-            "CO2e_total": 0
-        },
-        "rail_action_invest_station": {
-            "CO2e_total": 0
+            "transport_capacity_tkm": 133700000485.83072,
+            "transport_capacity_pkm": 0
         },
         "ship_dmstc": {
             "CO2e_cb": 786092.7129999999,
             "CO2e_total": 786092.7129999999,
             "demand_diesel": 2949722.222222222,
+            "demand_fueloil": 0,
             "energy": 2949722.222222222,
             "transport_capacity_tkm": 46900000000.0
         },
         "ship_inter": {
             "CO2e_cb": 5396000.0,
             "CO2e_total": 5396000.0,
+            "demand_diesel": 0,
             "demand_fueloil": 19722222.22222222,
             "energy": 19722222.22222222,
             "transport_capacity_tkm": 1982900000000.0
@@ -981,10 +968,6 @@
             "CO2e_total": 0,
             "transport_capacity_pkm": 30302012745.0
         },
-        "road_gds_mhd_action_wire": {},
-        "ship_dmstc_action_infra": {},
-        "other_foot_action_infra": {},
-        "other_cycl_action_infra": {},
         "air": {
             "CO2e_cb": 32106016.254000004,
             "CO2e_total": 32106016.254000004,
@@ -1002,8 +985,8 @@
             "demand_electricity": 11549327.296875015,
             "energy": 15951480.772177754,
             "mileage": 1403100000.588088,
-            "transport_capacity_pkm": 115405729954.14996,
-            "transport_capacity_tkm": 133700000485.83072
+            "transport_capacity_tkm": 133700000485.83072,
+            "transport_capacity_pkm": 115405729954.14996
         },
         "ship": {
             "CO2e_cb": 6182092.7129999995,
@@ -1016,9 +999,7 @@
         "other": {
             "CO2e_cb": 0,
             "CO2e_total": 0,
-            "mileage": 0,
-            "transport_capacity_pkm": 60604025490.0,
-            "transport_capacity_tkm": 0
+            "transport_capacity_pkm": 60604025490.0
         },
         "s": {
             "energy": 851452900.903141
@@ -1052,9 +1033,7 @@
         },
         "s_elec": {
             "energy": 11858971.09623083
-        },
-        "s_hydrogen": {},
-        "s_emethan": {}
+        }
     },
     "a18": {
         "a": {
@@ -3723,14 +3702,14 @@
         "road_ppl": {
             "CO2e_cb": 2202784.9553873786,
             "CO2e_total": 2202784.9553873786,
-            "CO2e_total_2021_estimated": 108515074.38656807,
+            "CO2e_total_2021_estimated": 108515074.38656805,
             "base_unit": 26646062.063072186,
             "change_CO2e_pct": -0.9810499283526595,
-            "change_CO2e_t": -114038725.70383634,
+            "change_CO2e_t": -114038725.70383632,
             "change_energy_MWh": -391356026.4933109,
             "change_energy_pct": -0.8585691311291213,
             "change_km": -364927180982.7107,
-            "cost_climate_saved": 445714273440.22504,
+            "cost_climate_saved": 445714273440.2249,
             "cost_wage": 5028646102.011722,
             "demand_electricity": 56340050.22533813,
             "demand_emplo": 226376.74107226802,
@@ -3747,14 +3726,14 @@
         "road_car": {
             "CO2e_cb": 2202784.9553873786,
             "CO2e_total": 2202784.9553873786,
-            "CO2e_total_2021_estimated": 106217663.60260423,
+            "CO2e_total_2021_estimated": 106217663.60260421,
             "base_unit": 26528891.703609888,
             "change_CO2e_pct": -0.9806400520902483,
-            "change_CO2e_t": -111577735.82162505,
+            "change_CO2e_t": -111577735.82162504,
             "change_energy_MWh": -390685582.41470915,
             "change_energy_pct": -0.8760438966877007,
             "change_km": -410359922394.90674,
-            "cost_climate_saved": 436082378728.4566,
+            "cost_climate_saved": 436082378728.45654,
             "demand_electricity": 47152707.808270305,
             "demand_epetrol": 8127470.045291653,
             "energy": 55280177.85356195,
@@ -3767,13 +3746,13 @@
         "road_car_it_ot": {
             "CO2e_cb": 1459210.0351573522,
             "CO2e_total": 1459210.0351573522,
-            "CO2e_total_2021_estimated": 70698308.9701466,
+            "CO2e_total_2021_estimated": 70698308.97014658,
             "change_CO2e_pct": -0.9807319569163943,
-            "change_CO2e_t": -74272924.71385238,
+            "change_CO2e_t": -74272924.71385236,
             "change_energy_MWh": -263794646.9956758,
             "change_energy_pct": -0.8886529356724897,
             "change_km": -284880143127.9893,
-            "cost_climate_saved": 290284922284.9424,
+            "cost_climate_saved": 290284922284.9423,
             "demand_electricity": 27669177.522655845,
             "demand_epetrol": 5383950.812595201,
             "energy": 33053128.335251044,
@@ -4257,7 +4236,7 @@
             "change_CO2e_t": -196087622.19145793,
             "change_energy_MWh": -656443175.5011826,
             "change_energy_pct": -0.7709682764658966,
-            "cost_climate_saved": 762215235827.0482,
+            "cost_climate_saved": 762215235827.0481,
             "cost_wage": 16588486146.618896,
             "demand_change": 0,
             "demand_ediesel": 20706758.557814445,
@@ -4306,7 +4285,7 @@
             "change_CO2e_t": -171231646.33595207,
             "change_energy_MWh": -575629521.4849077,
             "change_energy_pct": -0.8328050002386639,
-            "cost_climate_saved": 668985269557.3605,
+            "cost_climate_saved": 668985269557.3604,
             "cost_wage": 5918269098.8451605,
             "demand_change": 0,
             "demand_ediesel": 7706758.557814446,
@@ -10306,7 +10285,7 @@
         "CO2e_w_lulucf_203X": -6654622.779278189,
         "change_CO2e_t": -906010553.255391,
         "change_CO2e_pct": -1.0073993205067935,
-        "cost_climate_saved": 3548284065366.8633,
+        "cost_climate_saved": 3548284065366.863,
         "z": {
             "energy_18": 2579171234.236475,
             "pct_energy_18": null,
@@ -10644,7 +10623,7 @@
             "demand_emplo_new": null,
             "demand_emplo_com": null,
             "invest_pct": 0.3059545090491876,
-            "cost_climate_saved_pct": 0.21484012968763036,
+            "cost_climate_saved_pct": 0.21484012968763033,
             "demand_emplo_new_pct": 0.11426146392529597
         },
         "i": {

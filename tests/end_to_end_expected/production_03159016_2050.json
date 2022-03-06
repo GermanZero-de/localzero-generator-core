@@ -669,20 +669,14 @@
             "demand_lpg": 4417.233471962354,
             "demand_petrol": 187741.93458067987,
             "energy": 817222.9293021072,
-            "mileage": 682292690.2319568,
             "transport_capacity_pkm": 1227147515.1598063,
             "transport_capacity_tkm": 3622650657.4866657
-        },
-        "g": {
-            "CO2e_total": 0
-        },
-        "g_planning": {
-            "CO2e_total": 0
         },
         "air_inter": {
             "CO2e_cb": 43320.82839958811,
             "CO2e_total": 43320.82839958811,
             "demand_jetfuel": 164107.02356868217,
+            "demand_petrol": 0,
             "energy": 164107.02356868217,
             "transport_capacity_pkm": 89036277.66261768,
             "transport_capacity_tkm": 2175753.6866195058
@@ -711,9 +705,6 @@
             "mileage": 680638385.8822284,
             "transport_capacity_pkm": 869092796.1570793,
             "transport_capacity_tkm": 395395786.66089535
-        },
-        "road_action_charger": {
-            "CO2e_total": 0
         },
         "road_car": {
             "CO2e_cb": 100122.76102665166,
@@ -778,9 +769,6 @@
             "mileage": 1752789.9193474643,
             "transport_capacity_pkm": 26628417.696100097,
             "transport_capacity_tkm": 0.0
-        },
-        "road_bus_action_infra": {
-            "CO2e_total": 0
         },
         "road_gds": {
             "CO2e_cb": 47852.005808614165,
@@ -918,18 +906,19 @@
             "demand_electricity": 8559.525098872567,
             "energy": 10157.44404985464,
             "mileage": 1017002.2133775492,
+            "transport_capacity_tkm": 0,
             "transport_capacity_pkm": 123261526.17167418
         },
         "rail_ppl_metro": {
             "CO2e_cb": 0.0,
             "CO2e_total": 0.0,
+            "demand_biodiesel": 0,
+            "demand_diesel": 0,
             "demand_electricity": 0.0,
             "energy": 0.0,
             "mileage": 0.0,
+            "transport_capacity_tkm": 0,
             "transport_capacity_pkm": 0.0
-        },
-        "rail_ppl_metro_action_infra": {
-            "CO2e_total": 0
         },
         "rail_ppl_distance": {
             "CO2e_cb": 402.4196753191579,
@@ -939,6 +928,7 @@
             "demand_electricity": 8559.525098872567,
             "energy": 10157.44404985464,
             "mileage": 1017002.2133775492,
+            "transport_capacity_tkm": 0,
             "transport_capacity_pkm": 123261526.17167418
         },
         "rail_gds": {
@@ -949,24 +939,21 @@
             "demand_electricity": 9191.795748526076,
             "energy": 9456.300042697958,
             "mileage": 637302.1363508865,
-            "transport_capacity_tkm": 295858665.38233864
-        },
-        "rail_action_invest_infra": {
-            "CO2e_total": 0
-        },
-        "rail_action_invest_station": {
-            "CO2e_total": 0
+            "transport_capacity_tkm": 295858665.38233864,
+            "transport_capacity_pkm": 0
         },
         "ship_dmstc": {
             "CO2e_cb": 1134.372270068532,
             "CO2e_total": 1134.372270068532,
             "demand_diesel": 4256.60108274508,
+            "demand_fueloil": 0,
             "energy": 4256.60108274508,
             "transport_capacity_tkm": 67679115.43560405
         },
         "ship_inter": {
             "CO2e_cb": 7786.705903849028,
             "CO2e_total": 7786.705903849028,
+            "demand_diesel": 0,
             "demand_fueloil": 28460.18239710902,
             "energy": 28460.18239710902,
             "transport_capacity_tkm": 2861426822.9692807
@@ -974,17 +961,13 @@
         "other_foot": {
             "CO2e_cb": 0,
             "CO2e_total": 0,
-            "transport_capacity_pkm": 43727365
+            "transport_capacity_pkm": 43727365.0
         },
         "other_cycl": {
             "CO2e_cb": 0,
             "CO2e_total": 0,
             "transport_capacity_pkm": 87454730.0
         },
-        "road_gds_mhd_action_wire": {},
-        "ship_dmstc_action_infra": {},
-        "other_foot_action_infra": {},
-        "other_cycl_action_infra": {},
         "air": {
             "CO2e_cb": 46330.63497296046,
             "CO2e_total": 46330.63497296046,
@@ -1002,8 +985,8 @@
             "demand_electricity": 17751.320847398645,
             "energy": 19613.744092552595,
             "mileage": 1654304.3497284357,
-            "transport_capacity_pkm": 123261526.17167418,
-            "transport_capacity_tkm": 295858665.38233864
+            "transport_capacity_tkm": 295858665.38233864,
+            "transport_capacity_pkm": 123261526.17167418
         },
         "ship": {
             "CO2e_cb": 8921.07817391756,
@@ -1016,9 +999,7 @@
         "other": {
             "CO2e_cb": 0,
             "CO2e_total": 0,
-            "mileage": 0,
-            "transport_capacity_pkm": 131182095.0,
-            "transport_capacity_tkm": 0
+            "transport_capacity_pkm": 131182095.0
         },
         "s": {
             "energy": 817222.9293021072
@@ -1052,9 +1033,7 @@
         },
         "s_elec": {
             "energy": 18007.807619784046
-        },
-        "s_hydrogen": {},
-        "s_emethan": {}
+        }
     },
     "a18": {
         "a": {
