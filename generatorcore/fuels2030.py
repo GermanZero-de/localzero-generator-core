@@ -15,7 +15,7 @@ from . import (
 @dataclass
 class Vars0:
     # Used by f
-    CO2e_pb: float = None  # type: ignore
+    CO2e_production_based: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     CO2e_total_2021_estimated: float = None  # type: ignore
     change_CO2e_pct: float = None  # type: ignore
@@ -47,7 +47,7 @@ class Vars2:
 @dataclass
 class Vars3:
     # Used by p
-    CO2e_pb: float = None  # type: ignore
+    CO2e_production_based: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     CO2e_total_2021_estimated: float = None  # type: ignore
     change_CO2e_pct: float = None  # type: ignore
@@ -69,8 +69,8 @@ class Vars3:
 @dataclass
 class Vars4:
     # Used by p_petrol, p_jetfuel, p_diesel
-    CO2e_pb: float = None  # type: ignore
-    CO2e_pb_per_MWh: float = None  # type: ignore
+    CO2e_production_based: float = None  # type: ignore
+    CO2e_production_based_per_MWh: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     CO2e_total_2021_estimated: float = None  # type: ignore
     change_CO2e_pct: float = None  # type: ignore
@@ -105,8 +105,8 @@ class Vars5:
 @dataclass
 class Vars6:
     # Used by p_emethan, p_hydrogen, p_hydrogen_reconv
-    CO2e_pb: float = None  # type: ignore
-    CO2e_pb_per_MWh: float = None  # type: ignore
+    CO2e_production_based: float = None  # type: ignore
+    CO2e_production_based_per_MWh: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     CO2e_total_2021_estimated: float = None  # type: ignore
     change_CO2e_pct: float = None  # type: ignore
@@ -236,24 +236,32 @@ def calc(
     ) = f30.p_hydrogen_reconv.CO2e_total_2021_estimated = 0
 
     # ---------------------------------------
-    f30.p_petrol.CO2e_pb_per_MWh = -1 * fact("Fact_T_S_petrol_EmFa_tank_wheel_2018")
+    f30.p_petrol.CO2e_production_based_per_MWh = -1 * fact(
+        "Fact_T_S_petrol_EmFa_tank_wheel_2018"
+    )
     f30.p_petrol.pct_of_wage = ass("Ass_S_constr_renew_gas_pct_of_wage_2017")
     f30.p_petrol.ratio_wage_to_emplo = ass("Ass_S_constr_renew_gas_wage_per_year_2017")
     f30.p_petrol.invest_per_x = ass("Ass_S_power_to_x_invest_per_power")
     f30.p_petrol.full_load_hour = ass("Ass_S_power_to_x_full_load_hours2")
-    f30.p_jetfuel.CO2e_pb_per_MWh = -1 * fact("Fact_T_S_petroljet_EmFa_tank_wheel_2018")
+    f30.p_jetfuel.CO2e_production_based_per_MWh = -1 * fact(
+        "Fact_T_S_petroljet_EmFa_tank_wheel_2018"
+    )
     f30.p_jetfuel.pct_of_wage = ass("Ass_S_constr_renew_gas_pct_of_wage_2017")
     f30.p_jetfuel.ratio_wage_to_emplo = ass("Ass_S_constr_renew_gas_wage_per_year_2017")
     f30.p_jetfuel.invest_per_x = ass("Ass_S_power_to_x_invest_per_power")
     f30.p_jetfuel.full_load_hour = ass("Ass_S_power_to_x_full_load_hours2")
-    f30.p_diesel.CO2e_pb_per_MWh = -1 * fact("Fact_T_S_diesel_EmFa_tank_wheel_2018")
+    f30.p_diesel.CO2e_production_based_per_MWh = -1 * fact(
+        "Fact_T_S_diesel_EmFa_tank_wheel_2018"
+    )
     f30.p_diesel.pct_of_wage = ass("Ass_S_constr_renew_gas_pct_of_wage_2017")
     f30.p_diesel.ratio_wage_to_emplo = ass("Ass_S_constr_renew_gas_wage_per_year_2017")
     f30.p_diesel.invest_per_x = ass("Ass_S_power_to_x_invest_per_power")
     f30.p_diesel.full_load_hour = ass("Ass_S_power_to_x_full_load_hours2")
-    f30.p_emethan.CO2e_pb_per_MWh = -1 * fact("Fact_T_S_methan_EmFa_tank_wheel_2018")
-    f30.p_hydrogen.CO2e_pb_per_MWh = 0.0
-    f30.p_hydrogen_reconv.CO2e_pb_per_MWh = 0
+    f30.p_emethan.CO2e_production_based_per_MWh = -1 * fact(
+        "Fact_T_S_methan_EmFa_tank_wheel_2018"
+    )
+    f30.p_hydrogen.CO2e_production_based_per_MWh = 0.0
+    f30.p_hydrogen_reconv.CO2e_production_based_per_MWh = 0
     # --------------------------------
     f30.p_emethan.pct_of_wage = ass("Ass_S_constr_renew_gas_pct_of_wage_2017")
     f30.p_emethan.ratio_wage_to_emplo = ass("Ass_S_constr_renew_gas_wage_per_year_2017")
@@ -317,11 +325,21 @@ def calc(
         + f30.p_hydrogen.CO2e_total_2021_estimated
         + f30.p_hydrogen_reconv.CO2e_total_2021_estimated
     )  # SUM(p_petrol.CO2e_total_2021_estimated:p_hydrogen_reconv.CO2e_total_2021_estimated)
-    f30.p_petrol.CO2e_pb = f30.p_petrol.CO2e_pb_per_MWh * f30.p_petrol.energy
-    f30.p_jetfuel.CO2e_pb = f30.p_jetfuel.CO2e_pb_per_MWh * f30.p_jetfuel.energy
-    f30.p_diesel.CO2e_pb = f30.p_diesel.CO2e_pb_per_MWh * f30.p_diesel.energy
-    f30.p_emethan.CO2e_pb = f30.p_emethan.CO2e_pb_per_MWh * f30.p_emethan.energy
-    f30.p_hydrogen.CO2e_pb = f30.p_hydrogen_reconv.CO2e_pb = 0
+    f30.p_petrol.CO2e_production_based = (
+        f30.p_petrol.CO2e_production_based_per_MWh * f30.p_petrol.energy
+    )
+    f30.p_jetfuel.CO2e_production_based = (
+        f30.p_jetfuel.CO2e_production_based_per_MWh * f30.p_jetfuel.energy
+    )
+    f30.p_diesel.CO2e_production_based = (
+        f30.p_diesel.CO2e_production_based_per_MWh * f30.p_diesel.energy
+    )
+    f30.p_emethan.CO2e_production_based = (
+        f30.p_emethan.CO2e_production_based_per_MWh * f30.p_emethan.energy
+    )
+    f30.p_hydrogen.CO2e_production_based = (
+        f30.p_hydrogen_reconv.CO2e_production_based
+    ) = 0
     # --------------------------------
     f30.p_petrol.power_to_be_installed = div(
         f30.p_petrol.demand_electricity, f30.p_petrol.full_load_hour
@@ -366,25 +384,25 @@ def calc(
         / ass("Ass_E_P_renew_reverse_gud_efficiency")
     )
     f30.f.CO2e_total_2021_estimated = f30.p.CO2e_total_2021_estimated
-    f30.p_petrol.CO2e_total = f30.p_petrol.CO2e_pb
-    f30.p_jetfuel.CO2e_total = f30.p_jetfuel.CO2e_pb
-    f30.p_diesel.CO2e_total = f30.p_diesel.CO2e_pb
+    f30.p_petrol.CO2e_total = f30.p_petrol.CO2e_production_based
+    f30.p_jetfuel.CO2e_total = f30.p_jetfuel.CO2e_production_based
+    f30.p_diesel.CO2e_total = f30.p_diesel.CO2e_production_based
     f30.p_hydrogen.CO2e_total = f30.p_hydrogen_reconv.CO2e_total = 0
     f30.p_biodiesel.change_CO2e_t = -f18.p_biodiesel.CO2e_total
     f30.p_bioethanol.change_CO2e_t = f30.p_biodiesel.change_CO2e_t
     f30.p_hydrogen.change_CO2e_t = (
         f30.p_hydrogen_reconv.change_CO2e_t
     ) = f30.p_biogas.change_CO2e_t = 0
-    f30.p.CO2e_pb = (
-        f30.p_petrol.CO2e_pb
-        + f30.p_jetfuel.CO2e_pb
-        + f30.p_diesel.CO2e_pb
-        + f30.p_emethan.CO2e_pb
-        + f30.p_hydrogen.CO2e_pb
-        + f30.p_hydrogen_reconv.CO2e_pb
+    f30.p.CO2e_production_based = (
+        f30.p_petrol.CO2e_production_based
+        + f30.p_jetfuel.CO2e_production_based
+        + f30.p_diesel.CO2e_production_based
+        + f30.p_emethan.CO2e_production_based
+        + f30.p_hydrogen.CO2e_production_based
+        + f30.p_hydrogen_reconv.CO2e_production_based
     )  # SUM(p_petrol.CO2e_pb:p_hydrogen_reconv.CO2e_pb)
 
-    f30.p_emethan.CO2e_total = f30.p_emethan.CO2e_pb
+    f30.p_emethan.CO2e_total = f30.p_emethan.CO2e_production_based
     # ---------------------------------
     f30.p_petrol.invest = f30.p_petrol.power_to_be_installed * ass(
         "Ass_S_power_to_x_invest_per_power"
@@ -434,7 +452,7 @@ def calc(
         * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
-    f30.f.CO2e_pb = f30.p.CO2e_pb
+    f30.f.CO2e_production_based = f30.p.CO2e_production_based
     f30.p.CO2e_total = (
         f30.p_petrol.CO2e_total
         + f30.p_jetfuel.CO2e_total
