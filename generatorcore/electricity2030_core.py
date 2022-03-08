@@ -10,7 +10,7 @@ class EColVars2030:
     energy_installable: float = None  # type: ignore
     cost_fuel_per_MWh: float = None  # type: ignore
     cost_fuel: float = None  # type: ignore
-    percentage_of_energy: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
     mro_per_MWh: float = None  # type: ignore
     mro: float = None  # type: ignore
     CO2e_combustion_based_per_MWh: float = None  # type: ignore
@@ -174,9 +174,9 @@ def calc_biomass_cogen(
 
     p_local_biomass_cogen = EColVars2030()
 
-    p_local_biomass_cogen.percentage_of_energy = fact("Fact_E_P_renew_cogen_ratio_2018")
+    p_local_biomass_cogen.pct_energy = fact("Fact_E_P_renew_cogen_ratio_2018")
     p_local_biomass_cogen.energy = (
-        p_local_biomass.energy * p_local_biomass_cogen.percentage_of_energy
+        p_local_biomass.energy * p_local_biomass_cogen.pct_energy
     )
 
     return p_local_biomass_cogen

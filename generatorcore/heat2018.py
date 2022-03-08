@@ -33,7 +33,7 @@ class Vars3:
     CO2e_production_based: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     energy: float = None  # type: ignore
-    percentage_of_energy: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
 
 
 @dataclass
@@ -45,7 +45,7 @@ class Vars4:
     CO2e_production_based_per_MWh: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     energy: float = None  # type: ignore
-    percentage_of_energy: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
 
 
 @dataclass
@@ -55,7 +55,7 @@ class Vars5:
     CO2e_combustion_based_per_MWh: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     energy: float = None  # type: ignore
-    percentage_of_energy: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
 
 
 @dataclass
@@ -64,7 +64,7 @@ class Vars6:
     CO2e_combustion_based: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     energy: float = None  # type: ignore
-    percentage_of_energy: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
 
 
 @dataclass
@@ -74,7 +74,7 @@ class Vars7:
     CO2e_production_based: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     energy: float = None  # type: ignore
-    percentage_of_energy: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
 
 
 @dataclass
@@ -84,7 +84,7 @@ class Vars8:
     CO2e_production_based_per_MWh: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     energy: float = None  # type: ignore
-    percentage_of_energy: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
 
 
 @dataclass
@@ -238,7 +238,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18, e18: electricity2018.E18) ->
     )
 
     # 2 pct of total final energy consumption
-    p_gas.percentage_of_energy = div(p_gas.energy, p.energy)
+    p_gas.pct_energy = div(p_gas.energy, p.energy)
 
     # 3 process-based CO2e factor per MWh final energy
     p_gas.CO2e_production_based_per_MWh = fact("Fact_H_P_gas_ratio_CO2e_pb_to_fec_2018")
@@ -268,7 +268,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18, e18: electricity2018.E18) ->
     )
 
     # 2 pct of total final energy consumption
-    p_lpg.percentage_of_energy = div(p_lpg.energy, p.energy)
+    p_lpg.pct_energy = div(p_lpg.energy, p.energy)
 
     # 4 no process-based CO2e
 
@@ -295,7 +295,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18, e18: electricity2018.E18) ->
     )
 
     # 2 pct of total final energy consumption
-    p_fueloil.percentage_of_energy = div(p_fueloil.energy, p.energy)
+    p_fueloil.pct_energy = div(p_fueloil.energy, p.energy)
 
     # 4 no process-based CO2e
 
@@ -322,7 +322,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18, e18: electricity2018.E18) ->
     )
 
     # 2 pct of total final energy consumption
-    p_opetpro.percentage_of_energy = div(p_opetpro.energy, p.energy)
+    p_opetpro.pct_energy = div(p_opetpro.energy, p.energy)
 
     # 3 process-based CO2e factor per MWh final energy
     p_opetpro.CO2e_production_based_per_MWh = fact(
@@ -360,7 +360,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18, e18: electricity2018.E18) ->
     )
 
     # 2 pct of total final energy consumption
-    p_coal.percentage_of_energy = div(p_coal.energy, p.energy)
+    p_coal.pct_energy = div(p_coal.energy, p.energy)
 
     # 3 process-based CO2e factor per MWh final energy
     p_coal.CO2e_production_based_per_MWh = fact(
@@ -392,7 +392,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18, e18: electricity2018.E18) ->
     )
 
     # 2 pct of total final energy consumption
-    p_heatnet.percentage_of_energy = div(p_heatnet.energy, p.energy)
+    p_heatnet.pct_energy = div(p_heatnet.energy, p.energy)
 
     # Production cogenerated heatnet:
 
@@ -421,7 +421,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18, e18: electricity2018.E18) ->
         p_heatnet_cogen.energy = p_heatnet.energy
 
     # 2 pct of total final energy consumption of heatnet
-    p_heatnet_cogen.percentage_of_energy = div(p_heatnet_cogen.energy, p_heatnet.energy)
+    p_heatnet_cogen.pct_energy = div(p_heatnet_cogen.energy, p_heatnet.energy)
 
     # 4 no process-based CO2e
 
@@ -449,7 +449,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18, e18: electricity2018.E18) ->
     )
 
     # 2 pct of total final energy consumption of heatnet
-    p_heatnet_plant.percentage_of_energy = div(p_heatnet_plant.energy, p_heatnet.energy)
+    p_heatnet_plant.pct_energy = div(p_heatnet_plant.energy, p_heatnet.energy)
 
     # 4 no process-based CO2e
 
@@ -478,8 +478,8 @@ def calc(inputs: Inputs, *, t18: transport2018.T18, e18: electricity2018.E18) ->
 
     p_heatnet_geoth = h18.p_heatnet_geoth
 
-    p_heatnet_geoth.percentage_of_energy = 0
-    p_heatnet_geoth.energy = p_heatnet_geoth.percentage_of_energy * p_heatnet.energy
+    p_heatnet_geoth.pct_energy = 0
+    p_heatnet_geoth.energy = p_heatnet_geoth.pct_energy * p_heatnet.energy
 
     p_heatnet_geoth.CO2e_combustion_based = 0
     p_heatnet_geoth.CO2e_production_based = 0
@@ -488,12 +488,10 @@ def calc(inputs: Inputs, *, t18: transport2018.T18, e18: electricity2018.E18) ->
     )
 
     p_heatnet_lheatpump = h18.p_heatnet_lheatpump
-    p_heatnet_lheatpump.percentage_of_energy = 0
+    p_heatnet_lheatpump.pct_energy = 0
     p_heatnet_lheatpump.CO2e_production_based = 0
     p_heatnet_lheatpump.CO2e_combustion_based = 0
-    p_heatnet_lheatpump.energy = (
-        p_heatnet_lheatpump.percentage_of_energy * p_heatnet.energy
-    )
+    p_heatnet_lheatpump.energy = p_heatnet_lheatpump.pct_energy * p_heatnet.energy
     p_heatnet_lheatpump.CO2e_total = (
         p_heatnet_lheatpump.CO2e_production_based
         + p_heatnet_lheatpump.CO2e_combustion_based
@@ -513,7 +511,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18, e18: electricity2018.E18) ->
     )
 
     # 2 pct of total final energy consumption
-    p_biomass.percentage_of_energy = div(p_biomass.energy, p.energy)
+    p_biomass.pct_energy = div(p_biomass.energy, p.energy)
 
     # 3 process-based CO2e factor per MWh final energy
     p_biomass.CO2e_production_based_per_MWh = fact(
@@ -543,7 +541,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18, e18: electricity2018.E18) ->
     p_ofossil.energy = entries.i_ofossil_fec
 
     # 2 pct of total final energy consumption
-    p_ofossil.percentage_of_energy = div(p_ofossil.energy, p.energy)
+    p_ofossil.pct_energy = div(p_ofossil.energy, p.energy)
 
     # 3 process-based CO2e factor per MWh final energy
     p_ofossil.CO2e_production_based_per_MWh = fact(
@@ -572,19 +570,19 @@ def calc(inputs: Inputs, *, t18: transport2018.T18, e18: electricity2018.E18) ->
     )
 
     # 2 pct of total final energy consumption
-    p_orenew.percentage_of_energy = div(p_orenew.energy, p.energy)
+    p_orenew.pct_energy = div(p_orenew.energy, p.energy)
 
     # Production solarthermal energy within other renewables:
 
     p_solarth = h18.p_solarth
 
     # 2 pct of other renewables' final energy consumption
-    p_solarth.percentage_of_energy = fact("Fact_R_S_ratio_solarth_to_orenew_2018")
+    p_solarth.pct_energy = fact("Fact_R_S_ratio_solarth_to_orenew_2018")
 
     # 1 final energy consumption
     p_solarth.energy = (
         p_orenew.energy
-        * p_solarth.percentage_of_energy
+        * p_solarth.pct_energy
         # result: 9.444.712 MWh
     )
 
@@ -607,12 +605,12 @@ def calc(inputs: Inputs, *, t18: transport2018.T18, e18: electricity2018.E18) ->
     p_heatpump = h18.p_heatpump
 
     # 2 pct of other renewables' final energy consumption
-    p_heatpump.percentage_of_energy = fact("Fact_R_S_ratio_heatpump_to_orenew_2018")
+    p_heatpump.pct_energy = fact("Fact_R_S_ratio_heatpump_to_orenew_2018")
 
     # 1 final energy consumption
     p_heatpump.energy = (
         p_orenew.energy
-        * p_heatpump.percentage_of_energy
+        * p_heatpump.pct_energy
         # result: 13.920.010 MWh
     )
 
@@ -646,7 +644,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18, e18: electricity2018.E18) ->
     p_solarth = h18.p_solarth
 
     p_solarth.energy = p_orenew.energy * fact("Fact_R_S_ratio_solarth_to_orenew_2018")
-    p_solarth.percentage_of_energy = div(p_solarth.energy, p_orenew.energy)
+    p_solarth.pct_energy = div(p_solarth.energy, p_orenew.energy)
     p_solarth.CO2e_production_based_per_MWh = fact(
         "Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018"
     )
@@ -657,7 +655,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18, e18: electricity2018.E18) ->
 
     p_heatpump = h18.p_heatpump
     p_heatpump.energy = p_orenew.energy * fact("Fact_R_S_ratio_heatpump_to_orenew_2018")
-    p_heatpump.percentage_of_energy = div(p_heatpump.energy, p_orenew.energy)
+    p_heatpump.pct_energy = div(p_heatpump.energy, p_orenew.energy)
     p_heatpump.CO2e_production_based_per_MWh = fact(
         "Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018"
     )
@@ -705,16 +703,16 @@ def calc(inputs: Inputs, *, t18: transport2018.T18, e18: electricity2018.E18) ->
         + p_orenew.CO2e_total
     )
 
-    p.percentage_of_energy = (
-        p_gas.percentage_of_energy
-        + p_lpg.percentage_of_energy
-        + p_fueloil.percentage_of_energy
-        + p_opetpro.percentage_of_energy
-        + p_coal.percentage_of_energy
-        + p_heatnet.percentage_of_energy
-        + p_biomass.percentage_of_energy
-        + p_ofossil.percentage_of_energy
-        + p_orenew.percentage_of_energy
+    p.pct_energy = (
+        p_gas.pct_energy
+        + p_lpg.pct_energy
+        + p_fueloil.pct_energy
+        + p_opetpro.pct_energy
+        + p_coal.pct_energy
+        + p_heatnet.pct_energy
+        + p_biomass.pct_energy
+        + p_ofossil.pct_energy
+        + p_orenew.pct_energy
     )
 
     h = h18.h

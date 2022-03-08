@@ -51,7 +51,7 @@ class Vars5:
     CO2e_total: float = None  # type: ignore
     cost_fuel: float = None  # type: ignore
     energy: float = None  # type: ignore
-    percentage_of_energy: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
 
 
 @dataclass
@@ -63,7 +63,7 @@ class Vars6:
     cost_fuel: float = None  # type: ignore
     cost_fuel_per_MWh: float = None  # type: ignore
     energy: float = None  # type: ignore
-    percentage_of_energy: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
 
 
 @dataclass
@@ -76,7 +76,7 @@ class Vars7:
     cost_fuel_per_MWh: float = None  # type: ignore
     energy: float = None  # type: ignore
     number_of_buildings: float = None  # type: ignore
-    percentage_of_energy: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
 
 
 @dataclass
@@ -86,7 +86,7 @@ class Vars8:
     CO2e_combustion_based_per_MWh: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     energy: float = None  # type: ignore
-    percentage_of_energy: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
 
 
 @dataclass
@@ -204,53 +204,47 @@ def calc(inputs: Inputs, *, r18: residences2018.R18) -> B18:
         + b18.s_elec.energy
     )  # 187.870.374 MWh
 
-    b18.s_gas.percentage_of_energy = div(b18.s_gas.energy, b18.s.energy)  # 52,5%
+    b18.s_gas.pct_energy = div(b18.s_gas.energy, b18.s.energy)  # 52,5%
 
-    b18.s_lpg.percentage_of_energy = div(b18.s_lpg.energy, b18.s.energy)  # 1,6%
+    b18.s_lpg.pct_energy = div(b18.s_lpg.energy, b18.s.energy)  # 1,6%
 
-    b18.s_petrol.percentage_of_energy = div(b18.s_petrol.energy, b18.s.energy)  # 0,9%
+    b18.s_petrol.pct_energy = div(b18.s_petrol.energy, b18.s.energy)  # 0,9%
 
-    b18.s_jetfuel.percentage_of_energy = div(b18.s_jetfuel.energy, b18.s.energy)  # 0,2%
+    b18.s_jetfuel.pct_energy = div(b18.s_jetfuel.energy, b18.s.energy)  # 0,2%
 
-    b18.s_diesel.percentage_of_energy = div(b18.s_diesel.energy, b18.s.energy)  # 4,8%
+    b18.s_diesel.pct_energy = div(b18.s_diesel.energy, b18.s.energy)  # 4,8%
 
-    b18.s_fueloil.percentage_of_energy = div(
-        b18.s_fueloil.energy, b18.s.energy
-    )  # 17,8%
+    b18.s_fueloil.pct_energy = div(b18.s_fueloil.energy, b18.s.energy)  # 17,8%
 
-    b18.s_biomass.percentage_of_energy = div(
-        b18.s_biomass.energy, b18.s.energy
-    )  # 11,1%
+    b18.s_biomass.pct_energy = div(b18.s_biomass.energy, b18.s.energy)  # 11,1%
 
-    b18.s_coal.percentage_of_energy = div(b18.s_coal.energy, b18.s.energy)  # 0,1%
+    b18.s_coal.pct_energy = div(b18.s_coal.energy, b18.s.energy)  # 0,1%
 
-    b18.s_heatnet.percentage_of_energy = div(b18.s_heatnet.energy, b18.s.energy)  # 3,5%
+    b18.s_heatnet.pct_energy = div(b18.s_heatnet.energy, b18.s.energy)  # 3,5%
 
-    b18.s_elec_heating.percentage_of_energy = div(
+    b18.s_elec_heating.pct_energy = div(
         b18.s_elec_heating.energy, b18.s_elec.energy
     )  # 6,9%
 
-    b18.s_heatpump.percentage_of_energy = div(
-        b18.s_heatpump.energy, b18.s.energy
-    )  # 0,7%
+    b18.s_heatpump.pct_energy = div(b18.s_heatpump.energy, b18.s.energy)  # 0,7%
 
-    b18.s_solarth.percentage_of_energy = div(b18.s_solarth.energy, b18.s.energy)  # 0,5%
+    b18.s_solarth.pct_energy = div(b18.s_solarth.energy, b18.s.energy)  # 0,5%
 
-    b18.s_elec.percentage_of_energy = div(b18.s_elec.energy, b18.s.energy)
+    b18.s_elec.pct_energy = div(b18.s_elec.energy, b18.s.energy)
 
-    b18.s.percentage_of_energy = (
-        b18.s_gas.percentage_of_energy
-        + b18.s_lpg.percentage_of_energy
-        + b18.s_petrol.percentage_of_energy
-        + b18.s_jetfuel.percentage_of_energy
-        + b18.s_diesel.percentage_of_energy
-        + b18.s_fueloil.percentage_of_energy
-        + b18.s_biomass.percentage_of_energy
-        + b18.s_coal.percentage_of_energy
-        + b18.s_heatnet.percentage_of_energy
-        + b18.s_heatpump.percentage_of_energy
-        + b18.s_solarth.percentage_of_energy
-        + b18.s_elec.percentage_of_energy
+    b18.s.pct_energy = (
+        b18.s_gas.pct_energy
+        + b18.s_lpg.pct_energy
+        + b18.s_petrol.pct_energy
+        + b18.s_jetfuel.pct_energy
+        + b18.s_diesel.pct_energy
+        + b18.s_fueloil.pct_energy
+        + b18.s_biomass.pct_energy
+        + b18.s_coal.pct_energy
+        + b18.s_heatnet.pct_energy
+        + b18.s_heatpump.pct_energy
+        + b18.s_solarth.pct_energy
+        + b18.s_elec.pct_energy
     )
 
     # NACHFRAGE:

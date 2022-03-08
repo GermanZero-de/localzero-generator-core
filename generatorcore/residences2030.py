@@ -195,7 +195,7 @@ class Vars9:
     invest_com: float = None  # type: ignore
     invest_pa: float = None  # type: ignore
     invest_pa_com: float = None  # type: ignore
-    percentage_of_energy: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
 
 
 @dataclass
@@ -215,7 +215,7 @@ class Vars10:
     cost_fuel: float = None  # type: ignore
     cost_fuel_per_MWh: float = None  # type: ignore
     energy: float = None  # type: ignore
-    percentage_of_energy: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
 
 
 @dataclass
@@ -247,7 +247,7 @@ class Vars11:
     invest_pa: float = None  # type: ignore
     invest_pa_com: float = None  # type: ignore
     invest_per_x: float = None  # type: ignore
-    percentage_of_energy: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
     pct_of_wage: float = None  # type: ignore
     power_to_be_installed_pct: float = None  # type: ignore
     ratio_wage_to_emplo: float = None  # type: ignore
@@ -280,7 +280,7 @@ class Vars12:
     invest_pa: float = None  # type: ignore
     invest_pa_com: float = None  # type: ignore
     invest_per_x: float = None  # type: ignore
-    percentage_of_energy: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
     pct_of_wage: float = None  # type: ignore
     power_installed: float = None  # type: ignore
     power_to_be_installed: float = None  # type: ignore
@@ -303,7 +303,7 @@ class Vars13:
     cost_fuel: float = None  # type: ignore
     cost_fuel_per_MWh: float = None  # type: ignore
     energy: float = None  # type: ignore
-    percentage_of_energy: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
 
 
 @dataclass
@@ -320,7 +320,7 @@ class Vars14:
     change_energy_pct: float = None  # type: ignore
     cost_climate_saved: float = None  # type: ignore
     energy: float = None  # type: ignore
-    percentage_of_energy: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
 
 
 @dataclass
@@ -338,7 +338,7 @@ class Vars15:
     cost_climate_saved: float = None  # type: ignore
     cost_fuel: float = None  # type: ignore
     energy: float = None  # type: ignore
-    percentage_of_energy: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
 
 
 @dataclass
@@ -862,13 +862,13 @@ def calc(inputs: Inputs, *, r18: residences2018.R18, b18: business2018.B18) -> R
     s_elec = r30.s_elec
 
     # pct_energy
-    s_fueloil.percentage_of_energy = 0
+    s_fueloil.pct_energy = 0
 
-    s_lpg.percentage_of_energy = 0
+    s_lpg.pct_energy = 0
 
-    s_coal.percentage_of_energy = 0
+    s_coal.pct_energy = 0
 
-    s_petrol.percentage_of_energy = 0
+    s_petrol.pct_energy = 0
 
     s_gas.energy = 0
 
@@ -968,11 +968,11 @@ def calc(inputs: Inputs, *, r18: residences2018.R18, b18: business2018.B18) -> R
     )
     s_elec.energy = p.demand_electricity
     s.energy = p_buildings_total.energy + p_other.energy
-    s_fueloil.energy = s_fueloil.percentage_of_energy * s.energy
-    s_lpg.energy = s_lpg.percentage_of_energy * s.energy
-    s_biomass.percentage_of_energy = div(s_biomass.energy, s.energy)
-    s_coal.energy = s_coal.percentage_of_energy * s.energy
-    s_petrol.energy = s_petrol.percentage_of_energy * s.energy
+    s_fueloil.energy = s_fueloil.pct_energy * s.energy
+    s_lpg.energy = s_lpg.pct_energy * s.energy
+    s_biomass.pct_energy = div(s_biomass.energy, s.energy)
+    s_coal.energy = s_coal.pct_energy * s.energy
+    s_petrol.energy = s_petrol.pct_energy * s.energy
 
     if (
         p_buildings_total.energy - s_solarth.energy - s_heatpump.energy
@@ -985,9 +985,9 @@ def calc(inputs: Inputs, *, r18: residences2018.R18, b18: business2018.B18) -> R
     else:
         s_heatnet.energy = r18.s_heatnet.energy
 
-    s_heatnet.percentage_of_energy = div(s_heatnet.energy, s.energy)
-    s_solarth.percentage_of_energy = div(s_solarth.energy, s.energy)
-    s_heatpump.percentage_of_energy = div(s_heatpump.energy, s.energy)
+    s_heatnet.pct_energy = div(s_heatnet.energy, s.energy)
+    s_solarth.pct_energy = div(s_solarth.energy, s.energy)
+    s_heatpump.pct_energy = div(s_heatpump.energy, s.energy)
 
     sum_fueloil_to_heatpump_energy = (
         s_fueloil.energy
@@ -1000,7 +1000,7 @@ def calc(inputs: Inputs, *, r18: residences2018.R18, b18: business2018.B18) -> R
         + s_heatpump.energy
     )
 
-    s_elec_heating.percentage_of_energy = div(s_elec_heating.energy, s.energy)
+    s_elec_heating.pct_energy = div(s_elec_heating.energy, s.energy)
 
     s_emethan.energy = max(
         0,
@@ -1008,21 +1008,21 @@ def calc(inputs: Inputs, *, r18: residences2018.R18, b18: business2018.B18) -> R
         - (sum_fueloil_to_heatpump_energy + s_elec_heating.energy),
     )
 
-    s_emethan.percentage_of_energy = div(s_emethan.energy, s.energy)
+    s_emethan.pct_energy = div(s_emethan.energy, s.energy)
 
-    s_elec.percentage_of_energy = div(s_elec.energy, s.energy)
+    s_elec.pct_energy = div(s_elec.energy, s.energy)
 
-    s.percentage_of_energy = (
-        s_fueloil.percentage_of_energy
-        + s_lpg.percentage_of_energy
-        + s_biomass.percentage_of_energy
-        + s_coal.percentage_of_energy
-        + s_petrol.percentage_of_energy
-        + s_heatnet.percentage_of_energy
-        + s_solarth.percentage_of_energy
-        + s_heatpump.percentage_of_energy
-        + s_emethan.percentage_of_energy
-        + s_elec.percentage_of_energy
+    s.pct_energy = (
+        s_fueloil.pct_energy
+        + s_lpg.pct_energy
+        + s_biomass.pct_energy
+        + s_coal.pct_energy
+        + s_petrol.pct_energy
+        + s_heatnet.pct_energy
+        + s_solarth.pct_energy
+        + s_heatpump.pct_energy
+        + s_emethan.pct_energy
+        + s_elec.pct_energy
     )  # SUM(s_fueloil.pct_energy:s_elec.pct_energy)
 
     s.demand_heat_nonrehab = p_buildings_total.demand_heat_nonrehab
@@ -1532,7 +1532,7 @@ def calc(inputs: Inputs, *, r18: residences2018.R18, b18: business2018.B18) -> R
     s_heatpump.invest_pa_com = s_heatpump.invest_com / Kalkulationszeitraum
 
     g_consult.invest_pa = g_consult.invest / Kalkulationszeitraum
-    s_gas.percentage_of_energy = div(s_gas.energy, s.energy)
+    s_gas.pct_energy = div(s_gas.energy, s.energy)
     s_gas.cost_fuel_per_MWh = ass("Ass_R_S_gas_energy_cost_factor_2035")
     s_gas.cost_fuel = s_gas.energy * s_gas.cost_fuel_per_MWh / Million
     s_gas.change_energy_MWh = s_gas.energy - r18.s_gas.energy

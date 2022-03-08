@@ -272,7 +272,7 @@ class Vars15:
     energy: float = None  # type: ignore
     invest: float = None  # type: ignore
     invest_pa: float = None  # type: ignore
-    percentage_of_energy: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
 
 
 @dataclass
@@ -289,7 +289,7 @@ class Vars16:
     change_energy_pct: float = None  # type: ignore
     cost_climate_saved: float = None  # type: ignore
     energy: float = None  # type: ignore
-    percentage_of_energy: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
 
 
 @dataclass
@@ -307,7 +307,7 @@ class Vars17:
     change_energy_pct: float = None  # type: ignore
     cost_climate_saved: float = None  # type: ignore
     energy: float = None  # type: ignore
-    percentage_of_energy: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
 
 
 @dataclass
@@ -333,7 +333,7 @@ class Vars18:
     invest: float = None  # type: ignore
     invest_pa: float = None  # type: ignore
     invest_per_x: float = None  # type: ignore
-    percentage_of_energy: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
     pct_of_wage: float = None  # type: ignore
     power_installed: float = None  # type: ignore
     power_to_be_installed: float = None  # type: ignore
@@ -353,7 +353,7 @@ class Vars19:
     cost_climate_saved: float = None  # type: ignore
     demand_emethan: float = None  # type: ignore
     energy: float = None  # type: ignore
-    percentage_of_energy: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
 
 
 @dataclass
@@ -1844,15 +1844,15 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     s.change_energy_MWh = s.energy - a18.s.energy
-    s_petrol.percentage_of_energy = div(s_petrol.energy, s.energy)
-    s_diesel.percentage_of_energy = div(s_diesel.energy, s.energy)
-    s_fueloil.percentage_of_energy = div(s_fueloil.energy, s.energy)
-    s_lpg.percentage_of_energy = div(s_lpg.energy, s.energy)
-    s_gas.percentage_of_energy = div(s_gas.energy, s.energy)
-    s_emethan.percentage_of_energy = div(s_gas.energy, s.energy)
-    s_biomass.percentage_of_energy = div(s_biomass.energy, s.energy)
-    s_elec.percentage_of_energy = div(s_elec.energy, s.energy)
-    s_heatpump.percentage_of_energy = div(s_heatpump.energy, s.energy)
+    s_petrol.pct_energy = div(s_petrol.energy, s.energy)
+    s_diesel.pct_energy = div(s_diesel.energy, s.energy)
+    s_fueloil.pct_energy = div(s_fueloil.energy, s.energy)
+    s_lpg.pct_energy = div(s_lpg.energy, s.energy)
+    s_gas.pct_energy = div(s_gas.energy, s.energy)
+    s_emethan.pct_energy = div(s_gas.energy, s.energy)
+    s_biomass.pct_energy = div(s_biomass.energy, s.energy)
+    s_elec.pct_energy = div(s_elec.energy, s.energy)
+    s_heatpump.pct_energy = div(s_heatpump.energy, s.energy)
     s.CO2e_combustion_based = (
         s_petrol.CO2e_combustion_based
         + s_diesel.CO2e_combustion_based
@@ -1872,16 +1872,16 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
     )
     s_biomass.change_CO2e_pct = div(s_biomass.change_CO2e_t, a18.s_biomass.CO2e_total)
     s.change_energy_pct = div(s.change_energy_MWh, a18.s.energy)
-    s.percentage_of_energy = (
-        s_petrol.percentage_of_energy
-        + s_diesel.percentage_of_energy
-        + s_fueloil.percentage_of_energy
-        + s_lpg.percentage_of_energy
-        + s_gas.percentage_of_energy
-        + s_emethan.percentage_of_energy
-        + s_biomass.percentage_of_energy
-        + s_elec.percentage_of_energy
-        + s_heatpump.percentage_of_energy
+    s.pct_energy = (
+        s_petrol.pct_energy
+        + s_diesel.pct_energy
+        + s_fueloil.pct_energy
+        + s_lpg.pct_energy
+        + s_gas.pct_energy
+        + s_emethan.pct_energy
+        + s_biomass.pct_energy
+        + s_elec.pct_energy
+        + s_heatpump.pct_energy
     )
     a.CO2e_combustion_based = s.CO2e_combustion_based
     s.CO2e_total = s.CO2e_production_based + s.CO2e_combustion_based

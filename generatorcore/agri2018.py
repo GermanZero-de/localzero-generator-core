@@ -84,14 +84,14 @@ class Vars9:
     area_m2: float = None  # type: ignore
     energy: float = None  # type: ignore
     factor_adapted_to_fec: float = None  # type: ignore
-    percentage_of_energy: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
 
 
 @dataclass
 class Vars10:
     # Used by p_operation_elec_elcon, p_operation_vehicles
     energy: float = None  # type: ignore
-    percentage_of_energy: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
 
 
 @dataclass
@@ -101,7 +101,7 @@ class Vars11:
     CO2e_production_based: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     energy: float = None  # type: ignore
-    percentage_of_energy: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
 
 
 @dataclass
@@ -112,7 +112,7 @@ class Vars12:
     CO2e_production_based: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     energy: float = None  # type: ignore
-    percentage_of_energy: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
 
 
 @dataclass
@@ -648,8 +648,8 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18, b18: business2018.B18) -> A18:
     s_diesel.CO2e_combustion_based_per_MWh = fact(
         "Fact_T_S_diesel_EmFa_tank_wheel_2018"
     )
-    s_petrol.percentage_of_energy = div(s_petrol.energy, s.energy)
-    s_diesel.percentage_of_energy = div(s_diesel.energy, s.energy)
+    s_petrol.pct_energy = div(s_petrol.energy, s.energy)
+    s_diesel.pct_energy = div(s_diesel.energy, s.energy)
     s_diesel.CO2e_combustion_based = (
         s_diesel.energy * s_diesel.CO2e_combustion_based_per_MWh
     )
@@ -657,7 +657,7 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18, b18: business2018.B18) -> A18:
     s_petrol.CO2e_total = (
         s_petrol.CO2e_production_based + s_petrol.CO2e_combustion_based
     )
-    s_fueloil.percentage_of_energy = div(s_fueloil.energy, s.energy)
+    s_fueloil.pct_energy = div(s_fueloil.energy, s.energy)
     s_fueloil.CO2e_combustion_based = (
         s_fueloil.energy * s_fueloil.CO2e_combustion_based_per_MWh
     )
@@ -666,10 +666,10 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18, b18: business2018.B18) -> A18:
         s_diesel.CO2e_production_based + s_diesel.CO2e_combustion_based
     )
     p_operation.energy = s.energy
-    p_operation_vehicles.percentage_of_energy = div(
+    p_operation_vehicles.pct_energy = div(
         p_operation_vehicles.energy, p_operation.energy
     )
-    s_lpg.percentage_of_energy = div(s_lpg.energy, s.energy)
+    s_lpg.pct_energy = div(s_lpg.energy, s.energy)
     s_lpg.CO2e_combustion_based = s_lpg.energy * s_lpg.CO2e_combustion_based_per_MWh
     s_gas.CO2e_combustion_based_per_MWh = fact("Fact_H_P_ngas_cb_EF")
     s_fueloil.CO2e_total = (
@@ -678,14 +678,14 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18, b18: business2018.B18) -> A18:
     p_operation_heat.energy = (
         s_fueloil.energy + s_lpg.energy + s_gas.energy + s_biomass.energy
     )
-    s_gas.percentage_of_energy = div(s_gas.energy, s.energy)
+    s_gas.pct_energy = div(s_gas.energy, s.energy)
     s_gas.CO2e_combustion_based = s_gas.energy * s_gas.CO2e_combustion_based_per_MWh
     s_biomass.CO2e_combustion_based_per_MWh = fact("Fact_RB_S_biomass_CO2e_EF")
     s_lpg.CO2e_total = s_lpg.CO2e_production_based + s_lpg.CO2e_combustion_based
     p_operation_heat.factor_adapted_to_fec = div(
         p_operation_heat.energy, p_operation_heat.area_m2
     )
-    s_biomass.percentage_of_energy = div(s_biomass.energy, s.energy)
+    s_biomass.pct_energy = div(s_biomass.energy, s.energy)
     s_biomass.CO2e_combustion_based = (
         s_biomass.energy * s_biomass.CO2e_combustion_based_per_MWh
     )
@@ -698,31 +698,29 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18, b18: business2018.B18) -> A18:
         + s_biomass.CO2e_combustion_based
     )
     s_gas.CO2e_total = s_gas.CO2e_production_based + s_gas.CO2e_combustion_based
-    p_operation_heat.percentage_of_energy = div(
-        p_operation_heat.energy, p_operation.energy
-    )
-    s_elec.percentage_of_energy = div(s_elec.energy, s.energy)
+    p_operation_heat.pct_energy = div(p_operation_heat.energy, p_operation.energy)
+    s_elec.pct_energy = div(s_elec.energy, s.energy)
     s.CO2e_total = s.CO2e_production_based + s.CO2e_combustion_based
     a.CO2e_total = g.CO2e_total + p.CO2e_total + s.CO2e_total
     s_biomass.CO2e_total = (
         s_biomass.CO2e_production_based + s_biomass.CO2e_combustion_based
     )
-    p_operation_elec_elcon.percentage_of_energy = div(
+    p_operation_elec_elcon.pct_energy = div(
         p_operation_elec_elcon.energy, p_operation.energy
     )
-    s.percentage_of_energy = (
-        s_petrol.percentage_of_energy
-        + s_diesel.percentage_of_energy
-        + s_fueloil.percentage_of_energy
-        + s_lpg.percentage_of_energy
-        + s_gas.percentage_of_energy
-        + s_biomass.percentage_of_energy
-        + s_elec.percentage_of_energy
+    s.pct_energy = (
+        s_petrol.pct_energy
+        + s_diesel.pct_energy
+        + s_fueloil.pct_energy
+        + s_lpg.pct_energy
+        + s_gas.pct_energy
+        + s_biomass.pct_energy
+        + s_elec.pct_energy
     )
     s_elec.CO2e_combustion_based_per_MWh = fact("Fact_RB_S_elec_ratio_CO2e_to_fec")
     s_elec.CO2e_combustion_based = s_elec.energy * s_elec.CO2e_combustion_based_per_MWh
     s_elec.CO2e_total = s_elec.CO2e_production_based + s_elec.CO2e_combustion_based
-    s_heatpump.percentage_of_energy = div(s_heatpump.energy, b18.s.energy)
+    s_heatpump.pct_energy = div(s_heatpump.energy, b18.s.energy)
     s_heatpump.CO2e_combustion_based_per_MWh = fact(
         "Fact_RB_S_heatpump_ratio_CO2e_to_fec"
     )

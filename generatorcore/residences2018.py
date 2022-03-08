@@ -66,7 +66,7 @@ class Vars6:
     CO2e_total: float = None  # type: ignore
     cost_fuel: float = None  # type: ignore
     energy: float = None  # type: ignore
-    percentage_of_energy: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
 
 
 @dataclass
@@ -78,7 +78,7 @@ class Vars7:
     cost_fuel: float = None  # type: ignore
     cost_fuel_per_MWh: float = None  # type: ignore
     energy: float = None  # type: ignore
-    percentage_of_energy: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
 
 
 @dataclass
@@ -91,7 +91,7 @@ class Vars8:
     cost_fuel_per_MWh: float = None  # type: ignore
     energy: float = None  # type: ignore
     number_of_buildings: float = None  # type: ignore
-    percentage_of_energy: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
 
 
 @dataclass
@@ -101,7 +101,7 @@ class Vars9:
     CO2e_combustion_based_per_MWh: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     energy: float = None  # type: ignore
-    percentage_of_energy: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
 
 
 @dataclass
@@ -542,30 +542,30 @@ def calc(inputs: Inputs) -> R18:
     )
 
     # pct_energy
-    s_fueloil.percentage_of_energy = div(s_fueloil.energy, s.energy)
-    s_lpg.percentage_of_energy = div(s_lpg.energy, s.energy)
-    s_biomass.percentage_of_energy = div(s_biomass.energy, s.energy)
-    s_coal.percentage_of_energy = div(s_coal.energy, s.energy)
-    s_petrol.percentage_of_energy = div(s_petrol.energy, s.energy)
-    s_heatnet.percentage_of_energy = div(s_heatnet.energy, s.energy)
-    s_solarth.percentage_of_energy = div(s_solarth.energy, s.energy)
-    s_heatpump.percentage_of_energy = div(s_heatpump.energy, s.energy)
-    s_elec_heating.percentage_of_energy = div(s_elec_heating.energy, s_elec.energy)
+    s_fueloil.pct_energy = div(s_fueloil.energy, s.energy)
+    s_lpg.pct_energy = div(s_lpg.energy, s.energy)
+    s_biomass.pct_energy = div(s_biomass.energy, s.energy)
+    s_coal.pct_energy = div(s_coal.energy, s.energy)
+    s_petrol.pct_energy = div(s_petrol.energy, s.energy)
+    s_heatnet.pct_energy = div(s_heatnet.energy, s.energy)
+    s_solarth.pct_energy = div(s_solarth.energy, s.energy)
+    s_heatpump.pct_energy = div(s_heatpump.energy, s.energy)
+    s_elec_heating.pct_energy = div(s_elec_heating.energy, s_elec.energy)
 
-    s_gas.percentage_of_energy = div(s_gas.energy, s.energy)
-    s_elec.percentage_of_energy = div(s_elec.energy, s.energy)
+    s_gas.pct_energy = div(s_gas.energy, s.energy)
+    s_elec.pct_energy = div(s_elec.energy, s.energy)
 
-    s.percentage_of_energy = (
-        s_fueloil.percentage_of_energy
-        + s_lpg.percentage_of_energy
-        + s_biomass.percentage_of_energy
-        + s_coal.percentage_of_energy
-        + s_petrol.percentage_of_energy
-        + s_heatnet.percentage_of_energy
-        + s_solarth.percentage_of_energy
-        + s_heatpump.percentage_of_energy
-        + s_gas.percentage_of_energy
-        + s_elec.percentage_of_energy
+    s.pct_energy = (
+        s_fueloil.pct_energy
+        + s_lpg.pct_energy
+        + s_biomass.pct_energy
+        + s_coal.pct_energy
+        + s_petrol.pct_energy
+        + s_heatnet.pct_energy
+        + s_solarth.pct_energy
+        + s_heatpump.pct_energy
+        + s_gas.pct_energy
+        + s_elec.pct_energy
     )
 
     # CO2e_cb_per_MWh

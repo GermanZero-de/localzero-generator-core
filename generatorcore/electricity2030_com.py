@@ -188,16 +188,14 @@ def calc(
     p_fossil_ofossil.CO2e_combustion_based_per_MWh = (
         e18.p_fossil_ofossil.CO2e_combustion_based_per_MWh
     )
-    p_renew_pv.percentage_of_energy = ass("Ass_E_P_renew_pv_pct_of_nep_2035")
-    p_renew_wind.percentage_of_energy = ass(
-        "Ass_E_P_renew_wind_onshore_pct_of_nep_2035"
-    ) + ass("Ass_E_P_renew_wind_offshore_pct_of_nep_2035")
-    p_renew_biomass.percentage_of_energy = ass("Ass_E_P_renew_biomass_pct_of_nep_2035")
-    p_renew_geoth.percentage_of_energy = ass("Ass_E_P_renew_geoth_pct_of_nep_2035")
-    p_renew_hydro.percentage_of_energy = ass(
-        "Ass_E_P_renew_hydro_pct_of_nep_2035"
-    )  # energy
-    p_renew_reverse.percentage_of_energy = ass("Ass_E_P_renew_reverse_pct_of_nep_2035")
+    p_renew_pv.pct_energy = ass("Ass_E_P_renew_pv_pct_of_nep_2035")
+    p_renew_wind.pct_energy = ass("Ass_E_P_renew_wind_onshore_pct_of_nep_2035") + ass(
+        "Ass_E_P_renew_wind_offshore_pct_of_nep_2035"
+    )
+    p_renew_biomass.pct_energy = ass("Ass_E_P_renew_biomass_pct_of_nep_2035")
+    p_renew_geoth.pct_energy = ass("Ass_E_P_renew_geoth_pct_of_nep_2035")
+    p_renew_hydro.pct_energy = ass("Ass_E_P_renew_hydro_pct_of_nep_2035")  # energy
+    p_renew_reverse.pct_energy = ass("Ass_E_P_renew_reverse_pct_of_nep_2035")
     p_renew_pv.CO2e_total = 0
     p_renew_wind.CO2e_total = 0
     p_renew_geoth.CO2e_total = 0
@@ -214,30 +212,26 @@ def calc(
     p_renew_pv.CO2e_combustion_based_per_MWh = fact(
         "Fact_E_P_climate_neutral_ratio_CO2e_cb_to_fec"
     )
-    p_renew_pv_roof.percentage_of_energy = ass("Ass_E_P_renew_pv_roof_pct_of_nep_2035")
+    p_renew_pv_roof.pct_energy = ass("Ass_E_P_renew_pv_roof_pct_of_nep_2035")
     p_local_pv_roof.full_load_hour = entries.e_pv_full_load_hours_sta
-    p_renew_pv_facade.percentage_of_energy = ass(
-        "Ass_E_P_renew_pv_facade_pct_of_nep_2035"
-    )
+    p_renew_pv_facade.pct_energy = ass("Ass_E_P_renew_pv_facade_pct_of_nep_2035")
     p_local_pv_facade.full_load_hour = ass("Ass_E_P_local_pv_facade_full_load_hours")
-    p_renew_pv_park.percentage_of_energy = ass("Ass_E_P_renew_pv_park_pct_of_nep_2035")
-    p_renew_pv_agri.percentage_of_energy = ass("Ass_E_P_renew_pv_agri_pct_of_nep_2035")
+    p_renew_pv_park.pct_energy = ass("Ass_E_P_renew_pv_park_pct_of_nep_2035")
+    p_renew_pv_agri.pct_energy = ass("Ass_E_P_renew_pv_agri_pct_of_nep_2035")
     p_renew_wind.CO2e_combustion_based_per_MWh = fact(
         "Fact_E_P_climate_neutral_ratio_CO2e_cb_to_fec"
     )
     p_renew_wind_offshore.invest = 0
     p_renew_wind_offshore.demand_emplo = 0
     p_renew_wind_offshore.emplo_existing = 0
-    p_renew_wind_onshore.percentage_of_energy = ass(
-        "Ass_E_P_renew_wind_onshore_pct_of_nep_2035"
-    )
+    p_renew_wind_onshore.pct_energy = ass("Ass_E_P_renew_wind_onshore_pct_of_nep_2035")
     p_renew_wind_onshore.cost_mro_per_MWh = (
         ass("Ass_E_P_local_wind_onshore_ratio_invest_to_power_2020")
         * ass("Ass_E_P_local_wind_onshore_mro_per_year")
         / fact("Fact_E_P_wind_onshore_full_load_hours")
         * 1000
     )
-    p_renew_wind_offshore.percentage_of_energy = ass(
+    p_renew_wind_offshore.pct_energy = ass(
         "Ass_E_P_renew_wind_offshore_pct_of_nep_2035"
     )
     p_renew_wind_offshore.cost_mro_per_MWh = (
@@ -576,13 +570,13 @@ def calc(
     p_fossil_ofossil.CO2e_combustion_based = (
         p_fossil_ofossil.energy * p_fossil_ofossil.CO2e_combustion_based_per_MWh
     )
-    p_renew.percentage_of_energy = (
-        p_renew_pv.percentage_of_energy
-        + p_renew_wind.percentage_of_energy
-        + p_renew_biomass.percentage_of_energy
-        + p_renew_geoth.percentage_of_energy
-        + p_renew_hydro.percentage_of_energy
-        + p_renew_reverse.percentage_of_energy
+    p_renew.pct_energy = (
+        p_renew_pv.pct_energy
+        + p_renew_wind.pct_energy
+        + p_renew_biomass.pct_energy
+        + p_renew_geoth.pct_energy
+        + p_renew_hydro.pct_energy
+        + p_renew_reverse.pct_energy
     )
     p_renew.CO2e_total_2021_estimated = p_renew_biomass.CO2e_total_2021_estimated
     p_renew_geoth.invest_pa = p_renew_geoth.invest / Kalkulationszeitraum
@@ -699,14 +693,14 @@ def calc(
     d_t.change_energy_pct = div(d_t.change_energy_MWh, e18.d_t.energy)
     d_a.change_energy_pct = div(d_a.change_energy_MWh, e18.d_a.energy)
     d.change_energy_MWh = d.energy - e18.d.energy
-    d_h.percentage_of_energy = div(d_h.energy, d.energy)
-    d_r.percentage_of_energy = div(d_r.energy, d.energy)
-    d_b.percentage_of_energy = div(d_b.energy, d.energy)
-    d_i.percentage_of_energy = div(d_i.energy, d.energy)
-    d_t.percentage_of_energy = div(d_t.energy, d.energy)
-    d_a.percentage_of_energy = div(d_a.energy, d.energy)
-    d_f_wo_hydrogen.percentage_of_energy = div(d_f_wo_hydrogen.energy, d.energy)
-    d_f_hydrogen_reconv.percentage_of_energy = div(d_f_hydrogen_reconv.energy, d.energy)
+    d_h.pct_energy = div(d_h.energy, d.energy)
+    d_r.pct_energy = div(d_r.energy, d.energy)
+    d_b.pct_energy = div(d_b.energy, d.energy)
+    d_i.pct_energy = div(d_i.energy, d.energy)
+    d_t.pct_energy = div(d_t.energy, d.energy)
+    d_a.pct_energy = div(d_a.energy, d.energy)
+    d_f_wo_hydrogen.pct_energy = div(d_f_wo_hydrogen.energy, d.energy)
+    d_f_hydrogen_reconv.pct_energy = div(d_f_hydrogen_reconv.energy, d.energy)
     p_renew_geoth.invest_outside = (
         p_renew_geoth.invest * d.energy / ass("Ass_E_P_renew_nep_total_2035")
     )
@@ -971,15 +965,15 @@ def calc(
         g_grid_offshore.cost_wage, g_grid_offshore.ratio_wage_to_emplo
     )
     d.change_energy_pct = div(d.change_energy_MWh, e18.d.energy)
-    d.percentage_of_energy = (
-        d_h.percentage_of_energy
-        + d_r.percentage_of_energy
-        + d_b.percentage_of_energy
-        + d_i.percentage_of_energy
-        + d_t.percentage_of_energy
-        + d_a.percentage_of_energy
-        + d_f_wo_hydrogen.percentage_of_energy
-        + d_f_hydrogen_reconv.percentage_of_energy
+    d.pct_energy = (
+        d_h.pct_energy
+        + d_r.pct_energy
+        + d_b.pct_energy
+        + d_i.pct_energy
+        + d_t.pct_energy
+        + d_a.pct_energy
+        + d_f_wo_hydrogen.pct_energy
+        + d_f_hydrogen_reconv.pct_energy
     )
     p_fossil.change_energy_pct = div(p_fossil.change_energy_MWh, e18.p_fossil.energy)
     p_fossil_coal_brown.change_CO2e_t = (
@@ -1287,21 +1281,13 @@ def calc(
     p_local_pv.change_CO2e_t = p_local_pv.CO2e_total - e18.p_local_pv.CO2e_total
 
     p_local_pv.change_energy_MWh = p_local_pv.energy - e18.p_local_pv.energy
-    p_local_pv_roof.percentage_of_energy = div(
-        p_local_pv_roof.energy, p_local_pv.energy
-    )
+    p_local_pv_roof.pct_energy = div(p_local_pv_roof.energy, p_local_pv.energy)
     p_local_pv_roof.pet_sites = div(p_local_pv_roof.energy, p_local_pv.energy)
-    p_local_pv_facade.percentage_of_energy = div(
-        p_local_pv_facade.energy, p_local_pv.energy
-    )
+    p_local_pv_facade.pct_energy = div(p_local_pv_facade.energy, p_local_pv.energy)
     p_local_pv_facade.pet_sites = div(p_local_pv_facade.energy, p_local_pv.energy)
-    p_local_pv_park.percentage_of_energy = div(
-        p_local_pv_park.energy, p_local_pv.energy
-    )
+    p_local_pv_park.pct_energy = div(p_local_pv_park.energy, p_local_pv.energy)
     p_local_pv_park.pet_sites = div(p_local_pv_park.energy, p_local_pv.energy)
-    p_local_pv_agri.percentage_of_energy = div(
-        p_local_pv_agri.energy, p_local_pv.energy
-    )
+    p_local_pv_agri.pct_energy = div(p_local_pv_agri.energy, p_local_pv.energy)
     p_local_pv_agri.pet_sites = div(p_local_pv_agri.energy, p_local_pv.energy)
     p_local_pv.cost_mro = (
         p_local_pv_roof.cost_mro
@@ -1378,12 +1364,10 @@ def calc(
     g_grid_pv.cost_mro = g_grid_pv.invest * ass("Ass_E_G_grid_pv_mro") / Million
     g_grid_pv.invest_pa = g_grid_pv.invest / entries.m_duration_target
     p_local.change_energy_MWh = p_local.energy - e18.p_local.energy
-    p_local_pv.percentage_of_energy = div(p_local_pv.energy, p_local.energy)
-    p_local_wind_onshore.percentage_of_energy = div(
-        p_local_wind_onshore.energy, p_local.energy
-    )
-    p_local_biomass.percentage_of_energy = div(p_local_biomass.energy, p_local.energy)
-    p_local_hydro.percentage_of_energy = div(p_local_hydro.energy, p_local.energy)
+    p_local_pv.pct_energy = div(p_local_pv.energy, p_local.energy)
+    p_local_wind_onshore.pct_energy = div(p_local_wind_onshore.energy, p_local.energy)
+    p_local_biomass.pct_energy = div(p_local_biomass.energy, p_local.energy)
+    p_local_hydro.pct_energy = div(p_local_hydro.energy, p_local.energy)
     p_local_surplus.energy = p_local.energy - d.energy
 
     p_local.CO2e_combustion_based = (
@@ -1430,11 +1414,11 @@ def calc(
     )
     g_grid_pv.cost_wage = g_grid_pv.invest_pa * g_grid_pv.pct_of_wage
     p_local.change_energy_pct = div(p_local.change_energy_MWh, e18.p_local.energy)
-    p_local.percentage_of_energy = (
-        p_local_pv.percentage_of_energy
-        + p_local_wind_onshore.percentage_of_energy
-        + p_local_biomass.percentage_of_energy
-        + p_local_hydro.percentage_of_energy
+    p_local.pct_energy = (
+        p_local_pv.pct_energy
+        + p_local_wind_onshore.pct_energy
+        + p_local_biomass.pct_energy
+        + p_local_hydro.pct_energy
     )
     p_renew.energy = max(0, -p_local_surplus.energy)
     p_local.CO2e_combustion_based_per_MWh = div(
@@ -1467,17 +1451,13 @@ def calc(
     g_grid_pv.demand_emplo = div(g_grid_pv.cost_wage, g_grid_pv.ratio_wage_to_emplo)
     p_fossil_and_renew.energy = p_renew.energy
     p_renew.change_energy_MWh = p_renew.energy - e18.p_renew.energy
-    p_renew_pv.energy = p_renew.energy * p_renew_pv.percentage_of_energy
-    p_renew_wind_onshore.energy = (
-        p_renew.energy * p_renew_wind_onshore.percentage_of_energy
-    )
-    p_renew_wind_offshore.energy = (
-        p_renew.energy * p_renew_wind_offshore.percentage_of_energy
-    )
-    p_renew_biomass.energy = p_renew.energy * p_renew_biomass.percentage_of_energy
-    p_renew_geoth.energy = p_renew.energy * p_renew_geoth.percentage_of_energy
-    p_renew_hydro.energy = p_renew.energy * p_renew_hydro.percentage_of_energy
-    p_renew_reverse.energy = p_renew.energy * p_renew_reverse.percentage_of_energy
+    p_renew_pv.energy = p_renew.energy * p_renew_pv.pct_energy
+    p_renew_wind_onshore.energy = p_renew.energy * p_renew_wind_onshore.pct_energy
+    p_renew_wind_offshore.energy = p_renew.energy * p_renew_wind_offshore.pct_energy
+    p_renew_biomass.energy = p_renew.energy * p_renew_biomass.pct_energy
+    p_renew_geoth.energy = p_renew.energy * p_renew_geoth.pct_energy
+    p_renew_hydro.energy = p_renew.energy * p_renew_hydro.pct_energy
+    p_renew_reverse.energy = p_renew.energy * p_renew_reverse.pct_energy
     p.cost_wage = p_fossil_and_renew.cost_wage + p_local.cost_wage
     p_local.demand_emplo = (
         p_local_pv.demand_emplo
@@ -1502,12 +1482,10 @@ def calc(
     p_renew_pv.CO2e_combustion_based = (
         p_renew_pv.energy * p_renew_pv.CO2e_combustion_based_per_MWh
     )
-    p_renew_pv_roof.energy = p_renew_pv.energy * p_renew_pv_roof.percentage_of_energy
-    p_renew_pv_facade.energy = (
-        p_renew_pv.energy * p_renew_pv_facade.percentage_of_energy
-    )
-    p_renew_pv_park.energy = p_renew_pv.energy * p_renew_pv_park.percentage_of_energy
-    p_renew_pv_agri.energy = p_renew_pv.energy * p_renew_pv_agri.percentage_of_energy
+    p_renew_pv_roof.energy = p_renew_pv.energy * p_renew_pv_roof.pct_energy
+    p_renew_pv_facade.energy = p_renew_pv.energy * p_renew_pv_facade.pct_energy
+    p_renew_pv_park.energy = p_renew_pv.energy * p_renew_pv_park.pct_energy
+    p_renew_pv_agri.energy = p_renew_pv.energy * p_renew_pv_agri.pct_energy
     p_renew_wind_onshore.cost_mro = (
         p_renew_wind_onshore.energy * p_renew_wind_onshore.cost_mro_per_MWh / Million
     )
