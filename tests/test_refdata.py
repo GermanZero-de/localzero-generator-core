@@ -81,3 +81,10 @@ def test_filling_of_zeros_area(refdata: RefData):
     assert f.float("veg_marsh") == 0.0
     assert f.float("veg_plant_uncover_com") == 0.0
     assert f.float("settlement_ghd") == 0.0
+
+
+def test_co2path(refdata: RefData):
+    """co2path is the only refdata with an integer key. So check at least one lookup in there."""
+    p = refdata.co2path(2035)
+    assert p.float("GHG_budget_2016_to_year") == pytest.approx(7923139996.0)
+    assert p.float("nonCO2_budget_2016_to_year") == pytest.approx(1586688275)
