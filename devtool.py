@@ -11,7 +11,7 @@ This is a simple wrapper around the generator to
 """
 import argparse
 from commands.cmd_ready_to_rock import cmd_ready_to_rock
-from commands.cmd_run import cmd_run
+from commands.cmd_run import cmd_run, cmd_make_entries
 from commands.cmd_compare_to_excel import cmd_compare_to_excel
 from commands.cmd_data import (
     cmd_data_normalize,
@@ -37,6 +37,12 @@ def main():
     cmd_run_parser.add_argument("-year", default=2035)
     cmd_run_parser.add_argument("-o", default=None)
     cmd_run_parser.set_defaults(func=cmd_run)
+
+    cmd_make_entries_parser = subcmd_parsers.add_parser("make", help="Run make entries")
+    cmd_make_entries_parser.add_argument("-ags", default="03159016")
+    cmd_make_entries_parser.add_argument("-year", default=2035)
+    cmd_make_entries_parser.add_argument("-o", default=None)
+    cmd_make_entries_parser.set_defaults(func=cmd_make_entries)
 
     cmd_ready_to_rock_parser = subcmd_parsers.add_parser(
         "ready_to_rock", help="Check if all is well"
