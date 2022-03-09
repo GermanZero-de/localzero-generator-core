@@ -2,6 +2,7 @@
 
 During testing and development it is often necessary to compare two result dictionaries.
 """
+from dataclasses import dataclass
 import collections.abc
 import math
 import numbers
@@ -15,7 +16,7 @@ def float_matches(actual, expected, rel):
         return False
     elif math.isnan(expected):
         return False
-    reltol = min(math.fabs(expected), math.fabs(actual)) * rel
+    reltol = math.fabs(expected) * rel
     diff = math.fabs(actual - expected)
     if diff < reltol:
         return True
@@ -32,33 +33,45 @@ class MissingSentinel:
 MISSING_SENTINEL = MissingSentinel()
 
 
-def all_helper(
-    path: str, d1, d2, *, rel
-) -> typing.Iterator[tuple[str, typing.Any, typing.Any]]:
-    if isinstance(d1, collections.abc.Mapping) and isinstance(
-        d2, collections.abc.Mapping
+@dataclass
+class Diff:
+    path: str
+    actual: object
+    expected: object
+
+    def __str__(self) -> str:
+        return f"at {self.path} expected {self.expected} got {self.actual}"
+
+
+def all_helper(path: str, actual, expected, *, rel) -> typing.Iterator[Diff]:
+    if isinstance(actual, collections.abc.Mapping) and isinstance(
+        expected, collections.abc.Mapping
     ):
-        keys1 = frozenset(d1.keys())
-        keys2 = frozenset(d2.keys())
+        keys1 = frozenset(actual.keys())
+        keys2 = frozenset(expected.keys())
         shared_keys = keys1.intersection(keys2)
         for k in shared_keys:
-            yield from all_helper(path + "." + k, d1[k], d2[k], rel=rel)
+            yield from all_helper(path + "." + k, actual[k], expected[k], rel=rel)
         for k in keys1 - shared_keys:
-            yield from all_helper(path + "." + k, d1[k], MISSING_SENTINEL, rel=rel)
+            yield from all_helper(path + "." + k, actual[k], MISSING_SENTINEL, rel=rel)
         for k in keys2 - shared_keys:
-            yield from all_helper(path + "." + k, MISSING_SENTINEL, d2[k], rel=rel)
-    elif isinstance(d1, collections.abc.Mapping) and d2 is MISSING_SENTINEL:
-        for k in d1.keys():
-            yield from all_helper(path + "." + k, d1[k], MISSING_SENTINEL, rel=rel)
-    elif isinstance(d2, collections.abc.Mapping) and d1 is MISSING_SENTINEL:
-        for k in d2.keys():
-            yield from all_helper(path + "." + k, MISSING_SENTINEL, d2[k], rel=rel)
-    elif isinstance(d1, numbers.Number) and isinstance(d2, numbers.Number):
-        if not float_matches(actual=d1, expected=d2, rel=rel):
-            yield (path, d1, d2)
-    elif d1 != d2:
-        yield (path, d1, d2)
+            yield from all_helper(
+                path + "." + k, MISSING_SENTINEL, expected[k], rel=rel
+            )
+    elif isinstance(actual, collections.abc.Mapping) and expected is MISSING_SENTINEL:
+        for k in actual.keys():
+            yield from all_helper(path + "." + k, actual[k], MISSING_SENTINEL, rel=rel)
+    elif isinstance(expected, collections.abc.Mapping) and actual is MISSING_SENTINEL:
+        for k in expected.keys():
+            yield from all_helper(
+                path + "." + k, MISSING_SENTINEL, expected[k], rel=rel
+            )
+    elif isinstance(actual, numbers.Number) and isinstance(expected, numbers.Number):
+        if not float_matches(actual=actual, expected=expected, rel=rel):
+            yield Diff(path=path, actual=actual, expected=expected)
+    elif actual != expected:
+        yield Diff(path=path, actual=actual, expected=expected)
 
 
-def all(d1, d2, *, rel=1e-9):
-    return all_helper("", d1, d2, rel=rel)
+def all(*, actual, expected, rel=1e-9):
+    return all_helper("", actual, expected, rel=rel)

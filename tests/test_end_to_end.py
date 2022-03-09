@@ -93,11 +93,11 @@ def end_to_end(datadir_status: refdatatools.DataDirStatus, ags, year=2035):
         expected = json.load(fp)
         g = calculate_with_default_inputs(ags=ags, year=year)
         got = g.result_dict()
-        ds = list(diffs.all(expected, got))
+        ds = list(diffs.all(expected=expected, actual=got))
         if ds:
             # Write a diff of the json
-            for (p, e, g) in ds:
-                print("at", p, "expected", e, "got", g)
+            for d in ds:
+                print(d)
             assert False, "End to end test failed"
 
 
@@ -109,10 +109,10 @@ def make_entries_test(ags, year):
         expected = json.load(fp)
         e = makeentries.make_entries(refdata, ags, year)
         got = asdict(e)
-        ds = list(diffs.all(expected, got))
+        ds = list(diffs.all(expected=expected, actual=got))
         if ds:
-            for (p, e, g) in ds:
-                print("at", p, "expected", e, "got", g)
+            for d in ds:
+                print(d)
             assert False, "make entries test failed"
 
 
