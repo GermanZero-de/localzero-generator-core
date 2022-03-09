@@ -38,7 +38,6 @@ class zColVars:
     CO2e_combustion_based_30: float = None  # type: ignore
     CO2e_combustion_based_per_MWh: float = None  # type: ignore
     CO2e_total_30: float = None  # type: ignore
-    pct_CO2e_total_30: float = None  # type: ignore
     change_energy_MWh: float = None  # type: ignore
     change_energy_pct: float = None  # type: ignore
     change_CO2e_t: float = None  # type: ignore
@@ -1006,21 +1005,6 @@ def calc_z(
     i.pct_energy_30 = div(i30.p.energy, d.energy_30)
     t.pct_energy_30 = div(t30.t.energy, d.energy_30)
     a.pct_energy_30 = div(a30.p.energy, d.energy_30)
-
-    z.pct_CO2e_total_30 = 1
-    s.pct_CO2e_total_30 = div(s.CO2e_total_30, z.CO2e_total_30)
-    d.pct_CO2e_total_30 = div(d.CO2e_total_30, z.CO2e_total_30)
-
-    e.pct_CO2e_total_30 = div(e30.e.CO2e_total, z.CO2e_total_30)
-    h.pct_CO2e_total_30 = div(h30.h.CO2e_total, z.CO2e_total_30)
-    f.pct_CO2e_total_30 = div(f30.f.CO2e_total, z.CO2e_total_30)
-
-    rb.pct_CO2e_total_30 = div(b30.rb.CO2e_total, z.CO2e_total_30)
-    r.pct_CO2e_total_30 = div(r30.r.CO2e_total, z.CO2e_total_30)
-    b.pct_CO2e_total_30 = div(b30.b.CO2e_total, z.CO2e_total_30)
-    i.pct_CO2e_total_30 = div(i30.i.CO2e_total, z.CO2e_total_30)
-    t.pct_CO2e_total_30 = div(t30.t.CO2e_total, z.CO2e_total_30)
-    a.pct_CO2e_total_30 = div(a30.a.CO2e_total, z.CO2e_total_30)
 
     h.invest_pct = div(h30.h.invest, z.invest)
     e.invest_pct = div(e30.e.invest, z.invest)

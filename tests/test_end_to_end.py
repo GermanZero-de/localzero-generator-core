@@ -1,11 +1,13 @@
 """This is a simplistic regression test framework for the generator."""
+from dataclasses import asdict
 import json
 import os
 import pytest
 import typing
 
 from generatorcore.generator import calculate_with_default_inputs
-from generatorcore import refdatatools, diffs
+from generatorcore import refdatatools, diffs, makeentries
+from generatorcore.refdata import RefData
 
 PUBLIC_OR_PROP = typing.Literal["public", "proprietary"]
 
@@ -91,12 +93,31 @@ def end_to_end(datadir_status: refdatatools.DataDirStatus, ags, year=2035):
         expected = json.load(fp)
         g = calculate_with_default_inputs(ags=ags, year=year)
         got = g.result_dict()
-        ds = list(diffs.all(expected, got))
+        ds = list(diffs.all(expected=expected, actual=got))
         if ds:
             # Write a diff of the json
-            for (p, e, g) in ds:
-                print("at", p, "expected", e, "got", g)
+            for d in ds:
+                print(d)
             assert False, "End to end test failed"
+
+
+def make_entries_test(ags, year):
+    refdata = RefData.load()
+    root = refdatatools.root_of_this_repo()
+    fname = f"entries_{ags}_{year}.json"
+    with open(os.path.join(root, "tests", "end_to_end_expected", fname)) as fp:
+        expected = json.load(fp)
+        e = makeentries.make_entries(refdata, ags, year)
+        got = asdict(e)
+        ds = list(diffs.all(expected=expected, actual=got))
+        if ds:
+            for d in ds:
+                print(d)
+            assert False, "make entries test failed"
+
+
+def test_entries_test():
+    make_entries_test("03159016", 2035)
 
 
 # Default year = 2035
