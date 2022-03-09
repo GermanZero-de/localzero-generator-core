@@ -37,8 +37,8 @@ class Vars1:
 @dataclass
 class Vars2:
     # Used by i
-    CO2e_cb: float = None  # type: ignore
-    CO2e_pb: float = None  # type: ignore
+    CO2e_combustion_based: float = None  # type: ignore
+    CO2e_production_based: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     CO2e_total_2021_estimated: float = None  # type: ignore
     change_CO2e_pct: float = None  # type: ignore
@@ -61,8 +61,8 @@ class Vars2:
 @dataclass
 class Vars3:
     # Used by p
-    CO2e_cb: float = None  # type: ignore
-    CO2e_pb: float = None  # type: ignore
+    CO2e_combustion_based: float = None  # type: ignore
+    CO2e_production_based: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     CO2e_total_2021_estimated: float = None  # type: ignore
     change_CO2e_pct: float = None  # type: ignore
@@ -90,8 +90,8 @@ class Vars3:
 @dataclass
 class Vars4:
     # Used by p_miner
-    CO2e_cb: float = None  # type: ignore
-    CO2e_pb: float = None  # type: ignore
+    CO2e_combustion_based: float = None  # type: ignore
+    CO2e_production_based: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     CO2e_total_2021_estimated: float = None  # type: ignore
     change_CO2e_pct: float = None  # type: ignore
@@ -116,10 +116,10 @@ class Vars4:
 @dataclass
 class Vars5:
     # Used by p_miner_cement, p_miner_chalk, p_chem_basic, p_chem_other
-    CO2e_cb: float = None  # type: ignore
-    CO2e_cb_per_t: float = None  # type: ignore
-    CO2e_pb: float = None  # type: ignore
-    CO2e_pb_per_t: float = None  # type: ignore
+    CO2e_combustion_based: float = None  # type: ignore
+    CO2e_combustion_based_per_t: float = None  # type: ignore
+    CO2e_production_based: float = None  # type: ignore
+    CO2e_production_based_per_t: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     CO2e_total_2021_estimated: float = None  # type: ignore
     change_CO2e_pct: float = None  # type: ignore
@@ -146,10 +146,10 @@ class Vars5:
 @dataclass
 class Vars6:
     # Used by p_miner_glas, p_chem_ammonia, p_metal_steel_secondary
-    CO2e_cb: float = None  # type: ignore
-    CO2e_cb_per_t: float = None  # type: ignore
-    CO2e_pb: float = None  # type: ignore
-    CO2e_pb_per_t: float = None  # type: ignore
+    CO2e_combustion_based: float = None  # type: ignore
+    CO2e_combustion_based_per_t: float = None  # type: ignore
+    CO2e_production_based: float = None  # type: ignore
+    CO2e_production_based_per_t: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     CO2e_total_2021_estimated: float = None  # type: ignore
     change_CO2e_pct: float = None  # type: ignore
@@ -175,10 +175,10 @@ class Vars6:
 @dataclass
 class Vars7:
     # Used by p_miner_ceram, p_metal_nonfe
-    CO2e_cb: float = None  # type: ignore
-    CO2e_cb_per_t: float = None  # type: ignore
-    CO2e_pb: float = None  # type: ignore
-    CO2e_pb_per_t: float = None  # type: ignore
+    CO2e_combustion_based: float = None  # type: ignore
+    CO2e_combustion_based_per_t: float = None  # type: ignore
+    CO2e_production_based: float = None  # type: ignore
+    CO2e_production_based_per_t: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     CO2e_total_2021_estimated: float = None  # type: ignore
     change_CO2e_pct: float = None  # type: ignore
@@ -206,8 +206,8 @@ class Vars7:
 @dataclass
 class Vars8:
     # Used by p_chem
-    CO2e_cb: float = None  # type: ignore
-    CO2e_pb: float = None  # type: ignore
+    CO2e_combustion_based: float = None  # type: ignore
+    CO2e_production_based: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     CO2e_total_2021_estimated: float = None  # type: ignore
     change_CO2e_pct: float = None  # type: ignore
@@ -230,8 +230,8 @@ class Vars8:
 @dataclass
 class Vars9:
     # Used by p_metal
-    CO2e_cb: float = None  # type: ignore
-    CO2e_pb: float = None  # type: ignore
+    CO2e_combustion_based: float = None  # type: ignore
+    CO2e_production_based: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     CO2e_total_2021_estimated: float = None  # type: ignore
     change_CO2e_pct: float = None  # type: ignore
@@ -255,8 +255,8 @@ class Vars9:
 @dataclass
 class Vars10:
     # Used by p_metal_steel
-    CO2e_cb: float = None  # type: ignore
-    CO2e_pb: float = None  # type: ignore
+    CO2e_combustion_based: float = None  # type: ignore
+    CO2e_production_based: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     CO2e_total_2021_estimated: float = None  # type: ignore
     change_CO2e_pct: float = None  # type: ignore
@@ -278,10 +278,10 @@ class Vars10:
 @dataclass
 class Vars11:
     # Used by p_metal_steel_primary
-    CO2e_cb: float = None  # type: ignore
-    CO2e_cb_per_t: float = None  # type: ignore
-    CO2e_pb: float = None  # type: ignore
-    CO2e_pb_per_t: float = None  # type: ignore
+    CO2e_combustion_based: float = None  # type: ignore
+    CO2e_combustion_based_per_t: float = None  # type: ignore
+    CO2e_production_based: float = None  # type: ignore
+    CO2e_production_based_per_t: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     CO2e_total_2021_estimated: float = None  # type: ignore
     change_CO2e_pct: float = None  # type: ignore
@@ -308,8 +308,8 @@ class Vars11:
 @dataclass
 class Vars12:
     # Used by p_other
-    CO2e_cb: float = None  # type: ignore
-    CO2e_pb: float = None  # type: ignore
+    CO2e_combustion_based: float = None  # type: ignore
+    CO2e_production_based: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     CO2e_total_2021_estimated: float = None  # type: ignore
     change_CO2e_pct: float = None  # type: ignore
@@ -333,10 +333,10 @@ class Vars12:
 @dataclass
 class Vars13:
     # Used by p_other_paper, p_other_food
-    CO2e_cb: float = None  # type: ignore
-    CO2e_cb_per_t: float = None  # type: ignore
-    CO2e_pb: float = None  # type: ignore
-    CO2e_pb_per_t: float = None  # type: ignore
+    CO2e_combustion_based: float = None  # type: ignore
+    CO2e_combustion_based_per_t: float = None  # type: ignore
+    CO2e_production_based: float = None  # type: ignore
+    CO2e_production_based_per_t: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     CO2e_total_2021_estimated: float = None  # type: ignore
     change_CO2e_pct: float = None  # type: ignore
@@ -363,10 +363,10 @@ class Vars13:
 @dataclass
 class Vars14:
     # Used by p_other_further
-    CO2e_cb: float = None  # type: ignore
-    CO2e_cb_per_MWh: float = None  # type: ignore
-    CO2e_pb: float = None  # type: ignore
-    CO2e_pb_per_MWh: float = None  # type: ignore
+    CO2e_combustion_based: float = None  # type: ignore
+    CO2e_combustion_based_per_MWh: float = None  # type: ignore
+    CO2e_production_based: float = None  # type: ignore
+    CO2e_production_based_per_MWh: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     CO2e_total_2021_estimated: float = None  # type: ignore
     change_CO2e_pct: float = None  # type: ignore
@@ -394,8 +394,8 @@ class Vars14:
 @dataclass
 class Vars15:
     # Used by p_other_2efgh
-    CO2e_pb: float = None  # type: ignore
-    CO2e_pb_per_MWh: float = None  # type: ignore
+    CO2e_production_based: float = None  # type: ignore
+    CO2e_production_based_per_MWh: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     CO2e_total_2021_estimated: float = None  # type: ignore
     change_CO2e_pct: float = None  # type: ignore
@@ -497,10 +497,16 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
     )
     p_chem_basic.energy = p_chem_basic.demand_electricity + p_chem_basic.demand_emethan
 
-    p_chem_basic.CO2e_cb_per_t = ass("Ass_I_P_chem_basic_ratio_CO2e_cb_to_prodvol_2050")
-    p_chem_basic.CO2e_cb = p_chem_basic.prod_volume * p_chem_basic.CO2e_cb_per_t
-    p_chem_basic.CO2e_pb = ass("Ass_I_P_chem_all_co2e_factor_2050")
-    p_chem_basic.CO2e_total = p_chem_basic.CO2e_cb + p_chem_basic.CO2e_pb
+    p_chem_basic.CO2e_combustion_based_per_t = ass(
+        "Ass_I_P_chem_basic_ratio_CO2e_cb_to_prodvol_2050"
+    )
+    p_chem_basic.CO2e_combustion_based = (
+        p_chem_basic.prod_volume * p_chem_basic.CO2e_combustion_based_per_t
+    )
+    p_chem_basic.CO2e_production_based = ass("Ass_I_P_chem_all_co2e_factor_2050")
+    p_chem_basic.CO2e_total = (
+        p_chem_basic.CO2e_combustion_based + p_chem_basic.CO2e_production_based
+    )
     p_chem_basic.change_energy_MWh = p_chem_basic.energy - i18.p_chem_basic.energy
     p_chem_basic.change_energy_pct = div(
         p_chem_basic.change_energy_MWh, i18.p_chem_basic.energy
@@ -541,9 +547,11 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
         "Ass_I_P_chem_ammonia_fec_factor_electricity_2050"
     )
     p_chem_ammonia.energy = p_chem_ammonia.demand_electricity
-    p_chem_ammonia.CO2e_cb = ass("Ass_I_P_chem_all_co2e_factor_2050")
-    p_chem_ammonia.CO2e_pb = ass("Ass_I_P_chem_all_co2e_factor_2050")
-    p_chem_ammonia.CO2e_total = p_chem_ammonia.CO2e_cb + p_chem_ammonia.CO2e_pb
+    p_chem_ammonia.CO2e_combustion_based = ass("Ass_I_P_chem_all_co2e_factor_2050")
+    p_chem_ammonia.CO2e_production_based = ass("Ass_I_P_chem_all_co2e_factor_2050")
+    p_chem_ammonia.CO2e_total = (
+        p_chem_ammonia.CO2e_combustion_based + p_chem_ammonia.CO2e_production_based
+    )
     p_chem_ammonia.change_energy_MWh = p_chem_ammonia.energy - i18.p_chem_ammonia.energy
     p_chem_ammonia.change_energy_pct = div(
         p_chem_ammonia.change_energy_MWh, i18.p_chem_ammonia.energy
@@ -589,10 +597,16 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
         "Ass_I_P_chem_other_fec_factor_other_energie_2050"
     )
     p_chem_other.energy = p_chem_other.demand_electricity + p_chem_other.demand_emethan
-    p_chem_other.CO2e_cb_per_t = ass("Ass_I_P_chem_other_ratio_CO2e_cb_to_prodvol_2050")
-    p_chem_other.CO2e_cb = p_chem_other.prod_volume * p_chem_other.CO2e_cb_per_t
-    p_chem_other.CO2e_pb = ass("Ass_I_P_chem_all_co2e_factor_2050")
-    p_chem_other.CO2e_total = p_chem_other.CO2e_cb + p_chem_other.CO2e_pb
+    p_chem_other.CO2e_combustion_based_per_t = ass(
+        "Ass_I_P_chem_other_ratio_CO2e_cb_to_prodvol_2050"
+    )
+    p_chem_other.CO2e_combustion_based = (
+        p_chem_other.prod_volume * p_chem_other.CO2e_combustion_based_per_t
+    )
+    p_chem_other.CO2e_production_based = ass("Ass_I_P_chem_all_co2e_factor_2050")
+    p_chem_other.CO2e_total = (
+        p_chem_other.CO2e_combustion_based + p_chem_other.CO2e_production_based
+    )
     # change 2018 to 203X
     p_chem_other.change_energy_MWh = p_chem_other.energy - i18.p_chem_other.energy
     p_chem_other.change_energy_pct = div(
@@ -631,11 +645,15 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
     p_chem.prod_volume = (
         p_chem_basic.prod_volume + p_chem_ammonia.prod_volume + p_chem_other.prod_volume
     )
-    p_chem.CO2e_pb = (
-        p_chem_basic.CO2e_pb + p_chem_ammonia.CO2e_pb + p_chem_other.CO2e_pb
+    p_chem.CO2e_production_based = (
+        p_chem_basic.CO2e_production_based
+        + p_chem_ammonia.CO2e_production_based
+        + p_chem_other.CO2e_production_based
     )
-    p_chem.CO2e_cb = (
-        p_chem_basic.CO2e_cb + p_chem_ammonia.CO2e_cb + p_chem_other.CO2e_cb
+    p_chem.CO2e_combustion_based = (
+        p_chem_basic.CO2e_combustion_based
+        + p_chem_ammonia.CO2e_combustion_based
+        + p_chem_other.CO2e_combustion_based
     )
     p_chem.CO2e_total = (
         p_chem_basic.CO2e_total + p_chem_ammonia.CO2e_total + p_chem_other.CO2e_total
@@ -692,20 +710,23 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
         p_metal_steel_primary.demand_electricity + p_metal_steel_primary.demand_hydrogen
     )
     # CO2 Emissions
-    p_metal_steel_primary.CO2e_pb_per_t = ass(
+    p_metal_steel_primary.CO2e_production_based_per_t = ass(
         "Ass_I_P_metal_steel_primary_ratio_CO2e_pb_to_rodvol_2030"
     )
-    p_metal_steel_primary.CO2e_pb = (
-        p_metal_steel_primary.prod_volume * p_metal_steel_primary.CO2e_pb_per_t
+    p_metal_steel_primary.CO2e_production_based = (
+        p_metal_steel_primary.prod_volume
+        * p_metal_steel_primary.CO2e_production_based_per_t
     )
-    p_metal_steel_primary.CO2e_cb_per_t = ass(
+    p_metal_steel_primary.CO2e_combustion_based_per_t = ass(
         "Ass_I_P_metal_steel_primary_ratio_CO2e_eb_to_rodvol_2030"
     ) + ass("Ass_I_P_metal_steel_further_production_ratio_CO2e_eb_to_rodvol_2030")
-    p_metal_steel_primary.CO2e_cb = (
-        p_metal_steel_primary.prod_volume * p_metal_steel_primary.CO2e_cb_per_t
+    p_metal_steel_primary.CO2e_combustion_based = (
+        p_metal_steel_primary.prod_volume
+        * p_metal_steel_primary.CO2e_combustion_based_per_t
     )
     p_metal_steel_primary.CO2e_total = (
-        p_metal_steel_primary.CO2e_pb + p_metal_steel_primary.CO2e_cb
+        p_metal_steel_primary.CO2e_production_based
+        + p_metal_steel_primary.CO2e_combustion_based
     )
 
     # change 2018 to 203X
@@ -775,20 +796,23 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
     )
     p_metal_steel_secondary.energy = p_metal_steel_secondary.demand_electricity
     # CO2 Emissions
-    p_metal_steel_secondary.CO2e_pb_per_t = ass(
+    p_metal_steel_secondary.CO2e_production_based_per_t = ass(
         "Ass_I_P_metal_steel_secundary_ratio_CO2e_pb_to_rodvol_2030"
     )
-    p_metal_steel_secondary.CO2e_pb = (
-        p_metal_steel_secondary.prod_volume * p_metal_steel_secondary.CO2e_pb_per_t
+    p_metal_steel_secondary.CO2e_production_based = (
+        p_metal_steel_secondary.prod_volume
+        * p_metal_steel_secondary.CO2e_production_based_per_t
     )
-    p_metal_steel_secondary.CO2e_cb_per_t = ass(
+    p_metal_steel_secondary.CO2e_combustion_based_per_t = ass(
         "Ass_I_P_metal_steel_secundary_ratio_CO2e_eb_to_rodvol_2030"
     ) + ass("Ass_I_P_metal_steel_further_production_ratio_CO2e_eb_to_rodvol_2030")
-    p_metal_steel_secondary.CO2e_cb = (
-        p_metal_steel_secondary.prod_volume * p_metal_steel_secondary.CO2e_cb_per_t
+    p_metal_steel_secondary.CO2e_combustion_based = (
+        p_metal_steel_secondary.prod_volume
+        * p_metal_steel_secondary.CO2e_combustion_based_per_t
     )
     p_metal_steel_secondary.CO2e_total = (
-        p_metal_steel_secondary.CO2e_pb + p_metal_steel_secondary.CO2e_cb
+        p_metal_steel_secondary.CO2e_production_based
+        + p_metal_steel_secondary.CO2e_combustion_based
     )
 
     # change 2018 to 203X
@@ -799,8 +823,12 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
         p_metal_steel_secondary.change_energy_MWh, i18.p_metal_steel_secondary.energy
     )
     p_metal_steel_secondary.change_CO2e_t = (
-        p_metal_steel_secondary.CO2e_pb + p_metal_steel_secondary.CO2e_cb
-    ) - (i18.p_metal_steel_secondary.CO2e_pb + i18.p_metal_steel_secondary.CO2e_cb)
+        p_metal_steel_secondary.CO2e_production_based
+        + p_metal_steel_secondary.CO2e_combustion_based
+    ) - (
+        i18.p_metal_steel_secondary.CO2e_production_based
+        + i18.p_metal_steel_secondary.CO2e_combustion_based
+    )
     p_metal_steel_secondary.change_CO2e_pct = div(
         p_metal_steel_secondary.change_CO2e_t, i18.p_metal_steel_secondary.CO2e_total
     )
@@ -847,13 +875,17 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
     p_metal_steel.prod_volume = (
         p_metal_steel_primary.prod_volume + p_metal_steel_secondary.prod_volume
     )
-    p_metal_steel.CO2e_pb = (
-        p_metal_steel_primary.CO2e_pb + p_metal_steel_secondary.CO2e_pb
+    p_metal_steel.CO2e_production_based = (
+        p_metal_steel_primary.CO2e_production_based
+        + p_metal_steel_secondary.CO2e_production_based
     )
-    p_metal_steel.CO2e_cb = (
-        p_metal_steel_primary.CO2e_cb + p_metal_steel_secondary.CO2e_cb
+    p_metal_steel.CO2e_combustion_based = (
+        p_metal_steel_primary.CO2e_combustion_based
+        + p_metal_steel_secondary.CO2e_combustion_based
     )
-    p_metal_steel.CO2e_total = p_metal_steel.CO2e_pb + p_metal_steel.CO2e_cb
+    p_metal_steel.CO2e_total = (
+        p_metal_steel.CO2e_production_based + p_metal_steel.CO2e_combustion_based
+    )
 
     # change 2018 to 203X
     p_metal_steel.change_energy_MWh = p_metal_steel.energy - i18.p_metal_steel.energy
@@ -905,11 +937,17 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
         + p_metal_nonfe.demand_hydrogen
     )
     # CO2 Emissions
-    p_metal_nonfe.CO2e_pb_per_t = ass("Ass_I_P_metal_nonfe_CO2e_pb_2035")
-    p_metal_nonfe.CO2e_pb = p_metal_nonfe.prod_volume * p_metal_nonfe.CO2e_pb_per_t
-    p_metal_nonfe.CO2e_cb_per_t = ass("Ass_I_P_metal_nonfe_CO2e_cb_2035")
-    p_metal_nonfe.CO2e_cb = p_metal_nonfe.prod_volume * p_metal_nonfe.CO2e_cb_per_t
-    p_metal_nonfe.CO2e_total = p_metal_nonfe.CO2e_pb + p_metal_nonfe.CO2e_cb
+    p_metal_nonfe.CO2e_production_based_per_t = ass("Ass_I_P_metal_nonfe_CO2e_pb_2035")
+    p_metal_nonfe.CO2e_production_based = (
+        p_metal_nonfe.prod_volume * p_metal_nonfe.CO2e_production_based_per_t
+    )
+    p_metal_nonfe.CO2e_combustion_based_per_t = ass("Ass_I_P_metal_nonfe_CO2e_cb_2035")
+    p_metal_nonfe.CO2e_combustion_based = (
+        p_metal_nonfe.prod_volume * p_metal_nonfe.CO2e_combustion_based_per_t
+    )
+    p_metal_nonfe.CO2e_total = (
+        p_metal_nonfe.CO2e_production_based + p_metal_nonfe.CO2e_combustion_based
+    )
 
     # change 2018 to 203X
     p_metal_nonfe.change_energy_MWh = p_metal_nonfe.energy - i18.p_metal_nonfe.energy
@@ -950,8 +988,12 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
     # metal summary
     p_metal = i30.p_metal
     p_metal.energy = p_metal_steel.energy + p_metal_nonfe.energy
-    p_metal.CO2e_pb = p_metal_steel.CO2e_pb + p_metal_nonfe.CO2e_pb
-    p_metal.CO2e_cb = p_metal_steel.CO2e_cb + p_metal_nonfe.CO2e_cb
+    p_metal.CO2e_production_based = (
+        p_metal_steel.CO2e_production_based + p_metal_nonfe.CO2e_production_based
+    )
+    p_metal.CO2e_combustion_based = (
+        p_metal_steel.CO2e_combustion_based + p_metal_nonfe.CO2e_combustion_based
+    )
     p_metal.CO2e_total = p_metal_steel.CO2e_total + p_metal_nonfe.CO2e_total
     p_metal.change_energy_MWh = (
         p_metal_steel.change_energy_MWh + p_metal_nonfe.change_energy_MWh
@@ -984,11 +1026,13 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
     p_other_paper.energy = (
         p_other_paper.demand_electricity + p_other_paper.demand_heatnet
     )
-    p_other_paper.CO2e_cb_per_t = ass(
+    p_other_paper.CO2e_combustion_based_per_t = ass(
         "Ass_I_P_other_paper_ratio_CO2e_cb_to_prodvol_2050"
     )
-    p_other_paper.CO2e_cb = p_other_paper.prod_volume * p_other_paper.CO2e_cb_per_t
-    p_other_paper.CO2e_total = p_other_paper.CO2e_cb
+    p_other_paper.CO2e_combustion_based = (
+        p_other_paper.prod_volume * p_other_paper.CO2e_combustion_based_per_t
+    )
+    p_other_paper.CO2e_total = p_other_paper.CO2e_combustion_based
 
     # change 2018 to 203X
     p_other_paper.change_energy_MWh = p_other_paper.energy - i18.p_other_paper.energy
@@ -1041,9 +1085,13 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
     )
     p_other_food.energy = p_other_food.demand_electricity + p_other_food.demand_heatnet
 
-    p_other_food.CO2e_cb_per_t = ass("Ass_I_P_other_food_ratio_CO2e_cb_to_prodvol_2050")
-    p_other_food.CO2e_cb = p_other_food.prod_volume * p_other_food.CO2e_cb_per_t
-    p_other_food.CO2e_total = p_other_food.CO2e_cb
+    p_other_food.CO2e_combustion_based_per_t = ass(
+        "Ass_I_P_other_food_ratio_CO2e_cb_to_prodvol_2050"
+    )
+    p_other_food.CO2e_combustion_based = (
+        p_other_food.prod_volume * p_other_food.CO2e_combustion_based_per_t
+    )
+    p_other_food.CO2e_total = p_other_food.CO2e_combustion_based
 
     # change 2018 to 203X
     p_other_food.change_energy_MWh = p_other_food.energy - i18.p_other_food.energy
@@ -1092,15 +1140,21 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
     p_other_further.demand_heatnet = p_other_further.energy * ass(
         "Ass_I_P_other_further_fec_pct_of_heatnet_2050"
     )
-    p_other_further.CO2e_pb_per_MWh = ass(
+    p_other_further.CO2e_production_based_per_MWh = ass(
         "Ass_I_P_other_2d_ratio_of_CO2e_pb_to_fec_2050"
     )
-    p_other_further.CO2e_pb = p_other_further.energy * p_other_further.CO2e_pb_per_MWh
-    p_other_further.CO2e_cb_per_MWh = ass(
+    p_other_further.CO2e_production_based = (
+        p_other_further.energy * p_other_further.CO2e_production_based_per_MWh
+    )
+    p_other_further.CO2e_combustion_based_per_MWh = ass(
         "Ass_I_P_other_further_ratio_of_CO2e_cb_to_fec_2050"
     )
-    p_other_further.CO2e_cb = p_other_further.energy * p_other_further.CO2e_cb_per_MWh
-    p_other_further.CO2e_total = p_other_further.CO2e_cb + p_other_further.CO2e_pb
+    p_other_further.CO2e_combustion_based = (
+        p_other_further.energy * p_other_further.CO2e_combustion_based_per_MWh
+    )
+    p_other_further.CO2e_total = (
+        p_other_further.CO2e_combustion_based + p_other_further.CO2e_production_based
+    )
 
     # change 2018 to 203X
     p_other_further.change_energy_MWh = (
@@ -1143,11 +1197,13 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
     # has to be calculatet after p_other_further_2030
     # p_other_2efgh
     p_other_2efgh = i30.p_other_2efgh
-    p_other_2efgh.CO2e_pb_per_MWh = ass(
+    p_other_2efgh.CO2e_production_based_per_MWh = ass(
         "Ass_I_P_other_2efgh_ratio_of_CO2e_pb_to_fec_2050"
     )
-    p_other_2efgh.CO2e_pb = p_other_further.energy * p_other_2efgh.CO2e_pb_per_MWh
-    p_other_2efgh.CO2e_total = p_other_2efgh.CO2e_pb
+    p_other_2efgh.CO2e_production_based = (
+        p_other_further.energy * p_other_2efgh.CO2e_production_based_per_MWh
+    )
+    p_other_2efgh.CO2e_total = p_other_2efgh.CO2e_production_based
 
     # change 2018 to 203X
     p_other_2efgh.change_CO2e_t = (
@@ -1171,7 +1227,7 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
     )
 
     p_other_2efgh.invest = (
-        i18.p_other_2efgh.CO2e_pb - p_other_2efgh.CO2e_pb
+        i18.p_other_2efgh.CO2e_production_based - p_other_2efgh.CO2e_production_based
     ) * p_other_2efgh.invest_per_x
     p_other_2efgh.invest_pa = p_other_2efgh.invest / entries.m_duration_target
     p_other_2efgh.invest_pa_outside = p_other_2efgh.invest_pa
@@ -1188,9 +1244,13 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
     p_other = i30.p_other
     p_other.energy = p_other_paper.energy + p_other_food.energy + p_other_further.energy
     p_other.prod_volume = p_other_paper.prod_volume + p_other_food.prod_volume
-    p_other.CO2e_pb = p_other_further.CO2e_pb + p_other_2efgh.CO2e_pb
-    p_other.CO2e_cb = (
-        p_other_paper.CO2e_cb + p_other_food.CO2e_cb + p_other_further.CO2e_cb
+    p_other.CO2e_production_based = (
+        p_other_further.CO2e_production_based + p_other_2efgh.CO2e_production_based
+    )
+    p_other.CO2e_combustion_based = (
+        p_other_paper.CO2e_combustion_based
+        + p_other_food.CO2e_combustion_based
+        + p_other_further.CO2e_combustion_based
     )
     p_other.CO2e_total = (
         p_other_paper.CO2e_total
@@ -1238,10 +1298,10 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
     )
 
     p_miner_cement = i30.p_miner_cement
-    p_miner_cement.CO2e_pb_per_t = ass(
+    p_miner_cement.CO2e_production_based_per_t = ass(
         "Ass_I_P_miner_cement_ratio_CO2e_pb_to_prodvol_2050"
     )
-    p_miner_cement.CO2e_cb_per_t = ass(
+    p_miner_cement.CO2e_combustion_based_per_t = ass(
         "Ass_I_P_miner_cement_ratio_CO2e_cb_to_prodvol_2050"
     )
     p_miner_cement.demand_change = ass("Ass_I_P_miner_cement_prodvol_change")
@@ -1255,14 +1315,19 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
 
     p_miner_ceram = i30.p_miner_ceram
 
-    p_miner_ceram.CO2e_pb_per_t = ass(
+    p_miner_ceram.CO2e_production_based_per_t = ass(
         "Ass_I_P_miner_ceramic_ratio_CO2e_pb_to_prodvol_2050"
     )
-    p_miner_cement.CO2e_pb = p_miner_cement.prod_volume * p_miner_cement.CO2e_pb_per_t
+    p_miner_cement.CO2e_production_based = (
+        p_miner_cement.prod_volume * p_miner_cement.CO2e_production_based_per_t
+    )
     p_miner_cement.CO2e_total_2021_estimated = (
-        i18.p_miner_cement.CO2e_pb + i18.p_miner_cement.CO2e_cb
+        i18.p_miner_cement.CO2e_production_based
+        + i18.p_miner_cement.CO2e_combustion_based
     ) * fact("Fact_M_CO2e_wo_lulucf_2021_vs_2018")
-    p_miner_cement.CO2e_cb = p_miner_cement.prod_volume * p_miner_cement.CO2e_cb_per_t
+    p_miner_cement.CO2e_combustion_based = (
+        p_miner_cement.prod_volume * p_miner_cement.CO2e_combustion_based_per_t
+    )
 
     g_consult = i30.g_consult
 
@@ -1317,7 +1382,9 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
     p_miner_ceram.prod_volume = i18.p_miner_ceram.prod_volume * (
         1 + p_miner_ceram.demand_change
     )
-    p_miner_ceram.CO2e_pb = p_miner_ceram.prod_volume * p_miner_ceram.CO2e_pb_per_t
+    p_miner_ceram.CO2e_production_based = (
+        p_miner_ceram.prod_volume * p_miner_ceram.CO2e_production_based_per_t
+    )
 
     p_miner_chalk = i30.p_miner_chalk
 
@@ -1325,10 +1392,12 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
     p_miner_chalk.prod_volume = i18.p_miner_chalk.prod_volume * (
         1 + p_miner_chalk.demand_change
     )
-    p_miner_chalk.CO2e_pb_per_t = ass(
+    p_miner_chalk.CO2e_production_based_per_t = ass(
         "Ass_I_P_miner_chalk_ratio_CO2e_pb_to_prodvol_2050"
     )
-    p_miner_chalk.CO2e_pb = p_miner_chalk.prod_volume * p_miner_chalk.CO2e_pb_per_t
+    p_miner_chalk.CO2e_production_based = (
+        p_miner_chalk.prod_volume * p_miner_chalk.CO2e_production_based_per_t
+    )
 
     p_miner_glas = i30.p_miner_glas
 
@@ -1336,41 +1405,54 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
     p_miner_glas.prod_volume = i18.p_miner_glas.prod_volume * (
         1 + p_miner_glas.demand_change
     )
-    p_miner_glas.CO2e_pb_per_t = ass(
+    p_miner_glas.CO2e_production_based_per_t = ass(
         "Ass_I_P_miner_glass_ratio_CO2e_pb_to_prodvol_2050"
     )
-    p_miner_glas.CO2e_pb = p_miner_glas.prod_volume * p_miner_glas.CO2e_pb_per_t
+    p_miner_glas.CO2e_production_based = (
+        p_miner_glas.prod_volume * p_miner_glas.CO2e_production_based_per_t
+    )
 
     p_miner = i30.p_miner
 
-    p_miner.CO2e_pb = (
-        p_miner_cement.CO2e_pb
-        + p_miner_chalk.CO2e_pb
-        + p_miner_glas.CO2e_pb
-        + p_miner_ceram.CO2e_pb
+    p_miner.CO2e_production_based = (
+        p_miner_cement.CO2e_production_based
+        + p_miner_chalk.CO2e_production_based
+        + p_miner_glas.CO2e_production_based
+        + p_miner_ceram.CO2e_production_based
     )  # SUM(p_miner_cement.CO2e_pb:p_miner_ceram.CO2e_pb)
-    p_miner_ceram.CO2e_cb_per_t = ass(
+    p_miner_ceram.CO2e_combustion_based_per_t = ass(
         "Ass_I_P_miner_ceramic_ratio_CO2e_cb_to_prodvol_2050"
     )
-    p_miner_cement.CO2e_total = p_miner_cement.CO2e_pb + p_miner_cement.CO2e_cb
+    p_miner_cement.CO2e_total = (
+        p_miner_cement.CO2e_production_based + p_miner_cement.CO2e_combustion_based
+    )
     p_miner_cement.energy = (
         p_miner_cement.demand_electricity + p_miner_cement.demand_emethan
     )
     p_miner_cement.change_energy_MWh = p_miner_cement.energy - i18.p_miner_cement.energy
-    p_miner_ceram.CO2e_cb = p_miner_ceram.prod_volume * p_miner_ceram.CO2e_cb_per_t
+    p_miner_ceram.CO2e_combustion_based = (
+        p_miner_ceram.prod_volume * p_miner_ceram.CO2e_combustion_based_per_t
+    )
 
     p = i30.p
 
-    p.CO2e_pb = (
-        p_miner.CO2e_pb + p_chem.CO2e_pb + p_metal.CO2e_pb + p_other.CO2e_pb
+    p.CO2e_production_based = (
+        p_miner.CO2e_production_based
+        + p_chem.CO2e_production_based
+        + p_metal.CO2e_production_based
+        + p_other.CO2e_production_based
     )  # SUM(p_miner.CO2e_pb,p_chem.CO2e_pb,p_metal.CO2e_pb,p_other.CO2e_pb)
     p_miner_ceram.CO2e_total_2021_estimated = (
-        i18.p_miner_ceram.CO2e_pb + i18.p_miner_ceram.CO2e_cb
+        i18.p_miner_ceram.CO2e_production_based
+        + i18.p_miner_ceram.CO2e_combustion_based
     ) * fact("Fact_M_CO2e_wo_lulucf_2021_vs_2018")
     p_miner_cement.cost_climate_saved = (
         (
             p_miner_cement.CO2e_total_2021_estimated
-            - (p_miner_cement.CO2e_pb + p_miner_cement.CO2e_cb)
+            - (
+                p_miner_cement.CO2e_production_based
+                + p_miner_cement.CO2e_combustion_based
+            )
         )
         * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
@@ -1422,39 +1504,57 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
     )
     p_metal.prod_volume = p_metal_steel.prod_volume + p_metal_nonfe.prod_volume
 
-    p_miner_chalk.CO2e_cb_per_t = ass(
+    p_miner_chalk.CO2e_combustion_based_per_t = ass(
         "Ass_I_P_miner_chalk_ratio_CO2e_cb_to_prodvol_2050"
     )
-    p_miner_chalk.CO2e_cb = p_miner_chalk.prod_volume * p_miner_chalk.CO2e_cb_per_t
-    p_miner_glas.CO2e_cb_per_t = ass(
+    p_miner_chalk.CO2e_combustion_based = (
+        p_miner_chalk.prod_volume * p_miner_chalk.CO2e_combustion_based_per_t
+    )
+    p_miner_glas.CO2e_combustion_based_per_t = ass(
         "Ass_I_P_miner_glass_ratio_CO2e_cb_to_prodvol_2050"
     )
-    p_miner_glas.CO2e_cb = p_miner_glas.prod_volume * p_miner_glas.CO2e_cb_per_t
-    p_miner.CO2e_cb = (
-        p_miner_cement.CO2e_cb
-        + p_miner_chalk.CO2e_cb
-        + p_miner_glas.CO2e_cb
-        + p_miner_ceram.CO2e_cb
+    p_miner_glas.CO2e_combustion_based = (
+        p_miner_glas.prod_volume * p_miner_glas.CO2e_combustion_based_per_t
+    )
+    p_miner.CO2e_combustion_based = (
+        p_miner_cement.CO2e_combustion_based
+        + p_miner_chalk.CO2e_combustion_based
+        + p_miner_glas.CO2e_combustion_based
+        + p_miner_ceram.CO2e_combustion_based
     )  # SUM(p_miner_cement.CO2e_cb:p_miner_ceram.CO2e_cb)
-    p.CO2e_cb = p_miner.CO2e_cb + p_chem.CO2e_cb + p_metal.CO2e_cb + p_other.CO2e_cb
-    p_miner_ceram.CO2e_total = p_miner_ceram.CO2e_pb + p_miner_ceram.CO2e_cb
+    p.CO2e_combustion_based = (
+        p_miner.CO2e_combustion_based
+        + p_chem.CO2e_combustion_based
+        + p_metal.CO2e_combustion_based
+        + p_other.CO2e_combustion_based
+    )
+    p_miner_ceram.CO2e_total = (
+        p_miner_ceram.CO2e_production_based + p_miner_ceram.CO2e_combustion_based
+    )
     p_miner_ceram.energy = (
         p_miner_ceram.demand_electricity
         + p_miner_ceram.demand_biomass
         + p_miner_ceram.demand_hydrogen
     )
     p_miner_ceram.change_energy_MWh = p_miner_ceram.energy - i18.p_miner_ceram.energy
-    p_miner_cement.change_CO2e_t = (p_miner_cement.CO2e_pb + p_miner_cement.CO2e_cb) - (
-        i18.p_miner_cement.CO2e_pb + i18.p_miner_cement.CO2e_cb
+    p_miner_cement.change_CO2e_t = (
+        p_miner_cement.CO2e_production_based + p_miner_cement.CO2e_combustion_based
+    ) - (
+        i18.p_miner_cement.CO2e_production_based
+        + i18.p_miner_cement.CO2e_combustion_based
     )
-    p_miner_ceram.change_CO2e_t = (p_miner_ceram.CO2e_pb + p_miner_ceram.CO2e_cb) - (
-        i18.p_miner_ceram.CO2e_pb + i18.p_miner_ceram.CO2e_cb
+    p_miner_ceram.change_CO2e_t = (
+        p_miner_ceram.CO2e_production_based + p_miner_ceram.CO2e_combustion_based
+    ) - (
+        i18.p_miner_ceram.CO2e_production_based
+        + i18.p_miner_ceram.CO2e_combustion_based
     )
     p_miner_chalk.CO2e_total_2021_estimated = (
-        i18.p_miner_chalk.CO2e_pb + i18.p_miner_chalk.CO2e_cb
+        i18.p_miner_chalk.CO2e_production_based
+        + i18.p_miner_chalk.CO2e_combustion_based
     ) * fact("Fact_M_CO2e_wo_lulucf_2021_vs_2018")
     p_miner_glas.CO2e_total_2021_estimated = (
-        i18.p_miner_glas.CO2e_pb + i18.p_miner_glas.CO2e_cb
+        i18.p_miner_glas.CO2e_production_based + i18.p_miner_glas.CO2e_combustion_based
     ) * fact("Fact_M_CO2e_wo_lulucf_2021_vs_2018")
 
     p_miner.CO2e_total_2021_estimated = (
@@ -1466,7 +1566,10 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
     p_miner_ceram.cost_climate_saved = (
         (
             p_miner_ceram.CO2e_total_2021_estimated
-            - (p_miner_ceram.CO2e_pb + p_miner_ceram.CO2e_cb)
+            - (
+                p_miner_ceram.CO2e_production_based
+                + p_miner_ceram.CO2e_combustion_based
+            )
         )
         * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
@@ -1518,9 +1621,15 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
         + p_other.change_energy_MWh
     )
     p.change_energy_pct = div(p.change_energy_MWh, i18.p.energy)
-    p.change_CO2e_t = (p.CO2e_pb + p.CO2e_cb) - (i18.p.CO2e_pb + i18.p.CO2e_cb)
-    p_miner_chalk.CO2e_total = p_miner_chalk.CO2e_pb + p_miner_chalk.CO2e_cb
-    p_miner_glas.CO2e_total = p_miner_glas.CO2e_pb + p_miner_glas.CO2e_cb
+    p.change_CO2e_t = (p.CO2e_production_based + p.CO2e_combustion_based) - (
+        i18.p.CO2e_production_based + i18.p.CO2e_combustion_based
+    )
+    p_miner_chalk.CO2e_total = (
+        p_miner_chalk.CO2e_production_based + p_miner_chalk.CO2e_combustion_based
+    )
+    p_miner_glas.CO2e_total = (
+        p_miner_glas.CO2e_production_based + p_miner_glas.CO2e_combustion_based
+    )
     p_miner.CO2e_total = (
         p_miner_cement.CO2e_total
         + p_miner_chalk.CO2e_total
@@ -1531,7 +1640,10 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
     p_miner_chalk.cost_climate_saved = (
         (
             p_miner_chalk.CO2e_total_2021_estimated
-            - (p_miner_chalk.CO2e_pb + p_miner_chalk.CO2e_cb)
+            - (
+                p_miner_chalk.CO2e_production_based
+                + p_miner_chalk.CO2e_combustion_based
+            )
         )
         * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
@@ -1539,7 +1651,7 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
     p_miner_glas.cost_climate_saved = (
         (
             p_miner_glas.CO2e_total_2021_estimated
-            - (p_miner_glas.CO2e_pb + p_miner_glas.CO2e_cb)
+            - (p_miner_glas.CO2e_production_based + p_miner_glas.CO2e_combustion_based)
         )
         * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
@@ -1558,11 +1670,16 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
     p_miner_cement.change_energy_pct = div(
         p_miner_cement.change_energy_MWh, i18.p_miner_cement.energy
     )
-    p_miner_chalk.change_CO2e_t = (p_miner_chalk.CO2e_pb + p_miner_chalk.CO2e_cb) - (
-        i18.p_miner_chalk.CO2e_pb + i18.p_miner_chalk.CO2e_cb
+    p_miner_chalk.change_CO2e_t = (
+        p_miner_chalk.CO2e_production_based + p_miner_chalk.CO2e_combustion_based
+    ) - (
+        i18.p_miner_chalk.CO2e_production_based
+        + i18.p_miner_chalk.CO2e_combustion_based
     )
-    p_miner_glas.change_CO2e_t = (p_miner_glas.CO2e_pb + p_miner_glas.CO2e_cb) - (
-        i18.p_miner_glas.CO2e_pb + i18.p_miner_glas.CO2e_cb
+    p_miner_glas.change_CO2e_t = (
+        p_miner_glas.CO2e_production_based + p_miner_glas.CO2e_combustion_based
+    ) - (
+        i18.p_miner_glas.CO2e_production_based + i18.p_miner_glas.CO2e_combustion_based
     )
     p_miner.change_CO2e_t = (
         p_miner_cement.change_CO2e_t
@@ -1684,8 +1801,8 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
         p_miner.energy + p_chem.energy + p_metal.energy + p_other.energy
     )  # SUM(p_miner.energy,p_chem.energy,p_metal.energy,p_other.energy)
     i.change_CO2e_t = p.change_CO2e_t
-    i.CO2e_pb = p.CO2e_pb
-    i.CO2e_cb = p.CO2e_cb
+    i.CO2e_production_based = p.CO2e_production_based
+    i.CO2e_combustion_based = p.CO2e_combustion_based
     i.change_CO2e_pct = p.change_CO2e_pct
     i.CO2e_total = p.CO2e_total
     i.change_energy_MWh = p.change_energy_MWh
@@ -1740,14 +1857,16 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
         p_metal_steel.cost_wage + p_metal_nonfe.cost_wage
     )  # SUM(p_metal_steel.cost_wage,p_metal_nonfe.cost_wage)
 
-    p_chem_basic.CO2e_pb_per_t = ass("Ass_I_P_chem_all_co2e_factor_2050")
+    p_chem_basic.CO2e_production_based_per_t = ass("Ass_I_P_chem_all_co2e_factor_2050")
     p_chem_ammonia.demand_change = ass("Ass_I_P_chem_ammonia_prodvol_change")
-    p_chem_ammonia.CO2e_pb_per_t = ass("Ass_I_P_chem_all_co2e_factor_2050")
-    p_chem_ammonia.CO2e_cb_per_t = ass(
+    p_chem_ammonia.CO2e_production_based_per_t = ass(
+        "Ass_I_P_chem_all_co2e_factor_2050"
+    )
+    p_chem_ammonia.CO2e_combustion_based_per_t = ass(
         "Ass_I_P_chem_ammonia_ratio_CO2e_cb_to_prodvol_2050"
     )
     p_chem_other.demand_change = ass("Ass_I_P_chem_other_prodvol_change")
-    p_chem_other.CO2e_pb_per_t = ass("Ass_I_P_chem_all_co2e_factor_2050")
+    p_chem_other.CO2e_production_based_per_t = ass("Ass_I_P_chem_all_co2e_factor_2050")
     p_other.demand_electricity = (
         p_other_paper.demand_electricity
         + p_other_food.demand_electricity
@@ -1811,14 +1930,18 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
         + p_other.invest_outside
     )
     i.cost_wage = g.cost_wage + p.cost_wage
-    p_other_paper.CO2e_pb_per_t = fact(
+    p_other_paper.CO2e_production_based_per_t = fact(
         "Fact_I_P_other_paper_ratio_CO2e_pb_to_prodvol_2018"
     )
-    p_other_paper.CO2e_pb = p_other_paper.prod_volume * p_other_paper.CO2e_pb_per_t
-    p_other_food.CO2e_pb_per_t = fact(
+    p_other_paper.CO2e_production_based = (
+        p_other_paper.prod_volume * p_other_paper.CO2e_production_based_per_t
+    )
+    p_other_food.CO2e_production_based_per_t = fact(
         "Fact_I_P_other_food_ratio_CO2e_pb_to_prodvol_2018"
     )
-    p_other_food.CO2e_pb = p_other_food.prod_volume * p_other_food.CO2e_pb_per_t
+    p_other_food.CO2e_production_based = (
+        p_other_food.prod_volume * p_other_food.CO2e_production_based_per_t
+    )
     p_other.demand_emethan = p_other_further.demand_emethan
 
     i.invest_outside = p.invest_outside

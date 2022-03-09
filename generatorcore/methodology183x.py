@@ -27,16 +27,16 @@ from . import (
 class zColVars:
     energy_18: float = None  # type: ignore
     pct_energy_18: float = None  # type: ignore
-    CO2e_pb_18: float = None  # type: ignore
-    CO2e_cb_18: float = None  # type: ignore
+    CO2e_production_based_18: float = None  # type: ignore
+    CO2e_combustion_based_18: float = None  # type: ignore
     CO2e_total_18: float = None  # type: ignore
     pct_CO2e_total_18: float = None  # type: ignore
 
     energy_30: float = None  # type: ignore
     pct_energy_30: float = None  # type: ignore
-    CO2e_pb_30: float = None  # type: ignore
-    CO2e_cb_30: float = None  # type: ignore
-    CO2e_cb_per_MWh: float = None  # type: ignore
+    CO2e_production_based_30: float = None  # type: ignore
+    CO2e_combustion_based_30: float = None  # type: ignore
+    CO2e_combustion_based_per_MWh: float = None  # type: ignore
     CO2e_total_30: float = None  # type: ignore
     pct_CO2e_total_30: float = None  # type: ignore
     change_energy_MWh: float = None  # type: ignore
@@ -727,21 +727,33 @@ def calc_z(
     )
     z.energy_18 = s.energy_18
 
-    s.CO2e_pb_18 = h18.h.CO2e_pb + e18.e.CO2e_pb + f18.f.CO2e_pb
-    # d.CO2e_pb_18 = r18.r.CO2e_pb + b18.b.CO2e_pb + i18.i.CO2e_pb + t18.t.CO2e_pb + a18.a.CO2e_pb + l18.l.CO2e_pb
-    d.CO2e_pb_18 = i18.i.CO2e_pb + a18.a.CO2e_pb + l18.l.CO2e_pb
-    z.CO2e_pb_18 = s.CO2e_pb_18 + d.CO2e_pb_18
-
-    s.CO2e_cb_18 = h18.h.CO2e_cb + e18.e.CO2e_cb + f18.f.CO2e_cb
-    d.CO2e_cb_18 = (
-        r18.r.CO2e_cb
-        + b18.b.CO2e_cb
-        + i18.i.CO2e_cb
-        + t18.t.CO2e_cb
-        + a18.a.CO2e_cb
-        + l18.l.CO2e_cb
+    s.CO2e_production_based_18 = (
+        h18.h.CO2e_production_based
+        + e18.e.CO2e_production_based
+        + f18.f.CO2e_production_based
     )
-    z.CO2e_cb_18 = s.CO2e_cb_18 + d.CO2e_cb_18
+    # d.CO2e_pb_18 = r18.r.CO2e_pb + b18.b.CO2e_pb + i18.i.CO2e_pb + t18.t.CO2e_pb + a18.a.CO2e_pb + l18.l.CO2e_pb
+    d.CO2e_production_based_18 = (
+        i18.i.CO2e_production_based
+        + a18.a.CO2e_production_based
+        + l18.l.CO2e_production_based
+    )
+    z.CO2e_production_based_18 = s.CO2e_production_based_18 + d.CO2e_production_based_18
+
+    s.CO2e_combustion_based_18 = (
+        h18.h.CO2e_combustion_based
+        + e18.e.CO2e_combustion_based
+        + f18.f.CO2e_combustion_based
+    )
+    d.CO2e_combustion_based_18 = (
+        r18.r.CO2e_combustion_based
+        + b18.b.CO2e_combustion_based
+        + i18.i.CO2e_combustion_based
+        + t18.t.CO2e_combustion_based
+        + a18.a.CO2e_combustion_based
+        + l18.l.CO2e_combustion_based
+    )
+    z.CO2e_combustion_based_18 = s.CO2e_combustion_based_18 + d.CO2e_combustion_based_18
 
     s.CO2e_total_18 = h18.h.CO2e_total + e18.e.CO2e_total + f18.f.CO2e_total
     d.CO2e_total_18 = (
@@ -761,24 +773,32 @@ def calc_z(
     z.energy_30 = s.energy_30
 
     # s.CO2e_pb_30 = h30.h.CO2e_pb + e30.e.CO2e_pb + f30.f.CO2e_pb
-    s.CO2e_pb_30 = h30.h.CO2e_pb + f30.f.CO2e_pb
+    s.CO2e_production_based_30 = (
+        h30.h.CO2e_production_based + f30.f.CO2e_production_based
+    )
     # d.CO2e_pb_30 = r30.r.CO2e_pb + b30.b.CO2e_pb + i30.i.CO2e_pb + t30.t.CO2e_pb + a30.a.CO2e_pb + l30.l.CO2e_pb
-    d.CO2e_pb_30 = i30.i.CO2e_pb + a30.a.CO2e_pb + l30.l.CO2e_pb
-    z.CO2e_pb_30 = s.CO2e_pb_30 + d.CO2e_pb_30
+    d.CO2e_production_based_30 = (
+        i30.i.CO2e_production_based
+        + a30.a.CO2e_production_based
+        + l30.l.CO2e_production_based
+    )
+    z.CO2e_production_based_30 = s.CO2e_production_based_30 + d.CO2e_production_based_30
 
     # s.CO2e_cb_30 = h30.h.CO2e_cb + e30.e.CO2e_cb + f30.f.CO2e_cb
-    s.CO2e_cb_30 = h30.h.CO2e_cb + e30.e.CO2e_cb
-    d.CO2e_cb_30 = (
-        r30.r.CO2e_cb
-        + b30.b.CO2e_cb
-        + i30.i.CO2e_cb
-        + t30.t.CO2e_cb
-        + a30.a.CO2e_cb
-        + l30.l.CO2e_cb
+    s.CO2e_combustion_based_30 = (
+        h30.h.CO2e_combustion_based + e30.e.CO2e_combustion_based
     )
-    z.CO2e_cb_30 = s.CO2e_cb_30 + d.CO2e_cb_30
+    d.CO2e_combustion_based_30 = (
+        r30.r.CO2e_combustion_based
+        + b30.b.CO2e_combustion_based
+        + i30.i.CO2e_combustion_based
+        + t30.t.CO2e_combustion_based
+        + a30.a.CO2e_combustion_based
+        + l30.l.CO2e_combustion_based
+    )
+    z.CO2e_combustion_based_30 = s.CO2e_combustion_based_30 + d.CO2e_combustion_based_30
 
-    z.CO2e_cb_per_MWh = div(z.CO2e_cb_30, z.energy_30)
+    z.CO2e_combustion_based_per_MWh = div(z.CO2e_combustion_based_30, z.energy_30)
 
     s.CO2e_total_30 = h30.h.CO2e_total + e30.e.CO2e_total + f30.f.CO2e_total
     d.CO2e_total_30 = (

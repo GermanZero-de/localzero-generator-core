@@ -21,9 +21,8 @@ Install environment
 - install Python 3.10.
 - install Git
 - install Poetry from https://python-poetry.org/docs/
-
-  On windows run this inside a power shell:
-    - :code:`(Invoke-WebRequest -Uri https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py -UseBasicParsing).Content | python`
+    - on windows run this inside a power shell:
+      :code:`(Invoke-WebRequest -Uri https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py -UseBasicParsing).Content | python`
 
 - configure Git
 	- Token:
@@ -37,6 +36,7 @@ Install environment
 
 - install poetry and pre-commit
 	- :code:`install-environment.sh`
+	- on windows: install Node.js (necessary for pyright)
 
 - get the code repositories into your Data folder.
 

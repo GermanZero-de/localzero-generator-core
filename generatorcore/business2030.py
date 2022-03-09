@@ -9,7 +9,7 @@ import time
 @dataclass
 class Vars0:
     # Used by b
-    CO2e_cb: float = None  # type: ignore
+    CO2e_combustion_based: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     CO2e_total_2021_estimated: float = None  # type: ignore
     change_CO2e_pct: float = None  # type: ignore
@@ -166,7 +166,7 @@ class Vars9:
 @dataclass
 class Vars10:
     # Used by s
-    CO2e_cb: float = None  # type: ignore
+    CO2e_combustion_based: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     CO2e_total_2021_estimated: float = None  # type: ignore
     change_CO2e_pct: float = None  # type: ignore
@@ -190,8 +190,8 @@ class Vars10:
 @dataclass
 class Vars11:
     # Used by s_gas
-    CO2e_cb: float = None  # type: ignore
-    CO2e_cb_per_MWh: float = None  # type: ignore
+    CO2e_combustion_based: float = None  # type: ignore
+    CO2e_combustion_based_per_MWh: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     CO2e_total_2021_estimated: float = None  # type: ignore
     change_CO2e_pct: float = None  # type: ignore
@@ -210,8 +210,8 @@ class Vars11:
 @dataclass
 class Vars12:
     # Used by s_emethan
-    CO2e_cb: float = None  # type: ignore
-    CO2e_cb_per_MWh: float = None  # type: ignore
+    CO2e_combustion_based: float = None  # type: ignore
+    CO2e_combustion_based_per_MWh: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     CO2e_total_2021_estimated: float = None  # type: ignore
     change_CO2e_pct: float = None  # type: ignore
@@ -225,8 +225,8 @@ class Vars12:
 @dataclass
 class Vars13:
     # Used by s_lpg, s_petrol, s_jetfuel, s_diesel, s_elec_heating, s_elec
-    CO2e_cb: float = None  # type: ignore
-    CO2e_cb_per_MWh: float = None  # type: ignore
+    CO2e_combustion_based: float = None  # type: ignore
+    CO2e_combustion_based_per_MWh: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     CO2e_total_2021_estimated: float = None  # type: ignore
     change_CO2e_pct: float = None  # type: ignore
@@ -241,8 +241,8 @@ class Vars13:
 @dataclass
 class Vars14:
     # Used by s_fueloil, s_coal
-    CO2e_cb: float = None  # type: ignore
-    CO2e_cb_per_MWh: float = None  # type: ignore
+    CO2e_combustion_based: float = None  # type: ignore
+    CO2e_combustion_based_per_MWh: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     CO2e_total_2021_estimated: float = None  # type: ignore
     change_CO2e_pct: float = None  # type: ignore
@@ -259,8 +259,8 @@ class Vars14:
 @dataclass
 class Vars15:
     # Used by s_biomass, s_heatnet
-    CO2e_cb: float = None  # type: ignore
-    CO2e_cb_per_MWh: float = None  # type: ignore
+    CO2e_combustion_based: float = None  # type: ignore
+    CO2e_combustion_based_per_MWh: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     CO2e_total_2021_estimated: float = None  # type: ignore
     change_CO2e_pct: float = None  # type: ignore
@@ -278,8 +278,8 @@ class Vars15:
 @dataclass
 class Vars16:
     # Used by s_heatpump
-    CO2e_cb: float = None  # type: ignore
-    CO2e_cb_per_MWh: float = None  # type: ignore
+    CO2e_combustion_based: float = None  # type: ignore
+    CO2e_combustion_based_per_MWh: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     CO2e_total_2021_estimated: float = None  # type: ignore
     change_CO2e_pct: float = None  # type: ignore
@@ -310,8 +310,8 @@ class Vars16:
 @dataclass
 class Vars17:
     # Used by s_solarth
-    CO2e_cb: float = None  # type: ignore
-    CO2e_cb_per_MWh: float = None  # type: ignore
+    CO2e_combustion_based: float = None  # type: ignore
+    CO2e_combustion_based_per_MWh: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     CO2e_total_2021_estimated: float = None  # type: ignore
     area_ha_available: float = None  # type: ignore
@@ -341,7 +341,7 @@ class Vars17:
 @dataclass
 class Vars18:
     # Used by rb
-    CO2e_cb: float = None  # type: ignore
+    CO2e_combustion_based: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     CO2e_total_2021_estimated: float = None  # type: ignore
     change_CO2e_pct: float = None  # type: ignore
@@ -667,52 +667,80 @@ def calc(
 
     s.cost_fuel = s_biomass.cost_fuel
 
-    s_gas.CO2e_cb_per_MWh = b18.s_gas.CO2e_cb_per_MWh
-    s_lpg.CO2e_cb_per_MWh = b18.s_lpg.CO2e_cb_per_MWh
-    s_petrol.CO2e_cb_per_MWh = b18.s_petrol.CO2e_cb_per_MWh
-    s_jetfuel.CO2e_cb_per_MWh = b18.s_jetfuel.CO2e_cb_per_MWh
-    s_diesel.CO2e_cb_per_MWh = b18.s_diesel.CO2e_cb_per_MWh
-    s_fueloil.CO2e_cb_per_MWh = b18.s_fueloil.CO2e_cb_per_MWh
-    s_biomass.CO2e_cb_per_MWh = b18.s_biomass.CO2e_cb_per_MWh
-    s_coal.CO2e_cb_per_MWh = b18.s_coal.CO2e_cb_per_MWh
-    s_heatnet.CO2e_cb_per_MWh = 0
-    s_elec_heating.CO2e_cb_per_MWh = 0
-    s_heatpump.CO2e_cb_per_MWh = 0
-    s_solarth.CO2e_cb_per_MWh = 0
+    s_gas.CO2e_combustion_based_per_MWh = b18.s_gas.CO2e_combustion_based_per_MWh
+    s_lpg.CO2e_combustion_based_per_MWh = b18.s_lpg.CO2e_combustion_based_per_MWh
+    s_petrol.CO2e_combustion_based_per_MWh = b18.s_petrol.CO2e_combustion_based_per_MWh
+    s_jetfuel.CO2e_combustion_based_per_MWh = (
+        b18.s_jetfuel.CO2e_combustion_based_per_MWh
+    )
+    s_diesel.CO2e_combustion_based_per_MWh = b18.s_diesel.CO2e_combustion_based_per_MWh
+    s_fueloil.CO2e_combustion_based_per_MWh = (
+        b18.s_fueloil.CO2e_combustion_based_per_MWh
+    )
+    s_biomass.CO2e_combustion_based_per_MWh = (
+        b18.s_biomass.CO2e_combustion_based_per_MWh
+    )
+    s_coal.CO2e_combustion_based_per_MWh = b18.s_coal.CO2e_combustion_based_per_MWh
+    s_heatnet.CO2e_combustion_based_per_MWh = 0
+    s_elec_heating.CO2e_combustion_based_per_MWh = 0
+    s_heatpump.CO2e_combustion_based_per_MWh = 0
+    s_solarth.CO2e_combustion_based_per_MWh = 0
 
-    s_gas.CO2e_cb = s_gas.energy * s_gas.CO2e_cb_per_MWh
-    s_lpg.CO2e_cb = s_lpg.energy * s_lpg.CO2e_cb_per_MWh
-    s_petrol.CO2e_cb = s_petrol.energy * s_petrol.CO2e_cb_per_MWh
-    s_jetfuel.CO2e_cb = s_jetfuel.energy * s_jetfuel.CO2e_cb_per_MWh
+    s_gas.CO2e_combustion_based = s_gas.energy * s_gas.CO2e_combustion_based_per_MWh
+    s_lpg.CO2e_combustion_based = s_lpg.energy * s_lpg.CO2e_combustion_based_per_MWh
+    s_petrol.CO2e_combustion_based = (
+        s_petrol.energy * s_petrol.CO2e_combustion_based_per_MWh
+    )
+    s_jetfuel.CO2e_combustion_based = (
+        s_jetfuel.energy * s_jetfuel.CO2e_combustion_based_per_MWh
+    )
 
-    s_diesel.CO2e_cb = s_diesel.energy * s_diesel.CO2e_cb_per_MWh
+    s_diesel.CO2e_combustion_based = (
+        s_diesel.energy * s_diesel.CO2e_combustion_based_per_MWh
+    )
 
-    s_fueloil.CO2e_cb = s_fueloil.energy * s_fueloil.CO2e_cb_per_MWh
-    s_biomass.CO2e_cb = s_biomass.energy * s_biomass.CO2e_cb_per_MWh
-    s_coal.CO2e_cb = s_coal.energy * s_coal.CO2e_cb_per_MWh
-    s_heatnet.CO2e_cb = s_heatnet.energy * s_heatnet.CO2e_cb_per_MWh
-    s_elec_heating.CO2e_cb = s_elec_heating.energy * s_elec_heating.CO2e_cb_per_MWh
-    s_heatpump.CO2e_cb = s_heatpump.energy * s_heatpump.CO2e_cb_per_MWh
-    s_solarth.CO2e_cb = s_solarth.energy * s_solarth.CO2e_cb_per_MWh
+    s_fueloil.CO2e_combustion_based = (
+        s_fueloil.energy * s_fueloil.CO2e_combustion_based_per_MWh
+    )
+    s_biomass.CO2e_combustion_based = (
+        s_biomass.energy * s_biomass.CO2e_combustion_based_per_MWh
+    )
+    s_coal.CO2e_combustion_based = s_coal.energy * s_coal.CO2e_combustion_based_per_MWh
+    s_heatnet.CO2e_combustion_based = (
+        s_heatnet.energy * s_heatnet.CO2e_combustion_based_per_MWh
+    )
+    s_elec_heating.CO2e_combustion_based = (
+        s_elec_heating.energy * s_elec_heating.CO2e_combustion_based_per_MWh
+    )
+    s_heatpump.CO2e_combustion_based = (
+        s_heatpump.energy * s_heatpump.CO2e_combustion_based_per_MWh
+    )
+    s_solarth.CO2e_combustion_based = (
+        s_solarth.energy * s_solarth.CO2e_combustion_based_per_MWh
+    )
 
-    s_emethan.CO2e_cb_per_MWh = fact("Fact_T_S_methan_EmFa_tank_wheel_2018")
-    s_emethan.CO2e_cb = s_emethan.energy * s_emethan.CO2e_cb_per_MWh
-    s.CO2e_cb = (
-        s_gas.CO2e_cb
-        + s_emethan.CO2e_cb
-        + s_lpg.CO2e_cb
-        + s_petrol.CO2e_cb
-        + s_jetfuel.CO2e_cb
-        + s_diesel.CO2e_cb
-        + s_fueloil.CO2e_cb
-        + s_biomass.CO2e_cb
-        + s_coal.CO2e_cb
-        + s_heatnet.CO2e_cb
-        + s_heatpump.CO2e_cb
-        + s_solarth.CO2e_cb
+    s_emethan.CO2e_combustion_based_per_MWh = fact(
+        "Fact_T_S_methan_EmFa_tank_wheel_2018"
+    )
+    s_emethan.CO2e_combustion_based = (
+        s_emethan.energy * s_emethan.CO2e_combustion_based_per_MWh
+    )
+    s.CO2e_combustion_based = (
+        s_gas.CO2e_combustion_based
+        + s_emethan.CO2e_combustion_based
+        + s_lpg.CO2e_combustion_based
+        + s_petrol.CO2e_combustion_based
+        + s_jetfuel.CO2e_combustion_based
+        + s_diesel.CO2e_combustion_based
+        + s_fueloil.CO2e_combustion_based
+        + s_biomass.CO2e_combustion_based
+        + s_coal.CO2e_combustion_based
+        + s_heatnet.CO2e_combustion_based
+        + s_heatpump.CO2e_combustion_based
+        + s_solarth.CO2e_combustion_based
     )  # (SUM(s_gas.CO2e_cb:s_solarth.CO2e_cb))
 
-    s.CO2e_total = 0 + s.CO2e_cb
+    s.CO2e_total = 0 + s.CO2e_combustion_based
 
     s.change_energy_MWh = s.energy - b18.s.energy
     s_gas.change_energy_MWh = s_gas.energy - b18.s_gas.energy
@@ -746,57 +774,72 @@ def calc(
     )
     s_solarth.change_energy_pct = div(s_solarth.change_energy_MWh, b18.s_solarth.energy)
 
-    s.change_CO2e_t = s.CO2e_cb - b18.s.CO2e_cb
-    s_gas.change_CO2e_t = s_gas.CO2e_cb - b18.s_gas.CO2e_cb
-    s_lpg.change_CO2e_t = s_lpg.CO2e_cb - b18.s_lpg.CO2e_cb
-    s_petrol.change_CO2e_t = s_petrol.CO2e_cb - b18.s_petrol.CO2e_cb
-    s_jetfuel.change_CO2e_t = s_jetfuel.CO2e_cb - b18.s_jetfuel.CO2e_cb
-    s_diesel.change_CO2e_t = s_diesel.CO2e_cb - b18.s_diesel.CO2e_cb
-    s_fueloil.change_CO2e_t = s_fueloil.CO2e_cb - b18.s_fueloil.CO2e_cb
-    s_biomass.change_CO2e_t = s_biomass.CO2e_cb - b18.s_biomass.CO2e_cb
-    s_coal.change_CO2e_t = s_coal.CO2e_cb - b18.s_coal.CO2e_cb
-    s_emethan.change_CO2e_t = s_emethan.CO2e_cb
-    s_heatnet.change_CO2e_t = s_heatnet.CO2e_cb
-    s_elec_heating.change_CO2e_t = s_elec_heating.CO2e_cb
-    s_solarth.change_CO2e_t = s_solarth.CO2e_cb
+    s.change_CO2e_t = s.CO2e_combustion_based - b18.s.CO2e_combustion_based
+    s_gas.change_CO2e_t = s_gas.CO2e_combustion_based - b18.s_gas.CO2e_combustion_based
+    s_lpg.change_CO2e_t = s_lpg.CO2e_combustion_based - b18.s_lpg.CO2e_combustion_based
+    s_petrol.change_CO2e_t = (
+        s_petrol.CO2e_combustion_based - b18.s_petrol.CO2e_combustion_based
+    )
+    s_jetfuel.change_CO2e_t = (
+        s_jetfuel.CO2e_combustion_based - b18.s_jetfuel.CO2e_combustion_based
+    )
+    s_diesel.change_CO2e_t = (
+        s_diesel.CO2e_combustion_based - b18.s_diesel.CO2e_combustion_based
+    )
+    s_fueloil.change_CO2e_t = (
+        s_fueloil.CO2e_combustion_based - b18.s_fueloil.CO2e_combustion_based
+    )
+    s_biomass.change_CO2e_t = (
+        s_biomass.CO2e_combustion_based - b18.s_biomass.CO2e_combustion_based
+    )
+    s_coal.change_CO2e_t = (
+        s_coal.CO2e_combustion_based - b18.s_coal.CO2e_combustion_based
+    )
+    s_emethan.change_CO2e_t = s_emethan.CO2e_combustion_based
+    s_heatnet.change_CO2e_t = s_heatnet.CO2e_combustion_based
+    s_elec_heating.change_CO2e_t = s_elec_heating.CO2e_combustion_based
+    s_solarth.change_CO2e_t = s_solarth.CO2e_combustion_based
 
     p_nonresi.change_CO2e_t = 0
-    s_heatpump.change_CO2e_t = s_heatpump.CO2e_cb - b18.s_heatpump.CO2e_cb
+    s_heatpump.change_CO2e_t = (
+        s_heatpump.CO2e_combustion_based - b18.s_heatpump.CO2e_combustion_based
+    )
 
-    s_gas.CO2e_total_2021_estimated = b18.s_gas.CO2e_cb * fact(
+    s_gas.CO2e_total_2021_estimated = b18.s_gas.CO2e_combustion_based * fact(
         "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
     )
-    s_lpg.CO2e_total_2021_estimated = b18.s_lpg.CO2e_cb * fact(
+    s_lpg.CO2e_total_2021_estimated = b18.s_lpg.CO2e_combustion_based * fact(
         "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
     )
-    s_petrol.CO2e_total_2021_estimated = b18.s_petrol.CO2e_cb * fact(
+    s_petrol.CO2e_total_2021_estimated = b18.s_petrol.CO2e_combustion_based * fact(
         "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
     )
-    s_jetfuel.CO2e_total_2021_estimated = b18.s_jetfuel.CO2e_cb * fact(
+    s_jetfuel.CO2e_total_2021_estimated = b18.s_jetfuel.CO2e_combustion_based * fact(
         "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
     )
-    s_diesel.CO2e_total_2021_estimated = b18.s_diesel.CO2e_cb * fact(
+    s_diesel.CO2e_total_2021_estimated = b18.s_diesel.CO2e_combustion_based * fact(
         "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
     )
-    s_fueloil.CO2e_total_2021_estimated = b18.s_fueloil.CO2e_cb * fact(
+    s_fueloil.CO2e_total_2021_estimated = b18.s_fueloil.CO2e_combustion_based * fact(
         "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
     )
-    s_biomass.CO2e_total_2021_estimated = b18.s_biomass.CO2e_cb * fact(
+    s_biomass.CO2e_total_2021_estimated = b18.s_biomass.CO2e_combustion_based * fact(
         "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
     )
-    s_coal.CO2e_total_2021_estimated = b18.s_coal.CO2e_cb * fact(
+    s_coal.CO2e_total_2021_estimated = b18.s_coal.CO2e_combustion_based * fact(
         "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
     )
-    s_heatnet.CO2e_total_2021_estimated = b18.s_heatnet.CO2e_cb * fact(
+    s_heatnet.CO2e_total_2021_estimated = b18.s_heatnet.CO2e_combustion_based * fact(
         "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
     )
-    s_elec_heating.CO2e_total_2021_estimated = b18.s_elec_heating.CO2e_cb * fact(
+    s_elec_heating.CO2e_total_2021_estimated = (
+        b18.s_elec_heating.CO2e_combustion_based
+        * fact("Fact_M_CO2e_wo_lulucf_2021_vs_2018")
+    )
+    s_heatpump.CO2e_total_2021_estimated = b18.s_heatpump.CO2e_combustion_based * fact(
         "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
     )
-    s_heatpump.CO2e_total_2021_estimated = b18.s_heatpump.CO2e_cb * fact(
-        "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
-    )
-    s_solarth.CO2e_total_2021_estimated = b18.s_solarth.CO2e_cb * fact(
+    s_solarth.CO2e_total_2021_estimated = b18.s_solarth.CO2e_combustion_based * fact(
         "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
     )
 
@@ -818,67 +861,70 @@ def calc(
 
     # todo: CO2e_pb not definied
     s_gas.cost_climate_saved = (
-        (s_gas.CO2e_total_2021_estimated - (s_gas.CO2e_cb))
+        (s_gas.CO2e_total_2021_estimated - (s_gas.CO2e_combustion_based))
         * KlimaneutraleJahre
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     s_lpg.cost_climate_saved = (
-        (s_lpg.CO2e_total_2021_estimated - (s_lpg.CO2e_cb))
+        (s_lpg.CO2e_total_2021_estimated - (s_lpg.CO2e_combustion_based))
         * KlimaneutraleJahre
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     s_petrol.cost_climate_saved = (
-        (s_petrol.CO2e_total_2021_estimated - (s_petrol.CO2e_cb))
+        (s_petrol.CO2e_total_2021_estimated - (s_petrol.CO2e_combustion_based))
         * KlimaneutraleJahre
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     s_jetfuel.cost_climate_saved = (
-        (s_jetfuel.CO2e_total_2021_estimated - (s_jetfuel.CO2e_cb))
+        (s_jetfuel.CO2e_total_2021_estimated - (s_jetfuel.CO2e_combustion_based))
         * KlimaneutraleJahre
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     s_diesel.cost_climate_saved = (
-        (s_diesel.CO2e_total_2021_estimated - (s_diesel.CO2e_cb))
+        (s_diesel.CO2e_total_2021_estimated - (s_diesel.CO2e_combustion_based))
         * KlimaneutraleJahre
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     s_fueloil.cost_climate_saved = (
-        (s_fueloil.CO2e_total_2021_estimated - (s_fueloil.CO2e_cb))
+        (s_fueloil.CO2e_total_2021_estimated - (s_fueloil.CO2e_combustion_based))
         * KlimaneutraleJahre
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     s_biomass.cost_climate_saved = (
-        (s_biomass.CO2e_total_2021_estimated - (s_biomass.CO2e_cb))
+        (s_biomass.CO2e_total_2021_estimated - (s_biomass.CO2e_combustion_based))
         * KlimaneutraleJahre
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     s_coal.cost_climate_saved = (
-        (s_coal.CO2e_total_2021_estimated - (s_coal.CO2e_cb))
+        (s_coal.CO2e_total_2021_estimated - (s_coal.CO2e_combustion_based))
         * KlimaneutraleJahre
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     s_heatnet.cost_climate_saved = (
-        (s_heatnet.CO2e_total_2021_estimated - (s_heatnet.CO2e_cb))
+        (s_heatnet.CO2e_total_2021_estimated - (s_heatnet.CO2e_combustion_based))
         * KlimaneutraleJahre
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     s_elec_heating.cost_climate_saved = (
-        (s_elec_heating.CO2e_total_2021_estimated - (s_elec_heating.CO2e_cb))
+        (
+            s_elec_heating.CO2e_total_2021_estimated
+            - (s_elec_heating.CO2e_combustion_based)
+        )
         * KlimaneutraleJahre
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     s_heatpump.cost_climate_saved = (
-        (s_heatpump.CO2e_total_2021_estimated - (s_heatpump.CO2e_cb))
+        (s_heatpump.CO2e_total_2021_estimated - (s_heatpump.CO2e_combustion_based))
         * KlimaneutraleJahre
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     s_solarth.cost_climate_saved = (
-        (s_solarth.CO2e_total_2021_estimated - (s_solarth.CO2e_cb))
+        (s_solarth.CO2e_total_2021_estimated - (s_solarth.CO2e_combustion_based))
         * KlimaneutraleJahre
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     s.cost_climate_saved = (
-        (s.CO2e_total_2021_estimated - s.CO2e_cb)
+        (s.CO2e_total_2021_estimated - s.CO2e_combustion_based)
         * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
@@ -978,7 +1024,7 @@ def calc(
         + s_elec.pct_energy
     )  # SUM(s_gas.pct_energy:s_elec.pct_energy)
 
-    s.CO2e_total = s.CO2e_cb
+    s.CO2e_total = s.CO2e_combustion_based
 
     p_nonresi.emplo_existing = (
         fact("Fact_B_P_renovation_emplo_2017")
@@ -988,12 +1034,12 @@ def calc(
     )
     p_nonresi.cost_mro = 0
 
-    b.CO2e_cb = s.CO2e_cb
+    b.CO2e_combustion_based = s.CO2e_combustion_based
     b.CO2e_total = s.CO2e_total
     b.change_energy_MWh = s.change_energy_MWh
     b.change_energy_pct = s.change_energy_pct
     b.change_CO2e_t = s.change_CO2e_t
-    s.change_CO2e_pct = div(s.change_CO2e_t, b18.s.CO2e_cb)
+    s.change_CO2e_pct = div(s.change_CO2e_t, b18.s.CO2e_combustion_based)
     b.CO2e_total_2021_estimated = s.CO2e_total_2021_estimated
     b.cost_climate_saved = s.cost_climate_saved
     g.invest_pa = g_consult.invest_pa
@@ -1076,67 +1122,79 @@ def calc(
         / entries.m_population_nat
         * ass("Ass_B_D_install_heating_emplo_pct_of_B_solarth")
     )
-    s_gas.CO2e_total = s_gas.CO2e_cb
-    s_gas.change_CO2e_pct = div(s_gas.change_CO2e_t, b18.s_gas.CO2e_cb)
-    s_emethan.CO2e_total = s_emethan.CO2e_cb
+    s_gas.CO2e_total = s_gas.CO2e_combustion_based
+    s_gas.change_CO2e_pct = div(s_gas.change_CO2e_t, b18.s_gas.CO2e_combustion_based)
+    s_emethan.CO2e_total = s_emethan.CO2e_combustion_based
     s_emethan.change_energy_MWh = s_emethan.energy - 0
     s_emethan.CO2e_total_2021_estimated = 0 * fact("Fact_M_CO2e_wo_lulucf_2021_vs_2018")
     s_emethan.cost_climate_saved = (
-        (s_emethan.CO2e_total_2021_estimated - s_emethan.CO2e_cb)
+        (s_emethan.CO2e_total_2021_estimated - s_emethan.CO2e_combustion_based)
         * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
-    s_lpg.CO2e_total = s_lpg.CO2e_cb
-    s_lpg.change_CO2e_pct = div(s_lpg.change_CO2e_t, b18.s_lpg.CO2e_cb)
-    s_petrol.CO2e_total = s_petrol.CO2e_cb
-    s_petrol.change_CO2e_pct = div(s_petrol.change_CO2e_t, b18.s_petrol.CO2e_cb)
-    s_jetfuel.CO2e_total = s_jetfuel.CO2e_cb
-    s_jetfuel.change_CO2e_pct = div(s_jetfuel.change_CO2e_t, b18.s_jetfuel.CO2e_cb)
-    s_diesel.CO2e_total = s_diesel.CO2e_cb
-    s_diesel.change_CO2e_pct = div(s_diesel.change_CO2e_t, b18.s_diesel.CO2e_cb)
-    s_fueloil.CO2e_total = s_fueloil.CO2e_cb
-    s_fueloil.change_CO2e_pct = div(s_fueloil.change_CO2e_t, b18.s_fueloil.CO2e_cb)
-    s_biomass.CO2e_total = s_biomass.CO2e_cb
-    s_biomass.change_CO2e_pct = div(s_biomass.change_CO2e_t, b18.s_biomass.CO2e_cb)
-    s_coal.CO2e_total = s_coal.CO2e_cb
-    s_coal.change_CO2e_pct = div(s_coal.change_CO2e_t, b18.s_coal.CO2e_cb)
-    s_heatnet.CO2e_total = s_heatnet.CO2e_cb
-    s_heatpump.CO2e_total = s_heatpump.CO2e_cb
+    s_lpg.CO2e_total = s_lpg.CO2e_combustion_based
+    s_lpg.change_CO2e_pct = div(s_lpg.change_CO2e_t, b18.s_lpg.CO2e_combustion_based)
+    s_petrol.CO2e_total = s_petrol.CO2e_combustion_based
+    s_petrol.change_CO2e_pct = div(
+        s_petrol.change_CO2e_t, b18.s_petrol.CO2e_combustion_based
+    )
+    s_jetfuel.CO2e_total = s_jetfuel.CO2e_combustion_based
+    s_jetfuel.change_CO2e_pct = div(
+        s_jetfuel.change_CO2e_t, b18.s_jetfuel.CO2e_combustion_based
+    )
+    s_diesel.CO2e_total = s_diesel.CO2e_combustion_based
+    s_diesel.change_CO2e_pct = div(
+        s_diesel.change_CO2e_t, b18.s_diesel.CO2e_combustion_based
+    )
+    s_fueloil.CO2e_total = s_fueloil.CO2e_combustion_based
+    s_fueloil.change_CO2e_pct = div(
+        s_fueloil.change_CO2e_t, b18.s_fueloil.CO2e_combustion_based
+    )
+    s_biomass.CO2e_total = s_biomass.CO2e_combustion_based
+    s_biomass.change_CO2e_pct = div(
+        s_biomass.change_CO2e_t, b18.s_biomass.CO2e_combustion_based
+    )
+    s_coal.CO2e_total = s_coal.CO2e_combustion_based
+    s_coal.change_CO2e_pct = div(s_coal.change_CO2e_t, b18.s_coal.CO2e_combustion_based)
+    s_heatnet.CO2e_total = s_heatnet.CO2e_combustion_based
+    s_heatpump.CO2e_total = s_heatpump.CO2e_combustion_based
     s_solarth.demand_emplo_new = max(
         0, s_solarth.demand_emplo - s_solarth.emplo_existing
     )
-    s_solarth.CO2e_total = s_solarth.CO2e_cb
+    s_solarth.CO2e_total = s_solarth.CO2e_combustion_based
     s.demand_emplo_new = s_heatpump.demand_emplo_new + s_solarth.demand_emplo_new
     b.demand_emplo_new = g.demand_emplo_new + p.demand_emplo_new + s.demand_emplo_new
-    s_elec.CO2e_cb_per_MWh = b18.s_elec.CO2e_cb_per_MWh
-    s_elec.CO2e_cb = s_elec.energy * s_elec.CO2e_cb_per_MWh
-    s_elec.CO2e_total = s_elec.CO2e_cb
+    s_elec.CO2e_combustion_based_per_MWh = b18.s_elec.CO2e_combustion_based_per_MWh
+    s_elec.CO2e_combustion_based = s_elec.energy * s_elec.CO2e_combustion_based_per_MWh
+    s_elec.CO2e_total = s_elec.CO2e_combustion_based
     s_elec.change_energy_MWh = s_elec.energy - b18.s_elec.energy
     s_elec.change_energy_pct = div(s_elec.change_energy_MWh, b18.s_elec.energy)
-    s_elec.change_CO2e_t = s_elec.CO2e_cb - b18.s_elec.CO2e_cb
-    s_elec.CO2e_total_2021_estimated = b18.s_elec.CO2e_cb * fact(
+    s_elec.change_CO2e_t = (
+        s_elec.CO2e_combustion_based - b18.s_elec.CO2e_combustion_based
+    )
+    s_elec.CO2e_total_2021_estimated = b18.s_elec.CO2e_combustion_based * fact(
         "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
     )
     s_elec.cost_climate_saved = (
-        (s_elec.CO2e_total_2021_estimated - s_elec.CO2e_cb)
+        (s_elec.CO2e_total_2021_estimated - s_elec.CO2e_combustion_based)
         * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
 
-    s_elec_heating.CO2e_total = s_elec_heating.CO2e_cb
+    s_elec_heating.CO2e_total = s_elec_heating.CO2e_combustion_based
 
     rb.energy = r30.p.energy + p.energy
-    rb.CO2e_cb = r30.r.CO2e_cb + b.CO2e_cb
+    rb.CO2e_combustion_based = r30.r.CO2e_combustion_based + b.CO2e_combustion_based
     rb.CO2e_total = r30.r.CO2e_total + b.CO2e_total
     rb.change_energy_MWh = rb.energy - b18.rb.energy
     rb.change_energy_pct = div(rb.change_energy_MWh, b18.rb.energy)
-    rb.change_CO2e_t = rb.CO2e_cb - b18.rb.CO2e_cb
-    rb.change_CO2e_pct = div(rb.change_CO2e_t, b18.rb.CO2e_cb)
-    rb.CO2e_total_2021_estimated = b18.rb.CO2e_cb * fact(
+    rb.change_CO2e_t = rb.CO2e_combustion_based - b18.rb.CO2e_combustion_based
+    rb.change_CO2e_pct = div(rb.change_CO2e_t, b18.rb.CO2e_combustion_based)
+    rb.CO2e_total_2021_estimated = b18.rb.CO2e_combustion_based * fact(
         "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
     )
     rb.cost_climate_saved = (
-        (rb.CO2e_total_2021_estimated - rb.CO2e_cb)
+        (rb.CO2e_total_2021_estimated - rb.CO2e_combustion_based)
         * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )

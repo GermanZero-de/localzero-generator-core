@@ -13,8 +13,8 @@ class EColVars2030:
     pct_energy: float = None  # type: ignore
     mro_per_MWh: float = None  # type: ignore
     mro: float = None  # type: ignore
-    CO2e_cb_per_MWh: float = None  # type: ignore
-    CO2e_cb: float = None  # type: ignore
+    CO2e_combustion_based_per_MWh: float = None  # type: ignore
+    CO2e_combustion_based: float = None  # type: ignore
     cost_certificate_per_MWh: float = None  # type: ignore
     cost_certificate: float = None  # type: ignore
     cost_climate_saved: float = None  # type: ignore

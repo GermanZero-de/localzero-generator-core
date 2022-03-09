@@ -45,7 +45,7 @@ def co2e_from_demands(
 @dataclass
 class Air:
     # Used by air_dmstc, air, air_inter
-    CO2e_cb: float
+    CO2e_combustion_based: float
     CO2e_total: float
     demand_jetfuel: float
     demand_petrol: float
@@ -81,14 +81,14 @@ class Air:
             / inputs.entries.m_population_nat
         )
 
-        CO2e_cb = co2e_from_demands(
+        CO2e_combustion_based = co2e_from_demands(
             inputs, demand_jetfuel=demand_jetfuel, demand_jetpetrol=demand_petrol
         )
-        CO2e_total = CO2e_cb
+        CO2e_total = CO2e_combustion_based
 
         energy = demand_jetfuel + demand_petrol
         return cls(
-            CO2e_cb=CO2e_cb,
+            CO2e_combustion_based=CO2e_combustion_based,
             CO2e_total=CO2e_total,
             demand_jetfuel=demand_jetfuel,
             demand_petrol=demand_petrol,
@@ -118,11 +118,11 @@ class Air:
             / inputs.entries.m_population_nat
         )
 
-        CO2e_cb = co2e_from_demands(inputs, demand_jetfuel=demand_jetfuel)
-        CO2e_total = CO2e_cb
+        CO2e_combustion_based = co2e_from_demands(inputs, demand_jetfuel=demand_jetfuel)
+        CO2e_total = CO2e_combustion_based
         energy = demand_jetfuel
         return cls(
-            CO2e_cb=CO2e_cb,
+            CO2e_combustion_based=CO2e_combustion_based,
             CO2e_total=CO2e_total,
             transport_capacity_pkm=transport_capacity_pkm,
             transport_capacity_tkm=transport_capacity_tkm,
@@ -136,7 +136,7 @@ class Air:
 class Road:
     """Emissions caused by transport on the Road (car, bus, lorry, ...) of both goods and people."""
 
-    CO2e_cb: float
+    CO2e_combustion_based: float
     CO2e_total: float
     demand_biodiesel: float
     demand_bioethanol: float
@@ -179,7 +179,7 @@ class Road:
         demand_gas = mileage * gas
         demand_lpg = mileage * lpg
         demand_petrol = mileage * petrol
-        CO2e_cb = co2e_from_demands(
+        CO2e_combustion_based = co2e_from_demands(
             inputs,
             demand_petrol=demand_petrol,
             demand_diesel=demand_diesel,
@@ -200,9 +200,9 @@ class Road:
             + demand_biodiesel
             + demand_electricity
         )
-        CO2e_total = CO2e_cb
+        CO2e_total = CO2e_combustion_based
         return cls(
-            CO2e_cb=CO2e_cb,
+            CO2e_combustion_based=CO2e_combustion_based,
             CO2e_total=CO2e_total,
             demand_biodiesel=demand_biodiesel,
             demand_bioethanol=demand_bioethanol,
@@ -442,7 +442,7 @@ class Road:
 @dataclass
 class Rail:
     # Used by rail_gds, rail_ppl_metro, rail_ppl_distance, rail_ppl, rail
-    CO2e_cb: float
+    CO2e_combustion_based: float
     CO2e_total: float
     demand_biodiesel: float
     demand_diesel: float
@@ -472,15 +472,15 @@ class Rail:
             "Fact_T_D_rail_ppl_ratio_pkm_to_fzkm_2018"
         )
         energy = demand_diesel + demand_biodiesel + demand_electricity
-        CO2e_cb = co2e_from_demands(
+        CO2e_combustion_based = co2e_from_demands(
             inputs,
             demand_diesel=demand_diesel,
             demand_biodiesel=demand_biodiesel,
             demand_electricity=demand_electricity,
         )
-        CO2e_total = CO2e_cb
+        CO2e_total = CO2e_combustion_based
         return cls(
-            CO2e_cb=CO2e_cb,
+            CO2e_combustion_based=CO2e_combustion_based,
             CO2e_total=CO2e_total,
             demand_biodiesel=demand_biodiesel,
             demand_diesel=demand_diesel,
@@ -505,14 +505,14 @@ class Rail:
             "Fact_T_S_Rl_Train_gds_diesel_SEC_2018"
         ) + demand_electricity / inputs.fact("Fact_T_S_Rl_Train_gds_elec_SEC_2018")
 
-        CO2e_cb = co2e_from_demands(inputs, demand_diesel=demand_diesel)
+        CO2e_combustion_based = co2e_from_demands(inputs, demand_diesel=demand_diesel)
         energy = demand_diesel + demand_biodiesel + demand_electricity
         mileage = transport_capacity_tkm / inputs.fact(
             "Fact_T_D_rail_gds_ratio_tkm_to_fzkm_2018"
         )
-        CO2e_total = CO2e_cb
+        CO2e_total = CO2e_combustion_based
         return cls(
-            CO2e_cb=CO2e_cb,
+            CO2e_combustion_based=CO2e_combustion_based,
             CO2e_total=CO2e_total,
             demand_biodiesel=demand_biodiesel,
             demand_diesel=demand_diesel,
@@ -534,10 +534,12 @@ class Rail:
         demand_electricity = mileage * inputs.fact("Fact_T_S_Rl_Metro_SEC_fzkm_2018")
         energy = demand_electricity
         transport_capacity_pkm = mileage * inputs.fact("Fact_T_D_lf_Rl_Metro_2018")
-        CO2e_cb = co2e_from_demands(inputs, demand_electricity=demand_electricity)
-        CO2e_total = CO2e_cb
+        CO2e_combustion_based = co2e_from_demands(
+            inputs, demand_electricity=demand_electricity
+        )
+        CO2e_total = CO2e_combustion_based
         return cls(
-            CO2e_cb=CO2e_cb,
+            CO2e_combustion_based=CO2e_combustion_based,
             CO2e_total=CO2e_total,
             demand_electricity=demand_electricity,
             demand_biodiesel=0,
@@ -552,7 +554,7 @@ class Rail:
 @dataclass
 class Ship:
     # Used by ship_dmstc, ship_inter, ship
-    CO2e_cb: float
+    CO2e_combustion_based: float
     CO2e_total: float
     demand_diesel: float
     demand_fueloil: float
@@ -576,10 +578,10 @@ class Ship:
         )
         energy = demand_diesel
 
-        CO2e_cb = co2e_from_demands(inputs, demand_diesel=demand_diesel)
-        CO2e_total = CO2e_cb
+        CO2e_combustion_based = co2e_from_demands(inputs, demand_diesel=demand_diesel)
+        CO2e_total = CO2e_combustion_based
         return cls(
-            CO2e_cb=CO2e_cb,
+            CO2e_combustion_based=CO2e_combustion_based,
             CO2e_total=CO2e_total,
             transport_capacity_tkm=transport_capacity_tkm,
             demand_diesel=demand_diesel,
@@ -599,10 +601,10 @@ class Ship:
         ) * inputs.fact("Fact_T_D_Shp_sea_nat_EC_2018")
 
         energy = demand_fueloil
-        CO2e_cb = co2e_from_demands(inputs, demand_fueloil=demand_fueloil)
-        CO2e_total = CO2e_cb
+        CO2e_combustion_based = co2e_from_demands(inputs, demand_fueloil=demand_fueloil)
+        CO2e_total = CO2e_combustion_based
         return cls(
-            CO2e_cb=CO2e_cb,
+            CO2e_combustion_based=CO2e_combustion_based,
             CO2e_total=CO2e_total,
             transport_capacity_tkm=transport_capacity_tkm,
             demand_fueloil=demand_fueloil,
@@ -614,7 +616,7 @@ class Ship:
 @dataclass
 class Other:
     # Used by other_foot, other_cycl
-    CO2e_cb: float
+    CO2e_combustion_based: float
     CO2e_total: float
     transport_capacity_pkm: float
 
@@ -642,7 +644,9 @@ class Other:
         else:
             assert False, f"Do not know how to handle entries.t_rt7 = {t_rt7}"
         return cls(
-            CO2e_total=0, CO2e_cb=0, transport_capacity_pkm=transport_capacity_pkm
+            CO2e_total=0,
+            CO2e_combustion_based=0,
+            transport_capacity_pkm=transport_capacity_pkm,
         )
 
     @classmethod
@@ -666,14 +670,16 @@ class Other:
         else:
             assert False, f"Do not know how to handle entries.t_rt7 = {t_rt7}"
         return cls(
-            CO2e_total=0, CO2e_cb=0, transport_capacity_pkm=transport_capacity_pkm
+            CO2e_total=0,
+            CO2e_combustion_based=0,
+            transport_capacity_pkm=transport_capacity_pkm,
         )
 
 
 @dataclass
 class Transport:
     # Used by t
-    CO2e_cb: float
+    CO2e_combustion_based: float
     CO2e_total: float
     demand_biodiesel: float = 0
     demand_bioethanol: float = 0
@@ -695,7 +701,7 @@ class Transport:
     @classmethod
     def lift_air(cls, a: Air) -> "Transport":
         return cls(
-            CO2e_cb=a.CO2e_cb,
+            CO2e_combustion_based=a.CO2e_combustion_based,
             CO2e_total=a.CO2e_total,
             demand_jetfuel=a.demand_jetfuel,
             demand_petrol=a.demand_petrol,
@@ -707,7 +713,7 @@ class Transport:
     @classmethod
     def lift_ship(cls, s: Ship) -> "Transport":
         return cls(
-            CO2e_cb=s.CO2e_cb,
+            CO2e_combustion_based=s.CO2e_combustion_based,
             CO2e_total=s.CO2e_total,
             demand_diesel=s.demand_diesel,
             demand_fueloil=s.demand_fueloil,
@@ -718,7 +724,7 @@ class Transport:
     @classmethod
     def lift_road(cls, r: Road) -> "Transport":
         return cls(
-            CO2e_cb=r.CO2e_cb,
+            CO2e_combustion_based=r.CO2e_combustion_based,
             CO2e_total=r.CO2e_total,
             demand_diesel=r.demand_diesel,
             demand_biodiesel=r.demand_biodiesel,
@@ -736,7 +742,7 @@ class Transport:
     @classmethod
     def lift_rail(cls, r: Rail) -> "Transport":
         return cls(
-            CO2e_cb=r.CO2e_cb,
+            CO2e_combustion_based=r.CO2e_combustion_based,
             CO2e_total=r.CO2e_total,
             demand_biodiesel=r.demand_biodiesel,
             demand_diesel=r.demand_diesel,
@@ -749,7 +755,7 @@ class Transport:
     @classmethod
     def lift_other(cls, o: Other) -> "Transport":
         return cls(
-            CO2e_cb=o.CO2e_cb,
+            CO2e_combustion_based=o.CO2e_combustion_based,
             CO2e_total=o.CO2e_total,
             transport_capacity_pkm=o.transport_capacity_pkm,
         )
