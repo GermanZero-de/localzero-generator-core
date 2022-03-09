@@ -15,8 +15,8 @@ def float_matches(actual, expected, rel):
         return False
     elif math.isnan(expected):
         return False
+    reltol = min(math.fabs(expected), math.fabs(actual)) * rel
     diff = math.fabs(actual - expected)
-    reltol = math.fabs(expected) * rel
     if diff < reltol:
         return True
     if diff < 1e-12:
