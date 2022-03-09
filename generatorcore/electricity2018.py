@@ -9,8 +9,8 @@ from . import transport2018
 @dataclass
 class Vars0:
     # Used by e
-    CO2e_cb: float = None  # type: ignore
-    CO2e_pb: float = None  # type: ignore
+    CO2e_combustion_based: float = None  # type: ignore
+    CO2e_production_based: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
 
 
@@ -44,8 +44,8 @@ class Vars4:
 @dataclass
 class Vars5:
     # Used by p
-    CO2e_cb: float = None  # type: ignore
-    CO2e_cb_per_MWh: float = None  # type: ignore
+    CO2e_combustion_based: float = None  # type: ignore
+    CO2e_combustion_based_per_MWh: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     cost_certificate: float = None  # type: ignore
     cost_fuel: float = None  # type: ignore
@@ -56,8 +56,8 @@ class Vars5:
 @dataclass
 class Vars6:
     # Used by p_fossil
-    CO2e_cb: float = None  # type: ignore
-    CO2e_cb_per_MWh: float = None  # type: ignore
+    CO2e_combustion_based: float = None  # type: ignore
+    CO2e_combustion_based_per_MWh: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     cost_certificate: float = None  # type: ignore
     cost_fuel: float = None  # type: ignore
@@ -69,8 +69,8 @@ class Vars6:
 @dataclass
 class Vars7:
     # Used by p_fossil_nuclear, p_fossil_coal_brown, p_fossil_coal_black, p_fossil_gas, p_fossil_ofossil
-    CO2e_cb: float = None  # type: ignore
-    CO2e_cb_per_MWh: float = None  # type: ignore
+    CO2e_combustion_based: float = None  # type: ignore
+    CO2e_combustion_based_per_MWh: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     cost_certificate: float = None  # type: ignore
     cost_certificate_per_MWh: float = None  # type: ignore
@@ -92,8 +92,8 @@ class Vars8:
 @dataclass
 class Vars9:
     # Used by p_renew
-    CO2e_cb: float = None  # type: ignore
-    CO2e_cb_per_MWh: float = None  # type: ignore
+    CO2e_combustion_based: float = None  # type: ignore
+    CO2e_combustion_based_per_MWh: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     cost_fuel: float = None  # type: ignore
     cost_mro: float = None  # type: ignore
@@ -104,7 +104,7 @@ class Vars9:
 @dataclass
 class Vars10:
     # Used by p_renew_pv, p_renew_wind
-    CO2e_cb: float = None  # type: ignore
+    CO2e_combustion_based: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     cost_mro: float = None  # type: ignore
     energy: float = None  # type: ignore
@@ -114,8 +114,8 @@ class Vars10:
 @dataclass
 class Vars11:
     # Used by p_renew_pv_roof, p_renew_pv_facade, p_renew_pv_park, p_renew_pv_agri, p_renew_wind_onshore, p_renew_wind_offshore, p_renew_geoth, p_renew_hydro
-    CO2e_cb: float = None  # type: ignore
-    CO2e_cb_per_MWh: float = None  # type: ignore
+    CO2e_combustion_based: float = None  # type: ignore
+    CO2e_combustion_based_per_MWh: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     cost_mro: float = None  # type: ignore
     cost_mro_per_MWh: float = None  # type: ignore
@@ -126,8 +126,8 @@ class Vars11:
 @dataclass
 class Vars12:
     # Used by p_renew_biomass
-    CO2e_cb: float = None  # type: ignore
-    CO2e_cb_per_MWh: float = None  # type: ignore
+    CO2e_combustion_based: float = None  # type: ignore
+    CO2e_combustion_based_per_MWh: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     cost_fuel: float = None  # type: ignore
     cost_fuel_per_MWh: float = None  # type: ignore
@@ -140,8 +140,8 @@ class Vars12:
 @dataclass
 class Vars13:
     # Used by p_renew_biomass_waste, p_renew_biomass_solid, p_renew_biomass_gaseous, p_fossil_and_renew
-    CO2e_cb: float = None  # type: ignore
-    CO2e_cb_per_MWh: float = None  # type: ignore
+    CO2e_combustion_based: float = None  # type: ignore
+    CO2e_combustion_based_per_MWh: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     energy: float = None  # type: ignore
     pct_energy: float = None  # type: ignore
@@ -158,8 +158,8 @@ class Vars14:
 @dataclass
 class Vars15:
     # Used by p_local_pv
-    CO2e_cb: float = None  # type: ignore
-    CO2e_cb_per_MWh: float = None  # type: ignore
+    CO2e_combustion_based: float = None  # type: ignore
+    CO2e_combustion_based_per_MWh: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     cost_mro: float = None  # type: ignore
     energy: float = None  # type: ignore
@@ -168,8 +168,8 @@ class Vars15:
 @dataclass
 class Vars16:
     # Used by p_local_wind_onshore, p_local_hydro
-    CO2e_cb: float = None  # type: ignore
-    CO2e_cb_per_MWh: float = None  # type: ignore
+    CO2e_combustion_based: float = None  # type: ignore
+    CO2e_combustion_based_per_MWh: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     cost_mro: float = None  # type: ignore
     cost_mro_per_MWh: float = None  # type: ignore
@@ -179,8 +179,8 @@ class Vars16:
 @dataclass
 class Vars17:
     # Used by p_local_biomass
-    CO2e_cb: float = None  # type: ignore
-    CO2e_cb_per_MWh: float = None  # type: ignore
+    CO2e_combustion_based: float = None  # type: ignore
+    CO2e_combustion_based_per_MWh: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     cost_fuel: float = None  # type: ignore
     cost_fuel_per_MWh: float = None  # type: ignore
@@ -192,7 +192,7 @@ class Vars17:
 @dataclass
 class Vars18:
     # Used by p_local
-    CO2e_cb: float = None  # type: ignore
+    CO2e_combustion_based: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     cost_fuel: float = None  # type: ignore
     cost_mro: float = None  # type: ignore
@@ -326,26 +326,26 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
     p_local_hydro = e18.p_local_hydro
     p_local = e18.p_local
 
-    e.CO2e_pb = 0.0
-    p_renew_pv.CO2e_cb = 0.0
-    p_renew_wind.CO2e_cb = 0.0
-    p_renew_wind_onshore.CO2e_cb = 0.0
-    p_renew_wind_onshore.CO2e_cb_per_MWh = 0.0
+    e.CO2e_production_based = 0.0
+    p_renew_pv.CO2e_combustion_based = 0.0
+    p_renew_wind.CO2e_combustion_based = 0.0
+    p_renew_wind_onshore.CO2e_combustion_based = 0.0
+    p_renew_wind_onshore.CO2e_combustion_based_per_MWh = 0.0
     p_renew_wind_onshore.CO2e_total = 0.0
-    p_renew_wind_offshore.CO2e_cb = 0.0
-    p_renew_wind_offshore.CO2e_cb_per_MWh = 0.0
+    p_renew_wind_offshore.CO2e_combustion_based = 0.0
+    p_renew_wind_offshore.CO2e_combustion_based_per_MWh = 0.0
     p_renew_wind_offshore.CO2e_total = 0.0
     p_renew_reverse.energy = 0.0
     p_local.CO2e_total = 0.0
-    p_local_pv.CO2e_cb = 0.0
-    p_local_pv.CO2e_cb_per_MWh = 0.0
+    p_local_pv.CO2e_combustion_based = 0.0
+    p_local_pv.CO2e_combustion_based_per_MWh = 0.0
     p_local_pv.CO2e_total = 0.0
-    p_local_wind_onshore.CO2e_cb = 0.0
-    p_local_wind_onshore.CO2e_cb_per_MWh = 0.0
+    p_local_wind_onshore.CO2e_combustion_based = 0.0
+    p_local_wind_onshore.CO2e_combustion_based_per_MWh = 0.0
     p_local_wind_onshore.CO2e_total = 0.0
     p_local_biomass.CO2e_total = 0.0
-    p_local_hydro.CO2e_cb = 0.0
-    p_local_hydro.CO2e_cb_per_MWh = 0.0
+    p_local_hydro.CO2e_combustion_based = 0.0
+    p_local_hydro.CO2e_combustion_based_per_MWh = 0.0
     p_local_hydro.CO2e_total = 0.0
 
     # NACHFRAGE:
@@ -481,9 +481,9 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
         # result: 1.659,67 Mio €/d_a
     )
 
-    p_fossil_nuclear.CO2e_cb_per_MWh = 0
-    p_fossil_nuclear.CO2e_cb = (
-        p_fossil_nuclear.CO2e_cb_per_MWh
+    p_fossil_nuclear.CO2e_combustion_based_per_MWh = 0
+    p_fossil_nuclear.CO2e_combustion_based = (
+        p_fossil_nuclear.CO2e_combustion_based_per_MWh
         * p_fossil_nuclear.energy
         * fact("Fact_E_P_ratio_gross_electricity_prod_to_fec_electricity_2018")
     )
@@ -560,14 +560,14 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
         # result: 1.140,94 Mio €/d_a
     )
     # 9
-    p_fossil_coal_brown.CO2e_cb_per_MWh = (
+    p_fossil_coal_brown.CO2e_combustion_based_per_MWh = (
         fact("Fact_E_P_coal_brown_ratio_CO2e_cb_to_gep_2018")
         * fact("Fact_E_P_ratio_gross_electricity_prod_to_fec_electricity_2018")
         # result: 1,006  d_t/MWh
     )
     # 10
-    p_fossil_coal_brown.CO2e_cb = (
-        p_fossil_coal_brown.CO2e_cb_per_MWh
+    p_fossil_coal_brown.CO2e_combustion_based = (
+        p_fossil_coal_brown.CO2e_combustion_based_per_MWh
         * p_fossil_coal_brown.energy
         # result: 147.082.899 d_t/d_a
     )
@@ -643,14 +643,14 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
         # result: 911,00 Mio €/d_a
     )
     # 9
-    p_fossil_coal_black.CO2e_cb_per_MWh = (
+    p_fossil_coal_black.CO2e_combustion_based_per_MWh = (
         fact("Fact_E_P_coal_black_ratio_CO2e_cb_to_gep_2018")
         * fact("Fact_E_P_ratio_gross_electricity_prod_to_fec_electricity_2018")
         # result: 0,745  d_t/MWh
     )
     # 10
-    p_fossil_coal_black.CO2e_cb = (
-        p_fossil_coal_black.CO2e_cb_per_MWh
+    p_fossil_coal_black.CO2e_combustion_based = (
+        p_fossil_coal_black.CO2e_combustion_based_per_MWh
         * p_fossil_coal_black.energy
         # result: 62.158.560 d_t/d_a
     )
@@ -726,12 +726,12 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
         # result: 1.069,52 Mio €/d_a
     )
     # 9
-    p_fossil_gas.CO2e_cb_per_MWh = fact(
+    p_fossil_gas.CO2e_combustion_based_per_MWh = fact(
         "Fact_E_P_gas_ratio_CO2e_cb_to_gep_2018"
     ) * fact("Fact_E_P_ratio_gross_electricity_prod_to_fec_electricity_2018")
     # 10
-    p_fossil_gas.CO2e_cb = (
-        p_fossil_gas.CO2e_cb_per_MWh
+    p_fossil_gas.CO2e_combustion_based = (
+        p_fossil_gas.CO2e_combustion_based_per_MWh
         * p_fossil_gas.energy
         # result: 30.277.853 d_t/d_a
     )
@@ -800,12 +800,12 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
         # result: 83.401,84 Mio €/d_a
     )
     # 9
-    p_fossil_ofossil.CO2e_cb_per_MWh = fact(
+    p_fossil_ofossil.CO2e_combustion_based_per_MWh = fact(
         "Fact_E_P_ofossil_ratio_CO2e_cb_to_gep_2018"
     ) * fact("Fact_E_P_ratio_gross_electricity_prod_to_fec_electricity_2018")
     # 10
-    p_fossil_ofossil.CO2e_cb = (
-        p_fossil_ofossil.CO2e_cb_per_MWh
+    p_fossil_ofossil.CO2e_combustion_based = (
+        p_fossil_ofossil.CO2e_combustion_based_per_MWh
         * p_fossil_ofossil.energy
         # result: 28.806.227 d_t/d_a
     )
@@ -1056,14 +1056,14 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
         # result: 5.118.125 MWh
     )
     # 9
-    p_renew_biomass_waste.CO2e_cb_per_MWh = (
+    p_renew_biomass_waste.CO2e_combustion_based_per_MWh = (
         fact("Fact_E_P_biomass_waste_ratio_CO2e_cb_nonCO2_to_gep_2018")
         * fact("Fact_E_P_ratio_gross_electricity_prod_to_fec_electricity_2018")
         # result: 0,005  d_t/MWh
     )
     # 10
-    p_renew_biomass_waste.CO2e_cb = (
-        p_renew_biomass_waste.CO2e_cb_per_MWh
+    p_renew_biomass_waste.CO2e_combustion_based = (
+        p_renew_biomass_waste.CO2e_combustion_based_per_MWh
         * p_renew_biomass_waste.energy
         # result: 30.474 d_t/d_a
     )
@@ -1081,14 +1081,14 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
         # result: 9.212.626 MWh
     )
     # 9
-    p_renew_biomass_solid.CO2e_cb_per_MWh = (
+    p_renew_biomass_solid.CO2e_combustion_based_per_MWh = (
         fact("Fact_E_P_biomass_solid_ratio_CO2e_cb_nonCO2_to_gep_2018")
         * fact("Fact_E_P_ratio_gross_electricity_prod_to_fec_electricity_2018")
         # result: 0,012  d_t/MWh
     )
     # 10
-    p_renew_biomass_solid.CO2e_cb = (
-        p_renew_biomass_solid.CO2e_cb_per_MWh
+    p_renew_biomass_solid.CO2e_combustion_based = (
+        p_renew_biomass_solid.CO2e_combustion_based_per_MWh
         * p_renew_biomass_solid.energy
         # result: 140.885 d_t/d_a
     )
@@ -1106,14 +1106,14 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
         # result: 26.614.252 MWh
     )
     # 9
-    p_renew_biomass_gaseous.CO2e_cb_per_MWh = (
+    p_renew_biomass_gaseous.CO2e_combustion_based_per_MWh = (
         fact("Fact_E_P_biomass_gaseous_ratio_CO2e_cb_nonCO2_to_gep_2018")
         * fact("Fact_E_P_ratio_gross_electricity_prod_to_fec_electricity_2018")
         # result: 0,100  d_t/MWh
     )
     # 10
-    p_renew_biomass_gaseous.CO2e_cb = (
-        p_renew_biomass_gaseous.CO2e_cb_per_MWh
+    p_renew_biomass_gaseous.CO2e_combustion_based = (
+        p_renew_biomass_gaseous.CO2e_combustion_based_per_MWh
         * p_renew_biomass_gaseous.energy
         # result: 3.346.082 d_t/d_a
     )
@@ -1136,15 +1136,15 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
     # Zeile Biomasse 2
 
     # 10
-    p_renew_biomass.CO2e_cb = (
-        p_renew_biomass_waste.CO2e_cb
-        + p_renew_biomass_solid.CO2e_cb
-        + p_renew_biomass_gaseous.CO2e_cb
+    p_renew_biomass.CO2e_combustion_based = (
+        p_renew_biomass_waste.CO2e_combustion_based
+        + p_renew_biomass_solid.CO2e_combustion_based
+        + p_renew_biomass_gaseous.CO2e_combustion_based
         # result: 3.517.441 d_t/d_a
     )  # SUM(p_renew_biomass_waste.CO2e_cb:p_renew_biomass_gaseous.CO2e_cb)
     # Zeile Geothermie
-    p_renew_biomass.CO2e_cb_per_MWh = div(
-        p_renew_biomass.CO2e_cb, p_renew_biomass.energy
+    p_renew_biomass.CO2e_combustion_based_per_MWh = div(
+        p_renew_biomass.CO2e_combustion_based, p_renew_biomass.energy
     )
     # 1
     p_renew_geoth.pct_energy = (
@@ -1216,7 +1216,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
         + p_renew_hydro.cost_mro
     )
 
-    p_renew.CO2e_cb = p_renew_biomass.CO2e_cb
+    p_renew.CO2e_combustion_based = p_renew_biomass.CO2e_combustion_based
 
     p_renew_pv_agri = p_renew_pv_agri
     p_renew_pv_park = p_renew_pv_park
@@ -1374,10 +1374,12 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
         / 1000000
         # result: 3.899,37 Mio €/a
     )
-    p_local_biomass.CO2e_cb_per_MWh = fact(
+    p_local_biomass.CO2e_combustion_based_per_MWh = fact(
         "Fact_E_P_climate_neutral_ratio_CO2e_cb_to_fec"
     ) * fact("Fact_E_P_ratio_gross_electricity_prod_to_fec_electricity_2018")
-    p_local_biomass.CO2e_cb = p_local_biomass.CO2e_cb_per_MWh * p_local_biomass.energy
+    p_local_biomass.CO2e_combustion_based = (
+        p_local_biomass.CO2e_combustion_based_per_MWh * p_local_biomass.energy
+    )
     # Biomasse KWK Wärme
 
     p_local_biomass_cogen.pct_energy = fact("Fact_E_P_renew_cogen_ratio_2018")
@@ -1455,42 +1457,46 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
     )
     p.cost_mro = p_fossil.cost_mro + p_renew.cost_mro
 
-    p_fossil.CO2e_cb = (
-        p_fossil_nuclear.CO2e_cb
-        + p_fossil_coal_brown.CO2e_cb
-        + p_fossil_coal_black.CO2e_cb
-        + p_fossil_gas.CO2e_cb
-        + p_fossil_ofossil.CO2e_cb
+    p_fossil.CO2e_combustion_based = (
+        p_fossil_nuclear.CO2e_combustion_based
+        + p_fossil_coal_brown.CO2e_combustion_based
+        + p_fossil_coal_black.CO2e_combustion_based
+        + p_fossil_gas.CO2e_combustion_based
+        + p_fossil_ofossil.CO2e_combustion_based
     )
-    p_fossil.CO2e_cb_per_MWh = div(p_fossil.CO2e_cb, p_fossil.energy)
-    p.CO2e_cb = p_fossil.CO2e_cb + p_renew.CO2e_cb
-    p.CO2e_cb_per_MWh = div(p.CO2e_cb, p.energy)
+    p_fossil.CO2e_combustion_based_per_MWh = div(
+        p_fossil.CO2e_combustion_based, p_fossil.energy
+    )
+    p.CO2e_combustion_based = (
+        p_fossil.CO2e_combustion_based + p_renew.CO2e_combustion_based
+    )
+    p.CO2e_combustion_based_per_MWh = div(p.CO2e_combustion_based, p.energy)
 
-    p_renew_geoth.CO2e_cb_per_MWh = fact(
+    p_renew_geoth.CO2e_combustion_based_per_MWh = fact(
         "Fact_E_P_climate_neutral_ratio_CO2e_cb_to_fec"
     ) * fact("Fact_E_P_ratio_gross_electricity_prod_to_fec_electricity_2018")
-    p_renew_geoth.CO2e_cb = (
-        p_renew_geoth.CO2e_cb_per_MWh
+    p_renew_geoth.CO2e_combustion_based = (
+        p_renew_geoth.CO2e_combustion_based_per_MWh
         * p_renew_geoth.energy
         * fact("Fact_E_P_ratio_gross_electricity_prod_to_fec_electricity_2018")
     )
-    p_renew_hydro.CO2e_cb_per_MWh = fact(
+    p_renew_hydro.CO2e_combustion_based_per_MWh = fact(
         "Fact_E_P_climate_neutral_ratio_CO2e_cb_to_fec"
     ) * fact("Fact_E_P_ratio_gross_electricity_prod_to_fec_electricity_2018")
-    p_renew_hydro.CO2e_cb = (
-        p_renew_hydro.CO2e_cb_per_MWh
+    p_renew_hydro.CO2e_combustion_based = (
+        p_renew_hydro.CO2e_combustion_based_per_MWh
         * p_renew_hydro.energy
         * fact("Fact_E_P_ratio_gross_electricity_prod_to_fec_electricity_2018")
     )
-    p_local.CO2e_cb = p_local_biomass.CO2e_cb
+    p_local.CO2e_combustion_based = p_local_biomass.CO2e_combustion_based
 
-    e.CO2e_cb = p.CO2e_cb
-    p_fossil_nuclear.CO2e_total = p_fossil_nuclear.CO2e_cb
-    p_fossil_coal_brown.CO2e_total = p_fossil_coal_brown.CO2e_cb
+    e.CO2e_combustion_based = p.CO2e_combustion_based
+    p_fossil_nuclear.CO2e_total = p_fossil_nuclear.CO2e_combustion_based
+    p_fossil_coal_brown.CO2e_total = p_fossil_coal_brown.CO2e_combustion_based
     p_fossil_ofossil.CO2e_total = 0
-    p_fossil_coal_black.CO2e_total = p_fossil_coal_black.CO2e_cb
-    p_fossil_gas.CO2e_total = p_fossil_gas.CO2e_cb
-    p_fossil_ofossil.CO2e_total = p_fossil_ofossil.CO2e_cb
+    p_fossil_coal_black.CO2e_total = p_fossil_coal_black.CO2e_combustion_based
+    p_fossil_gas.CO2e_total = p_fossil_gas.CO2e_combustion_based
+    p_fossil_ofossil.CO2e_total = p_fossil_ofossil.CO2e_combustion_based
     p_fossil.CO2e_total = (
         p_fossil_nuclear.CO2e_total
         + p_fossil_coal_brown.CO2e_total
@@ -1499,40 +1505,46 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
         + p_fossil_ofossil.CO2e_total
     )
     p_renew_wind.CO2e_total = 0
-    p_renew_biomass_waste.CO2e_total = p_renew_biomass_waste.CO2e_cb
-    p_renew_biomass_solid.CO2e_total = p_renew_biomass_solid.CO2e_cb
-    p_renew_biomass_gaseous.CO2e_total = p_renew_biomass_gaseous.CO2e_cb
+    p_renew_biomass_waste.CO2e_total = p_renew_biomass_waste.CO2e_combustion_based
+    p_renew_biomass_solid.CO2e_total = p_renew_biomass_solid.CO2e_combustion_based
+    p_renew_biomass_gaseous.CO2e_total = p_renew_biomass_gaseous.CO2e_combustion_based
     p_renew_biomass.CO2e_total = (
         p_renew_biomass_waste.CO2e_total
         + p_renew_biomass_solid.CO2e_total
         + p_renew_biomass_gaseous.CO2e_total
     )  # SUM(p_renew_biomass_waste.CO2e_total:p_renew_biomass_gaseous.CO2e_total)
 
-    p_renew_pv_roof.CO2e_cb_per_MWh = fact(
+    p_renew_pv_roof.CO2e_combustion_based_per_MWh = fact(
         "Fact_E_P_climate_neutral_ratio_CO2e_cb_to_fec"
     ) * fact("Fact_E_P_ratio_gross_electricity_prod_to_fec_electricity_2018")
-    p_renew_pv_facade.CO2e_cb_per_MWh = fact(
+    p_renew_pv_facade.CO2e_combustion_based_per_MWh = fact(
         "Fact_E_P_climate_neutral_ratio_CO2e_cb_to_fec"
     ) * fact("Fact_E_P_ratio_gross_electricity_prod_to_fec_electricity_2018")
-    p_renew_pv_park.CO2e_cb_per_MWh = fact(
+    p_renew_pv_park.CO2e_combustion_based_per_MWh = fact(
         "Fact_E_P_climate_neutral_ratio_CO2e_cb_to_fec"
     ) * fact("Fact_E_P_ratio_gross_electricity_prod_to_fec_electricity_2018")
-    p_renew_pv_agri.CO2e_cb_per_MWh = fact(
+    p_renew_pv_agri.CO2e_combustion_based_per_MWh = fact(
         "Fact_E_P_climate_neutral_ratio_CO2e_cb_to_fec"
     ) * fact("Fact_E_P_ratio_gross_electricity_prod_to_fec_electricity_2018")
-    p_renew_pv_roof.CO2e_cb = p_renew_pv_roof.CO2e_cb_per_MWh * p_renew_pv_roof.energy
-    p_renew_pv_facade.CO2e_cb = (
-        p_renew_pv_facade.CO2e_cb_per_MWh * p_renew_pv_facade.energy
+    p_renew_pv_roof.CO2e_combustion_based = (
+        p_renew_pv_roof.CO2e_combustion_based_per_MWh * p_renew_pv_roof.energy
     )
-    p_renew_pv_park.CO2e_cb = p_renew_pv_park.CO2e_cb_per_MWh * p_renew_pv_park.energy
-    p_renew_pv_agri.CO2e_cb = p_renew_pv_agri.CO2e_cb_per_MWh * p_renew_pv_agri.energy
-    p_renew_pv_agri.CO2e_total = p_renew_pv_agri.CO2e_cb
-    p_renew_geoth.CO2e_total = p_renew_geoth.CO2e_cb
-    p_renew_hydro.CO2e_total = p_renew_hydro.CO2e_cb
-    p_renew_pv_roof.CO2e_total = p_renew_pv_roof.CO2e_cb
-    p_renew_pv_facade.CO2e_total = p_renew_pv_facade.CO2e_cb
-    p_renew_pv_park.CO2e_total = p_renew_pv_park.CO2e_cb
-    p_renew_pv_agri.CO2e_total = p_renew_pv_agri.CO2e_cb
+    p_renew_pv_facade.CO2e_combustion_based = (
+        p_renew_pv_facade.CO2e_combustion_based_per_MWh * p_renew_pv_facade.energy
+    )
+    p_renew_pv_park.CO2e_combustion_based = (
+        p_renew_pv_park.CO2e_combustion_based_per_MWh * p_renew_pv_park.energy
+    )
+    p_renew_pv_agri.CO2e_combustion_based = (
+        p_renew_pv_agri.CO2e_combustion_based_per_MWh * p_renew_pv_agri.energy
+    )
+    p_renew_pv_agri.CO2e_total = p_renew_pv_agri.CO2e_combustion_based
+    p_renew_geoth.CO2e_total = p_renew_geoth.CO2e_combustion_based
+    p_renew_hydro.CO2e_total = p_renew_hydro.CO2e_combustion_based
+    p_renew_pv_roof.CO2e_total = p_renew_pv_roof.CO2e_combustion_based
+    p_renew_pv_facade.CO2e_total = p_renew_pv_facade.CO2e_combustion_based
+    p_renew_pv_park.CO2e_total = p_renew_pv_park.CO2e_combustion_based
+    p_renew_pv_agri.CO2e_total = p_renew_pv_agri.CO2e_combustion_based
 
     p_renew_pv.CO2e_total = (
         p_renew_pv_roof.CO2e_total
@@ -1553,14 +1565,18 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
     e.CO2e_total = p.CO2e_total
 
     p_fossil_and_renew.energy = p.energy
-    p_fossil_and_renew.CO2e_cb = p_fossil.CO2e_cb + p_renew.CO2e_cb
-    p_fossil_and_renew.CO2e_cb_per_MWh = div(
-        p_fossil_and_renew.CO2e_cb, p_fossil_and_renew.energy
+    p_fossil_and_renew.CO2e_combustion_based = (
+        p_fossil.CO2e_combustion_based + p_renew.CO2e_combustion_based
+    )
+    p_fossil_and_renew.CO2e_combustion_based_per_MWh = div(
+        p_fossil_and_renew.CO2e_combustion_based, p_fossil_and_renew.energy
     )
     p_fossil_and_renew.CO2e_total = p_fossil.CO2e_total + p_renew.CO2e_total
 
     p_fossil_and_renew.pct_energy = p_fossil.pct_energy + p_renew.pct_energy
-    p_renew.CO2e_cb_per_MWh = div(p_renew.CO2e_cb, p_renew.energy)
+    p_renew.CO2e_combustion_based_per_MWh = div(
+        p_renew.CO2e_combustion_based, p_renew.energy
+    )
     p_local.pct_energy = div(p_local.energy, p.energy)
 
     return e18

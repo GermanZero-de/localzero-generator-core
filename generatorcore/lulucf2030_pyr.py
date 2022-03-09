@@ -57,11 +57,11 @@ def calc(
         0,
     )
 
-    pyr.CO2e_pb = pyr.CO2e_total
-    pyr.CO2e_pb_per_t = fact("Fact_L_P_biochar_ratio_CO2e_pb_to_prodvol")
-    pyr.prod_volume = div(pyr.CO2e_pb, pyr.CO2e_pb_per_t)
+    pyr.CO2e_production_based = pyr.CO2e_total
+    pyr.CO2e_production_based_per_t = fact("Fact_L_P_biochar_ratio_CO2e_pb_to_prodvol")
+    pyr.prod_volume = div(pyr.CO2e_production_based, pyr.CO2e_production_based_per_t)
 
-    pyr.change_CO2e_t = pyr.CO2e_pb
+    pyr.change_CO2e_t = pyr.CO2e_production_based
 
     pyr.change_CO2e_pct = 0
     pyr.CO2e_total_2021_estimated = 0
@@ -83,8 +83,8 @@ def calc(
     pyr.demand_emplo_new = pyr.demand_emplo
 
     l.CO2e_total = g.CO2e_total + pyr.CO2e_total
-    l.CO2e_pb = g.CO2e_pb + pyr.CO2e_pb
-    l.CO2e_cb = g.CO2e_cb
+    l.CO2e_production_based = g.CO2e_production_based + pyr.CO2e_production_based
+    l.CO2e_combustion_based = g.CO2e_combustion_based
     l.change_CO2e_t = l.CO2e_total - l18.l.CO2e_total
     l.change_CO2e_pct = div(l.change_CO2e_t, l18.l.CO2e_total)
     l.CO2e_total_2021_estimated = l18.l.CO2e_total * fact(

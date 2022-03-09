@@ -9,8 +9,8 @@ from . import residences2030, business2030, heat2018, agri2030, industry2030
 @dataclass
 class Vars0:
     # Used by h
-    CO2e_cb: float = None  # type: ignore
-    CO2e_pb: float = None  # type: ignore
+    CO2e_combustion_based: float = None  # type: ignore
+    CO2e_production_based: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     CO2e_total_2021_estimated: float = None  # type: ignore
     change_CO2e_pct: float = None  # type: ignore
@@ -83,8 +83,8 @@ class Vars4:
 @dataclass
 class Vars5:
     # Used by p
-    CO2e_cb: float = None  # type: ignore
-    CO2e_pb: float = None  # type: ignore
+    CO2e_combustion_based: float = None  # type: ignore
+    CO2e_production_based: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     CO2e_total_2021_estimated: float = None  # type: ignore
     change_CO2e_pct: float = None  # type: ignore
@@ -108,10 +108,10 @@ class Vars5:
 @dataclass
 class Vars6:
     # Used by p_gas, p_coal
-    CO2e_cb: float = None  # type: ignore
-    CO2e_cb_per_MWh: float = None  # type: ignore
-    CO2e_pb: float = None  # type: ignore
-    CO2e_pb_per_MWh: float = None  # type: ignore
+    CO2e_combustion_based: float = None  # type: ignore
+    CO2e_combustion_based_per_MWh: float = None  # type: ignore
+    CO2e_production_based: float = None  # type: ignore
+    CO2e_production_based_per_MWh: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     CO2e_total_2021_estimated: float = None  # type: ignore
     change_CO2e_pct: float = None  # type: ignore
@@ -128,8 +128,8 @@ class Vars6:
 @dataclass
 class Vars7:
     # Used by p_lpg
-    CO2e_cb: float = None  # type: ignore
-    CO2e_cb_per_MWh: float = None  # type: ignore
+    CO2e_combustion_based: float = None  # type: ignore
+    CO2e_combustion_based_per_MWh: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     CO2e_total_2021_estimated: float = None  # type: ignore
     change_CO2e_pct: float = None  # type: ignore
@@ -144,8 +144,8 @@ class Vars7:
 @dataclass
 class Vars8:
     # Used by p_fueloil
-    CO2e_cb: float = None  # type: ignore
-    CO2e_cb_per_MWh: float = None  # type: ignore
+    CO2e_combustion_based: float = None  # type: ignore
+    CO2e_combustion_based_per_MWh: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     CO2e_total_2021_estimated: float = None  # type: ignore
     change_CO2e_pct: float = None  # type: ignore
@@ -162,10 +162,10 @@ class Vars8:
 @dataclass
 class Vars9:
     # Used by p_opetpro, p_heatnet_cogen
-    CO2e_cb: float = None  # type: ignore
-    CO2e_cb_per_MWh: float = None  # type: ignore
-    CO2e_pb: float = None  # type: ignore
-    CO2e_pb_per_MWh: float = None  # type: ignore
+    CO2e_combustion_based: float = None  # type: ignore
+    CO2e_combustion_based_per_MWh: float = None  # type: ignore
+    CO2e_production_based: float = None  # type: ignore
+    CO2e_production_based_per_MWh: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     CO2e_total_2021_estimated: float = None  # type: ignore
     change_CO2e_pct: float = None  # type: ignore
@@ -180,8 +180,8 @@ class Vars9:
 @dataclass
 class Vars10:
     # Used by p_heatnet
-    CO2e_cb: float = None  # type: ignore
-    CO2e_pb: float = None  # type: ignore
+    CO2e_combustion_based: float = None  # type: ignore
+    CO2e_production_based: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     CO2e_total_2021_estimated: float = None  # type: ignore
     change_CO2e_pct: float = None  # type: ignore
@@ -203,8 +203,8 @@ class Vars10:
 @dataclass
 class Vars11:
     # Used by p_heatnet_plant
-    CO2e_pb: float = None  # type: ignore
-    CO2e_pb_per_MWh: float = None  # type: ignore
+    CO2e_production_based: float = None  # type: ignore
+    CO2e_production_based_per_MWh: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     CO2e_total_2021_estimated: float = None  # type: ignore
     area_ha_available: float = None  # type: ignore
@@ -230,8 +230,8 @@ class Vars11:
 @dataclass
 class Vars12:
     # Used by p_heatnet_lheatpump
-    CO2e_pb: float = None  # type: ignore
-    CO2e_pb_per_MWh: float = None  # type: ignore
+    CO2e_production_based: float = None  # type: ignore
+    CO2e_production_based_per_MWh: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     CO2e_total_2021_estimated: float = None  # type: ignore
     change_CO2e_pct: float = None  # type: ignore
@@ -259,8 +259,8 @@ class Vars12:
 @dataclass
 class Vars13:
     # Used by p_heatnet_geoth
-    CO2e_pb: float = None  # type: ignore
-    CO2e_pb_per_MWh: float = None  # type: ignore
+    CO2e_production_based: float = None  # type: ignore
+    CO2e_production_based_per_MWh: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     CO2e_total_2021_estimated: float = None  # type: ignore
     change_CO2e_pct: float = None  # type: ignore
@@ -287,8 +287,8 @@ class Vars13:
 @dataclass
 class Vars14:
     # Used by p_biomass
-    CO2e_pb: float = None  # type: ignore
-    CO2e_pb_per_MWh: float = None  # type: ignore
+    CO2e_production_based: float = None  # type: ignore
+    CO2e_production_based_per_MWh: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     CO2e_total_2021_estimated: float = None  # type: ignore
     change_CO2e_pct: float = None  # type: ignore
@@ -305,8 +305,8 @@ class Vars14:
 @dataclass
 class Vars15:
     # Used by p_ofossil, p_orenew, p_solarth, p_heatpump
-    CO2e_pb: float = None  # type: ignore
-    CO2e_pb_per_MWh: float = None  # type: ignore
+    CO2e_production_based: float = None  # type: ignore
+    CO2e_production_based_per_MWh: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     CO2e_total_2021_estimated: float = None  # type: ignore
     change_CO2e_pct: float = None  # type: ignore
@@ -408,17 +408,17 @@ def calc(
     ### Demand of Heat 2018 ###
     ###########################
 
-    p_gas.CO2e_pb_per_MWh = h18.p_gas.CO2e_pb_per_MWh
-    p_gas.CO2e_cb_per_MWh = h18.p_gas.CO2e_cb_per_MWh
+    p_gas.CO2e_production_based_per_MWh = h18.p_gas.CO2e_production_based_per_MWh
+    p_gas.CO2e_combustion_based_per_MWh = h18.p_gas.CO2e_combustion_based_per_MWh
     p_gas.energy = r30.s_gas.energy + b30.s_gas.energy
-    p_gas.CO2e_pb = p_gas.energy * p_gas.CO2e_pb_per_MWh
+    p_gas.CO2e_production_based = p_gas.energy * p_gas.CO2e_production_based_per_MWh
     p_lpg.energy = r30.s_lpg.energy + b30.s_lpg.energy
-    p_gas.CO2e_cb = p_gas.CO2e_cb_per_MWh * p_gas.energy
-    p_gas.CO2e_total = p_gas.CO2e_pb + p_gas.CO2e_cb
+    p_gas.CO2e_combustion_based = p_gas.CO2e_combustion_based_per_MWh * p_gas.energy
+    p_gas.CO2e_total = p_gas.CO2e_production_based + p_gas.CO2e_combustion_based
     p.CO2e_total_2021_estimated = h18.p.CO2e_total * fact(
         "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
     )
-    p_lpg.CO2e_cb_per_MWh = h18.p_lpg.CO2e_cb_per_MWh
+    p_lpg.CO2e_combustion_based_per_MWh = h18.p_lpg.CO2e_combustion_based_per_MWh
     g_storage.invest_per_x = fact("Fact_H_P_storage_specific_cost")
 
     g_planning.invest = (
@@ -502,10 +502,12 @@ def calc(
     p_fueloil.energy = r30.s_fueloil.energy + b30.s_fueloil.energy
     p_opetpro.energy = 0
     p_gas.cost_fuel_per_MWh = ass("Ass_R_S_gas_energy_cost_factor_2035")
-    p_opetpro.CO2e_pb_per_MWh = h18.p_opetpro.CO2e_pb_per_MWh
+    p_opetpro.CO2e_production_based_per_MWh = (
+        h18.p_opetpro.CO2e_production_based_per_MWh
+    )
 
-    p_lpg.CO2e_cb = p_lpg.CO2e_cb_per_MWh * p_lpg.energy
-    p_lpg.CO2e_total = p_lpg.CO2e_cb
+    p_lpg.CO2e_combustion_based = p_lpg.CO2e_combustion_based_per_MWh * p_lpg.energy
+    p_lpg.CO2e_total = p_lpg.CO2e_combustion_based
     p_coal.energy = r30.s_coal.energy + b30.s_coal.energy
     p_biomass.energy = (
         r30.s_biomass.energy
@@ -513,11 +515,15 @@ def calc(
         + i30.s_renew_biomass.energy
         + a30.s_biomass.energy
     )
-    p_fueloil.CO2e_cb_per_MWh = h18.p_fueloil.CO2e_cb_per_MWh
-    p_fueloil.CO2e_cb = p_fueloil.CO2e_cb_per_MWh * p_fueloil.energy
+    p_fueloil.CO2e_combustion_based_per_MWh = (
+        h18.p_fueloil.CO2e_combustion_based_per_MWh
+    )
+    p_fueloil.CO2e_combustion_based = (
+        p_fueloil.CO2e_combustion_based_per_MWh * p_fueloil.energy
+    )
     h.CO2e_total_2021_estimated = p.CO2e_total_2021_estimated
 
-    p_fueloil.CO2e_total = p_fueloil.CO2e_cb
+    p_fueloil.CO2e_total = p_fueloil.CO2e_combustion_based
 
     p_heatnet_lheatpump.full_load_hour = fact(
         "Fact_H_P_heatnet_lheatpump_full_load_hours"
@@ -545,11 +551,19 @@ def calc(
     )
     p_fueloil.cost_fuel_per_MWh = ass("Ass_R_S_fueloil_energy_cost_factor_2035")
     p_gas.cost_fuel = p_gas.energy * p_gas.cost_fuel_per_MWh / Million
-    p_opetpro.CO2e_pb = p_opetpro.energy * p_opetpro.CO2e_pb_per_MWh
-    p_opetpro.CO2e_cb_per_MWh = h18.p_opetpro.CO2e_cb_per_MWh
-    p_opetpro.CO2e_cb = p_opetpro.CO2e_cb_per_MWh * p_opetpro.energy
-    p_opetpro.CO2e_total = p_opetpro.CO2e_pb + p_opetpro.CO2e_cb
-    p_coal.CO2e_pb_per_MWh = h18.p_coal.CO2e_pb_per_MWh
+    p_opetpro.CO2e_production_based = (
+        p_opetpro.energy * p_opetpro.CO2e_production_based_per_MWh
+    )
+    p_opetpro.CO2e_combustion_based_per_MWh = (
+        h18.p_opetpro.CO2e_combustion_based_per_MWh
+    )
+    p_opetpro.CO2e_combustion_based = (
+        p_opetpro.CO2e_combustion_based_per_MWh * p_opetpro.energy
+    )
+    p_opetpro.CO2e_total = (
+        p_opetpro.CO2e_production_based + p_opetpro.CO2e_combustion_based
+    )
+    p_coal.CO2e_production_based_per_MWh = h18.p_coal.CO2e_production_based_per_MWh
     p_gas.change_energy_MWh = p_gas.energy - h18.p_gas.energy
     p_gas.change_energy_pct = div(p_gas.change_energy_MWh, h18.p_gas.energy)
     p_gas.change_CO2e_t = p_gas.CO2e_total - h18.p_gas.CO2e_total
@@ -564,10 +578,10 @@ def calc(
     )
     p_orenew.energy = p_solarth.energy + p_heatpump.energy
     p_ofossil.energy = 0
-    p_coal.CO2e_pb = p_coal.energy * p_coal.CO2e_pb_per_MWh
-    p_coal.CO2e_cb_per_MWh = h18.p_coal.CO2e_cb_per_MWh
+    p_coal.CO2e_production_based = p_coal.energy * p_coal.CO2e_production_based_per_MWh
+    p_coal.CO2e_combustion_based_per_MWh = h18.p_coal.CO2e_combustion_based_per_MWh
 
-    p_coal.CO2e_cb = p_coal.CO2e_cb_per_MWh * p_coal.energy
+    p_coal.CO2e_combustion_based = p_coal.CO2e_combustion_based_per_MWh * p_coal.energy
     p_lpg.change_energy_MWh = p_lpg.energy - h18.p_lpg.energy
     p_lpg.change_energy_pct = div(p_lpg.change_energy_MWh, h18.p_lpg.energy)
     p_lpg.change_CO2e_t = p_lpg.CO2e_total - h18.p_lpg.CO2e_total
@@ -594,9 +608,13 @@ def calc(
     p_opetpro.pct_energy = div(p_opetpro.energy, p.energy)
     p_coal.cost_fuel_per_MWh = ass("Ass_R_S_coal_energy_cost_factor_2035")
     p_fueloil.cost_fuel = p_fueloil.energy * p_fueloil.cost_fuel_per_MWh / Million
-    p_coal.CO2e_total = p_coal.CO2e_pb + p_coal.CO2e_cb
-    p_heatnet_cogen.CO2e_pb_per_MWh = fact("Fact_H_P_biomass_ratio_CO2e_pb_to_fec_2018")
-    p_heatnet_cogen.CO2e_pb = p_heatnet_cogen.energy * p_heatnet_cogen.CO2e_pb_per_MWh
+    p_coal.CO2e_total = p_coal.CO2e_production_based + p_coal.CO2e_combustion_based
+    p_heatnet_cogen.CO2e_production_based_per_MWh = fact(
+        "Fact_H_P_biomass_ratio_CO2e_pb_to_fec_2018"
+    )
+    p_heatnet_cogen.CO2e_production_based = (
+        p_heatnet_cogen.energy * p_heatnet_cogen.CO2e_production_based_per_MWh
+    )
     p_fueloil.change_energy_MWh = p_fueloil.energy - h18.p_fueloil.energy
     p_fueloil.change_energy_pct = div(p_fueloil.change_energy_MWh, h18.p_fueloil.energy)
     p_fueloil.change_CO2e_t = p_fueloil.CO2e_total - h18.p_fueloil.CO2e_total
@@ -611,14 +629,20 @@ def calc(
     )
     p_lpg.pct_energy = div(p_lpg.energy, p.energy)
     p_coal.pct_energy = div(p_coal.energy, p.energy)
-    p_heatnet_cogen.CO2e_cb_per_MWh = fact(
+    p_heatnet_cogen.CO2e_combustion_based_per_MWh = fact(
         "Fact_H_P_heatnet_biomass_ratio_CO2e_cb_to_fec_2018"
     )
-    p_heatnet_cogen.CO2e_cb = p_heatnet_cogen.CO2e_cb_per_MWh * p_heatnet_cogen.energy
-    p_heatnet_cogen.CO2e_total = p_heatnet_cogen.CO2e_pb + p_heatnet_cogen.CO2e_cb
+    p_heatnet_cogen.CO2e_combustion_based = (
+        p_heatnet_cogen.CO2e_combustion_based_per_MWh * p_heatnet_cogen.energy
+    )
+    p_heatnet_cogen.CO2e_total = (
+        p_heatnet_cogen.CO2e_production_based + p_heatnet_cogen.CO2e_combustion_based
+    )
     p_heatnet.CO2e_total = p_heatnet_cogen.CO2e_total
 
-    p_biomass.CO2e_pb_per_MWh = fact("Fact_H_P_biomass_ratio_CO2e_pb_to_fec_2018")
+    p_biomass.CO2e_production_based_per_MWh = fact(
+        "Fact_H_P_biomass_ratio_CO2e_pb_to_fec_2018"
+    )
     p_opetpro.change_energy_MWh = p_opetpro.energy - h18.p_opetpro.energy
     p_opetpro.change_energy_pct = div(p_opetpro.change_energy_MWh, h18.p_opetpro.energy)
     p_opetpro.change_CO2e_t = p_opetpro.CO2e_total - h18.p_opetpro.CO2e_total
@@ -638,10 +662,12 @@ def calc(
     p_heatnet_lheatpump.invest_pa = (
         p_heatnet_lheatpump.invest / entries.m_duration_target
     )
-    p_biomass.CO2e_pb = 0 * p_biomass.CO2e_pb_per_MWh
-    p_biomass.CO2e_total = p_biomass.CO2e_pb
-    p_ofossil.CO2e_pb_per_MWh = fact("Fact_H_P_ofossil_ratio_CO2e_pb_to_fec_2018")
-    p_ofossil.CO2e_pb = 0 * p_ofossil.CO2e_pb_per_MWh
+    p_biomass.CO2e_production_based = 0 * p_biomass.CO2e_production_based_per_MWh
+    p_biomass.CO2e_total = p_biomass.CO2e_production_based
+    p_ofossil.CO2e_production_based_per_MWh = fact(
+        "Fact_H_P_ofossil_ratio_CO2e_pb_to_fec_2018"
+    )
+    p_ofossil.CO2e_production_based = 0 * p_ofossil.CO2e_production_based_per_MWh
     p_coal.change_energy_MWh = p_coal.energy - h18.p_coal.energy
     p_coal.change_energy_pct = div(p_coal.change_energy_MWh, h18.p_coal.energy)
     p_coal.change_CO2e_t = p_coal.CO2e_total - h18.p_coal.CO2e_total
@@ -656,11 +682,13 @@ def calc(
     )
 
     p_biomass.pct_energy = div(p_biomass.energy, p.energy)
-    p_ofossil.CO2e_total = p_ofossil.CO2e_pb
+    p_ofossil.CO2e_total = p_ofossil.CO2e_production_based
 
-    p_heatnet.CO2e_cb = p_heatnet_cogen.CO2e_cb
+    p_heatnet.CO2e_combustion_based = p_heatnet_cogen.CO2e_combustion_based
 
-    p_orenew.CO2e_pb_per_MWh = fact("Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018")
+    p_orenew.CO2e_production_based_per_MWh = fact(
+        "Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018"
+    )
     p_heatnet.change_energy_MWh = p_heatnet.energy - h18.p_heatnet.energy
     p_heatnet.change_energy_pct = div(p_heatnet.change_energy_MWh, h18.p_heatnet.energy)
     p_heatnet.change_CO2e_t = p_heatnet.CO2e_total - h18.p_heatnet.CO2e_total
@@ -692,21 +720,25 @@ def calc(
     p_heatnet_lheatpump.cost_wage = (
         p_heatnet_lheatpump.pct_of_wage * p_heatnet_lheatpump.invest_pa
     )
-    p_orenew.CO2e_pb = 0 * p_orenew.CO2e_pb_per_MWh
+    p_orenew.CO2e_production_based = 0 * p_orenew.CO2e_production_based_per_MWh
     p_heatnet_cogen.pct_energy = div(p_heatnet_cogen.energy, p_heatnet.energy)
-    p_heatnet_plant.CO2e_pb_per_MWh = fact("Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018")
-    p_heatnet_plant.CO2e_pb = p_heatnet_plant.energy * p_heatnet_plant.CO2e_pb_per_MWh
-    p.CO2e_cb = (
-        p_gas.CO2e_cb
-        + p_lpg.CO2e_cb
-        + p_fueloil.CO2e_cb
-        + p_opetpro.CO2e_cb
-        + p_coal.CO2e_cb
-        + p_heatnet.CO2e_cb
+    p_heatnet_plant.CO2e_production_based_per_MWh = fact(
+        "Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018"
     )
-    h.CO2e_cb = p.CO2e_cb
+    p_heatnet_plant.CO2e_production_based = (
+        p_heatnet_plant.energy * p_heatnet_plant.CO2e_production_based_per_MWh
+    )
+    p.CO2e_combustion_based = (
+        p_gas.CO2e_combustion_based
+        + p_lpg.CO2e_combustion_based
+        + p_fueloil.CO2e_combustion_based
+        + p_opetpro.CO2e_combustion_based
+        + p_coal.CO2e_combustion_based
+        + p_heatnet.CO2e_combustion_based
+    )
+    h.CO2e_combustion_based = p.CO2e_combustion_based
 
-    p_orenew.CO2e_total = p_orenew.CO2e_pb + 0
+    p_orenew.CO2e_total = p_orenew.CO2e_production_based + 0
     p_heatnet_cogen.change_energy_MWh = (
         p_heatnet_cogen.energy - h18.p_heatnet_cogen.energy
     )
@@ -733,13 +765,13 @@ def calc(
     p_heatnet_plant.demand_emplo = div(
         p_heatnet_plant.cost_wage, p_heatnet_plant.ratio_wage_to_emplo
     )
-    p_heatnet_lheatpump.CO2e_pb_per_MWh = fact(
+    p_heatnet_lheatpump.CO2e_production_based_per_MWh = fact(
         "Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018"
     )
     p_heatnet_lheatpump.ratio_wage_to_emplo = fact(
         "Fact_B_P_constr_main_ratio_wage_to_emplo_2017"
     )
-    p_heatnet_plant.CO2e_total = p_heatnet_plant.CO2e_pb
+    p_heatnet_plant.CO2e_total = p_heatnet_plant.CO2e_production_based
     p_heatnet_plant.change_energy_MWh = (
         p_heatnet_plant.energy - h18.p_heatnet_plant.energy
     )
@@ -786,20 +818,22 @@ def calc(
     p_heatnet_geoth.demand_emplo = div(
         p_heatnet_geoth.cost_wage, p_heatnet_geoth.ratio_wage_to_emplo
     )
-    p_heatnet_lheatpump.CO2e_pb = (
-        p_heatnet_lheatpump.energy * p_heatnet_lheatpump.CO2e_pb_per_MWh
+    p_heatnet_lheatpump.CO2e_production_based = (
+        p_heatnet_lheatpump.energy * p_heatnet_lheatpump.CO2e_production_based_per_MWh
     )
     p_heatnet_lheatpump.demand_electricity = p_heatnet_lheatpump.energy / fact(
         "Fact_H_P_heatnet_lheatpump_apf"
     )
     p.demand_electricity = p_heatnet_lheatpump.demand_electricity
-    p_heatnet_geoth.CO2e_pb_per_MWh = fact("Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018")
+    p_heatnet_geoth.CO2e_production_based_per_MWh = fact(
+        "Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018"
+    )
     p_heatnet.demand_emplo = (
         p_heatnet_plant.demand_emplo
         + p_heatnet_lheatpump.demand_emplo
         + p_heatnet_geoth.demand_emplo
     )
-    p_heatnet_lheatpump.CO2e_total = p_heatnet_lheatpump.CO2e_pb
+    p_heatnet_lheatpump.CO2e_total = p_heatnet_lheatpump.CO2e_production_based
 
     p_heatnet_lheatpump.change_energy_MWh = (
         p_heatnet_lheatpump.energy - h18.p_heatnet_lheatpump.energy
@@ -850,7 +884,9 @@ def calc(
 
     p.invest_com = p_heatnet.invest_com
 
-    p_heatnet_geoth.CO2e_pb = p_heatnet_geoth.energy * p_heatnet_geoth.CO2e_pb_per_MWh
+    p_heatnet_geoth.CO2e_production_based = (
+        p_heatnet_geoth.energy * p_heatnet_geoth.CO2e_production_based_per_MWh
+    )
     p.CO2e_total = (
         p_gas.CO2e_total
         + p_lpg.CO2e_total
@@ -862,13 +898,13 @@ def calc(
         + p_ofossil.CO2e_total
         + p_orenew.CO2e_total
     )
-    p_heatnet.CO2e_pb = (
-        p_heatnet_cogen.CO2e_pb
-        + p_heatnet_plant.CO2e_pb
-        + p_heatnet_lheatpump.CO2e_pb
-        + p_heatnet_geoth.CO2e_pb
+    p_heatnet.CO2e_production_based = (
+        p_heatnet_cogen.CO2e_production_based
+        + p_heatnet_plant.CO2e_production_based
+        + p_heatnet_lheatpump.CO2e_production_based
+        + p_heatnet_geoth.CO2e_production_based
     )
-    p_heatnet_geoth.CO2e_total = p_heatnet_geoth.CO2e_pb
+    p_heatnet_geoth.CO2e_total = p_heatnet_geoth.CO2e_production_based
 
     p_heatnet_geoth.change_energy_MWh = (
         p_heatnet_geoth.energy - h18.p_heatnet_geoth.energy
@@ -951,16 +987,16 @@ def calc(
     )
     h.change_energy_pct = p.change_energy_pct
     p_gas.pct_energy = div(p_gas.energy, p.energy)
-    p.CO2e_pb = (
-        p_gas.CO2e_pb
-        + p_opetpro.CO2e_pb
-        + p_coal.CO2e_pb
-        + p_heatnet.CO2e_pb
-        + p_biomass.CO2e_pb
-        + p_ofossil.CO2e_pb
-        + p_orenew.CO2e_pb
+    p.CO2e_production_based = (
+        p_gas.CO2e_production_based
+        + p_opetpro.CO2e_production_based
+        + p_coal.CO2e_production_based
+        + p_heatnet.CO2e_production_based
+        + p_biomass.CO2e_production_based
+        + p_ofossil.CO2e_production_based
+        + p_orenew.CO2e_production_based
     )
-    h.CO2e_pb = p.CO2e_pb
+    h.CO2e_production_based = p.CO2e_production_based
 
     h.change_CO2e_pct = p.change_CO2e_pct
     p_orenew.change_energy_MWh = p_orenew.energy - h18.p_orenew.energy
@@ -988,9 +1024,11 @@ def calc(
         + p_orenew.pct_energy
     )
     p_solarth.pct_energy = div(p_solarth.energy, p_orenew.energy)
-    p_solarth.CO2e_pb_per_MWh = fact("Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018")
-    p_solarth.CO2e_pb = 0 * p_solarth.CO2e_pb_per_MWh
-    p_solarth.CO2e_total = p_solarth.CO2e_pb
+    p_solarth.CO2e_production_based_per_MWh = fact(
+        "Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018"
+    )
+    p_solarth.CO2e_production_based = 0 * p_solarth.CO2e_production_based_per_MWh
+    p_solarth.CO2e_total = p_solarth.CO2e_production_based
     p_solarth.change_energy_MWh = p_solarth.energy - h18.p_solarth.energy
     p_solarth.change_energy_pct = div(p_solarth.change_energy_MWh, h18.p_solarth.energy)
     p_solarth.change_CO2e_t = p_solarth.CO2e_total - h18.p_solarth.CO2e_total
@@ -1006,9 +1044,11 @@ def calc(
     h.change_energy_MWh = p.change_energy_MWh
 
     p_heatpump.pct_energy = div(p_heatpump.energy, p_orenew.energy)
-    p_heatpump.CO2e_pb_per_MWh = fact("Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018")
-    p_heatpump.CO2e_pb = 0 * p_heatpump.CO2e_pb_per_MWh
-    p_heatpump.CO2e_total = p_heatpump.CO2e_pb
+    p_heatpump.CO2e_production_based_per_MWh = fact(
+        "Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018"
+    )
+    p_heatpump.CO2e_production_based = 0 * p_heatpump.CO2e_production_based_per_MWh
+    p_heatpump.CO2e_total = p_heatpump.CO2e_production_based
 
     p_heatpump.change_energy_MWh = p_heatpump.energy - h18.p_heatpump.energy
     p_heatpump.change_energy_pct = div(
