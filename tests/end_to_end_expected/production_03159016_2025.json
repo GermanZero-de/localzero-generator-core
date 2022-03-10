@@ -3833,9 +3833,8 @@
             "transport_capacity_tkm": 242588458.57474545
         },
         "road_gds_ldt": {
-            "base_unit": 1307.1690106253202,
             "change_CO2e_pct": -0.9639789892251697,
-            "change_CO2e_t": -9926.77179452097,
+            "change_CO2e_t": -9926.771794520972,
             "change_energy_MWh": -31851.055309438285,
             "change_energy_pct": -0.7786755471697017,
             "change_km": -2478540.2465973357,
@@ -3846,12 +3845,15 @@
             "demand_ediesel": 1391.886154292219,
             "demand_electricity": 6530.719692933181,
             "demand_hydrogen": 1130.4810437806634,
+            "demand_epetrol": 0,
             "energy": 9053.086891006064,
+            "mileage": 26214053.189116836,
+            "transport_capacity_tkm": 3934793.3470738726,
+            "transport_capacity_pkm": 0,
+            "base_unit": 1307.1690106253202,
             "invest_pa": 24066962.044719156,
             "invest_per_x": 55234.545454545456,
-            "invest": 72200886.13415746,
-            "mileage": 26214053.189116836,
-            "transport_capacity_tkm": 3934793.3470738726
+            "invest": 72200886.13415746
         },
         "road_gds_ldt_it_ot": {
             "change_CO2e_pct": -0.9639968978817993,

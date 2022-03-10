@@ -810,7 +810,7 @@ class RoadGoodsMhd(Road):
         invest_pa = invest / inputs.entries.m_duration_target
         change_energy_pct = div(sum.change_energy_MWh, t18.road_gds_mhd.energy)
         change_CO2e_pct = div(sum.change_CO2e_t, t18.road_gds_mhd.CO2e_combustion_based)
-        return RoadGoodsMhd(
+        return cls(
             base_unit=base_unit,
             demand_emplo=demand_emplo,
             demand_emplo_new=demand_emplo_new,
@@ -837,27 +837,13 @@ class RoadGoodsMhd(Road):
 
 
 @dataclass
-class RoadGoodsLightWeight:
+class RoadGoodsLightWeight(Road):
     # Used by road_gds_ldt
     base_unit: float = None  # type: ignore
-    change_CO2e_pct: float = None  # type: ignore
-    change_CO2e_t: float = None  # type: ignore
-    change_energy_MWh: float = None  # type: ignore
-    change_energy_pct: float = None  # type: ignore
-    change_km: float = None  # type: ignore
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    cost_climate_saved: float = None  # type: ignore
-    demand_ediesel: float = None  # type: ignore
-    demand_electricity: float = None  # type: ignore
-    demand_hydrogen: float = None  # type: ignore
-    energy: float = None  # type: ignore
+
     invest_pa: float = None  # type: ignore
     invest_per_x: float = None  # type: ignore
     invest: float = None  # type: ignore
-    mileage: float = None  # type: ignore
-    transport_capacity_tkm: float = None  # type: ignore
 
     @classmethod
     def calc(
@@ -872,64 +858,43 @@ class RoadGoodsLightWeight:
         fact = inputs.fact
         entries = inputs.entries
 
-        road_gds_ldt = cls()
-        road_gds_ldt.base_unit = (
+        sum = road_gds_ldt_ab + road_gds_ldt_it_ot
+
+        base_unit = (
             road_gds_ldt_it_ot.transport_capacity_tkm
             + road_gds_ldt_ab.transport_capacity_tkm
         ) / fact("Fact_T_S_LDT_ratio_mlg_to_stock_2018")
-        road_gds_ldt.demand_electricity = (
-            road_gds_ldt_it_ot.demand_electricity + road_gds_ldt_ab.demand_electricity
+        invest_per_x = ass("Ass_T_S_LCV_average_price_2050")
+        change_CO2e_t = (
+            sum.CO2e_combustion_based - t18.road_gds_ldt.CO2e_combustion_based
         )
-        road_gds_ldt.CO2e_combustion_based = (
-            road_gds_ldt_it_ot.CO2e_combustion_based
-            + road_gds_ldt_ab.CO2e_combustion_based
+        change_CO2e_pct = div(change_CO2e_t, t18.road_gds_ldt.CO2e_combustion_based)
+        invest = base_unit * invest_per_x
+        invest_pa = invest / entries.m_duration_target
+        change_energy_pct = div(sum.change_energy_MWh, t18.road_gds_ldt.energy)
+        return cls(
+            base_unit=base_unit,
+            invest=invest,
+            invest_pa=invest_pa,
+            invest_per_x=invest_per_x,
+            change_CO2e_pct=change_CO2e_pct,  # can't use sum
+            change_CO2e_t=sum.change_CO2e_t,
+            change_energy_MWh=sum.change_energy_MWh,
+            change_energy_pct=change_energy_pct,  # can't use sum
+            change_km=sum.change_km,
+            CO2e_combustion_based=sum.CO2e_combustion_based,
+            CO2e_total_2021_estimated=sum.CO2e_total_2021_estimated,
+            CO2e_total=sum.CO2e_total,
+            cost_climate_saved=sum.cost_climate_saved,
+            demand_electricity=sum.demand_electricity,
+            demand_ediesel=sum.demand_ediesel,
+            demand_hydrogen=sum.demand_hydrogen,
+            demand_epetrol=sum.demand_epetrol,
+            energy=sum.energy,
+            mileage=sum.mileage,
+            transport_capacity_tkm=sum.transport_capacity_tkm,
+            transport_capacity_pkm=sum.transport_capacity_pkm,
         )
-        road_gds_ldt.mileage = road_gds_ldt_it_ot.mileage + road_gds_ldt_ab.mileage
-        road_gds_ldt.transport_capacity_tkm = (
-            road_gds_ldt_it_ot.transport_capacity_tkm
-            + road_gds_ldt_ab.transport_capacity_tkm
-        )
-        road_gds_ldt.invest_per_x = ass("Ass_T_S_LCV_average_price_2050")
-        road_gds_ldt.change_CO2e_t = (
-            road_gds_ldt.CO2e_combustion_based - t18.road_gds_ldt.CO2e_combustion_based
-        )
-        road_gds_ldt.change_CO2e_pct = div(
-            road_gds_ldt.change_CO2e_t, t18.road_gds_ldt.CO2e_combustion_based
-        )
-        road_gds_ldt.CO2e_total_2021_estimated = (
-            t18.road_gds_ldt.CO2e_combustion_based
-            * fact("Fact_M_CO2e_wo_lulucf_2021_vs_2018")
-        )
-        road_gds_ldt.cost_climate_saved = (
-            (
-                road_gds_ldt.CO2e_total_2021_estimated
-                - road_gds_ldt.CO2e_combustion_based
-            )
-            * entries.m_duration_neutral
-            * fact("Fact_M_cost_per_CO2e_2020")
-        )
-        road_gds_ldt.invest = road_gds_ldt.base_unit * road_gds_ldt.invest_per_x
-        road_gds_ldt.invest_pa = road_gds_ldt.invest / entries.m_duration_target
-        road_gds_ldt.demand_ediesel = (
-            road_gds_ldt_it_ot.demand_ediesel + road_gds_ldt_ab.demand_ediesel
-        )
-        road_gds_ldt.demand_hydrogen = (
-            road_gds_ldt_it_ot.demand_hydrogen + road_gds_ldt_ab.demand_hydrogen
-        )
-        road_gds_ldt.change_energy_MWh = (
-            road_gds_ldt_it_ot.change_energy_MWh + road_gds_ldt_ab.change_energy_MWh
-        )
-        road_gds_ldt.change_energy_pct = div(
-            road_gds_ldt.change_energy_MWh, t18.road_gds_ldt.energy
-        )
-        road_gds_ldt.change_km = (
-            road_gds_ldt_it_ot.change_km + road_gds_ldt_ab.change_km
-        )
-        road_gds_ldt.energy = road_gds_ldt_it_ot.energy + road_gds_ldt_ab.energy
-        road_gds_ldt.CO2e_total = (
-            road_gds_ldt_it_ot.CO2e_total + road_gds_ldt_ab.CO2e_total
-        )
-        return road_gds_ldt
 
 
 @dataclass
@@ -1913,9 +1878,6 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
 
     # road.ratio_wage_to_emploDauerstellen!)
 
-    road_gds.demand_electricity = (
-        road_gds_ldt.demand_electricity + road_gds_mhd.demand_electricity
-    )
     # road_gds_mhd_action_wire.emplo_existingnicht existent oder ausgelastet)
     road_gds_mhd_action_wire.demand_emplo_new = road_gds_mhd_action_wire.demand_emplo
     road.invest_com = (
@@ -1925,9 +1887,9 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
         # + road_bus_action_infra.invest_com
         + road_gds.invest_com
     )  # SUM(road_action_charger.invest_com:road_ppl.invest_com,road_gds.invest_com))
-
-    road.demand_electricity = road_ppl.demand_electricity + road_gds.demand_electricity
-    road.cost_climate_saved = road_ppl.cost_climate_saved + road_gds.cost_climate_saved
+    road_gds.demand_electricity = (
+        road_gds_ldt.demand_electricity + road_gds_mhd.demand_electricity
+    )
     road_gds.base_unit = road_gds_ldt.base_unit + road_gds_mhd.base_unit
     road_gds.change_CO2e_t = (
         road_gds.CO2e_combustion_based - t18.road_gds.CO2e_combustion_based
@@ -1944,6 +1906,28 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
     road_gds.demand_hydrogen = (
         road_gds_ldt.demand_hydrogen + road_gds_mhd.demand_hydrogen
     )
+    road_gds.change_CO2e_pct = div(
+        road_gds.change_CO2e_t, t18.road_gds.CO2e_combustion_based
+    )
+
+    road_gds.transport_capacity_tkm = (
+        road_gds_ldt.transport_capacity_tkm + road_gds_mhd.transport_capacity_tkm
+    )
+    road_gds.mileage = road_gds_ldt.mileage + road_gds_mhd.mileage
+    road_gds.demand_emplo = (
+        road_gds_mhd_action_wire.demand_emplo + road_gds_mhd.demand_emplo
+    )
+    road_gds.change_energy_MWh = (
+        road_gds_ldt.change_energy_MWh + road_gds_mhd.change_energy_MWh
+    )
+    road_gds.change_km = road_gds_ldt.change_km + road_gds_mhd.change_km
+    road_gds.energy = road_gds_ldt.energy + road_gds_mhd.energy
+    road_gds.CO2e_total = road_gds_ldt.CO2e_total + road_gds_mhd.CO2e_total
+    road_gds.change_energy_pct = div(road_gds.change_energy_MWh, t18.road_gds.energy)
+
+    road.demand_electricity = road_ppl.demand_electricity + road_gds.demand_electricity
+    road.cost_climate_saved = road_ppl.cost_climate_saved + road_gds.cost_climate_saved
+
     road.demand_ediesel = road_gds.demand_ediesel
 
     road.demand_hydrogen = road_gds.demand_hydrogen
@@ -1956,19 +1940,12 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
         + road.demand_change
     )  # SUM(road.demand_electricity:road.demand_change))
 
-    road_gds.change_CO2e_pct = div(
-        road_gds.change_CO2e_t, t18.road_gds.CO2e_combustion_based
-    )
-
     road.CO2e_combustion_based = (
         road_ppl.CO2e_combustion_based + road_gds.CO2e_combustion_based
     )
     road.change_energy_MWh = road.energy - t18.road.energy
     road.change_CO2e_t = road.CO2e_combustion_based - t18.road.CO2e_combustion_based
 
-    road_gds.transport_capacity_tkm = (
-        road_gds_ldt.transport_capacity_tkm + road_gds_mhd.transport_capacity_tkm
-    )
     road.change_CO2e_pct = div(road.change_CO2e_t, t18.road.CO2e_combustion_based)
 
     # road_gds_ldt.actionAntriebswechsel leichte Nutzfahrzeuge)
@@ -1976,7 +1953,6 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
         "Ass_T_D_lf_Rl_Metro_2050"
     )
 
-    road_gds.mileage = road_gds_ldt.mileage + road_gds_mhd.mileage
     road.transport_capacity_tkm = road_gds.transport_capacity_tkm
     rail_ppl_metro.demand_electricity = rail_ppl_metro.mileage * ass(
         "Ass_T_S_Rl_Metro_SEC_fzkm_2050"
@@ -1985,17 +1961,10 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
     # road_gds_mhd_action_wire.actionOberleitung - LKW - Infrastruktur)
     road.invest = road_action_charger.invest + road_ppl.invest + road_gds.invest
     road.change_energy_pct = div(road.change_energy_MWh, t18.road.energy)
-    road_gds.demand_emplo = (
-        road_gds_mhd_action_wire.demand_emplo + road_gds_mhd.demand_emplo
-    )
     road.invest_pa = (
         road_action_charger.invest_pa + road_ppl.invest_pa + road_gds.invest_pa
     )
     road.CO2e_total = road.CO2e_combustion_based
-    road_gds.change_energy_MWh = (
-        road_gds_ldt.change_energy_MWh + road_gds_mhd.change_energy_MWh
-    )
-    road_gds.change_km = road_gds_ldt.change_km + road_gds_mhd.change_km
     rail_ppl_distance.transport_capacity_pkm = div(
         t.transport_capacity_pkm * t18.rail_ppl_distance.transport_capacity_pkm,
         t18.road_bus.transport_capacity_pkm
@@ -2024,7 +1993,6 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
     )
     t.demand_hydrogen = road.demand_hydrogen
 
-    road_gds.energy = road_gds_ldt.energy + road_gds_mhd.energy
     road.mileage = road_ppl.mileage + road_gds.mileage
     road.demand_emplo = (
         road_action_charger.demand_emplo + road_ppl.demand_emplo + road_gds.demand_emplo
@@ -2032,8 +2000,6 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
     rail_ppl_metro.CO2e_combustion_based = rail_ppl_metro.demand_electricity * fact(
         "Fact_T_S_electricity_EmFa_tank_wheel_2018"
     )
-    road_gds.CO2e_total = road_gds_ldt.CO2e_total + road_gds_mhd.CO2e_total
-    road_gds.change_energy_pct = div(road_gds.change_energy_MWh, t18.road_gds.energy)
     road.CO2e_total_2021_estimated = (
         road_ppl.CO2e_total_2021_estimated
         + road_car.CO2e_total_2021_estimated
