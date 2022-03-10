@@ -1,15 +1,10 @@
 # pyright: strict
-from dataclasses import dataclass, asdict, fields
+from dataclasses import dataclass, asdict
 from .inputs import Inputs
+from .utils import element_wise_plus
 import typing
 
 MILLION = 1000000
-
-T = typing.TypeVar("T")
-
-
-def element_wise_plus(a: T, b: T) -> T:
-    return type(a)(*(getattr(a, f.name) + getattr(b, f.name) for f in fields(a)))
 
 
 def co2e_from_demands(
