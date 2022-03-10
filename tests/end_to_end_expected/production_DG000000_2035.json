@@ -3808,7 +3808,6 @@
             "transport_capacity_pkm": 83883741412.19608
         },
         "road_gds": {
-            "base_unit": 2010338.164784573,
             "change_CO2e_pct": -0.9653343083039372,
             "change_CO2e_t": -57192920.632116474,
             "change_energy_MWh": -184273494.99159643,
@@ -3818,19 +3817,22 @@
             "CO2e_total_2021_estimated": 55308688.51940231,
             "CO2e_total": 2053829.5767336397,
             "cost_climate_saved": 223270996117.1384,
-            "cost_wage": 514000000.0,
             "demand_ediesel": 7706758.557814641,
             "demand_electricity": 30728416.758704204,
+            "demand_hydrogen": 12661425.281132776,
+            "demand_epetrol": 0,
+            "energy": 51096600.597651616,
+            "mileage": 70850033995.42937,
+            "transport_capacity_tkm": 299379811562.14594,
+            "transport_capacity_pkm": 0,
+            "base_unit": 2010338.164784573,
             "demand_emplo_new": -221773.38249330537,
             "demand_emplo": 361968.9404822064,
-            "demand_hydrogen": 12661425.281132776,
-            "energy": 51096600.597651616,
             "invest_com": 26000000000.0,
             "invest_pa_com": 2000000000.0,
             "invest_pa": 13449714986.829967,
             "invest": 148846294828.78955,
-            "mileage": 70850033995.42937,
-            "transport_capacity_tkm": 299379811562.14594
+            "cost_wage": 514000000.0
         },
         "road_gds_ldt": {
             "change_CO2e_pct": -0.9639688750291576,
