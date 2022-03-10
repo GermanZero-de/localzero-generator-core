@@ -210,6 +210,7 @@ class Road:
     energy: float = None  # type: ignore
     mileage: float = None  # type: ignore
     transport_capacity_tkm: float = None  # type: ignore
+    transport_capacity_pkm: float = None  # type: ignore
 
     def __add__(self: "Road", other: "Road") -> "Road":
         return element_wise_plus(self, other)
@@ -284,6 +285,7 @@ class Road:
             energy=energy,
             mileage=mileage,
             transport_capacity_tkm=transport_capacity_tkm,
+            transport_capacity_pkm=0,
         )
 
     @classmethod
@@ -350,6 +352,7 @@ class Road:
             energy=energy,
             mileage=mileage,
             transport_capacity_tkm=transport_capacity_tkm,
+            transport_capacity_pkm=0,
         )
 
     @classmethod
@@ -418,6 +421,7 @@ class Road:
             energy=energy,
             mileage=mileage,
             transport_capacity_tkm=transport_capacity_tkm,
+            transport_capacity_pkm=0,
         )
 
     @classmethod
@@ -490,6 +494,7 @@ class Road:
             energy=energy,
             mileage=mileage,
             transport_capacity_tkm=transport_capacity_tkm,
+            transport_capacity_pkm=0,
         )
 
 
@@ -524,6 +529,7 @@ class Vars2:
 class Vars3:
     # Used by road_car
     base_unit: float = None  # type: ignore
+
     change_CO2e_pct: float = None  # type: ignore
     change_CO2e_t: float = None  # type: ignore
     change_energy_MWh: float = None  # type: ignore
@@ -536,11 +542,12 @@ class Vars3:
     demand_electricity: float = None  # type: ignore
     demand_epetrol: float = None  # type: ignore
     energy: float = None  # type: ignore
-    invest_pa: float = None  # type: ignore
-    invest_per_x: float = None  # type: ignore
-    invest: float = None  # type: ignore
     mileage: float = None  # type: ignore
     transport_capacity_pkm: float = None  # type: ignore
+
+    invest: float = None  # type: ignore
+    invest_pa: float = None  # type: ignore
+    invest_per_x: float = None  # type: ignore
 
 
 @dataclass
@@ -560,6 +567,7 @@ class RoadCar:
     energy: float
     mileage: float
     transport_capacity_pkm: float
+    transport_capacity_tkm: float
 
     @classmethod
     def calc_it_ot(
@@ -643,6 +651,7 @@ class RoadCar:
             energy=energy,
             mileage=mileage,
             transport_capacity_pkm=transport_capacity_pkm,
+            transport_capacity_tkm=0,
         )
 
     @classmethod
@@ -726,6 +735,7 @@ class RoadCar:
             energy=energy,
             mileage=mileage,
             transport_capacity_pkm=transport_capacity_pkm,
+            transport_capacity_tkm=0,
         )
 
 
