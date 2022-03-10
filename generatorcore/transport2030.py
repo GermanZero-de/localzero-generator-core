@@ -497,82 +497,10 @@ class Road:
             transport_capacity_pkm=0,
         )
 
-
-@dataclass
-class Vars2:
-    # Used by road_ppl
-    base_unit: float = None  # type: ignore
-    change_CO2e_pct: float = None  # type: ignore
-    change_CO2e_t: float = None  # type: ignore
-    change_energy_MWh: float = None  # type: ignore
-    change_energy_pct: float = None  # type: ignore
-    change_km: float = None  # type: ignore
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    cost_climate_saved: float = None  # type: ignore
-    cost_wage: float = None  # type: ignore
-    demand_electricity: float = None  # type: ignore
-    demand_emplo_new: float = None  # type: ignore
-    demand_emplo: float = None  # type: ignore
-    demand_epetrol: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    invest_com: float = None  # type: ignore
-    invest_pa_com: float = None  # type: ignore
-    invest_pa: float = None  # type: ignore
-    invest: float = None  # type: ignore
-    mileage: float = None  # type: ignore
-    transport_capacity_pkm: float = None  # type: ignore
-
-
-@dataclass
-class Vars3:
-    # Used by road_car
-    base_unit: float = None  # type: ignore
-
-    change_CO2e_pct: float = None  # type: ignore
-    change_CO2e_t: float = None  # type: ignore
-    change_energy_MWh: float = None  # type: ignore
-    change_energy_pct: float = None  # type: ignore
-    change_km: float = None  # type: ignore
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    cost_climate_saved: float = None  # type: ignore
-    demand_electricity: float = None  # type: ignore
-    demand_epetrol: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    mileage: float = None  # type: ignore
-    transport_capacity_pkm: float = None  # type: ignore
-
-    invest: float = None  # type: ignore
-    invest_pa: float = None  # type: ignore
-    invest_per_x: float = None  # type: ignore
-
-
-@dataclass
-class RoadCar:
-    # Used by road_car_it_ot, road_car_ab
-    change_CO2e_pct: float
-    change_CO2e_t: float
-    change_energy_MWh: float
-    change_energy_pct: float
-    change_km: float
-    CO2e_combustion_based: float
-    CO2e_total_2021_estimated: float
-    CO2e_total: float
-    cost_climate_saved: float
-    demand_electricity: float
-    demand_epetrol: float
-    energy: float
-    mileage: float
-    transport_capacity_pkm: float
-    transport_capacity_tkm: float
-
     @classmethod
-    def calc_it_ot(
+    def calc_car_it_ot(
         cls, inputs: Inputs, *, t18: T18, total_transport_capacity_pkm: float
-    ) -> "RoadCar":
+    ) -> "Road":
         ass = inputs.ass
         entries = inputs.entries
         fact = inputs.fact
@@ -648,6 +576,8 @@ class RoadCar:
             cost_climate_saved=cost_climate_saved,
             demand_electricity=demand_electricity,
             demand_epetrol=demand_epetrol,
+            demand_hydrogen=0,
+            demand_ediesel=0,
             energy=energy,
             mileage=mileage,
             transport_capacity_pkm=transport_capacity_pkm,
@@ -655,9 +585,9 @@ class RoadCar:
         )
 
     @classmethod
-    def calc_ab(
+    def calc_car_ab(
         cls, inputs: Inputs, *, t18: T18, total_transport_capacity_pkm: float
-    ) -> "RoadCar":
+    ) -> "Road":
         ass = inputs.ass
         entries = inputs.entries
         fact = inputs.fact
@@ -732,11 +662,65 @@ class RoadCar:
             cost_climate_saved=cost_climate_saved,
             demand_electricity=demand_electricity,
             demand_epetrol=demand_epetrol,
+            demand_hydrogen=0,
+            demand_ediesel=0,
             energy=energy,
             mileage=mileage,
             transport_capacity_pkm=transport_capacity_pkm,
             transport_capacity_tkm=0,
         )
+
+
+@dataclass
+class Vars2:
+    # Used by road_ppl
+    base_unit: float = None  # type: ignore
+    change_CO2e_pct: float = None  # type: ignore
+    change_CO2e_t: float = None  # type: ignore
+    change_energy_MWh: float = None  # type: ignore
+    change_energy_pct: float = None  # type: ignore
+    change_km: float = None  # type: ignore
+    CO2e_combustion_based: float = None  # type: ignore
+    CO2e_total_2021_estimated: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    cost_climate_saved: float = None  # type: ignore
+    cost_wage: float = None  # type: ignore
+    demand_electricity: float = None  # type: ignore
+    demand_emplo_new: float = None  # type: ignore
+    demand_emplo: float = None  # type: ignore
+    demand_epetrol: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    invest_com: float = None  # type: ignore
+    invest_pa_com: float = None  # type: ignore
+    invest_pa: float = None  # type: ignore
+    invest: float = None  # type: ignore
+    mileage: float = None  # type: ignore
+    transport_capacity_pkm: float = None  # type: ignore
+
+
+@dataclass
+class Vars3:
+    # Used by road_car
+    base_unit: float = None  # type: ignore
+
+    change_CO2e_pct: float = None  # type: ignore
+    change_CO2e_t: float = None  # type: ignore
+    change_energy_MWh: float = None  # type: ignore
+    change_energy_pct: float = None  # type: ignore
+    change_km: float = None  # type: ignore
+    CO2e_combustion_based: float = None  # type: ignore
+    CO2e_total_2021_estimated: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    cost_climate_saved: float = None  # type: ignore
+    demand_electricity: float = None  # type: ignore
+    demand_epetrol: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    mileage: float = None  # type: ignore
+    transport_capacity_pkm: float = None  # type: ignore
+
+    invest: float = None  # type: ignore
+    invest_pa: float = None  # type: ignore
+    invest_per_x: float = None  # type: ignore
 
 
 @dataclass
@@ -1368,8 +1352,8 @@ class T30:
     air_dmstc: AirDomestic = None  # type: ignore
     road_ppl: Vars2 = field(default_factory=Vars2)
     road_car: Vars3 = field(default_factory=Vars3)
-    road_car_it_ot: RoadCar = None  # type: ignore
-    road_car_ab: RoadCar = None  # type: ignore
+    road_car_it_ot: Road = None  # type: ignore
+    road_car_ab: Road = None  # type: ignore
     road_bus: Vars5 = field(default_factory=Vars5)
     road_gds: Vars6 = field(default_factory=Vars6)
     road_gds_ldt: RoadGoodsLightWeight = field(default_factory=RoadGoodsLightWeight)
@@ -1501,10 +1485,10 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
         else ass("Ass_T_D_trnsprt_ppl_nat") / entries.m_population_nat
     )
 
-    road_car_it_ot = RoadCar.calc_it_ot(
+    road_car_it_ot = Road.calc_car_it_ot(
         inputs, t18=t18, total_transport_capacity_pkm=t.transport_capacity_pkm
     )
-    road_car_ab = RoadCar.calc_ab(
+    road_car_ab = Road.calc_car_ab(
         inputs, t18=t18, total_transport_capacity_pkm=t.transport_capacity_pkm
     )
     road_gds_ldt_it_ot = Road.calc_goods_lightweight_it_ot(inputs, t18=t18)
