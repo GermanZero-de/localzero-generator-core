@@ -3736,11 +3736,11 @@
             "demand_electricity": 47152707.80828363,
             "demand_epetrol": 8127470.045291888,
             "energy": 55280177.85357551,
-            "invest_pa": 53137661608.61307,
-            "invest_per_x": 26039.14285714286,
-            "invest": 690789600911.9698,
             "mileage": 268520000000.00006,
-            "transport_capacity_pkm": 537040000000.0001
+            "transport_capacity_pkm": 537040000000.0001,
+            "invest": 690789600911.9698,
+            "invest_pa": 53137661608.61307,
+            "invest_per_x": 26039.14285714286
         },
         "road_car_it_ot": {
             "change_CO2e_pct": -0.9807319569163951,
@@ -3756,7 +3756,8 @@
             "demand_epetrol": 5383950.812595323,
             "energy": 33053128.33525685,
             "mileage": 186412005310.5779,
-            "transport_capacity_pkm": 372824010621.1558
+            "transport_capacity_pkm": 372824010621.1558,
+            "transport_capacity_tkm": 0
         },
         "road_car_ab": {
             "change_CO2e_pct": -0.9804571232093066,
@@ -3772,7 +3773,8 @@
             "demand_epetrol": 2743519.2326965653,
             "energy": 22227049.518318668,
             "mileage": 82107994689.42213,
-            "transport_capacity_pkm": 164215989378.84427
+            "transport_capacity_pkm": 164215989378.84427,
+            "transport_capacity_tkm": 0
         },
         "road_bus": {
             "CO2e_combustion_based": 0.0,
@@ -3863,7 +3865,8 @@
             "demand_epetrol": 0,
             "energy": 7075560.786263705,
             "mileage": 22546727622.498577,
-            "transport_capacity_tkm": 3384318831.0965285
+            "transport_capacity_tkm": 3384318831.0965285,
+            "transport_capacity_pkm": 0
         },
         "road_gds_ldt_ab": {
             "change_CO2e_pct": -0.963917933458591,
@@ -3881,7 +3884,8 @@
             "demand_epetrol": 0,
             "energy": 4416228.749104785,
             "mileage": 8926468236.687206,
-            "transport_capacity_tkm": 1339884663.2830229
+            "transport_capacity_tkm": 1339884663.2830229,
+            "transport_capacity_pkm": 0
         },
         "road_gds_mhd": {
             "change_CO2e_pct": -0.9657127241153168,
@@ -3900,6 +3904,7 @@
             "energy": 39604811.06228313,
             "mileage": 39376838136.24358,
             "transport_capacity_tkm": 294655608067.76636,
+            "transport_capacity_pkm": null,
             "base_unit": 440920.95197640517,
             "demand_emplo_new": -221773.38249330537,
             "demand_emplo": 352075.15035945876,
@@ -3924,7 +3929,8 @@
             "demand_epetrol": 0,
             "energy": 15642872.45529088,
             "mileage": 17327770126.715397,
-            "transport_capacity_tkm": 129663144244.34056
+            "transport_capacity_tkm": 129663144244.34056,
+            "transport_capacity_pkm": 0
         },
         "road_gds_mhd_ab": {
             "change_CO2e_pct": -0.9657127241153168,
@@ -3942,7 +3948,8 @@
             "demand_epetrol": 0,
             "energy": 23961938.606992252,
             "mileage": 22049068009.528187,
-            "transport_capacity_tkm": 164992463823.4258
+            "transport_capacity_tkm": 164992463823.4258,
+            "transport_capacity_pkm": 0
         },
         "road_gds_mhd_action_wire": {
             "cost_wage": 514000000.0,
