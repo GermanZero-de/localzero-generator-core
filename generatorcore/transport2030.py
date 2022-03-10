@@ -724,33 +724,21 @@ class Vars3:
 
 
 @dataclass
-class Vars5:
+class RoadBus(Road):
     # Used by road_bus
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
     base_unit: float = None  # type: ignore
-    change_CO2e_pct: float = None  # type: ignore
-    change_CO2e_t: float = None  # type: ignore
-    change_energy_MWh: float = None  # type: ignore
-    change_energy_pct: float = None  # type: ignore
-    change_km: float = None  # type: ignore
-    cost_climate_saved: float = None  # type: ignore
+
     cost_wage: float = None  # type: ignore
-    demand_electricity: float = None  # type: ignore
-    demand_emplo: float = None  # type: ignore
     demand_emplo_new: float = None  # type: ignore
+    demand_emplo: float = None  # type: ignore
     emplo_existing: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    invest: float = None  # type: ignore
     invest_com: float = None  # type: ignore
-    invest_pa: float = None  # type: ignore
     invest_pa_com: float = None  # type: ignore
+    invest_pa: float = None  # type: ignore
     invest_per_x: float = None  # type: ignore
-    mileage: float = None  # type: ignore
+    invest: float = None  # type: ignore
     pct_of_wage: float = None  # type: ignore
     ratio_wage_to_emplo: float = None  # type: ignore
-    transport_capacity_pkm: float = None  # type: ignore
 
 
 @dataclass
@@ -1305,7 +1293,7 @@ class T30:
     road_car: Vars3 = field(default_factory=Vars3)
     road_car_it_ot: Road = None  # type: ignore
     road_car_ab: Road = None  # type: ignore
-    road_bus: Vars5 = field(default_factory=Vars5)
+    road_bus: RoadBus = field(default_factory=RoadBus)
     road_gds: RoadGoods = field(default_factory=RoadGoods)
     road_gds_ldt: RoadGoodsLightWeight = None  # type: ignore
     road_gds_ldt_it_ot: Road = None  # type: ignore
@@ -1484,9 +1472,10 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
     road_action_charger.invest = (
         road_action_charger.base_unit * road_action_charger.invest_per_x
     )
-    road_bus_action_infra.invest_per_x = ass(
-        "Ass_T_C_cost_per_trnsprt_ppl_bus_infrstrctr"
-    )
+    road_bus.transport_capacity_tkm = 0
+    road_bus.demand_hydrogen = 0
+    road_bus.demand_ediesel = 0
+    road_bus.demand_epetrol = 0
     road_bus.transport_capacity_pkm = div(
         t.transport_capacity_pkm * t18.road_bus.transport_capacity_pkm,
         (
@@ -1502,6 +1491,18 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
         else ass("Ass_T_D_trnsprt_ppl_rural_pt_frac_2050")
         if entries.t_rt3 == "rural"
         else ass("Ass_T_D_trnsprt_ppl_nat_pt_frac_2050")
+    )
+    road_bus.mileage = road_bus.transport_capacity_pkm / ass("Ass_T_D_lf_ppl_Bus_2050")
+    road_bus.demand_electricity = (
+        road_bus.mileage
+        * ass("Ass_T_S_bus_frac_bev_mlg_2050")
+        * ass("Ass_T_S_Bus_SEC_elec_2030")
+    )
+    road_bus.CO2e_combustion_based = road_bus.demand_electricity * fact(
+        "Fact_T_S_electricity_EmFa_tank_wheel_2018"
+    )
+    road_bus_action_infra.invest_per_x = ass(
+        "Ass_T_C_cost_per_trnsprt_ppl_bus_infrstrctr"
     )
     road_bus_action_infra.invest = (
         road_bus.transport_capacity_pkm * road_bus_action_infra.invest_per_x
@@ -1562,15 +1563,6 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
     rail_gds.transport_capacity_tkm = t18.rail_gds.transport_capacity_tkm * (
         ass("Ass_T_D_trnsprt_gds_Rl_2050")
         / fact("Fact_T_D_Rl_train_nat_trnsprt_gds_2018")
-    )
-    road_bus.mileage = road_bus.transport_capacity_pkm / ass("Ass_T_D_lf_ppl_Bus_2050")
-    road_bus.demand_electricity = (
-        road_bus.mileage
-        * ass("Ass_T_S_bus_frac_bev_mlg_2050")
-        * ass("Ass_T_S_Bus_SEC_elec_2030")
-    )
-    road_bus.CO2e_combustion_based = road_bus.demand_electricity * fact(
-        "Fact_T_S_electricity_EmFa_tank_wheel_2018"
     )
     road_ppl.CO2e_combustion_based = (
         road_car.CO2e_combustion_based + road_bus.CO2e_combustion_based
