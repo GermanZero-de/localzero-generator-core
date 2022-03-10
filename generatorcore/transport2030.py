@@ -5,33 +5,105 @@ from . import transport2018
 
 
 @dataclass
-class Vars0:
+class AirInternational:
     # Used by air_inter
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
-    change_CO2e_pct: float = None  # type: ignore
-    change_CO2e_t: float = None  # type: ignore
-    change_energy_MWh: float = None  # type: ignore
-    change_energy_pct: float = None  # type: ignore
-    change_km: float = None  # type: ignore
-    cost_climate_saved: float = None  # type: ignore
-    demand_ejetfuel: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    transport_capacity_pkm: float = None  # type: ignore
-    transport_capacity_tkm: float = None  # type: ignore
+    CO2e_combustion_based: float
+    CO2e_total: float
+    CO2e_total_2021_estimated: float
+    change_CO2e_pct: float
+    change_CO2e_t: float
+    change_energy_MWh: float
+    change_energy_pct: float
+    change_km: float
+    cost_climate_saved: float
+    demand_ejetfuel: float
+    energy: float
+    transport_capacity_pkm: float
+    transport_capacity_tkm: float
+
+    @classmethod
+    def calc(cls, inputs: Inputs, t18: transport2018.T18) -> "AirInternational":
+        demand_ejetfuel = (
+            inputs.ass("Ass_T_D_Air_nat_EB_2050")
+            * inputs.entries.m_population_com_203X
+            / inputs.entries.m_population_nat
+        )
+        transport_capacity_tkm = t18.air_inter.transport_capacity_tkm * div(
+            demand_ejetfuel, t18.air_inter.demand_jetfuel
+        )
+        CO2e_combustion_based = demand_ejetfuel * inputs.ass(
+            "Ass_T_S_jetfuel_EmFa_tank_wheel_2050"
+        )
+        CO2e_total_2021_estimated = t18.air_inter.CO2e_combustion_based * inputs.fact(
+            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+        )
+        cost_climate_saved = (
+            (CO2e_total_2021_estimated - CO2e_combustion_based)
+            * inputs.entries.m_duration_neutral
+            * inputs.fact("Fact_M_cost_per_CO2e_2020")
+        )
+        transport_capacity_pkm = t18.air_inter.transport_capacity_pkm * div(
+            demand_ejetfuel, t18.air_inter.demand_jetfuel
+        )
+        change_km = transport_capacity_pkm - t18.air_inter.transport_capacity_pkm
+        energy = demand_ejetfuel  # SUM(AW235:BJ235)
+        CO2e_total = CO2e_combustion_based  # (CJ235 + air_inter.CO2e_cb)
+        change_energy_MWh = energy - t18.air_inter.energy
+        change_energy_pct = div(change_energy_MWh, t18.air_inter.energy)
+        change_CO2e_t = CO2e_combustion_based - t18.air_inter.CO2e_combustion_based
+        change_CO2e_pct = div(change_CO2e_t, t18.air_inter.CO2e_combustion_based)
+        return cls(
+            CO2e_total=CO2e_total,
+            CO2e_combustion_based=CO2e_combustion_based,
+            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+            transport_capacity_tkm=transport_capacity_tkm,
+            transport_capacity_pkm=transport_capacity_pkm,
+            change_energy_pct=change_energy_pct,
+            change_energy_MWh=change_energy_MWh,
+            change_CO2e_pct=change_CO2e_pct,
+            change_CO2e_t=change_CO2e_t,
+            change_km=change_km,
+            cost_climate_saved=cost_climate_saved,
+            demand_ejetfuel=demand_ejetfuel,
+            energy=energy,
+        )
 
 
 @dataclass
-class Vars1:
+class AirDomestic:
     # Used by air_dmstc
-    CO2e_total_2021_estimated: float = None  # type: ignore
-    change_CO2e_pct: float = None  # type: ignore
-    change_CO2e_t: float = None  # type: ignore
-    change_energy_MWh: float = None  # type: ignore
-    change_energy_pct: float = None  # type: ignore
-    change_km: float = None  # type: ignore
-    cost_climate_saved: float = None  # type: ignore
+    CO2e_total_2021_estimated: float
+    change_CO2e_pct: float
+    change_CO2e_t: float
+    change_energy_MWh: float
+    change_energy_pct: float
+    change_km: float
+    cost_climate_saved: float
+
+    @classmethod
+    def calc(cls, inputs: Inputs, t18: transport2018.T18) -> "AirDomestic":
+        CO2e_total_2021_estimated = t18.air_dmstc.CO2e_combustion_based * inputs.fact(
+            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+        )
+        cost_climate_saved = (
+            (CO2e_total_2021_estimated)
+            * inputs.entries.m_duration_neutral
+            * inputs.fact("Fact_M_cost_per_CO2e_2020")
+        )
+        change_km = -t18.air_dmstc.transport_capacity_pkm
+        change_energy_MWh = -t18.air_dmstc.energy
+        change_energy_pct = div(change_energy_MWh, t18.air_dmstc.energy)
+        change_CO2e_t = -t18.air_dmstc.CO2e_combustion_based
+        change_CO2e_pct = div(change_CO2e_t, t18.air_dmstc.CO2e_combustion_based)
+        return cls(
+            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+            change_CO2e_pct=change_CO2e_pct,
+            change_CO2e_t=change_CO2e_t,
+            change_energy_MWh=change_energy_MWh,
+            change_energy_pct=change_energy_pct,
+            change_km=change_km,
+            cost_climate_saved=cost_climate_saved,
+        )
 
 
 @dataclass
@@ -673,8 +745,8 @@ class Vars30:
 
 @dataclass
 class T30:
-    air_inter: Vars0 = field(default_factory=Vars0)
-    air_dmstc: Vars1 = field(default_factory=Vars1)
+    air_inter: AirInternational = None  # type: ignore
+    air_dmstc: AirDomestic = None  # type: ignore
     road_ppl: Vars2 = field(default_factory=Vars2)
     road_car: Vars3 = field(default_factory=Vars3)
     road_car_it_ot: Vars4 = field(default_factory=Vars4)
@@ -742,8 +814,6 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> T30:
     t30 = T30()
 
     air = t30.air
-    air_dmstc = t30.air_dmstc
-    air_inter = t30.air_inter
     g = t30.g
     g_planning = t30.g_planning
     other = t30.other
@@ -802,6 +872,11 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> T30:
     s_bioethanol.energy = 0
     s_biodiesel.energy = 0
 
+    air_dmstc = AirDomestic.calc(inputs, t18)
+    air_inter = AirInternational.calc(inputs, t18)
+    t30.air_dmstc = air_dmstc
+    t30.air_inter = air_inter
+
     t.transport_capacity_pkm = entries.m_population_com_203X * (
         ass("Ass_T_D_ratio_trnsprt_ppl_to_ppl_city")
         if entries.t_rt3 == "city"
@@ -847,11 +922,6 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> T30:
         / fact("Fact_T_D_trnsprt_gds_Rd_2018")
         * t18.road_gds_ldt_it_ot.transport_capacity_tkm
     )
-    air_inter.demand_ejetfuel = (
-        ass("Ass_T_D_Air_nat_EB_2050")
-        * entries.m_population_com_203X
-        / entries.m_population_nat
-    )
     road_gds_ldt_it_ot.mileage = road_gds_ldt_it_ot.transport_capacity_tkm / ass(
         "Ass_T_D_lf_gds_LDT_2050"
     )
@@ -865,12 +935,6 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> T30:
         road_car_it_ot.mileage
         * ass("Ass_T_S_Car_frac_bev_with_phev_mlg_2050")
         * ass("Ass_T_S_Car_SEC_elec_it_ot_2030")
-    )
-    air_inter.transport_capacity_tkm = t18.air_inter.transport_capacity_tkm * div(
-        air_inter.demand_ejetfuel, t18.air_inter.demand_jetfuel
-    )
-    air_inter.CO2e_combustion_based = air_inter.demand_ejetfuel * ass(
-        "Ass_T_S_jetfuel_EmFa_tank_wheel_2050"
     )
     air.CO2e_combustion_based = (
         air_inter.CO2e_combustion_based
@@ -916,14 +980,6 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> T30:
         "Ass_T_S_petrol_EmFa_tank_wheel_2050"
     ) + road_car_it_ot.demand_electricity * fact(
         "Fact_T_S_electricity_EmFa_tank_wheel_2018"
-    )
-    air_inter.CO2e_total_2021_estimated = t18.air_inter.CO2e_combustion_based * fact(
-        "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
-    )
-    air_inter.cost_climate_saved = (
-        (air_inter.CO2e_total_2021_estimated - air_inter.CO2e_combustion_based)
-        * entries.m_duration_neutral
-        * fact("Fact_M_cost_per_CO2e_2020")
     )
     road_car_ab.demand_electricity = (
         road_car_ab.mileage
@@ -1000,9 +1056,6 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> T30:
     road.demand_change = 0  # (SUM(BJ239:BJ252))
 
     air.energy = air.demand_ejetfuel + air.demand_change  # SUM(AW234:air.demand_change)
-    air_inter.transport_capacity_pkm = t18.air_inter.transport_capacity_pkm * div(
-        air_inter.demand_ejetfuel, t18.air_inter.demand_jetfuel
-    )
     road_gds_ldt_ab.transport_capacity_tkm = (
         ass("Ass_T_D_trnsprt_gds_Rd_2050")
         / fact("Fact_T_D_trnsprt_gds_Rd_2018")
@@ -1026,9 +1079,6 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> T30:
     ) + road_car_ab.demand_electricity * fact(
         "Fact_T_S_electricity_EmFa_tank_wheel_2018"
     )
-    air_inter.change_km = (
-        air_inter.transport_capacity_pkm - t18.air_inter.transport_capacity_pkm
-    )
     road_action_charger.pct_of_wage = fact(
         "Fact_T_D_constr_roadrail_revenue_pct_of_wage_2018"
     )
@@ -1044,7 +1094,6 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> T30:
         "Fact_T_D_constr_roadrail_ratio_wage_to_emplo_2018"
     )
     t.demand_ejetfuel = air.demand_ejetfuel  # + BD237 + BD253 + BD261 + BD265
-    air_inter.energy = air_inter.demand_ejetfuel  # SUM(AW235:BJ235)
     air.transport_capacity_pkm = air_inter.transport_capacity_pkm
 
     air.transport_capacity_tkm = air_inter.transport_capacity_tkm
@@ -1054,42 +1103,12 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> T30:
         * ass("Ass_T_S_LDT_frac_bev_mlg_2050")
         * ass("Ass_T_S_LDT_SEC_elec_it_ot_2030")
     )
-    air_inter.CO2e_total = (
-        air_inter.CO2e_combustion_based
-    )  # (CJ235 + air_inter.CO2e_cb)
-    air_inter.change_energy_MWh = air_inter.energy - t18.air_inter.energy
-    air_inter.change_energy_pct = div(air_inter.change_energy_MWh, t18.air_inter.energy)
-    air_inter.change_CO2e_t = (
-        air_inter.CO2e_combustion_based - t18.air_inter.CO2e_combustion_based
-    )
-    air_inter.change_CO2e_pct = div(
-        air_inter.change_CO2e_t, t18.air_inter.CO2e_combustion_based
-    )
-    air_dmstc.CO2e_total_2021_estimated = t18.air_dmstc.CO2e_combustion_based * fact(
-        "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
-    )
-    air_dmstc.cost_climate_saved = (
-        (air_dmstc.CO2e_total_2021_estimated)
-        * entries.m_duration_neutral
-        * fact("Fact_M_cost_per_CO2e_2020")
-    )
-    air_dmstc.change_km = -t18.air_dmstc.transport_capacity_pkm
 
-    # air_inter.actionUmstellung auf e - Kerosin)
-
-    air_dmstc.change_energy_MWh = -t18.air_dmstc.energy
-    air_dmstc.change_energy_pct = div(air_dmstc.change_energy_MWh, t18.air_dmstc.energy)
-    air_dmstc.change_CO2e_t = -t18.air_dmstc.CO2e_combustion_based
-    air_dmstc.change_CO2e_pct = div(
-        air_dmstc.change_CO2e_t, t18.air_dmstc.CO2e_combustion_based
-    )
     air.CO2e_total_2021_estimated = (
         air_inter.CO2e_total_2021_estimated + air_dmstc.CO2e_total_2021_estimated
     )
     air.cost_climate_saved = air_inter.cost_climate_saved + air_dmstc.cost_climate_saved
     air.change_km = air_dmstc.change_km + air_inter.change_km
-
-    # air_dmstc.actionKein Kurzstrecken - Flugverkehr mehr)
 
     road_car.demand_electricity = (
         road_car_it_ot.demand_electricity + road_car_ab.demand_electricity
