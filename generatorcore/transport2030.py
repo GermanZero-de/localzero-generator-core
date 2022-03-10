@@ -192,300 +192,6 @@ class Air:
 
 
 @dataclass
-class Vars2:
-    # Used by road_ppl
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
-    base_unit: float = None  # type: ignore
-    change_CO2e_pct: float = None  # type: ignore
-    change_CO2e_t: float = None  # type: ignore
-    change_energy_MWh: float = None  # type: ignore
-    change_energy_pct: float = None  # type: ignore
-    change_km: float = None  # type: ignore
-    cost_climate_saved: float = None  # type: ignore
-    cost_wage: float = None  # type: ignore
-    demand_electricity: float = None  # type: ignore
-    demand_emplo: float = None  # type: ignore
-    demand_emplo_new: float = None  # type: ignore
-    demand_epetrol: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    invest: float = None  # type: ignore
-    invest_com: float = None  # type: ignore
-    invest_pa: float = None  # type: ignore
-    invest_pa_com: float = None  # type: ignore
-    mileage: float = None  # type: ignore
-    transport_capacity_pkm: float = None  # type: ignore
-
-
-@dataclass
-class Vars3:
-    # Used by road_car
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
-    base_unit: float = None  # type: ignore
-    change_CO2e_pct: float = None  # type: ignore
-    change_CO2e_t: float = None  # type: ignore
-    change_energy_MWh: float = None  # type: ignore
-    change_energy_pct: float = None  # type: ignore
-    change_km: float = None  # type: ignore
-    cost_climate_saved: float = None  # type: ignore
-    demand_electricity: float = None  # type: ignore
-    demand_epetrol: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    invest: float = None  # type: ignore
-    invest_pa: float = None  # type: ignore
-    invest_per_x: float = None  # type: ignore
-    mileage: float = None  # type: ignore
-    transport_capacity_pkm: float = None  # type: ignore
-
-
-@dataclass
-class RoadCar:
-    # Used by road_car_it_ot, road_car_ab
-    CO2e_combustion_based: float
-    CO2e_total: float
-    CO2e_total_2021_estimated: float
-    change_CO2e_pct: float
-    change_CO2e_t: float
-    change_energy_MWh: float
-    change_energy_pct: float
-    change_km: float
-    cost_climate_saved: float
-    demand_electricity: float
-    demand_epetrol: float
-    energy: float
-    mileage: float
-    transport_capacity_pkm: float
-
-    @classmethod
-    def calc_it_ot(
-        cls, inputs: Inputs, *, t18: T18, total_transport_capacity_pkm: float
-    ) -> "RoadCar":
-        ass = inputs.ass
-        entries = inputs.entries
-        fact = inputs.fact
-
-        transport_capacity_pkm = (
-            total_transport_capacity_pkm
-            * div(
-                t18.road_car_it_ot.mileage,
-                t18.road_car_it_ot.mileage + t18.road_car_ab.mileage,
-            )
-            * (
-                (
-                    ass("Ass_T_D_trnsprt_ppl_city_car1_frac_2050")
-                    + ass("Ass_T_D_trnsprt_ppl_city_car2_frac_2050")
-                    + ass("Ass_T_D_trnsprt_ppl_city_car3_frac_2050")
-                    + ass("Ass_T_D_trnsprt_ppl_city_car4_frac_2050")
-                    if entries.t_rt3 == "city"
-                    else ass("Ass_T_D_trnsprt_ppl_smcty_car1_frac_2050")
-                    + ass("Ass_T_D_trnsprt_ppl_smcty_car2_frac_2050")
-                    + ass("Ass_T_D_trnsprt_ppl_smcty_car3_frac_2050")
-                    + ass("Ass_T_D_trnsprt_ppl_smcty_car4_frac_2050")
-                    if entries.t_rt3 == "smcty"
-                    else ass("Ass_T_D_trnsprt_ppl_rural_car1_frac_2050")
-                    + ass("Ass_T_D_trnsprt_ppl_rural_car2_frac_2050")
-                    + ass("Ass_T_D_trnsprt_ppl_rural_car3_frac_2050")
-                    + ass("Ass_T_D_trnsprt_ppl_rural_car4_frac_2050")
-                    if entries.t_rt3 == "rural"
-                    else ass("Ass_T_D_trnsprt_ppl_nat_car1_frac_2050")
-                    + ass("Ass_T_D_trnsprt_ppl_nat_car2_frac_2050")
-                    + ass("Ass_T_D_trnsprt_ppl_nat_car3_frac_2050")
-                    + ass("Ass_T_D_trnsprt_ppl_nat_car4_frac_2050")
-                )
-            )
-        )
-        change_km = transport_capacity_pkm - t18.road_car_it_ot.transport_capacity_pkm
-        mileage = transport_capacity_pkm / ass("Ass_T_D_lf_ppl_Car_2050")
-        demand_electricity = (
-            mileage
-            * ass("Ass_T_S_Car_frac_bev_with_phev_mlg_2050")
-            * ass("Ass_T_S_Car_SEC_elec_it_ot_2030")
-        )
-        demand_epetrol = (
-            mileage
-            * ass("Ass_T_S_Car_frac_petrol_with_phev_mlg_2050")
-            * ass("Ass_T_S_Car_SEC_petrol_it_ot_2050")
-        )
-        CO2e_combustion_based = demand_epetrol * ass(
-            "Ass_T_S_petrol_EmFa_tank_wheel_2050"
-        ) + demand_electricity * fact("Fact_T_S_electricity_EmFa_tank_wheel_2018")
-        energy = demand_electricity + demand_epetrol
-        CO2e_total = CO2e_combustion_based
-        change_energy_MWh = energy - t18.road_car_it_ot.energy
-        change_energy_pct = div(change_energy_MWh, t18.road_car_it_ot.energy)
-        change_CO2e_t = CO2e_combustion_based - t18.road_car_it_ot.CO2e_combustion_based
-        change_CO2e_pct = div(change_CO2e_t, t18.road_car_it_ot.CO2e_combustion_based)
-        CO2e_total_2021_estimated = t18.road_car_it_ot.CO2e_combustion_based * fact(
-            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
-        )
-        cost_climate_saved = (
-            (CO2e_total_2021_estimated - CO2e_combustion_based)
-            * entries.m_duration_neutral
-            * fact("Fact_M_cost_per_CO2e_2020")
-        )
-        return cls(
-            change_CO2e_pct=change_CO2e_pct,
-            change_CO2e_t=change_CO2e_t,
-            change_energy_MWh=change_energy_MWh,
-            change_energy_pct=change_energy_pct,
-            change_km=change_km,
-            CO2e_combustion_based=CO2e_combustion_based,
-            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
-            CO2e_total=CO2e_total,
-            cost_climate_saved=cost_climate_saved,
-            demand_electricity=demand_electricity,
-            demand_epetrol=demand_epetrol,
-            energy=energy,
-            mileage=mileage,
-            transport_capacity_pkm=transport_capacity_pkm,
-        )
-
-    @classmethod
-    def calc_ab(
-        cls, inputs: Inputs, *, t18: T18, total_transport_capacity_pkm: float
-    ) -> "RoadCar":
-        ass = inputs.ass
-        entries = inputs.entries
-        fact = inputs.fact
-
-        transport_capacity_pkm = (
-            total_transport_capacity_pkm
-            * div(
-                t18.road_car_ab.mileage,
-                (t18.road_car_it_ot.mileage + t18.road_car_ab.mileage),
-            )
-            * (
-                ass("Ass_T_D_trnsprt_ppl_city_car1_frac_2050")
-                + ass("Ass_T_D_trnsprt_ppl_city_car2_frac_2050")
-                + ass("Ass_T_D_trnsprt_ppl_city_car3_frac_2050")
-                + ass("Ass_T_D_trnsprt_ppl_city_car4_frac_2050")
-                if entries.t_rt3 == "city"
-                else ass("Ass_T_D_trnsprt_ppl_smcty_car1_frac_2050")
-                + ass("Ass_T_D_trnsprt_ppl_smcty_car2_frac_2050")
-                + ass("Ass_T_D_trnsprt_ppl_smcty_car3_frac_2050")
-                + ass("Ass_T_D_trnsprt_ppl_smcty_car4_frac_2050")
-                if entries.t_rt3 == "smcty"
-                else ass("Ass_T_D_trnsprt_ppl_rural_car1_frac_2050")
-                + ass("Ass_T_D_trnsprt_ppl_rural_car2_frac_2050")
-                + ass("Ass_T_D_trnsprt_ppl_rural_car3_frac_2050")
-                + ass("Ass_T_D_trnsprt_ppl_rural_car4_frac_2050")
-                if entries.t_rt3 == "rural"
-                else ass("Ass_T_D_trnsprt_ppl_nat_car1_frac_2050")
-                + ass("Ass_T_D_trnsprt_ppl_nat_car2_frac_2050")
-                + ass("Ass_T_D_trnsprt_ppl_nat_car3_frac_2050")
-                + ass("Ass_T_D_trnsprt_ppl_nat_car4_frac_2050")
-            )
-        )
-        mileage = transport_capacity_pkm / ass("Ass_T_D_lf_ppl_Car_2050")
-        demand_electricity = (
-            mileage
-            * ass("Ass_T_S_Car_frac_bev_with_phev_mlg_2050")
-            * ass("Ass_T_S_Car_SEC_elec_ab_2030")
-        )
-        demand_epetrol = (
-            mileage
-            * ass("Ass_T_S_Car_frac_petrol_with_phev_mlg_2050")
-            * ass("Ass_T_S_Car_SEC_petrol_ab_2050")
-        )
-        CO2e_combustion_based = demand_epetrol * ass(
-            "Ass_T_S_petrol_EmFa_tank_wheel_2050"
-        ) + demand_electricity * fact("Fact_T_S_electricity_EmFa_tank_wheel_2018")
-        energy = demand_electricity + demand_epetrol
-        change_energy_MWh = energy - t18.road_car_ab.energy
-        change_km = transport_capacity_pkm - t18.road_car_ab.transport_capacity_pkm
-        CO2e_total = CO2e_combustion_based
-        change_energy_pct = div(change_energy_MWh, t18.road_car_ab.energy)
-        change_CO2e_t = CO2e_combustion_based - t18.road_car_ab.CO2e_combustion_based
-        change_CO2e_pct = div(change_CO2e_t, t18.road_car_ab.CO2e_combustion_based)
-        CO2e_total_2021_estimated = t18.road_car_ab.CO2e_combustion_based * fact(
-            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
-        )
-        cost_climate_saved = (
-            (CO2e_total_2021_estimated - CO2e_combustion_based)
-            * entries.m_duration_neutral
-            * fact("Fact_M_cost_per_CO2e_2020")
-        )
-
-        return cls(
-            change_CO2e_pct=change_CO2e_pct,
-            change_CO2e_t=change_CO2e_t,
-            change_energy_MWh=change_energy_MWh,
-            change_energy_pct=change_energy_pct,
-            change_km=change_km,
-            CO2e_combustion_based=CO2e_combustion_based,
-            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
-            CO2e_total=CO2e_total,
-            cost_climate_saved=cost_climate_saved,
-            demand_electricity=demand_electricity,
-            demand_epetrol=demand_epetrol,
-            energy=energy,
-            mileage=mileage,
-            transport_capacity_pkm=transport_capacity_pkm,
-        )
-
-
-@dataclass
-class Vars5:
-    # Used by road_bus
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
-    base_unit: float = None  # type: ignore
-    change_CO2e_pct: float = None  # type: ignore
-    change_CO2e_t: float = None  # type: ignore
-    change_energy_MWh: float = None  # type: ignore
-    change_energy_pct: float = None  # type: ignore
-    change_km: float = None  # type: ignore
-    cost_climate_saved: float = None  # type: ignore
-    cost_wage: float = None  # type: ignore
-    demand_electricity: float = None  # type: ignore
-    demand_emplo: float = None  # type: ignore
-    demand_emplo_new: float = None  # type: ignore
-    emplo_existing: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    invest: float = None  # type: ignore
-    invest_com: float = None  # type: ignore
-    invest_pa: float = None  # type: ignore
-    invest_pa_com: float = None  # type: ignore
-    invest_per_x: float = None  # type: ignore
-    mileage: float = None  # type: ignore
-    pct_of_wage: float = None  # type: ignore
-    ratio_wage_to_emplo: float = None  # type: ignore
-    transport_capacity_pkm: float = None  # type: ignore
-
-
-@dataclass
-class Vars6:
-    # Used by road_gds
-    base_unit: float = None  # type: ignore
-    change_CO2e_pct: float = None  # type: ignore
-    change_CO2e_t: float = None  # type: ignore
-    change_energy_MWh: float = None  # type: ignore
-    change_energy_pct: float = None  # type: ignore
-    change_km: float = None  # type: ignore
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    cost_climate_saved: float = None  # type: ignore
-    cost_wage: float = None  # type: ignore
-    demand_ediesel: float = None  # type: ignore
-    demand_electricity: float = None  # type: ignore
-    demand_emplo_new: float = None  # type: ignore
-    demand_emplo: float = None  # type: ignore
-    demand_hydrogen: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    invest_com: float = None  # type: ignore
-    invest_pa_com: float = None  # type: ignore
-    invest_pa: float = None  # type: ignore
-    invest: float = None  # type: ignore
-    mileage: float = None  # type: ignore
-    transport_capacity_tkm: float = None  # type: ignore
-
-
-@dataclass
 class RoadGoods:
     # Used by road_gds_ldt_it_ot, road_gds_ldt_ab, road_gds_mhd_it_ot, road_gds_mhd_ab
     change_CO2e_pct: float = None  # type: ignore
@@ -780,6 +486,300 @@ class RoadGoods:
             mileage=mileage,
             transport_capacity_tkm=transport_capacity_tkm,
         )
+
+
+@dataclass
+class Vars2:
+    # Used by road_ppl
+    CO2e_combustion_based: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    CO2e_total_2021_estimated: float = None  # type: ignore
+    base_unit: float = None  # type: ignore
+    change_CO2e_pct: float = None  # type: ignore
+    change_CO2e_t: float = None  # type: ignore
+    change_energy_MWh: float = None  # type: ignore
+    change_energy_pct: float = None  # type: ignore
+    change_km: float = None  # type: ignore
+    cost_climate_saved: float = None  # type: ignore
+    cost_wage: float = None  # type: ignore
+    demand_electricity: float = None  # type: ignore
+    demand_emplo: float = None  # type: ignore
+    demand_emplo_new: float = None  # type: ignore
+    demand_epetrol: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    invest: float = None  # type: ignore
+    invest_com: float = None  # type: ignore
+    invest_pa: float = None  # type: ignore
+    invest_pa_com: float = None  # type: ignore
+    mileage: float = None  # type: ignore
+    transport_capacity_pkm: float = None  # type: ignore
+
+
+@dataclass
+class Vars3:
+    # Used by road_car
+    CO2e_combustion_based: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    CO2e_total_2021_estimated: float = None  # type: ignore
+    base_unit: float = None  # type: ignore
+    change_CO2e_pct: float = None  # type: ignore
+    change_CO2e_t: float = None  # type: ignore
+    change_energy_MWh: float = None  # type: ignore
+    change_energy_pct: float = None  # type: ignore
+    change_km: float = None  # type: ignore
+    cost_climate_saved: float = None  # type: ignore
+    demand_electricity: float = None  # type: ignore
+    demand_epetrol: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    invest: float = None  # type: ignore
+    invest_pa: float = None  # type: ignore
+    invest_per_x: float = None  # type: ignore
+    mileage: float = None  # type: ignore
+    transport_capacity_pkm: float = None  # type: ignore
+
+
+@dataclass
+class RoadCar:
+    # Used by road_car_it_ot, road_car_ab
+    CO2e_combustion_based: float
+    CO2e_total: float
+    CO2e_total_2021_estimated: float
+    change_CO2e_pct: float
+    change_CO2e_t: float
+    change_energy_MWh: float
+    change_energy_pct: float
+    change_km: float
+    cost_climate_saved: float
+    demand_electricity: float
+    demand_epetrol: float
+    energy: float
+    mileage: float
+    transport_capacity_pkm: float
+
+    @classmethod
+    def calc_it_ot(
+        cls, inputs: Inputs, *, t18: T18, total_transport_capacity_pkm: float
+    ) -> "RoadCar":
+        ass = inputs.ass
+        entries = inputs.entries
+        fact = inputs.fact
+
+        transport_capacity_pkm = (
+            total_transport_capacity_pkm
+            * div(
+                t18.road_car_it_ot.mileage,
+                t18.road_car_it_ot.mileage + t18.road_car_ab.mileage,
+            )
+            * (
+                (
+                    ass("Ass_T_D_trnsprt_ppl_city_car1_frac_2050")
+                    + ass("Ass_T_D_trnsprt_ppl_city_car2_frac_2050")
+                    + ass("Ass_T_D_trnsprt_ppl_city_car3_frac_2050")
+                    + ass("Ass_T_D_trnsprt_ppl_city_car4_frac_2050")
+                    if entries.t_rt3 == "city"
+                    else ass("Ass_T_D_trnsprt_ppl_smcty_car1_frac_2050")
+                    + ass("Ass_T_D_trnsprt_ppl_smcty_car2_frac_2050")
+                    + ass("Ass_T_D_trnsprt_ppl_smcty_car3_frac_2050")
+                    + ass("Ass_T_D_trnsprt_ppl_smcty_car4_frac_2050")
+                    if entries.t_rt3 == "smcty"
+                    else ass("Ass_T_D_trnsprt_ppl_rural_car1_frac_2050")
+                    + ass("Ass_T_D_trnsprt_ppl_rural_car2_frac_2050")
+                    + ass("Ass_T_D_trnsprt_ppl_rural_car3_frac_2050")
+                    + ass("Ass_T_D_trnsprt_ppl_rural_car4_frac_2050")
+                    if entries.t_rt3 == "rural"
+                    else ass("Ass_T_D_trnsprt_ppl_nat_car1_frac_2050")
+                    + ass("Ass_T_D_trnsprt_ppl_nat_car2_frac_2050")
+                    + ass("Ass_T_D_trnsprt_ppl_nat_car3_frac_2050")
+                    + ass("Ass_T_D_trnsprt_ppl_nat_car4_frac_2050")
+                )
+            )
+        )
+        change_km = transport_capacity_pkm - t18.road_car_it_ot.transport_capacity_pkm
+        mileage = transport_capacity_pkm / ass("Ass_T_D_lf_ppl_Car_2050")
+        demand_electricity = (
+            mileage
+            * ass("Ass_T_S_Car_frac_bev_with_phev_mlg_2050")
+            * ass("Ass_T_S_Car_SEC_elec_it_ot_2030")
+        )
+        demand_epetrol = (
+            mileage
+            * ass("Ass_T_S_Car_frac_petrol_with_phev_mlg_2050")
+            * ass("Ass_T_S_Car_SEC_petrol_it_ot_2050")
+        )
+        CO2e_combustion_based = demand_epetrol * ass(
+            "Ass_T_S_petrol_EmFa_tank_wheel_2050"
+        ) + demand_electricity * fact("Fact_T_S_electricity_EmFa_tank_wheel_2018")
+        energy = demand_electricity + demand_epetrol
+        CO2e_total = CO2e_combustion_based
+        change_energy_MWh = energy - t18.road_car_it_ot.energy
+        change_energy_pct = div(change_energy_MWh, t18.road_car_it_ot.energy)
+        change_CO2e_t = CO2e_combustion_based - t18.road_car_it_ot.CO2e_combustion_based
+        change_CO2e_pct = div(change_CO2e_t, t18.road_car_it_ot.CO2e_combustion_based)
+        CO2e_total_2021_estimated = t18.road_car_it_ot.CO2e_combustion_based * fact(
+            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+        )
+        cost_climate_saved = (
+            (CO2e_total_2021_estimated - CO2e_combustion_based)
+            * entries.m_duration_neutral
+            * fact("Fact_M_cost_per_CO2e_2020")
+        )
+        return cls(
+            change_CO2e_pct=change_CO2e_pct,
+            change_CO2e_t=change_CO2e_t,
+            change_energy_MWh=change_energy_MWh,
+            change_energy_pct=change_energy_pct,
+            change_km=change_km,
+            CO2e_combustion_based=CO2e_combustion_based,
+            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+            CO2e_total=CO2e_total,
+            cost_climate_saved=cost_climate_saved,
+            demand_electricity=demand_electricity,
+            demand_epetrol=demand_epetrol,
+            energy=energy,
+            mileage=mileage,
+            transport_capacity_pkm=transport_capacity_pkm,
+        )
+
+    @classmethod
+    def calc_ab(
+        cls, inputs: Inputs, *, t18: T18, total_transport_capacity_pkm: float
+    ) -> "RoadCar":
+        ass = inputs.ass
+        entries = inputs.entries
+        fact = inputs.fact
+
+        transport_capacity_pkm = (
+            total_transport_capacity_pkm
+            * div(
+                t18.road_car_ab.mileage,
+                (t18.road_car_it_ot.mileage + t18.road_car_ab.mileage),
+            )
+            * (
+                ass("Ass_T_D_trnsprt_ppl_city_car1_frac_2050")
+                + ass("Ass_T_D_trnsprt_ppl_city_car2_frac_2050")
+                + ass("Ass_T_D_trnsprt_ppl_city_car3_frac_2050")
+                + ass("Ass_T_D_trnsprt_ppl_city_car4_frac_2050")
+                if entries.t_rt3 == "city"
+                else ass("Ass_T_D_trnsprt_ppl_smcty_car1_frac_2050")
+                + ass("Ass_T_D_trnsprt_ppl_smcty_car2_frac_2050")
+                + ass("Ass_T_D_trnsprt_ppl_smcty_car3_frac_2050")
+                + ass("Ass_T_D_trnsprt_ppl_smcty_car4_frac_2050")
+                if entries.t_rt3 == "smcty"
+                else ass("Ass_T_D_trnsprt_ppl_rural_car1_frac_2050")
+                + ass("Ass_T_D_trnsprt_ppl_rural_car2_frac_2050")
+                + ass("Ass_T_D_trnsprt_ppl_rural_car3_frac_2050")
+                + ass("Ass_T_D_trnsprt_ppl_rural_car4_frac_2050")
+                if entries.t_rt3 == "rural"
+                else ass("Ass_T_D_trnsprt_ppl_nat_car1_frac_2050")
+                + ass("Ass_T_D_trnsprt_ppl_nat_car2_frac_2050")
+                + ass("Ass_T_D_trnsprt_ppl_nat_car3_frac_2050")
+                + ass("Ass_T_D_trnsprt_ppl_nat_car4_frac_2050")
+            )
+        )
+        mileage = transport_capacity_pkm / ass("Ass_T_D_lf_ppl_Car_2050")
+        demand_electricity = (
+            mileage
+            * ass("Ass_T_S_Car_frac_bev_with_phev_mlg_2050")
+            * ass("Ass_T_S_Car_SEC_elec_ab_2030")
+        )
+        demand_epetrol = (
+            mileage
+            * ass("Ass_T_S_Car_frac_petrol_with_phev_mlg_2050")
+            * ass("Ass_T_S_Car_SEC_petrol_ab_2050")
+        )
+        CO2e_combustion_based = demand_epetrol * ass(
+            "Ass_T_S_petrol_EmFa_tank_wheel_2050"
+        ) + demand_electricity * fact("Fact_T_S_electricity_EmFa_tank_wheel_2018")
+        energy = demand_electricity + demand_epetrol
+        change_energy_MWh = energy - t18.road_car_ab.energy
+        change_km = transport_capacity_pkm - t18.road_car_ab.transport_capacity_pkm
+        CO2e_total = CO2e_combustion_based
+        change_energy_pct = div(change_energy_MWh, t18.road_car_ab.energy)
+        change_CO2e_t = CO2e_combustion_based - t18.road_car_ab.CO2e_combustion_based
+        change_CO2e_pct = div(change_CO2e_t, t18.road_car_ab.CO2e_combustion_based)
+        CO2e_total_2021_estimated = t18.road_car_ab.CO2e_combustion_based * fact(
+            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+        )
+        cost_climate_saved = (
+            (CO2e_total_2021_estimated - CO2e_combustion_based)
+            * entries.m_duration_neutral
+            * fact("Fact_M_cost_per_CO2e_2020")
+        )
+
+        return cls(
+            change_CO2e_pct=change_CO2e_pct,
+            change_CO2e_t=change_CO2e_t,
+            change_energy_MWh=change_energy_MWh,
+            change_energy_pct=change_energy_pct,
+            change_km=change_km,
+            CO2e_combustion_based=CO2e_combustion_based,
+            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+            CO2e_total=CO2e_total,
+            cost_climate_saved=cost_climate_saved,
+            demand_electricity=demand_electricity,
+            demand_epetrol=demand_epetrol,
+            energy=energy,
+            mileage=mileage,
+            transport_capacity_pkm=transport_capacity_pkm,
+        )
+
+
+@dataclass
+class Vars5:
+    # Used by road_bus
+    CO2e_combustion_based: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    CO2e_total_2021_estimated: float = None  # type: ignore
+    base_unit: float = None  # type: ignore
+    change_CO2e_pct: float = None  # type: ignore
+    change_CO2e_t: float = None  # type: ignore
+    change_energy_MWh: float = None  # type: ignore
+    change_energy_pct: float = None  # type: ignore
+    change_km: float = None  # type: ignore
+    cost_climate_saved: float = None  # type: ignore
+    cost_wage: float = None  # type: ignore
+    demand_electricity: float = None  # type: ignore
+    demand_emplo: float = None  # type: ignore
+    demand_emplo_new: float = None  # type: ignore
+    emplo_existing: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    invest: float = None  # type: ignore
+    invest_com: float = None  # type: ignore
+    invest_pa: float = None  # type: ignore
+    invest_pa_com: float = None  # type: ignore
+    invest_per_x: float = None  # type: ignore
+    mileage: float = None  # type: ignore
+    pct_of_wage: float = None  # type: ignore
+    ratio_wage_to_emplo: float = None  # type: ignore
+    transport_capacity_pkm: float = None  # type: ignore
+
+
+@dataclass
+class Vars6:
+    # Used by road_gds
+    base_unit: float = None  # type: ignore
+    change_CO2e_pct: float = None  # type: ignore
+    change_CO2e_t: float = None  # type: ignore
+    change_energy_MWh: float = None  # type: ignore
+    change_energy_pct: float = None  # type: ignore
+    change_km: float = None  # type: ignore
+    CO2e_combustion_based: float = None  # type: ignore
+    CO2e_total_2021_estimated: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    cost_climate_saved: float = None  # type: ignore
+    cost_wage: float = None  # type: ignore
+    demand_ediesel: float = None  # type: ignore
+    demand_electricity: float = None  # type: ignore
+    demand_emplo_new: float = None  # type: ignore
+    demand_emplo: float = None  # type: ignore
+    demand_hydrogen: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    invest_com: float = None  # type: ignore
+    invest_pa_com: float = None  # type: ignore
+    invest_pa: float = None  # type: ignore
+    invest: float = None  # type: ignore
+    mileage: float = None  # type: ignore
+    transport_capacity_tkm: float = None  # type: ignore
 
 
 @dataclass
