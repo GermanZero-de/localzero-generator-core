@@ -3723,7 +3723,6 @@
             "transport_capacity_pkm": 620923741412.1962
         },
         "road_car": {
-            "base_unit": 26528891.703609888,
             "change_CO2e_pct": -0.9806400520902491,
             "change_CO2e_t": -111577735.82163283,
             "change_energy_MWh": -390685582.41472644,
@@ -3733,11 +3732,15 @@
             "CO2e_total_2021_estimated": 106217663.60261156,
             "CO2e_total": 2202784.9553874424,
             "cost_climate_saved": 436082378728.4871,
+            "demand_ediesel": 0,
             "demand_electricity": 47152707.80828363,
+            "demand_hydrogen": 0,
             "demand_epetrol": 8127470.045291888,
             "energy": 55280177.85357551,
             "mileage": 268520000000.00006,
+            "transport_capacity_tkm": 0,
             "transport_capacity_pkm": 537040000000.0001,
+            "base_unit": 26528891.703609888,
             "invest": 690789600911.9698,
             "invest_pa": 53137661608.61307,
             "invest_per_x": 26039.14285714286
