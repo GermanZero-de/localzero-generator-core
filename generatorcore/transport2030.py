@@ -237,7 +237,7 @@ class Road:
         return element_wise_plus(self, other)
 
     @classmethod
-    def calc_goods_lightweight_it_ot(cls, inputs: Inputs, *, t18: T18) -> "Road":
+    def calc_goods_lightduty_it_ot(cls, inputs: Inputs, *, t18: T18) -> "Road":
         ass = inputs.ass
         fact = inputs.fact
         entries = inputs.entries
@@ -310,7 +310,7 @@ class Road:
         )
 
     @classmethod
-    def calc_goods_lightweight_ab(cls, inputs: Inputs, *, t18: T18) -> "Road":
+    def calc_goods_lightduty_ab(cls, inputs: Inputs, *, t18: T18) -> "Road":
         ass = inputs.ass
         fact = inputs.fact
         entries = inputs.entries
@@ -377,7 +377,7 @@ class Road:
         )
 
     @classmethod
-    def calc_goods_mhd_ab(cls, inputs: Inputs, *, t18: T18) -> "Road":
+    def calc_goods_medium_and_heavy_duty_ab(cls, inputs: Inputs, *, t18: T18) -> "Road":
         ass = inputs.ass
         fact = inputs.fact
         entries = inputs.entries
@@ -446,7 +446,9 @@ class Road:
         )
 
     @classmethod
-    def calc_goods_mhd_it_ot(cls, inputs: Inputs, *, t18: T18) -> "Road":
+    def calc_goods_medium_and_heavy_duty_it_ot(
+        cls, inputs: Inputs, *, t18: T18
+    ) -> "Road":
         ass = inputs.ass
         fact = inputs.fact
         entries = inputs.entries
@@ -1871,16 +1873,16 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
         road_bus_action_infra=road_bus_action_infra,
     )
 
-    road_gds_ldt_it_ot = Road.calc_goods_lightweight_it_ot(inputs, t18=t18)
-    road_gds_ldt_ab = Road.calc_goods_lightweight_ab(inputs, t18=t18)
+    road_gds_ldt_it_ot = Road.calc_goods_lightduty_it_ot(inputs, t18=t18)
+    road_gds_ldt_ab = Road.calc_goods_lightduty_ab(inputs, t18=t18)
     road_gds_ldt = RoadGoodsLightDuty.calc(
         inputs,
         t18=t18,
         road_gds_ldt_it_ot=road_gds_ldt_it_ot,
         road_gds_ldt_ab=road_gds_ldt_ab,
     )
-    road_gds_mhd_ab = Road.calc_goods_mhd_ab(inputs, t18=t18)
-    road_gds_mhd_it_ot = Road.calc_goods_mhd_it_ot(inputs, t18=t18)
+    road_gds_mhd_ab = Road.calc_goods_medium_and_heavy_duty_ab(inputs, t18=t18)
+    road_gds_mhd_it_ot = Road.calc_goods_medium_and_heavy_duty_it_ot(inputs, t18=t18)
     road_gds_mhd = RoadGoodsMediumAndHeavyDuty.calc(
         inputs, t18=t18, it_ot=road_gds_mhd_it_ot, ab=road_gds_mhd_ab
     )
