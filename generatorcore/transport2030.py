@@ -1282,7 +1282,6 @@ class RoadSum:
         road_ppl: RoadPeople,
         road_action_charger: RoadInvestmentAction,
     ) -> "RoadSum":
-        demand_change = 0  # (SUM(BJ239:BJ252))
         transport_capacity_pkm = road_ppl.transport_capacity_pkm
         demand_epetrol = road_ppl.demand_epetrol
         demand_emplo_new = (
@@ -1309,13 +1308,7 @@ class RoadSum:
         cost_climate_saved = road_ppl.cost_climate_saved + road_gds.cost_climate_saved
         demand_ediesel = road_gds.demand_ediesel
         demand_hydrogen = road_gds.demand_hydrogen
-        energy = (
-            demand_electricity
-            + demand_epetrol
-            + demand_ediesel
-            + demand_hydrogen
-            + demand_change
-        )
+        energy = demand_electricity + demand_epetrol + demand_ediesel + demand_hydrogen
         CO2e_combustion_based = (
             road_ppl.CO2e_combustion_based + road_gds.CO2e_combustion_based
         )
@@ -1342,11 +1335,11 @@ class RoadSum:
             CO2e_total=CO2e_total,
             cost_climate_saved=cost_climate_saved,
             cost_wage=cost_wage,
-            demand_change=demand_change,
+            demand_change=0,  # Maybe this variable should not exist?
             demand_ediesel=demand_ediesel,
             demand_electricity=demand_electricity,
             demand_emplo_new=demand_emplo_new,
-            demand_emplo=0,
+            demand_emplo=0,  # Maybe this variable should not exist ?
             demand_epetrol=demand_epetrol,
             demand_hydrogen=demand_hydrogen,
             energy=energy,
@@ -1354,7 +1347,7 @@ class RoadSum:
             invest_pa_com=invest_pa_com,
             invest_pa=invest_pa,
             invest=invest,
-            mileage=0,
+            mileage=0,  # Maybe this variable should not exist ?
             transport_capacity_pkm=transport_capacity_pkm,
             transport_capacity_tkm=transport_capacity_tkm,
         )
