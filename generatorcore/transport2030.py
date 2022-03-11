@@ -760,6 +760,7 @@ class RoadCar(Road):
         fact = inputs.fact
         entries = inputs.entries
 
+        # Divide cars by chargers/car => chargers
         base_unit = car_base_unit / (
             ass("Ass_S_ratio_bev_car_per_charge_point_city")
             if entries.t_rt3 == "city"
@@ -1018,7 +1019,7 @@ class RoadPeople(Road):
 
 
 @dataclass
-class RoadGoodsMhd(Road):
+class RoadGoodsMediumAndHeavyDuty(Road):
     # Used by road_gds_mhd
     base_unit: float = None  # type: ignore
     demand_emplo_new: float = None  # type: ignore
@@ -1029,7 +1030,9 @@ class RoadGoodsMhd(Road):
     invest: float = None  # type: ignore
 
     @classmethod
-    def calc(cls, inputs: Inputs, t18: T18, it_ot: Road, ab: Road) -> "RoadGoodsMhd":
+    def calc(
+        cls, inputs: Inputs, t18: T18, it_ot: Road, ab: Road
+    ) -> "RoadGoodsMediumAndHeavyDuty":
         fact = inputs.fact
 
         sum = it_ot + ab
@@ -1104,7 +1107,7 @@ class RoadGoodsMhd(Road):
 
 
 @dataclass
-class RoadGoodsLightWeight(Road):
+class RoadGoodsLightDuty(Road):
     # Used by road_gds_ldt
     base_unit: float = None  # type: ignore
 
@@ -1120,7 +1123,7 @@ class RoadGoodsLightWeight(Road):
         t18: T18,
         road_gds_ldt_it_ot: Road,
         road_gds_ldt_ab: Road,
-    ) -> "RoadGoodsLightWeight":
+    ) -> "RoadGoodsLightDuty":
         ass = inputs.ass
         fact = inputs.fact
         entries = inputs.entries
@@ -1183,8 +1186,8 @@ class RoadGoods(Road):
         inputs: Inputs,
         *,
         t18: T18,
-        road_gds_ldt: RoadGoodsLightWeight,
-        road_gds_mhd: RoadGoodsMhd,
+        road_gds_ldt: RoadGoodsLightDuty,
+        road_gds_mhd: RoadGoodsMediumAndHeavyDuty,
         road_gds_mhd_action_wire: InvestmentAction,
     ) -> "RoadGoods":
         fact = inputs.fact
@@ -1282,7 +1285,7 @@ class RoadSum:
         road_ppl: RoadPeople,
         road_action_charger: RoadInvestmentAction,
     ) -> "RoadSum":
-        transport_capacity_pkm = road_ppl.transport_capacity_pkm
+        sum: Road = road_gds + road_ppl
         demand_epetrol = road_ppl.demand_epetrol
         demand_emplo_new = (
             road_action_charger.demand_emplo_new
@@ -1315,7 +1318,6 @@ class RoadSum:
         change_energy_MWh = energy - t18.road.energy
         change_CO2e_t = CO2e_combustion_based - t18.road.CO2e_combustion_based
         change_CO2e_pct = div(change_CO2e_t, t18.road.CO2e_combustion_based)
-        transport_capacity_tkm = road_gds.transport_capacity_tkm
         invest = road_action_charger.invest + road_ppl.invest + road_gds.invest
         change_energy_pct = div(change_energy_MWh, t18.road.energy)
         invest_pa = (
@@ -1354,8 +1356,8 @@ class RoadSum:
             invest_pa=invest_pa,
             invest=invest,
             mileage=mileage,
-            transport_capacity_pkm=transport_capacity_pkm,
-            transport_capacity_tkm=transport_capacity_tkm,
+            transport_capacity_pkm=sum.transport_capacity_pkm,
+            transport_capacity_tkm=sum.transport_capacity_tkm,
         )
 
 
@@ -1723,10 +1725,10 @@ class T30:
     road_car_ab: Road = None  # type: ignore
     road_bus: RoadBus = None  # type: ignore
     road_gds: RoadGoods = field(default_factory=RoadGoods)
-    road_gds_ldt: RoadGoodsLightWeight = None  # type: ignore
+    road_gds_ldt: RoadGoodsLightDuty = None  # type: ignore
     road_gds_ldt_it_ot: Road = None  # type: ignore
     road_gds_ldt_ab: Road = None  # type: ignore
-    road_gds_mhd: RoadGoodsMhd = None  # type: ignore
+    road_gds_mhd: RoadGoodsMediumAndHeavyDuty = None  # type: ignore
     road_gds_mhd_it_ot: Road = None  # type: ignore
     road_gds_mhd_ab: Road = None  # type: ignore
     road_gds_mhd_action_wire: InvestmentAction = field(default_factory=InvestmentAction)
@@ -1871,7 +1873,7 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
 
     road_gds_ldt_it_ot = Road.calc_goods_lightweight_it_ot(inputs, t18=t18)
     road_gds_ldt_ab = Road.calc_goods_lightweight_ab(inputs, t18=t18)
-    road_gds_ldt = RoadGoodsLightWeight.calc(
+    road_gds_ldt = RoadGoodsLightDuty.calc(
         inputs,
         t18=t18,
         road_gds_ldt_it_ot=road_gds_ldt_it_ot,
@@ -1879,10 +1881,10 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
     )
     road_gds_mhd_ab = Road.calc_goods_mhd_ab(inputs, t18=t18)
     road_gds_mhd_it_ot = Road.calc_goods_mhd_it_ot(inputs, t18=t18)
-    road_gds_mhd = RoadGoodsMhd.calc(
+    road_gds_mhd = RoadGoodsMediumAndHeavyDuty.calc(
         inputs, t18=t18, it_ot=road_gds_mhd_it_ot, ab=road_gds_mhd_ab
     )
-    road_gds_mhd_action_wire = RoadGoodsMhd.calc_action_wire(inputs)
+    road_gds_mhd_action_wire = RoadGoodsMediumAndHeavyDuty.calc_action_wire(inputs)
     road_gds = RoadGoods.calc(
         inputs,
         t18=t18,
