@@ -961,33 +961,19 @@ class RoadPeople(Road):
         fact = inputs.fact
         entries = inputs.entries
 
+        sum: Road = road_car + road_bus
+
         CO2e_total_2021_estimated = t18.road_ppl.CO2e_combustion_based * fact(
             "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
         )
-        CO2e_combustion_based = (
-            road_car.CO2e_combustion_based + road_bus.CO2e_combustion_based
-        )
-        demand_ediesel = 0
-        demand_hydrogen = 0
-        demand_electricity = road_car.demand_electricity + road_bus.demand_electricity
-        transport_capacity_tkm = 0
-        transport_capacity_pkm = (
-            road_car.transport_capacity_pkm + road_bus.transport_capacity_pkm
-        )
-        change_CO2e_t = CO2e_combustion_based - t18.road_ppl.CO2e_combustion_based
+        change_CO2e_t = sum.CO2e_combustion_based - t18.road_ppl.CO2e_combustion_based
         change_CO2e_pct = div(change_CO2e_t, t18.road_ppl.CO2e_combustion_based)
-        demand_epetrol = road_car.demand_epetrol
-        mileage = road_car.mileage + road_bus.mileage
-        energy = road_car.energy + road_bus.energy
-        change_energy_MWh = road_car.change_energy_MWh + road_bus.change_energy_MWh
         cost_climate_saved = (
-            (CO2e_total_2021_estimated - CO2e_combustion_based)
+            (CO2e_total_2021_estimated - sum.CO2e_combustion_based)
             * entries.m_duration_neutral
             * fact("Fact_M_cost_per_CO2e_2020")
         )
-        CO2e_total = road_car.CO2e_total + road_bus.CO2e_total
-        change_energy_pct = div(change_energy_MWh, t18.road_ppl.energy)
-        change_km = road_car.change_km + road_bus.change_km
+        change_energy_pct = div(sum.change_energy_MWh, t18.road_ppl.energy)
 
         demand_emplo_new = (
             road_bus.demand_emplo_new + road_bus_action_infra.demand_emplo_new
@@ -1005,21 +991,21 @@ class RoadPeople(Road):
         return cls(
             change_CO2e_pct=change_CO2e_pct,
             change_CO2e_t=change_CO2e_t,
-            change_energy_MWh=change_energy_MWh,
+            change_energy_MWh=sum.change_energy_MWh,
             change_energy_pct=change_energy_pct,
-            change_km=change_km,
-            CO2e_combustion_based=CO2e_combustion_based,
+            change_km=sum.change_km,
+            CO2e_combustion_based=sum.CO2e_combustion_based,
             CO2e_total_2021_estimated=CO2e_total_2021_estimated,
-            CO2e_total=CO2e_total,
+            CO2e_total=sum.CO2e_total,
             cost_climate_saved=cost_climate_saved,
-            demand_electricity=demand_electricity,
-            demand_epetrol=demand_epetrol,
-            demand_hydrogen=demand_hydrogen,
-            demand_ediesel=demand_ediesel,
-            energy=energy,
-            mileage=mileage,
-            transport_capacity_pkm=transport_capacity_pkm,
-            transport_capacity_tkm=transport_capacity_tkm,
+            demand_electricity=sum.demand_electricity,
+            demand_epetrol=sum.demand_epetrol,
+            demand_hydrogen=sum.demand_hydrogen,
+            demand_ediesel=sum.demand_ediesel,
+            energy=sum.energy,
+            mileage=sum.mileage,
+            transport_capacity_pkm=sum.transport_capacity_pkm,
+            transport_capacity_tkm=sum.transport_capacity_tkm,
             base_unit=base_unit,
             cost_wage=cost_wage,
             demand_emplo=demand_emplo,
@@ -1800,6 +1786,13 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
     road_bus_action_infra = RoadBus.calc_action_infra(
         inputs, bus_transport_capacity_pkm=road_bus.transport_capacity_pkm
     )
+    road_ppl = RoadPeople.calc(
+        inputs,
+        t18=t18,
+        road_car=road_car,
+        road_bus=road_bus,
+        road_bus_action_infra=road_bus_action_infra,
+    )
 
     road_gds_ldt_it_ot = Road.calc_goods_lightweight_it_ot(inputs, t18=t18)
     road_gds_ldt_ab = Road.calc_goods_lightweight_ab(inputs, t18=t18)
@@ -1821,14 +1814,6 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
         road_gds_ldt=road_gds_ldt,
         road_gds_mhd=road_gds_mhd,
         road_gds_mhd_action_wire=road_gds_mhd_action_wire,
-    )
-
-    road_ppl = RoadPeople.calc(
-        inputs,
-        t18=t18,
-        road_car=road_car,
-        road_bus=road_bus,
-        road_bus_action_infra=road_bus_action_infra,
     )
 
     t30.road_car_it_ot = road_car_it_ot
