@@ -1906,7 +1906,7 @@ class ShipInternational:
 
 
 @dataclass
-class Vars19:
+class OtherFoot:
     # Used by other_foot
     CO2e_total: float = None  # type: ignore
     CO2e_total_2021_estimated: float = None  # type: ignore
@@ -1917,6 +1917,45 @@ class Vars19:
     invest_pa: float = None  # type: ignore
     invest_pa_com: float = None  # type: ignore
     transport_capacity_pkm: float = None  # type: ignore
+
+    @classmethod
+    def calc(
+        cls, inputs: Inputs, *, t18: T18, total_transport_capacity_pkm: float
+    ) -> "OtherFoot":
+        ass = inputs.ass
+        fact = inputs.fact
+        entries = inputs.entries
+
+        transport_capacity_pkm = total_transport_capacity_pkm * (
+            ass("Ass_T_D_trnsprt_ppl_city_foot_frac_2050")
+            if entries.t_rt3 == "city"
+            else ass("Ass_T_D_trnsprt_ppl_smcty_foot_frac_2050")
+            if entries.t_rt3 == "smcty"
+            else ass("Ass_T_D_trnsprt_ppl_rural_foot_frac_2050")
+            if entries.t_rt3 == "rural"
+            else ass("Ass_T_D_trnsprt_ppl_nat_foot_frac_2050")
+        )
+        change_km = transport_capacity_pkm - t18.other_foot.transport_capacity_pkm
+
+        CO2e_total_2021_estimated = t18.other_foot.CO2e_combustion_based * fact(
+            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+        )
+        cost_climate_saved = (
+            (CO2e_total_2021_estimated)
+            * entries.m_duration_neutral
+            * fact("Fact_M_cost_per_CO2e_2020")
+        )
+        return cls(
+            CO2e_total=0,
+            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+            change_km=change_km,
+            cost_climate_saved=cost_climate_saved,
+            invest=0,
+            invest_com=0,
+            invest_pa=0,
+            invest_pa_com=0,
+            transport_capacity_pkm=transport_capacity_pkm,
+        )
 
 
 @dataclass
@@ -2139,9 +2178,9 @@ class T30:
     ship_dmstc: ShipDomestic = None  # type: ignore
     ship_dmstc_action_infra: Vars17 = field(default_factory=Vars17)
     ship_inter: ShipInternational = field(default_factory=ShipInternational)
-    other_foot: Vars19 = field(default_factory=Vars19)
+    other_foot: OtherFoot = None  # type: ignore
     other_foot_action_infra: InvestmentAction = field(default_factory=InvestmentAction)
-    other_cycl: OtherCycle = field(default_factory=OtherCycle)
+    other_cycl: OtherCycle = None  # type: ignore
     other_cycl_action_infra: InvestmentAction = field(default_factory=InvestmentAction)
     g_planning: Vars21 = field(default_factory=Vars21)
     s: Vars22 = field(default_factory=Vars22)
@@ -2190,7 +2229,6 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
     g_planning = t30.g_planning
     other = t30.other
     other_cycl_action_infra = t30.other_cycl_action_infra
-    other_foot = t30.other_foot
     other_foot_action_infra = t30.other_foot_action_infra
     rail = t30.rail
     rail_action_invest_infra = t30.rail_action_invest_infra
@@ -2303,9 +2341,15 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
 
     ship_dmstc = ShipDomestic.calc(inputs, t18=t18)
     ship_inter = ShipInternational.calc(inputs, t18=t18)
+
     other_cycl = OtherCycle.calc(
         inputs, t18, total_transport_capacity_pkm=t.transport_capacity_pkm
     )
+    other_foot = OtherFoot.calc(
+        inputs, t18=t18, total_transport_capacity_pkm=t.transport_capacity_pkm
+    )
+
+    other.CO2e_total = 0  # CJ265 + CM265(
 
     t30.road_car_it_ot = road_car_it_ot
     t30.road_car_ab = road_car_ab
@@ -2328,6 +2372,7 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
     t30.ship_dmstc = ship_dmstc
     t30.ship_inter = ship_inter
     t30.other_cycl = other_cycl
+    t30.other_foot = other_foot
 
     g_planning.ratio_wage_to_emplo = ass("Ass_T_C_yearly_costs_per_planer")
 
@@ -2725,19 +2770,6 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
     ship.change_energy_pct = div(ship.change_energy_MWh, t18.ship.energy)
     ship.change_CO2e_t = ship.CO2e_combustion_based - t18.ship.CO2e_combustion_based
     ship.change_CO2e_pct = div(ship.change_CO2e_t, t18.ship.CO2e_combustion_based)
-    other_foot.CO2e_total_2021_estimated = t18.other_foot.CO2e_combustion_based * fact(
-        "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
-    )
-    other_foot.cost_climate_saved = (
-        (other_foot.CO2e_total_2021_estimated)
-        * entries.m_duration_neutral
-        * fact("Fact_M_cost_per_CO2e_2020")
-    )
-
-    other_foot.invest_pa = 0
-    other_foot.invest = 0
-    other_foot.invest_com = other_foot.invest
-
     ship_dmstc_action_infra.invest_pa = (
         ship_dmstc_action_infra.invest / entries.m_duration_target
     )
@@ -2800,21 +2832,6 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
     # ship_inter.actionReduktion der Transportleistung
 
     t.change_energy_pct = div(t.change_energy_MWh, t18.t.energy)
-    other_foot.transport_capacity_pkm = t.transport_capacity_pkm * (
-        ass("Ass_T_D_trnsprt_ppl_city_foot_frac_2050")
-        if entries.t_rt3 == "city"
-        else ass("Ass_T_D_trnsprt_ppl_smcty_foot_frac_2050")
-        if entries.t_rt3 == "smcty"
-        else ass("Ass_T_D_trnsprt_ppl_rural_foot_frac_2050")
-        if entries.t_rt3 == "rural"
-        else ass("Ass_T_D_trnsprt_ppl_nat_foot_frac_2050")
-    )
-    other.CO2e_total = 0  # CJ265 + CM265(
-
-    other_foot.change_km = (
-        other_foot.transport_capacity_pkm - t18.other_foot.transport_capacity_pkm
-    )
-    other_foot.invest_pa_com = other_foot.invest_pa
 
     other_cycl_action_infra.invest_per_x = ass("Ass_T_C_cost_per_trnsprt_ppl_cycle")
     other_cycl_action_infra.invest = (
@@ -2841,8 +2858,6 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
     )  # SUM(other_foot.invest_com:DE268)
 
     g_planning.demand_emplo_new = g_planning.demand_emplo
-
-    other_foot.CO2e_total = 0
 
     other.CO2e_total_2021_estimated = (
         other_foot.CO2e_total_2021_estimated + other_cycl.CO2e_total_2021_estimated
