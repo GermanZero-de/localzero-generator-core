@@ -1325,6 +1325,12 @@ class RoadSum:
         CO2e_total_2021_estimated = (
             road_ppl.CO2e_total_2021_estimated + road_gds.CO2e_total_2021_estimated
         )
+        demand_emplo = (
+            road_action_charger.demand_emplo
+            + road_ppl.demand_emplo
+            + road_gds.demand_emplo
+        )
+        mileage = road_ppl.mileage + road_gds.mileage
         return cls(
             change_CO2e_pct=change_CO2e_pct,
             change_CO2e_t=change_CO2e_t,
@@ -1335,11 +1341,11 @@ class RoadSum:
             CO2e_total=CO2e_total,
             cost_climate_saved=cost_climate_saved,
             cost_wage=cost_wage,
-            demand_change=0,  # Maybe this variable should not exist?
+            demand_change=0,  # Maybe this variable should not exist
             demand_ediesel=demand_ediesel,
             demand_electricity=demand_electricity,
             demand_emplo_new=demand_emplo_new,
-            demand_emplo=0,  # Maybe this variable should not exist ?
+            demand_emplo=demand_emplo,
             demand_epetrol=demand_epetrol,
             demand_hydrogen=demand_hydrogen,
             energy=energy,
@@ -1347,7 +1353,7 @@ class RoadSum:
             invest_pa_com=invest_pa_com,
             invest_pa=invest_pa,
             invest=invest,
-            mileage=0,  # Maybe this variable should not exist ?
+            mileage=mileage,
             transport_capacity_pkm=transport_capacity_pkm,
             transport_capacity_tkm=transport_capacity_tkm,
         )
@@ -2052,10 +2058,6 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
     )
     t.demand_hydrogen = road.demand_hydrogen
 
-    road.mileage = road_ppl.mileage + road_gds.mileage
-    road.demand_emplo = (
-        road_action_charger.demand_emplo + road_ppl.demand_emplo + road_gds.demand_emplo
-    )
     rail_ppl_metro.CO2e_combustion_based = rail_ppl_metro.demand_electricity * fact(
         "Fact_T_S_electricity_EmFa_tank_wheel_2018"
     )
