@@ -3699,7 +3699,6 @@
             "cost_climate_saved": 7670612.794050551
         },
         "road_ppl": {
-            "base_unit": 25998.87735297862,
             "change_CO2e_pct": -0.9791654666816978,
             "change_CO2e_t": -99705.547517454,
             "change_energy_MWh": -335581.5402250504,
@@ -3709,18 +3708,22 @@
             "CO2e_total_2021_estimated": 95058.74175660127,
             "CO2e_total": 2121.519418788126,
             "cost_climate_saved": 253718616.9822299,
-            "cost_wage": 8713207.067491636,
+            "demand_ediesel": 0,
             "demand_electricity": 55855.86838642515,
-            "demand_emplo_new": 215.61930994222755,
-            "demand_emplo": 286.58479449587935,
+            "demand_hydrogen": 0,
             "demand_epetrol": 7827.62996657238,
             "energy": 63683.49835299753,
+            "mileage": 268680941.848276,
+            "transport_capacity_tkm": 0,
+            "transport_capacity_pkm": 630195836.2339219,
+            "base_unit": 25998.87735297862,
+            "cost_wage": 8713207.067491636,
+            "demand_emplo_new": 215.61930994222755,
+            "demand_emplo": 286.58479449587935,
             "invest_com": 321696355.2857659,
             "invest_pa_com": 11489155.54592021,
             "invest_pa": 35528441.9748473,
-            "invest": 994796375.2957244,
-            "mileage": 268680941.848276,
-            "transport_capacity_pkm": 630195836.2339219
+            "invest": 994796375.2957244
         },
         "road_car": {
             "change_CO2e_pct": -0.9788108178696425,
@@ -4408,7 +4411,6 @@
             "ratio_wage_to_emplo": 51951.779209286055
         },
         "road_action_charger": {
-            "base_unit": 1846.396139904645,
             "cost_wage": 242757.84112485548,
             "demand_emplo": 4.6727531726471465,
             "demand_emplo_new": 4.6727531726471465,
@@ -4418,7 +4420,8 @@
             "invest_pa_com": 198859.58724133152,
             "invest_per_x": 14324.296141814391,
             "pct_of_wage": 0.257,
-            "ratio_wage_to_emplo": 51951.779209286055
+            "ratio_wage_to_emplo": 51951.779209286055,
+            "base_unit": 1846.396139904645
         },
         "road_bus_action_infra": {
             "cost_wage": 86810.47423428732,
