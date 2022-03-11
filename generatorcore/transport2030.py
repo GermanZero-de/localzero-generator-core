@@ -722,6 +722,57 @@ class RoadCar(Road):
     invest_pa: float = None  # type: ignore
     invest_per_x: float = None  # type: ignore
 
+    @classmethod
+    def calc(cls, inputs: Inputs, *, t18: T18, it_ot: Road, ab: Road) -> "RoadCar":
+        fact = inputs.fact
+        ass = inputs.ass
+        entries = inputs.entries
+
+        road_car = cls()
+
+        road_car.base_unit = (
+            it_ot.transport_capacity_pkm + ab.transport_capacity_pkm
+        ) / fact("Fact_T_S_Car_ratio_mlg_to_stock_2018")
+        road_car.transport_capacity_tkm = 0
+        road_car.invest_per_x = ass("Ass_T_S_car_average_price_2050")
+        road_car.demand_electricity = it_ot.demand_electricity + ab.demand_electricity
+        road_car.demand_epetrol = it_ot.demand_epetrol + ab.demand_epetrol
+        road_car.demand_ediesel = 0
+        road_car.demand_hydrogen = 0
+        road_car.CO2e_combustion_based = (
+            it_ot.CO2e_combustion_based + ab.CO2e_combustion_based
+        )
+        road_car.transport_capacity_pkm = (
+            it_ot.transport_capacity_pkm + ab.transport_capacity_pkm
+        )
+        road_car.invest = road_car.base_unit * road_car.invest_per_x
+        road_car.mileage = it_ot.mileage + ab.mileage
+        road_car.change_CO2e_t = (
+            road_car.CO2e_combustion_based - t18.road_car.CO2e_combustion_based
+        )
+        road_car.change_CO2e_pct = div(
+            road_car.change_CO2e_t, t18.road_car.CO2e_combustion_based
+        )
+        road_car.CO2e_total_2021_estimated = t18.road_car.CO2e_combustion_based * fact(
+            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+        )
+        road_car.cost_climate_saved = (
+            (road_car.CO2e_total_2021_estimated - road_car.CO2e_combustion_based)
+            * entries.m_duration_neutral
+            * fact("Fact_M_cost_per_CO2e_2020")
+        )
+        road_car.invest_pa = road_car.invest / entries.m_duration_target
+        road_car.change_energy_MWh = it_ot.change_energy_MWh + ab.change_energy_MWh
+
+        road_car.change_energy_pct = div(
+            road_car.change_energy_MWh, t18.road_car.energy
+        )
+        road_car.change_km = it_ot.change_km + ab.change_km
+        road_car.energy = it_ot.energy + ab.energy
+        road_car.CO2e_total = it_ot.CO2e_total + ab.CO2e_total
+
+        return road_car
+
 
 @dataclass
 class RoadBus(Road):
@@ -1541,6 +1592,8 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
     road_car_ab = Road.calc_car_ab(
         inputs, t18=t18, total_transport_capacity_pkm=t.transport_capacity_pkm
     )
+    road_car = RoadCar.calc(inputs, t18=t18, it_ot=road_car_it_ot, ab=road_car_ab)
+
     road_gds_ldt_it_ot = Road.calc_goods_lightweight_it_ot(inputs, t18=t18)
     road_gds_ldt_ab = Road.calc_goods_lightweight_ab(inputs, t18=t18)
     road_gds_ldt = RoadGoodsLightWeight.calc(
@@ -1564,6 +1617,7 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
 
     t30.road_car_it_ot = road_car_it_ot
     t30.road_car_ab = road_car_ab
+    t30.road_car = road_car
     t30.road_gds_ldt_it_ot = road_gds_ldt_it_ot
     t30.road_gds_ldt_ab = road_gds_ldt_ab
     t30.road_gds_ldt = road_gds_ldt
@@ -1573,9 +1627,6 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
     t30.road_bus = road_bus
     t30.road_bus_action_infra = road_bus_action_infra
 
-    road_car.base_unit = (
-        road_car_it_ot.transport_capacity_pkm + road_car_ab.transport_capacity_pkm
-    ) / fact("Fact_T_S_Car_ratio_mlg_to_stock_2018")
     road_action_charger.base_unit = road_car.base_unit / (
         ass("Ass_S_ratio_bev_car_per_charge_point_city")
         if entries.t_rt3 == "city"
@@ -1616,46 +1667,6 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
     road_action_charger.invest_com = road_action_charger.invest * ass(
         "Ass_T_C_invest_state_charge_point_prctg"
     )
-    road_car.transport_capacity_tkm = 0
-    road_car.invest_per_x = ass("Ass_T_S_car_average_price_2050")
-    road_car.demand_electricity = (
-        road_car_it_ot.demand_electricity + road_car_ab.demand_electricity
-    )
-    road_car.demand_epetrol = road_car_it_ot.demand_epetrol + road_car_ab.demand_epetrol
-    road_car.demand_ediesel = 0
-    road_car.demand_hydrogen = 0
-    road_car.CO2e_combustion_based = (
-        road_car_it_ot.CO2e_combustion_based + road_car_ab.CO2e_combustion_based
-    )
-    road_car.transport_capacity_pkm = (
-        road_car_it_ot.transport_capacity_pkm + road_car_ab.transport_capacity_pkm
-    )
-    road_car.invest = road_car.base_unit * road_car.invest_per_x
-    road_car.mileage = road_car_it_ot.mileage + road_car_ab.mileage
-    road_car.change_CO2e_t = (
-        road_car.CO2e_combustion_based - t18.road_car.CO2e_combustion_based
-    )
-    road_car.change_CO2e_pct = div(
-        road_car.change_CO2e_t, t18.road_car.CO2e_combustion_based
-    )
-    road_car.CO2e_total_2021_estimated = t18.road_car.CO2e_combustion_based * fact(
-        "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
-    )
-    road_car.cost_climate_saved = (
-        (road_car.CO2e_total_2021_estimated - road_car.CO2e_combustion_based)
-        * entries.m_duration_neutral
-        * fact("Fact_M_cost_per_CO2e_2020")
-    )
-    road_car.invest_pa = road_car.invest / entries.m_duration_target
-    road_car.change_energy_MWh = (
-        road_car_it_ot.change_energy_MWh + road_car_ab.change_energy_MWh
-    )
-
-    road_car.change_energy_pct = div(road_car.change_energy_MWh, t18.road_car.energy)
-    road_car.change_km = road_car_it_ot.change_km + road_car_ab.change_km
-    road_car.energy = road_car_it_ot.energy + road_car_ab.energy
-    road_car.CO2e_total = road_car_it_ot.CO2e_total + road_car_ab.CO2e_total
-
     road_action_charger.cost_wage = (
         road_action_charger.invest_pa * road_action_charger.pct_of_wage
     )
