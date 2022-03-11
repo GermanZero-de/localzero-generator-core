@@ -1,6 +1,6 @@
 # pyright: strict
 from dataclasses import dataclass, asdict, fields
-from .inputs import Inputs
+from ..inputs import Inputs
 import typing
 
 MILLION = 1000000
