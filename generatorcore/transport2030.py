@@ -742,7 +742,6 @@ class Vars3:
 class RoadBus(Road):
     # Used by road_bus
     base_unit: float = None  # type: ignore
-
     cost_wage: float = None  # type: ignore
     demand_emplo_new: float = None  # type: ignore
     demand_emplo: float = None  # type: ignore
@@ -764,13 +763,9 @@ class RoadBus(Road):
         fact = inputs.fact
 
         road_bus_action_infra = InvestmentAction()
-        road_bus = cls()
 
-        road_bus.transport_capacity_tkm = 0
-        road_bus.demand_hydrogen = 0
-        road_bus.demand_ediesel = 0
-        road_bus.demand_epetrol = 0
-        road_bus.transport_capacity_pkm = div(
+        demand_epetrol = 0
+        transport_capacity_pkm = div(
             total_transport_capacity_pkm * t18.road_bus.transport_capacity_pkm,
             (
                 t18.road_bus.transport_capacity_pkm
@@ -786,30 +781,26 @@ class RoadBus(Road):
             if entries.t_rt3 == "rural"
             else ass("Ass_T_D_trnsprt_ppl_nat_pt_frac_2050")
         )
-        road_bus.mileage = road_bus.transport_capacity_pkm / ass(
-            "Ass_T_D_lf_ppl_Bus_2050"
-        )
-        road_bus.demand_electricity = (
-            road_bus.mileage
+        mileage = transport_capacity_pkm / ass("Ass_T_D_lf_ppl_Bus_2050")
+        demand_electricity = (
+            mileage
             * ass("Ass_T_S_bus_frac_bev_mlg_2050")
             * ass("Ass_T_S_Bus_SEC_elec_2030")
         )
-        road_bus.CO2e_combustion_based = road_bus.demand_electricity * fact(
+        CO2e_combustion_based = demand_electricity * fact(
             "Fact_T_S_electricity_EmFa_tank_wheel_2018"
         )
         road_bus_action_infra.invest_per_x = ass(
             "Ass_T_C_cost_per_trnsprt_ppl_bus_infrstrctr"
         )
         road_bus_action_infra.invest = (
-            road_bus.transport_capacity_pkm * road_bus_action_infra.invest_per_x
+            transport_capacity_pkm * road_bus_action_infra.invest_per_x
         )
-        road_bus.ratio_wage_to_emplo = ass("Ass_T_D_bus_metro_wage_driver")
+        ratio_wage_to_emplo = ass("Ass_T_D_bus_metro_wage_driver")
         road_bus_action_infra.invest_pa = (
             road_bus_action_infra.invest / entries.m_duration_target
         )
-        road_bus.demand_emplo = road_bus.mileage / fact(
-            "Fact_T_S_bus_ratio_mlg_to_driver_2018"
-        )
+        demand_emplo = mileage / fact("Fact_T_S_bus_ratio_mlg_to_driver_2018")
         road_bus_action_infra.pct_of_wage = fact(
             "Fact_T_D_constr_roadrail_revenue_pct_of_wage_2018"
         )
@@ -822,37 +813,25 @@ class RoadBus(Road):
         road_bus_action_infra.demand_emplo = div(
             road_bus_action_infra.cost_wage, road_bus_action_infra.ratio_wage_to_emplo
         )
-        road_bus.emplo_existing = (
-            div(t18.road_bus.mileage, road_bus.mileage) * road_bus.demand_emplo
-        )
-        road_bus.base_unit = road_bus.mileage / fact(
-            "Fact_T_S_Bus_ratio_mlg_to_stock_2018"
-        )
-        road_bus.CO2e_total = road_bus.CO2e_combustion_based
+        emplo_existing = div(t18.road_bus.mileage, mileage) * demand_emplo
+        base_unit = mileage / fact("Fact_T_S_Bus_ratio_mlg_to_stock_2018")
+        CO2e_total = CO2e_combustion_based
 
-        road_bus.energy = road_bus.demand_electricity
-        road_bus.change_km = (
-            road_bus.transport_capacity_pkm - t18.road_bus.transport_capacity_pkm
-        )
-        road_bus.invest_per_x = ass("Ass_T_S_bus_average_price_2050")
-        road_bus.demand_emplo_new = road_bus.demand_emplo - road_bus.emplo_existing
-        road_bus.change_energy_MWh = road_bus.energy - t18.road_bus.energy
+        energy = demand_electricity
+        change_km = transport_capacity_pkm - t18.road_bus.transport_capacity_pkm
+        invest_per_x = ass("Ass_T_S_bus_average_price_2050")
+        demand_emplo_new = demand_emplo - emplo_existing
+        change_energy_MWh = energy - t18.road_bus.energy
 
-        road_bus.cost_wage = road_bus.ratio_wage_to_emplo * road_bus.demand_emplo_new
-        road_bus.change_energy_pct = div(
-            road_bus.change_energy_MWh, t18.road_bus.energy
-        )
-        road_bus.change_CO2e_t = (
-            road_bus.CO2e_combustion_based - t18.road_bus.CO2e_combustion_based
-        )
-        road_bus.change_CO2e_pct = div(
-            road_bus.change_CO2e_t, t18.road_bus.CO2e_combustion_based
-        )
-        road_bus.CO2e_total_2021_estimated = t18.road_bus.CO2e_combustion_based * fact(
+        cost_wage = ratio_wage_to_emplo * demand_emplo_new
+        change_energy_pct = div(change_energy_MWh, t18.road_bus.energy)
+        change_CO2e_t = CO2e_combustion_based - t18.road_bus.CO2e_combustion_based
+        change_CO2e_pct = div(change_CO2e_t, t18.road_bus.CO2e_combustion_based)
+        CO2e_total_2021_estimated = t18.road_bus.CO2e_combustion_based * fact(
             "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
         )
-        road_bus.cost_climate_saved = (
-            (road_bus.CO2e_total_2021_estimated - road_bus.CO2e_combustion_based)
+        cost_climate_saved = (
+            (CO2e_total_2021_estimated - CO2e_combustion_based)
             * entries.m_duration_neutral
             * fact("Fact_M_cost_per_CO2e_2020")
         )
@@ -860,16 +839,45 @@ class RoadBus(Road):
         road_bus_action_infra.invest_com = road_bus_action_infra.invest * ass(
             "Ass_T_C_ratio_public_sector_100"
         )
-        road_bus.invest = (
-            road_bus.base_unit * road_bus.invest_per_x
-            + road_bus.cost_wage * entries.m_duration_target
-        )
-        road_bus.invest_com = road_bus.invest * ass("Ass_T_C_ratio_public_sector_100")
-        road_bus.invest_pa = road_bus.invest / entries.m_duration_target
-        road_bus.pct_of_wage = div(road_bus.cost_wage, road_bus.invest_pa)
-        road_bus.invest_pa_com = road_bus.invest_com / entries.m_duration_target
+        invest = base_unit * invest_per_x + cost_wage * entries.m_duration_target
+        invest_com = invest * ass("Ass_T_C_ratio_public_sector_100")
+        invest_pa = invest / entries.m_duration_target
+        pct_of_wage = div(cost_wage, invest_pa)
+        invest_pa_com = invest_com / entries.m_duration_target
         road_bus_action_infra.invest_pa_com = (
             road_bus_action_infra.invest_com / entries.m_duration_target
+        )
+
+        road_bus = cls(
+            change_CO2e_pct=change_CO2e_pct,
+            change_CO2e_t=change_CO2e_t,
+            change_energy_MWh=change_energy_MWh,
+            change_energy_pct=change_energy_pct,
+            change_km=change_km,
+            CO2e_combustion_based=CO2e_combustion_based,
+            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+            CO2e_total=CO2e_total,
+            cost_climate_saved=cost_climate_saved,
+            demand_electricity=demand_electricity,
+            demand_epetrol=demand_epetrol,
+            demand_hydrogen=0,
+            demand_ediesel=0,
+            energy=energy,
+            mileage=mileage,
+            transport_capacity_pkm=transport_capacity_pkm,
+            transport_capacity_tkm=0,
+            base_unit=base_unit,
+            cost_wage=cost_wage,
+            demand_emplo=demand_emplo,
+            demand_emplo_new=demand_emplo_new,
+            emplo_existing=emplo_existing,
+            invest_com=invest_com,
+            invest=invest,
+            invest_pa=invest_pa,
+            invest_pa_com=invest_pa_com,
+            invest_per_x=invest_per_x,
+            pct_of_wage=pct_of_wage,
+            ratio_wage_to_emplo=ratio_wage_to_emplo,
         )
 
         return (road_bus, road_bus_action_infra)
@@ -938,9 +946,11 @@ class RoadGoodsMhd(Road):
             demand_electricity=sum.demand_electricity,
             demand_ediesel=sum.demand_ediesel,
             demand_hydrogen=sum.demand_hydrogen,
+            demand_epetrol=0,
             energy=sum.energy,
             mileage=sum.mileage,
             transport_capacity_tkm=sum.transport_capacity_tkm,
+            transport_capacity_pkm=0,
         )
 
 
