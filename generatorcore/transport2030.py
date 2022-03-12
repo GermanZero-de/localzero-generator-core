@@ -2566,16 +2566,16 @@ class Vars22:
 
 
 @dataclass
-class Vars23:
+class G:
     # Used by g
-    cost_wage: float = None  # type: ignore
-    demand_emplo: float = None  # type: ignore
-    demand_emplo_com: float = None  # type: ignore
-    demand_emplo_new: float = None  # type: ignore
-    invest: float = None  # type: ignore
-    invest_com: float = None  # type: ignore
-    invest_pa: float = None  # type: ignore
-    invest_pa_com: float = None  # type: ignore
+    cost_wage: float
+    demand_emplo: float
+    demand_emplo_com: float
+    demand_emplo_new: float
+    invest: float
+    invest_com: float
+    invest_pa: float
+    invest_pa_com: float
 
 
 @dataclass
@@ -2873,7 +2873,7 @@ class T30:
     s_biogas: Vars22 = field(default_factory=Vars22)
     s_bioethanol: Vars22 = field(default_factory=Vars22)
     s_biodiesel: Vars22 = field(default_factory=Vars22)
-    g: Vars23 = field(default_factory=Vars23)
+    g: G = None  # type: ignore
     t: Vars24 = field(default_factory=Vars24)
     air: Air = None  # type: ignore
     road: RoadSum = field(default_factory=RoadSum)
@@ -2902,8 +2902,6 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
 
     t30 = T30()
 
-    g = t30.g
-    g_planning = t30.g_planning
     rail_ppl = t30.rail_ppl
     rail_ppl_distance = t30.rail_ppl_distance
     rail_ppl_distance = t30.rail_ppl_distance
@@ -3068,6 +3066,17 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
         rail_action_invest_infra=rail_action_invest_infra,
         other_cycl=other_cycl,
     )
+    # TODO: This Seems to be a pointless rename?
+    g = G(
+        invest_com=g_planning.invest_com,
+        invest_pa_com=g_planning.invest_pa_com,
+        demand_emplo=g_planning.demand_emplo,
+        cost_wage=g_planning.cost_wage,
+        invest_pa=g_planning.invest_pa,
+        invest=g_planning.invest,
+        demand_emplo_new=g_planning.demand_emplo_new,
+        demand_emplo_com=g_planning.demand_emplo_new,
+    )
 
     # --- Populate result ---
     t.transport_capacity_pkm = total_transport_capacity_pkm
@@ -3109,15 +3118,7 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
     t30.other_foot_action_infra = other_foot_action_infra
     t30.other = other
     t30.g_planning = g_planning
-
-    g.invest_com = g_planning.invest_com
-    g.invest_pa_com = g_planning.invest_pa_com
-    g.demand_emplo = g_planning.demand_emplo
-    g.cost_wage = g_planning.cost_wage
-    g.invest_pa = g_planning.invest_pa
-    g.invest = g_planning.invest
-    g.demand_emplo_new = g_planning.demand_emplo_new
-    g.demand_emplo_com = g.demand_emplo_new
+    t30.g = g
 
     t.demand_ejetfuel = air.demand_ejetfuel  # + BD237 + BD253 + BD261 + BD265
     t.demand_epetrol = (
