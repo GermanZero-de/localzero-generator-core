@@ -1,8 +1,7 @@
 # pyright: strict
 from dataclasses import dataclass
-from .utils import element_wise_plus
-from .utils import co2e_from_demands
-from .utils import MILLION
+from ..utils import element_wise_plus, MILLION
+from . import co2e
 from ..inputs import Inputs
 import typing
 
@@ -54,7 +53,7 @@ class Road:
         demand_gas = mileage * gas
         demand_lpg = mileage * lpg
         demand_petrol = mileage * petrol
-        CO2e_combustion_based = co2e_from_demands(
+        CO2e_combustion_based = co2e.from_demands(
             inputs,
             demand_petrol=demand_petrol,
             demand_diesel=demand_diesel,
