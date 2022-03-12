@@ -1671,7 +1671,7 @@ class RailPeople:
 
 
 @dataclass
-class Vars14:
+class RailGoods:
     # Used by rail_gds
     CO2e_combustion_based: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
@@ -1696,6 +1696,80 @@ class Vars14:
     mileage: float = None  # type: ignore
     ratio_wage_to_emplo: float = None  # type: ignore
     transport_capacity_tkm: float = None  # type: ignore
+
+    @classmethod
+    def calc(cls, inputs: Inputs, *, t18: T18) -> "RailGoods":
+        ass = inputs.ass
+        fact = inputs.fact
+        entries = inputs.entries
+
+        transport_capacity_tkm = t18.rail_gds.transport_capacity_tkm * (
+            ass("Ass_T_D_trnsprt_gds_Rl_2050")
+            / fact("Fact_T_D_Rl_train_nat_trnsprt_gds_2018")
+        )
+        demand_electricity = transport_capacity_tkm * ass(
+            "Ass_T_S_Rl_Train_gds_elec_SEC_2050"
+        )
+        CO2e_combustion_based = demand_electricity * fact(
+            "Fact_T_S_electricity_EmFa_tank_wheel_2018"
+        )
+        mileage = transport_capacity_tkm / fact(
+            "Fact_T_D_rail_gds_ratio_tkm_to_fzkm_2018"
+        )
+        CO2e_total_2021_estimated = t18.rail_gds.CO2e_combustion_based * fact(
+            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+        )
+        cost_climate_saved = (
+            (CO2e_total_2021_estimated - CO2e_combustion_based)
+            * entries.m_duration_neutral
+            * fact("Fact_M_cost_per_CO2e_2020")
+        )
+        ratio_wage_to_emplo = ass("Ass_T_D_rail_wage_driver")
+        demand_emplo = mileage / fact("Fact_T_D_rail_ratio_mlg_to_driver")
+        emplo_existing = t18.rail_gds.mileage / fact(
+            "Fact_T_D_rail_ratio_mlg_to_driver"
+        )
+        change_km = transport_capacity_tkm - t18.rail_gds.transport_capacity_tkm
+        demand_emplo_new = demand_emplo - emplo_existing
+
+        energy = demand_electricity  # SUM(rail_gds.demand_electricity:BJ260)
+        CO2e_total = CO2e_combustion_based
+        change_energy_MWh = energy - t18.rail_gds.energy
+        change_energy_pct = div(change_energy_MWh, t18.rail_gds.energy)
+        change_CO2e_t = CO2e_combustion_based - t18.rail_gds.CO2e_combustion_based
+        change_CO2e_pct = div(change_CO2e_t, t18.rail_gds.CO2e_combustion_based)
+        base_unit = change_km / fact("Fact_T_D_rail_gds_ratio_mlg_to_vehicle")
+        invest_per_x = fact("Fact_T_D_rail_gds_vehicle_invest")
+        cost_wage = ratio_wage_to_emplo * demand_emplo_new
+        invest = base_unit * invest_per_x + cost_wage * entries.m_duration_target
+        invest_pa = invest / entries.m_duration_target
+        pct_of_wage = div(cost_wage, invest_pa)
+
+        return cls(
+            CO2e_combustion_based=CO2e_combustion_based,
+            CO2e_total=CO2e_total,
+            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+            base_unit=base_unit,
+            change_CO2e_pct=change_CO2e_pct,
+            change_CO2e_t=change_CO2e_t,
+            change_energy_MWh=change_energy_MWh,
+            change_energy_pct=change_energy_pct,
+            change_km=change_km,
+            cost_climate_saved=cost_climate_saved,
+            cost_wage=cost_wage,
+            demand_electricity=demand_electricity,
+            demand_emplo=demand_emplo,
+            demand_emplo_new=demand_emplo_new,
+            emplo_existing=emplo_existing,
+            energy=energy,
+            invest=invest,
+            invest_pa=invest_pa,
+            invest_per_x=invest_per_x,
+            pct_of_wage=pct_of_wage,
+            mileage=mileage,
+            ratio_wage_to_emplo=ratio_wage_to_emplo,
+            transport_capacity_tkm=transport_capacity_tkm,
+        )
 
 
 @dataclass
@@ -2173,7 +2247,7 @@ class T30:
     rail_ppl: Vars11 = field(default_factory=Vars11)
     rail_ppl_distance: RailPeople = field(default_factory=RailPeople)
     rail_ppl_metro: RailPeople = None  # type: ignore
-    rail_gds: Vars14 = field(default_factory=Vars14)
+    rail_gds: RailGoods = field(default_factory=RailGoods)
     ship: Vars15 = field(default_factory=Vars15)
     ship_dmstc: ShipDomestic = None  # type: ignore
     ship_dmstc_action_infra: Vars17 = field(default_factory=Vars17)
@@ -2233,7 +2307,6 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
     rail = t30.rail
     rail_action_invest_infra = t30.rail_action_invest_infra
     rail_action_invest_station = t30.rail_action_invest_station
-    rail_gds = t30.rail_gds
     rail_ppl = t30.rail_ppl
     rail_ppl_distance = t30.rail_ppl_distance
     rail_ppl_metro_action_infra = t30.rail_ppl_metro_action_infra
@@ -2338,6 +2411,7 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
     rail_ppl_distance = RailPeople.calc_distance(
         inputs, t18=t18, total_transport_capacity_pkm=t.transport_capacity_pkm
     )
+    rail_gds = RailGoods.calc(inputs, t18=t18)
 
     ship_dmstc = ShipDomestic.calc(inputs, t18=t18)
     ship_inter = ShipInternational.calc(inputs, t18=t18)
@@ -2369,6 +2443,7 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
     t30.road = road
     t30.rail_ppl_metro = rail_ppl_metro
     t30.rail_ppl_distance = rail_ppl_distance
+    t30.rail_gds = rail_gds
     t30.ship_dmstc = ship_dmstc
     t30.ship_inter = ship_inter
     t30.other_cycl = other_cycl
@@ -2385,10 +2460,6 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
     rail.demand_change = 0  # SUM(BJ256:BJ260))
     rail_action_invest_infra.invest = (
         rail_action_invest_infra.invest_per_x * entries.m_population_com_203X
-    )
-    rail_gds.transport_capacity_tkm = t18.rail_gds.transport_capacity_tkm * (
-        ass("Ass_T_D_trnsprt_gds_Rl_2050")
-        / fact("Fact_T_D_Rl_train_nat_trnsprt_gds_2018")
     )
 
     rail_ppl.CO2e_total_2021_estimated = t18.rail_ppl.CO2e_combustion_based * fact(
@@ -2438,10 +2509,6 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
 
     g.cost_wage = g_planning.cost_wage
 
-    rail_gds.demand_electricity = rail_gds.transport_capacity_tkm * ass(
-        "Ass_T_S_Rl_Train_gds_elec_SEC_2050"
-    )
-
     rail_ppl.demand_electricity = (
         rail_ppl_distance.demand_electricity + rail_ppl_metro.demand_electricity
     )
@@ -2455,9 +2522,7 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
     rail_ppl.CO2e_combustion_based = (
         rail_ppl_distance.CO2e_combustion_based + rail_ppl_metro.CO2e_combustion_based
     )
-    rail_gds.CO2e_combustion_based = rail_gds.demand_electricity * fact(
-        "Fact_T_S_electricity_EmFa_tank_wheel_2018"
-    )
+
     rail.energy = (
         rail.demand_electricity + rail.demand_change
     )  # SUM(rail.demand_electricity:rail.demand_change)
@@ -2549,9 +2614,6 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
     # rail_action_invest_station.emplo_existingnicht existent oder ausgelastet
 
     rail.change_CO2e_pct = div(rail.change_CO2e_t, t18.rail.CO2e_combustion_based)
-    rail_gds.mileage = rail_gds.transport_capacity_tkm / fact(
-        "Fact_T_D_rail_gds_ratio_tkm_to_fzkm_2018"
-    )
     rail_ppl.transport_capacity_pkm = (
         rail_ppl_distance.transport_capacity_pkm + rail_ppl_metro.transport_capacity_pkm
     )
@@ -2561,16 +2623,6 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
     rail_ppl.change_CO2e_pct = div(
         rail_ppl.change_CO2e_t, t18.rail_ppl.CO2e_combustion_based
     )
-    rail_gds.CO2e_total_2021_estimated = t18.rail_gds.CO2e_combustion_based * fact(
-        "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
-    )
-    rail_gds.cost_climate_saved = (
-        (rail_gds.CO2e_total_2021_estimated - rail_gds.CO2e_combustion_based)
-        * entries.m_duration_neutral
-        * fact("Fact_M_cost_per_CO2e_2020")
-    )
-
-    rail_gds.ratio_wage_to_emplo = ass("Ass_T_D_rail_wage_driver")
     rail_ppl_metro_action_infra.invest_pa_com = (
         rail_ppl_metro_action_infra.invest_com / entries.m_duration_target
     )
@@ -2578,13 +2630,6 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
     rail_ppl.invest_com = rail_ppl_metro_action_infra.invest_com
     rail_ppl_metro_action_infra.cost_wage = (
         rail_ppl_metro_action_infra.invest_pa * rail_ppl_metro_action_infra.pct_of_wage
-    )
-    rail_gds.demand_emplo = rail_gds.mileage / fact("Fact_T_D_rail_ratio_mlg_to_driver")
-    rail_gds.emplo_existing = t18.rail_gds.mileage / fact(
-        "Fact_T_D_rail_ratio_mlg_to_driver"
-    )
-    rail_gds.change_km = (
-        rail_gds.transport_capacity_tkm - t18.rail_gds.transport_capacity_tkm
     )
     rail.change_energy_pct = div(rail.change_energy_MWh, t18.rail.energy)
 
@@ -2598,7 +2643,6 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
     rail_ppl_metro_action_infra.ratio_wage_to_emplo = fact(
         "Fact_T_D_constr_roadrail_ratio_wage_to_emplo_2018"
     )
-    rail_gds.demand_emplo_new = rail_gds.demand_emplo - rail_gds.emplo_existing
     rail_ppl.invest = (
         rail_ppl_distance.invest
         + rail_ppl_metro.invest
@@ -2615,9 +2659,6 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
     rail_ppl_metro_action_infra.demand_emplo = (
         rail_ppl_metro_action_infra.cost_wage
         / rail_ppl_metro_action_infra.ratio_wage_to_emplo
-    )
-    rail_gds.base_unit = rail_gds.change_km / fact(
-        "Fact_T_D_rail_gds_ratio_mlg_to_vehicle"
     )
     t.demand_change = (
         air.demand_change
@@ -2659,7 +2700,6 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
         + rail_ppl_metro.cost_wage
         + rail_ppl_metro_action_infra.cost_wage
     )  # SUM(rail_ppl_distance.cost_wage:rail_ppl_metro_action_infra.cost_wage)
-    rail_gds.cost_wage = rail_gds.ratio_wage_to_emplo * rail_gds.demand_emplo_new
     rail_ppl.demand_emplo_new = (
         rail_ppl_distance.demand_emplo_new
         + rail_ppl_metro.demand_emplo_new
@@ -2698,23 +2738,12 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
         + t.demand_hydrogen
         + t.demand_change
     )  # SUM(t.demand_electricity:t.demand_change)
-    rail_gds.energy = (
-        rail_gds.demand_electricity
-    )  # SUM(rail_gds.demand_electricity:BJ260)
     rail.mileage = rail_ppl.mileage + rail_gds.mileage
     rail.transport_capacity_tkm = rail_gds.transport_capacity_tkm
     ship.CO2e_combustion_based = (
         ship_dmstc.CO2e_combustion_based + ship_inter.CO2e_combustion_based
     )
-    rail_gds.CO2e_total = rail_gds.CO2e_combustion_based
-    rail_gds.change_energy_MWh = rail_gds.energy - t18.rail_gds.energy
-    rail_gds.change_energy_pct = div(rail_gds.change_energy_MWh, t18.rail_gds.energy)
-    rail_gds.change_CO2e_t = (
-        rail_gds.CO2e_combustion_based - t18.rail_gds.CO2e_combustion_based
-    )
-    rail_gds.change_CO2e_pct = div(
-        rail_gds.change_CO2e_t, t18.rail_gds.CO2e_combustion_based
-    )
+
     rail.CO2e_total_2021_estimated = (
         rail_ppl.CO2e_total_2021_estimated + rail_gds.CO2e_total_2021_estimated
     )
@@ -2722,13 +2751,6 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
     rail.base_unit = rail_ppl.base_unit + rail_gds.base_unit
     #  rail_gds.actionInvestitionen in zusätzliche Eisenbahnen und Personal
 
-    rail_gds.invest_per_x = fact("Fact_T_D_rail_gds_vehicle_invest")
-    rail_gds.invest = (
-        rail_gds.base_unit * rail_gds.invest_per_x
-        + rail_gds.cost_wage * entries.m_duration_target
-    )
-    rail_gds.invest_pa = rail_gds.invest / entries.m_duration_target
-    rail_gds.pct_of_wage = div(rail_gds.cost_wage, rail_gds.invest_pa)
     rail.invest_pa = (
         rail_action_invest_infra.invest_pa
         + rail_action_invest_station.invest_pa
