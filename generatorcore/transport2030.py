@@ -1,3 +1,5 @@
+# pyright: strict
+
 from dataclasses import dataclass, field, asdict
 from .inputs import Inputs
 from .utils import div, element_wise_plus
@@ -2450,7 +2452,7 @@ class OtherCycle:
 
     @classmethod
     def calc(
-        cls, inputs, t18: T18, total_transport_capacity_pkm: float
+        cls, inputs: Inputs, t18: T18, total_transport_capacity_pkm: float
     ) -> "OtherCycle":
         fact = inputs.fact
         ass = inputs.ass
@@ -3041,12 +3043,7 @@ class T30:
 
 
 def calc(inputs: Inputs, *, t18: T18) -> T30:
-    def fact(n):
-        return inputs.fact(n)
-
-    def ass(n):
-        return inputs.ass(n)
-
+    ass = inputs.ass
     entries = inputs.entries
 
     # --- Air ---
@@ -3287,5 +3284,3 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
         s_bioethanol=s_bioethanol,
         s_biodiesel=s_biodiesel,
     )
-
-    return t30
