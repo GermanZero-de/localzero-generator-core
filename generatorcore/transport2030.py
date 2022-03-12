@@ -2321,8 +2321,8 @@ class Ship:
         ship_dmstc_action_infra: ShipDomesticActionInfra,
     ) -> "Ship":
         demand_change = 0
-        invest = ship_dmstc_action_infra.invest
-        invest_com = ship_dmstc_action_infra.invest_com
+        invest = ship_dmstc_action_infra.invest + ship_dmstc.invest
+        invest_com = ship_dmstc_action_infra.invest_com 
         demand_ediesel = (
             ship_dmstc.demand_ediesel
             + ship_dmstc_action_infra.demand_ediesel
@@ -2332,7 +2332,7 @@ class Ship:
             ship_dmstc.CO2e_combustion_based + ship_inter.CO2e_combustion_based
         )
         energy = demand_ediesel + demand_change
-        transport_capacity_tkm = ship_dmstc.transport_capacity_tkm
+        transport_capacity_tkm = ship_dmstc.transport_capacity_tkm + ship_inter.transport_capacity_tkm
         CO2e_total = CO2e_combustion_based
         change_energy_MWh = energy - t18.ship.energy
         change_energy_pct = div(change_energy_MWh, t18.ship.energy)
@@ -2340,7 +2340,7 @@ class Ship:
         change_CO2e_pct = div(change_CO2e_t, t18.ship.CO2e_combustion_based)
         emplo_existing = ship_dmstc.emplo_existing
         base_unit = ship_dmstc.base_unit
-        invest_pa = ship_dmstc_action_infra.invest_pa
+        invest_pa = ship_dmstc_action_infra.invest_pa + ship_dmstc.invest_pa
         invest_pa_com = ship_dmstc_action_infra.invest_pa_com
         cost_wage = ship_dmstc.cost_wage + ship_dmstc_action_infra.cost_wage
         demand_emplo_new = (
