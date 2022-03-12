@@ -2503,7 +2503,7 @@ class OtherCycle:
 
 
 @dataclass
-class Vars21:
+class GPlanning:
     # Used by g_planning
     cost_wage: float = None  # type: ignore
     demand_emplo: float = None  # type: ignore
@@ -2514,6 +2514,49 @@ class Vars21:
     invest_pa: float = None  # type: ignore
     invest_pa_com: float = None  # type: ignore
     ratio_wage_to_emplo: float = None  # type: ignore
+
+    @classmethod
+    def calc(
+        cls,
+        inputs: Inputs,
+        road_bus_action_infra: InvestmentAction,
+        road_gds_mhd_action_wire: InvestmentAction,
+        road_action_charger: InvestmentAction,
+        rail_ppl_metro_action_infra: RailPeopleMetroActionInfra,
+        rail_action_invest_infra: InvestmentAction,
+        other_cycl: OtherCycle,
+    ) -> "GPlanning":
+        ass = inputs.ass
+        entries = inputs.entries
+
+        ratio_wage_to_emplo = ass("Ass_T_C_yearly_costs_per_planer")
+        invest = ass("Ass_T_C_planer_cost_per_invest_cost") * (
+            road_bus_action_infra.invest
+            + road_gds_mhd_action_wire.invest
+            + road_action_charger.invest
+            + rail_ppl_metro_action_infra.invest
+            + rail_action_invest_infra.invest
+            + other_cycl.invest
+        )
+        invest_com = invest * ass("Ass_T_C_ratio_public_sector_100")
+        invest_pa_com = invest_com / entries.m_duration_target
+        invest_pa = invest / entries.m_duration_target
+        cost_wage = invest_pa
+        demand_emplo = div(cost_wage, ratio_wage_to_emplo)
+        demand_emplo_new = demand_emplo
+        demand_emplo_com = demand_emplo_new
+
+        return cls(
+            cost_wage=cost_wage,
+            demand_emplo=demand_emplo,
+            demand_emplo_com=demand_emplo_com,
+            demand_emplo_new=demand_emplo_new,
+            invest=invest,
+            invest_com=invest_com,
+            invest_pa=invest_pa,
+            invest_pa_com=invest_pa_com,
+            ratio_wage_to_emplo=ratio_wage_to_emplo,
+        )
 
 
 @dataclass
@@ -2818,7 +2861,7 @@ class T30:
     other_foot_action_infra: InvestmentAction = None  # type: ignore
     other_cycl: OtherCycle = None  # type: ignore
     other_cycl_action_infra: InvestmentAction = None  # type: ignore
-    g_planning: Vars21 = field(default_factory=Vars21)
+    g_planning: GPlanning = None  # type: ignore
     s: Vars22 = field(default_factory=Vars22)
     s_diesel: Vars22 = field(default_factory=Vars22)
     s_emethan: Vars22 = field(default_factory=Vars22)
@@ -3015,6 +3058,17 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
         other_foot_action_infra=other_foot_action_infra,
     )
 
+    # --- Planning and other aggregates ---
+    g_planning = GPlanning.calc(
+        inputs,
+        road_bus_action_infra=road_bus_action_infra,
+        road_gds_mhd_action_wire=road_gds_mhd_action_wire,
+        road_action_charger=road_action_charger,
+        rail_ppl_metro_action_infra=rail_ppl_metro_action_infra,
+        rail_action_invest_infra=rail_action_invest_infra,
+        other_cycl=other_cycl,
+    )
+
     # --- Populate result ---
     t.transport_capacity_pkm = total_transport_capacity_pkm
 
@@ -3054,23 +3108,7 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
     t30.other_foot = other_foot
     t30.other_foot_action_infra = other_foot_action_infra
     t30.other = other
-
-    g_planning.ratio_wage_to_emplo = ass("Ass_T_C_yearly_costs_per_planer")
-    g_planning.invest = ass("Ass_T_C_planer_cost_per_invest_cost") * (
-        road_bus_action_infra.invest
-        + road_gds_mhd_action_wire.invest
-        + road_action_charger.invest
-        + rail_ppl_metro_action_infra.invest
-        + rail_action_invest_infra.invest
-        + other_cycl.invest
-    )
-    g_planning.invest_com = g_planning.invest * ass("Ass_T_C_ratio_public_sector_100")
-    g_planning.invest_pa_com = g_planning.invest_com / entries.m_duration_target
-    g_planning.invest_pa = g_planning.invest / entries.m_duration_target
-    g_planning.cost_wage = g_planning.invest_pa
-    g_planning.demand_emplo = div(g_planning.cost_wage, g_planning.ratio_wage_to_emplo)
-    g_planning.demand_emplo_new = g_planning.demand_emplo
-    g_planning.demand_emplo_com = g_planning.demand_emplo_new
+    t30.g_planning = g_planning
 
     g.invest_com = g_planning.invest_com
     g.invest_pa_com = g_planning.invest_pa_com
