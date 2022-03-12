@@ -220,6 +220,39 @@ class InvestmentAction:
     pct_of_wage: float = None  # type: ignore
     ratio_wage_to_emplo: float = None  # type: ignore
 
+    @classmethod
+    def calc_rail_action_invest_infra(cls, inputs: Inputs):
+        ass = inputs.ass
+        fact = inputs.fact
+        entries = inputs.entries
+
+        invest_per_x = ass("Ass_T_C_cost_per_trnsprt_rail_infrstrctr")
+        invest = invest_per_x * entries.m_population_com_203X
+        invest_pa = invest / entries.m_duration_target
+        pct_of_wage = fact("Fact_T_D_constr_roadrail_revenue_pct_of_wage_2018")
+        cost_wage = invest_pa * pct_of_wage
+        ratio_wage_to_emplo = fact("Fact_T_D_constr_roadrail_ratio_wage_to_emplo_2018")
+        demand_emplo = div(
+            cost_wage,
+            ratio_wage_to_emplo,
+        )
+        invest_com = invest * ass("Ass_T_C_ratio_public_sector_100")
+        demand_emplo_new = demand_emplo
+        invest_pa_com = invest_com / entries.m_duration_target
+
+        return cls(
+            cost_wage=cost_wage,
+            demand_emplo=demand_emplo,
+            demand_emplo_new=demand_emplo_new,
+            invest=invest,
+            invest_com=invest_com,
+            invest_pa=invest_pa,
+            invest_pa_com=invest_pa_com,
+            invest_per_x=invest_per_x,
+            pct_of_wage=pct_of_wage,
+            ratio_wage_to_emplo=ratio_wage_to_emplo,
+        )
+
 
 @dataclass
 class RoadInvestmentAction(InvestmentAction):
@@ -2416,7 +2449,7 @@ class T30:
     road: RoadSum = field(default_factory=RoadSum)
     rail: Vars27 = field(default_factory=Vars27)
     other: Vars28 = field(default_factory=Vars28)
-    rail_action_invest_infra: InvestmentAction = field(default_factory=InvestmentAction)
+    rail_action_invest_infra: InvestmentAction = None  # type: ignore
     rail_action_invest_station: InvestmentAction = field(
         default_factory=InvestmentAction
     )
@@ -2447,7 +2480,6 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
     other_cycl_action_infra = t30.other_cycl_action_infra
     other_foot_action_infra = t30.other_foot_action_infra
     rail = t30.rail
-    rail_action_invest_infra = t30.rail_action_invest_infra
     rail_action_invest_station = t30.rail_action_invest_station
     rail_ppl = t30.rail_ppl
     rail_ppl_distance = t30.rail_ppl_distance
@@ -2553,31 +2585,7 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
         inputs, t18=t18, total_transport_capacity_pkm=t.transport_capacity_pkm
     )
 
-    rail_action_invest_infra.invest_per_x = ass(
-        "Ass_T_C_cost_per_trnsprt_rail_infrstrctr"
-    )
-    rail_action_invest_infra.invest = (
-        rail_action_invest_infra.invest_per_x * entries.m_population_com_203X
-    )
-    rail_action_invest_infra.invest_pa = (
-        rail_action_invest_infra.invest / entries.m_duration_target
-    )
-    rail_action_invest_infra.pct_of_wage = fact(
-        "Fact_T_D_constr_roadrail_revenue_pct_of_wage_2018"
-    )
-    rail_action_invest_infra.cost_wage = (
-        rail_action_invest_infra.invest_pa * rail_action_invest_infra.pct_of_wage
-    )
-    rail_action_invest_infra.ratio_wage_to_emplo = fact(
-        "Fact_T_D_constr_roadrail_ratio_wage_to_emplo_2018"
-    )
-    rail_action_invest_infra.demand_emplo = div(
-        rail_action_invest_infra.cost_wage, rail_action_invest_infra.ratio_wage_to_emplo
-    )
-    rail_action_invest_infra.invest_com = rail_action_invest_infra.invest * ass(
-        "Ass_T_C_ratio_public_sector_100"
-    )
-    rail_action_invest_infra.demand_emplo_new = rail_action_invest_infra.demand_emplo
+    rail_action_invest_infra = InvestmentAction.calc_rail_action_invest_infra(inputs)
 
     rail_ppl_metro_action_infra = RailPeopleMetroActionInfra.calc(
         inputs, metro_transport_capacity_pkm=rail_ppl_metro.transport_capacity_pkm
@@ -2624,6 +2632,7 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
     t30.rail_ppl_distance = rail_ppl_distance
     t30.rail_ppl = rail_ppl
     t30.rail_ppl_metro_action_infra = rail_ppl_metro_action_infra
+    t30.rail_action_invest_infra = rail_action_invest_infra
     t30.rail_gds = rail_gds
     t30.ship_dmstc = ship_dmstc
     t30.ship_inter = ship_inter
@@ -2710,9 +2719,6 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
 
     rail_action_invest_station.invest_pa = (
         rail_action_invest_station.invest / entries.m_duration_target
-    )
-    rail_action_invest_infra.invest_pa_com = (
-        rail_action_invest_infra.invest_com / entries.m_duration_target
     )
     # rail_action_invest_station.actionSchienenverkehr Investitionen  Bahnhöfe
 
