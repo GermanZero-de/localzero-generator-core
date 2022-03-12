@@ -2689,7 +2689,7 @@ class Rail:
 
 
 @dataclass
-class Vars28:
+class Other:
     # Used by other
     CO2e_total: float = None  # type: ignore
     CO2e_total_2021_estimated: float = None  # type: ignore
@@ -2705,6 +2705,88 @@ class Vars28:
     invest_pa: float = None  # type: ignore
     invest_pa_com: float = None  # type: ignore
     transport_capacity_pkm: float = None  # type: ignore
+
+    @classmethod
+    def calc(
+        cls,
+        inputs: Inputs,
+        *,
+        other_foot: OtherFoot,
+        other_cycl: OtherCycle,
+        other_foot_action_infra: InvestmentAction,
+        other_cycl_action_infra: InvestmentAction,
+    ) -> "Other":
+        demand_change = 0
+        CO2e_total = 0
+        invest_com = (
+            other_foot.invest_com
+            + other_cycl.invest_com
+            + other_foot_action_infra.invest_com
+            + other_cycl_action_infra.invest_com
+        )
+        CO2e_total_2021_estimated = (
+            other_foot.CO2e_total_2021_estimated + other_cycl.CO2e_total_2021_estimated
+        )
+        cost_climate_saved = (
+            other_foot.cost_climate_saved + other_cycl.cost_climate_saved
+        )
+        invest = (
+            other_foot.invest
+            + other_cycl.invest
+            + other_foot_action_infra.invest
+            + other_cycl_action_infra.invest
+        )
+        invest_pa_com = (
+            other_foot.invest_pa_com
+            + other_cycl.invest_pa_com
+            + other_foot_action_infra.invest_pa_com
+            + other_cycl_action_infra.invest_pa_com
+        )
+        demand_emplo_new = (
+            other_foot_action_infra.demand_emplo_new
+            + other_cycl_action_infra.demand_emplo_new
+        )
+        transport_capacity_pkm = (
+            other_foot.transport_capacity_pkm + other_cycl.transport_capacity_pkm
+        )
+        change_km = other_foot.change_km + other_cycl.change_km
+        cost_wage = (
+            other_foot_action_infra.cost_wage + other_cycl_action_infra.cost_wage
+        )
+        other_cycl_action_infra.invest_pa = (
+            other_cycl_action_infra.invest / inputs.entries.m_duration_target
+        )
+        other_cycl_action_infra.demand_emplo = div(
+            other_cycl_action_infra.cost_wage,
+            other_cycl_action_infra.ratio_wage_to_emplo,
+        )
+        demand_emplo = (
+            other_foot_action_infra.demand_emplo + other_cycl_action_infra.demand_emplo
+        )
+        invest_pa = (
+            other_foot.invest_pa
+            + other_cycl.invest_pa
+            + other_foot_action_infra.invest_pa
+            + other_cycl_action_infra.invest_pa
+        )
+        base_unit = other_cycl.base_unit
+
+        return cls(
+            CO2e_total=CO2e_total,
+            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+            base_unit=base_unit,
+            change_km=change_km,
+            cost_climate_saved=cost_climate_saved,
+            cost_wage=cost_wage,
+            demand_change=demand_change,
+            demand_emplo=demand_emplo,
+            demand_emplo_new=demand_emplo_new,
+            invest=invest,
+            invest_com=invest_com,
+            invest_pa=invest_pa,
+            invest_pa_com=invest_pa_com,
+            transport_capacity_pkm=transport_capacity_pkm,
+        )
 
 
 @dataclass
@@ -2753,7 +2835,7 @@ class T30:
     air: Air = None  # type: ignore
     road: RoadSum = field(default_factory=RoadSum)
     rail: Rail = None  # type: ignore
-    other: Vars28 = field(default_factory=Vars28)
+    other: Other = None  # type: ignore
     rail_action_invest_infra: InvestmentAction = None  # type: ignore
     rail_action_invest_station: InvestmentAction = None  # type: ignore
     rail_ppl_metro_action_infra: RailPeopleMetroActionInfra = None  # type: ignore
@@ -2779,7 +2861,6 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
 
     g = t30.g
     g_planning = t30.g_planning
-    other = t30.other
     rail_ppl = t30.rail_ppl
     rail_ppl_distance = t30.rail_ppl_distance
     rail_ppl_distance = t30.rail_ppl_distance
@@ -2805,6 +2886,7 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
     s_bioethanol.energy = 0
     s_biodiesel.energy = 0
 
+    # --- Air ---
     air_dmstc = AirDomestic.calc(inputs, t18)
     air_inter = AirInternational.calc(inputs, t18)
     air = Air.calc(t18, domestic=air_dmstc, international=air_inter)
@@ -2820,6 +2902,7 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
         else ass("Ass_T_D_trnsprt_ppl_nat") / entries.m_population_nat
     )
 
+    # -- Road ---
     road_car_it_ot = Road.calc_car_it_ot(
         inputs, t18=t18, total_transport_capacity_pkm=total_transport_capacity_pkm
     )
@@ -2843,7 +2926,6 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
         road_bus=road_bus,
         road_bus_action_infra=road_bus_action_infra,
     )
-
     road_gds_ldt_it_ot = Road.calc_goods_lightduty_it_ot(inputs, t18=t18)
     road_gds_ldt_ab = Road.calc_goods_lightduty_ab(inputs, t18=t18)
     road_gds_ldt = RoadGoodsLightDuty.calc(
@@ -2872,18 +2954,17 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
         road_action_charger=road_action_charger,
     )
 
+    # --- Rail ---
     rail_ppl_metro = RailPeople.calc_metro(
         inputs, t18=t18, total_transport_capacity_pkm=total_transport_capacity_pkm
     )
     rail_ppl_distance = RailPeople.calc_distance(
         inputs, t18=t18, total_transport_capacity_pkm=total_transport_capacity_pkm
     )
-
     rail_action_invest_infra = InvestmentAction.calc_rail_action_invest_infra(inputs)
     rail_action_invest_station = InvestmentAction.calc_rail_action_invest_station(
         inputs
     )
-
     rail_ppl_metro_action_infra = RailPeopleMetroActionInfra.calc(
         inputs, metro_transport_capacity_pkm=rail_ppl_metro.transport_capacity_pkm
     )
@@ -2895,7 +2976,6 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
         rail_ppl_metro_action_infra=rail_ppl_metro_action_infra,
     )
     rail_gds = RailGoods.calc(inputs, t18=t18)
-
     rail = Rail.calc(
         inputs,
         t18=t18,
@@ -2905,6 +2985,7 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
         rail_action_invest_station=rail_action_invest_station,
     )
 
+    # --- Ship ---
     ship_dmstc = ShipDomestic.calc(inputs, t18=t18)
     ship_inter = ShipInternational.calc(inputs, t18=t18)
     ship_dmstc_action_infra = ShipDomesticActionInfra.calc(inputs)
@@ -2915,20 +2996,26 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
         ship_dmstc_action_infra=ship_dmstc_action_infra,
     )
 
+    # --- Other ---
     other_cycl = OtherCycle.calc(
         inputs, t18, total_transport_capacity_pkm=total_transport_capacity_pkm
     )
     other_cycl_action_infra = InvestmentAction.calc_other_cycl_action_infra(
         inputs, cycle_transport_capacity_pkm=other_cycl.transport_capacity_pkm
     )
-
     other_foot = OtherFoot.calc(
         inputs, t18=t18, total_transport_capacity_pkm=total_transport_capacity_pkm
     )
-
     other_foot_action_infra = InvestmentAction.calc_other_foot_action_infra(inputs)
-    other.CO2e_total = 0  # CJ265 + CM265(
+    other = Other.calc(
+        inputs,
+        other_foot=other_foot,
+        other_cycl=other_cycl,
+        other_cycl_action_infra=other_cycl_action_infra,
+        other_foot_action_infra=other_foot_action_infra,
+    )
 
+    # --- Populate result ---
     t.transport_capacity_pkm = total_transport_capacity_pkm
 
     t30.air_dmstc = air_dmstc
@@ -2966,11 +3053,9 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
     t30.other_cycl_action_infra = other_cycl_action_infra
     t30.other_foot = other_foot
     t30.other_foot_action_infra = other_foot_action_infra
+    t30.other = other
 
     g_planning.ratio_wage_to_emplo = ass("Ass_T_C_yearly_costs_per_planer")
-
-    t.demand_ejetfuel = air.demand_ejetfuel  # + BD237 + BD253 + BD261 + BD265
-
     g_planning.invest = ass("Ass_T_C_planer_cost_per_invest_cost") * (
         road_bus_action_infra.invest
         + road_gds_mhd_action_wire.invest
@@ -2983,30 +3068,23 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
     g.invest_com = g_planning.invest_com
     g_planning.invest_pa_com = g_planning.invest_com / entries.m_duration_target
     g.invest_pa_com = g_planning.invest_pa_com
-
     g_planning.invest_pa = g_planning.invest / entries.m_duration_target
+    g_planning.cost_wage = g_planning.invest_pa
+    g_planning.demand_emplo = div(g_planning.cost_wage, g_planning.ratio_wage_to_emplo)
+    g.demand_emplo = g_planning.demand_emplo
+    g.cost_wage = g_planning.cost_wage
+    g.invest_pa = g_planning.invest_pa
+    g_planning.demand_emplo_new = g_planning.demand_emplo
+    g.invest = g_planning.invest
+    g.demand_emplo_new = g_planning.demand_emplo_new
+    g_planning.demand_emplo_com = g_planning.demand_emplo_new
+    g.demand_emplo_com = g.demand_emplo_new
 
+    t.demand_ejetfuel = air.demand_ejetfuel  # + BD237 + BD253 + BD261 + BD265
     t.demand_epetrol = (
         road.demand_epetrol
     )  # (BB234 + road.demand_epetrol + BB253 + BB261 + BB265)
-    g_planning.cost_wage = g_planning.invest_pa
-
-    g_planning.demand_emplo = div(g_planning.cost_wage, g_planning.ratio_wage_to_emplo)
-
-    g.demand_emplo = g_planning.demand_emplo
-
-    g.cost_wage = g_planning.cost_wage
-
     t.demand_hydrogen = road.demand_hydrogen
-
-    other.demand_change = 0
-
-    rail_action_invest_station = InvestmentAction.calc_rail_action_invest_station(
-        inputs
-    )
-
-    # rail_ppl_distance.actionInvestitionen in zusätzliche Eisenbahnen und Personal
-
     t.demand_change = (
         air.demand_change
         + road.demand_change
@@ -3015,12 +3093,7 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
         + other.demand_change
     )
     t.demand_electricity = road.demand_electricity + rail.demand_electricity
-    # rail_ppl_metro.actionInvestitionen in zusätzliche SSU - Bahnen und Personal
-    # rail_ppl_metro_action_infra.actionInvesitionen in Verkehrsnetze für SSU Bahnen
-    g.invest_pa = g_planning.invest_pa
-
     t.demand_ediesel = road.demand_ediesel + ship.demand_ediesel
-
     t.energy = (
         t.demand_electricity
         + t.demand_epetrol
@@ -3028,7 +3101,7 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
         + t.demand_ejetfuel
         + t.demand_hydrogen
         + t.demand_change
-    )  # SUM(t.demand_electricity:t.demand_change)
+    )
     t.CO2e_combustion_based = (
         air.CO2e_combustion_based
         + road.CO2e_combustion_based
@@ -3037,7 +3110,6 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
     )
     t.change_energy_MWh = t.energy - t18.t.energy
     t.CO2e_total = t.CO2e_combustion_based
-
     t.transport_capacity_tkm = (
         air.transport_capacity_tkm
         + road.transport_capacity_tkm
@@ -3045,41 +3117,8 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
         + ship.transport_capacity_tkm
     )
     t.change_CO2e_t = t.CO2e_combustion_based - t18.t.CO2e_combustion_based
-
     t.change_CO2e_pct = div(t.change_CO2e_t, t18.t.CO2e_combustion_based)
-
     t.change_energy_pct = div(t.change_energy_MWh, t18.t.energy)
-
-    other.invest_com = (
-        other_foot.invest_com
-        + other_cycl.invest_com
-        + other_foot_action_infra.invest_com
-        + other_cycl_action_infra.invest_com
-    )  # SUM(other_foot.invest_com:DE268)
-
-    g_planning.demand_emplo_new = g_planning.demand_emplo
-
-    other.CO2e_total_2021_estimated = (
-        other_foot.CO2e_total_2021_estimated + other_cycl.CO2e_total_2021_estimated
-    )
-    other.cost_climate_saved = (
-        other_foot.cost_climate_saved + other_cycl.cost_climate_saved
-    )  # SUM(other_foot.cost_climate_saved:other_cycl.cost_climate_saved)
-
-    other.invest = (
-        other_foot.invest
-        + other_cycl.invest
-        + other_foot_action_infra.invest
-        + other_cycl_action_infra.invest
-    )  # SUM(other_foot.invest:other_cycl_action_infra.invest)
-
-    other.invest_pa_com = (
-        other_foot.invest_pa_com
-        + other_cycl.invest_pa_com
-        + other_foot_action_infra.invest_pa_com
-        + other_cycl_action_infra.invest_pa_com
-    )  # SUM(other_foot.invest_pa_com:DB268)
-    g.invest = g_planning.invest
     t.invest_com = (
         g.invest_com
         + road.invest_com
@@ -3087,11 +3126,6 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
         + ship.invest_com
         + other.invest_com
         + air.invest_com
-    )
-    # other_foot.emplo_existingnicht existent oder ausgelastet
-    other.demand_emplo_new = (
-        other_foot_action_infra.demand_emplo_new
-        + other_cycl_action_infra.demand_emplo_new
     )
     t.invest_pa_com = (
         g.invest_pa_com
@@ -3101,10 +3135,6 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
         + other.invest_pa_com
         + air.invest_pa_com
     )
-    other.transport_capacity_pkm = (
-        other_foot.transport_capacity_pkm + other_cycl.transport_capacity_pkm
-    )
-
     t.CO2e_total_2021_estimated = (
         air.CO2e_total_2021_estimated
         + road.CO2e_total_2021_estimated
@@ -3119,31 +3149,11 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
         + ship.cost_climate_saved
         + other.cost_climate_saved
     )
-    other.change_km = other_foot.change_km + other_cycl.change_km
-    # other_cycl.actionAufbau Radinfrastruktur
-
-    g.demand_emplo_new = g_planning.demand_emplo_new
-
     t.invest = (
         road.invest + rail.invest + ship.invest + other.invest + air.invest + g.invest
     )
-
-    other.cost_wage = (
-        other_foot_action_infra.cost_wage + other_cycl_action_infra.cost_wage
-    )
     t.cost_wage = (
         g.cost_wage + road.cost_wage + rail.cost_wage + ship.cost_wage + other.cost_wage
-    )
-
-    other_cycl_action_infra.invest_pa = (
-        other_cycl_action_infra.invest / entries.m_duration_target
-    )
-
-    other_cycl_action_infra.demand_emplo = div(
-        other_cycl_action_infra.cost_wage, other_cycl_action_infra.ratio_wage_to_emplo
-    )
-    other.demand_emplo = (
-        other_foot_action_infra.demand_emplo + other_cycl_action_infra.demand_emplo
     )
     t.demand_emplo = (
         g.demand_emplo
@@ -3153,8 +3163,6 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
         + ship.demand_emplo
         + other.demand_emplo
     )
-    # other_cycl.emplo_existingnicht existent oder ausgelastet
-
     t.demand_emplo_new = (
         g.demand_emplo_new
         + air.demand_emplo_new
@@ -3163,16 +3171,6 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
         + ship.demand_emplo_new
         + other.demand_emplo_new
     )
-    # g_planning.actionNeue Stellen im Bereich "Verkehrsplanung"
-    # other_cycl_action_infra.actionInvestitionen in (E - )Lastenräder
-
-    other.invest_pa = (
-        other_foot.invest_pa
-        + other_cycl.invest_pa
-        + other_foot_action_infra.invest_pa
-        + other_cycl_action_infra.invest_pa
-    )
-    other.base_unit = other_cycl.base_unit
     t.invest_pa = (
         road.invest_pa
         + rail.invest_pa
@@ -3181,13 +3179,14 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
         + air.invest_pa
         + g.invest_pa
     )
+    t.demand_emplo_com = g.demand_emplo_com
+
     s_petrol.energy = t.demand_epetrol
     s_jetfuel.energy = t.demand_ejetfuel
     s_diesel.energy = t.demand_ediesel
     s_elec.energy = t.demand_electricity
     s_hydrogen.energy = t.demand_hydrogen
     s_emethan.energy = 0
-
     s.energy = (
         s_petrol.energy
         + s_jetfuel.energy
@@ -3196,9 +3195,5 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
         + s_hydrogen.energy
         + s_emethan.energy
     )
-
-    g_planning.demand_emplo_com = g_planning.demand_emplo_new
-    g.demand_emplo_com = g.demand_emplo_new
-    t.demand_emplo_com = g.demand_emplo_com
 
     return t30
