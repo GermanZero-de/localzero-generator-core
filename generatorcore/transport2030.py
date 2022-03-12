@@ -197,11 +197,11 @@ class TransportInvestments:
     costs.
     """
 
-    base_unit: float = 0
+    base_unit: float
 
-    invest: float = 0
-    invest_pa: float = 0
-    invest_per_x: float = 0
+    invest: float
+    invest_pa: float
+    invest_per_x: float
 
 
 @dataclass
@@ -209,16 +209,16 @@ class InvestmentAction:
     """For some transport mechanism additional investments are needed."""
 
     # Used by road_gds_mhd_action_wire, other_foot_action_infra, other_cycl_action_infra, rail_action_invest_infra, rail_action_invest_station, road_bus_action_infra
-    cost_wage: float = None  # type: ignore
-    demand_emplo: float = None  # type: ignore
-    demand_emplo_new: float = None  # type: ignore
-    invest: float = None  # type: ignore
-    invest_com: float = None  # type: ignore
-    invest_pa: float = None  # type: ignore
-    invest_pa_com: float = None  # type: ignore
-    invest_per_x: float = None  # type: ignore
-    pct_of_wage: float = None  # type: ignore
-    ratio_wage_to_emplo: float = None  # type: ignore
+    cost_wage: float
+    demand_emplo: float
+    demand_emplo_new: float
+    invest: float
+    invest_com: float
+    invest_pa: float
+    invest_pa_com: float
+    invest_per_x: float
+    pct_of_wage: float
+    ratio_wage_to_emplo: float
 
     @classmethod
     def calc_rail_action_invest_infra(cls, inputs: Inputs) -> "InvestmentAction":
@@ -355,7 +355,7 @@ class InvestmentAction:
 @dataclass
 class RoadInvestmentAction(InvestmentAction):
     # Used by road_action_charger
-    base_unit: float = None  # type: ignore
+    base_unit: float
 
     @classmethod
     def calc_car_action_charger(
@@ -403,23 +403,23 @@ class RoadInvestmentAction(InvestmentAction):
 @dataclass
 class Road:
     # Used by road_gds_ldt_it_ot, road_gds_ldt_ab, road_gds_mhd_it_ot, road_gds_mhd_ab
-    change_CO2e_pct: float = None  # type: ignore
-    change_CO2e_t: float = None  # type: ignore
-    change_energy_MWh: float = None  # type: ignore
-    change_energy_pct: float = None  # type: ignore
-    change_km: float = None  # type: ignore
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    cost_climate_saved: float = None  # type: ignore
-    demand_ediesel: float = None  # type: ignore
-    demand_electricity: float = None  # type: ignore
-    demand_hydrogen: float = None  # type: ignore
-    demand_epetrol: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    mileage: float = None  # type: ignore
-    transport_capacity_tkm: float = None  # type: ignore
-    transport_capacity_pkm: float = None  # type: ignore
+    change_CO2e_pct: float
+    change_CO2e_t: float
+    change_energy_MWh: float
+    change_energy_pct: float
+    change_km: float
+    CO2e_combustion_based: float
+    CO2e_total_2021_estimated: float
+    CO2e_total: float
+    cost_climate_saved: float
+    demand_ediesel: float
+    demand_electricity: float
+    demand_hydrogen: float
+    demand_epetrol: float
+    energy: float
+    mileage: float
+    transport_capacity_tkm: float
+    transport_capacity_pkm: float
 
     def __add__(self: "Road", other: "Road") -> "Road":
         return element_wise_plus(self, other)
@@ -990,14 +990,14 @@ class RoadCar(Road, TransportInvestments):
 
 @dataclass
 class BusInvestments(TransportInvestments):
-    cost_wage: float = None  # type: ignore
-    demand_emplo_new: float = None  # type: ignore
-    demand_emplo: float = None  # type: ignore
-    emplo_existing: float = None  # type: ignore
-    invest_com: float = None  # type: ignore
-    invest_pa_com: float = None  # type: ignore
-    pct_of_wage: float = None  # type: ignore
-    ratio_wage_to_emplo: float = None  # type: ignore
+    cost_wage: float
+    demand_emplo_new: float
+    demand_emplo: float
+    emplo_existing: float
+    invest_com: float
+    invest_pa_com: float
+    pct_of_wage: float
+    ratio_wage_to_emplo: float
 
 
 @dataclass
@@ -1146,14 +1146,14 @@ class RoadBus(Road, BusInvestments):
 @dataclass
 class RoadPeople(Road):
     # Used by road_ppl
-    base_unit: float = None  # type: ignore
-    cost_wage: float = None  # type: ignore
-    demand_emplo_new: float = None  # type: ignore
-    demand_emplo: float = None  # type: ignore
-    invest_com: float = None  # type: ignore
-    invest_pa_com: float = None  # type: ignore
-    invest_pa: float = None  # type: ignore
-    invest: float = None  # type: ignore
+    base_unit: float
+    cost_wage: float
+    demand_emplo_new: float
+    demand_emplo: float
+    invest_com: float
+    invest_pa_com: float
+    invest_pa: float
+    invest: float
 
     @classmethod
     def calc(
@@ -1227,13 +1227,13 @@ class RoadPeople(Road):
 @dataclass
 class RoadGoodsMediumAndHeavyDuty(Road):
     # Used by road_gds_mhd
-    base_unit: float = None  # type: ignore
-    demand_emplo_new: float = None  # type: ignore
-    demand_emplo: float = None  # type: ignore
-    emplo_existing: float = None  # type: ignore
-    invest_pa: float = None  # type: ignore
-    invest_per_x: float = None  # type: ignore
-    invest: float = None  # type: ignore
+    base_unit: float
+    demand_emplo_new: float
+    demand_emplo: float
+    emplo_existing: float
+    invest_pa: float
+    invest_per_x: float
+    invest: float
 
     @classmethod
     def calc(
@@ -1315,11 +1315,11 @@ class RoadGoodsMediumAndHeavyDuty(Road):
 @dataclass
 class RoadGoodsLightDuty(Road):
     # Used by road_gds_ldt
-    base_unit: float = None  # type: ignore
+    base_unit: float
 
-    invest_pa: float = None  # type: ignore
-    invest_per_x: float = None  # type: ignore
-    invest: float = None  # type: ignore
+    invest_pa: float
+    invest_per_x: float
+    invest: float
 
     @classmethod
     def calc(
@@ -1376,15 +1376,15 @@ class RoadGoodsLightDuty(Road):
 @dataclass
 class RoadGoods(Road):
     # Used by road_gds
-    base_unit: float = None  # type: ignore
-    demand_emplo_new: float = None  # type: ignore
-    demand_emplo: float = None  # type: ignore
-    invest_com: float = None  # type: ignore
-    invest_pa_com: float = None  # type: ignore
-    invest_pa: float = None  # type: ignore
-    invest: float = None  # type: ignore
+    base_unit: float
+    demand_emplo_new: float
+    demand_emplo: float
+    invest_com: float
+    invest_pa_com: float
+    invest_pa: float
+    invest: float
 
-    cost_wage: float = None  # type: ignore
+    cost_wage: float
 
     @classmethod
     def calc(
@@ -1457,30 +1457,30 @@ class RoadGoods(Road):
 @dataclass
 class RoadSum:
     # Used by road
-    change_CO2e_pct: float = None  # type: ignore
-    change_CO2e_t: float = None  # type: ignore
-    change_energy_MWh: float = None  # type: ignore
-    change_energy_pct: float = None  # type: ignore
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    cost_climate_saved: float = None  # type: ignore
-    cost_wage: float = None  # type: ignore
-    demand_change: float = None  # type: ignore
-    demand_ediesel: float = None  # type: ignore
-    demand_electricity: float = None  # type: ignore
-    demand_emplo_new: float = None  # type: ignore
-    demand_emplo: float = None  # type: ignore
-    demand_epetrol: float = None  # type: ignore
-    demand_hydrogen: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    invest_com: float = None  # type: ignore
-    invest_pa_com: float = None  # type: ignore
-    invest_pa: float = None  # type: ignore
-    invest: float = None  # type: ignore
-    mileage: float = None  # type: ignore
-    transport_capacity_pkm: float = None  # type: ignore
-    transport_capacity_tkm: float = None  # type: ignore
+    change_CO2e_pct: float
+    change_CO2e_t: float
+    change_energy_MWh: float
+    change_energy_pct: float
+    CO2e_combustion_based: float
+    CO2e_total_2021_estimated: float
+    CO2e_total: float
+    cost_climate_saved: float
+    cost_wage: float
+    demand_change: float
+    demand_ediesel: float
+    demand_electricity: float
+    demand_emplo_new: float
+    demand_emplo: float
+    demand_epetrol: float
+    demand_hydrogen: float
+    energy: float
+    invest_com: float
+    invest_pa_com: float
+    invest_pa: float
+    invest: float
+    mileage: float
+    transport_capacity_pkm: float
+    transport_capacity_tkm: float
 
     @classmethod
     def calc(
@@ -1570,29 +1570,29 @@ class RoadSum:
 @dataclass
 class RailPeople:
     # Used by rail_ppl_distance and rail_ppl_metro
-    base_unit: float = None  # type: ignore
-    change_CO2e_pct: float = None  # type: ignore
-    change_CO2e_t: float = None  # type: ignore
-    change_energy_MWh: float = None  # type: ignore
-    change_energy_pct: float = None  # type: ignore
-    change_km: float = None  # type: ignore
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    cost_climate_saved: float = None  # type: ignore
-    cost_wage: float = None  # type: ignore
-    demand_electricity: float = None  # type: ignore
-    demand_emplo_new: float = None  # type: ignore
-    demand_emplo: float = None  # type: ignore
-    emplo_existing: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    invest_pa: float = None  # type: ignore
-    invest_per_x: float = None  # type: ignore
-    invest: float = None  # type: ignore
-    mileage: float = None  # type: ignore
-    pct_of_wage: float = None  # type: ignore
-    ratio_wage_to_emplo: float = None  # type: ignore
-    transport_capacity_pkm: float = None  # type: ignore
+    base_unit: float
+    change_CO2e_pct: float
+    change_CO2e_t: float
+    change_energy_MWh: float
+    change_energy_pct: float
+    change_km: float
+    CO2e_combustion_based: float
+    CO2e_total_2021_estimated: float
+    CO2e_total: float
+    cost_climate_saved: float
+    cost_wage: float
+    demand_electricity: float
+    demand_emplo_new: float
+    demand_emplo: float
+    emplo_existing: float
+    energy: float
+    invest_pa: float
+    invest_per_x: float
+    invest: float
+    mileage: float
+    pct_of_wage: float
+    ratio_wage_to_emplo: float
+    transport_capacity_pkm: float
 
     @classmethod
     def calc_metro(
@@ -1777,18 +1777,18 @@ class RailPeople:
 @dataclass
 class RailPeopleMetroActionInfra:
     # Used by rail_ppl_metro_action_infra
-    base_unit: float = None  # type: ignore
-    cost_wage: float = None  # type: ignore
-    demand_emplo: float = None  # type: ignore
-    demand_emplo_new: float = None  # type: ignore
-    emplo_existing: float = None  # type: ignore
-    invest: float = None  # type: ignore
-    invest_com: float = None  # type: ignore
-    invest_pa: float = None  # type: ignore
-    invest_pa_com: float = None  # type: ignore
-    invest_per_x: float = None  # type: ignore
-    pct_of_wage: float = None  # type: ignore
-    ratio_wage_to_emplo: float = None  # type: ignore
+    base_unit: float
+    cost_wage: float
+    demand_emplo: float
+    demand_emplo_new: float
+    emplo_existing: float
+    invest: float
+    invest_com: float
+    invest_pa: float
+    invest_pa_com: float
+    invest_per_x: float
+    pct_of_wage: float
+    ratio_wage_to_emplo: float
 
     @classmethod
     def calc(
@@ -1831,28 +1831,28 @@ class RailPeopleMetroActionInfra:
 @dataclass
 class RailPeopleSum:
     # Used by rail_ppl
-    base_unit: float = None  # type: ignore
-    change_CO2e_pct: float = None  # type: ignore
-    change_CO2e_t: float = None  # type: ignore
-    change_energy_MWh: float = None  # type: ignore
-    change_energy_pct: float = None  # type: ignore
-    change_km: float = None  # type: ignore
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    cost_climate_saved: float = None  # type: ignore
-    cost_wage: float = None  # type: ignore
-    demand_electricity: float = None  # type: ignore
-    demand_emplo_new: float = None  # type: ignore
-    demand_emplo: float = None  # type: ignore
-    emplo_existing: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    invest_com: float = None  # type: ignore
-    invest_pa_com: float = None  # type: ignore
-    invest_pa: float = None  # type: ignore
-    invest: float = None  # type: ignore
-    mileage: float = None  # type: ignore
-    transport_capacity_pkm: float = None  # type: ignore
+    base_unit: float
+    change_CO2e_pct: float
+    change_CO2e_t: float
+    change_energy_MWh: float
+    change_energy_pct: float
+    change_km: float
+    CO2e_combustion_based: float
+    CO2e_total_2021_estimated: float
+    CO2e_total: float
+    cost_climate_saved: float
+    cost_wage: float
+    demand_electricity: float
+    demand_emplo_new: float
+    demand_emplo: float
+    emplo_existing: float
+    energy: float
+    invest_com: float
+    invest_pa_com: float
+    invest_pa: float
+    invest: float
+    mileage: float
+    transport_capacity_pkm: float
 
     @classmethod
     def calc(
@@ -1963,29 +1963,29 @@ class RailPeopleSum:
 @dataclass
 class RailGoods:
     # Used by rail_gds
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
-    base_unit: float = None  # type: ignore
-    change_CO2e_pct: float = None  # type: ignore
-    change_CO2e_t: float = None  # type: ignore
-    change_energy_MWh: float = None  # type: ignore
-    change_energy_pct: float = None  # type: ignore
-    change_km: float = None  # type: ignore
-    cost_climate_saved: float = None  # type: ignore
-    cost_wage: float = None  # type: ignore
-    demand_electricity: float = None  # type: ignore
-    demand_emplo: float = None  # type: ignore
-    demand_emplo_new: float = None  # type: ignore
-    emplo_existing: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    invest: float = None  # type: ignore
-    invest_pa: float = None  # type: ignore
-    invest_per_x: float = None  # type: ignore
-    pct_of_wage: float = None  # type: ignore
-    mileage: float = None  # type: ignore
-    ratio_wage_to_emplo: float = None  # type: ignore
-    transport_capacity_tkm: float = None  # type: ignore
+    CO2e_combustion_based: float
+    CO2e_total: float
+    CO2e_total_2021_estimated: float
+    base_unit: float
+    change_CO2e_pct: float
+    change_CO2e_t: float
+    change_energy_MWh: float
+    change_energy_pct: float
+    change_km: float
+    cost_climate_saved: float
+    cost_wage: float
+    demand_electricity: float
+    demand_emplo: float
+    demand_emplo_new: float
+    emplo_existing: float
+    energy: float
+    invest: float
+    invest_pa: float
+    invest_per_x: float
+    pct_of_wage: float
+    mileage: float
+    ratio_wage_to_emplo: float
+    transport_capacity_tkm: float
 
     @classmethod
     def calc(cls, inputs: Inputs, *, t18: T18) -> "RailGoods":
@@ -2065,28 +2065,28 @@ class RailGoods:
 @dataclass
 class ShipDomestic:
     # Used by ship_dmstc
-    base_unit: float = None  # type: ignore
-    change_CO2e_pct: float = None  # type: ignore
-    change_CO2e_t: float = None  # type: ignore
-    change_energy_MWh: float = None  # type: ignore
-    change_energy_pct: float = None  # type: ignore
-    change_km: float = None  # type: ignore
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    cost_climate_saved: float = None  # type: ignore
-    cost_wage: float = None  # type: ignore
-    demand_ediesel: float = None  # type: ignore
-    demand_emplo_new: float = None  # type: ignore
-    demand_emplo: float = None  # type: ignore
-    emplo_existing: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    invest_pa: float = None  # type: ignore
-    invest_per_x: float = None  # type: ignore
-    invest: float = None  # type: ignore
-    pct_of_wage: float = None  # type: ignore
-    ratio_wage_to_emplo: float = None  # type: ignore
-    transport_capacity_tkm: float = None  # type: ignore
+    base_unit: float
+    change_CO2e_pct: float
+    change_CO2e_t: float
+    change_energy_MWh: float
+    change_energy_pct: float
+    change_km: float
+    CO2e_combustion_based: float
+    CO2e_total_2021_estimated: float
+    CO2e_total: float
+    cost_climate_saved: float
+    cost_wage: float
+    demand_ediesel: float
+    demand_emplo_new: float
+    demand_emplo: float
+    emplo_existing: float
+    energy: float
+    invest_pa: float
+    invest_per_x: float
+    invest: float
+    pct_of_wage: float
+    ratio_wage_to_emplo: float
+    transport_capacity_tkm: float
 
     @classmethod
     def calc(cls, inputs: Inputs, *, t18: T18) -> "ShipDomestic":
@@ -2164,18 +2164,18 @@ class ShipDomestic:
 @dataclass
 class ShipDomesticActionInfra:
     # Used by ship_dmstc_action_infra
-    CO2e_total_2021_estimated: float = None  # type: ignore
-    cost_climate_saved: float = None  # type: ignore
-    cost_wage: float = None  # type: ignore
-    demand_ediesel: float = None  # type: ignore
-    demand_emplo: float = None  # type: ignore
-    demand_emplo_new: float = None  # type: ignore
-    invest: float = None  # type: ignore
-    invest_com: float = None  # type: ignore
-    invest_pa: float = None  # type: ignore
-    invest_pa_com: float = None  # type: ignore
-    pct_of_wage: float = None  # type: ignore
-    ratio_wage_to_emplo: float = None  # type: ignore
+    CO2e_total_2021_estimated: float
+    cost_climate_saved: float
+    cost_wage: float
+    demand_ediesel: float
+    demand_emplo: float
+    demand_emplo_new: float
+    invest: float
+    invest_com: float
+    invest_pa: float
+    invest_pa_com: float
+    pct_of_wage: float
+    ratio_wage_to_emplo: float
 
     @classmethod
     def calc(cls, inputs: Inputs) -> "ShipDomesticActionInfra":
@@ -2222,18 +2222,18 @@ class ShipDomesticActionInfra:
 @dataclass
 class ShipInternational:
     # Used by ship_inter
-    change_CO2e_pct: float = None  # type: ignore
-    change_CO2e_t: float = None  # type: ignore
-    change_energy_MWh: float = None  # type: ignore
-    change_energy_pct: float = None  # type: ignore
-    change_km: float = None  # type: ignore
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    cost_climate_saved: float = None  # type: ignore
-    demand_ediesel: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    transport_capacity_tkm: float = None  # type: ignore
+    change_CO2e_pct: float
+    change_CO2e_t: float
+    change_energy_MWh: float
+    change_energy_pct: float
+    change_km: float
+    CO2e_combustion_based: float
+    CO2e_total_2021_estimated: float
+    CO2e_total: float
+    cost_climate_saved: float
+    demand_ediesel: float
+    energy: float
+    transport_capacity_tkm: float
 
     @classmethod
     def calc(cls, inputs: Inputs, *, t18: T18) -> "ShipInternational":
@@ -2287,27 +2287,27 @@ class ShipInternational:
 @dataclass
 class Ship:
     # Used by ship
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
-    base_unit: float = None  # type: ignore
-    change_CO2e_pct: float = None  # type: ignore
-    change_CO2e_t: float = None  # type: ignore
-    change_energy_MWh: float = None  # type: ignore
-    change_energy_pct: float = None  # type: ignore
-    cost_climate_saved: float = None  # type: ignore
-    cost_wage: float = None  # type: ignore
-    demand_change: float = None  # type: ignore
-    demand_ediesel: float = None  # type: ignore
-    demand_emplo: float = None  # type: ignore
-    demand_emplo_new: float = None  # type: ignore
-    emplo_existing: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    invest: float = None  # type: ignore
-    invest_com: float = None  # type: ignore
-    invest_pa: float = None  # type: ignore
-    invest_pa_com: float = None  # type: ignore
-    transport_capacity_tkm: float = None  # type: ignore
+    CO2e_combustion_based: float
+    CO2e_total: float
+    CO2e_total_2021_estimated: float
+    base_unit: float
+    change_CO2e_pct: float
+    change_CO2e_t: float
+    change_energy_MWh: float
+    change_energy_pct: float
+    cost_climate_saved: float
+    cost_wage: float
+    demand_change: float
+    demand_ediesel: float
+    demand_emplo: float
+    demand_emplo_new: float
+    emplo_existing: float
+    energy: float
+    invest: float
+    invest_com: float
+    invest_pa: float
+    invest_pa_com: float
+    transport_capacity_tkm: float
 
     @classmethod
     def calc(
@@ -2383,15 +2383,15 @@ class Ship:
 @dataclass
 class OtherFoot:
     # Used by other_foot
-    CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
-    change_km: float = None  # type: ignore
-    cost_climate_saved: float = None  # type: ignore
-    invest: float = None  # type: ignore
-    invest_com: float = None  # type: ignore
-    invest_pa: float = None  # type: ignore
-    invest_pa_com: float = None  # type: ignore
-    transport_capacity_pkm: float = None  # type: ignore
+    CO2e_total: float
+    CO2e_total_2021_estimated: float
+    change_km: float
+    cost_climate_saved: float
+    invest: float
+    invest_com: float
+    invest_pa: float
+    invest_pa_com: float
+    transport_capacity_pkm: float
 
     @classmethod
     def calc(
@@ -2436,17 +2436,17 @@ class OtherFoot:
 @dataclass
 class OtherCycle:
     # Used by other_cycl
-    CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
-    base_unit: float = None  # type: ignore
-    change_km: float = None  # type: ignore
-    cost_climate_saved: float = None  # type: ignore
-    invest: float = None  # type: ignore
-    invest_com: float = None  # type: ignore
-    invest_pa: float = None  # type: ignore
-    invest_pa_com: float = None  # type: ignore
-    invest_per_x: float = None  # type: ignore
-    transport_capacity_pkm: float = None  # type: ignore
+    CO2e_total: float
+    CO2e_total_2021_estimated: float
+    base_unit: float
+    change_km: float
+    cost_climate_saved: float
+    invest: float
+    invest_com: float
+    invest_pa: float
+    invest_pa_com: float
+    invest_per_x: float
+    transport_capacity_pkm: float
 
     @classmethod
     def calc(
@@ -2505,15 +2505,15 @@ class OtherCycle:
 @dataclass
 class GPlanning:
     # Used by g_planning
-    cost_wage: float = None  # type: ignore
-    demand_emplo: float = None  # type: ignore
-    demand_emplo_com: float = None  # type: ignore
-    demand_emplo_new: float = None  # type: ignore
-    invest: float = None  # type: ignore
-    invest_com: float = None  # type: ignore
-    invest_pa: float = None  # type: ignore
-    invest_pa_com: float = None  # type: ignore
-    ratio_wage_to_emplo: float = None  # type: ignore
+    cost_wage: float
+    demand_emplo: float
+    demand_emplo_com: float
+    demand_emplo_new: float
+    invest: float
+    invest_com: float
+    invest_pa: float
+    invest_pa_com: float
+    ratio_wage_to_emplo: float
 
     @classmethod
     def calc(
@@ -2581,28 +2581,28 @@ class G:
 @dataclass
 class Rail:
     # Used by rail
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
-    base_unit: float = None  # type: ignore
-    change_CO2e_pct: float = None  # type: ignore
-    change_CO2e_t: float = None  # type: ignore
-    change_energy_MWh: float = None  # type: ignore
-    change_energy_pct: float = None  # type: ignore
-    cost_climate_saved: float = None  # type: ignore
-    cost_wage: float = None  # type: ignore
-    demand_change: float = None  # type: ignore
-    demand_electricity: float = None  # type: ignore
-    demand_emplo: float = None  # type: ignore
-    demand_emplo_new: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    invest: float = None  # type: ignore
-    invest_com: float = None  # type: ignore
-    invest_pa: float = None  # type: ignore
-    invest_pa_com: float = None  # type: ignore
-    mileage: float = None  # type: ignore
-    transport_capacity_pkm: float = None  # type: ignore
-    transport_capacity_tkm: float = None  # type: ignore
+    CO2e_combustion_based: float
+    CO2e_total: float
+    CO2e_total_2021_estimated: float
+    base_unit: float
+    change_CO2e_pct: float
+    change_CO2e_t: float
+    change_energy_MWh: float
+    change_energy_pct: float
+    cost_climate_saved: float
+    cost_wage: float
+    demand_change: float
+    demand_electricity: float
+    demand_emplo: float
+    demand_emplo_new: float
+    energy: float
+    invest: float
+    invest_com: float
+    invest_pa: float
+    invest_pa_com: float
+    mileage: float
+    transport_capacity_pkm: float
+    transport_capacity_tkm: float
 
     @classmethod
     def calc(
@@ -2704,20 +2704,20 @@ class Rail:
 @dataclass
 class Other:
     # Used by other
-    CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
-    base_unit: float = None  # type: ignore
-    change_km: float = None  # type: ignore
-    cost_climate_saved: float = None  # type: ignore
-    cost_wage: float = None  # type: ignore
-    demand_change: float = None  # type: ignore
-    demand_emplo: float = None  # type: ignore
-    demand_emplo_new: float = None  # type: ignore
-    invest: float = None  # type: ignore
-    invest_com: float = None  # type: ignore
-    invest_pa: float = None  # type: ignore
-    invest_pa_com: float = None  # type: ignore
-    transport_capacity_pkm: float = None  # type: ignore
+    CO2e_total: float
+    CO2e_total_2021_estimated: float
+    base_unit: float
+    change_km: float
+    cost_climate_saved: float
+    cost_wage: float
+    demand_change: float
+    demand_emplo: float
+    demand_emplo_new: float
+    invest: float
+    invest_com: float
+    invest_pa: float
+    invest_pa_com: float
+    transport_capacity_pkm: float
 
     @classmethod
     def calc(
@@ -2805,31 +2805,31 @@ class Other:
 @dataclass
 class T:
     # Used by t
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
-    change_CO2e_pct: float = None  # type: ignore
-    change_CO2e_t: float = None  # type: ignore
-    change_energy_MWh: float = None  # type: ignore
-    change_energy_pct: float = None  # type: ignore
-    cost_climate_saved: float = None  # type: ignore
-    cost_wage: float = None  # type: ignore
-    demand_change: float = None  # type: ignore
-    demand_ediesel: float = None  # type: ignore
-    demand_ejetfuel: float = None  # type: ignore
-    demand_electricity: float = None  # type: ignore
-    demand_emplo: float = None  # type: ignore
-    demand_emplo_com: float = None  # type: ignore
-    demand_emplo_new: float = None  # type: ignore
-    demand_epetrol: float = None  # type: ignore
-    demand_hydrogen: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    invest: float = None  # type: ignore
-    invest_com: float = None  # type: ignore
-    invest_pa: float = None  # type: ignore
-    invest_pa_com: float = None  # type: ignore
-    transport_capacity_pkm: float = None  # type: ignore
-    transport_capacity_tkm: float = None  # type: ignore
+    CO2e_combustion_based: float
+    CO2e_total: float
+    CO2e_total_2021_estimated: float
+    change_CO2e_pct: float
+    change_CO2e_t: float
+    change_energy_MWh: float
+    change_energy_pct: float
+    cost_climate_saved: float
+    cost_wage: float
+    demand_change: float
+    demand_ediesel: float
+    demand_ejetfuel: float
+    demand_electricity: float
+    demand_emplo: float
+    demand_emplo_com: float
+    demand_emplo_new: float
+    demand_epetrol: float
+    demand_hydrogen: float
+    energy: float
+    invest: float
+    invest_com: float
+    invest_pa: float
+    invest_pa_com: float
+    transport_capacity_pkm: float
+    transport_capacity_tkm: float
 
     @classmethod
     def calc(
@@ -2983,58 +2983,58 @@ class T:
 
 @dataclass
 class T30:
-    air_inter: AirInternational = None  # type: ignore
-    air_dmstc: AirDomestic = None  # type: ignore
-    road_ppl: RoadPeople = field(default_factory=RoadPeople)
-    road_car: RoadCar = field(default_factory=RoadCar)
-    road_car_it_ot: Road = None  # type: ignore
-    road_car_ab: Road = None  # type: ignore
-    road_bus: RoadBus = None  # type: ignore
-    road_gds: RoadGoods = field(default_factory=RoadGoods)
-    road_gds_ldt: RoadGoodsLightDuty = None  # type: ignore
-    road_gds_ldt_it_ot: Road = None  # type: ignore
-    road_gds_ldt_ab: Road = None  # type: ignore
-    road_gds_mhd: RoadGoodsMediumAndHeavyDuty = None  # type: ignore
-    road_gds_mhd_it_ot: Road = None  # type: ignore
-    road_gds_mhd_ab: Road = None  # type: ignore
-    road_gds_mhd_action_wire: InvestmentAction = field(default_factory=InvestmentAction)
-    rail_ppl: RailPeopleSum = None  # type: ignore
-    rail_ppl_distance: RailPeople = field(default_factory=RailPeople)
-    rail_ppl_metro: RailPeople = None  # type: ignore
-    rail_gds: RailGoods = field(default_factory=RailGoods)
-    ship: Ship = None  # type: ignore
-    ship_dmstc: ShipDomestic = None  # type: ignore
-    ship_dmstc_action_infra: ShipDomesticActionInfra = None  # type: ignore
-    ship_inter: ShipInternational = field(default_factory=ShipInternational)
-    other_foot: OtherFoot = None  # type: ignore
-    other_foot_action_infra: InvestmentAction = None  # type: ignore
-    other_cycl: OtherCycle = None  # type: ignore
-    other_cycl_action_infra: InvestmentAction = None  # type: ignore
-    g_planning: GPlanning = None  # type: ignore
-    s: EnergySum = None  # type: ignore
-    s_diesel: EnergySum = None  # type: ignore
-    s_emethan: EnergySum = None  # type: ignore
-    s_jetfuel: EnergySum = None  # type: ignore
-    s_petrol: EnergySum = None  # type: ignore
-    s_fueloil: EnergySum = None  # type: ignore
-    s_lpg: EnergySum = None  # type: ignore
-    s_gas: EnergySum = None  # type: ignore
-    s_biogas: EnergySum = None  # type: ignore
-    s_bioethanol: EnergySum = None  # type: ignore
-    s_biodiesel: EnergySum = None  # type: ignore
-    s_elec: EnergySum = None  # type: ignore
-    s_hydrogen: EnergySum = None  # type: ignore
-    g: G = None  # type: ignore
-    t: T = None  # type: ignore
-    air: Air = None  # type: ignore
-    road: RoadSum = field(default_factory=RoadSum)
-    rail: Rail = None  # type: ignore
-    other: Other = None  # type: ignore
-    rail_action_invest_infra: InvestmentAction = None  # type: ignore
-    rail_action_invest_station: InvestmentAction = None  # type: ignore
-    rail_ppl_metro_action_infra: RailPeopleMetroActionInfra = None  # type: ignore
-    road_action_charger: RoadInvestmentAction = None  # type: ignore
-    road_bus_action_infra: InvestmentAction = None  # type: ignore
+    air_inter: AirInternational
+    air_dmstc: AirDomestic
+    road_ppl: RoadPeople
+    road_car: RoadCar
+    road_car_it_ot: Road
+    road_car_ab: Road
+    road_bus: RoadBus
+    road_gds: RoadGoods
+    road_gds_ldt: RoadGoodsLightDuty
+    road_gds_ldt_it_ot: Road
+    road_gds_ldt_ab: Road
+    road_gds_mhd: RoadGoodsMediumAndHeavyDuty
+    road_gds_mhd_it_ot: Road
+    road_gds_mhd_ab: Road
+    road_gds_mhd_action_wire: InvestmentAction
+    rail_ppl: RailPeopleSum
+    rail_ppl_distance: RailPeople
+    rail_ppl_metro: RailPeople
+    rail_gds: RailGoods
+    ship: Ship
+    ship_dmstc: ShipDomestic
+    ship_dmstc_action_infra: ShipDomesticActionInfra
+    ship_inter: ShipInternational
+    other_foot: OtherFoot
+    other_foot_action_infra: InvestmentAction
+    other_cycl: OtherCycle
+    other_cycl_action_infra: InvestmentAction
+    g_planning: GPlanning
+    s: EnergySum
+    s_diesel: EnergySum
+    s_emethan: EnergySum
+    s_jetfuel: EnergySum
+    s_petrol: EnergySum
+    s_fueloil: EnergySum
+    s_lpg: EnergySum
+    s_gas: EnergySum
+    s_biogas: EnergySum
+    s_bioethanol: EnergySum
+    s_biodiesel: EnergySum
+    s_elec: EnergySum
+    s_hydrogen: EnergySum
+    g: G
+    t: T
+    air: Air
+    road: RoadSum
+    rail: Rail
+    other: Other
+    rail_action_invest_infra: InvestmentAction
+    rail_action_invest_station: InvestmentAction
+    rail_ppl_metro_action_infra: RailPeopleMetroActionInfra
+    road_action_charger: RoadInvestmentAction
+    road_bus_action_infra: InvestmentAction
 
     def dict(self):
         return asdict(self)
@@ -3233,58 +3233,59 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
     )
 
     # --- Populate result ---
-    t30 = T30()
-    t30.air_dmstc = air_dmstc
-    t30.air_inter = air_inter
-    t30.air = air
-    t30.road_car_it_ot = road_car_it_ot
-    t30.road_car_ab = road_car_ab
-    t30.road_car = road_car
-    t30.road_bus = road_bus
-    t30.road_bus_action_infra = road_bus_action_infra
-    t30.road_action_charger = road_action_charger
-    t30.road_ppl = road_ppl
-    t30.road_gds_ldt_it_ot = road_gds_ldt_it_ot
-    t30.road_gds_ldt_ab = road_gds_ldt_ab
-    t30.road_gds_ldt = road_gds_ldt
-    t30.road_gds_mhd_ab = road_gds_mhd_ab
-    t30.road_gds_mhd_it_ot = road_gds_mhd_it_ot
-    t30.road_gds_mhd = road_gds_mhd
-    t30.road_gds = road_gds
-    t30.road_gds_mhd_action_wire = road_gds_mhd_action_wire
-    t30.road = road
-    t30.rail_ppl_metro = rail_ppl_metro
-    t30.rail_ppl_distance = rail_ppl_distance
-    t30.rail_ppl = rail_ppl
-    t30.rail_ppl_metro_action_infra = rail_ppl_metro_action_infra
-    t30.rail_action_invest_infra = rail_action_invest_infra
-    t30.rail_action_invest_station = rail_action_invest_station
-    t30.rail_gds = rail_gds
-    t30.rail = rail
-    t30.ship_dmstc = ship_dmstc
-    t30.ship_inter = ship_inter
-    t30.ship_dmstc_action_infra = ship_dmstc_action_infra
-    t30.ship = ship
-    t30.other_cycl = other_cycl
-    t30.other_cycl_action_infra = other_cycl_action_infra
-    t30.other_foot = other_foot
-    t30.other_foot_action_infra = other_foot_action_infra
-    t30.other = other
-    t30.g_planning = g_planning
-    t30.g = g
-    t30.t = t
-    t30.s_petrol = s_petrol
-    t30.s_jetfuel = s_jetfuel
-    t30.s_diesel = s_diesel
-    t30.s_elec = s_elec
-    t30.s_hydrogen = s_hydrogen
-    t30.s_emethan = s_emethan
-    t30.s = s
-    t30.s_fueloil = s_fueloil
-    t30.s_lpg = s_lpg
-    t30.s_gas = s_gas
-    t30.s_biogas = s_biogas
-    t30.s_bioethanol = s_bioethanol
-    t30.s_biodiesel = s_biodiesel
+    return T30(
+        air_dmstc=air_dmstc,
+        air_inter=air_inter,
+        air=air,
+        road_car_it_ot=road_car_it_ot,
+        road_car_ab=road_car_ab,
+        road_car=road_car,
+        road_bus=road_bus,
+        road_bus_action_infra=road_bus_action_infra,
+        road_action_charger=road_action_charger,
+        road_ppl=road_ppl,
+        road_gds_ldt_it_ot=road_gds_ldt_it_ot,
+        road_gds_ldt_ab=road_gds_ldt_ab,
+        road_gds_ldt=road_gds_ldt,
+        road_gds_mhd_ab=road_gds_mhd_ab,
+        road_gds_mhd_it_ot=road_gds_mhd_it_ot,
+        road_gds_mhd=road_gds_mhd,
+        road_gds=road_gds,
+        road_gds_mhd_action_wire=road_gds_mhd_action_wire,
+        road=road,
+        rail_ppl_metro=rail_ppl_metro,
+        rail_ppl_distance=rail_ppl_distance,
+        rail_ppl=rail_ppl,
+        rail_ppl_metro_action_infra=rail_ppl_metro_action_infra,
+        rail_action_invest_infra=rail_action_invest_infra,
+        rail_action_invest_station=rail_action_invest_station,
+        rail_gds=rail_gds,
+        rail=rail,
+        ship_dmstc=ship_dmstc,
+        ship_inter=ship_inter,
+        ship_dmstc_action_infra=ship_dmstc_action_infra,
+        ship=ship,
+        other_cycl=other_cycl,
+        other_cycl_action_infra=other_cycl_action_infra,
+        other_foot=other_foot,
+        other_foot_action_infra=other_foot_action_infra,
+        other=other,
+        g_planning=g_planning,
+        g=g,
+        t=t,
+        s_petrol=s_petrol,
+        s_jetfuel=s_jetfuel,
+        s_diesel=s_diesel,
+        s_elec=s_elec,
+        s_hydrogen=s_hydrogen,
+        s_emethan=s_emethan,
+        s=s,
+        s_fueloil=s_fueloil,
+        s_lpg=s_lpg,
+        s_gas=s_gas,
+        s_biogas=s_biogas,
+        s_bioethanol=s_bioethanol,
+        s_biodiesel=s_biodiesel,
+    )
 
     return t30
