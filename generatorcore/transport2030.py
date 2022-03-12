@@ -3065,19 +3065,20 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
         + other_cycl.invest
     )
     g_planning.invest_com = g_planning.invest * ass("Ass_T_C_ratio_public_sector_100")
-    g.invest_com = g_planning.invest_com
     g_planning.invest_pa_com = g_planning.invest_com / entries.m_duration_target
-    g.invest_pa_com = g_planning.invest_pa_com
     g_planning.invest_pa = g_planning.invest / entries.m_duration_target
     g_planning.cost_wage = g_planning.invest_pa
     g_planning.demand_emplo = div(g_planning.cost_wage, g_planning.ratio_wage_to_emplo)
+    g_planning.demand_emplo_new = g_planning.demand_emplo
+    g_planning.demand_emplo_com = g_planning.demand_emplo_new
+
+    g.invest_com = g_planning.invest_com
+    g.invest_pa_com = g_planning.invest_pa_com
     g.demand_emplo = g_planning.demand_emplo
     g.cost_wage = g_planning.cost_wage
     g.invest_pa = g_planning.invest_pa
-    g_planning.demand_emplo_new = g_planning.demand_emplo
     g.invest = g_planning.invest
     g.demand_emplo_new = g_planning.demand_emplo_new
-    g_planning.demand_emplo_com = g_planning.demand_emplo_new
     g.demand_emplo_com = g.demand_emplo_new
 
     t.demand_ejetfuel = air.demand_ejetfuel  # + BD237 + BD253 + BD261 + BD265
