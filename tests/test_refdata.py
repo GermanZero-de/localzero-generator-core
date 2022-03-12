@@ -54,14 +54,14 @@ def test_traffic_agg_for_tuebingen_administrative_district(refdata: RefData):
     assert t.float("gds_diesel") == pytest.approx(39.325871)
 
 
-def test_gemfr_ags_added_to_renewable_energy(refdata: RefData):
-    """03255508 is Wenzen a gemfr. Gebiet"""
-    re = refdata.renewable_energy("03255508")
-    assert re.float("pv") == 0.0
-    assert re.float("wind_on") == 0.0
-    assert re.float("biomass") == 0.0
-    assert re.float("geothermal") == 0.0
-    assert re.float("water") == 0.0
+#def test_gemfr_ags_added_to_renewable_energy(refdata: RefData):
+#    """03255508 is Wenzen a gemfr. Gebiet"""
+#    re = refdata.renewable_energy("03255508")
+#    assert re.float("pv") == 0.0
+#    assert re.float("wind_on") == 0.0
+#    assert re.float("biomass") == 0.0
+#    assert re.float("geothermal") == 0.0
+#    assert re.float("water") == 0.0
 
 
 def test_filling_of_zeros_flats(refdata: RefData):
