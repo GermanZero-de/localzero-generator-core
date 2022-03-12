@@ -2063,32 +2063,6 @@ class RailGoods:
 
 
 @dataclass
-class Vars15:
-    # Used by ship
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
-    base_unit: float = None  # type: ignore
-    change_CO2e_pct: float = None  # type: ignore
-    change_CO2e_t: float = None  # type: ignore
-    change_energy_MWh: float = None  # type: ignore
-    change_energy_pct: float = None  # type: ignore
-    cost_climate_saved: float = None  # type: ignore
-    cost_wage: float = None  # type: ignore
-    demand_change: float = None  # type: ignore
-    demand_ediesel: float = None  # type: ignore
-    demand_emplo: float = None  # type: ignore
-    demand_emplo_new: float = None  # type: ignore
-    emplo_existing: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    invest: float = None  # type: ignore
-    invest_com: float = None  # type: ignore
-    invest_pa: float = None  # type: ignore
-    invest_pa_com: float = None  # type: ignore
-    transport_capacity_tkm: float = None  # type: ignore
-
-
-@dataclass
 class ShipDomestic:
     # Used by ship_dmstc
     base_unit: float = None  # type: ignore
@@ -2306,6 +2280,102 @@ class ShipInternational:
             cost_climate_saved=cost_climate_saved,
             demand_ediesel=demand_ediesel,
             energy=energy,
+            transport_capacity_tkm=transport_capacity_tkm,
+        )
+
+
+@dataclass
+class Ship:
+    # Used by ship
+    CO2e_combustion_based: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    CO2e_total_2021_estimated: float = None  # type: ignore
+    base_unit: float = None  # type: ignore
+    change_CO2e_pct: float = None  # type: ignore
+    change_CO2e_t: float = None  # type: ignore
+    change_energy_MWh: float = None  # type: ignore
+    change_energy_pct: float = None  # type: ignore
+    cost_climate_saved: float = None  # type: ignore
+    cost_wage: float = None  # type: ignore
+    demand_change: float = None  # type: ignore
+    demand_ediesel: float = None  # type: ignore
+    demand_emplo: float = None  # type: ignore
+    demand_emplo_new: float = None  # type: ignore
+    emplo_existing: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    invest: float = None  # type: ignore
+    invest_com: float = None  # type: ignore
+    invest_pa: float = None  # type: ignore
+    invest_pa_com: float = None  # type: ignore
+    transport_capacity_tkm: float = None  # type: ignore
+
+    @classmethod
+    def calc(
+        cls,
+        *,
+        t18: T18,
+        ship_inter: ShipInternational,
+        ship_dmstc: ShipDomestic,
+        ship_dmstc_action_infra: ShipDomesticActionInfra,
+    ) -> "Ship":
+        demand_change = 0
+        invest = ship_dmstc_action_infra.invest
+        invest_com = ship_dmstc_action_infra.invest_com
+        demand_ediesel = (
+            ship_dmstc.demand_ediesel
+            + ship_dmstc_action_infra.demand_ediesel
+            + ship_inter.demand_ediesel
+        )
+        CO2e_combustion_based = (
+            ship_dmstc.CO2e_combustion_based + ship_inter.CO2e_combustion_based
+        )
+        energy = demand_ediesel + demand_change
+        transport_capacity_tkm = ship_dmstc.transport_capacity_tkm
+        CO2e_total = CO2e_combustion_based
+        change_energy_MWh = energy - t18.ship.energy
+        change_energy_pct = div(change_energy_MWh, t18.ship.energy)
+        change_CO2e_t = CO2e_combustion_based - t18.ship.CO2e_combustion_based
+        change_CO2e_pct = div(change_CO2e_t, t18.ship.CO2e_combustion_based)
+        emplo_existing = ship_dmstc.emplo_existing
+        base_unit = ship_dmstc.base_unit
+        invest_pa = ship_dmstc_action_infra.invest_pa
+        invest_pa_com = ship_dmstc_action_infra.invest_pa_com
+        cost_wage = ship_dmstc.cost_wage + ship_dmstc_action_infra.cost_wage
+        demand_emplo_new = (
+            ship_dmstc.demand_emplo_new + ship_dmstc_action_infra.demand_emplo_new
+        )
+        demand_emplo = ship_dmstc.demand_emplo + ship_dmstc_action_infra.demand_emplo
+        CO2e_total_2021_estimated = (
+            ship_dmstc.CO2e_total_2021_estimated
+            + ship_dmstc_action_infra.CO2e_total_2021_estimated
+            + ship_inter.CO2e_total_2021_estimated
+        )
+        cost_climate_saved = (
+            ship_dmstc.cost_climate_saved
+            + ship_dmstc_action_infra.cost_climate_saved
+            + ship_inter.cost_climate_saved
+        )
+        return cls(
+            CO2e_combustion_based=CO2e_combustion_based,
+            CO2e_total=CO2e_total,
+            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+            base_unit=base_unit,
+            change_CO2e_pct=change_CO2e_pct,
+            change_CO2e_t=change_CO2e_t,
+            change_energy_MWh=change_energy_MWh,
+            change_energy_pct=change_energy_pct,
+            cost_climate_saved=cost_climate_saved,
+            cost_wage=cost_wage,
+            demand_change=demand_change,
+            demand_ediesel=demand_ediesel,
+            demand_emplo=demand_emplo,
+            demand_emplo_new=demand_emplo_new,
+            emplo_existing=emplo_existing,
+            energy=energy,
+            invest=invest,
+            invest_com=invest_com,
+            invest_pa=invest_pa,
+            invest_pa_com=invest_pa_com,
             transport_capacity_tkm=transport_capacity_tkm,
         )
 
@@ -2658,7 +2728,7 @@ class T30:
     rail_ppl_distance: RailPeople = field(default_factory=RailPeople)
     rail_ppl_metro: RailPeople = None  # type: ignore
     rail_gds: RailGoods = field(default_factory=RailGoods)
-    ship: Vars15 = field(default_factory=Vars15)
+    ship: Ship = None  # type: ignore
     ship_dmstc: ShipDomestic = None  # type: ignore
     ship_dmstc_action_infra: ShipDomesticActionInfra = None  # type: ignore
     ship_inter: ShipInternational = field(default_factory=ShipInternational)
@@ -2726,7 +2796,6 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
     s_biogas = t30.s_biogas
     s_bioethanol = t30.s_bioethanol
     s_biodiesel = t30.s_biodiesel
-    ship = t30.ship
     t = t30.t
 
     s_fueloil.energy = 0
@@ -2838,8 +2907,13 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
 
     ship_dmstc = ShipDomestic.calc(inputs, t18=t18)
     ship_inter = ShipInternational.calc(inputs, t18=t18)
-
     ship_dmstc_action_infra = ShipDomesticActionInfra.calc(inputs)
+    ship = Ship.calc(
+        t18=t18,
+        ship_inter=ship_inter,
+        ship_dmstc=ship_dmstc,
+        ship_dmstc_action_infra=ship_dmstc_action_infra,
+    )
 
     other_cycl = OtherCycle.calc(
         inputs, t18, total_transport_capacity_pkm=total_transport_capacity_pkm
@@ -2887,6 +2961,7 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
     t30.ship_dmstc = ship_dmstc
     t30.ship_inter = ship_inter
     t30.ship_dmstc_action_infra = ship_dmstc_action_infra
+    t30.ship = ship
     t30.other_cycl = other_cycl
     t30.other_cycl_action_infra = other_cycl_action_infra
     t30.other_foot = other_foot
@@ -2924,16 +2999,7 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
 
     t.demand_hydrogen = road.demand_hydrogen
 
-    ship.demand_change = 0
-
     other.demand_change = 0
-
-    ship.invest = (
-        ship_dmstc_action_infra.invest
-    )  # SUM(ship_dmstc_action_infra.invest:DD264)
-    ship.invest_com = (
-        ship_dmstc_action_infra.invest_com
-    )  # SUM(ship_dmstc_action_infra.invest_com:DE264)
 
     rail_action_invest_station = InvestmentAction.calc_rail_action_invest_station(
         inputs
@@ -2953,11 +3019,6 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
     # rail_ppl_metro_action_infra.actionInvesitionen in Verkehrsnetze für SSU Bahnen
     g.invest_pa = g_planning.invest_pa
 
-    ship.demand_ediesel = (
-        ship_dmstc.demand_ediesel
-        + ship_dmstc_action_infra.demand_ediesel
-        + ship_inter.demand_ediesel
-    )  # SUM(ship_dmstc.demand_ediesel:ship_inter.demand_ediesel)
     t.demand_ediesel = road.demand_ediesel + ship.demand_ediesel
 
     t.energy = (
@@ -2968,10 +3029,6 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
         + t.demand_hydrogen
         + t.demand_change
     )  # SUM(t.demand_electricity:t.demand_change)
-    ship.CO2e_combustion_based = (
-        ship_dmstc.CO2e_combustion_based + ship_inter.CO2e_combustion_based
-    )
-
     t.CO2e_combustion_based = (
         air.CO2e_combustion_based
         + road.CO2e_combustion_based
@@ -2979,14 +3036,8 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
         + ship.CO2e_combustion_based
     )
     t.change_energy_MWh = t.energy - t18.t.energy
-    ship.energy = ship.demand_ediesel + ship.demand_change
-    ship.transport_capacity_tkm = ship_dmstc.transport_capacity_tkm
     t.CO2e_total = t.CO2e_combustion_based
-    ship.CO2e_total = ship.CO2e_combustion_based
-    ship.change_energy_MWh = ship.energy - t18.ship.energy
-    ship.change_energy_pct = div(ship.change_energy_MWh, t18.ship.energy)
-    ship.change_CO2e_t = ship.CO2e_combustion_based - t18.ship.CO2e_combustion_based
-    ship.change_CO2e_pct = div(ship.change_CO2e_t, t18.ship.CO2e_combustion_based)
+
     t.transport_capacity_tkm = (
         air.transport_capacity_tkm
         + road.transport_capacity_tkm
@@ -2995,37 +3046,7 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
     )
     t.change_CO2e_t = t.CO2e_combustion_based - t18.t.CO2e_combustion_based
 
-    ship.emplo_existing = ship_dmstc.emplo_existing
-    ship.base_unit = ship_dmstc.base_unit
-    # ship_dmstc_action_infra.actionAus -  und Neubau der Bundeswasserstraßen
-
-    ship.invest_pa = (
-        ship_dmstc_action_infra.invest_pa
-    )  # SUM(ship_dmstc_action_infra.invest_pa:DA264)
-    ship.invest_pa_com = (
-        ship_dmstc_action_infra.invest_pa_com
-    )  # SUM(ship_dmstc_action_infra.invest_pa_com:DB264)
-    ship.cost_wage = ship_dmstc.cost_wage + ship_dmstc_action_infra.cost_wage
-    ship.demand_emplo_new = (
-        ship_dmstc.demand_emplo_new + ship_dmstc_action_infra.demand_emplo_new
-    )
-    ship.demand_emplo = ship_dmstc.demand_emplo + ship_dmstc_action_infra.demand_emplo
-    # ship_dmstc_action_infra.emplo_existingnicht existent oder ausgelastet
-
     t.change_CO2e_pct = div(t.change_CO2e_t, t18.t.CO2e_combustion_based)
-    ship.CO2e_total_2021_estimated = (
-        ship_dmstc.CO2e_total_2021_estimated
-        + ship_dmstc_action_infra.CO2e_total_2021_estimated
-        + ship_inter.CO2e_total_2021_estimated
-    )  # SUM(ship_dmstc.CO2e_total_2021_estimated:ship_inter.CO2e_total_2021_estimated)
-
-    ship.cost_climate_saved = (
-        ship_dmstc.cost_climate_saved
-        + ship_dmstc_action_infra.cost_climate_saved
-        + ship_inter.cost_climate_saved
-    )  # SUM(ship_dmstc.cost_climate_saved:ship_inter.cost_climate_saved)
-
-    # ship_inter.actionReduktion der Transportleistung
 
     t.change_energy_pct = div(t.change_energy_MWh, t18.t.energy)
 
