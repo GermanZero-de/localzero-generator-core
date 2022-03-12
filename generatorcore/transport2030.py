@@ -2188,7 +2188,7 @@ class ShipDomestic:
 
 
 @dataclass
-class Vars17:
+class ShipDomesticActionInfra:
     # Used by ship_dmstc_action_infra
     CO2e_total_2021_estimated: float = None  # type: ignore
     cost_climate_saved: float = None  # type: ignore
@@ -2202,6 +2202,47 @@ class Vars17:
     invest_pa_com: float = None  # type: ignore
     pct_of_wage: float = None  # type: ignore
     ratio_wage_to_emplo: float = None  # type: ignore
+
+    @classmethod
+    def calc(cls, inputs: Inputs) -> "ShipDomesticActionInfra":
+        fact = inputs.fact
+        ass = inputs.ass
+        entries = inputs.entries
+
+        invest = (
+            ass("Ass_T_C_invest_water_ways")
+            * entries.m_population_com_203X
+            / entries.m_population_nat
+        )
+        invest_com = invest * ass("Ass_T_C_ratio_public_sector_100")
+        demand_ediesel = 0
+        pct_of_wage = fact("Fact_T_D_constr_roadrail_revenue_pct_of_wage_2018")
+        invest_pa = invest / entries.m_duration_target
+        cost_wage = invest_pa * pct_of_wage
+        ratio_wage_to_emplo = fact("Fact_T_D_constr_roadrail_ratio_wage_to_emplo_2018")
+        invest_pa_com = invest_com / entries.m_duration_target
+        demand_emplo = div(
+            cost_wage,
+            ratio_wage_to_emplo,
+        )
+        demand_emplo_new = demand_emplo
+        CO2e_total_2021_estimated = 0
+        cost_climate_saved = 0
+
+        return cls(
+            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+            cost_climate_saved=cost_climate_saved,
+            cost_wage=cost_wage,
+            demand_ediesel=demand_ediesel,
+            demand_emplo=demand_emplo,
+            demand_emplo_new=demand_emplo_new,
+            invest=invest,
+            invest_com=invest_com,
+            invest_pa=invest_pa,
+            invest_pa_com=invest_pa_com,
+            pct_of_wage=pct_of_wage,
+            ratio_wage_to_emplo=ratio_wage_to_emplo,
+        )
 
 
 @dataclass
@@ -2619,7 +2660,7 @@ class T30:
     rail_gds: RailGoods = field(default_factory=RailGoods)
     ship: Vars15 = field(default_factory=Vars15)
     ship_dmstc: ShipDomestic = None  # type: ignore
-    ship_dmstc_action_infra: Vars17 = field(default_factory=Vars17)
+    ship_dmstc_action_infra: ShipDomesticActionInfra = None  # type: ignore
     ship_inter: ShipInternational = field(default_factory=ShipInternational)
     other_foot: OtherFoot = None  # type: ignore
     other_foot_action_infra: InvestmentAction = None  # type: ignore
@@ -2686,7 +2727,6 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
     s_bioethanol = t30.s_bioethanol
     s_biodiesel = t30.s_biodiesel
     ship = t30.ship
-    ship_dmstc_action_infra = t30.ship_dmstc_action_infra
     t = t30.t
 
     s_fueloil.energy = 0
@@ -2699,12 +2739,9 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
     air_dmstc = AirDomestic.calc(inputs, t18)
     air_inter = AirInternational.calc(inputs, t18)
     air = Air.calc(t18, domestic=air_dmstc, international=air_inter)
-    t30.air_dmstc = air_dmstc
-    t30.air_inter = air_inter
-    t30.air = air
 
     # First we estimate the total required transport capacity in the target year (excluding air).
-    t.transport_capacity_pkm = entries.m_population_com_203X * (
+    total_transport_capacity_pkm = entries.m_population_com_203X * (
         ass("Ass_T_D_ratio_trnsprt_ppl_to_ppl_city")
         if entries.t_rt3 == "city"
         else ass("Ass_T_D_ratio_trnsprt_ppl_to_ppl_smcity")
@@ -2715,17 +2752,17 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
     )
 
     road_car_it_ot = Road.calc_car_it_ot(
-        inputs, t18=t18, total_transport_capacity_pkm=t.transport_capacity_pkm
+        inputs, t18=t18, total_transport_capacity_pkm=total_transport_capacity_pkm
     )
     road_car_ab = Road.calc_car_ab(
-        inputs, t18=t18, total_transport_capacity_pkm=t.transport_capacity_pkm
+        inputs, t18=t18, total_transport_capacity_pkm=total_transport_capacity_pkm
     )
     road_car = RoadCar.calc(inputs, t18=t18, it_ot=road_car_it_ot, ab=road_car_ab)
     road_action_charger = RoadInvestmentAction.calc_car_action_charger(
         inputs, car_base_unit=road_car.base_unit
     )
     road_bus = RoadBus.calc(
-        inputs, t18=t18, total_transport_capacity_pkm=t.transport_capacity_pkm
+        inputs, t18=t18, total_transport_capacity_pkm=total_transport_capacity_pkm
     )
     road_bus_action_infra = RoadBus.calc_action_infra(
         inputs, bus_transport_capacity_pkm=road_bus.transport_capacity_pkm
@@ -2767,10 +2804,10 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
     )
 
     rail_ppl_metro = RailPeople.calc_metro(
-        inputs, t18=t18, total_transport_capacity_pkm=t.transport_capacity_pkm
+        inputs, t18=t18, total_transport_capacity_pkm=total_transport_capacity_pkm
     )
     rail_ppl_distance = RailPeople.calc_distance(
-        inputs, t18=t18, total_transport_capacity_pkm=t.transport_capacity_pkm
+        inputs, t18=t18, total_transport_capacity_pkm=total_transport_capacity_pkm
     )
 
     rail_action_invest_infra = InvestmentAction.calc_rail_action_invest_infra(inputs)
@@ -2802,20 +2839,27 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
     ship_dmstc = ShipDomestic.calc(inputs, t18=t18)
     ship_inter = ShipInternational.calc(inputs, t18=t18)
 
+    ship_dmstc_action_infra = ShipDomesticActionInfra.calc(inputs)
+
     other_cycl = OtherCycle.calc(
-        inputs, t18, total_transport_capacity_pkm=t.transport_capacity_pkm
+        inputs, t18, total_transport_capacity_pkm=total_transport_capacity_pkm
     )
     other_cycl_action_infra = InvestmentAction.calc_other_cycl_action_infra(
         inputs, cycle_transport_capacity_pkm=other_cycl.transport_capacity_pkm
     )
 
     other_foot = OtherFoot.calc(
-        inputs, t18=t18, total_transport_capacity_pkm=t.transport_capacity_pkm
+        inputs, t18=t18, total_transport_capacity_pkm=total_transport_capacity_pkm
     )
 
     other_foot_action_infra = InvestmentAction.calc_other_foot_action_infra(inputs)
     other.CO2e_total = 0  # CJ265 + CM265(
 
+    t.transport_capacity_pkm = total_transport_capacity_pkm
+
+    t30.air_dmstc = air_dmstc
+    t30.air_inter = air_inter
+    t30.air = air
     t30.road_car_it_ot = road_car_it_ot
     t30.road_car_ab = road_car_ab
     t30.road_car = road_car
@@ -2842,6 +2886,7 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
     t30.rail = rail
     t30.ship_dmstc = ship_dmstc
     t30.ship_inter = ship_inter
+    t30.ship_dmstc_action_infra = ship_dmstc_action_infra
     t30.other_cycl = other_cycl
     t30.other_cycl_action_infra = other_cycl_action_infra
     t30.other_foot = other_foot
@@ -2883,14 +2928,6 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
 
     other.demand_change = 0
 
-    ship_dmstc_action_infra.invest = (
-        ass("Ass_T_C_invest_water_ways")
-        * entries.m_population_com_203X
-        / entries.m_population_nat
-    )
-    ship_dmstc_action_infra.invest_com = ship_dmstc_action_infra.invest * ass(
-        "Ass_T_C_ratio_public_sector_100"
-    )
     ship.invest = (
         ship_dmstc_action_infra.invest
     )  # SUM(ship_dmstc_action_infra.invest:DD264)
@@ -2916,7 +2953,6 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
     # rail_ppl_metro_action_infra.actionInvesitionen in Verkehrsnetze für SSU Bahnen
     g.invest_pa = g_planning.invest_pa
 
-    ship_dmstc_action_infra.demand_ediesel = 0
     ship.demand_ediesel = (
         ship_dmstc.demand_ediesel
         + ship_dmstc_action_infra.demand_ediesel
@@ -2951,9 +2987,6 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
     ship.change_energy_pct = div(ship.change_energy_MWh, t18.ship.energy)
     ship.change_CO2e_t = ship.CO2e_combustion_based - t18.ship.CO2e_combustion_based
     ship.change_CO2e_pct = div(ship.change_CO2e_t, t18.ship.CO2e_combustion_based)
-    ship_dmstc_action_infra.invest_pa = (
-        ship_dmstc_action_infra.invest / entries.m_duration_target
-    )
     t.transport_capacity_tkm = (
         air.transport_capacity_tkm
         + road.transport_capacity_tkm
@@ -2962,32 +2995,16 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
     )
     t.change_CO2e_t = t.CO2e_combustion_based - t18.t.CO2e_combustion_based
 
-    ship_dmstc_action_infra.pct_of_wage = fact(
-        "Fact_T_D_constr_roadrail_revenue_pct_of_wage_2018"
-    )
-    ship_dmstc_action_infra.cost_wage = (
-        ship_dmstc_action_infra.invest_pa * ship_dmstc_action_infra.pct_of_wage
-    )
     ship.emplo_existing = ship_dmstc.emplo_existing
-    ship_dmstc_action_infra.ratio_wage_to_emplo = fact(
-        "Fact_T_D_constr_roadrail_ratio_wage_to_emplo_2018"
-    )
     ship.base_unit = ship_dmstc.base_unit
     # ship_dmstc_action_infra.actionAus -  und Neubau der Bundeswasserstraßen
 
     ship.invest_pa = (
         ship_dmstc_action_infra.invest_pa
     )  # SUM(ship_dmstc_action_infra.invest_pa:DA264)
-    ship_dmstc_action_infra.invest_pa_com = (
-        ship_dmstc_action_infra.invest_com / entries.m_duration_target
-    )
-    ship_dmstc_action_infra.demand_emplo = div(
-        ship_dmstc_action_infra.cost_wage, ship_dmstc_action_infra.ratio_wage_to_emplo
-    )
     ship.invest_pa_com = (
         ship_dmstc_action_infra.invest_pa_com
     )  # SUM(ship_dmstc_action_infra.invest_pa_com:DB264)
-    ship_dmstc_action_infra.demand_emplo_new = ship_dmstc_action_infra.demand_emplo
     ship.cost_wage = ship_dmstc.cost_wage + ship_dmstc_action_infra.cost_wage
     ship.demand_emplo_new = (
         ship_dmstc.demand_emplo_new + ship_dmstc_action_infra.demand_emplo_new
@@ -2996,14 +3013,12 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
     # ship_dmstc_action_infra.emplo_existingnicht existent oder ausgelastet
 
     t.change_CO2e_pct = div(t.change_CO2e_t, t18.t.CO2e_combustion_based)
-    ship_dmstc_action_infra.CO2e_total_2021_estimated = 0
     ship.CO2e_total_2021_estimated = (
         ship_dmstc.CO2e_total_2021_estimated
         + ship_dmstc_action_infra.CO2e_total_2021_estimated
         + ship_inter.CO2e_total_2021_estimated
     )  # SUM(ship_dmstc.CO2e_total_2021_estimated:ship_inter.CO2e_total_2021_estimated)
 
-    ship_dmstc_action_infra.cost_climate_saved = 0
     ship.cost_climate_saved = (
         ship_dmstc.cost_climate_saved
         + ship_dmstc_action_infra.cost_climate_saved
