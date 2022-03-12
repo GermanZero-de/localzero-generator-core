@@ -2560,9 +2560,9 @@ class GPlanning:
 
 
 @dataclass
-class Vars22:
+class EnergySum:
     # Used by s, s_diesel, s_emethan, s_jetfuel, s_petrol, s_fueloil, s_lpg, s_gas, s_biogas, s_bioethanol, s_biodiesel, s_elec, s_hydrogen
-    energy: float = None  # type: ignore
+    energy: float
 
 
 @dataclass
@@ -2576,36 +2576,6 @@ class G:
     invest_com: float
     invest_pa: float
     invest_pa_com: float
-
-
-@dataclass
-class Vars24:
-    # Used by t
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
-    change_CO2e_pct: float = None  # type: ignore
-    change_CO2e_t: float = None  # type: ignore
-    change_energy_MWh: float = None  # type: ignore
-    change_energy_pct: float = None  # type: ignore
-    cost_climate_saved: float = None  # type: ignore
-    cost_wage: float = None  # type: ignore
-    demand_change: float = None  # type: ignore
-    demand_ediesel: float = None  # type: ignore
-    demand_ejetfuel: float = None  # type: ignore
-    demand_electricity: float = None  # type: ignore
-    demand_emplo: float = None  # type: ignore
-    demand_emplo_com: float = None  # type: ignore
-    demand_emplo_new: float = None  # type: ignore
-    demand_epetrol: float = None  # type: ignore
-    demand_hydrogen: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    invest: float = None  # type: ignore
-    invest_com: float = None  # type: ignore
-    invest_pa: float = None  # type: ignore
-    invest_pa_com: float = None  # type: ignore
-    transport_capacity_pkm: float = None  # type: ignore
-    transport_capacity_tkm: float = None  # type: ignore
 
 
 @dataclass
@@ -2833,6 +2803,185 @@ class Other:
 
 
 @dataclass
+class T:
+    # Used by t
+    CO2e_combustion_based: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    CO2e_total_2021_estimated: float = None  # type: ignore
+    change_CO2e_pct: float = None  # type: ignore
+    change_CO2e_t: float = None  # type: ignore
+    change_energy_MWh: float = None  # type: ignore
+    change_energy_pct: float = None  # type: ignore
+    cost_climate_saved: float = None  # type: ignore
+    cost_wage: float = None  # type: ignore
+    demand_change: float = None  # type: ignore
+    demand_ediesel: float = None  # type: ignore
+    demand_ejetfuel: float = None  # type: ignore
+    demand_electricity: float = None  # type: ignore
+    demand_emplo: float = None  # type: ignore
+    demand_emplo_com: float = None  # type: ignore
+    demand_emplo_new: float = None  # type: ignore
+    demand_epetrol: float = None  # type: ignore
+    demand_hydrogen: float = None  # type: ignore
+    energy: float = None  # type: ignore
+    invest: float = None  # type: ignore
+    invest_com: float = None  # type: ignore
+    invest_pa: float = None  # type: ignore
+    invest_pa_com: float = None  # type: ignore
+    transport_capacity_pkm: float = None  # type: ignore
+    transport_capacity_tkm: float = None  # type: ignore
+
+    @classmethod
+    def calc(
+        cls,
+        *,
+        t18: T18,
+        total_transport_capacity_pkm: float,
+        air: Air,
+        rail: Rail,
+        road: RoadSum,
+        ship: Ship,
+        other: Other,
+        g: G,
+    ) -> "T":
+        demand_ejetfuel = air.demand_ejetfuel
+        demand_epetrol = road.demand_epetrol
+        demand_hydrogen = road.demand_hydrogen
+        demand_change = (
+            air.demand_change
+            + road.demand_change
+            + rail.demand_change
+            + ship.demand_change
+            + other.demand_change
+        )
+        demand_electricity = road.demand_electricity + rail.demand_electricity
+        demand_ediesel = road.demand_ediesel + ship.demand_ediesel
+        energy = (
+            demand_electricity
+            + demand_epetrol
+            + demand_ediesel
+            + demand_ejetfuel
+            + demand_hydrogen
+            + demand_change
+        )
+        CO2e_combustion_based = (
+            air.CO2e_combustion_based
+            + road.CO2e_combustion_based
+            + rail.CO2e_combustion_based
+            + ship.CO2e_combustion_based
+        )
+        change_energy_MWh = energy - t18.t.energy
+        CO2e_total = CO2e_combustion_based
+        transport_capacity_tkm = (
+            air.transport_capacity_tkm
+            + road.transport_capacity_tkm
+            + rail.transport_capacity_tkm
+            + ship.transport_capacity_tkm
+        )
+        change_CO2e_t = CO2e_combustion_based - t18.t.CO2e_combustion_based
+        change_CO2e_pct = div(change_CO2e_t, t18.t.CO2e_combustion_based)
+        change_energy_pct = div(change_energy_MWh, t18.t.energy)
+        invest_com = (
+            g.invest_com
+            + road.invest_com
+            + rail.invest_com
+            + ship.invest_com
+            + other.invest_com
+            + air.invest_com
+        )
+        invest_pa_com = (
+            g.invest_pa_com
+            + road.invest_pa_com
+            + rail.invest_pa_com
+            + ship.invest_pa_com
+            + other.invest_pa_com
+            + air.invest_pa_com
+        )
+        CO2e_total_2021_estimated = (
+            air.CO2e_total_2021_estimated
+            + road.CO2e_total_2021_estimated
+            + rail.CO2e_total_2021_estimated
+            + ship.CO2e_total_2021_estimated
+            + other.CO2e_total_2021_estimated
+        )
+        cost_climate_saved = (
+            air.cost_climate_saved
+            + road.cost_climate_saved
+            + rail.cost_climate_saved
+            + ship.cost_climate_saved
+            + other.cost_climate_saved
+        )
+        invest = (
+            road.invest
+            + rail.invest
+            + ship.invest
+            + other.invest
+            + air.invest
+            + g.invest
+        )
+        cost_wage = (
+            g.cost_wage
+            + road.cost_wage
+            + rail.cost_wage
+            + ship.cost_wage
+            + other.cost_wage
+        )
+        demand_emplo = (
+            g.demand_emplo
+            + air.demand_emplo
+            + road.demand_emplo
+            + rail.demand_emplo
+            + ship.demand_emplo
+            + other.demand_emplo
+        )
+        demand_emplo_new = (
+            g.demand_emplo_new
+            + air.demand_emplo_new
+            + road.demand_emplo_new
+            + rail.demand_emplo_new
+            + ship.demand_emplo_new
+            + other.demand_emplo_new
+        )
+        invest_pa = (
+            road.invest_pa
+            + rail.invest_pa
+            + ship.invest_pa
+            + other.invest_pa
+            + air.invest_pa
+            + g.invest_pa
+        )
+        demand_emplo_com = g.demand_emplo_com
+
+        return cls(
+            CO2e_combustion_based=CO2e_combustion_based,
+            CO2e_total=CO2e_total,
+            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+            change_CO2e_pct=change_CO2e_pct,
+            change_CO2e_t=change_CO2e_t,
+            change_energy_MWh=change_energy_MWh,
+            change_energy_pct=change_energy_pct,
+            cost_climate_saved=cost_climate_saved,
+            cost_wage=cost_wage,
+            demand_change=demand_change,
+            demand_ediesel=demand_ediesel,
+            demand_ejetfuel=demand_ejetfuel,
+            demand_electricity=demand_electricity,
+            demand_emplo=demand_emplo,
+            demand_emplo_com=demand_emplo_com,
+            demand_emplo_new=demand_emplo_new,
+            demand_epetrol=demand_epetrol,
+            demand_hydrogen=demand_hydrogen,
+            energy=energy,
+            invest=invest,
+            invest_com=invest_com,
+            invest_pa=invest_pa,
+            invest_pa_com=invest_pa_com,
+            transport_capacity_pkm=total_transport_capacity_pkm,
+            transport_capacity_tkm=transport_capacity_tkm,
+        )
+
+
+@dataclass
 class T30:
     air_inter: AirInternational = None  # type: ignore
     air_dmstc: AirDomestic = None  # type: ignore
@@ -2862,19 +3011,21 @@ class T30:
     other_cycl: OtherCycle = None  # type: ignore
     other_cycl_action_infra: InvestmentAction = None  # type: ignore
     g_planning: GPlanning = None  # type: ignore
-    s: Vars22 = field(default_factory=Vars22)
-    s_diesel: Vars22 = field(default_factory=Vars22)
-    s_emethan: Vars22 = field(default_factory=Vars22)
-    s_jetfuel: Vars22 = field(default_factory=Vars22)
-    s_petrol: Vars22 = field(default_factory=Vars22)
-    s_fueloil: Vars22 = field(default_factory=Vars22)
-    s_lpg: Vars22 = field(default_factory=Vars22)
-    s_gas: Vars22 = field(default_factory=Vars22)
-    s_biogas: Vars22 = field(default_factory=Vars22)
-    s_bioethanol: Vars22 = field(default_factory=Vars22)
-    s_biodiesel: Vars22 = field(default_factory=Vars22)
+    s: EnergySum = None  # type: ignore
+    s_diesel: EnergySum = None  # type: ignore
+    s_emethan: EnergySum = None  # type: ignore
+    s_jetfuel: EnergySum = None  # type: ignore
+    s_petrol: EnergySum = None  # type: ignore
+    s_fueloil: EnergySum = None  # type: ignore
+    s_lpg: EnergySum = None  # type: ignore
+    s_gas: EnergySum = None  # type: ignore
+    s_biogas: EnergySum = None  # type: ignore
+    s_bioethanol: EnergySum = None  # type: ignore
+    s_biodiesel: EnergySum = None  # type: ignore
+    s_elec: EnergySum = None  # type: ignore
+    s_hydrogen: EnergySum = None  # type: ignore
     g: G = None  # type: ignore
-    t: Vars24 = field(default_factory=Vars24)
+    t: T = None  # type: ignore
     air: Air = None  # type: ignore
     road: RoadSum = field(default_factory=RoadSum)
     rail: Rail = None  # type: ignore
@@ -2884,8 +3035,6 @@ class T30:
     rail_ppl_metro_action_infra: RailPeopleMetroActionInfra = None  # type: ignore
     road_action_charger: RoadInvestmentAction = None  # type: ignore
     road_bus_action_infra: InvestmentAction = None  # type: ignore
-    s_elec: Vars22 = field(default_factory=Vars22)
-    s_hydrogen: Vars22 = field(default_factory=Vars22)
 
     def dict(self):
         return asdict(self)
@@ -2899,33 +3048,6 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
         return inputs.ass(n)
 
     entries = inputs.entries
-
-    t30 = T30()
-
-    rail_ppl = t30.rail_ppl
-    rail_ppl_distance = t30.rail_ppl_distance
-    rail_ppl_distance = t30.rail_ppl_distance
-    s = t30.s
-    s_diesel = t30.s_diesel
-    s_elec = t30.s_elec
-    s_emethan = t30.s_emethan
-    s_hydrogen = t30.s_hydrogen
-    s_jetfuel = t30.s_jetfuel
-    s_petrol = t30.s_petrol
-    s_fueloil = t30.s_fueloil
-    s_lpg = t30.s_lpg
-    s_gas = t30.s_gas
-    s_biogas = t30.s_biogas
-    s_bioethanol = t30.s_bioethanol
-    s_biodiesel = t30.s_biodiesel
-    t = t30.t
-
-    s_fueloil.energy = 0
-    s_lpg.energy = 0
-    s_gas.energy = 0
-    s_biogas.energy = 0
-    s_bioethanol.energy = 0
-    s_biodiesel.energy = 0
 
     # --- Air ---
     air_dmstc = AirDomestic.calc(inputs, t18)
@@ -3077,10 +3199,41 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
         demand_emplo_new=g_planning.demand_emplo_new,
         demand_emplo_com=g_planning.demand_emplo_new,
     )
+    t = T.calc(
+        t18=t18,
+        total_transport_capacity_pkm=total_transport_capacity_pkm,
+        air=air,
+        rail=rail,
+        road=road,
+        ship=ship,
+        other=other,
+        g=g,
+    )
+    s_petrol = EnergySum(t.demand_epetrol)
+    s_jetfuel = EnergySum(t.demand_ejetfuel)
+    s_diesel = EnergySum(t.demand_ediesel)
+    s_elec = EnergySum(t.demand_electricity)
+    s_hydrogen = EnergySum(t.demand_hydrogen)
+
+    s_emethan = EnergySum(0)
+    s_fueloil = EnergySum(0)
+    s_lpg = EnergySum(0)
+    s_gas = EnergySum(0)
+    s_biogas = EnergySum(0)
+    s_bioethanol = EnergySum(0)
+    s_biodiesel = EnergySum(0)
+
+    s = EnergySum(
+        s_petrol.energy
+        + s_jetfuel.energy
+        + s_diesel.energy
+        + s_elec.energy
+        + s_hydrogen.energy
+        + s_emethan.energy
+    )
 
     # --- Populate result ---
-    t.transport_capacity_pkm = total_transport_capacity_pkm
-
+    t30 = T30()
     t30.air_dmstc = air_dmstc
     t30.air_inter = air_inter
     t30.air = air
@@ -3119,121 +3272,19 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
     t30.other = other
     t30.g_planning = g_planning
     t30.g = g
-
-    t.demand_ejetfuel = air.demand_ejetfuel  # + BD237 + BD253 + BD261 + BD265
-    t.demand_epetrol = (
-        road.demand_epetrol
-    )  # (BB234 + road.demand_epetrol + BB253 + BB261 + BB265)
-    t.demand_hydrogen = road.demand_hydrogen
-    t.demand_change = (
-        air.demand_change
-        + road.demand_change
-        + rail.demand_change
-        + ship.demand_change
-        + other.demand_change
-    )
-    t.demand_electricity = road.demand_electricity + rail.demand_electricity
-    t.demand_ediesel = road.demand_ediesel + ship.demand_ediesel
-    t.energy = (
-        t.demand_electricity
-        + t.demand_epetrol
-        + t.demand_ediesel
-        + t.demand_ejetfuel
-        + t.demand_hydrogen
-        + t.demand_change
-    )
-    t.CO2e_combustion_based = (
-        air.CO2e_combustion_based
-        + road.CO2e_combustion_based
-        + rail.CO2e_combustion_based
-        + ship.CO2e_combustion_based
-    )
-    t.change_energy_MWh = t.energy - t18.t.energy
-    t.CO2e_total = t.CO2e_combustion_based
-    t.transport_capacity_tkm = (
-        air.transport_capacity_tkm
-        + road.transport_capacity_tkm
-        + rail.transport_capacity_tkm
-        + ship.transport_capacity_tkm
-    )
-    t.change_CO2e_t = t.CO2e_combustion_based - t18.t.CO2e_combustion_based
-    t.change_CO2e_pct = div(t.change_CO2e_t, t18.t.CO2e_combustion_based)
-    t.change_energy_pct = div(t.change_energy_MWh, t18.t.energy)
-    t.invest_com = (
-        g.invest_com
-        + road.invest_com
-        + rail.invest_com
-        + ship.invest_com
-        + other.invest_com
-        + air.invest_com
-    )
-    t.invest_pa_com = (
-        g.invest_pa_com
-        + road.invest_pa_com
-        + rail.invest_pa_com
-        + ship.invest_pa_com
-        + other.invest_pa_com
-        + air.invest_pa_com
-    )
-    t.CO2e_total_2021_estimated = (
-        air.CO2e_total_2021_estimated
-        + road.CO2e_total_2021_estimated
-        + rail.CO2e_total_2021_estimated
-        + ship.CO2e_total_2021_estimated
-        + other.CO2e_total_2021_estimated
-    )
-    t.cost_climate_saved = (
-        air.cost_climate_saved
-        + road.cost_climate_saved
-        + rail.cost_climate_saved
-        + ship.cost_climate_saved
-        + other.cost_climate_saved
-    )
-    t.invest = (
-        road.invest + rail.invest + ship.invest + other.invest + air.invest + g.invest
-    )
-    t.cost_wage = (
-        g.cost_wage + road.cost_wage + rail.cost_wage + ship.cost_wage + other.cost_wage
-    )
-    t.demand_emplo = (
-        g.demand_emplo
-        + air.demand_emplo
-        + road.demand_emplo
-        + rail.demand_emplo
-        + ship.demand_emplo
-        + other.demand_emplo
-    )
-    t.demand_emplo_new = (
-        g.demand_emplo_new
-        + air.demand_emplo_new
-        + road.demand_emplo_new
-        + rail.demand_emplo_new
-        + ship.demand_emplo_new
-        + other.demand_emplo_new
-    )
-    t.invest_pa = (
-        road.invest_pa
-        + rail.invest_pa
-        + ship.invest_pa
-        + other.invest_pa
-        + air.invest_pa
-        + g.invest_pa
-    )
-    t.demand_emplo_com = g.demand_emplo_com
-
-    s_petrol.energy = t.demand_epetrol
-    s_jetfuel.energy = t.demand_ejetfuel
-    s_diesel.energy = t.demand_ediesel
-    s_elec.energy = t.demand_electricity
-    s_hydrogen.energy = t.demand_hydrogen
-    s_emethan.energy = 0
-    s.energy = (
-        s_petrol.energy
-        + s_jetfuel.energy
-        + s_diesel.energy
-        + s_elec.energy
-        + s_hydrogen.energy
-        + s_emethan.energy
-    )
+    t30.t = t
+    t30.s_petrol = s_petrol
+    t30.s_jetfuel = s_jetfuel
+    t30.s_diesel = s_diesel
+    t30.s_elec = s_elec
+    t30.s_hydrogen = s_hydrogen
+    t30.s_emethan = s_emethan
+    t30.s = s
+    t30.s_fueloil = s_fueloil
+    t30.s_lpg = s_lpg
+    t30.s_gas = s_gas
+    t30.s_biogas = s_biogas
+    t30.s_bioethanol = s_bioethanol
+    t30.s_biodiesel = s_biodiesel
 
     return t30
