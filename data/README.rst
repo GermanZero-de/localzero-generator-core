@@ -20,6 +20,11 @@ If you use windows be advised that some windows tools might write files in
 an encoding that is not `utf-8` but for example `latin-1`.  That would cause
 trouble, so make sure you set the corresponding options.
 
+Furthermore it is a good idea to run `python devtool.py data normalize FILE`
+on every data file you have changed, so minor encoding differences (such as
+wether or not to put `"` around fields in a CSV) do not result in spurious
+merge conflicts later on.
+
 Where to get the data: Public Domain
 ------------------------------------
 
