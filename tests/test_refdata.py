@@ -53,6 +53,7 @@ def test_traffic_agg_for_tuebingen_administrative_district(refdata: RefData):
     assert t.float("gds_elec") == pytest.approx(212.596949)
     assert t.float("gds_diesel") == pytest.approx(39.325871)
 
+
 def test_co2path(refdata: RefData):
     """co2path is the only refdata with an integer key. So check at least one lookup in there."""
     p = refdata.co2path(2035)
