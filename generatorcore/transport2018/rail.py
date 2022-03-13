@@ -1,8 +1,7 @@
 # pyright: strict
 from dataclasses import dataclass
-from .utils import element_wise_plus
-from .utils import co2e_from_demands
-from .utils import MILLION
+from ..utils import element_wise_plus, MILLION
+from . import co2e
 from ..inputs import Inputs
 
 
@@ -39,7 +38,7 @@ class Rail:
             "Fact_T_D_rail_ppl_ratio_pkm_to_fzkm_2018"
         )
         energy = demand_diesel + demand_biodiesel + demand_electricity
-        CO2e_combustion_based = co2e_from_demands(
+        CO2e_combustion_based = co2e.from_demands(
             inputs,
             demand_diesel=demand_diesel,
             demand_biodiesel=demand_biodiesel,
@@ -72,7 +71,7 @@ class Rail:
             "Fact_T_S_Rl_Train_gds_diesel_SEC_2018"
         ) + demand_electricity / inputs.fact("Fact_T_S_Rl_Train_gds_elec_SEC_2018")
 
-        CO2e_combustion_based = co2e_from_demands(inputs, demand_diesel=demand_diesel)
+        CO2e_combustion_based = co2e.from_demands(inputs, demand_diesel=demand_diesel)
         energy = demand_diesel + demand_biodiesel + demand_electricity
         mileage = transport_capacity_tkm / inputs.fact(
             "Fact_T_D_rail_gds_ratio_tkm_to_fzkm_2018"
@@ -101,7 +100,7 @@ class Rail:
         demand_electricity = mileage * inputs.fact("Fact_T_S_Rl_Metro_SEC_fzkm_2018")
         energy = demand_electricity
         transport_capacity_pkm = mileage * inputs.fact("Fact_T_D_lf_Rl_Metro_2018")
-        CO2e_combustion_based = co2e_from_demands(
+        CO2e_combustion_based = co2e.from_demands(
             inputs, demand_electricity=demand_electricity
         )
         CO2e_total = CO2e_combustion_based

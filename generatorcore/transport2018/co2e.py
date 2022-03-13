@@ -1,18 +1,7 @@
-# pyright: strict
-from dataclasses import fields
 from ..inputs import Inputs
-import typing
-
-MILLION = 1000000
-
-T = typing.TypeVar("T")
 
 
-def element_wise_plus(a: T, b: T) -> T:
-    return type(a)(*(getattr(a, f.name) + getattr(b, f.name) for f in fields(a)))
-
-
-def co2e_from_demands(
+def from_demands(
     inputs: Inputs,
     *,
     demand_biodiesel: float = 0,

@@ -1,7 +1,7 @@
 # pyright: strict
 from dataclasses import dataclass
-from .utils import element_wise_plus
-from .utils import co2e_from_demands
+from ..utils import element_wise_plus
+from . import co2e
 from ..inputs import Inputs
 
 
@@ -44,7 +44,7 @@ class Air:
             / inputs.entries.m_population_nat
         )
 
-        CO2e_combustion_based = co2e_from_demands(
+        CO2e_combustion_based = co2e.from_demands(
             inputs, demand_jetfuel=demand_jetfuel, demand_jetpetrol=demand_petrol
         )
         CO2e_total = CO2e_combustion_based
@@ -81,7 +81,7 @@ class Air:
             / inputs.entries.m_population_nat
         )
 
-        CO2e_combustion_based = co2e_from_demands(inputs, demand_jetfuel=demand_jetfuel)
+        CO2e_combustion_based = co2e.from_demands(inputs, demand_jetfuel=demand_jetfuel)
         CO2e_total = CO2e_combustion_based
         energy = demand_jetfuel
         return cls(
