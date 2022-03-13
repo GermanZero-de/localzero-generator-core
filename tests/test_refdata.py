@@ -54,35 +54,6 @@ def test_traffic_agg_for_tuebingen_administrative_district(refdata: RefData):
     assert t.float("gds_diesel") == pytest.approx(39.325871)
 
 
-def test_gemfr_ags_added_to_renewable_energy(refdata: RefData):
-    """03255508 is Wenzen a gemfr. Gebiet"""
-    re = refdata.renewable_energy("03255508")
-    assert re.float("pv") == 0.0
-    assert re.float("wind_on") == 0.0
-    assert re.float("biomass") == 0.0
-    assert re.float("geothermal") == 0.0
-    assert re.float("water") == 0.0
-
-
-def test_filling_of_zeros_flats(refdata: RefData):
-    f = refdata.flats("03255508")
-    assert 0 == f.int("residential_buildings_total")
-    assert 0 == f.int("buildings_1flat")
-    assert 0 == f.int("buildings_2flats")
-    assert 0 == f.int("buildings_3flats")
-    assert 0 == f.int("buildings_dorms")
-    assert 0 == f.int("residential_buildings_area_total")
-
-
-def test_filling_of_zeros_area(refdata: RefData):
-    f = refdata.area("03255508")
-    assert f.float("veg_heath") == 0.0
-    assert f.float("veg_moor") == 0.0
-    assert f.float("veg_marsh") == 0.0
-    assert f.float("veg_plant_uncover_com") == 0.0
-    assert f.float("settlement_ghd") == 0.0
-
-
 def test_co2path(refdata: RefData):
     """co2path is the only refdata with an integer key. So check at least one lookup in there."""
     p = refdata.co2path(2035)
