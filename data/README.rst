@@ -5,6 +5,20 @@ The generator needs a bunch of data about residents, housing, energy, traffic...
 a run of the generator all the data is readonly and read from files that are all expected
 to be in a subfolder of this folder.
 
+How to change the data
+----------------------
+
+When you make changes to the data in the public or private repository they will 
+only be used by the generator once we switch the generator to the corresponding 
+revision (this is what the production.json file the generator core and KNUD are for).
+
+However you should test your changes anyway before we merge them into the data 
+repositories.  For that you can use the usual `ready to rock` test in the 
+generator core repository.  
+
+If you use windows be advised that some windows tools might write files in 
+an encoding that is not `utf-8` but for example `latin-1`.  That would cause
+trouble, so make sure you set the corresponding options.
 
 Where to get the data: Public Domain
 ------------------------------------

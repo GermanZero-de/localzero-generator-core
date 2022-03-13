@@ -36,7 +36,10 @@ class DataFrame(Generic[KeyT]):
     ) -> "DataFrame[KeyT]":
         repo = "proprietary" if what in PROPRIETARY_DATA_SOURCES else "public"
         with open(
-            os.path.join(datadir, repo, what, filename + ".csv"), "r", newline=""
+            os.path.join(datadir, repo, what, filename + ".csv"),
+            "r",
+            encoding="utf-8",
+            newline="",
         ) as file:
             reader = csv.reader(file)
             header = {}

@@ -32,7 +32,7 @@ def cmd_data_normalize(args):
                 current = [r]
         return dups
 
-    with open(args.file, "r") as fp:
+    with open(args.file, "r", newline="", encoding="utf-8") as fp:
         rows_with_header = list(csv.reader(fp))
 
     sorted_rows = sortby_and_check_ags_column(rows_with_header[1:])
@@ -43,7 +43,7 @@ def cmd_data_normalize(args):
             print("\t", d[0][0])
             for r in d:
                 print("\t\t", *(r[1:]))
-    with open(args.file, "w") as fp:
+    with open(args.file, "w", encoding="utf-8") as fp:
         writer = csv.writer(fp, lineterminator="\n")
         writer.writerow(rows_with_header[0])
         for row in sorted_rows:
