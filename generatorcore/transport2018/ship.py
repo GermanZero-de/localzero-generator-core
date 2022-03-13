@@ -1,7 +1,7 @@
 # pyright: strict
 from dataclasses import dataclass
-from .utils import element_wise_plus
-from .utils import co2e_from_demands
+from ..utils import element_wise_plus
+from . import co2e
 from ..inputs import Inputs
 
 
@@ -32,7 +32,7 @@ class Ship:
         )
         energy = demand_diesel
 
-        CO2e_combustion_based = co2e_from_demands(inputs, demand_diesel=demand_diesel)
+        CO2e_combustion_based = co2e.from_demands(inputs, demand_diesel=demand_diesel)
         CO2e_total = CO2e_combustion_based
         return cls(
             CO2e_combustion_based=CO2e_combustion_based,
@@ -55,7 +55,7 @@ class Ship:
         ) * inputs.fact("Fact_T_D_Shp_sea_nat_EC_2018")
 
         energy = demand_fueloil
-        CO2e_combustion_based = co2e_from_demands(inputs, demand_fueloil=demand_fueloil)
+        CO2e_combustion_based = co2e.from_demands(inputs, demand_fueloil=demand_fueloil)
         CO2e_total = CO2e_combustion_based
         return cls(
             CO2e_combustion_based=CO2e_combustion_based,
