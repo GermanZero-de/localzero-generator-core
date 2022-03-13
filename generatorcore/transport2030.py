@@ -2322,7 +2322,7 @@ class Ship:
     ) -> "Ship":
         demand_change = 0
         invest = ship_dmstc_action_infra.invest + ship_dmstc.invest
-        invest_com = ship_dmstc_action_infra.invest_com 
+        invest_com = ship_dmstc_action_infra.invest_com
         demand_ediesel = (
             ship_dmstc.demand_ediesel
             + ship_dmstc_action_infra.demand_ediesel
@@ -2332,7 +2332,9 @@ class Ship:
             ship_dmstc.CO2e_combustion_based + ship_inter.CO2e_combustion_based
         )
         energy = demand_ediesel + demand_change
-        transport_capacity_tkm = ship_dmstc.transport_capacity_tkm + ship_inter.transport_capacity_tkm
+        transport_capacity_tkm = (
+            ship_dmstc.transport_capacity_tkm + ship_inter.transport_capacity_tkm
+        )
         CO2e_total = CO2e_combustion_based
         change_energy_MWh = energy - t18.ship.energy
         change_energy_pct = div(change_energy_MWh, t18.ship.energy)
