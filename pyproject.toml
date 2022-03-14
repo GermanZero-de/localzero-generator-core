@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "generatorcore"
-version = "0.9.1"
+version = "1.0.0-alpha.0"
 description = "LocalZero Generator core."
 authors = ["Benedikt Grundmann <benedikt.grundmann@gmail.com>"]
 include = [
