@@ -385,8 +385,10 @@ def convert_nat_agri(xls: pd.ExcelFile) -> pd.DataFrame:
     agri.set_index(keys="ags", inplace=True, verify_integrity=True)
     return agri
 
+
 def rename_it_at_to_it_ot(df: pd.DataFrame) -> None:
     df["label"] = df["label"].apply(lambda n: n.replace("_it_at_", "_it_ot_"))
+
 
 def convert_facts(xls: pd.ExcelFile) -> pd.DataFrame:
     facts = pd.read_excel(
@@ -394,7 +396,16 @@ def convert_facts(xls: pd.ExcelFile) -> pd.DataFrame:
         sheet_name="Fakten",
         skiprows=7,
         usecols="A:H",
-        names=["group", "description", "label", "value", "unit", "rationale", "reference", "link"],
+        names=[
+            "group",
+            "description",
+            "label",
+            "value",
+            "unit",
+            "rationale",
+            "reference",
+            "link",
+        ],
     )
     remove_rows_with_na(facts, column="label")
     remove_rows_with(facts, column="group", eq="nu")
@@ -409,7 +420,16 @@ def convert_assumptions(xls: pd.ExcelFile) -> pd.DataFrame:
         sheet_name="Annahmen",
         skiprows=6,
         usecols="A:H",
-        names=["group", "description", "label", "value", "unit", "rationale", "reference", "link"],
+        names=[
+            "group",
+            "description",
+            "label",
+            "value",
+            "unit",
+            "rationale",
+            "reference",
+            "link",
+        ],
     )
     remove_rows_with_na(assumptions, column="label")
     remove_rows_with(assumptions, column="group", eq="nu")
