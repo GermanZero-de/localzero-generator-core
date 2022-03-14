@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field, asdict
-from .inputs import Inputs
-from .utils import div
+from ..inputs import Inputs
+from ..utils import div
 
 
 @dataclass
