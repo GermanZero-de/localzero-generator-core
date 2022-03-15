@@ -1450,33 +1450,16 @@ class RoadGoods(Road):
 
 
 @dataclass
-class RoadSum:
+class RoadSum(Road):
     # Used by road
-
-    change_CO2e_pct: float
-    change_CO2e_t: float
-    change_energy_MWh: float
-    change_energy_pct: float
-    CO2e_combustion_based: float
-    CO2e_total_2021_estimated: float
-    CO2e_total: float
-    cost_climate_saved: float
-    demand_ediesel: float
-    demand_electricity: float
-    demand_epetrol: float
-    demand_hydrogen: float
-    energy: float
-    invest_com: float
-    invest_pa_com: float
-    invest_pa: float
-    invest: float
-    mileage: float
-    transport_capacity_pkm: float
-    transport_capacity_tkm: float
 
     demand_emplo_new: float
     demand_emplo: float
     cost_wage: float
+    invest_com: float
+    invest_pa_com: float
+    invest_pa: float
+    invest: float
 
     @classmethod
     def calc(
@@ -1488,7 +1471,6 @@ class RoadSum:
         road_action_charger: RoadInvestmentAction,
     ) -> "RoadSum":
         sum: Road = road_gds + road_ppl
-        demand_epetrol = road_ppl.demand_epetrol
         demand_emplo_new = (
             road_action_charger.demand_emplo_new
             + road_ppl.demand_emplo_new
@@ -1509,54 +1491,41 @@ class RoadSum:
             # + road_bus_action_infra.invest_com
             + road_gds.invest_com
         )  # SUM(road_action_charger.invest_com:road_ppl.invest_com,road_gds.invest_com))
-        demand_electricity = road_ppl.demand_electricity + road_gds.demand_electricity
-        cost_climate_saved = road_ppl.cost_climate_saved + road_gds.cost_climate_saved
-        demand_ediesel = road_gds.demand_ediesel
-        demand_hydrogen = road_gds.demand_hydrogen
-        energy = demand_electricity + demand_epetrol + demand_ediesel + demand_hydrogen
-        CO2e_combustion_based = (
-            road_ppl.CO2e_combustion_based + road_gds.CO2e_combustion_based
-        )
-        change_energy_MWh = energy - t18.road.energy
-        change_CO2e_t = CO2e_combustion_based - t18.road.CO2e_combustion_based
-        change_CO2e_pct = div(change_CO2e_t, t18.road.CO2e_combustion_based)
+        # change_energy_MWh = sum.energy - t18.road.energy
+        change_CO2e_pct = div(sum.change_CO2e_t, t18.road.CO2e_combustion_based)
         invest = road_action_charger.invest + road_ppl.invest + road_gds.invest
-        change_energy_pct = div(change_energy_MWh, t18.road.energy)
+        change_energy_pct = div(sum.change_energy_MWh, t18.road.energy)
         invest_pa = (
             road_action_charger.invest_pa + road_ppl.invest_pa + road_gds.invest_pa
-        )
-        CO2e_total = CO2e_combustion_based
-        CO2e_total_2021_estimated = (
-            road_ppl.CO2e_total_2021_estimated + road_gds.CO2e_total_2021_estimated
         )
         demand_emplo = (
             road_action_charger.demand_emplo
             + road_ppl.demand_emplo
             + road_gds.demand_emplo
         )
-        mileage = road_ppl.mileage + road_gds.mileage
         return cls(
+            change_km=sum.change_km,
             change_CO2e_pct=change_CO2e_pct,
-            change_CO2e_t=change_CO2e_t,
-            change_energy_MWh=change_energy_MWh,
+            change_CO2e_t=sum.change_CO2e_t,
+            change_energy_MWh=sum.change_energy_MWh,
             change_energy_pct=change_energy_pct,
-            CO2e_combustion_based=CO2e_combustion_based,
-            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
-            CO2e_total=CO2e_total,
-            cost_climate_saved=cost_climate_saved,
+            CO2e_combustion_based=sum.CO2e_combustion_based,
+            CO2e_total_2021_estimated=sum.CO2e_total_2021_estimated,
+            CO2e_total=sum.CO2e_total,
+            cost_climate_saved=sum.cost_climate_saved,
             cost_wage=cost_wage,
-            demand_ediesel=demand_ediesel,
-            demand_electricity=demand_electricity,
+            demand_ediesel=sum.demand_ediesel,
+            demand_electricity=sum.demand_electricity,
             demand_emplo_new=demand_emplo_new,
             demand_emplo=demand_emplo,
-            demand_epetrol=demand_epetrol,
-            demand_hydrogen=demand_hydrogen,
-            energy=energy,
+            demand_epetrol=sum.demand_epetrol,
+            demand_hydrogen=sum.demand_hydrogen,
+            energy=sum.energy,
             invest_com=invest_com,
             invest_pa_com=invest_pa_com,
             invest_pa=invest_pa,
             invest=invest,
-            mileage=mileage,
+            mileage=sum.mileage,
             transport_capacity_pkm=sum.transport_capacity_pkm,
             transport_capacity_tkm=sum.transport_capacity_tkm,
         )
