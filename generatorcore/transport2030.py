@@ -125,7 +125,6 @@ class Air:
     change_energy_pct: float
     change_km: float
     cost_climate_saved: float
-    demand_change: float
     demand_ejetfuel: float
     demand_emplo: float
     demand_emplo_new: float
@@ -183,7 +182,6 @@ class Air:
             cost_climate_saved=cost_climate_saved,
             # Our simplified assumption here is that the only costs to get clean international flight is
             # using efuels. Therefore no costs show up here and all in the fuels2030 section.
-            demand_change=0,
             invest_pa_com=0,
             invest_com=0,
             invest_pa=0,
@@ -1463,7 +1461,6 @@ class RoadSum:
     CO2e_total_2021_estimated: float
     CO2e_total: float
     cost_climate_saved: float
-    demand_change: float
     demand_ediesel: float
     demand_electricity: float
     demand_epetrol: float
@@ -1548,7 +1545,6 @@ class RoadSum:
             CO2e_total=CO2e_total,
             cost_climate_saved=cost_climate_saved,
             cost_wage=cost_wage,
-            demand_change=0,  # Maybe this variable should not exist
             demand_ediesel=demand_ediesel,
             demand_electricity=demand_electricity,
             demand_emplo_new=demand_emplo_new,
@@ -2296,7 +2292,6 @@ class Ship:
     change_energy_pct: float
     cost_climate_saved: float
     cost_wage: float
-    demand_change: float
     demand_ediesel: float
     demand_emplo: float
     demand_emplo_new: float
@@ -2317,7 +2312,6 @@ class Ship:
         ship_dmstc: ShipDomestic,
         ship_dmstc_action_infra: ShipDomesticActionInfra,
     ) -> "Ship":
-        demand_change = 0
         invest = ship_dmstc_action_infra.invest + ship_dmstc.invest
         invest_com = ship_dmstc_action_infra.invest_com
         demand_ediesel = (
@@ -2328,7 +2322,7 @@ class Ship:
         CO2e_combustion_based = (
             ship_dmstc.CO2e_combustion_based + ship_inter.CO2e_combustion_based
         )
-        energy = demand_ediesel + demand_change
+        energy = demand_ediesel
         transport_capacity_tkm = (
             ship_dmstc.transport_capacity_tkm + ship_inter.transport_capacity_tkm
         )
@@ -2367,7 +2361,6 @@ class Ship:
             change_energy_pct=change_energy_pct,
             cost_climate_saved=cost_climate_saved,
             cost_wage=cost_wage,
-            demand_change=demand_change,
             demand_ediesel=demand_ediesel,
             demand_emplo=demand_emplo,
             demand_emplo_new=demand_emplo_new,
@@ -2592,7 +2585,6 @@ class Rail:
     change_energy_pct: float
     cost_climate_saved: float
     cost_wage: float
-    demand_change: float
     demand_electricity: float
     demand_emplo: float
     demand_emplo_new: float
@@ -2617,8 +2609,7 @@ class Rail:
         rail_action_invest_station: InvestmentAction,
     ) -> "Rail":
         demand_electricity = rail_ppl.demand_electricity + rail_gds.demand_electricity
-        demand_change = 0
-        energy = demand_electricity + demand_change
+        energy = demand_electricity
         change_energy_MWh = energy - t18.rail.energy
         CO2e_combustion_based = (
             rail_ppl.CO2e_combustion_based + rail_gds.CO2e_combustion_based
@@ -2687,7 +2678,6 @@ class Rail:
             change_energy_pct=change_energy_pct,
             cost_climate_saved=cost_climate_saved,
             cost_wage=cost_wage,
-            demand_change=demand_change,
             demand_electricity=demand_electricity,
             demand_emplo=demand_emplo,
             demand_emplo_new=demand_emplo_new,
@@ -2711,7 +2701,6 @@ class Other:
     change_km: float
     cost_climate_saved: float
     cost_wage: float
-    demand_change: float
     demand_emplo: float
     demand_emplo_new: float
     invest: float
@@ -2730,7 +2719,6 @@ class Other:
         other_foot_action_infra: InvestmentAction,
         other_cycl_action_infra: InvestmentAction,
     ) -> "Other":
-        demand_change = 0
         CO2e_total = 0
         invest_com = (
             other_foot.invest_com
@@ -2792,7 +2780,6 @@ class Other:
             change_km=change_km,
             cost_climate_saved=cost_climate_saved,
             cost_wage=cost_wage,
-            demand_change=demand_change,
             demand_emplo=demand_emplo,
             demand_emplo_new=demand_emplo_new,
             invest=invest,
@@ -2815,7 +2802,6 @@ class T:
     change_energy_pct: float
     cost_climate_saved: float
     cost_wage: float
-    demand_change: float
     demand_ediesel: float
     demand_ejetfuel: float
     demand_electricity: float
@@ -2848,13 +2834,6 @@ class T:
         demand_ejetfuel = air.demand_ejetfuel
         demand_epetrol = road.demand_epetrol
         demand_hydrogen = road.demand_hydrogen
-        demand_change = (
-            air.demand_change
-            + road.demand_change
-            + rail.demand_change
-            + ship.demand_change
-            + other.demand_change
-        )
         demand_electricity = road.demand_electricity + rail.demand_electricity
         demand_ediesel = road.demand_ediesel + ship.demand_ediesel
         energy = (
@@ -2863,7 +2842,6 @@ class T:
             + demand_ediesel
             + demand_ejetfuel
             + demand_hydrogen
-            + demand_change
         )
         CO2e_combustion_based = (
             air.CO2e_combustion_based
@@ -2963,7 +2941,6 @@ class T:
             change_energy_pct=change_energy_pct,
             cost_climate_saved=cost_climate_saved,
             cost_wage=cost_wage,
-            demand_change=demand_change,
             demand_ediesel=demand_ediesel,
             demand_ejetfuel=demand_ejetfuel,
             demand_electricity=demand_electricity,
