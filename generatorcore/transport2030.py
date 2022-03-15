@@ -416,12 +416,12 @@ class Road:
     cost_climate_saved: float
     demand_ediesel: float
     demand_electricity: float
-    demand_hydrogen: float
     demand_epetrol: float
+    demand_hydrogen: float
     energy: float
     mileage: float
-    transport_capacity_tkm: float
     transport_capacity_pkm: float
+    transport_capacity_tkm: float
 
     def __add__(self: "Road", other: "Road") -> "Road":
         return element_wise_plus(self, other)
@@ -1454,6 +1454,7 @@ class RoadGoods(Road):
 @dataclass
 class RoadSum:
     # Used by road
+
     change_CO2e_pct: float
     change_CO2e_t: float
     change_energy_MWh: float
@@ -1462,12 +1463,9 @@ class RoadSum:
     CO2e_total_2021_estimated: float
     CO2e_total: float
     cost_climate_saved: float
-    cost_wage: float
     demand_change: float
     demand_ediesel: float
     demand_electricity: float
-    demand_emplo_new: float
-    demand_emplo: float
     demand_epetrol: float
     demand_hydrogen: float
     energy: float
@@ -1478,6 +1476,10 @@ class RoadSum:
     mileage: float
     transport_capacity_pkm: float
     transport_capacity_tkm: float
+
+    demand_emplo_new: float
+    demand_emplo: float
+    cost_wage: float
 
     @classmethod
     def calc(
