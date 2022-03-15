@@ -4,6 +4,8 @@ from ..utils import div
 
 @dataclass
 class Transport:
+    """Every form of transports is modelled at least in terms of the below."""
+
     CO2e_total: float
     CO2e_combustion_based: float
     CO2e_total_2021_estimated: float
@@ -21,6 +23,10 @@ class Transport:
     def sum(
         cls, a: "Transport", b: "Transport", energy_2018: float, co2e_2018: float
     ) -> "Transport":
+        """Aggregate two transports (e.g. road_bus + road_car).  Mostly this is
+        just straightforward sums. But we also compute the percentages of
+        change in comparison of energy and CO2e in 2018.
+        """
         change_CO2e_t = a.change_CO2e_t + b.change_CO2e_t
         change_energy_MWh = a.change_energy_MWh + b.change_energy_MWh
         return cls(
