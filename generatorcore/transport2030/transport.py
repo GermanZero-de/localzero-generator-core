@@ -28,8 +28,8 @@ class Transport:
             CO2e_combustion_based=a.CO2e_combustion_based + b.CO2e_combustion_based,
             CO2e_total_2021_estimated=a.CO2e_total_2021_estimated
             + b.CO2e_total_2021_estimated,
-            change_CO2e_t=a.change_CO2e_t + b.change_CO2e_t,
-            change_energy_MWh=a.change_energy_MWh + b.change_energy_MWh,
+            change_CO2e_t=change_CO2e_t,
+            change_energy_MWh=change_energy_MWh,
             change_km=a.change_km + b.change_km,
             energy=a.energy + b.energy,
             cost_climate_saved=a.cost_climate_saved + b.cost_climate_saved,
