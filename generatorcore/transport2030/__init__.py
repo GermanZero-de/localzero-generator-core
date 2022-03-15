@@ -1,9 +1,9 @@
 # pyright: strict
 
 from dataclasses import dataclass, asdict
-from .inputs import Inputs
-from .utils import div, element_wise_plus
-from .transport2018 import T18
+from ..inputs import Inputs
+from ..utils import div, element_wise_plus
+from ..transport2018 import T18
 
 
 @dataclass
