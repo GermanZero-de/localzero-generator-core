@@ -3675,28 +3675,33 @@
     },
     "t30": {
         "air_inter": {
-            "CO2e_combustion_based": 11076307.2,
             "CO2e_total": 11076307.2,
+            "CO2e_combustion_based": 11076307.2,
             "CO2e_total_2021_estimated": 27906653.532140814,
-            "change_CO2e_pct": -0.6294762431047538,
             "change_CO2e_t": -18817341.976,
             "change_energy_MWh": -71353055.55555555,
-            "change_energy_pct": -0.6294762431047538,
             "change_km": -38838684199.56331,
-            "cost_climate_saved": 70561226997.50037,
-            "demand_ejetfuel": 42000000.0,
             "energy": 42000000.0,
+            "cost_climate_saved": 70561226997.50037,
+            "transport_capacity_tkm": 558655341.8400229,
             "transport_capacity_pkm": 22861315800.43669,
-            "transport_capacity_tkm": 558655341.8400229
+            "change_CO2e_pct": -0.6294762431047538,
+            "change_energy_pct": -0.6294762431047538,
+            "demand_ejetfuel": 42000000.0
         },
         "air_dmstc": {
+            "CO2e_total": 0,
+            "CO2e_combustion_based": 0,
             "CO2e_total_2021_estimated": 2037974.0134550002,
-            "change_CO2e_pct": -1.0,
             "change_CO2e_t": -2183080.824,
             "change_energy_MWh": -8282777.777777778,
-            "change_energy_pct": -1.0,
             "change_km": -10100000000.0,
-            "cost_climate_saved": 8544206051.4100895
+            "energy": 0,
+            "cost_climate_saved": 8544206051.4100895,
+            "transport_capacity_tkm": 0,
+            "transport_capacity_pkm": 0,
+            "change_CO2e_pct": -1.0,
+            "change_energy_pct": -1.0
         },
         "road_ppl": {
             "change_CO2e_pct": -0.9810499283526604,
@@ -4289,25 +4294,25 @@
             "transport_capacity_tkm": 1578352552145.0435
         },
         "air": {
-            "CO2e_combustion_based": 11076307.2,
             "CO2e_total": 11076307.2,
+            "CO2e_combustion_based": 11076307.2,
             "CO2e_total_2021_estimated": 29944627.545595814,
-            "change_CO2e_pct": -0.6546933805285016,
             "change_CO2e_t": -21000422.8,
             "change_energy_MWh": -79635833.33333333,
-            "change_energy_pct": -0.6547070147914197,
             "change_km": -48938684199.56331,
+            "energy": 42000000.0,
             "cost_climate_saved": 79105433048.91046,
+            "transport_capacity_tkm": 558655341.8400229,
+            "transport_capacity_pkm": 22861315800.43669,
+            "change_CO2e_pct": -0.6546933805285016,
+            "change_energy_pct": -0.6547070147914197,
             "demand_ejetfuel": 42000000.0,
             "demand_emplo": 0,
             "demand_emplo_new": 0,
-            "energy": 42000000.0,
             "invest": 0,
             "invest_com": 0,
             "invest_pa": 0,
-            "invest_pa_com": 0,
-            "transport_capacity_pkm": 22861315800.43669,
-            "transport_capacity_tkm": 558655341.8400229
+            "invest_pa_com": 0
         },
         "road": {
             "change_CO2e_pct": -0.9757441636775872,
