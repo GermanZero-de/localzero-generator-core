@@ -2251,26 +2251,27 @@ class ShipInternational:
 @dataclass
 class Ship:
     # Used by ship
-    CO2e_combustion_based: float
-    CO2e_total: float
-    CO2e_total_2021_estimated: float
-    base_unit: float
     change_CO2e_pct: float
     change_CO2e_t: float
     change_energy_MWh: float
     change_energy_pct: float
+    CO2e_combustion_based: float
+    CO2e_total_2021_estimated: float
+    CO2e_total: float
     cost_climate_saved: float
-    cost_wage: float
     demand_ediesel: float
-    demand_emplo: float
     demand_emplo_new: float
-    emplo_existing: float
+    demand_emplo: float
     energy: float
+    transport_capacity_tkm: float
+
+    base_unit: float
+    cost_wage: float
+    emplo_existing: float
     invest: float
     invest_com: float
     invest_pa: float
     invest_pa_com: float
-    transport_capacity_tkm: float
 
     @classmethod
     def calc(
