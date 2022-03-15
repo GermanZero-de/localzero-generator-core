@@ -890,8 +890,8 @@ class Road:
 
         sum = it_ot + ab
 
-        change_CO2e_t = sum.CO2e_combustion_based - t18.road_car.CO2e_combustion_based
-        change_CO2e_pct = div(change_CO2e_t, t18.road_car.CO2e_combustion_based)
+        # sum.CO2e_combustion_based - t18.road_car.CO2e_combustion_based
+        change_CO2e_pct = div(sum.change_CO2e_t, t18.road_car.CO2e_combustion_based)
         CO2e_total_2021_estimated = t18.road_car.CO2e_combustion_based * fact(
             "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
         )
@@ -905,7 +905,7 @@ class Road:
 
         return cls(
             change_CO2e_pct=change_CO2e_pct,
-            change_CO2e_t=change_CO2e_t,
+            change_CO2e_t=sum.change_CO2e_t,
             change_energy_MWh=sum.change_energy_MWh,
             change_energy_pct=change_energy_pct,
             change_km=sum.change_km,
@@ -970,7 +970,7 @@ class RoadCar(Road, TransportInvestments):
 
         return cls(
             change_CO2e_pct=change_CO2e_pct,
-            change_CO2e_t=change_CO2e_t,
+            change_CO2e_t=sum.change_CO2e_t,
             change_energy_MWh=sum.change_energy_MWh,
             change_energy_pct=change_energy_pct,
             change_km=sum.change_km,
@@ -1175,8 +1175,7 @@ class RoadPeople(Road):
         CO2e_total_2021_estimated = t18.road_ppl.CO2e_combustion_based * fact(
             "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
         )
-        change_CO2e_t = sum.CO2e_combustion_based - t18.road_ppl.CO2e_combustion_based
-        change_CO2e_pct = div(change_CO2e_t, t18.road_ppl.CO2e_combustion_based)
+        change_CO2e_pct = div(sum.change_CO2e_t, t18.road_ppl.CO2e_combustion_based)
         cost_climate_saved = (
             (CO2e_total_2021_estimated - sum.CO2e_combustion_based)
             * entries.m_duration_neutral
@@ -1199,7 +1198,7 @@ class RoadPeople(Road):
 
         return cls(
             change_CO2e_pct=change_CO2e_pct,
-            change_CO2e_t=change_CO2e_t,
+            change_CO2e_t=sum.change_CO2e_t,
             change_energy_MWh=sum.change_energy_MWh,
             change_energy_pct=change_energy_pct,
             change_km=sum.change_km,
@@ -1343,10 +1342,7 @@ class RoadGoodsLightDuty(Road):
             + road_gds_ldt_ab.transport_capacity_tkm
         ) / fact("Fact_T_S_LDT_ratio_mlg_to_stock_2018")
         invest_per_x = ass("Ass_T_S_LCV_average_price_2050")
-        change_CO2e_t = (
-            sum.CO2e_combustion_based - t18.road_gds_ldt.CO2e_combustion_based
-        )
-        change_CO2e_pct = div(change_CO2e_t, t18.road_gds_ldt.CO2e_combustion_based)
+        change_CO2e_pct = div(sum.change_CO2e_t, t18.road_gds_ldt.CO2e_combustion_based)
         invest = base_unit * invest_per_x
         invest_pa = invest / entries.m_duration_target
         change_energy_pct = div(sum.change_energy_MWh, t18.road_gds_ldt.energy)
@@ -1411,9 +1407,8 @@ class RoadGoods(Road):
             * entries.m_duration_neutral
             * fact("Fact_M_cost_per_CO2e_2020")
         )
-        change_CO2e_t = sum.CO2e_combustion_based - t18.road_gds.CO2e_combustion_based
         change_energy_pct = div(sum.change_energy_MWh, t18.road_gds.energy)
-        change_CO2e_pct = div(change_CO2e_t, t18.road_gds.CO2e_combustion_based)
+        change_CO2e_pct = div(sum.change_CO2e_t, t18.road_gds.CO2e_combustion_based)
 
         base_unit = road_gds_ldt.base_unit + road_gds_mhd.base_unit
         demand_emplo_new = road_gds_mhd.demand_emplo_new  # (SUM(DM247:DM252))
@@ -1434,7 +1429,7 @@ class RoadGoods(Road):
             invest_pa=invest_pa,
             invest_pa_com=invest_pa_com,
             change_CO2e_pct=change_CO2e_pct,  # can't use sum
-            change_CO2e_t=change_CO2e_t,
+            change_CO2e_t=sum.change_CO2e_t,
             change_energy_MWh=sum.change_energy_MWh,
             change_energy_pct=change_energy_pct,  # can't use sum
             change_km=sum.change_km,
