@@ -60,7 +60,7 @@ https://www.ifeu.de/fileadmin/uploads/BISKO_Methodenpapier_kurz_ifeu_Nov19.pdf
 
 Erweiterung und Differenzierung von BISKO durch die Einflussbilanz:  
 
-.. figure:: ../images/22-02-22_LocalZero_Erklärung_Einflussbilanz_BISKO.png
+.. figure:: ../images/22-02-22_LocalZero_Erklärung_Einflussbilanz_BISKO_HiRes.png
     :align: center
     :width: 600
 
@@ -82,7 +82,7 @@ Methodik Einflussbilanz
 | Beispiel Wärme:  
 | Als Hausbesitzer:in kann man die Gas-Therme (Emissionen liegen bei Private Haushalte) umstellen auf Wärmepumpe, welche lediglich Strom verbraucht. Die Emissionen vom Strom werden dann dem Stromanbieter zugerechnet (Sektor Strom), denn als Hausbesitzer:in hat man nur bedingt Einfluss auf den Strommix. Stellt man auf Fernwärme um, hat man auch keine Emissionen mehr im Haus. Dafür muss der Energieversorger schauen, wie er die Fernwärme klimaneutral umstellen kann, die Emissionen liegen bei ihm (Sektor Wärme). 
 
-.. figure:: ../images/22-02-22_LocalZero_Erklärung_Einflussbilanz_Beispiel.png
+.. figure:: ../images/22-02-22_LocalZero_Erklärung_Einflussbilanz_Beispiel_HiRes.png
     :align: center
     :width: 600
 
@@ -95,7 +95,7 @@ Methodik Einflussbilanz
 | Prinzip innerhalb eines Sektors:  
 | THG-Emissionen werden auf der Nachfrage-Seite bilanziert, wenn es sich um „prozessbedingte“ Emissionen handelt (Industrie, Landwirtschaft, LULUCF), und auf Bereitstellung-Seite, wenn es sich um „verbrennungsbedingte“/“energiebedingte“ Emissionen handelt (Strom, Wärme, Kraftstoffe, Haushalte, GHD, Betriebe und Maschinen (BuM) in Landwirtschaft). Eine Ausnahme bildet Verkehr, da der Verbrauch der Kraftstoffe und damit die THG-Emissionen schon spezifisch den Verkehrsträger zugeordnet werden. Ähnlich erfolgt die Allokation in Industrie, da Produktionsprozesse sowohl eb als auch pb Emissionen enthalten, die darum zusammen dem jeweiligen Industriezweig zugeschrieben werden. 
 
-.. figure:: ../images/22-02-22_LocalZero_Erklärung_Einflussbilanz_Sektoren.png
+.. figure:: ../images/22-02-22_LocalZero_Erklärung_Einflussbilanz_Sektoren_HiRes.png
     :align: center
     :width: 600
 
@@ -105,6 +105,6 @@ Es gibt zwei Gruppen von Sektoren:
  
 #. Produktion von Endenergie (Vorkette). Es werden die Endenergieträger Strom (Sektor Strom), Heizöl, sonstige Mineralölprodukte, Kohle, LPG, Erdgas, sonstige fossile Energieträger, Fernwärme, Biomasse (alle Sektor Wärme) Benzin, Diesel, Kerosin, Bioethanol, Biodiesel, Biogas, E-Methan, Wasserstoff (alle Sektor Kraftstoffe) bereitstellt. Die erneuerbaren Endenergieträger Solarthermie und Wärmepumpe werden der Vollständigkeit halber in Wärme aufgeführt, aber eigentlich in den Sektoren PH, GHD und Landwirtschaft privat vor Ort produziert. Verursacherbilanz: Der Kommune werden die THG-Emissionen zugeschrieben, die bei der Vorkette (Produktion der Endenergieträger in Deutschland) entstehen. 
 
-#.  Produktion von Endprodukten (Nutzung von Endenergieträgern). Die Endenergieträger werden von einem Endverbraucher genutzt und in Raumwärme und Warmwasser sowie andere Anwendungen (PH, GHD, BuM), Produkte (Industrie) oder Fortbewegung (Verkehr) umgewandelt. Die Emissionen aus der Produktion landwirtschaftlicher Produkte und aus LULUCF sind unabhängig von Endenergie und werden daher auf Grundlage von Tierzahlen und Flächen berechnet. Quellenbilanz: Der Kommune werden die THG-Emissionen zugeschrieben, die direkt vor Ort durch die Produktion von Gütern oder Leistungen (durch Nutzung der Endenergieträger) entstehen. 
+#. Produktion von Endprodukten (Nutzung von Endenergieträgern). Die Endenergieträger werden von einem Endverbraucher genutzt und in Raumwärme und Warmwasser sowie andere Anwendungen (PH, GHD, BuM), Produkte (Industrie) oder Fortbewegung (Verkehr) umgewandelt. Die Emissionen aus der Produktion landwirtschaftlicher Produkte und aus LULUCF sind unabhängig von Endenergie und werden daher auf Grundlage von Tierzahlen und Flächen berechnet. Quellenbilanz: Der Kommune werden die THG-Emissionen zugeschrieben, die direkt vor Ort durch die Produktion von Gütern oder Leistungen (durch Nutzung der Endenergieträger) entstehen. 
 
  
