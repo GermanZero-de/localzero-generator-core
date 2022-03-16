@@ -290,42 +290,25 @@ class RailPeopleSum(Transport):
     @classmethod
     def calc(
         cls,
-        inputs: Inputs,
         *,
         t18: T18,
         rail_ppl_metro: RailPeople,
         rail_ppl_distance: RailPeople,
         rail_ppl_metro_action_infra: RailPeopleMetroActionInfra,
     ) -> "RailPeopleSum":
-        fact = inputs.fact
-        entries = inputs.entries
-
-        CO2e_total_2021_estimated = t18.rail_ppl.CO2e_combustion_based * fact(
-            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+        sum = Transport.sum(
+            rail_ppl_metro,
+            rail_ppl_distance,
+            energy_2018=t18.rail_ppl.energy,
+            co2e_2018=t18.rail_ppl.CO2e_combustion_based,
         )
+
         demand_electricity = (
             rail_ppl_distance.demand_electricity + rail_ppl_metro.demand_electricity
         )
-        CO2e_combustion_based = (
-            rail_ppl_distance.CO2e_combustion_based
-            + rail_ppl_metro.CO2e_combustion_based
-        )
-        base_unit = (
-            rail_ppl_distance.base_unit
-            + rail_ppl_metro.base_unit
-            + 0  # rail_ppl_metro_action_infra.base_unit
-        )  # SUM(rail_ppl_distance.base_unit:DO259)
-        transport_capacity_pkm = (
-            rail_ppl_distance.transport_capacity_pkm
-            + rail_ppl_metro.transport_capacity_pkm
-        )
-        change_CO2e_t = CO2e_combustion_based - t18.rail_ppl.CO2e_combustion_based
-        change_CO2e_pct = div(change_CO2e_t, t18.rail_ppl.CO2e_combustion_based)
+        base_unit = rail_ppl_distance.base_unit + rail_ppl_metro.base_unit
         invest_com = rail_ppl_metro_action_infra.invest_com
         mileage = rail_ppl_distance.mileage + rail_ppl_metro.mileage
-        change_energy_MWh = (
-            rail_ppl_distance.change_energy_MWh + rail_ppl_metro.change_energy_MWh
-        )
         invest = (
             rail_ppl_distance.invest
             + rail_ppl_metro.invest
@@ -336,15 +319,6 @@ class RailPeopleSum(Transport):
             + rail_ppl_metro.emplo_existing
             + rail_ppl_metro_action_infra.emplo_existing
         )
-        energy = rail_ppl_distance.energy + rail_ppl_metro.energy
-        cost_climate_saved = (
-            (CO2e_total_2021_estimated - CO2e_combustion_based)
-            * entries.m_duration_neutral
-            * fact("Fact_M_cost_per_CO2e_2020")
-        )
-        CO2e_total = rail_ppl_distance.CO2e_total + rail_ppl_metro.CO2e_total
-        change_energy_pct = div(change_energy_MWh, t18.rail_ppl.energy)
-        change_km = rail_ppl_distance.change_km + rail_ppl_metro.change_km
         invest_pa = (
             rail_ppl_distance.invest_pa
             + rail_ppl_metro.invest_pa
@@ -369,28 +343,17 @@ class RailPeopleSum(Transport):
 
         return cls(
             base_unit=base_unit,
-            change_CO2e_pct=change_CO2e_pct,
-            change_CO2e_t=change_CO2e_t,
-            change_energy_MWh=change_energy_MWh,
-            change_energy_pct=change_energy_pct,
-            change_km=change_km,
-            CO2e_combustion_based=CO2e_combustion_based,
-            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
-            CO2e_total=CO2e_total,
-            cost_climate_saved=cost_climate_saved,
             cost_wage=cost_wage,
             demand_electricity=demand_electricity,
             demand_emplo_new=demand_emplo_new,
             demand_emplo=demand_emplo,
             emplo_existing=emplo_existing,
-            energy=energy,
+            invest=invest,
             invest_com=invest_com,
             invest_pa_com=invest_pa_com,
             invest_pa=invest_pa,
-            invest=invest,
             mileage=mileage,
-            transport_capacity_pkm=transport_capacity_pkm,
-            transport_capacity_tkm=0,
+            **asdict(sum),
         )
 
 
@@ -503,7 +466,6 @@ class Rail(Transport):
     @classmethod
     def calc(
         cls,
-        inputs: Inputs,
         *,
         t18: T18,
         rail_ppl: RailPeopleSum,
@@ -511,17 +473,13 @@ class Rail(Transport):
         rail_action_invest_infra: InvestmentAction,
         rail_action_invest_station: InvestmentAction,
     ) -> "Rail":
-        demand_electricity = rail_ppl.demand_electricity + rail_gds.demand_electricity
-        energy = demand_electricity
-        change_energy_MWh = energy - t18.rail.energy
-        CO2e_combustion_based = (
-            rail_ppl.CO2e_combustion_based + rail_gds.CO2e_combustion_based
+        sum = Transport.sum(
+            rail_ppl,
+            rail_gds,
+            energy_2018=t18.rail.energy,
+            co2e_2018=t18.rail.CO2e_combustion_based,
         )
-        change_CO2e_t = CO2e_combustion_based - t18.rail.CO2e_combustion_based
-        change_CO2e_pct = div(change_CO2e_t, t18.rail.CO2e_combustion_based)
-        change_energy_pct = div(change_energy_MWh, t18.rail.energy)
-        CO2e_total = CO2e_combustion_based
-        transport_capacity_pkm = rail_ppl.transport_capacity_pkm
+        demand_electricity = rail_ppl.demand_electricity + rail_gds.demand_electricity
         invest_com = (
             rail_action_invest_infra.invest_com
             + rail_action_invest_station.invest_com
@@ -539,11 +497,6 @@ class Rail(Transport):
             + rail_ppl.invest_pa_com
         )
         mileage = rail_ppl.mileage + rail_gds.mileage
-        transport_capacity_tkm = rail_gds.transport_capacity_tkm
-        CO2e_total_2021_estimated = (
-            rail_ppl.CO2e_total_2021_estimated + rail_gds.CO2e_total_2021_estimated
-        )
-        cost_climate_saved = rail_ppl.cost_climate_saved + rail_gds.cost_climate_saved
         base_unit = rail_ppl.base_unit + rail_gds.base_unit
         invest_pa = (
             rail_action_invest_infra.invest_pa
@@ -571,28 +524,17 @@ class Rail(Transport):
         )
 
         return cls(
-            CO2e_combustion_based=CO2e_combustion_based,
-            CO2e_total=CO2e_total,
-            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
             base_unit=base_unit,
-            change_CO2e_pct=change_CO2e_pct,
-            change_CO2e_t=change_CO2e_t,
-            change_km=rail_ppl.change_km + rail_gds.change_km,
-            change_energy_MWh=change_energy_MWh,
-            change_energy_pct=change_energy_pct,
-            cost_climate_saved=cost_climate_saved,
             cost_wage=cost_wage,
             demand_electricity=demand_electricity,
             demand_emplo=demand_emplo,
             demand_emplo_new=demand_emplo_new,
-            energy=energy,
             invest=invest,
             invest_com=invest_com,
             invest_pa=invest_pa,
             invest_pa_com=invest_pa_com,
             mileage=mileage,
-            transport_capacity_pkm=transport_capacity_pkm,
-            transport_capacity_tkm=transport_capacity_tkm,
+            **asdict(sum),
         )
 
 
@@ -1524,7 +1466,6 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
         inputs, metro_transport_capacity_pkm=rail_ppl_metro.transport_capacity_pkm
     )
     rail_ppl = RailPeopleSum.calc(
-        inputs,
         t18=t18,
         rail_ppl_metro=rail_ppl_metro,
         rail_ppl_distance=rail_ppl_distance,
@@ -1532,7 +1473,6 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
     )
     rail_gds = RailGoods.calc(inputs, t18=t18)
     rail = Rail.calc(
-        inputs,
         t18=t18,
         rail_ppl=rail_ppl,
         rail_gds=rail_gds,
