@@ -1,19 +1,15 @@
 from dataclasses import dataclass
 from ..inputs import Inputs
+from .co2e import CO2e
 
 
 @dataclass
-class CO2e_per_t:
+class CO2e_per_t(CO2e):
     # Used by p_miner_cement, p_miner_chalk, p_miner_glas, p_miner_ceram, p_chem_basic, p_chem_ammonia, p_chem_other, p_metal_steel_primary, p_metal_steel_secondary, p_metal_nonfe, p_other_paper, p_other_food
-    CO2e_combustion_based: float = None  # type: ignore
     CO2e_combustion_based_per_t: float = None  # type: ignore
-    CO2e_production_based: float = None  # type: ignore
     CO2e_production_based_per_t: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    energy: float = None  # type: ignore
     energy_use_factor: float = None  # type: ignore
     pct_energy: float = None  # type: ignore
-    prod_volume: float = None  # type: ignore
 
     @classmethod
     def calc_p_miner_cement(cls, inputs: Inputs, p_miner_energy: float) -> "CO2e_per_t":
@@ -218,7 +214,7 @@ class CO2e_per_t:
         )
 
     @classmethod
-    def calc_p_metal_steel_primary(
+    def calc_p_metal_steel_primary_route(
         cls, inputs: Inputs, p_metal_steel_energy: float
     ) -> "CO2e_per_t":
 
@@ -255,7 +251,7 @@ class CO2e_per_t:
         )
 
     @classmethod
-    def calc_p_metal_steel_secondary(
+    def calc_p_metal_steel_secondary_route(
         cls, inputs: Inputs, p_metal_steel_energy: float
     ) -> "CO2e_per_t":
 

@@ -1,9 +1,10 @@
-from generatorcore.industry2018.co2e_basic import CO2e_basic
-from generatorcore.industry2018.co2e_per_mwh import CO2e_per_MWh
 from ..inputs import Inputs
 from ..utils import div
 from .i18 import I18
 from .co2e_per_t import CO2e_per_t
+from .co2e_basic import CO2e_basic
+from .co2e_per_mwh import CO2e_per_MWh
+from .co2e_with_pct_energy import CO2e_with_pct_energy
 
 
 # for mineral industry the energy_use_factor still needs to be added to facts
@@ -15,171 +16,50 @@ def calc(inputs: Inputs) -> I18:
 
     i18 = I18()
 
-    i18.p_miner.energy = entries.i_fec_pct_of_miner * entries.i_energy_total
-    i18.p_miner_cement = CO2e_per_t.calc_p_miner_cement(inputs, i18.p_miner.energy)  # type: ignore
-    i18.p_miner_chalk = CO2e_per_t.calc_p_miner_chalk(inputs, i18.p_miner.energy)  # type: ignore
-    i18.p_miner_glas = CO2e_per_t.calc_p_miner_glas(inputs, i18.p_miner.energy)  # type: ignore
-    i18.p_miner_ceram = CO2e_per_t.calc_p_miner_ceram(inputs, i18.p_miner.energy)  # type: ignore
-
-    i18.p_chem.energy = entries.i_fec_pct_of_chem * entries.i_energy_total
-    i18.p_chem_basic = CO2e_per_t.calc_p_chem_basic(inputs, i18.p_chem.energy)  # type: ignore
-    i18.p_chem_ammonia = CO2e_per_t.calc_p_chem_ammonia(inputs, i18.p_chem.energy)  # type: ignore
-    i18.p_chem_other = CO2e_per_t.calc_p_chem_other(inputs, i18.p_chem.energy)  # type: ignore
-
-    # metal
-    i18.p_metal.energy = entries.i_fec_pct_of_metal * entries.i_energy_total
-    i18.p_metal_nonfe = CO2e_per_t.calc_p_metal_non_fe(inputs, i18.p_metal.energy)  # type: ignore
-
-    # steel total (primary and secondary)
-    i18.p_metal_steel.pct_energy = fact("Fact_I_P_metal_fec_pct_of_steel_2018")
-    i18.p_metal_steel.energy = i18.p_metal.energy * i18.p_metal_steel.pct_energy
-
-    # primary and secondary route
-    i18.p_metal_steel_primary = CO2e_per_t.calc_p_metal_steel_primary(inputs, i18.p_metal_steel.energy)  # type: ignore
-    i18.p_metal_steel_secondary = CO2e_per_t.calc_p_metal_steel_secondary(inputs, i18.p_metal_steel.energy)  # type: ignore
-
-    # steel total (primary and secondary) - continiued -----------------------------
-    i18.p_metal_steel.prod_volume = (
-        i18.p_metal_steel_primary.prod_volume + i18.p_metal_steel_secondary.prod_volume
+    p_miner_energy = entries.i_fec_pct_of_miner * entries.i_energy_total
+    i18.p_miner_cement = CO2e_per_t.calc_p_miner_cement(inputs, p_miner_energy)  # type: ignore
+    i18.p_miner_chalk = CO2e_per_t.calc_p_miner_chalk(inputs, p_miner_energy)  # type: ignore
+    i18.p_miner_glas = CO2e_per_t.calc_p_miner_glas(inputs, p_miner_energy)  # type: ignore
+    i18.p_miner_ceram = CO2e_per_t.calc_p_miner_ceram(inputs, p_miner_energy)  # type: ignore
+    i18.p_miner = (
+        i18.p_miner_cement + i18.p_miner_chalk + i18.p_miner_glas + i18.p_miner_ceram
     )
 
-    i18.p_metal_steel.CO2e_production_based = (
-        i18.p_metal_steel_primary.CO2e_production_based
-        + i18.p_metal_steel_secondary.CO2e_production_based
-    )
-    i18.p_metal_steel.CO2e_combustion_based = (
-        i18.p_metal_steel_primary.CO2e_combustion_based
-        + i18.p_metal_steel_secondary.CO2e_combustion_based
-    )
-    i18.p_metal_steel.CO2e_total = (
-        i18.p_metal_steel_primary.CO2e_total + i18.p_metal_steel_secondary.CO2e_total
-    )
+    p_chem_energy = entries.i_fec_pct_of_chem * entries.i_energy_total
+    i18.p_chem_basic = CO2e_per_t.calc_p_chem_basic(inputs, p_chem_energy)  # type: ignore
+    i18.p_chem_ammonia = CO2e_per_t.calc_p_chem_ammonia(inputs, p_chem_energy)  # type: ignore
+    i18.p_chem_other = CO2e_per_t.calc_p_chem_other(inputs, p_chem_energy)  # type: ignore
+    i18.p_chem = i18.p_chem_basic + i18.p_chem_ammonia + i18.p_chem_other
 
-    # p_other
-    i18.p_other.energy = entries.i_fec_pct_of_other * entries.i_energy_total
-    i18.p_other_paper = CO2e_per_t.calc_p_other_paper(inputs, i18.p_other.energy)  # type: ignore
-    i18.p_other_food = CO2e_per_t.calc_p_other_food(inputs, i18.p_other.energy)  # type: ignore
-    i18.p_other_further = CO2e_per_MWh.calc_p_other_further(inputs, i18.p_other.energy)  # type: ignore
+    p_metal_energy = entries.i_fec_pct_of_metal * entries.i_energy_total
+    p_metal_steel_pct_energy = fact("Fact_I_P_metal_fec_pct_of_steel_2018")
+    p_metal_steel_energy = p_metal_energy * p_metal_steel_pct_energy
+    i18.p_metal_steel_primary = CO2e_per_t.calc_p_metal_steel_primary_route(inputs, p_metal_steel_energy)  # type: ignore
+    i18.p_metal_steel_secondary = CO2e_per_t.calc_p_metal_steel_secondary_route(inputs, p_metal_steel_energy)  # type: ignore
+    i18.p_metal_steel = CO2e_with_pct_energy.calc_p_metal_steel(inputs, p_metal_steel_pct_energy, p_metal_steel_energy, i18.p_metal_steel_primary, i18.p_metal_steel_secondary)  # type: ignore
+    i18.p_metal_nonfe = CO2e_per_t.calc_p_metal_non_fe(inputs, p_metal_energy)  # type: ignore
+    i18.p_metal = i18.p_metal_steel + i18.p_metal_nonfe
+    i18.p_metal.energy = p_metal_energy
+
+    p_other_energy = entries.i_fec_pct_of_other * entries.i_energy_total
+    i18.p_other_paper = CO2e_per_t.calc_p_other_paper(inputs, p_other_energy)  # type: ignore
+    i18.p_other_food = CO2e_per_t.calc_p_other_food(inputs, p_other_energy)  # type: ignore
+    i18.p_other_further = CO2e_per_MWh.calc_p_other_further(inputs, p_other_energy)  # type: ignore
     i18.p_other_2efgh = CO2e_basic.calc_p_other_2efgh(inputs, i18.p_other_further.energy)  # type: ignore
+    i18.p_other = i18.p_other_paper + i18.p_other_food
+    i18.p_other.energy = p_other_energy
 
-    i18.p_miner.prod_volume = (
-        i18.p_miner_cement.prod_volume
-        + i18.p_miner_chalk.prod_volume
-        + i18.p_miner_glas.prod_volume
-        + i18.p_miner_ceram.prod_volume
-    )
-
-    i18.p_chem.prod_volume = (
-        i18.p_chem_basic.prod_volume
-        + i18.p_chem_ammonia.prod_volume
-        + i18.p_chem_other.prod_volume
-    )
-    i18.p_miner.CO2e_production_based = (
-        i18.p_miner_cement.CO2e_production_based
-        + i18.p_miner_chalk.CO2e_production_based
-        + i18.p_miner_glas.CO2e_production_based
-        + i18.p_miner_ceram.CO2e_production_based
-    )
-
-    i18.p_chem.CO2e_production_based = (
-        i18.p_chem_basic.CO2e_production_based
-        + i18.p_chem_ammonia.CO2e_production_based
-        + i18.p_chem_other.CO2e_production_based
-    )
-    i18.p_metal.CO2e_production_based = (
-        i18.p_metal_steel.CO2e_production_based
-        + i18.p_metal_nonfe.CO2e_production_based
-    )
-
-    i18.p_other.CO2e_production_based = (
-        i18.p_other_paper.CO2e_production_based
-        + i18.p_other_food.CO2e_production_based
-        + i18.p_other_further.CO2e_production_based
+    i18.p_other.CO2e_combustion_based += +i18.p_other_further.CO2e_combustion_based
+    i18.p_other.CO2e_production_based += (
+        +i18.p_other_further.CO2e_production_based
         + i18.p_other_2efgh.CO2e_production_based
     )
-
-    i18.p_miner.CO2e_combustion_based = (
-        i18.p_miner_cement.CO2e_combustion_based
-        + i18.p_miner_chalk.CO2e_combustion_based
-        + i18.p_miner_glas.CO2e_combustion_based
-        + i18.p_miner_ceram.CO2e_combustion_based
+    i18.p_other.CO2e_total += (
+        +i18.p_other_further.CO2e_total + i18.p_other_2efgh.CO2e_total
     )
 
-    i18.p_chem.CO2e_combustion_based = (
-        i18.p_chem_basic.CO2e_combustion_based
-        + i18.p_chem_ammonia.CO2e_combustion_based
-        + i18.p_chem_other.CO2e_combustion_based
-    )
-
-    i18.p_metal.CO2e_combustion_based = (
-        i18.p_metal_steel.CO2e_combustion_based
-        + i18.p_metal_nonfe.CO2e_combustion_based
-    )
-
-    i18.p_other.CO2e_combustion_based = (
-        i18.p_other_paper.CO2e_combustion_based
-        + i18.p_other_food.CO2e_combustion_based
-        + i18.p_other_further.CO2e_combustion_based
-    )
-
-    i18.p.CO2e_combustion_based = (
-        i18.p_miner.CO2e_combustion_based
-        + i18.p_chem.CO2e_combustion_based
-        + i18.p_metal.CO2e_combustion_based
-        + i18.p_other.CO2e_combustion_based
-    )
-
-    i18.p_metal.prod_volume = (
-        i18.p_metal_steel.prod_volume + i18.p_metal_nonfe.prod_volume
-    )
-
-    i18.p_other.prod_volume = (
-        i18.p_other_paper.prod_volume + i18.p_other_food.prod_volume
-    )
-
+    i18.p = i18.p_miner + i18.p_chem + i18.p_metal + i18.p_other
     i18.p.energy = entries.i_energy_total
-    i18.p.prod_volume = (
-        i18.p_miner.prod_volume
-        + i18.p_chem.prod_volume
-        + i18.p_metal.prod_volume
-        + i18.p_other.prod_volume
-    )
-
-    i18.p.CO2e_production_based = (
-        i18.p_miner.CO2e_production_based
-        + i18.p_chem.CO2e_production_based
-        + i18.p_metal.CO2e_production_based
-        + i18.p_other.CO2e_production_based
-    )
-
-    i18.p_miner.CO2e_total = (
-        i18.p_miner_cement.CO2e_total
-        + i18.p_miner_chalk.CO2e_total
-        + i18.p_miner_glas.CO2e_total
-        + i18.p_miner_ceram.CO2e_total
-    )
-
-    i18.p_chem.CO2e_total = (
-        i18.p_chem_basic.CO2e_total
-        + i18.p_chem_ammonia.CO2e_total
-        + i18.p_chem_other.CO2e_total
-    )
-
-    i18.p_metal.CO2e_total = i18.p_metal_steel.CO2e_total + i18.p_metal_nonfe.CO2e_total
-
-    i18.p_other.CO2e_total = (
-        i18.p_other_paper.CO2e_total
-        + i18.p_other_food.CO2e_total
-        + i18.p_other_further.CO2e_total
-        + i18.p_other_2efgh.CO2e_total
-    )
-
-    i18.p.CO2e_total = (
-        i18.p_miner.CO2e_total
-        + i18.p_chem.CO2e_total
-        + i18.p_metal.CO2e_total
-        + i18.p_other.CO2e_total
-    )
 
     i18.s.energy = entries.i_energy_total
 
