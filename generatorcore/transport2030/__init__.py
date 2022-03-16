@@ -176,18 +176,12 @@ class Other(Transport):
         other_foot_action_infra: InvestmentAction,
         other_cycl_action_infra: InvestmentAction,
     ) -> "Other":
-        CO2e_total = 0
+        sum = Transport.sum(other_foot, other_cycl, energy_2018=0, co2e_2018=0)
         invest_com = (
             other_foot.invest_com
             + other_cycl.invest_com
             + other_foot_action_infra.invest_com
             + other_cycl_action_infra.invest_com
-        )
-        CO2e_total_2021_estimated = (
-            other_foot.CO2e_total_2021_estimated + other_cycl.CO2e_total_2021_estimated
-        )
-        cost_climate_saved = (
-            other_foot.cost_climate_saved + other_cycl.cost_climate_saved
         )
         invest = (
             other_foot.invest
@@ -205,10 +199,6 @@ class Other(Transport):
             other_foot_action_infra.demand_emplo_new
             + other_cycl_action_infra.demand_emplo_new
         )
-        transport_capacity_pkm = (
-            other_foot.transport_capacity_pkm + other_cycl.transport_capacity_pkm
-        )
-        change_km = other_foot.change_km + other_cycl.change_km
         cost_wage = (
             other_foot_action_infra.cost_wage + other_cycl_action_infra.cost_wage
         )
@@ -231,17 +221,7 @@ class Other(Transport):
         base_unit = other_cycl.base_unit
 
         return cls(
-            CO2e_combustion_based=0,
-            CO2e_total=CO2e_total,
-            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
-            change_CO2e_t=0,
-            change_CO2e_pct=0,
-            energy=0,
-            change_energy_MWh=0,
-            change_energy_pct=0,
             base_unit=base_unit,
-            change_km=change_km,
-            cost_climate_saved=cost_climate_saved,
             cost_wage=cost_wage,
             demand_emplo=demand_emplo,
             demand_emplo_new=demand_emplo_new,
@@ -249,8 +229,7 @@ class Other(Transport):
             invest_com=invest_com,
             invest_pa=invest_pa,
             invest_pa_com=invest_pa_com,
-            transport_capacity_pkm=transport_capacity_pkm,
-            transport_capacity_tkm=0,
+            **asdict(sum),
         )
 
 
