@@ -6,16 +6,17 @@ from ..utils import div
 class Transport:
     """Every form of transports is modelled at least in terms of the below."""
 
-    CO2e_total: float
-    CO2e_combustion_based: float
-    CO2e_total_2021_estimated: float
     change_CO2e_t: float
     change_energy_MWh: float
     change_km: float
-    energy: float
+    CO2e_combustion_based: float
+    CO2e_total_2021_estimated: float
+    CO2e_total: float
     cost_climate_saved: float
-    transport_capacity_tkm: float
+    energy: float
     transport_capacity_pkm: float
+    transport_capacity_tkm: float
+
     change_CO2e_pct: float
     change_energy_pct: float
 

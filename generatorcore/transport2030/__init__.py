@@ -4,10 +4,9 @@ from dataclasses import dataclass, asdict
 from ..inputs import Inputs
 from ..utils import div
 from ..transport2018 import T18
-from .air import AirDomestic, AirInternational, Air
-
-# from .transport import Transport
+from .transport import Transport
 from .investmentaction import InvestmentAction
+from .air import AirDomestic, AirInternational, Air
 from .road import (
     Road,
     RoadBus,
@@ -22,31 +21,20 @@ from .road import (
 
 
 @dataclass
-class RailPeople:
+class RailPeople(Transport):
     # Used by rail_ppl_distance and rail_ppl_metro
     base_unit: float
-    change_CO2e_pct: float
-    change_CO2e_t: float
-    change_energy_MWh: float
-    change_energy_pct: float
-    change_km: float
-    CO2e_combustion_based: float
-    CO2e_total_2021_estimated: float
-    CO2e_total: float
-    cost_climate_saved: float
     cost_wage: float
     demand_electricity: float
     demand_emplo_new: float
     demand_emplo: float
     emplo_existing: float
-    energy: float
     invest_pa: float
     invest_per_x: float
     invest: float
     mileage: float
     pct_of_wage: float
     ratio_wage_to_emplo: float
-    transport_capacity_pkm: float
 
     @classmethod
     def calc_metro(
@@ -132,6 +120,7 @@ class RailPeople:
             pct_of_wage=pct_of_wage,
             ratio_wage_to_emplo=ratio_wage_to_emplo,
             transport_capacity_pkm=transport_capacity_pkm,
+            transport_capacity_tkm=0,
         )
 
     @classmethod
@@ -225,6 +214,7 @@ class RailPeople:
             pct_of_wage=pct_of_wage,
             ratio_wage_to_emplo=ratio_wage_to_emplo,
             transport_capacity_pkm=transport_capacity_pkm,
+            transport_capacity_tkm=0,
         )
 
 
@@ -283,30 +273,19 @@ class RailPeopleMetroActionInfra:
 
 
 @dataclass
-class RailPeopleSum:
+class RailPeopleSum(Transport):
     # Used by rail_ppl
     base_unit: float
-    change_CO2e_pct: float
-    change_CO2e_t: float
-    change_energy_MWh: float
-    change_energy_pct: float
-    change_km: float
-    CO2e_combustion_based: float
-    CO2e_total_2021_estimated: float
-    CO2e_total: float
-    cost_climate_saved: float
     cost_wage: float
     demand_electricity: float
     demand_emplo_new: float
     demand_emplo: float
     emplo_existing: float
-    energy: float
     invest_com: float
     invest_pa_com: float
     invest_pa: float
     invest: float
     mileage: float
-    transport_capacity_pkm: float
 
     @classmethod
     def calc(
@@ -411,35 +390,25 @@ class RailPeopleSum:
             invest=invest,
             mileage=mileage,
             transport_capacity_pkm=transport_capacity_pkm,
+            transport_capacity_tkm=0,
         )
 
 
 @dataclass
-class RailGoods:
+class RailGoods(Transport):
     # Used by rail_gds
-    CO2e_combustion_based: float
-    CO2e_total: float
-    CO2e_total_2021_estimated: float
     base_unit: float
-    change_CO2e_pct: float
-    change_CO2e_t: float
-    change_energy_MWh: float
-    change_energy_pct: float
-    change_km: float
-    cost_climate_saved: float
     cost_wage: float
     demand_electricity: float
     demand_emplo: float
     demand_emplo_new: float
     emplo_existing: float
-    energy: float
     invest: float
     invest_pa: float
     invest_per_x: float
     pct_of_wage: float
     mileage: float
     ratio_wage_to_emplo: float
-    transport_capacity_tkm: float
 
     @classmethod
     def calc(cls, inputs: Inputs, *, t18: T18) -> "RailGoods":
@@ -512,6 +481,117 @@ class RailGoods:
             pct_of_wage=pct_of_wage,
             mileage=mileage,
             ratio_wage_to_emplo=ratio_wage_to_emplo,
+            transport_capacity_tkm=transport_capacity_tkm,
+            transport_capacity_pkm=0,
+        )
+
+
+@dataclass
+class Rail(Transport):
+    # Used by rail
+    base_unit: float
+    cost_wage: float
+    demand_electricity: float
+    demand_emplo_new: float
+    demand_emplo: float
+    invest_com: float
+    invest_pa_com: float
+    invest_pa: float
+    invest: float
+    mileage: float
+
+    @classmethod
+    def calc(
+        cls,
+        inputs: Inputs,
+        *,
+        t18: T18,
+        rail_ppl: RailPeopleSum,
+        rail_gds: RailGoods,
+        rail_action_invest_infra: InvestmentAction,
+        rail_action_invest_station: InvestmentAction,
+    ) -> "Rail":
+        demand_electricity = rail_ppl.demand_electricity + rail_gds.demand_electricity
+        energy = demand_electricity
+        change_energy_MWh = energy - t18.rail.energy
+        CO2e_combustion_based = (
+            rail_ppl.CO2e_combustion_based + rail_gds.CO2e_combustion_based
+        )
+        change_CO2e_t = CO2e_combustion_based - t18.rail.CO2e_combustion_based
+        change_CO2e_pct = div(change_CO2e_t, t18.rail.CO2e_combustion_based)
+        change_energy_pct = div(change_energy_MWh, t18.rail.energy)
+        CO2e_total = CO2e_combustion_based
+        transport_capacity_pkm = rail_ppl.transport_capacity_pkm
+        invest_com = (
+            rail_action_invest_infra.invest_com
+            + rail_action_invest_station.invest_com
+            + rail_ppl.invest_com
+        )
+        demand_emplo_new = (
+            rail_action_invest_infra.demand_emplo_new
+            + rail_action_invest_station.demand_emplo_new
+            + rail_ppl.demand_emplo_new
+            + rail_gds.demand_emplo_new
+        )
+        invest_pa_com = (
+            rail_action_invest_infra.invest_pa_com
+            + rail_action_invest_station.invest_pa_com
+            + rail_ppl.invest_pa_com
+        )
+        mileage = rail_ppl.mileage + rail_gds.mileage
+        transport_capacity_tkm = rail_gds.transport_capacity_tkm
+        CO2e_total_2021_estimated = (
+            rail_ppl.CO2e_total_2021_estimated + rail_gds.CO2e_total_2021_estimated
+        )
+        cost_climate_saved = rail_ppl.cost_climate_saved + rail_gds.cost_climate_saved
+        base_unit = rail_ppl.base_unit + rail_gds.base_unit
+        invest_pa = (
+            rail_action_invest_infra.invest_pa
+            + rail_action_invest_station.invest_pa
+            + rail_ppl.invest_pa
+            + rail_gds.invest_pa
+        )
+        demand_emplo = (
+            rail_action_invest_infra.demand_emplo
+            + rail_action_invest_station.demand_emplo
+            + rail_ppl.demand_emplo
+            + rail_gds.demand_emplo
+        )
+        cost_wage = (
+            rail_action_invest_infra.cost_wage
+            + rail_action_invest_station.cost_wage
+            + rail_ppl.cost_wage
+            + rail_gds.cost_wage
+        )
+        invest = (
+            rail_action_invest_infra.invest
+            + rail_action_invest_station.invest
+            + rail_ppl.invest
+            + rail_gds.invest
+        )
+
+        return cls(
+            CO2e_combustion_based=CO2e_combustion_based,
+            CO2e_total=CO2e_total,
+            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+            base_unit=base_unit,
+            change_CO2e_pct=change_CO2e_pct,
+            change_CO2e_t=change_CO2e_t,
+            change_km=rail_ppl.change_km + rail_gds.change_km,
+            change_energy_MWh=change_energy_MWh,
+            change_energy_pct=change_energy_pct,
+            cost_climate_saved=cost_climate_saved,
+            cost_wage=cost_wage,
+            demand_electricity=demand_electricity,
+            demand_emplo=demand_emplo,
+            demand_emplo_new=demand_emplo_new,
+            energy=energy,
+            invest=invest,
+            invest_com=invest_com,
+            invest_pa=invest_pa,
+            invest_pa_com=invest_pa_com,
+            mileage=mileage,
+            transport_capacity_pkm=transport_capacity_pkm,
             transport_capacity_tkm=transport_capacity_tkm,
         )
 
@@ -1030,126 +1110,6 @@ class G:
     invest_com: float
     invest_pa: float
     invest_pa_com: float
-
-
-@dataclass
-class Rail:
-    # Used by rail
-    CO2e_combustion_based: float
-    CO2e_total: float
-    CO2e_total_2021_estimated: float
-    base_unit: float
-    change_CO2e_pct: float
-    change_CO2e_t: float
-    change_energy_MWh: float
-    change_energy_pct: float
-    cost_climate_saved: float
-    cost_wage: float
-    demand_electricity: float
-    demand_emplo: float
-    demand_emplo_new: float
-    energy: float
-    invest: float
-    invest_com: float
-    invest_pa: float
-    invest_pa_com: float
-    mileage: float
-    transport_capacity_pkm: float
-    transport_capacity_tkm: float
-
-    @classmethod
-    def calc(
-        cls,
-        inputs: Inputs,
-        *,
-        t18: T18,
-        rail_ppl: RailPeopleSum,
-        rail_gds: RailGoods,
-        rail_action_invest_infra: InvestmentAction,
-        rail_action_invest_station: InvestmentAction,
-    ) -> "Rail":
-        demand_electricity = rail_ppl.demand_electricity + rail_gds.demand_electricity
-        energy = demand_electricity
-        change_energy_MWh = energy - t18.rail.energy
-        CO2e_combustion_based = (
-            rail_ppl.CO2e_combustion_based + rail_gds.CO2e_combustion_based
-        )
-        change_CO2e_t = CO2e_combustion_based - t18.rail.CO2e_combustion_based
-        change_CO2e_pct = div(change_CO2e_t, t18.rail.CO2e_combustion_based)
-        change_energy_pct = div(change_energy_MWh, t18.rail.energy)
-        CO2e_total = CO2e_combustion_based
-        transport_capacity_pkm = rail_ppl.transport_capacity_pkm
-        invest_com = (
-            rail_action_invest_infra.invest_com
-            + rail_action_invest_station.invest_com
-            + rail_ppl.invest_com
-        )
-        demand_emplo_new = (
-            rail_action_invest_infra.demand_emplo_new
-            + rail_action_invest_station.demand_emplo_new
-            + rail_ppl.demand_emplo_new
-            + rail_gds.demand_emplo_new
-        )
-        invest_pa_com = (
-            rail_action_invest_infra.invest_pa_com
-            + rail_action_invest_station.invest_pa_com
-            + rail_ppl.invest_pa_com
-        )
-        mileage = rail_ppl.mileage + rail_gds.mileage
-        transport_capacity_tkm = rail_gds.transport_capacity_tkm
-        CO2e_total_2021_estimated = (
-            rail_ppl.CO2e_total_2021_estimated + rail_gds.CO2e_total_2021_estimated
-        )
-        cost_climate_saved = rail_ppl.cost_climate_saved + rail_gds.cost_climate_saved
-        base_unit = rail_ppl.base_unit + rail_gds.base_unit
-        invest_pa = (
-            rail_action_invest_infra.invest_pa
-            + rail_action_invest_station.invest_pa
-            + rail_ppl.invest_pa
-            + rail_gds.invest_pa
-        )
-        demand_emplo = (
-            rail_action_invest_infra.demand_emplo
-            + rail_action_invest_station.demand_emplo
-            + rail_ppl.demand_emplo
-            + rail_gds.demand_emplo
-        )
-        cost_wage = (
-            rail_action_invest_infra.cost_wage
-            + rail_action_invest_station.cost_wage
-            + rail_ppl.cost_wage
-            + rail_gds.cost_wage
-        )
-        invest = (
-            rail_action_invest_infra.invest
-            + rail_action_invest_station.invest
-            + rail_ppl.invest
-            + rail_gds.invest
-        )
-
-        return cls(
-            CO2e_combustion_based=CO2e_combustion_based,
-            CO2e_total=CO2e_total,
-            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
-            base_unit=base_unit,
-            change_CO2e_pct=change_CO2e_pct,
-            change_CO2e_t=change_CO2e_t,
-            change_energy_MWh=change_energy_MWh,
-            change_energy_pct=change_energy_pct,
-            cost_climate_saved=cost_climate_saved,
-            cost_wage=cost_wage,
-            demand_electricity=demand_electricity,
-            demand_emplo=demand_emplo,
-            demand_emplo_new=demand_emplo_new,
-            energy=energy,
-            invest=invest,
-            invest_com=invest_com,
-            invest_pa=invest_pa,
-            invest_pa_com=invest_pa_com,
-            mileage=mileage,
-            transport_capacity_pkm=transport_capacity_pkm,
-            transport_capacity_tkm=transport_capacity_tkm,
-        )
 
 
 @dataclass
