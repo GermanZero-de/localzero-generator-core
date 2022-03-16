@@ -1,3 +1,5 @@
+from generatorcore.industry2018.co2e_basic import CO2e_basic
+from generatorcore.industry2018.co2e_per_mwh import CO2e_per_MWh
 from ..inputs import Inputs
 from ..utils import div
 from .i18 import I18
@@ -26,6 +28,7 @@ def calc(inputs: Inputs) -> I18:
 
     # metal
     i18.p_metal.energy = entries.i_fec_pct_of_metal * entries.i_energy_total
+    i18.p_metal_nonfe = CO2e_per_t.calc_p_metal_non_fe(inputs, i18.p_metal.energy)  # type: ignore
 
     # steel total (primary and secondary)
     i18.p_metal_steel.pct_energy = fact("Fact_I_P_metal_fec_pct_of_steel_2018")
@@ -52,47 +55,12 @@ def calc(inputs: Inputs) -> I18:
         i18.p_metal_steel_primary.CO2e_total + i18.p_metal_steel_secondary.CO2e_total
     )
 
-    # non fe metals
-    i18.p_metal_nonfe = CO2e_per_t.calc_p_metal_nonfe(inputs, i18.p_metal.energy)  # type: ignore
-
     # p_other
     i18.p_other.energy = entries.i_fec_pct_of_other * entries.i_energy_total
     i18.p_other_paper = CO2e_per_t.calc_p_other_paper(inputs, i18.p_other.energy)  # type: ignore
     i18.p_other_food = CO2e_per_t.calc_p_other_food(inputs, i18.p_other.energy)  # type: ignore
-
-    # p_other_further
-    i18.p_other_further.pct_energy = fact("Fact_I_P_other_fec_pct_of_further_2018")
-    i18.p_other_further.energy = i18.p_other.energy * i18.p_other_further.pct_energy
-    # no prodvolume for other industries
-    # i18.p_other_further.energy_use_factor =
-    # i18.p_other_further.prod_volume = i18.p_other_further.energy * i18.p_other_further.energy_use_factor
-    i18.p_other_further.CO2e_production_based_per_MWh = fact(
-        "Fact_I_P_other_2d_ratio_CO2e_pb_to_fec_2018"
-    )
-    i18.p_other_further.CO2e_production_based = (
-        i18.p_other_further.energy * i18.p_other_further.CO2e_production_based_per_MWh
-    )
-    i18.p_other_further.CO2e_combustion_based_per_MWh = fact(
-        "Fact_I_P_other_further_ratio_CO2e_cb_to_fec_2018"
-    )
-    i18.p_other_further.CO2e_combustion_based = (
-        i18.p_other_further.energy * i18.p_other_further.CO2e_combustion_based_per_MWh
-    )
-    i18.p_other_further.CO2e_total = (
-        i18.p_other_further.CO2e_production_based
-        + i18.p_other_further.CO2e_combustion_based
-    )
-    i18.p_other_further.prod_volume = fact("Fact_I_P_other_further_prodvol_2018")
-
-    # energy of further_other_industries
-
-    i18.p_other_2efgh.CO2e_production_based_per_MWh = fact(
-        "Fact_I_P_other_2efgh_ratio_CO2e_pb_to_fec_2018"
-    )
-    i18.p_other_2efgh.CO2e_production_based = (
-        i18.p_other_further.energy * i18.p_other_2efgh.CO2e_production_based_per_MWh
-    )
-    i18.p_other_2efgh.CO2e_total = i18.p_other_2efgh.CO2e_production_based
+    i18.p_other_further = CO2e_per_MWh.calc_p_other_further(inputs, i18.p_other.energy)  # type: ignore
+    i18.p_other_2efgh = CO2e_basic.calc_p_other_2efgh(inputs, i18.p_other_further.energy)  # type: ignore
 
     i18.p_miner.prod_volume = (
         i18.p_miner_cement.prod_volume

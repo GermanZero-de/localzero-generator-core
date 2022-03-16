@@ -292,7 +292,7 @@ class CO2e_per_t:
         )
 
     @classmethod
-    def calc_p_metal_nonfe(cls, inputs: Inputs, p_metal_energy: float) -> "CO2e_per_t":
+    def calc_p_metal_non_fe(cls, inputs: Inputs, p_metal_energy: float) -> "CO2e_per_t":
 
         pct_energy = inputs.fact("Fact_I_P_metal_fec_pct_of_nonfe_2018")
         energy = p_metal_energy * pct_energy
