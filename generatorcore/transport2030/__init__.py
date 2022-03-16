@@ -4,6 +4,7 @@ from dataclasses import dataclass, asdict
 from ..inputs import Inputs
 from ..utils import div
 from ..transport2018 import T18
+from .transport import Transport
 from .investmentaction import InvestmentAction
 from .air import AirDomestic, AirInternational, Air
 from .road import (
@@ -21,30 +22,19 @@ from .rail import Rail, RailGoods, RailPeople, RailPeopleMetroActionInfra, RailP
 
 
 @dataclass
-class ShipDomestic:
+class ShipDomestic(Transport):
     # Used by ship_dmstc
     base_unit: float
-    change_CO2e_pct: float
-    change_CO2e_t: float
-    change_energy_MWh: float
-    change_energy_pct: float
-    change_km: float
-    CO2e_combustion_based: float
-    CO2e_total_2021_estimated: float
-    CO2e_total: float
-    cost_climate_saved: float
     cost_wage: float
     demand_ediesel: float
     demand_emplo_new: float
     demand_emplo: float
     emplo_existing: float
-    energy: float
     invest_pa: float
     invest_per_x: float
     invest: float
     pct_of_wage: float
     ratio_wage_to_emplo: float
-    transport_capacity_tkm: float
 
     @classmethod
     def calc(cls, inputs: Inputs, *, t18: T18) -> "ShipDomestic":
@@ -116,6 +106,7 @@ class ShipDomestic:
             pct_of_wage=pct_of_wage,
             ratio_wage_to_emplo=ratio_wage_to_emplo,
             transport_capacity_tkm=transport_capacity_tkm,
+            transport_capacity_pkm=0,
         )
 
 
@@ -178,20 +169,9 @@ class ShipDomesticActionInfra:
 
 
 @dataclass
-class ShipInternational:
+class ShipInternational(Transport):
     # Used by ship_inter
-    change_CO2e_pct: float
-    change_CO2e_t: float
-    change_energy_MWh: float
-    change_energy_pct: float
-    change_km: float
-    CO2e_combustion_based: float
-    CO2e_total_2021_estimated: float
-    CO2e_total: float
-    cost_climate_saved: float
     demand_ediesel: float
-    energy: float
-    transport_capacity_tkm: float
 
     @classmethod
     def calc(cls, inputs: Inputs, *, t18: T18) -> "ShipInternational":
@@ -239,26 +219,17 @@ class ShipInternational:
             demand_ediesel=demand_ediesel,
             energy=energy,
             transport_capacity_tkm=transport_capacity_tkm,
+            transport_capacity_pkm=0,
         )
 
 
 @dataclass
-class Ship:
+class Ship(Transport):
     # Used by ship
-    change_CO2e_pct: float
-    change_CO2e_t: float
-    change_energy_MWh: float
-    change_energy_pct: float
-    CO2e_combustion_based: float
-    CO2e_total_2021_estimated: float
-    CO2e_total: float
-    cost_climate_saved: float
+
     demand_ediesel: float
     demand_emplo_new: float
     demand_emplo: float
-    energy: float
-    transport_capacity_tkm: float
-
     base_unit: float
     cost_wage: float
     emplo_existing: float
@@ -319,6 +290,7 @@ class Ship:
             CO2e_total=CO2e_total,
             CO2e_total_2021_estimated=CO2e_total_2021_estimated,
             base_unit=base_unit,
+            change_km=ship_inter.change_km + ship_dmstc.change_km,
             change_CO2e_pct=change_CO2e_pct,
             change_CO2e_t=change_CO2e_t,
             change_energy_MWh=change_energy_MWh,
@@ -335,6 +307,7 @@ class Ship:
             invest_pa=invest_pa,
             invest_pa_com=invest_pa_com,
             transport_capacity_tkm=transport_capacity_tkm,
+            transport_capacity_pkm=0,
         )
 
 
