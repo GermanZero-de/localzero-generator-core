@@ -218,6 +218,15 @@ class T(Transport):
         )
         # TODO: Talk with Leon about this. Because the computed transport capacity is not equal to the precomputed
         # required transport capacity.
+        # For Göttingen 2050:
+        # computed is: 1354291254.7988613
+        # required is: 1308219008.6132076
+        # So we actually have more than we precompute, so maybe this is just fine / expected?
+        # In which case we probably should want this assert:
+        # Maybe this is mostly caused by air and other?
+        assert (
+            total_transport_capacity_pkm <= res.transport_capacity_pkm
+        ), "We should know have at least as much provided transport capacity as we required initially"
         res.transport_capacity_pkm = total_transport_capacity_pkm
         return res
 
