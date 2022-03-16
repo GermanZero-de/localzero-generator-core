@@ -247,6 +247,13 @@ class Ship(Transport):
         ship_dmstc: ShipDomestic,
         ship_dmstc_action_infra: ShipDomesticActionInfra,
     ) -> "Ship":
+        sum = Transport.sum(
+            ship_inter,
+            ship_dmstc,
+            energy_2018=t18.ship.energy,
+            co2e_2018=t18.ship.CO2e_combustion_based,
+        )
+
         invest = ship_dmstc_action_infra.invest + ship_dmstc.invest
         invest_com = ship_dmstc_action_infra.invest_com
         demand_ediesel = (
@@ -254,18 +261,6 @@ class Ship(Transport):
             + ship_dmstc_action_infra.demand_ediesel
             + ship_inter.demand_ediesel
         )
-        CO2e_combustion_based = (
-            ship_dmstc.CO2e_combustion_based + ship_inter.CO2e_combustion_based
-        )
-        energy = demand_ediesel
-        transport_capacity_tkm = (
-            ship_dmstc.transport_capacity_tkm + ship_inter.transport_capacity_tkm
-        )
-        CO2e_total = CO2e_combustion_based
-        change_energy_MWh = energy - t18.ship.energy
-        change_energy_pct = div(change_energy_MWh, t18.ship.energy)
-        change_CO2e_t = CO2e_combustion_based - t18.ship.CO2e_combustion_based
-        change_CO2e_pct = div(change_CO2e_t, t18.ship.CO2e_combustion_based)
         emplo_existing = ship_dmstc.emplo_existing
         base_unit = ship_dmstc.base_unit
         invest_pa = ship_dmstc_action_infra.invest_pa + ship_dmstc.invest_pa
@@ -276,38 +271,35 @@ class Ship(Transport):
         )
         demand_emplo = ship_dmstc.demand_emplo + ship_dmstc_action_infra.demand_emplo
         CO2e_total_2021_estimated = (
-            ship_dmstc.CO2e_total_2021_estimated
+            sum.CO2e_total_2021_estimated
             + ship_dmstc_action_infra.CO2e_total_2021_estimated
-            + ship_inter.CO2e_total_2021_estimated
         )
         cost_climate_saved = (
-            ship_dmstc.cost_climate_saved
-            + ship_dmstc_action_infra.cost_climate_saved
-            + ship_inter.cost_climate_saved
+            sum.cost_climate_saved + ship_dmstc_action_infra.cost_climate_saved
         )
         return cls(
-            CO2e_combustion_based=CO2e_combustion_based,
-            CO2e_total=CO2e_total,
+            CO2e_combustion_based=sum.CO2e_combustion_based,
+            CO2e_total=sum.CO2e_total,
             CO2e_total_2021_estimated=CO2e_total_2021_estimated,
             base_unit=base_unit,
-            change_km=ship_inter.change_km + ship_dmstc.change_km,
-            change_CO2e_pct=change_CO2e_pct,
-            change_CO2e_t=change_CO2e_t,
-            change_energy_MWh=change_energy_MWh,
-            change_energy_pct=change_energy_pct,
+            change_km=sum.change_km,
+            change_CO2e_pct=sum.change_CO2e_pct,
+            change_CO2e_t=sum.change_CO2e_t,
+            change_energy_MWh=sum.change_energy_MWh,
+            change_energy_pct=sum.change_energy_pct,
             cost_climate_saved=cost_climate_saved,
             cost_wage=cost_wage,
             demand_ediesel=demand_ediesel,
             demand_emplo=demand_emplo,
             demand_emplo_new=demand_emplo_new,
             emplo_existing=emplo_existing,
-            energy=energy,
+            energy=sum.energy,
             invest=invest,
             invest_com=invest_com,
             invest_pa=invest_pa,
             invest_pa_com=invest_pa_com,
-            transport_capacity_tkm=transport_capacity_tkm,
-            transport_capacity_pkm=0,
+            transport_capacity_tkm=sum.transport_capacity_tkm,
+            transport_capacity_pkm=sum.transport_capacity_pkm,
         )
 
 
