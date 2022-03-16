@@ -1,5 +1,5 @@
 # pyright: strict
-
+from typing import Callable
 from dataclasses import dataclass
 from ..utils import div
 
@@ -24,26 +24,32 @@ class Transport:
 
     @classmethod
     def sum(
-        cls, a: "Transport", b: "Transport", energy_2018: float, co2e_2018: float
+        cls,
+        *transports: "Transport",
+        energy_2018: float,
+        co2e_2018: float,
     ) -> "Transport":
         """Aggregate two transports (e.g. road_bus + road_car).  Mostly this is
         just straightforward sums. But we also compute the percentages of
         change in comparison of energy and CO2e in 2018.
         """
-        change_CO2e_t = a.change_CO2e_t + b.change_CO2e_t
-        change_energy_MWh = a.change_energy_MWh + b.change_energy_MWh
+
+        def sum_of(get: Callable[["Transport"], float]):
+            return sum(map(get, transports))
+
+        change_CO2e_t = sum_of(lambda t: t.change_CO2e_t)
+        change_energy_MWh = sum_of(lambda t: t.change_energy_MWh)
         return cls(
-            CO2e_total=a.CO2e_total + b.CO2e_total,
-            CO2e_combustion_based=a.CO2e_combustion_based + b.CO2e_combustion_based,
-            CO2e_total_2021_estimated=a.CO2e_total_2021_estimated
-            + b.CO2e_total_2021_estimated,
+            CO2e_total=sum_of(lambda t: t.CO2e_total),
+            CO2e_combustion_based=sum_of(lambda t: t.CO2e_combustion_based),
+            CO2e_total_2021_estimated=sum_of(lambda t: t.CO2e_total_2021_estimated),
             change_CO2e_t=change_CO2e_t,
             change_energy_MWh=change_energy_MWh,
-            change_km=a.change_km + b.change_km,
-            energy=a.energy + b.energy,
-            cost_climate_saved=a.cost_climate_saved + b.cost_climate_saved,
-            transport_capacity_tkm=a.transport_capacity_tkm + b.transport_capacity_tkm,
-            transport_capacity_pkm=a.transport_capacity_pkm + b.transport_capacity_pkm,
+            change_km=sum_of(lambda t: t.change_km),
+            energy=sum_of(lambda t: t.energy),
+            cost_climate_saved=sum_of(lambda t: t.cost_climate_saved),
+            transport_capacity_tkm=sum_of(lambda t: t.transport_capacity_tkm),
+            transport_capacity_pkm=sum_of(lambda t: t.transport_capacity_pkm),
             change_CO2e_pct=div(change_CO2e_t, co2e_2018),
             change_energy_pct=div(change_energy_MWh, energy_2018),
         )

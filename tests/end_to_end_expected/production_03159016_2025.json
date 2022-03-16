@@ -4290,14 +4290,18 @@
             "invest_pa_com": 8289990.697431788
         },
         "t": {
+            "change_CO2e_t": -180594.38774142967,
+            "change_energy_MWh": -583342.6384003657,
+            "change_km": -1250310593.69892,
             "CO2e_combustion_based": 24763.168975633504,
+            "CO2e_total_2021_estimated": 191707.681848057,
             "CO2e_total": 24763.168975633504,
-            "CO2e_total_2021_estimated": 191707.68184805696,
-            "change_CO2e_pct": -0.8794143767022334,
-            "change_CO2e_t": -180594.38774142973,
-            "change_energy_MWh": -583342.6384003656,
-            "change_energy_pct": -0.7138109045698314,
             "cost_climate_saved": 862685770.2682483,
+            "energy": 233880.290901771,
+            "transport_capacity_pkm": 1308219008.6132076,
+            "transport_capacity_tkm": 2243712225.540189,
+            "change_CO2e_pct": -0.8794143767022332,
+            "change_energy_pct": -0.7138109045698317,
             "cost_wage": 66875957.182099506,
             "demand_ediesel": 24983.256173826936,
             "demand_ejetfuel": 60608.16307666034,
@@ -4307,13 +4311,10 @@
             "demand_emplo_new": 1007.0776798290625,
             "demand_epetrol": 7827.62996657238,
             "demand_hydrogen": 10286.170787045521,
-            "energy": 233880.290901771,
             "invest": 1604932765.7920744,
             "invest_com": 623121251.4404979,
             "invest_pa": 547484034.9465103,
-            "invest_pa_com": 207707083.8134993,
-            "transport_capacity_pkm": 1308219008.6132076,
-            "transport_capacity_tkm": 2243712225.540189
+            "invest_pa_com": 207707083.8134993
         },
         "air": {
             "change_CO2e_t": -30304.691660505137,

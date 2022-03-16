@@ -20,6 +20,7 @@ from .road import (
 from .rail import Rail, RailGoods, RailPeople, RailPeopleMetroActionInfra, RailPeopleSum
 from .ship import Ship, ShipDomestic, ShipInternational, ShipDomesticActionInfra
 from .other import Other, OtherCycle, OtherFoot
+from .transport import Transport
 
 
 @dataclass
@@ -99,16 +100,8 @@ class G:
 
 
 @dataclass
-class T:
+class T(Transport):
     # Used by t
-    CO2e_combustion_based: float
-    CO2e_total: float
-    CO2e_total_2021_estimated: float
-    change_CO2e_pct: float
-    change_CO2e_t: float
-    change_energy_MWh: float
-    change_energy_pct: float
-    cost_climate_saved: float
     cost_wage: float
     demand_ediesel: float
     demand_ejetfuel: float
@@ -118,13 +111,10 @@ class T:
     demand_emplo_new: float
     demand_epetrol: float
     demand_hydrogen: float
-    energy: float
     invest: float
     invest_com: float
     invest_pa: float
     invest_pa_com: float
-    transport_capacity_pkm: float
-    transport_capacity_tkm: float
 
     @classmethod
     def calc(
@@ -139,35 +129,20 @@ class T:
         other: Other,
         g: G,
     ) -> "T":
+        sum = Transport.sum(
+            air,
+            rail,
+            road,
+            ship,
+            other,
+            energy_2018=t18.t.energy,
+            co2e_2018=t18.t.CO2e_combustion_based,
+        )
         demand_ejetfuel = air.demand_ejetfuel
         demand_epetrol = road.demand_epetrol
         demand_hydrogen = road.demand_hydrogen
         demand_electricity = road.demand_electricity + rail.demand_electricity
         demand_ediesel = road.demand_ediesel + ship.demand_ediesel
-        energy = (
-            demand_electricity
-            + demand_epetrol
-            + demand_ediesel
-            + demand_ejetfuel
-            + demand_hydrogen
-        )
-        CO2e_combustion_based = (
-            air.CO2e_combustion_based
-            + road.CO2e_combustion_based
-            + rail.CO2e_combustion_based
-            + ship.CO2e_combustion_based
-        )
-        change_energy_MWh = energy - t18.t.energy
-        CO2e_total = CO2e_combustion_based
-        transport_capacity_tkm = (
-            air.transport_capacity_tkm
-            + road.transport_capacity_tkm
-            + rail.transport_capacity_tkm
-            + ship.transport_capacity_tkm
-        )
-        change_CO2e_t = CO2e_combustion_based - t18.t.CO2e_combustion_based
-        change_CO2e_pct = div(change_CO2e_t, t18.t.CO2e_combustion_based)
-        change_energy_pct = div(change_energy_MWh, t18.t.energy)
         invest_com = (
             g.invest_com
             + road.invest_com
@@ -183,20 +158,6 @@ class T:
             + ship.invest_pa_com
             + other.invest_pa_com
             + air.invest_pa_com
-        )
-        CO2e_total_2021_estimated = (
-            air.CO2e_total_2021_estimated
-            + road.CO2e_total_2021_estimated
-            + rail.CO2e_total_2021_estimated
-            + ship.CO2e_total_2021_estimated
-            + other.CO2e_total_2021_estimated
-        )
-        cost_climate_saved = (
-            air.cost_climate_saved
-            + road.cost_climate_saved
-            + rail.cost_climate_saved
-            + ship.cost_climate_saved
-            + other.cost_climate_saved
         )
         invest = (
             road.invest
@@ -239,15 +200,7 @@ class T:
         )
         demand_emplo_com = g.demand_emplo_com
 
-        return cls(
-            CO2e_combustion_based=CO2e_combustion_based,
-            CO2e_total=CO2e_total,
-            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
-            change_CO2e_pct=change_CO2e_pct,
-            change_CO2e_t=change_CO2e_t,
-            change_energy_MWh=change_energy_MWh,
-            change_energy_pct=change_energy_pct,
-            cost_climate_saved=cost_climate_saved,
+        res = cls(
             cost_wage=cost_wage,
             demand_ediesel=demand_ediesel,
             demand_ejetfuel=demand_ejetfuel,
@@ -257,14 +210,16 @@ class T:
             demand_emplo_new=demand_emplo_new,
             demand_epetrol=demand_epetrol,
             demand_hydrogen=demand_hydrogen,
-            energy=energy,
             invest=invest,
             invest_com=invest_com,
             invest_pa=invest_pa,
             invest_pa_com=invest_pa_com,
-            transport_capacity_pkm=total_transport_capacity_pkm,
-            transport_capacity_tkm=transport_capacity_tkm,
+            **asdict(sum),
         )
+        # TODO: Talk with Leon about this. Because the computed transport capacity is not equal to the precomputed
+        # required transport capacity.
+        res.transport_capacity_pkm = total_transport_capacity_pkm
+        return res
 
 
 @dataclass
