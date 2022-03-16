@@ -4090,8 +4090,8 @@
             "ratio_wage_to_emplo": 53280.0
         },
         "ship": {
-            "change_CO2e_t": -2717629.1129999994,
-            "change_energy_MWh": -9671944.44444444,
+            "change_CO2e_t": -2717629.113,
+            "change_energy_MWh": -9671944.444444442,
             "change_km": -953385915492.9575,
             "CO2e_combustion_based": 3464463.6,
             "CO2e_total_2021_estimated": 5771176.293316899,
@@ -4100,8 +4100,8 @@
             "energy": 13000000.0,
             "transport_capacity_pkm": 0,
             "transport_capacity_tkm": 1076414084507.0425,
-            "change_CO2e_pct": -0.4395969519003232,
-            "change_energy_pct": -0.4266040995356472,
+            "change_CO2e_pct": -0.4395969519003233,
+            "change_energy_pct": -0.4266040995356473,
             "demand_ediesel": 13000000.0,
             "demand_emplo_new": 5001.5528062100675,
             "demand_emplo": 10143.552806210066,
@@ -4168,15 +4168,22 @@
             "demand_ediesel": 10000000.0
         },
         "other_foot": {
-            "CO2e_total": 0,
-            "CO2e_total_2021_estimated": 0.0,
+            "change_CO2e_t": 0,
+            "change_energy_MWh": 0,
             "change_km": 8057987255.0,
+            "CO2e_combustion_based": 0,
+            "CO2e_total_2021_estimated": 0.0,
+            "CO2e_total": 0,
             "cost_climate_saved": 0.0,
+            "energy": 0,
+            "transport_capacity_pkm": 38360000000.0,
+            "transport_capacity_tkm": 0,
+            "change_CO2e_pct": 0,
+            "change_energy_pct": 0,
             "invest": 0,
             "invest_com": 0,
             "invest_pa": 0,
-            "invest_pa_com": 0,
-            "transport_capacity_pkm": 38360000000.0
+            "invest_pa_com": 0
         },
         "other_foot_action_infra": {
             "cost_wage": 99101350.16311474,
@@ -4191,17 +4198,24 @@
             "ratio_wage_to_emplo": 51951.779209286055
         },
         "other_cycl": {
-            "CO2e_total": 0,
-            "CO2e_total_2021_estimated": 0.0,
-            "base_unit": 4203835.616438356,
+            "change_CO2e_t": 0,
+            "change_energy_MWh": 0,
             "change_km": 27237987255.0,
+            "CO2e_combustion_based": 0,
+            "CO2e_total_2021_estimated": 0.0,
+            "CO2e_total": 0,
             "cost_climate_saved": 0.0,
+            "energy": 0,
+            "transport_capacity_pkm": 57540000000.0,
+            "transport_capacity_tkm": 0,
+            "change_CO2e_pct": 0,
+            "change_energy_pct": 0,
+            "base_unit": 4203835.616438356,
             "invest": 12569468493.150684,
             "invest_com": 0,
             "invest_pa": 966882191.7808219,
             "invest_pa_com": 0.0,
-            "invest_per_x": 2990.0,
-            "transport_capacity_pkm": 57540000000.0
+            "invest_per_x": 2990.0
         },
         "other_cycl_action_infra": {
             "cost_wage": 98846153.84615386,
@@ -4373,19 +4387,26 @@
             "mileage": 2867797725.2311015
         },
         "other": {
-            "CO2e_total": 0,
-            "CO2e_total_2021_estimated": 0.0,
-            "base_unit": 4203835.616438356,
+            "change_CO2e_t": 0,
+            "change_energy_MWh": 0,
             "change_km": 35295974510.0,
+            "CO2e_combustion_based": 0,
+            "CO2e_total_2021_estimated": 0.0,
+            "CO2e_total": 0,
             "cost_climate_saved": 0.0,
+            "energy": 0,
+            "transport_capacity_pkm": 95900000000.0,
+            "transport_capacity_tkm": 0,
+            "change_CO2e_pct": 0,
+            "change_energy_pct": 0,
+            "base_unit": 4203835.616438356,
             "cost_wage": 197947504.00926858,
             "demand_emplo": 3810.216070018382,
             "demand_emplo_new": 3810.216070018382,
             "invest": 22582377256.265438,
             "invest_com": 10012908763.114754,
             "invest_pa": 1737105942.789649,
-            "invest_pa_com": 770223751.0088272,
-            "transport_capacity_pkm": 95900000000.0
+            "invest_pa_com": 770223751.0088272
         },
         "rail_action_invest_infra": {
             "cost_wage": 5416769230.769231,

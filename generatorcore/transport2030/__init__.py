@@ -20,24 +20,24 @@ from .road import (
 from .rail import Rail, RailGoods, RailPeople, RailPeopleMetroActionInfra, RailPeopleSum
 from .ship import Ship, ShipDomestic, ShipInternational, ShipDomesticActionInfra
 
+from .transport import Transport
+
 
 @dataclass
-class OtherFoot:
+class OtherFoot(Transport):
     # Used by other_foot
-    CO2e_total: float
-    CO2e_total_2021_estimated: float
-    change_km: float
-    cost_climate_saved: float
     invest: float
     invest_com: float
     invest_pa: float
     invest_pa_com: float
-    transport_capacity_pkm: float
 
     @classmethod
     def calc(
         cls, inputs: Inputs, *, t18: T18, total_transport_capacity_pkm: float
     ) -> "OtherFoot":
+        """Everybody should walk more it's healthy and has no negative effects
+        on the climate. But of course how much we can walk depends on the
+        kind of area we are in."""
         ass = inputs.ass
         fact = inputs.fact
         entries = inputs.entries
@@ -62,7 +62,13 @@ class OtherFoot:
             * fact("Fact_M_cost_per_CO2e_2020")
         )
         return cls(
+            CO2e_combustion_based=0,
             CO2e_total=0,
+            change_CO2e_t=0,
+            change_CO2e_pct=0,
+            energy=0,
+            change_energy_MWh=0,
+            change_energy_pct=0,
             CO2e_total_2021_estimated=CO2e_total_2021_estimated,
             change_km=change_km,
             cost_climate_saved=cost_climate_saved,
@@ -71,23 +77,20 @@ class OtherFoot:
             invest_pa=0,
             invest_pa_com=0,
             transport_capacity_pkm=transport_capacity_pkm,
+            transport_capacity_tkm=0,
         )
 
 
 @dataclass
-class OtherCycle:
+class OtherCycle(Transport):
     # Used by other_cycl
-    CO2e_total: float
-    CO2e_total_2021_estimated: float
+
     base_unit: float
-    change_km: float
-    cost_climate_saved: float
     invest: float
     invest_com: float
     invest_pa: float
     invest_pa_com: float
     invest_per_x: float
-    transport_capacity_pkm: float
 
     @classmethod
     def calc(
@@ -129,8 +132,14 @@ class OtherCycle:
         CO2e_total = 0
 
         return cls(
+            CO2e_combustion_based=0,
             CO2e_total=CO2e_total,
             CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+            change_CO2e_t=0,
+            change_CO2e_pct=0,
+            energy=0,
+            change_energy_MWh=0,
+            change_energy_pct=0,
             base_unit=base_unit,
             change_km=change_km,
             cost_climate_saved=cost_climate_saved,
@@ -140,6 +149,108 @@ class OtherCycle:
             invest_pa_com=invest_pa_com,
             invest_per_x=invest_per_x,
             transport_capacity_pkm=transport_capacity_pkm,
+            transport_capacity_tkm=0,
+        )
+
+
+@dataclass
+class Other(Transport):
+    # Used by other
+
+    base_unit: float
+    cost_wage: float
+    demand_emplo: float
+    demand_emplo_new: float
+    invest: float
+    invest_com: float
+    invest_pa: float
+    invest_pa_com: float
+
+    @classmethod
+    def calc(
+        cls,
+        inputs: Inputs,
+        *,
+        other_foot: OtherFoot,
+        other_cycl: OtherCycle,
+        other_foot_action_infra: InvestmentAction,
+        other_cycl_action_infra: InvestmentAction,
+    ) -> "Other":
+        CO2e_total = 0
+        invest_com = (
+            other_foot.invest_com
+            + other_cycl.invest_com
+            + other_foot_action_infra.invest_com
+            + other_cycl_action_infra.invest_com
+        )
+        CO2e_total_2021_estimated = (
+            other_foot.CO2e_total_2021_estimated + other_cycl.CO2e_total_2021_estimated
+        )
+        cost_climate_saved = (
+            other_foot.cost_climate_saved + other_cycl.cost_climate_saved
+        )
+        invest = (
+            other_foot.invest
+            + other_cycl.invest
+            + other_foot_action_infra.invest
+            + other_cycl_action_infra.invest
+        )
+        invest_pa_com = (
+            other_foot.invest_pa_com
+            + other_cycl.invest_pa_com
+            + other_foot_action_infra.invest_pa_com
+            + other_cycl_action_infra.invest_pa_com
+        )
+        demand_emplo_new = (
+            other_foot_action_infra.demand_emplo_new
+            + other_cycl_action_infra.demand_emplo_new
+        )
+        transport_capacity_pkm = (
+            other_foot.transport_capacity_pkm + other_cycl.transport_capacity_pkm
+        )
+        change_km = other_foot.change_km + other_cycl.change_km
+        cost_wage = (
+            other_foot_action_infra.cost_wage + other_cycl_action_infra.cost_wage
+        )
+        other_cycl_action_infra.invest_pa = (
+            other_cycl_action_infra.invest / inputs.entries.m_duration_target
+        )
+        other_cycl_action_infra.demand_emplo = div(
+            other_cycl_action_infra.cost_wage,
+            other_cycl_action_infra.ratio_wage_to_emplo,
+        )
+        demand_emplo = (
+            other_foot_action_infra.demand_emplo + other_cycl_action_infra.demand_emplo
+        )
+        invest_pa = (
+            other_foot.invest_pa
+            + other_cycl.invest_pa
+            + other_foot_action_infra.invest_pa
+            + other_cycl_action_infra.invest_pa
+        )
+        base_unit = other_cycl.base_unit
+
+        return cls(
+            CO2e_combustion_based=0,
+            CO2e_total=CO2e_total,
+            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+            change_CO2e_t=0,
+            change_CO2e_pct=0,
+            energy=0,
+            change_energy_MWh=0,
+            change_energy_pct=0,
+            base_unit=base_unit,
+            change_km=change_km,
+            cost_climate_saved=cost_climate_saved,
+            cost_wage=cost_wage,
+            demand_emplo=demand_emplo,
+            demand_emplo_new=demand_emplo_new,
+            invest=invest,
+            invest_com=invest_com,
+            invest_pa=invest_pa,
+            invest_pa_com=invest_pa_com,
+            transport_capacity_pkm=transport_capacity_pkm,
+            transport_capacity_tkm=0,
         )
 
 
@@ -217,104 +328,6 @@ class G:
     invest_com: float
     invest_pa: float
     invest_pa_com: float
-
-
-@dataclass
-class Other:
-    # Used by other
-    CO2e_total: float
-    CO2e_total_2021_estimated: float
-    base_unit: float
-    change_km: float
-    cost_climate_saved: float
-    cost_wage: float
-    demand_emplo: float
-    demand_emplo_new: float
-    invest: float
-    invest_com: float
-    invest_pa: float
-    invest_pa_com: float
-    transport_capacity_pkm: float
-
-    @classmethod
-    def calc(
-        cls,
-        inputs: Inputs,
-        *,
-        other_foot: OtherFoot,
-        other_cycl: OtherCycle,
-        other_foot_action_infra: InvestmentAction,
-        other_cycl_action_infra: InvestmentAction,
-    ) -> "Other":
-        CO2e_total = 0
-        invest_com = (
-            other_foot.invest_com
-            + other_cycl.invest_com
-            + other_foot_action_infra.invest_com
-            + other_cycl_action_infra.invest_com
-        )
-        CO2e_total_2021_estimated = (
-            other_foot.CO2e_total_2021_estimated + other_cycl.CO2e_total_2021_estimated
-        )
-        cost_climate_saved = (
-            other_foot.cost_climate_saved + other_cycl.cost_climate_saved
-        )
-        invest = (
-            other_foot.invest
-            + other_cycl.invest
-            + other_foot_action_infra.invest
-            + other_cycl_action_infra.invest
-        )
-        invest_pa_com = (
-            other_foot.invest_pa_com
-            + other_cycl.invest_pa_com
-            + other_foot_action_infra.invest_pa_com
-            + other_cycl_action_infra.invest_pa_com
-        )
-        demand_emplo_new = (
-            other_foot_action_infra.demand_emplo_new
-            + other_cycl_action_infra.demand_emplo_new
-        )
-        transport_capacity_pkm = (
-            other_foot.transport_capacity_pkm + other_cycl.transport_capacity_pkm
-        )
-        change_km = other_foot.change_km + other_cycl.change_km
-        cost_wage = (
-            other_foot_action_infra.cost_wage + other_cycl_action_infra.cost_wage
-        )
-        other_cycl_action_infra.invest_pa = (
-            other_cycl_action_infra.invest / inputs.entries.m_duration_target
-        )
-        other_cycl_action_infra.demand_emplo = div(
-            other_cycl_action_infra.cost_wage,
-            other_cycl_action_infra.ratio_wage_to_emplo,
-        )
-        demand_emplo = (
-            other_foot_action_infra.demand_emplo + other_cycl_action_infra.demand_emplo
-        )
-        invest_pa = (
-            other_foot.invest_pa
-            + other_cycl.invest_pa
-            + other_foot_action_infra.invest_pa
-            + other_cycl_action_infra.invest_pa
-        )
-        base_unit = other_cycl.base_unit
-
-        return cls(
-            CO2e_total=CO2e_total,
-            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
-            base_unit=base_unit,
-            change_km=change_km,
-            cost_climate_saved=cost_climate_saved,
-            cost_wage=cost_wage,
-            demand_emplo=demand_emplo,
-            demand_emplo_new=demand_emplo_new,
-            invest=invest,
-            invest_com=invest_com,
-            invest_pa=invest_pa,
-            invest_pa_com=invest_pa_com,
-            transport_capacity_pkm=transport_capacity_pkm,
-        )
 
 
 @dataclass
