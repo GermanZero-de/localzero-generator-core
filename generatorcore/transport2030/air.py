@@ -51,9 +51,7 @@ class AirDomestic(Transport):
 @dataclass
 class AirInternational(Transport):
     # Used by air_inter
-    CO2e_combustion_based: float
     demand_ejetfuel: float
-    CO2e_total: float
 
     @classmethod
     def calc(cls, inputs: Inputs, t18: T18) -> "AirInternational":
@@ -109,8 +107,6 @@ class AirInternational(Transport):
 @dataclass
 class Air(Transport):
     # Used by air
-    CO2e_combustion_based: float
-    CO2e_total: float
     demand_ejetfuel: float
     demand_emplo: float
     demand_emplo_new: float
