@@ -16,6 +16,8 @@ def calc_air_domestic(inputs: Inputs, t18: T18) -> "Transport":
     CO2e_total_2021_estimated = t18.air_dmstc.CO2e_combustion_based * inputs.fact(
         "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
     )
+    # Assuming every year from 2021 onwards we would have use the same amount
+    # of CO2e on domestic flights if we hadn't decided to ban them.
     cost_climate_saved = (
         (CO2e_total_2021_estimated)
         * inputs.entries.m_duration_neutral
