@@ -5,7 +5,7 @@ from ..inputs import Inputs
 from ..utils import div
 from ..transport2018 import T18
 from .investmentaction import InvestmentAction
-from .air import AirDomestic, AirInternational, Air
+from .air import calc_air_domestic, AirInternational, Air
 from .road import (
     Road,
     RoadBus,
@@ -103,14 +103,9 @@ class G:
 class T(Transport):
     # Used by t
     cost_wage: float
-    demand_ediesel: float
-    demand_ejetfuel: float
-    demand_electricity: float
     demand_emplo: float
     demand_emplo_com: float
     demand_emplo_new: float
-    demand_epetrol: float
-    demand_hydrogen: float
     invest: float
     invest_com: float
     invest_pa: float
@@ -129,20 +124,7 @@ class T(Transport):
         other: Other,
         g: G,
     ) -> "T":
-        sum = Transport.sum(
-            air,
-            rail,
-            road,
-            ship,
-            other,
-            energy_2018=t18.t.energy,
-            co2e_2018=t18.t.CO2e_combustion_based,
-        )
-        demand_ejetfuel = air.demand_ejetfuel
-        demand_epetrol = road.demand_epetrol
-        demand_hydrogen = road.demand_hydrogen
-        demand_electricity = road.demand_electricity + rail.demand_electricity
-        demand_ediesel = road.demand_ediesel + ship.demand_ediesel
+        sum = Transport.sum(air, rail, road, ship, other, transport2018=t18.t)
         invest_com = (
             g.invest_com
             + road.invest_com
@@ -202,14 +184,9 @@ class T(Transport):
 
         res = cls(
             cost_wage=cost_wage,
-            demand_ediesel=demand_ediesel,
-            demand_ejetfuel=demand_ejetfuel,
-            demand_electricity=demand_electricity,
             demand_emplo=demand_emplo,
             demand_emplo_com=demand_emplo_com,
             demand_emplo_new=demand_emplo_new,
-            demand_epetrol=demand_epetrol,
-            demand_hydrogen=demand_hydrogen,
             invest=invest,
             invest_com=invest_com,
             invest_pa=invest_pa,
@@ -234,7 +211,7 @@ class T(Transport):
 @dataclass
 class T30:
     air_inter: AirInternational
-    air_dmstc: AirDomestic
+    air_dmstc: Transport
     road_ppl: RoadPeople
     road_car: RoadCar
     road_car_it_ot: Road
@@ -295,7 +272,7 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
     entries = inputs.entries
 
     # --- Air ---
-    air_dmstc = AirDomestic.calc(inputs, t18)
+    air_dmstc = calc_air_domestic(inputs, t18)
     air_inter = AirInternational.calc(inputs, t18)
     air = Air.calc(t18, domestic=air_dmstc, international=air_inter)
 

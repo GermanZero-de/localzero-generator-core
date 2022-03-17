@@ -5,7 +5,7 @@ from ..inputs import Inputs
 from ..utils import div
 from ..transport2018 import T18
 
-from .transport import Transport
+from .transport import Transport, zero_energy_and_co2e
 from .investmentaction import InvestmentAction
 
 
@@ -47,14 +47,9 @@ class OtherFoot(Transport):
             * entries.m_duration_neutral
             * fact("Fact_M_cost_per_CO2e_2020")
         )
-        return cls(
+        res = cls(
             CO2e_combustion_based=0,
             CO2e_total=0,
-            change_CO2e_t=0,
-            change_CO2e_pct=0,
-            energy=0,
-            change_energy_MWh=0,
-            change_energy_pct=0,
             CO2e_total_2021_estimated=CO2e_total_2021_estimated,
             change_km=change_km,
             cost_climate_saved=cost_climate_saved,
@@ -64,7 +59,9 @@ class OtherFoot(Transport):
             invest_pa_com=0,
             transport_capacity_pkm=transport_capacity_pkm,
             transport_capacity_tkm=0,
+            transport2018=zero_energy_and_co2e,
         )
+        return res
 
 
 @dataclass
@@ -117,15 +114,10 @@ class OtherCycle(Transport):
         invest_pa_com = invest_com / entries.m_duration_target
         CO2e_total = 0
 
-        return cls(
+        res = cls(
             CO2e_combustion_based=0,
             CO2e_total=CO2e_total,
             CO2e_total_2021_estimated=CO2e_total_2021_estimated,
-            change_CO2e_t=0,
-            change_CO2e_pct=0,
-            energy=0,
-            change_energy_MWh=0,
-            change_energy_pct=0,
             base_unit=base_unit,
             change_km=change_km,
             cost_climate_saved=cost_climate_saved,
@@ -136,7 +128,9 @@ class OtherCycle(Transport):
             invest_per_x=invest_per_x,
             transport_capacity_pkm=transport_capacity_pkm,
             transport_capacity_tkm=0,
+            transport2018=zero_energy_and_co2e,
         )
+        return res
 
 
 @dataclass
@@ -162,7 +156,7 @@ class Other(Transport):
         other_foot_action_infra: InvestmentAction,
         other_cycl_action_infra: InvestmentAction,
     ) -> "Other":
-        sum = Transport.sum(other_foot, other_cycl, energy_2018=0, co2e_2018=0)
+        sum = Transport.sum(other_foot, other_cycl, transport2018=zero_energy_and_co2e)
         invest_com = (
             other_foot.invest_com
             + other_cycl.invest_com
