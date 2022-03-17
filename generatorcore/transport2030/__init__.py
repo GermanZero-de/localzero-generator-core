@@ -302,7 +302,7 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
     )
     road_car = RoadCar.calc(inputs, t18=t18, it_ot=road_car_it_ot, ab=road_car_ab)
     road_action_charger = RoadInvestmentAction.calc_car_action_charger(
-        inputs, car_base_unit=road_car.base_unit
+        inputs, car_base_unit=road_car.fleet_modernisation_cost.base_unit
     )
     road_bus = RoadBus.calc(
         inputs,

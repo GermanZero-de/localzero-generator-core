@@ -409,8 +409,10 @@ class Road:
 
 
 @dataclass
-class RoadCar(Road, TransportInvestments):
+class RoadCar(Road):
     # Used by road_car
+    LIFT_INTO_RESULT_DICT = ["transport", "fleet_modernisation_cost"]
+    fleet_modernisation_cost: TransportInvestments
 
     @staticmethod
     def calc_cost_modernisation_of_fleet(
@@ -438,7 +440,9 @@ class RoadCar(Road, TransportInvestments):
         return cls(
             mileage=it_ot.mileage + ab.mileage,
             transport=sum,
-            **asdict(cls.calc_cost_modernisation_of_fleet(inputs, sum_it_ot_ab=sum)),
+            fleet_modernisation_cost=cls.calc_cost_modernisation_of_fleet(
+                inputs, sum_it_ot_ab=sum
+            ),
         )
 
 
@@ -607,10 +611,18 @@ class RoadPeople(Road):
         sum = Transport.sum(car.transport, bus.transport, transport2018=t18.road_ppl)
 
         demand_emplo_new = bus.demand_emplo_new + road_bus_action_infra.demand_emplo_new
-        invest = car.invest + bus.invest + road_bus_action_infra.invest
+        invest = (
+            car.fleet_modernisation_cost.invest
+            + bus.invest
+            + road_bus_action_infra.invest
+        )
         invest_com = bus.invest_com + road_bus_action_infra.invest_com
-        base_unit = car.base_unit + bus.base_unit
-        invest_pa = car.invest_pa + bus.invest_pa + road_bus_action_infra.invest_pa
+        base_unit = car.fleet_modernisation_cost.base_unit + bus.base_unit
+        invest_pa = (
+            car.fleet_modernisation_cost.invest_pa
+            + bus.invest_pa
+            + road_bus_action_infra.invest_pa
+        )
         invest_pa_com = bus.invest_pa_com + road_bus_action_infra.invest_pa_com
         cost_wage = bus.cost_wage + road_bus_action_infra.cost_wage
         demand_emplo = bus.demand_emplo + road_bus_action_infra.demand_emplo
