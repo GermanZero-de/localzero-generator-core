@@ -48,9 +48,9 @@ class Transport:
     change_transport_capacity_pkm: float = 0
     change_transport_capacity_tkm: float = 0
 
-    transport2018: InitVar[Transport2018 | None] = None
+    transport2018: InitVar[Transport2018]
 
-    def __post_init__(self, transport2018: Transport2018 | None = None):
+    def __post_init__(self, transport2018: Transport2018):
         self.CO2e_total = self.CO2e_combustion_based
         self.energy = (
             self.demand_ejetfuel
@@ -59,10 +59,7 @@ class Transport:
             + self.demand_epetrol
             + self.demand_hydrogen
         )
-        if transport2018 is not None:
-            self.calc_and_set_changes(transport2018)
 
-    def calc_and_set_changes(self, transport2018: Transport2018) -> None:
         self.change_CO2e_t = (
             self.CO2e_combustion_based - transport2018.CO2e_combustion_based
         )
