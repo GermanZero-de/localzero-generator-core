@@ -23,7 +23,9 @@ class TransportInvestments:
 
 
 @dataclass
-class Road(Transport):
+class Road:
+    LIFT_INTO_RESULT_DICT = ["transport"]
+    transport: Transport
     # Used by road_gds_ldt_it_ot, road_gds_ldt_ab, road_gds_mhd_it_ot, road_gds_mhd_ab
     mileage: float
 
@@ -67,17 +69,19 @@ class Road(Transport):
             * fact("Fact_M_cost_per_CO2e_2020")
         )
         return cls(
-            CO2e_combustion_based=CO2e_combustion_based,
-            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
-            cost_climate_saved=cost_climate_saved,
-            demand_electricity=demand_electricity,
-            demand_ediesel=demand_ediesel,
-            demand_hydrogen=demand_hydrogen,
-            demand_epetrol=0,
             mileage=mileage,
-            transport_capacity_tkm=transport_capacity_tkm,
-            transport_capacity_pkm=0,
-            transport2018=t18.road_gds_ldt_it_ot,
+            transport=Transport(
+                CO2e_combustion_based=CO2e_combustion_based,
+                CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+                cost_climate_saved=cost_climate_saved,
+                demand_electricity=demand_electricity,
+                demand_ediesel=demand_ediesel,
+                demand_hydrogen=demand_hydrogen,
+                demand_epetrol=0,
+                transport_capacity_tkm=transport_capacity_tkm,
+                transport_capacity_pkm=0,
+                transport2018=t18.road_gds_ldt_it_ot,
+            ),
         )
 
     @classmethod
@@ -119,16 +123,18 @@ class Road(Transport):
             * fact("Fact_M_cost_per_CO2e_2020")
         )
         return cls(
-            CO2e_combustion_based=CO2e_combustion_based,
-            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
-            cost_climate_saved=cost_climate_saved,
-            demand_electricity=demand_electricity,
-            demand_ediesel=demand_ediesel,
-            demand_hydrogen=demand_hydrogen,
             mileage=mileage,
-            transport_capacity_tkm=transport_capacity_tkm,
-            transport_capacity_pkm=0,
-            transport2018=(t18.road_gds_ldt_ab),
+            transport=Transport(
+                CO2e_combustion_based=CO2e_combustion_based,
+                CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+                cost_climate_saved=cost_climate_saved,
+                demand_electricity=demand_electricity,
+                demand_ediesel=demand_ediesel,
+                demand_hydrogen=demand_hydrogen,
+                transport_capacity_tkm=transport_capacity_tkm,
+                transport_capacity_pkm=0,
+                transport2018=(t18.road_gds_ldt_ab),
+            ),
         )
 
     @classmethod
@@ -170,17 +176,19 @@ class Road(Transport):
             * fact("Fact_M_cost_per_CO2e_2020")
         )
         return cls(
-            CO2e_combustion_based=CO2e_combustion_based,
-            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
-            cost_climate_saved=cost_climate_saved,
-            demand_electricity=demand_electricity,
-            demand_ediesel=demand_ediesel,
-            demand_hydrogen=demand_hydrogen,
-            demand_epetrol=0,
             mileage=mileage,
-            transport_capacity_tkm=transport_capacity_tkm,
-            transport_capacity_pkm=0,
-            transport2018=(t18.road_gds_mhd_ab),
+            transport=Transport(
+                CO2e_combustion_based=CO2e_combustion_based,
+                CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+                cost_climate_saved=cost_climate_saved,
+                demand_electricity=demand_electricity,
+                demand_ediesel=demand_ediesel,
+                demand_hydrogen=demand_hydrogen,
+                demand_epetrol=0,
+                transport_capacity_tkm=transport_capacity_tkm,
+                transport_capacity_pkm=0,
+                transport2018=(t18.road_gds_mhd_ab),
+            ),
         )
 
     @classmethod
@@ -225,17 +233,19 @@ class Road(Transport):
             * fact("Fact_M_cost_per_CO2e_2020")
         )
         return cls(
-            CO2e_combustion_based=CO2e_combustion_based,
-            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
-            cost_climate_saved=cost_climate_saved,
-            demand_electricity=demand_electricity,
-            demand_ediesel=demand_ediesel,
-            demand_hydrogen=demand_hydrogen,
-            demand_epetrol=0,
             mileage=mileage,
-            transport_capacity_tkm=transport_capacity_tkm,
-            transport_capacity_pkm=0,
-            transport2018=(t18.road_gds_mhd_it_ot),
+            transport=Transport(
+                CO2e_combustion_based=CO2e_combustion_based,
+                CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+                cost_climate_saved=cost_climate_saved,
+                demand_electricity=demand_electricity,
+                demand_ediesel=demand_ediesel,
+                demand_hydrogen=demand_hydrogen,
+                demand_epetrol=0,
+                transport_capacity_tkm=transport_capacity_tkm,
+                transport_capacity_pkm=0,
+                transport2018=(t18.road_gds_mhd_it_ot),
+            ),
         )
 
     @classmethod
@@ -303,17 +313,19 @@ class Road(Transport):
             * fact("Fact_M_cost_per_CO2e_2020")
         )
         return cls(
-            CO2e_combustion_based=CO2e_combustion_based,
-            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
-            cost_climate_saved=cost_climate_saved,
-            demand_electricity=demand_electricity,
-            demand_epetrol=demand_epetrol,
-            demand_hydrogen=0,
-            demand_ediesel=0,
             mileage=mileage,
-            transport_capacity_pkm=transport_capacity_pkm,
-            transport_capacity_tkm=0,
-            transport2018=t18.road_car_it_ot,
+            transport=Transport(
+                CO2e_combustion_based=CO2e_combustion_based,
+                CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+                cost_climate_saved=cost_climate_saved,
+                demand_electricity=demand_electricity,
+                demand_epetrol=demand_epetrol,
+                demand_hydrogen=0,
+                demand_ediesel=0,
+                transport_capacity_pkm=transport_capacity_pkm,
+                transport_capacity_tkm=0,
+                transport2018=t18.road_car_it_ot,
+            ),
         )
 
     @classmethod
@@ -380,17 +392,19 @@ class Road(Transport):
         )
 
         return cls(
-            CO2e_combustion_based=CO2e_combustion_based,
-            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
-            cost_climate_saved=cost_climate_saved,
-            demand_electricity=demand_electricity,
-            demand_epetrol=demand_epetrol,
-            demand_hydrogen=0,
-            demand_ediesel=0,
             mileage=mileage,
-            transport_capacity_pkm=transport_capacity_pkm,
-            transport_capacity_tkm=0,
-            transport2018=(t18.road_car_ab),
+            transport=Transport(
+                CO2e_combustion_based=CO2e_combustion_based,
+                CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+                cost_climate_saved=cost_climate_saved,
+                demand_electricity=demand_electricity,
+                demand_epetrol=demand_epetrol,
+                demand_hydrogen=0,
+                demand_ediesel=0,
+                transport_capacity_pkm=transport_capacity_pkm,
+                transport_capacity_tkm=0,
+                transport2018=(t18.road_car_ab),
+            ),
         )
 
 
@@ -420,10 +434,10 @@ class RoadCar(Road, TransportInvestments):
 
     @classmethod
     def calc(cls, inputs: Inputs, *, t18: T18, it_ot: Road, ab: Road) -> "RoadCar":
-        sum = Transport.sum(it_ot, ab, transport2018=t18.road_car)
+        sum = Transport.sum(it_ot.transport, ab.transport, transport2018=t18.road_car)
         return cls(
             mileage=it_ot.mileage + ab.mileage,
-            **asdict(sum),
+            transport=sum,
             **asdict(cls.calc_cost_modernisation_of_fleet(inputs, sum_it_ot_ab=sum)),
         )
 
@@ -553,14 +567,16 @@ class RoadBus(Road, BusInvestments):
         )
 
         return cls(
-            CO2e_combustion_based=CO2e_combustion_based,
-            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
-            cost_climate_saved=cost_climate_saved,
-            demand_electricity=demand_electricity,
             mileage=mileage,
-            transport_capacity_pkm=transport_capacity_pkm,
-            transport_capacity_tkm=0,
-            transport2018=t18.road_bus,
+            transport=Transport(
+                CO2e_combustion_based=CO2e_combustion_based,
+                CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+                cost_climate_saved=cost_climate_saved,
+                demand_electricity=demand_electricity,
+                transport_capacity_pkm=transport_capacity_pkm,
+                transport_capacity_tkm=0,
+                transport2018=t18.road_bus,
+            ),
             **asdict(cls.calc_bus_investments(inputs, t18=t18, mileage=mileage)),
         )
 
@@ -588,7 +604,7 @@ class RoadPeople(Road):
         road_bus_action_infra: InvestmentAction,
     ) -> "RoadPeople":
 
-        sum = Transport.sum(car, bus, transport2018=t18.road_ppl)
+        sum = Transport.sum(car.transport, bus.transport, transport2018=t18.road_ppl)
 
         demand_emplo_new = bus.demand_emplo_new + road_bus_action_infra.demand_emplo_new
         invest = car.invest + bus.invest + road_bus_action_infra.invest
@@ -609,7 +625,7 @@ class RoadPeople(Road):
             invest=invest,
             invest_pa=invest_pa,
             invest_pa_com=invest_pa_com,
-            **asdict(sum),
+            transport=sum,
         )
 
 
@@ -630,7 +646,9 @@ class RoadGoodsMediumAndHeavyDuty(Road):
     ) -> "RoadGoodsMediumAndHeavyDuty":
         fact = inputs.fact
 
-        sum = Transport.sum(it_ot, ab, transport2018=t18.road_gds_mhd)
+        sum = Transport.sum(
+            it_ot.transport, ab.transport, transport2018=t18.road_gds_mhd
+        )
         mileage = it_ot.mileage + ab.mileage
 
         demand_emplo = mileage / fact("Fact_T_D_MHD_ratio_mlg_to_driver")
@@ -653,7 +671,7 @@ class RoadGoodsMediumAndHeavyDuty(Road):
             invest=invest,
             invest_pa=invest_pa,
             invest_per_x=invest_per_x,
-            **asdict(sum),
+            transport=sum,
         )
 
     @staticmethod
@@ -708,7 +726,9 @@ class RoadGoodsLightDuty(Road):
         fact = inputs.fact
         entries = inputs.entries
 
-        sum = Transport.sum(ab, it_ot, transport2018=t18.road_gds_ldt)
+        sum = Transport.sum(
+            ab.transport, it_ot.transport, transport2018=t18.road_gds_ldt
+        )
 
         base_unit = (sum.transport_capacity_tkm) / fact(
             "Fact_T_S_LDT_ratio_mlg_to_stock_2018"
@@ -722,7 +742,7 @@ class RoadGoodsLightDuty(Road):
             invest_pa=invest_pa,
             invest_per_x=invest_per_x,
             mileage=ab.mileage + it_ot.mileage,
-            **asdict(sum),
+            transport=sum,
         )
 
 
@@ -748,7 +768,7 @@ class RoadGoods(Road):
         mhd: RoadGoodsMediumAndHeavyDuty,
         road_gds_mhd_action_wire: InvestmentAction,
     ) -> "RoadGoods":
-        sum = Transport.sum(ldt, mhd, transport2018=t18.road_gds)
+        sum = Transport.sum(ldt.transport, mhd.transport, transport2018=t18.road_gds)
 
         base_unit = ldt.base_unit + mhd.base_unit
         demand_emplo_new = mhd.demand_emplo_new
@@ -768,7 +788,7 @@ class RoadGoods(Road):
             demand_emplo=demand_emplo,
             demand_emplo_new=demand_emplo_new,
             mileage=ldt.mileage + mhd.mileage,
-            **asdict(sum),
+            transport=sum,
         )
 
 
@@ -793,7 +813,7 @@ class RoadSum(Road):
         people: RoadPeople,
         road_action_charger: RoadInvestmentAction,
     ) -> "RoadSum":
-        sum = Transport.sum(goods, people, transport2018=t18.road)
+        sum = Transport.sum(goods.transport, people.transport, transport2018=t18.road)
         demand_emplo_new = (
             road_action_charger.demand_emplo_new
             + people.demand_emplo_new
@@ -823,5 +843,5 @@ class RoadSum(Road):
             demand_emplo_new=demand_emplo_new,
             demand_emplo=demand_emplo,
             mileage=people.mileage + goods.mileage,
-            **asdict(sum),
+            transport=sum,
         )

@@ -1,6 +1,6 @@
 # pyright: strict
 
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass
 from ..inputs import Inputs
 from ..utils import div
 from ..transport2018 import T18
@@ -10,7 +10,9 @@ from .investmentaction import InvestmentAction
 
 
 @dataclass
-class OtherFoot(Transport):
+class OtherFoot:
+    LIFT_INTO_RESULT_DICT = ["transport"]
+    transport: Transport
     # Used by other_foot
     invest: float
     invest_com: float
@@ -47,26 +49,30 @@ class OtherFoot(Transport):
             * fact("Fact_M_cost_per_CO2e_2020")
         )
         res = cls(
-            CO2e_combustion_based=0,
-            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
-            cost_climate_saved=cost_climate_saved,
             invest=0,
             invest_com=0,
             invest_pa=0,
             invest_pa_com=0,
-            transport_capacity_pkm=transport_capacity_pkm,
-            transport_capacity_tkm=0,
-            transport2018=ZeroEnergyAndCO2e(
-                transport_capacity_pkm=t18.other_cycl.transport_capacity_pkm,
+            transport=Transport(
+                CO2e_combustion_based=0,
+                CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+                cost_climate_saved=cost_climate_saved,
+                transport_capacity_pkm=transport_capacity_pkm,
                 transport_capacity_tkm=0,
+                transport2018=ZeroEnergyAndCO2e(
+                    transport_capacity_pkm=t18.other_cycl.transport_capacity_pkm,
+                    transport_capacity_tkm=0,
+                ),
             ),
         )
         return res
 
 
 @dataclass
-class OtherCycle(Transport):
+class OtherCycle:
     # Used by other_cycl
+    LIFT_INTO_RESULT_DICT = ["transport"]
+    transport: Transport
 
     base_unit: float
     invest: float
@@ -113,27 +119,31 @@ class OtherCycle(Transport):
         invest_pa_com = invest_com / entries.m_duration_target
 
         return cls(
-            CO2e_combustion_based=0,
-            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
             base_unit=base_unit,
-            cost_climate_saved=cost_climate_saved,
             invest=invest,
             invest_com=invest_com,
             invest_pa=invest_pa,
             invest_pa_com=invest_pa_com,
             invest_per_x=invest_per_x,
-            transport_capacity_pkm=transport_capacity_pkm,
-            transport_capacity_tkm=0,
-            transport2018=ZeroEnergyAndCO2e(
-                transport_capacity_pkm=t18.other_cycl.transport_capacity_pkm,
+            transport=Transport(
+                CO2e_combustion_based=0,
+                CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+                cost_climate_saved=cost_climate_saved,
+                transport_capacity_pkm=transport_capacity_pkm,
                 transport_capacity_tkm=0,
+                transport2018=ZeroEnergyAndCO2e(
+                    transport_capacity_pkm=t18.other_cycl.transport_capacity_pkm,
+                    transport_capacity_tkm=0,
+                ),
             ),
         )
 
 
 @dataclass
-class Other(Transport):
+class Other:
     # Used by other
+    LIFT_INTO_RESULT_DICT = ["transport"]
+    transport: Transport
 
     base_unit: float
     cost_wage: float
@@ -156,8 +166,8 @@ class Other(Transport):
         other_cycl_action_infra: InvestmentAction,
     ) -> "Other":
         sum = Transport.sum(
-            other_foot,
-            other_cycl,
+            other_foot.transport,
+            other_cycl.transport,
             transport2018=ZeroEnergyAndCO2e(
                 transport_capacity_pkm=t18.other.transport_capacity_pkm,
                 transport_capacity_tkm=0,
@@ -216,5 +226,5 @@ class Other(Transport):
             invest_com=invest_com,
             invest_pa=invest_pa,
             invest_pa_com=invest_pa_com,
-            **asdict(sum),
+            transport=sum,
         )

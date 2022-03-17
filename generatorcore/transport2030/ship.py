@@ -9,7 +9,9 @@ from .transport import Transport
 
 
 @dataclass
-class ShipDomestic(Transport):
+class ShipDomestic:
+    LIFT_INTO_RESULT_DICT = ["transport"]
+    transport: Transport
     # Used by ship_dmstc
     base_unit: float
     cost_wage: float
@@ -65,11 +67,7 @@ class ShipDomestic(Transport):
 
         return cls(
             base_unit=base_unit,
-            CO2e_combustion_based=CO2e_combustion_based,
-            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
-            cost_climate_saved=cost_climate_saved,
             cost_wage=cost_wage,
-            demand_ediesel=demand_ediesel,
             demand_emplo_new=demand_emplo_new,
             demand_emplo=demand_emplo,
             emplo_existing=emplo_existing,
@@ -78,9 +76,15 @@ class ShipDomestic(Transport):
             invest=invest,
             pct_of_wage=pct_of_wage,
             ratio_wage_to_emplo=ratio_wage_to_emplo,
-            transport_capacity_tkm=transport_capacity_tkm,
-            transport_capacity_pkm=0,
-            transport2018=t18.ship_dmstc,
+            transport=Transport(
+                CO2e_combustion_based=CO2e_combustion_based,
+                CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+                cost_climate_saved=cost_climate_saved,
+                demand_ediesel=demand_ediesel,
+                transport_capacity_tkm=transport_capacity_tkm,
+                transport_capacity_pkm=0,
+                transport2018=t18.ship_dmstc,
+            ),
         )
 
 
@@ -143,9 +147,10 @@ class ShipDomesticActionInfra:
 
 
 @dataclass
-class ShipInternational(Transport):
+class ShipInternational:
     # Used by ship_inter
-    demand_ediesel: float
+    LIFT_INTO_RESULT_DICT = ["transport"]
+    transport: Transport
 
     @classmethod
     def calc(cls, inputs: Inputs, *, t18: T18) -> "ShipInternational":
@@ -174,19 +179,23 @@ class ShipInternational(Transport):
         )
 
         return cls(
-            CO2e_combustion_based=CO2e_combustion_based,
-            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
-            cost_climate_saved=cost_climate_saved,
-            demand_ediesel=demand_ediesel,
-            transport_capacity_tkm=transport_capacity_tkm,
-            transport_capacity_pkm=0,
-            transport2018=t18.ship_inter,
+            transport=Transport(
+                CO2e_combustion_based=CO2e_combustion_based,
+                CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+                cost_climate_saved=cost_climate_saved,
+                demand_ediesel=demand_ediesel,
+                transport_capacity_tkm=transport_capacity_tkm,
+                transport_capacity_pkm=0,
+                transport2018=t18.ship_inter,
+            )
         )
 
 
 @dataclass
-class Ship(Transport):
+class Ship:
     # Used by ship
+    LIFT_INTO_RESULT_DICT = ["transport"]
+    transport: Transport
 
     demand_emplo_new: float
     demand_emplo: float
@@ -207,15 +216,25 @@ class Ship(Transport):
         ship_dmstc: ShipDomestic,
         ship_dmstc_action_infra: ShipDomesticActionInfra,
     ) -> "Ship":
-        sum = Transport.sum(ship_inter, ship_dmstc, transport2018=t18.ship)
+        sum = Transport.sum(
+            ship_inter.transport, ship_dmstc.transport, transport2018=t18.ship
+        )
+        # This additional values are all 0 anyway, so the computation below
+        # that were in the original excel were not needed. For now I'm leaving
+        # them in here until I have either convinced myself that the corresponding
+        # variables should just completely disappear from ShipDomesticActionInfra
+        # or I have some better plan.
+        # demand_ediesel = sum + ship_dmstc_action_infra.demand_ediesel
+        # CO2e_total_2021_estimated = (
+        #     sum.CO2e_total_2021_estimated
+        #     + ship_dmstc_action_infra.CO2e_total_2021_estimated
+        # )
+        # cost_climate_saved = (
+        #     sum.cost_climate_saved + ship_dmstc_action_infra.cost_climate_saved
+        # )
 
         invest = ship_dmstc_action_infra.invest + ship_dmstc.invest
         invest_com = ship_dmstc_action_infra.invest_com
-        demand_ediesel = (
-            ship_dmstc.demand_ediesel
-            + ship_dmstc_action_infra.demand_ediesel
-            + ship_inter.demand_ediesel
-        )
         emplo_existing = ship_dmstc.emplo_existing
         base_unit = ship_dmstc.base_unit
         invest_pa = ship_dmstc_action_infra.invest_pa + ship_dmstc.invest_pa
@@ -225,32 +244,15 @@ class Ship(Transport):
             ship_dmstc.demand_emplo_new + ship_dmstc_action_infra.demand_emplo_new
         )
         demand_emplo = ship_dmstc.demand_emplo + ship_dmstc_action_infra.demand_emplo
-        CO2e_total_2021_estimated = (
-            sum.CO2e_total_2021_estimated
-            + ship_dmstc_action_infra.CO2e_total_2021_estimated
-        )
-        cost_climate_saved = (
-            sum.cost_climate_saved + ship_dmstc_action_infra.cost_climate_saved
-        )
         return cls(
-            CO2e_combustion_based=sum.CO2e_combustion_based,
-            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
             base_unit=base_unit,
-            change_CO2e_pct=sum.change_CO2e_pct,
-            change_CO2e_t=sum.change_CO2e_t,
-            change_energy_MWh=sum.change_energy_MWh,
-            change_energy_pct=sum.change_energy_pct,
-            cost_climate_saved=cost_climate_saved,
             cost_wage=cost_wage,
-            demand_ediesel=demand_ediesel,
             demand_emplo=demand_emplo,
             demand_emplo_new=demand_emplo_new,
             emplo_existing=emplo_existing,
-            energy=sum.energy,
             invest=invest,
             invest_com=invest_com,
             invest_pa=invest_pa,
             invest_pa_com=invest_pa_com,
-            transport_capacity_tkm=sum.transport_capacity_tkm,
-            transport_capacity_pkm=sum.transport_capacity_pkm,
+            transport=sum,
         )

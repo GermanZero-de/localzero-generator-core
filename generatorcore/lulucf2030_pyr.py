@@ -50,7 +50,7 @@ def calc(
             + r30.r.CO2e_total
             + b30.b.CO2e_total
             + i30.i.CO2e_total
-            + t30.t.CO2e_total
+            + t30.t.transport.CO2e_total
             + a30.a.CO2e_total
             + l30.g.CO2e_total
         ),

@@ -1,4 +1,5 @@
-from dataclasses import dataclass, asdict
+# pyright: strict
+from dataclasses import dataclass
 from ..utils import div
 from ..inputs import Inputs
 from ..transport2018 import T18
@@ -7,7 +8,9 @@ from .investmentaction import InvestmentAction
 
 
 @dataclass
-class RailPeople(Transport):
+class RailPeople:
+    LIFT_INTO_RESULT_DICT = ["transport"]
+    transport: Transport
     # Used by rail_ppl_distance and rail_ppl_metro
     base_unit: float
     cost_wage: float
@@ -74,11 +77,7 @@ class RailPeople(Transport):
         pct_of_wage = div(cost_wage, invest_pa)
         return cls(
             base_unit=base_unit,
-            CO2e_combustion_based=CO2e_combustion_based,
-            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
-            cost_climate_saved=cost_climate_saved,
             cost_wage=cost_wage,
-            demand_electricity=demand_electricity,
             demand_emplo_new=demand_emplo_new,
             demand_emplo=demand_emplo,
             emplo_existing=emplo_existing,
@@ -88,9 +87,15 @@ class RailPeople(Transport):
             mileage=mileage,
             pct_of_wage=pct_of_wage,
             ratio_wage_to_emplo=ratio_wage_to_emplo,
-            transport_capacity_pkm=transport_capacity_pkm,
-            transport_capacity_tkm=0,
-            transport2018=t18.rail_ppl_metro,
+            transport=Transport(
+                CO2e_combustion_based=CO2e_combustion_based,
+                CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+                cost_climate_saved=cost_climate_saved,
+                demand_electricity=demand_electricity,
+                transport_capacity_pkm=transport_capacity_pkm,
+                transport_capacity_tkm=0,
+                transport2018=t18.rail_ppl_metro,
+            ),
         )
 
     @classmethod
@@ -149,11 +154,7 @@ class RailPeople(Transport):
         pct_of_wage = div(cost_wage, invest_pa)
         return cls(
             base_unit=base_unit,
-            CO2e_combustion_based=CO2e_combustion_based,
-            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
-            cost_climate_saved=cost_climate_saved,
             cost_wage=cost_wage,
-            demand_electricity=demand_electricity,
             demand_emplo_new=demand_emplo_new,
             demand_emplo=demand_emplo,
             emplo_existing=emplo_existing,
@@ -163,9 +164,15 @@ class RailPeople(Transport):
             mileage=mileage,
             pct_of_wage=pct_of_wage,
             ratio_wage_to_emplo=ratio_wage_to_emplo,
-            transport_capacity_pkm=transport_capacity_pkm,
-            transport_capacity_tkm=0,
-            transport2018=t18.rail_ppl_distance,
+            transport=Transport(
+                CO2e_combustion_based=CO2e_combustion_based,
+                CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+                cost_climate_saved=cost_climate_saved,
+                demand_electricity=demand_electricity,
+                transport_capacity_pkm=transport_capacity_pkm,
+                transport_capacity_tkm=0,
+                transport2018=t18.rail_ppl_distance,
+            ),
         )
 
 
@@ -224,7 +231,9 @@ class RailPeopleMetroActionInfra:
 
 
 @dataclass
-class RailPeopleSum(Transport):
+class RailPeopleSum:
+    LIFT_INTO_RESULT_DICT = ["transport"]
+    transport: Transport
     # Used by rail_ppl
     base_unit: float
     cost_wage: float
@@ -246,9 +255,6 @@ class RailPeopleSum(Transport):
         rail_ppl_distance: RailPeople,
         rail_ppl_metro_action_infra: RailPeopleMetroActionInfra,
     ) -> "RailPeopleSum":
-        sum = Transport.sum(
-            rail_ppl_metro, rail_ppl_distance, transport2018=t18.rail_ppl
-        )
         base_unit = rail_ppl_distance.base_unit + rail_ppl_metro.base_unit
         invest_com = rail_ppl_metro_action_infra.invest_com
         mileage = rail_ppl_distance.mileage + rail_ppl_metro.mileage
@@ -295,12 +301,18 @@ class RailPeopleSum(Transport):
             invest_pa_com=invest_pa_com,
             invest_pa=invest_pa,
             mileage=mileage,
-            **asdict(sum),
+            transport=Transport.sum(
+                rail_ppl_metro.transport,
+                rail_ppl_distance.transport,
+                transport2018=t18.rail_ppl,
+            ),
         )
 
 
 @dataclass
-class RailGoods(Transport):
+class RailGoods:
+    LIFT_INTO_RESULT_DICT = ["transport"]
+    transport: Transport
     # Used by rail_gds
     base_unit: float
     cost_wage: float
@@ -357,12 +369,8 @@ class RailGoods(Transport):
         pct_of_wage = div(cost_wage, invest_pa)
 
         return cls(
-            CO2e_combustion_based=CO2e_combustion_based,
-            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
             base_unit=base_unit,
-            cost_climate_saved=cost_climate_saved,
             cost_wage=cost_wage,
-            demand_electricity=demand_electricity,
             demand_emplo=demand_emplo,
             demand_emplo_new=demand_emplo_new,
             emplo_existing=emplo_existing,
@@ -372,14 +380,22 @@ class RailGoods(Transport):
             pct_of_wage=pct_of_wage,
             mileage=mileage,
             ratio_wage_to_emplo=ratio_wage_to_emplo,
-            transport_capacity_tkm=transport_capacity_tkm,
-            transport_capacity_pkm=0,
-            transport2018=t18.rail_gds,
+            transport=Transport(
+                CO2e_combustion_based=CO2e_combustion_based,
+                CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+                cost_climate_saved=cost_climate_saved,
+                demand_electricity=demand_electricity,
+                transport_capacity_tkm=transport_capacity_tkm,
+                transport_capacity_pkm=0,
+                transport2018=t18.rail_gds,
+            ),
         )
 
 
 @dataclass
-class Rail(Transport):
+class Rail:
+    LIFT_INTO_RESULT_DICT = ["transport"]
+    transport: Transport
     # Used by rail
     base_unit: float
     cost_wage: float
@@ -401,7 +417,6 @@ class Rail(Transport):
         rail_action_invest_infra: InvestmentAction,
         rail_action_invest_station: InvestmentAction,
     ) -> "Rail":
-        sum = Transport.sum(rail_ppl, rail_gds, transport2018=t18.rail)
         invest_com = (
             rail_action_invest_infra.invest_com
             + rail_action_invest_station.invest_com
@@ -455,5 +470,7 @@ class Rail(Transport):
             invest_pa=invest_pa,
             invest_pa_com=invest_pa_com,
             mileage=mileage,
-            **asdict(sum),
+            transport=Transport.sum(
+                rail_ppl.transport, rail_gds.transport, transport2018=t18.rail
+            ),
         )

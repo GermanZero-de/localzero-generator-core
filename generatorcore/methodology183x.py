@@ -672,7 +672,7 @@ def calc_z(
         + r30.r.CO2e_total
         + b30.b.CO2e_total
         + i30.i.CO2e_total
-        + t30.t.CO2e_total
+        + t30.t.transport.CO2e_total
         + a30.a.CO2e_total
     )
 
@@ -696,7 +696,7 @@ def calc_z(
         + r30.r.cost_climate_saved
         + b30.b.cost_climate_saved
         + i30.i.cost_climate_saved
-        + t30.t.cost_climate_saved
+        + t30.t.transport.cost_climate_saved
         + a30.a.cost_climate_saved
         + l30.l.cost_climate_saved
     )
@@ -764,7 +764,11 @@ def calc_z(
 
     s.energy_30 = h30.p.energy + e30.p.energy + f30.p.energy
     d.energy_30 = (
-        r30.p.energy + b30.p.energy + i30.p.energy + t30.t.energy + a30.p.energy
+        r30.p.energy
+        + b30.p.energy
+        + i30.p.energy
+        + t30.t.transport.energy
+        + a30.p.energy
     )
     z.energy_30 = s.energy_30
 
@@ -788,7 +792,7 @@ def calc_z(
         r30.r.CO2e_combustion_based
         + b30.b.CO2e_combustion_based
         + i30.i.CO2e_combustion_based
-        + t30.t.CO2e_combustion_based
+        + t30.t.transport.CO2e_combustion_based
         + a30.a.CO2e_combustion_based
         + l30.l.CO2e_combustion_based
     )
@@ -801,7 +805,7 @@ def calc_z(
         r30.r.CO2e_total
         + b30.b.CO2e_total
         + i30.i.CO2e_total
-        + t30.t.CO2e_total
+        + t30.t.transport.CO2e_total
         + a30.a.CO2e_total
         + l30.l.CO2e_total
     )
@@ -1000,7 +1004,7 @@ def calc_z(
     r.pct_energy_30 = div(r30.p.energy, d.energy_30)
     b.pct_energy_30 = div(b30.p.energy, d.energy_30)
     i.pct_energy_30 = div(i30.p.energy, d.energy_30)
-    t.pct_energy_30 = div(t30.t.energy, d.energy_30)
+    t.pct_energy_30 = div(t30.t.transport.energy, d.energy_30)
     a.pct_energy_30 = div(a30.p.energy, d.energy_30)
 
     h.invest_pct = div(h30.h.invest, z.invest)
@@ -1019,7 +1023,9 @@ def calc_z(
     r.cost_climate_saved_pct = div(r30.r.cost_climate_saved, z.cost_climate_saved)
     b.cost_climate_saved_pct = div(b30.b.cost_climate_saved, z.cost_climate_saved)
     i.cost_climate_saved_pct = div(i30.i.cost_climate_saved, z.cost_climate_saved)
-    t.cost_climate_saved_pct = div(t30.t.cost_climate_saved, z.cost_climate_saved)
+    t.cost_climate_saved_pct = div(
+        t30.t.transport.cost_climate_saved, z.cost_climate_saved
+    )
     a.cost_climate_saved_pct = div(a30.a.cost_climate_saved, z.cost_climate_saved)
     l.cost_climate_saved_pct = div(l30.l.cost_climate_saved, z.cost_climate_saved)
 

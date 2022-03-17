@@ -100,7 +100,9 @@ class G:
 
 
 @dataclass
-class T(Transport):
+class T:
+    LIFT_INTO_RESULT_DICT = ["transport"]
+    transport: Transport
     # Used by t
     cost_wage: float
     demand_emplo: float
@@ -116,7 +118,7 @@ class T(Transport):
         cls,
         *,
         t18: T18,
-        total_transport_capacity_pkm: float,
+        required_domestic_transport_capacity_pkm: float,
         air: Air,
         rail: Rail,
         road: RoadSum,
@@ -124,7 +126,6 @@ class T(Transport):
         other: Other,
         g: G,
     ) -> "T":
-        sum = Transport.sum(air.transport, rail, road, ship, other, transport2018=t18.t)
         invest_com = (
             g.invest_com
             + road.invest_com
@@ -191,18 +192,18 @@ class T(Transport):
             invest_com=invest_com,
             invest_pa=invest_pa,
             invest_pa_com=invest_pa_com,
-            **asdict(sum),
+            transport=Transport.sum(
+                air.transport,
+                rail.transport,
+                road.transport,
+                ship.transport,
+                other.transport,
+                transport2018=t18.t,
+            ),
         )
-        # TODO: Talk with Leon about this. Because the computed transport capacity is not equal to the precomputed
-        # required transport capacity.
-        # For Göttingen 2050:
-        # computed is: 1354291254.7988613
-        # required is: 1308219008.6132076
-        # So we actually have more than we precompute, so maybe this is just fine / expected?
-        # In which case we probably should want this assert:
-        # Maybe this is mostly caused by air and other?
         assert (
-            total_transport_capacity_pkm <= res.transport_capacity_pkm
+            required_domestic_transport_capacity_pkm
+            <= res.transport.transport_capacity_pkm
         ), "We should know have at least as much provided transport capacity as we required initially"
         # Also shouldn't we store the computed transport capacity here?
         # And not what we claimed we need but what we are providing?
@@ -309,7 +310,7 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
         total_transport_capacity_pkm=required_domestic_transport_capacity_pkm,
     )
     road_bus_action_infra = RoadBus.calc_action_infra(
-        inputs, bus_transport_capacity_pkm=road_bus.transport_capacity_pkm
+        inputs, bus_transport_capacity_pkm=road_bus.transport.transport_capacity_pkm
     )
     road_ppl = RoadPeople.calc(
         inputs,
@@ -361,7 +362,8 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
         inputs
     )
     rail_ppl_metro_action_infra = RailPeopleMetroActionInfra.calc(
-        inputs, metro_transport_capacity_pkm=rail_ppl_metro.transport_capacity_pkm
+        inputs,
+        metro_transport_capacity_pkm=rail_ppl_metro.transport.transport_capacity_pkm,
     )
     rail_ppl = RailPeopleSum.calc(
         t18=t18,
@@ -396,7 +398,7 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
         total_transport_capacity_pkm=required_domestic_transport_capacity_pkm,
     )
     other_cycl_action_infra = InvestmentAction.calc_other_cycl_action_infra(
-        inputs, cycle_transport_capacity_pkm=other_cycl.transport_capacity_pkm
+        inputs, cycle_transport_capacity_pkm=other_cycl.transport.transport_capacity_pkm
     )
     other_foot = OtherFoot.calc(
         inputs,
@@ -436,7 +438,7 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
     )
     t = T.calc(
         t18=t18,
-        total_transport_capacity_pkm=required_domestic_transport_capacity_pkm,
+        required_domestic_transport_capacity_pkm=required_domestic_transport_capacity_pkm,
         air=air,
         rail=rail,
         road=road,
@@ -444,11 +446,11 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
         other=other,
         g=g,
     )
-    s_petrol = EnergySum(t.demand_epetrol)
-    s_jetfuel = EnergySum(t.demand_ejetfuel)
-    s_diesel = EnergySum(t.demand_ediesel)
-    s_elec = EnergySum(t.demand_electricity)
-    s_hydrogen = EnergySum(t.demand_hydrogen)
+    s_petrol = EnergySum(t.transport.demand_epetrol)
+    s_jetfuel = EnergySum(t.transport.demand_ejetfuel)
+    s_diesel = EnergySum(t.transport.demand_ediesel)
+    s_elec = EnergySum(t.transport.demand_electricity)
+    s_hydrogen = EnergySum(t.transport.demand_hydrogen)
 
     s_emethan = EnergySum(0)
     s_fueloil = EnergySum(0)

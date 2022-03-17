@@ -121,7 +121,7 @@ def calc(
     d_r.energy = r30.p.demand_electricity
     d_b.energy = b30.p.demand_electricity
     d_i.energy = i30.p.demand_electricity
-    d_t.energy = t30.t.demand_electricity
+    d_t.energy = t30.t.transport.demand_electricity
     d_a.energy = a30.p_operation.demand_electricity
     d_f_wo_hydrogen.energy = (
         f30.p_petrol.demand_electricity

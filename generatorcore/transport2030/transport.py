@@ -88,7 +88,7 @@ class Transport:
         def sum_of(get: Callable[["Transport"], float]):
             return sum(map(get, transports))
 
-        res = cls(
+        return cls(
             CO2e_total=sum_of(lambda t: t.CO2e_total),
             CO2e_combustion_based=sum_of(lambda t: t.CO2e_combustion_based),
             CO2e_total_2021_estimated=sum_of(lambda t: t.CO2e_total_2021_estimated),
@@ -102,4 +102,3 @@ class Transport:
             demand_hydrogen=sum_of(lambda t: t.demand_hydrogen),
             transport2018=transport2018,
         )
-        return res
