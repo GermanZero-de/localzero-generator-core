@@ -5,7 +5,7 @@ from ..inputs import Inputs
 from ..utils import div
 from ..transport2018 import T18
 from .investmentaction import InvestmentAction
-from .air import calc_air_domestic, AirInternational, Air
+from .air import calc_air_domestic, calc_air_international, Air
 from .road import (
     Road,
     RoadBus,
@@ -211,7 +211,7 @@ class T(Transport):
 
 @dataclass
 class T30:
-    air_inter: AirInternational
+    air_inter: Transport
     air_dmstc: Transport
     road_ppl: RoadPeople
     road_car: RoadCar
@@ -274,7 +274,7 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
 
     # --- Air ---
     air_dmstc = calc_air_domestic(inputs, t18)
-    air_inter = AirInternational.calc(inputs, t18)
+    air_inter = calc_air_international(inputs, t18)
     air = Air.calc(t18, domestic=air_dmstc, international=air_inter)
 
     # First we estimate the total required transport capacity in the target year (excluding air).
