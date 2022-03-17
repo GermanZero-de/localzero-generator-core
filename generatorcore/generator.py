@@ -58,17 +58,6 @@ class Result:
 
     m183X: methodology183x.M183X
 
-    # search value
-    def search_value(self, var: str):
-        sep = "."
-        gen = self.result_dict()
-        for k in gen:
-            for l in gen[k]:
-                if type(gen[k][l]) == dict:
-                    for m in gen[k][l]:
-                        if l + sep + m == var:
-                            print(k + sep + l + sep + m + "=", gen[k][l][m])
-
     def result_dict(self):
         return asdict(self)
 
