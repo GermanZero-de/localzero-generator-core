@@ -57,11 +57,7 @@ class Road(Transport):
             * ass("Ass_T_S_LDT_frac_fcev_mlg_2050")
             * ass("Ass_T_S_LDT_SEC_fcev_2030")
         )
-        CO2e_total = CO2e_combustion_based
 
-        change_km = (
-            transport_capacity_tkm - t18.road_gds_ldt_it_ot.transport_capacity_tkm
-        )
         CO2e_total_2021_estimated = t18.road_gds_ldt_it_ot.CO2e_combustion_based * fact(
             "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
         )
@@ -70,11 +66,9 @@ class Road(Transport):
             * entries.m_duration_neutral
             * fact("Fact_M_cost_per_CO2e_2020")
         )
-        res = cls(
-            change_km=change_km,
+        return cls(
             CO2e_combustion_based=CO2e_combustion_based,
             CO2e_total_2021_estimated=CO2e_total_2021_estimated,
-            CO2e_total=CO2e_total,
             cost_climate_saved=cost_climate_saved,
             demand_electricity=demand_electricity,
             demand_ediesel=demand_ediesel,
@@ -83,9 +77,8 @@ class Road(Transport):
             mileage=mileage,
             transport_capacity_tkm=transport_capacity_tkm,
             transport_capacity_pkm=0,
+            transport2018=t18.road_gds_ldt_it_ot,
         )
-        res.calc_and_set_changes(t18.road_gds_ldt_it_ot)
-        return res
 
     @classmethod
     def calc_goods_lightduty_ab(cls, inputs: Inputs, *, t18: T18) -> "Road":
@@ -117,7 +110,6 @@ class Road(Transport):
         CO2e_combustion_based = demand_ediesel * ass(
             "Ass_T_S_diesel_EmFa_tank_wheel_2050"
         ) + demand_electricity * fact("Fact_T_S_electricity_EmFa_tank_wheel_2018")
-        CO2e_total = CO2e_combustion_based
         CO2e_total_2021_estimated = t18.road_gds_ldt_ab.CO2e_combustion_based * fact(
             "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
         )
@@ -126,12 +118,9 @@ class Road(Transport):
             * entries.m_duration_neutral
             * fact("Fact_M_cost_per_CO2e_2020")
         )
-        change_km = transport_capacity_tkm - t18.road_gds_ldt_ab.transport_capacity_tkm
-        res = cls(
-            change_km=change_km,
+        return cls(
             CO2e_combustion_based=CO2e_combustion_based,
             CO2e_total_2021_estimated=CO2e_total_2021_estimated,
-            CO2e_total=CO2e_total,
             cost_climate_saved=cost_climate_saved,
             demand_electricity=demand_electricity,
             demand_ediesel=demand_ediesel,
@@ -139,9 +128,8 @@ class Road(Transport):
             mileage=mileage,
             transport_capacity_tkm=transport_capacity_tkm,
             transport_capacity_pkm=0,
+            transport2018=(t18.road_gds_ldt_ab),
         )
-        res.calc_and_set_changes(t18.road_gds_ldt_ab)
-        return res
 
     @classmethod
     def calc_goods_medium_and_heavy_duty_ab(cls, inputs: Inputs, *, t18: T18) -> "Road":
@@ -176,18 +164,14 @@ class Road(Transport):
             * ass("Ass_T_S_MHD_frac_fcev_mlg_2050")
             * ass("Ass_T_S_MHD_SEC_fcev_2030")
         )
-        CO2e_total = CO2e_combustion_based
-        change_km = transport_capacity_tkm - t18.road_gds_mhd_ab.transport_capacity_tkm
         cost_climate_saved = (
             (CO2e_total_2021_estimated - CO2e_combustion_based)
             * entries.m_duration_neutral
             * fact("Fact_M_cost_per_CO2e_2020")
         )
-        res = cls(
-            change_km=change_km,
+        return cls(
             CO2e_combustion_based=CO2e_combustion_based,
             CO2e_total_2021_estimated=CO2e_total_2021_estimated,
-            CO2e_total=CO2e_total,
             cost_climate_saved=cost_climate_saved,
             demand_electricity=demand_electricity,
             demand_ediesel=demand_ediesel,
@@ -196,9 +180,8 @@ class Road(Transport):
             mileage=mileage,
             transport_capacity_tkm=transport_capacity_tkm,
             transport_capacity_pkm=0,
+            transport2018=(t18.road_gds_mhd_ab),
         )
-        res.calc_and_set_changes(t18.road_gds_mhd_ab)
-        return res
 
     @classmethod
     def calc_goods_medium_and_heavy_duty_it_ot(
@@ -233,10 +216,6 @@ class Road(Transport):
             * ass("Ass_T_S_MHD_SEC_fcev_2030")
         )
 
-        CO2e_total = CO2e_combustion_based
-        change_km = (
-            transport_capacity_tkm - t18.road_gds_mhd_it_ot.transport_capacity_tkm
-        )
         CO2e_total_2021_estimated = t18.road_gds_mhd_it_ot.CO2e_combustion_based * fact(
             "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
         )
@@ -245,11 +224,9 @@ class Road(Transport):
             * entries.m_duration_neutral
             * fact("Fact_M_cost_per_CO2e_2020")
         )
-        res = cls(
-            change_km=change_km,
+        return cls(
             CO2e_combustion_based=CO2e_combustion_based,
             CO2e_total_2021_estimated=CO2e_total_2021_estimated,
-            CO2e_total=CO2e_total,
             cost_climate_saved=cost_climate_saved,
             demand_electricity=demand_electricity,
             demand_ediesel=demand_ediesel,
@@ -258,20 +235,23 @@ class Road(Transport):
             mileage=mileage,
             transport_capacity_tkm=transport_capacity_tkm,
             transport_capacity_pkm=0,
+            transport2018=(t18.road_gds_mhd_it_ot),
         )
-        res.calc_and_set_changes(t18.road_gds_mhd_it_ot)
-        return res
 
     @classmethod
     def calc_car_it_ot(
-        cls, inputs: Inputs, *, t18: T18, total_transport_capacity_pkm: float
+        cls,
+        inputs: Inputs,
+        *,
+        t18: T18,
+        required_domestic_transport_capacity_pkm: float,
     ) -> "Road":
         ass = inputs.ass
         entries = inputs.entries
         fact = inputs.fact
 
         transport_capacity_pkm = (
-            total_transport_capacity_pkm
+            required_domestic_transport_capacity_pkm
             * div(
                 t18.road_car_it_ot.mileage,
                 t18.road_car_it_ot.mileage + t18.road_car_ab.mileage,
@@ -300,7 +280,6 @@ class Road(Transport):
                 )
             )
         )
-        change_km = transport_capacity_pkm - t18.road_car_it_ot.transport_capacity_pkm
         mileage = transport_capacity_pkm / ass("Ass_T_D_lf_ppl_Car_2050")
         demand_electricity = (
             mileage
@@ -315,7 +294,6 @@ class Road(Transport):
         CO2e_combustion_based = demand_epetrol * ass(
             "Ass_T_S_petrol_EmFa_tank_wheel_2050"
         ) + demand_electricity * fact("Fact_T_S_electricity_EmFa_tank_wheel_2018")
-        CO2e_total = CO2e_combustion_based
         CO2e_total_2021_estimated = t18.road_car_it_ot.CO2e_combustion_based * fact(
             "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
         )
@@ -324,11 +302,9 @@ class Road(Transport):
             * entries.m_duration_neutral
             * fact("Fact_M_cost_per_CO2e_2020")
         )
-        res = cls(
-            change_km=change_km,
+        return cls(
             CO2e_combustion_based=CO2e_combustion_based,
             CO2e_total_2021_estimated=CO2e_total_2021_estimated,
-            CO2e_total=CO2e_total,
             cost_climate_saved=cost_climate_saved,
             demand_electricity=demand_electricity,
             demand_epetrol=demand_epetrol,
@@ -337,20 +313,23 @@ class Road(Transport):
             mileage=mileage,
             transport_capacity_pkm=transport_capacity_pkm,
             transport_capacity_tkm=0,
+            transport2018=t18.road_car_it_ot,
         )
-        res.calc_and_set_changes(t18.road_car_it_ot)
-        return res
 
     @classmethod
     def calc_car_ab(
-        cls, inputs: Inputs, *, t18: T18, total_transport_capacity_pkm: float
+        cls,
+        inputs: Inputs,
+        *,
+        t18: T18,
+        required_domestic_transport_capacity_pkm: float,
     ) -> "Road":
         ass = inputs.ass
         entries = inputs.entries
         fact = inputs.fact
 
         transport_capacity_pkm = (
-            total_transport_capacity_pkm
+            required_domestic_transport_capacity_pkm
             * div(
                 t18.road_car_ab.mileage,
                 (t18.road_car_it_ot.mileage + t18.road_car_ab.mileage),
@@ -391,8 +370,6 @@ class Road(Transport):
         CO2e_combustion_based = demand_epetrol * ass(
             "Ass_T_S_petrol_EmFa_tank_wheel_2050"
         ) + demand_electricity * fact("Fact_T_S_electricity_EmFa_tank_wheel_2018")
-        change_km = transport_capacity_pkm - t18.road_car_ab.transport_capacity_pkm
-        CO2e_total = CO2e_combustion_based
         CO2e_total_2021_estimated = t18.road_car_ab.CO2e_combustion_based * fact(
             "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
         )
@@ -402,11 +379,9 @@ class Road(Transport):
             * fact("Fact_M_cost_per_CO2e_2020")
         )
 
-        res = cls(
-            change_km=change_km,
+        return cls(
             CO2e_combustion_based=CO2e_combustion_based,
             CO2e_total_2021_estimated=CO2e_total_2021_estimated,
-            CO2e_total=CO2e_total,
             cost_climate_saved=cost_climate_saved,
             demand_electricity=demand_electricity,
             demand_epetrol=demand_epetrol,
@@ -415,9 +390,8 @@ class Road(Transport):
             mileage=mileage,
             transport_capacity_pkm=transport_capacity_pkm,
             transport_capacity_tkm=0,
+            transport2018=(t18.road_car_ab),
         )
-        res.calc_and_set_changes(t18.road_car_ab)
-        return res
 
 
 @dataclass
@@ -543,7 +517,6 @@ class RoadBus(Road, BusInvestments):
         entries = inputs.entries
         fact = inputs.fact
 
-        demand_epetrol = 0
         transport_capacity_pkm = div(
             total_transport_capacity_pkm * t18.road_bus.transport_capacity_pkm,
             (
@@ -569,15 +542,7 @@ class RoadBus(Road, BusInvestments):
         CO2e_combustion_based = demand_electricity * fact(
             "Fact_T_S_electricity_EmFa_tank_wheel_2018"
         )
-        CO2e_total = CO2e_combustion_based
 
-        energy = demand_electricity
-        change_km = transport_capacity_pkm - t18.road_bus.transport_capacity_pkm
-        change_energy_MWh = energy - t18.road_bus.energy
-
-        change_energy_pct = div(change_energy_MWh, t18.road_bus.energy)
-        change_CO2e_t = CO2e_combustion_based - t18.road_bus.CO2e_combustion_based
-        change_CO2e_pct = div(change_CO2e_t, t18.road_bus.CO2e_combustion_based)
         CO2e_total_2021_estimated = t18.road_bus.CO2e_combustion_based * fact(
             "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
         )
@@ -588,23 +553,14 @@ class RoadBus(Road, BusInvestments):
         )
 
         return cls(
-            change_CO2e_pct=change_CO2e_pct,
-            change_CO2e_t=change_CO2e_t,
-            change_energy_MWh=change_energy_MWh,
-            change_energy_pct=change_energy_pct,
-            change_km=change_km,
             CO2e_combustion_based=CO2e_combustion_based,
             CO2e_total_2021_estimated=CO2e_total_2021_estimated,
-            CO2e_total=CO2e_total,
             cost_climate_saved=cost_climate_saved,
             demand_electricity=demand_electricity,
-            demand_epetrol=demand_epetrol,
-            demand_hydrogen=0,
-            demand_ediesel=0,
-            energy=energy,
             mileage=mileage,
             transport_capacity_pkm=transport_capacity_pkm,
             transport_capacity_tkm=0,
+            transport2018=t18.road_bus,
             **asdict(cls.calc_bus_investments(inputs, t18=t18, mileage=mileage)),
         )
 

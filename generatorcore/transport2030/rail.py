@@ -53,8 +53,6 @@ class RailPeople(Transport):
         base_unit = (mileage - t18.rail_ppl_metro.mileage) / fact(
             "Fact_T_D_rail_metro_ratio_mlg_to_vehicle"
         )
-        CO2e_total = CO2e_combustion_based
-        change_km = transport_capacity_pkm - t18.rail_ppl_metro.transport_capacity_pkm
         invest_per_x = fact("Fact_T_D_rail_metro_vehicle_invest")
         ratio_wage_to_emplo = ass("Ass_T_D_bus_metro_wage_driver")
         demand_emplo = mileage / fact("Fact_T_D_metro_ratio_mlg_to_driver")
@@ -74,12 +72,10 @@ class RailPeople(Transport):
         )
         invest_pa = invest / entries.m_duration_target
         pct_of_wage = div(cost_wage, invest_pa)
-        res = cls(
+        return cls(
             base_unit=base_unit,
-            change_km=change_km,
             CO2e_combustion_based=CO2e_combustion_based,
             CO2e_total_2021_estimated=CO2e_total_2021_estimated,
-            CO2e_total=CO2e_total,
             cost_climate_saved=cost_climate_saved,
             cost_wage=cost_wage,
             demand_electricity=demand_electricity,
@@ -96,7 +92,6 @@ class RailPeople(Transport):
             transport_capacity_tkm=0,
             transport2018=t18.rail_ppl_metro,
         )
-        return res
 
     @classmethod
     def calc_distance(
@@ -138,10 +133,6 @@ class RailPeople(Transport):
             "Fact_T_D_rail_ratio_mlg_to_driver"
         )
         demand_emplo_new = demand_emplo - emplo_existing
-        CO2e_total = CO2e_combustion_based
-        change_km = (
-            transport_capacity_pkm - t18.rail_ppl_distance.transport_capacity_pkm
-        )
         ratio_wage_to_emplo = ass("Ass_T_D_rail_wage_driver")
         cost_wage = ratio_wage_to_emplo * demand_emplo_new
         invest_per_x = fact("Fact_T_D_rail_ppl_vehicle_invest")
@@ -156,12 +147,10 @@ class RailPeople(Transport):
         invest = base_unit * invest_per_x + cost_wage * entries.m_duration_target
         invest_pa = invest / entries.m_duration_target
         pct_of_wage = div(cost_wage, invest_pa)
-        res = cls(
+        return cls(
             base_unit=base_unit,
-            change_km=change_km,
             CO2e_combustion_based=CO2e_combustion_based,
             CO2e_total_2021_estimated=CO2e_total_2021_estimated,
-            CO2e_total=CO2e_total,
             cost_climate_saved=cost_climate_saved,
             cost_wage=cost_wage,
             demand_electricity=demand_electricity,
@@ -178,7 +167,6 @@ class RailPeople(Transport):
             transport_capacity_tkm=0,
             transport2018=t18.rail_ppl_distance,
         )
-        return res
 
 
 @dataclass
@@ -358,10 +346,9 @@ class RailGoods(Transport):
         emplo_existing = t18.rail_gds.mileage / fact(
             "Fact_T_D_rail_ratio_mlg_to_driver"
         )
-        change_km = transport_capacity_tkm - t18.rail_gds.transport_capacity_tkm
         demand_emplo_new = demand_emplo - emplo_existing
 
-        CO2e_total = CO2e_combustion_based
+        change_km = transport_capacity_tkm - t18.rail_gds.transport_capacity_tkm
         base_unit = change_km / fact("Fact_T_D_rail_gds_ratio_mlg_to_vehicle")
         invest_per_x = fact("Fact_T_D_rail_gds_vehicle_invest")
         cost_wage = ratio_wage_to_emplo * demand_emplo_new
@@ -369,12 +356,10 @@ class RailGoods(Transport):
         invest_pa = invest / entries.m_duration_target
         pct_of_wage = div(cost_wage, invest_pa)
 
-        res = cls(
+        return cls(
             CO2e_combustion_based=CO2e_combustion_based,
-            CO2e_total=CO2e_total,
             CO2e_total_2021_estimated=CO2e_total_2021_estimated,
             base_unit=base_unit,
-            change_km=change_km,
             cost_climate_saved=cost_climate_saved,
             cost_wage=cost_wage,
             demand_electricity=demand_electricity,
@@ -391,7 +376,6 @@ class RailGoods(Transport):
             transport_capacity_pkm=0,
             transport2018=t18.rail_gds,
         )
-        return res
 
 
 @dataclass

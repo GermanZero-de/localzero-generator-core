@@ -5,7 +5,7 @@ from ..inputs import Inputs
 from ..utils import div
 from ..transport2018 import T18
 
-from .transport import Transport, zero_energy_and_co2e
+from .transport import Transport, ZeroEnergyAndCO2e
 from .investmentaction import InvestmentAction
 
 
@@ -37,7 +37,6 @@ class OtherFoot(Transport):
             if entries.t_rt3 == "rural"
             else ass("Ass_T_D_trnsprt_ppl_nat_foot_frac_2050")
         )
-        change_km = transport_capacity_pkm - t18.other_foot.transport_capacity_pkm
 
         CO2e_total_2021_estimated = t18.other_foot.CO2e_combustion_based * fact(
             "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
@@ -49,9 +48,7 @@ class OtherFoot(Transport):
         )
         res = cls(
             CO2e_combustion_based=0,
-            CO2e_total=0,
             CO2e_total_2021_estimated=CO2e_total_2021_estimated,
-            change_km=change_km,
             cost_climate_saved=cost_climate_saved,
             invest=0,
             invest_com=0,
@@ -59,7 +56,10 @@ class OtherFoot(Transport):
             invest_pa_com=0,
             transport_capacity_pkm=transport_capacity_pkm,
             transport_capacity_tkm=0,
-            transport2018=zero_energy_and_co2e,
+            transport2018=ZeroEnergyAndCO2e(
+                transport_capacity_pkm=t18.other_cycl.transport_capacity_pkm,
+                transport_capacity_tkm=0,
+            ),
         )
         return res
 
@@ -110,16 +110,12 @@ class OtherCycle(Transport):
         )
         invest_com = 0
         invest_pa = invest / entries.m_duration_target
-        change_km = transport_capacity_pkm - t18.other_cycl.transport_capacity_pkm
         invest_pa_com = invest_com / entries.m_duration_target
-        CO2e_total = 0
 
-        res = cls(
+        return cls(
             CO2e_combustion_based=0,
-            CO2e_total=CO2e_total,
             CO2e_total_2021_estimated=CO2e_total_2021_estimated,
             base_unit=base_unit,
-            change_km=change_km,
             cost_climate_saved=cost_climate_saved,
             invest=invest,
             invest_com=invest_com,
@@ -128,9 +124,11 @@ class OtherCycle(Transport):
             invest_per_x=invest_per_x,
             transport_capacity_pkm=transport_capacity_pkm,
             transport_capacity_tkm=0,
-            transport2018=zero_energy_and_co2e,
+            transport2018=ZeroEnergyAndCO2e(
+                transport_capacity_pkm=t18.other_cycl.transport_capacity_pkm,
+                transport_capacity_tkm=0,
+            ),
         )
-        return res
 
 
 @dataclass
@@ -151,12 +149,21 @@ class Other(Transport):
         cls,
         inputs: Inputs,
         *,
+        t18: T18,
         other_foot: OtherFoot,
         other_cycl: OtherCycle,
         other_foot_action_infra: InvestmentAction,
         other_cycl_action_infra: InvestmentAction,
     ) -> "Other":
-        sum = Transport.sum(other_foot, other_cycl, transport2018=zero_energy_and_co2e)
+        sum = Transport.sum(
+            other_foot,
+            other_cycl,
+            transport2018=ZeroEnergyAndCO2e(
+                transport_capacity_pkm=t18.other.transport_capacity_pkm,
+                transport_capacity_tkm=0,
+            ),
+        )
+
         invest_com = (
             other_foot.invest_com
             + other_cycl.invest_com

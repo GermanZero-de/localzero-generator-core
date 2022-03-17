@@ -56,7 +56,6 @@ class ShipDomestic(Transport):
         )
         demand_emplo_new = demand_emplo - emplo_existing
         change_km = transport_capacity_tkm - t18.ship_dmstc.transport_capacity_tkm
-        CO2e_total = CO2e_combustion_based
         base_unit = change_km / fact("Fact_T_D_Shp_dmstc_nat_ratio_mlg_to_vehicle")
         invest_per_x = fact("Fact_T_D_Shp_dmstc_vehicle_invest")
         cost_wage = ratio_wage_to_emplo * demand_emplo_new
@@ -64,12 +63,10 @@ class ShipDomestic(Transport):
         invest_pa = invest / entries.m_duration_target
         pct_of_wage = div(cost_wage, invest_pa)
 
-        res = cls(
+        return cls(
             base_unit=base_unit,
-            change_km=change_km,
             CO2e_combustion_based=CO2e_combustion_based,
             CO2e_total_2021_estimated=CO2e_total_2021_estimated,
-            CO2e_total=CO2e_total,
             cost_climate_saved=cost_climate_saved,
             cost_wage=cost_wage,
             demand_ediesel=demand_ediesel,
@@ -85,7 +82,6 @@ class ShipDomestic(Transport):
             transport_capacity_pkm=0,
             transport2018=t18.ship_dmstc,
         )
-        return res
 
 
 @dataclass
@@ -173,24 +169,19 @@ class ShipInternational(Transport):
             * entries.m_duration_neutral
             * fact("Fact_M_cost_per_CO2e_2020")
         )
-        CO2e_total = CO2e_combustion_based
         transport_capacity_tkm = t18.ship_inter.transport_capacity_tkm * div(
             demand_ediesel, t18.ship_inter.energy
         )
-        change_km = transport_capacity_tkm - t18.ship_inter.transport_capacity_tkm
 
-        res = cls(
-            change_km=change_km,
+        return cls(
             CO2e_combustion_based=CO2e_combustion_based,
             CO2e_total_2021_estimated=CO2e_total_2021_estimated,
-            CO2e_total=CO2e_total,
             cost_climate_saved=cost_climate_saved,
             demand_ediesel=demand_ediesel,
             transport_capacity_tkm=transport_capacity_tkm,
             transport_capacity_pkm=0,
             transport2018=t18.ship_inter,
         )
-        return res
 
 
 @dataclass
@@ -243,10 +234,8 @@ class Ship(Transport):
         )
         return cls(
             CO2e_combustion_based=sum.CO2e_combustion_based,
-            CO2e_total=sum.CO2e_total,
             CO2e_total_2021_estimated=CO2e_total_2021_estimated,
             base_unit=base_unit,
-            change_km=sum.change_km,
             change_CO2e_pct=sum.change_CO2e_pct,
             change_CO2e_t=sum.change_CO2e_t,
             change_energy_MWh=sum.change_energy_MWh,

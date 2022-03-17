@@ -23,20 +23,16 @@ def calc_air_domestic(inputs: Inputs, t18: T18) -> "Transport":
         * inputs.entries.m_duration_neutral
         * inputs.fact("Fact_M_cost_per_CO2e_2020")
     )
-    change_km = -t18.air_dmstc.transport_capacity_pkm
-    t = Transport(
+    return Transport(
         CO2e_total_2021_estimated=CO2e_total_2021_estimated,
-        change_km=change_km,
         cost_climate_saved=cost_climate_saved,
         # We need no energy to transport nothing
         transport_capacity_tkm=0,
         transport_capacity_pkm=0,
         # And not doing anything causes no CO2e
         CO2e_combustion_based=0,
-        CO2e_total=0,
         transport2018=t18.air_dmstc,
     )
-    return t
 
 
 @dataclass(kw_only=True)
@@ -68,20 +64,15 @@ class AirInternational(Transport):
         transport_capacity_pkm = t18.air_inter.transport_capacity_pkm * div(
             demand_ejetfuel, t18.air_inter.demand_jetfuel
         )
-        change_km = transport_capacity_pkm - t18.air_inter.transport_capacity_pkm
-        CO2e_total = CO2e_combustion_based
-        res = cls(
-            CO2e_total=CO2e_total,
+        return cls(
             CO2e_combustion_based=CO2e_combustion_based,
             CO2e_total_2021_estimated=CO2e_total_2021_estimated,
             transport_capacity_tkm=transport_capacity_tkm,
             transport_capacity_pkm=transport_capacity_pkm,
-            change_km=change_km,
             cost_climate_saved=cost_climate_saved,
             demand_ejetfuel=demand_ejetfuel,
             transport2018=t18.air_inter,
         )
-        return res
 
 
 @dataclass
@@ -102,7 +93,7 @@ class Air(Transport):
         international: AirInternational,
     ) -> "Air":
         sum = Transport.sum(domestic, international, transport2018=t18.air)
-        res = cls(
+        return cls(
             # Our simplified assumption here is that the only costs to get clean international flight is
             # using efuels. Therefore no costs show up here and all in the fuels2030 section.
             invest_pa_com=0,
@@ -113,4 +104,3 @@ class Air(Transport):
             demand_emplo_new=0,
             **asdict(sum),
         )
-        return res

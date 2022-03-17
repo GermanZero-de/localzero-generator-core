@@ -206,7 +206,6 @@ class T(Transport):
         ), "We should know have at least as much provided transport capacity as we required initially"
         # Also shouldn't we store the computed transport capacity here?
         # And not what we claimed we need but what we are providing?
-        res.transport_capacity_pkm = total_transport_capacity_pkm
         return res
 
 
@@ -279,7 +278,7 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
     air = Air.calc(t18, domestic=air_dmstc, international=air_inter)
 
     # First we estimate the total required transport capacity in the target year (excluding air).
-    total_transport_capacity_pkm = entries.m_population_com_203X * (
+    required_domestic_transport_capacity_pkm = entries.m_population_com_203X * (
         ass("Ass_T_D_ratio_trnsprt_ppl_to_ppl_city")
         if entries.t_rt3 == "city"
         else ass("Ass_T_D_ratio_trnsprt_ppl_to_ppl_smcity")
@@ -291,17 +290,23 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
 
     # -- Road ---
     road_car_it_ot = Road.calc_car_it_ot(
-        inputs, t18=t18, total_transport_capacity_pkm=total_transport_capacity_pkm
+        inputs,
+        t18=t18,
+        required_domestic_transport_capacity_pkm=required_domestic_transport_capacity_pkm,
     )
     road_car_ab = Road.calc_car_ab(
-        inputs, t18=t18, total_transport_capacity_pkm=total_transport_capacity_pkm
+        inputs,
+        t18=t18,
+        required_domestic_transport_capacity_pkm=required_domestic_transport_capacity_pkm,
     )
     road_car = RoadCar.calc(inputs, t18=t18, it_ot=road_car_it_ot, ab=road_car_ab)
     road_action_charger = RoadInvestmentAction.calc_car_action_charger(
         inputs, car_base_unit=road_car.base_unit
     )
     road_bus = RoadBus.calc(
-        inputs, t18=t18, total_transport_capacity_pkm=total_transport_capacity_pkm
+        inputs,
+        t18=t18,
+        total_transport_capacity_pkm=required_domestic_transport_capacity_pkm,
     )
     road_bus_action_infra = RoadBus.calc_action_infra(
         inputs, bus_transport_capacity_pkm=road_bus.transport_capacity_pkm
@@ -342,10 +347,14 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
 
     # --- Rail ---
     rail_ppl_metro = RailPeople.calc_metro(
-        inputs, t18=t18, total_transport_capacity_pkm=total_transport_capacity_pkm
+        inputs,
+        t18=t18,
+        total_transport_capacity_pkm=required_domestic_transport_capacity_pkm,
     )
     rail_ppl_distance = RailPeople.calc_distance(
-        inputs, t18=t18, total_transport_capacity_pkm=total_transport_capacity_pkm
+        inputs,
+        t18=t18,
+        total_transport_capacity_pkm=required_domestic_transport_capacity_pkm,
     )
     rail_action_invest_infra = InvestmentAction.calc_rail_action_invest_infra(inputs)
     rail_action_invest_station = InvestmentAction.calc_rail_action_invest_station(
@@ -382,17 +391,22 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
 
     # --- Other ---
     other_cycl = OtherCycle.calc(
-        inputs, t18, total_transport_capacity_pkm=total_transport_capacity_pkm
+        inputs,
+        t18,
+        total_transport_capacity_pkm=required_domestic_transport_capacity_pkm,
     )
     other_cycl_action_infra = InvestmentAction.calc_other_cycl_action_infra(
         inputs, cycle_transport_capacity_pkm=other_cycl.transport_capacity_pkm
     )
     other_foot = OtherFoot.calc(
-        inputs, t18=t18, total_transport_capacity_pkm=total_transport_capacity_pkm
+        inputs,
+        t18=t18,
+        total_transport_capacity_pkm=required_domestic_transport_capacity_pkm,
     )
     other_foot_action_infra = InvestmentAction.calc_other_foot_action_infra(inputs)
     other = Other.calc(
         inputs,
+        t18=t18,
         other_foot=other_foot,
         other_cycl=other_cycl,
         other_cycl_action_infra=other_cycl_action_infra,
@@ -422,7 +436,7 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
     )
     t = T.calc(
         t18=t18,
-        total_transport_capacity_pkm=total_transport_capacity_pkm,
+        total_transport_capacity_pkm=required_domestic_transport_capacity_pkm,
         air=air,
         rail=rail,
         road=road,

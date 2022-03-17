@@ -7,15 +7,16 @@ from ..utils import div
 class Transport2018(Protocol):
     energy: float
     CO2e_combustion_based: float
+    transport_capacity_pkm: float
+    transport_capacity_tkm: float
 
 
 @dataclass(frozen=True)
 class ZeroEnergyAndCO2e:
+    transport_capacity_pkm: float
+    transport_capacity_tkm: float
     energy: float = 0
     CO2e_combustion_based: float = 0
-
-
-zero_energy_and_co2e = ZeroEnergyAndCO2e()
 
 
 @dataclass(kw_only=True)
@@ -25,10 +26,8 @@ class Transport:
     # change_km is confusing. What does it mean when we start to aggregate
     # two transports, one that modified transport_capacity_pkm and one
     # that modified transport_capacity_tkm ?
-    change_km: float
     CO2e_combustion_based: float
     CO2e_total_2021_estimated: float
-    CO2e_total: float
     cost_climate_saved: float
     transport_capacity_pkm: float
     transport_capacity_tkm: float
@@ -40,15 +39,19 @@ class Transport:
     demand_hydrogen: float = 0
 
     # Numbers we can derive from the above + 2018 values
+    CO2e_total: float = 0  # always CO2e_combustion_based because there is no production based CO2E in transport
     energy: float = 0  # always just the sum of the demands
     change_energy_MWh: float = 0
     change_CO2e_t: float = 0
     change_CO2e_pct: float = 0
     change_energy_pct: float = 0
+    change_transport_capacity_pkm: float = 0
+    change_transport_capacity_tkm: float = 0
 
     transport2018: InitVar[Transport2018 | None] = None
 
     def __post_init__(self, transport2018: Transport2018 | None = None):
+        self.CO2e_total = self.CO2e_combustion_based
         self.energy = (
             self.demand_ejetfuel
             + self.demand_ediesel
@@ -68,6 +71,12 @@ class Transport:
             self.change_CO2e_t, transport2018.CO2e_combustion_based
         )
         self.change_energy_pct = div(self.change_energy_MWh, transport2018.energy)
+        self.change_transport_capacity_pkm = (
+            self.transport_capacity_pkm - transport2018.transport_capacity_pkm
+        )
+        self.change_transport_capacity_tkm = (
+            self.transport_capacity_tkm - transport2018.transport_capacity_tkm
+        )
 
     @classmethod
     def sum(cls, *transports: "Transport", transport2018: Transport2018) -> "Transport":
@@ -83,7 +92,6 @@ class Transport:
             CO2e_total=sum_of(lambda t: t.CO2e_total),
             CO2e_combustion_based=sum_of(lambda t: t.CO2e_combustion_based),
             CO2e_total_2021_estimated=sum_of(lambda t: t.CO2e_total_2021_estimated),
-            change_km=sum_of(lambda t: t.change_km),
             cost_climate_saved=sum_of(lambda t: t.cost_climate_saved),
             transport_capacity_tkm=sum_of(lambda t: t.transport_capacity_tkm),
             transport_capacity_pkm=sum_of(lambda t: t.transport_capacity_pkm),
