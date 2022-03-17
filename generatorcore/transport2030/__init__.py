@@ -124,7 +124,7 @@ class T(Transport):
         other: Other,
         g: G,
     ) -> "T":
-        sum = Transport.sum(air, rail, road, ship, other, transport2018=t18.t)
+        sum = Transport.sum(air.transport, rail, road, ship, other, transport2018=t18.t)
         invest_com = (
             g.invest_com
             + road.invest_com

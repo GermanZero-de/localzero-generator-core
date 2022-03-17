@@ -1,6 +1,6 @@
 # pyright: strict
 
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass
 from ..inputs import Inputs
 from ..utils import div
 from ..transport2018 import T18
@@ -73,7 +73,9 @@ def calc_air_international(inputs: Inputs, t18: T18) -> "Transport":
 
 
 @dataclass
-class Air(Transport):
+class Air:
+    LIFT_INTO_RESULT_DICT = ["transport"]
+    transport: Transport
     # Used by air
     demand_emplo: float
     demand_emplo_new: float
@@ -89,7 +91,6 @@ class Air(Transport):
         domestic: Transport,
         international: Transport,
     ) -> "Air":
-        sum = Transport.sum(domestic, international, transport2018=t18.air)
         return cls(
             # Our simplified assumption here is that the only costs to get clean international flight is
             # using efuels. Therefore no costs show up here and all in the fuels2030 section.
@@ -99,5 +100,5 @@ class Air(Transport):
             invest=0,
             demand_emplo=0,
             demand_emplo_new=0,
-            **asdict(sum),
+            transport=Transport.sum(domestic, international, transport2018=t18.air),
         )

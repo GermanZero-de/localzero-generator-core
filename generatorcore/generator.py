@@ -1,3 +1,4 @@
+# pyright: strict
 import time
 import dataclasses
 import sys
@@ -31,29 +32,35 @@ from . import industry2030
 from . import lulucf2030_pyr
 
 
-def _convert_dataclass(v: object) -> dict[str, object]:
-    """This does basically the same as asdict from dataclasses does.
-
-    The most important difference is that _convert_dataclass will
-    call result_dict_items if it exists instead of using
-    dataclasses.fields to get the values to include in the dictionary.
-    """
-    result_dict_items: list[tuple[str, object]]
-    if hasattr(v, "result_dict_items"):
-        result_dict_items = getattr(v, "result_dict_items")()
-    else:
-        result_dict_items = [
-            (f.name, getattr(v, f.name)) for f in dataclasses.fields(v)
-        ]
-
-    return {name: _convert_item(value) for (name, value) in result_dict_items}
-
-
 def _convert_item(v: object) -> object:
     if dataclasses.is_dataclass(v) and not isinstance(v, type):
-        return _convert_dataclass(v)
+        return dataclass_to_result_dict(v)
     else:
         return v
+
+
+def dataclass_to_result_dict(v: object) -> dict[str, object]:
+    """This does basically the same as asdict from dataclasses does.
+
+    The most important difference is that classes can contain a list
+    called LIFT_INTO_RESULT_DICT and will list all values contained
+    in that dictionary into the resulting dictionary.
+    """
+    result = {f.name: _convert_item(getattr(v, f.name)) for f in dataclasses.fields(v)}
+    names_to_lift: list[str] = getattr(v, "LIFT_INTO_RESULT_DICT", [])
+    values_to_lift: list[dict[str, object]] = []
+    for name in names_to_lift:
+        v = result[name]
+        if isinstance(v, dict):
+            values_to_lift.append(v)  # type: ignore
+            del result[name]
+        else:
+            assert (
+                False
+            ), f"LIFT_INTO_RESULT_DICT encountered {v} at {name} -- which is not a dictionary"
+    for v in values_to_lift:
+        result.update(v)
+    return result
 
 
 @dataclasses.dataclass
@@ -84,7 +91,7 @@ class Result:
     m183X: methodology183x.M183X
 
     def result_dict(self):
-        return _convert_dataclass(self)
+        return dataclass_to_result_dict(self)
 
 
 def calculate(inputs: Inputs) -> Result:
