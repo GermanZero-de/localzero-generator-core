@@ -204,6 +204,8 @@ class T(Transport):
         assert (
             total_transport_capacity_pkm <= res.transport_capacity_pkm
         ), "We should know have at least as much provided transport capacity as we required initially"
+        # Also shouldn't we store the computed transport capacity here?
+        # And not what we claimed we need but what we are providing?
         res.transport_capacity_pkm = total_transport_capacity_pkm
         return res
 
