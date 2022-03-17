@@ -169,9 +169,6 @@ class A18:
     s_elec: Vars12 = field(default_factory=Vars12)
     s_heatpump: Vars12 = field(default_factory=Vars12)
 
-    def dict(self):
-        return asdict(self)
-
 
 def calc(inputs: Inputs, *, l18: lulucf2018.L18, b18: business2018.B18) -> A18:
     def fact(n):

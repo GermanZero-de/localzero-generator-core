@@ -1,4 +1,4 @@
-from dataclasses import dataclass, asdict, field
+from dataclasses import dataclass, field
 
 from .inputs import Inputs
 
@@ -130,9 +130,6 @@ class L18:
     g_other: Vars8 = field(default_factory=Vars8)
     g_wood: Vars8 = field(default_factory=Vars8)
     pyrolysis: Vars7 = field(default_factory=Vars7)
-
-    def dict(self):
-        return asdict(self)
 
 
 def calc(inputs: Inputs) -> L18:

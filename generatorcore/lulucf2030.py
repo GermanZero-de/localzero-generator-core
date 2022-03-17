@@ -1,4 +1,4 @@
-from dataclasses import dataclass, asdict, field
+from dataclasses import dataclass, field
 from .inputs import Inputs
 from .utils import div
 from . import (
@@ -88,9 +88,6 @@ class L30:
     g_wet_org_rp: LColVars2030 = field(default_factory=LColVars2030)
     g_water_org_low: LColVars2030 = field(default_factory=LColVars2030)
     g_water_org_high: LColVars2030 = field(default_factory=LColVars2030)
-
-    def dict(self):
-        return asdict(self)
 
 
 def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:

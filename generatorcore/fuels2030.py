@@ -1,4 +1,4 @@
-from dataclasses import dataclass, asdict, field
+from dataclasses import dataclass, field
 from .inputs import Inputs
 from .utils import div
 from . import (
@@ -159,9 +159,6 @@ class F30:
     p_hydrogen_reconv: Vars6 = field(default_factory=Vars6)
     p_hydrogen_total: Vars2 = field(default_factory=Vars2)
     p_efuels: Vars7 = field(default_factory=Vars7)
-
-    def dict(self):
-        return asdict(self)
 
 
 def calc(

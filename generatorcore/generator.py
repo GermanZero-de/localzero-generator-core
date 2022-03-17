@@ -1,5 +1,5 @@
 import time
-from dataclasses import dataclass, asdict
+import dataclasses
 import sys
 from generatorcore import electricity2030_core, methodology183x
 
@@ -31,7 +31,32 @@ from . import industry2030
 from . import lulucf2030_pyr
 
 
-@dataclass
+def _convert_dataclass(v: object) -> dict[str, object]:
+    """This does basically the same as asdict from dataclasses does.
+
+    The most important difference is that _convert_dataclass will
+    call result_dict_items if it exists instead of using
+    dataclasses.fields to get the values to include in the dictionary.
+    """
+    result_dict_items: list[tuple[str, object]]
+    if hasattr(v, "result_dict_items"):
+        result_dict_items = getattr(v, "result_dict_items")()
+    else:
+        result_dict_items = [
+            (f.name, getattr(v, f.name)) for f in dataclasses.fields(v)
+        ]
+
+    return {name: _convert_item(value) for (name, value) in result_dict_items}
+
+
+def _convert_item(v: object) -> object:
+    if dataclasses.is_dataclass(v) and not isinstance(v, type):
+        return _convert_dataclass(v)
+    else:
+        return v
+
+
+@dataclasses.dataclass
 class Result:
     # 2018
     r18: residences2018.R18
@@ -59,7 +84,7 @@ class Result:
     m183X: methodology183x.M183X
 
     def result_dict(self):
-        return asdict(self)
+        return _convert_dataclass(self)
 
 
 def calculate(inputs: Inputs) -> Result:

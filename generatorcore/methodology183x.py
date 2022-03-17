@@ -1,4 +1,4 @@
-from dataclasses import dataclass, asdict, field
+from dataclasses import dataclass, field
 from .inputs import Inputs
 from .utils import div
 from . import (
@@ -160,9 +160,6 @@ class M183X:
 
     GHG_budget_2022_to_year_target_nat: float = None  # type: ignore  # INFO THG Budget Deutschland
     CO2e_2022_to_year_target: float = None  # type: ignore  # INFO CO2e sind Emissionen für Kommune
-
-    def dict(self):
-        return asdict(self)
 
 
 def calc_budget(

@@ -1,4 +1,4 @@
-from dataclasses import dataclass, asdict, field
+from dataclasses import dataclass, field
 
 from . import transport2018, electricity2018
 from .inputs import Inputs
@@ -115,9 +115,6 @@ class H18:
     p_orenew: Vars8 = field(default_factory=Vars8)
     p_solarth: Vars8 = field(default_factory=Vars8)
     p_heatpump: Vars8 = field(default_factory=Vars8)
-
-    def dict(self):
-        return asdict(self)
 
 
 def calc(inputs: Inputs, *, t18: transport2018.T18, e18: electricity2018.E18) -> H18:

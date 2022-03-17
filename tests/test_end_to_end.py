@@ -70,7 +70,7 @@ def test_all_used_variables_are_populated():
         next = result
         for element in path.split("."):
             if element in next:
-                next = next[element]
+                next = next[element]  # type: ignore
                 if next is None:
                     populated_with_none.add(path)
                     break

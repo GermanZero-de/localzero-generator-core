@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field, asdict
+from dataclasses import dataclass, field
 from .inputs import Inputs
 from .utils import div
 from . import business2018, residences2018, residences2030
@@ -388,10 +388,6 @@ class B30:
     s_solarth: Vars17 = field(default_factory=Vars17)
     s_elec: Vars13 = field(default_factory=Vars13)
     rb: Vars18 = field(default_factory=Vars18)
-
-    # erzeuge dictionry
-    def dict(self):
-        return asdict(self)
 
 
 # Berechnungsfunktion im Sektor GHD für 2018

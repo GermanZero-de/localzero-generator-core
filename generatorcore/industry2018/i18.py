@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field, asdict
+from dataclasses import dataclass, field
 from .co2e import CO2e
 from .empty import Empty
 from .co2e_per_t import CO2e_per_t
@@ -54,6 +54,3 @@ class I18:
     s_renew_heatpump: Energy_pct = field(default_factory=Energy_pct)
     s_renew_solarth: Energy_pct = field(default_factory=Energy_pct)
     s_renew_elec: Energy_pct = field(default_factory=Energy_pct)
-
-    def dict(self):
-        return asdict(self)

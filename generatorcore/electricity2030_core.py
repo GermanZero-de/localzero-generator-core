@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field, asdict
+from dataclasses import dataclass, field
 
 from generatorcore.inputs import Inputs
 
@@ -123,14 +123,6 @@ class E30:
     p_local_biomass_cogen: EColVars2030 = field(default_factory=EColVars2030)
     p_local_hydro: EColVars2030 = field(default_factory=EColVars2030)
     p_local_surplus: EColVars2030 = field(default_factory=EColVars2030)
-
-    # erzeuge dictionry
-    def dict(self):
-        return asdict(self)
-
-    def convergence_check(self):
-        edict = self.dict().copy()
-        return edict
 
 
 def calc_biomass(inputs: Inputs) -> EColVars2030:
