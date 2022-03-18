@@ -1,5 +1,6 @@
+# pyright: strict
 import time
-from dataclasses import dataclass, asdict
+import dataclasses
 import sys
 from generatorcore import electricity2030_core, methodology183x
 
@@ -31,7 +32,38 @@ from . import industry2030
 from . import lulucf2030_pyr
 
 
-@dataclass
+def _convert_item(v: object) -> object:
+    if dataclasses.is_dataclass(v) and not isinstance(v, type):
+        return dataclass_to_result_dict(v)
+    else:
+        return v
+
+
+def dataclass_to_result_dict(v: object) -> dict[str, object]:
+    """This does basically the same as asdict from dataclasses does.
+
+    The most important difference is that classes can contain a list
+    called LIFT_INTO_RESULT_DICT and will list all values contained
+    in that dictionary into the resulting dictionary.
+    """
+    result = {f.name: _convert_item(getattr(v, f.name)) for f in dataclasses.fields(v)}
+    names_to_lift: list[str] = getattr(v, "LIFT_INTO_RESULT_DICT", [])
+    values_to_lift: list[dict[str, object]] = []
+    for name in names_to_lift:
+        v = result[name]
+        if isinstance(v, dict):
+            values_to_lift.append(v)  # type: ignore
+            del result[name]
+        else:
+            assert (
+                False
+            ), f"LIFT_INTO_RESULT_DICT encountered {v} at {name} -- which is not a dictionary"
+    for v in values_to_lift:
+        result.update(v)
+    return result
+
+
+@dataclasses.dataclass
 class Result:
     # 2018
     r18: residences2018.R18
@@ -58,19 +90,8 @@ class Result:
 
     m183X: methodology183x.M183X
 
-    # search value
-    def search_value(self, var: str):
-        sep = "."
-        gen = self.result_dict()
-        for k in gen:
-            for l in gen[k]:
-                if type(gen[k][l]) == dict:
-                    for m in gen[k][l]:
-                        if l + sep + m == var:
-                            print(k + sep + l + sep + m + "=", gen[k][l][m])
-
     def result_dict(self):
-        return asdict(self)
+        return dataclass_to_result_dict(self)
 
 
 def calculate(inputs: Inputs) -> Result:

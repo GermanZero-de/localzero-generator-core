@@ -1,8 +1,9 @@
 """Module utils -- some useful classes or functions.
 
 """
+# pyright: strict
 import typing
-from dataclasses import fields
+import dataclasses
 
 MILLION = 1000000
 
@@ -21,4 +22,6 @@ T = typing.TypeVar("T")
 
 def element_wise_plus(a: T, b: T) -> T:
     """Element wise addition for a dataclasses"""
-    return type(a)(*(getattr(a, f.name) + getattr(b, f.name) for f in fields(a)))
+    return type(a)(
+        *(getattr(a, f.name) + getattr(b, f.name) for f in dataclasses.fields(a))
+    )

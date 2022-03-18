@@ -1,4 +1,4 @@
-from dataclasses import dataclass, asdict, field
+from dataclasses import dataclass, field
 from .inputs import Inputs
 from .utils import div
 from . import residences2018
@@ -133,9 +133,6 @@ class B18:
     s_elec: Vars8 = field(default_factory=Vars8)
     rb: Vars9 = field(default_factory=Vars9)
     rp_p: Vars10 = field(default_factory=Vars10)
-
-    def dict(self):
-        return asdict(self)
 
 
 # Berechnungsfunktion im Sektor GHD für 2018

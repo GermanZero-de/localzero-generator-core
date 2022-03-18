@@ -190,7 +190,7 @@ class Road:
         )
 
     @classmethod
-    def calc_goods_light_weight(
+    def calc_goods_light_duty(
         cls, inputs: Inputs, section: typing.Literal["it_ot", "ab"]
     ) -> "Road":
         def fact(n: str) -> float:
@@ -235,7 +235,9 @@ class Road:
         )
 
     @classmethod
-    def calc_goods_mhd_it_ot(cls, inputs: Inputs, road_bus_mileage: float):
+    def calc_goods_medium_and_heavy_duty_it_ot(
+        cls, inputs: Inputs, road_bus_mileage: float
+    ):
         def fact(n: str) -> float:
             return inputs.fact(n)
 
@@ -274,7 +276,7 @@ class Road:
         )
 
     @classmethod
-    def calc_mhd_ab(cls, inputs: Inputs):
+    def calc_goods_medium_and_heavy_duty_ab(cls, inputs: Inputs):
         def fact(n: str) -> float:
             return inputs.fact(n)
 

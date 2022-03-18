@@ -23,13 +23,13 @@ def calc(inputs: Inputs) -> T18:
     road_car = road_car_it_ot + road_car_ab
     road_bus = Road.calc_bus(inputs)
     road_ppl = road_car + road_bus
-    road_gds_mhd_it_ot = Road.calc_goods_mhd_it_ot(
+    road_gds_mhd_it_ot = Road.calc_goods_medium_and_heavy_duty_it_ot(
         inputs, road_bus_mileage=road_bus.mileage
     )
-    road_gds_mhd_ab = Road.calc_mhd_ab(inputs)
+    road_gds_mhd_ab = Road.calc_goods_medium_and_heavy_duty_ab(inputs)
     road_gds_mhd = road_gds_mhd_ab + road_gds_mhd_it_ot
-    road_gds_ldt_it_ot = Road.calc_goods_light_weight(inputs, "it_ot")
-    road_gds_ldt_ab = Road.calc_goods_light_weight(inputs, "ab")
+    road_gds_ldt_it_ot = Road.calc_goods_light_duty(inputs, "it_ot")
+    road_gds_ldt_ab = Road.calc_goods_light_duty(inputs, "ab")
     road_gds_ldt = road_gds_ldt_it_ot + road_gds_ldt_ab
     road_gds = road_gds_ldt + road_gds_mhd
     road = road_gds + road_ppl

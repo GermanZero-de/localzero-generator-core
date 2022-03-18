@@ -6,7 +6,7 @@
 Herzlich Willkommen zur Dokumentation des Generators
 ====================================================
 
-Diese Dokumentation enthält Erklärtexte zur Berechnung der einzelnen Sektoren des LocalZero Generators. 
+Diese Dokumentation enthält Erklärtexte zur Berechnung der einzelnen Sektoren des LocalZero Generators.
 
 .. toctree::
    :maxdepth: 2

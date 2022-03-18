@@ -1,5 +1,5 @@
 # pyright: strict
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass
 from .air import Air
 from .road import Road
 from .rail import Rail
@@ -56,6 +56,3 @@ class T18:
     s_bioethanol: EnergySum
     s_biodiesel: EnergySum
     s_elec: EnergySum
-
-    def dict(self):
-        return asdict(self)
