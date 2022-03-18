@@ -1,4 +1,4 @@
-from dataclasses import dataclass, asdict, field
+from dataclasses import dataclass, field
 from .inputs import Inputs
 from .utils import div
 from . import (
@@ -160,9 +160,6 @@ class F30:
     p_hydrogen_total: Vars2 = field(default_factory=Vars2)
     p_efuels: Vars7 = field(default_factory=Vars7)
 
-    def dict(self):
-        return asdict(self)
-
 
 def calc(
     inputs: Inputs,
@@ -190,20 +187,24 @@ def calc(
     f30.d_b.energy = b30.p.demand_ediesel + b30.p.demand_emethan
     f30.d_i.energy = i30.p.demand_emethan + i30.p.demand_hydrogen
     f30.d_t.energy = (
-        t30.t.demand_epetrol
-        + t30.t.demand_ediesel
-        + t30.t.demand_ejetfuel
-        + t30.t.demand_hydrogen
+        t30.t.transport.demand_epetrol
+        + t30.t.transport.demand_ediesel
+        + t30.t.transport.demand_ejetfuel
+        + t30.t.transport.demand_hydrogen
     )
     f30.d_a.energy = (
         a30.p_operation.demand_epetrol
         + a30.p_operation.demand_ediesel
         + a30.p_operation.demand_emethan
     )
-    f30.p_petrol.energy = t30.t.demand_epetrol + a30.p_operation.demand_epetrol
-    f30.p_jetfuel.energy = t30.t.demand_ejetfuel
+    f30.p_petrol.energy = (
+        t30.t.transport.demand_epetrol + a30.p_operation.demand_epetrol
+    )
+    f30.p_jetfuel.energy = t30.t.transport.demand_ejetfuel
     f30.p_diesel.energy = (
-        b30.p.demand_ediesel + t30.t.demand_ediesel + a30.p_operation.demand_ediesel
+        b30.p.demand_ediesel
+        + t30.t.transport.demand_ediesel
+        + a30.p_operation.demand_ediesel
     )
     f30.p_emethan.energy = (
         r30.p.demand_emethan
@@ -211,7 +212,7 @@ def calc(
         + i30.p.demand_emethan
         + a30.p_operation.demand_emethan
     )
-    f30.p_hydrogen.energy = i30.p.demand_hydrogen + t30.t.demand_hydrogen
+    f30.p_hydrogen.energy = i30.p.demand_hydrogen + t30.t.transport.demand_hydrogen
     # ---------------------------
     f30.p_bioethanol.change_energy_MWh = -f18.p_bioethanol.energy
     f30.p_biodiesel.change_energy_MWh = -f18.p_biodiesel.energy
@@ -372,7 +373,7 @@ def calc(
             + r30.p.demand_electricity
             + b30.p.demand_electricity
             + i30.p.demand_electricity
-            + t30.t.demand_electricity
+            + t30.t.transport.demand_electricity
             + a30.p_operation.demand_electricity
             + f30.p_petrol.demand_electricity
             + f30.p_jetfuel.demand_electricity

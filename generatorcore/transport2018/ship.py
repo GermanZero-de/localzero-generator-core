@@ -14,6 +14,7 @@ class Ship:
     demand_fueloil: float
     energy: float
     transport_capacity_tkm: float
+    transport_capacity_pkm: float
 
     def __add__(self: "Ship", other: "Ship") -> "Ship":
         return element_wise_plus(self, other)
@@ -38,6 +39,7 @@ class Ship:
             CO2e_combustion_based=CO2e_combustion_based,
             CO2e_total=CO2e_total,
             transport_capacity_tkm=transport_capacity_tkm,
+            transport_capacity_pkm=0,
             demand_diesel=demand_diesel,
             demand_fueloil=0,
             energy=energy,
@@ -61,6 +63,7 @@ class Ship:
             CO2e_combustion_based=CO2e_combustion_based,
             CO2e_total=CO2e_total,
             transport_capacity_tkm=transport_capacity_tkm,
+            transport_capacity_pkm=0,
             demand_fueloil=demand_fueloil,
             demand_diesel=0,
             energy=energy,

@@ -1,4 +1,4 @@
-from dataclasses import dataclass, asdict, field
+from dataclasses import dataclass, field
 
 from generatorcore.electricity2030_core import EColVars2030
 from .inputs import Inputs
@@ -349,10 +349,6 @@ class H30:
 
     # for pdf
     p_fossil_change_CO2e_t: float = None  # type: ignore
-
-    # erzeuge dictionry
-    def dict(self):
-        return asdict(self)
 
 
 def calc(
