@@ -31,7 +31,7 @@ Install environment
 		- create personal access token (repo, workflow, admin:org:read, gist)
 		- save your token
 		- On Windows Token add the token Windows Anmeldeinformationen (similar tools exist on linux and mac)
-			- Generische Anmeldeinformationen hinzufügen (Adresse: git:https://github.com, Benutzernamepoe: Git Nutzername, Passwort: Token)
+			- Generische Anmeldeinformationen hinzufügen (Adresse: git:https://github.com, Benutzername: Git Nutzername, Passwort: Token)
 - get this Git Repo (if you haven't done so already)
 	- :code:`git clone https://github.com/GermanZero-de/localzero-generator-core`
 
