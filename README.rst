@@ -20,7 +20,6 @@ Install environment
 =========================
 - install Python 3.10.
 - install Git
-		- ensure that git is in your PATH variable (needed for devtool.py data checkout later)
 - install Poetry from https://python-poetry.org/docs/
     - on windows run this inside a power shell:
       :code:`(Invoke-WebRequest -Uri https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py -UseBasicParsing).Content | python`
@@ -31,7 +30,7 @@ Install environment
 		- create personal access token (repo, workflow, admin:org:read, gist)
 		- save your token
 		- On Windows Token add the token Windows Anmeldeinformationen (similar tools exist on linux and mac)
-			- Generische Anmeldeinformationen hinzufügen (Adresse: git:https://github.com, Benutzernamepoe: Git Nutzername, Passwort: Token)
+			- Generische Anmeldeinformationen hinzufügen (Adresse: git:https://github.com, Benutzername: Git Nutzername, Passwort: Token)
 - get this Git Repo (if you haven't done so already)
 	- :code:`git clone https://github.com/GermanZero-de/localzero-generator-core`
 
@@ -39,12 +38,7 @@ Install environment
 	- :code:`install-environment.sh`
 	- on windows: install Node.js (necessary for pyright)
 
-- get the git repositories into your Data folder.
-
-  This will clone the git data repositories in the subfolders ./data/public and ./data/proprietary
-
-  **ISSUE:** You might not have access to the proprietary repository,
-  but the data generator cannot run without it. We are working on that.
+- get the code repositories into your Data folder.
 
 .. code-block:: console
 
@@ -74,7 +68,7 @@ than 2000 minutes every month (mostly because of the overhead involved in recrea
 the local development environment inside github).
 
 So now we rely on a little discipline enforced by peer pressure. When you make changes
-you should run :code:`python devtool.py ready-to-rock` before you push.  And you are only ready to push
+you should run :code:`ready-to-rock.sh` before you push.  And you are only ready to push
 if it outputs: :code:`I'm ready to rock and save the climate`. Please include the output
 of the tool in your feature description like this:
 
