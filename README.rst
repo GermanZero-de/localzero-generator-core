@@ -4,13 +4,16 @@
 
 Localzero Generator Core
 =========================
-This contains the calcuation. It should neither contain reference data
-nor anything that is specific to the website.
+LocalZero is a community project providing a tool that can not only determine green house gas budgets but also final energy consumptions per sector
+for a given city/district and target year. In addition, the tool informs costs and the most important measures required to become carbon neutral.
 
-- Important Note (record date 19.03.22)
-    - Note that the LocalZero Generator is not yet usable, as some required data is proprietary. We are going to provide a general REST API Service soon.
+More information on the methodology can be found in our documentation on readthedocs.
 
-Install environment
+- 19.03.2018 Important Note!
+    - The LocalZero Generator is not yet usable, as some required data is proprietary. However, the tool can be tested on our website: germanzero.de/loesungen/localzero. Future work will include the development of a REST API Service.
+
+
+Setup
 =========================
 - Install Python
     - Version 3.10.
@@ -41,8 +44,16 @@ Install environment
 
       **ISSUE:** You might not have access to the proprietary repository. We are providing a REST API Service soon.
 
-Working Process
+Contributing to this project
 =========================
+
+Development
+-----
+This repository contains the calculations of the LocalZero Generator Core only. It should neither contain reference data
+nor anything that is specific to the website.
+
+For local development, checkout our helpful commands in devtool.py please.
+
 
 Formatting
 -----
@@ -87,21 +98,3 @@ of the tool in your feature description like this:
 	You are ready to rock and save the climate at 4985f650030c4ba94387b87da53c055772a342f8, but don't forget to copy paste the above into your pull request
 
 
-Devtools
--------
-
-
-.. code-block:: console
-
-	poetry shell
-	python devtool.py data checkout
-
-
-
-How to run the generator
-------------------------
-
-.. code-block:: console
-
-    poetry shell
-    python devtool.py run -o output.json
