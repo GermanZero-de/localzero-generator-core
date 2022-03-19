@@ -254,6 +254,31 @@ class Row(Generic[KeyT]):
         )
 
 
+@dataclass(kw_only=True)
+class FactOrAssumptionCompleteRow:
+    label: str
+    group: str
+    description: str
+    value: float
+    unit: str
+    rationale: str
+    reference: str
+    link: str
+
+    @classmethod
+    def of_row(cls, label: str, row: Row[str]) -> "FactOrAssumptionCompleteRow":
+        return cls(
+            label=label,
+            group=row.str("group"),
+            description=row.str("description"),
+            value=row.float("value"),
+            unit=row.str("unit"),
+            rationale=row.str("rationale"),
+            reference=row.str("reference"),
+            link=row.str("link"),
+        )
+
+
 class FactsAndAssumptions:
     def __init__(self, facts: DataFrame[str], assumptions: DataFrame[str]):
         self._facts = facts
@@ -262,6 +287,14 @@ class FactsAndAssumptions:
     def fact(self, keyname: str) -> float:
         """Statistics about the past. Must be able to give a source for each fact."""
         return Row(self._facts, keyname).float("value")
+
+    def complete_fact(self, keyname: str) -> FactOrAssumptionCompleteRow:
+        r = Row(self._facts, keyname)
+        return FactOrAssumptionCompleteRow.of_row(keyname, r)
+
+    def complete_ass(self, keyname: str) -> FactOrAssumptionCompleteRow:
+        r = Row(self._assumptions, keyname)
+        return FactOrAssumptionCompleteRow.of_row(keyname, r)
 
     def ass(self, keyname: str) -> float:
         """Similar to fact, but these try to describe the future. And are therefore based on various assumptions."""

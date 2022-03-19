@@ -2,6 +2,7 @@ import csv
 import sys
 import os.path
 import json
+from typing import Callable, Literal
 from dataclasses import asdict
 from generatorcore import ags, refdatatools, refdata, makeentries
 
@@ -57,13 +58,13 @@ def cmd_data_is_production(args):
         exit(1)
 
 
-def cmd_data_lookup(args):
-    ags = args.ags
+def bold(s, end=None, file=sys.stdout):
+    print(f"\033[1m{s}\033[0m", end=end, file=file)
+
+
+def lookup_by_ags(ags, *, fix_missing_entries):
     ags_dis = ags[:5] + "000"  # This identifies the administrative district (Landkreis)
     ags_sta = ags[:2] + "000000"  # This identifies the federal state (Bundesland)
-
-    def bold(s):
-        print(f"\033[1m{s}\033[0m")
 
     def print_lookup(name, lookup_fn, key):
         bold(name)
@@ -78,7 +79,7 @@ def cmd_data_lookup(args):
             print(record)
         print()
 
-    data = refdata.RefData.load(fix_missing_entries=args.fix_missing_entries)
+    data = refdata.RefData.load(fix_missing_entries=fix_missing_entries)
 
     by_ags = [
         ("area", data.area),
@@ -120,6 +121,50 @@ def cmd_data_lookup(args):
     print()
     for (name, lookup_fn) in by_sta:
         print_lookup(name, lookup_fn, key=ags_sta)
+
+
+def lookup_fact_or_ass(
+    pattern: str,
+    what: Literal["fact", "assumption"],
+    lookup: Callable[
+        [refdata.FactsAndAssumptions, str], refdata.FactOrAssumptionCompleteRow
+    ],
+):
+
+    data = refdata.RefData.load()
+    try:
+        res = lookup(data.facts_and_assumptions(), pattern)
+        bold(pattern, end=": ")
+        print(res.value, end="")
+        print(f" {res.unit}\t({res.description})")
+        print("")
+        print(res.rationale)
+        if res.reference or res.link:
+            bold("reference")
+            print(res.reference)
+            print(res.link)
+        else:
+            bold("no reference data available")
+    except:
+        bold(f"No {what} called {pattern} found!", file=sys.stderr)
+        exit(1)
+
+
+def cmd_data_lookup(args):
+    pattern: str = args.pattern
+    if ags.is_valid(pattern):
+        lookup_by_ags(pattern, fix_missing_entries=args.fix_missing_entries)
+    elif pattern.startswith("Ass_"):
+        lookup_fact_or_ass(
+            pattern, "assumption", refdata.FactsAndAssumptions.complete_ass
+        )
+    elif pattern.startswith("Fact_"):
+        lookup_fact_or_ass(pattern, "fact", refdata.FactsAndAssumptions.complete_fact)
+    else:
+        print(
+            f"This {pattern} does not look like a AGS, fact or pattern... do not know what to do... giving up!",
+            file=sys.stderr,
+        )
 
 
 def cmd_data_checkout(args):
