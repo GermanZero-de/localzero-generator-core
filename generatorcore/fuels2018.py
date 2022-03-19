@@ -13,12 +13,6 @@ class Vars0:
 
 
 @dataclass
-class Vars1:
-    # Used by g, d_e_hydrogen_reconv, p_emethan, p_hydrogen, p_hydrogen_reconv
-    pass
-
-
-@dataclass
 class Vars2:
     # Used by d, d_r, d_b, d_i, d_t, d_a
     energy: float = None  # type: ignore
@@ -44,14 +38,12 @@ class Vars4:
 @dataclass
 class F18:
     f: Vars0 = field(default_factory=Vars0)
-    g: Vars1 = field(default_factory=Vars1)
     d: Vars2 = field(default_factory=Vars2)
     d_r: Vars2 = field(default_factory=Vars2)
     d_b: Vars2 = field(default_factory=Vars2)
     d_i: Vars2 = field(default_factory=Vars2)
     d_t: Vars2 = field(default_factory=Vars2)
     d_a: Vars2 = field(default_factory=Vars2)
-    d_e_hydrogen_reconv: Vars1 = field(default_factory=Vars1)
     p: Vars3 = field(default_factory=Vars3)
     p_petrol: Vars4 = field(default_factory=Vars4)
     p_jetfuel: Vars4 = field(default_factory=Vars4)
@@ -59,9 +51,6 @@ class F18:
     p_bioethanol: Vars4 = field(default_factory=Vars4)
     p_biodiesel: Vars4 = field(default_factory=Vars4)
     p_biogas: Vars4 = field(default_factory=Vars4)
-    p_emethan: Vars1 = field(default_factory=Vars1)
-    p_hydrogen: Vars1 = field(default_factory=Vars1)
-    p_hydrogen_reconv: Vars1 = field(default_factory=Vars1)
 
 
 # Berechnungsfunktion Fuels 2018
