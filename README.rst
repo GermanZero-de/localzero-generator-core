@@ -4,66 +4,63 @@
 
 Localzero Generator Core
 =========================
-This contains the calcuation. It should neither contain reference data
-nor anything that is specific to the website.
+LocalZero is a community project providing a tool that can not only determine green house gas budgets but also final energy consumptions per sector
+for a given city/district and target year. In addition, the tool informs costs and the most important measures required to become carbon neutral.
 
-Special cases
---------------
-Here are some interesting special cases to note that were found when we tried to run
-over all AGSes in Germany:
+More information on the methodology can be found in our documentation on readthedocs.
 
-03255508
-    https://de.wikipedia.org/wiki/Wenzen_(gemeindefreies_Gebiet). No population. But that is given
-	in the population datasets as blank not as 0.
+- 19.03.2018 Important Note!
+    - The LocalZero Generator is not yet usable by people outside of GermanZero, as some required data is proprietary. However, the tool can be tested on our website: germanzero.de/loesungen/localzero. Future work will include the development of a REST API Service.
 
-Install environment
+
+Setup
 =========================
-- install Python 3.10.
-- install Git
+- Install Python
+    - Version 3.10.
+- Install Git
 		- ensure that git is in your PATH variable (needed for devtool.py data checkout later)
-- install Poetry from https://python-poetry.org/docs/
-    - on windows run this inside a power shell:
+- Install Poetry from https://python-poetry.org/docs/
+    - **On Windows:** run this inside a power shell:
+
       :code:`(Invoke-WebRequest -Uri https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py -UseBasicParsing).Content | python`
 
-- configure Git
+- Configure Git
 	- Token:
 		- https://github.com/settings/tokens:
 		- create personal access token (repo, workflow, admin:org:read, gist)
 		- save your token
 		- On Windows Token add the token Windows Anmeldeinformationen (similar tools exist on linux and mac)
 			- Generische Anmeldeinformationen hinzufügen (Adresse: git:https://github.com, Benutzername: Git Nutzername, Passwort: Token)
-- get this Git Repo (if you haven't done so already)
+    - get this Git Repo (if you haven't done so already)
 	- :code:`git clone https://github.com/GermanZero-de/localzero-generator-core`
 
-- install poetry and pre-commit
+- Install poetry and pre-commit
 	- :code:`install-environment.sh`
-	- on windows: install Node.js (necessary for pyright)
+	- **On Windows:** install Node.js (necessary for pyright)
 
-- get the git repositories into your Data folder.
+- Get the required Data Repos
+    - Clone https://github.com/GermanZero-de/localzero-data-public into ./data/public
+    - Clone https://github.com/GermanZero-de/localzero-data-proprietary into ./data/proprietary
 
-  This will clone the git data repositories in the subfolders ./data/public and ./data/proprietary
+      **ISSUE:** You might not have access to the proprietary repository. We are providing a REST API Service soon.
 
-  **ISSUE:** You might not have access to the proprietary repository,
-  but the data generator cannot run without it. We are working on that.
+Contributing to this project
+=========================
 
-.. code-block:: console
-
-	poetry shell
-	python devtool.py data checkout
-
-Black
+Development
 -----
-We use black to automatically format the code and thereby avoid any spurious merge
+This repository contains the calculations of the LocalZero Generator Core only. It should neither contain reference data
+nor anything that is specific to the website.
+
+For local development, checkout our helpful commands in devtool.py please.
+
+
+Formatting
+-----
+We use **black** to automatically format the code and thereby avoid any spurious merge
 conflicts, due to layout differences. This will happen in a pre-commit automatically,
 but to for the best experience you should configure your editor to do the same.
 
-How to run the generator
-------------------------
-
-.. code-block:: console
-
-    poetry shell
-    python devtool.py run -o output.json
 
 Testing
 -------
@@ -99,3 +96,5 @@ of the tool in your feature description like this:
 	Don't commit to branch...................................................Passed
 	black....................................................................Passed
 	You are ready to rock and save the climate at 4985f650030c4ba94387b87da53c055772a342f8, but don't forget to copy paste the above into your pull request
+
+
