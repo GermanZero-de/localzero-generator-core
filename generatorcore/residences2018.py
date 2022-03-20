@@ -4,12 +4,6 @@ from .utils import div
 
 
 @dataclass
-class Vars0:
-    # Used by g, g_consult, p_buildings_new, s_emethan
-    pass
-
-
-@dataclass
 class Vars1:
     # Used by r
     CO2e_combustion_based: float = None  # type: ignore
@@ -106,9 +100,7 @@ class Vars9:
 
 @dataclass
 class R18:
-    g: Vars0 = field(default_factory=Vars0)
     r: Vars1 = field(default_factory=Vars1)
-    g_consult: Vars0 = field(default_factory=Vars0)
     p: Vars2 = field(default_factory=Vars2)
     p_buildings_total: Vars3 = field(default_factory=Vars3)
     p_buildings_until_1919: Vars3 = field(default_factory=Vars3)
@@ -118,7 +110,6 @@ class R18:
     p_buildings_1996_2004: Vars3 = field(default_factory=Vars3)
     p_buildings_2005_2011: Vars4 = field(default_factory=Vars4)
     p_buildings_2011_today: Vars4 = field(default_factory=Vars4)
-    p_buildings_new: Vars0 = field(default_factory=Vars0)
     p_buildings_area_m2_com: Vars5 = field(default_factory=Vars5)
     p_elec_elcon: Vars2 = field(default_factory=Vars2)
     p_elec_heatpump: Vars2 = field(default_factory=Vars2)
@@ -133,7 +124,6 @@ class R18:
     s_heatnet: Vars7 = field(default_factory=Vars7)
     s_solarth: Vars7 = field(default_factory=Vars7)
     s_heatpump: Vars7 = field(default_factory=Vars7)
-    s_emethan: Vars0 = field(default_factory=Vars0)
     s_elec_heating: Vars7 = field(default_factory=Vars7)
     s_gas: Vars7 = field(default_factory=Vars7)
     s_elec: Vars9 = field(default_factory=Vars9)
@@ -157,7 +147,6 @@ def calc(inputs: Inputs) -> R18:
     p_buildings_1996_2004 = r18.p_buildings_1996_2004
     p_buildings_2005_2011 = r18.p_buildings_2005_2011
     p_buildings_2011_today = r18.p_buildings_2011_today
-    p_buildings_new = r18.p_buildings_new
     p_buildings_area_m2_com = r18.p_buildings_area_m2_com
     p_other = r18.p_other
     p_vehicles = r18.p_vehicles
@@ -435,7 +424,6 @@ def calc(inputs: Inputs) -> R18:
     s_elec_heating = r18.s_elec_heating
     s_gas = r18.s_gas
     s_elec = r18.s_elec
-    s_emethan = r18.s_emethan
     p_elec_elcon = r18.p_elec_elcon
     p_elec_heatpump = r18.p_elec_heatpump
 

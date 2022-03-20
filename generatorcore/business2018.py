@@ -15,12 +15,6 @@ class Vars0:
 
 
 @dataclass
-class Vars1:
-    # Used by g, g_consult, s_emethan
-    pass
-
-
-@dataclass
 class Vars2:
     # Used by p, p_elec_elcon, p_elec_heatpump, p_vehicles, p_other
     energy: float = None  # type: ignore
@@ -107,8 +101,6 @@ class Vars10:
 @dataclass
 class B18:
     b: Vars0 = field(default_factory=Vars0)
-    g: Vars1 = field(default_factory=Vars1)
-    g_consult: Vars1 = field(default_factory=Vars1)
     p: Vars2 = field(default_factory=Vars2)
     p_nonresi: Vars3 = field(default_factory=Vars3)
     p_nonresi_com: Vars4 = field(default_factory=Vars4)
@@ -118,7 +110,6 @@ class B18:
     p_other: Vars2 = field(default_factory=Vars2)
     s: Vars5 = field(default_factory=Vars5)
     s_gas: Vars6 = field(default_factory=Vars6)
-    s_emethan: Vars1 = field(default_factory=Vars1)
     s_lpg: Vars6 = field(default_factory=Vars6)
     s_petrol: Vars6 = field(default_factory=Vars6)
     s_jetfuel: Vars6 = field(default_factory=Vars6)

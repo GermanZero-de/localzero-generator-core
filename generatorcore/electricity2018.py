@@ -15,12 +15,6 @@ class Vars0:
 
 
 @dataclass
-class Vars1:
-    # Used by g, g_grid_offshore, g_grid_onshore, g_grid_pv, d_f_wo_hydrogen, p_local_biomass_gaseous, p_local_biomass_solid, p_local_surplus
-    pass
-
-
-@dataclass
 class Vars2:
     # Used by d
     cost_fuel: float = None  # type: ignore
@@ -203,10 +197,6 @@ class Vars18:
 @dataclass
 class E18:
     e: Vars0 = field(default_factory=Vars0)
-    g: Vars1 = field(default_factory=Vars1)
-    g_grid_offshore: Vars1 = field(default_factory=Vars1)
-    g_grid_onshore: Vars1 = field(default_factory=Vars1)
-    g_grid_pv: Vars1 = field(default_factory=Vars1)
     d: Vars2 = field(default_factory=Vars2)
     d_r: Vars3 = field(default_factory=Vars3)
     d_b: Vars3 = field(default_factory=Vars3)
@@ -214,7 +204,6 @@ class E18:
     d_t: Vars3 = field(default_factory=Vars3)
     d_a: Vars4 = field(default_factory=Vars4)
     d_h: Vars4 = field(default_factory=Vars4)
-    d_f_wo_hydrogen: Vars1 = field(default_factory=Vars1)
     d_f_hydrogen_reconv: Vars4 = field(default_factory=Vars4)
     p: Vars5 = field(default_factory=Vars5)
     p_fossil: Vars6 = field(default_factory=Vars6)
@@ -253,9 +242,6 @@ class E18:
     p_local_wind_onshore: Vars16 = field(default_factory=Vars16)
     p_local_biomass: Vars17 = field(default_factory=Vars17)
     p_local_biomass_cogen: Vars8 = field(default_factory=Vars8)
-    p_local_biomass_gaseous: Vars1 = field(default_factory=Vars1)
-    p_local_biomass_solid: Vars1 = field(default_factory=Vars1)
-    p_local_surplus: Vars1 = field(default_factory=Vars1)
     p_local_hydro: Vars16 = field(default_factory=Vars16)
     p_local: Vars18 = field(default_factory=Vars18)
 
