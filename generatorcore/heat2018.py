@@ -6,13 +6,7 @@ from .utils import div
 
 
 @dataclass
-class Vars0:
-    # Used by g, g_storage, g_planning
-    pass
-
-
-@dataclass
-class Vars1:
+class EnergyDemand:
     # Used by d, d_r, d_b, d_i, d_t, a_t
     energy: float = None  # type: ignore
 
@@ -89,15 +83,12 @@ class Vars8:
 
 @dataclass
 class H18:
-    g: Vars0 = field(default_factory=Vars0)
-    g_storage: Vars0 = field(default_factory=Vars0)
-    g_planning: Vars0 = field(default_factory=Vars0)
-    d: Vars1 = field(default_factory=Vars1)
-    d_r: Vars1 = field(default_factory=Vars1)
-    d_b: Vars1 = field(default_factory=Vars1)
-    d_i: Vars1 = field(default_factory=Vars1)
-    d_t: Vars1 = field(default_factory=Vars1)
-    a_t: Vars1 = field(default_factory=Vars1)
+    d: EnergyDemand = field(default_factory=EnergyDemand)
+    d_r: EnergyDemand = field(default_factory=EnergyDemand)
+    d_b: EnergyDemand = field(default_factory=EnergyDemand)
+    d_i: EnergyDemand = field(default_factory=EnergyDemand)
+    d_t: EnergyDemand = field(default_factory=EnergyDemand)
+    a_t: EnergyDemand = field(default_factory=EnergyDemand)
     h: Vars2 = field(default_factory=Vars2)
     p: Vars3 = field(default_factory=Vars3)
     p_gas: Vars4 = field(default_factory=Vars4)
@@ -121,9 +112,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18, e18: electricity2018.E18) ->
     fact = inputs.fact
     entries = inputs.entries
 
-    h18 = H18()
-    d_r = h18.d_r
-    d_r.energy = (
+    d_r = EnergyDemand(
         entries.r_coal_fec
         + entries.r_fueloil_fec
         + entries.r_lpg_fec
@@ -132,8 +121,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18, e18: electricity2018.E18) ->
         + entries.r_orenew_fec
         + entries.r_heatnet_fec
     )
-    d_b = h18.d_b
-    d_b.energy = (
+    d_b = EnergyDemand(
         entries.b_coal_fec
         + entries.b_fueloil_fec
         + entries.b_lpg_fec
@@ -142,8 +130,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18, e18: electricity2018.E18) ->
         + entries.b_orenew_fec
         + entries.b_heatnet_fec
     )
-    d_i = h18.d_i
-    d_i.energy = (
+    d_i = EnergyDemand(
         entries.i_coal_fec
         + entries.i_fueloil_fec
         + entries.i_lpg_fec
@@ -154,17 +141,15 @@ def calc(inputs: Inputs, *, t18: transport2018.T18, e18: electricity2018.E18) ->
         + entries.i_ofossil_fec
         + entries.i_heatnet_fec
     )
-    d_t = h18.d_t
-    d_t.energy = t18.t.demand_fueloil + t18.t.demand_lpg + t18.t.demand_gas
-    a_t = h18.a_t
-    a_t.energy = (
+    d_t = EnergyDemand(t18.t.demand_fueloil + t18.t.demand_lpg + t18.t.demand_gas)
+    a_t = EnergyDemand(
         entries.a_fueloil_fec
         + entries.a_lpg_fec
         + entries.a_gas_fec
         + entries.a_biomass_fec
     )
-    d = h18.d
-    d.energy = d_r.energy + d_b.energy + d_i.energy + d_t.energy + a_t.energy
+    d = EnergyDemand(d_r.energy + d_b.energy + d_i.energy + d_t.energy + a_t.energy)
+    h18 = H18(d_r=d_r, d_b=d_b, d_i=d_i, d_t=d_t, a_t=a_t, d=d)
     p = h18.p
     p.energy = d.energy
     p_gas = h18.p_gas
