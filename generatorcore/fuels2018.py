@@ -72,18 +72,10 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> F18:
         return inputs.fact(n)
 
     entries = inputs.entries
-
     f18 = F18()
-
-    # ------------------------------------------------
-    f18.f.CO2e_combustion_based = 0
-
     f18.d_r.energy = entries.r_petrol_fec
-
     f18.d_b.energy = entries.b_petrol_fec + entries.b_jetfuel_fec + entries.b_diesel_fec
-
     f18.d_i.energy = entries.i_diesel_fec
-
     f18.d_t.energy = (
         t18.t.demand_petrol
         + t18.t.demand_jetfuel
@@ -92,9 +84,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> F18:
         + t18.t.demand_bioethanol
         + t18.t.demand_biodiesel
     )
-
     f18.d_a.energy = entries.a_petrol_fec + entries.a_diesel_fec
-
     f18.d.energy = (
         f18.d_r.energy
         + f18.d_b.energy
@@ -102,24 +92,64 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> F18:
         + f18.d_t.energy
         + f18.d_a.energy
     )
-
     f18.p_petrol.energy = (
         entries.r_petrol_fec
         + entries.b_petrol_fec
         + entries.a_petrol_fec
         + t18.t.demand_petrol
     )
+    f18.p_petrol.CO2e_production_based_per_MWh = fact(
+        "Fact_F_P_petrol_ratio_CO2e_pb_to_fec_2018"
+    )
+    f18.p_petrol.CO2e_production_based = (
+        f18.p_petrol.CO2e_production_based_per_MWh * f18.p_petrol.energy
+    )
+    f18.p_petrol.CO2e_total = f18.p_petrol.CO2e_production_based
     f18.p_jetfuel.energy = entries.b_jetfuel_fec + t18.s_jetfuel.energy
+    f18.p_jetfuel.CO2e_production_based_per_MWh = fact(
+        "Fact_F_P_jetfuel_ratio_CO2e_pb_to_fec_2018"
+    )
+    f18.p_jetfuel.CO2e_production_based = (
+        f18.p_jetfuel.CO2e_production_based_per_MWh * f18.p_jetfuel.energy
+    )
+    f18.p_jetfuel.CO2e_total = f18.p_jetfuel.CO2e_production_based
     f18.p_diesel.energy = (
         entries.b_diesel_fec
         + entries.i_diesel_fec
         + t18.t.demand_diesel
         + entries.a_diesel_fec
     )
+    f18.p_diesel.CO2e_production_based_per_MWh = fact(
+        "Fact_F_P_diesel_ratio_CO2e_pb_to_fec_2018"
+    )
+    f18.p_diesel.CO2e_production_based = (
+        f18.p_diesel.CO2e_production_based_per_MWh * f18.p_diesel.energy
+    )
+    f18.p_diesel.CO2e_total = f18.p_diesel.CO2e_production_based
     f18.p_bioethanol.energy = t18.t.demand_bioethanol
+    f18.p_bioethanol.CO2e_production_based_per_MWh = fact(
+        "Fact_H_P_biomass_ratio_CO2e_pb_to_fec_2018"
+    )
+    f18.p_bioethanol.CO2e_production_based = (
+        f18.p_bioethanol.CO2e_production_based_per_MWh * f18.p_bioethanol.energy
+    )
+    f18.p_bioethanol.CO2e_total = f18.p_bioethanol.CO2e_production_based
     f18.p_biodiesel.energy = t18.t.demand_biodiesel
+    f18.p_biodiesel.CO2e_production_based_per_MWh = fact(
+        "Fact_H_P_biomass_ratio_CO2e_pb_to_fec_2018"
+    )
+    f18.p_biodiesel.CO2e_production_based = (
+        f18.p_biodiesel.CO2e_production_based_per_MWh * f18.p_biodiesel.energy
+    )
+    f18.p_biodiesel.CO2e_total = f18.p_biodiesel.CO2e_production_based
     f18.p_biogas.energy = t18.t.demand_biogas
-
+    f18.p_biogas.CO2e_production_based_per_MWh = fact(
+        "Fact_H_P_biomass_ratio_CO2e_pb_to_fec_2018"
+    )
+    f18.p_biogas.CO2e_production_based = (
+        f18.p_biogas.CO2e_production_based_per_MWh * f18.p_biogas.energy
+    )
+    f18.p_biogas.CO2e_total = f18.p_biogas.CO2e_production_based
     f18.p.energy = (
         f18.p_petrol.energy
         + f18.p_jetfuel.energy
@@ -128,45 +158,6 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> F18:
         + f18.p_biodiesel.energy
         + f18.p_biogas.energy
     )
-    # ------------------------------------
-    f18.p_petrol.CO2e_production_based_per_MWh = fact(
-        "Fact_F_P_petrol_ratio_CO2e_pb_to_fec_2018"
-    )
-    f18.p_jetfuel.CO2e_production_based_per_MWh = fact(
-        "Fact_F_P_jetfuel_ratio_CO2e_pb_to_fec_2018"
-    )
-    f18.p_diesel.CO2e_production_based_per_MWh = fact(
-        "Fact_F_P_diesel_ratio_CO2e_pb_to_fec_2018"
-    )
-    f18.p_bioethanol.CO2e_production_based_per_MWh = fact(
-        "Fact_H_P_biomass_ratio_CO2e_pb_to_fec_2018"
-    )
-    f18.p_biodiesel.CO2e_production_based_per_MWh = fact(
-        "Fact_H_P_biomass_ratio_CO2e_pb_to_fec_2018"
-    )
-    f18.p_biogas.CO2e_production_based_per_MWh = fact(
-        "Fact_H_P_biomass_ratio_CO2e_pb_to_fec_2018"
-    )
-    # -------------------------------------
-    f18.p_petrol.CO2e_production_based = (
-        f18.p_petrol.CO2e_production_based_per_MWh * f18.p_petrol.energy
-    )
-    f18.p_jetfuel.CO2e_production_based = (
-        f18.p_jetfuel.CO2e_production_based_per_MWh * f18.p_jetfuel.energy
-    )
-    f18.p_diesel.CO2e_production_based = (
-        f18.p_diesel.CO2e_production_based_per_MWh * f18.p_diesel.energy
-    )
-    f18.p_bioethanol.CO2e_production_based = (
-        f18.p_bioethanol.CO2e_production_based_per_MWh * f18.p_bioethanol.energy
-    )
-    f18.p_biodiesel.CO2e_production_based = (
-        f18.p_biodiesel.CO2e_production_based_per_MWh * f18.p_biodiesel.energy
-    )
-    f18.p_biogas.CO2e_production_based = (
-        f18.p_biogas.CO2e_production_based_per_MWh * f18.p_biogas.energy
-    )
-
     f18.p.CO2e_production_based = (
         f18.p_petrol.CO2e_production_based
         + f18.p_jetfuel.CO2e_production_based
@@ -174,17 +165,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> F18:
         + f18.p_bioethanol.CO2e_production_based
         + f18.p_biodiesel.CO2e_production_based
         + f18.p_biogas.CO2e_production_based
-    )  # SUM(p_petrol.CO2e_pb:p_biogas.CO2e_pb)
-
-    f18.f.CO2e_production_based = f18.p.CO2e_production_based
-    # --------------------------------------
-    f18.p_petrol.CO2e_total = f18.p_petrol.CO2e_production_based
-    f18.p_jetfuel.CO2e_total = f18.p_jetfuel.CO2e_production_based
-    f18.p_diesel.CO2e_total = f18.p_diesel.CO2e_production_based
-    f18.p_bioethanol.CO2e_total = f18.p_bioethanol.CO2e_production_based
-    f18.p_biodiesel.CO2e_total = f18.p_biodiesel.CO2e_production_based
-    f18.p_biogas.CO2e_total = f18.p_biogas.CO2e_production_based
-
+    )
     f18.p.CO2e_total = (
         f18.p_petrol.CO2e_total
         + f18.p_jetfuel.CO2e_total
@@ -193,7 +174,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> F18:
         + f18.p_biodiesel.CO2e_total
         + f18.p_biogas.CO2e_total
     )
-
+    f18.f.CO2e_combustion_based = 0
+    f18.f.CO2e_production_based = f18.p.CO2e_production_based
     f18.f.CO2e_total = f18.p.CO2e_total
-
     return f18
