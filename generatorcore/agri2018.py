@@ -28,12 +28,6 @@ class Vars2:
 
 
 @dataclass
-class Vars3:
-    # Used by g_consult, g_organic, s_emethan
-    pass
-
-
-@dataclass
 class Vars4:
     # Used by p_fermen_dairycow, p_fermen_nondairy, p_fermen_swine, p_fermen_poultry, p_fermen_oanimal, p_manure_dairycow, p_manure_nondairy, p_manure_swine, p_manure_poultry, p_manure_oanimal, p_manure_deposition
     CO2e_combustion_based: float = None  # type: ignore
@@ -120,8 +114,6 @@ class A18:
     a: Vars0 = field(default_factory=Vars0)
     p: Vars1 = field(default_factory=Vars1)
     g: Vars2 = field(default_factory=Vars2)
-    g_consult: Vars3 = field(default_factory=Vars3)
-    g_organic: Vars3 = field(default_factory=Vars3)
     p_fermen: Vars0 = field(default_factory=Vars0)
     p_fermen_dairycow: Vars4 = field(default_factory=Vars4)
     p_fermen_nondairy: Vars4 = field(default_factory=Vars4)
@@ -164,7 +156,6 @@ class A18:
     s_fueloil: Vars12 = field(default_factory=Vars12)
     s_lpg: Vars12 = field(default_factory=Vars12)
     s_gas: Vars12 = field(default_factory=Vars12)
-    s_emethan: Vars3 = field(default_factory=Vars3)
     s_biomass: Vars12 = field(default_factory=Vars12)
     s_elec: Vars12 = field(default_factory=Vars12)
     s_heatpump: Vars12 = field(default_factory=Vars12)

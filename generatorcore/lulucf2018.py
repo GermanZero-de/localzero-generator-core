@@ -21,12 +21,6 @@ class Vars1:
 
 
 @dataclass
-class Vars2:
-    # Used by g_planning, g_wet_org_rp, g_wet_org_low_r, g_wet_org_low_rp, g_wet_org_high_r, g_wet_org_high_rp
-    pass
-
-
-@dataclass
 class Vars3:
     # Used by g_forest
     CO2e_combustion_based: float = None  # type: ignore
@@ -86,7 +80,6 @@ class Vars8:
 class L18:
     l: Vars0 = field(default_factory=Vars0)
     g: Vars1 = field(default_factory=Vars1)
-    g_planning: Vars2 = field(default_factory=Vars2)
     g_forest: Vars3 = field(default_factory=Vars3)
     g_forest_managed: Vars4 = field(default_factory=Vars4)
     g_forest_natural: Vars5 = field(default_factory=Vars5)
@@ -110,13 +103,8 @@ class L18:
     g_wet_min: Vars5 = field(default_factory=Vars5)
     g_wet_org: Vars6 = field(default_factory=Vars6)
     g_wet_org_r: Vars7 = field(default_factory=Vars7)
-    g_wet_org_rp: Vars2 = field(default_factory=Vars2)
     g_wet_org_low: Vars5 = field(default_factory=Vars5)
     g_wet_org_high: Vars5 = field(default_factory=Vars5)
-    g_wet_org_low_r: Vars2 = field(default_factory=Vars2)
-    g_wet_org_low_rp: Vars2 = field(default_factory=Vars2)
-    g_wet_org_high_r: Vars2 = field(default_factory=Vars2)
-    g_wet_org_high_rp: Vars2 = field(default_factory=Vars2)
     g_water: Vars6 = field(default_factory=Vars6)
     g_water_org: Vars6 = field(default_factory=Vars6)
     g_water_min: Vars5 = field(default_factory=Vars5)
