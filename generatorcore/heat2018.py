@@ -12,7 +12,7 @@ class EnergyDemand:
 
 
 @dataclass
-class Vars2:
+class H:
     # Used by h
     CO2e_combustion_based: float = None  # type: ignore
     CO2e_production_based: float = None  # type: ignore
@@ -31,25 +31,63 @@ class Vars3:
 
 
 @dataclass
-class Vars4:
+class HeatProduction:
     # Used by p_gas, p_opetpro, p_coal
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_combustion_based_per_MWh: float = None  # type: ignore
-    CO2e_production_based: float = None  # type: ignore
-    CO2e_production_based_per_MWh: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
+    CO2e_combustion_based: float
+    CO2e_combustion_based_per_MWh: float
+    CO2e_production_based: float
+    CO2e_production_based_per_MWh: float
+    CO2e_total: float
+    energy: float
+    pct_energy: float
+
+    @classmethod
+    def calc(
+        cls,
+        energy: float,
+        total_energy_production: float,
+        CO2e_production_based_per_MWh: float,
+        CO2e_combustion_based_per_MWh: float,
+    ) -> "HeatProduction":
+        pct_energy = div(energy, total_energy_production)
+        CO2e_production_based = energy * CO2e_production_based_per_MWh
+        CO2e_combustion_based = energy * CO2e_combustion_based_per_MWh
+        return cls(
+            energy=energy,
+            pct_energy=pct_energy,
+            CO2e_total=CO2e_production_based + CO2e_combustion_based,
+            CO2e_combustion_based=CO2e_combustion_based,
+            CO2e_combustion_based_per_MWh=CO2e_combustion_based_per_MWh,
+            CO2e_production_based=CO2e_production_based,
+            CO2e_production_based_per_MWh=CO2e_production_based_per_MWh,
+        )
 
 
 @dataclass
-class Vars5:
+class HeatProductionCombustionBased:
     # Used by p_lpg, p_fueloil, p_heatnet_cogen, p_heatnet_plant
     CO2e_combustion_based: float = None  # type: ignore
     CO2e_combustion_based_per_MWh: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     energy: float = None  # type: ignore
     pct_energy: float = None  # type: ignore
+
+    @classmethod
+    def calc(
+        cls,
+        energy: float,
+        total_energy_production: float,
+        CO2e_combustion_based_per_MWh: float,
+    ) -> "HeatProductionCombustionBased":
+        pct_energy = div(energy, total_energy_production)
+        CO2e_combustion_based = energy * CO2e_combustion_based_per_MWh
+        return cls(
+            energy=energy,
+            pct_energy=pct_energy,
+            CO2e_total=CO2e_combustion_based,
+            CO2e_combustion_based=CO2e_combustion_based,
+            CO2e_combustion_based_per_MWh=CO2e_combustion_based_per_MWh,
+        )
 
 
 @dataclass
@@ -72,7 +110,7 @@ class Vars7:
 
 
 @dataclass
-class Vars8:
+class HeatProductionProductionBased:
     # Used by p_biomass, p_ofossil, p_orenew, p_solarth, p_heatpump
     CO2e_production_based: float = None  # type: ignore
     CO2e_production_based_per_MWh: float = None  # type: ignore
@@ -80,32 +118,67 @@ class Vars8:
     energy: float = None  # type: ignore
     pct_energy: float = None  # type: ignore
 
+    @classmethod
+    def calc(
+        cls,
+        energy: float,
+        total_energy_production: float,
+        CO2e_production_based_per_MWh: float,
+    ) -> "HeatProductionProductionBased":
+        pct_energy = div(energy, total_energy_production)
+        CO2e_production_based = energy * CO2e_production_based_per_MWh
+        return cls(
+            energy=energy,
+            pct_energy=pct_energy,
+            CO2e_total=CO2e_production_based,
+            CO2e_production_based=CO2e_production_based,
+            CO2e_production_based_per_MWh=CO2e_production_based_per_MWh,
+        )
+
 
 @dataclass
 class H18:
-    d: EnergyDemand = field(default_factory=EnergyDemand)
-    d_r: EnergyDemand = field(default_factory=EnergyDemand)
-    d_b: EnergyDemand = field(default_factory=EnergyDemand)
-    d_i: EnergyDemand = field(default_factory=EnergyDemand)
-    d_t: EnergyDemand = field(default_factory=EnergyDemand)
-    a_t: EnergyDemand = field(default_factory=EnergyDemand)
-    h: Vars2 = field(default_factory=Vars2)
+    d: EnergyDemand
+    d_r: EnergyDemand
+    d_b: EnergyDemand
+    d_i: EnergyDemand
+    d_t: EnergyDemand
+    a_t: EnergyDemand
+    p_gas: HeatProduction
+    p_opetpro: HeatProduction
+    p_coal: HeatProduction
+    h: H = field(default_factory=H)
     p: Vars3 = field(default_factory=Vars3)
-    p_gas: Vars4 = field(default_factory=Vars4)
-    p_lpg: Vars5 = field(default_factory=Vars5)
-    p_fueloil: Vars5 = field(default_factory=Vars5)
-    p_opetpro: Vars4 = field(default_factory=Vars4)
-    p_coal: Vars4 = field(default_factory=Vars4)
+    p_lpg: HeatProductionCombustionBased = field(
+        default_factory=HeatProductionCombustionBased
+    )
+    p_fueloil: HeatProductionCombustionBased = field(
+        default_factory=HeatProductionCombustionBased
+    )
     p_heatnet: Vars6 = field(default_factory=Vars6)
-    p_heatnet_cogen: Vars5 = field(default_factory=Vars5)
-    p_heatnet_plant: Vars5 = field(default_factory=Vars5)
+    p_heatnet_cogen: HeatProductionCombustionBased = field(
+        default_factory=HeatProductionCombustionBased
+    )
+    p_heatnet_plant: HeatProductionCombustionBased = field(
+        default_factory=HeatProductionCombustionBased
+    )
     p_heatnet_geoth: Vars7 = field(default_factory=Vars7)
     p_heatnet_lheatpump: Vars7 = field(default_factory=Vars7)
-    p_biomass: Vars8 = field(default_factory=Vars8)
-    p_ofossil: Vars8 = field(default_factory=Vars8)
-    p_orenew: Vars8 = field(default_factory=Vars8)
-    p_solarth: Vars8 = field(default_factory=Vars8)
-    p_heatpump: Vars8 = field(default_factory=Vars8)
+    p_biomass: HeatProductionProductionBased = field(
+        default_factory=HeatProductionProductionBased
+    )
+    p_ofossil: HeatProductionProductionBased = field(
+        default_factory=HeatProductionProductionBased
+    )
+    p_orenew: HeatProductionProductionBased = field(
+        default_factory=HeatProductionProductionBased
+    )
+    p_solarth: HeatProductionProductionBased = field(
+        default_factory=HeatProductionProductionBased
+    )
+    p_heatpump: HeatProductionProductionBased = field(
+        default_factory=HeatProductionProductionBased
+    )
 
 
 def calc(inputs: Inputs, *, t18: transport2018.T18, e18: electricity2018.E18) -> H18:
@@ -142,6 +215,10 @@ def calc(inputs: Inputs, *, t18: transport2018.T18, e18: electricity2018.E18) ->
         + entries.i_heatnet_fec
     )
     d_t = EnergyDemand(t18.t.demand_fueloil + t18.t.demand_lpg + t18.t.demand_gas)
+    # TODO: Rename the below to d_a.  Not doing it now as we would have to
+    # do this in knud as well, and it might be better to do a bigger coordinated
+    # rename after we have decided if we want to replace some of these appreviations
+    # by longer forms.
     a_t = EnergyDemand(
         entries.a_fueloil_fec
         + entries.a_lpg_fec
@@ -149,81 +226,104 @@ def calc(inputs: Inputs, *, t18: transport2018.T18, e18: electricity2018.E18) ->
         + entries.a_biomass_fec
     )
     d = EnergyDemand(d_r.energy + d_b.energy + d_i.energy + d_t.energy + a_t.energy)
-    h18 = H18(d_r=d_r, d_b=d_b, d_i=d_i, d_t=d_t, a_t=a_t, d=d)
+    total_energy_production = d.energy
+
+    p_gas = HeatProduction.calc(
+        energy=(
+            entries.r_gas_fec
+            + entries.b_gas_fec
+            + entries.i_gas_fec
+            + entries.a_gas_fec
+            + t18.t.demand_gas
+        ),
+        total_energy_production=total_energy_production,
+        CO2e_production_based_per_MWh=fact("Fact_H_P_gas_ratio_CO2e_pb_to_fec_2018"),
+        CO2e_combustion_based_per_MWh=fact("Fact_H_P_gas_ratio_CO2e_cb_to_fec_2018"),
+    )
+
+    p_coal = HeatProduction.calc(
+        energy=entries.r_coal_fec + entries.b_coal_fec + entries.i_coal_fec,
+        total_energy_production=total_energy_production,
+        CO2e_production_based_per_MWh=fact("Fact_H_P_coal_ratio_CO2e_pb_to_fec_2018"),
+        CO2e_combustion_based_per_MWh=fact("Fact_H_P_coal_ratio_CO2e_cb_to_fec_2018"),
+    )
+
+    p_opetpro = HeatProduction.calc(
+        energy=entries.i_opetpro_fec,
+        total_energy_production=total_energy_production,
+        CO2e_production_based_per_MWh=fact(
+            "Fact_H_P_opetpro_ratio_CO2e_pb_to_fec_2018"
+        ),
+        CO2e_combustion_based_per_MWh=fact(
+            "Fact_H_P_opetpro_ratio_CO2e_cb_to_fec_2018"
+        ),
+    )
+
+    p_lpg = HeatProductionCombustionBased.calc(
+        energy=(
+            entries.r_lpg_fec
+            + entries.b_lpg_fec
+            + entries.i_lpg_fec
+            + entries.a_lpg_fec
+            + t18.s_lpg.energy
+        ),
+        total_energy_production=total_energy_production,
+        CO2e_combustion_based_per_MWh=fact("Fact_H_P_lpg_ratio_CO2e_cb_to_fec_2018"),
+    )
+
+    p_fueloil = HeatProductionCombustionBased.calc(
+        energy=(
+            entries.r_fueloil_fec
+            + entries.b_fueloil_fec
+            + entries.i_fueloil_fec
+            + entries.a_fueloil_fec
+            + t18.s_fueloil.energy
+        ),
+        total_energy_production=total_energy_production,
+        CO2e_combustion_based_per_MWh=fact(
+            "Fact_H_P_fueloil_ratio_CO2e_cb_to_fec_2018"
+        ),
+    )
+
+    p_biomass = HeatProductionProductionBased.calc(
+        energy=(
+            entries.r_biomass_fec
+            + entries.b_biomass_fec
+            + entries.i_biomass_fec
+            + entries.a_biomass_fec
+        ),
+        total_energy_production=total_energy_production,
+        CO2e_production_based_per_MWh=fact(
+            "Fact_H_P_biomass_ratio_CO2e_pb_to_fec_2018"
+        ),
+    )
+
+    p_ofossil = HeatProductionProductionBased.calc(
+        energy=entries.i_ofossil_fec,
+        total_energy_production=total_energy_production,
+        CO2e_production_based_per_MWh=fact(
+            "Fact_H_P_ofossil_ratio_CO2e_pb_to_fec_2018"
+        ),
+    )
+
+    h18 = H18(
+        d_r=d_r,
+        d_b=d_b,
+        d_i=d_i,
+        d_t=d_t,
+        a_t=a_t,
+        d=d,
+        p_gas=p_gas,
+        p_coal=p_coal,
+        p_opetpro=p_opetpro,
+        p_lpg=p_lpg,
+        p_fueloil=p_fueloil,
+        p_biomass=p_biomass,
+        p_ofossil=p_ofossil,
+    )
     p = h18.p
     p.energy = d.energy
-    p_gas = h18.p_gas
-    p_gas.energy = (
-        entries.r_gas_fec
-        + entries.b_gas_fec
-        + entries.i_gas_fec
-        + entries.a_gas_fec
-        + t18.t.demand_gas
-    )
-    p_gas.pct_energy = div(p_gas.energy, p.energy)
-    p_gas.CO2e_production_based_per_MWh = fact("Fact_H_P_gas_ratio_CO2e_pb_to_fec_2018")
-    p_gas.CO2e_production_based = p_gas.energy * p_gas.CO2e_production_based_per_MWh
-    p_gas.CO2e_combustion_based_per_MWh = fact("Fact_H_P_gas_ratio_CO2e_cb_to_fec_2018")
-    p_gas.CO2e_combustion_based = p_gas.energy * p_gas.CO2e_combustion_based_per_MWh
-    p_gas.CO2e_total = p_gas.CO2e_production_based + p_gas.CO2e_combustion_based
-    p_lpg = h18.p_lpg
-    p_lpg.energy = (
-        entries.r_lpg_fec
-        + entries.b_lpg_fec
-        + entries.i_lpg_fec
-        + entries.a_lpg_fec
-        + t18.s_lpg.energy
-    )
-    p_lpg.pct_energy = div(p_lpg.energy, p.energy)
-    p_lpg.CO2e_combustion_based_per_MWh = fact("Fact_H_P_lpg_ratio_CO2e_cb_to_fec_2018")
-    p_lpg.CO2e_combustion_based = p_lpg.energy * p_lpg.CO2e_combustion_based_per_MWh
-    p_lpg.CO2e_total = p_lpg.CO2e_combustion_based
-    p_fueloil = h18.p_fueloil
-    p_fueloil.energy = (
-        entries.r_fueloil_fec
-        + entries.b_fueloil_fec
-        + entries.i_fueloil_fec
-        + entries.a_fueloil_fec
-        + t18.s_fueloil.energy
-    )
-    p_fueloil.pct_energy = div(p_fueloil.energy, p.energy)
-    p_fueloil.CO2e_combustion_based_per_MWh = fact(
-        "Fact_H_P_fueloil_ratio_CO2e_cb_to_fec_2018"
-    )
-    p_fueloil.CO2e_combustion_based = (
-        p_fueloil.energy * p_fueloil.CO2e_combustion_based_per_MWh
-    )
-    p_fueloil.CO2e_total = p_fueloil.CO2e_combustion_based
-    p_opetpro = h18.p_opetpro
-    p_opetpro.energy = entries.i_opetpro_fec
-    p_opetpro.pct_energy = div(p_opetpro.energy, p.energy)
-    p_opetpro.CO2e_production_based_per_MWh = fact(
-        "Fact_H_P_opetpro_ratio_CO2e_pb_to_fec_2018"
-    )
-    p_opetpro.CO2e_production_based = (
-        p_opetpro.energy * p_opetpro.CO2e_production_based_per_MWh
-    )
-    p_opetpro.CO2e_combustion_based_per_MWh = fact(
-        "Fact_H_P_opetpro_ratio_CO2e_cb_to_fec_2018"
-    )
-    p_opetpro.CO2e_combustion_based = (
-        p_opetpro.energy * p_opetpro.CO2e_combustion_based_per_MWh
-    )
-    p_opetpro.CO2e_total = (
-        p_opetpro.CO2e_production_based + p_opetpro.CO2e_combustion_based
-    )
-    p_coal = h18.p_coal
-    p_coal.energy = entries.r_coal_fec + entries.b_coal_fec + entries.i_coal_fec
-    p_coal.pct_energy = div(p_coal.energy, p.energy)
-    p_coal.CO2e_production_based_per_MWh = fact(
-        "Fact_H_P_coal_ratio_CO2e_pb_to_fec_2018"
-    )
-    p_coal.CO2e_production_based = p_coal.energy * p_coal.CO2e_production_based_per_MWh
-    p_coal.CO2e_combustion_based_per_MWh = fact(
-        "Fact_H_P_coal_ratio_CO2e_cb_to_fec_2018"
-    )
-    p_coal.CO2e_combustion_based = p_coal.energy * p_coal.CO2e_combustion_based_per_MWh
-    p_coal.CO2e_total = p_coal.CO2e_production_based + p_coal.CO2e_combustion_based
+
     p_heatnet = h18.p_heatnet
     p_heatnet.energy = (
         entries.r_heatnet_fec + entries.b_heatnet_fec + entries.i_heatnet_fec
@@ -286,32 +386,6 @@ def calc(inputs: Inputs, *, t18: transport2018.T18, e18: electricity2018.E18) ->
         p_heatnet_lheatpump.CO2e_production_based
         + p_heatnet_lheatpump.CO2e_combustion_based
     )
-    p_biomass = h18.p_biomass
-    p_biomass.energy = (
-        entries.r_biomass_fec
-        + entries.b_biomass_fec
-        + entries.i_biomass_fec
-        + entries.a_biomass_fec
-    )
-    p_biomass.pct_energy = div(p_biomass.energy, p.energy)
-    p_biomass.CO2e_production_based_per_MWh = fact(
-        "Fact_H_P_biomass_ratio_CO2e_pb_to_fec_2018"
-    )
-    p_biomass.CO2e_production_based = (
-        p_biomass.energy * p_biomass.CO2e_production_based_per_MWh
-    )
-    p_biomass.CO2e_total = p_biomass.CO2e_production_based
-    p_ofossil = h18.p_ofossil
-    "p_coal.energy = (\n        entry ('In_I_ofossil_fec')\n\n        #result: 21.019.444 MWh\n    )"
-    p_ofossil.energy = entries.i_ofossil_fec
-    p_ofossil.pct_energy = div(p_ofossil.energy, p.energy)
-    p_ofossil.CO2e_production_based_per_MWh = fact(
-        "Fact_H_P_ofossil_ratio_CO2e_pb_to_fec_2018"
-    )
-    p_ofossil.CO2e_production_based = (
-        p_ofossil.energy * p_ofossil.CO2e_production_based_per_MWh
-    )
-    p_ofossil.CO2e_total = p_ofossil.CO2e_production_based
     p_orenew = h18.p_orenew
     p_orenew.energy = entries.r_orenew_fec + entries.b_orenew_fec + entries.i_orenew_fec
     p_orenew.pct_energy = div(p_orenew.energy, p.energy)
