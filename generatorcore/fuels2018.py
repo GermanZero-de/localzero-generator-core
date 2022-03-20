@@ -63,8 +63,8 @@ class F18:
     p_biodiesel: FuelProduction
     p_biogas: FuelProduction
 
-    f: TotalFuelProduction
-    p: F
+    p: TotalFuelProduction
+    f: F
 
 
 def calc(inputs: Inputs, *, t18: transport2018.T18) -> F18:
