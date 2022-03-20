@@ -54,6 +54,26 @@ nor anything that is specific to the website.
 
 For local development, checkout our helpful commands in devtool.py please.
 
+Some notes on the code structure / history of the project
+----------------------------------------------------------
+
+The prototype was written as an excel spreadsheet, that contained both the data and the calculations.
+To translate the spreadsheet into python a semi-automatic process (read some scripts + a lot of work)
+was used and the structure dictated by the spreadsheet was kept. This allowed us to gain confidence in
+the new implementation as the results including all intermediate results could be compared directly.
+
+However it also sadly meant that the new code uses very little of the expressive power of python
+and was sometimes even less easy to understand than the spreadsheet.
+
+So we added an end to end testing framework, again so that we can make changes to the code without
+accidentally changing the numbers that are computed.  But this time independently of excel.
+
+We are using this new found freedom to clarify the code structure, but this is an ongoing project.
+Our current plan is to finish a first pass over all sectors clarifying each sector individually.
+When that is done, we will do another pass to factor out common functionality across sectors.
+
+So some sectors are currently more readable than others, but we didn't want this fact to delay
+the release.  If you have questions on any individual sector feel free to contact us.
 
 Formatting
 -----
