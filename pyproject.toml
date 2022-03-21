@@ -4,7 +4,7 @@ version = "1.0.0"
 description = "LocalZero Generator core."
 authors = ["Benedikt Grundmann <benedikt.grundmann@gmail.com>","Anja Höhne","Anne Klenge","Jan Kuhlem",
           "Sebastian Lüttig","Silvan Ostheimer","Hauke Schmülling","Leon Schomburg <Leon.Schomburg.ext@germanzero.de>",
-          "Manfred Schüssler","Anne Schwob", "Eckhard Weißhaar","Jennifer Wessel"]
+          "Manfred Schüssler","Anne Schwob", "Eckhard Weißhaar","Jeniffer Wessel"]
 include = [
   "generatorcore/py.typed"
 ]

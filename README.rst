@@ -9,12 +9,12 @@ LocalZero is a community project providing a tool that determines
  - greenhouse gas balances for the reference year 2018 and the planned target year
  - final energy consumptions for the reference year 2018 and the planned target year
  - and the most important measures and costs required to become carbon neutral.
- 
+
 This tool can be used at city, district or state level using their respective unique 8-digit AGS-key (Amtlicher Gemeindeschlüssel).
 More information on the methodology can be found in our documentation on readthedocs: https://localzero-generator.readthedocs.io/de/latest/.
 
-- 19.03.2018 Important Note!
-    - The LocalZero Generator is not yet usable by people outside of GermanZero, as some required data is proprietary. However, the tool can be tested on our website: germanzero.de/loesungen/localzero. Future work will include the development of a REST API Service.
+- 19.03.2022 Important Note!
+    - The LocalZero Generator is not yet usable by people outside of GermanZero, as some required data is proprietary. However, the tool can be tested on our website: https://germanzero.de/loesungen/localzero. Future work will include the development of a REST API Service.
 
 
 Setup
