@@ -4,9 +4,13 @@
 
 Localzero Generator Core
 =========================
-LocalZero is a community project providing a tool that can not only determine green house gas budgets but also final energy consumptions per sector
-for a given city/district and target year. In addition, the tool informs costs and the most important measures required to become carbon neutral.
+LocalZero is a community project providing a tool that determines
 
+ - a status quo green house gas balance 
+ - a greenhouse gas balance for a target year, where carbon neutrality is reached,
+ - and most important measures and costs required to become carbon neutral.
+ 
+This is calculated for a given city/district that can be chosen by the user. Each city is referenced via an 8-digit AGS-key (Amtlicher Gemeindeschlüssel).
 More information on the methodology can be found in our documentation on readthedocs: https://localzero-generator.readthedocs.io/en/latest/.
 
 - 19.03.2018 Important Note!
