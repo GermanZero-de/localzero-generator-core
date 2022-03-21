@@ -6,11 +6,11 @@ Localzero Generator Core
 =========================
 LocalZero is a community project providing a tool that determines
 
- - a status quo green house gas balance 
- - a greenhouse gas balance for a target year, where carbon neutrality is reached,
+ - a status quo greenhouse gas balance (for the record year 2018)
+ - a greenhouse gas balance for the planned target year to achieve carbon neutrality
  - and most important measures and costs required to become carbon neutral.
  
-This is calculated for a given city/district that can be chosen by the user. Each city is referenced via an 8-digit AGS-key (Amtlicher Gemeindeschlüssel).
+This is calculated for a given city/district that can be chosen by the user. Each city is referenced via a unique 8-digit AGS-key (Amtlicher Gemeindeschlüssel).
 More information on the methodology can be found in our documentation on readthedocs: https://localzero-generator.readthedocs.io/en/latest/.
 
 - 19.03.2018 Important Note!
