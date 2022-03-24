@@ -2,6 +2,6 @@ from dataclasses import dataclass
 
 
 @dataclass
-class Energy:
+class EnergySum:
     # Used by s_fossil, s_renew
-    energy: float = None  # type: ignore
+    energy: float
