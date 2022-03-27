@@ -327,7 +327,6 @@ class Version:
 class RefData:
     """This class gives you a single handle around all the reference data."""
 
-    _renewable_energy: DataFrame[str]
     _ags_master: dict[str, str]
     _area: DataFrame[str]
     _area_kinds: DataFrame[str]
