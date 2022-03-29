@@ -1,13 +1,11 @@
 # pyright: strict
 from dataclasses import dataclass
 from .co2e import CO2e
-from .empty import Empty
 from .co2e_per_t import CO2e_per_t
 from .co2e_with_pct_energy import CO2e_with_pct_energy
 from .co2e_per_mwh import CO2e_per_MWh
 from .co2e_basic import CO2e_basic
-from .energy_pct import Energy_pct
-from .energy_sum import EnergySum
+from .energy_sum import EnergySum, Energy_pct, Empty
 
 
 @dataclass

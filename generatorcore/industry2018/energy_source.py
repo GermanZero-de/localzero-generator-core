@@ -1,9 +1,7 @@
 # pyright: strict
 from dataclasses import dataclass
 from ..inputs import Inputs
-from .energy_pct import Energy_pct
-from .energy_sum import EnergySum
-from .empty import Empty
+from .energy_sum import EnergySum, Energy_pct, Empty
 
 
 @dataclass
