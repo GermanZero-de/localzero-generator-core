@@ -11,6 +11,9 @@ class CO2e:
     energy: float = 0
     prod_volume: float = 0
 
+    def __post_init__(self):
+        self.CO2e_total = self.CO2e_production_based + self.CO2e_combustion_based
+
     def __add__(self: "CO2e", other: "CO2e") -> "CO2e":
         return CO2e(
             CO2e_combustion_based=self.CO2e_combustion_based

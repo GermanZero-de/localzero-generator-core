@@ -35,14 +35,10 @@ class CO2e_with_pct_energy(CO2e):
             p_metal_steel_primary.CO2e_combustion_based
             + p_metal_steel_secondary.CO2e_combustion_based
         )
-        CO2e_total = (
-            p_metal_steel_primary.CO2e_total + p_metal_steel_secondary.CO2e_total
-        )
 
         return cls(
             CO2e_combustion_based=CO2e_combustion_based,
             CO2e_production_based=CO2e_production_based,
-            CO2e_total=CO2e_total,
             energy=energy,
             pct_energy=pct_energy,
             prod_volume=prod_volume,

@@ -27,7 +27,6 @@ class CO2e_per_MWh(CO2e):
             "Fact_I_P_other_further_ratio_CO2e_cb_to_fec_2018"
         )
         CO2e_combustion_based = energy * CO2e_combustion_based_per_MWh
-        CO2e_total = CO2e_production_based + CO2e_combustion_based
         prod_volume = inputs.fact("Fact_I_P_other_further_prodvol_2018")
 
         return cls(
@@ -35,7 +34,6 @@ class CO2e_per_MWh(CO2e):
             CO2e_combustion_based_per_MWh=CO2e_combustion_based_per_MWh,
             CO2e_production_based=CO2e_production_based,
             CO2e_production_based_per_MWh=CO2e_production_based_per_MWh,
-            CO2e_total=CO2e_total,
             energy=energy,
             pct_energy=pct_energy,
             prod_volume=prod_volume,

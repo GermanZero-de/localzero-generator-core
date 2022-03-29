@@ -26,14 +26,12 @@ class CO2e_per_t(CO2e):
             "Fact_I_P_miner_cement_ratio_CO2e_cb_to_prodvol_2018"
         )
         CO2e_combustion_based = prod_volume * CO2e_combustion_based_per_t
-        CO2e_total = CO2e_production_based + CO2e_combustion_based
 
         return cls(
             CO2e_combustion_based=CO2e_combustion_based,
             CO2e_combustion_based_per_t=CO2e_combustion_based_per_t,
             CO2e_production_based=CO2e_production_based,
             CO2e_production_based_per_t=CO2e_production_based_per_t,
-            CO2e_total=CO2e_total,
             energy=energy,
             energy_use_factor=energy_use_factor,
             pct_energy=pct_energy,
@@ -54,14 +52,12 @@ class CO2e_per_t(CO2e):
             "Fact_I_P_miner_chalk_ratio_CO2e_cb_to_prodvol_2018"
         )
         CO2e_combustion_based = prod_volume * CO2e_combustion_based_per_t
-        CO2e_total = CO2e_production_based + CO2e_combustion_based
 
         return cls(
             CO2e_combustion_based=CO2e_combustion_based,
             CO2e_combustion_based_per_t=CO2e_combustion_based_per_t,
             CO2e_production_based=CO2e_production_based,
             CO2e_production_based_per_t=CO2e_production_based_per_t,
-            CO2e_total=CO2e_total,
             energy=energy,
             energy_use_factor=energy_use_factor,
             pct_energy=pct_energy,
@@ -82,14 +78,12 @@ class CO2e_per_t(CO2e):
             "Fact_I_P_miner_glas_ratio_CO2e_cb_to_prodvol_2018"
         )
         CO2e_combustion_based = prod_volume * CO2e_combustion_based_per_t
-        CO2e_total = CO2e_production_based + CO2e_combustion_based
 
         return cls(
             CO2e_combustion_based=CO2e_combustion_based,
             CO2e_combustion_based_per_t=CO2e_combustion_based_per_t,
             CO2e_production_based=CO2e_production_based,
             CO2e_production_based_per_t=CO2e_production_based_per_t,
-            CO2e_total=CO2e_total,
             energy=energy,
             energy_use_factor=energy_use_factor,
             pct_energy=pct_energy,
@@ -110,14 +104,12 @@ class CO2e_per_t(CO2e):
             "Fact_I_P_miner_ceram_ratio_CO2e_cb_to_prodvol_2018"
         )
         CO2e_combustion_based = prod_volume * CO2e_combustion_based_per_t
-        CO2e_total = CO2e_production_based + CO2e_combustion_based
 
         return cls(
             CO2e_combustion_based=CO2e_combustion_based,
             CO2e_combustion_based_per_t=CO2e_combustion_based_per_t,
             CO2e_production_based=CO2e_production_based,
             CO2e_production_based_per_t=CO2e_production_based_per_t,
-            CO2e_total=CO2e_total,
             energy=energy,
             energy_use_factor=energy_use_factor,
             pct_energy=pct_energy,
@@ -142,14 +134,12 @@ class CO2e_per_t(CO2e):
             "Fact_I_P_chem_basic_wo_ammonia_CO2e_eb_ratio_per_t_product_2018"
         )
         CO2e_combustion_based = prod_volume * CO2e_combustion_based_per_t
-        CO2e_total = CO2e_production_based + CO2e_combustion_based
 
         return cls(
             CO2e_combustion_based=CO2e_combustion_based,
             CO2e_combustion_based_per_t=CO2e_combustion_based_per_t,
             CO2e_production_based=CO2e_production_based,
             CO2e_production_based_per_t=CO2e_production_based_per_t,
-            CO2e_total=CO2e_total,
             energy=energy,
             energy_use_factor=energy_use_factor,
             pct_energy=pct_energy,
@@ -172,14 +162,12 @@ class CO2e_per_t(CO2e):
             "Fact_I_P_chem_ammonia_CO2e_eb_ratio_per_t_product_2018"
         )
         CO2e_combustion_based = prod_volume * CO2e_combustion_based_per_t
-        CO2e_total = CO2e_production_based + CO2e_combustion_based
 
         return cls(
             CO2e_combustion_based=CO2e_combustion_based,
             CO2e_combustion_based_per_t=CO2e_combustion_based_per_t,
             CO2e_production_based=CO2e_production_based,
             CO2e_production_based_per_t=CO2e_production_based_per_t,
-            CO2e_total=CO2e_total,
             energy=energy,
             energy_use_factor=energy_use_factor,
             pct_energy=pct_energy,
@@ -200,14 +188,12 @@ class CO2e_per_t(CO2e):
             "Fact_I_P_chem_other_CO2e_eb_ratio_per_t_product_2018"
         )
         CO2e_combustion_based = prod_volume * CO2e_combustion_based_per_t
-        CO2e_total = CO2e_production_based + CO2e_combustion_based
 
         return cls(
             CO2e_combustion_based=CO2e_combustion_based,
             CO2e_combustion_based_per_t=CO2e_combustion_based_per_t,
             CO2e_production_based=CO2e_production_based,
             CO2e_production_based_per_t=CO2e_production_based_per_t,
-            CO2e_total=CO2e_total,
             energy=energy,
             energy_use_factor=energy_use_factor,
             pct_energy=pct_energy,
@@ -237,14 +223,11 @@ class CO2e_per_t(CO2e):
         )
         CO2e_combustion_based = prod_volume * CO2e_combustion_based_per_t
 
-        CO2e_total = CO2e_production_based + CO2e_combustion_based
-
         return cls(
             CO2e_combustion_based=CO2e_combustion_based,
             CO2e_combustion_based_per_t=CO2e_combustion_based_per_t,
             CO2e_production_based=CO2e_production_based,
             CO2e_production_based_per_t=CO2e_production_based_per_t,
-            CO2e_total=CO2e_total,
             energy=energy,
             energy_use_factor=energy_use_factor,
             pct_energy=pct_energy,
@@ -274,14 +257,11 @@ class CO2e_per_t(CO2e):
         )
         CO2e_combustion_based = prod_volume * CO2e_combustion_based_per_t
 
-        CO2e_total = CO2e_production_based + CO2e_combustion_based
-
         return cls(
             CO2e_combustion_based=CO2e_combustion_based,
             CO2e_combustion_based_per_t=CO2e_combustion_based_per_t,
             CO2e_production_based=CO2e_production_based,
             CO2e_production_based_per_t=CO2e_production_based_per_t,
-            CO2e_total=CO2e_total,
             energy=energy,
             energy_use_factor=energy_use_factor,
             pct_energy=pct_energy,
@@ -309,14 +289,11 @@ class CO2e_per_t(CO2e):
         )
         CO2e_combustion_based = prod_volume * CO2e_combustion_based_per_t
 
-        CO2e_total = CO2e_production_based + CO2e_combustion_based
-
         return cls(
             CO2e_combustion_based=CO2e_combustion_based,
             CO2e_combustion_based_per_t=CO2e_combustion_based_per_t,
             CO2e_production_based=CO2e_production_based,
             CO2e_production_based_per_t=CO2e_production_based_per_t,
-            CO2e_total=CO2e_total,
             energy=energy,
             energy_use_factor=energy_use_factor,
             pct_energy=pct_energy,
@@ -344,14 +321,11 @@ class CO2e_per_t(CO2e):
         )
         CO2e_combustion_based = prod_volume * CO2e_combustion_based_per_t
 
-        CO2e_total = CO2e_production_based + CO2e_combustion_based
-
         return cls(
             CO2e_combustion_based=CO2e_combustion_based,
             CO2e_combustion_based_per_t=CO2e_combustion_based_per_t,
             CO2e_production_based=CO2e_production_based,
             CO2e_production_based_per_t=CO2e_production_based_per_t,
-            CO2e_total=CO2e_total,
             energy=energy,
             energy_use_factor=energy_use_factor,
             pct_energy=pct_energy,
@@ -378,14 +352,11 @@ class CO2e_per_t(CO2e):
         )
         CO2e_combustion_based = prod_volume * CO2e_combustion_based_per_t
 
-        CO2e_total = CO2e_combustion_based + CO2e_production_based
-
         return cls(
             CO2e_combustion_based=CO2e_combustion_based,
             CO2e_combustion_based_per_t=CO2e_combustion_based_per_t,
             CO2e_production_based=CO2e_production_based,
             CO2e_production_based_per_t=CO2e_production_based_per_t,
-            CO2e_total=CO2e_total,
             energy=energy,
             energy_use_factor=energy_use_factor,
             pct_energy=pct_energy,
