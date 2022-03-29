@@ -1,3 +1,4 @@
+# pyright: strict
 from dataclasses import dataclass, InitVar
 from generatorcore.utils import div
 
@@ -9,5 +10,5 @@ class Energy_pct:
     pct_energy: float = 0
     total_energy: InitVar[float] = 0
 
-    def __post_init__(self, total_energy):
+    def __post_init__(self, total_energy: float):
         self.pct_energy = div(self.energy, total_energy)

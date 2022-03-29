@@ -1,3 +1,4 @@
+# pyright: strict
 from dataclasses import dataclass
 from .co2e_per_t import CO2e_per_t
 from ..inputs import Inputs
@@ -7,7 +8,7 @@ from .co2e import CO2e
 @dataclass
 class CO2e_with_pct_energy(CO2e):
     # Used by p_metal_steel
-    pct_energy: float = None  # type: ignore
+    pct_energy: float = 0
 
     @classmethod
     def calc_p_metal_steel(

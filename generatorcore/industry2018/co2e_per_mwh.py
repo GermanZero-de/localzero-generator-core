@@ -1,3 +1,4 @@
+# pyright: strict
 from dataclasses import dataclass
 from ..inputs import Inputs
 from .co2e import CO2e
@@ -6,9 +7,9 @@ from .co2e import CO2e
 @dataclass
 class CO2e_per_MWh(CO2e):
     # Used by p_other_further
-    CO2e_combustion_based_per_MWh: float = None  # type: ignore
-    CO2e_production_based_per_MWh: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
+    CO2e_combustion_based_per_MWh: float = 0
+    CO2e_production_based_per_MWh: float = 0
+    pct_energy: float = 0
 
     @classmethod
     def calc_p_other_further(
