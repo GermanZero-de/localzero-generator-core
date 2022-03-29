@@ -142,13 +142,33 @@ class CO2eFromSoil(CO2eEmissions):
 
 
 @dataclass
-class Vars6:
+class CO2eFromOther(CO2eEmissions):
     # Used by p_other_liming_dolomite, p_other_urea, p_other_ecrop, p_other_liming_calcit
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_production_based: float = None  # type: ignore
     CO2e_production_based_per_t: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    prod_volume: float = None  # type: ignore
+    prod_volume: float = None  # type: ignore -- in tons
+
+    @classmethod
+    def calc(
+        cls, inputs: Inputs, what: str, *, ratio_suffix="_ratio"
+    ) -> "CO2eFromOther":
+        # No idea why we use ratio_ with
+        #   Fact_A_P_other_liming_calcit_ratio_CO2e_pb_to_amount_2018
+        # but not with
+        #   Fact_A_P_other_urea_CO2e_pb_to_amount_2018
+        CO2e_combustion_based = 0.0
+        CO2e_production_based_per_t = inputs.fact(
+            "Fact_A_P_other_" + what + ratio_suffix + "_CO2e_pb_to_amount_2018"
+        )
+        prod_volume = getattr(inputs.entries, "a_other_" + what + "_prod_volume")
+        CO2e_production_based = prod_volume * CO2e_production_based_per_t
+        CO2e_total = CO2e_production_based
+        return cls(
+            CO2e_combustion_based=CO2e_combustion_based,
+            CO2e_production_based=CO2e_production_based,
+            CO2e_production_based_per_t=CO2e_production_based_per_t,
+            CO2e_total=CO2e_total,
+            prod_volume=prod_volume,
+        )
 
 
 @dataclass
@@ -255,11 +275,11 @@ class A18:
     p_soil_leaching: CO2eFromSoil = field(default_factory=CO2eFromSoil)
     p_soil_deposition: CO2eFromSoil = field(default_factory=CO2eFromSoil)
     p_other: CO2eEmissions = field(default_factory=CO2eEmissions)
-    p_other_liming_dolomite: Vars6 = field(default_factory=Vars6)
-    p_other_urea: Vars6 = field(default_factory=Vars6)
-    p_other_ecrop: Vars6 = field(default_factory=Vars6)
+    p_other_liming_dolomite: CO2eFromOther = field(default_factory=CO2eFromOther)
+    p_other_urea: CO2eFromOther = field(default_factory=CO2eFromOther)
+    p_other_ecrop: CO2eFromOther = field(default_factory=CO2eFromOther)
     p_other_liming: CO2eEmissions = field(default_factory=CO2eEmissions)
-    p_other_liming_calcit: Vars6 = field(default_factory=Vars6)
+    p_other_liming_calcit: CO2eFromOther = field(default_factory=CO2eFromOther)
     p_other_kas: Vars7 = field(default_factory=Vars7)
     p_operation: Vars8 = field(default_factory=Vars8)
     p_operation_heat: Vars9 = field(default_factory=Vars9)
@@ -287,23 +307,8 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18, b18: business2018.B18) -> A18:
     p = a18.p
     g = a18.g
     p_fermen = a18.p_fermen
-    p_soil_fertilizer = a18.p_soil_fertilizer
-    p_soil_manure = a18.p_soil_manure
-    p_soil_sludge = a18.p_soil_sludge
-    p_soil_ecrop = a18.p_soil_ecrop
-    p_soil_grazing = a18.p_soil_grazing
-    p_soil_residue = a18.p_soil_residue
-    p_soil_orgfarm = a18.p_soil_orgfarm
-    p_soil_orgloss = a18.p_soil_orgloss
-    p_soil_leaching = a18.p_soil_leaching
-    p_soil_deposition = a18.p_soil_deposition
     p_other = a18.p_other
     p_other_kas = a18.p_other_kas
-    p_other_liming = a18.p_other_liming
-    p_other_liming_calcit = a18.p_other_liming_calcit
-    p_other_liming_dolomite = a18.p_other_liming_dolomite
-    p_other_urea = a18.p_other_urea
-    p_other_ecrop = a18.p_other_ecrop
     p_operation = a18.p_operation
     p_operation_heat = a18.p_operation_heat
     p_operation_elec_elcon = a18.p_operation_elec_elcon
@@ -425,6 +430,13 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18, b18: business2018.B18) -> A18:
         p_soil_leaching,
         p_soil_deposition,
     )
+    p_other_liming_calcit = CO2eFromOther.calc(inputs, "liming_calcit")
+    p_other_liming_dolomite = CO2eFromOther.calc(inputs, "liming_dolomite")
+    p_other_liming = CO2eEmissions.sum(p_other_liming_calcit, p_other_liming_dolomite)
+
+    p_other_urea = CO2eFromOther.calc(inputs, "urea", ratio_suffix="")
+    p_other_ecrop = CO2eFromOther.calc(inputs, "ecrop")
+    p_other_kas = CO2eFromOther.calc(inputs, "kas")
 
     a18.p_fermen_dairycow = p_fermen_dairycow
     a18.p_fermen_nondairy = p_fermen_nondairy
@@ -449,79 +461,13 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18, b18: business2018.B18) -> A18:
     a18.p_soil_leaching = p_soil_leaching
     a18.p_soil_deposition = p_soil_deposition
     a18.p_soil = p_soil
+    a18.p_other_liming_calcit = p_other_liming_calcit
+    a18.p_other_liming_dolomite = p_other_liming_dolomite
+    a18.p_other_liming = p_other_liming
+    a18.p_other_urea = p_other_urea
+    a18.p_other_ecrop = p_other_ecrop
+    a18.p_other_kas = p_other_kas
 
-    p_other_liming_calcit.CO2e_combustion_based = 0.0
-    p_other_liming_calcit.CO2e_production_based_per_t = fact(
-        "Fact_A_P_other_liming_calcit_ratio_CO2e_pb_to_amount_2018"
-    )
-    p_other_liming_calcit.prod_volume = entries.a_other_liming_calcit_prod_volume
-    p_other_liming_calcit.CO2e_production_based = (
-        p_other_liming_calcit.prod_volume
-        * p_other_liming_calcit.CO2e_production_based_per_t
-    )
-    p_other_liming_calcit.CO2e_total = p_other_liming_calcit.CO2e_production_based
-    p_other_liming_calcit.prod_volume = entries.a_other_liming_calcit_prod_volume
-    p_other_liming_calcit.CO2e_production_based_per_t = fact(
-        "Fact_A_P_other_liming_calcit_ratio_CO2e_pb_to_amount_2018"
-    )
-    p_other_liming_calcit.CO2e_production_based = (
-        p_other_liming_calcit.prod_volume
-        * p_other_liming_calcit.CO2e_production_based_per_t
-    )
-    p_other_liming_dolomite.CO2e_combustion_based = 0.0
-    p_other_liming_dolomite.CO2e_production_based_per_t = fact(
-        "Fact_A_P_other_liming_dolomite_ratio_CO2e_pb_to_amount_2018"
-    )
-    p_other_liming_dolomite.prod_volume = entries.a_other_liming_dolomite_prod_volume
-    p_other_liming_dolomite.CO2e_production_based = (
-        p_other_liming_dolomite.prod_volume
-        * p_other_liming_dolomite.CO2e_production_based_per_t
-    )
-    p_other_liming_dolomite.CO2e_total = p_other_liming_dolomite.CO2e_production_based
-    p_other_liming_dolomite.prod_volume = entries.a_other_liming_dolomite_prod_volume
-    p_other_liming_dolomite.CO2e_production_based_per_t = fact(
-        "Fact_A_P_other_liming_dolomite_ratio_CO2e_pb_to_amount_2018"
-    )
-    p_other_liming_dolomite.CO2e_production_based = (
-        p_other_liming_dolomite.prod_volume
-        * p_other_liming_dolomite.CO2e_production_based_per_t
-    )
-    p_other_liming.CO2e_combustion_based = 0.0
-    p_other_liming.CO2e_production_based = (
-        p_other_liming_calcit.CO2e_production_based
-        + p_other_liming_dolomite.CO2e_production_based
-    )
-    p_other_liming.CO2e_total = p_other_liming.CO2e_production_based
-    p_other_urea.CO2e_combustion_based = 0.0
-    p_other_urea.CO2e_production_based_per_t = fact(
-        "Fact_A_P_other_urea_CO2e_pb_to_amount_2018"
-    )
-    p_other_urea.prod_volume = entries.a_other_urea_prod_volume
-    p_other_urea.CO2e_production_based = (
-        p_other_urea.prod_volume * p_other_urea.CO2e_production_based_per_t
-    )
-    p_other_urea.CO2e_total = (
-        p_other_urea.CO2e_production_based + p_other_urea.CO2e_combustion_based
-    )
-    p_other_ecrop.CO2e_combustion_based = 0.0
-    p_other_ecrop.CO2e_production_based_per_t = fact(
-        "Fact_A_P_other_ecrop_ratio_CO2e_pb_to_amount_2018"
-    )
-    p_other_ecrop.prod_volume = entries.a_other_ecrop_prod_volume
-    p_other_ecrop.CO2e_production_based = (
-        p_other_ecrop.prod_volume * p_other_ecrop.CO2e_production_based_per_t
-    )
-    p_other_ecrop.CO2e_total = (
-        p_other_ecrop.CO2e_production_based + p_other_ecrop.CO2e_combustion_based
-    )
-    p_other_kas.prod_volume = entries.a_other_kas_prod_volume
-    p_other_kas.CO2e_production_based_per_t = fact(
-        "Fact_A_P_other_kas_ratio_CO2e_pb_to_amount_2018"
-    )
-    p_other_kas.CO2e_production_based = (
-        p_other_kas.prod_volume * p_other_kas.CO2e_production_based_per_t
-    )
-    p_other_kas.CO2e_total = p_other_kas.CO2e_production_based
     p_other.CO2e_combustion_based = 0.0
     p_other.CO2e_production_based = (
         p_other_liming.CO2e_production_based
