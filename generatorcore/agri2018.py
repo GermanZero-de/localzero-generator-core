@@ -6,11 +6,19 @@ from .utils import div
 
 
 @dataclass
-class Vars0:
+class CO2eProduction:
     # Used by a, p_fermen, p_manure, p_soil, p_other, p_other_liming
     CO2e_combustion_based: float = None  # type: ignore
     CO2e_production_based: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
+
+    @classmethod
+    def sum(cls, *co2es: "CO2eProduction") -> "CO2eProduction":
+        return cls(
+            CO2e_combustion_based=sum(c.CO2e_combustion_based for c in co2es),
+            CO2e_production_based=sum(c.CO2e_production_based for c in co2es),
+            CO2e_total=sum(c.CO2e_total for c in co2es),
+        )
 
 
 @dataclass
@@ -28,12 +36,9 @@ class Vars2:
 
 
 @dataclass
-class CO2eFromFermentationOrManure:
+class CO2eFromFermentationOrManure(CO2eProduction):
     # Used by p_fermen_dairycow, p_fermen_nondairy, p_fermen_swine, p_fermen_poultry, p_fermen_oanimal, p_manure_dairycow, p_manure_nondairy, p_manure_swine, p_manure_poultry, p_manure_oanimal, p_manure_deposition
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_production_based: float = None  # type: ignore
     CO2e_production_based_per_t: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
     amount: float = None  # type: ignore -- in tons of manure ...
 
     @classmethod
@@ -69,6 +74,38 @@ class CO2eFromFermentationOrManure:
         CO2e_combustion_based = 0.0
         CO2e_production_based_per_t = getattr(
             inputs.entries, "a_manure_" + what + "_ratio_CO2e_to_amount"
+        )
+        CO2e_production_based = amount * CO2e_production_based_per_t
+        CO2e_total = CO2e_production_based + CO2e_combustion_based
+        return cls(
+            CO2e_combustion_based=CO2e_combustion_based,
+            CO2e_production_based=CO2e_production_based,
+            CO2e_production_based_per_t=CO2e_production_based_per_t,
+            CO2e_total=CO2e_total,
+            amount=amount,
+        )
+
+    @classmethod
+    def calc_deposition(
+        cls,
+        inputs: Inputs,
+        *,
+        p_fermen_dairycow: "CO2eFromFermentationOrManure",
+        p_fermen_nondairy: "CO2eFromFermentationOrManure",
+        p_fermen_swine: "CO2eFromFermentationOrManure",
+        p_fermen_oanimal: "CO2eFromFermentationOrManure",
+    ) -> "CO2eFromFermentationOrManure":
+        """This computes the deposition of reactive nitrogen of animals (excluding poultry)"""
+
+        CO2e_combustion_based = 0.0
+        CO2e_production_based_per_t = (
+            inputs.entries.a_manure_deposition_ratio_CO2e_to_amount
+        )
+        amount = (
+            p_fermen_dairycow.amount
+            + p_fermen_nondairy.amount
+            + p_fermen_swine.amount
+            + p_fermen_oanimal.amount
         )
         CO2e_production_based = amount * CO2e_production_based_per_t
         CO2e_total = CO2e_production_based + CO2e_combustion_based
@@ -155,10 +192,10 @@ class Vars12:
 
 @dataclass
 class A18:
-    a: Vars0 = field(default_factory=Vars0)
+    a: CO2eProduction = field(default_factory=CO2eProduction)
     p: Vars1 = field(default_factory=Vars1)
     g: Vars2 = field(default_factory=Vars2)
-    p_fermen: Vars0 = field(default_factory=Vars0)
+    p_fermen: CO2eProduction = field(default_factory=CO2eProduction)
     p_fermen_dairycow: CO2eFromFermentationOrManure = field(
         default_factory=CO2eFromFermentationOrManure
     )
@@ -174,7 +211,7 @@ class A18:
     p_fermen_oanimal: CO2eFromFermentationOrManure = field(
         default_factory=CO2eFromFermentationOrManure
     )
-    p_manure: Vars0 = field(default_factory=Vars0)
+    p_manure: CO2eProduction = field(default_factory=CO2eProduction)
     p_manure_dairycow: CO2eFromFermentationOrManure = field(
         default_factory=CO2eFromFermentationOrManure
     )
@@ -193,7 +230,7 @@ class A18:
     p_manure_deposition: CO2eFromFermentationOrManure = field(
         default_factory=CO2eFromFermentationOrManure
     )
-    p_soil: Vars0 = field(default_factory=Vars0)
+    p_soil: CO2eProduction = field(default_factory=CO2eProduction)
     p_soil_fertilizer: Vars5 = field(default_factory=Vars5)
     p_soil_manure: Vars5 = field(default_factory=Vars5)
     p_soil_sludge: Vars5 = field(default_factory=Vars5)
@@ -204,11 +241,11 @@ class A18:
     p_soil_orgloss: Vars5 = field(default_factory=Vars5)
     p_soil_leaching: Vars5 = field(default_factory=Vars5)
     p_soil_deposition: Vars5 = field(default_factory=Vars5)
-    p_other: Vars0 = field(default_factory=Vars0)
+    p_other: CO2eProduction = field(default_factory=CO2eProduction)
     p_other_liming_dolomite: Vars6 = field(default_factory=Vars6)
     p_other_urea: Vars6 = field(default_factory=Vars6)
     p_other_ecrop: Vars6 = field(default_factory=Vars6)
-    p_other_liming: Vars0 = field(default_factory=Vars0)
+    p_other_liming: CO2eProduction = field(default_factory=CO2eProduction)
     p_other_liming_calcit: Vars6 = field(default_factory=Vars6)
     p_other_kas: Vars7 = field(default_factory=Vars7)
     p_operation: Vars8 = field(default_factory=Vars8)
@@ -237,8 +274,6 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18, b18: business2018.B18) -> A18:
     p = a18.p
     g = a18.g
     p_fermen = a18.p_fermen
-    p_manure = a18.p_manure
-    p_manure_deposition = a18.p_manure_deposition
     p_soil_fertilizer = a18.p_soil_fertilizer
     p_soil_manure = a18.p_soil_manure
     p_soil_sludge = a18.p_soil_sludge
@@ -304,6 +339,21 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18, b18: business2018.B18) -> A18:
     p_manure_oanimal = CO2eFromFermentationOrManure.calc_manure(
         inputs, "oanimal", amount=p_fermen_oanimal.amount
     )
+    p_manure_deposition = CO2eFromFermentationOrManure.calc_deposition(
+        inputs,
+        p_fermen_dairycow=p_fermen_dairycow,
+        p_fermen_nondairy=p_fermen_nondairy,
+        p_fermen_swine=p_fermen_swine,
+        p_fermen_oanimal=p_fermen_oanimal,
+    )
+    p_manure = CO2eProduction.sum(
+        p_manure_dairycow,
+        p_manure_nondairy,
+        p_manure_swine,
+        p_manure_poultry,
+        p_manure_oanimal,
+        p_manure_deposition,
+    )
 
     a18.p_fermen_dairycow = p_fermen_dairycow
     a18.p_fermen_nondairy = p_fermen_nondairy
@@ -315,36 +365,9 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18, b18: business2018.B18) -> A18:
     a18.p_manure_swine = p_manure_swine
     a18.p_manure_poultry = p_manure_poultry
     a18.p_manure_oanimal = p_manure_oanimal
+    a18.p_manure_deposition = p_manure_deposition
+    a18.p_manure = p_manure
 
-    p_manure_deposition.CO2e_combustion_based = 0.0
-    p_manure_deposition.CO2e_production_based_per_t = (
-        entries.a_manure_deposition_ratio_CO2e_to_amount
-    )
-    p_manure_deposition.amount = (
-        p_fermen_dairycow.amount
-        + p_fermen_nondairy.amount
-        + p_fermen_swine.amount
-        + p_fermen_oanimal.amount
-    )
-    p_manure_deposition.CO2e_production_based = (
-        p_manure_deposition.amount * p_manure_deposition.CO2e_production_based_per_t
-    )
-    p_manure_deposition.CO2e_total = (
-        p_manure_deposition.CO2e_production_based
-        + p_manure_deposition.CO2e_combustion_based
-    )
-    p_manure.CO2e_combustion_based = 0.0
-    p_manure.CO2e_production_based = (
-        p_manure_dairycow.CO2e_production_based
-        + p_manure_nondairy.CO2e_production_based
-        + p_manure_swine.CO2e_production_based
-        + p_manure_poultry.CO2e_production_based
-        + p_manure_oanimal.CO2e_production_based
-        + p_manure_deposition.CO2e_production_based
-    )
-    p_manure.CO2e_total = (
-        p_manure.CO2e_production_based + p_manure.CO2e_combustion_based
-    )
     p_soil_fertilizer.CO2e_combustion_based = 0.0
     p_soil_fertilizer.CO2e_production_based_per_t = (
         entries.a_soil_fertilizer_ratio_CO2e_to_ha
