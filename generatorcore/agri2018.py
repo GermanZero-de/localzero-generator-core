@@ -28,13 +28,57 @@ class Vars2:
 
 
 @dataclass
-class Vars4:
+class CO2eFromFermentationOrManure:
     # Used by p_fermen_dairycow, p_fermen_nondairy, p_fermen_swine, p_fermen_poultry, p_fermen_oanimal, p_manure_dairycow, p_manure_nondairy, p_manure_swine, p_manure_poultry, p_manure_oanimal, p_manure_deposition
     CO2e_combustion_based: float = None  # type: ignore
     CO2e_production_based: float = None  # type: ignore
     CO2e_production_based_per_t: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
-    amount: float = None  # type: ignore
+    amount: float = None  # type: ignore -- in tons of manure ...
+
+    @classmethod
+    def calc_fermen(
+        cls, inputs: Inputs, what: str, *, alias: str | None = None
+    ) -> "CO2eFromFermentationOrManure":
+        CO2e_combustion_based = 0.0
+        # This line and the next might just be a little too cute.
+        # They make the callsite nice and short, but forego any type checking
+        # I'll keep it like this for now, but this is one of the places where
+        # a better overall design is probably lurking somewhere
+        CO2e_production_based_per_t = inputs.fact(
+            "Fact_A_P_fermen_" + what + "_ratio_CO2e_to_amount_2018"
+        )
+        # Also don't ask me why we called swine except when we called them pig
+        amount = getattr(
+            inputs.entries, "a_fermen_" + (what if alias is None else alias) + "_amount"
+        )
+        CO2e_production_based = amount * CO2e_production_based_per_t
+        CO2e_total = CO2e_production_based + CO2e_combustion_based
+        return cls(
+            CO2e_combustion_based=CO2e_combustion_based,
+            CO2e_production_based=CO2e_production_based,
+            CO2e_production_based_per_t=CO2e_production_based_per_t,
+            CO2e_total=CO2e_total,
+            amount=amount,
+        )
+
+    @classmethod
+    def calc_manure(
+        cls, inputs: Inputs, what: str, *, amount: float
+    ) -> "CO2eFromFermentationOrManure":
+        CO2e_combustion_based = 0.0
+        CO2e_production_based_per_t = getattr(
+            inputs.entries, "a_manure_" + what + "_ratio_CO2e_to_amount"
+        )
+        CO2e_production_based = amount * CO2e_production_based_per_t
+        CO2e_total = CO2e_production_based + CO2e_combustion_based
+        return cls(
+            CO2e_combustion_based=CO2e_combustion_based,
+            CO2e_production_based=CO2e_production_based,
+            CO2e_production_based_per_t=CO2e_production_based_per_t,
+            CO2e_total=CO2e_total,
+            amount=amount,
+        )
 
 
 @dataclass
@@ -115,18 +159,40 @@ class A18:
     p: Vars1 = field(default_factory=Vars1)
     g: Vars2 = field(default_factory=Vars2)
     p_fermen: Vars0 = field(default_factory=Vars0)
-    p_fermen_dairycow: Vars4 = field(default_factory=Vars4)
-    p_fermen_nondairy: Vars4 = field(default_factory=Vars4)
-    p_fermen_swine: Vars4 = field(default_factory=Vars4)
-    p_fermen_poultry: Vars4 = field(default_factory=Vars4)
-    p_fermen_oanimal: Vars4 = field(default_factory=Vars4)
+    p_fermen_dairycow: CO2eFromFermentationOrManure = field(
+        default_factory=CO2eFromFermentationOrManure
+    )
+    p_fermen_nondairy: CO2eFromFermentationOrManure = field(
+        default_factory=CO2eFromFermentationOrManure
+    )
+    p_fermen_swine: CO2eFromFermentationOrManure = field(
+        default_factory=CO2eFromFermentationOrManure
+    )
+    p_fermen_poultry: CO2eFromFermentationOrManure = field(
+        default_factory=CO2eFromFermentationOrManure
+    )
+    p_fermen_oanimal: CO2eFromFermentationOrManure = field(
+        default_factory=CO2eFromFermentationOrManure
+    )
     p_manure: Vars0 = field(default_factory=Vars0)
-    p_manure_dairycow: Vars4 = field(default_factory=Vars4)
-    p_manure_nondairy: Vars4 = field(default_factory=Vars4)
-    p_manure_swine: Vars4 = field(default_factory=Vars4)
-    p_manure_poultry: Vars4 = field(default_factory=Vars4)
-    p_manure_oanimal: Vars4 = field(default_factory=Vars4)
-    p_manure_deposition: Vars4 = field(default_factory=Vars4)
+    p_manure_dairycow: CO2eFromFermentationOrManure = field(
+        default_factory=CO2eFromFermentationOrManure
+    )
+    p_manure_nondairy: CO2eFromFermentationOrManure = field(
+        default_factory=CO2eFromFermentationOrManure
+    )
+    p_manure_swine: CO2eFromFermentationOrManure = field(
+        default_factory=CO2eFromFermentationOrManure
+    )
+    p_manure_poultry: CO2eFromFermentationOrManure = field(
+        default_factory=CO2eFromFermentationOrManure
+    )
+    p_manure_oanimal: CO2eFromFermentationOrManure = field(
+        default_factory=CO2eFromFermentationOrManure
+    )
+    p_manure_deposition: CO2eFromFermentationOrManure = field(
+        default_factory=CO2eFromFermentationOrManure
+    )
     p_soil: Vars0 = field(default_factory=Vars0)
     p_soil_fertilizer: Vars5 = field(default_factory=Vars5)
     p_soil_manure: Vars5 = field(default_factory=Vars5)
@@ -171,17 +237,7 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18, b18: business2018.B18) -> A18:
     p = a18.p
     g = a18.g
     p_fermen = a18.p_fermen
-    p_fermen_dairycow = a18.p_fermen_dairycow
-    p_fermen_nondairy = a18.p_fermen_nondairy
-    p_fermen_swine = a18.p_fermen_swine
-    p_fermen_poultry = a18.p_fermen_poultry
-    p_fermen_oanimal = a18.p_fermen_oanimal
     p_manure = a18.p_manure
-    p_manure_dairycow = a18.p_manure_dairycow
-    p_manure_nondairy = a18.p_manure_nondairy
-    p_manure_swine = a18.p_manure_swine
-    p_manure_poultry = a18.p_manure_poultry
-    p_manure_oanimal = a18.p_manure_oanimal
     p_manure_deposition = a18.p_manure_deposition
     p_soil_fertilizer = a18.p_soil_fertilizer
     p_soil_manure = a18.p_soil_manure
@@ -225,121 +281,41 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18, b18: business2018.B18) -> A18:
     )
     s_heatpump.CO2e_total = s_heatpump.CO2e_combustion_based
     g.CO2e_total = 0.0
-    p_fermen_dairycow.CO2e_combustion_based = 0.0
-    p_fermen_dairycow.CO2e_production_based_per_t = fact(
-        "Fact_A_P_fermen_dairycow_ratio_CO2e_to_amount_2018"
+    p_fermen_dairycow = CO2eFromFermentationOrManure.calc_fermen(inputs, "dairycow")
+    p_fermen_nondairy = CO2eFromFermentationOrManure.calc_fermen(inputs, "nondairy")
+    p_fermen_swine = CO2eFromFermentationOrManure.calc_fermen(
+        inputs, "swine", alias="pig"
     )
-    p_fermen_dairycow.amount = entries.a_fermen_dairycow_amount
-    p_fermen_dairycow.CO2e_production_based = (
-        p_fermen_dairycow.amount * p_fermen_dairycow.CO2e_production_based_per_t
+    p_fermen_poultry = CO2eFromFermentationOrManure.calc_fermen(inputs, "poultry")
+    p_fermen_oanimal = CO2eFromFermentationOrManure.calc_fermen(inputs, "oanimal")
+
+    p_manure_dairycow = CO2eFromFermentationOrManure.calc_manure(
+        inputs, "dairycow", amount=p_fermen_dairycow.amount
     )
-    p_fermen_dairycow.CO2e_total = (
-        p_fermen_dairycow.CO2e_production_based
-        + p_fermen_dairycow.CO2e_combustion_based
+    p_manure_nondairy = CO2eFromFermentationOrManure.calc_manure(
+        inputs, "nondairy", amount=p_fermen_nondairy.amount
     )
-    p_fermen_nondairy.CO2e_combustion_based = 0.0
-    p_fermen_nondairy.CO2e_production_based_per_t = fact(
-        "Fact_A_P_fermen_nondairy_ratio_CO2e_to_amount_2018"
+    p_manure_swine = CO2eFromFermentationOrManure.calc_manure(
+        inputs, "swine", amount=p_fermen_swine.amount
     )
-    p_fermen_nondairy.amount = entries.a_fermen_nondairy_amount
-    p_fermen_nondairy.CO2e_production_based = (
-        p_fermen_nondairy.amount * p_fermen_nondairy.CO2e_production_based_per_t
+    p_manure_poultry = CO2eFromFermentationOrManure.calc_manure(
+        inputs, "poultry", amount=p_fermen_poultry.amount
     )
-    p_fermen_nondairy.CO2e_total = (
-        p_fermen_nondairy.CO2e_production_based
-        + p_fermen_nondairy.CO2e_combustion_based
+    p_manure_oanimal = CO2eFromFermentationOrManure.calc_manure(
+        inputs, "oanimal", amount=p_fermen_oanimal.amount
     )
-    p_fermen_swine.CO2e_combustion_based = 0.0
-    p_fermen_swine.CO2e_production_based_per_t = fact(
-        "Fact_A_P_fermen_swine_ratio_CO2e_to_amount_2018"
-    )
-    p_fermen_swine.amount = entries.a_fermen_pig_amount
-    p_fermen_swine.CO2e_production_based = (
-        p_fermen_swine.amount * p_fermen_swine.CO2e_production_based_per_t
-    )
-    p_fermen_swine.CO2e_total = (
-        p_fermen_swine.CO2e_production_based + p_fermen_swine.CO2e_combustion_based
-    )
-    p_fermen_poultry.CO2e_combustion_based = 0.0
-    p_fermen_poultry.CO2e_production_based_per_t = fact(
-        "Fact_A_P_fermen_poultry_ratio_CO2e_to_amount_2018"
-    )
-    p_fermen_poultry.amount = entries.a_fermen_poultry_amount
-    p_fermen_poultry.CO2e_production_based = (
-        p_fermen_poultry.amount * p_fermen_poultry.CO2e_production_based_per_t
-    )
-    p_fermen_poultry.CO2e_total = p_fermen_poultry.CO2e_production_based
-    p_fermen_poultry.CO2e_total = (
-        p_fermen_poultry.CO2e_production_based + p_fermen_poultry.CO2e_combustion_based
-    )
-    p_fermen_oanimal.CO2e_combustion_based = 0.0
-    p_fermen_oanimal.CO2e_production_based_per_t = fact(
-        "Fact_A_P_fermen_oanimal_ratio_CO2e_to_amount_2018"
-    )
-    p_fermen_oanimal.amount = entries.a_fermen_oanimal_amount
-    p_fermen_oanimal.CO2e_production_based = (
-        p_fermen_oanimal.amount * p_fermen_oanimal.CO2e_production_based_per_t
-    )
-    p_fermen_oanimal.CO2e_total = (
-        p_fermen_oanimal.CO2e_production_based + p_fermen_oanimal.CO2e_combustion_based
-    )
-    p_manure_dairycow.CO2e_combustion_based = 0.0
-    p_manure_dairycow.CO2e_production_based_per_t = (
-        entries.a_manure_dairycow_ratio_CO2e_to_amount
-    )
-    p_manure_dairycow.CO2e_production_based = (
-        p_fermen_dairycow.amount * p_manure_dairycow.CO2e_production_based_per_t
-    )
-    p_manure_dairycow.amount = p_fermen_dairycow.amount
-    p_manure_dairycow.CO2e_total = (
-        p_manure_dairycow.CO2e_production_based
-        + p_manure_dairycow.CO2e_combustion_based
-    )
-    p_manure_nondairy.CO2e_combustion_based = 0.0
-    p_manure_nondairy.CO2e_production_based_per_t = (
-        entries.a_manure_nondairy_ratio_CO2e_to_amount
-    )
-    p_manure_nondairy.CO2e_production_based = (
-        p_fermen_nondairy.amount * p_manure_nondairy.CO2e_production_based_per_t
-    )
-    p_manure_nondairy.amount = p_fermen_nondairy.amount
-    p_manure_nondairy.CO2e_total = (
-        p_manure_nondairy.CO2e_production_based
-        + p_manure_nondairy.CO2e_combustion_based
-    )
-    p_manure_swine.CO2e_combustion_based = 0.0
-    p_manure_swine.CO2e_production_based_per_t = (
-        entries.a_manure_swine_ratio_CO2e_to_amount
-    )
-    p_manure_swine.CO2e_production_based = (
-        p_fermen_swine.amount * p_manure_swine.CO2e_production_based_per_t
-    )
-    p_manure_swine.amount = p_fermen_swine.amount
-    p_manure_swine.CO2e_total = (
-        p_manure_swine.CO2e_production_based + p_manure_swine.CO2e_combustion_based
-    )
-    p_manure_poultry.CO2e_combustion_based = 0.0
-    p_manure_poultry.CO2e_production_based_per_t = (
-        entries.a_manure_poultry_ratio_CO2e_to_amount
-    )
-    p_manure_poultry.CO2e_production_based = (
-        p_fermen_poultry.amount * p_manure_poultry.CO2e_production_based_per_t
-    )
-    p_manure_poultry.amount = p_fermen_poultry.amount
-    p_manure_poultry.CO2e_total = (
-        p_manure_poultry.CO2e_production_based + p_manure_poultry.CO2e_combustion_based
-    )
-    p_manure_oanimal.CO2e_combustion_based = 0.0
-    p_manure_oanimal.CO2e_production_based_per_t = (
-        entries.a_manure_oanimal_ratio_CO2e_to_amount
-    )
-    p_manure_oanimal.CO2e_production_based = (
-        p_fermen_oanimal.amount * p_manure_oanimal.CO2e_production_based_per_t
-    )
-    p_manure_oanimal.amount = p_fermen_oanimal.amount
-    p_manure_oanimal.CO2e_total = (
-        p_manure_oanimal.CO2e_production_based + p_manure_oanimal.CO2e_combustion_based
-    )
+
+    a18.p_fermen_dairycow = p_fermen_dairycow
+    a18.p_fermen_nondairy = p_fermen_nondairy
+    a18.p_fermen_swine = p_fermen_swine
+    a18.p_fermen_poultry = p_fermen_poultry
+    a18.p_fermen_oanimal = p_fermen_oanimal
+    a18.p_manure_dairycow = p_manure_dairycow
+    a18.p_manure_nondairy = p_manure_nondairy
+    a18.p_manure_swine = p_manure_swine
+    a18.p_manure_poultry = p_manure_poultry
+    a18.p_manure_oanimal = p_manure_oanimal
+
     p_manure_deposition.CO2e_combustion_based = 0.0
     p_manure_deposition.CO2e_production_based_per_t = (
         entries.a_manure_deposition_ratio_CO2e_to_amount
