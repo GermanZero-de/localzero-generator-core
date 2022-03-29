@@ -86,7 +86,6 @@ class Result:
     h30: heat2030.H30
     l30: lulucf2030.L30
     a30: agri2030.A30
-    h30: heat2030.H30
 
     m183X: methodology183x.M183X
 

@@ -51,7 +51,6 @@ class EColVars2030:
     ratio_wage_to_emplo: float = None  # type: ignore
     cost_wage: float = None  # type: ignore
     cost_mro_per_MWh: float = None  # type: ignore
-    demand_emplo: float = None  # type: ignore
     emplo_existing: float = None  # type: ignore
     demand_emplo_new: float = None  # type: ignore
     full_load_hour: float = None  # type: ignore
