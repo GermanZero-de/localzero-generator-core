@@ -280,7 +280,7 @@ class A18:
     p_other_ecrop: CO2eFromOther = field(default_factory=CO2eFromOther)
     p_other_liming: CO2eEmissions = field(default_factory=CO2eEmissions)
     p_other_liming_calcit: CO2eFromOther = field(default_factory=CO2eFromOther)
-    p_other_kas: Vars7 = field(default_factory=Vars7)
+    p_other_kas: CO2eFromOther = field(default_factory=CO2eFromOther)
     p_operation: Vars8 = field(default_factory=Vars8)
     p_operation_heat: Vars9 = field(default_factory=Vars9)
     p_operation_elec_elcon: Vars10 = field(default_factory=Vars10)
@@ -308,7 +308,6 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18, b18: business2018.B18) -> A18:
     g = a18.g
     p_fermen = a18.p_fermen
     p_other = a18.p_other
-    p_other_kas = a18.p_other_kas
     p_operation = a18.p_operation
     p_operation_heat = a18.p_operation_heat
     p_operation_elec_elcon = a18.p_operation_elec_elcon
