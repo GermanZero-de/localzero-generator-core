@@ -6,14 +6,14 @@ from .utils import div
 
 
 @dataclass
-class CO2eProduction:
+class CO2eEmissions:
     # Used by a, p_fermen, p_manure, p_soil, p_other, p_other_liming
     CO2e_combustion_based: float = None  # type: ignore
     CO2e_production_based: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
 
     @classmethod
-    def sum(cls, *co2es: "CO2eProduction") -> "CO2eProduction":
+    def sum(cls, *co2es: "CO2eEmissions") -> "CO2eEmissions":
         return cls(
             CO2e_combustion_based=sum(c.CO2e_combustion_based for c in co2es),
             CO2e_production_based=sum(c.CO2e_production_based for c in co2es),
@@ -36,7 +36,7 @@ class Vars2:
 
 
 @dataclass
-class CO2eFromFermentationOrManure(CO2eProduction):
+class CO2eFromFermentationOrManure(CO2eEmissions):
     # Used by p_fermen_dairycow, p_fermen_nondairy, p_fermen_swine, p_fermen_poultry, p_fermen_oanimal, p_manure_dairycow, p_manure_nondairy, p_manure_swine, p_manure_poultry, p_manure_oanimal, p_manure_deposition
     CO2e_production_based_per_t: float = None  # type: ignore
     amount: float = None  # type: ignore -- in tons of manure ...
@@ -119,13 +119,26 @@ class CO2eFromFermentationOrManure(CO2eProduction):
 
 
 @dataclass
-class Vars5:
+class CO2eFromSoil(CO2eEmissions):
     # Used by p_soil_fertilizer, p_soil_manure, p_soil_sludge, p_soil_ecrop, p_soil_grazing, p_soil_residue, p_soil_orgfarm, p_soil_orgloss, p_soil_leaching, p_soil_deposition
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_production_based: float = None  # type: ignore
     CO2e_production_based_per_t: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
     area_ha: float = None  # type: ignore
+
+    @classmethod
+    def calc(cls, ratio_CO2e_to_ha: float, area_ha: float) -> "CO2eFromSoil":
+        CO2e_combustion_based = 0.0
+        # Huh? This line looks really odd.  Is that a we combined multiple different variables in the same spreadsheet column
+        # modelling oddity?
+        CO2e_production_based_per_t = ratio_CO2e_to_ha
+        CO2e_production_based = area_ha * CO2e_production_based_per_t
+        CO2e_total = CO2e_production_based + CO2e_combustion_based
+        return cls(
+            CO2e_combustion_based=CO2e_combustion_based,
+            CO2e_production_based=CO2e_production_based,
+            CO2e_production_based_per_t=CO2e_production_based_per_t,
+            CO2e_total=CO2e_total,
+            area_ha=area_ha,
+        )
 
 
 @dataclass
@@ -192,10 +205,10 @@ class Vars12:
 
 @dataclass
 class A18:
-    a: CO2eProduction = field(default_factory=CO2eProduction)
+    a: CO2eEmissions = field(default_factory=CO2eEmissions)
     p: Vars1 = field(default_factory=Vars1)
     g: Vars2 = field(default_factory=Vars2)
-    p_fermen: CO2eProduction = field(default_factory=CO2eProduction)
+    p_fermen: CO2eEmissions = field(default_factory=CO2eEmissions)
     p_fermen_dairycow: CO2eFromFermentationOrManure = field(
         default_factory=CO2eFromFermentationOrManure
     )
@@ -211,7 +224,7 @@ class A18:
     p_fermen_oanimal: CO2eFromFermentationOrManure = field(
         default_factory=CO2eFromFermentationOrManure
     )
-    p_manure: CO2eProduction = field(default_factory=CO2eProduction)
+    p_manure: CO2eEmissions = field(default_factory=CO2eEmissions)
     p_manure_dairycow: CO2eFromFermentationOrManure = field(
         default_factory=CO2eFromFermentationOrManure
     )
@@ -230,22 +243,22 @@ class A18:
     p_manure_deposition: CO2eFromFermentationOrManure = field(
         default_factory=CO2eFromFermentationOrManure
     )
-    p_soil: CO2eProduction = field(default_factory=CO2eProduction)
-    p_soil_fertilizer: Vars5 = field(default_factory=Vars5)
-    p_soil_manure: Vars5 = field(default_factory=Vars5)
-    p_soil_sludge: Vars5 = field(default_factory=Vars5)
-    p_soil_ecrop: Vars5 = field(default_factory=Vars5)
-    p_soil_grazing: Vars5 = field(default_factory=Vars5)
-    p_soil_residue: Vars5 = field(default_factory=Vars5)
-    p_soil_orgfarm: Vars5 = field(default_factory=Vars5)
-    p_soil_orgloss: Vars5 = field(default_factory=Vars5)
-    p_soil_leaching: Vars5 = field(default_factory=Vars5)
-    p_soil_deposition: Vars5 = field(default_factory=Vars5)
-    p_other: CO2eProduction = field(default_factory=CO2eProduction)
+    p_soil: CO2eEmissions = field(default_factory=CO2eEmissions)
+    p_soil_fertilizer: CO2eFromSoil = field(default_factory=CO2eFromSoil)
+    p_soil_manure: CO2eFromSoil = field(default_factory=CO2eFromSoil)
+    p_soil_sludge: CO2eFromSoil = field(default_factory=CO2eFromSoil)
+    p_soil_ecrop: CO2eFromSoil = field(default_factory=CO2eFromSoil)
+    p_soil_grazing: CO2eFromSoil = field(default_factory=CO2eFromSoil)
+    p_soil_residue: CO2eFromSoil = field(default_factory=CO2eFromSoil)
+    p_soil_orgfarm: CO2eFromSoil = field(default_factory=CO2eFromSoil)
+    p_soil_orgloss: CO2eFromSoil = field(default_factory=CO2eFromSoil)
+    p_soil_leaching: CO2eFromSoil = field(default_factory=CO2eFromSoil)
+    p_soil_deposition: CO2eFromSoil = field(default_factory=CO2eFromSoil)
+    p_other: CO2eEmissions = field(default_factory=CO2eEmissions)
     p_other_liming_dolomite: Vars6 = field(default_factory=Vars6)
     p_other_urea: Vars6 = field(default_factory=Vars6)
     p_other_ecrop: Vars6 = field(default_factory=Vars6)
-    p_other_liming: CO2eProduction = field(default_factory=CO2eProduction)
+    p_other_liming: CO2eEmissions = field(default_factory=CO2eEmissions)
     p_other_liming_calcit: Vars6 = field(default_factory=Vars6)
     p_other_kas: Vars7 = field(default_factory=Vars7)
     p_operation: Vars8 = field(default_factory=Vars8)
@@ -346,13 +359,36 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18, b18: business2018.B18) -> A18:
         p_fermen_swine=p_fermen_swine,
         p_fermen_oanimal=p_fermen_oanimal,
     )
-    p_manure = CO2eProduction.sum(
+    p_manure = CO2eEmissions.sum(
         p_manure_dairycow,
         p_manure_nondairy,
         p_manure_swine,
         p_manure_poultry,
         p_manure_oanimal,
         p_manure_deposition,
+    )
+
+    # crop land soil emissions
+    p_soil_fertilizer = CO2eFromSoil.calc(
+        inputs.entries.a_soil_fertilizer_ratio_CO2e_to_ha, area_ha=l18.g_crop.area_ha
+    )
+    p_soil_manure = CO2eFromSoil.calc(
+        inputs.entries.a_soil_manure_ratio_CO2e_to_ha, area_ha=l18.g_crop.area_ha
+    )
+    p_soil_sludge = CO2eFromSoil.calc(
+        inputs.entries.a_soil_sludge_ratio_CO2e_to_ha, area_ha=l18.g_crop.area_ha
+    )
+    p_soil_ecrop = CO2eFromSoil.calc(
+        inputs.entries.a_soil_ecrop_ratio_CO2e_to_ha, area_ha=l18.g_crop.area_ha
+    )
+    p_soil_residue = CO2eFromSoil.calc(
+        inputs.entries.a_soil_residue_ratio_CO2e_to_ha, area_ha=l18.g_crop.area_ha
+    )
+
+    # grass land soil emissions
+    # TODO: Fix spelling of grazing in entries
+    p_soil_grazing = CO2eFromSoil.calc(
+        inputs.entries.a_soil_crazing_ratio_CO2e_to_ha, area_ha=l18.g_grass.area_ha
     )
 
     a18.p_fermen_dairycow = p_fermen_dairycow
@@ -367,64 +403,13 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18, b18: business2018.B18) -> A18:
     a18.p_manure_oanimal = p_manure_oanimal
     a18.p_manure_deposition = p_manure_deposition
     a18.p_manure = p_manure
+    a18.p_soil_fertilizer = p_soil_fertilizer
+    a18.p_soil_manure = p_soil_manure
+    a18.p_soil_sludge = p_soil_sludge
+    a18.p_soil_ecrop = p_soil_ecrop
+    a18.p_soil_residue = p_soil_residue
+    a18.p_soil_grazing = p_soil_grazing
 
-    p_soil_fertilizer.CO2e_combustion_based = 0.0
-    p_soil_fertilizer.CO2e_production_based_per_t = (
-        entries.a_soil_fertilizer_ratio_CO2e_to_ha
-    )
-    p_soil_fertilizer.area_ha = l18.g_crop.area_ha
-    p_soil_fertilizer.CO2e_production_based = (
-        p_soil_fertilizer.area_ha * p_soil_fertilizer.CO2e_production_based_per_t
-    )
-    p_soil_fertilizer.CO2e_total = (
-        p_soil_fertilizer.CO2e_production_based
-        + p_soil_fertilizer.CO2e_combustion_based
-    )
-    p_soil_manure.CO2e_combustion_based = 0.0
-    p_soil_manure.CO2e_production_based_per_t = entries.a_soil_manure_ratio_CO2e_to_ha
-    p_soil_manure.area_ha = l18.g_crop.area_ha
-    p_soil_manure.CO2e_production_based = (
-        p_soil_manure.area_ha * p_soil_manure.CO2e_production_based_per_t
-    )
-    p_soil_manure.CO2e_total = (
-        p_soil_manure.CO2e_production_based + p_soil_manure.CO2e_combustion_based
-    )
-    p_soil_sludge.CO2e_combustion_based = 0.0
-    p_soil_sludge.CO2e_production_based_per_t = entries.a_soil_sludge_ratio_CO2e_to_ha
-    p_soil_sludge.area_ha = l18.g_crop.area_ha
-    p_soil_sludge.CO2e_production_based = (
-        p_soil_sludge.area_ha * p_soil_sludge.CO2e_production_based_per_t
-    )
-    p_soil_sludge.CO2e_total = (
-        p_soil_sludge.CO2e_production_based + p_soil_sludge.CO2e_combustion_based
-    )
-    p_soil_ecrop.CO2e_combustion_based = 0.0
-    p_soil_ecrop.CO2e_production_based_per_t = entries.a_soil_ecrop_ratio_CO2e_to_ha
-    p_soil_ecrop.area_ha = l18.g_crop.area_ha
-    p_soil_ecrop.CO2e_production_based = (
-        p_soil_ecrop.area_ha * p_soil_ecrop.CO2e_production_based_per_t
-    )
-    p_soil_ecrop.CO2e_total = (
-        p_soil_ecrop.CO2e_production_based + p_soil_ecrop.CO2e_combustion_based
-    )
-    p_soil_grazing.CO2e_combustion_based = 0.0
-    p_soil_grazing.CO2e_production_based_per_t = entries.a_soil_crazing_ratio_CO2e_to_ha
-    p_soil_grazing.area_ha = l18.g_grass.area_ha
-    p_soil_grazing.CO2e_production_based = (
-        p_soil_grazing.area_ha * p_soil_grazing.CO2e_production_based_per_t
-    )
-    p_soil_grazing.CO2e_total = (
-        p_soil_grazing.CO2e_production_based + p_soil_grazing.CO2e_combustion_based
-    )
-    p_soil_residue.CO2e_combustion_based = 0.0
-    p_soil_residue.CO2e_production_based_per_t = entries.a_soil_residue_ratio_CO2e_to_ha
-    p_soil_residue.area_ha = l18.g_crop.area_ha
-    p_soil_residue.CO2e_production_based = (
-        p_soil_residue.area_ha * p_soil_residue.CO2e_production_based_per_t
-    )
-    p_soil_residue.CO2e_total = (
-        p_soil_residue.CO2e_production_based + p_soil_residue.CO2e_combustion_based
-    )
     p_soil_orgfarm.CO2e_combustion_based = 0.0
     p_soil_orgfarm.CO2e_production_based_per_t = entries.a_soil_orgfarm_ratio_CO2e_to_ha
     p_soil_orgfarm.area_ha = (
