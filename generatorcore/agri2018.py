@@ -1,4 +1,4 @@
-from dataclasses import dataclass, asdict, field
+from dataclasses import dataclass, field
 
 from . import business2018, lulucf2018
 from .inputs import Inputs
@@ -8,9 +8,9 @@ from .utils import div
 @dataclass
 class CO2eEmissions:
     # Used by a, p_fermen, p_manure, p_soil, p_other, p_other_liming
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_production_based: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
+    CO2e_combustion_based: float
+    CO2e_production_based: float
+    CO2e_total: float
 
     @classmethod
     def sum(cls, *co2es: "CO2eEmissions") -> "CO2eEmissions":
@@ -25,22 +25,22 @@ class CO2eEmissions:
 class P:
     # TODO: What is a good name for this?
     # Used by p
-    CO2e_production_based: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    energy: float = None  # type: ignore
+    CO2e_production_based: float
+    CO2e_total: float
+    energy: float
 
 
 @dataclass
 class CO2e_total:
     # Used by g
-    CO2e_total: float = None  # type: ignore
+    CO2e_total: float
 
 
 @dataclass
 class CO2eFromFermentationOrManure(CO2eEmissions):
     # Used by p_fermen_dairycow, p_fermen_nondairy, p_fermen_swine, p_fermen_poultry, p_fermen_oanimal, p_manure_dairycow, p_manure_nondairy, p_manure_swine, p_manure_poultry, p_manure_oanimal, p_manure_deposition
-    CO2e_production_based_per_t: float = None  # type: ignore
-    amount: float = None  # type: ignore -- in tons of manure ...
+    CO2e_production_based_per_t: float
+    amount: float
 
     @classmethod
     def calc_fermen(
@@ -122,8 +122,8 @@ class CO2eFromFermentationOrManure(CO2eEmissions):
 @dataclass
 class CO2eFromSoil(CO2eEmissions):
     # Used by p_soil_fertilizer, p_soil_manure, p_soil_sludge, p_soil_ecrop, p_soil_grazing, p_soil_residue, p_soil_orgfarm, p_soil_orgloss, p_soil_leaching, p_soil_deposition
-    CO2e_production_based_per_t: float = None  # type: ignore
-    area_ha: float = None  # type: ignore
+    CO2e_production_based_per_t: float
+    area_ha: float
 
     @classmethod
     def calc(cls, ratio_CO2e_to_ha: float, area_ha: float) -> "CO2eFromSoil":
@@ -145,12 +145,12 @@ class CO2eFromSoil(CO2eEmissions):
 @dataclass
 class CO2eFromOther(CO2eEmissions):
     # Used by p_other_liming_dolomite, p_other_urea, p_other_ecrop, p_other_liming_calcit
-    CO2e_production_based_per_t: float = None  # type: ignore
-    prod_volume: float = None  # type: ignore -- in tons
+    CO2e_production_based_per_t: float
+    prod_volume: float
 
     @classmethod
     def calc(
-        cls, inputs: Inputs, what: str, *, ratio_suffix="_ratio"
+        cls, inputs: Inputs, what: str, *, ratio_suffix: str = "_ratio"
     ) -> "CO2eFromOther":
         # No idea why we use ratio_ with
         #   Fact_A_P_other_liming_calcit_ratio_CO2e_pb_to_amount_2018
@@ -175,13 +175,13 @@ class CO2eFromOther(CO2eEmissions):
 @dataclass
 class Energy:
     # Used by p_operation, p_operation_elec_heatpump
-    energy: float = None  # type: ignore
+    energy: float
 
 
 @dataclass
 class EnergyWithPercentage(Energy):
     # Used by p_operation_elec_elcon, p_operation_vehicles
-    pct_energy: float = None  # type: ignore
+    pct_energy: float
 
     @classmethod
     def calc(cls, *, energy: float, total_energy: float) -> "EnergyWithPercentage":
@@ -191,8 +191,8 @@ class EnergyWithPercentage(Energy):
 @dataclass
 class OperationHeatEnergy(EnergyWithPercentage):
     # Used by p_operation_heat
-    area_m2: float = None  # type: ignore
-    factor_adapted_to_fec: float = None  # type: ignore
+    area_m2: float
+    factor_adapted_to_fec: float
 
     @classmethod
     def calc(
@@ -216,10 +216,10 @@ class OperationHeatEnergy(EnergyWithPercentage):
 @dataclass
 class CO2eFromEnergyUse(CO2eEmissions):
     # Used by s
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_production_based: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    energy: float = None  # type: ignore
+    CO2e_combustion_based: float
+    CO2e_production_based: float
+    CO2e_total: float
+    energy: float
 
     @classmethod
     def sum(cls, *co2es: "CO2eFromEnergyUse") -> "CO2eFromEnergyUse":
@@ -235,8 +235,8 @@ class CO2eFromEnergyUse(CO2eEmissions):
 class CO2eFromEnergyUseDetail(CO2eFromEnergyUse):
     # TODO: Why are these called s_ ?
     # Used by s_petrol, s_diesel, s_fueloil, s_lpg, s_gas, s_biomass, s_elec, s_heatpump
-    CO2e_combustion_based_per_MWh: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
+    CO2e_combustion_based_per_MWh: float
+    pct_energy: float
 
     @classmethod
     def calc(
@@ -257,80 +257,54 @@ class CO2eFromEnergyUseDetail(CO2eFromEnergyUse):
 
 @dataclass
 class A18:
-    a: CO2eEmissions = field(default_factory=CO2eEmissions)
-    p: P = field(default_factory=P)
-    g: CO2e_total = field(default_factory=CO2e_total)
-    p_fermen: CO2eEmissions = field(default_factory=CO2eEmissions)
-    p_fermen_dairycow: CO2eFromFermentationOrManure = field(
-        default_factory=CO2eFromFermentationOrManure
-    )
-    p_fermen_nondairy: CO2eFromFermentationOrManure = field(
-        default_factory=CO2eFromFermentationOrManure
-    )
-    p_fermen_swine: CO2eFromFermentationOrManure = field(
-        default_factory=CO2eFromFermentationOrManure
-    )
-    p_fermen_poultry: CO2eFromFermentationOrManure = field(
-        default_factory=CO2eFromFermentationOrManure
-    )
-    p_fermen_oanimal: CO2eFromFermentationOrManure = field(
-        default_factory=CO2eFromFermentationOrManure
-    )
-    p_manure: CO2eEmissions = field(default_factory=CO2eEmissions)
-    p_manure_dairycow: CO2eFromFermentationOrManure = field(
-        default_factory=CO2eFromFermentationOrManure
-    )
-    p_manure_nondairy: CO2eFromFermentationOrManure = field(
-        default_factory=CO2eFromFermentationOrManure
-    )
-    p_manure_swine: CO2eFromFermentationOrManure = field(
-        default_factory=CO2eFromFermentationOrManure
-    )
-    p_manure_poultry: CO2eFromFermentationOrManure = field(
-        default_factory=CO2eFromFermentationOrManure
-    )
-    p_manure_oanimal: CO2eFromFermentationOrManure = field(
-        default_factory=CO2eFromFermentationOrManure
-    )
-    p_manure_deposition: CO2eFromFermentationOrManure = field(
-        default_factory=CO2eFromFermentationOrManure
-    )
-    p_soil: CO2eEmissions = field(default_factory=CO2eEmissions)
-    p_soil_fertilizer: CO2eFromSoil = field(default_factory=CO2eFromSoil)
-    p_soil_manure: CO2eFromSoil = field(default_factory=CO2eFromSoil)
-    p_soil_sludge: CO2eFromSoil = field(default_factory=CO2eFromSoil)
-    p_soil_ecrop: CO2eFromSoil = field(default_factory=CO2eFromSoil)
-    p_soil_grazing: CO2eFromSoil = field(default_factory=CO2eFromSoil)
-    p_soil_residue: CO2eFromSoil = field(default_factory=CO2eFromSoil)
-    p_soil_orgfarm: CO2eFromSoil = field(default_factory=CO2eFromSoil)
-    p_soil_orgloss: CO2eFromSoil = field(default_factory=CO2eFromSoil)
-    p_soil_leaching: CO2eFromSoil = field(default_factory=CO2eFromSoil)
-    p_soil_deposition: CO2eFromSoil = field(default_factory=CO2eFromSoil)
-    p_other: CO2eEmissions = field(default_factory=CO2eEmissions)
-    p_other_liming_dolomite: CO2eFromOther = field(default_factory=CO2eFromOther)
-    p_other_urea: CO2eFromOther = field(default_factory=CO2eFromOther)
-    p_other_ecrop: CO2eFromOther = field(default_factory=CO2eFromOther)
-    p_other_liming: CO2eEmissions = field(default_factory=CO2eEmissions)
-    p_other_liming_calcit: CO2eFromOther = field(default_factory=CO2eFromOther)
-    p_other_kas: CO2eFromOther = field(default_factory=CO2eFromOther)
-    p_operation: Energy = field(default_factory=Energy)
-    p_operation_heat: OperationHeatEnergy = field(default_factory=OperationHeatEnergy)
-    p_operation_elec_elcon: EnergyWithPercentage = field(
-        default_factory=EnergyWithPercentage
-    )
-    p_operation_elec_heatpump: Energy = field(default_factory=Energy)
-    p_operation_vehicles: EnergyWithPercentage = field(
-        default_factory=EnergyWithPercentage
-    )
-    s: CO2eFromEnergyUse = field(default_factory=CO2eFromEnergyUse)
-    s_petrol: CO2eFromEnergyUseDetail = field(default_factory=CO2eFromEnergyUseDetail)
-    s_diesel: CO2eFromEnergyUseDetail = field(default_factory=CO2eFromEnergyUseDetail)
-    s_fueloil: CO2eFromEnergyUseDetail = field(default_factory=CO2eFromEnergyUseDetail)
-    s_lpg: CO2eFromEnergyUseDetail = field(default_factory=CO2eFromEnergyUseDetail)
-    s_gas: CO2eFromEnergyUseDetail = field(default_factory=CO2eFromEnergyUseDetail)
-    s_biomass: CO2eFromEnergyUseDetail = field(default_factory=CO2eFromEnergyUseDetail)
-    s_elec: CO2eFromEnergyUseDetail = field(default_factory=CO2eFromEnergyUseDetail)
-    s_heatpump: CO2eFromEnergyUseDetail = field(default_factory=CO2eFromEnergyUseDetail)
+    a: CO2eEmissions
+    p: P
+    g: CO2e_total
+    p_fermen: CO2eEmissions
+    p_fermen_dairycow: CO2eFromFermentationOrManure
+    p_fermen_nondairy: CO2eFromFermentationOrManure
+    p_fermen_swine: CO2eFromFermentationOrManure
+    p_fermen_poultry: CO2eFromFermentationOrManure
+    p_fermen_oanimal: CO2eFromFermentationOrManure
+    p_manure: CO2eEmissions
+    p_manure_dairycow: CO2eFromFermentationOrManure
+    p_manure_nondairy: CO2eFromFermentationOrManure
+    p_manure_swine: CO2eFromFermentationOrManure
+    p_manure_poultry: CO2eFromFermentationOrManure
+    p_manure_oanimal: CO2eFromFermentationOrManure
+    p_manure_deposition: CO2eFromFermentationOrManure
+    p_soil: CO2eEmissions
+    p_soil_fertilizer: CO2eFromSoil
+    p_soil_manure: CO2eFromSoil
+    p_soil_sludge: CO2eFromSoil
+    p_soil_ecrop: CO2eFromSoil
+    p_soil_grazing: CO2eFromSoil
+    p_soil_residue: CO2eFromSoil
+    p_soil_orgfarm: CO2eFromSoil
+    p_soil_orgloss: CO2eFromSoil
+    p_soil_leaching: CO2eFromSoil
+    p_soil_deposition: CO2eFromSoil
+    p_other: CO2eEmissions
+    p_other_liming_dolomite: CO2eFromOther
+    p_other_urea: CO2eFromOther
+    p_other_ecrop: CO2eFromOther
+    p_other_liming: CO2eEmissions
+    p_other_liming_calcit: CO2eFromOther
+    p_other_kas: CO2eFromOther
+    p_operation: Energy
+    p_operation_heat: OperationHeatEnergy
+    p_operation_elec_elcon: EnergyWithPercentage
+    p_operation_elec_heatpump: Energy
+    p_operation_vehicles: EnergyWithPercentage
+    s: CO2eFromEnergyUse
+    s_petrol: CO2eFromEnergyUseDetail
+    s_diesel: CO2eFromEnergyUseDetail
+    s_fueloil: CO2eFromEnergyUseDetail
+    s_lpg: CO2eFromEnergyUseDetail
+    s_gas: CO2eFromEnergyUseDetail
+    s_biomass: CO2eFromEnergyUseDetail
+    s_elec: CO2eFromEnergyUseDetail
+    s_heatpump: CO2eFromEnergyUseDetail
 
 
 def calc(inputs: Inputs, *, l18: lulucf2018.L18, b18: business2018.B18) -> A18:
