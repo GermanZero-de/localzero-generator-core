@@ -23,7 +23,6 @@ class EColVars2030:
     CO2e_total: float = None  # type: ignore
     CO2e_total_2021_estimated: float = None  # type: ignore
     demand_electricity: float = None  # type: ignore
-    demand_emplo: float = None  # type: ignore
     demand_emplo_com: float = None  # type: ignore
     power_installed: float = None  # type: ignore
     power_to_be_installed_pct: float = None  # type: ignore

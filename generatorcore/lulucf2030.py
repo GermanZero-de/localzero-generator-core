@@ -81,7 +81,6 @@ class L30:
     g_wood: LColVars2030 = field(default_factory=LColVars2030)
     pyr: LColVars2030 = field(default_factory=LColVars2030)
     g_planning: LColVars2030 = field(default_factory=LColVars2030)
-    g_crop_org: LColVars2030 = field(default_factory=LColVars2030)
     g_grass_org: LColVars2030 = field(default_factory=LColVars2030)
     g_wet_org: LColVars2030 = field(default_factory=LColVars2030)
     g_wet_org_r: LColVars2030 = field(default_factory=LColVars2030)
