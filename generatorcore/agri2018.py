@@ -225,7 +225,6 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18, b18: business2018.B18) -> A18:
     )
     s_heatpump.CO2e_total = s_heatpump.CO2e_combustion_based
     g.CO2e_total = 0.0
-
     p_fermen_dairycow.CO2e_combustion_based = 0.0
     p_fermen_dairycow.CO2e_production_based_per_t = fact(
         "Fact_A_P_fermen_dairycow_ratio_CO2e_to_amount_2018"
@@ -370,7 +369,6 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18, b18: business2018.B18) -> A18:
     p_manure.CO2e_total = (
         p_manure.CO2e_production_based + p_manure.CO2e_combustion_based
     )
-
     p_soil_fertilizer.CO2e_combustion_based = 0.0
     p_soil_fertilizer.CO2e_production_based_per_t = (
         entries.a_soil_fertilizer_ratio_CO2e_to_ha
@@ -489,7 +487,6 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18, b18: business2018.B18) -> A18:
         + p_soil_deposition.CO2e_production_based
     )
     p_soil.CO2e_total = p_soil.CO2e_production_based + p_soil.CO2e_combustion_based
-
     p_other_liming_calcit.CO2e_combustion_based = 0.0
     p_other_liming_calcit.CO2e_production_based_per_t = fact(
         "Fact_A_P_other_liming_calcit_ratio_CO2e_pb_to_amount_2018"
@@ -575,8 +572,6 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18, b18: business2018.B18) -> A18:
         + p_other_kas.CO2e_total
         + p_other_ecrop.CO2e_total
     )
-
-    s.CO2e_production_based = 0.0
     s_petrol.CO2e_production_based = 0.0
     s_petrol.CO2e_combustion_based_per_MWh = fact(
         "Fact_T_S_petrol_EmFa_tank_wheel_2018"
@@ -632,6 +627,7 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18, b18: business2018.B18) -> A18:
     s_elec.CO2e_combustion_based_per_MWh = fact("Fact_RB_S_elec_ratio_CO2e_to_fec")
     s_elec.CO2e_combustion_based = s_elec.energy * s_elec.CO2e_combustion_based_per_MWh
     s_elec.CO2e_total = s_elec.CO2e_production_based + s_elec.CO2e_combustion_based
+    s.CO2e_production_based = 0.0
     s.energy = (
         s_petrol.energy
         + s_diesel.energy
@@ -644,19 +640,10 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18, b18: business2018.B18) -> A18:
     s_petrol.pct_energy = div(s_petrol.energy, s.energy)
     s_diesel.pct_energy = div(s_diesel.energy, s.energy)
     s_fueloil.pct_energy = div(s_fueloil.energy, s.energy)
-    s_lpg.pct_energy = div(s_lpg.energy, s.energy)
-    s_gas.pct_energy = div(s_gas.energy, s.energy)
     s_biomass.pct_energy = div(s_biomass.energy, s.energy)
     s_elec.pct_energy = div(s_elec.energy, s.energy)
-    s.CO2e_combustion_based = (
-        s_petrol.CO2e_combustion_based
-        + s_diesel.CO2e_combustion_based
-        + s_fueloil.CO2e_combustion_based
-        + s_lpg.CO2e_combustion_based
-        + s_gas.CO2e_combustion_based
-        + s_biomass.CO2e_combustion_based
-    )
-    s.CO2e_total = s.CO2e_production_based + s.CO2e_combustion_based
+    s_lpg.pct_energy = div(s_lpg.energy, s.energy)
+    s_gas.pct_energy = div(s_gas.energy, s.energy)
     s.pct_energy = (
         s_petrol.pct_energy
         + s_diesel.pct_energy
@@ -666,6 +653,15 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18, b18: business2018.B18) -> A18:
         + s_biomass.pct_energy
         + s_elec.pct_energy
     )
+    s.CO2e_combustion_based = (
+        s_petrol.CO2e_combustion_based
+        + s_diesel.CO2e_combustion_based
+        + s_fueloil.CO2e_combustion_based
+        + s_lpg.CO2e_combustion_based
+        + s_gas.CO2e_combustion_based
+        + s_biomass.CO2e_combustion_based
+    )
+    s.CO2e_total = s.CO2e_production_based + s.CO2e_combustion_based
     p_operation_elec_heatpump.energy = 0
     p_fermen.CO2e_production_based = p_fermen.CO2e_production_based = (
         p_fermen_dairycow.CO2e_production_based
@@ -678,19 +674,7 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18, b18: business2018.B18) -> A18:
     p_fermen.CO2e_total = (
         p_fermen.CO2e_production_based + p_fermen.CO2e_combustion_based
     )
-    p_operation_heat.area_m2 = (
-        b18.p_nonresi.area_m2
-        * fact("Fact_A_P_energy_buildings_ratio_A_to_B")
-        / (1 - fact("Fact_A_P_energy_buildings_ratio_A_to_B"))
-    )
     p_operation.energy = s.energy
-    p_operation_heat.energy = (
-        s_fueloil.energy + s_lpg.energy + s_gas.energy + s_biomass.energy
-    )
-    p_operation_heat.factor_adapted_to_fec = div(
-        p_operation_heat.energy, p_operation_heat.area_m2
-    )
-    p_operation_heat.pct_energy = div(p_operation_heat.energy, p_operation.energy)
     p_operation_elec_elcon.energy = s_elec.energy
     p_operation_elec_elcon.pct_energy = div(
         p_operation_elec_elcon.energy, p_operation.energy
@@ -699,6 +683,18 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18, b18: business2018.B18) -> A18:
     p_operation_vehicles.pct_energy = div(
         p_operation_vehicles.energy, p_operation.energy
     )
+    p_operation_heat.area_m2 = (
+        b18.p_nonresi.area_m2
+        * fact("Fact_A_P_energy_buildings_ratio_A_to_B")
+        / (1 - fact("Fact_A_P_energy_buildings_ratio_A_to_B"))
+    )
+    p_operation_heat.energy = (
+        s_fueloil.energy + s_lpg.energy + s_gas.energy + s_biomass.energy
+    )
+    p_operation_heat.factor_adapted_to_fec = div(
+        p_operation_heat.energy, p_operation_heat.area_m2
+    )
+    p_operation_heat.pct_energy = div(p_operation_heat.energy, p_operation.energy)
     p.CO2e_production_based = (
         p_fermen.CO2e_production_based
         + p_manure.CO2e_production_based
