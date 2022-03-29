@@ -1,7 +1,6 @@
 # pyright: strict
 from ..inputs import Inputs
 from .i18 import I18
-from .co2e import CO2e
 from .energy_demand import calc_energy_demand
 from .energy_source import calc_energy_sources
 
@@ -12,12 +11,7 @@ def calc(inputs: Inputs) -> I18:
     production = calc_energy_demand(inputs)
     energy_source = calc_energy_sources(inputs)
 
-    i = CO2e()
-    i.prod_volume = production.p.prod_volume
-    i.CO2e_production_based = production.p.CO2e_production_based
-    i.CO2e_combustion_based = production.p.CO2e_combustion_based
-    i.CO2e_total = production.p.CO2e_total
-    i.energy = production.p.energy
+    i = production.p
 
     return I18(
         i=i,
