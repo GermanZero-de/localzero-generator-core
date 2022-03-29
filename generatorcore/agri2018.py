@@ -391,6 +391,41 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18, b18: business2018.B18) -> A18:
         inputs.entries.a_soil_crazing_ratio_CO2e_to_ha, area_ha=l18.g_grass.area_ha
     )
 
+    # organic soil emissions
+    p_soil_orgfarm = CO2eFromSoil.calc(
+        inputs.entries.a_soil_orgfarm_ratio_CO2e_to_ha,
+        area_ha=l18.g_crop_org_low.area_ha
+        + l18.g_crop_org_high.area_ha
+        + l18.g_grass_org_low.area_ha
+        + l18.g_grass_org_high.area_ha,
+    )
+    p_soil_orgloss = CO2eFromSoil.calc(
+        inputs.entries.a_soil_orgloss_ratio_CO2e_to_ha,
+        area_ha=l18.g_crop_org_low.area_ha + l18.g_crop_org_high.area_ha,
+    )
+
+    # other soil emissions
+    p_soil_leaching = CO2eFromSoil.calc(
+        inputs.entries.a_soil_leaching_ratio_CO2e_to_ha,
+        area_ha=l18.g_crop.area_ha + l18.g_grass.area_ha,
+    )
+    p_soil_deposition = CO2eFromSoil.calc(
+        inputs.entries.a_soil_deposition_ratio_CO2e_to_ha,
+        area_ha=l18.g_crop.area_ha + l18.g_grass.area_ha,
+    )
+    p_soil = CO2eEmissions.sum(
+        p_soil_fertilizer,
+        p_soil_manure,
+        p_soil_sludge,
+        p_soil_ecrop,
+        p_soil_grazing,
+        p_soil_residue,
+        p_soil_orgfarm,
+        p_soil_orgloss,
+        p_soil_leaching,
+        p_soil_deposition,
+    )
+
     a18.p_fermen_dairycow = p_fermen_dairycow
     a18.p_fermen_nondairy = p_fermen_nondairy
     a18.p_fermen_swine = p_fermen_swine
@@ -409,68 +444,12 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18, b18: business2018.B18) -> A18:
     a18.p_soil_ecrop = p_soil_ecrop
     a18.p_soil_residue = p_soil_residue
     a18.p_soil_grazing = p_soil_grazing
+    a18.p_soil_orgfarm = p_soil_orgfarm
+    a18.p_soil_orgloss = p_soil_orgloss
+    a18.p_soil_leaching = p_soil_leaching
+    a18.p_soil_deposition = p_soil_deposition
+    a18.p_soil = p_soil
 
-    p_soil_orgfarm.CO2e_combustion_based = 0.0
-    p_soil_orgfarm.CO2e_production_based_per_t = entries.a_soil_orgfarm_ratio_CO2e_to_ha
-    p_soil_orgfarm.area_ha = (
-        l18.g_crop_org_low.area_ha
-        + l18.g_crop_org_high.area_ha
-        + l18.g_grass_org_low.area_ha
-        + l18.g_grass_org_high.area_ha
-    )
-    p_soil_orgfarm.CO2e_production_based = (
-        p_soil_orgfarm.area_ha * p_soil_orgfarm.CO2e_production_based_per_t
-    )
-    p_soil_orgfarm.CO2e_total = (
-        p_soil_orgfarm.CO2e_production_based + p_soil_orgfarm.CO2e_combustion_based
-    )
-    p_soil_orgloss.CO2e_combustion_based = 0.0
-    p_soil_orgloss.CO2e_production_based_per_t = entries.a_soil_orgloss_ratio_CO2e_to_ha
-    p_soil_orgloss.area_ha = l18.g_crop_org_low.area_ha + l18.g_crop_org_high.area_ha
-    p_soil_orgloss.CO2e_production_based = (
-        p_soil_orgloss.area_ha * p_soil_orgloss.CO2e_production_based_per_t
-    )
-    p_soil_orgloss.CO2e_total = (
-        p_soil_orgloss.CO2e_production_based + p_soil_orgloss.CO2e_combustion_based
-    )
-    p_soil_leaching.CO2e_combustion_based = 0.0
-    p_soil_leaching.CO2e_production_based_per_t = (
-        entries.a_soil_leaching_ratio_CO2e_to_ha
-    )
-    p_soil_leaching.area_ha = l18.g_crop.area_ha + l18.g_grass.area_ha
-    p_soil_leaching.CO2e_production_based = (
-        p_soil_leaching.area_ha * p_soil_leaching.CO2e_production_based_per_t
-    )
-    p_soil_leaching.CO2e_total = (
-        p_soil_leaching.CO2e_production_based + p_soil_leaching.CO2e_combustion_based
-    )
-    p_soil_deposition.CO2e_combustion_based = 0.0
-    p_soil_deposition.CO2e_production_based_per_t = (
-        entries.a_soil_deposition_ratio_CO2e_to_ha
-    )
-    p_soil_deposition.area_ha = l18.g_crop.area_ha + l18.g_grass.area_ha
-    p_soil_deposition.CO2e_production_based = (
-        p_soil_deposition.area_ha * p_soil_deposition.CO2e_production_based_per_t
-    )
-    p_soil_deposition.CO2e_total = (
-        p_soil_deposition.CO2e_production_based
-        + p_soil_deposition.CO2e_combustion_based
-    )
-    p_soil = a18.p_soil
-    p_soil.CO2e_combustion_based = 0.0
-    p_soil.CO2e_production_based = (
-        p_soil_fertilizer.CO2e_production_based
-        + p_soil_manure.CO2e_production_based
-        + p_soil_sludge.CO2e_production_based
-        + p_soil_ecrop.CO2e_production_based
-        + p_soil_grazing.CO2e_production_based
-        + p_soil_residue.CO2e_production_based
-        + p_soil_orgfarm.CO2e_production_based
-        + p_soil_orgloss.CO2e_production_based
-        + p_soil_leaching.CO2e_production_based
-        + p_soil_deposition.CO2e_production_based
-    )
-    p_soil.CO2e_total = p_soil.CO2e_production_based + p_soil.CO2e_combustion_based
     p_other_liming_calcit.CO2e_combustion_based = 0.0
     p_other_liming_calcit.CO2e_production_based_per_t = fact(
         "Fact_A_P_other_liming_calcit_ratio_CO2e_pb_to_amount_2018"
