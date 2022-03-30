@@ -27,7 +27,6 @@ class CO2e_per_t(CO2e):
         fact_CO2e_combustion_based_per_t: str,
     ):
         self.pct_energy = inputs.fact(fact_pct_energy)
-
         self.energy = self.pct_energy * category_energy
 
         self.prod_volume = self.energy * self.energy_use_factor
