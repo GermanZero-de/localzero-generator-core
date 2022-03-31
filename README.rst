@@ -39,7 +39,7 @@ Setup
 	- :code:`git clone https://github.com/GermanZero-de/localzero-generator-core`
 
 - Install poetry and pre-commit
-	- :code:`poetry install --dev --no-root`
+	- :code:`install-environment.sh`
 	- **On Windows:** install Node.js (necessary for pyright)
 
 - Get the required Data Repos
