@@ -1041,9 +1041,6 @@
             "CO2e_total": 63523578.34889994,
             "energy": 41472222.222222224
         },
-        "g": {
-            "CO2e_total": 0.0
-        },
         "p_fermen": {
             "CO2e_combustion_based": 0.0,
             "CO2e_production_based": 25067600.300000004,
@@ -1052,36 +1049,36 @@
         "p_fermen_dairycow": {
             "CO2e_combustion_based": 0.0,
             "CO2e_production_based": 14125000.300000003,
-            "CO2e_production_based_per_t": 3.44436594406106,
             "CO2e_total": 14125000.300000003,
+            "CO2e_production_based_per_t": 3.44436594406106,
             "amount": 4100900.0000000005
         },
         "p_fermen_nondairy": {
             "CO2e_combustion_based": 0.0,
             "CO2e_production_based": 9814000.0,
-            "CO2e_production_based_per_t": 1.250453757738409,
             "CO2e_total": 9814000.0,
+            "CO2e_production_based_per_t": 1.250453757738409,
             "amount": 7848351.0
         },
         "p_fermen_swine": {
             "CO2e_combustion_based": 0.0,
             "CO2e_production_based": 639000.0,
-            "CO2e_production_based_per_t": 0.024162033089507286,
             "CO2e_total": 639000.0,
+            "CO2e_production_based_per_t": 0.024162033089507286,
             "amount": 26446450.0
         },
         "p_fermen_poultry": {
             "CO2e_combustion_based": 0.0,
             "CO2e_production_based": 0.0,
-            "CO2e_production_based_per_t": 0.0,
             "CO2e_total": 0.0,
+            "CO2e_production_based_per_t": 0.0,
             "amount": 175199760.0
         },
         "p_fermen_oanimal": {
             "CO2e_combustion_based": 0.0,
             "CO2e_production_based": 489600.0,
-            "CO2e_production_based_per_t": 0.2023509242800031,
             "CO2e_total": 489600.0,
+            "CO2e_production_based_per_t": 0.2023509242800031,
             "amount": 2419559.0
         },
         "p_manure": {
@@ -1092,43 +1089,43 @@
         "p_manure_dairycow": {
             "CO2e_combustion_based": 0.0,
             "CO2e_production_based": 2918750.0000000005,
-            "CO2e_production_based_per_t": 0.7117340096076471,
             "CO2e_total": 2918750.0000000005,
+            "CO2e_production_based_per_t": 0.7117340096076471,
             "amount": 4100900.0000000005
         },
         "p_manure_nondairy": {
             "CO2e_combustion_based": 0.0,
             "CO2e_production_based": 2290560.0000000005,
-            "CO2e_production_based_per_t": 0.29185239039385474,
             "CO2e_total": 2290560.0000000005,
+            "CO2e_production_based_per_t": 0.29185239039385474,
             "amount": 7848351.0
         },
         "p_manure_swine": {
             "CO2e_combustion_based": 0.0,
             "CO2e_production_based": 2756800.0,
-            "CO2e_production_based_per_t": 0.10424083383592127,
             "CO2e_total": 2756800.0,
+            "CO2e_production_based_per_t": 0.10424083383592127,
             "amount": 26446450.0
         },
         "p_manure_poultry": {
             "CO2e_combustion_based": 0.0,
             "CO2e_production_based": 220879.19247543853,
-            "CO2e_production_based_per_t": 0.0012607277114731123,
             "CO2e_total": 220879.19247543853,
+            "CO2e_production_based_per_t": 0.0012607277114731123,
             "amount": 175199760.0
         },
         "p_manure_oanimal": {
             "CO2e_combustion_based": 0.0,
             "CO2e_production_based": 118097.45862420046,
-            "CO2e_production_based_per_t": 0.048809497360552255,
             "CO2e_total": 118097.45862420046,
+            "CO2e_production_based_per_t": 0.048809497360552255,
             "amount": 2419559.0
         },
         "p_manure_deposition": {
             "CO2e_combustion_based": 0.0,
             "CO2e_production_based": 983400.0,
-            "CO2e_production_based_per_t": 0.02409392957437978,
             "CO2e_total": 983400.0,
+            "CO2e_production_based_per_t": 0.02409392957437978,
             "amount": 40815260.0
         },
         "p_soil": {
@@ -1139,71 +1136,71 @@
         "p_soil_fertilizer": {
             "CO2e_combustion_based": 0.0,
             "CO2e_production_based": 7008593.460000005,
-            "CO2e_production_based_per_t": 0.5674746901890231,
             "CO2e_total": 7008593.460000005,
+            "CO2e_production_based_per_t": 0.5674746901890231,
             "area_ha": 12350495.24
         },
         "p_soil_manure": {
             "CO2e_combustion_based": 0.0,
             "CO2e_production_based": 4743284.841905052,
-            "CO2e_production_based_per_t": 0.3840562463068527,
             "CO2e_total": 4743284.841905052,
+            "CO2e_production_based_per_t": 0.3840562463068527,
             "area_ha": 12350495.24
         },
         "p_soil_sludge": {
             "CO2e_combustion_based": 0.0,
             "CO2e_production_based": 66247.27100577144,
-            "CO2e_production_based_per_t": 0.005363936402421661,
             "CO2e_total": 66247.27100577144,
+            "CO2e_production_based_per_t": 0.005363936402421661,
             "area_ha": 12350495.24
         },
         "p_soil_ecrop": {
             "CO2e_combustion_based": 0.0,
             "CO2e_production_based": 1398119.325706325,
-            "CO2e_production_based_per_t": 0.11320350306100964,
             "CO2e_total": 1398119.325706325,
+            "CO2e_production_based_per_t": 0.11320350306100964,
             "area_ha": 12350495.24
         },
         "p_soil_grazing": {
             "CO2e_combustion_based": 0.0,
             "CO2e_production_based": 1285294.2594662264,
-            "CO2e_production_based_per_t": 0.20487068880162398,
             "CO2e_total": 1285294.2594662264,
+            "CO2e_production_based_per_t": 0.20487068880162398,
             "area_ha": 6273685.45
         },
         "p_soil_residue": {
             "CO2e_combustion_based": 0.0,
             "CO2e_production_based": 2356405.585893585,
-            "CO2e_production_based_per_t": 0.19079442079875533,
             "CO2e_total": 2356405.585893585,
+            "CO2e_production_based_per_t": 0.19079442079875533,
             "area_ha": 12350495.24
         },
         "p_soil_orgfarm": {
             "CO2e_combustion_based": 0.0,
             "CO2e_production_based": 2658636.744657143,
-            "CO2e_production_based_per_t": 2.088265952505867,
             "CO2e_total": 2658636.744657143,
+            "CO2e_production_based_per_t": 2.088265952505867,
             "area_ha": 1273131.29894535
         },
         "p_soil_orgloss": {
             "CO2e_combustion_based": 0.0,
             "CO2e_production_based": 8666.472311437885,
-            "CO2e_production_based_per_t": 0.025958434232804417,
             "CO2e_total": 8666.472311437885,
+            "CO2e_production_based_per_t": 0.025958434232804417,
             "area_ha": 333859.59390747134
         },
         "p_soil_leaching": {
             "CO2e_combustion_based": 0.0,
             "CO2e_production_based": 3657147.9802038334,
-            "CO2e_production_based_per_t": 0.19636557661661266,
             "CO2e_total": 3657147.9802038334,
+            "CO2e_production_based_per_t": 0.19636557661661266,
             "area_ha": 18624180.69
         },
         "p_soil_deposition": {
             "CO2e_combustion_based": 0.0,
             "CO2e_production_based": 1464042.4566509086,
-            "CO2e_production_based_per_t": 0.07860976442507381,
             "CO2e_total": 1464042.4566509086,
+            "CO2e_production_based_per_t": 0.07860976442507381,
             "area_ha": 18624180.69
         },
         "p_other": {
@@ -1214,22 +1211,22 @@
         "p_other_liming_dolomite": {
             "CO2e_combustion_based": 0.0,
             "CO2e_production_based": 57240.0,
-            "CO2e_production_based_per_t": 0.477,
             "CO2e_total": 57240.0,
+            "CO2e_production_based_per_t": 0.477,
             "prod_volume": 120000.0
         },
         "p_other_urea": {
             "CO2e_combustion_based": 0.0,
             "CO2e_production_based": 569541.0,
-            "CO2e_production_based_per_t": 0.733,
             "CO2e_total": 569541.0,
+            "CO2e_production_based_per_t": 0.733,
             "prod_volume": 777000.0
         },
         "p_other_ecrop": {
             "CO2e_combustion_based": 0.0,
             "CO2e_production_based": 1607592.0000000002,
-            "CO2e_production_based_per_t": 0.07840000000000001,
             "CO2e_total": 1607592.0000000002,
+            "CO2e_production_based_per_t": 0.07840000000000001,
             "prod_volume": 20505000.0
         },
         "p_other_liming": {
@@ -1240,24 +1237,25 @@
         "p_other_liming_calcit": {
             "CO2e_combustion_based": 0.0,
             "CO2e_production_based": 2082520.0,
-            "CO2e_production_based_per_t": 0.44,
             "CO2e_total": 2082520.0,
+            "CO2e_production_based_per_t": 0.44,
             "prod_volume": 4733000.0
         },
         "p_other_kas": {
+            "CO2e_combustion_based": 0.0,
             "CO2e_production_based": 204160.0,
-            "CO2e_production_based_per_t": 0.44,
             "CO2e_total": 204160.0,
+            "CO2e_production_based_per_t": 0.44,
             "prod_volume": 464000.0
         },
         "p_operation": {
             "energy": 41472222.222222224
         },
         "p_operation_heat": {
-            "area_m2": 168763753.40599453,
             "energy": 16722222.22222222,
-            "factor_adapted_to_fec": 0.0990865744849465,
-            "pct_energy": 0.40321500334896176
+            "pct_energy": 0.40321500334896176,
+            "area_m2": 168763753.40599453,
+            "factor_adapted_to_fec": 0.0990865744849465
         },
         "p_operation_elec_elcon": {
             "energy": 5250000.0,
@@ -1274,71 +1272,70 @@
             "CO2e_combustion_based": 7168272.655555556,
             "CO2e_production_based": 0.0,
             "CO2e_total": 7168272.655555556,
-            "energy": 41472222.222222224,
-            "pct_energy": 1.0
+            "energy": 41472222.222222224
         },
         "s_petrol": {
             "CO2e_combustion_based": 90343.20000000001,
-            "CO2e_combustion_based_per_MWh": 0.27102960000000004,
             "CO2e_production_based": 0.0,
             "CO2e_total": 90343.20000000001,
             "energy": 333333.3333333333,
+            "CO2e_combustion_based_per_MWh": 0.27102960000000004,
             "pct_energy": 0.008037508372404554
         },
         "s_diesel": {
             "CO2e_combustion_based": 5107863.0,
-            "CO2e_combustion_based_per_MWh": 0.2664972,
             "CO2e_production_based": 0.0,
             "CO2e_total": 5107863.0,
             "energy": 19166666.666666668,
+            "CO2e_combustion_based_per_MWh": 0.2664972,
             "pct_energy": 0.4621567314132619
         },
         "s_fueloil": {
             "CO2e_combustion_based": 642833.3333333334,
-            "CO2e_combustion_based_per_MWh": 0.266,
             "CO2e_production_based": 0.0,
             "CO2e_total": 642833.3333333334,
             "energy": 2416666.6666666665,
+            "CO2e_combustion_based_per_MWh": 0.266,
             "pct_energy": 0.05827193569993301
         },
         "s_lpg": {
             "CO2e_combustion_based": 570472.3999999999,
-            "CO2e_combustion_based_per_MWh": 0.23880239999999997,
             "CO2e_production_based": 0.0,
             "CO2e_total": 570472.3999999999,
             "energy": 2388888.888888889,
+            "CO2e_combustion_based_per_MWh": 0.23880239999999997,
             "pct_energy": 0.05760214333556597
         },
         "s_gas": {
             "CO2e_combustion_based": 591833.3333333334,
-            "CO2e_combustion_based_per_MWh": 0.201,
             "CO2e_production_based": 0.0,
             "CO2e_total": 591833.3333333334,
             "energy": 2944444.4444444445,
+            "CO2e_combustion_based_per_MWh": 0.201,
             "pct_energy": 0.0709979906229069
         },
         "s_biomass": {
             "CO2e_combustion_based": 164927.38888888888,
-            "CO2e_combustion_based_per_MWh": 0.018382000000000003,
             "CO2e_production_based": 0.0,
             "CO2e_total": 164927.38888888888,
             "energy": 8972222.22222222,
+            "CO2e_combustion_based_per_MWh": 0.018382000000000003,
             "pct_energy": 0.21634293369055588
         },
         "s_elec": {
             "CO2e_combustion_based": 0.0,
-            "CO2e_combustion_based_per_MWh": 0.0,
             "CO2e_production_based": 0.0,
             "CO2e_total": 0.0,
             "energy": 5250000.0,
+            "CO2e_combustion_based_per_MWh": 0.0,
             "pct_energy": 0.12659075686537172
         },
         "s_heatpump": {
             "CO2e_combustion_based": 0.0,
-            "CO2e_combustion_based_per_MWh": 0.0,
             "CO2e_production_based": 0.0,
             "CO2e_total": 0.0,
-            "energy": 0.0,
+            "energy": 0,
+            "CO2e_combustion_based_per_MWh": 0.0,
             "pct_energy": 0.0
         }
     },
