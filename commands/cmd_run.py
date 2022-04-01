@@ -4,6 +4,7 @@ import sys
 from generatorcore.generator import calculate_with_default_inputs
 from generatorcore.refdata import RefData
 from generatorcore.makeentries import make_entries
+from generatorcore import tracednumber
 
 
 def json_to_output(json_object, args):
@@ -12,7 +13,12 @@ def json_to_output(json_object, args):
         with open(args.o, mode="w") as fp:
             json.dump(json_object, indent=4, fp=fp)
     else:
-        json.dump(json_object, indent=4, fp=sys.stdout)
+        json.dump(
+            json_object,
+            indent=4,
+            fp=sys.stdout,
+            default=tracednumber.TracedNumber.to_json,
+        )
 
 
 def cmd_run(args):

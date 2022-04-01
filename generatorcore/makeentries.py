@@ -656,11 +656,7 @@ def make_entries(data: refdata.RefData, ags: str, year: int):
         n2oe = data_nat_agri_sta.float(what + "_n2oe")
         co2e = (ch4e * 25.0 + n2oe * 298.0) * 1000.0
         count = data_nat_agri_sta.float(what)
-        if count > 0:
-            return co2e / count
-        else:
-            # TODO: compute national equivalent
-            assert False, "Here we should return the national efactor instead"
+        return co2e / count
 
     a_manure_dairycow_ratio_CO2e_to_amount = compute_animal_efactor("cows")
     a_manure_nondairy_ratio_CO2e_to_amount = compute_animal_efactor("cattle")
@@ -673,13 +669,10 @@ def make_entries(data: refdata.RefData, ags: str, year: int):
         + data_nat_agri_sta.float("pigs")
         + data_nat_agri_sta.float("other_animals")
     )
-    if animal_wo_poultry_deposition_sta > 0:
-        a_manure_deposition_ratio_CO2e_to_amount = (
-            data_nat_agri_sta.float("animal_wo_poultry_deposition_co2e")
-            / animal_wo_poultry_deposition_sta
-        )
-    else:
-        assert False, "TODO here we should compute the natoional factor instead"
+    a_manure_deposition_ratio_CO2e_to_amount = (
+        data_nat_agri_sta.float("animal_wo_poultry_deposition_co2e")
+        / animal_wo_poultry_deposition_sta
+    )
 
     def compute_efactor_from_n2o(
         what: str, area: float, data_nat_agri: refdata.Row = data_nat_agri_sta

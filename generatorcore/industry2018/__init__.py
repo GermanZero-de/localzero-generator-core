@@ -57,11 +57,11 @@ def calc(inputs: Inputs) -> I18:
     p_other = p_other_paper + p_other_food
     p_other.energy = p_other_energy
 
-    p_other.CO2e_combustion_based += +p_other_further.CO2e_combustion_based
+    p_other.CO2e_combustion_based += p_other_further.CO2e_combustion_based
     p_other.CO2e_production_based += (
-        +p_other_further.CO2e_production_based + p_other_2efgh.CO2e_production_based
+        p_other_further.CO2e_production_based + p_other_2efgh.CO2e_production_based
     )
-    p_other.CO2e_total += +p_other_further.CO2e_total + p_other_2efgh.CO2e_total
+    p_other.CO2e_total += p_other_further.CO2e_total + p_other_2efgh.CO2e_total
 
     p = p_miner + p_chem + p_metal + p_other
     p.energy = entries.i_energy_total

@@ -225,13 +225,19 @@ class Row(Generic[KeyT]):
                 data_column=attr,
                 dataset=self.dataset,
             )
-        return float(value)
+        v = float(value)
+        from . import tracednumber
+
+        return tracednumber.TracedNumber(v, f"{self.dataset}({self.key_value}).{attr}")  # type: ignore
 
     def int(self, attr: str) -> int:
         """Access an integer attribute."""
         f = self.float(attr)
         if f.is_integer():
-            return int(f)
+            if isinstance(f, float):
+                return int(f)
+            else:
+                return f
         else:
             raise ExpectedIntGotFloat(
                 key_column=self.key_column,
