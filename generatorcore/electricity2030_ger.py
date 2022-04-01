@@ -1166,9 +1166,7 @@ def calc(
     )
     p_renew_geoth.cost_wage = p_renew_geoth.invest_pa * p_renew_geoth.pct_of_wage
     p_renew_reverse.cost_wage = p_renew_reverse.invest_pa * p_renew_reverse.pct_of_wage
-    p_local_pv_roof.pct_x = p_local_pv_roof.energy / (
-        d_r.energy + d_b.energy + d_i.energy + d_t.energy + d_a.energy
-    )
+
     p_local_pv_roof.cost_mro = (
         p_local_pv_roof.energy * p_local_pv_roof.cost_mro_per_MWh / Million
     )
@@ -1662,6 +1660,9 @@ def calc(
     p_local_biomass.pct_x = div(p_local_biomass.energy, p.energy)
     p_local_hydro.pct_x = div(p_local_hydro.energy, p.energy)  #
     p_local.change_energy_pct = div(p_local.change_energy_MWh, e18.p_local.energy)
+    
+    p_local_pv_roof.pct_x = div(p_local_pv_roof.energy,p.energy)
+
     p_local.pct_energy = (
         p_local_pv.pct_energy
         + p_local_wind_onshore.pct_energy
