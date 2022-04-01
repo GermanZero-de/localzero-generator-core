@@ -1041,9 +1041,6 @@
             "CO2e_total": 63523578.34889994,
             "energy": 41472222.222222224
         },
-        "g": {
-            "CO2e_total": 0.0
-        },
         "p_fermen": {
             "CO2e_combustion_based": 0.0,
             "CO2e_production_based": 25067600.300000004,
@@ -1255,10 +1252,10 @@
             "energy": 41472222.222222224
         },
         "p_operation_heat": {
-            "area_m2": 168763753.40599453,
             "energy": 16722222.22222222,
-            "factor_adapted_to_fec": 0.0990865744849465,
-            "pct_energy": 0.40321500334896176
+            "pct_energy": 0.40321500334896176,
+            "area_m2": 168763753.40599453,
+            "factor_adapted_to_fec": 0.0990865744849465
         },
         "p_operation_elec_elcon": {
             "energy": 5250000.0,
@@ -1337,7 +1334,7 @@
             "CO2e_combustion_based": 0.0,
             "CO2e_production_based": 0.0,
             "CO2e_total": 0.0,
-            "energy": 0.0,
+            "energy": 0,
             "CO2e_combustion_based_per_MWh": 0.0,
             "pct_energy": 0.0
         }

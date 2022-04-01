@@ -54,7 +54,7 @@ class CO2eFromFermentationOrManure(CO2eEmissions):
         CO2e_production_based_per_t = inputs.fact(
             "Fact_A_P_fermen_" + what + "_ratio_CO2e_to_amount_2018"
         )
-        # Also don't ask me why we called swine except when we called them pig
+        # Also don't ask me why we called swine swine except when we called them pig
         amount = getattr(
             inputs.entries, "a_fermen_" + (what if alias is None else alias) + "_amount"
         )
@@ -259,7 +259,6 @@ class CO2eFromEnergyUseDetail(CO2eFromEnergyUse):
 class A18:
     a: CO2eEmissions
     p: P
-    g: CO2e_total
     p_fermen: CO2eEmissions
     p_fermen_dairycow: CO2eFromFermentationOrManure
     p_fermen_nondairy: CO2eFromFermentationOrManure
@@ -515,16 +514,13 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18, b18: business2018.B18) -> A18:
         ),
         energy=p_operation.energy,
     )
-    # TODO: Why? What? Huh?
-    g = CO2e_total(0)
     a = CO2eEmissions(
-        CO2e_total=g.CO2e_total + p.CO2e_total + s.CO2e_total,
+        CO2e_total=p.CO2e_total + s.CO2e_total,
         CO2e_production_based=p.CO2e_production_based,
         CO2e_combustion_based=s.CO2e_combustion_based,
     )
 
     return A18(
-        g=g,
         p_fermen_dairycow=p_fermen_dairycow,
         p_fermen_nondairy=p_fermen_nondairy,
         p_fermen_swine=p_fermen_swine,
