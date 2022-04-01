@@ -1582,9 +1582,9 @@ def calc(
     p_local_pv.pct_x = div(p_local_pv.energy, p.energy)
     p_local_wind_onshore.pct_x = div(p_local_wind_onshore.energy, p.energy)
     p_local_biomass.pct_x = div(p_local_biomass.energy, p.energy)
-    p_local_hydro.pct_x = div(p_local_hydro.energy, p.energy)  
+    p_local_hydro.pct_x = div(p_local_hydro.energy, p.energy)
 
-    p_local_pv_roof.pct_x = div(p_local_pv_roof.energy,p.energy)
+    p_local_pv_roof.pct_x = div(p_local_pv_roof.energy, p.energy)
 
     p_fossil_and_renew.change_energy_pct = div(
         p_fossil_and_renew.change_energy_MWh, e18.p_fossil_and_renew.energy
