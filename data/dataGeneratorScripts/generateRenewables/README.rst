@@ -10,7 +10,7 @@ In order to use the json files set *reloadfromXML* boolean set as *False*.
 Note that if you want the parse the xml data you need to install the third party lxml python package (Download and install https://lxml.de/).
 
 The json file that is used to update all ags keys to 2018 is downloaded from https://www.xrepository.de/api/xrepository/urn:xoev-de:bund:destatis:bevoelkerungsstatistik:codeliste:ags.historie_2021-12-31/download/Destatis.AGS.Historie_2021-12-31.json
-and holds data on all ags keys and changes that happend after 2006. 
+and holds data on all ags keys and changes that happend after 2006.
 
 More info on the Marktstammdaten register:
 The Marktstammdaten Register lists all local energy sources (alle Strom- und Gaserzeugungsanlagen)
