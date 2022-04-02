@@ -45,8 +45,6 @@ def calc(inputs: Inputs) -> I18:
         s_fossil_opetpro=energy_source.s_fossil_opetpro,
         s_fossil_ofossil=energy_source.s_fossil_ofossil,
         s_renew=energy_source.s_renew,
-        s_renew_hydrogen=energy_source.s_renew_hydrogen,
-        s_renew_emethan=energy_source.s_renew_emethan,
         s_renew_biomass=energy_source.s_renew_biomass,
         s_renew_heatnet=energy_source.s_renew_heatnet,
         s_renew_heatpump=energy_source.s_renew_heatpump,

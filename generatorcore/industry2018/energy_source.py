@@ -1,7 +1,7 @@
 # pyright: strict
 from dataclasses import dataclass
 from ..inputs import Inputs
-from .energy_sum import EnergySum, Energy_pct, Empty
+from .energy_sum import EnergySum, Energy_pct
 
 
 @dataclass
@@ -16,8 +16,6 @@ class Energy_source:
     s_fossil_opetpro: Energy_pct
     s_fossil_ofossil: Energy_pct
     s_renew: EnergySum
-    s_renew_hydrogen: Empty
-    s_renew_emethan: Empty
     s_renew_biomass: Energy_pct
     s_renew_heatnet: Energy_pct
     s_renew_heatpump: Energy_pct
@@ -50,8 +48,6 @@ def calc_energy_sources(inputs: Inputs) -> Energy_source:
         total_energy=s.energy,
     )
     s_renew_elec = Energy_pct(energy=entries.i_elec_fec, total_energy=s.energy)
-    s_renew_hydrogen = Empty()
-    s_renew_emethan = Empty()
 
     s_renew = EnergySum(
         s_renew_biomass.energy
@@ -82,8 +78,6 @@ def calc_energy_sources(inputs: Inputs) -> Energy_source:
         s_fossil_opetpro=s_fossil_opetpro,
         s_fossil_ofossil=s_fossil_ofossil,
         s_renew=s_renew,
-        s_renew_hydrogen=s_renew_hydrogen,
-        s_renew_emethan=s_renew_emethan,
         s_renew_biomass=s_renew_biomass,
         s_renew_heatnet=s_renew_heatnet,
         s_renew_heatpump=s_renew_heatpump,

@@ -5,7 +5,7 @@ from .co2e_per_t import CO2e_per_t
 from .co2e_with_pct_energy import CO2e_with_pct_energy
 from .co2e_per_mwh import CO2e_per_MWh
 from .co2e_basic import CO2e_basic
-from .energy_sum import EnergySum, Energy_pct, Empty
+from .energy_sum import EnergySum, Energy_pct
 
 
 @dataclass
@@ -46,8 +46,6 @@ class I18:
     s_fossil_opetpro: Energy_pct
     s_fossil_ofossil: Energy_pct
     s_renew: EnergySum
-    s_renew_hydrogen: Empty
-    s_renew_emethan: Empty
     s_renew_biomass: Energy_pct
     s_renew_heatnet: Energy_pct
     s_renew_heatpump: Energy_pct
