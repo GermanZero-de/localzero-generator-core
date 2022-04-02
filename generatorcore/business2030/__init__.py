@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
-from .inputs import Inputs
-from .utils import div
-from . import business2018, residences2018, residences2030
+from ..inputs import Inputs
+from ..utils import div
+from .. import business2018, residences2018, residences2030
 
 import time
 

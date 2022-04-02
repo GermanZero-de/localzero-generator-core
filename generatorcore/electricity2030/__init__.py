@@ -1,6 +1,6 @@
-from .inputs import Inputs
+from ..inputs import Inputs
 from . import electricity2030_core, electricity2030_com, electricity2030_ger
-from . import (
+from .. import (
     electricity2018,
     residences2018,
     business2018,

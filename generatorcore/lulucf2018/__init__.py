@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 
-from .inputs import Inputs
+from ..inputs import Inputs
 
 
 @dataclass

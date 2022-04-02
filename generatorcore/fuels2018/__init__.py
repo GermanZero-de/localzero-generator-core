@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 
-from . import transport2018
-from .inputs import Inputs
+from .. import transport2018
+from ..inputs import Inputs
 
 
 @dataclass

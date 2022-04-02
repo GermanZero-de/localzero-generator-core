@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
-from .inputs import Inputs
-from .utils import div
-from . import residences2018
+from ..inputs import Inputs
+from ..utils import div
+from .. import residences2018
 
 # Definition der relevanten Spaltennamen für den Sektor E
 
