@@ -6,12 +6,12 @@ import re
 import json
 
 
-cutoffdate = "31.12.2018"
+CUTOFFDATE = "31.12.2018"
 
 # this is only used in the handling of "not 2018"-ags keys
 # this is not used in the xml parsing so far
 
-exceptionDict = {
+EXCEPTION_DICT = {
     "09478444": "Neuensorger Forst ist ein gemeindefreies gebiet",
     "01053105": "Sachsenwald ist ein gemeindefreies Gebiet",
     "06435200": "Gutsbezirk Spessart ist ist ein gemeindefreies Gebiet",
@@ -23,13 +23,13 @@ exceptionDict = {
 
 
 def parse_elem(elem, tags: list[str]) -> list:
-    returnList = [None] * len(tags)
+    return_list = [None] * len(tags)
     for subelem in elem:
         print(subelem.tag + "   " + subelem.text)
         for i, tag in enumerate(tags):
             if subelem.tag == tag:
-                returnList[i] = subelem.text
-    return returnList
+                return_list[i] = subelem.text
+    return return_list
 
 
 def parse_xml(
@@ -157,11 +157,11 @@ def calc_sum(input_dict: defaultdict) -> float:
 def handle_not_in_master(
     input_dict: defaultdict,
     master: list,
-    dataList,
-    lookUpDict,
-    populationData: dict,
+    data_list,
+    look_up_dict,
+    population_dict: dict,
     *,
-    printDetails: bool = False,
+    print_details: bool = False,
 ):
     """
     This deals with all ags entries in input_dict that are not contained in the master list. It adds the power values of the missing ags keys to their
@@ -177,34 +177,34 @@ def handle_not_in_master(
 
     for ags in notInMaster:
         newAGSnotinMaster = False
-        if printDetails:
+        if print_details:
             print("handling ags " + ags)
 
         changedAgsList = lookUpAGSinRepo(
-            ags, lookUpDict=lookUpDict, repo=dataList, printDetails=printDetails
+            ags, look_up_dict=look_up_dict, repo=data_list, print_details=print_details
         )
 
         if (
             changedAgsList == []
         ):  # this happens if the ags key is a gemeindefreies Gebiet and the ags key occurs in the exception list
-            if printDetails:
+            if print_details:
                 print(str(ags) + "ags key not in master")
                 print(str(input_dict[ags]) + "power lost")
             del input_dict[ags]
             continue
 
-        if printDetails:
+        if print_details:
             print("ags in changed AGS List" + str(changedAgsList))
 
         for agsKey in changedAgsList:
             if (
                 agsKey not in master
             ):  # this happens if the new ags key is a gemeindefreies Gebiet and the ags key occurs in the exception list
-                if printDetails:
+                if print_details:
                     print(str(agsKey) + " new Ags not in master")
-                if agsKey in exceptionDict:
-                    if printDetails:
-                        print(exceptionDict[agsKey])
+                if agsKey in EXCEPTION_DICT:
+                    if print_details:
+                        print(EXCEPTION_DICT[agsKey])
                         print(str(input_dict[ags]) + " power lost")
                     newAGSnotinMaster = True
                 else:
@@ -213,30 +213,30 @@ def handle_not_in_master(
         if newAGSnotinMaster:
             continue
 
-        populationSum = sum(float(populationData[agsKey]) for agsKey in changedAgsList)
+        populationSum = sum(float(population_dict[agsKey]) for agsKey in changedAgsList)
         power = float(input_dict[ags])
 
         for agsKey in changedAgsList:
-            populationinchangedAGS = float(populationData[agsKey])
+            populationinchangedAGS = float(population_dict[agsKey])
             input_dict[agsKey] += power * (populationinchangedAGS / populationSum)
 
     return input_dict
 
 
-def loadAGSRepo(repoPath):
+def load_ags_repo(repoPath):
     """This loads the json from https://www.xrepository.de/api/xrepository/urn:xoev-de:bund:destatis:bevoelkerungsstatistik:codeliste:ags.historie_2021-12-31/download/Destatis.AGS.Historie_2021-12-31.json
-    to a dict "agsList" and creates a lookup dict "agslookUpDict" that saves all contained ags keys with the indices, where they appear in agsList
-    [code,predecessorAGS,name,validFrom,changeType,validUntil,successorAGS,successorName,successorAGSValidFrom,descritpion] with
+    to a dict "agsList" and creates a lookup dict "look_up_dict" that saves all contained ags keys with the indices, where they appear in agsList
+    [code,predecessor_ags,name,valid_from,change_type,valid_until,successor_ags,successor_name,successor_ags_valid_from,descritpion] with
     the following description
     - code - Code
-    - predecessorAGS - AGS
+    - predecessor_ags - AGS
     - name - Gemeindenamen mit Zusatz
-    - validFrom - gueltig ab
-    - changeType - Aenderungsart
-    - validUntil - gueltig bis
-    - successorAGS - AGS des Nachfolgers
-    - successorName - Name des Nachfolgers
-    - successorAGSValidFrom - Nachfolger gueltig ab
+    - valid_from - gueltig ab
+    - change_type - Aenderungsart
+    - valid_until - gueltig bis
+    - successor_ags - AGS des Nachfolgers
+    - successor_name - Name des Nachfolgers
+    - successor_ags_valid_from - Nachfolger gueltig ab
     - descritpion - Hinweis
     nützliche info aus der xrepository json
     In dieser Codeliste sind alle Gebietsänderungen seit dem 01.01.2007 abgebildet. Sie enthält alle AGS,
@@ -252,9 +252,9 @@ def loadAGSRepo(repoPath):
     # TODO: Check if this handles all cases correctly or if we could do better easily.
     with open(repoPath, "r", encoding="utf-8") as repo:
         agsList = json.loads(repo.read())
-    dataList = agsList["daten"]
+    data_list = agsList["daten"]
     agsLookUpDict = defaultdict(list)
-    for (i, data) in enumerate(dataList):
+    for (i, data) in enumerate(data_list):
         for ii, elem in enumerate(data):
             # print(elem)
             if elem == None:
@@ -265,93 +265,93 @@ def loadAGSRepo(repoPath):
 
 
 def lookUpAGSinRepo(
-    ags: str, lookUpDict, repo, *, printDetails: bool = False
+    ags: str, look_up_dict, repo, *, print_details: bool = False
 ) -> list[str]:
     """
     This looks up an ags and returns a list of all ags keys that are either predecessors or successors of the key.
     """
     # TODO: Check if this deals with all cases correctly.
 
-    agsReturnList = []
-    dataList = repo["daten"]
-    vorkommnisse = lookUpDict[ags]
+    ags_return_list = []
+    data_list = repo["daten"]
+    vorkommnisse = look_up_dict[ags]
 
-    agsAsPredecessor = []
-    agsAsSuccessor = []
+    ags_as_predecessor = []
+    ags_as_successor = []
 
     for elem in vorkommnisse:
         if elem[1] == 1:  # the ags key is at the predecessor position in the data
-            agsAsPredecessor.append(dataList[elem[0]])
+            ags_as_predecessor.append(data_list[elem[0]])
 
         elif elem[1] == 6:  # the ags key is at the successor position in the data
-            agsAsSuccessor.append(dataList[elem[0]])
+            ags_as_successor.append(data_list[elem[0]])
         else:
             print(
-                "This should not happen. Check if the repository is prvoded in the following form:\n [code,predecessorAGS,name,validFrom,changeType,validUntil,successorAGS,successorName,successorAGSValidFrom,descritpion]"
+                "This should not happen. Check if the repository is prvoded in the following form:\n [code,predecessor_ags,name,valid_from,change_type,valid_until,successor_ags,successor_name,successor_ags_valid_from,descritpion]"
             )
             exit(1)
 
-    if len(agsAsPredecessor) > 0:
+    if len(ags_as_predecessor) > 0:
 
-        for elem in agsAsPredecessor:
+        for elem in ags_as_predecessor:
 
             [
                 code,
-                predecessorAGS,
+                predecessor_ags,
                 name,
-                validFrom,
-                changeType,
-                validUntil,
-                successorAGS,
-                successorName,
-                successorAGSValidFrom,
+                valid_from,
+                change_type,
+                valid_until,
+                successor_ags,
+                successor_name,
+                successor_ags_valid_from,
                 descritpion,
             ] = elem
-            if successorAGS != None:
-                if printDetails:
+            if successor_ags != None:
+                if print_details:
                     print(
-                        successorAGS
+                        successor_ags
                         + " ags as predeccessor date "
-                        + successorAGSValidFrom
+                        + successor_ags_valid_from
                     )
-                if int(successorAGSValidFrom[-4:]) <= int(cutoffdate[-4:]):
-                    if successorAGS != ags:
-                        agsReturnList.append(successorAGS)
+                if int(successor_ags_valid_from[-4:]) <= int(CUTOFFDATE[-4:]):
+                    if successor_ags != ags:
+                        ags_return_list.append(successor_ags)
 
-    if len(agsAsSuccessor) > 0:
-        for elem in agsAsSuccessor:
+    if len(ags_as_successor) > 0:
+        for elem in ags_as_successor:
             [
                 code,
-                predecessorAGS,
+                predecessor_ags,
                 name,
-                validFrom,
-                changeType,
-                validUntil,
-                successorAGS,
-                successorName,
-                successorAGSValidFrom,
+                valid_from,
+                change_type,
+                valid_until,
+                successor_ags,
+                successor_name,
+                successor_ags_valid_from,
                 descritpion,
             ] = elem
-            if printDetails:
+            if print_details:
                 print(
-                    predecessorAGS + " ags as successor date " + successorAGSValidFrom
+                    predecessor_ags + " ags as successor date " + successor_ags_valid_from
                 )
-            if int(successorAGSValidFrom[-4:]) > int(cutoffdate[-4:]):
-                if predecessorAGS != ags:
-                    agsReturnList.append(predecessorAGS)
+            if int(successor_ags_valid_from[-4:]) > int(CUTOFFDATE[-4:]):
+                if predecessor_ags != ags:
+                    ags_return_list.append(predecessor_ags)
 
-    if len(agsReturnList) == 0:
-        if ags in exceptionDict:
-            if printDetails:
-                print(exceptionDict[ags])
+    if len(ags_return_list) == 0:
+        if ags in EXCEPTION_DICT:
+            if print_details:
+                print(EXCEPTION_DICT[ags])
         else:
             print("apperatently you did not handle all cases for " + ags)
             exit(1)
 
-    return agsReturnList
+    return ags_return_list
 
 
-def saveDict(input_dict: dict, name: str):
+def save_dict(input_dict: dict, name: str):
     if not os.path.exists("xmlZwischenspeicher"):
         os.makedirs("xmlZwischenspeicher")
 
@@ -359,21 +359,21 @@ def saveDict(input_dict: dict, name: str):
         json.dump(input_dict, file)
 
 
-def loadDictFromJson(name: str):
+def load_dict_from_json(name: str):
     return_dict = defaultdict(float)
     with open("xmlZwischenspeicher/" + name + ".json", "r") as file:
         return_dict = defaultdict(float, json.loads(file.read()))
     return return_dict
 
 
-def fuseDicts(input_dictList: list[defaultdict], masterList) -> dict:
+def fuse_dicts(input_dict_list: list[defaultdict], master_ags_list) -> dict:
     return_dict = {}
-    for ags in masterList:
-        return_dict[ags] = [input_dict[ags] for input_dict in input_dictList]
+    for ags in master_ags_list:
+        return_dict[ags] = [input_dict[ags] for input_dict in input_dict_list]
     return return_dict
 
 
-def aggregateDict(input_dict: dict):
+def aggregate_dict(input_dict: dict):
     """aggregates the input dict and creates sums for all state and district ags keys."""
 
     def addLists(list1: list[float], list2: list[float]) -> list[float]:
@@ -383,29 +383,29 @@ def aggregateDict(input_dict: dict):
             return list1
         return [list1[i] + list2[i] for i, _ in enumerate(list2)]
 
-    sumoverDistr = defaultdict(list[float])
-    sumoverState = defaultdict(list[float])
-    for ags, powerList in input_dict.items():
+    sum_over_districts = defaultdict(list[float])
+    sum_over_states = defaultdict(list[float])
+    for ags, powers_list in input_dict.items():
         ags_sta = ags[:2] + "000000"
         ags_dis = ags[:5] + "000"
-        sumoverDistr[ags_dis] = addLists(sumoverDistr[ags_dis], powerList)
-        sumoverState[ags_sta] = addLists(sumoverState[ags_sta], powerList)
+        sum_over_districts[ags_dis] = addLists(sum_over_districts[ags_dis], powers_list)
+        sum_over_states[ags_sta] = addLists(sum_over_states[ags_sta], powers_list)
 
-    for key, val in sumoverDistr.items():
+    for key, val in sum_over_districts.items():
         input_dict[key] = val
 
-    for key, val in sumoverState.items():
+    for key, val in sum_over_states.items():
         input_dict[key] = val
 
 
-def dictToSortedList(input_dict: dict) -> list:
-    returnList = []
+def dict_to_sorted_list(input_dict: dict) -> list:
+    return_list = []
     for ags, powers in input_dict.items():
-        returnList.append([ags, *powers])
+        return_list.append([ags, *powers])
 
-    returnList.sort(key=lambda x: int(x[0]))  # sort by ags keys
+    return_list.sort(key=lambda x: int(x[0]))  # sort by ags keys
 
-    return returnList
+    return return_list
 
 
 def main():
@@ -413,83 +413,83 @@ def main():
     reloadfromXML: bool = False
 
     pv_dict = defaultdict(float)
-    BiomassDict = defaultdict(float)
-    WasserDict = defaultdict(float)
-    WindDict = defaultdict(float)
+    biomass_dict = defaultdict(float)
+    wasser_dict = defaultdict(float)
+    wind_dict = defaultdict(float)
 
     if reloadfromXML:
         pv_dict = parse_multi_xml("Xml/EinheitenSolar", 24, print_exit=True, print_info=True)
-        BiomassDict = parse_xml(
+        biomass_dict = parse_xml(
             "Xml/EinheitenBiomasse.xml", print_exit=True, print_info=True
         )
-        WasserDict = parse_xml("Xml/EinheitenWasser.xml", print_exit=True, print_info=True)
-        WindDict = parse_xml("Xml/EinheitenWind.xml", print_exit=True, print_info=True)
+        wasser_dict = parse_xml("Xml/EinheitenWasser.xml", print_exit=True, print_info=True)
+        wind_dict = parse_xml("Xml/EinheitenWind.xml", print_exit=True, print_info=True)
 
-        saveDict(pv_dict, "pv_dict")
-        saveDict(BiomassDict, "biomassDict")
-        saveDict(WindDict, "windDict")
-        saveDict(WasserDict, "wasserDict")
+        save_dict(pv_dict, "pv_dict")
+        save_dict(biomass_dict, "biomass_dict")
+        save_dict(wind_dict, "wind_dict")
+        save_dict(wasser_dict, "wasser_dict")
     else:
-        pv_dict = loadDictFromJson("pv_dict")
-        BiomassDict = loadDictFromJson("biomassDict")
-        WasserDict = loadDictFromJson("wasserDict")
-        WindDict = loadDictFromJson("windDict")
+        pv_dict = load_dict_from_json("pv_dict")
+        biomass_dict = load_dict_from_json("biomassDict")
+        wasser_dict = load_dict_from_json("wasserDict")
+        wind_dict = load_dict_from_json("windDict")
 
-    masterAGS = load_master("Master2018/master.csv")
-    population = load_population("population/2018.csv")
+    master_ags_list = load_master("Master2018/master.csv")
+    population_dict = load_population("population/2018.csv")
 
-    [agsList, lookUpDict] = loadAGSRepo("Xrepo/xrepo.json")
+    [agsList, look_up_dict] = load_ags_repo("Xrepo/xrepo.json")
 
-    BiomassDict = handle_not_in_master(
-        BiomassDict,
-        master=masterAGS,
-        dataList=agsList,
-        lookUpDict=lookUpDict,
-        populationData=population,
+    biomass_dict = handle_not_in_master(
+        biomass_dict,
+        master=master_ags_list,
+        data_list=agsList,
+        look_up_dict=look_up_dict,
+        population_dict=population_dict,
     )
     pv_dict = handle_not_in_master(
         pv_dict,
-        master=masterAGS,
-        dataList=agsList,
-        lookUpDict=lookUpDict,
-        populationData=population,
+        master=master_ags_list,
+        data_list=agsList,
+        look_up_dict=look_up_dict,
+        population_dict=population_dict,
     )
-    WasserDict = handle_not_in_master(
-        WasserDict,
-        master=masterAGS,
-        dataList=agsList,
-        lookUpDict=lookUpDict,
-        populationData=population,
+    wasser_dict = handle_not_in_master(
+        wasser_dict,
+        master=master_ags_list,
+        data_list=agsList,
+        look_up_dict=look_up_dict,
+        population_dict=population_dict,
     )
-    WindDict = handle_not_in_master(
-        WindDict,
-        master=masterAGS,
-        dataList=agsList,
-        lookUpDict=lookUpDict,
-        populationData=population,
-    )
-
-    BiomassTotal = calc_sum(BiomassDict)
-    WasserTotal = calc_sum(WasserDict)
-    WindTotal = calc_sum(WindDict)
-    PvTotal = calc_sum(pv_dict)
-
-    totalDict = fuseDicts(
-        [pv_dict, WindDict, BiomassDict, WasserDict], masterList=masterAGS
+    wind_dict = handle_not_in_master(
+        wind_dict,
+        master=master_ags_list,
+        data_list=agsList,
+        look_up_dict=look_up_dict,
+        population_dict=population_dict,
     )
 
-    aggregateDict(totalDict)
+    biomass_total = calc_sum(biomass_dict)
+    wasser_total = calc_sum(wasser_dict)
+    wind_total = calc_sum(wind_dict)
+    pv_total = calc_sum(pv_dict)
 
-    sortedAgsList = dictToSortedList(totalDict)
+    renewables_dict = fuse_dicts(
+        [pv_dict, wind_dict, biomass_dict, wasser_dict], master_ags_list=master_ags_list
+    )
+
+    aggregate_dict(renewables_dict)
+
+    sorted_ags_list = dict_to_sorted_list(renewables_dict)
 
     with open("2018.csv", "w", newline="") as renewable_energy:
         renewable_energy.write("ags,pv,wind_on,biomass,water\n")
         writer = csv.writer(renewable_energy)
 
-        writer.writerow(["DG000000", PvTotal, WindTotal, BiomassTotal, WasserTotal])
+        writer.writerow(["DG000000", pv_total, wind_total, biomass_total, wasser_total])
 
-        for agsAndPowerValueRow in sortedAgsList:
-            writer.writerow(agsAndPowerValueRow)
+        for ags_and_power_value_row in sorted_ags_list:
+            writer.writerow(ags_and_power_value_row)
 
 
 main()
