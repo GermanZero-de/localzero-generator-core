@@ -4,7 +4,7 @@ from ..inputs import Inputs
 from .co2e import CO2e
 
 
-@dataclass
+@dataclass(kw_only=True)
 class CO2e_per_MWh(CO2e):
     # Used by p_other_further
     CO2e_production_based_per_MWh: float = 0

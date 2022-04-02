@@ -2,7 +2,7 @@
 from dataclasses import dataclass
 
 
-@dataclass
+@dataclass(kw_only=True)
 class CO2e:
     # Used by i, p, p_miner, p_chem, p_metal, p_other
     CO2e_combustion_based: float = 0

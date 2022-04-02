@@ -4,7 +4,7 @@ from ..inputs import Inputs
 from .energy_sum import EnergySum, Energy_pct
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Energy_source:
     s: Energy_pct
     s_fossil: EnergySum
@@ -50,7 +50,7 @@ def calc_energy_sources(inputs: Inputs) -> Energy_source:
     s_renew_elec = Energy_pct(energy=entries.i_elec_fec, total_energy=s.energy)
 
     s_renew = EnergySum(
-        s_renew_biomass.energy
+        energy=s_renew_biomass.energy
         + s_renew_heatnet.energy
         + s_renew_heatpump.energy
         + s_renew_solarth.energy
@@ -58,7 +58,7 @@ def calc_energy_sources(inputs: Inputs) -> Energy_source:
     )
 
     s_fossil = EnergySum(
-        s_fossil_gas.energy
+        energy=s_fossil_gas.energy
         + s_fossil_coal.energy
         + s_fossil_diesel.energy
         + s_fossil_fueloil.energy

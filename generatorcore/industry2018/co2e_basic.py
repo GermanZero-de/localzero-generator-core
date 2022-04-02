@@ -3,12 +3,12 @@ from dataclasses import dataclass
 from ..inputs import Inputs
 
 
-@dataclass
+@dataclass(kw_only=True)
 class CO2e_basic:
     # Used by p_other_2efgh
-    CO2e_production_based: float = 0
-    CO2e_production_based_per_MWh: float = 0
-    CO2e_total: float = 0
+    CO2e_production_based: float
+    CO2e_production_based_per_MWh: float
+    CO2e_total: float
 
     @classmethod
     def calc_p_other_2efgh(

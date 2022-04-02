@@ -5,7 +5,7 @@ from ..inputs import Inputs
 from .co2e import CO2e
 
 
-@dataclass
+@dataclass(kw_only=True)
 class CO2e_with_pct_energy(CO2e):
     # Used by p_metal_steel
     pct_energy: float = 0

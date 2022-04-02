@@ -8,7 +8,7 @@ from .co2e_basic import CO2e_basic
 from .energy_sum import EnergySum, Energy_pct
 
 
-@dataclass
+@dataclass(kw_only=True)
 class I18:
     i: CO2e
     p: CO2e

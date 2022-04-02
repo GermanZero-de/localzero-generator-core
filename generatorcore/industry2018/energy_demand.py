@@ -8,7 +8,7 @@ from .co2e_per_mwh import CO2e_per_MWh
 from .co2e_with_pct_energy import CO2e_with_pct_energy
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Production:
     p: CO2e
 
