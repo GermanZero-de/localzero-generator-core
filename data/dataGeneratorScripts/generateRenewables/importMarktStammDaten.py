@@ -160,8 +160,6 @@ class Date():
 CUTOFFDATE = "31.12.2018"
 cut_off_date:Date = Date.parse_day_month_year(CUTOFFDATE)
 
-# this is only used in the handling of "not 2018"-ags keys
-# this is not used in the xml parsing so far
 
 EXCEPTION_DICT = {
     "09478444": "Neuensorger Forst ist ein gemeindefreies gebiet",
