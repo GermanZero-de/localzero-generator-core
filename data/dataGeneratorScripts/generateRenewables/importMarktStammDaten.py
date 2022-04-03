@@ -1,12 +1,164 @@
 from collections import defaultdict
 import csv
+from dataclasses import dataclass
+from tkinter.ttk import Separator
 from lxml import etree
 import os
 import re
 import json
 
+class Date():
+
+    @dataclass
+    class Year():
+        year:int
+        def __gt__(self,other) -> bool:
+            returnBool:bool = False
+            if self.year > other.year:
+                returnBool = True
+            return returnBool
+        
+        def __lt__(self,other) -> bool:
+            returnBool:bool = False
+            if self.year < other.year:
+                returnBool = True
+
+            return returnBool
+        
+        def __eq__(self,other) -> bool:
+            returnBool:bool = False
+            if self.year == other.year:
+                returnBool = True
+            return returnBool
+
+        def __ge__(self,other) -> bool:
+            return self > other or self == other
+
+        def __le__(self,other) -> bool:
+            return self < other or self == other
+
+
+    @dataclass
+    class Month():
+        month:int
+        def __gt__(self,other) -> bool:
+            returnBool:bool = False
+            if self.month > other.month:
+                returnBool = True
+            return returnBool
+        
+        def __lt__(self,other) -> bool:
+            returnBool:bool = False
+            if self.month < other.month:
+                returnBool = True
+
+            return returnBool
+        
+        def __eq__(self,other) -> bool:
+            returnBool:bool = False
+            if self.month == other.month:
+                returnBool = True
+            return returnBool
+
+        def __ge__(self,other) -> bool:
+            return self > other or self == other
+
+        def __le__(self,other) -> bool:
+            return self < other or self == other
+
+    @dataclass
+    class Day():
+        day:int
+        def __gt__(self,other) -> bool:
+            returnBool:bool = False
+            if self.day > other.day:
+                returnBool = True
+            return returnBool
+        
+        def __lt__(self,other) -> bool:
+            returnBool:bool = False
+            if self.day < other.day:
+                returnBool = True
+
+            return returnBool
+        
+        def __eq__(self,other) -> bool:
+            returnBool:bool = False
+            if self.day == other.day:
+                returnBool = True
+            return returnBool
+        
+        def __ge__(self,other) -> bool:
+            return self > other or self == other
+
+        def __le__(self,other) -> bool:
+            return self < other or self == other
+
+    year:Year
+    month:Month
+    day:Day
+
+    def __init__(self,year,month,day):
+        self.year = self.Year(year=year)
+        self.month = self.Month(month=month)
+        self.day = self.Day(day=day)
+
+    @classmethod
+    def parse_day_month_year(cls,inputdate:str,separator:str="."):
+        [day,month,year] = inputdate.split(separator)
+        return cls(int(year),int(month),int(day))
+
+    @classmethod
+    def parse_year_month_day(cls,inputdate:str,separator:str="-"):
+        [year,month,day] = inputdate.split(separator)
+        return cls(int(year),int(month),int(day))
+
+    def __gt__(self,other) -> bool:
+        returnBool:bool = False
+
+        if self.year > other.year:
+            returnBool = True
+
+        elif self.year == other.year:
+            if self.month > other.month:
+                returnBool = True
+            elif self.month == other.month:
+                if self.day > other.day:
+                    returnBool = True
+
+        return returnBool
+    
+    def __lt__(self,other) -> bool:
+        returnBool:bool = False
+
+        if self.year < other.year:
+            returnBool = True
+
+        elif self.year == other.year:
+            if self.month < other.month:
+                returnBool = True
+            elif self.month == other.month:
+                if self.day < other.day:
+                    returnBool = True
+
+        return returnBool
+    
+    def __eq__(self,other) -> bool:
+        returnBool:bool = False
+        if self.year == other.year and self.month == other.month and self.day == other.day:
+            returnBool = True
+        return returnBool
+    
+    def __ge__(self,other) -> bool:
+        return self > other or self == other
+
+    def __le__(self,other) -> bool:
+        return self < other or self == other
+    
+    
 
 CUTOFFDATE = "31.12.2018"
+cut_off_date:Date = Date.parse_day_month_year(CUTOFFDATE)
 
 # this is only used in the handling of "not 2018"-ags keys
 # this is not used in the xml parsing so far
@@ -56,7 +208,7 @@ def parse_xml(
         no_power_count = 0
         no_date = 0
         for elem in root:
-            [ags, netpower, date, enddate, status] = parse_elem(
+            [ags, netpower, start_date_string, end_date_string, status,temp_shut_down_date_string,reactivation_date_string] = parse_elem(
                 elem,
                 [
                     "Gemeindeschluessel",
@@ -64,6 +216,8 @@ def parse_xml(
                     "Inbetriebnahmedatum",
                     "DatumEndgueltigeStilllegung",
                     "EinheitBetriebsstatus",
+                    "DatumBeginnVoruebergehendeStilllegung",
+                    "DatumWiederaufnahmeBetrieb"
                 ],
             )
 
@@ -72,17 +226,31 @@ def parse_xml(
             if status == "31":  # filter out "in Planung"
                 continue
 
-            if (
-                enddate is not None and int(enddate[:4]) < 2019
-            ):  # filter out "stillgelegt vor 2019"
-                continue
+            if end_date_string != None:
+                end_date = Date.parse_year_month_day(end_date_string)
+                if end_date < cut_off_date: # die Einheit wurde vor unserem Cutt-Off Datum stillgelegt
+                    continue
 
-            if date is None:
+            if start_date_string != None:
+                start_date = Date.parse_year_month_day(start_date_string)
+                if start_date > cut_off_date:  # filter out "in Betrieb gegangen nach ende 2018"
+                    continue
+            else: 
                 no_date += 1
-            elif (
-                int(date[:4]) > 2018
-            ):  # filter out "in Betrieb gegangen nach ende 2018"
-                continue
+            
+            if temp_shut_down_date_string != None:
+                temp_shut_down_date = Date.parse_year_month_day(temp_shut_down_date_string)
+                if temp_shut_down_date < cut_off_date:
+                    # die Einheit wurde vor dem Cut-Off Datum temporär stillgelegt
+                    if reactivation_date_string != None:
+                        reactivation_date = Date.parse_year_month_day(reactivation_date_string)
+                        if reactivation_date > cut_off_date:
+                            # Die Einheit wurde nach dem Cut-Off Datum reaktiviert -> rausfiltern
+                            continue
+                    else:
+                        # Die Einheit wurde bisher nicht reaktiviert (es gibt kein Wiederaufnahme Datum) -> rausfiltern
+                        continue  
+            
 
             if ags is None:
                 no_ags_count += 1
@@ -314,7 +482,8 @@ def lookUpAGSinRepo(
                         + " ags as predeccessor date "
                         + successor_ags_valid_from
                     )
-                if int(successor_ags_valid_from[-4:]) <= int(CUTOFFDATE[-4:]):
+                successor_ags_valid_from_date = Date.parse_day_month_year(successor_ags_valid_from)     
+                if successor_ags_valid_from_date <= cut_off_date:
                     if successor_ags != ags:
                         ags_return_list.append(successor_ags)
 
@@ -336,7 +505,8 @@ def lookUpAGSinRepo(
                 print(
                     predecessor_ags + " ags as successor date " + successor_ags_valid_from
                 )
-            if int(successor_ags_valid_from[-4:]) > int(CUTOFFDATE[-4:]):
+            successor_ags_valid_from_date =  Date.parse_day_month_year(successor_ags_valid_from)   
+            if successor_ags_valid_from_date > cut_off_date:
                 if predecessor_ags != ags:
                     ags_return_list.append(predecessor_ags)
 
@@ -431,9 +601,9 @@ def main():
         save_dict(wasser_dict, "wasser_dict")
     else:
         pv_dict = load_dict_from_json("pv_dict")
-        biomass_dict = load_dict_from_json("biomassDict")
-        wasser_dict = load_dict_from_json("wasserDict")
-        wind_dict = load_dict_from_json("windDict")
+        biomass_dict = load_dict_from_json("biomass_dict")
+        wasser_dict = load_dict_from_json("wasser_dict")
+        wind_dict = load_dict_from_json("wind_dict")
 
     master_ags_list = load_master("Master2018/master.csv")
     population_dict = load_population("population/2018.csv")
