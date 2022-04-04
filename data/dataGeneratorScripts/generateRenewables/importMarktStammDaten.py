@@ -4,11 +4,11 @@ from lxml import etree
 import os
 import re
 import json
-from datetime import datetime 
+from datetime import datetime
 
 
 CUTOFFDATE = "31.12.2018"
-cut_off_date:datetime = datetime.strptime(CUTOFFDATE,"%d.%m.%Y")
+cut_off_date: datetime = datetime.strptime(CUTOFFDATE, "%d.%m.%Y")
 
 # Diese AGS werden ignoriert, weil wir zurzeit für gemeindefreie Gebiete keine Daten aufbereiten.
 EXCEPTION_DICT = {
@@ -25,7 +25,7 @@ EXCEPTION_DICT = {
 def parse_elem(elem, tags: list[str]) -> list:
     return_list = [None] * len(tags)
     for subelem in elem:
-        #print(subelem.tag + "   " + subelem.text)
+        # print(subelem.tag + "   " + subelem.text)
         for i, tag in enumerate(tags):
             if subelem.tag == tag:
                 return_list[i] = subelem.text
@@ -56,7 +56,15 @@ def parse_xml(
         no_power_count = 0
         no_date = 0
         for elem in root:
-            [ags, netpower, start_date_string, end_date_string, status,temp_shut_down_date_string,reactivation_date_string] = parse_elem(
+            [
+                ags,
+                netpower,
+                start_date_string,
+                end_date_string,
+                status,
+                temp_shut_down_date_string,
+                reactivation_date_string,
+            ] = parse_elem(
                 elem,
                 [
                     "Gemeindeschluessel",
@@ -65,7 +73,7 @@ def parse_xml(
                     "DatumEndgueltigeStilllegung",
                     "EinheitBetriebsstatus",
                     "DatumBeginnVoruebergehendeStilllegung",
-                    "DatumWiederaufnahmeBetrieb"
+                    "DatumWiederaufnahmeBetrieb",
                 ],
             )
 
@@ -75,30 +83,37 @@ def parse_xml(
                 continue
 
             if end_date_string != None:
-                end_date = datetime.strptime(end_date_string,"%Y-%m-%d")
-                if end_date < cut_off_date: # die Einheit wurde vor unserem Cutt-Off Datum stillgelegt
+                end_date = datetime.strptime(end_date_string, "%Y-%m-%d")
+                if (
+                    end_date < cut_off_date
+                ):  # die Einheit wurde vor unserem Cutt-Off Datum stillgelegt
                     continue
 
             if start_date_string != None:
-                start_date = datetime.strptime(start_date_string,"%Y-%m-%d")
-                if start_date > cut_off_date:  # filter out "in Betrieb gegangen nach ende 2018"
+                start_date = datetime.strptime(start_date_string, "%Y-%m-%d")
+                if (
+                    start_date > cut_off_date
+                ):  # filter out "in Betrieb gegangen nach ende 2018"
                     continue
-            else: 
+            else:
                 no_date += 1
-            
+
             if temp_shut_down_date_string != None:
-                temp_shut_down_date = datetime.strptime(temp_shut_down_date_string,"%Y-%m-%d")
+                temp_shut_down_date = datetime.strptime(
+                    temp_shut_down_date_string, "%Y-%m-%d"
+                )
                 if temp_shut_down_date < cut_off_date:
                     # die Einheit wurde vor dem Cut-Off Datum temporär stillgelegt
                     if reactivation_date_string != None:
-                        reactivation_date = datetime.strptime(reactivation_date_string,"%Y-%m-%d")
+                        reactivation_date = datetime.strptime(
+                            reactivation_date_string, "%Y-%m-%d"
+                        )
                         if reactivation_date > cut_off_date:
                             # Die Einheit wurde nach dem Cut-Off Datum reaktiviert -> rausfiltern
                             continue
                     else:
                         # Die Einheit wurde bisher nicht reaktiviert (es gibt kein Wiederaufnahme Datum) -> rausfiltern
-                        continue  
-            
+                        continue
 
             if ags is None:
                 no_ags_count += 1
@@ -319,7 +334,9 @@ def lookUpAGSinRepo(
                         + " ags as predeccessor date "
                         + successor_ags_valid_from
                     )
-                successor_ags_valid_from_date = datetime.strptime(successor_ags_valid_from,"%d.%m.%Y")   
+                successor_ags_valid_from_date = datetime.strptime(
+                    successor_ags_valid_from, "%d.%m.%Y"
+                )
                 if successor_ags_valid_from_date <= cut_off_date:
                     if successor_ags != ags:
                         ags_return_list.append(successor_ags)
@@ -340,9 +357,13 @@ def lookUpAGSinRepo(
             ] = elem
             if print_details:
                 print(
-                    predecessor_ags + " ags as successor date " + successor_ags_valid_from
+                    predecessor_ags
+                    + " ags as successor date "
+                    + successor_ags_valid_from
                 )
-            successor_ags_valid_from_date =  datetime.strptime(successor_ags_valid_from,"%d.%m.%Y")   
+            successor_ags_valid_from_date = datetime.strptime(
+                successor_ags_valid_from, "%d.%m.%Y"
+            )
             if successor_ags_valid_from_date > cut_off_date:
                 if predecessor_ags != ags:
                     ags_return_list.append(predecessor_ags)
@@ -425,11 +446,15 @@ def main():
     wind_dict = defaultdict(float)
 
     if reloadfromXML:
-        pv_dict = parse_multi_xml("Xml/EinheitenSolar", 24, print_exit=True, print_info=True)
+        pv_dict = parse_multi_xml(
+            "Xml/EinheitenSolar", 24, print_exit=True, print_info=True
+        )
         biomass_dict = parse_xml(
             "Xml/EinheitenBiomasse.xml", print_exit=True, print_info=True
         )
-        wasser_dict = parse_xml("Xml/EinheitenWasser.xml", print_exit=True, print_info=True)
+        wasser_dict = parse_xml(
+            "Xml/EinheitenWasser.xml", print_exit=True, print_info=True
+        )
         wind_dict = parse_xml("Xml/EinheitenWind.xml", print_exit=True, print_info=True)
 
         save_dict(pv_dict, "pv_dict")
