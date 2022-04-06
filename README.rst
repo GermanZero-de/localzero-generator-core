@@ -48,6 +48,10 @@ Setup
 
       **ISSUE:** You might not have access to the proprietary repository. We are providing a REST API Service soon.
 
+- Enter the Poetry shell
+    - :code:`poetry shell` makes the development tools (`pyright`, `pre-commit`, etc.) available in your shell.
+    - You need to do this every time you start working on the generator, it's not a one-time setup step.
+
 Contributing to this project
 =========================
 

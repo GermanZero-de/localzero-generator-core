@@ -12,5 +12,6 @@ def cmd_ready_to_rock(args) -> None:
         print(
             f"You are ready to rock and save the climate at {rev}, but don't forget to copy paste the above into your pull request"
         )
-    except:
+    except Exception as e:
         print("You are NOT ready yet. Fix your errors first!")
+        print(e)

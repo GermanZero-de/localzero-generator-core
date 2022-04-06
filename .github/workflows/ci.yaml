@@ -36,10 +36,10 @@ jobs:
           virtualenvs-in-project: true
 
       - name: Load cached venv
-        id: cached-pip-wheels
+        id: cached-poetry-dependencies
         uses: actions/cache@v2
         with:
-          path: ~/.cache
+          path: .venv
           key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
 
       - name: Install dependencies
@@ -53,15 +53,15 @@ jobs:
           PA_TOKEN: ${{ secrets.LZ_PAT }}
         run: |
           source $VENV
-          python devtool.py data checkout -pat ${PA_TOKEN}
+          poetry run python devtool.py data checkout -pat ${PA_TOKEN}
         shell: bash
 
       - name: Run pytest
         run: |
           source $VENV
-          pytest tests/
+          poetry run pytest tests/
 
       - name: Run pytest coverage
         run: |
           source $VENV
-          pytest --cov=generatorcore tests/ --cov-fail-under=${{ env.COVERAGE_REQ }}
+          poetry run pytest --cov=generatorcore tests/ --cov-fail-under=${{ env.COVERAGE_REQ }}
