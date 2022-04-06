@@ -1,40 +1,38 @@
 # pyright: strict
 from dataclasses import dataclass
-from .co2e import CO2e
-from .co2e_per_t import CO2e_per_t
-from .co2e_with_pct_energy import CO2e_with_pct_energy
-from .co2e_per_mwh import CO2e_per_MWh
-from .co2e_basic import CO2e_basic
 from .energy_sum import EnergySum, Energy_pct
+from .production_branches import ExtraEmission,ProductionSubBranch,ProductionSubBranchCO2viaFEC,ProductionSubSum,ProductionBranch,ProductionSum
+
 
 
 @dataclass(kw_only=True)
 class I18:
-    i: CO2e
-    p: CO2e
+    i: ProductionSum
+    p: ProductionSum
 
-    p_miner: CO2e
-    p_miner_cement: CO2e_per_t
-    p_miner_chalk: CO2e_per_t
-    p_miner_glas: CO2e_per_t
-    p_miner_ceram: CO2e_per_t
+    p_miner: ProductionBranch
+    p_miner_cement: ProductionSubBranch
+    p_miner_chalk: ProductionSubBranch
+    p_miner_glas: ProductionSubBranch
+    p_miner_ceram: ProductionSubBranch
 
-    p_chem: CO2e
-    p_chem_basic: CO2e_per_t
-    p_chem_ammonia: CO2e_per_t
-    p_chem_other: CO2e_per_t
+    p_chem: ProductionBranch
+    p_chem_basic: ProductionSubBranch
+    p_chem_ammonia: ProductionSubBranch
+    p_chem_other: ProductionSubBranch
 
-    p_metal: CO2e
-    p_metal_steel: CO2e_with_pct_energy
-    p_metal_steel_primary: CO2e_per_t
-    p_metal_steel_secondary: CO2e_per_t
-    p_metal_nonfe: CO2e_per_t
+    p_metal: ProductionBranch
+    p_metal_steel: ProductionSubSum
+    p_metal_steel_primary: ProductionSubBranch
+    p_metal_steel_secondary: ProductionSubBranch
+    p_metal_nonfe: ProductionSubBranch
 
-    p_other: CO2e
-    p_other_paper: CO2e_per_t
-    p_other_food: CO2e_per_t
-    p_other_further: CO2e_per_MWh
-    p_other_2efgh: CO2e_basic
+    p_other: ProductionBranch
+    p_other_paper: ProductionSubBranch
+    p_other_food: ProductionSubBranch
+
+    p_other_further: ProductionSubBranchCO2viaFEC
+    p_other_2efgh: ExtraEmission
 
     s: Energy_pct
     s_fossil: EnergySum
