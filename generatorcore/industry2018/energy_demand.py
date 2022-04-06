@@ -1,94 +1,74 @@
 # pyright: strict
 from dataclasses import dataclass
-from .co2e import CO2e
 from ..inputs import Inputs
-from .co2e_per_t import CO2e_per_t
-from .co2e_basic import CO2e_basic
-from .co2e_per_mwh import CO2e_per_MWh
-from .co2e_with_pct_energy import CO2e_with_pct_energy
+from .production_branches import ExtraEmission,ProductionSubBranch,ProductionSubBranchCO2viaFEC,ProductionSubSum,ProductionBranch,ProductionSum
 
 
 @dataclass(kw_only=True)
 class Production:
-    p: CO2e
 
-    p_miner: CO2e
-    p_miner_cement: CO2e_per_t
-    p_miner_chalk: CO2e_per_t
-    p_miner_glas: CO2e_per_t
-    p_miner_ceram: CO2e_per_t
+    p: ProductionSum
 
-    p_chem: CO2e
-    p_chem_basic: CO2e_per_t
-    p_chem_ammonia: CO2e_per_t
-    p_chem_other: CO2e_per_t
+    p_miner: ProductionBranch
+    p_miner_cement: ProductionSubBranch
+    p_miner_chalk: ProductionSubBranch
+    p_miner_glas: ProductionSubBranch
+    p_miner_ceram: ProductionSubBranch
 
-    p_metal: CO2e
-    p_metal_steel: CO2e_with_pct_energy
-    p_metal_steel_primary: CO2e_per_t
-    p_metal_steel_secondary: CO2e_per_t
-    p_metal_nonfe: CO2e_per_t
+    p_chem: ProductionBranch
+    p_chem_basic: ProductionSubBranch
+    p_chem_ammonia: ProductionSubBranch
+    p_chem_other: ProductionSubBranch
 
-    p_other: CO2e
-    p_other_paper: CO2e_per_t
-    p_other_food: CO2e_per_t
-    p_other_further: CO2e_per_MWh
-    p_other_2efgh: CO2e_basic
+    p_metal: ProductionBranch
+    p_metal_steel: ProductionSubSum
+    p_metal_steel_primary: ProductionSubBranch
+    p_metal_steel_secondary: ProductionSubBranch
+    p_metal_nonfe: ProductionSubBranch
+
+    p_other: ProductionBranch
+    p_other_paper: ProductionSubBranch
+    p_other_food: ProductionSubBranch
+
+    p_other_further: ProductionSubBranchCO2viaFEC
+    p_other_2efgh: ExtraEmission
 
 
-def calc_energy_demand(inputs: Inputs) -> Production:
+def calc_production(inputs:Inputs) -> Production:
     fact = inputs.fact
     entries = inputs.entries
 
-    p_miner_energy = entries.i_fec_pct_of_miner * entries.i_energy_total
-    p_miner_cement = CO2e_per_t.calc_p_miner_cement(inputs, p_miner_energy)
-    p_miner_chalk = CO2e_per_t.calc_p_miner_chalk(inputs, p_miner_energy)
-    p_miner_glas = CO2e_per_t.calc_p_miner_glas(inputs, p_miner_energy)
-    p_miner_ceram = CO2e_per_t.calc_p_miner_ceram(inputs, p_miner_energy)
-    p_miner = p_miner_cement + p_miner_chalk + p_miner_glas + p_miner_ceram
+    energy_consumption_industry = entries.i_energy_total
 
-    p_chem_energy = entries.i_fec_pct_of_chem * entries.i_energy_total
-    p_chem_basic = CO2e_per_t.calc_p_chem_basic(inputs, p_chem_energy)
-    p_chem_ammonia = CO2e_per_t.calc_p_chem_ammonia(inputs, p_chem_energy)
-    p_chem_other = CO2e_per_t.calc_p_chem_other(inputs, p_chem_energy)
-    p_chem = p_chem_basic + p_chem_ammonia + p_chem_other
+    energy_consumption_miner = energy_consumption_industry * entries.i_fec_pct_of_miner 
+    p_miner_cement = ProductionSubBranch.calc_production_sub_branch(inputs=inputs,branch="miner",sub_branch="cement",energy_consumption_branch=energy_consumption_miner) 
+    p_miner_chalk = ProductionSubBranch.calc_production_sub_branch(inputs=inputs,branch="miner",sub_branch="cement",energy_consumption_branch=energy_consumption_miner) 
+    p_miner_glas = ProductionSubBranch.calc_production_sub_branch(inputs=inputs,branch="miner",sub_branch="cement",energy_consumption_branch=energy_consumption_miner) 
+    p_miner_ceram = ProductionSubBranch.calc_production_sub_branch(inputs=inputs,branch="miner",sub_branch="cement",energy_consumption_branch=energy_consumption_miner)
+    p_miner =  ProductionBranch.calc_production_sum(sub_branch_list=[p_miner_cement,p_miner_chalk,p_miner_glas,p_miner_ceram])
 
-    p_metal_energy = entries.i_fec_pct_of_metal * entries.i_energy_total
-    p_metal_steel_pct_energy = fact("Fact_I_P_metal_fec_pct_of_steel_2018")
-    p_metal_steel_energy = p_metal_energy * p_metal_steel_pct_energy
-    p_metal_steel_primary = CO2e_per_t.calc_p_metal_steel_primary_route(
-        inputs, p_metal_steel_energy
-    )
-    p_metal_steel_secondary = CO2e_per_t.calc_p_metal_steel_secondary_route(
-        inputs, p_metal_steel_energy
-    )
-    p_metal_steel = CO2e_with_pct_energy.calc_p_metal_steel(
-        inputs,
-        p_metal_steel_pct_energy,
-        p_metal_steel_energy,
-        p_metal_steel_primary,
-        p_metal_steel_secondary,
-    )
-    p_metal_nonfe = CO2e_per_t.calc_p_metal_non_fe(inputs, p_metal_energy)
-    p_metal = p_metal_steel + p_metal_nonfe
-    p_metal.energy = p_metal_energy
+    energy_consumption_chemistry = energy_consumption_industry * entries.i_fec_pct_of_chem
+    p_chem_basic = ProductionSubBranch.calc_production_sub_branch(inputs=inputs,branch="chem",sub_branch="basic",energy_consumption_branch=energy_consumption_chemistry) 
+    p_chem_ammonia = ProductionSubBranch.calc_production_sub_branch(inputs=inputs,branch="chem",sub_branch="amonia",energy_consumption_branch=energy_consumption_chemistry) 
+    p_chem_other = ProductionSubBranch.calc_production_sub_branch(inputs=inputs,branch="chem",sub_branch="other",energy_consumption_branch=energy_consumption_chemistry) 
+    p_chem = ProductionBranch.calc_production_sum(sub_branch_list=[p_chem_basic,p_chem_ammonia,p_chem_other])
 
-    p_other_energy = entries.i_fec_pct_of_other * entries.i_energy_total
-    p_other_paper = CO2e_per_t.calc_p_other_paper(inputs, p_other_energy)
-    p_other_food = CO2e_per_t.calc_p_other_food(inputs, p_other_energy)
-    p_other_further = CO2e_per_MWh.calc_p_other_further(inputs, p_other_energy)
-    p_other_2efgh = CO2e_basic.calc_p_other_2efgh(inputs, p_other_further.energy)
-    p_other = p_other_paper + p_other_food
-    p_other.energy = p_other_energy
+    energy_consumption_metal = energy_consumption_industry * entries.i_fec_pct_of_metal
+    energy_consumption_metal_steel = energy_consumption_metal* fact("Fact_I_P_metal_fec_pct_of_steel")
+    p_metal_steel_primary = ProductionSubBranch.calc_production_sub_branch(inputs=inputs,branch="metal",sub_branch="steel_primary",energy_consumption_branch=energy_consumption_metal_steel) 
+    p_metal_steel_secondary = ProductionSubBranch.calc_production_sub_branch(inputs=inputs,branch="metal",sub_branch="steel_secondary",energy_consumption_branch=energy_consumption_metal_steel)
+    p_metal_steel = ProductionSubSum.calc_production_sub_sum(energy_consumption_branch=energy_consumption_metal,sub_branch_list=[p_metal_steel_primary,p_metal_steel_secondary])
+    p_metal_nonfe = ProductionSubBranch.calc_production_sub_branch(inputs=inputs,branch="metal",sub_branch="nonfe",energy_consumption_branch=energy_consumption_metal) 
+    p_metal = ProductionBranch.calc_production_sum(sub_branch_list=[p_metal_steel,p_metal_nonfe])
 
-    p_other.CO2e_combustion_based += +p_other_further.CO2e_combustion_based
-    p_other.CO2e_production_based += (
-        +p_other_further.CO2e_production_based + p_other_2efgh.CO2e_production_based
-    )
-    p_other.CO2e_total += +p_other_further.CO2e_total + p_other_2efgh.CO2e_total
+    energy_consumption_other = energy_consumption_industry * entries.i_fec_pct_of_other
+    p_other_paper = ProductionSubBranch.calc_production_sub_branch(inputs=inputs,branch="other",sub_branch="paper",energy_consumption_branch=energy_consumption_other) 
+    p_other_food = ProductionSubBranch.calc_production_sub_branch(inputs=inputs,branch="other",sub_branch="food",energy_consumption_branch=energy_consumption_other) 
+    p_other_further = ProductionSubBranchCO2viaFEC.calc_production_sub_branch(inputs=inputs,branch="other",sub_branch="further",energy_consumption_branch=energy_consumption_other)
+    p_other_2efgh = ExtraEmission.calc_extra_emission(inputs=inputs,branch="other",sub_branch="further",energy_consumption=p_other_further.energy)
+    p_other = ProductionBranch.calc_production_sum(sub_branch_list=[p_other_paper,p_other_food],sub_branch_via_FEC_list=[p_other_further],extra_emission_list=[p_other_2efgh])
 
-    p = p_miner + p_chem + p_metal + p_other
-    p.energy = entries.i_energy_total
+    p = ProductionSum.calc_production_sum(branch_list=[p_miner,p_chem,p_metal,p_other])
 
     return Production(
         p=p,
