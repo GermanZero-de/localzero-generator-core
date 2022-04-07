@@ -36,11 +36,11 @@ class ProductionSubBranch():
         energy_use_factor = fact("Fact_I_P_"+branch+"_"+sub_branch+"_ratio_prodvol_to_fec")
         production_volume = energy * energy_use_factor
 
-        CO2e_combustion_based_per_t = fact("Fact_I_P_"+branch+"_"+sub_branch+"_ratio_CO2e_pb_to_prodvol")
+        CO2e_combustion_based_per_t = fact("Fact_I_P_"+branch+"_"+sub_branch+"_ratio_CO2e_cb_to_prodvol")
         CO2e_combustion_based = production_volume*CO2e_combustion_based_per_t
         
 
-        CO2e_production_based_per_t = fact("Fact_I_P_"+branch+"_"+sub_branch+"_ratio_CO2e_cb_to_prodvol")
+        CO2e_production_based_per_t = fact("Fact_I_P_"+branch+"_"+sub_branch+"_ratio_CO2e_pb_to_prodvol")
         CO2e_production_based = production_volume * CO2e_production_based_per_t
 
         CO2e_total = CO2e_combustion_based + CO2e_production_based
@@ -87,16 +87,16 @@ class ProductionSubBranchCO2viaFEC():
 
         fact=inputs.fact
 
-        pct_energy = fact("Fact_I_P_"+branch+"_"+sub_branch+"_energy_use_factor")
+        pct_energy = fact("Fact_I_P_"+branch+"_fec_pct_of_"+sub_branch)
         energy = energy_consumption_branch * pct_energy
 
-        production_volume = 1 #meaning 100%
+        production_volume = fact("Fact_I_P_"+branch+"_"+sub_branch+"_prodvol") # =1, meaning 100% see descritpion of Fact_I_P_other_further_prodvol this Fact for explanation
 
-        CO2e_combustion_based_per_MWh = fact("Fact_I_P_"+branch+"_"+sub_branch+"_ratio_CO2e_pb_to_fec")
+        CO2e_combustion_based_per_MWh = fact("Fact_I_P_"+branch+"_"+sub_branch+"_ratio_CO2e_cb_to_fec")
         CO2e_combustion_based = production_volume * CO2e_combustion_based_per_MWh
         
 
-        CO2e_production_based_per_MWh = fact("Fact_I_P_"+branch+"_"+sub_branch+"_ratio_CO2e_cb_to_fec")
+        CO2e_production_based_per_MWh = fact("Fact_I_P_"+branch+"_"+sub_branch+"_ratio_CO2e_pb_to_fec")
         CO2e_production_based = production_volume * CO2e_production_based_per_MWh
 
         CO2e_total = CO2e_combustion_based + CO2e_production_based

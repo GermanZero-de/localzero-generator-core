@@ -151,6 +151,42 @@ def prepare_facts(inputs:Inputs):
     "Fact_I_P_chem_other_ratio_CO2e_pb_to_prodvol":replace_value("Fact_I_P_chem_other_CO2e_pb_ratio_per_t_product_2018"),
     "Fact_I_P_chem_other_ratio_CO2e_cb_to_prodvol":replace_value("Fact_I_P_chem_other_CO2e_eb_ratio_per_t_product_2018"),
 
+    #metallherstellende Industrie Fakten
+    "Fact_I_P_metal_fec_pct_of_steel":replace_value("Fact_I_P_metal_fec_pct_of_steel_2018"),
+
+    "Fact_I_P_metal_fec_pct_of_steel_primary":replace_value("Fakt_I_N_metallh_Primaerroute_EEV_2018_Anteil"),
+    "Fact_I_P_metal_steel_primary_ratio_prodvol_to_fec":replace_value("Fact_I_P_metal_steel_primary_ratio_fec_to_prodvol_2018",lambda x: div(1,x)),
+    "Fact_I_P_metal_steel_primary_ratio_CO2e_pb_to_prodvol":replace_value("Fact_I_P_metal_steel_primary_ratio_CO2e_pb_to_prodvol_2018"),
+    "Fact_I_P_metal_steel_primary_ratio_CO2e_cb_to_prodvol":replace_value("Fact_I_P_metal_steel_primary_ratio_CO2e_eb_to_prodvol_2018"),
+
+    "Fact_I_P_metal_fec_pct_of_steel_secondary":replace_value("Fakt_I_N_metallh_Sekundaerroute_EEV_2018_Anteil"),
+    "Fact_I_P_metal_steel_secondary_ratio_prodvol_to_fec":replace_value("Fact_I_P_metal_steel_secondary_ratio_fec_to_prodvol_2018",lambda x: div(1,x)),
+    "Fact_I_P_metal_steel_secondary_ratio_CO2e_pb_to_prodvol":replace_value("Fact_I_P_metal_steel_secondary_ratio_CO2e_pb_to_prodvol_2018"),
+    "Fact_I_P_metal_steel_secondary_ratio_CO2e_cb_to_prodvol":replace_value("Fact_I_P_metal_steel_secondary_ratio_CO2e_eb_to_prodvol_2018"),
+
+    "Fact_I_P_metal_fec_pct_of_nonfe":replace_value("Fact_I_P_metal_fec_pct_of_nonfe_2018"),
+    "Fact_I_P_metal_nonfe_ratio_prodvol_to_fec":replace_value("Fact_I_P_metal_nonfe_ratio_fec_to_prodvol_2018",lambda x: div(1,x)),
+    "Fact_I_P_metal_nonfe_ratio_CO2e_pb_to_prodvol":replace_value("Fact_I_P_metal_nonfe_ratio_CO2e_pb_to_prodvol_2018"),
+    "Fact_I_P_metal_nonfe_ratio_CO2e_cb_to_prodvol":replace_value("Fact_I_P_metal_nonfe_ratio_CO2e_cb_to_prodvol_2018"),
+
+    #sontige Industrie Fakten
+    "Fact_I_P_other_fec_pct_of_paper":replace_value("Fact_I_P_other_fec_pct_of_paper_2018"),
+    "Fact_I_P_other_paper_ratio_prodvol_to_fec":replace_value("Fact_I_P_other_paper_ratio_fec_to_prodvol_2018",lambda x: div(1,x)),
+    "Fact_I_P_other_paper_ratio_CO2e_pb_to_prodvol":replace_value("Fact_I_P_other_paper_ratio_CO2e_pb_to_prodvol_2018"),
+    "Fact_I_P_other_paper_ratio_CO2e_cb_to_prodvol":replace_value("Fact_I_P_other_paper_ratio_CO2e_cb_to_prodvol_2018"),
+
+    "Fact_I_P_other_fec_pct_of_food":replace_value("Fact_I_P_other_fec_pct_of_food_2018"),
+    "Fact_I_P_other_food_ratio_prodvol_to_fec":replace_value("Fact_I_P_other_food_ratio_fec_to_prodvol_2018",lambda x: div(1,x)),
+    "Fact_I_P_other_food_ratio_CO2e_pb_to_prodvol":replace_value("Fact_I_P_other_food_ratio_CO2e_pb_to_prodvol_2018"),
+    "Fact_I_P_other_food_ratio_CO2e_cb_to_prodvol":replace_value("Fact_I_P_other_food_ratio_CO2e_cb_to_prodvol_2018"),
+
+    "Fact_I_P_other_fec_pct_of_further":replace_value("Fact_I_P_other_fec_pct_of_further_2018"),
+    "Fact_I_P_other_further_prodvol":replace_value("Fact_I_P_other_further_prodvol_2018"),
+    "Fact_I_P_other_further_ratio_CO2e_pb_to_fec":replace_value("Fact_I_P_other_2d_ratio_CO2e_pb_to_fec_2018"),
+    "Fact_I_P_other_further_ratio_CO2e_cb_to_fec":replace_value("Fact_I_P_other_further_ratio_CO2e_cb_to_fec_2018"),
+
+    "Fact_I_P_other_2efgh_ratio_CO2e_pb_to_fec":replace_value("Fact_I_P_other_2efgh_ratio_CO2e_pb_to_fec_2018"),
+
     }
 
     new_facts.append_rows(additional_facts)
