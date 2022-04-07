@@ -299,7 +299,10 @@ class FactsAndAssumptions:
     def ass(self, keyname: str) -> float:
         """Similar to fact, but these try to describe the future. And are therefore based on various assumptions."""
         return Row(self._assumptions, keyname).float("value")
-
+    
+    #Leon-Func
+    def return_fact_data_frame(self):
+        return self._facts
 
 def datadir_or_default(datadir: str | None = None) -> str:
     """Return the normalized absolute path to the data directory."""

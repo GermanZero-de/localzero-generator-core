@@ -33,7 +33,7 @@ class ProductionSubBranch():
         pct_energy = fact("Fact_I_P_"+branch+"_"+sub_branch+"_energy_use_factor")
         energy = energy_consumption_branch * pct_energy
 
-        energy_use_factor = fact("Fact_I_P"+branch+"_"+sub_branch+"_ratio_prodvol_to_fec")
+        energy_use_factor = fact("Fact_I_P_"+branch+"_"+sub_branch+"_ratio_prodvol_to_fec")
         production_volume = energy * energy_use_factor
 
         CO2e_combustion_based_per_t = fact("Fact_I_P_"+branch+"_"+sub_branch+"_ratio_CO2e_pb_to_prodvol")

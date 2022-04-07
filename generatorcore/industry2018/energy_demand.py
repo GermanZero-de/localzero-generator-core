@@ -1,5 +1,7 @@
 # pyright: strict
 from dataclasses import dataclass
+
+from generatorcore import refdata
 from ..inputs import Inputs
 from .production_branches import ExtraEmission,ProductionSubBranch,ProductionSubBranchCO2viaFEC,ProductionSubSum,ProductionBranch,ProductionSum
 
@@ -29,7 +31,6 @@ class Production:
     p_other: ProductionBranch
     p_other_paper: ProductionSubBranch
     p_other_food: ProductionSubBranch
-
     p_other_further: ProductionSubBranchCO2viaFEC
     p_other_2efgh: ExtraEmission
 
@@ -41,6 +42,11 @@ def calc_production(inputs:Inputs) -> Production:
     energy_consumption_industry = entries.i_energy_total
 
     energy_consumption_miner = energy_consumption_industry * entries.i_fec_pct_of_miner 
+
+    prepare_facts(inputs=inputs)
+    	
+    print(fact("Fact_I_P_miner_cement_energy_use_factor"))
+    
     p_miner_cement = ProductionSubBranch.calc_production_sub_branch(inputs=inputs,branch="miner",sub_branch="cement",energy_consumption_branch=energy_consumption_miner) 
     p_miner_chalk = ProductionSubBranch.calc_production_sub_branch(inputs=inputs,branch="miner",sub_branch="cement",energy_consumption_branch=energy_consumption_miner) 
     p_miner_glas = ProductionSubBranch.calc_production_sub_branch(inputs=inputs,branch="miner",sub_branch="cement",energy_consumption_branch=energy_consumption_miner) 
@@ -92,3 +98,15 @@ def calc_production(inputs:Inputs) -> Production:
         p_other_further=p_other_further,
         p_other_2efgh=p_other_2efgh,
     )
+
+def prepare_facts(inputs:Inputs):
+
+    new_facts_and_assumptions = inputs.return_facts()
+    new_inputs:refdata.DataFrame[str] = new_facts_and_assumptions.return_fact_data_frame()
+
+    additional_facts = {"Fact_I_P_miner_cement_energy_use_factor":new_inputs.get("Fact_I_P_miner_cement_energy_use_factor_2017")}
+
+
+    new_inputs.append_rows(additional_facts)
+
+    
