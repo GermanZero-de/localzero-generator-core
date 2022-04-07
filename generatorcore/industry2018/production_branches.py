@@ -30,7 +30,7 @@ class ProductionSubBranch():
 
         fact=inputs.fact
 
-        pct_energy = fact("Fact_I_P_"+branch+"_"+sub_branch+"_energy_use_factor")
+        pct_energy = fact("Fact_I_P_"+branch+"_fec_pct_of_"+sub_branch)
         energy = energy_consumption_branch * pct_energy
 
         energy_use_factor = fact("Fact_I_P_"+branch+"_"+sub_branch+"_ratio_prodvol_to_fec")

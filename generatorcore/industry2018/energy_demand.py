@@ -1,5 +1,7 @@
 # pyright: strict
 from dataclasses import dataclass
+from typing import Callable
+from generatorcore.utils import div
 
 from generatorcore import refdata
 from ..inputs import Inputs
@@ -45,7 +47,6 @@ def calc_production(inputs:Inputs) -> Production:
 
     prepare_facts(inputs=inputs)
     	
-    print(fact("Fact_I_P_miner_cement_energy_use_factor"))
     
     p_miner_cement = ProductionSubBranch.calc_production_sub_branch(inputs=inputs,branch="miner",sub_branch="cement",energy_consumption_branch=energy_consumption_miner) 
     p_miner_chalk = ProductionSubBranch.calc_production_sub_branch(inputs=inputs,branch="miner",sub_branch="cement",energy_consumption_branch=energy_consumption_miner) 
@@ -55,7 +56,7 @@ def calc_production(inputs:Inputs) -> Production:
 
     energy_consumption_chemistry = energy_consumption_industry * entries.i_fec_pct_of_chem
     p_chem_basic = ProductionSubBranch.calc_production_sub_branch(inputs=inputs,branch="chem",sub_branch="basic",energy_consumption_branch=energy_consumption_chemistry) 
-    p_chem_ammonia = ProductionSubBranch.calc_production_sub_branch(inputs=inputs,branch="chem",sub_branch="amonia",energy_consumption_branch=energy_consumption_chemistry) 
+    p_chem_ammonia = ProductionSubBranch.calc_production_sub_branch(inputs=inputs,branch="chem",sub_branch="ammonia",energy_consumption_branch=energy_consumption_chemistry) 
     p_chem_other = ProductionSubBranch.calc_production_sub_branch(inputs=inputs,branch="chem",sub_branch="other",energy_consumption_branch=energy_consumption_chemistry) 
     p_chem = ProductionBranch.calc_production_sum(sub_branch_list=[p_chem_basic,p_chem_ammonia,p_chem_other])
 
@@ -104,9 +105,55 @@ def prepare_facts(inputs:Inputs):
     new_facts_and_assumptions = inputs.return_facts()
     new_inputs:refdata.DataFrame[str] = new_facts_and_assumptions.return_fact_data_frame()
 
-    additional_facts = {"Fact_I_P_miner_cement_energy_use_factor":new_inputs.get("Fact_I_P_miner_cement_energy_use_factor_2017")}
+    def replace_value(instr:str, replace_value_functions: Callable[[float],float] = lambda x : x, inputs:refdata.DataFrame[str] = new_inputs) -> list[str]:
+        
+        header = inputs.header
+        string_list = [x for x in inputs.get(instr)] #copy by value
+        string_list[header["value"]] = str(replace_value_functions(float(string_list[header["value"]])))
+
+        return string_list
+
+    additional_facts = {
+    #mineralische Industrie Fakten
+    "Fact_I_P_miner_fec_pct_of_cement":replace_value("Fact_I_P_miner_fec_pct_of_cement_2018"),
+    "Fact_I_P_miner_cement_ratio_prodvol_to_fec":replace_value("Fact_I_P_miner_cement_energy_use_factor_2017"),
+    "Fact_I_P_miner_cement_ratio_CO2e_pb_to_prodvol":replace_value("Fact_I_P_miner_cement_ratio_CO2e_pb_to_prodvol_2018"),
+    "Fact_I_P_miner_cement_ratio_CO2e_cb_to_prodvol":replace_value("Fact_I_P_miner_cement_ratio_CO2e_cb_to_prodvol_2018"),
+
+    "Fact_I_P_miner_fec_pct_of_chalk":replace_value("Fact_I_P_miner_fec_pct_of_chalk_2017"),
+    "Fact_I_P_miner_chalk_ratio_prodvol_to_fec":replace_value("Fact_I_P_miner_chalk_energy_use_factor_2017"),
+    "Fact_I_P_miner_chalk_ratio_CO2e_pb_to_prodvol":replace_value("Fact_I_P_miner_chalk_ratio_CO2e_pb_to_prodvol_2018"),
+    "Fact_I_P_miner_chalk_ratio_CO2e_cb_to_prodvol":replace_value("Fact_I_P_miner_chalk_ratio_CO2e_cb_to_prodvol_2018"),
+
+    "Fact_I_P_miner_fec_pct_of_glas":replace_value("Fact_I_P_miner_fec_pct_of_glas_2017"),
+    "Fact_I_P_miner_glas_ratio_prodvol_to_fec":replace_value("Fact_I_P_miner_glas_energy_use_factor_2017"),
+    "Fact_I_P_miner_glas_ratio_CO2e_pb_to_prodvol":replace_value("Fact_I_P_miner_glas_ratio_CO2e_pb_to_prodvol_2018"),
+    "Fact_I_P_miner_glas_ratio_CO2e_cb_to_prodvol":replace_value("Fact_I_P_miner_glas_ratio_CO2e_cb_to_prodvol_2018"),
+
+    "Fact_I_P_miner_fec_pct_of_ceram":replace_value("Fact_I_P_miner_fec_pct_of_ceram_2017"),
+    "Fact_I_P_miner_ceram_ratio_prodvol_to_fec":replace_value("Fact_I_P_miner_ceram_energy_use_factor_2017"),
+    "Fact_I_P_miner_ceram_ratio_CO2e_pb_to_prodvol":replace_value("Fact_I_P_miner_ceram_ratio_CO2e_pb_to_prodvol_2018"),
+    "Fact_I_P_miner_ceram_ratio_CO2e_cb_to_prodvol":replace_value("Fact_I_P_miner_ceram_ratio_CO2e_cb_to_prodvol_2018"),
+
+    #chemische Industrie Fakten
+    "Fact_I_P_chem_fec_pct_of_basic":replace_value("Fact_I_S_chem_basic_wo_ammonia_fec_ratio_to_chem_all_2018"),
+    "Fact_I_P_chem_basic_ratio_prodvol_to_fec":replace_value("Fact_I_P_chem_basic_wo_ammonia_ratio_prodvol_to_fec_2018"),
+    "Fact_I_P_chem_basic_ratio_CO2e_pb_to_prodvol":replace_value("Fact_I_P_chem_basic_wo_ammonia_CO2e_pb_ratio_per_t_product_2018"),
+    "Fact_I_P_chem_basic_ratio_CO2e_cb_to_prodvol":replace_value("Fact_I_P_chem_basic_wo_ammonia_CO2e_eb_ratio_per_t_product_2018"),
+
+    "Fact_I_P_chem_fec_pct_of_ammonia":replace_value("Fact_I_S_chem_ammonia_fec_ratio_to_chem_all_2018"),
+    "Fact_I_P_chem_ammonia_ratio_prodvol_to_fec":replace_value("Fact_I_P_chem_ammonia_fec_ratio_per_t_product_2013",lambda x: div(1,x)),
+    "Fact_I_P_chem_ammonia_ratio_CO2e_pb_to_prodvol":replace_value("Fact_I_P_chem_ammonia_CO2e_pb_ratio_per_t_product_2018"),
+    "Fact_I_P_chem_ammonia_ratio_CO2e_cb_to_prodvol":replace_value("Fact_I_P_chem_ammonia_CO2e_eb_ratio_per_t_product_2018"),
+
+    "Fact_I_P_chem_fec_pct_of_other":replace_value("Fact_I_S_chem_other_fec_ratio_to_chem_all_2018"),
+    "Fact_I_P_chem_other_ratio_prodvol_to_fec":replace_value("Fact_I_P_chem_other_ratio_prodvol_to_fec_2018"),
+    "Fact_I_P_chem_other_ratio_CO2e_pb_to_prodvol":replace_value("Fact_I_P_chem_other_CO2e_pb_ratio_per_t_product_2018"),
+    "Fact_I_P_chem_other_ratio_CO2e_cb_to_prodvol":replace_value("Fact_I_P_chem_other_CO2e_eb_ratio_per_t_product_2018"),
+
+    }
+
 
 
     new_inputs.append_rows(additional_facts)
 
-    
