@@ -49,7 +49,7 @@ def calc_production(inputs: Inputs) -> Production:
     entries = inputs.entries
 
     prepare_facts(inputs=inputs)
-    
+
     energy_consumption_industry = entries.i_energy_total
 
     energy_consumption_miner = energy_consumption_industry * entries.i_fec_pct_of_miner

@@ -28,14 +28,28 @@ def calc_supply(inputs: Inputs) -> EnergySupply:
     entries = inputs.entries
 
     total_energy_supply = entries.i_energy_total
-    
-    s_fossil_gas = EnergySource(energy=entries.i_gas_fec, total_energy=total_energy_supply)
-    s_fossil_coal = EnergySource(energy=entries.i_coal_fec, total_energy=total_energy_supply)
-    s_fossil_diesel = EnergySource(energy=entries.i_diesel_fec, total_energy=total_energy_supply)
-    s_fossil_fueloil = EnergySource(energy=entries.i_fueloil_fec, total_energy=total_energy_supply)
-    s_fossil_lpg = EnergySource(energy=entries.i_lpg_fec, total_energy=total_energy_supply)
-    s_fossil_opetpro = EnergySource(energy=entries.i_opetpro_fec, total_energy=total_energy_supply)
-    s_fossil_ofossil = EnergySource(energy=entries.i_ofossil_fec, total_energy=total_energy_supply)
+
+    s_fossil_gas = EnergySource(
+        energy=entries.i_gas_fec, total_energy=total_energy_supply
+    )
+    s_fossil_coal = EnergySource(
+        energy=entries.i_coal_fec, total_energy=total_energy_supply
+    )
+    s_fossil_diesel = EnergySource(
+        energy=entries.i_diesel_fec, total_energy=total_energy_supply
+    )
+    s_fossil_fueloil = EnergySource(
+        energy=entries.i_fueloil_fec, total_energy=total_energy_supply
+    )
+    s_fossil_lpg = EnergySource(
+        energy=entries.i_lpg_fec, total_energy=total_energy_supply
+    )
+    s_fossil_opetpro = EnergySource(
+        energy=entries.i_opetpro_fec, total_energy=total_energy_supply
+    )
+    s_fossil_ofossil = EnergySource(
+        energy=entries.i_ofossil_fec, total_energy=total_energy_supply
+    )
 
     s_fossil = EnergySum(
         energy=s_fossil_gas.energy
@@ -47,8 +61,12 @@ def calc_supply(inputs: Inputs) -> EnergySupply:
         + s_fossil_ofossil.energy
     )
 
-    s_renew_biomass = EnergySource(energy=entries.i_biomass_fec, total_energy=total_energy_supply)
-    s_renew_heatnet = EnergySource(energy=entries.i_heatnet_fec, total_energy=total_energy_supply)
+    s_renew_biomass = EnergySource(
+        energy=entries.i_biomass_fec, total_energy=total_energy_supply
+    )
+    s_renew_heatnet = EnergySource(
+        energy=entries.i_heatnet_fec, total_energy=total_energy_supply
+    )
     s_renew_heatpump = EnergySource(
         energy=entries.i_orenew_fec * fact("Fact_R_S_ratio_heatpump_to_orenew_2018"),
         total_energy=total_energy_supply,
@@ -57,7 +75,9 @@ def calc_supply(inputs: Inputs) -> EnergySupply:
         energy=entries.i_orenew_fec * fact("Fact_R_S_ratio_solarth_to_orenew_2018"),
         total_energy=total_energy_supply,
     )
-    s_renew_elec = EnergySource(energy=entries.i_elec_fec, total_energy=total_energy_supply)
+    s_renew_elec = EnergySource(
+        energy=entries.i_elec_fec, total_energy=total_energy_supply
+    )
 
     s_renew = EnergySum(
         energy=s_renew_biomass.energy
@@ -67,10 +87,8 @@ def calc_supply(inputs: Inputs) -> EnergySupply:
         + s_renew_elec.energy
     )
 
-    
-
     s = EnergySource(energy=entries.i_energy_total, total_energy=entries.i_energy_total)
-    
+
     return EnergySupply(
         s=s,
         s_fossil=s_fossil,
