@@ -1,6 +1,6 @@
 # pyright: strict
 from dataclasses import dataclass
-from .energy_sum import EnergySum, Energy_pct
+from .supply_classes import EnergySum, EnergySource
 from .production_branches import (
     ExtraEmission,
     ProductionSubBranch,
@@ -40,18 +40,18 @@ class I18:
     p_other_further: ProductionSubBranchCO2viaFEC
     p_other_2efgh: ExtraEmission
 
-    s: Energy_pct
+    s: EnergySource
     s_fossil: EnergySum
-    s_fossil_gas: Energy_pct
-    s_fossil_coal: Energy_pct
-    s_fossil_diesel: Energy_pct
-    s_fossil_fueloil: Energy_pct
-    s_fossil_lpg: Energy_pct
-    s_fossil_opetpro: Energy_pct
-    s_fossil_ofossil: Energy_pct
+    s_fossil_gas: EnergySource
+    s_fossil_coal: EnergySource
+    s_fossil_diesel: EnergySource
+    s_fossil_fueloil: EnergySource
+    s_fossil_lpg: EnergySource
+    s_fossil_opetpro: EnergySource
+    s_fossil_ofossil: EnergySource
     s_renew: EnergySum
-    s_renew_biomass: Energy_pct
-    s_renew_heatnet: Energy_pct
-    s_renew_heatpump: Energy_pct
-    s_renew_solarth: Energy_pct
-    s_renew_elec: Energy_pct
+    s_renew_biomass: EnergySource
+    s_renew_heatnet: EnergySource
+    s_renew_heatpump: EnergySource
+    s_renew_solarth: EnergySource
+    s_renew_elec: EnergySource

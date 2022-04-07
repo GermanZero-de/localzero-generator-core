@@ -2,14 +2,13 @@
 from ..inputs import Inputs
 from .i18 import I18
 from .energy_demand import calc_production
-from .energy_source import calc_energy_sources
-
+from .energy_source import calc_supply
 
 # for mineral industry the energy_use_factor still needs to be added to facts
 def calc(inputs: Inputs) -> I18:
 
     production = calc_production(inputs)
-    energy_source = calc_energy_sources(inputs)
+    supply = calc_supply(inputs)
 
     i = production.p
 
@@ -35,19 +34,19 @@ def calc(inputs: Inputs) -> I18:
         p_other_food=production.p_other_food,
         p_other_further=production.p_other_further,
         p_other_2efgh=production.p_other_2efgh,
-        s=energy_source.s,
-        s_fossil=energy_source.s_fossil,
-        s_fossil_gas=energy_source.s_fossil_gas,
-        s_fossil_coal=energy_source.s_fossil_coal,
-        s_fossil_diesel=energy_source.s_fossil_diesel,
-        s_fossil_fueloil=energy_source.s_fossil_fueloil,
-        s_fossil_lpg=energy_source.s_fossil_lpg,
-        s_fossil_opetpro=energy_source.s_fossil_opetpro,
-        s_fossil_ofossil=energy_source.s_fossil_ofossil,
-        s_renew=energy_source.s_renew,
-        s_renew_biomass=energy_source.s_renew_biomass,
-        s_renew_heatnet=energy_source.s_renew_heatnet,
-        s_renew_heatpump=energy_source.s_renew_heatpump,
-        s_renew_solarth=energy_source.s_renew_solarth,
-        s_renew_elec=energy_source.s_renew_elec,
+        s=supply.s,
+        s_fossil=supply.s_fossil,
+        s_fossil_gas=supply.s_fossil_gas,
+        s_fossil_coal=supply.s_fossil_coal,
+        s_fossil_diesel=supply.s_fossil_diesel,
+        s_fossil_fueloil=supply.s_fossil_fueloil,
+        s_fossil_lpg=supply.s_fossil_lpg,
+        s_fossil_opetpro=supply.s_fossil_opetpro,
+        s_fossil_ofossil=supply.s_fossil_ofossil,
+        s_renew=supply.s_renew,
+        s_renew_biomass=supply.s_renew_biomass,
+        s_renew_heatnet=supply.s_renew_heatnet,
+        s_renew_heatpump=supply.s_renew_heatpump,
+        s_renew_solarth=supply.s_renew_solarth,
+        s_renew_elec=supply.s_renew_elec,
     )
