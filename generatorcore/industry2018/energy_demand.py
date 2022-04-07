@@ -41,17 +41,15 @@ def calc_production(inputs:Inputs) -> Production:
     fact = inputs.fact
     entries = inputs.entries
 
-    energy_consumption_industry = entries.i_energy_total
-
-    energy_consumption_miner = energy_consumption_industry * entries.i_fec_pct_of_miner 
-
     prepare_facts(inputs=inputs)
-    	
-    
+
+    energy_consumption_industry = entries.i_energy_total
+	
+    energy_consumption_miner = energy_consumption_industry * entries.i_fec_pct_of_miner
     p_miner_cement = ProductionSubBranch.calc_production_sub_branch(inputs=inputs,branch="miner",sub_branch="cement",energy_consumption_branch=energy_consumption_miner) 
-    p_miner_chalk = ProductionSubBranch.calc_production_sub_branch(inputs=inputs,branch="miner",sub_branch="cement",energy_consumption_branch=energy_consumption_miner) 
-    p_miner_glas = ProductionSubBranch.calc_production_sub_branch(inputs=inputs,branch="miner",sub_branch="cement",energy_consumption_branch=energy_consumption_miner) 
-    p_miner_ceram = ProductionSubBranch.calc_production_sub_branch(inputs=inputs,branch="miner",sub_branch="cement",energy_consumption_branch=energy_consumption_miner)
+    p_miner_chalk = ProductionSubBranch.calc_production_sub_branch(inputs=inputs,branch="miner",sub_branch="chalk",energy_consumption_branch=energy_consumption_miner) 
+    p_miner_glas = ProductionSubBranch.calc_production_sub_branch(inputs=inputs,branch="miner",sub_branch="glas",energy_consumption_branch=energy_consumption_miner) 
+    p_miner_ceram = ProductionSubBranch.calc_production_sub_branch(inputs=inputs,branch="miner",sub_branch="ceram",energy_consumption_branch=energy_consumption_miner)
     p_miner =  ProductionBranch.calc_production_sum(sub_branch_list=[p_miner_cement,p_miner_chalk,p_miner_glas,p_miner_ceram])
 
     energy_consumption_chemistry = energy_consumption_industry * entries.i_fec_pct_of_chem
@@ -72,7 +70,7 @@ def calc_production(inputs:Inputs) -> Production:
     p_other_paper = ProductionSubBranch.calc_production_sub_branch(inputs=inputs,branch="other",sub_branch="paper",energy_consumption_branch=energy_consumption_other) 
     p_other_food = ProductionSubBranch.calc_production_sub_branch(inputs=inputs,branch="other",sub_branch="food",energy_consumption_branch=energy_consumption_other) 
     p_other_further = ProductionSubBranchCO2viaFEC.calc_production_sub_branch(inputs=inputs,branch="other",sub_branch="further",energy_consumption_branch=energy_consumption_other)
-    p_other_2efgh = ExtraEmission.calc_extra_emission(inputs=inputs,branch="other",sub_branch="further",energy_consumption=p_other_further.energy)
+    p_other_2efgh = ExtraEmission.calc_extra_emission(inputs=inputs,branch="other",sub_branch="2efgh",energy_consumption=p_other_further.energy)
     p_other = ProductionBranch.calc_production_sum(sub_branch_list=[p_other_paper,p_other_food],sub_branch_via_FEC_list=[p_other_further],extra_emission_list=[p_other_2efgh])
 
     p = ProductionSum.calc_production_sum(branch_list=[p_miner,p_chem,p_metal,p_other])

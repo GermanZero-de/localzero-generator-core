@@ -93,11 +93,11 @@ class ProductionSubBranchCO2viaFEC():
         production_volume = fact("Fact_I_P_"+branch+"_"+sub_branch+"_prodvol") # =1, meaning 100% see descritpion of Fact_I_P_other_further_prodvol this Fact for explanation
 
         CO2e_combustion_based_per_MWh = fact("Fact_I_P_"+branch+"_"+sub_branch+"_ratio_CO2e_cb_to_fec")
-        CO2e_combustion_based = production_volume * CO2e_combustion_based_per_MWh
+        CO2e_combustion_based = energy * CO2e_combustion_based_per_MWh
         
 
         CO2e_production_based_per_MWh = fact("Fact_I_P_"+branch+"_"+sub_branch+"_ratio_CO2e_pb_to_fec")
-        CO2e_production_based = production_volume * CO2e_production_based_per_MWh
+        CO2e_production_based = energy * CO2e_production_based_per_MWh
 
         CO2e_total = CO2e_combustion_based + CO2e_production_based
 
@@ -165,10 +165,10 @@ class ProductionSubSum():
 
         for sub_branch in sub_branch_list:
             energy += sub_branch.energy
-            production_volume += sub_branch.energy
-            CO2e_combustion_based += sub_branch.energy
-            CO2e_production_based += sub_branch.energy
-            CO2e_total += sub_branch.energy
+            production_volume += sub_branch.prod_volume
+            CO2e_combustion_based += sub_branch.CO2e_combustion_based
+            CO2e_production_based += sub_branch.CO2e_production_based
+            CO2e_total += sub_branch.CO2e_total
 
         pct_energy = div(energy,energy_consumption_branch)
 
@@ -214,9 +214,9 @@ class ProductionBranch():
         if sub_branch_via_FEC_list is not []:
             for sub_branch in sub_branch_via_FEC_list:
                 energy += sub_branch.energy
-                CO2e_combustion_based += sub_branch.energy
-                CO2e_production_based += sub_branch.energy
-                CO2e_total += sub_branch.energy
+                CO2e_combustion_based += sub_branch.CO2e_combustion_based
+                CO2e_production_based += sub_branch.CO2e_production_based
+                CO2e_total += sub_branch.CO2e_total
 
         if extra_emission_list is not []:
             for extra_emission in extra_emission_list:
@@ -253,10 +253,10 @@ class ProductionSum():
 
         for branch in branch_list:
             energy += branch.energy
-            production_volume += branch.energy
-            CO2e_combustion_based += branch.energy
-            CO2e_production_based += branch.energy
-            CO2e_total += branch.energy
+            production_volume += branch.prod_volume
+            CO2e_combustion_based += branch.CO2e_combustion_based
+            CO2e_production_based += branch.CO2e_production_based
+            CO2e_total += branch.CO2e_total
 
 
         return cls(
