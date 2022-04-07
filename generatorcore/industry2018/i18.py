@@ -1,8 +1,14 @@
 # pyright: strict
 from dataclasses import dataclass
 from .energy_sum import EnergySum, Energy_pct
-from .production_branches import ExtraEmission,ProductionSubBranch,ProductionSubBranchCO2viaFEC,ProductionSubSum,ProductionBranch,ProductionSum
-
+from .production_branches import (
+    ExtraEmission,
+    ProductionSubBranch,
+    ProductionSubBranchCO2viaFEC,
+    ProductionSubSum,
+    ProductionBranch,
+    ProductionSum,
+)
 
 
 @dataclass(kw_only=True)

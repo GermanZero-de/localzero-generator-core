@@ -34,6 +34,6 @@ class Inputs:
         """Similar to fact, but these try to describe the future. And are therefore based on various assumptions."""
         return self._facts_and_assumptions.ass(keyname)
 
-    #Leon-Function
+    # Leon-Function
     def return_facts(self):
         return self._facts_and_assumptions

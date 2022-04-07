@@ -3,8 +3,9 @@ from dataclasses import dataclass
 from ..inputs import Inputs
 from generatorcore.utils import div
 
+
 @dataclass(kw_only=True)
-class ProductionSubBranch():
+class ProductionSubBranch:
     energy: float
     pct_energy: float
 
@@ -23,28 +24,32 @@ class ProductionSubBranch():
     def calc_production_sub_branch(
         cls,
         inputs: Inputs,
-        sub_branch:str,
-        branch:str,
-        energy_consumption_branch:float
-        ) -> "ProductionSubBranch":
+        sub_branch: str,
+        branch: str,
+        energy_consumption_branch: float,
+    ) -> "ProductionSubBranch":
 
-        fact=inputs.fact
+        fact = inputs.fact
 
-        pct_energy = fact("Fact_I_P_"+branch+"_fec_pct_of_"+sub_branch)
+        pct_energy = fact("Fact_I_P_" + branch + "_fec_pct_of_" + sub_branch)
         energy = energy_consumption_branch * pct_energy
 
-        energy_use_factor = fact("Fact_I_P_"+branch+"_"+sub_branch+"_ratio_prodvol_to_fec")
+        energy_use_factor = fact(
+            "Fact_I_P_" + branch + "_" + sub_branch + "_ratio_prodvol_to_fec"
+        )
         production_volume = energy * energy_use_factor
 
-        CO2e_combustion_based_per_t = fact("Fact_I_P_"+branch+"_"+sub_branch+"_ratio_CO2e_cb_to_prodvol")
-        CO2e_combustion_based = production_volume*CO2e_combustion_based_per_t
-        
+        CO2e_combustion_based_per_t = fact(
+            "Fact_I_P_" + branch + "_" + sub_branch + "_ratio_CO2e_cb_to_prodvol"
+        )
+        CO2e_combustion_based = production_volume * CO2e_combustion_based_per_t
 
-        CO2e_production_based_per_t = fact("Fact_I_P_"+branch+"_"+sub_branch+"_ratio_CO2e_pb_to_prodvol")
+        CO2e_production_based_per_t = fact(
+            "Fact_I_P_" + branch + "_" + sub_branch + "_ratio_CO2e_pb_to_prodvol"
+        )
         CO2e_production_based = production_volume * CO2e_production_based_per_t
 
         CO2e_total = CO2e_combustion_based + CO2e_production_based
-
 
         return cls(
             energy=energy,
@@ -54,12 +59,13 @@ class ProductionSubBranch():
             CO2e_combustion_based=CO2e_combustion_based,
             CO2e_combustion_based_per_t=CO2e_combustion_based_per_t,
             CO2e_production_based=CO2e_production_based,
-            CO2e_production_based_per_t = CO2e_production_based_per_t,
-            CO2e_total = CO2e_total
-            )
+            CO2e_production_based_per_t=CO2e_production_based_per_t,
+            CO2e_total=CO2e_total,
+        )
+
 
 @dataclass(kw_only=True)
-class ProductionSubBranchCO2viaFEC():
+class ProductionSubBranchCO2viaFEC:
     """This class is only used by p_other_further as we were not able to determine a production volume for this quantitiy
     Therefore we set the prod_volume to 100% an and calculate the CO2e Emissiones via a Emmissions/Energy_consumption - Factor"""
 
@@ -80,27 +86,31 @@ class ProductionSubBranchCO2viaFEC():
     def calc_production_sub_branch(
         cls,
         inputs: Inputs,
-        sub_branch:str,
-        branch:str,
-        energy_consumption_branch:float
-        ) -> "ProductionSubBranchCO2viaFEC":
+        sub_branch: str,
+        branch: str,
+        energy_consumption_branch: float,
+    ) -> "ProductionSubBranchCO2viaFEC":
 
-        fact=inputs.fact
+        fact = inputs.fact
 
-        pct_energy = fact("Fact_I_P_"+branch+"_fec_pct_of_"+sub_branch)
+        pct_energy = fact("Fact_I_P_" + branch + "_fec_pct_of_" + sub_branch)
         energy = energy_consumption_branch * pct_energy
 
-        production_volume = fact("Fact_I_P_"+branch+"_"+sub_branch+"_prodvol") # =1, meaning 100% see descritpion of Fact_I_P_other_further_prodvol this Fact for explanation
+        production_volume = fact(
+            "Fact_I_P_" + branch + "_" + sub_branch + "_prodvol"
+        )  # =1, meaning 100% see descritpion of Fact_I_P_other_further_prodvol this Fact for explanation
 
-        CO2e_combustion_based_per_MWh = fact("Fact_I_P_"+branch+"_"+sub_branch+"_ratio_CO2e_cb_to_fec")
+        CO2e_combustion_based_per_MWh = fact(
+            "Fact_I_P_" + branch + "_" + sub_branch + "_ratio_CO2e_cb_to_fec"
+        )
         CO2e_combustion_based = energy * CO2e_combustion_based_per_MWh
-        
 
-        CO2e_production_based_per_MWh = fact("Fact_I_P_"+branch+"_"+sub_branch+"_ratio_CO2e_pb_to_fec")
+        CO2e_production_based_per_MWh = fact(
+            "Fact_I_P_" + branch + "_" + sub_branch + "_ratio_CO2e_pb_to_fec"
+        )
         CO2e_production_based = energy * CO2e_production_based_per_MWh
 
         CO2e_total = CO2e_combustion_based + CO2e_production_based
-
 
         return cls(
             energy=energy,
@@ -109,12 +119,13 @@ class ProductionSubBranchCO2viaFEC():
             CO2e_combustion_based=CO2e_combustion_based,
             CO2e_combustion_based_per_MWh=CO2e_combustion_based_per_MWh,
             CO2e_production_based=CO2e_production_based,
-            CO2e_production_based_per_MWh = CO2e_production_based_per_MWh,
-            CO2e_total = CO2e_total
-            )
+            CO2e_production_based_per_MWh=CO2e_production_based_per_MWh,
+            CO2e_total=CO2e_total,
+        )
+
 
 @dataclass(kw_only=True)
-class ExtraEmission():
+class ExtraEmission:
     """This is only used by p_other_2efgh. We are adding some additional prouction based emissions as we so not include them in p_other_further."""
 
     CO2e_production_based: float
@@ -123,16 +134,14 @@ class ExtraEmission():
 
     @classmethod
     def calc_extra_emission(
-        cls,
-        inputs:Inputs,
-        energy_consumption:float,
-        branch:str,
-        sub_branch:str
-        ) -> "ExtraEmission":
+        cls, inputs: Inputs, energy_consumption: float, branch: str, sub_branch: str
+    ) -> "ExtraEmission":
 
-        fact=inputs.fact
+        fact = inputs.fact
 
-        CO2e_production_based_per_MWh = fact("Fact_I_P_"+branch+"_"+sub_branch+"_ratio_CO2e_pb_to_fec")
+        CO2e_production_based_per_MWh = fact(
+            "Fact_I_P_" + branch + "_" + sub_branch + "_ratio_CO2e_pb_to_fec"
+        )
         CO2e_production_based = energy_consumption * CO2e_production_based_per_MWh
         CO2e_total = CO2e_production_based
 
@@ -140,22 +149,24 @@ class ExtraEmission():
             CO2e_production_based=CO2e_production_based,
             CO2e_production_based_per_MWh=CO2e_production_based_per_MWh,
             CO2e_total=CO2e_total,
-            )
+        )
+
 
 @dataclass(kw_only=True)
-class ProductionSubSum():
+class ProductionSubSum:
     energy: float
     pct_energy: float
     prod_volume: float
     CO2e_combustion_based: float
     CO2e_production_based: float
     CO2e_total: float
+
     @classmethod
     def calc_production_sub_sum(
         cls,
-        energy_consumption_branch:float,
-        sub_branch_list: list[ProductionSubBranch]
-        ) -> "ProductionSubSum":
+        energy_consumption_branch: float,
+        sub_branch_list: list[ProductionSubBranch],
+    ) -> "ProductionSubSum":
 
         energy = 0
         production_volume = 0
@@ -170,7 +181,7 @@ class ProductionSubSum():
             CO2e_production_based += sub_branch.CO2e_production_based
             CO2e_total += sub_branch.CO2e_total
 
-        pct_energy = div(energy,energy_consumption_branch)
+        pct_energy = div(energy, energy_consumption_branch)
 
         return cls(
             energy=energy,
@@ -178,11 +189,12 @@ class ProductionSubSum():
             prod_volume=production_volume,
             CO2e_combustion_based=CO2e_combustion_based,
             CO2e_production_based=CO2e_production_based,
-            CO2e_total = CO2e_total
-            )
+            CO2e_total=CO2e_total,
+        )
+
 
 @dataclass(kw_only=True)
-class ProductionBranch():
+class ProductionBranch:
     energy: float
     prod_volume: float
     CO2e_combustion_based: float
@@ -192,11 +204,10 @@ class ProductionBranch():
     @classmethod
     def calc_production_sum(
         cls,
-        sub_branch_list: list[ProductionSubBranch|ProductionSubSum],
-        sub_branch_via_FEC_list : list[ProductionSubBranchCO2viaFEC] = [],
-        extra_emission_list : list[ExtraEmission] = []
-         
-        ) -> "ProductionBranch":
+        sub_branch_list: list[ProductionSubBranch | ProductionSubSum],
+        sub_branch_via_FEC_list: list[ProductionSubBranchCO2viaFEC] = [],
+        extra_emission_list: list[ExtraEmission] = [],
+    ) -> "ProductionBranch":
 
         energy = 0
         production_volume = 0
@@ -228,11 +239,12 @@ class ProductionBranch():
             prod_volume=production_volume,
             CO2e_combustion_based=CO2e_combustion_based,
             CO2e_production_based=CO2e_production_based,
-            CO2e_total = CO2e_total
-            )
+            CO2e_total=CO2e_total,
+        )
+
 
 @dataclass(kw_only=True)
-class ProductionSum():
+class ProductionSum:
     energy: float
     prod_volume: float
     CO2e_combustion_based: float
@@ -241,9 +253,8 @@ class ProductionSum():
 
     @classmethod
     def calc_production_sum(
-        cls,
-        branch_list: list[ProductionBranch]
-        ) -> "ProductionSum":
+        cls, branch_list: list[ProductionBranch]
+    ) -> "ProductionSum":
 
         energy = 0
         production_volume = 0
@@ -258,11 +269,10 @@ class ProductionSum():
             CO2e_production_based += branch.CO2e_production_based
             CO2e_total += branch.CO2e_total
 
-
         return cls(
             energy=energy,
             prod_volume=production_volume,
             CO2e_combustion_based=CO2e_combustion_based,
             CO2e_production_based=CO2e_production_based,
-            CO2e_total = CO2e_total
-            )
+            CO2e_total=CO2e_total,
+        )
