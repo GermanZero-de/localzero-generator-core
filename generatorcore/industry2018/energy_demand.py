@@ -103,9 +103,9 @@ def calc_production(inputs:Inputs) -> Production:
 def prepare_facts(inputs:Inputs):
 
     new_facts_and_assumptions = inputs.return_facts()
-    new_inputs:refdata.DataFrame[str] = new_facts_and_assumptions.return_fact_data_frame()
+    new_facts:refdata.DataFrame[str] = new_facts_and_assumptions.return_fact_data_frame()
 
-    def replace_value(instr:str, replace_value_functions: Callable[[float],float] = lambda x : x, inputs:refdata.DataFrame[str] = new_inputs) -> list[str]:
+    def replace_value(instr:str, replace_value_functions: Callable[[float],float] = lambda x : x, inputs:refdata.DataFrame[str] = new_facts) -> list[str]:
         
         header = inputs.header
         string_list = [x for x in inputs.get(instr)] #copy by value
@@ -153,7 +153,5 @@ def prepare_facts(inputs:Inputs):
 
     }
 
-
-
-    new_inputs.append_rows(additional_facts)
+    new_facts.append_rows(additional_facts)
 
