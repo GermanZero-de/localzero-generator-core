@@ -2,14 +2,6 @@ module Main exposing (Model, Msg(..), init, main, subscriptions, update, view)
 
 --import Element.Background as Background
 
-import GeneratorRuns
-    exposing
-        ( AbsolutePath
-        , GeneratorRuns
-        , Inputs
-        , Run
-        , Path
-        )
 import Array exposing (Array)
 import Browser
 import Chart as C
@@ -44,6 +36,14 @@ import FeatherIcons
 import FormatNumber exposing (format)
 import FormatNumber.Locales exposing (spanishLocale)
 import GeneratorResult exposing (GeneratorResult, Node(..), Tree)
+import GeneratorRuns
+    exposing
+        ( AbsolutePath
+        , GeneratorRuns
+        , Inputs
+        , Path
+        , Run
+        )
 import Html exposing (Html)
 import Http
 import Set exposing (Set)
@@ -138,7 +138,7 @@ dangerousIconButton i op =
 
 
 type alias Model =
-    { results : GeneratorRuns
+    { runs : GeneratorRuns
     , collapseStatus : CollapseStatus
     , interestList : Set Path
     , showModal : Maybe ModalState
@@ -149,8 +149,6 @@ type ModalState
     = PrepareCalculate (Maybe Int) Inputs
     | Loading
     | LoadFailure String
-
-
 
 
 sizes : { small : Int, medium : Int, large : Int }
@@ -211,7 +209,7 @@ initiateLoad maybeNdx inputs model =
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( { results = GeneratorRuns.empty
+    ( { runs = GeneratorRuns.empty
       , showModal = Nothing
       , interestList = Set.empty
       , collapseStatus = allCollapsed
@@ -251,9 +249,9 @@ getInterestList model =
         |> List.map
             (\path ->
                 ( path
-                , Array.initialize (GeneratorRuns.size model.results)
+                , Array.initialize (GeneratorRuns.size model.runs)
                     (\n ->
-                        GeneratorRuns.getValue ( n, path ) model.results
+                        GeneratorRuns.getValue ( n, path ) model.runs
                     )
                 )
             )
@@ -277,13 +275,13 @@ update msg model =
                         newResults =
                             case maybeNdx of
                                 Nothing ->
-                                    GeneratorRuns.add inputsAndResult model.results
+                                    GeneratorRuns.add inputsAndResult model.runs
 
                                 Just ndx ->
-                                    GeneratorRuns.set ndx inputsAndResult model.results
+                                    GeneratorRuns.set ndx inputsAndResult model.runs
                     in
                     ( { model
-                        | results = newResults
+                        | runs = newResults
                         , showModal = Nothing
                       }
                     , Cmd.none
@@ -351,7 +349,7 @@ update msg model =
             )
 
         RemoveResult ndx ->
-            ( { model | results = GeneratorRuns.remove ndx model.results }
+            ( { model | runs = GeneratorRuns.remove ndx model.runs }
             , Cmd.none
             )
 
@@ -590,7 +588,7 @@ viewResultsPane model =
                 , width fill
                 , height fill
                 ]
-                (GeneratorRuns.toList model.results
+                (GeneratorRuns.toList model.runs
                     |> List.map
                         (\( resultNdx, ir ) ->
                             viewInputsAndResult resultNdx model.collapseStatus model.interestList ir

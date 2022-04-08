@@ -5388,7 +5388,7 @@ var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
-		{collapseStatus: $author$project$CollapseStatus$allCollapsed, interestList: $elm$core$Set$empty, results: $author$project$GeneratorRuns$empty, showModal: $elm$core$Maybe$Nothing},
+		{collapseStatus: $author$project$CollapseStatus$allCollapsed, interestList: $elm$core$Set$empty, runs: $author$project$GeneratorRuns$empty, showModal: $elm$core$Maybe$Nothing},
 		$elm$core$Platform$Cmd$none);
 };
 var $elm$core$Platform$Sub$batch = _Platform_batch;
@@ -6910,16 +6910,16 @@ var $author$project$Main$update = F2(
 					var inputsAndResult = {inputs: inputs, result: result};
 					var newResults = function () {
 						if (maybeNdx.$ === 'Nothing') {
-							return A2($author$project$GeneratorRuns$add, inputsAndResult, model.results);
+							return A2($author$project$GeneratorRuns$add, inputsAndResult, model.runs);
 						} else {
 							var ndx = maybeNdx.a;
-							return A3($author$project$GeneratorRuns$set, ndx, inputsAndResult, model.results);
+							return A3($author$project$GeneratorRuns$set, ndx, inputsAndResult, model.runs);
 						}
 					}();
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
-							{results: newResults, showModal: $elm$core$Maybe$Nothing}),
+							{runs: newResults, showModal: $elm$core$Maybe$Nothing}),
 						$elm$core$Platform$Cmd$none);
 				} else {
 					switch (resultOrError.a.$) {
@@ -7012,7 +7012,7 @@ var $author$project$Main$update = F2(
 					_Utils_update(
 						model,
 						{
-							results: A2($author$project$GeneratorRuns$remove, ndx, model.results)
+							runs: A2($author$project$GeneratorRuns$remove, ndx, model.runs)
 						}),
 					$elm$core$Platform$Cmd$none);
 		}
@@ -14952,12 +14952,12 @@ var $author$project$Main$getInterestList = function (model) {
 				path,
 				A2(
 					$elm$core$Array$initialize,
-					$author$project$GeneratorRuns$size(model.results),
+					$author$project$GeneratorRuns$size(model.runs),
 					function (n) {
 						return A2(
 							$author$project$GeneratorRuns$getValue,
 							_Utils_Tuple2(n, path),
-							model.results);
+							model.runs);
 					}));
 		},
 		$elm$core$Set$toList(model.interestList));
@@ -23703,7 +23703,7 @@ var $author$project$Main$viewResultsPane = function (model) {
 							var ir = _v0.b;
 							return A4($author$project$Main$viewInputsAndResult, resultNdx, model.collapseStatus, model.interestList, ir);
 						},
-						$author$project$GeneratorRuns$toList(model.results))))
+						$author$project$GeneratorRuns$toList(model.runs))))
 			]));
 };
 var $author$project$Main$viewModel = function (model) {
