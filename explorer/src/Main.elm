@@ -2,10 +2,10 @@ module Main exposing (Model, Msg(..), init, main, subscriptions, update, view)
 
 --import Element.Background as Background
 
-import AllInputsAndResults
+import GeneratorRuns
     exposing
         ( AbsolutePath
-        , AllInputsAndResults
+        , GeneratorRuns
         , Inputs
         , InputsAndResult
         , Path
@@ -138,7 +138,7 @@ dangerousIconButton i op =
 
 
 type alias Model =
-    { results : AllInputsAndResults
+    { results : GeneratorRuns
     , collapseStatus : CollapseStatus
     , interestList : Set Path
     , showModal : Maybe ModalState
@@ -211,7 +211,7 @@ initiateLoad maybeNdx inputs model =
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( { results = AllInputsAndResults.empty
+    ( { results = GeneratorRuns.empty
       , showModal = Nothing
       , interestList = Set.empty
       , collapseStatus = allCollapsed
@@ -251,9 +251,9 @@ getInterestList model =
         |> List.map
             (\path ->
                 ( path
-                , Array.initialize (AllInputsAndResults.size model.results)
+                , Array.initialize (GeneratorRuns.size model.results)
                     (\n ->
-                        AllInputsAndResults.getValue ( n, path ) model.results
+                        GeneratorRuns.getValue ( n, path ) model.results
                     )
                 )
             )
@@ -277,10 +277,10 @@ update msg model =
                         newResults =
                             case maybeNdx of
                                 Nothing ->
-                                    AllInputsAndResults.add inputsAndResult model.results
+                                    GeneratorRuns.add inputsAndResult model.results
 
                                 Just ndx ->
-                                    AllInputsAndResults.set ndx inputsAndResult model.results
+                                    GeneratorRuns.set ndx inputsAndResult model.results
                     in
                     ( { model
                         | results = newResults
@@ -351,7 +351,7 @@ update msg model =
             )
 
         RemoveResult ndx ->
-            ( { model | results = AllInputsAndResults.remove ndx model.results }
+            ( { model | results = GeneratorRuns.remove ndx model.results }
             , Cmd.none
             )
 
@@ -590,7 +590,7 @@ viewResultsPane model =
                 , width fill
                 , height fill
                 ]
-                (AllInputsAndResults.toList model.results
+                (GeneratorRuns.toList model.results
                     |> List.map
                         (\( resultNdx, ir ) ->
                             viewInputsAndResult resultNdx model.collapseStatus model.interestList ir
