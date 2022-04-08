@@ -31,7 +31,7 @@ type alias Path =
 type alias AbsolutePath =
     ( Int, Path )
 
-
+{-| One run of the generator -}
 type alias Run =
     { result : GeneratorResult
     , inputs : Inputs
