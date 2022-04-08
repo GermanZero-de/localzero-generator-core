@@ -269,16 +269,16 @@ update msg model =
             case resultOrError of
                 Ok result ->
                     let
-                        inputsAndResult =
+                        run =
                             { inputs = inputs, result = result }
 
                         newResults =
                             case maybeNdx of
                                 Nothing ->
-                                    GeneratorRuns.add inputsAndResult model.runs
+                                    GeneratorRuns.add run model.runs
 
                                 Just ndx ->
-                                    GeneratorRuns.set ndx inputsAndResult model.runs
+                                    GeneratorRuns.set ndx run model.runs
                     in
                     ( { model
                         | runs = newResults
