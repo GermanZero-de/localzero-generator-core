@@ -43,6 +43,7 @@ class Production:
     p_other_further: ProductionSubBranchCO2viaFEC
     p_other_2efgh: ExtraEmission
 
+
 def calc_production(inputs: Inputs) -> Production:
     fact = inputs.fact
     entries = inputs.entries
