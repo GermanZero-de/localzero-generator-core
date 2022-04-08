@@ -67,4 +67,5 @@ def cmd_explorer(args):
                     return
 
     httpd = HTTPServer(("", 4070), ExplorerHandler)
+    print("Ready to go. Explore at http://localhost:4070")
     httpd.serve_forever()

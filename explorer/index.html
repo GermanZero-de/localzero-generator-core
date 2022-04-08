@@ -6907,13 +6907,13 @@ var $author$project$Main$update = F2(
 				var resultOrError = msg.c;
 				if (resultOrError.$ === 'Ok') {
 					var result = resultOrError.a;
-					var inputsAndResult = {inputs: inputs, result: result};
+					var run = {inputs: inputs, result: result};
 					var newResults = function () {
 						if (maybeNdx.$ === 'Nothing') {
-							return A2($author$project$GeneratorRuns$add, inputsAndResult, model.runs);
+							return A2($author$project$GeneratorRuns$add, run, model.runs);
 						} else {
 							var ndx = maybeNdx.a;
-							return A3($author$project$GeneratorRuns$set, ndx, inputsAndResult, model.runs);
+							return A3($author$project$GeneratorRuns$set, ndx, run, model.runs);
 						}
 					}();
 					return _Utils_Tuple2(
