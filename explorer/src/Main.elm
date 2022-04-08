@@ -7,7 +7,7 @@ import GeneratorRuns
         ( AbsolutePath
         , GeneratorRuns
         , Inputs
-        , InputsAndResult
+        , Run
         , Path
         )
 import Array exposing (Array)
@@ -532,7 +532,7 @@ viewTree resultNdx path collapseStatus interestList tree =
                 )
 
 
-viewInputsAndResult : Int -> CollapseStatus -> Set Path -> InputsAndResult -> Element Msg
+viewInputsAndResult : Int -> CollapseStatus -> Set Path -> Run -> Element Msg
 viewInputsAndResult resultNdx collapseStatus interestList inputsAndResult =
     column
         [ width fill

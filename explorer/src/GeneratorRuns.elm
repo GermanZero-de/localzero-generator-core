@@ -2,7 +2,7 @@ module GeneratorRuns exposing
     ( AbsolutePath
     , GeneratorRuns
     , Inputs
-    , InputsAndResult
+    , Run
     , Path
     , add
     , empty
@@ -20,19 +20,19 @@ import GeneratorResult exposing (GeneratorResult)
 import Html exposing (a)
 
 
-{-| A Path to a result inside a given GeneratorResult
+{-| A Path to a value inside a given GeneratorResult
 -}
 type alias Path =
     List String
 
 
-{-| A Path to a result inside the nth ExplorerResult
+{-| A Path to a value inside the nth Run
 -}
 type alias AbsolutePath =
     ( Int, Path )
 
 
-type alias InputsAndResult =
+type alias Run =
     { result : GeneratorResult
     , inputs : Inputs
     }
@@ -43,7 +43,7 @@ type alias Inputs =
 
 
 type GeneratorRuns
-    = GeneratorRuns (Array InputsAndResult)
+    = GeneratorRuns (Array Run)
 
 
 empty : GeneratorRuns
@@ -51,7 +51,7 @@ empty =
     GeneratorRuns Array.empty
 
 
-add : InputsAndResult -> GeneratorRuns -> GeneratorRuns
+add : Run -> GeneratorRuns -> GeneratorRuns
 add ir (GeneratorRuns a) =
     let
         new =
@@ -69,7 +69,7 @@ remove ndx (GeneratorRuns a) =
     GeneratorRuns new
 
 
-set : Int -> InputsAndResult -> GeneratorRuns -> GeneratorRuns
+set : Int -> Run -> GeneratorRuns -> GeneratorRuns
 set ndx ir (GeneratorRuns a) =
     Array.set ndx ir a
         |> GeneratorRuns
@@ -98,7 +98,7 @@ getValue ( ndx, path ) (GeneratorRuns a) =
             )
 
 
-maybeGet : Maybe Int -> GeneratorRuns -> Maybe InputsAndResult
+maybeGet : Maybe Int -> GeneratorRuns -> Maybe Run
 maybeGet maybeNdx (GeneratorRuns a) =
     case maybeNdx of
         Nothing ->
@@ -108,6 +108,6 @@ maybeGet maybeNdx (GeneratorRuns a) =
             Array.get ndx a
 
 
-toList : GeneratorRuns -> List ( Int, InputsAndResult )
+toList : GeneratorRuns -> List ( Int, Run )
 toList (GeneratorRuns a) =
     Array.toIndexedList a
