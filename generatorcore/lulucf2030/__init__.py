@@ -1,9 +1,7 @@
 from dataclasses import dataclass, field
-from .inputs import Inputs
-from .utils import div
-from . import (
-    lulucf2018,
-)
+from ..inputs import Inputs
+from ..utils import div
+from .. import lulucf2018
 
 
 @dataclass

@@ -1,7 +1,7 @@
-from .inputs import Inputs
-from .utils import div
+from ..inputs import Inputs
+from ..utils import div
 from . import electricity2030_core
-from . import (
+from .. import (
     electricity2018,
     residences2018,
     business2018,

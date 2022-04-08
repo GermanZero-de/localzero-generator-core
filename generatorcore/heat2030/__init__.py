@@ -1,9 +1,9 @@
 from dataclasses import dataclass, field
 
-from generatorcore.electricity2030_core import EColVars2030
-from .inputs import Inputs
-from .utils import div
-from . import residences2030, business2030, heat2018, agri2030, industry2030
+from ..electricity2030.electricity2030_core import EColVars2030
+from ..inputs import Inputs
+from ..utils import div
+from .. import residences2030, business2030, heat2018, agri2030, industry2030
 
 
 @dataclass
