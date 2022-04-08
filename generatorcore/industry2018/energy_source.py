@@ -22,7 +22,6 @@ class EnergySupply:
     s_renew_solarth: EnergySource
     s_renew_elec: EnergySource
 
-
 def calc_supply(inputs: Inputs) -> EnergySupply:
     fact = inputs.fact
     entries = inputs.entries

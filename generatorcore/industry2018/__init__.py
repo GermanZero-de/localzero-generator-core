@@ -1,14 +1,13 @@
 # pyright: strict
 from ..inputs import Inputs
 from .i18 import I18
-from .energy_demand import calc_production
-from .energy_source import calc_supply
+from. import energy_demand,energy_source
 
 # for mineral industry the energy_use_factor still needs to be added to facts
 def calc(inputs: Inputs) -> I18:
 
-    production = calc_production(inputs)
-    supply = calc_supply(inputs)
+    production = energy_demand.calc_production(inputs)
+    supply = energy_source.calc_supply(inputs)
 
     i = production.p
 
