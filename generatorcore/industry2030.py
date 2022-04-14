@@ -1931,13 +1931,13 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
     )
     i.cost_wage = g.cost_wage + p.cost_wage
     p_other_paper.CO2e_production_based_per_t = fact(
-        "Fact_I_P_other_paper_ratio_CO2e_pb_to_prodvol_2018"
+        "Fact_I_P_other_paper_ratio_CO2e_pb_to_prodvol"
     )
     p_other_paper.CO2e_production_based = (
         p_other_paper.prod_volume * p_other_paper.CO2e_production_based_per_t
     )
     p_other_food.CO2e_production_based_per_t = fact(
-        "Fact_I_P_other_food_ratio_CO2e_pb_to_prodvol_2018"
+        "Fact_I_P_other_food_ratio_CO2e_pb_to_prodvol"
     )
     p_other_food.CO2e_production_based = (
         p_other_food.prod_volume * p_other_food.CO2e_production_based_per_t
