@@ -6,7 +6,7 @@ import Array exposing (Array)
 import Browser
 import Chart as C
 import Chart.Attributes as CA
-import CollapseStatus exposing (CollapseStatus, allCollapsed, isCollapsed, toggle)
+import CollapseStatus exposing (CollapseStatus, allCollapsed, isCollapsed)
 import Dict
 import Element
     exposing
@@ -35,7 +35,6 @@ import Element.Keyed
 import FeatherIcons
 import FormatNumber exposing (format)
 import FormatNumber.Locales exposing (spanishLocale)
-import GeneratorResult exposing (GeneratorResult, Node(..), Tree)
 import GeneratorRuns
     exposing
         ( AbsolutePath
@@ -47,6 +46,7 @@ import GeneratorRuns
 import Html exposing (Html)
 import Http
 import Set exposing (Set)
+import ValueTree exposing (Node(..), Tree, Value(..))
 
 
 germanLocale =
@@ -197,12 +197,22 @@ white =
     Element.rgb255 255 255 255
 
 
-initiateLoad : Maybe Int -> Inputs -> Model -> ( Model, Cmd Msg )
-initiateLoad maybeNdx inputs model =
+initiateCalculate : Maybe Int -> Inputs -> Tree -> Model -> ( Model, Cmd Msg )
+initiateCalculate maybeNdx inputs entries model =
     ( { model | showModal = Just Loading }
     , Http.get
         { url = "http://localhost:4070/calculate/" ++ inputs.ags ++ "/" ++ String.fromInt inputs.year
-        , expect = Http.expectJson (GotGeneratorResult maybeNdx inputs) GeneratorResult.decoder
+        , expect = Http.expectJson (GotGeneratorResult maybeNdx inputs entries) ValueTree.decoder
+        }
+    )
+
+
+initiateMakeEntries : Maybe Int -> Inputs -> Model -> ( Model, Cmd Msg )
+initiateMakeEntries maybeNdx inputs model =
+    ( { model | showModal = Just Loading }
+    , Http.get
+        { url = "http://localhost:4070/make-entries/" ++ inputs.ags ++ "/" ++ String.fromInt inputs.year
+        , expect = Http.expectJson (GotEntries maybeNdx inputs) ValueTree.decoder
         }
     )
 
@@ -223,7 +233,8 @@ init _ =
 
 
 type Msg
-    = GotGeneratorResult (Maybe Int) Inputs (Result Http.Error GeneratorResult)
+    = GotGeneratorResult (Maybe Int) Inputs Tree (Result Http.Error Tree)
+    | GotEntries (Maybe Int) Inputs (Result Http.Error Tree)
       --| AddItemToChartClicked { path : Path, value : Float }
     | AddToInterestList Path
     | RemoveFromInterestList Path
@@ -240,18 +251,25 @@ type ModalMsg
 
 
 type alias InterestListTable =
-    List ( Path, Array (Maybe Float) )
+    List ( Path, Array Value )
 
 
 getInterestList : Model -> InterestListTable
 getInterestList model =
+    -- The withDefault handles the case if we somehow managed to get two
+    -- differently structured result values into the explorer, this can only
+    -- really happen when two different versions of the python code are
+    -- explored at the same time.
+    -- Otherwise you can't add a path to the interest list that ends
+    -- at a TREE
     Set.toList model.interestList
         |> List.map
             (\path ->
                 ( path
                 , Array.initialize (GeneratorRuns.size model.runs)
                     (\n ->
-                        GeneratorRuns.getValue ( n, path ) model.runs
+                        GeneratorRuns.getValue n path model.runs
+                            |> Maybe.withDefault (String "TREE")
                     )
                 )
             )
@@ -265,12 +283,27 @@ withLoadFailure msg model =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        GotGeneratorResult maybeNdx inputs resultOrError ->
+        GotEntries maybeNdx inputs (Ok entries) ->
+            model
+                |> initiateCalculate maybeNdx inputs entries
+
+        GotEntries _ _ (Err e) ->
+            let
+                _ =
+                    Debug.log "GotEntries Error" e
+            in
+            ( model, Cmd.none )
+
+        GotGeneratorResult maybeNdx inputs entries resultOrError ->
             case resultOrError of
                 Ok result ->
                     let
                         run =
-                            { inputs = inputs, result = result }
+                            GeneratorRuns.createRun
+                                { inputs = inputs
+                                , entries = entries
+                                , result = result
+                                }
 
                         newResults =
                             case maybeNdx of
@@ -336,7 +369,7 @@ update msg model =
 
         CalculateModalOkPressed maybeNdx inputs ->
             model
-                |> initiateLoad maybeNdx inputs
+                |> initiateMakeEntries maybeNdx inputs
 
         AddToInterestList path ->
             ( { model | interestList = Set.insert path model.interestList }
@@ -408,9 +441,18 @@ viewChart interestList =
                             (\ndx ->
                                 let
                                     get ( _, a ) =
-                                        Array.get ndx a
-                                            |> Maybe.andThen identity
-                                            |> Maybe.withDefault 0.0
+                                        case Array.get ndx a of
+                                            Just (Float f) ->
+                                                f
+
+                                            Just (String _) ->
+                                                0.0
+
+                                            Just Null ->
+                                                0.0
+
+                                            Nothing ->
+                                                0.0
                                 in
                                 C.bar get []
                                     |> C.named (String.fromInt ndx)
@@ -496,13 +538,19 @@ viewTree resultNdx path collapseStatus interestList tree =
                                         , viewTree resultNdx childPath collapseStatus interestList child
                                         ]
 
-                                Leaf Nothing ->
+                                Leaf Null ->
                                     itemRow
                                         [ el [ width fill ] (text name)
-                                        , el (Font.alignRight :: fonts.explorerValues) <| text "null"
+                                        , el (Font.alignRight :: Font.bold :: fonts.explorerValues) <| text "null"
                                         ]
 
-                                Leaf (Just f) ->
+                                Leaf (String s) ->
+                                    itemRow
+                                        [ el [ width fill ] (text name)
+                                        , el (Font.alignRight :: fonts.explorerValues) <| text s
+                                        ]
+
+                                Leaf (Float f) ->
                                     let
                                         button =
                                             if Set.member childPath interestList then
@@ -531,7 +579,14 @@ viewTree resultNdx path collapseStatus interestList tree =
 
 
 viewInputsAndResult : Int -> CollapseStatus -> Set Path -> Run -> Element Msg
-viewInputsAndResult resultNdx collapseStatus interestList inputsAndResult =
+viewInputsAndResult resultNdx collapseStatus interestList run =
+    let
+        inputs =
+            GeneratorRuns.getInputs run
+
+        tree =
+            GeneratorRuns.getTree run
+    in
     column
         [ width fill
         , spacing sizes.medium
@@ -541,20 +596,20 @@ viewInputsAndResult resultNdx collapseStatus interestList inputsAndResult =
         , Border.rounded 4
         ]
         [ row [ width fill ]
-            [ Input.button ([ width fill ] ++ treeElementStyle)
+            [ Input.button (width fill :: treeElementStyle)
                 { label =
                     row [ width fill, spacing sizes.medium ]
                         [ collapsedStatusIcon ( resultNdx, [] ) collapseStatus
                         , el [ Font.bold ] (text (String.fromInt resultNdx ++ ":"))
-                        , text (inputsAndResult.inputs.ags ++ " " ++ String.fromInt inputsAndResult.inputs.year)
+                        , text (inputs.ags ++ " " ++ String.fromInt inputs.year)
                         ]
                 , onPress = Just (CollapseToggleRequested ( resultNdx, [] ))
                 }
-            , iconButton FeatherIcons.edit (DisplayCalculateModalPressed (Just resultNdx) (Just inputsAndResult.inputs))
-            , iconButton FeatherIcons.copy (DisplayCalculateModalPressed Nothing (Just inputsAndResult.inputs))
+            , iconButton FeatherIcons.edit (DisplayCalculateModalPressed (Just resultNdx) (Just inputs))
+            , iconButton FeatherIcons.copy (DisplayCalculateModalPressed Nothing (Just inputs))
             , dangerousIconButton FeatherIcons.trash2 (RemoveResult resultNdx)
             ]
-        , viewTree resultNdx [] collapseStatus interestList inputsAndResult.result
+        , viewTree resultNdx [] collapseStatus interestList tree
         ]
 
 
@@ -564,7 +619,7 @@ viewResultsPane : Model -> Element Msg
 viewResultsPane model =
     let
         topBar =
-            row ([ width fill ] ++ fonts.explorer)
+            row (width fill :: fonts.explorer)
                 [ text "LocalZero Explorer"
                 , el [ width fill ] Element.none
                 , iconButton FeatherIcons.plus (DisplayCalculateModalPressed Nothing Nothing)
@@ -617,15 +672,27 @@ viewInterestList interestList =
                                 , width = shrink
                                 , view =
                                     \( path, values ) ->
-                                        Array.get resultNdx values
-                                            |> Maybe.andThen identity
-                                            |> Maybe.map
-                                                (\f ->
-                                                    el (Font.alignRight :: fonts.explorerValues) <|
-                                                        text
-                                                            (format germanLocale f)
-                                                )
-                                            |> Maybe.withDefault Element.none
+                                        let
+                                            value =
+                                                case Array.get resultNdx values of
+                                                    Just (Float f) ->
+                                                        el (Font.alignRight :: fonts.explorerValues) <|
+                                                            text
+                                                                (format germanLocale f)
+
+                                                    Just (String s) ->
+                                                        el (Font.alignRight :: fonts.explorerValues) <|
+                                                            text s
+
+                                                    Just Null ->
+                                                        el (Font.alignRight :: Font.bold :: fonts.explorerValues) <|
+                                                            text "bold"
+
+                                                    Nothing ->
+                                                        -- make compiler happy
+                                                        Element.none
+                                        in
+                                        value
                                 }
                             )
 
@@ -742,9 +809,6 @@ viewCalculateModal maybeNdx inputs =
 view : Model -> Html Msg
 view model =
     let
-        filler =
-            el [ width fill, height fill ] Element.none
-
         dialog =
             case model.showModal of
                 Nothing ->

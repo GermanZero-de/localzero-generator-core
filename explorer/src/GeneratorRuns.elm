@@ -2,10 +2,13 @@ module GeneratorRuns exposing
     ( AbsolutePath
     , GeneratorRuns
     , Inputs
-    , Run
     , Path
+    , Run
     , add
+    , createRun
     , empty
+    , getInputs
+    , getTree
     , getValue
     , maybeGet
     , remove
@@ -16,8 +19,8 @@ module GeneratorRuns exposing
 
 import Array exposing (Array)
 import Array.Extra
-import GeneratorResult exposing (GeneratorResult)
 import Html exposing (a)
+import ValueTree exposing (Tree, Value)
 
 
 {-| A Path to a value inside a given GeneratorResult
@@ -26,16 +29,18 @@ type alias Path =
     List String
 
 
-{-| A Path to a value inside the nth Run
--}
 type alias AbsolutePath =
     ( Int, Path )
 
-{-| One run of the generator -}
-type alias Run =
-    { result : GeneratorResult
-    , inputs : Inputs
-    }
+
+{-| One run of the generator
+-}
+type Run
+    = Run
+        { result : Tree
+        , entries : Tree
+        , inputs : Inputs
+        }
 
 
 type alias Inputs =
@@ -44,6 +49,20 @@ type alias Inputs =
 
 type GeneratorRuns
     = GeneratorRuns (Array Run)
+
+
+createRun : { inputs : Inputs, entries : Tree, result : Tree } -> Run
+createRun { inputs, entries, result } =
+    Run
+        { inputs = inputs
+        , entries = entries
+        , result = result
+        }
+
+
+getInputs : Run -> Inputs
+getInputs (Run r) =
+    r.inputs
 
 
 empty : GeneratorRuns
@@ -80,20 +99,27 @@ size (GeneratorRuns a) =
     Array.length a
 
 
-getValue : AbsolutePath -> GeneratorRuns -> Maybe Float
-getValue ( ndx, path ) (GeneratorRuns a) =
+getTree : Run -> Tree
+getTree (Run r) =
+    ValueTree.merge
+        (ValueTree.wrap "entries" r.entries)
+        (ValueTree.wrap "result" r.result)
+
+
+getValue : Int -> Path -> GeneratorRuns -> Maybe Value
+getValue ndx path (GeneratorRuns a) =
     Array.get ndx a
         |> Maybe.andThen
-            (\ir ->
-                GeneratorResult.get path ir.result
+            (\r ->
+                ValueTree.get path (getTree r)
                     |> Maybe.andThen
                         (\node ->
                             case node of
-                                GeneratorResult.Tree _ ->
+                                ValueTree.Tree _ ->
                                     Nothing
 
-                                GeneratorResult.Leaf n ->
-                                    n
+                                ValueTree.Leaf n ->
+                                    Just n
                         )
             )
 
