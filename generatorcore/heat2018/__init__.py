@@ -1,8 +1,8 @@
 from dataclasses import dataclass, field
 
-from . import transport2018, electricity2018
-from .inputs import Inputs
-from .utils import div
+from .. import transport2018, electricity2018
+from ..inputs import Inputs
+from ..utils import div
 
 
 @dataclass

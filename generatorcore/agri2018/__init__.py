@@ -1,8 +1,8 @@
 from dataclasses import dataclass, field
 
-from . import business2018, lulucf2018
-from .inputs import Inputs
-from .utils import div
+from .. import business2018, lulucf2018
+from ..inputs import Inputs
+from ..utils import div
 
 
 @dataclass

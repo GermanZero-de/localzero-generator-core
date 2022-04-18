@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
-from .inputs import Inputs
-from .utils import div
-from . import (
+from ..inputs import Inputs
+from ..utils import div
+from .. import (
     fuels2018,
     agri2030,
     business2030,

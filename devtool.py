@@ -25,6 +25,7 @@ from commands.cmd_test_end_to_end import (
     cmd_test_end_to_end_create_expectation,
     cmd_test_end_to_end_run_all_ags,
 )
+from commands.cmd_explorer import cmd_explorer
 
 
 def main():
@@ -37,6 +38,11 @@ def main():
     cmd_run_parser.add_argument("-year", default=2035)
     cmd_run_parser.add_argument("-o", default=None)
     cmd_run_parser.set_defaults(func=cmd_run)
+
+    cmd_explorer_parser = subcmd_parsers.add_parser(
+        "explorer", help="Start the LocalZero Explorer"
+    )
+    cmd_explorer_parser.set_defaults(func=cmd_explorer)
 
     cmd_make_entries_parser = subcmd_parsers.add_parser("make", help="Run make entries")
     cmd_make_entries_parser.add_argument("-ags", default="03159016")

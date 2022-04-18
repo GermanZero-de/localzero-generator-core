@@ -1,6 +1,6 @@
-from .inputs import Inputs
-from .utils import div
-from . import (
+from ..inputs import Inputs
+from ..utils import div
+from .. import (
     lulucf2018,
     lulucf2030,
     agri2030,

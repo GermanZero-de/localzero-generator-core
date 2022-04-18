@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 
-from generatorcore.inputs import Inputs
+from ..inputs import Inputs
 
 # Definition der relevanten Spaltennamen für den Sektor E
 @dataclass
