@@ -89,6 +89,11 @@ treeElementStyle =
     ]
 
 
+size16 : FeatherIcons.Icon -> FeatherIcons.Icon
+size16 =
+    FeatherIcons.withSize 16
+
+
 icon : FeatherIcons.Icon -> Element msg
 icon i =
     i
@@ -258,6 +263,8 @@ type Msg
     | GotEntries (Maybe Int) Inputs (Result Http.Error Tree)
       --| AddItemToChartClicked { path : Path, value : Float }
     | AddToInterestList Path
+    | AddOverride Int String Float
+    | RemoveOverride Int String
     | RemoveFromInterestList Path
     | CollapseToggleRequested AbsolutePath
     | UpdateModal ModalMsg
@@ -397,6 +404,24 @@ update msg model =
             , Cmd.none
             )
 
+        AddOverride ndx name f ->
+            ( { model
+                | runs =
+                    model.runs
+                        |> GeneratorRuns.update ndx (GeneratorRuns.mapOverrides (Dict.insert name f))
+              }
+            , Cmd.none
+            )
+
+        RemoveOverride ndx name ->
+            ( { model
+                | runs =
+                    model.runs
+                        |> GeneratorRuns.update ndx (GeneratorRuns.mapOverrides (Dict.remove name))
+              }
+            , Cmd.none
+            )
+
         RemoveFromInterestList path ->
             ( { model | interestList = Set.remove path model.interestList }
             , Cmd.none
@@ -521,11 +546,11 @@ collapsedStatusIcon path collapsed =
             else
                 FeatherIcons.chevronDown
     in
-    el iconButtonStyle (icon i)
+    el iconButtonStyle (icon (size16 i))
 
 
-viewTree : Int -> Path -> CollapseStatus -> Set Path -> Tree -> Element Msg
-viewTree resultNdx path collapseStatus interestList tree =
+viewTree : Int -> Path -> CollapseStatus -> Set Path -> Overrides -> Tree -> Element Msg
+viewTree resultNdx path collapseStatus interestList overrides tree =
     if isCollapsed ( resultNdx, path ) collapseStatus then
         Element.none
 
@@ -534,6 +559,9 @@ viewTree resultNdx path collapseStatus interestList tree =
             |> List.map
                 (\( name, val ) ->
                     let
+                        isEntry =
+                            path == [ "entries" ]
+
                         itemRow content =
                             row
                                 ([ spacing sizes.large, width fill ] ++ treeElementStyle)
@@ -556,7 +584,7 @@ viewTree resultNdx path collapseStatus interestList tree =
                                                     ]
                                             , onPress = Just (CollapseToggleRequested ( resultNdx, path ++ [ name ] ))
                                             }
-                                        , viewTree resultNdx childPath collapseStatus interestList child
+                                        , viewTree resultNdx childPath collapseStatus interestList overrides child
                                         ]
 
                                 Leaf Null ->
@@ -575,17 +603,57 @@ viewTree resultNdx path collapseStatus interestList tree =
                                     let
                                         button =
                                             if Set.member childPath interestList then
-                                                dangerousIconButton FeatherIcons.trash2 (RemoveFromInterestList childPath)
+                                                dangerousIconButton (size16 FeatherIcons.trash2) (RemoveFromInterestList childPath)
 
                                             else
-                                                iconButton FeatherIcons.plus (AddToInterestList childPath)
+                                                iconButton (size16 FeatherIcons.plus) (AddToInterestList childPath)
+
+                                        override =
+                                            Dict.get name overrides
+
+                                        ( originalValue, maybeOverride ) =
+                                            -- Clicking on original value should start or revert
+                                            -- an override
+                                            if isEntry then
+                                                let
+                                                    ( colors, action, o ) =
+                                                        case override of
+                                                            Nothing ->
+                                                                ( [ Font.color germanZeroGreen
+                                                                  , Element.mouseOver [ Font.color germanZeroYellow ]
+                                                                  ]
+                                                                , AddOverride resultNdx name f
+                                                                , Element.none
+                                                                )
+
+                                                            Just newF ->
+                                                                ( [ Font.strike
+                                                                  , Font.color red
+                                                                  , Element.mouseOver [ Font.color germanZeroYellow ]
+                                                                  ]
+                                                                , RemoveOverride resultNdx name
+                                                                , Element.text (format germanLocale newF)
+                                                                )
+                                                in
+                                                ( Input.button (Font.alignRight :: fonts.explorerValues ++ colors)
+                                                    { label = text (format germanLocale f)
+                                                    , onPress = Just action
+                                                    }
+                                                , o
+                                                )
+
+                                            else
+                                                ( el (Font.alignRight :: fonts.explorerValues) <|
+                                                    text
+                                                        (format germanLocale f)
+                                                , Element.none
+                                                )
                                     in
                                     itemRow
                                         [ button
                                         , el [ width fill ] (text name)
-                                        , el (Font.alignRight :: fonts.explorerValues) <|
-                                            text
-                                                (format germanLocale f)
+                                        , originalValue
+                                        , maybeOverride
                                         ]
                     in
                     ( name, element )
@@ -607,6 +675,9 @@ viewInputsAndResult resultNdx collapseStatus interestList run =
 
         tree =
             GeneratorRuns.getTree run
+
+        overrides =
+            GeneratorRuns.getOverrides run
     in
     column
         [ width fill
@@ -630,7 +701,7 @@ viewInputsAndResult resultNdx collapseStatus interestList run =
             , iconButton FeatherIcons.copy (DisplayCalculateModalPressed Nothing (Just inputs))
             , dangerousIconButton FeatherIcons.trash2 (RemoveResult resultNdx)
             ]
-        , viewTree resultNdx [] collapseStatus interestList tree
+        , viewTree resultNdx [] collapseStatus interestList overrides tree
         ]
 
 
@@ -725,7 +796,7 @@ viewInterestList interestList =
                     , width = shrink
                     , view =
                         \( p, _ ) ->
-                            dangerousIconButton FeatherIcons.trash2 (RemoveFromInterestList p)
+                            dangerousIconButton (size16 FeatherIcons.trash2) (RemoveFromInterestList p)
                     }
             in
             Element.table

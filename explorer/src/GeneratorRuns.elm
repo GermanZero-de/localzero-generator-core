@@ -18,6 +18,7 @@ module GeneratorRuns exposing
     , set
     , size
     , toList
+    , update
     )
 
 import Array exposing (Array)
@@ -38,7 +39,7 @@ type alias AbsolutePath =
 
 
 type alias Overrides =
-    Dict String ValueTree.Value
+    Dict String Float
 
 
 {-| One run of the generator
@@ -106,6 +107,16 @@ remove ndx (GeneratorRuns a) =
             Array.Extra.removeAt ndx a
     in
     GeneratorRuns new
+
+
+update : Int -> (Run -> Run) -> GeneratorRuns -> GeneratorRuns
+update ndx f (GeneratorRuns a) =
+    case Array.get ndx a of
+        Nothing ->
+            GeneratorRuns a
+
+        Just r ->
+            GeneratorRuns (Array.set ndx (f r) a)
 
 
 set : Int -> Run -> GeneratorRuns -> GeneratorRuns
