@@ -2,14 +2,17 @@ module GeneratorRuns exposing
     ( AbsolutePath
     , GeneratorRuns
     , Inputs
+    , Overrides
     , Path
     , Run
     , add
     , createRun
     , empty
     , getInputs
+    , getOverrides
     , getTree
     , getValue
+    , mapOverrides
     , maybeGet
     , remove
     , set
@@ -19,6 +22,7 @@ module GeneratorRuns exposing
 
 import Array exposing (Array)
 import Array.Extra
+import Dict exposing (Dict)
 import Html exposing (a)
 import ValueTree exposing (Tree, Value)
 
@@ -33,12 +37,17 @@ type alias AbsolutePath =
     ( Int, Path )
 
 
+type alias Overrides =
+    Dict String ValueTree.Value
+
+
 {-| One run of the generator
 -}
 type Run
     = Run
         { result : Tree
         , entries : Tree
+        , overrides : Overrides
         , inputs : Inputs
         }
 
@@ -57,7 +66,18 @@ createRun { inputs, entries, result } =
         { inputs = inputs
         , entries = entries
         , result = result
+        , overrides = Dict.empty
         }
+
+
+mapOverrides : (Overrides -> Overrides) -> Run -> Run
+mapOverrides f (Run r) =
+    Run { r | overrides = f r.overrides }
+
+
+getOverrides : Run -> Overrides
+getOverrides (Run r) =
+    r.overrides
 
 
 getInputs : Run -> Inputs

@@ -7,7 +7,7 @@ import Browser
 import Chart as C
 import Chart.Attributes as CA
 import CollapseStatus exposing (CollapseStatus, allCollapsed, isCollapsed)
-import Dict
+import Dict exposing (Dict)
 import Element
     exposing
         ( Element
@@ -40,11 +40,13 @@ import GeneratorRuns
         ( AbsolutePath
         , GeneratorRuns
         , Inputs
+        , Overrides
         , Path
         , Run
         )
 import Html exposing (Html)
 import Http
+import Json.Encode as Encode
 import Set exposing (Set)
 import ValueTree exposing (Node(..), Tree, Value(..))
 
@@ -197,12 +199,31 @@ white =
     Element.rgb255 255 255 255
 
 
+encodeOverrides : Dict String ValueTree.Value -> Encode.Value
+encodeOverrides d =
+    Encode.dict
+        identity
+        (\v ->
+            case v of
+                Float f ->
+                    Encode.float f
+
+                String s ->
+                    Encode.string s
+
+                Null ->
+                    Encode.null
+        )
+        d
+
+
 initiateCalculate : Maybe Int -> Inputs -> Tree -> Model -> ( Model, Cmd Msg )
 initiateCalculate maybeNdx inputs entries model =
     ( { model | showModal = Just Loading }
-    , Http.get
+    , Http.post
         { url = "http://localhost:4070/calculate/" ++ inputs.ags ++ "/" ++ String.fromInt inputs.year
         , expect = Http.expectJson (GotGeneratorResult maybeNdx inputs entries) ValueTree.decoder
+        , body = Http.jsonBody (encodeOverrides Dict.empty)
         }
     )
 
@@ -671,7 +692,7 @@ viewInterestList interestList =
                                 { header = el [ Font.bold, Font.alignRight ] (Element.text (String.fromInt resultNdx))
                                 , width = shrink
                                 , view =
-                                    \( path, values ) ->
+                                    \( _, values ) ->
                                         let
                                             value =
                                                 case Array.get resultNdx values of
