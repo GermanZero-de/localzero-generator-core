@@ -5,7 +5,8 @@ module Main exposing (Model, Msg(..), init, main, subscriptions, update, view)
 import AllRuns
     exposing
         ( AbsolutePath
-        , GeneratorRuns
+        , AllRuns
+        , RunId
         )
 import Array exposing (Array)
 import Browser
@@ -157,11 +158,11 @@ dangerousIconButton i op =
 
 
 type alias ActiveOverrideEditor =
-    { runNdx : Int, name : String, value : String, asFloat : Maybe Float }
+    { runNdx : RunId, name : String, value : String, asFloat : Maybe Float }
 
 
 type alias Model =
-    { runs : GeneratorRuns
+    { runs : AllRuns
     , collapseStatus : CollapseStatus
     , interestList : Set Run.Path
     , showModal : Maybe ModalState
@@ -170,7 +171,7 @@ type alias Model =
 
 
 type ModalState
-    = PrepareCalculate (Maybe Int) Run.Inputs
+    = PrepareCalculate (Maybe RunId) Run.Inputs
     | Loading
     | LoadFailure String
 
@@ -229,7 +230,7 @@ encodeOverrides d =
         d
 
 
-initiateCalculate : Maybe Int -> Run.Inputs -> Run.Entries -> Run.Overrides -> Model -> ( Model, Cmd Msg )
+initiateCalculate : Maybe RunId -> Run.Inputs -> Run.Entries -> Run.Overrides -> Model -> ( Model, Cmd Msg )
 initiateCalculate maybeNdx inputs entries overrides model =
     ( { model | showModal = Just Loading }
     , Http.post
@@ -240,7 +241,7 @@ initiateCalculate maybeNdx inputs entries overrides model =
     )
 
 
-initiateMakeEntries : Maybe Int -> Run.Inputs -> Run.Overrides -> Model -> ( Model, Cmd Msg )
+initiateMakeEntries : Maybe RunId -> Run.Inputs -> Run.Overrides -> Model -> ( Model, Cmd Msg )
 initiateMakeEntries maybeNdx inputs overrides model =
     ( { model | showModal = Just Loading }
     , Http.get
@@ -267,20 +268,20 @@ init _ =
 
 
 type Msg
-    = GotGeneratorResult (Maybe Int) Run.Inputs Run.Entries Run.Overrides (Result Http.Error Tree)
-    | GotEntries (Maybe Int) Run.Inputs Run.Overrides (Result Http.Error Run.Entries)
+    = GotGeneratorResult (Maybe RunId) Run.Inputs Run.Entries Run.Overrides (Result Http.Error Tree)
+    | GotEntries (Maybe RunId) Run.Inputs Run.Overrides (Result Http.Error Run.Entries)
       --| AddItemToChartClicked { path : Path, value : Float }
     | AddToInterestList Run.Path
-    | AddOrUpdateOverride Int String Float
-    | RemoveOverride Int String
-    | OverrideEdited Int String String
+    | AddOrUpdateOverride RunId String Float
+    | RemoveOverride RunId String
+    | OverrideEdited RunId String String
     | OverrideEditFinished
     | RemoveFromInterestList Run.Path
     | CollapseToggleRequested AbsolutePath
     | UpdateModal ModalMsg
-    | DisplayCalculateModalPressed (Maybe Int) (Maybe Run.Inputs)
-    | CalculateModalOkPressed (Maybe Int) Run.Inputs
-    | RemoveResult Int
+    | DisplayCalculateModalPressed (Maybe RunId) (Maybe Run.Inputs)
+    | CalculateModalOkPressed (Maybe RunId) Run.Inputs
+    | RemoveResult RunId
     | Noop
 
 

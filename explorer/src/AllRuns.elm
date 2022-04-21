@@ -1,23 +1,31 @@
 module AllRuns exposing
     ( AbsolutePath
-    , GeneratorRuns
+    , AllRuns
+    , RunId
     , add
     , empty
     , get
     , getValue
-    , maybeGet
     , remove
     , set
     , size
+    , stringFromRunId
     , toList
     , update
     )
 
-import Array exposing (Array)
-import Array.Extra
 import Dict exposing (Dict)
 import Run exposing (Path, Run)
 import ValueTree exposing (Value)
+
+
+type alias RunId =
+    Int
+
+
+stringFromRunId : RunId -> String
+stringFromRunId runId =
+    String.fromInt runId
 
 
 {-| A Path to a value inside a given GeneratorResult
@@ -26,59 +34,62 @@ type alias AbsolutePath =
     ( Int, Path )
 
 
-{-| One run of the generator
+{-| One run of the generator.
+Uses a dictionary so that ids still refer to the same generator run after deletion of
+another run.
 -}
-type GeneratorRuns
-    = GeneratorRuns (Array Run)
+type AllRuns
+    = AllRuns { runs : Dict Int Run, nextId : Int }
 
 
-empty : GeneratorRuns
+empty : AllRuns
 empty =
-    GeneratorRuns Array.empty
+    AllRuns { runs = Dict.empty, nextId = 0 }
 
 
-add : Run -> GeneratorRuns -> GeneratorRuns
-add ir (GeneratorRuns a) =
+add : Run -> AllRuns -> AllRuns
+add ir (AllRuns a) =
     let
+        newNextId =
+            a.nextId + 1
+
         new =
-            Array.push ir a
+            Dict.insert a.nextId ir a.runs
     in
-    GeneratorRuns new
+    AllRuns { runs = new, nextId = newNextId }
 
 
-remove : Int -> GeneratorRuns -> GeneratorRuns
-remove ndx (GeneratorRuns a) =
-    let
-        new =
-            Array.Extra.removeAt ndx a
-    in
-    GeneratorRuns new
+remove : RunId -> AllRuns -> AllRuns
+remove id (AllRuns a) =
+    AllRuns { a | runs = Dict.remove id a.runs }
 
 
-update : Int -> (Run -> Run) -> GeneratorRuns -> GeneratorRuns
-update ndx f (GeneratorRuns a) =
-    case Array.get ndx a of
+update : RunId -> (Run -> Run) -> AllRuns -> AllRuns
+update id f (AllRuns a) =
+    case Dict.get id a.runs of
         Nothing ->
-            GeneratorRuns a
+            AllRuns a
 
         Just r ->
-            GeneratorRuns (Array.set ndx (f r) a)
+            AllRuns { a | runs = Dict.insert id (f r) a.runs }
 
 
-set : Int -> Run -> GeneratorRuns -> GeneratorRuns
-set ndx ir (GeneratorRuns a) =
-    Array.set ndx ir a
-        |> GeneratorRuns
+set : RunId -> Run -> AllRuns -> AllRuns
+set id ir (AllRuns a) =
+    AllRuns
+        { a
+            | runs = Dict.insert id ir a.runs
+        }
 
 
-size : GeneratorRuns -> Int
-size (GeneratorRuns a) =
-    Array.length a
+size : AllRuns -> Int
+size (AllRuns a) =
+    Dict.size a.runs
 
 
-getValue : Run.OverrideHandling -> Int -> Path -> GeneratorRuns -> Maybe Value
-getValue handling ndx path (GeneratorRuns a) =
-    Array.get ndx a
+getValue : Run.OverrideHandling -> RunId -> Path -> AllRuns -> Maybe Value
+getValue handling ndx path (AllRuns a) =
+    Dict.get ndx a.runs
         |> Maybe.andThen
             (\r ->
                 ValueTree.get path (Run.getTree handling r)
@@ -94,21 +105,11 @@ getValue handling ndx path (GeneratorRuns a) =
             )
 
 
-maybeGet : Maybe Int -> GeneratorRuns -> Maybe Run
-maybeGet maybeNdx (GeneratorRuns a) =
-    case maybeNdx of
-        Nothing ->
-            Nothing
-
-        Just ndx ->
-            Array.get ndx a
+get : RunId -> AllRuns -> Maybe Run
+get id (AllRuns a) =
+    Dict.get id a.runs
 
 
-get : Int -> GeneratorRuns -> Maybe Run
-get ndx (GeneratorRuns a) =
-    Array.get ndx a
-
-
-toList : GeneratorRuns -> List ( Int, Run )
-toList (GeneratorRuns a) =
-    Array.toIndexedList a
+toList : AllRuns -> List ( RunId, Run )
+toList (AllRuns a) =
+    Dict.toList a.runs
