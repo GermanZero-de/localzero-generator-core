@@ -229,13 +229,13 @@ encodeOverrides d =
         d
 
 
-initiateCalculate : Maybe Int -> Run.Inputs -> Tree -> Run.Overrides -> Model -> ( Model, Cmd Msg )
+initiateCalculate : Maybe Int -> Run.Inputs -> Run.Entries -> Run.Overrides -> Model -> ( Model, Cmd Msg )
 initiateCalculate maybeNdx inputs entries overrides model =
     ( { model | showModal = Just Loading }
     , Http.post
         { url = "http://localhost:4070/calculate/" ++ inputs.ags ++ "/" ++ String.fromInt inputs.year
         , expect = Http.expectJson (GotGeneratorResult maybeNdx inputs entries overrides) ValueTree.decoder
-        , body = Http.jsonBody (encodeOverrides <| Debug.log "overrides in calculate" overrides)
+        , body = Http.jsonBody (encodeOverrides overrides)
         }
     )
 
@@ -245,7 +245,7 @@ initiateMakeEntries maybeNdx inputs overrides model =
     ( { model | showModal = Just Loading }
     , Http.get
         { url = "http://localhost:4070/make-entries/" ++ inputs.ags ++ "/" ++ String.fromInt inputs.year
-        , expect = Http.expectJson (GotEntries maybeNdx inputs <| Debug.log "overrides in make entries" overrides) ValueTree.decoder
+        , expect = Http.expectJson (GotEntries maybeNdx inputs overrides) Run.entriesDecoder
         }
     )
 
@@ -267,8 +267,8 @@ init _ =
 
 
 type Msg
-    = GotGeneratorResult (Maybe Int) Run.Inputs Tree Run.Overrides (Result Http.Error Tree)
-    | GotEntries (Maybe Int) Run.Inputs Run.Overrides (Result Http.Error Tree)
+    = GotGeneratorResult (Maybe Int) Run.Inputs Run.Entries Run.Overrides (Result Http.Error Tree)
+    | GotEntries (Maybe Int) Run.Inputs Run.Overrides (Result Http.Error Run.Entries)
       --| AddItemToChartClicked { path : Path, value : Float }
     | AddToInterestList Run.Path
     | AddOrUpdateOverride Int String Float
@@ -307,7 +307,7 @@ getInterestList model =
                 ( path
                 , Array.initialize (AllRuns.size model.runs)
                     (\n ->
-                        AllRuns.getValue n path model.runs
+                        AllRuns.getValue Run.WithOverrides n path model.runs
                             |> Maybe.withDefault (String "TREE")
                     )
                 )
@@ -795,9 +795,6 @@ viewInputsAndResult resultNdx collapseStatus interestList activeOverrideEditor r
         inputs =
             Run.getInputs run
 
-        tree =
-            Run.getTree run
-
         overrides =
             Run.getOverrides run
     in
@@ -823,7 +820,13 @@ viewInputsAndResult resultNdx collapseStatus interestList activeOverrideEditor r
             , iconButton FeatherIcons.copy (DisplayCalculateModalPressed Nothing (Just inputs))
             , dangerousIconButton FeatherIcons.trash2 (RemoveResult resultNdx)
             ]
-        , viewTree resultNdx [] collapseStatus interestList overrides activeOverrideEditor tree
+        , viewTree resultNdx
+            []
+            collapseStatus
+            interestList
+            overrides
+            activeOverrideEditor
+            (Run.getTree Run.WithoutOverrides run)
         ]
 
 

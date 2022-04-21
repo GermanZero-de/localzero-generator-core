@@ -1,4 +1,4 @@
-module ValueTree exposing (Node(..), Tree, Value(..), decoder, get, merge, wrap)
+module ValueTree exposing (Node(..), Tree, Value(..), decoder, get, merge, valueDecoder, wrap)
 
 import Dict exposing (Dict)
 import Json.Decode as Decode
@@ -55,12 +55,19 @@ treeDecoder =
     Decode.dict nodeDecoder
 
 
+valueDecoder : Decode.Decoder Value
+valueDecoder =
+    Decode.oneOf
+        [ Decode.float |> Decode.map Float
+        , Decode.string |> Decode.map String
+        , Decode.null Null
+        ]
+
+
 nodeDecoder : Decode.Decoder Node
 nodeDecoder =
     Decode.oneOf
-        [ Decode.float |> Decode.map (Leaf << Float)
-        , Decode.string |> Decode.map (Leaf << String)
-        , Decode.null (Leaf Null)
+        [ valueDecoder |> Decode.map Leaf
         , Decode.dict (Decode.lazy (\() -> nodeDecoder)) |> Decode.map Tree
         ]
 

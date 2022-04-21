@@ -76,12 +76,12 @@ size (GeneratorRuns a) =
     Array.length a
 
 
-getValue : Int -> Path -> GeneratorRuns -> Maybe Value
-getValue ndx path (GeneratorRuns a) =
+getValue : Run.OverrideHandling -> Int -> Path -> GeneratorRuns -> Maybe Value
+getValue handling ndx path (GeneratorRuns a) =
     Array.get ndx a
         |> Maybe.andThen
             (\r ->
-                ValueTree.get path (Run.getTree r)
+                ValueTree.get path (Run.getTree handling r)
                     |> Maybe.andThen
                         (\node ->
                             case node of

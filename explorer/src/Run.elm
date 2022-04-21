@@ -1,9 +1,12 @@
 module Run exposing
-    ( Inputs
+    ( Entries
+    , Inputs
+    , OverrideHandling(..)
     , Overrides
     , Path
     , Run
     , create
+    , entriesDecoder
     , getInputs
     , getOverrides
     , getTree
@@ -14,6 +17,7 @@ module Run exposing
 -}
 
 import Dict exposing (Dict)
+import Json.Decode as Decode
 import ValueTree exposing (Tree)
 
 
@@ -27,10 +31,14 @@ type alias Overrides =
     Dict String Float
 
 
+type alias Entries =
+    Dict String ValueTree.Value
+
+
 type Run
     = Run
         { result : Tree
-        , entries : Tree
+        , entries : Entries
         , overrides : Overrides
         , inputs : Inputs
         }
@@ -40,7 +48,7 @@ type alias Inputs =
     { ags : String, year : Int }
 
 
-create : { inputs : Inputs, entries : Tree, overrides : Overrides, result : Tree } -> Run
+create : { inputs : Inputs, entries : Entries, overrides : Overrides, result : Tree } -> Run
 create { inputs, entries, result, overrides } =
     Run
         { inputs = inputs
@@ -65,8 +73,36 @@ getInputs (Run r) =
     r.inputs
 
 
-getTree : Run -> Tree
-getTree (Run r) =
+type OverrideHandling
+    = WithOverrides
+    | WithoutOverrides
+
+
+getTree : OverrideHandling -> Run -> Tree
+getTree h (Run r) =
+    let
+        entries =
+            case h of
+                WithoutOverrides ->
+                    Dict.map (\_ v -> ValueTree.Leaf v) r.entries
+
+                WithOverrides ->
+                    Dict.map
+                        (\k v ->
+                            case Dict.get k r.overrides of
+                                Nothing ->
+                                    ValueTree.Leaf v
+
+                                Just o ->
+                                    ValueTree.Leaf (ValueTree.Float o)
+                        )
+                        r.entries
+    in
     ValueTree.merge
-        (ValueTree.wrap "entries" r.entries)
+        (ValueTree.wrap "entries" entries)
         (ValueTree.wrap "result" r.result)
+
+
+entriesDecoder : Decode.Decoder Entries
+entriesDecoder =
+    Decode.dict ValueTree.valueDecoder
