@@ -2,8 +2,14 @@ module Main exposing (Model, Msg(..), init, main, subscriptions, update, view)
 
 --import Element.Background as Background
 
+import AllRuns
+    exposing
+        ( AbsolutePath
+        , GeneratorRuns
+        )
 import Array exposing (Array)
 import Browser
+import Browser.Dom
 import Chart as C
 import Chart.Attributes as CA
 import CollapseStatus exposing (CollapseStatus, allCollapsed, isCollapsed)
@@ -29,30 +35,36 @@ import Element
         )
 import Element.Background as Background
 import Element.Border as Border
+import Element.Events as Events
 import Element.Font as Font
 import Element.Input as Input
 import Element.Keyed
 import FeatherIcons
 import FormatNumber exposing (format)
 import FormatNumber.Locales exposing (spanishLocale)
-import GeneratorRuns
-    exposing
-        ( AbsolutePath
-        , GeneratorRuns
-        , Inputs
-        , Overrides
-        , Path
-        , Run
-        )
 import Html exposing (Html)
+import Html.Attributes
 import Http
 import Json.Encode as Encode
+import Maybe.Extra
+import Run exposing (Run)
 import Set exposing (Set)
+import Task
 import ValueTree exposing (Node(..), Tree, Value(..))
 
 
 germanLocale =
     { spanishLocale | decimals = 2 }
+
+
+parseGermanNumber : String -> Maybe Float
+parseGermanNumber s =
+    s
+        |> String.replace "." ""
+        -- ignore . (thousands separator)
+        |> String.replace "," "."
+        -- make it look like an english number
+        |> String.toFloat
 
 
 
@@ -144,16 +156,21 @@ dangerousIconButton i op =
 -- MODEL
 
 
+type alias ActiveOverrideEditor =
+    { runNdx : Int, name : String, value : String, asFloat : Maybe Float }
+
+
 type alias Model =
     { runs : GeneratorRuns
     , collapseStatus : CollapseStatus
-    , interestList : Set Path
+    , interestList : Set Run.Path
     , showModal : Maybe ModalState
+    , activeOverrideEditor : Maybe ActiveOverrideEditor
     }
 
 
 type ModalState
-    = PrepareCalculate (Maybe Int) Inputs
+    = PrepareCalculate (Maybe Int) Run.Inputs
     | Loading
     | LoadFailure String
 
@@ -204,51 +221,42 @@ white =
     Element.rgb255 255 255 255
 
 
-encodeOverrides : Dict String ValueTree.Value -> Encode.Value
+encodeOverrides : Run.Overrides -> Encode.Value
 encodeOverrides d =
     Encode.dict
         identity
-        (\v ->
-            case v of
-                Float f ->
-                    Encode.float f
-
-                String s ->
-                    Encode.string s
-
-                Null ->
-                    Encode.null
-        )
+        Encode.float
         d
 
 
-initiateCalculate : Maybe Int -> Inputs -> Tree -> Model -> ( Model, Cmd Msg )
-initiateCalculate maybeNdx inputs entries model =
+initiateCalculate : Maybe Int -> Run.Inputs -> Tree -> Run.Overrides -> Model -> ( Model, Cmd Msg )
+initiateCalculate maybeNdx inputs entries overrides model =
     ( { model | showModal = Just Loading }
     , Http.post
         { url = "http://localhost:4070/calculate/" ++ inputs.ags ++ "/" ++ String.fromInt inputs.year
-        , expect = Http.expectJson (GotGeneratorResult maybeNdx inputs entries) ValueTree.decoder
-        , body = Http.jsonBody (encodeOverrides Dict.empty)
+        , expect = Http.expectJson (GotGeneratorResult maybeNdx inputs entries overrides) ValueTree.decoder
+        , body = Http.jsonBody (encodeOverrides <| Debug.log "overrides in calculate" overrides)
         }
     )
 
 
-initiateMakeEntries : Maybe Int -> Inputs -> Model -> ( Model, Cmd Msg )
-initiateMakeEntries maybeNdx inputs model =
+initiateMakeEntries : Maybe Int -> Run.Inputs -> Run.Overrides -> Model -> ( Model, Cmd Msg )
+initiateMakeEntries maybeNdx inputs overrides model =
     ( { model | showModal = Just Loading }
     , Http.get
         { url = "http://localhost:4070/make-entries/" ++ inputs.ags ++ "/" ++ String.fromInt inputs.year
-        , expect = Http.expectJson (GotEntries maybeNdx inputs) ValueTree.decoder
+        , expect = Http.expectJson (GotEntries maybeNdx inputs <| Debug.log "overrides in make entries" overrides) ValueTree.decoder
         }
     )
 
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( { runs = GeneratorRuns.empty
+    ( { runs = AllRuns.empty
       , showModal = Nothing
       , interestList = Set.empty
       , collapseStatus = allCollapsed
+      , activeOverrideEditor = Nothing
       }
     , Cmd.none
     )
@@ -259,18 +267,21 @@ init _ =
 
 
 type Msg
-    = GotGeneratorResult (Maybe Int) Inputs Tree (Result Http.Error Tree)
-    | GotEntries (Maybe Int) Inputs (Result Http.Error Tree)
+    = GotGeneratorResult (Maybe Int) Run.Inputs Tree Run.Overrides (Result Http.Error Tree)
+    | GotEntries (Maybe Int) Run.Inputs Run.Overrides (Result Http.Error Tree)
       --| AddItemToChartClicked { path : Path, value : Float }
-    | AddToInterestList Path
-    | AddOverride Int String Float
+    | AddToInterestList Run.Path
+    | AddOrUpdateOverride Int String Float
     | RemoveOverride Int String
-    | RemoveFromInterestList Path
+    | OverrideEdited Int String String
+    | OverrideEditFinished
+    | RemoveFromInterestList Run.Path
     | CollapseToggleRequested AbsolutePath
     | UpdateModal ModalMsg
-    | DisplayCalculateModalPressed (Maybe Int) (Maybe Inputs)
-    | CalculateModalOkPressed (Maybe Int) Inputs
+    | DisplayCalculateModalPressed (Maybe Int) (Maybe Run.Inputs)
+    | CalculateModalOkPressed (Maybe Int) Run.Inputs
     | RemoveResult Int
+    | Noop
 
 
 type ModalMsg
@@ -279,7 +290,7 @@ type ModalMsg
 
 
 type alias InterestListTable =
-    List ( Path, Array Value )
+    List ( Run.Path, Array Value )
 
 
 getInterestList : Model -> InterestListTable
@@ -294,9 +305,9 @@ getInterestList model =
         |> List.map
             (\path ->
                 ( path
-                , Array.initialize (GeneratorRuns.size model.runs)
+                , Array.initialize (AllRuns.size model.runs)
                     (\n ->
-                        GeneratorRuns.getValue n path model.runs
+                        AllRuns.getValue n path model.runs
                             |> Maybe.withDefault (String "TREE")
                     )
                 )
@@ -310,36 +321,40 @@ withLoadFailure msg model =
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    case msg of
-        GotEntries maybeNdx inputs (Ok entries) ->
-            model
-                |> initiateCalculate maybeNdx inputs entries
+    case Debug.log "msg" msg of
+        Noop ->
+            ( model, Cmd.none )
 
-        GotEntries _ _ (Err e) ->
+        GotEntries maybeNdx inputs overrides (Ok entries) ->
+            model
+                |> initiateCalculate maybeNdx inputs entries overrides
+
+        GotEntries _ _ _ (Err e) ->
             let
                 _ =
                     Debug.log "GotEntries Error" e
             in
             ( model, Cmd.none )
 
-        GotGeneratorResult maybeNdx inputs entries resultOrError ->
+        GotGeneratorResult maybeNdx inputs entries overrides resultOrError ->
             case resultOrError of
                 Ok result ->
                     let
                         run =
-                            GeneratorRuns.createRun
+                            Run.create
                                 { inputs = inputs
                                 , entries = entries
                                 , result = result
+                                , overrides = overrides
                                 }
 
                         newResults =
                             case maybeNdx of
                                 Nothing ->
-                                    GeneratorRuns.add run model.runs
+                                    AllRuns.add run model.runs
 
                                 Just ndx ->
-                                    GeneratorRuns.set ndx run model.runs
+                                    AllRuns.set ndx run model.runs
                     in
                     ( { model
                         | runs = newResults
@@ -396,28 +411,86 @@ update msg model =
             )
 
         CalculateModalOkPressed maybeNdx inputs ->
+            -- TODO: Actually lookup any existing overrides
             model
-                |> initiateMakeEntries maybeNdx inputs
+                |> initiateMakeEntries maybeNdx inputs Dict.empty
 
         AddToInterestList path ->
             ( { model | interestList = Set.insert path model.interestList }
             , Cmd.none
             )
 
-        AddOverride ndx name f ->
+        AddOrUpdateOverride ndx name f ->
             ( { model
                 | runs =
                     model.runs
-                        |> GeneratorRuns.update ndx (GeneratorRuns.mapOverrides (Dict.insert name f))
+                        |> AllRuns.update ndx (Run.mapOverrides (Dict.insert name f))
               }
             , Cmd.none
             )
+
+        OverrideEdited ndx name newText ->
+            let
+                isFocusChanged =
+                    case model.activeOverrideEditor of
+                        Nothing ->
+                            True
+
+                        Just e ->
+                            e.runNdx /= ndx || e.name /= name
+            in
+            ( { model
+                | activeOverrideEditor =
+                    Just
+                        { runNdx = ndx
+                        , name = name
+                        , value = newText
+                        , asFloat = parseGermanNumber newText
+                        }
+              }
+            , if isFocusChanged then
+                Task.attempt (\_ -> Noop) (Browser.Dom.focus "overrideEditor")
+
+              else
+                Cmd.none
+            )
+
+        OverrideEditFinished ->
+            case model.activeOverrideEditor of
+                Nothing ->
+                    ( model, Cmd.none )
+
+                Just editor ->
+                    let
+                        modelEditorClosed =
+                            { model | activeOverrideEditor = Nothing }
+                    in
+                    case editor.asFloat of
+                        Nothing ->
+                            -- Throw the edit away it wasn't valid
+                            ( modelEditorClosed, Cmd.none )
+
+                        Just f ->
+                            case AllRuns.get editor.runNdx model.runs of
+                                Nothing ->
+                                    ( modelEditorClosed, Cmd.none )
+
+                                Just run ->
+                                    modelEditorClosed
+                                        |> initiateMakeEntries (Just editor.runNdx)
+                                            (Run.getInputs run)
+                                            (Run.getOverrides run
+                                                |> Dict.insert editor.name f
+                                            )
 
         RemoveOverride ndx name ->
             ( { model
                 | runs =
                     model.runs
-                        |> GeneratorRuns.update ndx (GeneratorRuns.mapOverrides (Dict.remove name))
+                        |> AllRuns.update ndx (Run.mapOverrides (Dict.remove name))
+                , activeOverrideEditor =
+                    model.activeOverrideEditor
+                        |> Maybe.Extra.filter (\e -> e.runNdx /= ndx || e.name /= name)
               }
             , Cmd.none
             )
@@ -428,7 +501,7 @@ update msg model =
             )
 
         RemoveResult ndx ->
-            ( { model | runs = GeneratorRuns.remove ndx model.runs }
+            ( { model | runs = AllRuns.remove ndx model.runs }
             , Cmd.none
             )
 
@@ -549,8 +622,16 @@ collapsedStatusIcon path collapsed =
     el iconButtonStyle (icon (size16 i))
 
 
-viewTree : Int -> Path -> CollapseStatus -> Set Path -> Overrides -> Tree -> Element Msg
-viewTree resultNdx path collapseStatus interestList overrides tree =
+viewTree :
+    Int
+    -> Run.Path
+    -> CollapseStatus
+    -> Set Run.Path
+    -> Run.Overrides
+    -> Maybe ActiveOverrideEditor
+    -> Tree
+    -> Element Msg
+viewTree resultNdx path collapseStatus interestList overrides activeOverrideEditor tree =
     if isCollapsed ( resultNdx, path ) collapseStatus then
         Element.none
 
@@ -584,7 +665,7 @@ viewTree resultNdx path collapseStatus interestList overrides tree =
                                                     ]
                                             , onPress = Just (CollapseToggleRequested ( resultNdx, path ++ [ name ] ))
                                             }
-                                        , viewTree resultNdx childPath collapseStatus interestList overrides child
+                                        , viewTree resultNdx childPath collapseStatus interestList overrides activeOverrideEditor child
                                         ]
 
                                 Leaf Null ->
@@ -601,6 +682,10 @@ viewTree resultNdx path collapseStatus interestList overrides tree =
 
                                 Leaf (Float f) ->
                                     let
+                                        formattedF : String
+                                        formattedF =
+                                            format germanLocale f
+
                                         button =
                                             if Set.member childPath interestList then
                                                 dangerousIconButton (size16 FeatherIcons.trash2) (RemoveFromInterestList childPath)
@@ -608,35 +693,72 @@ viewTree resultNdx path collapseStatus interestList overrides tree =
                                             else
                                                 iconButton (size16 FeatherIcons.plus) (AddToInterestList childPath)
 
-                                        override =
-                                            Dict.get name overrides
-
                                         ( originalValue, maybeOverride ) =
                                             -- Clicking on original value should start or revert
                                             -- an override
                                             if isEntry then
                                                 let
-                                                    ( colors, action, o ) =
-                                                        case override of
-                                                            Nothing ->
-                                                                ( [ Font.color germanZeroGreen
-                                                                  , Element.mouseOver [ Font.color germanZeroYellow ]
-                                                                  ]
-                                                                , AddOverride resultNdx name f
-                                                                , Element.none
-                                                                )
+                                                    override =
+                                                        Dict.get name overrides
 
-                                                            Just newF ->
+                                                    thisOverrideEditor =
+                                                        activeOverrideEditor
+                                                            |> Maybe.Extra.filter (\e -> e.runNdx == resultNdx && e.name == name)
+
+                                                    ( originalStyle, action, o ) =
+                                                        case thisOverrideEditor of
+                                                            Nothing ->
+                                                                case override of
+                                                                    Nothing ->
+                                                                        ( [ Font.color germanZeroGreen
+                                                                          , Element.mouseOver [ Font.color germanZeroYellow ]
+                                                                          ]
+                                                                        , OverrideEdited resultNdx name formattedF
+                                                                        , Element.none
+                                                                        )
+
+                                                                    Just newF ->
+                                                                        ( [ Font.strike
+                                                                          , Font.color red
+                                                                          , Element.mouseOver [ Font.color germanZeroYellow ]
+                                                                          ]
+                                                                        , RemoveOverride resultNdx name
+                                                                        , Input.button (Font.alignRight :: fonts.explorerValues)
+                                                                            { label = text (format germanLocale newF)
+                                                                            , onPress = Just (OverrideEdited resultNdx name formattedF)
+                                                                            }
+                                                                        )
+
+                                                            Just editor ->
+                                                                let
+                                                                    textStyle =
+                                                                        case editor.asFloat of
+                                                                            Nothing ->
+                                                                                [ Border.color red, Border.width 1 ]
+
+                                                                            Just _ ->
+                                                                                []
+
+                                                                    textAttributes =
+                                                                        Events.onLoseFocus OverrideEditFinished
+                                                                            :: Element.htmlAttribute (Html.Attributes.id "overrideEditor")
+                                                                            :: textStyle
+                                                                in
                                                                 ( [ Font.strike
                                                                   , Font.color red
                                                                   , Element.mouseOver [ Font.color germanZeroYellow ]
                                                                   ]
                                                                 , RemoveOverride resultNdx name
-                                                                , Element.text (format germanLocale newF)
+                                                                , Input.text textAttributes
+                                                                    { text = editor.value
+                                                                    , onChange = OverrideEdited resultNdx name
+                                                                    , placeholder = Nothing
+                                                                    , label = Input.labelHidden "override"
+                                                                    }
                                                                 )
                                                 in
-                                                ( Input.button (Font.alignRight :: fonts.explorerValues ++ colors)
-                                                    { label = text (format germanLocale f)
+                                                ( Input.button (Font.alignRight :: fonts.explorerValues ++ originalStyle)
+                                                    { label = text formattedF
                                                     , onPress = Just action
                                                     }
                                                 , o
@@ -667,17 +789,17 @@ viewTree resultNdx path collapseStatus interestList overrides tree =
                 )
 
 
-viewInputsAndResult : Int -> CollapseStatus -> Set Path -> Run -> Element Msg
-viewInputsAndResult resultNdx collapseStatus interestList run =
+viewInputsAndResult : Int -> CollapseStatus -> Set Run.Path -> Maybe ActiveOverrideEditor -> Run -> Element Msg
+viewInputsAndResult resultNdx collapseStatus interestList activeOverrideEditor run =
     let
         inputs =
-            GeneratorRuns.getInputs run
+            Run.getInputs run
 
         tree =
-            GeneratorRuns.getTree run
+            Run.getTree run
 
         overrides =
-            GeneratorRuns.getOverrides run
+            Run.getOverrides run
     in
     column
         [ width fill
@@ -701,7 +823,7 @@ viewInputsAndResult resultNdx collapseStatus interestList run =
             , iconButton FeatherIcons.copy (DisplayCalculateModalPressed Nothing (Just inputs))
             , dangerousIconButton FeatherIcons.trash2 (RemoveResult resultNdx)
             ]
-        , viewTree resultNdx [] collapseStatus interestList overrides tree
+        , viewTree resultNdx [] collapseStatus interestList overrides activeOverrideEditor tree
         ]
 
 
@@ -735,10 +857,14 @@ viewResultsPane model =
                 , width fill
                 , height fill
                 ]
-                (GeneratorRuns.toList model.runs
+                (AllRuns.toList model.runs
                     |> List.map
                         (\( resultNdx, ir ) ->
-                            viewInputsAndResult resultNdx model.collapseStatus model.interestList ir
+                            viewInputsAndResult resultNdx
+                                model.collapseStatus
+                                model.interestList
+                                model.activeOverrideEditor
+                                ir
                         )
                 )
             )
@@ -854,7 +980,7 @@ viewModalDialogBox content =
         ]
 
 
-viewCalculateModal : Maybe Int -> Inputs -> Element Msg
+viewCalculateModal : Maybe Int -> Run.Inputs -> Element Msg
 viewCalculateModal maybeNdx inputs =
     let
         labelStyle =

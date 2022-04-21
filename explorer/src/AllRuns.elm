@@ -1,18 +1,10 @@
-module GeneratorRuns exposing
+module AllRuns exposing
     ( AbsolutePath
     , GeneratorRuns
-    , Inputs
-    , Overrides
-    , Path
-    , Run
     , add
-    , createRun
     , empty
-    , getInputs
-    , getOverrides
-    , getTree
+    , get
     , getValue
-    , mapOverrides
     , maybeGet
     , remove
     , set
@@ -24,66 +16,20 @@ module GeneratorRuns exposing
 import Array exposing (Array)
 import Array.Extra
 import Dict exposing (Dict)
-import Html exposing (a)
-import ValueTree exposing (Tree, Value)
+import Run exposing (Path, Run)
+import ValueTree exposing (Value)
 
 
 {-| A Path to a value inside a given GeneratorResult
 -}
-type alias Path =
-    List String
-
-
 type alias AbsolutePath =
     ( Int, Path )
 
 
-type alias Overrides =
-    Dict String Float
-
-
 {-| One run of the generator
 -}
-type Run
-    = Run
-        { result : Tree
-        , entries : Tree
-        , overrides : Overrides
-        , inputs : Inputs
-        }
-
-
-type alias Inputs =
-    { ags : String, year : Int }
-
-
 type GeneratorRuns
     = GeneratorRuns (Array Run)
-
-
-createRun : { inputs : Inputs, entries : Tree, result : Tree } -> Run
-createRun { inputs, entries, result } =
-    Run
-        { inputs = inputs
-        , entries = entries
-        , result = result
-        , overrides = Dict.empty
-        }
-
-
-mapOverrides : (Overrides -> Overrides) -> Run -> Run
-mapOverrides f (Run r) =
-    Run { r | overrides = f r.overrides }
-
-
-getOverrides : Run -> Overrides
-getOverrides (Run r) =
-    r.overrides
-
-
-getInputs : Run -> Inputs
-getInputs (Run r) =
-    r.inputs
 
 
 empty : GeneratorRuns
@@ -130,19 +76,12 @@ size (GeneratorRuns a) =
     Array.length a
 
 
-getTree : Run -> Tree
-getTree (Run r) =
-    ValueTree.merge
-        (ValueTree.wrap "entries" r.entries)
-        (ValueTree.wrap "result" r.result)
-
-
 getValue : Int -> Path -> GeneratorRuns -> Maybe Value
 getValue ndx path (GeneratorRuns a) =
     Array.get ndx a
         |> Maybe.andThen
             (\r ->
-                ValueTree.get path (getTree r)
+                ValueTree.get path (Run.getTree r)
                     |> Maybe.andThen
                         (\node ->
                             case node of
@@ -163,6 +102,11 @@ maybeGet maybeNdx (GeneratorRuns a) =
 
         Just ndx ->
             Array.get ndx a
+
+
+get : Int -> GeneratorRuns -> Maybe Run
+get ndx (GeneratorRuns a) =
+    Array.get ndx a
 
 
 toList : GeneratorRuns -> List ( Int, Run )
