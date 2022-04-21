@@ -45,7 +45,9 @@ import FormatNumber exposing (format)
 import FormatNumber.Locales exposing (spanishLocale)
 import Html exposing (Html)
 import Html.Attributes
+import Html.Events
 import Http
+import Json.Decode as Decode
 import Json.Encode as Encode
 import Maybe.Extra
 import Run exposing (Run)
@@ -322,7 +324,7 @@ withLoadFailure msg model =
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    case Debug.log "msg" msg of
+    case msg of
         Noop ->
             ( model, Cmd.none )
 
@@ -331,10 +333,6 @@ update msg model =
                 |> initiateCalculate maybeNdx inputs entries overrides
 
         GotEntries _ _ _ (Err e) ->
-            let
-                _ =
-                    Debug.log "GotEntries Error" e
-            in
             ( model, Cmd.none )
 
         GotGeneratorResult maybeNdx inputs entries overrides resultOrError ->
@@ -623,6 +621,23 @@ collapsedStatusIcon path collapsed =
     el iconButtonStyle (icon (size16 i))
 
 
+onEnter : msg -> Element.Attribute msg
+onEnter msg =
+    Element.htmlAttribute
+        (Html.Events.on "keyup"
+            (Decode.field "key" Decode.string
+                |> Decode.andThen
+                    (\key ->
+                        if key == "Enter" then
+                            Decode.succeed msg
+
+                        else
+                            Decode.fail "Not the enter key"
+                    )
+            )
+        )
+
+
 viewTree :
     Int
     -> Run.Path
@@ -719,14 +734,18 @@ viewTree resultNdx path collapseStatus interestList overrides activeOverrideEdit
                                                                         )
 
                                                                     Just newF ->
+                                                                        let
+                                                                            newFormattedF =
+                                                                                format germanLocale newF
+                                                                        in
                                                                         ( [ Font.strike
                                                                           , Font.color red
                                                                           , Element.mouseOver [ Font.color germanZeroYellow ]
                                                                           ]
                                                                         , RemoveOverride resultNdx name
                                                                         , Input.button (Font.alignRight :: fonts.explorerValues)
-                                                                            { label = text (format germanLocale newF)
-                                                                            , onPress = Just (OverrideEdited resultNdx name formattedF)
+                                                                            { label = text newFormattedF
+                                                                            , onPress = Just (OverrideEdited resultNdx name newFormattedF)
                                                                             }
                                                                         )
 
@@ -738,7 +757,8 @@ viewTree resultNdx path collapseStatus interestList overrides activeOverrideEdit
                                                                                 [ Border.color red, Border.width 1 ]
 
                                                                             Just _ ->
-                                                                                []
+                                                                                [ onEnter OverrideEditFinished
+                                                                                ]
 
                                                                     textAttributes =
                                                                         Events.onLoseFocus OverrideEditFinished
