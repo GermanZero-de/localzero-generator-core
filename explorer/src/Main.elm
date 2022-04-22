@@ -47,6 +47,7 @@ import Html exposing (Html)
 import Html.Attributes
 import Html.Events
 import Http
+import InterestList exposing (InterestList)
 import Json.Decode as Decode
 import Json.Encode as Encode
 import Maybe.Extra
@@ -166,7 +167,7 @@ type alias ActiveOverrideEditor =
 type alias Model =
     { runs : AllRuns
     , collapseStatus : CollapseStatus
-    , interestList : Set Run.Path
+    , interestList : InterestList
     , showModal : Maybe ModalState
     , activeOverrideEditor : Maybe ActiveOverrideEditor
     }
@@ -257,7 +258,7 @@ init : () -> ( Model, Cmd Msg )
 init _ =
     ( { runs = AllRuns.empty
       , showModal = Nothing
-      , interestList = Set.empty
+      , interestList = InterestList.empty
       , collapseStatus = allCollapsed
       , activeOverrideEditor = Nothing
       }
@@ -304,7 +305,7 @@ getInterestList model =
     -- explored at the same time.
     -- Otherwise you can't add a path to the interest list that ends
     -- at a TREE
-    Set.toList model.interestList
+    InterestList.toList model.interestList
         |> List.map
             (\path ->
                 ( path
@@ -407,7 +408,7 @@ update msg model =
                 |> initiateMakeEntries maybeNdx inputs Dict.empty
 
         AddToInterestList path ->
-            ( { model | interestList = Set.insert path model.interestList }
+            ( { model | interestList = InterestList.insert path model.interestList }
             , Cmd.none
             )
 
@@ -487,7 +488,7 @@ update msg model =
             )
 
         RemoveFromInterestList path ->
-            ( { model | interestList = Set.remove path model.interestList }
+            ( { model | interestList = InterestList.remove path model.interestList }
             , Cmd.none
             )
 
@@ -634,7 +635,7 @@ viewTree :
     Int
     -> Run.Path
     -> CollapseStatus
-    -> Set Run.Path
+    -> InterestList
     -> Run.Overrides
     -> Maybe ActiveOverrideEditor
     -> Tree
@@ -695,7 +696,7 @@ viewTree resultNdx path collapseStatus interestList overrides activeOverrideEdit
                                             format germanLocale f
 
                                         button =
-                                            if Set.member childPath interestList then
+                                            if InterestList.member childPath interestList then
                                                 dangerousIconButton (size16 FeatherIcons.trash2) (RemoveFromInterestList childPath)
 
                                             else
@@ -802,7 +803,7 @@ viewTree resultNdx path collapseStatus interestList overrides activeOverrideEdit
                 )
 
 
-viewInputsAndResult : Int -> CollapseStatus -> Set Run.Path -> Maybe ActiveOverrideEditor -> Run -> Element Msg
+viewInputsAndResult : Int -> CollapseStatus -> InterestList -> Maybe ActiveOverrideEditor -> Run -> Element Msg
 viewInputsAndResult resultNdx collapseStatus interestList activeOverrideEditor run =
     let
         inputs =
