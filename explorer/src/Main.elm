@@ -51,6 +51,7 @@ import InterestList exposing (InterestList)
 import Json.Decode as Decode
 import Json.Encode as Encode
 import Maybe.Extra
+import Pivot exposing (Pivot)
 import Run exposing (Run)
 import Set exposing (Set)
 import Task
@@ -167,7 +168,7 @@ type alias ActiveOverrideEditor =
 type alias Model =
     { runs : AllRuns
     , collapseStatus : CollapseStatus
-    , interestList : InterestList
+    , interestList : Pivot InterestList
     , showModal : Maybe ModalState
     , activeOverrideEditor : Maybe ActiveOverrideEditor
     }
@@ -258,7 +259,7 @@ init : () -> ( Model, Cmd Msg )
 init _ =
     ( { runs = AllRuns.empty
       , showModal = Nothing
-      , interestList = InterestList.empty
+      , interestList = Pivot.singleton InterestList.empty
       , collapseStatus = allCollapsed
       , activeOverrideEditor = Nothing
       }
@@ -305,7 +306,7 @@ getInterestList model =
     -- explored at the same time.
     -- Otherwise you can't add a path to the interest list that ends
     -- at a TREE
-    InterestList.toList model.interestList
+    InterestList.toList (Pivot.getC model.interestList)
         |> List.map
             (\path ->
                 ( path
@@ -408,7 +409,7 @@ update msg model =
                 |> initiateMakeEntries maybeNdx inputs Dict.empty
 
         AddToInterestList path ->
-            ( { model | interestList = InterestList.insert path model.interestList }
+            ( { model | interestList = Pivot.mapC (InterestList.insert path) model.interestList }
             , Cmd.none
             )
 
@@ -488,7 +489,7 @@ update msg model =
             )
 
         RemoveFromInterestList path ->
-            ( { model | interestList = InterestList.remove path model.interestList }
+            ( { model | interestList = Pivot.mapC (InterestList.remove path) model.interestList }
             , Cmd.none
             )
 
@@ -884,7 +885,7 @@ viewResultsPane model =
                         (\( resultNdx, ir ) ->
                             viewInputsAndResult resultNdx
                                 model.collapseStatus
-                                model.interestList
+                                (Pivot.getC model.interestList)
                                 model.activeOverrideEditor
                                 ir
                         )
