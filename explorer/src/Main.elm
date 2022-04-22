@@ -14,7 +14,7 @@ import Browser.Dom
 import Chart as C
 import Chart.Attributes as CA
 import CollapseStatus exposing (CollapseStatus, allCollapsed, isCollapsed)
-import Dict exposing (Dict)
+import Dict
 import Element
     exposing
         ( Element
@@ -173,7 +173,7 @@ type alias Model =
 
 
 type ModalState
-    = PrepareCalculate (Maybe RunId) Run.Inputs
+    = PrepareCalculate (Maybe RunId) Run.Inputs Run.Overrides
     | Loading
     | LoadFailure String
 
@@ -281,7 +281,7 @@ type Msg
     | RemoveFromInterestList Run.Path
     | CollapseToggleRequested AbsolutePath
     | UpdateModal ModalMsg
-    | DisplayCalculateModalPressed (Maybe RunId) (Maybe Run.Inputs)
+    | DisplayCalculateModalPressed (Maybe RunId) Run.Inputs Run.Overrides
     | CalculateModalOkPressed (Maybe RunId) Run.Inputs
     | RemoveResult RunId
     | Noop
@@ -392,18 +392,10 @@ update msg model =
                 |> Tuple.mapFirst (\md -> { model | showModal = md })
                 |> Tuple.mapSecond (Cmd.map UpdateModal)
 
-        DisplayCalculateModalPressed maybeNdx maybeInputs ->
+        DisplayCalculateModalPressed maybeNdx inputs overrides ->
             let
-                inputs =
-                    case maybeInputs of
-                        Nothing ->
-                            { ags = "", year = 2035 }
-
-                        Just i ->
-                            i
-
                 modal =
-                    PrepareCalculate maybeNdx inputs
+                    PrepareCalculate maybeNdx inputs overrides
             in
             ( { model | showModal = Just modal }
             , Cmd.none
@@ -511,13 +503,13 @@ updateModal msg model =
         Nothing ->
             ( Nothing, Cmd.none )
 
-        Just (PrepareCalculate ndx inputs) ->
+        Just (PrepareCalculate ndx inputs overrides) ->
             case msg of
                 CalculateModalAgsUpdated a ->
-                    ( Just (PrepareCalculate ndx { inputs | ags = a }), Cmd.none )
+                    ( Just (PrepareCalculate ndx { inputs | ags = a } overrides), Cmd.none )
 
                 CalculateModalTargetYearUpdated y ->
-                    ( Just (PrepareCalculate ndx { inputs | year = y }), Cmd.none )
+                    ( Just (PrepareCalculate ndx { inputs | year = y } overrides), Cmd.none )
 
         Just Loading ->
             ( Just Loading, Cmd.none )
@@ -837,8 +829,8 @@ viewInputsAndResult resultNdx collapseStatus interestList activeOverrideEditor r
                         ]
                 , onPress = Just (CollapseToggleRequested ( resultNdx, [] ))
                 }
-            , iconButton FeatherIcons.edit (DisplayCalculateModalPressed (Just resultNdx) (Just inputs))
-            , iconButton FeatherIcons.copy (DisplayCalculateModalPressed Nothing (Just inputs))
+            , iconButton FeatherIcons.edit (DisplayCalculateModalPressed (Just resultNdx) inputs overrides)
+            , iconButton FeatherIcons.copy (DisplayCalculateModalPressed Nothing inputs overrides)
             , dangerousIconButton FeatherIcons.trash2 (RemoveResult resultNdx)
             ]
         , viewTree resultNdx
@@ -856,11 +848,16 @@ viewInputsAndResult resultNdx collapseStatus interestList activeOverrideEditor r
 viewResultsPane : Model -> Element Msg
 viewResultsPane model =
     let
+        defaultInputs =
+            { ags = ""
+            , year = 2035
+            }
+
         topBar =
             row (width fill :: fonts.explorer)
                 [ text "LocalZero Explorer"
                 , el [ width fill ] Element.none
-                , iconButton FeatherIcons.plus (DisplayCalculateModalPressed Nothing Nothing)
+                , iconButton FeatherIcons.plus (DisplayCalculateModalPressed Nothing defaultInputs Dict.empty)
                 ]
     in
     column
@@ -1004,8 +1001,8 @@ viewModalDialogBox content =
         ]
 
 
-viewCalculateModal : Maybe Int -> Run.Inputs -> Element Msg
-viewCalculateModal maybeNdx inputs =
+viewCalculateModal : Maybe Int -> Run.Inputs -> Run.Overrides -> Element Msg
+viewCalculateModal maybeNdx inputs overrides =
     let
         labelStyle =
             [ Font.alignRight, width (minimum 100 shrink) ]
@@ -1059,8 +1056,8 @@ view model =
                 Just modalState ->
                     viewModalDialogBox
                         (case modalState of
-                            PrepareCalculate maybeNdx inputs ->
-                                viewCalculateModal maybeNdx inputs
+                            PrepareCalculate maybeNdx inputs overrides ->
+                                viewCalculateModal maybeNdx inputs overrides
 
                             Loading ->
                                 text "Loading..."
