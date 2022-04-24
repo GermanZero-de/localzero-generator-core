@@ -41,8 +41,6 @@ import Element.Font as Font
 import Element.Input as Input
 import Element.Keyed
 import FeatherIcons
-import FormatNumber exposing (format)
-import FormatNumber.Locales exposing (spanishLocale)
 import Html exposing (Html)
 import Html.Attributes
 import Html.Events
@@ -59,12 +57,14 @@ import Styling
         ( black
         , dangerousIconButton
         , fonts
+        , formatGermanNumber
         , germanZeroGreen
         , germanZeroYellow
         , icon
         , iconButton
         , iconButtonStyle
         , modalDim
+        , parseGermanNumber
         , red
         , size16
         , sizes
@@ -73,20 +73,6 @@ import Styling
         )
 import Task
 import ValueTree exposing (Node(..), Tree, Value(..))
-
-
-germanLocale =
-    { spanishLocale | decimals = 2 }
-
-
-parseGermanNumber : String -> Maybe Float
-parseGermanNumber s =
-    s
-        |> String.replace "." ""
-        -- ignore . (thousands separator)
-        |> String.replace "," "."
-        -- make it look like an english number
-        |> String.toFloat
 
 
 
@@ -595,7 +581,7 @@ viewTree resultNdx path collapseStatus interestList overrides activeOverrideEdit
                                     let
                                         formattedF : String
                                         formattedF =
-                                            format germanLocale f
+                                            formatGermanNumber f
 
                                         button =
                                             if InterestList.member childPath interestList then
@@ -631,7 +617,7 @@ viewTree resultNdx path collapseStatus interestList overrides activeOverrideEdit
                                                                     Just newF ->
                                                                         let
                                                                             newFormattedF =
-                                                                                format germanLocale newF
+                                                                                formatGermanNumber newF
                                                                         in
                                                                         ( [ Font.strike
                                                                           , Font.color red
@@ -682,8 +668,7 @@ viewTree resultNdx path collapseStatus interestList overrides activeOverrideEdit
 
                                             else
                                                 ( el (Font.alignRight :: fonts.explorerValues) <|
-                                                    text
-                                                        (format germanLocale f)
+                                                    text (formatGermanNumber f)
                                                 , Element.none
                                                 )
                                     in
@@ -819,8 +804,7 @@ viewInterestList interestList =
                                                 case Array.get resultNdx values of
                                                     Just (Float f) ->
                                                         el (Font.alignRight :: fonts.explorerValues) <|
-                                                            text
-                                                                (format germanLocale f)
+                                                            text (formatGermanNumber f)
 
                                                     Just (String s) ->
                                                         el (Font.alignRight :: fonts.explorerValues) <|

@@ -2,12 +2,14 @@ module Styling exposing
     ( black
     , dangerousIconButton
     , fonts
+    , formatGermanNumber
     , germanZeroGreen
     , germanZeroYellow
     , icon
     , iconButton
     , iconButtonStyle
     , modalDim
+    , parseGermanNumber
     , red
     , size16
     , sizes
@@ -20,6 +22,27 @@ import Element.Border as Border
 import Element.Font as Font
 import Element.Input as Input
 import FeatherIcons
+import FormatNumber exposing (format)
+import FormatNumber.Locales exposing (spanishLocale)
+
+
+germanLocale =
+    { spanishLocale | decimals = 2 }
+
+
+formatGermanNumber : Float -> String
+formatGermanNumber f =
+    format germanLocale f
+
+
+parseGermanNumber : String -> Maybe Float
+parseGermanNumber s =
+    s
+        |> String.replace "." ""
+        -- ignore . (thousands separator)
+        |> String.replace "," "."
+        -- make it look like an english number
+        |> String.toFloat
 
 
 sizes : { small : Int, medium : Int, large : Int }
