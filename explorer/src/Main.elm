@@ -780,8 +780,8 @@ viewResultsPane model =
         ]
 
 
-viewInterestList : InterestListTable -> Element Msg
-viewInterestList interestList =
+viewInterestListTable : InterestListTable -> Element Msg
+viewInterestListTable interestList =
     case interestList of
         [] ->
             Element.none
@@ -845,18 +845,23 @@ viewInterestList interestList =
                 }
 
 
-viewModel : Model -> Element Msg
-viewModel model =
+viewInterestList : Model -> Element Msg
+viewInterestList model =
     let
-        interestList =
+        interestListTable =
             getInterestList model
     in
+    column [ width fill, height fill, spacing 40, padding sizes.large ]
+        [ viewChart interestListTable
+        , viewInterestListTable interestListTable
+        ]
+
+
+viewModel : Model -> Element Msg
+viewModel model =
     row [ width fill, height fill ]
         [ viewResultsPane model
-        , column [ width fill, height fill, spacing 40, padding sizes.large ]
-            [ viewChart interestList
-            , viewInterestList interestList
-            ]
+        , viewInterestList model
         ]
 
 

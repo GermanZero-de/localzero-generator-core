@@ -1,6 +1,7 @@
 module InterestList exposing
     ( InterestList
     , empty
+    , getLabel
     , insert
     , member
     , remove
@@ -12,12 +13,17 @@ import Set exposing (Set)
 
 
 type InterestList
-    = InterestList { paths : Set Path }
+    = InterestList { label : String, paths : Set Path }
 
 
 empty : InterestList
 empty =
-    InterestList { paths = Set.empty }
+    InterestList { label = "data", paths = Set.empty }
+
+
+getLabel : InterestList -> String
+getLabel (InterestList l) =
+    l.label
 
 
 remove : Path -> InterestList -> InterestList
