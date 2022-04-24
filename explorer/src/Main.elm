@@ -120,8 +120,7 @@ icon i =
 
 iconButtonStyle : List (Element.Attribute msg)
 iconButtonStyle =
-    [ padding sizes.small
-    , Font.color germanZeroGreen
+    [ Font.color germanZeroGreen
     , Element.mouseOver [ Font.color germanZeroYellow ]
     , Element.focused [ Border.color germanZeroYellow ]
     ]
@@ -142,8 +141,7 @@ iconButton i onPress =
 
 dangerousIconButtonStyle : List (Element.Attribute Msg)
 dangerousIconButtonStyle =
-    [ padding sizes.small
-    , Font.color red
+    [ Font.color red
     , Element.mouseOver [ Font.color germanZeroYellow ]
     , Element.focused [ Border.color germanZeroYellow ]
     ]
@@ -680,13 +678,15 @@ viewTree resultNdx path collapseStatus interestList overrides activeOverrideEdit
 
                                 Leaf Null ->
                                     itemRow
-                                        [ el [ width fill ] (text name)
+                                        [ el [ width (px 16) ] Element.none
+                                        , el [ width fill ] (text name)
                                         , el (Font.alignRight :: Font.bold :: fonts.explorerValues) <| text "null"
                                         ]
 
                                 Leaf (String s) ->
                                     itemRow
-                                        [ el [ width fill ] (text name)
+                                        [ el [ width (px 16) ] Element.none
+                                        , el [ width fill ] (text name)
                                         , el (Font.alignRight :: fonts.explorerValues) <| text s
                                         ]
 
@@ -821,7 +821,7 @@ viewInputsAndResult resultNdx collapseStatus interestList activeOverrideEditor r
         , Border.color black
         , Border.rounded 4
         ]
-        [ row [ width fill ]
+        [ row [ width fill, Element.spacingXY sizes.medium 0 ]
             [ Input.button (width fill :: treeElementStyle)
                 { label =
                     row [ width fill, spacing sizes.medium ]
