@@ -247,7 +247,7 @@ update msg model =
             model
                 |> initiateCalculate maybeNdx inputs entries overrides
 
-        GotEntries _ _ _ (Err e) ->
+        GotEntries _ _ _ (Err _) ->
             model
                 |> withNoCmd
 
@@ -426,7 +426,20 @@ update msg model =
                 |> withNoCmd
 
         RemoveInterestList id ->
-            ( model, Cmd.none )
+            model
+                |> activateInterestList id
+                |> mapInterestLists
+                    (\ils ->
+                        case Pivot.removeGoR ils of
+                            Nothing ->
+                                -- If List was singleton, delete becomes
+                                -- reset to empty
+                                Maybe.withDefault (Pivot.singleton InterestList.empty) (Pivot.removeGoL ils)
+
+                            Just without ->
+                                without
+                    )
+                |> withNoCmd
 
         ActivateInterestList id ->
             model
@@ -931,7 +944,7 @@ viewInterestList id isActive interestList allRuns =
                     )
                     (ToggleShowGraph id)
                 , iconButton FeatherIcons.copy (DuplicateInterestList id)
-                , dangerousIconButton FeatherIcons.trash2 Noop
+                , dangerousIconButton FeatherIcons.trash2 (RemoveInterestList id)
                 ]
             ]
         , column [ width fill, spacing 40 ]
