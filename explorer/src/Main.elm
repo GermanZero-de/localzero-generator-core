@@ -13,8 +13,10 @@ import Browser
 import Browser.Dom
 import Chart as C
 import Chart.Attributes as CA
+import Cmd.Extra exposing (withNoCmd)
 import CollapseStatus exposing (CollapseStatus, allCollapsed, isCollapsed)
 import Dict
+import Dropdown
 import Element
     exposing
         ( Element
@@ -96,10 +98,16 @@ type alias ActiveOverrideEditor =
     { runNdx : RunId, name : String, value : String, asFloat : Maybe Float }
 
 
+{-| Position of interestlist in pivot
+-}
+type alias InterestListId =
+    Int
+
+
 type alias Model =
     { runs : AllRuns
     , collapseStatus : CollapseStatus
-    , interestList : Pivot InterestList
+    , interestLists : Pivot InterestList
     , showModal : Maybe ModalState
     , activeOverrideEditor : Maybe ActiveOverrideEditor
     }
@@ -140,11 +148,16 @@ initiateMakeEntries maybeNdx inputs overrides model =
     )
 
 
+activateInterestList : InterestListId -> Model -> Model
+activateInterestList id model =
+    { model | interestLists = Pivot.withRollback (Pivot.goTo id) model.interestLists }
+
+
 init : () -> ( Model, Cmd Msg )
 init _ =
     ( { runs = AllRuns.empty
       , showModal = Nothing
-      , interestList = Pivot.singleton InterestList.empty
+      , interestLists = Pivot.singleton InterestList.empty
       , collapseStatus = allCollapsed
       , activeOverrideEditor = Nothing
       }
@@ -171,6 +184,10 @@ type Msg
     | DisplayCalculateModalPressed (Maybe RunId) Run.Inputs Run.Overrides
     | CalculateModalOkPressed (Maybe RunId) Run.Inputs
     | RemoveResult RunId
+    | ToggleShowGraph InterestListId
+    | DuplicateInterestList InterestListId
+    | RemoveInterestList InterestListId
+    | ActivateInterestList InterestListId
     | Noop
 
 
@@ -183,25 +200,35 @@ type alias InterestListTable =
     List ( Run.Path, Array Value )
 
 
-getInterestList : Model -> InterestListTable
-getInterestList model =
+applyInterestListToRuns : InterestList -> AllRuns -> InterestListTable
+applyInterestListToRuns interestList runs =
     -- The withDefault handles the case if we somehow managed to get two
     -- differently structured result values into the explorer, this can only
     -- really happen when two different versions of the python code are
     -- explored at the same time.
     -- Otherwise you can't add a path to the interest list that ends
     -- at a TREE
-    InterestList.toList (Pivot.getC model.interestList)
+    InterestList.toList interestList
         |> List.map
             (\path ->
                 ( path
-                , Array.initialize (AllRuns.size model.runs)
+                , Array.initialize (AllRuns.size runs)
                     (\n ->
-                        AllRuns.getValue Run.WithOverrides n path model.runs
+                        AllRuns.getValue Run.WithOverrides n path runs
                             |> Maybe.withDefault (String "TREE")
                     )
                 )
             )
+
+
+mapActiveInterestList : (InterestList -> InterestList) -> Model -> Model
+mapActiveInterestList f =
+    mapInterestLists (Pivot.mapC f)
+
+
+mapInterestLists : (Pivot InterestList -> Pivot InterestList) -> Model -> Model
+mapInterestLists f m =
+    { m | interestLists = f m.interestLists }
 
 
 withLoadFailure : String -> Model -> ( Model, Cmd Msg )
@@ -213,14 +240,16 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         Noop ->
-            ( model, Cmd.none )
+            model
+                |> withNoCmd
 
         GotEntries maybeNdx inputs overrides (Ok entries) ->
             model
                 |> initiateCalculate maybeNdx inputs entries overrides
 
         GotEntries _ _ _ (Err e) ->
-            ( model, Cmd.none )
+            model
+                |> withNoCmd
 
         GotGeneratorResult maybeNdx inputs entries overrides resultOrError ->
             case resultOrError of
@@ -242,12 +271,11 @@ update msg model =
                                 Just ndx ->
                                     AllRuns.set ndx run model.runs
                     in
-                    ( { model
+                    { model
                         | runs = newResults
                         , showModal = Nothing
-                      }
-                    , Cmd.none
-                    )
+                    }
+                        |> withNoCmd
 
                 Err (Http.BadUrl s) ->
                     model
@@ -270,9 +298,12 @@ update msg model =
                         |> withLoadFailure ("Failed to decode: " ++ error)
 
         CollapseToggleRequested path ->
-            ( { model | collapseStatus = CollapseStatus.toggle path model.collapseStatus }
-            , Cmd.none
-            )
+            { model | collapseStatus = CollapseStatus.toggle path model.collapseStatus }
+                |> withNoCmd
+
+        RemoveResult ndx ->
+            { model | runs = AllRuns.remove ndx model.runs }
+                |> withNoCmd
 
         UpdateModal modalMsg ->
             updateModal modalMsg model.showModal
@@ -284,28 +315,21 @@ update msg model =
                 modal =
                     PrepareCalculate maybeNdx inputs overrides
             in
-            ( { model | showModal = Just modal }
-            , Cmd.none
-            )
+            { model | showModal = Just modal }
+                |> withNoCmd
 
         CalculateModalOkPressed maybeNdx inputs ->
             -- TODO: Actually lookup any existing overrides
             model
                 |> initiateMakeEntries maybeNdx inputs Dict.empty
 
-        AddToInterestList path ->
-            ( { model | interestList = Pivot.mapC (InterestList.insert path) model.interestList }
-            , Cmd.none
-            )
-
         AddOrUpdateOverride ndx name f ->
-            ( { model
+            { model
                 | runs =
                     model.runs
                         |> AllRuns.update ndx (Run.mapOverrides (Dict.insert name f))
-              }
-            , Cmd.none
-            )
+            }
+                |> withNoCmd
 
         OverrideEdited ndx name newText ->
             let
@@ -362,47 +386,78 @@ update msg model =
                                             )
 
         RemoveOverride ndx name ->
-            ( { model
+            { model
                 | runs =
                     model.runs
                         |> AllRuns.update ndx (Run.mapOverrides (Dict.remove name))
                 , activeOverrideEditor =
                     model.activeOverrideEditor
                         |> Maybe.Extra.filter (\e -> e.runNdx /= ndx || e.name /= name)
-              }
-            , Cmd.none
-            )
+            }
+                |> withNoCmd
+
+        AddToInterestList path ->
+            model
+                |> mapActiveInterestList (InterestList.insert path)
+                |> withNoCmd
 
         RemoveFromInterestList path ->
-            ( { model | interestList = Pivot.mapC (InterestList.remove path) model.interestList }
-            , Cmd.none
-            )
+            model
+                |> mapActiveInterestList (InterestList.remove path)
+                |> withNoCmd
 
-        RemoveResult ndx ->
-            ( { model | runs = AllRuns.remove ndx model.runs }
-            , Cmd.none
-            )
+        ToggleShowGraph id ->
+            model
+                |> activateInterestList id
+                |> mapActiveInterestList InterestList.toggleShowGraph
+                |> withNoCmd
+
+        DuplicateInterestList id ->
+            model
+                |> activateInterestList id
+                |> mapInterestLists
+                    (\p ->
+                        Pivot.appendGoR
+                            (Pivot.getC p
+                                |> InterestList.mapLabel (\l -> l ++ " Copy")
+                            )
+                            p
+                    )
+                |> withNoCmd
+
+        RemoveInterestList id ->
+            ( model, Cmd.none )
+
+        ActivateInterestList id ->
+            model
+                |> activateInterestList id
+                |> withNoCmd
 
 
 updateModal : ModalMsg -> Maybe ModalState -> ( Maybe ModalState, Cmd ModalMsg )
 updateModal msg model =
     case model of
         Nothing ->
-            ( Nothing, Cmd.none )
+            Nothing
+                |> withNoCmd
 
         Just (PrepareCalculate ndx inputs overrides) ->
             case msg of
                 CalculateModalAgsUpdated a ->
-                    ( Just (PrepareCalculate ndx { inputs | ags = a } overrides), Cmd.none )
+                    Just (PrepareCalculate ndx { inputs | ags = a } overrides)
+                        |> withNoCmd
 
                 CalculateModalTargetYearUpdated y ->
-                    ( Just (PrepareCalculate ndx { inputs | year = y } overrides), Cmd.none )
+                    Just (PrepareCalculate ndx { inputs | year = y } overrides)
+                        |> withNoCmd
 
         Just Loading ->
-            ( Just Loading, Cmd.none )
+            Just Loading
+                |> withNoCmd
 
         Just (LoadFailure f) ->
-            ( Just <| LoadFailure f, Cmd.none )
+            Just (LoadFailure f)
+                |> withNoCmd
 
 
 
@@ -690,6 +745,11 @@ viewTree resultNdx path collapseStatus interestList overrides activeOverrideEdit
                 )
 
 
+buttons : List (Element Msg) -> Element Msg
+buttons l =
+    row [ Element.spacingXY sizes.medium 0 ] l
+
+
 viewInputsAndResult : Int -> CollapseStatus -> InterestList -> Maybe ActiveOverrideEditor -> Run -> Element Msg
 viewInputsAndResult resultNdx collapseStatus interestList activeOverrideEditor run =
     let
@@ -707,7 +767,7 @@ viewInputsAndResult resultNdx collapseStatus interestList activeOverrideEditor r
         , Border.color black
         , Border.rounded 4
         ]
-        [ row [ width fill, Element.spacingXY sizes.medium 0 ]
+        [ row [ width fill ]
             [ Input.button (width fill :: treeElementStyle)
                 { label =
                     row [ width fill, spacing sizes.medium ]
@@ -717,9 +777,11 @@ viewInputsAndResult resultNdx collapseStatus interestList activeOverrideEditor r
                         ]
                 , onPress = Just (CollapseToggleRequested ( resultNdx, [] ))
                 }
-            , iconButton FeatherIcons.edit (DisplayCalculateModalPressed (Just resultNdx) inputs overrides)
-            , iconButton FeatherIcons.copy (DisplayCalculateModalPressed Nothing inputs overrides)
-            , dangerousIconButton FeatherIcons.trash2 (RemoveResult resultNdx)
+            , buttons
+                [ iconButton FeatherIcons.edit (DisplayCalculateModalPressed (Just resultNdx) inputs overrides)
+                , iconButton FeatherIcons.copy (DisplayCalculateModalPressed Nothing inputs overrides)
+                , dangerousIconButton FeatherIcons.trash2 (RemoveResult resultNdx)
+                ]
             ]
         , viewTree resultNdx
             []
@@ -735,19 +797,6 @@ viewInputsAndResult resultNdx collapseStatus interestList activeOverrideEditor r
 -}
 viewResultsPane : Model -> Element Msg
 viewResultsPane model =
-    let
-        defaultInputs =
-            { ags = ""
-            , year = 2035
-            }
-
-        topBar =
-            row (width fill :: fonts.explorer)
-                [ text "LocalZero Explorer"
-                , el [ width fill ] Element.none
-                , iconButton FeatherIcons.plus (DisplayCalculateModalPressed Nothing defaultInputs Dict.empty)
-                ]
-    in
     column
         [ height fill
         , spacing sizes.large
@@ -755,8 +804,7 @@ viewResultsPane model =
         , height (minimum 0 fill)
         , width (minimum 500 shrink)
         ]
-        [ topBar
-        , el
+        [ el
             [ scrollbarY
             , width fill
             , height fill
@@ -771,7 +819,7 @@ viewResultsPane model =
                         (\( resultNdx, ir ) ->
                             viewInputsAndResult resultNdx
                                 model.collapseStatus
-                                (Pivot.getC model.interestList)
+                                (Pivot.getC model.interestLists)
                                 model.activeOverrideEditor
                                 ir
                         )
@@ -835,8 +883,7 @@ viewInterestListTable interestList =
             in
             Element.table
                 [ width fill
-                , height fill
-                , scrollbarY
+                , height shrink
                 , spacing sizes.large
                 , padding sizes.large
                 ]
@@ -845,23 +892,112 @@ viewInterestListTable interestList =
                 }
 
 
-viewInterestList : Model -> Element Msg
-viewInterestList model =
+viewInterestList : InterestListId -> Bool -> InterestList -> AllRuns -> Element Msg
+viewInterestList id isActive interestList allRuns =
     let
         interestListTable =
-            getInterestList model
+            applyInterestListToRuns interestList allRuns
+
+        showGraph =
+            InterestList.getShowGraph interestList
     in
-    column [ width fill, height fill, spacing 40, padding sizes.large ]
-        [ viewChart interestListTable
-        , viewInterestListTable interestListTable
+    column
+        [ width fill
+        , Events.onClick (ActivateInterestList id)
+        , Element.mouseOver [ Border.color germanZeroYellow ]
+        , Border.color
+            (if isActive then
+                germanZeroYellow
+
+             else
+                germanZeroGreen
+            )
+        , Border.width 1
+        , padding sizes.medium
+        ]
+        [ row
+            [ width fill
+            , Font.size 24
+            , Element.paddingXY sizes.large sizes.medium
+            ]
+            [ el [ width fill ] (text (InterestList.getLabel interestList))
+            , buttons
+                [ iconButton
+                    (if showGraph then
+                        FeatherIcons.eye
+
+                     else
+                        FeatherIcons.eyeOff
+                    )
+                    (ToggleShowGraph id)
+                , iconButton FeatherIcons.copy (DuplicateInterestList id)
+                , dangerousIconButton FeatherIcons.trash2 Noop
+                ]
+            ]
+        , column [ width fill, spacing 40 ]
+            [ if showGraph then
+                viewChart interestListTable
+
+              else
+                Element.none
+            , viewInterestListTable interestListTable
+            ]
         ]
 
 
 viewModel : Model -> Element Msg
 viewModel model =
-    row [ width fill, height fill ]
-        [ viewResultsPane model
-        , viewInterestList model
+    let
+        defaultInputs =
+            { ags = ""
+            , year = 2035
+            }
+
+        topBar =
+            row
+                ([ width fill
+                 , padding sizes.large
+                 , Border.color germanZeroYellow
+                 , Border.widthEach { bottom = 2, top = 0, left = 0, right = 0 }
+                 ]
+                    ++ fonts.explorer
+                )
+                [ text "LocalZero Explorer"
+                , el [ width fill ] Element.none
+                , iconButton FeatherIcons.plus (DisplayCalculateModalPressed Nothing defaultInputs Dict.empty)
+                ]
+
+        interestLists =
+            Pivot.indexAbsolute model.interestLists
+                |> Pivot.toList
+                |> List.map
+                    (\( pos, il ) ->
+                        let
+                            activePos =
+                                Pivot.lengthL model.interestLists
+                        in
+                        viewInterestList pos (pos == activePos) il model.runs
+                    )
+    in
+    column
+        [ width fill
+        , height fill
+        ]
+        [ topBar
+        , row
+            [ width fill
+            , height fill
+            , spacing sizes.large
+            ]
+            [ viewResultsPane model
+            , column
+                [ width fill
+                , height fill
+                , spacing sizes.medium
+                , padding sizes.medium
+                ]
+                interestLists
+            ]
         ]
 
 

@@ -6,6 +6,8 @@
     "elm-version": "0.19.1",
     "dependencies": {
         "direct": {
+            "Janiczek/cmd-extra": "1.1.0",
+            "PaackEng/elm-ui-dropdown": "3.3.0",
             "coinop-logan/elm-format-number": "1.0.0",
             "elm/browser": "1.0.2",
             "elm/core": "1.0.5",

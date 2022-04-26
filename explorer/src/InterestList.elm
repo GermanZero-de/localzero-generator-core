@@ -2,10 +2,13 @@ module InterestList exposing
     ( InterestList
     , empty
     , getLabel
+    , getShowGraph
     , insert
+    , mapLabel
     , member
     , remove
     , toList
+    , toggleShowGraph
     )
 
 import Run exposing (Path)
@@ -13,17 +16,32 @@ import Set exposing (Set)
 
 
 type InterestList
-    = InterestList { label : String, paths : Set Path }
+    = InterestList { label : String, paths : Set Path, showGraph : Bool }
 
 
 empty : InterestList
 empty =
-    InterestList { label = "data", paths = Set.empty }
+    InterestList { label = "data", paths = Set.empty, showGraph = True }
+
+
+toggleShowGraph : InterestList -> InterestList
+toggleShowGraph (InterestList il) =
+    InterestList { il | showGraph = not il.showGraph }
+
+
+getShowGraph : InterestList -> Bool
+getShowGraph (InterestList il) =
+    il.showGraph
 
 
 getLabel : InterestList -> String
 getLabel (InterestList l) =
     l.label
+
+
+mapLabel : (String -> String) -> InterestList -> InterestList
+mapLabel f (InterestList l) =
+    InterestList { l | label = f l.label }
 
 
 remove : Path -> InterestList -> InterestList
