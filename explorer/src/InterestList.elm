@@ -1,6 +1,8 @@
 module InterestList exposing
     ( InterestList
+    , decoder
     , empty
+    , encode
     , getLabel
     , getShowGraph
     , insert
@@ -11,6 +13,8 @@ module InterestList exposing
     , toggleShowGraph
     )
 
+import Json.Decode as Decode
+import Json.Encode as Encode
 import Run exposing (Path)
 import Set exposing (Set)
 
@@ -62,3 +66,27 @@ member p (InterestList i) =
 toList : InterestList -> List Path
 toList (InterestList i) =
     Set.toList i.paths
+
+
+encode : InterestList -> Encode.Value
+encode (InterestList i) =
+    Encode.object
+        [ ( "label", Encode.string i.label )
+        , ( "showGraph", Encode.bool i.showGraph )
+        , ( "paths", Encode.set (Encode.list Encode.string) i.paths )
+        ]
+
+
+decoder : Decode.Decoder InterestList
+decoder =
+    Decode.map3
+        (\label showGraph paths ->
+            InterestList { label = label, showGraph = showGraph, paths = paths }
+        )
+        (Decode.field "label" Decode.string)
+        (Decode.field "showGraph" Decode.bool)
+        (Decode.field "paths"
+            (Decode.list (Decode.list Decode.string)
+                |> Decode.map Set.fromList
+            )
+        )

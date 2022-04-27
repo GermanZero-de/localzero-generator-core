@@ -13,7 +13,7 @@ import Browser
 import Browser.Dom
 import Chart as C
 import Chart.Attributes as CA
-import Cmd.Extra exposing (withNoCmd)
+import Cmd.Extra exposing (withCmd, withNoCmd)
 import CollapseStatus exposing (CollapseStatus, allCollapsed, isCollapsed)
 import Dict
 import Dropdown
@@ -44,6 +44,9 @@ import Element.Font as Font
 import Element.Input as Input
 import Element.Keyed
 import FeatherIcons
+import File exposing (File)
+import File.Download as Download
+import File.Select
 import Html exposing (Html)
 import Html.Attributes
 import Html.Events
@@ -55,6 +58,7 @@ import Maybe.Extra
 import Pivot exposing (Pivot)
 import Run exposing (Run)
 import Set exposing (Set)
+import Storage exposing (Storage)
 import Styling
     exposing
         ( black
@@ -190,6 +194,10 @@ type Msg
     | DuplicateInterestListClicked InterestListId
     | RemoveInterestListClicked InterestListId
     | ActivateInterestListClicked InterestListId
+    | DownloadClicked
+    | UploadClicked
+    | FileUploaded File
+    | FileContentLoaded String
     | Noop
 
 
@@ -238,12 +246,53 @@ withLoadFailure msg model =
     ( { model | showModal = Just (LoadFailure msg) }, Cmd.none )
 
 
+downloadCmd : Model -> Cmd msg
+downloadCmd model =
+    let
+        content =
+            Storage.encode { interestLists = Pivot.toList model.interestLists }
+                |> Encode.encode 0
+    in
+    Download.string "explorer.json" "text/json" content
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         Noop ->
             model
                 |> withNoCmd
+
+        DownloadClicked ->
+            model
+                |> withCmd (downloadCmd model)
+
+        UploadClicked ->
+            model
+                |> withCmd (File.Select.file [ "text/json" ] FileUploaded)
+
+        FileUploaded file ->
+            model
+                |> withCmd (Task.perform FileContentLoaded (File.toString file))
+
+        FileContentLoaded content ->
+            case Decode.decodeString Storage.decoder content of
+                Err _ ->
+                    model
+                        |> withLoadFailure "Failed to load file"
+
+                Ok storage ->
+                    let
+                        ils =
+                            case Pivot.fromList storage.interestLists of
+                                Nothing ->
+                                    model.interestLists
+
+                                Just i ->
+                                    i
+                    in
+                    { model | interestLists = ils }
+                        |> withNoCmd
 
         GotEntries maybeNdx inputs overrides (Ok entries) ->
             model
@@ -995,6 +1044,10 @@ viewModel model =
                 )
                 [ text "LocalZero Explorer"
                 , el [ width fill ] Element.none
+                , buttons
+                    [ iconButton FeatherIcons.download DownloadClicked
+                    , iconButton FeatherIcons.upload UploadClicked
+                    ]
                 ]
 
         interestLists =
