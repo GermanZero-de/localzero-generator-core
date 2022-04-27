@@ -1,4 +1,4 @@
-module GeneratorResult exposing (GeneratorResult, Node(..), Tree, decoder, get)
+module ValueTree exposing (Node(..), Tree, Value(..), decoder, get, merge, valueDecoder, wrap)
 
 import Dict exposing (Dict)
 import Json.Decode as Decode
@@ -6,15 +6,27 @@ import Json.Decode as Decode
 
 type Node
     = Tree Tree
-    | Leaf (Maybe Float)
+    | Leaf Value
+
+
+type Value
+    = Float Float
+    | Null
+    | String String
 
 
 type alias Tree =
     Dict String Node
 
 
-type alias GeneratorResult =
-    Tree
+wrap : String -> Tree -> Tree
+wrap name tree =
+    Dict.fromList [ ( name, Tree tree ) ]
+
+
+merge : Tree -> Tree -> Tree
+merge t1 t2 =
+    Dict.union t1 t2
 
 
 getHelper : List String -> Node -> Maybe Node
@@ -43,15 +55,23 @@ treeDecoder =
     Decode.dict nodeDecoder
 
 
+valueDecoder : Decode.Decoder Value
+valueDecoder =
+    Decode.oneOf
+        [ Decode.float |> Decode.map Float
+        , Decode.string |> Decode.map String
+        , Decode.null Null
+        ]
+
+
 nodeDecoder : Decode.Decoder Node
 nodeDecoder =
     Decode.oneOf
-        [ Decode.float |> Decode.map (Leaf << Just)
-        , Decode.null (Leaf Nothing)
+        [ valueDecoder |> Decode.map Leaf
         , Decode.dict (Decode.lazy (\() -> nodeDecoder)) |> Decode.map Tree
         ]
 
 
-decoder : Decode.Decoder GeneratorResult
+decoder : Decode.Decoder Tree
 decoder =
     treeDecoder
