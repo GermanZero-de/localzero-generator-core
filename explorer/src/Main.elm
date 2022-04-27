@@ -172,22 +172,21 @@ init _ =
 type Msg
     = GotGeneratorResult (Maybe RunId) Run.Inputs Run.Entries Run.Overrides (Result Http.Error Tree)
     | GotEntries (Maybe RunId) Run.Inputs Run.Overrides (Result Http.Error Run.Entries)
-      --| AddItemToChartClicked { path : Path, value : Float }
-    | AddToInterestList Run.Path
-    | RemoveFromInterestList InterestListId Run.Path
-    | AddOrUpdateOverride RunId String Float
-    | RemoveOverride RunId String
+    | AddToInterestListClicked Run.Path
+    | RemoveFromInterestListClicked InterestListId Run.Path
+    | AddOrUpdateOverrideClicked RunId String Float
+    | RemoveOverrideClicked RunId String
     | OverrideEdited RunId String String
     | OverrideEditFinished
-    | CollapseToggleRequested AbsolutePath
-    | UpdateModal ModalMsg
-    | DisplayCalculateModalPressed (Maybe RunId) Run.Inputs Run.Overrides
-    | CalculateModalOkPressed (Maybe RunId) Run.Inputs
-    | RemoveResult RunId
-    | ToggleShowGraph InterestListId
-    | DuplicateInterestList InterestListId
-    | RemoveInterestList InterestListId
-    | ActivateInterestList InterestListId
+    | ToggleCollapseTreeClicked AbsolutePath
+    | ModalMsg ModalMsg
+    | DisplayCalculateModalClicked (Maybe RunId) Run.Inputs Run.Overrides
+    | CalculateModalOkClicked (Maybe RunId) Run.Inputs
+    | RemoveRunClicked RunId
+    | ToggleShowGraphClicked InterestListId
+    | DuplicateInterestListClicked InterestListId
+    | RemoveInterestListClicked InterestListId
+    | ActivateInterestListClicked InterestListId
     | Noop
 
 
@@ -297,20 +296,20 @@ update msg model =
                     model
                         |> withLoadFailure ("Failed to decode: " ++ error)
 
-        CollapseToggleRequested path ->
+        ToggleCollapseTreeClicked path ->
             { model | collapseStatus = CollapseStatus.toggle path model.collapseStatus }
                 |> withNoCmd
 
-        RemoveResult ndx ->
+        RemoveRunClicked ndx ->
             { model | runs = AllRuns.remove ndx model.runs }
                 |> withNoCmd
 
-        UpdateModal modalMsg ->
+        ModalMsg modalMsg ->
             updateModal modalMsg model.showModal
                 |> Tuple.mapFirst (\md -> { model | showModal = md })
-                |> Tuple.mapSecond (Cmd.map UpdateModal)
+                |> Tuple.mapSecond (Cmd.map ModalMsg)
 
-        DisplayCalculateModalPressed maybeNdx inputs overrides ->
+        DisplayCalculateModalClicked maybeNdx inputs overrides ->
             let
                 modal =
                     PrepareCalculate maybeNdx inputs overrides
@@ -318,12 +317,12 @@ update msg model =
             { model | showModal = Just modal }
                 |> withNoCmd
 
-        CalculateModalOkPressed maybeNdx inputs ->
+        CalculateModalOkClicked maybeNdx inputs ->
             -- TODO: Actually lookup any existing overrides
             model
                 |> initiateMakeEntries maybeNdx inputs Dict.empty
 
-        AddOrUpdateOverride ndx name f ->
+        AddOrUpdateOverrideClicked ndx name f ->
             { model
                 | runs =
                     model.runs
@@ -385,7 +384,7 @@ update msg model =
                                                 |> Dict.insert editor.name f
                                             )
 
-        RemoveOverride ndx name ->
+        RemoveOverrideClicked ndx name ->
             { model
                 | runs =
                     model.runs
@@ -396,24 +395,24 @@ update msg model =
             }
                 |> withNoCmd
 
-        AddToInterestList path ->
+        AddToInterestListClicked path ->
             model
                 |> mapActiveInterestList (InterestList.insert path)
                 |> withNoCmd
 
-        RemoveFromInterestList id path ->
+        RemoveFromInterestListClicked id path ->
             model
                 |> activateInterestList id
                 |> mapActiveInterestList (InterestList.remove path)
                 |> withNoCmd
 
-        ToggleShowGraph id ->
+        ToggleShowGraphClicked id ->
             model
                 |> activateInterestList id
                 |> mapActiveInterestList InterestList.toggleShowGraph
                 |> withNoCmd
 
-        DuplicateInterestList id ->
+        DuplicateInterestListClicked id ->
             model
                 |> activateInterestList id
                 |> mapInterestLists
@@ -426,7 +425,7 @@ update msg model =
                     )
                 |> withNoCmd
 
-        RemoveInterestList id ->
+        RemoveInterestListClicked id ->
             model
                 |> activateInterestList id
                 |> mapInterestLists
@@ -442,7 +441,7 @@ update msg model =
                     )
                 |> withNoCmd
 
-        ActivateInterestList id ->
+        ActivateInterestListClicked id ->
             model
                 |> activateInterestList id
                 |> withNoCmd
@@ -628,7 +627,7 @@ viewTree runId interestListId path collapseStatus interestList overrides activeO
                                                     , el (Font.alignRight :: fonts.explorerNodeSize) <|
                                                         text (String.fromInt (Dict.size child))
                                                     ]
-                                            , onPress = Just (CollapseToggleRequested ( runId, path ++ [ name ] ))
+                                            , onPress = Just (ToggleCollapseTreeClicked ( runId, path ++ [ name ] ))
                                             }
                                         , viewTree runId
                                             interestListId
@@ -663,10 +662,10 @@ viewTree runId interestListId path collapseStatus interestList overrides activeO
                                         button =
                                             if InterestList.member childPath interestList then
                                                 dangerousIconButton (size16 FeatherIcons.trash2)
-                                                    (RemoveFromInterestList interestListId childPath)
+                                                    (RemoveFromInterestListClicked interestListId childPath)
 
                                             else
-                                                iconButton (size16 FeatherIcons.plus) (AddToInterestList childPath)
+                                                iconButton (size16 FeatherIcons.plus) (AddToInterestListClicked childPath)
 
                                         ( originalValue, maybeOverride ) =
                                             -- Clicking on original value should start or revert
@@ -701,7 +700,7 @@ viewTree runId interestListId path collapseStatus interestList overrides activeO
                                                                           , Font.color red
                                                                           , Element.mouseOver [ Font.color germanZeroYellow ]
                                                                           ]
-                                                                        , RemoveOverride runId name
+                                                                        , RemoveOverrideClicked runId name
                                                                         , Input.button (Font.alignRight :: fonts.explorerValues)
                                                                             { label = text newFormattedF
                                                                             , onPress = Just (OverrideEdited runId name newFormattedF)
@@ -728,7 +727,7 @@ viewTree runId interestListId path collapseStatus interestList overrides activeO
                                                                   , Font.color red
                                                                   , Element.mouseOver [ Font.color germanZeroYellow ]
                                                                   ]
-                                                                , RemoveOverride runId name
+                                                                , RemoveOverrideClicked runId name
                                                                 , Input.text textAttributes
                                                                     { text = editor.value
                                                                     , onChange = OverrideEdited runId name
@@ -798,12 +797,12 @@ viewInputsAndResult runId interestListId collapseStatus interestList activeOverr
                         , el [ Font.bold ] (text (String.fromInt runId ++ ":"))
                         , text (inputs.ags ++ " " ++ String.fromInt inputs.year)
                         ]
-                , onPress = Just (CollapseToggleRequested ( runId, [] ))
+                , onPress = Just (ToggleCollapseTreeClicked ( runId, [] ))
                 }
             , buttons
-                [ iconButton FeatherIcons.edit (DisplayCalculateModalPressed (Just runId) inputs overrides)
-                , iconButton FeatherIcons.copy (DisplayCalculateModalPressed Nothing inputs overrides)
-                , dangerousIconButton FeatherIcons.trash2 (RemoveResult runId)
+                [ iconButton FeatherIcons.edit (DisplayCalculateModalClicked (Just runId) inputs overrides)
+                , iconButton FeatherIcons.copy (DisplayCalculateModalClicked Nothing inputs overrides)
+                , dangerousIconButton FeatherIcons.trash2 (RemoveRunClicked runId)
                 ]
             ]
         , viewTree runId
@@ -903,7 +902,7 @@ viewInterestListTable interestListId interestList =
                     , width = shrink
                     , view =
                         \( p, _ ) ->
-                            dangerousIconButton (size16 FeatherIcons.trash2) (RemoveFromInterestList interestListId p)
+                            dangerousIconButton (size16 FeatherIcons.trash2) (RemoveFromInterestListClicked interestListId p)
                     }
             in
             Element.table
@@ -928,7 +927,7 @@ viewInterestList id isActive interestList allRuns =
     in
     column
         [ width fill
-        , Events.onClick (ActivateInterestList id)
+        , Events.onClick (ActivateInterestListClicked id)
         , Element.mouseOver [ Border.color germanZeroYellow ]
         , Border.color
             (if isActive then
@@ -954,9 +953,9 @@ viewInterestList id isActive interestList allRuns =
                      else
                         FeatherIcons.eyeOff
                     )
-                    (ToggleShowGraph id)
-                , iconButton FeatherIcons.copy (DuplicateInterestList id)
-                , dangerousIconButton FeatherIcons.trash2 (RemoveInterestList id)
+                    (ToggleShowGraphClicked id)
+                , iconButton FeatherIcons.copy (DuplicateInterestListClicked id)
+                , dangerousIconButton FeatherIcons.trash2 (RemoveInterestListClicked id)
                 ]
             ]
         , column [ width fill, spacing 40 ]
@@ -989,7 +988,7 @@ viewModel model =
                 )
                 [ text "LocalZero Explorer"
                 , el [ width fill ] Element.none
-                , iconButton FeatherIcons.plus (DisplayCalculateModalPressed Nothing defaultInputs Dict.empty)
+                , iconButton FeatherIcons.plus (DisplayCalculateModalClicked Nothing defaultInputs Dict.empty)
                 ]
 
         interestLists =
@@ -1071,7 +1070,7 @@ viewCalculateModal maybeNdx inputs overrides =
         [ Input.text []
             { label = Input.labelLeft labelStyle (text "AGS")
             , text = inputs.ags
-            , onChange = UpdateModal << CalculateModalAgsUpdated
+            , onChange = ModalMsg << CalculateModalAgsUpdated
             , placeholder = Nothing
             }
         , Input.slider
@@ -1091,11 +1090,11 @@ viewCalculateModal maybeNdx inputs overrides =
             , min = 2025
             , max = 2050
             , step = Just 1.0
-            , onChange = UpdateModal << CalculateModalTargetYearUpdated << round
+            , onChange = ModalMsg << CalculateModalTargetYearUpdated << round
             , value = toFloat inputs.year
             , thumb = Input.defaultThumb
             }
-        , iconButton FeatherIcons.check (CalculateModalOkPressed maybeNdx inputs)
+        , iconButton FeatherIcons.check (CalculateModalOkClicked maybeNdx inputs)
         ]
 
 
