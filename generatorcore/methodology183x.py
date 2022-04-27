@@ -1,4 +1,6 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, asdict
+
+from numpy import Infinity
 from .inputs import Inputs
 from .utils import div
 from . import (
@@ -1038,3 +1040,29 @@ def calc_z(
     t.demand_emplo_new_pct = div(t30.t.demand_emplo_new, z.demand_emplo_new)
     a.demand_emplo_new_pct = div(a30.a.demand_emplo_new, z.demand_emplo_new)
     l.demand_emplo_new_pct = div(l30.l.demand_emplo_new, z.demand_emplo_new)
+
+
+    # calc CO2e reduction per invest
+
+    sector_list = [h30, e30, f30, r30, b30, i30, t30, a30, l30]
+    bestInvest : tuple[str,str,float] = ("","",Infinity)
+    for sector in sector_list:
+        sector_dict = asdict(sector)
+        #print(sector_dict)
+        for variable in sector_dict.keys():
+            #print(variable)
+            variable_dict: dict
+            if isinstance(sector_dict[variable],dict):
+                variable_dict = dict(sector_dict[variable])
+            else:
+                continue
+            variable_dict_key_set = set(variable_dict.keys())
+            if ("change_CO2e_t" in variable_dict_key_set) and ("invest" in variable_dict_key_set):
+                #print("CO2 Veränderung ",variable_dict["change_CO2e_t"])
+                #print("Investitionen ",variable_dict["invest"])
+                if variable_dict["change_CO2e_t"] is not None and variable_dict["invest"] is not None:
+                    Co2ReductionPerInvest = div(variable_dict["change_CO2e_t"],variable_dict["invest"])
+                    if Co2ReductionPerInvest < bestInvest[2]:
+                        bestInvest = (sector,variable,Co2ReductionPerInvest)
+
+    print(bestInvest[1], "\n value ",bestInvest[2])
