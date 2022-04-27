@@ -5,6 +5,7 @@ module InterestList exposing
     , encode
     , getLabel
     , getShowGraph
+    , guessShortPathLabels
     , insert
     , mapLabel
     , member
@@ -13,6 +14,7 @@ module InterestList exposing
     , toggleShowGraph
     )
 
+import Dict exposing (Dict)
 import Json.Decode as Decode
 import Json.Encode as Encode
 import Run exposing (Path)
@@ -23,9 +25,27 @@ type InterestList
     = InterestList { label : String, paths : Set Path, showGraph : Bool }
 
 
+{-| Sometimes we want to display shorter labels (e.g. in a chart), when all the labels are have a very similar
+structure. This tries to guess short names.
+-}
+guessShortPathLabels : InterestList -> Dict Path String
+guessShortPathLabels (InterestList il) =
+    let
+        paths =
+            Set.toList il.paths
+
+        guess : List String -> String
+        guess p =
+            String.join "." p
+    in
+    paths
+        |> List.map (\p -> ( p, guess p ))
+        |> Dict.fromList
+
+
 empty : InterestList
 empty =
-    InterestList { label = "data", paths = Set.empty, showGraph = True }
+    InterestList { label = "data", paths = Set.empty, showGraph = False }
 
 
 toggleShowGraph : InterestList -> InterestList

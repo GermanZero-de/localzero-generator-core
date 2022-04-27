@@ -4372,6 +4372,184 @@ function _Browser_load(url)
 
 
 
+// DECODER
+
+var _File_decoder = _Json_decodePrim(function(value) {
+	// NOTE: checks if `File` exists in case this is run on node
+	return (typeof File !== 'undefined' && value instanceof File)
+		? $elm$core$Result$Ok(value)
+		: _Json_expecting('a FILE', value);
+});
+
+
+// METADATA
+
+function _File_name(file) { return file.name; }
+function _File_mime(file) { return file.type; }
+function _File_size(file) { return file.size; }
+
+function _File_lastModified(file)
+{
+	return $elm$time$Time$millisToPosix(file.lastModified);
+}
+
+
+// DOWNLOAD
+
+var _File_downloadNode;
+
+function _File_getDownloadNode()
+{
+	return _File_downloadNode || (_File_downloadNode = document.createElement('a'));
+}
+
+var _File_download = F3(function(name, mime, content)
+{
+	return _Scheduler_binding(function(callback)
+	{
+		var blob = new Blob([content], {type: mime});
+
+		// for IE10+
+		if (navigator.msSaveOrOpenBlob)
+		{
+			navigator.msSaveOrOpenBlob(blob, name);
+			return;
+		}
+
+		// for HTML5
+		var node = _File_getDownloadNode();
+		var objectUrl = URL.createObjectURL(blob);
+		node.href = objectUrl;
+		node.download = name;
+		_File_click(node);
+		URL.revokeObjectURL(objectUrl);
+	});
+});
+
+function _File_downloadUrl(href)
+{
+	return _Scheduler_binding(function(callback)
+	{
+		var node = _File_getDownloadNode();
+		node.href = href;
+		node.download = '';
+		node.origin === location.origin || (node.target = '_blank');
+		_File_click(node);
+	});
+}
+
+
+// IE COMPATIBILITY
+
+function _File_makeBytesSafeForInternetExplorer(bytes)
+{
+	// only needed by IE10 and IE11 to fix https://github.com/elm/file/issues/10
+	// all other browsers can just run `new Blob([bytes])` directly with no problem
+	//
+	return new Uint8Array(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+}
+
+function _File_click(node)
+{
+	// only needed by IE10 and IE11 to fix https://github.com/elm/file/issues/11
+	// all other browsers have MouseEvent and do not need this conditional stuff
+	//
+	if (typeof MouseEvent === 'function')
+	{
+		node.dispatchEvent(new MouseEvent('click'));
+	}
+	else
+	{
+		var event = document.createEvent('MouseEvents');
+		event.initMouseEvent('click', true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+		document.body.appendChild(node);
+		node.dispatchEvent(event);
+		document.body.removeChild(node);
+	}
+}
+
+
+// UPLOAD
+
+var _File_node;
+
+function _File_uploadOne(mimes)
+{
+	return _Scheduler_binding(function(callback)
+	{
+		_File_node = document.createElement('input');
+		_File_node.type = 'file';
+		_File_node.accept = A2($elm$core$String$join, ',', mimes);
+		_File_node.addEventListener('change', function(event)
+		{
+			callback(_Scheduler_succeed(event.target.files[0]));
+		});
+		_File_click(_File_node);
+	});
+}
+
+function _File_uploadOneOrMore(mimes)
+{
+	return _Scheduler_binding(function(callback)
+	{
+		_File_node = document.createElement('input');
+		_File_node.type = 'file';
+		_File_node.multiple = true;
+		_File_node.accept = A2($elm$core$String$join, ',', mimes);
+		_File_node.addEventListener('change', function(event)
+		{
+			var elmFiles = _List_fromArray(event.target.files);
+			callback(_Scheduler_succeed(_Utils_Tuple2(elmFiles.a, elmFiles.b)));
+		});
+		_File_click(_File_node);
+	});
+}
+
+
+// CONTENT
+
+function _File_toString(blob)
+{
+	return _Scheduler_binding(function(callback)
+	{
+		var reader = new FileReader();
+		reader.addEventListener('loadend', function() {
+			callback(_Scheduler_succeed(reader.result));
+		});
+		reader.readAsText(blob);
+		return function() { reader.abort(); };
+	});
+}
+
+function _File_toBytes(blob)
+{
+	return _Scheduler_binding(function(callback)
+	{
+		var reader = new FileReader();
+		reader.addEventListener('loadend', function() {
+			callback(_Scheduler_succeed(new DataView(reader.result)));
+		});
+		reader.readAsArrayBuffer(blob);
+		return function() { reader.abort(); };
+	});
+}
+
+function _File_toUrl(blob)
+{
+	return _Scheduler_binding(function(callback)
+	{
+		var reader = new FileReader();
+		reader.addEventListener('loadend', function() {
+			callback(_Scheduler_succeed(reader.result));
+		});
+		reader.readAsDataURL(blob);
+		return function() { reader.abort(); };
+	});
+}
+
+
+
+
 // SEND REQUEST
 
 var _Http_toTask = F3(function(router, toTask, request)
@@ -5389,7 +5567,7 @@ var $author$project$InterestList$InterestList = function (a) {
 	return {$: 'InterestList', a: a};
 };
 var $author$project$InterestList$empty = $author$project$InterestList$InterestList(
-	{label: 'data', paths: $elm$core$Set$empty, showGraph: true});
+	{label: 'data', paths: $elm$core$Set$empty, showGraph: false});
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $yotamDvir$elm_pivot$Pivot$Types$Pivot = F2(
@@ -5412,6 +5590,7 @@ var $author$project$Main$init = function (_v0) {
 		{
 			activeOverrideEditor: $elm$core$Maybe$Nothing,
 			collapseStatus: $author$project$CollapseStatus$allCollapsed,
+			editingActiveInterestListLabel: false,
 			interestLists: $yotamDvir$elm_pivot$Pivot$singleton($author$project$InterestList$empty),
 			runs: $author$project$AllRuns$empty,
 			showModal: $elm$core$Maybe$Nothing
@@ -5422,6 +5601,12 @@ var $elm$core$Platform$Sub$batch = _Platform_batch;
 var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
 var $author$project$Main$subscriptions = function (model) {
 	return $elm$core$Platform$Sub$none;
+};
+var $author$project$Main$FileContentLoaded = function (a) {
+	return {$: 'FileContentLoaded', a: a};
+};
+var $author$project$Main$FileUploaded = function (a) {
+	return {$: 'FileUploaded', a: a};
 };
 var $author$project$Main$ModalMsg = function (a) {
 	return {$: 'ModalMsg', a: a};
@@ -5670,6 +5855,10 @@ var $author$project$AllRuns$add = F2(
 		return $author$project$AllRuns$AllRuns(
 			{nextId: newNextId, runs: _new});
 	});
+var $elm$core$Basics$always = F2(
+	function (a, _v0) {
+		return a;
+	});
 var $yotamDvir$elm_pivot$Pivot$Modify$appendGoL = F2(
 	function (val, _v0) {
 		var c = _v0.a;
@@ -5694,6 +5883,24 @@ var $yotamDvir$elm_pivot$Pivot$Modify$appendGoR = function (val) {
 		$yotamDvir$elm_pivot$Pivot$Modify$appendGoL(val));
 };
 var $yotamDvir$elm_pivot$Pivot$appendGoR = $yotamDvir$elm_pivot$Pivot$Modify$appendGoR;
+var $yotamDvir$elm_pivot$Pivot$Modify$appendL = F2(
+	function (val, _v0) {
+		var c = _v0.a;
+		var _v1 = _v0.b;
+		var l = _v1.a;
+		var r = _v1.b;
+		return A2(
+			$yotamDvir$elm_pivot$Pivot$Types$Pivot,
+			c,
+			_Utils_Tuple2(
+				A2($elm$core$List$cons, val, l),
+				r));
+	});
+var $yotamDvir$elm_pivot$Pivot$Modify$appendR = function (val) {
+	return $yotamDvir$elm_pivot$Pivot$Utilities$mirror(
+		$yotamDvir$elm_pivot$Pivot$Modify$appendL(val));
+};
+var $yotamDvir$elm_pivot$Pivot$appendR = $yotamDvir$elm_pivot$Pivot$Modify$appendR;
 var $elm$core$Basics$composeL = F3(
 	function (g, f, x) {
 		return g(
@@ -5729,6 +5936,224 @@ var $author$project$Run$create = function (_v0) {
 	return $author$project$Run$Run(
 		{entries: entries, inputs: inputs, overrides: overrides, result: result});
 };
+var $elm$json$Json$Decode$decodeString = _Json_runOnString;
+var $elm$json$Json$Decode$andThen = _Json_andThen;
+var $elm$json$Json$Decode$fail = _Json_fail;
+var $elm$json$Json$Decode$field = _Json_decodeField;
+var $elm$json$Json$Decode$int = _Json_decodeInt;
+var $elm$json$Json$Decode$bool = _Json_decodeBool;
+var $elm$core$Set$insert = F2(
+	function (key, _v0) {
+		var dict = _v0.a;
+		return $elm$core$Set$Set_elm_builtin(
+			A3($elm$core$Dict$insert, key, _Utils_Tuple0, dict));
+	});
+var $elm$core$Set$fromList = function (list) {
+	return A3($elm$core$List$foldl, $elm$core$Set$insert, $elm$core$Set$empty, list);
+};
+var $elm$json$Json$Decode$list = _Json_decodeList;
+var $elm$json$Json$Decode$map3 = _Json_map3;
+var $elm$json$Json$Decode$string = _Json_decodeString;
+var $author$project$InterestList$decoder = A4(
+	$elm$json$Json$Decode$map3,
+	F3(
+		function (label, showGraph, paths) {
+			return $author$project$InterestList$InterestList(
+				{label: label, paths: paths, showGraph: showGraph});
+		}),
+	A2($elm$json$Json$Decode$field, 'label', $elm$json$Json$Decode$string),
+	A2($elm$json$Json$Decode$field, 'showGraph', $elm$json$Json$Decode$bool),
+	A2(
+		$elm$json$Json$Decode$field,
+		'paths',
+		A2(
+			$elm$json$Json$Decode$map,
+			$elm$core$Set$fromList,
+			$elm$json$Json$Decode$list(
+				$elm$json$Json$Decode$list($elm$json$Json$Decode$string)))));
+var $author$project$Storage$v1Decoder = A2(
+	$elm$json$Json$Decode$map,
+	function (l) {
+		return {interestLists: l};
+	},
+	A2(
+		$elm$json$Json$Decode$field,
+		'interestLists',
+		$elm$json$Json$Decode$list($author$project$InterestList$decoder)));
+var $author$project$Storage$decoder = A2(
+	$elm$json$Json$Decode$andThen,
+	function (v) {
+		if (v === 1) {
+			return $author$project$Storage$v1Decoder;
+		} else {
+			return $elm$json$Json$Decode$fail(
+				'unknown version number ' + ($elm$core$String$fromInt(v) + ' encountered '));
+		}
+	},
+	A2($elm$json$Json$Decode$field, 'version', $elm$json$Json$Decode$int));
+var $elm$json$Json$Encode$bool = _Json_wrap;
+var $elm$json$Json$Encode$list = F2(
+	function (func, entries) {
+		return _Json_wrap(
+			A3(
+				$elm$core$List$foldl,
+				_Json_addEntry(func),
+				_Json_emptyArray(_Utils_Tuple0),
+				entries));
+	});
+var $elm$json$Json$Encode$object = function (pairs) {
+	return _Json_wrap(
+		A3(
+			$elm$core$List$foldl,
+			F2(
+				function (_v0, obj) {
+					var k = _v0.a;
+					var v = _v0.b;
+					return A3(_Json_addField, k, v, obj);
+				}),
+			_Json_emptyObject(_Utils_Tuple0),
+			pairs));
+};
+var $elm$core$Dict$foldl = F3(
+	function (func, acc, dict) {
+		foldl:
+		while (true) {
+			if (dict.$ === 'RBEmpty_elm_builtin') {
+				return acc;
+			} else {
+				var key = dict.b;
+				var value = dict.c;
+				var left = dict.d;
+				var right = dict.e;
+				var $temp$func = func,
+					$temp$acc = A3(
+					func,
+					key,
+					value,
+					A3($elm$core$Dict$foldl, func, acc, left)),
+					$temp$dict = right;
+				func = $temp$func;
+				acc = $temp$acc;
+				dict = $temp$dict;
+				continue foldl;
+			}
+		}
+	});
+var $elm$core$Set$foldl = F3(
+	function (func, initialState, _v0) {
+		var dict = _v0.a;
+		return A3(
+			$elm$core$Dict$foldl,
+			F3(
+				function (key, _v1, state) {
+					return A2(func, key, state);
+				}),
+			initialState,
+			dict);
+	});
+var $elm$json$Json$Encode$set = F2(
+	function (func, entries) {
+		return _Json_wrap(
+			A3(
+				$elm$core$Set$foldl,
+				_Json_addEntry(func),
+				_Json_emptyArray(_Utils_Tuple0),
+				entries));
+	});
+var $elm$json$Json$Encode$string = _Json_wrap;
+var $author$project$InterestList$encode = function (_v0) {
+	var i = _v0.a;
+	return $elm$json$Json$Encode$object(
+		_List_fromArray(
+			[
+				_Utils_Tuple2(
+				'label',
+				$elm$json$Json$Encode$string(i.label)),
+				_Utils_Tuple2(
+				'showGraph',
+				$elm$json$Json$Encode$bool(i.showGraph)),
+				_Utils_Tuple2(
+				'paths',
+				A2(
+					$elm$json$Json$Encode$set,
+					$elm$json$Json$Encode$list($elm$json$Json$Encode$string),
+					i.paths))
+			]));
+};
+var $elm$json$Json$Encode$int = _Json_wrap;
+var $author$project$Storage$encodeV1 = function (_v0) {
+	var interestLists = _v0.interestLists;
+	return $elm$json$Json$Encode$object(
+		_List_fromArray(
+			[
+				_Utils_Tuple2(
+				'version',
+				$elm$json$Json$Encode$int(1)),
+				_Utils_Tuple2(
+				'interestLists',
+				A2($elm$json$Json$Encode$list, $author$project$InterestList$encode, interestLists))
+			]));
+};
+var $author$project$Storage$encode = function (s) {
+	return $author$project$Storage$encodeV1(s);
+};
+var $elm$time$Time$Posix = function (a) {
+	return {$: 'Posix', a: a};
+};
+var $elm$time$Time$millisToPosix = $elm$time$Time$Posix;
+var $elm$file$File$Download$string = F3(
+	function (name, mime, content) {
+		return A2(
+			$elm$core$Task$perform,
+			$elm$core$Basics$never,
+			A3(_File_download, name, mime, content));
+	});
+var $yotamDvir$elm_pivot$Pivot$Utilities$reversePrependList = F2(
+	function (l, r) {
+		reversePrependList:
+		while (true) {
+			if (l.b) {
+				var x = l.a;
+				var xs = l.b;
+				var $temp$l = xs,
+					$temp$r = A2($elm$core$List$cons, x, r);
+				l = $temp$l;
+				r = $temp$r;
+				continue reversePrependList;
+			} else {
+				return r;
+			}
+		}
+	});
+var $yotamDvir$elm_pivot$Pivot$Get$getA = function (_v0) {
+	var c = _v0.a;
+	var _v1 = _v0.b;
+	var l = _v1.a;
+	var r = _v1.b;
+	return A2(
+		$yotamDvir$elm_pivot$Pivot$Utilities$reversePrependList,
+		l,
+		A2($elm$core$List$cons, c, r));
+};
+var $yotamDvir$elm_pivot$Pivot$getA = $yotamDvir$elm_pivot$Pivot$Get$getA;
+var $yotamDvir$elm_pivot$Pivot$toList = $yotamDvir$elm_pivot$Pivot$getA;
+var $author$project$Main$downloadCmd = function (model) {
+	var content = A2(
+		$elm$json$Json$Encode$encode,
+		0,
+		$author$project$Storage$encode(
+			{
+				interestLists: $yotamDvir$elm_pivot$Pivot$toList(model.interestLists)
+			}));
+	return A3($elm$file$File$Download$string, 'explorer.json', 'text/json', content);
+};
+var $elm$file$File$Select$file = F2(
+	function (mimes, toMsg) {
+		return A2(
+			$elm$core$Task$perform,
+			toMsg,
+			_File_uploadOne(mimes));
+	});
 var $elm_community$maybe_extra$Maybe$Extra$filter = F2(
 	function (f, m) {
 		if (m.$ === 'Just') {
@@ -5739,6 +6164,17 @@ var $elm_community$maybe_extra$Maybe$Extra$filter = F2(
 		}
 	});
 var $elm$browser$Browser$Dom$focus = _Browser_call('focus');
+var $yotamDvir$elm_pivot$Pivot$Create$fromList = function (l) {
+	if (!l.b) {
+		return $elm$core$Maybe$Nothing;
+	} else {
+		var hd = l.a;
+		var tl = l.b;
+		return $elm$core$Maybe$Just(
+			A2($yotamDvir$elm_pivot$Pivot$Create$fromCons, hd, tl));
+	}
+};
+var $yotamDvir$elm_pivot$Pivot$fromList = $yotamDvir$elm_pivot$Pivot$Create$fromList;
 var $elm$core$Dict$get = F2(
 	function (targetKey, dict) {
 		get:
@@ -5818,7 +6254,6 @@ var $author$project$ValueTree$Leaf = function (a) {
 var $author$project$ValueTree$Tree = function (a) {
 	return {$: 'Tree', a: a};
 };
-var $elm$json$Json$Decode$andThen = _Json_andThen;
 var $elm$json$Json$Decode$lazy = function (thunk) {
 	return A2(
 		$elm$json$Json$Decode$andThen,
@@ -5835,7 +6270,6 @@ var $author$project$ValueTree$String = function (a) {
 };
 var $elm$json$Json$Decode$float = _Json_decodeFloat;
 var $elm$json$Json$Decode$null = _Json_decodeNull;
-var $elm$json$Json$Decode$string = _Json_decodeString;
 var $author$project$ValueTree$valueDecoder = $elm$json$Json$Decode$oneOf(
 	_List_fromArray(
 		[
@@ -5867,31 +6301,6 @@ try {
 	throw 'Some top-level definitions from `ValueTree` are causing infinite recursion:\n\n  ┌─────┐\n  │    nodeDecoder\n  └─────┘\n\nThese errors are very tricky, so read https://elm-lang.org/0.19.1/bad-recursion to learn how to fix it!';}
 var $author$project$ValueTree$treeDecoder = $elm$json$Json$Decode$dict($author$project$ValueTree$nodeDecoder);
 var $author$project$ValueTree$decoder = $author$project$ValueTree$treeDecoder;
-var $elm$core$Dict$foldl = F3(
-	function (func, acc, dict) {
-		foldl:
-		while (true) {
-			if (dict.$ === 'RBEmpty_elm_builtin') {
-				return acc;
-			} else {
-				var key = dict.b;
-				var value = dict.c;
-				var left = dict.d;
-				var right = dict.e;
-				var $temp$func = func,
-					$temp$acc = A3(
-					func,
-					key,
-					value,
-					A3($elm$core$Dict$foldl, func, acc, left)),
-					$temp$dict = right;
-				func = $temp$func;
-				acc = $temp$acc;
-				dict = $temp$dict;
-				continue foldl;
-			}
-		}
-	});
 var $elm$json$Json$Encode$dict = F3(
 	function (toKey, toValue, dictionary) {
 		return _Json_wrap(
@@ -5912,7 +6321,6 @@ var $elm$json$Json$Encode$float = _Json_wrap;
 var $author$project$Main$encodeOverrides = function (d) {
 	return A3($elm$json$Json$Encode$dict, $elm$core$Basics$identity, $elm$json$Json$Encode$float, d);
 };
-var $elm$json$Json$Decode$decodeString = _Json_runOnString;
 var $elm$http$Http$BadStatus_ = F2(
 	function (a, b) {
 		return {$: 'BadStatus_', a: a, b: b};
@@ -6603,12 +7011,6 @@ var $author$project$Main$initiateMakeEntries = F4(
 					url: 'http://localhost:4070/make-entries/' + (inputs.ags + ('/' + $elm$core$String$fromInt(inputs.year)))
 				}));
 	});
-var $elm$core$Set$insert = F2(
-	function (key, _v0) {
-		var dict = _v0.a;
-		return $elm$core$Set$Set_elm_builtin(
-			A3($elm$core$Dict$insert, key, _Utils_Tuple0, dict));
-	});
 var $author$project$InterestList$insert = F2(
 	function (p, _v0) {
 		var i = _v0.a;
@@ -6762,6 +7164,7 @@ var $author$project$AllRuns$set = F3(
 					runs: A3($elm$core$Dict$insert, id, ir, a.runs)
 				}));
 	});
+var $elm$file$File$toString = _File_toString;
 var $author$project$CollapseStatus$collapse = F2(
 	function (ap, _v0) {
 		var s = _v0.a;
@@ -6877,6 +7280,16 @@ var $author$project$Main$updateModal = F2(
 			}
 		}
 	});
+var $Janiczek$cmd_extra$Cmd$Extra$withCmd = F2(
+	function (cmd, model) {
+		return _Utils_Tuple2(model, cmd);
+	});
+var $author$project$Main$withEditingActiveInterestListLabel = F2(
+	function (b, m) {
+		return _Utils_update(
+			m,
+			{editingActiveInterestListLabel: b});
+	});
 var $author$project$Main$withLoadFailure = F2(
 	function (msg, model) {
 		return _Utils_Tuple2(
@@ -6893,6 +7306,50 @@ var $author$project$Main$update = F2(
 		switch (msg.$) {
 			case 'Noop':
 				return $Janiczek$cmd_extra$Cmd$Extra$withNoCmd(model);
+			case 'DownloadClicked':
+				return A2(
+					$Janiczek$cmd_extra$Cmd$Extra$withCmd,
+					$author$project$Main$downloadCmd(model),
+					model);
+			case 'UploadClicked':
+				return A2(
+					$Janiczek$cmd_extra$Cmd$Extra$withCmd,
+					A2(
+						$elm$file$File$Select$file,
+						_List_fromArray(
+							['text/json']),
+						$author$project$Main$FileUploaded),
+					model);
+			case 'FileUploaded':
+				var file = msg.a;
+				return A2(
+					$Janiczek$cmd_extra$Cmd$Extra$withCmd,
+					A2(
+						$elm$core$Task$perform,
+						$author$project$Main$FileContentLoaded,
+						$elm$file$File$toString(file)),
+					model);
+			case 'FileContentLoaded':
+				var content = msg.a;
+				var _v1 = A2($elm$json$Json$Decode$decodeString, $author$project$Storage$decoder, content);
+				if (_v1.$ === 'Err') {
+					return A2($author$project$Main$withLoadFailure, 'Failed to load file', model);
+				} else {
+					var storage = _v1.a;
+					var ils = function () {
+						var _v2 = $yotamDvir$elm_pivot$Pivot$fromList(storage.interestLists);
+						if (_v2.$ === 'Nothing') {
+							return model.interestLists;
+						} else {
+							var i = _v2.a;
+							return i;
+						}
+					}();
+					return $Janiczek$cmd_extra$Cmd$Extra$withNoCmd(
+						_Utils_update(
+							model,
+							{interestLists: ils}));
+				}
 			case 'GotEntries':
 				if (msg.d.$ === 'Ok') {
 					var maybeNdx = msg.a;
@@ -6931,10 +7388,10 @@ var $author$project$Main$update = F2(
 							var s = resultOrError.a.a;
 							return A2($author$project$Main$withLoadFailure, 'BAD URL: ' + s, model);
 						case 'Timeout':
-							var _v3 = resultOrError.a;
+							var _v5 = resultOrError.a;
 							return A2($author$project$Main$withLoadFailure, 'TIMEOUT', model);
 						case 'NetworkError':
-							var _v4 = resultOrError.a;
+							var _v6 = resultOrError.a;
 							return A2($author$project$Main$withLoadFailure, 'NETWORK ERROR', model);
 						case 'BadStatus':
 							var code = resultOrError.a.a;
@@ -7011,11 +7468,11 @@ var $author$project$Main$update = F2(
 				var name = msg.b;
 				var newText = msg.c;
 				var isFocusChanged = function () {
-					var _v6 = model.activeOverrideEditor;
-					if (_v6.$ === 'Nothing') {
+					var _v8 = model.activeOverrideEditor;
+					if (_v8.$ === 'Nothing') {
 						return true;
 					} else {
-						var e = _v6.a;
+						var e = _v8.a;
 						return (!_Utils_eq(e.runNdx, ndx)) || (!_Utils_eq(e.name, name));
 					}
 				}();
@@ -7033,29 +7490,29 @@ var $author$project$Main$update = F2(
 						}),
 					isFocusChanged ? A2(
 						$elm$core$Task$attempt,
-						function (_v5) {
+						function (_v7) {
 							return $author$project$Main$Noop;
 						},
 						$elm$browser$Browser$Dom$focus('overrideEditor')) : $elm$core$Platform$Cmd$none);
 			case 'OverrideEditFinished':
-				var _v7 = model.activeOverrideEditor;
-				if (_v7.$ === 'Nothing') {
+				var _v9 = model.activeOverrideEditor;
+				if (_v9.$ === 'Nothing') {
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				} else {
-					var editor = _v7.a;
+					var editor = _v9.a;
 					var modelEditorClosed = _Utils_update(
 						model,
 						{activeOverrideEditor: $elm$core$Maybe$Nothing});
-					var _v8 = editor.asFloat;
-					if (_v8.$ === 'Nothing') {
+					var _v10 = editor.asFloat;
+					if (_v10.$ === 'Nothing') {
 						return _Utils_Tuple2(modelEditorClosed, $elm$core$Platform$Cmd$none);
 					} else {
-						var f = _v8.a;
-						var _v9 = A2($author$project$AllRuns$get, editor.runNdx, model.runs);
-						if (_v9.$ === 'Nothing') {
+						var f = _v10.a;
+						var _v11 = A2($author$project$AllRuns$get, editor.runNdx, model.runs);
+						if (_v11.$ === 'Nothing') {
 							return _Utils_Tuple2(modelEditorClosed, $elm$core$Platform$Cmd$none);
 						} else {
-							var run = _v9.a;
+							var run = _v11.a;
 							return A4(
 								$author$project$Main$initiateMakeEntries,
 								$elm$core$Maybe$Just(editor.runNdx),
@@ -7111,6 +7568,12 @@ var $author$project$Main$update = F2(
 						$author$project$Main$mapActiveInterestList,
 						$author$project$InterestList$toggleShowGraph,
 						A2($author$project$Main$activateInterestList, id, model)));
+			case 'NewInterestListClicked':
+				return $Janiczek$cmd_extra$Cmd$Extra$withNoCmd(
+					A2(
+						$author$project$Main$mapInterestLists,
+						$yotamDvir$elm_pivot$Pivot$appendR($author$project$InterestList$empty),
+						model));
 			case 'DuplicateInterestListClicked':
 				var id = msg.a;
 				return $Janiczek$cmd_extra$Cmd$Extra$withNoCmd(
@@ -7134,22 +7597,37 @@ var $author$project$Main$update = F2(
 					A2(
 						$author$project$Main$mapInterestLists,
 						function (ils) {
-							var _v10 = $yotamDvir$elm_pivot$Pivot$removeGoR(ils);
-							if (_v10.$ === 'Nothing') {
+							var _v12 = $yotamDvir$elm_pivot$Pivot$removeGoR(ils);
+							if (_v12.$ === 'Nothing') {
 								return A2(
 									$elm$core$Maybe$withDefault,
 									$yotamDvir$elm_pivot$Pivot$singleton($author$project$InterestList$empty),
 									$yotamDvir$elm_pivot$Pivot$removeGoL(ils));
 							} else {
-								var without = _v10.a;
+								var without = _v12.a;
 								return without;
 							}
 						},
 						A2($author$project$Main$activateInterestList, id, model)));
-			default:
+			case 'ActivateInterestListClicked':
 				var id = msg.a;
 				return $Janiczek$cmd_extra$Cmd$Extra$withNoCmd(
 					A2($author$project$Main$activateInterestList, id, model));
+			case 'InterestListLabelEdited':
+				var id = msg.a;
+				var newLabel = msg.b;
+				return $Janiczek$cmd_extra$Cmd$Extra$withNoCmd(
+					A2(
+						$author$project$Main$mapActiveInterestList,
+						$author$project$InterestList$mapLabel(
+							$elm$core$Basics$always(newLabel)),
+						A2(
+							$author$project$Main$withEditingActiveInterestListLabel,
+							true,
+							A2($author$project$Main$activateInterestList, id, model))));
+			default:
+				return $Janiczek$cmd_extra$Cmd$Extra$withNoCmd(
+					A2($author$project$Main$withEditingActiveInterestListLabel, false, model));
 		}
 	});
 var $mdgriffith$elm_ui$Internal$Model$Fill = function (a) {
@@ -7181,7 +7659,6 @@ var $mdgriffith$elm_ui$Internal$Style$classes = {above: 'a', active: 'atv', alig
 var $mdgriffith$elm_ui$Internal$Model$Attr = function (a) {
 	return {$: 'Attr', a: a};
 };
-var $elm$json$Json$Encode$string = _Json_wrap;
 var $elm$html$Html$Attributes$stringProperty = F2(
 	function (key, string) {
 		return A2(
@@ -9706,28 +10183,6 @@ var $mdgriffith$elm_ui$Internal$Model$staticRoot = function (opts) {
 					]),
 				_List_Nil);
 	}
-};
-var $elm$json$Json$Encode$list = F2(
-	function (func, entries) {
-		return _Json_wrap(
-			A3(
-				$elm$core$List$foldl,
-				_Json_addEntry(func),
-				_Json_emptyArray(_Utils_Tuple0),
-				entries));
-	});
-var $elm$json$Json$Encode$object = function (pairs) {
-	return _Json_wrap(
-		A3(
-			$elm$core$List$foldl,
-			F2(
-				function (_v0, obj) {
-					var k = _v0.a;
-					var v = _v0.b;
-					return A3(_Json_addField, k, v, obj);
-				}),
-			_Json_emptyObject(_Utils_Tuple0),
-			pairs));
 };
 var $elm$core$List$any = F2(
 	function (isOkay, list) {
@@ -13254,7 +13709,6 @@ var $author$project$Styling$iconButtonStyle = _List_fromArray(
 			]))
 	]);
 var $mdgriffith$elm_ui$Internal$Model$Button = {$: 'Button'};
-var $elm$json$Json$Encode$bool = _Json_wrap;
 var $elm$html$Html$Attributes$boolProperty = F2(
 	function (key, bool) {
 		return A2(
@@ -13294,8 +13748,6 @@ var $elm$html$Html$Events$onClick = function (msg) {
 		$elm$json$Json$Decode$succeed(msg));
 };
 var $mdgriffith$elm_ui$Element$Events$onClick = A2($elm$core$Basics$composeL, $mdgriffith$elm_ui$Internal$Model$Attr, $elm$html$Html$Events$onClick);
-var $elm$json$Json$Decode$fail = _Json_fail;
-var $elm$json$Json$Decode$field = _Json_decodeField;
 var $elm$virtual_dom$VirtualDom$MayPreventDefault = function (a) {
 	return {$: 'MayPreventDefault', a: a};
 };
@@ -13394,10 +13846,6 @@ var $mdgriffith$elm_ui$Element$Input$button = F2(
 			$mdgriffith$elm_ui$Internal$Model$Unkeyed(
 				_List_fromArray(
 					[label])));
-	});
-var $elm$core$Basics$always = F2(
-	function (a, _v0) {
-		return a;
 	});
 var $mdgriffith$elm_ui$Internal$Model$unstyled = A2($elm$core$Basics$composeL, $mdgriffith$elm_ui$Internal$Model$Unstyled, $elm$core$Basics$always);
 var $mdgriffith$elm_ui$Element$html = $mdgriffith$elm_ui$Internal$Model$unstyled;
@@ -15024,7 +15472,133 @@ var $author$project$Main$viewModalDialogBox = F2(
 					filler
 				]));
 	});
+var $author$project$Main$DownloadClicked = {$: 'DownloadClicked'};
+var $author$project$Main$NewInterestListClicked = {$: 'NewInterestListClicked'};
+var $author$project$Main$UploadClicked = {$: 'UploadClicked'};
 var $author$project$Styling$black = A3($mdgriffith$elm_ui$Element$rgb255, 0, 0, 0);
+var $author$project$Main$buttons = function (l) {
+	return A2(
+		$mdgriffith$elm_ui$Element$row,
+		_List_fromArray(
+			[
+				A2($mdgriffith$elm_ui$Element$spacingXY, $author$project$Styling$sizes.medium, 0)
+			]),
+		l);
+};
+var $elm$svg$Svg$Attributes$d = _VirtualDom_attribute('d');
+var $elm$svg$Svg$line = $elm$svg$Svg$trustedNode('line');
+var $elm$svg$Svg$path = $elm$svg$Svg$trustedNode('path');
+var $elm$svg$Svg$Attributes$x1 = _VirtualDom_attribute('x1');
+var $elm$svg$Svg$Attributes$x2 = _VirtualDom_attribute('x2');
+var $elm$svg$Svg$Attributes$y1 = _VirtualDom_attribute('y1');
+var $elm$svg$Svg$Attributes$y2 = _VirtualDom_attribute('y2');
+var $feathericons$elm_feather$FeatherIcons$download = A2(
+	$feathericons$elm_feather$FeatherIcons$makeBuilder,
+	'download',
+	_List_fromArray(
+		[
+			A2(
+			$elm$svg$Svg$path,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$d('M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4')
+				]),
+			_List_Nil),
+			A2(
+			$elm$svg$Svg$polyline,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$points('7 10 12 15 17 10')
+				]),
+			_List_Nil),
+			A2(
+			$elm$svg$Svg$line,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$x1('12'),
+					$elm$svg$Svg$Attributes$y1('15'),
+					$elm$svg$Svg$Attributes$x2('12'),
+					$elm$svg$Svg$Attributes$y2('3')
+				]),
+			_List_Nil)
+		]));
+var $mdgriffith$elm_ui$Internal$Model$Bottom = {$: 'Bottom'};
+var $mdgriffith$elm_ui$Element$alignBottom = $mdgriffith$elm_ui$Internal$Model$AlignY($mdgriffith$elm_ui$Internal$Model$Bottom);
+var $mdgriffith$elm_ui$Internal$Model$Right = {$: 'Right'};
+var $mdgriffith$elm_ui$Element$alignRight = $mdgriffith$elm_ui$Internal$Model$AlignX($mdgriffith$elm_ui$Internal$Model$Right);
+var $mdgriffith$elm_ui$Internal$Model$MoveX = function (a) {
+	return {$: 'MoveX', a: a};
+};
+var $mdgriffith$elm_ui$Internal$Flag$moveX = $mdgriffith$elm_ui$Internal$Flag$flag(25);
+var $mdgriffith$elm_ui$Element$moveLeft = function (x) {
+	return A2(
+		$mdgriffith$elm_ui$Internal$Model$TransformComponent,
+		$mdgriffith$elm_ui$Internal$Flag$moveX,
+		$mdgriffith$elm_ui$Internal$Model$MoveX(-x));
+};
+var $mdgriffith$elm_ui$Internal$Model$boxShadowClass = function (shadow) {
+	return $elm$core$String$concat(
+		_List_fromArray(
+			[
+				shadow.inset ? 'box-inset' : 'box-',
+				$mdgriffith$elm_ui$Internal$Model$floatClass(shadow.offset.a) + 'px',
+				$mdgriffith$elm_ui$Internal$Model$floatClass(shadow.offset.b) + 'px',
+				$mdgriffith$elm_ui$Internal$Model$floatClass(shadow.blur) + 'px',
+				$mdgriffith$elm_ui$Internal$Model$floatClass(shadow.size) + 'px',
+				$mdgriffith$elm_ui$Internal$Model$formatColorClass(shadow.color)
+			]));
+};
+var $mdgriffith$elm_ui$Internal$Flag$shadows = $mdgriffith$elm_ui$Internal$Flag$flag(19);
+var $mdgriffith$elm_ui$Element$Border$shadow = function (almostShade) {
+	var shade = {blur: almostShade.blur, color: almostShade.color, inset: false, offset: almostShade.offset, size: almostShade.size};
+	return A2(
+		$mdgriffith$elm_ui$Internal$Model$StyleClass,
+		$mdgriffith$elm_ui$Internal$Flag$shadows,
+		A3(
+			$mdgriffith$elm_ui$Internal$Model$Single,
+			$mdgriffith$elm_ui$Internal$Model$boxShadowClass(shade),
+			'box-shadow',
+			$mdgriffith$elm_ui$Internal$Model$formatBoxShadow(shade)));
+};
+var $author$project$Styling$shadowColor = A4($mdgriffith$elm_ui$Element$rgba255, 100, 100, 100, 0.6);
+var $author$project$Styling$floatingActionButton = F2(
+	function (i, onPress) {
+		var size = 40;
+		var paddingSize = (size / 8) | 0;
+		var iconSize = size - (2 * paddingSize);
+		return A3(
+			$author$project$Styling$iconButtonWithStyle,
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$Font$color($author$project$Styling$white),
+					$mdgriffith$elm_ui$Element$Background$color($author$project$Styling$germanZeroGreen),
+					$mdgriffith$elm_ui$Element$mouseOver(
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$Background$color($author$project$Styling$germanZeroYellow)
+						])),
+					$mdgriffith$elm_ui$Element$focused(
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$Background$color($author$project$Styling$germanZeroYellow)
+						])),
+					$mdgriffith$elm_ui$Element$Border$rounded((size / 2) | 0),
+					$mdgriffith$elm_ui$Element$Border$shadow(
+					{
+						blur: 1,
+						color: $author$project$Styling$shadowColor,
+						offset: _Utils_Tuple2(1, 1),
+						size: 2
+					}),
+					$mdgriffith$elm_ui$Element$alignBottom,
+					$mdgriffith$elm_ui$Element$alignRight,
+					$mdgriffith$elm_ui$Element$moveUp(10),
+					$mdgriffith$elm_ui$Element$moveLeft(10),
+					$mdgriffith$elm_ui$Element$padding(paddingSize)
+				]),
+			A2($feathericons$elm_feather$FeatherIcons$withSize, iconSize, i),
+			onPress);
+	});
 var $mdgriffith$elm_ui$Element$Font$family = function (families) {
 	return A2(
 		$mdgriffith$elm_ui$Internal$Model$StyleClass,
@@ -15097,41 +15671,73 @@ var $yotamDvir$elm_pivot$Pivot$Map$indexAbsolute = function (pvt) {
 };
 var $yotamDvir$elm_pivot$Pivot$indexAbsolute = $yotamDvir$elm_pivot$Pivot$Map$indexAbsolute;
 var $yotamDvir$elm_pivot$Pivot$lengthL = $yotamDvir$elm_pivot$Pivot$Position$lengthL;
-var $yotamDvir$elm_pivot$Pivot$Utilities$reversePrependList = F2(
-	function (l, r) {
-		reversePrependList:
-		while (true) {
-			if (l.b) {
-				var x = l.a;
-				var xs = l.b;
-				var $temp$l = xs,
-					$temp$r = A2($elm$core$List$cons, x, r);
-				l = $temp$l;
-				r = $temp$r;
-				continue reversePrependList;
-			} else {
-				return r;
-			}
-		}
-	});
-var $yotamDvir$elm_pivot$Pivot$Get$getA = function (_v0) {
-	var c = _v0.a;
-	var _v1 = _v0.b;
-	var l = _v1.a;
-	var r = _v1.b;
-	return A2(
-		$yotamDvir$elm_pivot$Pivot$Utilities$reversePrependList,
-		l,
-		A2($elm$core$List$cons, c, r));
-};
-var $yotamDvir$elm_pivot$Pivot$getA = $yotamDvir$elm_pivot$Pivot$Get$getA;
-var $yotamDvir$elm_pivot$Pivot$toList = $yotamDvir$elm_pivot$Pivot$getA;
+var $feathericons$elm_feather$FeatherIcons$plus = A2(
+	$feathericons$elm_feather$FeatherIcons$makeBuilder,
+	'plus',
+	_List_fromArray(
+		[
+			A2(
+			$elm$svg$Svg$line,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$x1('12'),
+					$elm$svg$Svg$Attributes$y1('5'),
+					$elm$svg$Svg$Attributes$x2('12'),
+					$elm$svg$Svg$Attributes$y2('19')
+				]),
+			_List_Nil),
+			A2(
+			$elm$svg$Svg$line,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$x1('5'),
+					$elm$svg$Svg$Attributes$y1('12'),
+					$elm$svg$Svg$Attributes$x2('19'),
+					$elm$svg$Svg$Attributes$y2('12')
+				]),
+			_List_Nil)
+		]));
+var $feathericons$elm_feather$FeatherIcons$upload = A2(
+	$feathericons$elm_feather$FeatherIcons$makeBuilder,
+	'upload',
+	_List_fromArray(
+		[
+			A2(
+			$elm$svg$Svg$path,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$d('M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4')
+				]),
+			_List_Nil),
+			A2(
+			$elm$svg$Svg$polyline,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$points('17 8 12 3 7 8')
+				]),
+			_List_Nil),
+			A2(
+			$elm$svg$Svg$line,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$x1('12'),
+					$elm$svg$Svg$Attributes$y1('3'),
+					$elm$svg$Svg$Attributes$x2('12'),
+					$elm$svg$Svg$Attributes$y2('15')
+				]),
+			_List_Nil)
+		]));
 var $author$project$Main$ActivateInterestListClicked = function (a) {
 	return {$: 'ActivateInterestListClicked', a: a};
 };
 var $author$project$Main$DuplicateInterestListClicked = function (a) {
 	return {$: 'DuplicateInterestListClicked', a: a};
 };
+var $author$project$Main$InterestListLabelEditFinished = {$: 'InterestListLabelEditFinished'};
+var $author$project$Main$InterestListLabelEdited = F2(
+	function (a, b) {
+		return {$: 'InterestListLabelEdited', a: a, b: b};
+	});
 var $author$project$Main$RemoveInterestListClicked = function (a) {
 	return {$: 'RemoveInterestListClicked', a: a};
 };
@@ -15305,17 +15911,6 @@ var $author$project$Main$applyInterestListToRuns = F2(
 			},
 			$author$project$InterestList$toList(interestList));
 	});
-var $author$project$Main$buttons = function (l) {
-	return A2(
-		$mdgriffith$elm_ui$Element$row,
-		_List_fromArray(
-			[
-				A2($mdgriffith$elm_ui$Element$spacingXY, $author$project$Styling$sizes.medium, 0)
-			]),
-		l);
-};
-var $elm$svg$Svg$Attributes$d = _VirtualDom_attribute('d');
-var $elm$svg$Svg$path = $elm$svg$Svg$trustedNode('path');
 var $elm$svg$Svg$rect = $elm$svg$Svg$trustedNode('rect');
 var $elm$svg$Svg$Attributes$rx = _VirtualDom_attribute('rx');
 var $elm$svg$Svg$Attributes$ry = _VirtualDom_attribute('ry');
@@ -15391,11 +15986,6 @@ var $feathericons$elm_feather$FeatherIcons$eye = A2(
 				]),
 			_List_Nil)
 		]));
-var $elm$svg$Svg$line = $elm$svg$Svg$trustedNode('line');
-var $elm$svg$Svg$Attributes$x1 = _VirtualDom_attribute('x1');
-var $elm$svg$Svg$Attributes$x2 = _VirtualDom_attribute('x2');
-var $elm$svg$Svg$Attributes$y1 = _VirtualDom_attribute('y1');
-var $elm$svg$Svg$Attributes$y2 = _VirtualDom_attribute('y2');
 var $feathericons$elm_feather$FeatherIcons$eyeOff = A2(
 	$feathericons$elm_feather$FeatherIcons$makeBuilder,
 	'eye-off',
@@ -15427,6 +16017,50 @@ var $author$project$InterestList$getShowGraph = function (_v0) {
 	var il = _v0.a;
 	return il.showGraph;
 };
+var $author$project$InterestList$guessShortPathLabels = function (_v0) {
+	var il = _v0.a;
+	var paths = $elm$core$Set$toList(il.paths);
+	var guess = function (p) {
+		return A2($elm$core$String$join, '.', p);
+	};
+	return $elm$core$Dict$fromList(
+		A2(
+			$elm$core$List$map,
+			function (p) {
+				return _Utils_Tuple2(
+					p,
+					guess(p));
+			},
+			paths));
+};
+var $mdgriffith$elm_ui$Element$Input$HiddenLabel = function (a) {
+	return {$: 'HiddenLabel', a: a};
+};
+var $mdgriffith$elm_ui$Element$Input$labelHidden = $mdgriffith$elm_ui$Element$Input$HiddenLabel;
+var $author$project$Main$onEnter = function (msg) {
+	return $mdgriffith$elm_ui$Element$htmlAttribute(
+		A2(
+			$elm$html$Html$Events$on,
+			'keyup',
+			A2(
+				$elm$json$Json$Decode$andThen,
+				function (key) {
+					return (key === 'Enter') ? $elm$json$Json$Decode$succeed(msg) : $elm$json$Json$Decode$fail('Not the enter key');
+				},
+				A2($elm$json$Json$Decode$field, 'key', $elm$json$Json$Decode$string))));
+};
+var $elm$html$Html$Events$onBlur = function (msg) {
+	return A2(
+		$elm$html$Html$Events$on,
+		'blur',
+		$elm$json$Json$Decode$succeed(msg));
+};
+var $mdgriffith$elm_ui$Element$Events$onLoseFocus = A2($elm$core$Basics$composeL, $mdgriffith$elm_ui$Internal$Model$Attr, $elm$html$Html$Events$onBlur);
+var $mdgriffith$elm_ui$Element$Input$Placeholder = F2(
+	function (a, b) {
+		return {$: 'Placeholder', a: a, b: b};
+	});
+var $mdgriffith$elm_ui$Element$Input$placeholder = $mdgriffith$elm_ui$Element$Input$Placeholder;
 var $feathericons$elm_feather$FeatherIcons$trash2 = A2(
 	$feathericons$elm_feather$FeatherIcons$makeBuilder,
 	'trash-2',
@@ -17447,7 +18081,6 @@ var $terezka$elm_charts$Internal$Svg$Event = F2(
 		return {handler: handler, name: name};
 	});
 var $elm$svg$Svg$clipPath = $elm$svg$Svg$trustedNode('clipPath');
-var $elm$json$Json$Decode$map3 = _Json_map3;
 var $debois$elm_dom$DOM$offsetHeight = A2($elm$json$Json$Decode$field, 'offsetHeight', $elm$json$Json$Decode$float);
 var $debois$elm_dom$DOM$offsetWidth = A2($elm$json$Json$Decode$field, 'offsetWidth', $elm$json$Json$Decode$float);
 var $elm$json$Json$Decode$map4 = _Json_map4;
@@ -21316,10 +21949,6 @@ var $elm$time$Time$toSecond = F2(
 				1000));
 	});
 var $elm$core$String$toUpper = _String_toUpper;
-var $elm$time$Time$Posix = function (a) {
-	return {$: 'Posix', a: a};
-};
-var $elm$time$Time$millisToPosix = $elm$time$Time$Posix;
 var $ryannhg$date_format$DateFormat$millisecondsPerYear = $elm$core$Basics$round((((1000 * 60) * 60) * 24) * 365.25);
 var $ryannhg$date_format$DateFormat$firstDayOfYear = F2(
 	function (zone, time) {
@@ -23615,8 +24244,8 @@ var $mdgriffith$elm_ui$Element$table = F2(
 				data: config.data
 			});
 	});
-var $author$project$Main$viewInterestListTable = F2(
-	function (interestListId, interestList) {
+var $author$project$Main$viewInterestListTable = F3(
+	function (shortPathLabels, interestListId, interestList) {
 		if (!interestList.b) {
 			return $mdgriffith$elm_ui$Element$none;
 		} else {
@@ -23713,9 +24342,11 @@ var $author$project$Main$viewInterestListTable = F2(
 				});
 		}
 	});
-var $author$project$Main$viewInterestList = F4(
-	function (id, isActive, interestList, allRuns) {
+var $author$project$Main$viewInterestList = F5(
+	function (id, editingActiveInterestListLabel, isActive, interestList, allRuns) {
 		var showGraph = $author$project$InterestList$getShowGraph(interestList);
+		var shortPathLabels = $author$project$InterestList$guessShortPathLabels(interestList);
+		var labelText = $author$project$InterestList$getLabel(interestList);
 		var interestListTable = A2($author$project$Main$applyInterestListToRuns, interestList, allRuns);
 		return A2(
 			$mdgriffith$elm_ui$Element$column,
@@ -23746,14 +24377,45 @@ var $author$project$Main$viewInterestList = F4(
 						]),
 					_List_fromArray(
 						[
+							(editingActiveInterestListLabel && isActive) ? A2(
+							$mdgriffith$elm_ui$Element$Input$text,
+							_List_fromArray(
+								[
+									$mdgriffith$elm_ui$Element$Events$onLoseFocus($author$project$Main$InterestListLabelEditFinished),
+									$author$project$Main$onEnter($author$project$Main$InterestListLabelEditFinished)
+								]),
+							{
+								label: $mdgriffith$elm_ui$Element$Input$labelHidden('interest list'),
+								onChange: $author$project$Main$InterestListLabelEdited(id),
+								placeholder: $elm$core$Maybe$Just(
+									A2(
+										$mdgriffith$elm_ui$Element$Input$placeholder,
+										_List_Nil,
+										$mdgriffith$elm_ui$Element$text('label'))),
+								text: labelText
+							}) : A2(
+							$mdgriffith$elm_ui$Element$el,
+							_List_fromArray(
+								[
+									$mdgriffith$elm_ui$Element$Events$onClick(
+									A2($author$project$Main$InterestListLabelEdited, id, labelText)),
+									$mdgriffith$elm_ui$Element$Font$color(
+									(labelText === '') ? $author$project$Styling$modalDim : $author$project$Styling$black),
+									$mdgriffith$elm_ui$Element$mouseOver(
+									_List_fromArray(
+										[
+											$mdgriffith$elm_ui$Element$Font$color($author$project$Styling$germanZeroYellow)
+										]))
+								]),
+							$mdgriffith$elm_ui$Element$text(
+								(labelText === '') ? 'label' : labelText)),
 							A2(
 							$mdgriffith$elm_ui$Element$el,
 							_List_fromArray(
 								[
 									$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
 								]),
-							$mdgriffith$elm_ui$Element$text(
-								$author$project$InterestList$getLabel(interestList))),
+							$mdgriffith$elm_ui$Element$none),
 							$author$project$Main$buttons(
 							_List_fromArray(
 								[
@@ -23781,7 +24443,7 @@ var $author$project$Main$viewInterestList = F4(
 					_List_fromArray(
 						[
 							showGraph ? $author$project$Main$viewChart(interestListTable) : $mdgriffith$elm_ui$Element$none,
-							A2($author$project$Main$viewInterestListTable, id, interestListTable)
+							A3($author$project$Main$viewInterestListTable, shortPathLabels, id, interestListTable)
 						]))
 				]));
 	});
@@ -23790,109 +24452,6 @@ var $author$project$Main$DisplayCalculateModalClicked = F3(
 		return {$: 'DisplayCalculateModalClicked', a: a, b: b, c: c};
 	});
 var $author$project$Main$defaultInputs = {ags: '', year: 2035};
-var $mdgriffith$elm_ui$Internal$Model$Bottom = {$: 'Bottom'};
-var $mdgriffith$elm_ui$Element$alignBottom = $mdgriffith$elm_ui$Internal$Model$AlignY($mdgriffith$elm_ui$Internal$Model$Bottom);
-var $mdgriffith$elm_ui$Internal$Model$Right = {$: 'Right'};
-var $mdgriffith$elm_ui$Element$alignRight = $mdgriffith$elm_ui$Internal$Model$AlignX($mdgriffith$elm_ui$Internal$Model$Right);
-var $mdgriffith$elm_ui$Internal$Model$MoveX = function (a) {
-	return {$: 'MoveX', a: a};
-};
-var $mdgriffith$elm_ui$Internal$Flag$moveX = $mdgriffith$elm_ui$Internal$Flag$flag(25);
-var $mdgriffith$elm_ui$Element$moveLeft = function (x) {
-	return A2(
-		$mdgriffith$elm_ui$Internal$Model$TransformComponent,
-		$mdgriffith$elm_ui$Internal$Flag$moveX,
-		$mdgriffith$elm_ui$Internal$Model$MoveX(-x));
-};
-var $mdgriffith$elm_ui$Internal$Model$boxShadowClass = function (shadow) {
-	return $elm$core$String$concat(
-		_List_fromArray(
-			[
-				shadow.inset ? 'box-inset' : 'box-',
-				$mdgriffith$elm_ui$Internal$Model$floatClass(shadow.offset.a) + 'px',
-				$mdgriffith$elm_ui$Internal$Model$floatClass(shadow.offset.b) + 'px',
-				$mdgriffith$elm_ui$Internal$Model$floatClass(shadow.blur) + 'px',
-				$mdgriffith$elm_ui$Internal$Model$floatClass(shadow.size) + 'px',
-				$mdgriffith$elm_ui$Internal$Model$formatColorClass(shadow.color)
-			]));
-};
-var $mdgriffith$elm_ui$Internal$Flag$shadows = $mdgriffith$elm_ui$Internal$Flag$flag(19);
-var $mdgriffith$elm_ui$Element$Border$shadow = function (almostShade) {
-	var shade = {blur: almostShade.blur, color: almostShade.color, inset: false, offset: almostShade.offset, size: almostShade.size};
-	return A2(
-		$mdgriffith$elm_ui$Internal$Model$StyleClass,
-		$mdgriffith$elm_ui$Internal$Flag$shadows,
-		A3(
-			$mdgriffith$elm_ui$Internal$Model$Single,
-			$mdgriffith$elm_ui$Internal$Model$boxShadowClass(shade),
-			'box-shadow',
-			$mdgriffith$elm_ui$Internal$Model$formatBoxShadow(shade)));
-};
-var $author$project$Styling$shadowColor = A4($mdgriffith$elm_ui$Element$rgba255, 100, 100, 100, 0.6);
-var $author$project$Styling$floatingActionButton = F2(
-	function (i, onPress) {
-		var size = 40;
-		var paddingSize = (size / 8) | 0;
-		var iconSize = size - (2 * paddingSize);
-		return A3(
-			$author$project$Styling$iconButtonWithStyle,
-			_List_fromArray(
-				[
-					$mdgriffith$elm_ui$Element$Font$color($author$project$Styling$white),
-					$mdgriffith$elm_ui$Element$Background$color($author$project$Styling$germanZeroGreen),
-					$mdgriffith$elm_ui$Element$mouseOver(
-					_List_fromArray(
-						[
-							$mdgriffith$elm_ui$Element$Background$color($author$project$Styling$germanZeroYellow)
-						])),
-					$mdgriffith$elm_ui$Element$focused(
-					_List_fromArray(
-						[
-							$mdgriffith$elm_ui$Element$Background$color($author$project$Styling$germanZeroYellow)
-						])),
-					$mdgriffith$elm_ui$Element$Border$rounded((size / 2) | 0),
-					$mdgriffith$elm_ui$Element$Border$shadow(
-					{
-						blur: 1,
-						color: $author$project$Styling$shadowColor,
-						offset: _Utils_Tuple2(1, 1),
-						size: 2
-					}),
-					$mdgriffith$elm_ui$Element$alignBottom,
-					$mdgriffith$elm_ui$Element$alignRight,
-					$mdgriffith$elm_ui$Element$moveUp(10),
-					$mdgriffith$elm_ui$Element$moveLeft(10),
-					$mdgriffith$elm_ui$Element$padding(paddingSize)
-				]),
-			A2($feathericons$elm_feather$FeatherIcons$withSize, iconSize, i),
-			onPress);
-	});
-var $feathericons$elm_feather$FeatherIcons$plus = A2(
-	$feathericons$elm_feather$FeatherIcons$makeBuilder,
-	'plus',
-	_List_fromArray(
-		[
-			A2(
-			$elm$svg$Svg$line,
-			_List_fromArray(
-				[
-					$elm$svg$Svg$Attributes$x1('12'),
-					$elm$svg$Svg$Attributes$y1('5'),
-					$elm$svg$Svg$Attributes$x2('12'),
-					$elm$svg$Svg$Attributes$y2('19')
-				]),
-			_List_Nil),
-			A2(
-			$elm$svg$Svg$line,
-			_List_fromArray(
-				[
-					$elm$svg$Svg$Attributes$x1('5'),
-					$elm$svg$Svg$Attributes$y1('12'),
-					$elm$svg$Svg$Attributes$x2('19'),
-					$elm$svg$Svg$Attributes$y2('12')
-				]),
-			_List_Nil)
-		]));
 var $author$project$AllRuns$toList = function (_v0) {
 	var a = _v0.a;
 	return $elm$core$Dict$toList(a.runs);
@@ -23996,34 +24555,11 @@ var $mdgriffith$elm_ui$Element$Keyed$column = F2(
 			$mdgriffith$elm_ui$Internal$Model$Keyed(children));
 	});
 var $elm$html$Html$Attributes$id = $elm$html$Html$Attributes$stringProperty('id');
-var $mdgriffith$elm_ui$Element$Input$HiddenLabel = function (a) {
-	return {$: 'HiddenLabel', a: a};
-};
-var $mdgriffith$elm_ui$Element$Input$labelHidden = $mdgriffith$elm_ui$Element$Input$HiddenLabel;
 var $author$project$InterestList$member = F2(
 	function (p, _v0) {
 		var i = _v0.a;
 		return A2($elm$core$Set$member, p, i.paths);
 	});
-var $author$project$Main$onEnter = function (msg) {
-	return $mdgriffith$elm_ui$Element$htmlAttribute(
-		A2(
-			$elm$html$Html$Events$on,
-			'keyup',
-			A2(
-				$elm$json$Json$Decode$andThen,
-				function (key) {
-					return (key === 'Enter') ? $elm$json$Json$Decode$succeed(msg) : $elm$json$Json$Decode$fail('Not the enter key');
-				},
-				A2($elm$json$Json$Decode$field, 'key', $elm$json$Json$Decode$string))));
-};
-var $elm$html$Html$Events$onBlur = function (msg) {
-	return A2(
-		$elm$html$Html$Events$on,
-		'blur',
-		$elm$json$Json$Decode$succeed(msg));
-};
-var $mdgriffith$elm_ui$Element$Events$onLoseFocus = A2($elm$core$Basics$composeL, $mdgriffith$elm_ui$Internal$Model$Attr, $elm$html$Html$Events$onBlur);
 var $mdgriffith$elm_ui$Element$Font$strike = $mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.strike);
 var $author$project$Main$viewTree = F8(
 	function (runId, interestListId, path, collapseStatus, interestList, overrides, activeOverrideEditor, tree) {
@@ -24520,7 +25056,13 @@ var $author$project$Main$viewModel = function (model) {
 					[
 						$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
 					]),
-				$mdgriffith$elm_ui$Element$none)
+				$mdgriffith$elm_ui$Element$none),
+				$author$project$Main$buttons(
+				_List_fromArray(
+					[
+						A2($author$project$Styling$iconButton, $feathericons$elm_feather$FeatherIcons$download, $author$project$Main$DownloadClicked),
+						A2($author$project$Styling$iconButton, $feathericons$elm_feather$FeatherIcons$upload, $author$project$Main$UploadClicked)
+					]))
 			]));
 	var interestLists = A2(
 		$elm$core$List$map,
@@ -24528,9 +25070,10 @@ var $author$project$Main$viewModel = function (model) {
 			var pos = _v0.a;
 			var il = _v0.b;
 			var activePos = $yotamDvir$elm_pivot$Pivot$lengthL(model.interestLists);
-			return A4(
+			return A5(
 				$author$project$Main$viewInterestList,
 				pos,
+				model.editingActiveInterestListLabel,
 				_Utils_eq(pos, activePos),
 				il,
 				model.runs);
@@ -24569,7 +25112,9 @@ var $author$project$Main$viewModel = function (model) {
 								A2($mdgriffith$elm_ui$Element$minimum, 0, $mdgriffith$elm_ui$Element$fill)),
 								$mdgriffith$elm_ui$Element$scrollbarY,
 								$mdgriffith$elm_ui$Element$spacing($author$project$Styling$sizes.medium),
-								$mdgriffith$elm_ui$Element$padding($author$project$Styling$sizes.medium)
+								$mdgriffith$elm_ui$Element$padding($author$project$Styling$sizes.medium),
+								$mdgriffith$elm_ui$Element$inFront(
+								A2($author$project$Styling$floatingActionButton, $feathericons$elm_feather$FeatherIcons$plus, $author$project$Main$NewInterestListClicked))
 							]),
 						interestLists)
 					]))
