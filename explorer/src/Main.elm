@@ -28,6 +28,7 @@ import Element
         , height
         , minimum
         , padding
+        , paragraph
         , px
         , row
         , scrollbarY
@@ -1138,7 +1139,8 @@ view model =
 
                                 Loading ->
                                     ( "Loading"
-                                    , text "This should be done immediately. If it doesn't go away something is probably broken."
+                                    , paragraph [ width fill, height fill ]
+                                        [ text "This should be done immediately. If it doesn't go away something is probably broken." ]
                                     )
 
                                 LoadFailure msg ->
