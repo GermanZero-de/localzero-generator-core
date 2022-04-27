@@ -174,11 +174,11 @@ type Msg
     | GotEntries (Maybe RunId) Run.Inputs Run.Overrides (Result Http.Error Run.Entries)
       --| AddItemToChartClicked { path : Path, value : Float }
     | AddToInterestList Run.Path
+    | RemoveFromInterestList InterestListId Run.Path
     | AddOrUpdateOverride RunId String Float
     | RemoveOverride RunId String
     | OverrideEdited RunId String String
     | OverrideEditFinished
-    | RemoveFromInterestList Run.Path
     | CollapseToggleRequested AbsolutePath
     | UpdateModal ModalMsg
     | DisplayCalculateModalPressed (Maybe RunId) Run.Inputs Run.Overrides
@@ -401,8 +401,9 @@ update msg model =
                 |> mapActiveInterestList (InterestList.insert path)
                 |> withNoCmd
 
-        RemoveFromInterestList path ->
+        RemoveFromInterestList id path ->
             model
+                |> activateInterestList id
                 |> mapActiveInterestList (InterestList.remove path)
                 |> withNoCmd
 
@@ -586,7 +587,8 @@ onEnter msg =
 
 
 viewTree :
-    Int
+    RunId
+    -> InterestListId
     -> Run.Path
     -> CollapseStatus
     -> InterestList
@@ -594,8 +596,8 @@ viewTree :
     -> Maybe ActiveOverrideEditor
     -> Tree
     -> Element Msg
-viewTree resultNdx path collapseStatus interestList overrides activeOverrideEditor tree =
-    if isCollapsed ( resultNdx, path ) collapseStatus then
+viewTree runId interestListId path collapseStatus interestList overrides activeOverrideEditor tree =
+    if isCollapsed ( runId, path ) collapseStatus then
         Element.none
 
     else
@@ -621,14 +623,21 @@ viewTree resultNdx path collapseStatus interestList overrides activeOverrideEdit
                                         [ Input.button [ width fill, Element.focused [] ]
                                             { label =
                                                 itemRow
-                                                    [ collapsedStatusIcon ( resultNdx, childPath ) collapseStatus
+                                                    [ collapsedStatusIcon ( runId, childPath ) collapseStatus
                                                     , el [ width fill ] (text name)
                                                     , el (Font.alignRight :: fonts.explorerNodeSize) <|
                                                         text (String.fromInt (Dict.size child))
                                                     ]
-                                            , onPress = Just (CollapseToggleRequested ( resultNdx, path ++ [ name ] ))
+                                            , onPress = Just (CollapseToggleRequested ( runId, path ++ [ name ] ))
                                             }
-                                        , viewTree resultNdx childPath collapseStatus interestList overrides activeOverrideEditor child
+                                        , viewTree runId
+                                            interestListId
+                                            childPath
+                                            collapseStatus
+                                            interestList
+                                            overrides
+                                            activeOverrideEditor
+                                            child
                                         ]
 
                                 Leaf Null ->
@@ -653,7 +662,8 @@ viewTree resultNdx path collapseStatus interestList overrides activeOverrideEdit
 
                                         button =
                                             if InterestList.member childPath interestList then
-                                                dangerousIconButton (size16 FeatherIcons.trash2) (RemoveFromInterestList childPath)
+                                                dangerousIconButton (size16 FeatherIcons.trash2)
+                                                    (RemoveFromInterestList interestListId childPath)
 
                                             else
                                                 iconButton (size16 FeatherIcons.plus) (AddToInterestList childPath)
@@ -668,7 +678,7 @@ viewTree resultNdx path collapseStatus interestList overrides activeOverrideEdit
 
                                                     thisOverrideEditor =
                                                         activeOverrideEditor
-                                                            |> Maybe.Extra.filter (\e -> e.runNdx == resultNdx && e.name == name)
+                                                            |> Maybe.Extra.filter (\e -> e.runNdx == runId && e.name == name)
 
                                                     ( originalStyle, action, o ) =
                                                         case thisOverrideEditor of
@@ -678,7 +688,7 @@ viewTree resultNdx path collapseStatus interestList overrides activeOverrideEdit
                                                                         ( [ Font.color germanZeroGreen
                                                                           , Element.mouseOver [ Font.color germanZeroYellow ]
                                                                           ]
-                                                                        , OverrideEdited resultNdx name formattedF
+                                                                        , OverrideEdited runId name formattedF
                                                                         , Element.none
                                                                         )
 
@@ -691,10 +701,10 @@ viewTree resultNdx path collapseStatus interestList overrides activeOverrideEdit
                                                                           , Font.color red
                                                                           , Element.mouseOver [ Font.color germanZeroYellow ]
                                                                           ]
-                                                                        , RemoveOverride resultNdx name
+                                                                        , RemoveOverride runId name
                                                                         , Input.button (Font.alignRight :: fonts.explorerValues)
                                                                             { label = text newFormattedF
-                                                                            , onPress = Just (OverrideEdited resultNdx name newFormattedF)
+                                                                            , onPress = Just (OverrideEdited runId name newFormattedF)
                                                                             }
                                                                         )
 
@@ -718,10 +728,10 @@ viewTree resultNdx path collapseStatus interestList overrides activeOverrideEdit
                                                                   , Font.color red
                                                                   , Element.mouseOver [ Font.color germanZeroYellow ]
                                                                   ]
-                                                                , RemoveOverride resultNdx name
+                                                                , RemoveOverride runId name
                                                                 , Input.text textAttributes
                                                                     { text = editor.value
-                                                                    , onChange = OverrideEdited resultNdx name
+                                                                    , onChange = OverrideEdited runId name
                                                                     , placeholder = Nothing
                                                                     , label = Input.labelHidden "override"
                                                                     }
@@ -763,8 +773,8 @@ buttons l =
     row [ Element.spacingXY sizes.medium 0 ] l
 
 
-viewInputsAndResult : Int -> CollapseStatus -> InterestList -> Maybe ActiveOverrideEditor -> Run -> Element Msg
-viewInputsAndResult resultNdx collapseStatus interestList activeOverrideEditor run =
+viewInputsAndResult : RunId -> InterestListId -> CollapseStatus -> InterestList -> Maybe ActiveOverrideEditor -> Run -> Element Msg
+viewInputsAndResult runId interestListId collapseStatus interestList activeOverrideEditor run =
     let
         inputs =
             Run.getInputs run
@@ -784,19 +794,20 @@ viewInputsAndResult resultNdx collapseStatus interestList activeOverrideEditor r
             [ Input.button (width fill :: treeElementStyle)
                 { label =
                     row [ width fill, spacing sizes.medium ]
-                        [ collapsedStatusIcon ( resultNdx, [] ) collapseStatus
-                        , el [ Font.bold ] (text (String.fromInt resultNdx ++ ":"))
+                        [ collapsedStatusIcon ( runId, [] ) collapseStatus
+                        , el [ Font.bold ] (text (String.fromInt runId ++ ":"))
                         , text (inputs.ags ++ " " ++ String.fromInt inputs.year)
                         ]
-                , onPress = Just (CollapseToggleRequested ( resultNdx, [] ))
+                , onPress = Just (CollapseToggleRequested ( runId, [] ))
                 }
             , buttons
-                [ iconButton FeatherIcons.edit (DisplayCalculateModalPressed (Just resultNdx) inputs overrides)
+                [ iconButton FeatherIcons.edit (DisplayCalculateModalPressed (Just runId) inputs overrides)
                 , iconButton FeatherIcons.copy (DisplayCalculateModalPressed Nothing inputs overrides)
-                , dangerousIconButton FeatherIcons.trash2 (RemoveResult resultNdx)
+                , dangerousIconButton FeatherIcons.trash2 (RemoveResult runId)
                 ]
             ]
-        , viewTree resultNdx
+        , viewTree runId
+            interestListId
             []
             collapseStatus
             interestList
@@ -831,6 +842,7 @@ viewResultsPane model =
                     |> List.map
                         (\( resultNdx, ir ) ->
                             viewInputsAndResult resultNdx
+                                (Pivot.lengthL model.interestLists)
                                 model.collapseStatus
                                 (Pivot.getC model.interestLists)
                                 model.activeOverrideEditor
@@ -841,8 +853,8 @@ viewResultsPane model =
         ]
 
 
-viewInterestListTable : InterestListTable -> Element Msg
-viewInterestListTable interestList =
+viewInterestListTable : InterestListId -> InterestListTable -> Element Msg
+viewInterestListTable interestListId interestList =
     case interestList of
         [] ->
             Element.none
@@ -891,7 +903,7 @@ viewInterestListTable interestList =
                     , width = shrink
                     , view =
                         \( p, _ ) ->
-                            dangerousIconButton (size16 FeatherIcons.trash2) (RemoveFromInterestList p)
+                            dangerousIconButton (size16 FeatherIcons.trash2) (RemoveFromInterestList interestListId p)
                     }
             in
             Element.table
@@ -953,7 +965,7 @@ viewInterestList id isActive interestList allRuns =
 
               else
                 Element.none
-            , viewInterestListTable interestListTable
+            , viewInterestListTable id interestListTable
             ]
         ]
 
@@ -994,18 +1006,19 @@ viewModel model =
     in
     column
         [ width fill
-        , height fill
+        , height (minimum 0 fill)
         ]
         [ topBar
         , row
             [ width fill
-            , height fill
+            , height (minimum 0 fill)
             , spacing sizes.large
             ]
             [ viewResultsPane model
             , column
                 [ width fill
-                , height fill
+                , height (minimum 0 fill)
+                , scrollbarY
                 , spacing sizes.medium
                 , padding sizes.medium
                 ]
