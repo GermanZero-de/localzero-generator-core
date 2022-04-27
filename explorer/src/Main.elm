@@ -15,7 +15,7 @@ import Chart as C
 import Chart.Attributes as CA
 import Cmd.Extra exposing (withCmd, withNoCmd)
 import CollapseStatus exposing (CollapseStatus, allCollapsed, isCollapsed)
-import Dict
+import Dict exposing (Dict)
 import Dropdown
 import Element
     exposing
@@ -115,6 +115,7 @@ type alias Model =
     { runs : AllRuns
     , collapseStatus : CollapseStatus
     , interestLists : Pivot InterestList
+    , editingActiveInterestListLabel : Bool
     , showModal : Maybe ModalState
     , activeOverrideEditor : Maybe ActiveOverrideEditor
     }
@@ -157,7 +158,9 @@ initiateMakeEntries maybeNdx inputs overrides model =
 
 activateInterestList : InterestListId -> Model -> Model
 activateInterestList id model =
-    { model | interestLists = Pivot.withRollback (Pivot.goTo id) model.interestLists }
+    { model
+        | interestLists = Pivot.withRollback (Pivot.goTo id) model.interestLists
+    }
 
 
 init : () -> ( Model, Cmd Msg )
@@ -165,6 +168,7 @@ init _ =
     ( { runs = AllRuns.empty
       , showModal = Nothing
       , interestLists = Pivot.singleton InterestList.empty
+      , editingActiveInterestListLabel = False
       , collapseStatus = allCollapsed
       , activeOverrideEditor = Nothing
       }
@@ -190,10 +194,13 @@ type Msg
     | DisplayCalculateModalClicked (Maybe RunId) Run.Inputs Run.Overrides
     | CalculateModalOkClicked (Maybe RunId) Run.Inputs
     | RemoveRunClicked RunId
+    | InterestListLabelEdited InterestListId String
+    | InterestListLabelEditFinished
     | ToggleShowGraphClicked InterestListId
     | DuplicateInterestListClicked InterestListId
     | RemoveInterestListClicked InterestListId
     | ActivateInterestListClicked InterestListId
+    | NewInterestListClicked
     | DownloadClicked
     | UploadClicked
     | FileUploaded File
@@ -244,6 +251,11 @@ mapInterestLists f m =
 withLoadFailure : String -> Model -> ( Model, Cmd Msg )
 withLoadFailure msg model =
     ( { model | showModal = Just (LoadFailure msg) }, Cmd.none )
+
+
+withEditingActiveInterestListLabel : Bool -> Model -> Model
+withEditingActiveInterestListLabel b m =
+    { m | editingActiveInterestListLabel = b }
 
 
 downloadCmd : Model -> Cmd msg
@@ -464,6 +476,11 @@ update msg model =
                 |> mapActiveInterestList InterestList.toggleShowGraph
                 |> withNoCmd
 
+        NewInterestListClicked ->
+            model
+                |> mapInterestLists (Pivot.appendR InterestList.empty)
+                |> withNoCmd
+
         DuplicateInterestListClicked id ->
             model
                 |> activateInterestList id
@@ -496,6 +513,18 @@ update msg model =
         ActivateInterestListClicked id ->
             model
                 |> activateInterestList id
+                |> withNoCmd
+
+        InterestListLabelEdited id newLabel ->
+            model
+                |> activateInterestList id
+                |> withEditingActiveInterestListLabel True
+                |> mapActiveInterestList (InterestList.mapLabel (always newLabel))
+                |> withNoCmd
+
+        InterestListLabelEditFinished ->
+            model
+                |> withEditingActiveInterestListLabel False
                 |> withNoCmd
 
 
@@ -913,8 +942,8 @@ viewResultsPane model =
         ]
 
 
-viewInterestListTable : InterestListId -> InterestListTable -> Element Msg
-viewInterestListTable interestListId interestList =
+viewInterestListTable : Dict Run.Path String -> InterestListId -> InterestListTable -> Element Msg
+viewInterestListTable shortPathLabels interestListId interestList =
     case interestList of
         [] ->
             Element.none
@@ -977,14 +1006,20 @@ viewInterestListTable interestListId interestList =
                 }
 
 
-viewInterestList : InterestListId -> Bool -> InterestList -> AllRuns -> Element Msg
-viewInterestList id isActive interestList allRuns =
+viewInterestList : InterestListId -> Bool -> Bool -> InterestList -> AllRuns -> Element Msg
+viewInterestList id editingActiveInterestListLabel isActive interestList allRuns =
     let
         interestListTable =
             applyInterestListToRuns interestList allRuns
 
         showGraph =
             InterestList.getShowGraph interestList
+
+        labelText =
+            InterestList.getLabel interestList
+
+        shortPathLabels =
+            InterestList.guessShortPathLabels interestList
     in
     column
         [ width fill
@@ -1005,7 +1040,38 @@ viewInterestList id isActive interestList allRuns =
             , Font.size 24
             , Element.paddingXY sizes.large sizes.medium
             ]
-            [ el [ width fill ] (text (InterestList.getLabel interestList))
+            [ if editingActiveInterestListLabel && isActive then
+                Input.text
+                    [ Events.onLoseFocus InterestListLabelEditFinished
+                    , onEnter InterestListLabelEditFinished
+                    ]
+                    { onChange = InterestListLabelEdited id
+                    , text = labelText
+                    , label = Input.labelHidden "interest list"
+                    , placeholder = Just (Input.placeholder [] (text "label"))
+                    }
+
+              else
+                el
+                    [ Events.onClick (InterestListLabelEdited id labelText)
+                    , Font.color
+                        (if labelText == "" then
+                            modalDim
+
+                         else
+                            black
+                        )
+                    , Element.mouseOver [ Font.color germanZeroYellow ]
+                    ]
+                    (text
+                        (if labelText == "" then
+                            "label"
+
+                         else
+                            labelText
+                        )
+                    )
+            , el [ width fill ] Element.none
             , buttons
                 [ iconButton
                     (if showGraph then
@@ -1025,7 +1091,7 @@ viewInterestList id isActive interestList allRuns =
 
               else
                 Element.none
-            , viewInterestListTable id interestListTable
+            , viewInterestListTable shortPathLabels id interestListTable
             ]
         ]
 
@@ -1059,7 +1125,7 @@ viewModel model =
                             activePos =
                                 Pivot.lengthL model.interestLists
                         in
-                        viewInterestList pos (pos == activePos) il model.runs
+                        viewInterestList pos model.editingActiveInterestListLabel (pos == activePos) il model.runs
                     )
     in
     column
@@ -1079,6 +1145,8 @@ viewModel model =
                 , scrollbarY
                 , spacing sizes.medium
                 , padding sizes.medium
+                , Element.inFront
+                    (floatingActionButton FeatherIcons.plus NewInterestListClicked)
                 ]
                 interestLists
             ]
