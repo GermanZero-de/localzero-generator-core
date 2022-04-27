@@ -1,6 +1,7 @@
 module Styling exposing
     ( black
     , dangerousIconButton
+    , floatingActionButton
     , fonts
     , formatGermanNumber
     , germanZeroGreen
@@ -12,12 +13,14 @@ module Styling exposing
     , parseGermanNumber
     , red
     , size16
+    , size32
     , sizes
     , treeElementStyle
     , white
     )
 
 import Element exposing (Element, padding)
+import Element.Background as Background
 import Element.Border as Border
 import Element.Font as Font
 import Element.Input as Input
@@ -64,6 +67,11 @@ fonts =
 modalDim : Element.Color
 modalDim =
     Element.rgba255 128 128 128 0.8
+
+
+shadowColor : Element.Color
+shadowColor =
+    Element.rgba255 100 100 100 0.6
 
 
 germanZeroYellow : Element.Color
@@ -117,6 +125,11 @@ size16 =
     FeatherIcons.withSize 16
 
 
+size32 : FeatherIcons.Icon -> FeatherIcons.Icon
+size32 =
+    FeatherIcons.withSize 32
+
+
 icon : FeatherIcons.Icon -> Element msg
 icon i =
     i
@@ -138,6 +151,35 @@ iconButtonWithStyle style i onPress =
         { label = icon i
         , onPress = Just onPress
         }
+
+
+floatingActionButton : FeatherIcons.Icon -> msg -> Element msg
+floatingActionButton i onPress =
+    let
+        size =
+            40
+
+        paddingSize =
+            size // 8
+
+        iconSize =
+            size - 2 * paddingSize
+    in
+    iconButtonWithStyle
+        [ Font.color white
+        , Background.color germanZeroGreen
+        , Element.mouseOver [ Background.color germanZeroYellow ]
+        , Element.focused [ Background.color germanZeroYellow ]
+        , Border.rounded (size // 2)
+        , Border.shadow { offset = ( 1, 1 ), size = 2, blur = 1, color = shadowColor }
+        , Element.alignBottom
+        , Element.alignRight
+        , Element.moveUp 10
+        , Element.moveLeft 10
+        , padding paddingSize
+        ]
+        (FeatherIcons.withSize (toFloat iconSize) i)
+        onPress
 
 
 iconButton : FeatherIcons.Icon -> msg -> Element msg

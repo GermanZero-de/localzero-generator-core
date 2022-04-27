@@ -58,6 +58,7 @@ import Styling
     exposing
         ( black
         , dangerousIconButton
+        , floatingActionButton
         , fonts
         , formatGermanNumber
         , germanZeroGreen
@@ -69,6 +70,7 @@ import Styling
         , parseGermanNumber
         , red
         , size16
+        , size32
         , sizes
         , treeElementStyle
         , white
@@ -816,6 +818,13 @@ viewInputsAndResult runId interestListId collapseStatus interestList activeOverr
         ]
 
 
+defaultInputs : Run.Inputs
+defaultInputs =
+    { ags = ""
+    , year = 2035
+    }
+
+
 {-| The pane on the left hand side containing the results
 -}
 viewResultsPane : Model -> Element Msg
@@ -826,6 +835,8 @@ viewResultsPane model =
         , padding sizes.large
         , height (minimum 0 fill)
         , width (minimum 500 shrink)
+        , Element.inFront
+            (floatingActionButton FeatherIcons.plus (DisplayCalculateModalClicked Nothing defaultInputs Dict.empty))
         ]
         [ el
             [ scrollbarY
@@ -972,23 +983,17 @@ viewInterestList id isActive interestList allRuns =
 viewModel : Model -> Element Msg
 viewModel model =
     let
-        defaultInputs =
-            { ags = ""
-            , year = 2035
-            }
-
         topBar =
             row
                 ([ width fill
                  , padding sizes.large
-                 , Border.color germanZeroYellow
+                 , Border.color black
                  , Border.widthEach { bottom = 2, top = 0, left = 0, right = 0 }
                  ]
                     ++ fonts.explorer
                 )
                 [ text "LocalZero Explorer"
                 , el [ width fill ] Element.none
-                , iconButton FeatherIcons.plus (DisplayCalculateModalClicked Nothing defaultInputs Dict.empty)
                 ]
 
         interestLists =
@@ -1026,8 +1031,8 @@ viewModel model =
         ]
 
 
-viewModalDialogBox : Element Msg -> Element Msg
-viewModalDialogBox content =
+viewModalDialogBox : String -> Element Msg -> Element Msg
+viewModalDialogBox title content =
     let
         filler =
             el [ width fill, height fill ] Element.none
@@ -1040,14 +1045,27 @@ viewModalDialogBox content =
         [ filler
         , row [ width fill, height fill ]
             [ filler
-            , el
+            , column
                 [ width (minimum 600 fill)
                 , height (minimum 400 fill)
-                , Background.color germanZeroYellow
-                , Border.rounded 4
                 , padding sizes.large
                 ]
-                content
+                [ el
+                    [ width fill
+                    , Font.color white
+                    , Background.color germanZeroYellow
+                    , Font.size 24
+                    , padding 8
+                    ]
+                    (text title)
+                , el
+                    [ Background.color white
+                    , width fill
+                    , height fill
+                    , padding sizes.medium
+                    ]
+                    content
+                ]
             , filler
             ]
         , filler
@@ -1063,9 +1081,7 @@ viewCalculateModal maybeNdx inputs overrides =
     column
         [ width fill
         , height fill
-        , Background.color white
         , spacing sizes.medium
-        , padding sizes.medium
         ]
         [ Input.text []
             { label = Input.labelLeft labelStyle (text "AGS")
@@ -1094,7 +1110,7 @@ viewCalculateModal maybeNdx inputs overrides =
             , value = toFloat inputs.year
             , thumb = Input.defaultThumb
             }
-        , iconButton FeatherIcons.check (CalculateModalOkClicked maybeNdx inputs)
+        , iconButton (size32 FeatherIcons.check) (CalculateModalOkClicked maybeNdx inputs)
         ]
 
 
@@ -1107,17 +1123,28 @@ view model =
                     Element.none
 
                 Just modalState ->
-                    viewModalDialogBox
-                        (case modalState of
-                            PrepareCalculate maybeNdx inputs overrides ->
-                                viewCalculateModal maybeNdx inputs overrides
+                    let
+                        ( title, content ) =
+                            case modalState of
+                                PrepareCalculate maybeNdx inputs overrides ->
+                                    ( case maybeNdx of
+                                        Nothing ->
+                                            "Add new generator run"
 
-                            Loading ->
-                                text "Loading..."
+                                        Just ndx ->
+                                            "Change generator run " ++ String.fromInt ndx
+                                    , viewCalculateModal maybeNdx inputs overrides
+                                    )
 
-                            LoadFailure msg ->
-                                text ("FAILURE: " ++ msg)
-                        )
+                                Loading ->
+                                    ( "Loading"
+                                    , text "This should be done immediately. If it doesn't go away something is probably broken."
+                                    )
+
+                                LoadFailure msg ->
+                                    ( "Loading failed", text msg )
+                    in
+                    viewModalDialogBox title content
     in
     Element.layout
         [ width fill
