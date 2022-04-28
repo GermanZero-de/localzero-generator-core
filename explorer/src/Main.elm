@@ -568,8 +568,8 @@ subscriptions model =
 -- VIEW
 
 
-viewChart : InterestListTable -> Element Msg
-viewChart interestList =
+viewChart : Dict Run.Path String -> InterestListTable -> Element Msg
+viewChart shortPathLabels interestList =
     let
         widthChart =
             800
@@ -605,6 +605,15 @@ viewChart interestList =
                                     |> C.named (String.fromInt ndx)
                             )
 
+        getLabel : Run.Path -> String
+        getLabel p =
+            case Dict.get p shortPathLabels of
+                Just s ->
+                    s
+
+                Nothing ->
+                    String.join "." p
+
         chart =
             C.chart
                 [ CA.height heightChart
@@ -616,7 +625,7 @@ viewChart interestList =
                 , C.xAxis []
                 , C.yAxis []
                 , C.bars [] bars interestList
-                , C.binLabels (String.join "." << Tuple.first) [ CA.moveDown 40 ]
+                , C.binLabels (getLabel << Tuple.first) [ CA.moveDown 40 ]
                 , C.legendsAt .max
                     .max
                     [ CA.column
@@ -1098,7 +1107,7 @@ viewInterestList id editingActiveInterestListLabel isActive interestList allRuns
             ]
         , column [ width fill, spacing 40 ]
             [ if showGraph then
-                viewChart interestListTable
+                viewChart shortPathLabels interestListTable
 
               else
                 Element.none
