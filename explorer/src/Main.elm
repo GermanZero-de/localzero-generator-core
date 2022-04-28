@@ -520,7 +520,8 @@ update msg model =
                 |> activateInterestList id
                 |> withEditingActiveInterestListLabel True
                 |> mapActiveInterestList (InterestList.mapLabel (always newLabel))
-                |> withNoCmd
+                |> withCmd
+                    (Task.attempt (\_ -> Noop) (Browser.Dom.focus "interestlabel"))
 
         InterestListLabelEditFinished ->
             model
@@ -984,8 +985,17 @@ viewInterestListTable shortPathLabels interestListId interestList =
                                 }
                             )
 
-                pathColumn =
-                    { header = Element.none, width = shrink, view = \( p, _ ) -> text (String.join "." p) }
+                shortPathLabelColumn =
+                    { header = Element.none
+                    , width = shrink
+                    , view =
+                        \( p, _ ) ->
+                            column []
+                                [ Maybe.withDefault "CAN'T HAPPEN" (Dict.get p shortPathLabels)
+                                    |> text
+                                , el [ Font.size 8 ] (text (String.join "." p))
+                                ]
+                    }
 
                 deleteColumn =
                     { header = Element.none
@@ -1002,7 +1012,7 @@ viewInterestListTable shortPathLabels interestListId interestList =
                 , padding sizes.large
                 ]
                 { data = interestList
-                , columns = pathColumn :: dataColumns ++ [ deleteColumn ]
+                , columns = shortPathLabelColumn :: dataColumns ++ [ deleteColumn ]
                 }
 
 
@@ -1019,7 +1029,7 @@ viewInterestList id editingActiveInterestListLabel isActive interestList allRuns
             InterestList.getLabel interestList
 
         shortPathLabels =
-            InterestList.guessShortPathLabels interestList
+            InterestList.getShortPathLabels interestList
     in
     column
         [ width fill
@@ -1044,6 +1054,7 @@ viewInterestList id editingActiveInterestListLabel isActive interestList allRuns
                 Input.text
                     [ Events.onLoseFocus InterestListLabelEditFinished
                     , onEnter InterestListLabelEditFinished
+                    , Element.htmlAttribute (Html.Attributes.id "interestlabel")
                     ]
                     { onChange = InterestListLabelEdited id
                     , text = labelText

@@ -4,8 +4,8 @@ module InterestList exposing
     , empty
     , encode
     , getLabel
+    , getShortPathLabels
     , getShowGraph
-    , guessShortPathLabels
     , insert
     , mapLabel
     , member
@@ -15,14 +15,78 @@ module InterestList exposing
     )
 
 import Dict exposing (Dict)
+import Html exposing (b)
 import Json.Decode as Decode
 import Json.Encode as Encode
+import List.Extra
 import Run exposing (Path)
 import Set exposing (Set)
 
 
 type InterestList
-    = InterestList { label : String, paths : Set Path, showGraph : Bool }
+    = InterestList
+        { label : String
+        , paths : Set Path
+        , showGraph : Bool
+        , guessedShortLabels : Dict Path String
+        }
+
+
+type ShortenerInstruction
+    = Skip String
+    | Take
+
+
+shorten : String -> List (List String) -> List String
+shorten delim lists =
+    let
+        makeShortener : List ShortenerInstruction -> List (List String) -> List ShortenerInstruction
+        makeShortener res ps =
+            if List.any List.isEmpty ps then
+                List.reverse res
+
+            else
+                case ps of
+                    [] ->
+                        List.reverse res
+
+                    a :: rest ->
+                        if List.all (\p -> List.head p == List.head a) rest then
+                            makeShortener (Skip (List.head a |> Maybe.withDefault "") :: res) (List.map (List.drop 1) ps)
+
+                        else
+                            makeShortener (Take :: res) (List.map (List.drop 1) ps)
+
+        shortener =
+            makeShortener [] lists
+
+        applyShortener : List ShortenerInstruction -> List String -> List String -> String
+        applyShortener ins res list =
+            case ( ins, list ) of
+                ( [], _ ) ->
+                    String.join delim (List.reverse res ++ list)
+
+                ( _, [] ) ->
+                    "CAN'T HAPPEN BECAUSE OF THE WAY SHORTENER IS CONSTRUCTED"
+
+                ( (Skip s) :: insRest, _ :: listRest ) ->
+                    applyShortener insRest res listRest
+
+                ( Take :: insRest, l :: listRest ) ->
+                    applyShortener insRest (l :: res) listRest
+    in
+    lists
+        |> List.map (applyShortener shortener [])
+
+
+mapLast : (a -> a) -> List a -> List a
+mapLast f l =
+    case List.Extra.unconsLast l of
+        Nothing ->
+            []
+
+        Just ( x, prefix ) ->
+            prefix ++ [ f x ]
 
 
 {-| Sometimes we want to display shorter labels (e.g. in a chart), when all the labels are have a very similar
@@ -34,18 +98,32 @@ guessShortPathLabels (InterestList il) =
         paths =
             Set.toList il.paths
 
-        guess : List String -> String
-        guess p =
-            String.join "." p
+        shortLabels =
+            let
+                shortenedLastElements =
+                    shorten "_"
+                        (paths
+                            |> List.map (String.split "_" << Maybe.withDefault "" << List.Extra.last)
+                        )
+            in
+            shorten "." (List.map2 (\l e -> mapLast (always e) l) paths shortenedLastElements)
     in
-    paths
-        |> List.map (\p -> ( p, guess p ))
-        |> Dict.fromList
+    Dict.fromList (List.map2 Tuple.pair paths shortLabels)
+
+
+getShortPathLabels : InterestList -> Dict Path String
+getShortPathLabels (InterestList il) =
+    il.guessedShortLabels
+
+
+updateShortPathLabels : InterestList -> InterestList
+updateShortPathLabels ((InterestList il) as i) =
+    InterestList { il | guessedShortLabels = guessShortPathLabels i }
 
 
 empty : InterestList
 empty =
-    InterestList { label = "data", paths = Set.empty, showGraph = False }
+    InterestList { label = "data", paths = Set.empty, showGraph = False, guessedShortLabels = Dict.empty }
 
 
 toggleShowGraph : InterestList -> InterestList
@@ -71,11 +149,13 @@ mapLabel f (InterestList l) =
 remove : Path -> InterestList -> InterestList
 remove p (InterestList i) =
     InterestList { i | paths = Set.remove p i.paths }
+        |> updateShortPathLabels
 
 
 insert : Path -> InterestList -> InterestList
 insert p (InterestList i) =
     InterestList { i | paths = Set.insert p i.paths }
+        |> updateShortPathLabels
 
 
 member : Path -> InterestList -> Bool
@@ -101,7 +181,8 @@ decoder : Decode.Decoder InterestList
 decoder =
     Decode.map3
         (\label showGraph paths ->
-            InterestList { label = label, showGraph = showGraph, paths = paths }
+            InterestList { label = label, showGraph = showGraph, paths = paths, guessedShortLabels = Dict.empty }
+                |> updateShortPathLabels
         )
         (Decode.field "label" Decode.string)
         (Decode.field "showGraph" Decode.bool)
