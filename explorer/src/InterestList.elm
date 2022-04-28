@@ -94,21 +94,25 @@ structure. This tries to guess short names.
 -}
 guessShortPathLabels : InterestList -> Dict Path String
 guessShortPathLabels (InterestList il) =
-    let
-        paths =
-            Set.toList il.paths
+    case Set.toList il.paths of
+        [ onlyOne ] ->
+            -- If there is only one string, shorten would construct the empty string as
+            -- the unambigous short version...
+            Dict.singleton onlyOne (List.Extra.last onlyOne |> Maybe.withDefault "")
 
-        shortLabels =
+        paths ->
             let
-                shortenedLastElements =
-                    shorten "_"
-                        (paths
-                            |> List.map (String.split "_" << Maybe.withDefault "" << List.Extra.last)
-                        )
+                shortLabels =
+                    let
+                        shortenedLastElements =
+                            shorten "_"
+                                (paths
+                                    |> List.map (String.split "_" << Maybe.withDefault "" << List.Extra.last)
+                                )
+                    in
+                    shorten "." (List.map2 (\l e -> mapLast (always e) l) paths shortenedLastElements)
             in
-            shorten "." (List.map2 (\l e -> mapLast (always e) l) paths shortenedLastElements)
-    in
-    Dict.fromList (List.map2 Tuple.pair paths shortLabels)
+            Dict.fromList (List.map2 Tuple.pair paths shortLabels)
 
 
 getShortPathLabels : InterestList -> Dict Path String

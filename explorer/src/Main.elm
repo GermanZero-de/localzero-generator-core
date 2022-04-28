@@ -1002,7 +1002,7 @@ viewInterestListTable shortPathLabels interestListId interestList =
                             column []
                                 [ Maybe.withDefault "CAN'T HAPPEN" (Dict.get p shortPathLabels)
                                     |> text
-                                , el [ Font.size 8 ] (text (String.join "." p))
+                                , el [ Font.size 12 ] (text (String.join "." p))
                                 ]
                     }
 
