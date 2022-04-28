@@ -1159,16 +1159,21 @@ viewModel model =
             , spacing sizes.large
             ]
             [ viewResultsPane model
-            , column
+            , el
                 [ width fill
                 , height (minimum 0 fill)
-                , scrollbarY
-                , spacing sizes.medium
-                , padding sizes.medium
                 , Element.inFront
                     (floatingActionButton FeatherIcons.plus NewInterestListClicked)
                 ]
-                interestLists
+                (column
+                    [ width fill
+                    , height (minimum 0 fill)
+                    , scrollbarY
+                    , spacing sizes.medium
+                    , padding sizes.medium
+                    ]
+                    interestLists
+                )
             ]
         ]
 
