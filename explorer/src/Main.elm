@@ -651,7 +651,7 @@ viewChart shortPathLabels interestListTable =
                 , C.legendsAt .max
                     .max
                     [ CA.column
-                    , CA.moveLeft 5
+                    , CA.moveRight 20
                     , CA.alignRight
                     , CA.spacing 5
                     ]
