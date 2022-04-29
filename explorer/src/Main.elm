@@ -698,6 +698,90 @@ onEnter msg =
         )
 
 
+viewEntryAndOverride : Int -> String -> Run.Overrides -> Maybe ActiveOverrideEditor -> Float -> ( Element Msg, Element Msg )
+viewEntryAndOverride runId name overrides activeOverrideEditor f =
+    let
+        formattedF : String
+        formattedF =
+            formatGermanNumber f
+
+        override =
+            Dict.get name overrides
+
+        thisOverrideEditor =
+            activeOverrideEditor
+                |> Maybe.Extra.filter (\e -> e.runNdx == runId && e.name == name)
+
+        ( originalStyle, action, o ) =
+            case thisOverrideEditor of
+                Nothing ->
+                    case override of
+                        Nothing ->
+                            ( [ Font.color germanZeroGreen
+                              , Element.mouseOver [ Font.color germanZeroYellow ]
+                              ]
+                            , OverrideEdited runId name formattedF
+                            , Element.none
+                            )
+
+                        Just newF ->
+                            let
+                                newFormattedF =
+                                    formatGermanNumber newF
+                            in
+                            ( [ Font.strike
+                              , Font.color red
+                              , Element.mouseOver [ Font.color germanZeroYellow ]
+                              ]
+                            , RemoveOverrideClicked runId name
+                            , Input.button
+                                (Font.alignRight
+                                    :: Font.color germanZeroGreen
+                                    :: Element.mouseOver [ Font.color germanZeroYellow ]
+                                    :: fonts.explorerValues
+                                )
+                                { label = text newFormattedF
+                                , onPress = Just (OverrideEdited runId name newFormattedF)
+                                }
+                            )
+
+                Just editor ->
+                    let
+                        textStyle =
+                            case editor.asFloat of
+                                Nothing ->
+                                    [ Border.color red, Border.width 1 ]
+
+                                Just _ ->
+                                    [ onEnter OverrideEditFinished
+                                    ]
+
+                        textAttributes =
+                            Events.onLoseFocus OverrideEditFinished
+                                :: Element.htmlAttribute (Html.Attributes.id "overrideEditor")
+                                :: textStyle
+                    in
+                    ( [ Font.strike
+                      , Font.color red
+                      , Element.mouseOver [ Font.color germanZeroYellow ]
+                      ]
+                    , RemoveOverrideClicked runId name
+                    , Input.text textAttributes
+                        { text = editor.value
+                        , onChange = OverrideEdited runId name
+                        , placeholder = Nothing
+                        , label = Input.labelHidden "override"
+                        }
+                    )
+    in
+    ( Input.button (Font.alignRight :: fonts.explorerValues ++ originalStyle)
+        { label = text formattedF
+        , onPress = Just action
+        }
+    , o
+    )
+
+
 viewTree :
     RunId
     -> InterestListId
@@ -784,77 +868,7 @@ viewTree runId interestListId path collapseStatus interestList overrides activeO
                                             -- Clicking on original value should start or revert
                                             -- an override
                                             if isEntry then
-                                                let
-                                                    override =
-                                                        Dict.get name overrides
-
-                                                    thisOverrideEditor =
-                                                        activeOverrideEditor
-                                                            |> Maybe.Extra.filter (\e -> e.runNdx == runId && e.name == name)
-
-                                                    ( originalStyle, action, o ) =
-                                                        case thisOverrideEditor of
-                                                            Nothing ->
-                                                                case override of
-                                                                    Nothing ->
-                                                                        ( [ Font.color germanZeroGreen
-                                                                          , Element.mouseOver [ Font.color germanZeroYellow ]
-                                                                          ]
-                                                                        , OverrideEdited runId name formattedF
-                                                                        , Element.none
-                                                                        )
-
-                                                                    Just newF ->
-                                                                        let
-                                                                            newFormattedF =
-                                                                                formatGermanNumber newF
-                                                                        in
-                                                                        ( [ Font.strike
-                                                                          , Font.color red
-                                                                          , Element.mouseOver [ Font.color germanZeroYellow ]
-                                                                          ]
-                                                                        , RemoveOverrideClicked runId name
-                                                                        , Input.button (Font.alignRight :: fonts.explorerValues)
-                                                                            { label = text newFormattedF
-                                                                            , onPress = Just (OverrideEdited runId name newFormattedF)
-                                                                            }
-                                                                        )
-
-                                                            Just editor ->
-                                                                let
-                                                                    textStyle =
-                                                                        case editor.asFloat of
-                                                                            Nothing ->
-                                                                                [ Border.color red, Border.width 1 ]
-
-                                                                            Just _ ->
-                                                                                [ onEnter OverrideEditFinished
-                                                                                ]
-
-                                                                    textAttributes =
-                                                                        Events.onLoseFocus OverrideEditFinished
-                                                                            :: Element.htmlAttribute (Html.Attributes.id "overrideEditor")
-                                                                            :: textStyle
-                                                                in
-                                                                ( [ Font.strike
-                                                                  , Font.color red
-                                                                  , Element.mouseOver [ Font.color germanZeroYellow ]
-                                                                  ]
-                                                                , RemoveOverrideClicked runId name
-                                                                , Input.text textAttributes
-                                                                    { text = editor.value
-                                                                    , onChange = OverrideEdited runId name
-                                                                    , placeholder = Nothing
-                                                                    , label = Input.labelHidden "override"
-                                                                    }
-                                                                )
-                                                in
-                                                ( Input.button (Font.alignRight :: fonts.explorerValues ++ originalStyle)
-                                                    { label = text formattedF
-                                                    , onPress = Just action
-                                                    }
-                                                , o
-                                                )
+                                                viewEntryAndOverride runId name overrides activeOverrideEditor f
 
                                             else
                                                 ( el (Font.alignRight :: fonts.explorerValues) <|
