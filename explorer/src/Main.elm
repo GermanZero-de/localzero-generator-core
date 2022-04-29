@@ -54,6 +54,7 @@ import Http
 import InterestList exposing (InterestList)
 import Json.Decode as Decode
 import Json.Encode as Encode
+import List.Extra
 import Maybe.Extra
 import Pivot exposing (Pivot)
 import Run exposing (Run)
@@ -214,28 +215,54 @@ type ModalMsg
 
 
 type alias InterestListTable =
-    List ( Run.Path, Array Value )
+    { paths : List Run.Path
+    , runs : List RunId
+    , values : Dict ( RunId, Run.Path ) Value
+    }
 
 
 applyInterestListToRuns : InterestList -> AllRuns -> InterestListTable
-applyInterestListToRuns interestList runs =
+applyInterestListToRuns interestList allRuns =
     -- The withDefault handles the case if we somehow managed to get two
     -- differently structured result values into the explorer, this can only
     -- really happen when two different versions of the python code are
     -- explored at the same time.
     -- Otherwise you can't add a path to the interest list that ends
     -- at a TREE
-    InterestList.toList interestList
-        |> List.map
-            (\path ->
-                ( path
-                , Array.initialize (AllRuns.size runs)
-                    (\n ->
-                        AllRuns.getValue Run.WithOverrides n path runs
-                            |> Maybe.withDefault (String "TREE")
+    let
+        paths =
+            InterestList.toList interestList
+
+        runList =
+            AllRuns.toList allRuns
+
+        runs =
+            List.map Tuple.first runList
+
+        values =
+            runList
+                |> List.concatMap
+                    (\( runId, run ) ->
+                        paths
+                            |> List.map
+                                (\path ->
+                                    case
+                                        Run.getTree Run.WithOverrides run
+                                            |> ValueTree.get path
+                                    of
+                                        Nothing ->
+                                            ( ( runId, path ), String "NOTHING" )
+
+                                        Just (ValueTree.Tree _) ->
+                                            ( ( runId, path ), String "TREE" )
+
+                                        Just (ValueTree.Leaf v) ->
+                                            ( ( runId, path ), v )
+                                )
                     )
-                )
-            )
+                |> Dict.fromList
+    in
+    { runs = runs, paths = paths, values = values }
 
 
 mapActiveInterestList : (InterestList -> InterestList) -> Model -> Model
@@ -569,7 +596,7 @@ subscriptions model =
 
 
 viewChart : Dict Run.Path String -> InterestListTable -> Element Msg
-viewChart shortPathLabels interestList =
+viewChart shortPathLabels interestListTable =
     let
         widthChart =
             800
@@ -578,32 +605,27 @@ viewChart shortPathLabels interestList =
             600
 
         bars =
-            case interestList of
-                [] ->
-                    []
+            interestListTable.runs
+                |> List.map
+                    (\runId ->
+                        let
+                            get path =
+                                case Dict.get ( runId, path ) interestListTable.values of
+                                    Just (Float f) ->
+                                        f
 
-                ( _, row ) :: _ ->
-                    List.range 0 (Array.length row - 1)
-                        |> List.map
-                            (\ndx ->
-                                let
-                                    get ( _, a ) =
-                                        case Array.get ndx a of
-                                            Just (Float f) ->
-                                                f
+                                    Just (String _) ->
+                                        0.0
 
-                                            Just (String _) ->
-                                                0.0
+                                    Just Null ->
+                                        0.0
 
-                                            Just Null ->
-                                                0.0
-
-                                            Nothing ->
-                                                0.0
-                                in
-                                C.bar get []
-                                    |> C.named (String.fromInt ndx)
-                            )
+                                    Nothing ->
+                                        0.0
+                        in
+                        C.bar get []
+                            |> C.named (String.fromInt runId)
+                    )
 
         getLabel : Run.Path -> String
         getLabel p =
@@ -624,8 +646,8 @@ viewChart shortPathLabels interestList =
                 , C.yLabels []
                 , C.xAxis []
                 , C.yAxis []
-                , C.bars [] bars interestList
-                , C.binLabels (getLabel << Tuple.first) [ CA.moveDown 40 ]
+                , C.bars [] bars interestListTable.paths
+                , C.binLabels getLabel [ CA.moveDown 40 ]
                 , C.legendsAt .max
                     .max
                     [ CA.column
@@ -952,77 +974,69 @@ viewResultsPane model =
         ]
 
 
-viewInterestListTable : Dict Run.Path String -> InterestListId -> InterestListTable -> Element Msg
-viewInterestListTable shortPathLabels interestListId interestList =
-    case interestList of
-        [] ->
-            Element.none
+viewInterestListTableAsTable : Dict Run.Path String -> InterestListId -> InterestListTable -> Element Msg
+viewInterestListTableAsTable shortPathLabels interestListId interestListTable =
+    let
+        dataColumns =
+            interestListTable.runs
+                |> List.map
+                    (\runId ->
+                        { header = el [ Font.bold, Font.alignRight ] (Element.text (String.fromInt runId))
+                        , width = shrink
+                        , view =
+                            \path ->
+                                let
+                                    value =
+                                        case Dict.get ( runId, path ) interestListTable.values of
+                                            Just (Float f) ->
+                                                el (Font.alignRight :: fonts.explorerValues) <|
+                                                    text (formatGermanNumber f)
 
-        ( _, row ) :: _ ->
-            let
-                resultCount =
-                    Array.length row
+                                            Just (String s) ->
+                                                el (Font.alignRight :: fonts.explorerValues) <|
+                                                    text s
 
-                dataColumns =
-                    List.range 0 (resultCount - 1)
-                        |> List.map
-                            (\resultNdx ->
-                                { header = el [ Font.bold, Font.alignRight ] (Element.text (String.fromInt resultNdx))
-                                , width = shrink
-                                , view =
-                                    \( _, values ) ->
-                                        let
-                                            value =
-                                                case Array.get resultNdx values of
-                                                    Just (Float f) ->
-                                                        el (Font.alignRight :: fonts.explorerValues) <|
-                                                            text (formatGermanNumber f)
+                                            Just Null ->
+                                                el (Font.alignRight :: Font.bold :: fonts.explorerValues) <|
+                                                    text "bold"
 
-                                                    Just (String s) ->
-                                                        el (Font.alignRight :: fonts.explorerValues) <|
-                                                            text s
+                                            Nothing ->
+                                                -- make compiler happy
+                                                Element.none
+                                in
+                                value
+                        }
+                    )
 
-                                                    Just Null ->
-                                                        el (Font.alignRight :: Font.bold :: fonts.explorerValues) <|
-                                                            text "bold"
+        shortPathLabelColumn =
+            { header = Element.none
+            , width = shrink
+            , view =
+                \path ->
+                    column []
+                        [ Maybe.withDefault "CAN'T HAPPEN" (Dict.get path shortPathLabels)
+                            |> text
+                        , el [ Font.size 12 ] (text (String.join "." path))
+                        ]
+            }
 
-                                                    Nothing ->
-                                                        -- make compiler happy
-                                                        Element.none
-                                        in
-                                        value
-                                }
-                            )
-
-                shortPathLabelColumn =
-                    { header = Element.none
-                    , width = shrink
-                    , view =
-                        \( p, _ ) ->
-                            column []
-                                [ Maybe.withDefault "CAN'T HAPPEN" (Dict.get p shortPathLabels)
-                                    |> text
-                                , el [ Font.size 12 ] (text (String.join "." p))
-                                ]
-                    }
-
-                deleteColumn =
-                    { header = Element.none
-                    , width = shrink
-                    , view =
-                        \( p, _ ) ->
-                            dangerousIconButton (size16 FeatherIcons.trash2) (RemoveFromInterestListClicked interestListId p)
-                    }
-            in
-            Element.table
-                [ width fill
-                , height shrink
-                , spacing sizes.large
-                , padding sizes.large
-                ]
-                { data = interestList
-                , columns = shortPathLabelColumn :: dataColumns ++ [ deleteColumn ]
-                }
+        deleteColumn =
+            { header = Element.none
+            , width = shrink
+            , view =
+                \path ->
+                    dangerousIconButton (size16 FeatherIcons.trash2) (RemoveFromInterestListClicked interestListId path)
+            }
+    in
+    Element.table
+        [ width fill
+        , height shrink
+        , spacing sizes.large
+        , padding sizes.large
+        ]
+        { data = interestListTable.paths
+        , columns = shortPathLabelColumn :: dataColumns ++ [ deleteColumn ]
+        }
 
 
 viewInterestList : InterestListId -> Bool -> Bool -> InterestList -> AllRuns -> Element Msg
@@ -1112,7 +1126,7 @@ viewInterestList id editingActiveInterestListLabel isActive interestList allRuns
 
               else
                 Element.none
-            , viewInterestListTable shortPathLabels id interestListTable
+            , viewInterestListTableAsTable shortPathLabels id interestListTable
             ]
         ]
 
