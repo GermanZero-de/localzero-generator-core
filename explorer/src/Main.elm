@@ -1039,19 +1039,20 @@ viewInterestList id editingActiveInterestListLabel isActive interestList allRuns
 
         shortPathLabels =
             InterestList.getShortPathLabels interestList
+
+        ( borderColor, borderWidth ) =
+            if isActive then
+                ( germanZeroYellow, 2 )
+
+            else
+                ( germanZeroGreen, 1 )
     in
     column
         [ width fill
         , Events.onClick (ActivateInterestListClicked id)
         , Element.mouseOver [ Border.color germanZeroYellow ]
-        , Border.color
-            (if isActive then
-                germanZeroYellow
-
-             else
-                germanZeroGreen
-            )
-        , Border.width 1
+        , Border.color borderColor
+        , Border.width borderWidth
         , padding sizes.medium
         ]
         [ row
