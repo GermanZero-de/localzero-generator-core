@@ -1,4 +1,4 @@
-module ValueTree exposing (Node(..), Tree, Value(..), decoder, get, merge, valueDecoder, wrap)
+module ValueTree exposing (Node(..), Tree, Value(..), decoder, expand, get, merge, valueDecoder, wrap)
 
 import Dict exposing (Dict)
 import Json.Decode as Decode
@@ -43,6 +43,25 @@ getHelper path node =
                 Tree t ->
                     Dict.get name t
                         |> Maybe.andThen (getHelper pathRest)
+
+
+expandHelper : List String -> Tree -> List (List String)
+expandHelper path t =
+    Dict.toList t
+        |> List.concatMap
+            (\( name, child ) ->
+                case child of
+                    Leaf _ ->
+                        [ path ++ [ name ] ]
+
+                    Tree childTree ->
+                        expandHelper (path ++ [ name ]) childTree
+            )
+
+
+expand : Tree -> List (List String)
+expand =
+    expandHelper []
 
 
 get : List String -> Tree -> Maybe Node

@@ -13,6 +13,8 @@ import Browser
 import Browser.Dom
 import Chart as C
 import Chart.Attributes as CA
+import Chart.Events
+import Chart.Item
 import Cmd.Extra exposing (withCmd, withNoCmd)
 import CollapseStatus exposing (CollapseStatus, allCollapsed, isCollapsed)
 import Dict exposing (Dict)
@@ -26,6 +28,7 @@ import Element
         , el
         , fill
         , height
+        , maximum
         , minimum
         , padding
         , paragraph
@@ -47,6 +50,7 @@ import FeatherIcons
 import File exposing (File)
 import File.Download as Download
 import File.Select
+import Filter
 import Html exposing (Html)
 import Html.Attributes
 import Html.Events
@@ -57,7 +61,7 @@ import Json.Encode as Encode
 import List.Extra
 import Maybe.Extra
 import Pivot exposing (Pivot)
-import Run exposing (Run)
+import Run exposing (OverrideHandling(..), Run)
 import Set exposing (Set)
 import Storage exposing (Storage)
 import Styling
@@ -103,13 +107,21 @@ main =
 
 
 type alias ActiveOverrideEditor =
-    { runNdx : RunId, name : String, value : String, asFloat : Maybe Float }
+    { runId : RunId, name : String, value : String, asFloat : Maybe Float }
+
+
+type alias ActiveSearch =
+    { runId : RunId, pattern : String, result : ValueTree.Tree }
 
 
 {-| Position of interestlist in pivot
 -}
 type alias InterestListId =
     Int
+
+
+type alias ChartHovering =
+    List (Chart.Item.Many (List String) Chart.Item.Any)
 
 
 type alias Model =
@@ -119,6 +131,8 @@ type alias Model =
     , editingActiveInterestListLabel : Bool
     , showModal : Maybe ModalState
     , activeOverrideEditor : Maybe ActiveOverrideEditor
+    , activeSearch : Maybe ActiveSearch
+    , chartHovering : ChartHovering
     }
 
 
@@ -126,6 +140,11 @@ type ModalState
     = PrepareCalculate (Maybe RunId) Run.Inputs Run.Overrides
     | Loading
     | LoadFailure String
+
+
+filterFieldId : String
+filterFieldId =
+    "filter"
 
 
 encodeOverrides : Run.Overrides -> Encode.Value
@@ -172,6 +191,8 @@ init _ =
       , editingActiveInterestListLabel = False
       , collapseStatus = allCollapsed
       , activeOverrideEditor = Nothing
+      , activeSearch = Nothing
+      , chartHovering = []
       }
     , Cmd.none
     )
@@ -190,6 +211,9 @@ type Msg
     | RemoveOverrideClicked RunId String
     | OverrideEdited RunId String String
     | OverrideEditFinished
+    | FilterEdited RunId String
+    | FilterFinished
+    | FilterQuickAddRequested
     | ToggleCollapseTreeClicked AbsolutePath
     | ModalMsg ModalMsg
     | DisplayCalculateModalClicked (Maybe RunId) Run.Inputs Run.Overrides
@@ -206,6 +230,7 @@ type Msg
     | UploadClicked
     | FileUploaded File
     | FileContentLoaded String
+    | OnChartHover ChartHovering
     | Noop
 
 
@@ -421,7 +446,63 @@ update msg model =
             }
                 |> withNoCmd
 
-        OverrideEdited ndx name newText ->
+        FilterEdited runId pattern ->
+            let
+                newActiveSearch =
+                    case AllRuns.get runId model.runs of
+                        Nothing ->
+                            -- Shouldn't really happen, but have to make compiler happy
+                            -- would really like elm to have panic
+                            model.activeSearch
+
+                        Just run ->
+                            let
+                                result =
+                                    Filter.filter pattern (Run.getTree WithoutOverrides run)
+                            in
+                            Just
+                                { runId = runId
+                                , pattern = pattern
+                                , result = result
+                                }
+
+                activeSearchFieldChanged =
+                    case ( model.activeSearch, newActiveSearch ) of
+                        ( _, Nothing ) ->
+                            False
+
+                        ( Nothing, Just _ ) ->
+                            True
+
+                        ( Just a, Just b ) ->
+                            a.runId /= b.runId
+            in
+            { model | activeSearch = newActiveSearch }
+                |> withCmd (Task.attempt (\_ -> Noop) (Browser.Dom.focus filterFieldId))
+
+        FilterQuickAddRequested ->
+            case model.activeSearch of
+                Nothing ->
+                    model
+                        |> withNoCmd
+
+                Just a ->
+                    let
+                        paths =
+                            ValueTree.expand a.result
+                    in
+                    { model | activeSearch = Nothing }
+                        |> mapActiveInterestList
+                            (\il ->
+                                List.foldl (\p i -> InterestList.insert p i) il paths
+                            )
+                        |> withNoCmd
+
+        FilterFinished ->
+            { model | activeSearch = Nothing }
+                |> withNoCmd
+
+        OverrideEdited runId name newText ->
             let
                 isFocusChanged =
                     case model.activeOverrideEditor of
@@ -429,12 +510,12 @@ update msg model =
                             True
 
                         Just e ->
-                            e.runNdx /= ndx || e.name /= name
+                            e.runId /= runId || e.name /= name
             in
             ( { model
                 | activeOverrideEditor =
                     Just
-                        { runNdx = ndx
+                        { runId = runId
                         , name = name
                         , value = newText
                         , asFloat = parseGermanNumber newText
@@ -463,26 +544,26 @@ update msg model =
                             ( modelEditorClosed, Cmd.none )
 
                         Just f ->
-                            case AllRuns.get editor.runNdx model.runs of
+                            case AllRuns.get editor.runId model.runs of
                                 Nothing ->
                                     ( modelEditorClosed, Cmd.none )
 
                                 Just run ->
                                     modelEditorClosed
-                                        |> initiateMakeEntries (Just editor.runNdx)
+                                        |> initiateMakeEntries (Just editor.runId)
                                             (Run.getInputs run)
                                             (Run.getOverrides run
                                                 |> Dict.insert editor.name f
                                             )
 
-        RemoveOverrideClicked ndx name ->
+        RemoveOverrideClicked runId name ->
             { model
                 | runs =
                     model.runs
-                        |> AllRuns.update ndx (Run.mapOverrides (Dict.remove name))
+                        |> AllRuns.update runId (Run.mapOverrides (Dict.remove name))
                 , activeOverrideEditor =
                     model.activeOverrideEditor
-                        |> Maybe.Extra.filter (\e -> e.runNdx /= ndx || e.name /= name)
+                        |> Maybe.Extra.filter (\e -> e.runId /= runId || e.name /= name)
             }
                 |> withNoCmd
 
@@ -555,6 +636,10 @@ update msg model =
                 |> withEditingActiveInterestListLabel False
                 |> withNoCmd
 
+        OnChartHover hovering ->
+            { model | chartHovering = hovering }
+                |> withNoCmd
+
 
 updateModal : ModalMsg -> Maybe ModalState -> ( Maybe ModalState, Cmd ModalMsg )
 updateModal msg model =
@@ -595,8 +680,8 @@ subscriptions model =
 -- VIEW
 
 
-viewChart : Dict Run.Path String -> InterestListTable -> Element Msg
-viewChart shortPathLabels interestListTable =
+viewChart : ChartHovering -> Dict Run.Path String -> InterestListTable -> Element Msg
+viewChart chartHovering shortPathLabels interestListTable =
     let
         widthChart =
             800
@@ -625,6 +710,7 @@ viewChart shortPathLabels interestListTable =
                         in
                         C.bar get []
                             |> C.named (String.fromInt runId)
+                            |> C.format (\v -> formatGermanNumber v)
                     )
 
         getLabel : Run.Path -> String
@@ -640,6 +726,8 @@ viewChart shortPathLabels interestListTable =
             C.chart
                 [ CA.height heightChart
                 , CA.width widthChart
+                , Chart.Events.onMouseMove OnChartHover (Chart.Events.getNearest Chart.Item.bins)
+                , Chart.Events.onMouseLeave (OnChartHover [])
                 ]
                 [ C.xTicks []
                 , C.yTicks []
@@ -656,6 +744,10 @@ viewChart shortPathLabels interestListTable =
                     , CA.spacing 5
                     ]
                     []
+                , C.each chartHovering
+                    (\p item ->
+                        [ C.tooltip item [] [] [] ]
+                    )
                 ]
     in
     el
@@ -668,11 +760,11 @@ viewChart shortPathLabels interestListTable =
         (Element.html chart)
 
 
-collapsedStatusIcon : AbsolutePath -> CollapseStatus -> Element Msg
-collapsedStatusIcon path collapsed =
+collapsedStatusIcon : Bool -> Element Msg
+collapsedStatusIcon collapsed =
     let
         i =
-            if isCollapsed path collapsed then
+            if collapsed then
                 FeatherIcons.chevronRight
 
             else
@@ -681,21 +773,31 @@ collapsedStatusIcon path collapsed =
     el iconButtonStyle (icon (size16 i))
 
 
-onEnter : msg -> Element.Attribute msg
-onEnter msg =
+onKeys : List ( String, msg ) -> Element.Attribute msg
+onKeys keys =
+    let
+        keyDict =
+            Dict.fromList keys
+    in
     Element.htmlAttribute
         (Html.Events.on "keyup"
             (Decode.field "key" Decode.string
                 |> Decode.andThen
-                    (\key ->
-                        if key == "Enter" then
-                            Decode.succeed msg
+                    (\k ->
+                        case Dict.get k keyDict of
+                            Just msg ->
+                                Decode.succeed msg
 
-                        else
-                            Decode.fail "Not the enter key"
+                            Nothing ->
+                                Decode.fail "Not the expected key"
                     )
             )
         )
+
+
+onEnter : msg -> Element.Attribute msg
+onEnter k =
+    onKeys [ ( "Enter", k ) ]
 
 
 viewEntryAndOverride : Int -> String -> Run.Overrides -> Maybe ActiveOverrideEditor -> Float -> ( Element Msg, Element Msg )
@@ -710,7 +812,7 @@ viewEntryAndOverride runId name overrides activeOverrideEditor f =
 
         thisOverrideEditor =
             activeOverrideEditor
-                |> Maybe.Extra.filter (\e -> e.runNdx == runId && e.name == name)
+                |> Maybe.Extra.filter (\e -> e.runId == runId && e.name == name)
 
         ( originalStyle, action, o ) =
             case thisOverrideEditor of
@@ -786,14 +888,14 @@ viewTree :
     RunId
     -> InterestListId
     -> Run.Path
-    -> CollapseStatus
+    -> (RunId -> Run.Path -> Bool)
     -> InterestList
     -> Run.Overrides
     -> Maybe ActiveOverrideEditor
     -> Tree
     -> Element Msg
-viewTree runId interestListId path collapseStatus interestList overrides activeOverrideEditor tree =
-    if isCollapsed ( runId, path ) collapseStatus then
+viewTree runId interestListId path checkIsCollapsed interestList overrides activeOverrideEditor tree =
+    if checkIsCollapsed runId path then
         Element.none
 
     else
@@ -819,9 +921,9 @@ viewTree runId interestListId path collapseStatus interestList overrides activeO
                                         [ Input.button [ width fill, Element.focused [] ]
                                             { label =
                                                 itemRow
-                                                    [ collapsedStatusIcon ( runId, childPath ) collapseStatus
+                                                    [ collapsedStatusIcon (checkIsCollapsed runId childPath)
                                                     , el [ width fill ] (text name)
-                                                    , el (Font.alignRight :: fonts.explorerNodeSize) <|
+                                                    , el (Font.italic :: Font.alignRight :: fonts.explorerNodeSize) <|
                                                         text (String.fromInt (Dict.size child))
                                                     ]
                                             , onPress = Just (ToggleCollapseTreeClicked ( runId, path ++ [ name ] ))
@@ -829,7 +931,7 @@ viewTree runId interestListId path collapseStatus interestList overrides activeO
                                         , viewTree runId
                                             interestListId
                                             childPath
-                                            collapseStatus
+                                            checkIsCollapsed
                                             interestList
                                             overrides
                                             activeOverrideEditor
@@ -886,7 +988,7 @@ viewTree runId interestListId path collapseStatus interestList overrides activeO
                     ( name, element )
                 )
             |> Element.Keyed.column
-                ([ padding sizes.medium
+                ([ Element.paddingEach { left = sizes.medium, right = 0, top = sizes.medium, bottom = sizes.medium }
                  , spacing sizes.small
                  , width fill
                  ]
@@ -899,14 +1001,49 @@ buttons l =
     row [ Element.spacingXY sizes.medium 0 ] l
 
 
-viewInputsAndResult : RunId -> InterestListId -> CollapseStatus -> InterestList -> Maybe ActiveOverrideEditor -> Run -> Element Msg
-viewInputsAndResult runId interestListId collapseStatus interestList activeOverrideEditor run =
+viewInputsAndResult : RunId -> InterestListId -> CollapseStatus -> InterestList -> Maybe ActiveOverrideEditor -> Maybe ActiveSearch -> Run -> Element Msg
+viewInputsAndResult runId interestListId collapseStatus interestList activeOverrideEditor activeSearch run =
     let
         inputs =
             Run.getInputs run
 
         overrides =
             Run.getOverrides run
+
+        differentIfFilterActive =
+            case activeSearch |> Maybe.Extra.filter (\s -> s.runId == runId) of
+                Nothing ->
+                    { filterButton = iconButton FeatherIcons.filter (FilterEdited runId "")
+                    , treeToDisplay = Run.getTree WithoutOverrides run
+                    , isCollapsed = \r p -> isCollapsed ( r, p ) collapseStatus
+                    , filterPatternField = Element.none
+                    }
+
+                Just s ->
+                    { filterButton = dangerousIconButton FeatherIcons.filter FilterFinished
+                    , treeToDisplay = s.result
+                    , isCollapsed = \_ _ -> False
+                    , filterPatternField =
+                        column [ width fill, spacing 8 ]
+                            [ Input.text
+                                [ width fill
+                                , Font.size 18
+                                , Element.htmlAttribute (Html.Attributes.id filterFieldId)
+                                , onKeys
+                                    [ ( "Escape", FilterFinished )
+                                    , ( "Enter", FilterQuickAddRequested )
+                                    ]
+                                ]
+                                { onChange = FilterEdited runId
+                                , text = s.pattern
+                                , label = Input.labelHidden "search"
+                                , placeholder =
+                                    Just
+                                        (Input.placeholder [] (text "Pattern, e.g: a18 CO2e_total"))
+                                }
+                            , el [ Font.size 12 ] (text "Escape to cancel, Enter to add all")
+                            ]
+                    }
     in
     column
         [ width fill
@@ -920,26 +1057,29 @@ viewInputsAndResult runId interestListId collapseStatus interestList activeOverr
             [ Input.button (width fill :: treeElementStyle)
                 { label =
                     row [ width fill, spacing sizes.medium ]
-                        [ collapsedStatusIcon ( runId, [] ) collapseStatus
+                        [ collapsedStatusIcon (differentIfFilterActive.isCollapsed runId [])
                         , el [ Font.bold ] (text (String.fromInt runId ++ ":"))
                         , text (inputs.ags ++ " " ++ String.fromInt inputs.year)
                         ]
                 , onPress = Just (ToggleCollapseTreeClicked ( runId, [] ))
                 }
             , buttons
-                [ iconButton FeatherIcons.edit (DisplayCalculateModalClicked (Just runId) inputs overrides)
+                [ differentIfFilterActive.filterButton
+                , iconButton FeatherIcons.edit (DisplayCalculateModalClicked (Just runId) inputs overrides)
                 , iconButton FeatherIcons.copy (DisplayCalculateModalClicked Nothing inputs overrides)
                 , dangerousIconButton FeatherIcons.trash2 (RemoveRunClicked runId)
                 ]
             ]
-        , viewTree runId
+        , differentIfFilterActive.filterPatternField
+        , viewTree
+            runId
             interestListId
             []
-            collapseStatus
+            differentIfFilterActive.isCollapsed
             interestList
             overrides
             activeOverrideEditor
-            (Run.getTree Run.WithoutOverrides run)
+            differentIfFilterActive.treeToDisplay
         ]
 
 
@@ -981,6 +1121,7 @@ viewResultsPane model =
                                 model.collapseStatus
                                 (Pivot.getC model.interestLists)
                                 model.activeOverrideEditor
+                                model.activeSearch
                                 ir
                         )
                 )
@@ -1053,8 +1194,8 @@ viewInterestListTableAsTable shortPathLabels interestListId interestListTable =
         }
 
 
-viewInterestList : InterestListId -> Bool -> Bool -> InterestList -> AllRuns -> Element Msg
-viewInterestList id editingActiveInterestListLabel isActive interestList allRuns =
+viewInterestList : InterestListId -> Bool -> Bool -> InterestList -> ChartHovering -> AllRuns -> Element Msg
+viewInterestList id editingActiveInterestListLabel isActive interestList chartHovering allRuns =
     let
         interestListTable =
             applyInterestListToRuns interestList allRuns
@@ -1136,7 +1277,7 @@ viewInterestList id editingActiveInterestListLabel isActive interestList allRuns
             ]
         , column [ width fill, spacing 40 ]
             [ if showGraph then
-                viewChart shortPathLabels interestListTable
+                viewChart chartHovering shortPathLabels interestListTable
 
               else
                 Element.none
@@ -1174,7 +1315,7 @@ viewModel model =
                             activePos =
                                 Pivot.lengthL model.interestLists
                         in
-                        viewInterestList pos model.editingActiveInterestListLabel (pos == activePos) il model.runs
+                        viewInterestList pos model.editingActiveInterestListLabel (pos == activePos) il model.chartHovering model.runs
                     )
     in
     column
