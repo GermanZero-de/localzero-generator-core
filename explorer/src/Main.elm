@@ -135,6 +135,11 @@ type ModalState
     | LoadFailure String
 
 
+filterFieldId : String
+filterFieldId =
+    "filter"
+
+
 encodeOverrides : Run.Overrides -> Encode.Value
 encodeOverrides d =
     Encode.dict
@@ -200,6 +205,7 @@ type Msg
     | OverrideEditFinished
     | FilterEdited RunId String
     | FilterFinished
+    | FilterQuickAddRequested
     | ToggleCollapseTreeClicked AbsolutePath
     | ModalMsg ModalMsg
     | DisplayCalculateModalClicked (Maybe RunId) Run.Inputs Run.Overrides
@@ -451,11 +457,37 @@ update msg model =
                                 , result = result
                                 }
 
-                _ =
-                    Debug.log "search" ( runId, pattern, newActiveSearch )
+                activeSearchFieldChanged =
+                    case ( model.activeSearch, newActiveSearch ) of
+                        ( _, Nothing ) ->
+                            False
+
+                        ( Nothing, Just _ ) ->
+                            True
+
+                        ( Just a, Just b ) ->
+                            a.runId /= b.runId
             in
             { model | activeSearch = newActiveSearch }
-                |> withNoCmd
+                |> withCmd (Task.attempt (\_ -> Noop) (Browser.Dom.focus filterFieldId))
+
+        FilterQuickAddRequested ->
+            case model.activeSearch of
+                Nothing ->
+                    model
+                        |> withNoCmd
+
+                Just a ->
+                    let
+                        paths =
+                            ValueTree.expand a.result
+                    in
+                    { model | activeSearch = Nothing }
+                        |> mapActiveInterestList
+                            (\il ->
+                                List.foldl (\p i -> InterestList.insert p i) il paths
+                            )
+                        |> withNoCmd
 
         FilterFinished ->
             { model | activeSearch = Nothing }
@@ -708,11 +740,11 @@ viewChart shortPathLabels interestListTable =
         (Element.html chart)
 
 
-collapsedStatusIcon : AbsolutePath -> CollapseStatus -> Element Msg
-collapsedStatusIcon path collapsed =
+collapsedStatusIcon : Bool -> Element Msg
+collapsedStatusIcon collapsed =
     let
         i =
-            if isCollapsed path collapsed then
+            if collapsed then
                 FeatherIcons.chevronRight
 
             else
@@ -721,21 +753,31 @@ collapsedStatusIcon path collapsed =
     el iconButtonStyle (icon (size16 i))
 
 
-onEnter : msg -> Element.Attribute msg
-onEnter msg =
+onKeys : List ( String, msg ) -> Element.Attribute msg
+onKeys keys =
+    let
+        keyDict =
+            Dict.fromList keys
+    in
     Element.htmlAttribute
         (Html.Events.on "keyup"
             (Decode.field "key" Decode.string
                 |> Decode.andThen
-                    (\key ->
-                        if key == "Enter" then
-                            Decode.succeed msg
+                    (\k ->
+                        case Dict.get k keyDict of
+                            Just msg ->
+                                Decode.succeed msg
 
-                        else
-                            Decode.fail "Not the enter key"
+                            Nothing ->
+                                Decode.fail "Not the expected key"
                     )
             )
         )
+
+
+onEnter : msg -> Element.Attribute msg
+onEnter k =
+    onKeys [ ( "Enter", k ) ]
 
 
 viewEntryAndOverride : Int -> String -> Run.Overrides -> Maybe ActiveOverrideEditor -> Float -> ( Element Msg, Element Msg )
@@ -826,14 +868,14 @@ viewTree :
     RunId
     -> InterestListId
     -> Run.Path
-    -> CollapseStatus
+    -> (RunId -> Run.Path -> Bool)
     -> InterestList
     -> Run.Overrides
     -> Maybe ActiveOverrideEditor
     -> Tree
     -> Element Msg
-viewTree runId interestListId path collapseStatus interestList overrides activeOverrideEditor tree =
-    if isCollapsed ( runId, path ) collapseStatus then
+viewTree runId interestListId path checkIsCollapsed interestList overrides activeOverrideEditor tree =
+    if checkIsCollapsed runId path then
         Element.none
 
     else
@@ -859,9 +901,9 @@ viewTree runId interestListId path collapseStatus interestList overrides activeO
                                         [ Input.button [ width fill, Element.focused [] ]
                                             { label =
                                                 itemRow
-                                                    [ collapsedStatusIcon ( runId, childPath ) collapseStatus
+                                                    [ collapsedStatusIcon (checkIsCollapsed runId childPath)
                                                     , el [ width fill ] (text name)
-                                                    , el (Font.alignRight :: fonts.explorerNodeSize) <|
+                                                    , el (Font.italic :: Font.alignRight :: fonts.explorerNodeSize) <|
                                                         text (String.fromInt (Dict.size child))
                                                     ]
                                             , onPress = Just (ToggleCollapseTreeClicked ( runId, path ++ [ name ] ))
@@ -869,7 +911,7 @@ viewTree runId interestListId path collapseStatus interestList overrides activeO
                                         , viewTree runId
                                             interestListId
                                             childPath
-                                            collapseStatus
+                                            checkIsCollapsed
                                             interestList
                                             overrides
                                             activeOverrideEditor
@@ -926,7 +968,7 @@ viewTree runId interestListId path collapseStatus interestList overrides activeO
                     ( name, element )
                 )
             |> Element.Keyed.column
-                ([ padding sizes.medium
+                ([ Element.paddingEach { left = sizes.medium, right = 0, top = sizes.medium, bottom = sizes.medium }
                  , spacing sizes.small
                  , width fill
                  ]
@@ -948,29 +990,40 @@ viewInputsAndResult runId interestListId collapseStatus interestList activeOverr
         overrides =
             Run.getOverrides run
 
-        ( filterButton, treeToDisplay, searchField ) =
+        differentIfFilterActive =
             case activeSearch |> Maybe.Extra.filter (\s -> s.runId == runId) of
                 Nothing ->
-                    ( iconButton FeatherIcons.filter (FilterEdited runId "")
-                    , Run.getTree WithoutOverrides run
-                    , Element.none
-                    )
+                    { filterButton = iconButton FeatherIcons.filter (FilterEdited runId "")
+                    , treeToDisplay = Run.getTree WithoutOverrides run
+                    , isCollapsed = \r p -> isCollapsed ( r, p ) collapseStatus
+                    , filterPatternField = Element.none
+                    }
 
                 Just s ->
-                    ( dangerousIconButton FeatherIcons.filter FilterFinished
-                    , s.result
-                    , Input.text [ width fill ]
-                        { onChange = FilterEdited runId
-                        , text = s.pattern
-                        , label = Input.labelHidden "search"
-                        , placeholder =
-                            Just
-                                (Input.placeholder [] (text "Filter by path..."))
-                        }
-                    )
-
-        _ =
-            Debug.log "treeToDisplay" treeToDisplay
+                    { filterButton = dangerousIconButton FeatherIcons.filter FilterFinished
+                    , treeToDisplay = s.result
+                    , isCollapsed = \_ _ -> False
+                    , filterPatternField =
+                        column [ width fill, spacing 8 ]
+                            [ Input.text
+                                [ width fill
+                                , Font.size 18
+                                , Element.htmlAttribute (Html.Attributes.id filterFieldId)
+                                , onKeys
+                                    [ ( "Escape", FilterFinished )
+                                    , ( "Enter", FilterQuickAddRequested )
+                                    ]
+                                ]
+                                { onChange = FilterEdited runId
+                                , text = s.pattern
+                                , label = Input.labelHidden "search"
+                                , placeholder =
+                                    Just
+                                        (Input.placeholder [] (text "Pattern, e.g: a18 CO2e_total"))
+                                }
+                            , el [ Font.size 12 ] (text "Escape to cancel, Enter to add all")
+                            ]
+                    }
     in
     column
         [ width fill
@@ -984,29 +1037,29 @@ viewInputsAndResult runId interestListId collapseStatus interestList activeOverr
             [ Input.button (width fill :: treeElementStyle)
                 { label =
                     row [ width fill, spacing sizes.medium ]
-                        [ collapsedStatusIcon ( runId, [] ) collapseStatus
+                        [ collapsedStatusIcon (differentIfFilterActive.isCollapsed runId [])
                         , el [ Font.bold ] (text (String.fromInt runId ++ ":"))
                         , text (inputs.ags ++ " " ++ String.fromInt inputs.year)
                         ]
                 , onPress = Just (ToggleCollapseTreeClicked ( runId, [] ))
                 }
             , buttons
-                [ filterButton
+                [ differentIfFilterActive.filterButton
                 , iconButton FeatherIcons.edit (DisplayCalculateModalClicked (Just runId) inputs overrides)
                 , iconButton FeatherIcons.copy (DisplayCalculateModalClicked Nothing inputs overrides)
                 , dangerousIconButton FeatherIcons.trash2 (RemoveRunClicked runId)
                 ]
             ]
-
-        --, searchField
-        , viewTree runId
+        , differentIfFilterActive.filterPatternField
+        , viewTree
+            runId
             interestListId
             []
-            collapseStatus
+            differentIfFilterActive.isCollapsed
             interestList
             overrides
             activeOverrideEditor
-            treeToDisplay
+            differentIfFilterActive.treeToDisplay
         ]
 
 

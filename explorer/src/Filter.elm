@@ -1,16 +1,17 @@
 module Filter exposing (filter)
 
 import Dict
+import Html.Attributes exposing (pattern)
 import Run exposing (Path)
 import ValueTree exposing (Node(..), Tree)
 
 
-filter : String -> Tree -> Tree
-filter pattern tree =
+filterWord : String -> Tree -> Tree
+filterWord pattern tree =
     Dict.toList tree
         |> List.filterMap
             (\( name, child ) ->
-                if String.contains pattern name then
+                if String.toLower pattern == String.toLower name then
                     Just ( name, child )
 
                 else
@@ -21,7 +22,7 @@ filter pattern tree =
                         Tree childTree ->
                             let
                                 newChildTree =
-                                    filter pattern childTree
+                                    filterWord pattern childTree
                             in
                             if Dict.isEmpty newChildTree then
                                 Nothing
@@ -32,24 +33,14 @@ filter pattern tree =
         |> Dict.fromList
 
 
-expand : Path -> Tree -> List Path
-expand path t =
-    Dict.toList t
-        |> List.concatMap
-            (\( name, child ) ->
-                case child of
-                    Leaf _ ->
-                        [ path ++ [ name ] ]
+filter : String -> Tree -> Tree
+filter pattern tree =
+    let
+        words =
+            String.words pattern
+    in
+    if List.isEmpty words then
+        Dict.empty
 
-                    Tree childTree ->
-                        expand (path ++ [ name ]) childTree
-            )
-
-
-search : String -> Tree -> List Path
-search pattern tree =
-    expand [] tree
-        |> List.filter
-            (\p ->
-                String.contains pattern (String.join "." p)
-            )
+    else
+        List.foldl filterWord tree words
