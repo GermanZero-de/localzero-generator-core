@@ -1,3 +1,4 @@
+import dataclasses
 import json
 import sys
 import os
@@ -5,6 +6,8 @@ import os.path
 import re
 from generatorcore.generator import calculate_with_default_inputs
 from generatorcore import refdata
+from generatorcore.makeentries import make_entries
+from typing import Iterator
 
 test_dir = os.path.join("tests", "end_to_end_expected")
 
@@ -24,16 +27,31 @@ def update_expectation(ags: str, year: int, file_path: str):
     json_to_output_file(g.result_dict(), file_path)
 
 
-def cmd_test_end_to_end_update_expectations(args):
-    expect_file_pattern = r"production_((\d+)|(DG000000))_(20\d\d)\.json"
+def update_entries(ags: str, year: int, file_path: str):
+    rd = refdata.RefData.load()
+    entries = make_entries(rd, ags=ags, year=year)
+    json_to_output_file(dataclasses.asdict(entries), file_path)
 
+
+def expectation_files(pattern: str) -> Iterator[tuple[str, str, int]]:
     for filename in os.listdir(test_dir):
-        m = re.match(expect_file_pattern, filename)
+        m = re.match(pattern, filename)
         if m is not None:
             ags = m.group(1)
             year = int(m.group(4))
             file_path = os.path.join(test_dir, filename)
-            update_expectation(ags=ags, year=year, file_path=file_path)
+            yield (file_path, ags, year)
+
+
+def cmd_test_end_to_end_update_expectations(args):
+    expect_entries_pattern = r"entries_((\d+)|(DG000000))_(20\d\d)\.json"
+    expect_file_pattern = r"production_((\d+)|(DG000000))_(20\d\d)\.json"
+
+    for (file_path, ags, year) in expectation_files(expect_entries_pattern):
+        update_entries(ags=ags, year=year, file_path=file_path)
+
+    for (file_path, ags, year) in expectation_files(expect_file_pattern):
+        update_expectation(ags=ags, year=year, file_path=file_path)
 
 
 def cmd_test_end_to_end_create_expectation(args):
