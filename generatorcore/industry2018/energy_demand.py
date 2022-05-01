@@ -188,4 +188,3 @@ def calc_production(inputs: Inputs) -> Production:
         p_other_further=p_other_further,
         p_other_2efgh=p_other_2efgh,
     )
-

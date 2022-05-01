@@ -301,7 +301,6 @@ class FactsAndAssumptions:
         return Row(self._assumptions, keyname).float("value")
 
 
-
 def datadir_or_default(datadir: str | None = None) -> str:
     """Return the normalized absolute path to the data directory."""
     if datadir is None:
