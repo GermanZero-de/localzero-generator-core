@@ -7,7 +7,7 @@ module CollapseStatus exposing
     , toggle
     )
 
-import GeneratorRuns exposing (AbsolutePath)
+import AllRuns exposing (AbsolutePath)
 import Set exposing (Set)
 
 
