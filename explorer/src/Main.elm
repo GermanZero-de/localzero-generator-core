@@ -13,6 +13,8 @@ import Browser
 import Browser.Dom
 import Chart as C
 import Chart.Attributes as CA
+import Chart.Events
+import Chart.Item
 import Cmd.Extra exposing (withCmd, withNoCmd)
 import CollapseStatus exposing (CollapseStatus, allCollapsed, isCollapsed)
 import Dict exposing (Dict)
@@ -118,6 +120,10 @@ type alias InterestListId =
     Int
 
 
+type alias ChartHovering =
+    List (Chart.Item.Many (List String) Chart.Item.Any)
+
+
 type alias Model =
     { runs : AllRuns
     , collapseStatus : CollapseStatus
@@ -126,6 +132,7 @@ type alias Model =
     , showModal : Maybe ModalState
     , activeOverrideEditor : Maybe ActiveOverrideEditor
     , activeSearch : Maybe ActiveSearch
+    , chartHovering : ChartHovering
     }
 
 
@@ -185,6 +192,7 @@ init _ =
       , collapseStatus = allCollapsed
       , activeOverrideEditor = Nothing
       , activeSearch = Nothing
+      , chartHovering = []
       }
     , Cmd.none
     )
@@ -222,6 +230,7 @@ type Msg
     | UploadClicked
     | FileUploaded File
     | FileContentLoaded String
+    | OnChartHover ChartHovering
     | Noop
 
 
@@ -627,6 +636,10 @@ update msg model =
                 |> withEditingActiveInterestListLabel False
                 |> withNoCmd
 
+        OnChartHover hovering ->
+            { model | chartHovering = hovering }
+                |> withNoCmd
+
 
 updateModal : ModalMsg -> Maybe ModalState -> ( Maybe ModalState, Cmd ModalMsg )
 updateModal msg model =
@@ -667,8 +680,8 @@ subscriptions model =
 -- VIEW
 
 
-viewChart : Dict Run.Path String -> InterestListTable -> Element Msg
-viewChart shortPathLabels interestListTable =
+viewChart : ChartHovering -> Dict Run.Path String -> InterestListTable -> Element Msg
+viewChart chartHovering shortPathLabels interestListTable =
     let
         widthChart =
             800
@@ -697,6 +710,7 @@ viewChart shortPathLabels interestListTable =
                         in
                         C.bar get []
                             |> C.named (String.fromInt runId)
+                            |> C.format (\v -> formatGermanNumber v)
                     )
 
         getLabel : Run.Path -> String
@@ -712,6 +726,8 @@ viewChart shortPathLabels interestListTable =
             C.chart
                 [ CA.height heightChart
                 , CA.width widthChart
+                , Chart.Events.onMouseMove OnChartHover (Chart.Events.getNearest Chart.Item.bins)
+                , Chart.Events.onMouseLeave (OnChartHover [])
                 ]
                 [ C.xTicks []
                 , C.yTicks []
@@ -728,6 +744,10 @@ viewChart shortPathLabels interestListTable =
                     , CA.spacing 5
                     ]
                     []
+                , C.each chartHovering
+                    (\p item ->
+                        [ C.tooltip item [] [] [] ]
+                    )
                 ]
     in
     el
@@ -1174,8 +1194,8 @@ viewInterestListTableAsTable shortPathLabels interestListId interestListTable =
         }
 
 
-viewInterestList : InterestListId -> Bool -> Bool -> InterestList -> AllRuns -> Element Msg
-viewInterestList id editingActiveInterestListLabel isActive interestList allRuns =
+viewInterestList : InterestListId -> Bool -> Bool -> InterestList -> ChartHovering -> AllRuns -> Element Msg
+viewInterestList id editingActiveInterestListLabel isActive interestList chartHovering allRuns =
     let
         interestListTable =
             applyInterestListToRuns interestList allRuns
@@ -1257,7 +1277,7 @@ viewInterestList id editingActiveInterestListLabel isActive interestList allRuns
             ]
         , column [ width fill, spacing 40 ]
             [ if showGraph then
-                viewChart shortPathLabels interestListTable
+                viewChart chartHovering shortPathLabels interestListTable
 
               else
                 Element.none
@@ -1295,7 +1315,7 @@ viewModel model =
                             activePos =
                                 Pivot.lengthL model.interestLists
                         in
-                        viewInterestList pos model.editingActiveInterestListLabel (pos == activePos) il model.runs
+                        viewInterestList pos model.editingActiveInterestListLabel (pos == activePos) il model.chartHovering model.runs
                     )
     in
     column
