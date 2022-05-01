@@ -26,6 +26,7 @@ import Element
         , el
         , fill
         , height
+        , maximum
         , minimum
         , padding
         , paragraph
@@ -47,6 +48,7 @@ import FeatherIcons
 import File exposing (File)
 import File.Download as Download
 import File.Select
+import Filter
 import Html exposing (Html)
 import Html.Attributes
 import Html.Events
@@ -57,7 +59,7 @@ import Json.Encode as Encode
 import List.Extra
 import Maybe.Extra
 import Pivot exposing (Pivot)
-import Run exposing (Run)
+import Run exposing (OverrideHandling(..), Run)
 import Set exposing (Set)
 import Storage exposing (Storage)
 import Styling
@@ -103,7 +105,11 @@ main =
 
 
 type alias ActiveOverrideEditor =
-    { runNdx : RunId, name : String, value : String, asFloat : Maybe Float }
+    { runId : RunId, name : String, value : String, asFloat : Maybe Float }
+
+
+type alias ActiveSearch =
+    { runId : RunId, pattern : String, result : ValueTree.Tree }
 
 
 {-| Position of interestlist in pivot
@@ -119,6 +125,7 @@ type alias Model =
     , editingActiveInterestListLabel : Bool
     , showModal : Maybe ModalState
     , activeOverrideEditor : Maybe ActiveOverrideEditor
+    , activeSearch : Maybe ActiveSearch
     }
 
 
@@ -172,6 +179,7 @@ init _ =
       , editingActiveInterestListLabel = False
       , collapseStatus = allCollapsed
       , activeOverrideEditor = Nothing
+      , activeSearch = Nothing
       }
     , Cmd.none
     )
@@ -190,6 +198,8 @@ type Msg
     | RemoveOverrideClicked RunId String
     | OverrideEdited RunId String String
     | OverrideEditFinished
+    | FilterEdited RunId String
+    | FilterFinished
     | ToggleCollapseTreeClicked AbsolutePath
     | ModalMsg ModalMsg
     | DisplayCalculateModalClicked (Maybe RunId) Run.Inputs Run.Overrides
@@ -421,7 +431,37 @@ update msg model =
             }
                 |> withNoCmd
 
-        OverrideEdited ndx name newText ->
+        FilterEdited runId pattern ->
+            let
+                newActiveSearch =
+                    case AllRuns.get runId model.runs of
+                        Nothing ->
+                            -- Shouldn't really happen, but have to make compiler happy
+                            -- would really like elm to have panic
+                            model.activeSearch
+
+                        Just run ->
+                            let
+                                result =
+                                    Filter.filter pattern (Run.getTree WithoutOverrides run)
+                            in
+                            Just
+                                { runId = runId
+                                , pattern = pattern
+                                , result = result
+                                }
+
+                _ =
+                    Debug.log "search" ( runId, pattern, newActiveSearch )
+            in
+            { model | activeSearch = newActiveSearch }
+                |> withNoCmd
+
+        FilterFinished ->
+            { model | activeSearch = Nothing }
+                |> withNoCmd
+
+        OverrideEdited runId name newText ->
             let
                 isFocusChanged =
                     case model.activeOverrideEditor of
@@ -429,12 +469,12 @@ update msg model =
                             True
 
                         Just e ->
-                            e.runNdx /= ndx || e.name /= name
+                            e.runId /= runId || e.name /= name
             in
             ( { model
                 | activeOverrideEditor =
                     Just
-                        { runNdx = ndx
+                        { runId = runId
                         , name = name
                         , value = newText
                         , asFloat = parseGermanNumber newText
@@ -463,26 +503,26 @@ update msg model =
                             ( modelEditorClosed, Cmd.none )
 
                         Just f ->
-                            case AllRuns.get editor.runNdx model.runs of
+                            case AllRuns.get editor.runId model.runs of
                                 Nothing ->
                                     ( modelEditorClosed, Cmd.none )
 
                                 Just run ->
                                     modelEditorClosed
-                                        |> initiateMakeEntries (Just editor.runNdx)
+                                        |> initiateMakeEntries (Just editor.runId)
                                             (Run.getInputs run)
                                             (Run.getOverrides run
                                                 |> Dict.insert editor.name f
                                             )
 
-        RemoveOverrideClicked ndx name ->
+        RemoveOverrideClicked runId name ->
             { model
                 | runs =
                     model.runs
-                        |> AllRuns.update ndx (Run.mapOverrides (Dict.remove name))
+                        |> AllRuns.update runId (Run.mapOverrides (Dict.remove name))
                 , activeOverrideEditor =
                     model.activeOverrideEditor
-                        |> Maybe.Extra.filter (\e -> e.runNdx /= ndx || e.name /= name)
+                        |> Maybe.Extra.filter (\e -> e.runId /= runId || e.name /= name)
             }
                 |> withNoCmd
 
@@ -710,7 +750,7 @@ viewEntryAndOverride runId name overrides activeOverrideEditor f =
 
         thisOverrideEditor =
             activeOverrideEditor
-                |> Maybe.Extra.filter (\e -> e.runNdx == runId && e.name == name)
+                |> Maybe.Extra.filter (\e -> e.runId == runId && e.name == name)
 
         ( originalStyle, action, o ) =
             case thisOverrideEditor of
@@ -899,14 +939,38 @@ buttons l =
     row [ Element.spacingXY sizes.medium 0 ] l
 
 
-viewInputsAndResult : RunId -> InterestListId -> CollapseStatus -> InterestList -> Maybe ActiveOverrideEditor -> Run -> Element Msg
-viewInputsAndResult runId interestListId collapseStatus interestList activeOverrideEditor run =
+viewInputsAndResult : RunId -> InterestListId -> CollapseStatus -> InterestList -> Maybe ActiveOverrideEditor -> Maybe ActiveSearch -> Run -> Element Msg
+viewInputsAndResult runId interestListId collapseStatus interestList activeOverrideEditor activeSearch run =
     let
         inputs =
             Run.getInputs run
 
         overrides =
             Run.getOverrides run
+
+        ( filterButton, treeToDisplay, searchField ) =
+            case activeSearch |> Maybe.Extra.filter (\s -> s.runId == runId) of
+                Nothing ->
+                    ( iconButton FeatherIcons.filter (FilterEdited runId "")
+                    , Run.getTree WithoutOverrides run
+                    , Element.none
+                    )
+
+                Just s ->
+                    ( dangerousIconButton FeatherIcons.filter FilterFinished
+                    , s.result
+                    , Input.text [ width fill ]
+                        { onChange = FilterEdited runId
+                        , text = s.pattern
+                        , label = Input.labelHidden "search"
+                        , placeholder =
+                            Just
+                                (Input.placeholder [] (text "Filter by path..."))
+                        }
+                    )
+
+        _ =
+            Debug.log "treeToDisplay" treeToDisplay
     in
     column
         [ width fill
@@ -927,11 +991,14 @@ viewInputsAndResult runId interestListId collapseStatus interestList activeOverr
                 , onPress = Just (ToggleCollapseTreeClicked ( runId, [] ))
                 }
             , buttons
-                [ iconButton FeatherIcons.edit (DisplayCalculateModalClicked (Just runId) inputs overrides)
+                [ filterButton
+                , iconButton FeatherIcons.edit (DisplayCalculateModalClicked (Just runId) inputs overrides)
                 , iconButton FeatherIcons.copy (DisplayCalculateModalClicked Nothing inputs overrides)
                 , dangerousIconButton FeatherIcons.trash2 (RemoveRunClicked runId)
                 ]
             ]
+
+        --, searchField
         , viewTree runId
             interestListId
             []
@@ -939,7 +1006,7 @@ viewInputsAndResult runId interestListId collapseStatus interestList activeOverr
             interestList
             overrides
             activeOverrideEditor
-            (Run.getTree Run.WithoutOverrides run)
+            treeToDisplay
         ]
 
 
@@ -981,6 +1048,7 @@ viewResultsPane model =
                                 model.collapseStatus
                                 (Pivot.getC model.interestLists)
                                 model.activeOverrideEditor
+                                model.activeSearch
                                 ir
                         )
                 )
