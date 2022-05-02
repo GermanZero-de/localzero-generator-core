@@ -11,6 +11,8 @@
 # This is Bene specific
 .DS_Store
 
+elm-stuff/
+
 ## Non LocalZero specific standard python project gitignore
 
 # Byte-compiled / optimized / DLL files

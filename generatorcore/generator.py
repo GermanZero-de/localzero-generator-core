@@ -2,7 +2,8 @@
 import time
 import dataclasses
 import sys
-from generatorcore import electricity2030_core, methodology183x
+from generatorcore import methodology183x
+from generatorcore.electricity2030 import electricity2030_core
 
 from .refdata import RefData
 from .inputs import Inputs
@@ -29,7 +30,7 @@ from . import heat2030
 from . import agri2030
 from . import lulucf2030
 from . import industry2030
-from . import lulucf2030_pyr
+from .lulucf2030 import lulucf2030_pyr
 
 
 def _convert_item(v: object) -> object:
