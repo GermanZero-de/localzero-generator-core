@@ -1,6 +1,7 @@
 module Filter exposing (filter)
 
 import Dict
+import Glob
 import Html.Attributes exposing (pattern)
 import Run exposing (Path)
 import ValueTree exposing (Node(..), Tree)
@@ -11,7 +12,7 @@ filterWord pattern tree =
     Dict.toList tree
         |> List.filterMap
             (\( name, child ) ->
-                if String.toLower pattern == String.toLower name then
+                if Glob.match pattern name then
                     Just ( name, child )
 
                 else

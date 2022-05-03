@@ -687,7 +687,7 @@ viewChart chartHovering shortPathLabels interestListTable =
             800
 
         heightChart =
-            600
+            400
 
         bars =
             interestListTable.runs
