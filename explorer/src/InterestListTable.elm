@@ -1,5 +1,9 @@
 module InterestListTable exposing (InterestListTable, create)
 
+{-| A InterestListTable is the result of applying an InterestList
+to all the runs.
+-}
+
 import AllRuns exposing (AllRuns, RunId)
 import Dict exposing (Dict)
 import InterestList exposing (InterestList)
