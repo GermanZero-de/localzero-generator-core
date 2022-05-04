@@ -23,7 +23,10 @@ matchHelper pattern text =
         ( Nothing, _ ) ->
             False
 
-        ( Just ( '*', "" ), Nothing ) ->
+        ( Just ( '*', "" ), _ ) ->
+            -- If everything until a '*' at the end of a pattern
+            -- has matched, then we are done, no matter how many
+            -- more (if any) characters are left in the text
             True
 
         ( _, Nothing ) ->
