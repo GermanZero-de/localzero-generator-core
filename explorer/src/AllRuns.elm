@@ -16,7 +16,7 @@ module AllRuns exposing
 
 import Dict exposing (Dict)
 import Run exposing (Path, Run)
-import ValueTree exposing (Value)
+import Tree exposing (Value)
 
 
 type alias RunId =
@@ -92,14 +92,14 @@ getValue handling ndx path (AllRuns a) =
     Dict.get ndx a.runs
         |> Maybe.andThen
             (\r ->
-                ValueTree.get path (Run.getTree handling r)
+                Tree.get path (Run.getTree handling r)
                     |> Maybe.andThen
                         (\node ->
                             case node of
-                                ValueTree.Tree _ ->
+                                Tree.Tree _ ->
                                     Nothing
 
-                                ValueTree.Leaf n ->
+                                Tree.Leaf n ->
                                     Just n
                         )
             )

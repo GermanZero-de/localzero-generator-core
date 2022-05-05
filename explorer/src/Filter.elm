@@ -4,7 +4,7 @@ import Dict
 import Glob
 import Html.Attributes exposing (pattern)
 import Run exposing (Path)
-import ValueTree exposing (Node(..), Tree)
+import Tree exposing (Node(..), Tree)
 
 
 filterWord : String -> Tree -> Tree

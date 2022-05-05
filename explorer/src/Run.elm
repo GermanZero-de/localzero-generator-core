@@ -18,7 +18,7 @@ module Run exposing
 
 import Dict exposing (Dict)
 import Json.Decode as Decode
-import ValueTree exposing (Tree)
+import Tree exposing (Tree)
 
 
 {-| A Path to a value inside a run.
@@ -32,7 +32,7 @@ type alias Overrides =
 
 
 type alias Entries =
-    Dict String ValueTree.Value
+    Dict String Tree.Value
 
 
 type Run
@@ -84,25 +84,25 @@ getTree h (Run r) =
         entries =
             case h of
                 WithoutOverrides ->
-                    Dict.map (\_ v -> ValueTree.Leaf v) r.entries
+                    Dict.map (\_ v -> Tree.Leaf v) r.entries
 
                 WithOverrides ->
                     Dict.map
                         (\k v ->
                             case Dict.get k r.overrides of
                                 Nothing ->
-                                    ValueTree.Leaf v
+                                    Tree.Leaf v
 
                                 Just o ->
-                                    ValueTree.Leaf (ValueTree.Float o)
+                                    Tree.Leaf (Tree.Float o)
                         )
                         r.entries
     in
-    ValueTree.merge
-        (ValueTree.wrap "entries" entries)
-        (ValueTree.wrap "result" r.result)
+    Tree.merge
+        (Tree.wrap "entries" entries)
+        (Tree.wrap "result" r.result)
 
 
 entriesDecoder : Decode.Decoder Entries
 entriesDecoder =
-    Decode.dict ValueTree.valueDecoder
+    Decode.dict Tree.valueDecoder

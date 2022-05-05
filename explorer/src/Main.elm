@@ -87,7 +87,7 @@ import Styling
         , white
         )
 import Task
-import ValueTree exposing (Node(..), Tree, Value(..))
+import Tree exposing (Node(..), Tree, Value(..))
 
 
 
@@ -112,7 +112,7 @@ type alias ActiveOverrideEditor =
 
 
 type alias ActiveSearch =
-    { runId : RunId, pattern : String, result : ValueTree.Tree }
+    { runId : RunId, pattern : String, result : Tree.Tree }
 
 
 {-| Position of interestlist in pivot
@@ -161,7 +161,7 @@ initiateCalculate maybeNdx inputs entries overrides model =
     ( { model | showModal = Just Loading }
     , Http.post
         { url = "http://localhost:4070/calculate/" ++ inputs.ags ++ "/" ++ String.fromInt inputs.year
-        , expect = Http.expectJson (GotGeneratorResult maybeNdx inputs entries overrides) ValueTree.decoder
+        , expect = Http.expectJson (GotGeneratorResult maybeNdx inputs entries overrides) Tree.decoder
         , body = Http.jsonBody (encodeOverrides overrides)
         }
     )
@@ -439,7 +439,7 @@ update msg model =
                 Just a ->
                     let
                         paths =
-                            ValueTree.expand a.result
+                            Tree.expand a.result
                     in
                     { model | activeSearch = Nothing }
                         |> mapActiveInterestList

@@ -1,4 +1,4 @@
-module ValueTree exposing (Node(..), Tree, Value(..), decoder, expand, get, merge, valueDecoder, wrap)
+module Tree exposing (Node(..), Tree, Value(..), decoder, expand, get, merge, valueDecoder, wrap)
 
 import Dict exposing (Dict)
 import Json.Decode as Decode
