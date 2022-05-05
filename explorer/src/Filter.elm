@@ -7,7 +7,7 @@ import Run exposing (Path)
 import Tree exposing (Node(..), Tree)
 
 
-filterWord : String -> Tree -> Tree
+filterWord : String -> Tree value -> Tree value
 filterWord pattern tree =
     Dict.toList tree
         |> List.filterMap
@@ -34,7 +34,7 @@ filterWord pattern tree =
         |> Dict.fromList
 
 
-filter : String -> Tree -> Tree
+filter : String -> Tree value -> Tree value
 filter pattern tree =
     let
         words =

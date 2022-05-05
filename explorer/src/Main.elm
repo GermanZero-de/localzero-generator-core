@@ -87,7 +87,8 @@ import Styling
         , white
         )
 import Task
-import Tree exposing (Node(..), Tree, Value(..))
+import Tree exposing (Node(..), Tree)
+import Value exposing (Value(..))
 
 
 
@@ -112,7 +113,10 @@ type alias ActiveOverrideEditor =
 
 
 type alias ActiveSearch =
-    { runId : RunId, pattern : String, result : Tree.Tree }
+    { runId : RunId
+    , pattern : String
+    , result : Tree.Tree Value
+    }
 
 
 {-| Position of interestlist in pivot
@@ -161,7 +165,7 @@ initiateCalculate maybeNdx inputs entries overrides model =
     ( { model | showModal = Just Loading }
     , Http.post
         { url = "http://localhost:4070/calculate/" ++ inputs.ags ++ "/" ++ String.fromInt inputs.year
-        , expect = Http.expectJson (GotGeneratorResult maybeNdx inputs entries overrides) Tree.decoder
+        , expect = Http.expectJson (GotGeneratorResult maybeNdx inputs entries overrides) (Tree.decoder Value.decoder)
         , body = Http.jsonBody (encodeOverrides overrides)
         }
     )
@@ -204,7 +208,7 @@ init _ =
 
 
 type Msg
-    = GotGeneratorResult (Maybe RunId) Run.Inputs Run.Entries Run.Overrides (Result Http.Error Tree)
+    = GotGeneratorResult (Maybe RunId) Run.Inputs Run.Entries Run.Overrides (Result Http.Error (Tree Value))
     | GotEntries (Maybe RunId) Run.Inputs Run.Overrides (Result Http.Error Run.Entries)
     | AddToInterestListClicked Run.Path
     | RemoveFromInterestListClicked InterestListId Run.Path
@@ -842,7 +846,7 @@ viewTree :
     -> InterestList
     -> Run.Overrides
     -> Maybe ActiveOverrideEditor
-    -> Tree
+    -> Tree Value
     -> Element Msg
 viewTree runId interestListId path checkIsCollapsed interestList overrides activeOverrideEditor tree =
     if checkIsCollapsed runId path then

@@ -1,35 +1,30 @@
-module Tree exposing (Node(..), Tree, Value(..), decoder, expand, get, merge, valueDecoder, wrap)
+module Tree exposing (Node(..), Tree, decoder, expand, get, merge, wrap)
 
 import Dict exposing (Dict)
 import Json.Decode as Decode
+import Value exposing (Value)
 
 
-type Node
-    = Tree Tree
-    | Leaf Value
+type Node value
+    = Tree (Tree value)
+    | Leaf value
 
 
-type Value
-    = Float Float
-    | Null
-    | String String
+type alias Tree value =
+    Dict String (Node value)
 
 
-type alias Tree =
-    Dict String Node
-
-
-wrap : String -> Tree -> Tree
+wrap : String -> Tree value -> Tree value
 wrap name tree =
     Dict.fromList [ ( name, Tree tree ) ]
 
 
-merge : Tree -> Tree -> Tree
+merge : Tree value -> Tree value -> Tree value
 merge t1 t2 =
     Dict.union t1 t2
 
 
-getHelper : List String -> Node -> Maybe Node
+getHelper : List String -> Node value -> Maybe (Node value)
 getHelper path node =
     case path of
         [] ->
@@ -45,7 +40,7 @@ getHelper path node =
                         |> Maybe.andThen (getHelper pathRest)
 
 
-expandHelper : List String -> Tree -> List (List String)
+expandHelper : List String -> Tree value -> List (List String)
 expandHelper path t =
     Dict.toList t
         |> List.concatMap
@@ -59,38 +54,29 @@ expandHelper path t =
             )
 
 
-expand : Tree -> List (List String)
+expand : Tree value -> List (List String)
 expand =
     expandHelper []
 
 
-get : List String -> Tree -> Maybe Node
+get : List String -> Tree value -> Maybe (Node value)
 get p t =
     getHelper p (Tree t)
 
 
-treeDecoder : Decode.Decoder Tree
-treeDecoder =
-    Decode.dict nodeDecoder
+treeDecoder : Decode.Decoder value -> Decode.Decoder (Tree value)
+treeDecoder valueDecoder =
+    Decode.dict (nodeDecoder valueDecoder)
 
 
-valueDecoder : Decode.Decoder Value
-valueDecoder =
-    Decode.oneOf
-        [ Decode.float |> Decode.map Float
-        , Decode.string |> Decode.map String
-        , Decode.null Null
-        ]
-
-
-nodeDecoder : Decode.Decoder Node
-nodeDecoder =
+nodeDecoder : Decode.Decoder value -> Decode.Decoder (Node value)
+nodeDecoder valueDecoder =
     Decode.oneOf
         [ valueDecoder |> Decode.map Leaf
-        , Decode.dict (Decode.lazy (\() -> nodeDecoder)) |> Decode.map Tree
+        , Decode.dict (Decode.lazy (\() -> nodeDecoder valueDecoder)) |> Decode.map Tree
         ]
 
 
-decoder : Decode.Decoder Tree
-decoder =
-    treeDecoder
+decoder : Decode.Decoder value -> Decode.Decoder (Tree value)
+decoder valueDecoder =
+    treeDecoder valueDecoder

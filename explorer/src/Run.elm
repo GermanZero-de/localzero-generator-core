@@ -19,6 +19,7 @@ module Run exposing
 import Dict exposing (Dict)
 import Json.Decode as Decode
 import Tree exposing (Tree)
+import Value exposing (Value)
 
 
 {-| A Path to a value inside a run.
@@ -32,12 +33,12 @@ type alias Overrides =
 
 
 type alias Entries =
-    Dict String Tree.Value
+    Dict String Value
 
 
 type Run
     = Run
-        { result : Tree
+        { result : Tree Value
         , entries : Entries
         , overrides : Overrides
         , inputs : Inputs
@@ -48,7 +49,13 @@ type alias Inputs =
     { ags : String, year : Int }
 
 
-create : { inputs : Inputs, entries : Entries, overrides : Overrides, result : Tree } -> Run
+create :
+    { inputs : Inputs
+    , entries : Entries
+    , overrides : Overrides
+    , result : Tree Value
+    }
+    -> Run
 create { inputs, entries, result, overrides } =
     Run
         { inputs = inputs
@@ -78,7 +85,7 @@ type OverrideHandling
     | WithoutOverrides
 
 
-getTree : OverrideHandling -> Run -> Tree
+getTree : OverrideHandling -> Run -> Tree Value
 getTree h (Run r) =
     let
         entries =
@@ -94,7 +101,7 @@ getTree h (Run r) =
                                     Tree.Leaf v
 
                                 Just o ->
-                                    Tree.Leaf (Tree.Float o)
+                                    Tree.Leaf (Value.Float o)
                         )
                         r.entries
     in
@@ -105,4 +112,4 @@ getTree h (Run r) =
 
 entriesDecoder : Decode.Decoder Entries
 entriesDecoder =
-    Decode.dict Tree.valueDecoder
+    Decode.dict Value.decoder

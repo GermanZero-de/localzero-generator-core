@@ -8,7 +8,8 @@ import AllRuns exposing (AllRuns, RunId)
 import Dict exposing (Dict)
 import InterestList exposing (InterestList)
 import Run
-import Tree exposing (Value(..))
+import Tree
+import Value exposing (Value(..))
 
 
 type alias InterestListTable =
