@@ -6504,7 +6504,62 @@ var $elm$core$Dict$isEmpty = function (dict) {
 		return false;
 	}
 };
+var $author$project$Glob$matchHelper = F2(
+	function (pattern, text) {
+		matchHelper:
+		while (true) {
+			var _v0 = _Utils_Tuple2(
+				$elm$core$String$uncons(pattern),
+				$elm$core$String$uncons(text));
+			if (_v0.a.$ === 1) {
+				if (_v0.b.$ === 1) {
+					var _v1 = _v0.a;
+					var _v2 = _v0.b;
+					return true;
+				} else {
+					var _v3 = _v0.a;
+					return false;
+				}
+			} else {
+				if (_v0.b.$ === 1) {
+					if (('*' === _v0.a.a.a) && (_v0.a.a.b === '')) {
+						var _v4 = _v0.a.a;
+						var _v5 = _v0.b;
+						return true;
+					} else {
+						var _v6 = _v0.b;
+						return false;
+					}
+				} else {
+					var _v7 = _v0.a.a;
+					var p = _v7.a;
+					var ps = _v7.b;
+					var _v8 = _v0.b.a;
+					var t = _v8.a;
+					var ts = _v8.b;
+					switch (p) {
+						case '?':
+							var $temp$pattern = ps,
+								$temp$text = ts;
+							pattern = $temp$pattern;
+							text = $temp$text;
+							continue matchHelper;
+						case '*':
+							return A2($author$project$Glob$matchHelper, pattern, ts) || A2($author$project$Glob$matchHelper, ps, text);
+						default:
+							return _Utils_eq(p, t) && A2($author$project$Glob$matchHelper, ps, ts);
+					}
+				}
+			}
+		}
+	});
 var $elm$core$String$toLower = _String_toLower;
+var $author$project$Glob$match = F2(
+	function (pattern, text) {
+		var lowerText = $elm$core$String$toLower(text);
+		var lowerPat = $elm$core$String$toLower(pattern);
+		return (A2($elm$core$String$contains, '?', lowerPat) || A2($elm$core$String$contains, '*', lowerPat)) ? A2($author$project$Glob$matchHelper, lowerPat, lowerText) : _Utils_eq(lowerPat, lowerText);
+	});
 var $author$project$Filter$filterWord = F2(
 	function (pattern, tree) {
 		return $elm$core$Dict$fromList(
@@ -6513,9 +6568,7 @@ var $author$project$Filter$filterWord = F2(
 				function (_v0) {
 					var name = _v0.a;
 					var child = _v0.b;
-					if (_Utils_eq(
-						$elm$core$String$toLower(pattern),
-						$elm$core$String$toLower(name))) {
+					if (A2($author$project$Glob$match, pattern, name)) {
 						return $elm$core$Maybe$Just(
 							_Utils_Tuple2(name, child));
 					} else {
@@ -24558,7 +24611,7 @@ var $terezka$elm_charts$Chart$yTicks = function (edits) {
 var $author$project$Main$viewChart = F3(
 	function (chartHovering, shortPathLabels, interestListTable) {
 		var widthChart = 800;
-		var heightChart = 600;
+		var heightChart = 400;
 		var getLabel = function (p) {
 			var _v2 = A2($elm$core$Dict$get, p, shortPathLabels);
 			if (!_v2.$) {

@@ -56,6 +56,7 @@ import Html.Attributes
 import Html.Events
 import Http
 import InterestList exposing (InterestList)
+import InterestListTable exposing (InterestListTable)
 import Json.Decode as Decode
 import Json.Encode as Encode
 import List.Extra
@@ -237,57 +238,6 @@ type Msg
 type ModalMsg
     = CalculateModalTargetYearUpdated Int
     | CalculateModalAgsUpdated String
-
-
-type alias InterestListTable =
-    { paths : List Run.Path
-    , runs : List RunId
-    , values : Dict ( RunId, Run.Path ) Value
-    }
-
-
-applyInterestListToRuns : InterestList -> AllRuns -> InterestListTable
-applyInterestListToRuns interestList allRuns =
-    -- The withDefault handles the case if we somehow managed to get two
-    -- differently structured result values into the explorer, this can only
-    -- really happen when two different versions of the python code are
-    -- explored at the same time.
-    -- Otherwise you can't add a path to the interest list that ends
-    -- at a TREE
-    let
-        paths =
-            InterestList.toList interestList
-
-        runList =
-            AllRuns.toList allRuns
-
-        runs =
-            List.map Tuple.first runList
-
-        values =
-            runList
-                |> List.concatMap
-                    (\( runId, run ) ->
-                        paths
-                            |> List.map
-                                (\path ->
-                                    case
-                                        Run.getTree Run.WithOverrides run
-                                            |> ValueTree.get path
-                                    of
-                                        Nothing ->
-                                            ( ( runId, path ), String "NOTHING" )
-
-                                        Just (ValueTree.Tree _) ->
-                                            ( ( runId, path ), String "TREE" )
-
-                                        Just (ValueTree.Leaf v) ->
-                                            ( ( runId, path ), v )
-                                )
-                    )
-                |> Dict.fromList
-    in
-    { runs = runs, paths = paths, values = values }
 
 
 mapActiveInterestList : (InterestList -> InterestList) -> Model -> Model
@@ -687,7 +637,7 @@ viewChart chartHovering shortPathLabels interestListTable =
             800
 
         heightChart =
-            600
+            400
 
         bars =
             interestListTable.runs
@@ -1198,7 +1148,7 @@ viewInterestList : InterestListId -> Bool -> Bool -> InterestList -> ChartHoveri
 viewInterestList id editingActiveInterestListLabel isActive interestList chartHovering allRuns =
     let
         interestListTable =
-            applyInterestListToRuns interestList allRuns
+            InterestListTable.create interestList allRuns
 
         showGraph =
             InterestList.getShowGraph interestList
