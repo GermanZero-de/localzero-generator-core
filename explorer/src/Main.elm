@@ -8,7 +8,6 @@ import AllRuns
         , AllRuns
         , RunId
         )
-import Array exposing (Array)
 import Browser
 import Browser.Dom
 import Chart as C
@@ -18,7 +17,6 @@ import Chart.Item
 import Cmd.Extra exposing (withCmd, withNoCmd)
 import CollapseStatus exposing (CollapseStatus, allCollapsed, isCollapsed)
 import Dict exposing (Dict)
-import Dropdown
 import Element
     exposing
         ( Element
@@ -28,7 +26,6 @@ import Element
         , el
         , fill
         , height
-        , maximum
         , minimum
         , padding
         , paragraph
@@ -59,12 +56,10 @@ import InterestList exposing (InterestList)
 import InterestListTable exposing (InterestListTable)
 import Json.Decode as Decode
 import Json.Encode as Encode
-import List.Extra
 import Maybe.Extra
 import Pivot exposing (Pivot)
 import Run exposing (OverrideHandling(..), Run)
-import Set exposing (Set)
-import Storage exposing (Storage)
+import Storage
 import Styling
     exposing
         ( black
