@@ -28,51 +28,46 @@ IGNORE = {
     "09572459": "Mark",
     "09572460": "Neunhofer Forst",
 }
+def ags_to_be_ignored(ags:str) -> bool:
+    return ags in IGNORE.keys()
 
 
-def power_per_component(
-    ags_history, unit_power
-) -> tuple[dict[str, set[str]], defaultdict[str, float]]:
+def accumulate_power_per_ags(unit_power) -> defaultdict[str, float]:
     """
-    Accumulates power of active units per connected component of AGS.
+    Accumulates power of active units per AGS Key that (active at the parameter "active_unit_date" variable defined in main).
 
-    A connected component of AGS is the maximum set of AGS that are connected
-    through predecessor or successor relationships as detailed in the AGS
-    history.
-
-    >>> ags_history = [("01051001", "01057777")]
     >>> unit_power = [
-    ...     ("01051001", 1.0),
     ...     ("01057777", 2.0),
-    ...     ("07232249", 4.0)
+    ...     ("07232249", 4.0),
+            ("01057777", 5.0)
     ... ]
-    >>> cmpnt_ags, cmpnt_power = power_per_component(ags_history, unit_power)
-    >>> cmpnt_ags == {"01057777": {"01051001", "01057777"}, "07232249": {"07232249"}}
-    True
-    >>> cmpnt_power == {"01057777": 3.0, "07232249": 4.0}
+    >>> power_per_ags_dict = accumulate_power_per_ags(unit_power)
+    >>> power_per_ags_dict == {"01057777": 7.0, "07232249": 4.0}
     True
     """
-    cmpnts = DisjointSet()
-    for ags1, ags2 in ags_history:
-        cmpnts.union(ags1, ags2)
-
-    cmpnt_power = defaultdict(float)
+    power_per_ags_dict = defaultdict(float)
     for ags, power in unit_power:
-        cmpnt_power[cmpnts.find(ags)] += power
+        power_per_ags_dict[ags] += power
 
-    return dict(cmpnts.itersets(with_canonical_elements=True)), cmpnt_power
+    return power_per_ags_dict
 
 
-def power_per_ags(
-    cmpnt_ags, cmpnt_power, population
-) -> tuple[float, defaultdict[str, float]]:
+def update_non_valid_ags_keys(
+    power_per_ags_dict, ags_history, population, local_zero_date:str
+) -> tuple[defaultdict[str, float],float]:
     """
-    Distributes power of AGS cmpnts over AGS by population.
+    Updates all ags keys to valid ags that are used by the local zero tool.
+
+    Background info: The AGS keys in Germany undergo some minor changes every year.
+    All changes are listed in the ags_history parameter. AGS Keys, that are listed in
+    the Marktstammdatenregister but are not part of the local zero ags list, are
+    therefore keys, which were not valid on the local_zero_date (see variable in main function).
+    These unvalid keys are updated according to the ags history.
 
     >>> cmpnt_ags = {"01057777": {"01051001", "01057777"}, "07232249": {"07232249"}}
     >>> cmpnt_power = {"01057777": 3.0, "07232249": 4.0}
     >>> population = {"01051001": 1000, "01057777": 2000, "07232249": 3000}
-    >>> power_lost, ags_power = power_per_ags(cmpnt_ags, cmpnt_power, population)
+    >>> power_lost, ags_power = update_non_valid_ags_keys(cmpnt_ags, cmpnt_power, population)
     >>> power_lost
     0
     >>> ags_power["01051001"]
@@ -88,27 +83,35 @@ def power_per_ags(
     ags_power = defaultdict(float)
     power_lost = 0
 
-    for cmpnt_id, total_power in cmpnt_power.items():
-        # Ignore AGS with zero inhabitants.
-        populated = [ags for ags in cmpnt_ags[cmpnt_id] if population[ags] > 0]
-        if len(populated) == 0:
-            if set(cmpnt_ags[cmpnt_id]).issubset(IGNORE):
-                power_lost += total_power
-                continue
-            else:
-                raise Exception(f"Component {cmpnt_id} is empty!")
-        total_population = sum(population[ags] for ags in populated)
-        power_per_person = total_power / total_population
-        ags_power.update((ags, power_per_person * population[ags]) for ags in populated)
+    # calculate all ags keys that are not contained in the ags list used by local zero
+    ags_not_used_by_local_zero = set(power_per_ags_dict.keys()).difference(population.keys())
 
-    return power_lost, aggregate(ags_power)
+    for ags in ags_not_used_by_local_zero:
+        total_power = power_per_ags_dict[ags]
+
+        # delete ags that are listed in IGNORE (e.g. due to them corresponding to gemeindefreie Gebiete)
+        if ags_to_be_ignored(ags):
+            power_lost += total_power
+            del power_per_ags_dict[ags]
+            continue
+        
+        def update_ags(power_per_ags_dict, ags_history, population, local_zero_date:str) -> str:
+            """
+            This updates an ags key according to the ags history. If an ags splits into multiple ags keys in the process, its power is distributed by their shares in population.  
+            """
+            return ""
+
+        #recursivly updates the power_per_ags_dict until all resulting ags keys are valid (meaning they are used by local zero)
+        update_ags(power_per_ags_dict, ags_history, population, local_zero_date)
+
+    return aggregate(power_per_ags_dict), power_lost
 
 
 def unit_query(column_name):
     """
-    Creates a query for units in the given column that were active at a specific cut-off date.
+    Creates a query for units in the given column that were active at a specific date.
 
-    This cut-off date must be provided as a query parameter called "cutoff_date".
+    This date must be provided as a query parameter called "active_unit_date".
     The query works for unit tables in the Marktstammdatenregister.dev SQLite export, which can be
     downloaded and extracted as follows:
 
@@ -122,16 +125,16 @@ def unit_query(column_name):
             {column_name}
         where
             Gemeindeschluessel is not null
-            and Inbetriebnahmedatum <= :cutoff_date -- Vor/am Stichtag in Betrieb genommen ...
+            and Inbetriebnahmedatum <= :active_unit_date -- Vor/am Stichtag in Betrieb genommen ...
             and (
                 -- ... und nie oder nach Stichtag stillgelegt ...
                 DatumEndgueltigeStilllegung is null
-                or DatumEndgueltigeStilllegung > :cutoff_date
+                or DatumEndgueltigeStilllegung > :active_unit_date
             )
             and (
                 -- ... und nie voruebergehend stillgelegt oder vor/am Stichtag wieder in Betrieb genommen.
                 DatumBeginnVoruebergehendeStilllegung is null
-                or DatumWiederaufnahmeBetrieb <= :cutoff_date
+                or DatumWiederaufnahmeBetrieb <= :active_unit_date
         )
         """
 
@@ -225,7 +228,9 @@ def aggregate(ags_power: defaultdict[str, float]) -> defaultdict[str, float]:
 if __name__ == "__main__":
     import sys
 
-    cutoff_date = "2018-12-31"
+    active_unit_date = "2021-12-31"
+    local_zero_date = "2018-12-31"
+    
 
     population = read_population_csv(sys.argv[1])
     ags_history = read_ags_history_json(sys.argv[2])
@@ -233,17 +238,23 @@ if __name__ == "__main__":
     dicts = ()
     with sqlite3.connect(f"file:{sys.argv[3]}?mode=ro", uri=True) as mastr_con:
 
-        def power(column):
+        def power(column) -> tuple[defaultdict[str, float], float]:
+            """
+            Returns a dictionary and a single float value "{ags: power_per_ags}, lost_power".
+            The dictionary contains all ags keys that are in the 
+            
+            """
             unit_power = mastr_con.execute(
-                unit_query(column), {"cutoff_date": cutoff_date}
+                unit_query(column), {"active_unit_date": active_unit_date}
             )
-            cmpnt_ags, cmpnt_power = power_per_component(ags_history, unit_power)
-            return power_per_ags(cmpnt_ags, cmpnt_power, population)
 
-        pv_lost, pv = power("EinheitSolar")
-        wind_lost, wind = power("EinheitWind")
-        biomass_lost, biomass = power("EinheitBiomasse")
-        water_lost, water = power("EinheitWasser")
+            power_per_valid_ags, power_lost = update_non_valid_ags_keys(accumulate_power_per_ags(unit_power), ags_history, population, local_zero_date)
+            return power_per_valid_ags, power_lost
+
+        pv, pv_lost = power("EinheitSolar")
+        wind, wind_lost = power("EinheitWind")
+        biomass, biomass_lost = power("EinheitBiomasse")
+        water, water_lost = power("EinheitWasser")
 
         dicts = (pv, wind, biomass, water)
 
