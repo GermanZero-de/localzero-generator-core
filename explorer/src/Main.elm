@@ -709,7 +709,7 @@ viewChart chartHovering shortPathLabels interestListTable =
         (Element.html chart)
 
 
-collapsedStatusIcon : Bool -> Element Msg
+collapsedStatusIcon : Bool -> Element msg
 collapsedStatusIcon collapsed =
     let
         i =
@@ -834,17 +834,15 @@ viewEntryAndOverride runId name overrides activeOverrideEditor f =
 
 
 viewTree :
-    RunId
-    -> InterestListId
+    { isCollapsed : Run.Path -> Bool
+    , collapsedToggledMsg : Run.Path -> msg
+    , viewLeaf : Run.Path -> String -> leaf -> List (Element msg)
+    }
     -> Run.Path
-    -> (RunId -> Run.Path -> Bool)
-    -> InterestList
-    -> Run.Overrides
-    -> Maybe ActiveOverrideEditor
-    -> Tree Value
-    -> Element Msg
-viewTree runId interestListId path checkIsCollapsed interestList overrides activeOverrideEditor tree =
-    if checkIsCollapsed runId path then
+    -> Tree leaf
+    -> Element msg
+viewTree cfg path tree =
+    if cfg.isCollapsed path then
         Element.none
 
     else
@@ -852,9 +850,6 @@ viewTree runId interestListId path checkIsCollapsed interestList overrides activ
             |> List.map
                 (\( name, val ) ->
                     let
-                        isEntry =
-                            path == [ "entries" ]
-
                         itemRow content =
                             row
                                 ([ spacing sizes.large, width fill ] ++ treeElementStyle)
@@ -870,69 +865,20 @@ viewTree runId interestListId path checkIsCollapsed interestList overrides activ
                                         [ Input.button [ width fill, Element.focused [] ]
                                             { label =
                                                 itemRow
-                                                    [ collapsedStatusIcon (checkIsCollapsed runId childPath)
+                                                    [ collapsedStatusIcon (cfg.isCollapsed childPath)
                                                     , el [ width fill ] (text name)
                                                     , el (Font.italic :: Font.alignRight :: fonts.explorerNodeSize) <|
                                                         text (String.fromInt (Dict.size child))
                                                     ]
-                                            , onPress = Just (ToggleCollapseTreeClicked ( runId, path ++ [ name ] ))
+                                            , onPress = Just (cfg.collapsedToggledMsg childPath)
                                             }
-                                        , viewTree runId
-                                            interestListId
+                                        , viewTree cfg
                                             childPath
-                                            checkIsCollapsed
-                                            interestList
-                                            overrides
-                                            activeOverrideEditor
                                             child
                                         ]
 
-                                Leaf Null ->
-                                    itemRow
-                                        [ el [ width (px 16) ] Element.none
-                                        , el [ width fill ] (text name)
-                                        , el (Font.alignRight :: Font.bold :: fonts.explorerValues) <| text "null"
-                                        ]
-
-                                Leaf (String s) ->
-                                    itemRow
-                                        [ el [ width (px 16) ] Element.none
-                                        , el [ width fill ] (text name)
-                                        , el (Font.alignRight :: fonts.explorerValues) <| text s
-                                        ]
-
-                                Leaf (Float f) ->
-                                    let
-                                        formattedF : String
-                                        formattedF =
-                                            formatGermanNumber f
-
-                                        button =
-                                            if InterestList.member childPath interestList then
-                                                dangerousIconButton (size16 FeatherIcons.trash2)
-                                                    (RemoveFromInterestListClicked interestListId childPath)
-
-                                            else
-                                                iconButton (size16 FeatherIcons.plus) (AddToInterestListClicked childPath)
-
-                                        ( originalValue, maybeOverride ) =
-                                            -- Clicking on original value should start or revert
-                                            -- an override
-                                            if isEntry then
-                                                viewEntryAndOverride runId name overrides activeOverrideEditor f
-
-                                            else
-                                                ( el (Font.alignRight :: fonts.explorerValues) <|
-                                                    text (formatGermanNumber f)
-                                                , Element.none
-                                                )
-                                    in
-                                    itemRow
-                                        [ button
-                                        , el [ width fill ] (text name)
-                                        , originalValue
-                                        , maybeOverride
-                                        ]
+                                Leaf leaf ->
+                                    itemRow <| cfg.viewLeaf path name leaf
                     in
                     ( name, element )
                 )
@@ -943,6 +889,76 @@ viewTree runId interestListId path checkIsCollapsed interestList overrides activ
                  ]
                     ++ fonts.explorerItems
                 )
+
+
+viewValueTree :
+    RunId
+    -> InterestListId
+    -> Run.Path
+    -> (RunId -> Run.Path -> Bool)
+    -> InterestList
+    -> Run.Overrides
+    -> Maybe ActiveOverrideEditor
+    -> Tree Value
+    -> Element Msg
+viewValueTree runId interestListId path checkIsCollapsed interestList overrides activeOverrideEditor tree =
+    let
+        viewLeaf : Run.Path -> String -> Value -> List (Element Msg)
+        viewLeaf pathToParent name value =
+            case value of
+                Null ->
+                    [ el [ width (px 16) ] Element.none
+                    , el [ width fill ] (text name)
+                    , el (Font.alignRight :: Font.bold :: fonts.explorerValues) <| text "null"
+                    ]
+
+                String s ->
+                    [ el [ width (px 16) ] Element.none
+                    , el [ width fill ] (text name)
+                    , el (Font.alignRight :: fonts.explorerValues) <| text s
+                    ]
+
+                Float f ->
+                    let
+                        isEntry =
+                            pathToParent == [ "entries" ]
+
+                        thisPath =
+                            pathToParent ++ [ name ]
+
+                        button =
+                            if InterestList.member thisPath interestList then
+                                dangerousIconButton (size16 FeatherIcons.trash2)
+                                    (RemoveFromInterestListClicked interestListId thisPath)
+
+                            else
+                                iconButton (size16 FeatherIcons.plus) (AddToInterestListClicked thisPath)
+
+                        ( originalValue, maybeOverride ) =
+                            -- Clicking on original value should start or revert
+                            -- an override
+                            if isEntry then
+                                viewEntryAndOverride runId name overrides activeOverrideEditor f
+
+                            else
+                                ( el (Font.alignRight :: fonts.explorerValues) <|
+                                    text (formatGermanNumber f)
+                                , Element.none
+                                )
+                    in
+                    [ button
+                    , el [ width fill ] (text name)
+                    , originalValue
+                    , maybeOverride
+                    ]
+    in
+    viewTree
+        { isCollapsed = checkIsCollapsed runId
+        , collapsedToggledMsg = \p -> ToggleCollapseTreeClicked ( runId, p )
+        , viewLeaf = viewLeaf
+        }
+        []
+        tree
 
 
 buttons : List (Element Msg) -> Element Msg
@@ -1020,7 +1036,7 @@ viewInputsAndResult runId interestListId collapseStatus interestList activeOverr
                 ]
             ]
         , differentIfFilterActive.filterPatternField
-        , viewTree
+        , viewValueTree
             runId
             interestListId
             []
