@@ -89,7 +89,7 @@ def power_per_ags(
     power_lost = 0
 
     for cmpnt_id, total_power in cmpnt_power.items():
-        # Ignore AGS with zero inhabitants.
+        # Ignore AGS with zero inhabitants. This also makes sure that we only distribute power to the ags keys we use with local zero!
         populated = [ags for ags in cmpnt_ags[cmpnt_id] if population[ags] > 0]
         if len(populated) == 0:
             if set(cmpnt_ags[cmpnt_id]).issubset(IGNORE):
