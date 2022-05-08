@@ -234,7 +234,7 @@ type Msg
     | ToggleCollapseTreeClicked Explorable.Id Path
     | ModalMsg ModalMsg
     | DisplayCalculateModalClicked (Maybe RunId) Run.Inputs Run.Overrides
-    | CalculateModalOkClicked (Maybe RunId) Run.Inputs
+    | CalculateModalOkClicked (Maybe RunId) Run.Inputs Run.Overrides
     | RemoveExplorableClicked Explorable.Id
     | InterestListLabelEdited InterestListId String
     | InterestListLabelEditFinished
@@ -303,6 +303,11 @@ removeDiff aId bId model =
     { model | diffs = Dict.remove ( aId, bId ) model.diffs }
 
 
+insertDiff : RunId -> RunId -> DiffData -> Model -> Model
+insertDiff runA runB diffData model =
+    { model | diffs = Dict.insert ( runA, runB ) diffData model.diffs }
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
@@ -341,15 +346,15 @@ update msg model =
                     { model | interestLists = ils }
                         |> withNoCmd
 
-        GotEntries maybeNdx inputs overrides (Ok entries) ->
+        GotEntries maybeRunId inputs overrides (Ok entries) ->
             model
-                |> initiateCalculate maybeNdx inputs entries overrides
+                |> initiateCalculate maybeRunId inputs entries overrides
 
         GotEntries _ _ _ (Err _) ->
             model
                 |> withNoCmd
 
-        GotGeneratorResult maybeNdx inputs entries overrides resultOrError ->
+        GotGeneratorResult maybeRunId inputs entries overrides resultOrError ->
             case resultOrError of
                 Ok result ->
                     let
@@ -361,16 +366,42 @@ update msg model =
                                 , overrides = overrides
                                 }
 
-                        newResults =
-                            case maybeNdx of
-                                Nothing ->
-                                    AllRuns.add run model.runs
+                        modelWithRun =
+                            { model
+                                | runs =
+                                    case maybeRunId of
+                                        Nothing ->
+                                            AllRuns.add run model.runs
 
-                                Just ndx ->
-                                    AllRuns.set ndx run model.runs
+                                        Just runId ->
+                                            AllRuns.set runId run model.runs
+                            }
+
+                        newDiffs =
+                            case maybeRunId of
+                                Nothing ->
+                                    modelWithRun.diffs
+
+                                Just runId ->
+                                    modelWithRun.diffs
+                                        |> Dict.map
+                                            (\( runA, runB ) diffData ->
+                                                if runA == runId || runB == runId then
+                                                    -- A input into the diff was recomputed. Recompute the diff
+                                                    case diffRunsById runA runB diffData.tolerance modelWithRun of
+                                                        Nothing ->
+                                                            -- If elm had panic I should panic
+                                                            diffData
+
+                                                        Just d ->
+                                                            d
+
+                                                else
+                                                    diffData
+                                            )
                     in
-                    { model
-                        | runs = newResults
+                    { modelWithRun
+                        | diffs = newDiffs
                         , showModal = Nothing
                     }
                         |> withNoCmd
@@ -422,11 +453,9 @@ update msg model =
             { model | showModal = Just modal }
                 |> withNoCmd
 
-        CalculateModalOkClicked maybeNdx inputs ->
-            -- TODO: Actually lookup any existing overrides
-            -- TODO: Recompute any dependent diffs
+        CalculateModalOkClicked maybeNdx inputs overrides ->
             model
-                |> initiateMakeEntries maybeNdx inputs Dict.empty
+                |> initiateMakeEntries maybeNdx inputs overrides
 
         AddOrUpdateOverrideClicked ndx name f ->
             { model
@@ -539,7 +568,6 @@ update msg model =
                                     ( modelEditorClosed, Cmd.none )
 
                                 Just run ->
-                                    -- TODO: Recompute any dependent diffs
                                     modelEditorClosed
                                         |> initiateMakeEntries (Just editor.runId)
                                             (Run.getInputs run)
@@ -548,16 +576,21 @@ update msg model =
                                             )
 
         RemoveOverrideClicked runId name ->
-            -- TODO: This is broken
-            { model
-                | runs =
-                    model.runs
-                        |> AllRuns.update runId (Run.mapOverrides (Dict.remove name))
-                , activeOverrideEditor =
-                    model.activeOverrideEditor
-                        |> Maybe.Extra.filter (\e -> e.runId /= runId || e.name /= name)
-            }
-                |> withNoCmd
+            case AllRuns.get runId model.runs of
+                Nothing ->
+                    ( model, Cmd.none )
+
+                Just run ->
+                    { model
+                        | activeOverrideEditor =
+                            model.activeOverrideEditor
+                                |> Maybe.Extra.filter (\e -> e.runId /= runId || e.name /= name)
+                    }
+                        |> initiateMakeEntries (Just runId)
+                            (Run.getInputs run)
+                            (Run.getOverrides run
+                                |> Dict.remove name
+                            )
 
         AddToInterestListClicked path ->
             model
@@ -633,8 +666,15 @@ update msg model =
                 |> withNoCmd
 
         DiffToleranceUpdated aId bId newTolerance ->
-            diffRuns aId bId newTolerance model
-                |> withNoCmd
+            case diffRunsById aId bId newTolerance model of
+                Nothing ->
+                    model
+                        |> withNoCmd
+
+                Just d ->
+                    model
+                        |> insertDiff aId bId d
+                        |> withNoCmd
 
         ToggleSelectForCompareClicked runId ->
             case model.selectedForComparison of
@@ -654,23 +694,33 @@ update msg model =
 
                             idB =
                                 runId
+
+                            withoutComparison =
+                                { model | selectedForComparison = Nothing }
                         in
-                        diffRuns idA idB Value.defaultTolerance { model | selectedForComparison = Nothing }
-                            |> withNoCmd
+                        case diffRunsById idA idB Value.defaultTolerance withoutComparison of
+                            Nothing ->
+                                withoutComparison
+                                    |> withNoCmd
+
+                            Just d ->
+                                withoutComparison
+                                    |> insertDiff idA idB d
+                                    |> withNoCmd
 
         LeftPaneMoved w ->
             { model | leftPaneWidth = w }
                 |> withNoCmd
 
 
-diffRuns : RunId -> RunId -> Float -> Model -> Model
-diffRuns idA idB tolerance model =
+diffRunsById : RunId -> RunId -> Float -> Model -> Maybe DiffData
+diffRunsById idA idB tolerance model =
     case ( AllRuns.get idA model.runs, AllRuns.get idB model.runs ) of
         ( Nothing, _ ) ->
-            model
+            Nothing
 
         ( _, Nothing ) ->
-            model
+            Nothing
 
         ( Just runA, Just runB ) ->
             let
@@ -682,7 +732,7 @@ diffRuns idA idB tolerance model =
                 diffData =
                     { diff = diff, tolerance = tolerance }
             in
-            { model | diffs = Dict.insert ( idA, idB ) diffData model.diffs }
+            Just diffData
 
 
 updateModal : ModalMsg -> Maybe ModalState -> ( Maybe ModalState, Cmd ModalMsg )
@@ -1066,15 +1116,16 @@ viewDiffTree id collapseStatus tree =
     let
         viewLeaf : Run.Path -> String -> Diff.Diff Value -> List (Element Msg)
         viewLeaf pathToParent name leaf =
+            -- TODO: Make the diff display something useful in more cases
             case leaf of
                 Left _ ->
-                    []
+                    [ text "TODO left" ]
 
                 Right _ ->
-                    []
+                    [ text "TODO right" ]
 
                 Unequal (Tree _) (Tree _) ->
-                    []
+                    [ text "TODO unequal tree" ]
 
                 Unequal (Leaf (Float f1)) (Leaf (Float f2)) ->
                     [ el [ width fill ] (text name)
@@ -1084,14 +1135,14 @@ viewDiffTree id collapseStatus tree =
                         text (formatGermanNumber f2)
                     ]
 
-                Unequal (Leaf l1) (Leaf l2) ->
-                    [ text "unequal" ]
+                Unequal (Leaf _) (Leaf _) ->
+                    [ text "TODO unequal non floats" ]
 
-                Unequal (Leaf l1) (Tree n2) ->
-                    [ text "unequal l n" ]
+                Unequal (Leaf _) (Tree _) ->
+                    [ text "TODO unequal leaf vs tree" ]
 
-                Unequal (Tree n1) (Leaf l2) ->
-                    [ text "unequal n l" ]
+                Unequal (Tree _) (Leaf _) ->
+                    [ text "TODO unequal tree vs leaf" ]
     in
     viewTree
         { isCollapsed = \p -> isCollapsed id p collapseStatus
@@ -1120,7 +1171,7 @@ viewComparison aId bId collapseStatus diffData =
             [ Input.button treeElementStyle
                 { label =
                     row [ spacing sizes.medium ]
-                        [ collapsedStatusIcon False
+                        [ collapsedStatusIcon (isCollapsed id [] collapseStatus)
                         , el [ Font.bold ] (text (String.fromInt aId ++ " ≈ " ++ String.fromInt bId))
                         ]
                 , onPress = Just (ToggleCollapseTreeClicked id [])
@@ -1142,7 +1193,7 @@ viewComparison aId bId collapseStatus diffData =
                                 Element.none
                             )
                         ]
-                        (text (formatGermanNumber diffData.tolerance))
+                        (text (">" ++ formatGermanNumber diffData.tolerance ++ "%"))
                     )
                 ]
                 { label = Input.labelHidden "tolerance"
@@ -1628,7 +1679,9 @@ viewCalculateModal maybeNdx inputs overrides =
             , value = toFloat inputs.year
             , thumb = Input.defaultThumb
             }
-        , iconButton (size32 FeatherIcons.check) (CalculateModalOkClicked maybeNdx inputs)
+        , iconButton
+            (size32 FeatherIcons.check)
+            (CalculateModalOkClicked maybeNdx inputs overrides)
         ]
 
 
