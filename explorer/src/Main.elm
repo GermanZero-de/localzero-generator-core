@@ -229,7 +229,7 @@ type Msg
     | ModalMsg ModalMsg
     | DisplayCalculateModalClicked (Maybe RunId) Run.Inputs Run.Overrides
     | CalculateModalOkClicked (Maybe RunId) Run.Inputs
-    | RemoveRunClicked RunId
+    | RemoveExplorableClicked Explorable.Id
     | InterestListLabelEdited InterestListId String
     | InterestListLabelEditFinished
     | ToggleShowGraphClicked InterestListId
@@ -280,6 +280,20 @@ downloadCmd model =
                 |> Encode.encode 0
     in
     Download.string "explorer.json" "text/json" content
+
+
+removeRunAndDiffsThatDependOnIt : RunId -> Model -> Model
+removeRunAndDiffsThatDependOnIt runId model =
+    let
+        newDiffs =
+            Dict.filter (\( runA, runB ) _ -> runA /= runId && runB /= runId) model.diffs
+    in
+    { model | runs = AllRuns.remove runId model.runs, diffs = newDiffs }
+
+
+removeDiff : RunId -> RunId -> Model -> Model
+removeDiff aId bId model =
+    { model | diffs = Dict.remove ( aId, bId ) model.diffs }
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -378,9 +392,15 @@ update msg model =
             { model | collapseStatus = CollapseStatus.toggle i path model.collapseStatus }
                 |> withNoCmd
 
-        RemoveRunClicked ndx ->
-            { model | runs = AllRuns.remove ndx model.runs }
-                |> withNoCmd
+        RemoveExplorableClicked id ->
+            case id of
+                Explorable.Run runId ->
+                    removeRunAndDiffsThatDependOnIt runId model
+                        |> withNoCmd
+
+                Explorable.Diff runA runB ->
+                    removeDiff runA runB model
+                        |> withNoCmd
 
         ModalMsg modalMsg ->
             updateModal modalMsg model.showModal
@@ -1087,9 +1107,8 @@ viewComparison aId bId collapseStatus tree =
                 , onPress = Just (ToggleCollapseTreeClicked id [])
                 }
             , buttons
-                [-- differentIfFilterActive.filterButton
-                 --, selectForComparisonButton
-                 --, dangerousIconButton FeatherIcons.trash2 (RemoveRunClicked runId)
+                [ -- differentIfFilterActive.filterButton
+                  dangerousIconButton FeatherIcons.trash2 (RemoveExplorableClicked id)
                 ]
             ]
 
@@ -1187,7 +1206,7 @@ viewRun runId interestListId interestList collapseStatus activeOverrideEditor ac
                 , selectForComparisonButton
                 , iconButton FeatherIcons.edit (DisplayCalculateModalClicked (Just runId) inputs overrides)
                 , iconButton FeatherIcons.copy (DisplayCalculateModalClicked Nothing inputs overrides)
-                , dangerousIconButton FeatherIcons.trash2 (RemoveRunClicked runId)
+                , dangerousIconButton FeatherIcons.trash2 (RemoveExplorableClicked (Explorable.Run runId))
                 ]
             ]
         , differentIfFilterActive.filterPatternField
