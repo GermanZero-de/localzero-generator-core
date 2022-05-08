@@ -90,7 +90,7 @@ def power_per_ags(
 
     for cmpnt_id, total_power in cmpnt_power.items():
         # Ignore AGS with zero inhabitants. This also makes sure that we only distribute power to the ags keys we use with local zero!
-        populated = [ags for ags in cmpnt_ags[cmpnt_id] if population[ags] > 0]
+        populated = [ags for ags in cmpnt_ags[cmpnt_id] if ags in population.keys() and population[ags] > 0]
         if len(populated) == 0:
             if set(cmpnt_ags[cmpnt_id]).issubset(IGNORE):
                 power_lost += total_power
@@ -136,7 +136,7 @@ def unit_query(column_name):
         """
 
 
-def read_population_csv(filename) -> defaultdict[str, int]:
+def read_population_csv(filename) -> dict[str, int]:
     """
     Reads a CSV file containing population data.
 
@@ -145,7 +145,7 @@ def read_population_csv(filename) -> defaultdict[str, int]:
     with open(filename, "r") as f:
         r = csv.reader(f)
         next(r)  # Skip header.
-        return defaultdict(int, ((ags, int(pop)) for (ags, pop) in r))
+        return dict(((ags, int(pop)) for (ags, pop) in r))
 
 
 def read_ags_master_csv(filename) -> frozenset[str]:
@@ -225,7 +225,7 @@ def aggregate(ags_power: defaultdict[str, float]) -> defaultdict[str, float]:
 if __name__ == "__main__":
     import sys
 
-    cutoff_date = "2018-12-31"
+    cutoff_date = "2021-12-31"
 
     population = read_population_csv(sys.argv[1])
     ags_history = read_ags_history_json(sys.argv[2])
@@ -251,15 +251,13 @@ if __name__ == "__main__":
         print(f"Total power lost: {total_lost} kW")
 
     def rows():
-        all_ags = reduce(
-            lambda s1, s2: s1.union(s2),
-            (set(d.keys()) for d in dicts),
-        )
-        for ags in sorted(list(all_ags)):
+        for ags in sorted(population.keys()):
             yield [ags] + [f"{d[ags]:.3f}" if d[ags] != 0 else "0" for d in dicts]
             # yield [ags] + [str(d[ags]) for d in dicts]
 
     with open("out3.csv", "w", newline="") as f:
         writer = csv.writer(f)
+
+        #write header
         writer.writerow(["ags", "pv", "wind", "biomass", "water"])
         writer.writerows(rows())
