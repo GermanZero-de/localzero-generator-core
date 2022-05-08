@@ -7,12 +7,13 @@ module CollapseStatus exposing
     , toggle
     )
 
-import AllRuns exposing (AbsolutePath)
+import Explorable
+import Run exposing (Path)
 import Set exposing (Set)
 
 
 type CollapseStatus
-    = CollapseStatus (Set AbsolutePath)
+    = CollapseStatus (Set ( Explorable.Comparable, Path ))
 
 
 allCollapsed : CollapseStatus
@@ -20,25 +21,30 @@ allCollapsed =
     CollapseStatus Set.empty
 
 
-expand : AbsolutePath -> CollapseStatus -> CollapseStatus
-expand ap (CollapseStatus s) =
-    CollapseStatus (Set.insert ap s)
+absolutePath : Explorable.Id -> Path -> ( Explorable.Comparable, Path )
+absolutePath i p =
+    ( Explorable.toComparable i, p )
 
 
-collapse : AbsolutePath -> CollapseStatus -> CollapseStatus
-collapse ap (CollapseStatus s) =
-    CollapseStatus (Set.remove ap s)
+expand : Explorable.Id -> Path -> CollapseStatus -> CollapseStatus
+expand i p (CollapseStatus s) =
+    CollapseStatus (Set.insert (absolutePath i p) s)
 
 
-isCollapsed : AbsolutePath -> CollapseStatus -> Bool
-isCollapsed ap (CollapseStatus s) =
-    not (Set.member ap s)
+collapse : Explorable.Id -> Path -> CollapseStatus -> CollapseStatus
+collapse i p (CollapseStatus s) =
+    CollapseStatus (Set.remove (absolutePath i p) s)
 
 
-toggle : AbsolutePath -> CollapseStatus -> CollapseStatus
-toggle ap s =
-    if isCollapsed ap s then
-        expand ap s
+isCollapsed : Explorable.Id -> Path -> CollapseStatus -> Bool
+isCollapsed i p (CollapseStatus s) =
+    not (Set.member (absolutePath i p) s)
+
+
+toggle : Explorable.Id -> Path -> CollapseStatus -> CollapseStatus
+toggle i p s =
+    if isCollapsed i p s then
+        expand i p s
 
     else
-        collapse ap s
+        collapse i p s

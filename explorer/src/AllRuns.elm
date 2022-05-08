@@ -1,6 +1,5 @@
 module AllRuns exposing
-    ( AbsolutePath
-    , AllRuns
+    ( AllRuns
     , RunId
     , add
     , empty
@@ -16,7 +15,8 @@ module AllRuns exposing
 
 import Dict exposing (Dict)
 import Run exposing (Path, Run)
-import ValueTree exposing (Value)
+import Tree
+import Value exposing (Value)
 
 
 type alias RunId =
@@ -26,12 +26,6 @@ type alias RunId =
 stringFromRunId : RunId -> String
 stringFromRunId runId =
     String.fromInt runId
-
-
-{-| A Path to a value inside a given GeneratorResult
--}
-type alias AbsolutePath =
-    ( Int, Path )
 
 
 {-| One run of the generator.
@@ -44,7 +38,7 @@ type AllRuns
 
 empty : AllRuns
 empty =
-    AllRuns { runs = Dict.empty, nextId = 0 }
+    AllRuns { runs = Dict.empty, nextId = 1 }
 
 
 add : Run -> AllRuns -> AllRuns
@@ -92,14 +86,14 @@ getValue handling ndx path (AllRuns a) =
     Dict.get ndx a.runs
         |> Maybe.andThen
             (\r ->
-                ValueTree.get path (Run.getTree handling r)
+                Tree.get path (Run.getTree handling r)
                     |> Maybe.andThen
                         (\node ->
                             case node of
-                                ValueTree.Tree _ ->
+                                Tree.Tree _ ->
                                     Nothing
 
-                                ValueTree.Leaf n ->
+                                Tree.Leaf n ->
                                     Just n
                         )
             )

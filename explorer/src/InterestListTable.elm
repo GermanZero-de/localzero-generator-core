@@ -1,10 +1,15 @@
 module InterestListTable exposing (InterestListTable, create)
 
+{-| A InterestListTable is the result of applying an InterestList
+to all the runs.
+-}
+
 import AllRuns exposing (AllRuns, RunId)
 import Dict exposing (Dict)
 import InterestList exposing (InterestList)
 import Run
-import ValueTree exposing (Value(..))
+import Tree
+import Value exposing (Value(..))
 
 
 type alias InterestListTable =
@@ -41,15 +46,15 @@ create interestList allRuns =
                                 (\path ->
                                     case
                                         Run.getTree Run.WithOverrides run
-                                            |> ValueTree.get path
+                                            |> Tree.get path
                                     of
                                         Nothing ->
                                             ( ( runId, path ), String "NOTHING" )
 
-                                        Just (ValueTree.Tree _) ->
+                                        Just (Tree.Tree _) ->
                                             ( ( runId, path ), String "TREE" )
 
-                                        Just (ValueTree.Leaf v) ->
+                                        Just (Tree.Leaf v) ->
                                             ( ( runId, path ), v )
                                 )
                     )
