@@ -4,8 +4,7 @@ module Main exposing (Model, Msg(..), init, main, subscriptions, update, view)
 
 import AllRuns
     exposing
-        ( AbsolutePath
-        , AllRuns
+        ( AllRuns
         , RunId
         )
 import Browser
@@ -17,6 +16,7 @@ import Chart.Item
 import Cmd.Extra exposing (withCmd, withNoCmd)
 import CollapseStatus exposing (CollapseStatus, allCollapsed, isCollapsed)
 import Dict exposing (Dict)
+import Diff exposing (Diff(..))
 import Element
     exposing
         ( Element
@@ -43,6 +43,7 @@ import Element.Events as Events
 import Element.Font as Font
 import Element.Input as Input
 import Element.Keyed
+import Explorable
 import FeatherIcons
 import File exposing (File)
 import File.Download as Download
@@ -58,7 +59,7 @@ import Json.Decode as Decode
 import Json.Encode as Encode
 import Maybe.Extra
 import Pivot exposing (Pivot)
-import Run exposing (OverrideHandling(..), Run)
+import Run exposing (OverrideHandling(..), Path, Run)
 import Storage
 import Styling
     exposing
@@ -124,6 +125,10 @@ type alias ChartHovering =
     List (Chart.Item.Many (List String) Chart.Item.Any)
 
 
+type alias DiffId =
+    ( RunId, RunId )
+
+
 type alias Model =
     { runs : AllRuns
     , collapseStatus : CollapseStatus
@@ -133,6 +138,9 @@ type alias Model =
     , activeOverrideEditor : Maybe ActiveOverrideEditor
     , activeSearch : Maybe ActiveSearch
     , chartHovering : ChartHovering
+    , diffs : Dict DiffId (Tree (Diff Value))
+    , selectedForComparison : Maybe RunId
+    , leftPaneWidth : Int
     }
 
 
@@ -193,6 +201,9 @@ init _ =
       , activeOverrideEditor = Nothing
       , activeSearch = Nothing
       , chartHovering = []
+      , diffs = Dict.empty
+      , selectedForComparison = Nothing
+      , leftPaneWidth = 600
       }
     , Cmd.none
     )
@@ -214,7 +225,7 @@ type Msg
     | FilterEdited RunId String
     | FilterFinished
     | FilterQuickAddRequested
-    | ToggleCollapseTreeClicked AbsolutePath
+    | ToggleCollapseTreeClicked Explorable.Id Path
     | ModalMsg ModalMsg
     | DisplayCalculateModalClicked (Maybe RunId) Run.Inputs Run.Overrides
     | CalculateModalOkClicked (Maybe RunId) Run.Inputs
@@ -232,6 +243,8 @@ type Msg
     | FileContentLoaded String
     | OnChartHover ChartHovering
     | Noop
+    | ToggleSelectForCompareClicked RunId
+    | LeftPaneMoved Int
 
 
 type ModalMsg
@@ -361,8 +374,8 @@ update msg model =
                     model
                         |> withLoadFailure ("Failed to decode: " ++ error)
 
-        ToggleCollapseTreeClicked path ->
-            { model | collapseStatus = CollapseStatus.toggle path model.collapseStatus }
+        ToggleCollapseTreeClicked i path ->
+            { model | collapseStatus = CollapseStatus.toggle i path model.collapseStatus }
                 |> withNoCmd
 
         RemoveRunClicked ndx ->
@@ -587,6 +600,49 @@ update msg model =
 
         OnChartHover hovering ->
             { model | chartHovering = hovering }
+                |> withNoCmd
+
+        ToggleSelectForCompareClicked runId ->
+            case model.selectedForComparison of
+                Nothing ->
+                    { model | selectedForComparison = Just runId }
+                        |> withNoCmd
+
+                Just r ->
+                    if r == runId then
+                        { model | selectedForComparison = Nothing }
+                            |> withNoCmd
+
+                    else
+                        let
+                            idA =
+                                r
+
+                            idB =
+                                runId
+
+                            modelComparisonCleared =
+                                { model | selectedForComparison = Nothing }
+                        in
+                        case ( AllRuns.get idA model.runs, AllRuns.get idB model.runs ) of
+                            ( Nothing, _ ) ->
+                                modelComparisonCleared
+                                    |> withNoCmd
+
+                            ( _, Nothing ) ->
+                                modelComparisonCleared
+                                    |> withNoCmd
+
+                            ( Just runA, Just runB ) ->
+                                let
+                                    diff =
+                                        Diff.diff Value.isEqual (Run.getTree WithOverrides runA) (Run.getTree WithOverrides runB)
+                                in
+                                { modelComparisonCleared | diffs = Dict.insert ( idA, idB ) diff modelComparisonCleared.diffs }
+                                    |> withNoCmd
+
+        LeftPaneMoved w ->
+            { model | leftPaneWidth = w }
                 |> withNoCmd
 
 
@@ -954,10 +1010,10 @@ viewValueTree runId interestListId path checkIsCollapsed interestList overrides 
     in
     viewTree
         { isCollapsed = checkIsCollapsed runId
-        , collapsedToggledMsg = \p -> ToggleCollapseTreeClicked ( runId, p )
+        , collapsedToggledMsg = ToggleCollapseTreeClicked (Explorable.Run runId)
         , viewLeaf = viewLeaf
         }
-        []
+        path
         tree
 
 
@@ -966,8 +1022,87 @@ buttons l =
     row [ Element.spacingXY sizes.medium 0 ] l
 
 
-viewInputsAndResult : RunId -> InterestListId -> CollapseStatus -> InterestList -> Maybe ActiveOverrideEditor -> Maybe ActiveSearch -> Run -> Element Msg
-viewInputsAndResult runId interestListId collapseStatus interestList activeOverrideEditor activeSearch run =
+viewDiffTree : Explorable.Id -> CollapseStatus -> Tree (Diff.Diff Value) -> Element Msg
+viewDiffTree id collapseStatus tree =
+    let
+        viewLeaf : Run.Path -> String -> Diff.Diff Value -> List (Element Msg)
+        viewLeaf pathToParent name leaf =
+            case leaf of
+                Left _ ->
+                    []
+
+                Right _ ->
+                    []
+
+                Unequal (Tree _) (Tree _) ->
+                    []
+
+                Unequal (Leaf (Float f1)) (Leaf (Float f2)) ->
+                    [ el [ width fill ] (text name)
+                    , el (Font.alignRight :: fonts.explorerValues) <|
+                        text (formatGermanNumber f1)
+                    , el (Font.alignRight :: fonts.explorerValues) <|
+                        text (formatGermanNumber f2)
+                    ]
+
+                Unequal (Leaf l1) (Leaf l2) ->
+                    [ text "unequal" ]
+
+                Unequal (Leaf l1) (Tree n2) ->
+                    [ text "unequal l n" ]
+
+                Unequal (Tree n1) (Leaf l2) ->
+                    [ text "unequal n l" ]
+    in
+    viewTree
+        { isCollapsed = \p -> isCollapsed id p collapseStatus
+        , collapsedToggledMsg = ToggleCollapseTreeClicked id
+        , viewLeaf = viewLeaf
+        }
+        []
+        tree
+
+
+viewComparison : RunId -> RunId -> CollapseStatus -> Tree (Diff.Diff Value) -> Element Msg
+viewComparison aId bId collapseStatus tree =
+    let
+        id =
+            Explorable.Diff aId bId
+    in
+    column
+        [ width fill
+        , spacing sizes.medium
+        , padding sizes.small
+        , Border.width 1
+        , Border.color black
+        , Border.rounded 4
+        ]
+        [ row [ width fill ]
+            [ Input.button (width fill :: treeElementStyle)
+                { label =
+                    row [ width fill, spacing sizes.medium ]
+                        [ collapsedStatusIcon False
+                        , el [ Font.bold ] (text (String.fromInt aId ++ " ≈ " ++ String.fromInt bId))
+                        ]
+                , onPress = Just (ToggleCollapseTreeClicked id [])
+                }
+            , buttons
+                [-- differentIfFilterActive.filterButton
+                 --, selectForComparisonButton
+                 --, dangerousIconButton FeatherIcons.trash2 (RemoveRunClicked runId)
+                ]
+            ]
+
+        --, differentIfFilterActive.filterPatternField
+        , viewDiffTree
+            id
+            collapseStatus
+            tree
+        ]
+
+
+viewRun : RunId -> InterestListId -> InterestList -> CollapseStatus -> Maybe ActiveOverrideEditor -> Maybe ActiveSearch -> Maybe RunId -> Run -> Element Msg
+viewRun runId interestListId interestList collapseStatus activeOverrideEditor activeSearch selectedForComparison run =
     let
         inputs =
             Run.getInputs run
@@ -975,12 +1110,31 @@ viewInputsAndResult runId interestListId collapseStatus interestList activeOverr
         overrides =
             Run.getOverrides run
 
+        isSelectedForComparison =
+            case selectedForComparison of
+                Nothing ->
+                    False
+
+                Just ri ->
+                    ri == runId
+
+        selectForComparisonButton =
+            if isSelectedForComparison then
+                dangerousIconButton
+                    FeatherIcons.trello
+                    (ToggleSelectForCompareClicked runId)
+
+            else
+                iconButton
+                    FeatherIcons.trello
+                    (ToggleSelectForCompareClicked runId)
+
         differentIfFilterActive =
             case activeSearch |> Maybe.Extra.filter (\s -> s.runId == runId) of
                 Nothing ->
                     { filterButton = iconButton FeatherIcons.filter (FilterEdited runId "")
                     , treeToDisplay = Run.getTree WithoutOverrides run
-                    , isCollapsed = \r p -> isCollapsed ( r, p ) collapseStatus
+                    , isCollapsed = \r p -> isCollapsed (Explorable.Run r) p collapseStatus
                     , filterPatternField = Element.none
                     }
 
@@ -1026,10 +1180,11 @@ viewInputsAndResult runId interestListId collapseStatus interestList activeOverr
                         , el [ Font.bold ] (text (String.fromInt runId ++ ":"))
                         , text (inputs.ags ++ " " ++ String.fromInt inputs.year)
                         ]
-                , onPress = Just (ToggleCollapseTreeClicked ( runId, [] ))
+                , onPress = Just (ToggleCollapseTreeClicked (Explorable.Run runId) [])
                 }
             , buttons
                 [ differentIfFilterActive.filterButton
+                , selectForComparisonButton
                 , iconButton FeatherIcons.edit (DisplayCalculateModalClicked (Just runId) inputs overrides)
                 , iconButton FeatherIcons.copy (DisplayCalculateModalClicked Nothing inputs overrides)
                 , dangerousIconButton FeatherIcons.trash2 (RemoveRunClicked runId)
@@ -1057,14 +1212,14 @@ defaultInputs =
 
 {-| The pane on the left hand side containing the results
 -}
-viewResultsPane : Model -> Element Msg
-viewResultsPane model =
+viewRunsAndComparisons : Model -> Element Msg
+viewRunsAndComparisons model =
     column
         [ height fill
         , spacing sizes.large
         , padding sizes.large
         , height (minimum 0 fill)
-        , width (minimum 500 shrink)
+        , width (px model.leftPaneWidth)
         , Element.inFront
             (floatingActionButton FeatherIcons.plus (DisplayCalculateModalClicked Nothing defaultInputs Dict.empty))
         ]
@@ -1078,17 +1233,26 @@ viewResultsPane model =
                 , width fill
                 , height fill
                 ]
-                (AllRuns.toList model.runs
+                ((AllRuns.toList model.runs
                     |> List.map
                         (\( resultNdx, ir ) ->
-                            viewInputsAndResult resultNdx
+                            viewRun resultNdx
                                 (Pivot.lengthL model.interestLists)
-                                model.collapseStatus
                                 (Pivot.getC model.interestLists)
+                                model.collapseStatus
                                 model.activeOverrideEditor
                                 model.activeSearch
+                                model.selectedForComparison
                                 ir
                         )
+                 )
+                    ++ (model.diffs
+                            |> Dict.toList
+                            |> List.map
+                                (\( ( a, b ), diff ) ->
+                                    viewComparison a b model.collapseStatus diff
+                                )
+                       )
                 )
             )
         ]
@@ -1293,7 +1457,13 @@ viewModel model =
             , height (minimum 0 fill)
             , spacing sizes.large
             ]
-            [ viewResultsPane model
+            [ viewRunsAndComparisons model
+            , el
+                [ width (px 2)
+                , Background.color black
+                , height fill
+                ]
+                Element.none
             , el
                 [ width fill
                 , height (minimum 0 fill)

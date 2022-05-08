@@ -1,6 +1,5 @@
 module AllRuns exposing
-    ( AbsolutePath
-    , AllRuns
+    ( AllRuns
     , RunId
     , add
     , empty
@@ -29,12 +28,6 @@ stringFromRunId runId =
     String.fromInt runId
 
 
-{-| A Path to a value inside a given GeneratorResult
--}
-type alias AbsolutePath =
-    ( Int, Path )
-
-
 {-| One run of the generator.
 Uses a dictionary so that ids still refer to the same generator run after deletion of
 another run.
@@ -45,7 +38,7 @@ type AllRuns
 
 empty : AllRuns
 empty =
-    AllRuns { runs = Dict.empty, nextId = 0 }
+    AllRuns { runs = Dict.empty, nextId = 1 }
 
 
 add : Run -> AllRuns -> AllRuns
