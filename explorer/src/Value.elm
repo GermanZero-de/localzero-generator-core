@@ -1,4 +1,4 @@
-module Value exposing (Value(..), decoder, isEqual)
+module Value exposing (Value(..), decoder, defaultTolerance, isEqual, minimumTolerance)
 
 import Json.Decode as Decode
 
@@ -9,8 +9,18 @@ type Value
     | String String
 
 
-isEqual : Value -> Value -> Bool
-isEqual a b =
+minimumTolerance : Float
+minimumTolerance =
+    1.0e-2
+
+
+defaultTolerance : Float
+defaultTolerance =
+    minimumTolerance
+
+
+isEqual : Float -> Value -> Value -> Bool
+isEqual tolerance a b =
     case ( a, b ) of
         ( Null, Null ) ->
             True
@@ -30,7 +40,11 @@ isEqual a b =
                     False
 
                 ( False, False ) ->
-                    abs (fb - fa) <= 1.0e-2
+                    let
+                        d =
+                            abs (fb - fa)
+                    in
+                    d <= max (tolerance * max (abs fa) (abs fb)) 1.0e-12
 
         ( Float _, Null ) ->
             False

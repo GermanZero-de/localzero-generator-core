@@ -129,6 +129,12 @@ type alias DiffId =
     ( RunId, RunId )
 
 
+type alias DiffData =
+    { diff : Tree (Diff Value)
+    , tolerance : Float -- 0 to 100.0
+    }
+
+
 type alias Model =
     { runs : AllRuns
     , collapseStatus : CollapseStatus
@@ -138,7 +144,7 @@ type alias Model =
     , activeOverrideEditor : Maybe ActiveOverrideEditor
     , activeSearch : Maybe ActiveSearch
     , chartHovering : ChartHovering
-    , diffs : Dict DiffId (Tree (Diff Value))
+    , diffs : Dict DiffId DiffData
     , selectedForComparison : Maybe RunId
     , leftPaneWidth : Int
     }
@@ -245,6 +251,7 @@ type Msg
     | Noop
     | ToggleSelectForCompareClicked RunId
     | LeftPaneMoved Int
+    | DiffToleranceUpdated RunId RunId Float
 
 
 type ModalMsg
@@ -622,6 +629,10 @@ update msg model =
             { model | chartHovering = hovering }
                 |> withNoCmd
 
+        DiffToleranceUpdated aId bId newTolerance ->
+            diffRuns aId bId newTolerance model
+                |> withNoCmd
+
         ToggleSelectForCompareClicked runId ->
             case model.selectedForComparison of
                 Nothing ->
@@ -640,30 +651,35 @@ update msg model =
 
                             idB =
                                 runId
-
-                            modelComparisonCleared =
-                                { model | selectedForComparison = Nothing }
                         in
-                        case ( AllRuns.get idA model.runs, AllRuns.get idB model.runs ) of
-                            ( Nothing, _ ) ->
-                                modelComparisonCleared
-                                    |> withNoCmd
-
-                            ( _, Nothing ) ->
-                                modelComparisonCleared
-                                    |> withNoCmd
-
-                            ( Just runA, Just runB ) ->
-                                let
-                                    diff =
-                                        Diff.diff Value.isEqual (Run.getTree WithOverrides runA) (Run.getTree WithOverrides runB)
-                                in
-                                { modelComparisonCleared | diffs = Dict.insert ( idA, idB ) diff modelComparisonCleared.diffs }
-                                    |> withNoCmd
+                        diffRuns idA idB Value.defaultTolerance { model | selectedForComparison = Nothing }
+                            |> withNoCmd
 
         LeftPaneMoved w ->
             { model | leftPaneWidth = w }
                 |> withNoCmd
+
+
+diffRuns : RunId -> RunId -> Float -> Model -> Model
+diffRuns idA idB tolerance model =
+    case ( AllRuns.get idA model.runs, AllRuns.get idB model.runs ) of
+        ( Nothing, _ ) ->
+            model
+
+        ( _, Nothing ) ->
+            model
+
+        ( Just runA, Just runB ) ->
+            let
+                diff =
+                    Diff.diff (Value.isEqual (tolerance / 100.0))
+                        (Run.getTree WithOverrides runA)
+                        (Run.getTree WithOverrides runB)
+
+                diffData =
+                    { diff = diff, tolerance = tolerance }
+            in
+            { model | diffs = Dict.insert ( idA, idB ) diffData model.diffs }
 
 
 updateModal : ModalMsg -> Maybe ModalState -> ( Maybe ModalState, Cmd ModalMsg )
@@ -1083,8 +1099,8 @@ viewDiffTree id collapseStatus tree =
         tree
 
 
-viewComparison : RunId -> RunId -> CollapseStatus -> Tree (Diff.Diff Value) -> Element Msg
-viewComparison aId bId collapseStatus tree =
+viewComparison : RunId -> RunId -> CollapseStatus -> DiffData -> Element Msg
+viewComparison aId bId collapseStatus diffData =
     let
         id =
             Explorable.Diff aId bId
@@ -1098,13 +1114,41 @@ viewComparison aId bId collapseStatus tree =
         , Border.rounded 4
         ]
         [ row [ width fill ]
-            [ Input.button (width fill :: treeElementStyle)
+            [ Input.button treeElementStyle
                 { label =
-                    row [ width fill, spacing sizes.medium ]
+                    row [ spacing sizes.medium ]
                         [ collapsedStatusIcon False
                         , el [ Font.bold ] (text (String.fromInt aId ++ " ≈ " ++ String.fromInt bId))
                         ]
                 , onPress = Just (ToggleCollapseTreeClicked id [])
+                }
+            , Input.slider
+                [ height (px 20)
+                , Element.behindContent
+                    (el
+                        [ width fill
+                        , Font.center
+                        , Element.behindContent
+                            (el
+                                [ width fill
+                                , height (px 2)
+                                , Element.centerY
+                                , Background.color germanZeroGreen
+                                , Border.rounded 2
+                                ]
+                                Element.none
+                            )
+                        ]
+                        (text (formatGermanNumber diffData.tolerance))
+                    )
+                ]
+                { label = Input.labelHidden "tolerance"
+                , min = 0.001
+                , max = 100.0
+                , step = Just 0.001
+                , onChange = DiffToleranceUpdated aId bId
+                , value = diffData.tolerance
+                , thumb = Input.defaultThumb
                 }
             , buttons
                 [ -- differentIfFilterActive.filterButton
@@ -1116,7 +1160,7 @@ viewComparison aId bId collapseStatus tree =
         , viewDiffTree
             id
             collapseStatus
-            tree
+            diffData.diff
         ]
 
 
@@ -1268,8 +1312,8 @@ viewRunsAndComparisons model =
                     ++ (model.diffs
                             |> Dict.toList
                             |> List.map
-                                (\( ( a, b ), diff ) ->
-                                    viewComparison a b model.collapseStatus diff
+                                (\( ( a, b ), diffData ) ->
+                                    viewComparison a b model.collapseStatus diffData
                                 )
                        )
                 )
