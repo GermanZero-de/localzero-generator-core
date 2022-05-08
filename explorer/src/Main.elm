@@ -424,6 +424,7 @@ update msg model =
 
         CalculateModalOkClicked maybeNdx inputs ->
             -- TODO: Actually lookup any existing overrides
+            -- TODO: Recompute any dependent diffs
             model
                 |> initiateMakeEntries maybeNdx inputs Dict.empty
 
@@ -538,6 +539,7 @@ update msg model =
                                     ( modelEditorClosed, Cmd.none )
 
                                 Just run ->
+                                    -- TODO: Recompute any dependent diffs
                                     modelEditorClosed
                                         |> initiateMakeEntries (Just editor.runId)
                                             (Run.getInputs run)
@@ -546,6 +548,7 @@ update msg model =
                                             )
 
         RemoveOverrideClicked runId name ->
+            -- TODO: This is broken
             { model
                 | runs =
                     model.runs
