@@ -26,6 +26,7 @@ class Vars0:
     invest_pa: float = None  # type: ignore
     invest_pa_com: float = None  # type: ignore
     invest_pa_outside: float = None  # type: ignore
+    invest_per_CO2e: float = None # type: ignore
 
 
 @dataclass
@@ -43,6 +44,7 @@ class Vars1:
     energy: float = None  # type: ignore
     invest: float = None  # type: ignore
     invest_pa: float = None  # type: ignore
+    invest_per_CO2e: float = None # type: ignore
 
 
 @dataclass
@@ -272,6 +274,7 @@ class Vars15:
     energy: float = None  # type: ignore
     invest: float = None  # type: ignore
     invest_pa: float = None  # type: ignore
+    invest_per_CO2e: float = None # type: ignore
     pct_energy: float = None  # type: ignore
 
 
@@ -1928,5 +1931,9 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
     g_organic.cost_wage = g_organic.invest_pa * g_organic.pct_of_wage
     g.cost_wage = g_consult.cost_wage + g_organic.cost_wage
     a.cost_wage = g.cost_wage + p.cost_wage + s.cost_wage
+
+    a.invest_per_CO2e = div(a.invest, a.change_CO2e_t)
+    p.invest_per_CO2e = div(p.invest, p.change_CO2e_t)
+    s.invest_per_CO2e = div(s.invest, s.change_CO2e_t)
 
     return a30
