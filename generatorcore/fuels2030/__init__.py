@@ -43,6 +43,7 @@ class EFuelProduction:
     invest: float
     invest_pa: float
     invest_per_x: float
+    invest_per_CO2e: float
     pct_of_wage: float
     power_to_be_installed: float
     ratio_wage_to_emplo: float
@@ -87,7 +88,7 @@ class EFuelProduction:
         cost_wage = invest_pa * pct_of_wage
         demand_emplo = div(cost_wage, ratio_wage_to_emplo)
         demand_emplo_new = demand_emplo
-
+        invest_per_CO2e = div(invest,change_CO2e_t)
         return cls(
             CO2e_production_based=CO2e_production_based,
             CO2e_production_based_per_MWh=CO2e_production_based_per_MWh,
@@ -110,6 +111,7 @@ class EFuelProduction:
             pct_of_wage=pct_of_wage,
             power_to_be_installed=power_to_be_installed,
             ratio_wage_to_emplo=ratio_wage_to_emplo,
+            invest_per_CO2e=invest_per_CO2e
         )
 
 
@@ -165,6 +167,7 @@ class NewEFuelProduction:
     invest_pa: float
     invest_pa_outside: float
     invest_per_x: float
+    invest_per_CO2e: float
     pct_of_wage: float
     power_to_be_installed: float
     ratio_wage_to_emplo: float
@@ -207,6 +210,9 @@ class NewEFuelProduction:
         cost_wage = invest_pa * pct_of_wage
         demand_emplo = div(cost_wage, ratio_wage_to_emplo)
         demand_emplo_new = demand_emplo
+
+        invest_per_CO2e = div(invest, change_CO2e_t)
+
         return cls(
             CO2e_production_based=CO2e_production_based,
             CO2e_production_based_per_MWh=CO2e_production_based_per_MWh,
@@ -227,6 +233,7 @@ class NewEFuelProduction:
             invest_pa=invest_pa,
             invest_pa_outside=invest_pa_outside,
             invest_per_x=invest_per_power,
+            invest_per_CO2e = invest_per_CO2e,
             pct_of_wage=pct_of_wage,
             power_to_be_installed=power_to_be_installed,
             ratio_wage_to_emplo=ratio_wage_to_emplo,
@@ -253,6 +260,7 @@ class TotalEFuelProduction:
     invest_outside: float
     invest_pa: float
     invest_pa_outside: float
+    invest_per_CO2e: float
 
     @classmethod
     def calc(
@@ -262,6 +270,10 @@ class TotalEFuelProduction:
         efuels: list[EFuelProduction],
         fuels_without_repl: list[FuelWithoutDirectReplacement],
     ) -> "TotalEFuelProduction":
+
+        invest = sum(x.invest for x in new_efuels) + sum(x.invest for x in efuels)
+        change_CO2e_t = sum(x.change_CO2e_t for x in new_efuels)+ sum(x.change_CO2e_t for x in efuels)+ sum(x.change_CO2e_t for x in fuels_without_repl)
+        invest_per_CO2e = div(invest,change_CO2e_t)
 
         res = cls(
             CO2e_production_based=sum(x.CO2e_production_based for x in new_efuels)
@@ -274,9 +286,7 @@ class TotalEFuelProduction:
             + sum(x.CO2e_total_2021_estimated for x in efuels)
             + sum(x.CO2e_total_2021_estimated for x in fuels_without_repl),
             change_CO2e_pct=0,
-            change_CO2e_t=sum(x.change_CO2e_t for x in new_efuels)
-            + sum(x.change_CO2e_t for x in efuels)
-            + sum(x.change_CO2e_t for x in fuels_without_repl),
+            change_CO2e_t=change_CO2e_t,
             change_energy_MWh=sum(x.change_energy_MWh for x in new_efuels)
             + sum(x.change_energy_MWh for x in efuels)
             + sum(x.change_energy_MWh for x in fuels_without_repl),
@@ -293,11 +303,12 @@ class TotalEFuelProduction:
             demand_emplo_new=sum(x.demand_emplo_new for x in new_efuels)
             + sum(x.demand_emplo_new for x in efuels),
             energy=sum(x.energy for x in new_efuels) + sum(x.energy for x in efuels),
-            invest=sum(x.invest for x in new_efuels) + sum(x.invest for x in efuels),
+            invest=invest,
             invest_outside=sum(x.invest_outside for x in new_efuels),
             invest_pa=sum(x.invest_pa for x in new_efuels)
             + sum(x.invest_pa for x in efuels),
             invest_pa_outside=sum(x.invest_pa_outside for x in new_efuels),
+            invest_per_CO2e=invest_per_CO2e
         )
         res.change_energy_pct = div(res.change_energy_MWh, f18.p.energy)
         res.change_CO2e_pct = div(res.change_CO2e_t, f18.p.CO2e_total)
@@ -322,6 +333,7 @@ class F:
     invest_outside: float
     invest_pa: float
     invest_pa_outside: float
+    invest_per_CO2e: float
 
     @classmethod
     def of_p(cls, p: TotalEFuelProduction) -> "F":
@@ -341,6 +353,7 @@ class F:
             cost_wage=p.cost_wage,
             demand_emplo=p.demand_emplo,
             demand_emplo_new=p.demand_emplo_new,
+            invest_per_CO2e=p.invest_per_CO2e
         )
 
 
@@ -349,12 +362,22 @@ class EFuels:
     # Used by p_efuels
     change_CO2e_t: float
     energy: float
+    invest: float
+    invest_per_CO2e: float
 
     @classmethod
     def calc(cls, *efuels: EFuelProduction) -> "EFuels":
         change_CO2e_t = sum(e.change_CO2e_t for e in efuels)
         energy = sum(e.energy for e in efuels)
-        return cls(change_CO2e_t=change_CO2e_t, energy=energy)
+        invest = sum(e.invest for e in efuels)
+        invest_per_CO2e = div(invest,change_CO2e_t)
+
+        return cls(
+            change_CO2e_t=change_CO2e_t,
+            energy=energy,
+            invest=invest,
+            invest_per_CO2e=invest_per_CO2e,
+            )
 
 
 @dataclass
