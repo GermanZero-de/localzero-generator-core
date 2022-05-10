@@ -82,6 +82,8 @@ def calc(
     pyr.demand_emplo = div(pyr.cost_wage, pyr.ratio_wage_to_emplo)
     pyr.demand_emplo_new = pyr.demand_emplo
 
+    pyr.invest_per_CO2e = div(pyr.invest, pyr.change_CO2e_t)
+
     l.CO2e_total = g.CO2e_total + pyr.CO2e_total
     l.CO2e_production_based = g.CO2e_production_based + pyr.CO2e_production_based
     l.CO2e_combustion_based = g.CO2e_combustion_based
@@ -101,3 +103,4 @@ def calc(
     l.cost_wage = g.cost_wage + pyr.cost_wage
     l.demand_emplo = g.demand_emplo + pyr.demand_emplo
     l.demand_emplo_new = g.demand_emplo_new + pyr.demand_emplo_new
+    l.invest_per_CO2e = div( l.invest, l.change_CO2e_t)

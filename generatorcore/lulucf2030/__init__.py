@@ -19,6 +19,7 @@ class LColVars2030:
     CO2e_total_2021_estimated: float = None  # type: ignore
     cost_climate_saved: float = None  # type: ignore
     invest_pa: float = None  # type: ignore
+    invest_per_CO2e: float = None # type: ignore
     cost_wage: float = None  # type: ignore
     demand_emplo: float = None  # type: ignore
     demand_emplo_new: float = None  # type: ignore
@@ -1497,5 +1498,50 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
     g_settlement.demand_emplo_new = g_settlement_org.demand_emplo_new
 
     g_wet_org_rp.change_CO2e_pct = 0
+
+    
+    g.invest_per_CO2e = div( g.invest, g.change_CO2e_t)
+    g_forest.invest_per_CO2e = div( g_forest.invest, g_forest.change_CO2e_t)
+    g_forest_managed.invest_per_CO2e = div( g_forest_managed.invest, g_forest_managed.change_CO2e_t)
+    #g_forest_natural.invest_per_CO2e = div( g_forest_natural.invest, g_forest_natural.change_CO2e_t)
+    g_crop.invest_per_CO2e = div( g_crop.invest, g_crop.change_CO2e_t)
+    g_crop_org.invest_per_CO2e = div( g_crop_org.invest, g_crop_org.change_CO2e_t)
+    #g_crop_min_conv.invest_per_CO2e = div( g_crop_min_conv.invest, g_crop_min_conv.change_CO2e_t)
+    #g_crop_min_hum.invest_per_CO2e = div( g_crop_min_hum.invest, g_crop_min_hum.change_CO2e_t)
+    g_crop_org_low.invest_per_CO2e = div( g_crop_org_low.invest, g_crop_org_low.change_CO2e_t)
+    g_crop_org_high.invest_per_CO2e = div( g_crop_org_high.invest, g_crop_org_high.change_CO2e_t)
+    g_grass.invest_per_CO2e = div( g_grass.invest, g_grass.change_CO2e_t)
+    #g_grass_min_conv.invest_per_CO2e = div( g_grass_min_conv.invest, g_grass_min_conv.change_CO2e_t)
+    g_grass_org_low.invest_per_CO2e = div( g_grass_org_low.invest, g_grass_org_low.change_CO2e_t)
+    g_grass_org_high.invest_per_CO2e = div( g_grass_org_high.invest, g_grass_org_high.change_CO2e_t)
+    g_grove.invest_per_CO2e = div( g_grove.invest, g_grove.change_CO2e_t)
+    #g_grove_min.invest_per_CO2e = div( g_grove_min.invest, g_grove_min.change_CO2e_t)
+    g_grove_org.invest_per_CO2e = div(  g_grove_org.invest,  g_grove_org.change_CO2e_t)
+    g_grove_org_low.invest_per_CO2e = div( g_grove_org_low.invest, g_grove_org_low.change_CO2e_t)
+    g_grove_org_high.invest_per_CO2e = div( g_grove_org_high.invest, g_grove_org_high.change_CO2e_t)
+    g_wet.invest_per_CO2e = div( g_wet.invest, g_wet.change_CO2e_t)
+    #g_wet_min.invest_per_CO2e = div( g_wet_min.invest, g_wet_min.change_CO2e_t)
+    g_wet_org_low.invest_per_CO2e = div( g_wet_org_low.invest, g_wet_org_low.change_CO2e_t)
+    g_wet_org_high.invest_per_CO2e = div( g_wet_org_high.invest, g_wet_org_high.change_CO2e_t)
+    #g_wet_org_low_r.invest_per_CO2e = div( g_wet_org_low_r.invest, g_wet_org_low_r.change_CO2e_t)
+    #g_wet_org_low_rp.invest_per_CO2e = div( g_wet_org_low_rp.invest, g_wet_org_low_rp.change_CO2e_t)
+    #g_wet_org_high_r.invest_per_CO2e = div( g_wet_org_high_r.invest, g_wet_org_high_r.change_CO2e_t)
+    #g_wet_org_high_rp.invest_per_CO2e = div( g_wet_org_high_rp.invest, g_wet_org_high_rp.change_CO2e_t)
+    g_water.invest_per_CO2e = div( g_water.invest, g_water.change_CO2e_t)
+    g_water_min.invest_per_CO2e = div( g_water_min.invest, g_water_min.change_CO2e_t)
+    g_water_org.invest_per_CO2e = div( g_water_org.invest, g_water_org.change_CO2e_t)
+    #g_settlement.invest_per_CO2e = div( g_settlement.invest, g_settlement.change_CO2e_t)
+    #g_settlement_org.invest_per_CO2e = div( g_settlement_org.invest, g_settlement_org.change_CO2e_t)
+    #g_settlement_min.invest_per_CO2e = div( g_settlement_min.invest, g_settlement_min.change_CO2e_t)
+    #g_settlement_org_low.invest_per_CO2e = div( g_settlement_org_low.invest, g_settlement_org_low.change_CO2e_t)
+    #g_settlement_org_high.invest_per_CO2e = div( g_settlement_org_high.invest, g_settlement_org_high.change_CO2e_t)
+    g_other.invest_per_CO2e = div( g_other.invest, g_other.change_CO2e_t)
+    #g_wood.invest_per_CO2e = div( g_wood.invest, g_wood.change_CO2e_t)
+    g_grass_org.invest_per_CO2e = div( g_grass_org.invest, g_grass_org.change_CO2e_t)
+    g_wet_org.invest_per_CO2e = div( g_wet_org.invest, g_wet_org.change_CO2e_t)
+    #g_wet_org_r.invest_per_CO2e = div( g_wet_org_r.invest, g_wet_org_r.change_CO2e_t)
+    g_wet_org_rp.invest_per_CO2e = div( g_wet_org_rp.invest, g_wet_org_rp.change_CO2e_t)
+    g_water_org_low.invest_per_CO2e = div( g_water_org_low.invest, g_water_org_low.change_CO2e_t)
+    g_water_org_high.invest_per_CO2e = div( g_water_org_high.invest, g_water_org_high.change_CO2e_t)
 
     return l30
