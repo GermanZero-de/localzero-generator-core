@@ -1,527 +1,263 @@
 from collections import defaultdict
 import csv
-from lxml import etree
-import os
-import re
+from functools import reduce
+from itertools import groupby
 import json
-from datetime import datetime
-
-
-CUTOFFDATE = "31.12.2018"
-cut_off_date: datetime = datetime.strptime(CUTOFFDATE, "%d.%m.%Y")
+import sqlite3
+from disjoint_set import DisjointSet
 
 # Diese AGS werden ignoriert, weil wir zurzeit für gemeindefreie Gebiete keine Daten aufbereiten.
-EXCEPTION_DICT = {
-    "09478444": "Neuensorger Forst ist ein gemeindefreies gebiet",
+IGNORE = {
     "01053105": "Sachsenwald ist ein gemeindefreies Gebiet",
-    "06435200": "Gutsbezirk Spessart ist ist ein gemeindefreies Gebiet",
     "01060014": "BuchholzerForstist ist ein gemeindefreies Gebiet",
-    "09572444": "Gdefr. Geb. (Lkr Erlangen-Höchstadt) ist ein gemeindefreies Gebiet",
-    "03155501": "Solling (Landkreis Northeim) ist ein gemeindefreies Gebiet",
     "03153504": "Harz (Landkreis Goslar), gemfr. Gebiet ist ein gemeindefreies Gebiet",
+    "03155501": "Solling (Landkreis Northeim) ist ein gemeindefreies Gebiet",
+    "06435200": "Gutsbezirk Spessart ist ist ein gemeindefreies Gebiet",
+    "09478444": "Neuensorger Forst ist ein gemeindefreies gebiet",
+    "09478451": "Breitengüßbacher Forst ist ein gemeindefreies Gebiet",
+    "09478453": "Neuensorger Forst ist ein gemeindefreies Gebiet",
+    "09572444": "Gdefr. Geb. (Lkr Erlangen-Höchstadt) ist ein gemeindefreies Gebiet",
+    "09572451": "Birkach ist ein gemeindefreies Gebiet",
+    "09572452": "Buckenhofer Forst",
+    "09572453": "Dormitzer Forst",
+    "09572454": "Erlenstegener Forst",
+    "09572455": "Forst Tennenlohe",
+    "09572456": "Geschaidt",
+    "09572457": "Kalchreuther Forst",
+    "09572458": "Kraftshofer Forst",
+    "09572459": "Mark",
+    "09572460": "Neunhofer Forst",
 }
 
 
-def parse_elem(elem, tags: list[str]) -> list:
-    return_list = [None] * len(tags)
-    for subelem in elem:
-        # print(subelem.tag + "   " + subelem.text)
-        for i, tag in enumerate(tags):
-            if subelem.tag == tag:
-                return_list[i] = subelem.text
-    return return_list
-
-
-def parse_xml(
-    path: str,
-    *,
-    use_input_dict=False,
-    input_dict=defaultdict(float),
-    print_info: bool = False,
-    print_exit: bool = False,
-) -> defaultdict:
-    """This parses the XML file under path and returns a dict formated list {key: power | ags keys in xml}
-    Right now we also filter out some entries due to some specifications like the installation date.
-    There are just a few entries (<10) in the xml that do not ags keys. ATM we disregard those.
+def power_per_component(
+    ags_history, unit_power
+) -> tuple[dict[str, set[str]], defaultdict[str, float]]:
     """
-    return_dict = defaultdict(float)
-    if use_input_dict:
-        return_dict = input_dict
-    with open(path, "r", encoding="utf-16") as file:
+    Accumulates power of active units per connected component of AGS.
 
-        tree = etree.parse(file, parser=etree.XMLParser())
-        root = tree.getroot()
+    A connected component of AGS is the maximum set of AGS that are connected
+    through predecessor or successor relationships as detailed in the AGS
+    history.
 
-        no_ags_count = 0
-        no_power_count = 0
-        no_date = 0
-        for elem in root:
-            [
-                ags,
-                netpower,
-                start_date_string,
-                end_date_string,
-                status,
-                temp_shut_down_date_string,
-                reactivation_date_string,
-            ] = parse_elem(
-                elem,
-                [
-                    "Gemeindeschluessel",
-                    "Nettonennleistung",
-                    "Inbetriebnahmedatum",
-                    "DatumEndgueltigeStilllegung",
-                    "EinheitBetriebsstatus",
-                    "DatumBeginnVoruebergehendeStilllegung",
-                    "DatumWiederaufnahmeBetrieb",
-                ],
-            )
+    >>> ags_history = [("01051001", "01057777")]
+    >>> unit_power = [
+    ...     ("01051001", 1.0),
+    ...     ("01057777", 2.0),
+    ...     ("07232249", 4.0)
+    ... ]
+    >>> cmpnt_ags, cmpnt_power = power_per_component(ags_history, unit_power)
+    >>> cmpnt_ags == {"01057777": {"01051001", "01057777"}, "07232249": {"07232249"}}
+    True
+    >>> cmpnt_power == {"01057777": 3.0, "07232249": 4.0}
+    True
+    """
+    cmpnts = DisjointSet()
+    for ags1, ags2 in ags_history:
+        cmpnts.union(ags1, ags2)
 
-            # Betriebsstatus
-            # 35 -> In Betrieb, 31 -> In Planung, 37 -> Vorübergehend stillgelegt, 38 -> Endgültig stillgelegt
-            if status == "31":  # filter out "in Planung"
+    cmpnt_power = defaultdict(float)
+    for ags, power in unit_power:
+        cmpnt_power[cmpnts.find(ags)] += power
+
+    return dict(cmpnts.itersets(with_canonical_elements=True)), cmpnt_power
+
+
+def power_per_ags(
+    cmpnt_ags, cmpnt_power, population
+) -> tuple[float, defaultdict[str, float]]:
+    """
+    Distributes power of AGS cmpnts over AGS by population.
+
+    >>> cmpnt_ags = {"01057777": {"01051001", "01057777"}, "07232249": {"07232249"}}
+    >>> cmpnt_power = {"01057777": 3.0, "07232249": 4.0}
+    >>> population = {"01051001": 1000, "01057777": 2000, "07232249": 3000}
+    >>> power_lost, ags_power = power_per_ags(cmpnt_ags, cmpnt_power, population)
+    >>> power_lost
+    0
+    >>> ags_power["01051001"]
+    1.0
+    >>> ags_power["01057777"]
+    2.0
+    >>> ags_power["07232249"]
+    4.0
+
+    (Aggregation is tested separately, see the 'aggregate' function.)
+    """
+    # ags_power will map each AGS to an approximation of the amount of power produced there.
+    ags_power = defaultdict(float)
+    power_lost = 0
+
+    for cmpnt_id, total_power in cmpnt_power.items():
+        # Ignore AGS with zero inhabitants. This also makes sure that we only distribute power to the ags keys we use with local zero!
+        populated = [ags for ags in cmpnt_ags[cmpnt_id] if ags in population.keys() and population[ags] > 0]
+        if len(populated) == 0:
+            if set(cmpnt_ags[cmpnt_id]).issubset(IGNORE):
+                power_lost += total_power
                 continue
-
-            if end_date_string != None:
-                end_date = datetime.strptime(end_date_string, "%Y-%m-%d")
-                if (
-                    end_date < cut_off_date
-                ):  # die Einheit wurde vor unserem Cutt-Off Datum stillgelegt
-                    continue
-
-            if start_date_string != None:
-                start_date = datetime.strptime(start_date_string, "%Y-%m-%d")
-                if (
-                    start_date > cut_off_date
-                ):  # filter out "in Betrieb gegangen nach ende 2018"
-                    continue
             else:
-                no_date += 1
+                raise Exception(f"Component {cmpnt_id} is empty!")
+        total_population = sum(population[ags] for ags in populated)
+        power_per_person = total_power / total_population
+        ags_power.update((ags, power_per_person * population[ags]) for ags in populated)
 
-            if temp_shut_down_date_string != None:
-                temp_shut_down_date = datetime.strptime(
-                    temp_shut_down_date_string, "%Y-%m-%d"
-                )
-                if temp_shut_down_date < cut_off_date:
-                    # die Einheit wurde vor dem Cut-Off Datum temporär stillgelegt
-                    if reactivation_date_string != None:
-                        reactivation_date = datetime.strptime(
-                            reactivation_date_string, "%Y-%m-%d"
-                        )
-                        if reactivation_date > cut_off_date:
-                            # Die Einheit wurde nach dem Cut-Off Datum reaktiviert -> rausfiltern
-                            continue
-                    else:
-                        # Die Einheit wurde bisher nicht reaktiviert (es gibt kein Wiederaufnahme Datum) -> rausfiltern
-                        continue
+    return power_lost, aggregate(ags_power)
 
-            if ags is None:
-                no_ags_count += 1
-            elif netpower is None:
-                no_power_count += 1
-            else:
-                return_dict[ags] += float(netpower)
 
-        if print_info:
-            print(
-                "In "
-                + path
-                + ": No AGS Count: "
-                + str(no_power_count)
-                + ", No power Count: "
-                + str(no_power_count)
-                + ", No Date: "
-                + str(no_date)
+def unit_query(column_name):
+    """
+    Creates a query for units in the given column that were active at a specific cut-off date.
+
+    This cut-off date must be provided as a query parameter called "cutoff_date".
+    The query works for unit tables in the Marktstammdatenregister.dev SQLite export, which can be
+    downloaded and extracted as follows:
+
+    curl https://s3.eu-central-1.wasabisys.com/mastr-backup/Marktstammdatenregister.db.gz | gunzip - >Marktstammdatenregister.db
+    """
+    return f"""
+        select
+            Gemeindeschluessel,
+            Bruttoleistung
+        from
+            {column_name}
+        where
+            Gemeindeschluessel is not null
+            and Inbetriebnahmedatum <= :cutoff_date -- Vor/am Stichtag in Betrieb genommen ...
+            and (
+                -- ... und nie oder nach Stichtag stillgelegt ...
+                DatumEndgueltigeStilllegung is null
+                or DatumEndgueltigeStilllegung > :cutoff_date
             )
-        if print_exit:
-            print("parsed " + path)
+            and (
+                -- ... und nie voruebergehend stillgelegt oder vor/am Stichtag wieder in Betrieb genommen.
+                DatumBeginnVoruebergehendeStilllegung is null
+                or DatumWiederaufnahmeBetrieb <= :cutoff_date
+        )
+        """
 
-    return return_dict
+
+def read_population_csv(filename) -> dict[str, int]:
+    """
+    Reads a CSV file containing population data.
+
+    The expected format is <AGS as string>, <population as integer>.
+    """
+    with open(filename, "r") as f:
+        r = csv.reader(f)
+        next(r)  # Skip header.
+        return dict(((ags, int(pop)) for (ags, pop) in r))
 
 
-def parse_multi_xml(base_path, number_of_files, *, print_exit=False, print_info=False):
-    """We need this as the data for one Energieträger (Pv) is stored in multiple XML files."""
-    pv_dict = defaultdict(float)
-    for i in range(1, number_of_files + 1):
-        pv_dict = parse_xml(
-            base_path + "_" + str(i) + ".xml",
-            use_input_dict=True,
-            input_dict=pv_dict,
-            print_info=print_info,
-            print_exit=print_exit,
+def read_ags_master_csv(filename) -> frozenset[str]:
+    """
+    Reads the "master.csv" file containing all AGS.
+
+    The expected format is <AGS as string>, <name as string>
+    """
+    with open(filename, "r") as f:
+        r = csv.reader(f)
+        next(r)  # Skip header.
+        return frozenset(ags for [ags, _name] in r)
+
+
+def read_ags_history_json(filename) -> tuple[tuple[str, str]]:
+    """
+    Reads the "AGS Historie" JSON file from Destatis.
+
+    See https://www.xrepository.de/api/xrepository/urn:xoev-de:bund:destatis:bevoelkerungsstatistik:codeliste:ags.historie_2021-12-31/download/Destatis.AGS.Historie_2021-12-31.json
+    """
+    with open(filename, "r",encoding="utf-8") as f:
+        return tuple(
+            (AGS, NachfolgerAGS)
+            for [
+                _Code,
+                AGS,
+                _GemeindenameMitZusatz,
+                _gueltigAb,
+                _Aenderungsart,
+                _gueltigBis,
+                NachfolgerAGS,
+                _NachfolgerName,
+                _NachfolgerGueltigAb,
+                _Hinweis,
+            ] in json.load(f)["daten"]
+            if AGS is not None and NachfolgerAGS is not None
         )
 
-    return pv_dict
 
-
-def load_master(path) -> list:
-    """This loads the master.csv file and returns a list of all ags keys."""
-    master_list = []
-    with open(path, "r") as file:
-        master_reader = csv.reader(file, delimiter=",")
-        _ = next(master_reader)  # remove header
-        for entry in master_reader:
-            master_list.append(entry[0])
-    return master_list
-
-
-def load_population(path) -> dict:
-    """This loads the 2018.csv population file that contains a list of all ags keys with their population."""
-    population_dict = dict()
-    with open(path, "r") as file:
-        population_reader = csv.reader(file, delimiter=",")
-
-        _ = next(population_reader)  # remove header
-        for entry in population_reader:
-            population_dict[entry[0]] = entry[1]
-    return population_dict
-
-
-def handle_not_in_master(
-    input_dict: defaultdict,
-    master: list,
-    data_list,
-    look_up_dict,
-    population_dict: dict,
-    *,
-    print_details: bool = False,
-):
+def aggregate(ags_power: defaultdict[str, float]) -> defaultdict[str, float]:
     """
-    This deals with all ags entries in input_dict that are not contained in the master list. It adds the power values of the missing ags keys to their
-     successors or predecessors.
+    Aggregates nationwide, per-state, and per-district power.
 
-     So far the powers are distributes over sevreal ags keys proportional to their population.
-     The EE-unit is disregarded/deleted if the ags corresponds to a gemeindefreie Gebiet.
+    Modifies the argument and returns it for convenience.
+
+    >>> original = {"01051001": 1.0, "01057777": 2.0}
+    >>> result = aggregate(dict(original))
+    >>> sorted(list(result.keys()))
+    ['01000000', '01051000', '01051001', '01057000', '01057777', 'DG000000']
+    >>> set(original.items()).issubset(set(result.items()))
+    True
+    >>> result["01000000"]
+    3.0
+    >>> result["01051000"]
+    1.0
+    >>> result["01057000"]
+    2.0
+    >>> result["DG000000"]
+    3.0
     """
-    notInMaster = set(input_dict.keys()).difference(master)
+    state_prefix = lambda ags: ags[:2]
+    district_prefix = lambda ags: ags[:5]
+    ags_sorted = sorted(list(ags_power.keys()))
 
-    for ags in notInMaster:
-        newAGSnotinMaster = False
-        if print_details:
-            print("handling ags " + ags)
+    # Do this first so we don't include state and district aggregates.
+    ags_power["DG000000"] = sum(ags_power.values())
 
-        changedAgsList = lookUpAGSinRepo(
-            ags, look_up_dict=look_up_dict, repo=data_list, print_details=print_details
-        )
+    # Use keys from ags_sorted to avoid including previous aggregates.
+    for state, ags in groupby(ags_sorted, state_prefix):
+        ags_power[state + "000000"] = sum(ags_power[x] for x in ags)
+    for district, ags in groupby(ags_sorted, district_prefix):
+        ags_power[district + "000"] = sum(ags_power[x] for x in ags)
 
-        if (
-            changedAgsList == []
-        ):  # this happens if the ags key is a gemeindefreies Gebiet and the ags key occurs in the exception list
-            if print_details:
-                print(str(ags) + "ags key not in master")
-                print(str(input_dict[ags]) + "power lost")
-            del input_dict[ags]
-            continue
-
-        if print_details:
-            print("ags in changed AGS List" + str(changedAgsList))
-
-        for agsKey in changedAgsList:
-            if (
-                agsKey not in master
-            ):  # this happens if the new ags key is a gemeindefreies Gebiet and the ags key occurs in the exception list
-                if print_details:
-                    print(str(agsKey) + " new Ags not in master")
-                if agsKey in EXCEPTION_DICT:
-                    if print_details:
-                        print(EXCEPTION_DICT[agsKey])
-                        print(str(input_dict[ags]) + " power lost")
-                    newAGSnotinMaster = True
-                else:
-                    exit(1)
-
-        if newAGSnotinMaster:
-            continue
-
-        populationSum = sum(float(population_dict[agsKey]) for agsKey in changedAgsList)
-        power = float(input_dict[ags])
-
-        for agsKey in changedAgsList:
-            populationinchangedAGS = float(population_dict[agsKey])
-            input_dict[agsKey] += power * (populationinchangedAGS / populationSum)
-
-    return input_dict
+    return ags_power
 
 
-def load_ags_repo(repoPath):
-    """This loads the json from https://www.xrepository.de/api/xrepository/urn:xoev-de:bund:destatis:bevoelkerungsstatistik:codeliste:ags.historie_2021-12-31/download/Destatis.AGS.Historie_2021-12-31.json
-    to a dict "agsList" and creates a lookup dict "look_up_dict" that saves all contained ags keys with the indices, where they appear in agsList
-    [code,predecessor_ags,name,valid_from,change_type,valid_until,successor_ags,successor_name,successor_ags_valid_from,descritpion] with
-    the following description
-    - code - Code
-    - predecessor_ags - AGS
-    - name - Gemeindenamen mit Zusatz
-    - valid_from - gueltig ab
-    - change_type - Aenderungsart
-    - valid_until - gueltig bis
-    - successor_ags - AGS des Nachfolgers
-    - successor_name - Name des Nachfolgers
-    - successor_ags_valid_from - Nachfolger gueltig ab
-    - descritpion - Hinweis
-    nützliche info aus der xrepository json
-    In dieser Codeliste sind alle Gebietsänderungen seit dem 01.01.2007 abgebildet. Sie enthält alle AGS,
-    die zu irgendeinem Zeitpunkt seit dem 31.12.2006 existiert haben. Jeweils mit Gültigkeitszeitraum,
-    Gemeindebezeichnung und (falls die Gemeinde inzwischen aufgelöst wurde) dem Rechtsnachfolger.
+if __name__ == "__main__":
+    import sys
 
-    with the change types:
-    - 1 = Auflösung (AGS wird ungültig)
-    - 2 = Teilausgliederung (Gemeinde gibt einen Teil ab, AGS bleibt weiterhin gültig)
-    - 3 = Schlüsseländerung (AGS wird ungültig, Gemeinde bekommt einen neuen AGS, z.B. bei Kreiszugehörigkeitsänderungen)
-    - 4 = Namensänderung (AGS bleibt bestehen, Gemeinde bekommt einen neuen Namen oder eine Zusatzbezeichnung wie z.B. "Stadt")
-    """
-    # TODO: Check if this handles all cases correctly or if we could do better easily.
-    with open(repoPath, "r", encoding="utf-8") as repo:
-        agsList = json.loads(repo.read())
-    data_list = agsList["daten"]
-    agsLookUpDict = defaultdict(list)
-    for (i, data) in enumerate(data_list):
-        for ii, elem in enumerate(data):
-            # print(elem)
-            if elem == None:
-                continue
-            if re.match(r"[0-9]{8}", elem):
-                agsLookUpDict[elem].append([i, ii])
-    return agsList, agsLookUpDict
+    cutoff_date = "2021-12-31"
 
+    population = read_population_csv(sys.argv[1])
+    ags_history = read_ags_history_json(sys.argv[2])
 
-def lookUpAGSinRepo(
-    ags: str, look_up_dict, repo, *, print_details: bool = False
-) -> list[str]:
-    """
-    This looks up an ags and returns a list of all ags keys that are either predecessors or successors of the key.
-    """
-    # TODO: Check if this deals with all cases correctly.
+    dicts = ()
+    with sqlite3.connect(f"file:{sys.argv[3]}?mode=ro", uri=True) as mastr_con:
 
-    ags_return_list = []
-    data_list = repo["daten"]
-    vorkommnisse = look_up_dict[ags]
-
-    ags_as_predecessor = []
-    ags_as_successor = []
-
-    for elem in vorkommnisse:
-        if elem[1] == 1:  # the ags key is at the predecessor position in the data
-            ags_as_predecessor.append(data_list[elem[0]])
-
-        elif elem[1] == 6:  # the ags key is at the successor position in the data
-            ags_as_successor.append(data_list[elem[0]])
-        else:
-            print(
-                "This should not happen. Check if the repository is prvoded in the following form:\n [code,predecessor_ags,name,valid_from,change_type,valid_until,successor_ags,successor_name,successor_ags_valid_from,descritpion]"
+        def power(column):
+            unit_power = mastr_con.execute(
+                unit_query(column), {"cutoff_date": cutoff_date}
             )
-            exit(1)
+            cmpnt_ags, cmpnt_power = power_per_component(ags_history, unit_power)
+            return power_per_ags(cmpnt_ags, cmpnt_power, population)
 
-    if len(ags_as_predecessor) > 0:
+        pv_lost, pv = power("EinheitSolar")
+        wind_lost, wind = power("EinheitWind")
+        biomass_lost, biomass = power("EinheitBiomasse")
+        water_lost, water = power("EinheitWasser")
 
-        for elem in ags_as_predecessor:
+        dicts = (pv, wind, biomass, water)
 
-            [
-                code,
-                predecessor_ags,
-                name,
-                valid_from,
-                change_type,
-                valid_until,
-                successor_ags,
-                successor_name,
-                successor_ags_valid_from,
-                descritpion,
-            ] = elem
-            if successor_ags != None:
-                if print_details:
-                    print(
-                        successor_ags
-                        + " ags as predeccessor date "
-                        + successor_ags_valid_from
-                    )
-                successor_ags_valid_from_date = datetime.strptime(
-                    successor_ags_valid_from, "%d.%m.%Y"
-                )
-                if successor_ags_valid_from_date <= cut_off_date:
-                    if successor_ags != ags:
-                        ags_return_list.append(successor_ags)
+        total_lost = pv_lost + wind_lost + biomass_lost + water_lost
+        print(f"Total power lost: {total_lost} kW")
 
-    if len(ags_as_successor) > 0:
-        for elem in ags_as_successor:
-            [
-                code,
-                predecessor_ags,
-                name,
-                valid_from,
-                change_type,
-                valid_until,
-                successor_ags,
-                successor_name,
-                successor_ags_valid_from,
-                descritpion,
-            ] = elem
-            if print_details:
-                print(
-                    predecessor_ags
-                    + " ags as successor date "
-                    + successor_ags_valid_from
-                )
-            successor_ags_valid_from_date = datetime.strptime(
-                successor_ags_valid_from, "%d.%m.%Y"
-            )
-            if successor_ags_valid_from_date > cut_off_date:
-                if predecessor_ags != ags:
-                    ags_return_list.append(predecessor_ags)
+    def rows():
+        for ags in sorted(population.keys()):
+            yield [ags] + [f"{d[ags]:.3f}" if d[ags] != 0 else "0" for d in dicts]
+            # yield [ags] + [str(d[ags]) for d in dicts]
 
-    if len(ags_return_list) == 0:
-        if ags in EXCEPTION_DICT:
-            if print_details:
-                print(EXCEPTION_DICT[ags])
-        else:
-            print("apperatently you did not handle all cases for " + ags)
-            exit(1)
+    with open("2018.csv", "w", newline="") as f:
+        writer = csv.writer(f)
 
-    return ags_return_list
-
-
-def save_dict(input_dict: dict, name: str):
-    if not os.path.exists("xmlZwischenspeicher"):
-        os.makedirs("xmlZwischenspeicher")
-
-    with open("xmlZwischenspeicher/" + name + ".json", "w") as file:
-        json.dump(input_dict, file)
-
-
-def load_dict_from_json(name: str):
-    return_dict = defaultdict(float)
-    with open("xmlZwischenspeicher/" + name + ".json", "r") as file:
-        return_dict = defaultdict(float, json.loads(file.read()))
-    return return_dict
-
-
-def fuse_dicts(input_dict_list: list[defaultdict], master_ags_list) -> dict:
-    return_dict = {}
-    for ags in master_ags_list:
-        return_dict[ags] = [input_dict[ags] for input_dict in input_dict_list]
-    return return_dict
-
-
-def aggregate_dict(input_dict: dict):
-    """aggregates the input dict and creates sums for all state and district ags keys."""
-
-    def addLists(list1: list[float], list2: list[float]) -> list[float]:
-        if list1 == []:
-            return list2
-        if list2 == []:
-            return list1
-        return [list1[i] + list2[i] for i, _ in enumerate(list2)]
-
-    sum_over_districts = defaultdict(list[float])
-    sum_over_states = defaultdict(list[float])
-    for ags, powers_list in input_dict.items():
-        ags_sta = ags[:2] + "000000"
-        ags_dis = ags[:5] + "000"
-        sum_over_districts[ags_dis] = addLists(sum_over_districts[ags_dis], powers_list)
-        sum_over_states[ags_sta] = addLists(sum_over_states[ags_sta], powers_list)
-
-    for key, val in sum_over_districts.items():
-        input_dict[key] = val
-
-    for key, val in sum_over_states.items():
-        input_dict[key] = val
-
-
-def dict_to_sorted_list(input_dict: dict) -> list:
-    return_list = []
-    for ags, powers in input_dict.items():
-        return_list.append([ags, *powers])
-
-    return_list.sort(key=lambda x: int(x[0]))  # sort by ags keys
-
-    return return_list
-
-
-def main():
-
-    reloadfromXML: bool = False
-
-    pv_dict = defaultdict(float)
-    biomass_dict = defaultdict(float)
-    wasser_dict = defaultdict(float)
-    wind_dict = defaultdict(float)
-
-    if reloadfromXML:
-        pv_dict = parse_multi_xml(
-            "Xml/EinheitenSolar", 24, print_exit=True, print_info=True
-        )
-        biomass_dict = parse_xml(
-            "Xml/EinheitenBiomasse.xml", print_exit=True, print_info=True
-        )
-        wasser_dict = parse_xml(
-            "Xml/EinheitenWasser.xml", print_exit=True, print_info=True
-        )
-        wind_dict = parse_xml("Xml/EinheitenWind.xml", print_exit=True, print_info=True)
-
-        save_dict(pv_dict, "pv_dict")
-        save_dict(biomass_dict, "biomass_dict")
-        save_dict(wind_dict, "wind_dict")
-        save_dict(wasser_dict, "wasser_dict")
-    else:
-        pv_dict = load_dict_from_json("pv_dict")
-        biomass_dict = load_dict_from_json("biomass_dict")
-        wasser_dict = load_dict_from_json("wasser_dict")
-        wind_dict = load_dict_from_json("wind_dict")
-
-    master_ags_list = load_master("Master2018/master.csv")
-    population_dict = load_population("population/2018.csv")
-
-    [agsList, look_up_dict] = load_ags_repo("Xrepo/xrepo.json")
-
-    biomass_dict = handle_not_in_master(
-        biomass_dict,
-        master=master_ags_list,
-        data_list=agsList,
-        look_up_dict=look_up_dict,
-        population_dict=population_dict,
-    )
-    pv_dict = handle_not_in_master(
-        pv_dict,
-        master=master_ags_list,
-        data_list=agsList,
-        look_up_dict=look_up_dict,
-        population_dict=population_dict,
-    )
-    wasser_dict = handle_not_in_master(
-        wasser_dict,
-        master=master_ags_list,
-        data_list=agsList,
-        look_up_dict=look_up_dict,
-        population_dict=population_dict,
-    )
-    wind_dict = handle_not_in_master(
-        wind_dict,
-        master=master_ags_list,
-        data_list=agsList,
-        look_up_dict=look_up_dict,
-        population_dict=population_dict,
-    )
-
-    biomass_total = sum(biomass_dict.values())
-    wasser_total = sum(wasser_dict.values())
-    wind_total = sum(wind_dict.values())
-    pv_total = sum(pv_dict.values())
-
-    renewables_dict = fuse_dicts(
-        [pv_dict, wind_dict, biomass_dict, wasser_dict], master_ags_list=master_ags_list
-    )
-
-    aggregate_dict(renewables_dict)
-
-    sorted_ags_list = dict_to_sorted_list(renewables_dict)
-
-    with open("2018.csv", "w", newline="") as renewable_energy:
-        renewable_energy.write("ags,pv,wind_on,biomass,water\n")
-        writer = csv.writer(renewable_energy)
-
-        writer.writerow(["DG000000", pv_total, wind_total, biomass_total, wasser_total])
-
-        for ags_and_power_value_row in sorted_ags_list:
-            writer.writerow(ags_and_power_value_row)
-
-
-main()
+        #write header
+        writer.writerow(["ags", "pv", "wind", "biomass", "water"])
+        writer.writerows(rows())
