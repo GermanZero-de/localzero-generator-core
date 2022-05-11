@@ -33,5 +33,5 @@ to distribute the installed unit powers over several ags keys if the power can n
 Unfortunatly not all AGS Keys in the Marktstammdatenregister are valid keys, that are used by local zero. This is due to the fact that the ags keys change over time. To update
 the keys we use the following algorithms: We create sets of ags keys {ags keys| ags keys linked via ags history} that are linked via a entries in the ags history and accumulate
 all powers of the renewable units in this set. Afterwards we distribute the accumulated power over subsets of these sets
-{{ags keys| ags keys linked via ags history & used by local zero}} by the using their respective share in population. With the assumption that 
+{{ags keys| ags keys linked via ags history & used by local zero}} by the using their respective share in population. With the assumption that
 most ags keys do not change over the years and the {ags keys| ags keys linked via ags history} sets do not get too big, the resulting error is acceptable.

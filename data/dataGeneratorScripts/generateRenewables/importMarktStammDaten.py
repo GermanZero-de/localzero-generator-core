@@ -90,7 +90,11 @@ def power_per_ags(
 
     for cmpnt_id, total_power in cmpnt_power.items():
         # Ignore AGS with zero inhabitants. This also makes sure that we only distribute power to the ags keys we use with local zero!
-        populated = [ags for ags in cmpnt_ags[cmpnt_id] if ags in population.keys() and population[ags] > 0]
+        populated = [
+            ags
+            for ags in cmpnt_ags[cmpnt_id]
+            if ags in population.keys() and population[ags] > 0
+        ]
         if len(populated) == 0:
             if set(cmpnt_ags[cmpnt_id]).issubset(IGNORE):
                 power_lost += total_power
@@ -166,7 +170,7 @@ def read_ags_history_json(filename) -> tuple[tuple[str, str]]:
 
     See https://www.xrepository.de/api/xrepository/urn:xoev-de:bund:destatis:bevoelkerungsstatistik:codeliste:ags.historie_2021-12-31/download/Destatis.AGS.Historie_2021-12-31.json
     """
-    with open(filename, "r",encoding="utf-8") as f:
+    with open(filename, "r", encoding="utf-8") as f:
         return tuple(
             (AGS, NachfolgerAGS)
             for [
@@ -258,6 +262,6 @@ if __name__ == "__main__":
     with open("2018.csv", "w", newline="") as f:
         writer = csv.writer(f)
 
-        #write header
+        # write header
         writer.writerow(["ags", "pv", "wind", "biomass", "water"])
         writer.writerows(rows())
