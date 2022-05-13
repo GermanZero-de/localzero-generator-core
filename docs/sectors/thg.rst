@@ -43,7 +43,7 @@ Ermittlung eines deutschen Treibhausgasbudgets 2016-2035 mit dem NCG-Ansatz
    | F-Gase: 180 Mt statt 170 Mt.
    | Gesamt non-CO2-THG-Budget 2016-35: 2.530 Mt CO2e statt 1.590 Mt CO2e.
 
-.. figure:: ../images/THG_Nullkurve_Deutschland.png
+.. figure:: ../images/THG_Nullkurve_Deutschland_050522.png
     :align: center
     :width: 600
 
@@ -53,7 +53,7 @@ Ermittlung eines deutschen Treibhausgasbudgets 2016-2035 mit dem NCG-Ansatz
 | Mit „Wunschwerten“ beginnend im Jahr 2022 wurde eine „Nullkurve“ skizziert, welche deutsche Klimaneutralität 2035 ermöglichen würde sowie im THG-Budget bleibt. Alle darüber liegenden Emissionen müssten dann im Ausland kompensiert werden.
 | Zum Vergleich wurden die geplanten Emissionen bis 2045 der Bundesregierung im Klimaschutzgesetz 2021 mit dem beschriebenen NCG-Ansatz zurückgerechnet. Für die Periode 2016-2045 plant die Bundesregierung 12,8 Gt CO2e, davon 7,9 Gt CO2e ab 2022. Die erlaubten non-CO2-THG für diesen Zeitraum betragen nach dem NCG-Ansatz 2,1 Gt CO2e. Dementsprechend nimmt die Bundesregierung 10,7 Gt CO2 ab 2016 in Kauf. Mit der Weltbevölkerung von 2016 entspräche das 958 Gt CO2 ab 2016 bzw. 791 Gt CO2 ab 2020. Entsprechend der Tabelle 5.8 auf S. 5-96 des AR6 korrespondiert dies bei 66,6 Perzentilen einem Temperaturanstieg von 1,77 Grad gegenüber dem vorindustriellen Zeitalter. Bei einem aktuellen Stand von 1,07 Grad (2010-2019) plant die Bundesregierung also, das 1,5-Grad-Limit um 0,27 Grad zu überschreiten. Der NCG-Ansatz erlaubt somit einen anschaulichen Vergleich zwischen den THG-Zielen der Bundesregierung (CO2 und non-CO2) und den CO2-Budgets des IPCC.
 
-.. figure:: ../images/THG_Emissionen_Deutschland.png
+.. figure:: ../images/THG_Emissionen_Deutschland_050522.png
     :align: center
     :width: 600
 
@@ -69,7 +69,7 @@ Ermittlung eines deutschen Treibhausgasbudgets 2016-2035 mit dem NCG-Ansatz
 | An der CO2-Kurve steht: „In pathways limiting global warming to 1.5°C with no or limited overshoot as well as in pathways with a higher overshoot, CO2 emissions are reduced to net zero globally around 2050.” 
 | Diese netto CO2-Neutralität muss weltweit 2050 gelten, flankiert von den nicht 0 erreichenden non-CO2-THG-Pfaden. Dass Deutschland als überproportionaler CO2-Emittent sein Budget bereits früher aufgebraucht haben wird bzw. zur netto CO2-Neutralität kommen muss, bedeutet aber nicht, dass seine non-CO2-THG-Reduktionspfade sich nicht wie die der anderen Länder (OECD+EU27) verhalten können. Denn im Gegensatz zu CO2, wo ein quantifizierbares und endliches Budget zur Verfügung steht, können alle Länder gleichmäßig nach dem hier gewählten NCG-Ansatz von ihrem Ausgangs-Emissionsniveau 2015 ihre non-CO2-THG herunterfahren, um das weltweite Ziel zu erreichen.
 
-.. figure:: ../images/THG_Emissionen_Global.png
+.. figure:: ../images/THG_Emissionen_Global_050522.png
     :align: center
     :width: 600
 
@@ -80,7 +80,7 @@ Ermittlung eines deutschen Treibhausgasbudgets 2016-2035 mit dem NCG-Ansatz
 | Sowohl 2018 als auch 2021 wurden die selben scenario data sets verwendet (siehe AR6 SPM-38, TS-62). Das Szenario SSP1-1.9 ist lediglich ein bestimmtes Szenario, welches die Erderwärmung auf max. 1,6 Grad im mittleren Zeithorizont beschränkt (AR6 SPM-18). Dieses liegt im Range der 2018 veröffentlichten „Pfade, welche die globale Erwärmung ohne oder mit geringer Überschreitung auf 1,5 Grad begrenzen“ (SR1.5 S. 13), bildet aber nicht den Median ab.
 
 
-.. figure:: ../images/THG_Emissionen_Zukunft.png
+.. figure:: ../images/THG_Emissionen_Zukunft_050522.png
     :align: center
     :width: 600
 
