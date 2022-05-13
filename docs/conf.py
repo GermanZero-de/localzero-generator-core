@@ -17,9 +17,9 @@
 
 # -- Project information -----------------------------------------------------
 
-project = "Generator Documentation"
-copyright = "2022, Local Zero Team"
-author = "Local Zero Team"
+project = "Klimavisionsgenerator Dokumentation"
+copyright = "2022, LocalZero Team"
+author = "LocalZero Team"
 
 # The full version, including alpha/beta/rc tags
 release = "0.1"
@@ -54,6 +54,7 @@ exclude_patterns = []
 # a list of builtin themes.
 #
 html_theme = "sphinx_rtd_theme"  #'alabaster'
+html_logo = "./images/LocalZero_5_Logo_gelb.png"
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
