@@ -17,9 +17,9 @@
 
 # -- Project information -----------------------------------------------------
 
-project = "Generator Dokumentation"
-copyright = "2022, Local Zero Team"
-author = "Local Zero Team"
+project = "Klimavisionsgenerator Dokumentation"
+copyright = "2022, LocalZero Team"
+author = "LocalZero Team"
 
 # The full version, including alpha/beta/rc tags
 release = "0.1"
