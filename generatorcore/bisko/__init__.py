@@ -53,24 +53,24 @@ class energy_source:
 
 @dataclass
 class bisko_sector:
-   petrol: energy_source
-   fueloil: energy_source
-   coal: energy_source
-   lpg: energy_source
-   gas: energy_source
-   heatnet: energy_source
-   biomass: energy_source
-   solarth: energy_source
-   heatpump: energy_source
-   elec: energy_source
-   heatpump: energy_source
-   diesel: energy_source
-   jetfuel: energy_source
-   biomass: energy_source
-   bioethanol: energy_source
-   biodiesel: energy_source
-   biogas: energy_source
-   other: energy_source
+   petrol: energy_source|None = None
+   fueloil: energy_source|None = None
+   coal: energy_source|None = None
+   lpg: energy_source|None = None
+   gas: energy_source|None = None
+   heatnet: energy_source|None = None
+   biomass: energy_source|None = None
+   solarth: energy_source|None = None
+   heatpump: energy_source|None = None
+   elec: energy_source|None = None
+   heatpump: energy_source|None = None
+   diesel: energy_source|None = None
+   jetfuel: energy_source|None = None
+   biomass: energy_source|None = None
+   bioethanol: energy_source|None = None
+   biodiesel: energy_source|None = None
+   biogas: energy_source|None = None
+   other: energy_source|None = None
 
 
 @dataclass
@@ -102,7 +102,7 @@ def calc(
     t30: transport2030.T30,
 ) -> bisko:
 
-    ph_bisko = calc_ph_bisko()
+    ph_bisko = calc_ph_bisko(r18=r18,h18=h18,f18=f18,e18=e18)
     ghd_bisko = calc_ghd_bisko()
     traffic_bisko = calc_traffic_bisko()
     industry_bisko = calc_industry_bisko()
@@ -119,3 +119,23 @@ def calc_ph_bisko(r18:residences2018.R18,h18:heat2018.H18,f18:fuels2018.F18,e18:
     petrol = energy_source(energy=r18.s_petrol.energy,CO2e_cb_self=r18.s_petrol.CO2e_total,CO2e_cb_from_fuels=f18.p_petrol.CO2e_production_based*div(f18.d_r.energy,f18.d.energy)) 
     fueloil = energy_source(energy=r18.s_fueloil.energy,CO2e_cb_self=r18.s_fueloil.CO2e_total,CO2e_cb_from_heat=h18.p_fueloil.CO2e_combustion_based*div(h18.d_r.energy,h18.d.energy))
     coal = energy_source(energy=r18.s_coal.energy,CO2e_cb_self=r18.s_coal.CO2e_total,CO2e_cb_from_heat=h18.p_coal.CO2e_combustion_based*div(h18.d_r.energy,h18.d.energy),CO2e_pb=h18.p_coal.CO2e_production_based*div(h18.d_r.energy,h18.d.energy))
+    lpg = energy_source(energy=r18.s_lpg.energy,CO2e_cb_self=r18.s_lpg.CO2e_total,CO2e_cb_from_heat=h18.p_lpg.CO2e_combustion_based*div(h18.d_r.energy,h18.d.energy))
+    gas = energy_source(energy=r18.s_gas.energy,CO2e_cb_self=r18.s_gas.CO2e_total,CO2e_cb_from_heat=h18.p_gas.CO2e_combustion_based*div(h18.d_r.energy,h18.d.energy),CO2e_pb=h18.p_gas.CO2e_production_based*div(h18.d_r.energy,h18.d.energy))
+    heatnet = energy_source(energy=r18.s_heatnet.energy,CO2e_cb_self=r18.s_heatnet.CO2e_total,CO2e_cb_from_heat=h18.p_heatnet.CO2e_combustion_based*div(h18.d_r.energy,h18.d.energy))
+    biomass = energy_source(energy=r18.s_biomass.energy,CO2e_cb_self=r18.s_biomass.CO2e_total,CO2e_pb=h18.p_biomass.CO2e_production_based*div(h18.d_r.energy,h18.d.energy))
+    solarth = energy_source(energy=r18.s_solarth.energy,CO2e_cb_self=r18.s_solarth.CO2e_total,CO2e_pb=h18.p_solarth.CO2e_production_based*div(h18.d_r.energy,h18.d.energy))
+    heatpump = energy_source(energy=r18.s_heatpump.energy,CO2e_cb_self=r18.s_heatpump.CO2e_total,CO2e_pb=h18.p_heatpump.CO2e_production_based*div(h18.d_r.energy,h18.d.energy))
+    elec = energy_source(energy=r18.s_elec.energy,CO2e_cb_self=r18.s_elec.CO2e_total,CO2e_cb_from_elec=e18.p.CO2e_total*div(e18.d_r.energy,e18.d.energy))
+
+    return bisko_sector(
+        petrol=petrol,
+        fueloil=fueloil,
+        coal=coal,
+        lpg=lpg,
+        gas=gas,
+        heatnet=heatnet,
+        biomass=biomass,
+        solarth=solarth,
+        heatpump=heatpump,
+        elec=elec
+    )
