@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from site import setcopyright
 
 from ..utils import div
 from .. import (
