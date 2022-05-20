@@ -22,9 +22,9 @@ from .. import (
     transport2030,
 )
 
+
 @dataclass
-class EnergySourceCalcIntermediate:
-    
+class EnergySourceCalcIntermediate: 
 
     eb_energy_from_same_sector: float
 
@@ -42,6 +42,8 @@ class EnergySourceCalcIntermediate:
     # production based Emissions
     CO2e_pb: float|None = None
 
+    eb_CO2e_pb_from_heat: float|None = None
+
     def __post_init__(self):
 
         def sum_over_none_and_float(*args:float|None)->float:
@@ -54,7 +56,8 @@ class EnergySourceCalcIntermediate:
             return return_float
         #automatically sum over all cb_based emissions    
         self.CO2e_cb = sum_over_none_and_float(self.eb_CO2e_cb_from_same_sector,self.eb_CO2e_cb_from_heat,self.eb_CO2e_cb_from_elec,self.eb_CO2e_cb_from_fuels)
-        self.energy = sum_over_none_and_float(self.eb_energy_from_same_sector,self.eb_energy_from_traffic,self.eb_energy_from_agri)
+        self.energy = sum_over_none_and_float(self.eb_energy_from_same_sector,self.eb_energy_from_agri)
+        self.CO2e_pb = self.eb_CO2e_pb_from_heat
 
 
 @dataclass
@@ -68,76 +71,111 @@ class Sum_Class:
     # combustion based Emissions
     CO2e_cb: float
 
-    # production based Emissions
-    CO2e_pb: float|None = None
+    eb_CO2e_from_same_sector: float
+    eb_CO2e_cb_from_heat: float 
+    eb_CO2e_cb_from_elec: float
+    eb_CO2e_cb_from_fuels: float
 
+    # production based Emissions
+    CO2e_pb: float
+    eb_CO2e_pb_from_heat: float
 
 
     @classmethod
     def calc(cls,*args: EnergySourceCalcIntermediate):
         energy = sum([elem.energy if elem.energy != None else 0 for elem in args])
+        energy_from_same_eb_sector = sum([elem.eb_energy_from_same_sector if elem.eb_energy_from_same_sector != None else 0 for elem in args])
+        energy_from_eb_agri_sector = sum([elem.eb_energy_from_agri if elem.eb_energy_from_agri != None else 0 for elem in args])
         CO2e_cb = sum([elem.CO2e_cb if elem.CO2e_cb != None else 0 for elem in args])
+        eb_CO2e_from_same_sector = sum([elem.eb_CO2e_cb_from_same_sector if elem.eb_CO2e_cb_from_same_sector != None else 0 for elem in args])
+        eb_CO2e_cb_from_heat= sum([elem.eb_CO2e_cb_from_heat if elem.eb_CO2e_cb_from_heat != None else 0 for elem in args])
+        eb_CO2e_cb_from_elec= sum([elem.eb_CO2e_cb_from_elec if elem.eb_CO2e_cb_from_elec != None else 0 for elem in args])
+        eb_CO2e_cb_from_fuels= sum([elem.eb_CO2e_cb_from_fuels if elem.eb_CO2e_cb_from_fuels != None else 0 for elem in args])
         CO2e_pb = sum([elem.CO2e_pb if elem.CO2e_pb != None else 0 for elem in args])
+        eb_CO2e_pb_from_heat = sum([elem.eb_CO2e_pb_from_heat if elem.eb_CO2e_pb_from_heat != None else 0 for elem in args])
 
         return cls(
             energy=energy,
+            energy_from_same_eb_sector=energy_from_same_eb_sector,
+            energy_from_eb_agri_sector = energy_from_eb_agri_sector,
             CO2e_cb=CO2e_cb,
+            eb_CO2e_from_same_sector=eb_CO2e_from_same_sector,
+            eb_CO2e_cb_from_heat = eb_CO2e_cb_from_heat,
+            eb_CO2e_cb_from_elec = eb_CO2e_cb_from_elec,
+            eb_CO2e_cb_from_fuels = eb_CO2e_cb_from_fuels,
             CO2e_pb = CO2e_pb,
+            eb_CO2e_pb_from_heat=eb_CO2e_pb_from_heat,
         )
         
+@dataclass
+class EnergySource: 
+    # energy consumption
+    energy: float = 0
 
+    # combustion based Emissions
+    CO2e_cb: float = 0
+
+    # production based Emissions
+    CO2e_pb: float|None = None
+
+
+    def __init__(self,energy_source_intermediate:EnergySourceCalcIntermediate):
+        self.energy = energy_source_intermediate.energy
+        self.CO2e_cb = energy_source_intermediate.CO2e_cb
+        self.CO2e_pb = energy_source_intermediate.CO2e_pb
 
 
 @dataclass
 class Bisko_Sector:
 
     total: Sum_Class
-    petrol: EnergySourceCalcIntermediate|None = None
-    fueloil: EnergySourceCalcIntermediate|None = None
-    coal: EnergySourceCalcIntermediate|None = None
-    lpg: EnergySourceCalcIntermediate|None = None
-    gas: EnergySourceCalcIntermediate|None = None
-    heatnet: EnergySourceCalcIntermediate|None = None
-    biomass: EnergySourceCalcIntermediate|None = None
-    solarth: EnergySourceCalcIntermediate|None = None
-    heatpump: EnergySourceCalcIntermediate|None = None
-    elec: EnergySourceCalcIntermediate|None = None
-    heatpump: EnergySourceCalcIntermediate|None = None
-    diesel: EnergySourceCalcIntermediate|None = None
-    jetfuel: EnergySourceCalcIntermediate|None = None
-    biomass: EnergySourceCalcIntermediate|None = None
-    bioethanol: EnergySourceCalcIntermediate|None = None
-    biodiesel: EnergySourceCalcIntermediate|None = None
-    biogas: EnergySourceCalcIntermediate|None = None
-    other: EnergySourceCalcIntermediate|None = None
+    petrol: EnergySource|None = None
+    fueloil: EnergySource|None = None
+    coal: EnergySource|None = None
+    lpg: EnergySource|None = None
+    gas: EnergySource|None = None
+    heatnet: EnergySource|None = None
+    biomass: EnergySource|None = None
+    solarth: EnergySource|None = None
+    heatpump: EnergySource|None = None
+    elec: EnergySource|None = None
+    heatpump: EnergySource|None = None
+    diesel: EnergySource|None = None
+    jetfuel: EnergySource|None = None
+    biomass: EnergySource|None = None
+    bioethanol: EnergySource|None = None
+    biodiesel: EnergySource|None = None
+    biogas: EnergySource|None = None
+    other: EnergySource|None = None
 
     @classmethod
     def calc_ph_bisko(cls, r18:residences2018.R18,h18:heat2018.H18,f18:fuels2018.F18,e18:electricity2018.E18) -> "Bisko_Sector":
 
         petrol = EnergySourceCalcIntermediate(eb_energy_from_same_sector=r18.s_petrol.energy,eb_CO2e_cb_from_same_sector=r18.s_petrol.CO2e_total,eb_CO2e_cb_from_fuels=f18.p_petrol.CO2e_production_based*div(f18.d_r.energy,f18.d.energy)) 
         fueloil = EnergySourceCalcIntermediate(eb_energy_from_same_sector=r18.s_fueloil.energy,eb_CO2e_cb_from_same_sector=r18.s_fueloil.CO2e_total,eb_CO2e_cb_from_heat=h18.p_fueloil.CO2e_combustion_based*div(h18.d_r.energy,h18.d.energy))
-        coal = EnergySourceCalcIntermediate(eb_energy_from_same_sector=r18.s_coal.energy,eb_CO2e_cb_from_same_sector=r18.s_coal.CO2e_total,eb_CO2e_cb_from_heat=h18.p_coal.CO2e_combustion_based*div(h18.d_r.energy,h18.d.energy),CO2e_pb=h18.p_coal.CO2e_production_based*div(h18.d_r.energy,h18.d.energy))
+        coal = EnergySourceCalcIntermediate(eb_energy_from_same_sector=r18.s_coal.energy,eb_CO2e_cb_from_same_sector=r18.s_coal.CO2e_total,eb_CO2e_cb_from_heat=h18.p_coal.CO2e_combustion_based*div(h18.d_r.energy,h18.d.energy),eb_CO2e_pb_from_heat=h18.p_coal.CO2e_production_based*div(h18.d_r.energy,h18.d.energy))
         lpg = EnergySourceCalcIntermediate(eb_energy_from_same_sector=r18.s_lpg.energy,eb_CO2e_cb_from_same_sector=r18.s_lpg.CO2e_total,eb_CO2e_cb_from_heat=h18.p_lpg.CO2e_combustion_based*div(h18.d_r.energy,h18.d.energy))
-        gas = EnergySourceCalcIntermediate(eb_energy_from_same_sector=r18.s_gas.energy,eb_CO2e_cb_from_same_sector=r18.s_gas.CO2e_total,eb_CO2e_cb_from_heat=h18.p_gas.CO2e_combustion_based*div(h18.d_r.energy,h18.d.energy),CO2e_pb=h18.p_gas.CO2e_production_based*div(h18.d_r.energy,h18.d.energy))
+        gas = EnergySourceCalcIntermediate(eb_energy_from_same_sector=r18.s_gas.energy,eb_CO2e_cb_from_same_sector=r18.s_gas.CO2e_total,eb_CO2e_cb_from_heat=h18.p_gas.CO2e_combustion_based*div(h18.d_r.energy,h18.d.energy),eb_CO2e_pb_from_heat=h18.p_gas.CO2e_production_based*div(h18.d_r.energy,h18.d.energy))
         heatnet = EnergySourceCalcIntermediate(eb_energy_from_same_sector=r18.s_heatnet.energy,eb_CO2e_cb_from_same_sector=r18.s_heatnet.CO2e_total,eb_CO2e_cb_from_heat=h18.p_heatnet.CO2e_combustion_based*div(h18.d_r.energy,h18.d.energy))
-        biomass = EnergySourceCalcIntermediate(eb_energy_from_same_sector=r18.s_biomass.energy,eb_CO2e_cb_from_same_sector=r18.s_biomass.CO2e_total,CO2e_pb=h18.p_biomass.CO2e_production_based*div(h18.d_r.energy,h18.d.energy))
-        solarth = EnergySourceCalcIntermediate(eb_energy_from_same_sector=r18.s_solarth.energy,eb_CO2e_cb_from_same_sector=r18.s_solarth.CO2e_total,CO2e_pb=h18.p_solarth.CO2e_production_based*div(h18.d_r.energy,h18.d.energy))
-        heatpump = EnergySourceCalcIntermediate(eb_energy_from_same_sector=r18.s_heatpump.energy,eb_CO2e_cb_from_same_sector=r18.s_heatpump.CO2e_total,CO2e_pb=h18.p_heatpump.CO2e_production_based*div(h18.d_r.energy,h18.d.energy))
+        biomass = EnergySourceCalcIntermediate(eb_energy_from_same_sector=r18.s_biomass.energy,eb_CO2e_cb_from_same_sector=r18.s_biomass.CO2e_total,eb_CO2e_pb_from_heat=h18.p_biomass.CO2e_production_based*div(h18.d_r.energy,h18.d.energy))
+        solarth = EnergySourceCalcIntermediate(eb_energy_from_same_sector=r18.s_solarth.energy,eb_CO2e_cb_from_same_sector=r18.s_solarth.CO2e_total,eb_CO2e_pb_from_heat=h18.p_solarth.CO2e_production_based*div(h18.d_r.energy,h18.d.energy))
+        heatpump = EnergySourceCalcIntermediate(eb_energy_from_same_sector=r18.s_heatpump.energy,eb_CO2e_cb_from_same_sector=r18.s_heatpump.CO2e_total,eb_CO2e_pb_from_heat=h18.p_heatpump.CO2e_production_based*div(h18.d_r.energy,h18.d.energy))
         elec = EnergySourceCalcIntermediate(eb_energy_from_same_sector=r18.s_elec.energy,eb_CO2e_cb_from_same_sector=r18.s_elec.CO2e_total,eb_CO2e_cb_from_elec=e18.p.CO2e_total*div(e18.d_r.energy,e18.d.energy))
 
         total = Sum_Class.calc(petrol,fueloil,coal,lpg,gas,heatnet,biomass,solarth,heatpump,elec)
 
+
         return cls(
-            petrol=petrol,
-            fueloil=fueloil,
-            coal=coal,
-            lpg=lpg,
-            gas=gas,
-            heatnet=heatnet,
-            biomass=biomass,
-            solarth=solarth,
-            heatpump=heatpump,
-            elec=elec,
+            petrol=EnergySource(petrol),
+            fueloil=EnergySource(fueloil),
+            coal=EnergySource(coal),
+            lpg=EnergySource(lpg),
+            gas=EnergySource(gas),
+            heatnet=EnergySource(heatnet),
+            biomass=EnergySource(biomass),
+            solarth=EnergySource(solarth),
+            heatpump=EnergySource(heatpump),
+            elec=EnergySource(elec),
             total=total,
         )
    
