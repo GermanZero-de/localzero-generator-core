@@ -205,9 +205,9 @@ class Bisko_Sector:
 
         return cls(
             petrol=EnergySource(petrol),
-            fueloil=EnergySource(fueloil),
             diesel=EnergySource(diesel),
             jetfuel=EnergySource(jetfuel),
+            fueloil=EnergySource(fueloil),            
             coal=EnergySource(coal),
             lpg=EnergySource(lpg),
             gas=EnergySource(gas),
