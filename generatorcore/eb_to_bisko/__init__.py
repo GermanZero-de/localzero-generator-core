@@ -191,17 +191,16 @@ class Bisko_Sector:
         jetfuel = EnergySourceCalcIntermediate(eb_energy_from_same_sector=b18.s_jetfuel.energy,eb_CO2e_cb_from_same_sector=b18.s_jetfuel.CO2e_total,eb_CO2e_cb_from_fuels=f18.p_jetfuel.CO2e_production_based*div(f18.d_b.energy,f18.d.energy))
         #TODO: fix h.18.a_t....
         fueloil = EnergySourceCalcIntermediate(eb_energy_from_same_sector=b18.s_fueloil.energy,eb_energy_from_agri=a18.s_fueloil.energy,eb_CO2e_cb_from_same_sector=b18.s_fueloil.CO2e_total,eb_CO2e_cb_from_agri=a18.s_fueloil.CO2e_combustion_based,eb_CO2e_cb_from_heat=h18.p_fueloil.CO2e_combustion_based*div(h18.d_b.energy+h18.a_t.energy,h18.d.energy))
-        # copied from petrol so far 
-        #coal = EnergySourceCalcIntermediate(eb_energy_from_same_sector=b18.s_coal.energy,eb_CO2e_cb_from_same_sector=b18.s_coal.CO2e_total,eb_CO2e_cb_from_heat=h18.p_coal.CO2e_combustion_based*div(h18.d_r.energy,h18.d.energy),eb_CO2e_pb_from_heat=h18.p_coal.CO2e_production_based*div(h18.d_r.energy,h18.d.energy))
-        #lpg = EnergySourceCalcIntermediate(eb_energy_from_same_sector=b18.s_lpg.energy,eb_CO2e_cb_from_same_sector=b18.s_lpg.CO2e_total,eb_CO2e_cb_from_heat=h18.p_lpg.CO2e_combustion_based*div(h18.d_r.energy,h18.d.energy))
-        #gas = EnergySourceCalcIntermediate(eb_energy_from_same_sector=b18.s_gas.energy,eb_CO2e_cb_from_same_sector=b18.s_gas.CO2e_total,eb_CO2e_cb_from_heat=h18.p_gas.CO2e_combustion_based*div(h18.d_r.energy,h18.d.energy),eb_CO2e_pb_from_heat=h18.p_gas.CO2e_production_based*div(h18.d_r.energy,h18.d.energy))
-        #heatnet = EnergySourceCalcIntermediate(eb_energy_from_same_sector=b18.s_heatnet.energy,eb_CO2e_cb_from_same_sector=b18.s_heatnet.CO2e_total,eb_CO2e_cb_from_heat=h18.p_heatnet.CO2e_combustion_based*div(h18.d_r.energy,h18.d.energy))
-        #biomass = EnergySourceCalcIntermediate(eb_energy_from_same_sector=b18.s_biomass.energy,eb_CO2e_cb_from_same_sector=b18.s_biomass.CO2e_total,eb_CO2e_pb_from_heat=h18.p_biomass.CO2e_production_based*div(h18.d_r.energy,h18.d.energy))
-        #solarth = EnergySourceCalcIntermediate(eb_energy_from_same_sector=b18.s_solarth.energy,eb_CO2e_cb_from_same_sector=b18.s_solarth.CO2e_total,eb_CO2e_pb_from_heat=h18.p_solarth.CO2e_production_based*div(h18.d_r.energy,h18.d.energy))
-        #heatpump = EnergySourceCalcIntermediate(eb_energy_from_same_sector=b18.s_heatpump.energy,eb_CO2e_cb_from_same_sector=b18.s_heatpump.CO2e_total,eb_CO2e_pb_from_heat=h18.p_heatpump.CO2e_production_based*div(h18.d_r.energy,h18.d.energy))
-        #elec = EnergySourceCalcIntermediate(eb_energy_from_same_sector=b18.s_elec.energy,eb_CO2e_cb_from_same_sector=b18.s_elec.CO2e_total,eb_CO2e_cb_from_elec=e18.p.CO2e_total*div(e18.d_r.energy,e18.d.energy))
+        coal = EnergySourceCalcIntermediate(eb_energy_from_same_sector=b18.s_coal.energy,eb_CO2e_cb_from_same_sector=b18.s_coal.CO2e_total,eb_CO2e_cb_from_heat=h18.p_coal.CO2e_combustion_based*div(h18.d_b.energy,h18.d.energy),eb_CO2e_pb_from_heat=h18.p_coal.CO2e_production_based*div(h18.d_b.energy,h18.d.energy))
+        lpg = EnergySourceCalcIntermediate(eb_energy_from_same_sector=b18.s_lpg.energy,eb_energy_from_agri=a18.s_lpg.energy,eb_CO2e_cb_from_same_sector=b18.s_lpg.CO2e_total,eb_CO2e_cb_from_agri=a18.s_lpg.CO2e_total,eb_CO2e_cb_from_heat=h18.p_lpg.CO2e_combustion_based*div(h18.d_b.energy+h18.a_t.energy,h18.d.energy))
+        gas = EnergySourceCalcIntermediate(eb_energy_from_same_sector=b18.s_gas.energy,eb_energy_from_agri=a18.s_gas.energy,eb_CO2e_cb_from_same_sector=b18.s_gas.CO2e_total,eb_CO2e_cb_from_agri=a18.s_gas.CO2e_total,eb_CO2e_cb_from_heat=h18.p_gas.CO2e_combustion_based*div(h18.d_b.energy+h18.a_t.energy,h18.d.energy),eb_CO2e_pb_from_heat=h18.p_gas.CO2e_production_based*div(h18.d_b.energy+h18.a_t.energy,h18.d.energy))
+        heatnet = EnergySourceCalcIntermediate(eb_energy_from_same_sector=b18.s_heatnet.energy,eb_CO2e_cb_from_same_sector=b18.s_heatnet.CO2e_total,eb_CO2e_cb_from_heat=h18.p_heatnet.CO2e_combustion_based*div(h18.d_b.energy,h18.d.energy))
+        biomass = EnergySourceCalcIntermediate(eb_energy_from_same_sector=b18.s_biomass.energy,eb_energy_from_agri=a18.s_biomass.energy,eb_CO2e_cb_from_same_sector=b18.s_biomass.CO2e_total,eb_CO2e_cb_from_agri=a18.s_biomass.CO2e_total,eb_CO2e_pb_from_heat=h18.p_biomass.CO2e_production_based*div(h18.d_b.energy+h18.a_t.energy,h18.d.energy))
+        solarth = EnergySourceCalcIntermediate(eb_energy_from_same_sector=b18.s_solarth.energy,eb_CO2e_cb_from_same_sector=b18.s_solarth.CO2e_total,eb_CO2e_pb_from_heat=h18.p_solarth.CO2e_production_based*div(h18.d_b.energy,h18.d.energy))
+        heatpump = EnergySourceCalcIntermediate(eb_energy_from_same_sector=b18.s_heatpump.energy,eb_CO2e_cb_from_same_sector=b18.s_heatpump.CO2e_total,eb_CO2e_pb_from_heat=h18.p_heatpump.CO2e_production_based*div(h18.d_b.energy,h18.d.energy))
+        elec = EnergySourceCalcIntermediate(eb_energy_from_same_sector=b18.s_elec.energy,eb_energy_from_agri=a18.s_elec.energy,eb_CO2e_cb_from_same_sector=b18.s_elec.CO2e_total,eb_CO2e_cb_from_agri=a18.s_elec.CO2e_total,eb_CO2e_cb_from_elec=e18.p.CO2e_total*div(e18.d_b.energy+e18.d_a.energy,e18.d.energy))
 
-        #total = Sum_Class.calc(petrol,fueloil,coal,lpg,gas,heatnet,biomass,solarth,heatpump,elec)
+        total = Sum_Class.calc(petrol,diesel,jetfuel,fueloil,coal,lpg,gas,heatnet,biomass,solarth,heatpump,elec)
 
 
         return cls(
@@ -209,15 +208,15 @@ class Bisko_Sector:
             fueloil=EnergySource(fueloil),
             diesel=EnergySource(diesel),
             jetfuel=EnergySource(jetfuel),
-            #coal=EnergySource(coal),
-            #lpg=EnergySource(lpg),
-            #gas=EnergySource(gas),
-            #heatnet=EnergySource(heatnet),
-            #biomass=EnergySource(biomass),
-            #solarth=EnergySource(solarth),
-            #heatpump=EnergySource(heatpump),
-            #elec=EnergySource(elec),
-            #total=total,
+            coal=EnergySource(coal),
+            lpg=EnergySource(lpg),
+            gas=EnergySource(gas),
+            heatnet=EnergySource(heatnet),
+            biomass=EnergySource(biomass),
+            solarth=EnergySource(solarth),
+            heatpump=EnergySource(heatpump),
+            elec=EnergySource(elec),
+            total=total,
         )
    
 
