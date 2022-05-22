@@ -275,6 +275,18 @@ class BiskoTraffic(BiskoSector):
         )
 
 @dataclass
+class SubSector:
+    CO2e_cb: float
+    CO2e_pb: float
+
+    @classmethod
+    def calc_sum(cls,*args:"SubSector") -> "SubSector":
+        CO2e_cb:float = sum([elem.CO2e_cb if elem.CO2e_cb != None else 0 for elem in args])
+        CO2e_pb:float = sum([elem.CO2e_pb if elem.CO2e_pb != None else 0 for elem in args])
+        return cls(CO2e_cb=CO2e_cb,CO2e_pb=CO2e_pb)
+            
+
+@dataclass
 class BiskoIndustry(BiskoSector):
     diesel: EnergySource
     fueloil: EnergySource
@@ -285,9 +297,17 @@ class BiskoIndustry(BiskoSector):
     solarth: EnergySource
     heatpump: EnergySource
 
+    miner: SubSector
+    chemistry: SubSector
+    metal: SubSector
+    other: SubSector
+
+    total_production: SubSector
+    total_industry: SubSector 
+
     @classmethod
     def calc_industry_bisko(cls, i18:industry2018.I18,h18:heat2018.H18,f18:fuels2018.F18,e18:electricity2018.E18,a18:agri2018.A18) -> "BiskoIndustry":
-
+        #Bereitstellung
         diesel = EnergySourceCalcIntermediate(eb_energy_from_same_sector=i18.s_fossil_diesel.energy,eb_CO2e_cb_from_fuels=f18.p_diesel.CO2e_production_based*div(f18.d_i.energy,f18.d.energy))
         fueloil = EnergySourceCalcIntermediate(eb_energy_from_same_sector=i18.s_fossil_fueloil.energy,eb_CO2e_cb_from_heat=h18.p_fueloil.CO2e_combustion_based*div(h18.d_i.energy,h18.d.energy))
         coal = EnergySourceCalcIntermediate(eb_energy_from_same_sector=i18.s_fossil_coal.energy,eb_CO2e_cb_from_heat=h18.p_coal.CO2e_combustion_based*div(h18.d_i.energy,h18.d.energy),eb_CO2e_pb_from_heat=h18.p_coal.CO2e_production_based*div(h18.d_i.energy,h18.d.energy))
@@ -300,9 +320,16 @@ class BiskoIndustry(BiskoSector):
         solarth = EnergySourceCalcIntermediate(eb_energy_from_same_sector=i18.s_renew_solarth.energy,eb_CO2e_pb_from_heat=h18.p_solarth.CO2e_production_based*div(h18.d_i.energy,h18.d.energy))
         heatpump = EnergySourceCalcIntermediate(eb_energy_from_same_sector=i18.s_renew_heatpump.energy,eb_CO2e_pb_from_heat=h18.p_heatpump.CO2e_production_based*div(h18.d_i.energy,h18.d.energy))
         elec = EnergySourceCalcIntermediate(eb_energy_from_same_sector=i18.s_renew_elec.energy,eb_CO2e_cb_from_elec=e18.p.CO2e_total*div(e18.d_i.energy,e18.d.energy))
+        #total Bereitstellung
+        total_supply = SumClass.calc(diesel,fueloil,coal,lpg,gas,other_fossil,heatnet,biomass,solarth,heatpump,elec)
 
-        total = SumClass.calc(diesel,fueloil,coal,lpg,gas,other_fossil,heatnet,biomass,solarth,heatpump,elec)
+        miner = SubSector(CO2e_cb=i18.p_miner.CO2e_combustion_based,CO2e_pb=i18.p_miner.CO2e_production_based)
+        chem = SubSector(CO2e_cb=i18.p_chem.CO2e_combustion_based,CO2e_pb=i18.p_chem.CO2e_production_based)
+        metal = SubSector(CO2e_cb=i18.p_metal.CO2e_combustion_based,CO2e_pb=i18.p_metal.CO2e_production_based)
+        other = SubSector(CO2e_cb=i18.p_other.CO2e_combustion_based,CO2e_pb=i18.p_other.CO2e_production_based)
 
+        total_production = SubSector.calc_sum(miner,chem,metal,other)
+        total_industry = SubSector(CO2e_cb=total_production.CO2e_cb + total_supply.CO2e_cb,CO2e_pb=total_production.CO2e_pb + total_supply.CO2e_pb)
 
         return cls(
             diesel=EnergySource(diesel),
@@ -316,7 +343,13 @@ class BiskoIndustry(BiskoSector):
             solarth=EnergySource(solarth),
             heatpump=EnergySource(heatpump),
             elec=EnergySource(elec),
-            total=total,
+            total=total_supply,
+            miner=miner,
+            chemistry=chem,
+            metal=metal,
+            other=other,
+            total_production=total_production,
+            total_industry=total_industry,
         )
 
 
