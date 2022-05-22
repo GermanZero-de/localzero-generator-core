@@ -226,17 +226,17 @@ class Bisko_Sector:
     def calc_traffic_bisko(cls, inputs:Inputs, t18:transport2018.T18,h18:heat2018.H18,f18:fuels2018.F18,e18:electricity2018.E18) -> "Bisko_Sector":
 
         fact = inputs.fact
+        ass = inputs.ass
 
-        petrol = EnergySourceCalcIntermediate(eb_energy_from_same_sector=t18.s_petrol.energy,eb_CO2e_cb_from_same_sector=t18.s_petrol.energy*fact("T_S_petrol_EmFa_tank_wheel_2018"),eb_CO2e_cb_from_fuels=f18.p_petrol.CO2e_production_based*div(f18.d_t.energy,f18.d.energy)) 
-        diesel = EnergySourceCalcIntermediate(eb_energy_from_same_sector=t18.s_diesel.energy,eb_CO2e_cb_from_same_sector=t18.s_diesel.energy*fact("T_S_diesel_EmFa_tank_wheel_2018"),eb_CO2e_cb_from_fuels=f18.p_diesel.CO2e_production_based*div(f18.d_t.energy+f18.d_a.energy,f18.d.energy))
-        jetfuel = EnergySourceCalcIntermediate(eb_energy_from_same_sector=t18.s_jetfuel.energy,eb_CO2e_cb_from_same_sector=t18.s_jetfuel.energy*fact("T_S_jetfuel_EmFa_tank_wheel_2018"),eb_CO2e_cb_from_fuels=f18.p_jetfuel.CO2e_production_based*div(f18.d_t.energy,f18.d.energy))
-        #maybe change into: Assumption?
-        bioethanol= EnergySourceCalcIntermediate(eb_energy_from_same_sector=t18.s_bioethanol.energy,eb_CO2e_cb_from_same_sector=t18.s_bioethanol.energy*fact("T_S_bioethanol_EmFa_tank_wheel_2018"),eb_CO2e_cb_from_fuels=f18.p_bioethanol.CO2e_production_based*div(f18.d_t.energy,f18.d.energy))
-        biodiesel= EnergySourceCalcIntermediate(eb_energy_from_same_sector=t18.s_biodiesel.energy,eb_CO2e_cb_from_same_sector=t18.s_biodiesel.energy*fact("T_S_biodiesel_EmFa_tank_wheel_2018"),eb_CO2e_cb_from_fuels=f18.p_biodiesel.CO2e_production_based*div(f18.d_t.energy,f18.d.energy))
-        biogas= EnergySourceCalcIntermediate(eb_energy_from_same_sector=t18.s_biogas.energy,eb_CO2e_cb_from_same_sector=t18.s_biogas.energy*fact("T_S_biogas_EmFa_tank_wheel_2018"),eb_CO2e_cb_from_fuels=f18.p_biogas.CO2e_production_based*div(f18.d_t.energy,f18.d.energy))
-        lpg = EnergySourceCalcIntermediate(eb_energy_from_same_sector=t18.s_lpg.energy,eb_CO2e_cb_from_same_sector=t18.s_lpg.energy*fact("T_S_lpg_EmFa_tank_wheel_2018"),eb_CO2e_cb_from_heat=h18.p_lpg.CO2e_combustion_based*div(h18.d_t.energy,h18.d.energy))
-        gas = EnergySourceCalcIntermediate(eb_energy_from_same_sector=t18.s_gas.energy,eb_CO2e_cb_from_same_sector=t18.s_gas.energy*fact("T_S_cng_EmFa_tank_wheel_2018"),eb_CO2e_cb_from_heat=h18.p_gas.CO2e_combustion_based*div(h18.d_t.energy,h18.d.energy),eb_CO2e_pb_from_heat=h18.p_gas.CO2e_production_based*div(h18.d_t.energy,h18.d.energy))
-        elec = EnergySourceCalcIntermediate(eb_energy_from_same_sector=t18.s_elec.energy,eb_CO2e_cb_from_same_sector=t18.s_elec.energy*fact("T_S_electricity_EmFa_tank_wheel_2018"),eb_CO2e_cb_from_elec=e18.p.CO2e_total*div(e18.d_t.energy,e18.d.energy))
+        petrol = EnergySourceCalcIntermediate(eb_energy_from_same_sector=t18.s_petrol.energy,eb_CO2e_cb_from_same_sector=t18.s_petrol.energy*fact("Fact_T_S_petrol_EmFa_tank_wheel_2018"),eb_CO2e_cb_from_fuels=f18.p_petrol.CO2e_production_based*div(f18.d_t.energy,f18.d.energy)) 
+        diesel = EnergySourceCalcIntermediate(eb_energy_from_same_sector=t18.s_diesel.energy,eb_CO2e_cb_from_same_sector=t18.s_diesel.energy*fact("Fact_T_S_diesel_EmFa_tank_wheel_2018"),eb_CO2e_cb_from_fuels=f18.p_diesel.CO2e_production_based*div(f18.d_t.energy+f18.d_a.energy,f18.d.energy))
+        jetfuel = EnergySourceCalcIntermediate(eb_energy_from_same_sector=t18.s_jetfuel.energy,eb_CO2e_cb_from_same_sector=t18.s_jetfuel.energy*fact("Fact_T_S_jetfuel_EmFa_tank_wheel_2018"),eb_CO2e_cb_from_fuels=f18.p_jetfuel.CO2e_production_based*div(f18.d_t.energy,f18.d.energy))
+        bioethanol= EnergySourceCalcIntermediate(eb_energy_from_same_sector=t18.s_bioethanol.energy,eb_CO2e_cb_from_same_sector=t18.s_bioethanol.energy*ass("Ass_T_S_bioethanol_EmFa_tank_wheel"),eb_CO2e_cb_from_fuels=f18.p_bioethanol.CO2e_production_based*div(f18.d_t.energy,f18.d.energy))
+        biodiesel= EnergySourceCalcIntermediate(eb_energy_from_same_sector=t18.s_biodiesel.energy,eb_CO2e_cb_from_same_sector=t18.s_biodiesel.energy*ass("Ass_T_S_biodiesel_EmFa_tank_wheel"),eb_CO2e_cb_from_fuels=f18.p_biodiesel.CO2e_production_based*div(f18.d_t.energy,f18.d.energy))
+        biogas= EnergySourceCalcIntermediate(eb_energy_from_same_sector=t18.s_biogas.energy,eb_CO2e_cb_from_same_sector=t18.s_biogas.energy*ass("Ass_T_S_biogas_EmFa_tank_wheel"),eb_CO2e_cb_from_fuels=f18.p_biogas.CO2e_production_based*div(f18.d_t.energy,f18.d.energy))
+        lpg = EnergySourceCalcIntermediate(eb_energy_from_same_sector=t18.s_lpg.energy,eb_CO2e_cb_from_same_sector=t18.s_lpg.energy*fact("Fact_T_S_lpg_EmFa_tank_wheel_2018"),eb_CO2e_cb_from_heat=h18.p_lpg.CO2e_combustion_based*div(h18.d_t.energy,h18.d.energy))
+        gas = EnergySourceCalcIntermediate(eb_energy_from_same_sector=t18.s_gas.energy,eb_CO2e_cb_from_same_sector=t18.s_gas.energy*fact("Fact_T_S_cng_EmFa_tank_wheel_2018"),eb_CO2e_cb_from_heat=h18.p_gas.CO2e_combustion_based*div(h18.d_t.energy,h18.d.energy),eb_CO2e_pb_from_heat=h18.p_gas.CO2e_production_based*div(h18.d_t.energy,h18.d.energy))
+        elec = EnergySourceCalcIntermediate(eb_energy_from_same_sector=t18.s_elec.energy,eb_CO2e_cb_from_same_sector=t18.s_elec.energy*fact("Fact_T_S_electricity_EmFa_tank_wheel_2018"),eb_CO2e_cb_from_elec=e18.p.CO2e_total*div(e18.d_t.energy,e18.d.energy))
 
         total = Sum_Class.calc(petrol,diesel,jetfuel,bioethanol,biodiesel,biogas,lpg,gas,elec)
 
