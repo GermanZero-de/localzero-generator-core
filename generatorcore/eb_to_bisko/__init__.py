@@ -1,5 +1,7 @@
 from dataclasses import dataclass
 
+from generatorcore.inputs import Inputs
+
 from ..utils import div
 from .. import (
     agri2018,
@@ -184,7 +186,7 @@ class Bisko_Sector:
         )
     
     @classmethod
-    def calc_ghd_bisko(cls, b18:business2018.B18,h18:heat2018.H18,f18:fuels2018.F18,e18:electricity2018.E18,a18=agri2018.A18) -> "Bisko_Sector":
+    def calc_ghd_bisko(cls, b18:business2018.B18,h18:heat2018.H18,f18:fuels2018.F18,e18:electricity2018.E18,a18:agri2018.A18) -> "Bisko_Sector":
 
         petrol = EnergySourceCalcIntermediate(eb_energy_from_same_sector=b18.s_petrol.energy,eb_energy_from_agri=a18.s_petrol.energy,eb_CO2e_cb_from_same_sector=b18.s_petrol.CO2e_total,eb_CO2e_cb_from_agri=a18.s_petrol.CO2e_total,eb_CO2e_cb_from_fuels=f18.p_petrol.CO2e_production_based*div(f18.d_b.energy+f18.d_a.energy,f18.d.energy)) 
         diesel = EnergySourceCalcIntermediate(eb_energy_from_same_sector=b18.s_diesel.energy,eb_energy_from_agri=a18.s_diesel.energy,eb_CO2e_cb_from_same_sector=b18.s_diesel.CO2e_total,eb_CO2e_cb_from_agri=a18.s_diesel.CO2e_total,eb_CO2e_cb_from_fuels=f18.p_diesel.CO2e_production_based*div(f18.d_b.energy+f18.d_a.energy,f18.d.energy))
@@ -220,17 +222,49 @@ class Bisko_Sector:
         )
    
 
+    @classmethod
+    def calc_traffic_bisko(cls, inputs:Inputs, t18:transport2018.T18,h18:heat2018.H18,f18:fuels2018.F18,e18:electricity2018.E18) -> "Bisko_Sector":
+
+        fact = inputs.fact
+
+        petrol = EnergySourceCalcIntermediate(eb_energy_from_same_sector=t18.s_petrol.energy,eb_CO2e_cb_from_same_sector=t18.s_petrol.energy*fact("T_S_petrol_EmFa_tank_wheel_2018"),eb_CO2e_cb_from_fuels=f18.p_petrol.CO2e_production_based*div(f18.d_t.energy,f18.d.energy)) 
+        diesel = EnergySourceCalcIntermediate(eb_energy_from_same_sector=t18.s_diesel.energy,eb_CO2e_cb_from_same_sector=t18.s_diesel.energy*fact("T_S_diesel_EmFa_tank_wheel_2018"),eb_CO2e_cb_from_fuels=f18.p_diesel.CO2e_production_based*div(f18.d_t.energy+f18.d_a.energy,f18.d.energy))
+        jetfuel = EnergySourceCalcIntermediate(eb_energy_from_same_sector=t18.s_jetfuel.energy,eb_CO2e_cb_from_same_sector=t18.s_jetfuel.energy*fact("T_S_jetfuel_EmFa_tank_wheel_2018"),eb_CO2e_cb_from_fuels=f18.p_jetfuel.CO2e_production_based*div(f18.d_t.energy,f18.d.energy))
+        #maybe change into: Assumption?
+        bioethanol= EnergySourceCalcIntermediate(eb_energy_from_same_sector=t18.s_bioethanol.energy,eb_CO2e_cb_from_same_sector=t18.s_bioethanol.energy*fact("T_S_bioethanol_EmFa_tank_wheel_2018"),eb_CO2e_cb_from_fuels=f18.p_bioethanol.CO2e_production_based*div(f18.d_t.energy,f18.d.energy))
+        biodiesel= EnergySourceCalcIntermediate(eb_energy_from_same_sector=t18.s_biodiesel.energy,eb_CO2e_cb_from_same_sector=t18.s_biodiesel.energy*fact("T_S_biodiesel_EmFa_tank_wheel_2018"),eb_CO2e_cb_from_fuels=f18.p_biodiesel.CO2e_production_based*div(f18.d_t.energy,f18.d.energy))
+        biogas= EnergySourceCalcIntermediate(eb_energy_from_same_sector=t18.s_biogas.energy,eb_CO2e_cb_from_same_sector=t18.s_biogas.energy*fact("T_S_biogas_EmFa_tank_wheel_2018"),eb_CO2e_cb_from_fuels=f18.p_biogas.CO2e_production_based*div(f18.d_t.energy,f18.d.energy))
+        lpg = EnergySourceCalcIntermediate(eb_energy_from_same_sector=t18.s_lpg.energy,eb_CO2e_cb_from_same_sector=t18.s_lpg.energy*fact("T_S_lpg_EmFa_tank_wheel_2018"),eb_CO2e_cb_from_heat=h18.p_lpg.CO2e_combustion_based*div(h18.d_t.energy,h18.d.energy))
+        gas = EnergySourceCalcIntermediate(eb_energy_from_same_sector=t18.s_gas.energy,eb_CO2e_cb_from_same_sector=t18.s_gas.energy*fact("T_S_cng_EmFa_tank_wheel_2018"),eb_CO2e_cb_from_heat=h18.p_gas.CO2e_combustion_based*div(h18.d_t.energy,h18.d.energy),eb_CO2e_pb_from_heat=h18.p_gas.CO2e_production_based*div(h18.d_t.energy,h18.d.energy))
+        elec = EnergySourceCalcIntermediate(eb_energy_from_same_sector=t18.s_elec.energy,eb_CO2e_cb_from_same_sector=t18.s_elec.energy*fact("T_S_electricity_EmFa_tank_wheel_2018"),eb_CO2e_cb_from_elec=e18.p.CO2e_total*div(e18.d_t.energy,e18.d.energy))
+
+        total = Sum_Class.calc(petrol,diesel,jetfuel,bioethanol,biodiesel,biogas,lpg,gas,elec)
+
+
+        return cls(
+            petrol=EnergySource(petrol),
+            diesel=EnergySource(diesel),
+            jetfuel=EnergySource(jetfuel),
+            bioethanol=EnergySource(bioethanol),
+            biodiesel=EnergySource(biodiesel),
+            biogas=EnergySource(biogas),
+            lpg=EnergySource(lpg),
+            gas=EnergySource(gas),
+            elec=EnergySource(elec),
+            total=total,
+        )
 
 @dataclass
 class Bisko:
     ph: Bisko_Sector
-    #ghd: Bisko_Sector
-    #traffic: Bisko_Sector
+    ghd: Bisko_Sector
+    traffic: Bisko_Sector
     #industry: Bisko_Sector
 
     
     @classmethod
     def calc(cls,
+        inputs: Inputs,
         *,
         a18: agri2018.A18,
         b18: business2018.B18,
@@ -241,26 +275,17 @@ class Bisko:
         l18: lulucf2018.L18,
         r18: residences2018.R18,
         t18: transport2018.T18,
-        a30: agri2030.A30,
-        b30: business2030.B30,
-        e30: electricity2030.E30,
-        f30: fuels2030.F30,
-        h30: heat2030.H30,
-        i30: industry2030.I30,
-        l30: lulucf2030.L30,
-        r30: residences2030.R30,
-        t30: transport2030.T30,
     ) -> "Bisko":
 
         ph_bisko = Bisko_Sector.calc_ph_bisko(r18=r18,h18=h18,f18=f18,e18=e18)
-        #ghd_bisko = calc_ghd_bisko()
-        #traffic_bisko = calc_traffic_bisko()
+        ghd_bisko = Bisko_Sector.calc_ghd_bisko(b18=b18,h18=h18,f18=f18,e18=e18,a18=a18)
+        traffic_bisko = Bisko_Sector.calc_traffic_bisko(inputs=inputs,t18=t18,h18=h18,f18=f18,e18=e18)
         #industry_bisko = calc_industry_bisko()
 
         return cls(
             ph=ph_bisko,
-            #ghd=ghd_bisko,
-            #traffic=traffic_bisko,
+            ghd=ghd_bisko,
+            traffic=traffic_bisko,
             #industry=industry_bisko,
         )
 

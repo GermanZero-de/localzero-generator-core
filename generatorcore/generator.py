@@ -247,7 +247,9 @@ def calculate(inputs: Inputs) -> Result:
     )
 
     print("Bisko_calc", file=sys.stderr)
-    bisko = Bisko.calc(r18=r18,
+    bisko = Bisko.calc(
+        inputs,
+        r18=r18,
         b18=b18,
         i18=i18,
         t18=t18,
@@ -256,15 +258,6 @@ def calculate(inputs: Inputs) -> Result:
         a18=a18,
         e18=e18,
         h18=h18,
-        t30=t30,
-        i30=i30,
-        r30=r30,
-        b30=b30,
-        f30=f30,
-        e30=e30,
-        l30=l30,
-        a30=a30,
-        h30=h30,
         )
 
     return Result(
