@@ -62,7 +62,6 @@ class EnergySourceCalcIntermediate:
         self.energy = sum_over_none_and_float(self.eb_energy_from_same_sector,self.eb_energy_from_agri)
         self.CO2e_pb = self.eb_CO2e_pb_from_heat
 
-
 @dataclass
 class SumClass:
     # energy consumption
@@ -130,8 +129,6 @@ class EnergySource:
         self.CO2e_cb = energy_source_intermediate.CO2e_cb
         self.CO2e_pb = energy_source_intermediate.CO2e_pb
 
-
-
 @dataclass
 class BiskoSector:
 
@@ -140,9 +137,7 @@ class BiskoSector:
     lpg: EnergySource
     gas: EnergySource
     elec: EnergySource
-
-   
-
+ 
 @dataclass
 class BiskoPH(BiskoSector):
     petrol: EnergySource
@@ -285,7 +280,6 @@ class SubSector:
         CO2e_pb:float = sum([elem.CO2e_pb if elem.CO2e_pb != None else 0 for elem in args])
         return cls(CO2e_cb=CO2e_cb,CO2e_pb=CO2e_pb)
             
-
 @dataclass
 class BiskoIndustry(BiskoSector):
     diesel: EnergySource
@@ -306,7 +300,7 @@ class BiskoIndustry(BiskoSector):
     total_industry: SubSector 
 
     @classmethod
-    def calc_industry_bisko(cls, i18:industry2018.I18,h18:heat2018.H18,f18:fuels2018.F18,e18:electricity2018.E18,a18:agri2018.A18) -> "BiskoIndustry":
+    def calc_industry_bisko(cls, i18:industry2018.I18,h18:heat2018.H18,f18:fuels2018.F18,e18:electricity2018.E18) -> "BiskoIndustry":
         #Bereitstellung
         diesel = EnergySourceCalcIntermediate(eb_energy_from_same_sector=i18.s_fossil_diesel.energy,eb_CO2e_cb_from_fuels=f18.p_diesel.CO2e_production_based*div(f18.d_i.energy,f18.d.energy))
         fueloil = EnergySourceCalcIntermediate(eb_energy_from_same_sector=i18.s_fossil_fueloil.energy,eb_CO2e_cb_from_heat=h18.p_fueloil.CO2e_combustion_based*div(h18.d_i.energy,h18.d.energy))
@@ -352,14 +346,12 @@ class BiskoIndustry(BiskoSector):
             total_industry=total_industry,
         )
 
-
-
 @dataclass
 class Bisko:
     ph: BiskoPH
     ghd: BiskoGHD
     traffic: BiskoTraffic
-    #industry: BiskoSector
+    industry: BiskoIndustry
 
     
     @classmethod
@@ -380,13 +372,13 @@ class Bisko:
         ph_bisko = BiskoPH.calc_ph_bisko(r18=r18,h18=h18,f18=f18,e18=e18)
         ghd_bisko = BiskoGHD.calc_ghd_bisko(b18=b18,h18=h18,f18=f18,e18=e18,a18=a18)
         traffic_bisko = BiskoTraffic.calc_traffic_bisko(inputs=inputs,t18=t18,h18=h18,f18=f18,e18=e18)
-        #industry_bisko = calc_industry_bisko()
+        industry_bisko = BiskoIndustry.calc_industry_bisko(i18=i18,h18=h18,f18=f18,e18=e18)
 
         return cls(
             ph=ph_bisko,
             ghd=ghd_bisko,
             traffic=traffic_bisko,
-            #industry=industry_bisko,
+            industry=industry_bisko,
         )
 
 
