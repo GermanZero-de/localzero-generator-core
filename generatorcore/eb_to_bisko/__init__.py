@@ -347,11 +347,75 @@ class BiskoIndustry(BiskoSector):
         )
 
 @dataclass
+class ProductionBasedEmission:
+    CO2e_pb: float
+
+    @classmethod
+    def calc_sum(cls,*args:"ProductionBasedEmission") -> "ProductionBasedEmission":
+        CO2e_pb = sum([elem.CO2e_pb for elem in args])
+        return cls(CO2e_pb=CO2e_pb)
+
+@dataclass
+class BiskoProduktionBasedOnly:
+    total: ProductionBasedEmission
+
+@dataclass
+class BiskoAgriculture(BiskoProduktionBasedOnly):
+
+    forest: ProductionBasedEmission
+    manure: ProductionBasedEmission
+    soil: ProductionBasedEmission
+    other: ProductionBasedEmission
+
+    @classmethod
+    def calc_bisko_agri(cls,a18:agri2018.A18) -> "BiskoAgriculture":
+        forest = ProductionBasedEmission(CO2e_pb=a18.p_fermen.CO2e_production_based)
+        manure = ProductionBasedEmission(CO2e_pb=a18.p_fermen.CO2e_production_based)
+        soil = ProductionBasedEmission(CO2e_pb=a18.p_fermen.CO2e_production_based)
+        other = ProductionBasedEmission(CO2e_pb=a18.p_fermen.CO2e_production_based)
+
+        total = ProductionBasedEmission.calc_sum(forest,manure,soil,other)
+
+        return cls(forest=forest,manure=manure,soil=soil,other=other,total=total)
+
+@dataclass
+class BiskoLULUCF(BiskoProduktionBasedOnly):
+
+    forest: ProductionBasedEmission
+    crop: ProductionBasedEmission
+    grass: ProductionBasedEmission
+    grove: ProductionBasedEmission
+    wet: ProductionBasedEmission
+    water: ProductionBasedEmission
+    settlement: ProductionBasedEmission
+    other: ProductionBasedEmission
+    wood: ProductionBasedEmission
+
+    @classmethod
+    def calc_bisko_lulucf(cls,l18:lulucf2018.L18) -> "BiskoLULUCF":
+        forest = ProductionBasedEmission(CO2e_pb=l18.g_forest.CO2e_production_based)
+        crop = ProductionBasedEmission(CO2e_pb=l18.g_crop.CO2e_production_based)
+        grass = ProductionBasedEmission(CO2e_pb=l18.g_grass.CO2e_production_based)
+        grove = ProductionBasedEmission(CO2e_pb=l18.g_grove.CO2e_production_based)
+        wet = ProductionBasedEmission(CO2e_pb=l18.g_wet.CO2e_production_based)
+        water = ProductionBasedEmission(CO2e_pb=l18.g_water.CO2e_production_based)
+        settlement = ProductionBasedEmission(CO2e_pb=l18.g_settlement.CO2e_production_based)
+        other = ProductionBasedEmission(CO2e_pb=l18.g_other.CO2e_production_based)
+        wood = ProductionBasedEmission(CO2e_pb=l18.g_wood.CO2e_production_based)
+
+        total = ProductionBasedEmission.calc_sum(forest,crop,grass,grove,wet,water,settlement,other,wood)
+
+        return cls(forest=forest,crop=crop,grass=grass,grove=grove,wet=wet,water=water,settlement=settlement,other=other,wood=wood,total=total)
+
+@dataclass
 class Bisko:
     ph: BiskoPH
     ghd: BiskoGHD
     traffic: BiskoTraffic
     industry: BiskoIndustry
+
+    agri: BiskoAgriculture
+    lulucf: BiskoLULUCF
 
     
     @classmethod
@@ -373,12 +437,16 @@ class Bisko:
         ghd_bisko = BiskoGHD.calc_ghd_bisko(b18=b18,h18=h18,f18=f18,e18=e18,a18=a18)
         traffic_bisko = BiskoTraffic.calc_traffic_bisko(inputs=inputs,t18=t18,h18=h18,f18=f18,e18=e18)
         industry_bisko = BiskoIndustry.calc_industry_bisko(i18=i18,h18=h18,f18=f18,e18=e18)
+        agri_bisko = BiskoAgriculture.calc_bisko_agri(a18=a18)
+        lulucf_bisko = BiskoLULUCF.calc_bisko_lulucf(l18=l18) 
 
         return cls(
             ph=ph_bisko,
             ghd=ghd_bisko,
             traffic=traffic_bisko,
             industry=industry_bisko,
+            agri=agri_bisko,
+            lulucf=lulucf_bisko,
         )
 
 
