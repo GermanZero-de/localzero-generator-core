@@ -258,7 +258,7 @@ def calculate(inputs: Inputs) -> Result:
         a18=a18,
         e18=e18,
         h18=h18,
-        )
+    )
 
     return Result(
         r18=r18,
