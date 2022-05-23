@@ -10849,5 +10849,354 @@
         "CO2e_per_capita_com_pct_of_nat": 1.0732293769202796,
         "GHG_budget_2022_to_year_target_nat": 3027300996.0,
         "CO2e_2022_to_year_target": 5875175474.745388
+    },
+    "bisko": {
+        "ph": {
+            "total": {
+                "energy": 644416944.4444444,
+                "energy_from_same_eb_sector": 644416944.4444444,
+                "energy_from_eb_agri_sector": 0,
+                "CO2e_cb": 172180155.74383733,
+                "eb_CO2e_from_same_sector": 85825774.59333335,
+                "eb_CO2e_cb_from_agri": 0,
+                "eb_CO2e_cb_from_heat": 19087961.514081325,
+                "eb_CO2e_cb_from_elec": 67260306.27118805,
+                "eb_CO2e_cb_from_fuels": 6113.365234613695,
+                "CO2e_pb": 3262603.953258372,
+                "eb_CO2e_pb_from_heat": 3262603.953258372
+            },
+            "lpg": {
+                "energy": 10110555.555555556,
+                "CO2e_cb": 2680060.1332995463,
+                "CO2e_pb": null
+            },
+            "gas": {
+                "energy": 255496388.8888889,
+                "CO2e_cb": 51922493.55906511,
+                "CO2e_pb": 2295677.495342772
+            },
+            "elec": {
+                "energy": 126600000.0,
+                "CO2e_cb": 67260306.27118805,
+                "CO2e_pb": null
+            },
+            "petrol": {
+                "energy": 1130555.5555555555,
+                "CO2e_cb": 304444.3652346137,
+                "CO2e_pb": null
+            },
+            "fueloil": {
+                "energy": 107194722.22222222,
+                "CO2e_cb": 29895740.442807335,
+                "CO2e_pb": null
+            },
+            "coal": {
+                "energy": 5742777.777777778,
+                "CO2e_cb": 6246545.73707094,
+                "CO2e_pb": 966926.4579156002
+            },
+            "heatnet": {
+                "energy": 49785277.777777776,
+                "CO2e_cb": 12634641.252949513,
+                "CO2e_pb": null
+            },
+            "biomass": {
+                "energy": 67235555.55555555,
+                "CO2e_cb": 1235923.9822222223,
+                "CO2e_pb": 0.0
+            },
+            "solarth": {
+                "energy": 8537777.77777778,
+                "CO2e_cb": 0.0,
+                "CO2e_pb": 0.0
+            },
+            "heatpump": {
+                "energy": 12583333.333333332,
+                "CO2e_cb": 0.0,
+                "CO2e_pb": 0.0
+            }
+        },
+        "ghd": {
+            "total": {
+                "energy": 360861111.1111111,
+                "energy_from_same_eb_sector": 319388888.8888889,
+                "energy_from_eb_agri_sector": 41472222.222222224,
+                "CO2e_cb": 125667142.14860018,
+                "eb_CO2e_from_same_sector": 32793744.659444444,
+                "eb_CO2e_cb_from_agri": 7168272.655555556,
+                "eb_CO2e_cb_from_heat": 6156641.917472336,
+                "eb_CO2e_cb_from_elec": 79129147.04605646,
+                "eb_CO2e_cb_from_fuels": 419335.8700713709,
+                "CO2e_pb": 1114376.5620642146,
+                "eb_CO2e_pb_from_heat": 1114376.5620642146
+            },
+            "lpg": {
+                "energy": 5396111.111111111,
+                "CO2e_cb": 1381775.345130588,
+                "CO2e_pb": null
+            },
+            "gas": {
+                "energy": 101546944.44444445,
+                "CO2e_cb": 20610291.739690725,
+                "CO2e_pb": 806132.1735987755
+            },
+            "elec": {
+                "energy": 148940000.0,
+                "CO2e_cb": 79129147.04605646,
+                "CO2e_pb": null
+            },
+            "petrol": {
+                "energy": 2001111.111111111,
+                "CO2e_cb": 695283.9694762614,
+                "CO2e_pb": null
+            },
+            "diesel": {
+                "energy": 28199722.22222222,
+                "CO2e_cb": 7752660.0506476415,
+                "CO2e_pb": null
+            },
+            "jetfuel": {
+                "energy": 284722.2222222222,
+                "CO2e_cb": 84234.02772524497,
+                "CO2e_pb": null
+            },
+            "fueloil": {
+                "energy": 35786944.44444444,
+                "CO2e_cb": 10004599.996888006,
+                "CO2e_pb": null
+            },
+            "coal": {
+                "energy": 232777.77777777778,
+                "CO2e_cb": 1432999.0747501536,
+                "CO2e_pb": 308244.3884654391
+            },
+            "heatnet": {
+                "energy": 6521944.444444444,
+                "CO2e_cb": 4027769.8832350858,
+                "CO2e_pb": null
+            },
+            "biomass": {
+                "energy": 29832500.0,
+                "CO2e_cb": 548381.0150000001,
+                "CO2e_pb": 0.0
+            },
+            "solarth": {
+                "energy": 856292.9840251112,
+                "CO2e_cb": 0,
+                "CO2e_pb": 0.0
+            },
+            "heatpump": {
+                "energy": 1262040.3493082223,
+                "CO2e_cb": 0,
+                "CO2e_pb": 0.0
+            }
+        },
+        "traffic": {
+            "total": {
+                "energy": 831730678.6809531,
+                "energy_from_same_eb_sector": 831730678.6809531,
+                "energy_from_eb_agri_sector": 0,
+                "CO2e_cb": 227743157.4553768,
+                "eb_CO2e_from_same_sector": 209461777.52358752,
+                "eb_CO2e_cb_from_agri": 0,
+                "eb_CO2e_cb_from_heat": 41619.732392921775,
+                "eb_CO2e_cb_from_elec": 6300458.3569799075,
+                "eb_CO2e_cb_from_fuels": 11939301.842416465,
+                "CO2e_pb": 114927.17567475588,
+                "eb_CO2e_pb_from_heat": 114927.17567475588
+            },
+            "lpg": {
+                "energy": 5041261.908542714,
+                "CO2e_cb": 1217063.7673502604,
+                "CO2e_pb": null
+            },
+            "gas": {
+                "energy": 1103087.940031202,
+                "CO2e_cb": 250549.78508014898,
+                "CO2e_pb": 114927.17567475588
+            },
+            "elec": {
+                "energy": 11858971.096230889,
+                "CO2e_cb": 6300458.3569799075,
+                "CO2e_pb": null
+            },
+            "petrol": {
+                "energy": 213636569.12698975,
+                "CO2e_cb": 62301982.559216075,
+                "CO2e_pb": null
+            },
+            "diesel": {
+                "energy": 443098275.8081123,
+                "CO2e_cb": 124698880.077345,
+                "CO2e_pb": null
+            },
+            "jetfuel": {
+                "energy": 121527777.77777778,
+                "CO2e_cb": 32974222.90940544,
+                "CO2e_pb": null
+            },
+            "bioethanol": {
+                "energy": 9594280.129124003,
+                "CO2e_cb": 0.0,
+                "CO2e_pb": null
+            },
+            "biodiesel": {
+                "energy": 25611705.87117407,
+                "CO2e_cb": 0.0,
+                "CO2e_pb": null
+            },
+            "biogas": {
+                "energy": 258749.02297028195,
+                "CO2e_cb": 0.0,
+                "CO2e_pb": null
+            }
+        },
+        "industry": {
+            "total": {
+                "energy": 722440277.7777777,
+                "energy_from_same_eb_sector": 722440277.7777777,
+                "energy_from_eb_agri_sector": 0,
+                "CO2e_cb": 142898958.20993155,
+                "eb_CO2e_from_same_sector": 0,
+                "eb_CO2e_cb_from_agri": 0,
+                "eb_CO2e_cb_from_heat": 22777678.099489424,
+                "eb_CO2e_cb_from_elec": 120120212.84663714,
+                "eb_CO2e_cb_from_fuels": 1067.2638049806326,
+                "CO2e_pb": 3951031.543128554,
+                "eb_CO2e_pb_from_heat": 3951031.543128554
+            },
+            "lpg": {
+                "energy": 1359444.4444444445,
+                "CO2e_cb": 253189.77757973262,
+                "CO2e_pb": null
+            },
+            "gas": {
+                "energy": 249600555.55555555,
+                "CO2e_cb": 545221.4706242277,
+                "CO2e_pb": 2204703.0220368034
+            },
+            "elec": {
+                "energy": 226095000.0,
+                "CO2e_cb": 120120212.84663714,
+                "CO2e_pb": null
+            },
+            "diesel": {
+                "energy": 134444.44444444444,
+                "CO2e_cb": 1067.2638049806326,
+                "CO2e_pb": null
+            },
+            "fueloil": {
+                "energy": 7472500.0,
+                "CO2e_cb": 1327179.8197082435,
+                "CO2e_pb": null
+            },
+            "coal": {
+                "energy": 117908055.55555555,
+                "CO2e_cb": 4071993.1793316705,
+                "CO2e_pb": 928608.5210917505
+            },
+            "other_fossil": {
+                "energy": 35275277.777777776,
+                "CO2e_cb": 4446145.678236258,
+                "CO2e_pb": 817720.0
+            },
+            "heatnet": {
+                "energy": 53165277.777777776,
+                "CO2e_cb": 12133948.174009291,
+                "CO2e_pb": null
+            },
+            "biomass": {
+                "energy": 31304444.444444444,
+                "CO2e_cb": 0,
+                "CO2e_pb": 0.0
+            },
+            "solarth": {
+                "energy": 50640.98292621625,
+                "CO2e_cb": 0,
+                "CO2e_pb": 0.0
+            },
+            "heatpump": {
+                "energy": 74636.79485156153,
+                "CO2e_cb": 0,
+                "CO2e_pb": 0.0
+            },
+            "miner": {
+                "CO2e_cb": 13847540.000000004,
+                "CO2e_pb": 19561057.000000004
+            },
+            "chemistry": {
+                "CO2e_cb": 19697645.000000004,
+                "CO2e_pb": 6615950.000000001
+            },
+            "metal": {
+                "CO2e_cb": 38292520.00000001,
+                "CO2e_pb": 21488751.000000004
+            },
+            "other": {
+                "CO2e_cb": 19106810.000000004,
+                "CO2e_pb": 17056850.000000004
+            },
+            "total_production": {
+                "CO2e_cb": 90944515.00000001,
+                "CO2e_pb": 64722608.000000015
+            },
+            "total_industry": {
+                "CO2e_cb": 233843473.20993155,
+                "CO2e_pb": 68673639.54312856
+            }
+        },
+        "agri": {
+            "total": {
+                "CO2e_pb": 63523578.34889994
+            },
+            "forest": {
+                "CO2e_pb": 25067600.300000004
+            },
+            "manure": {
+                "CO2e_pb": 9288486.65109964
+            },
+            "soil": {
+                "CO2e_pb": 24646438.39780029
+            },
+            "other": {
+                "CO2e_pb": 4521053.0
+            }
+        },
+        "lulucf": {
+            "total": {
+                "CO2e_pb": -24659363.00310469
+            },
+            "forest": {
+                "CO2e_pb": -67100295.05882475
+            },
+            "crop": {
+                "CO2e_pb": 16540351.74183966
+            },
+            "grass": {
+                "CO2e_pb": 18181529.273245063
+            },
+            "grove": {
+                "CO2e_pb": -2420580.321439789
+            },
+            "wet": {
+                "CO2e_pb": 4081045.774120587
+            },
+            "water": {
+                "CO2e_pb": 2246039.615591387
+            },
+            "settlement": {
+                "CO2e_pb": 7056983.028653572
+            },
+            "other": {
+                "CO2e_pb": 0.0
+            },
+            "wood": {
+                "CO2e_pb": -3244437.0562904244
+            }
+        },
+        "total_energy": 2559449012.0142865,
+        "total_CO2e_combustion_based": 668489413.5577459,
+        "total_CO2e_production_based": 47307154.579921156,
+        "bisko_quality": 0.1624823692085159
     }
 }
