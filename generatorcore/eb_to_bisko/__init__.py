@@ -13,15 +13,6 @@ from .. import (
     lulucf2018,
     residences2018,
     transport2018,
-    agri2030,
-    business2030,
-    electricity2030,
-    fuels2030,
-    heat2030,
-    industry2030,
-    lulucf2030,
-    residences2030,
-    transport2030,
 )
 
 
@@ -370,9 +361,9 @@ class BiskoAgriculture(BiskoProduktionBasedOnly):
     @classmethod
     def calc_bisko_agri(cls,a18:agri2018.A18) -> "BiskoAgriculture":
         forest = ProductionBasedEmission(CO2e_pb=a18.p_fermen.CO2e_production_based)
-        manure = ProductionBasedEmission(CO2e_pb=a18.p_fermen.CO2e_production_based)
-        soil = ProductionBasedEmission(CO2e_pb=a18.p_fermen.CO2e_production_based)
-        other = ProductionBasedEmission(CO2e_pb=a18.p_fermen.CO2e_production_based)
+        manure = ProductionBasedEmission(CO2e_pb=a18.p_manure.CO2e_production_based)
+        soil = ProductionBasedEmission(CO2e_pb=a18.p_soil.CO2e_production_based)
+        other = ProductionBasedEmission(CO2e_pb=a18.p_other.CO2e_production_based)
 
         total = ProductionBasedEmission.calc_sum(forest,manure,soil,other)
 
