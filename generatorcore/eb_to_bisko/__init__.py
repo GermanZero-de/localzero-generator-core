@@ -417,6 +417,12 @@ class Bisko:
     agri: BiskoAgriculture
     lulucf: BiskoLULUCF
 
+    total_energy: float
+    total_CO2e_combustion_based: float
+    total_CO2e_production_based: float
+
+    bisko_quality: float
+
     
     @classmethod
     def calc(cls,
@@ -438,7 +444,13 @@ class Bisko:
         traffic_bisko = BiskoTraffic.calc_traffic_bisko(inputs=inputs,t18=t18,h18=h18,f18=f18,e18=e18)
         industry_bisko = BiskoIndustry.calc_industry_bisko(i18=i18,h18=h18,f18=f18,e18=e18)
         agri_bisko = BiskoAgriculture.calc_bisko_agri(a18=a18)
-        lulucf_bisko = BiskoLULUCF.calc_bisko_lulucf(l18=l18) 
+        lulucf_bisko = BiskoLULUCF.calc_bisko_lulucf(l18=l18)
+
+        total_energy = ph_bisko.total.energy + ghd_bisko.total.energy + traffic_bisko.total.energy + industry_bisko.total.energy
+        total_CO2e_combustion_based = ph_bisko.total.CO2e_cb + ghd_bisko.total.CO2e_cb + traffic_bisko.total.CO2e_cb + industry_bisko.total.CO2e_cb
+        total_CO2e_production_based = ph_bisko.total.CO2e_pb + ghd_bisko.total.CO2e_pb + traffic_bisko.total.CO2e_pb + industry_bisko.total.CO2e_pb + agri_bisko.total.CO2e_pb + lulucf_bisko.total.CO2e_pb
+
+        bisko_quality = traffic_bisko.total.energy * div(0.5,total_energy)
 
         return cls(
             ph=ph_bisko,
@@ -447,6 +459,10 @@ class Bisko:
             industry=industry_bisko,
             agri=agri_bisko,
             lulucf=lulucf_bisko,
+            total_energy=total_energy,
+            total_CO2e_combustion_based=total_CO2e_combustion_based,
+            total_CO2e_production_based=total_CO2e_production_based,
+            bisko_quality=bisko_quality,
         )
 
 
