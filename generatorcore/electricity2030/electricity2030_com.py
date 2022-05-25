@@ -154,6 +154,16 @@ def calc(
     p_fossil_nuclear.change_energy_MWh = (
         p_fossil_nuclear.energy - e18.p_fossil_nuclear.energy
     )
+    p_fossil_nuclear.cost_fuel = (
+        p_fossil_nuclear.cost_fuel_per_MWh * p_fossil_nuclear.energy / 1000000
+    )
+    p_fossil_nuclear.cost_mro = (
+        p_fossil_nuclear.cost_mro_per_MWh * p_fossil_nuclear.energy / 1000000
+    )
+    p_fossil_nuclear.CO2e_combustion_based = (
+        p_fossil_nuclear.energy * p_fossil_nuclear.CO2e_combustion_based_per_MWh
+    )
+    p_fossil_nuclear.CO2e_total = p_fossil_nuclear.CO2e_combustion_based
 
     p_fossil_coal_brown.energy = 0
     p_fossil_coal_brown.CO2e_total_2021_estimated = (
@@ -167,6 +177,15 @@ def calc(
     )
     p_fossil_coal_brown.change_energy_MWh = (
         p_fossil_coal_brown.energy - e18.p_fossil_coal_brown.energy
+    )
+    p_fossil_coal_brown.cost_fuel = (
+        p_fossil_coal_brown.cost_fuel_per_MWh * p_fossil_coal_brown.energy / 1000000
+    )
+    p_fossil_coal_brown.cost_mro = (
+        p_fossil_coal_brown.cost_mro_per_MWh * p_fossil_coal_brown.energy / 1000000
+    )
+    p_fossil_coal_brown.CO2e_combustion_based = (
+        p_fossil_coal_brown.energy * p_fossil_coal_brown.CO2e_combustion_based_per_MWh
     )
 
     p_fossil_coal_black.energy = 0
@@ -182,6 +201,15 @@ def calc(
     p_fossil_coal_black.change_energy_MWh = (
         p_fossil_coal_black.energy - e18.p_fossil_coal_black.energy
     )
+    p_fossil_coal_black.cost_fuel = (
+        p_fossil_coal_black.cost_fuel_per_MWh * p_fossil_coal_black.energy / 1000000
+    )
+    p_fossil_coal_black.cost_mro = (
+        p_fossil_coal_black.cost_mro_per_MWh * p_fossil_coal_black.energy / 1000000
+    )
+    p_fossil_coal_black.CO2e_combustion_based = (
+        p_fossil_coal_black.energy * p_fossil_coal_black.CO2e_combustion_based_per_MWh
+    )
 
     p_fossil_gas.energy = 0
     p_fossil_gas.CO2e_total_2021_estimated = (
@@ -194,6 +222,15 @@ def calc(
         e18.p_fossil_gas.CO2e_combustion_based_per_MWh
     )
     p_fossil_gas.change_energy_MWh = p_fossil_gas.energy - e18.p_fossil_gas.energy
+    p_fossil_gas.cost_fuel = (
+        p_fossil_gas.cost_fuel_per_MWh * p_fossil_gas.energy / 1000000
+    )
+    p_fossil_gas.cost_mro = (
+        p_fossil_gas.cost_mro_per_MWh * p_fossil_gas.energy / 1000000
+    )
+    p_fossil_gas.CO2e_combustion_based = (
+        p_fossil_gas.energy * p_fossil_gas.CO2e_combustion_based_per_MWh
+    )
 
     p_fossil_ofossil.energy = 0
     p_fossil_ofossil.CO2e_total_2021_estimated = (
@@ -204,6 +241,33 @@ def calc(
     p_fossil_ofossil.cost_mro_per_MWh = e18.p_fossil_ofossil.cost_mro_per_MWh
     p_fossil_ofossil.CO2e_combustion_based_per_MWh = (
         e18.p_fossil_ofossil.CO2e_combustion_based_per_MWh
+    )
+    p_fossil_ofossil.change_energy_MWh = (
+        p_fossil_ofossil.energy - e18.p_fossil_ofossil.energy
+    )
+    p_fossil_ofossil.cost_fuel = (
+        p_fossil_ofossil.cost_fuel_per_MWh * p_fossil_ofossil.energy / 1000000
+    )
+    p_fossil_ofossil.cost_mro = (
+        p_fossil_ofossil.cost_mro_per_MWh * p_fossil_ofossil.energy / 1000000
+    )
+    p_fossil_ofossil.CO2e_combustion_based = (
+        p_fossil_ofossil.energy * p_fossil_ofossil.CO2e_combustion_based_per_MWh
+    )
+
+    p_fossil.energy = (
+        p_fossil_nuclear.energy
+        + p_fossil_coal_brown.energy
+        + p_fossil_coal_black.energy
+        + p_fossil_gas.energy
+        + p_fossil_ofossil.energy
+    )
+
+    p_fossil.CO2e_total_2021_estimated = (
+        p_fossil_coal_brown.CO2e_total_2021_estimated
+        + p_fossil_coal_black.CO2e_total_2021_estimated
+        + p_fossil_gas.CO2e_total_2021_estimated
+        + p_fossil_ofossil.CO2e_total_2021_estimated
     )
 
     p_renew_pv.pct_energy = ass("Ass_E_P_renew_pv_pct_of_nep_2035")
@@ -515,69 +579,6 @@ def calc(
     )
     p_fossil_and_renew.invest_pa_com = p_renew.invest_pa_com
     p_fossil_and_renew.invest_com = p_renew.invest_com
-    p_fossil.energy = (
-        p_fossil_nuclear.energy
-        + p_fossil_coal_brown.energy
-        + p_fossil_coal_black.energy
-        + p_fossil_gas.energy
-        + p_fossil_ofossil.energy
-    )
-
-    p_fossil_ofossil.change_energy_MWh = (
-        p_fossil_ofossil.energy - e18.p_fossil_ofossil.energy
-    )
-    p_fossil.CO2e_total_2021_estimated = (
-        p_fossil_coal_brown.CO2e_total_2021_estimated
-        + p_fossil_coal_black.CO2e_total_2021_estimated
-        + p_fossil_gas.CO2e_total_2021_estimated
-        + p_fossil_ofossil.CO2e_total_2021_estimated
-    )
-    p_fossil_nuclear.cost_fuel = (
-        p_fossil_nuclear.cost_fuel_per_MWh * p_fossil_nuclear.energy / 1000000
-    )
-    p_fossil_nuclear.cost_mro = (
-        p_fossil_nuclear.cost_mro_per_MWh * p_fossil_nuclear.energy / 1000000
-    )
-    p_fossil_nuclear.CO2e_combustion_based = (
-        p_fossil_nuclear.energy * p_fossil_nuclear.CO2e_combustion_based_per_MWh
-    )
-    p_fossil_nuclear.CO2e_total = p_fossil_nuclear.CO2e_combustion_based
-    p_fossil_coal_brown.cost_fuel = (
-        p_fossil_coal_brown.cost_fuel_per_MWh * p_fossil_coal_brown.energy / 1000000
-    )
-    p_fossil_coal_brown.cost_mro = (
-        p_fossil_coal_brown.cost_mro_per_MWh * p_fossil_coal_brown.energy / 1000000
-    )
-    p_fossil_coal_brown.CO2e_combustion_based = (
-        p_fossil_coal_brown.energy * p_fossil_coal_brown.CO2e_combustion_based_per_MWh
-    )
-    p_fossil_coal_black.cost_fuel = (
-        p_fossil_coal_black.cost_fuel_per_MWh * p_fossil_coal_black.energy / 1000000
-    )
-    p_fossil_coal_black.cost_mro = (
-        p_fossil_coal_black.cost_mro_per_MWh * p_fossil_coal_black.energy / 1000000
-    )
-    p_fossil_coal_black.CO2e_combustion_based = (
-        p_fossil_coal_black.energy * p_fossil_coal_black.CO2e_combustion_based_per_MWh
-    )
-    p_fossil_gas.cost_fuel = (
-        p_fossil_gas.cost_fuel_per_MWh * p_fossil_gas.energy / 1000000
-    )
-    p_fossil_gas.cost_mro = (
-        p_fossil_gas.cost_mro_per_MWh * p_fossil_gas.energy / 1000000
-    )
-    p_fossil_gas.CO2e_combustion_based = (
-        p_fossil_gas.energy * p_fossil_gas.CO2e_combustion_based_per_MWh
-    )
-    p_fossil_ofossil.cost_fuel = (
-        p_fossil_ofossil.cost_fuel_per_MWh * p_fossil_ofossil.energy / 1000000
-    )
-    p_fossil_ofossil.cost_mro = (
-        p_fossil_ofossil.cost_mro_per_MWh * p_fossil_ofossil.energy / 1000000
-    )
-    p_fossil_ofossil.CO2e_combustion_based = (
-        p_fossil_ofossil.energy * p_fossil_ofossil.CO2e_combustion_based_per_MWh
-    )
     p_renew.pct_energy = (
         p_renew_pv.pct_energy
         + p_renew_wind.pct_energy
