@@ -99,24 +99,25 @@ def calc(
     p_local_surplus = e30.p_local_surplus
     p_fossil_and_renew = e30.p_fossil_and_renew
 
-    """S T A R T"""
-
     g_grid_offshore.invest = 0
     g_grid_offshore.invest_per_x = ass("Ass_E_G_grid_offshore_ratio_invest_to_power")
     g_grid_offshore.pct_of_wage = fact("Fact_B_P_constr_main_revenue_pct_of_wage_2017")
     g_grid_offshore.ratio_wage_to_emplo = fact(
         "Fact_B_P_constr_main_ratio_wage_to_emplo_2017"
     )
+
     g_grid_onshore.invest_per_x = ass("Ass_E_G_grid_onshore_ratio_invest_to_power")
     g_grid_onshore.pct_of_wage = fact("Fact_B_P_constr_main_revenue_pct_of_wage_2017")
     g_grid_onshore.ratio_wage_to_emplo = fact(
         "Fact_B_P_constr_main_ratio_wage_to_emplo_2017"
     )
+
     g_grid_pv.invest_per_x = ass("Ass_E_G_grid_pv_ratio_invest_to_power")
     g_grid_pv.pct_of_wage = fact("Fact_B_P_constr_main_revenue_pct_of_wage_2017")
     g_grid_pv.ratio_wage_to_emplo = fact(
         "Fact_B_P_constr_main_ratio_wage_to_emplo_2017"
     )
+
     d_h.energy = h30.p.demand_electricity
     d_r.energy = r30.p.demand_electricity
     d_b.energy = b30.p.demand_electricity
@@ -136,29 +137,11 @@ def calc(
     d_i.cost_fuel_per_MWh = fact("Fact_E_D_I_cost_fuel_per_MWh_2018")
     d_t.cost_fuel_per_MWh = fact("Fact_E_D_R_cost_fuel_per_MWh_2018")
     d_a.cost_fuel_per_MWh = fact("Fact_E_D_R_cost_fuel_per_MWh_2018")
+
     p_renew.invest_pa_com = 0
     p_renew.invest_com = 0
+
     p_fossil_nuclear.energy = 0
-    p_fossil_coal_brown.energy = 0
-    p_fossil_coal_black.energy = 0
-    p_fossil_gas.energy = 0
-    p_fossil_ofossil.energy = 0
-    p_fossil_coal_brown.CO2e_total_2021_estimated = (
-        e18.p_fossil_coal_brown.CO2e_combustion_based
-        * fact("Fact_M_CO2e_wo_lulucf_2021_vs_2018")
-    )
-    p_fossil_coal_black.CO2e_total_2021_estimated = (
-        e18.p_fossil_coal_black.CO2e_combustion_based
-        * fact("Fact_M_CO2e_wo_lulucf_2021_vs_2018")
-    )
-    p_fossil_gas.CO2e_total_2021_estimated = (
-        e18.p_fossil_gas.CO2e_combustion_based
-        * fact("Fact_M_CO2e_wo_lulucf_2021_vs_2018")
-    )
-    p_fossil_ofossil.CO2e_total_2021_estimated = (
-        e18.p_fossil_ofossil.CO2e_combustion_based
-        * fact("Fact_M_CO2e_wo_lulucf_2021_vs_2018")
-    )
     p_fossil_nuclear.cost_fuel_per_MWh = e18.p_fossil_nuclear.cost_fuel_per_MWh
     p_fossil_nuclear.cost_mro_per_MWh = e18.p_fossil_nuclear.cost_mro_per_MWh
     p_fossil_nuclear.CO2e_combustion_based_per_MWh = (
@@ -168,26 +151,61 @@ def calc(
         e18.p_fossil_nuclear.CO2e_combustion_based
         * fact("Fact_M_CO2e_wo_lulucf_2021_vs_2018")
     )
+    p_fossil_nuclear.change_energy_MWh = (
+        p_fossil_nuclear.energy - e18.p_fossil_nuclear.energy
+    )
+
+    p_fossil_coal_brown.energy = 0
+    p_fossil_coal_brown.CO2e_total_2021_estimated = (
+        e18.p_fossil_coal_brown.CO2e_combustion_based
+        * fact("Fact_M_CO2e_wo_lulucf_2021_vs_2018")
+    )
     p_fossil_coal_brown.cost_fuel_per_MWh = e18.p_fossil_coal_brown.cost_fuel_per_MWh
     p_fossil_coal_brown.cost_mro_per_MWh = e18.p_fossil_coal_brown.cost_mro_per_MWh
     p_fossil_coal_brown.CO2e_combustion_based_per_MWh = (
         e18.p_fossil_coal_brown.CO2e_combustion_based_per_MWh
+    )
+    p_fossil_coal_brown.change_energy_MWh = (
+        p_fossil_coal_brown.energy - e18.p_fossil_coal_brown.energy
+    )
+
+    p_fossil_coal_black.energy = 0
+    p_fossil_coal_black.CO2e_total_2021_estimated = (
+        e18.p_fossil_coal_black.CO2e_combustion_based
+        * fact("Fact_M_CO2e_wo_lulucf_2021_vs_2018")
     )
     p_fossil_coal_black.cost_fuel_per_MWh = e18.p_fossil_coal_black.cost_fuel_per_MWh
     p_fossil_coal_black.cost_mro_per_MWh = e18.p_fossil_coal_black.cost_mro_per_MWh
     p_fossil_coal_black.CO2e_combustion_based_per_MWh = (
         e18.p_fossil_coal_black.CO2e_combustion_based_per_MWh
     )
+    p_fossil_coal_black.change_energy_MWh = (
+        p_fossil_coal_black.energy - e18.p_fossil_coal_black.energy
+    )
+
+    p_fossil_gas.energy = 0
+    p_fossil_gas.CO2e_total_2021_estimated = (
+        e18.p_fossil_gas.CO2e_combustion_based
+        * fact("Fact_M_CO2e_wo_lulucf_2021_vs_2018")
+    )
     p_fossil_gas.cost_fuel_per_MWh = e18.p_fossil_gas.cost_fuel_per_MWh
     p_fossil_gas.cost_mro_per_MWh = e18.p_fossil_gas.cost_mro_per_MWh
     p_fossil_gas.CO2e_combustion_based_per_MWh = (
         e18.p_fossil_gas.CO2e_combustion_based_per_MWh
+    )
+    p_fossil_gas.change_energy_MWh = p_fossil_gas.energy - e18.p_fossil_gas.energy
+
+    p_fossil_ofossil.energy = 0
+    p_fossil_ofossil.CO2e_total_2021_estimated = (
+        e18.p_fossil_ofossil.CO2e_combustion_based
+        * fact("Fact_M_CO2e_wo_lulucf_2021_vs_2018")
     )
     p_fossil_ofossil.cost_fuel_per_MWh = e18.p_fossil_ofossil.cost_fuel_per_MWh
     p_fossil_ofossil.cost_mro_per_MWh = e18.p_fossil_ofossil.cost_mro_per_MWh
     p_fossil_ofossil.CO2e_combustion_based_per_MWh = (
         e18.p_fossil_ofossil.CO2e_combustion_based_per_MWh
     )
+
     p_renew_pv.pct_energy = ass("Ass_E_P_renew_pv_pct_of_nep_2035")
     p_renew_wind.pct_energy = ass("Ass_E_P_renew_wind_onshore_pct_of_nep_2035") + ass(
         "Ass_E_P_renew_wind_offshore_pct_of_nep_2035"
@@ -497,16 +515,6 @@ def calc(
     )
     p_fossil_and_renew.invest_pa_com = p_renew.invest_pa_com
     p_fossil_and_renew.invest_com = p_renew.invest_com
-    p_fossil_nuclear.change_energy_MWh = (
-        p_fossil_nuclear.energy - e18.p_fossil_nuclear.energy
-    )
-    p_fossil_coal_brown.change_energy_MWh = (
-        p_fossil_coal_brown.energy - e18.p_fossil_coal_brown.energy
-    )
-    p_fossil_coal_black.change_energy_MWh = (
-        p_fossil_coal_black.energy - e18.p_fossil_coal_black.energy
-    )
-    p_fossil_gas.change_energy_MWh = p_fossil_gas.energy - e18.p_fossil_gas.energy
     p_fossil.energy = (
         p_fossil_nuclear.energy
         + p_fossil_coal_brown.energy
