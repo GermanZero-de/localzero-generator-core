@@ -1,4 +1,4 @@
-module Tree exposing (Node(..), Tree, decoder, expand, get, merge, wrap)
+module Tree exposing (Node(..), Tree, decoder, empty, expand, get, merge, wrap)
 
 import Dict exposing (Dict)
 import Json.Decode as Decode
@@ -22,6 +22,11 @@ wrap name tree =
 merge : Tree value -> Tree value -> Tree value
 merge t1 t2 =
     Dict.union t1 t2
+
+
+empty : Tree value
+empty =
+    Dict.empty
 
 
 getHelper : List String -> Node value -> Maybe (Node value)

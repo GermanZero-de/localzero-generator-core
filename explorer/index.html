@@ -5551,7 +5551,7 @@ var $author$project$CollapseStatus$allCollapsed = $elm$core$Set$empty;
 var $author$project$AllRuns$AllRuns = $elm$core$Basics$identity;
 var $author$project$AllRuns$empty = {by: 1, B: $elm$core$Dict$empty};
 var $author$project$InterestList$InterestList = $elm$core$Basics$identity;
-var $author$project$InterestList$empty = {bs: $elm$core$Dict$empty, aM: 'data', aa: $elm$core$Set$empty, aR: false};
+var $author$project$InterestList$empty = {bs: $elm$core$Dict$empty, aM: 'data', _: $elm$core$Set$empty, aR: false};
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $yotamDvir$elm_pivot$Pivot$Types$Pivot = F2(
@@ -5572,8 +5572,8 @@ var $yotamDvir$elm_pivot$Pivot$singleton = $yotamDvir$elm_pivot$Pivot$Create$sin
 var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
 		{
+			ad: $elm$core$Maybe$Nothing,
 			ae: $elm$core$Maybe$Nothing,
-			af: $elm$core$Maybe$Nothing,
 			bg: _List_Nil,
 			aK: $author$project$CollapseStatus$allCollapsed,
 			I: $elm$core$Dict$empty,
@@ -5582,7 +5582,7 @@ var $author$project$Main$init = function (_v0) {
 			bv: 600,
 			B: $author$project$AllRuns$empty,
 			aC: $elm$core$Maybe$Nothing,
-			ac: $elm$core$Maybe$Nothing
+			ab: $elm$core$Maybe$Nothing
 		},
 		$elm$core$Platform$Cmd$none);
 };
@@ -6183,7 +6183,7 @@ var $elm$core$Dict$singleton = F2(
 	});
 var $author$project$InterestList$guessShortPathLabels = function (_v0) {
 	var il = _v0;
-	var _v1 = $elm$core$Set$toList(il.aa);
+	var _v1 = $elm$core$Set$toList(il._);
 	if (_v1.b && (!_v1.b.b)) {
 		var onlyOne = _v1.a;
 		return A2(
@@ -6241,7 +6241,7 @@ var $author$project$InterestList$decoder = A4(
 	F3(
 		function (label, showGraph, paths) {
 			return $author$project$InterestList$updateShortPathLabels(
-				{bs: $elm$core$Dict$empty, aM: label, aa: paths, aR: showGraph});
+				{bs: $elm$core$Dict$empty, aM: label, _: paths, aR: showGraph});
 		}),
 	A2($elm$json$Json$Decode$field, 'label', $elm$json$Json$Decode$string),
 	A2($elm$json$Json$Decode$field, 'showGraph', $elm$json$Json$Decode$bool),
@@ -6279,10 +6279,10 @@ var $author$project$Run$WithOverrides = 0;
 var $author$project$Tree$Leaf = function (a) {
 	return {$: 1, a: a};
 };
-var $author$project$Diff$Left = function (a) {
+var $author$project$Diff$LeftOnly = function (a) {
 	return {$: 0, a: a};
 };
-var $author$project$Diff$Right = function (a) {
+var $author$project$Diff$RightOnly = function (a) {
 	return {$: 1, a: a};
 };
 var $author$project$Tree$Tree = function (a) {
@@ -6292,6 +6292,7 @@ var $author$project$Diff$Unequal = F2(
 	function (a, b) {
 		return {$: 2, a: a, b: b};
 	});
+var $author$project$Tree$empty = $elm$core$Dict$empty;
 var $elm$core$Dict$isEmpty = function (dict) {
 	if (dict.$ === -2) {
 		return true;
@@ -6387,24 +6388,48 @@ var $elm$core$Dict$merge = F6(
 	});
 var $author$project$Diff$diff = F3(
 	function (valueIsEqual, a, b) {
+		var insertRightOnlyTree = F3(
+			function (key, rightOnlyTree, acc) {
+				return A3(
+					$elm$core$Dict$insert,
+					key,
+					$author$project$Tree$Tree(
+						A3($author$project$Diff$diff, valueIsEqual, $author$project$Tree$empty, rightOnlyTree)),
+					acc);
+			});
+		var insertLeftOnlyTree = F3(
+			function (key, leftOnlyTree, acc) {
+				return A3(
+					$elm$core$Dict$insert,
+					key,
+					$author$project$Tree$Tree(
+						A3($author$project$Diff$diff, valueIsEqual, leftOnlyTree, $author$project$Tree$empty)),
+					acc);
+			});
 		return A6(
 			$elm$core$Dict$merge,
 			F3(
 				function (key, value, acc) {
-					return A3(
-						$elm$core$Dict$insert,
-						key,
-						$author$project$Tree$Leaf(
-							$author$project$Diff$Left(value)),
-						acc);
+					if (!value.$) {
+						var leftOnlyTree = value.a;
+						return A3(insertLeftOnlyTree, key, leftOnlyTree, acc);
+					} else {
+						var leaf = value.a;
+						return A3(
+							$elm$core$Dict$insert,
+							key,
+							$author$project$Tree$Leaf(
+								$author$project$Diff$LeftOnly(leaf)),
+							acc);
+					}
 				}),
 			F4(
 				function (key, value1, value2, acc) {
-					var _v0 = _Utils_Tuple2(value1, value2);
-					if (!_v0.a.$) {
-						if (!_v0.b.$) {
-							var t1 = _v0.a.a;
-							var t2 = _v0.b.a;
+					var _v1 = _Utils_Tuple2(value1, value2);
+					if (!_v1.a.$) {
+						if (!_v1.b.$) {
+							var t1 = _v1.a.a;
+							var t2 = _v1.b.a;
 							var t = A3($author$project$Diff$diff, valueIsEqual, t1, t2);
 							return $elm$core$Dict$isEmpty(t) ? acc : A3(
 								$elm$core$Dict$insert,
@@ -6412,41 +6437,44 @@ var $author$project$Diff$diff = F3(
 								$author$project$Tree$Tree(t),
 								acc);
 						} else {
-							return A3(
-								$elm$core$Dict$insert,
-								key,
-								$author$project$Tree$Leaf(
-									A2($author$project$Diff$Unequal, value1, value2)),
-								acc);
+							var leftOnlyTree = _v1.a.a;
+							return A3(insertLeftOnlyTree, key, leftOnlyTree, acc);
 						}
 					} else {
-						if (!_v0.b.$) {
-							return A3(
-								$elm$core$Dict$insert,
-								key,
-								$author$project$Tree$Leaf(
-									A2($author$project$Diff$Unequal, value1, value2)),
-								acc);
+						if (!_v1.b.$) {
+							var rightOnlyTree = _v1.b.a;
+							return A3(insertRightOnlyTree, key, rightOnlyTree, acc);
 						} else {
-							var l1 = _v0.a.a;
-							var l2 = _v0.b.a;
+							var l1 = _v1.a.a;
+							var l2 = _v1.b.a;
 							return A2(valueIsEqual, l1, l2) ? acc : A3(
 								$elm$core$Dict$insert,
 								key,
 								$author$project$Tree$Leaf(
-									A2($author$project$Diff$Unequal, value1, value2)),
+									A2($author$project$Diff$Unequal, l1, l2)),
 								acc);
 						}
 					}
 				}),
 			F3(
 				function (key, value, acc) {
-					return A3(
-						$elm$core$Dict$insert,
-						key,
-						$author$project$Tree$Leaf(
-							$author$project$Diff$Right(value)),
-						acc);
+					if (!value.$) {
+						var rightOnlyTree = value.a;
+						return A3(
+							$elm$core$Dict$insert,
+							key,
+							$author$project$Tree$Tree(
+								A3($author$project$Diff$diff, valueIsEqual, $author$project$Tree$empty, rightOnlyTree)),
+							acc);
+					} else {
+						var leaf = value.a;
+						return A3(
+							$elm$core$Dict$insert,
+							key,
+							$author$project$Tree$Leaf(
+								$author$project$Diff$RightOnly(leaf)),
+							acc);
+					}
 				}),
 			a,
 			b,
@@ -6722,7 +6750,7 @@ var $author$project$InterestList$encode = function (_v0) {
 				A2(
 					$elm$json$Json$Encode$set,
 					$elm$json$Json$Encode$list($elm$json$Json$Encode$string),
-					i.aa))
+					i._))
 			]));
 };
 var $elm$json$Json$Encode$int = _Json_wrap;
@@ -7696,7 +7724,7 @@ var $author$project$Main$initiateCalculate = F5(
 			_Utils_update(
 				model,
 				{
-					ac: $elm$core$Maybe$Just($author$project$Main$Loading)
+					ab: $elm$core$Maybe$Just($author$project$Main$Loading)
 				}),
 			$elm$http$Http$post(
 				{
@@ -7725,7 +7753,7 @@ var $author$project$Main$initiateMakeEntries = F4(
 			_Utils_update(
 				model,
 				{
-					ac: $elm$core$Maybe$Just($author$project$Main$Loading)
+					ab: $elm$core$Maybe$Just($author$project$Main$Loading)
 				}),
 			$elm$http$Http$get(
 				{
@@ -7743,7 +7771,7 @@ var $author$project$InterestList$insert = F2(
 			_Utils_update(
 				i,
 				{
-					aa: A2($elm$core$Set$insert, p, i.aa)
+					_: A2($elm$core$Set$insert, p, i._)
 				}));
 	});
 var $author$project$Main$insertDiff = F4(
@@ -7855,7 +7883,7 @@ var $author$project$InterestList$remove = F2(
 			_Utils_update(
 				i,
 				{
-					aa: A2($elm$core$Set$remove, p, i.aa)
+					_: A2($elm$core$Set$remove, p, i._)
 				}));
 	});
 var $author$project$Main$removeDiff = F3(
@@ -8090,7 +8118,7 @@ var $author$project$Main$withLoadFailure = F2(
 			_Utils_update(
 				model,
 				{
-					ac: $elm$core$Maybe$Just(
+					ab: $elm$core$Maybe$Just(
 						$author$project$Main$LoadFailure(msg))
 				}),
 			$elm$core$Platform$Cmd$none);
@@ -8205,7 +8233,7 @@ var $author$project$Main$update = F2(
 					return $Janiczek$cmd_extra$Cmd$Extra$withNoCmd(
 						_Utils_update(
 							modelWithRun,
-							{I: newDiffs, ac: $elm$core$Maybe$Nothing}));
+							{I: newDiffs, ab: $elm$core$Maybe$Nothing}));
 				} else {
 					switch (resultOrError.a.$) {
 						case 0:
@@ -8259,9 +8287,9 @@ var $author$project$Main$update = F2(
 						function (md) {
 							return _Utils_update(
 								model,
-								{ac: md});
+								{ab: md});
 						},
-						A2($author$project$Main$updateModal, modalMsg, model.ac)));
+						A2($author$project$Main$updateModal, modalMsg, model.ab)));
 			case 13:
 				var maybeNdx = msg.a;
 				var inputs = msg.b;
@@ -8271,7 +8299,7 @@ var $author$project$Main$update = F2(
 					_Utils_update(
 						model,
 						{
-							ac: $elm$core$Maybe$Just(modal)
+							ab: $elm$core$Maybe$Just(modal)
 						}));
 			case 14:
 				var maybeNdx = msg.a;
@@ -8299,7 +8327,7 @@ var $author$project$Main$update = F2(
 				var newActiveSearch = function () {
 					var _v15 = A2($author$project$AllRuns$get, runId, model.B);
 					if (_v15.$ === 1) {
-						return model.af;
+						return model.ae;
 					} else {
 						var run = _v15.a;
 						var result = A2(
@@ -8311,7 +8339,7 @@ var $author$project$Main$update = F2(
 					}
 				}();
 				var activeSearchFieldChanged = function () {
-					var _v12 = _Utils_Tuple2(model.af, newActiveSearch);
+					var _v12 = _Utils_Tuple2(model.ae, newActiveSearch);
 					if (_v12.b.$ === 1) {
 						var _v13 = _v12.b;
 						return false;
@@ -8336,9 +8364,9 @@ var $author$project$Main$update = F2(
 						$elm$browser$Browser$Dom$focus($author$project$Main$filterFieldId)),
 					_Utils_update(
 						model,
-						{af: newActiveSearch}));
+						{ae: newActiveSearch}));
 			case 10:
-				var _v16 = model.af;
+				var _v16 = model.ae;
 				if (_v16.$ === 1) {
 					return $Janiczek$cmd_extra$Cmd$Extra$withNoCmd(model);
 				} else {
@@ -8359,19 +8387,19 @@ var $author$project$Main$update = F2(
 							},
 							_Utils_update(
 								model,
-								{af: $elm$core$Maybe$Nothing})));
+								{ae: $elm$core$Maybe$Nothing})));
 				}
 			case 9:
 				return $Janiczek$cmd_extra$Cmd$Extra$withNoCmd(
 					_Utils_update(
 						model,
-						{af: $elm$core$Maybe$Nothing}));
+						{ae: $elm$core$Maybe$Nothing}));
 			case 6:
 				var runId = msg.a;
 				var name = msg.b;
 				var newText = msg.c;
 				var isFocusChanged = function () {
-					var _v18 = model.ae;
+					var _v18 = model.ad;
 					if (_v18.$ === 1) {
 						return true;
 					} else {
@@ -8383,7 +8411,7 @@ var $author$project$Main$update = F2(
 					_Utils_update(
 						model,
 						{
-							ae: $elm$core$Maybe$Just(
+							ad: $elm$core$Maybe$Just(
 								{
 									bd: $author$project$Styling$parseGermanNumber(newText),
 									aN: name,
@@ -8398,14 +8426,14 @@ var $author$project$Main$update = F2(
 						},
 						$elm$browser$Browser$Dom$focus('overrideEditor')) : $elm$core$Platform$Cmd$none);
 			case 7:
-				var _v19 = model.ae;
+				var _v19 = model.ad;
 				if (_v19.$ === 1) {
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				} else {
 					var editor = _v19.a;
 					var modelEditorClosed = _Utils_update(
 						model,
-						{ae: $elm$core$Maybe$Nothing});
+						{ad: $elm$core$Maybe$Nothing});
 					var _v20 = editor.bd;
 					if (_v20.$ === 1) {
 						return _Utils_Tuple2(modelEditorClosed, $elm$core$Platform$Cmd$none);
@@ -8448,12 +8476,12 @@ var $author$project$Main$update = F2(
 						_Utils_update(
 							model,
 							{
-								ae: A2(
+								ad: A2(
 									$elm_community$maybe_extra$Maybe$Extra$filter,
 									function (e) {
 										return (!_Utils_eq(e.M, runId)) || (!_Utils_eq(e.aN, name));
 									},
-									model.ae)
+									model.ad)
 							}));
 				}
 			case 2:
@@ -10931,7 +10959,7 @@ var $elm$core$String$concat = function (strings) {
 var $mdgriffith$elm_ui$Internal$Style$Intermediate = $elm$core$Basics$identity;
 var $mdgriffith$elm_ui$Internal$Style$emptyIntermediate = F2(
 	function (selector, closing) {
-		return {bi: closing, u: _List_Nil, ap: _List_Nil, ab: selector};
+		return {bi: closing, u: _List_Nil, ap: _List_Nil, aa: selector};
 	});
 var $mdgriffith$elm_ui$Internal$Style$renderRules = F2(
 	function (_v0, rulesToRender) {
@@ -10960,7 +10988,7 @@ var $mdgriffith$elm_ui$Internal$Style$renderRules = F2(
 							{
 								u: A2(
 									$elm$core$List$cons,
-									{bi: '\n}', u: _List_Nil, ap: props, ab: '@supports (' + (prop + (':' + (value + (') {' + parent.ab))))},
+									{bi: '\n}', u: _List_Nil, ap: props, aa: '@supports (' + (prop + (':' + (value + (') {' + parent.aa))))},
 									rendered.u)
 							});
 					case 5:
@@ -10973,7 +11001,7 @@ var $mdgriffith$elm_ui$Internal$Style$renderRules = F2(
 									$elm$core$List$cons,
 									A2(
 										$mdgriffith$elm_ui$Internal$Style$renderRules,
-										A2($mdgriffith$elm_ui$Internal$Style$emptyIntermediate, parent.ab + (' + ' + selector), ''),
+										A2($mdgriffith$elm_ui$Internal$Style$emptyIntermediate, parent.aa + (' + ' + selector), ''),
 										adjRules),
 									rendered.u)
 							});
@@ -10987,7 +11015,7 @@ var $mdgriffith$elm_ui$Internal$Style$renderRules = F2(
 									$elm$core$List$cons,
 									A2(
 										$mdgriffith$elm_ui$Internal$Style$renderRules,
-										A2($mdgriffith$elm_ui$Internal$Style$emptyIntermediate, parent.ab + (' > ' + child), ''),
+										A2($mdgriffith$elm_ui$Internal$Style$emptyIntermediate, parent.aa + (' > ' + child), ''),
 										childRules),
 									rendered.u)
 							});
@@ -11001,7 +11029,7 @@ var $mdgriffith$elm_ui$Internal$Style$renderRules = F2(
 									$elm$core$List$cons,
 									A2(
 										$mdgriffith$elm_ui$Internal$Style$renderRules,
-										A2($mdgriffith$elm_ui$Internal$Style$emptyIntermediate, parent.ab + (' ' + child), ''),
+										A2($mdgriffith$elm_ui$Internal$Style$emptyIntermediate, parent.aa + (' ' + child), ''),
 										childRules),
 									rendered.u)
 							});
@@ -11017,7 +11045,7 @@ var $mdgriffith$elm_ui$Internal$Style$renderRules = F2(
 										$mdgriffith$elm_ui$Internal$Style$renderRules,
 										A2(
 											$mdgriffith$elm_ui$Internal$Style$emptyIntermediate,
-											_Utils_ap(parent.ab, descriptor),
+											_Utils_ap(parent.aa, descriptor),
 											''),
 										descriptorRules),
 									rendered.u)
@@ -11031,7 +11059,7 @@ var $mdgriffith$elm_ui$Internal$Style$renderRules = F2(
 									$elm$core$List$cons,
 									A2(
 										$mdgriffith$elm_ui$Internal$Style$renderRules,
-										A2($mdgriffith$elm_ui$Internal$Style$emptyIntermediate, parent.ab, ''),
+										A2($mdgriffith$elm_ui$Internal$Style$emptyIntermediate, parent.aa, ''),
 										batched),
 									rendered.u)
 							});
@@ -11056,7 +11084,7 @@ var $mdgriffith$elm_ui$Internal$Style$renderCompact = function (styleClasses) {
 		if (!_v2.b) {
 			return '';
 		} else {
-			return rule.ab + ('{' + (renderValues(rule.ap) + (rule.bi + '}')));
+			return rule.aa + ('{' + (renderValues(rule.ap) + (rule.bi + '}')));
 		}
 	};
 	var renderIntermediate = function (_v0) {
@@ -16064,7 +16092,7 @@ var $mdgriffith$elm_ui$Element$Input$textHelper = F3(
 							$mdgriffith$elm_ui$Internal$Model$Attr(
 							$elm$html$Html$Events$onInput(textOptions.aP)),
 							$mdgriffith$elm_ui$Element$Input$hiddenLabelAttribute(textOptions.aM),
-							$mdgriffith$elm_ui$Element$Input$spellcheck(textInput.ad),
+							$mdgriffith$elm_ui$Element$Input$spellcheck(textInput.ac),
 							A2(
 							$elm$core$Maybe$withDefault,
 							$mdgriffith$elm_ui$Internal$Model$NoAttribute,
@@ -16192,7 +16220,7 @@ var $mdgriffith$elm_ui$Element$Input$textHelper = F3(
 var $mdgriffith$elm_ui$Element$Input$text = $mdgriffith$elm_ui$Element$Input$textHelper(
 	{
 		S: $elm$core$Maybe$Nothing,
-		ad: false,
+		ac: false,
 		C: $mdgriffith$elm_ui$Element$Input$TextInputNode('text')
 	});
 var $author$project$Main$viewCalculateModal = F3(
@@ -16513,7 +16541,7 @@ var $author$project$Styling$fonts = {
 		[
 			$mdgriffith$elm_ui$Element$Font$size(16)
 		]),
-	U: _List_fromArray(
+	ah: _List_fromArray(
 		[
 			$mdgriffith$elm_ui$Element$Font$size(16),
 			$mdgriffith$elm_ui$Element$Font$family(
@@ -16695,7 +16723,7 @@ var $author$project$AllRuns$toList = function (_v0) {
 };
 var $author$project$InterestList$toList = function (_v0) {
 	var i = _v0;
-	return $elm$core$Set$toList(i.aa);
+	return $elm$core$Set$toList(i._);
 };
 var $author$project$InterestListTable$create = F2(
 	function (interestList, allRuns) {
@@ -16718,7 +16746,7 @@ var $author$project$InterestListTable$create = F2(
 							if (_v1.$ === 1) {
 								return _Utils_Tuple2(
 									_Utils_Tuple2(runId, path),
-									$author$project$Value$String('NOTHING'));
+									$author$project$Value$String(''));
 							} else {
 								if (!_v1.a.$) {
 									return _Utils_Tuple2(
@@ -16735,7 +16763,7 @@ var $author$project$InterestListTable$create = F2(
 						paths);
 				},
 				runList));
-		return {aa: paths, B: runs, dW: values};
+		return {_: paths, B: runs, dW: values};
 	});
 var $author$project$Styling$red = A3($mdgriffith$elm_ui$Element$rgb255, 197, 40, 61);
 var $author$project$Styling$dangerousIconButtonStyle = _List_fromArray(
@@ -17300,7 +17328,7 @@ var $terezka$elm_charts$Chart$Attributes$color = F2(
 			{eF: v});
 	});
 var $terezka$elm_charts$Internal$Helpers$pink = '#ea60df';
-var $terezka$elm_charts$Internal$Svg$defaultBar = {D: _List_Nil, y: 'white', E: 0, eF: $terezka$elm_charts$Internal$Helpers$pink, bR: $elm$core$Maybe$Nothing, e9: 0, fa: '', fb: 10, Y: 1, fS: 0, fT: 0};
+var $terezka$elm_charts$Internal$Svg$defaultBar = {D: _List_Nil, y: 'white', E: 0, eF: $terezka$elm_charts$Internal$Helpers$pink, bR: $elm$core$Maybe$Nothing, e9: 0, fa: '', fb: 10, X: 1, fS: 0, fT: 0};
 var $terezka$elm_charts$Chart$Attributes$roundBottom = F2(
 	function (v, config) {
 		return _Utils_update(
@@ -17536,7 +17564,7 @@ var $terezka$elm_charts$Internal$Commands$QuadraticBeziersShort = F2(
 		return {$: 5, a: a, b: b};
 	});
 var $terezka$elm_charts$Internal$Coordinates$innerLength = function (axis) {
-	return A2($elm$core$Basics$max, 1, (axis.W - axis.fv) - axis.fu);
+	return A2($elm$core$Basics$max, 1, (axis.V - axis.fv) - axis.fu);
 };
 var $terezka$elm_charts$Internal$Coordinates$innerWidth = function (plane) {
 	return $terezka$elm_charts$Internal$Coordinates$innerLength(plane.d2);
@@ -17892,12 +17920,12 @@ var $terezka$elm_charts$Internal$Coordinates$toId = function (plane) {
 		_List_fromArray(
 			[
 				'elm-charts__id',
-				numToStr(plane.d2.W),
+				numToStr(plane.d2.V),
 				numToStr(plane.d2.di),
 				numToStr(plane.d2.bw),
 				numToStr(plane.d2.fv),
 				numToStr(plane.d2.fu),
-				numToStr(plane.d3.W),
+				numToStr(plane.d3.V),
 				numToStr(plane.d3.di),
 				numToStr(plane.d3.bw),
 				numToStr(plane.d3.fv),
@@ -18081,7 +18109,7 @@ var $terezka$elm_charts$Internal$Svg$bar = F3(
 		var commands = _v1.a;
 		var highlightCommands = _v1.b;
 		var viewAuraBar = function (fill) {
-			return (!config.e9) ? A6(viewBar, fill, config.Y, config.y, config.E, 1, commands) : A2(
+			return (!config.e9) ? A6(viewBar, fill, config.X, config.y, config.E, 1, commands) : A2(
 				$elm$svg$Svg$g,
 				_List_fromArray(
 					[
@@ -18090,7 +18118,7 @@ var $terezka$elm_charts$Internal$Svg$bar = F3(
 				_List_fromArray(
 					[
 						A6(viewBar, highlightColor, config.e9, 'transparent', 0, 0, highlightCommands),
-						A6(viewBar, fill, config.Y, config.y, config.E, 1, commands)
+						A6(viewBar, fill, config.X, config.y, config.E, 1, commands)
 					]));
 		};
 		var _v3 = config.bR;
@@ -18975,17 +19003,17 @@ var $terezka$elm_charts$Internal$Svg$decoder = F2(
 			function (mouseX, mouseY, box) {
 				var yPrev = plane.d3;
 				var xPrev = plane.d2;
-				var widthPercent = box.cA / plane.d2.W;
-				var heightPercent = box.c2 / plane.d3.W;
+				var widthPercent = box.cA / plane.d2.V;
+				var heightPercent = box.c2 / plane.d3.V;
 				var newPlane = _Utils_update(
 					plane,
 					{
 						d2: _Utils_update(
 							xPrev,
-							{W: box.cA, fu: plane.d2.fu * widthPercent, fv: plane.d2.fv * widthPercent}),
+							{V: box.cA, fu: plane.d2.fu * widthPercent, fv: plane.d2.fv * widthPercent}),
 						d3: _Utils_update(
 							yPrev,
-							{W: box.c2, fu: plane.d3.fu * heightPercent, fv: plane.d3.fv * heightPercent})
+							{V: box.c2, fu: plane.d3.fu * heightPercent, fv: plane.d3.fv * heightPercent})
 					});
 				var searched = A2(
 					$terezka$elm_charts$Internal$Svg$fromSvg,
@@ -19012,14 +19040,14 @@ var $terezka$elm_charts$Internal$Svg$container = F5(
 		var svgAttrsSize = config.bA ? _List_fromArray(
 			[
 				$elm$svg$Svg$Attributes$viewBox(
-				'0 0 ' + ($elm$core$String$fromFloat(plane.d2.W) + (' ' + $elm$core$String$fromFloat(plane.d3.W)))),
+				'0 0 ' + ($elm$core$String$fromFloat(plane.d2.V) + (' ' + $elm$core$String$fromFloat(plane.d3.V)))),
 				A2($elm$html$Html$Attributes$style, 'display', 'block')
 			]) : _List_fromArray(
 			[
 				$elm$svg$Svg$Attributes$width(
-				$elm$core$String$fromFloat(plane.d2.W)),
+				$elm$core$String$fromFloat(plane.d2.V)),
 				$elm$svg$Svg$Attributes$height(
-				$elm$core$String$fromFloat(plane.d3.W)),
+				$elm$core$String$fromFloat(plane.d3.V)),
 				A2($elm$html$Html$Attributes$style, 'display', 'block')
 			]);
 		var htmlAttrsSize = config.bA ? _List_fromArray(
@@ -19031,11 +19059,11 @@ var $terezka$elm_charts$Internal$Svg$container = F5(
 				A2(
 				$elm$html$Html$Attributes$style,
 				'width',
-				$elm$core$String$fromFloat(plane.d2.W) + 'px'),
+				$elm$core$String$fromFloat(plane.d2.V) + 'px'),
 				A2(
 				$elm$html$Html$Attributes$style,
 				'height',
-				$elm$core$String$fromFloat(plane.d3.W) + 'px')
+				$elm$core$String$fromFloat(plane.d3.V) + 'px')
 			]);
 		var htmlAttrsDef = _List_fromArray(
 			[
@@ -19125,12 +19153,12 @@ var $terezka$elm_charts$Chart$Attributes$orLower = F3(
 	});
 var $terezka$elm_charts$Chart$definePlane = F2(
 	function (config, elements) {
-		var width = A2($elm$core$Basics$max, 1, (config.cA - config._.df) - config._.dG);
+		var width = A2($elm$core$Basics$max, 1, (config.cA - config.Z.df) - config.Z.dG);
 		var toLimit = F5(
 			function (length, marginMin, marginMax, min, max) {
-				return {eN: max, eO: min, W: length, fu: marginMax, fv: marginMin, bw: max, di: min};
+				return {eN: max, eO: min, V: length, fu: marginMax, fv: marginMin, bw: max, di: min};
 			});
-		var height = A2($elm$core$Basics$max, 1, (config.c2 - config._.cM) - config._.dR);
+		var height = A2($elm$core$Basics$max, 1, (config.c2 - config.Z.cM) - config.Z.dR);
 		var fixSingles = function (bs) {
 			return _Utils_eq(bs.di, bs.bw) ? _Utils_update(
 				bs,
@@ -19224,23 +19252,23 @@ var $terezka$elm_charts$Chart$definePlane = F2(
 		}();
 		var unpadded = {d2: calcRange, d3: calcDomain};
 		var scalePadX = $terezka$elm_charts$Internal$Coordinates$scaleCartesianX(unpadded);
-		var xMax = calcRange.bw + scalePadX(config._.dG);
-		var xMin = calcRange.di - scalePadX(config._.df);
+		var xMax = calcRange.bw + scalePadX(config.Z.dG);
+		var xMin = calcRange.di - scalePadX(config.Z.df);
 		var scalePadY = $terezka$elm_charts$Internal$Coordinates$scaleCartesianY(unpadded);
-		var yMax = calcDomain.bw + scalePadY(config._.dR);
-		var yMin = calcDomain.di - scalePadY(config._.cM);
+		var yMax = calcDomain.bw + scalePadY(config.Z.dR);
+		var yMin = calcDomain.di - scalePadY(config.Z.cM);
 		return {
 			d2: _Utils_update(
 				calcRange,
 				{
-					W: config.cA,
+					V: config.cA,
 					bw: A2($elm$core$Basics$max, xMin, xMax),
 					di: A2($elm$core$Basics$min, xMin, xMax)
 				}),
 			d3: _Utils_update(
 				calcDomain,
 				{
-					W: config.c2,
+					V: config.c2,
 					bw: A2($elm$core$Basics$max, yMin, yMax),
 					di: A2($elm$core$Basics$min, yMin, yMax)
 				})
@@ -19421,7 +19449,7 @@ var $terezka$elm_charts$Chart$Attributes$dashed = F2(
 			config,
 			{bn: value});
 	});
-var $terezka$elm_charts$Internal$Svg$defaultDot = {y: '', E: 0, eF: $terezka$elm_charts$Internal$Helpers$pink, l: false, e9: 0, fa: '', fb: 5, Y: 1, aQ: $elm$core$Maybe$Nothing, f0: 6};
+var $terezka$elm_charts$Internal$Svg$defaultDot = {y: '', E: 0, eF: $terezka$elm_charts$Internal$Helpers$pink, l: false, e9: 0, fa: '', fb: 5, X: 1, aQ: $elm$core$Maybe$Nothing, f0: 6};
 var $terezka$elm_charts$Internal$Svg$isWithinPlane = F3(
 	function (plane, x, y) {
 		return _Utils_eq(
@@ -19493,7 +19521,7 @@ var $terezka$elm_charts$Internal$Svg$dot = F5(
 				$elm$svg$Svg$Attributes$strokeWidth(
 				$elm$core$String$fromFloat(config.E)),
 				$elm$svg$Svg$Attributes$fillOpacity(
-				$elm$core$String$fromFloat(config.Y)),
+				$elm$core$String$fromFloat(config.X)),
 				$elm$svg$Svg$Attributes$fill(config.eF),
 				$elm$svg$Svg$Attributes$class('elm-charts__dot'),
 				config.l ? $terezka$elm_charts$Internal$Svg$withinChartArea(plane) : $elm$svg$Svg$Attributes$class('')
@@ -19665,7 +19693,7 @@ var $terezka$elm_charts$Chart$Svg$dot = F4(
 			A2($terezka$elm_charts$Internal$Helpers$apply, edits, $terezka$elm_charts$Internal$Svg$defaultDot));
 	});
 var $terezka$elm_charts$Internal$Helpers$gray = '#EFF2FA';
-var $terezka$elm_charts$Internal$Svg$defaultLine = {D: _List_Nil, ez: false, eF: 'rgb(210, 210, 210)', bn: _List_Nil, e: false, l: false, Y: 1, gq: -90, gr: 0, cA: 1, aW: $elm$core$Maybe$Nothing, ba: $elm$core$Maybe$Nothing, gM: $elm$core$Maybe$Nothing, g: 0, gN: $elm$core$Maybe$Nothing, cF: $elm$core$Maybe$Nothing, gO: $elm$core$Maybe$Nothing, h: 0};
+var $terezka$elm_charts$Internal$Svg$defaultLine = {D: _List_Nil, ez: false, eF: 'rgb(210, 210, 210)', bn: _List_Nil, e: false, l: false, X: 1, gq: -90, gr: 0, cA: 1, aW: $elm$core$Maybe$Nothing, ba: $elm$core$Maybe$Nothing, gM: $elm$core$Maybe$Nothing, g: 0, gN: $elm$core$Maybe$Nothing, cF: $elm$core$Maybe$Nothing, gO: $elm$core$Maybe$Nothing, h: 0};
 var $elm$core$Basics$cos = _Basics_cos;
 var $terezka$elm_charts$Internal$Svg$lengthInCartesianX = $terezka$elm_charts$Internal$Coordinates$scaleCartesianX;
 var $terezka$elm_charts$Internal$Svg$lengthInCartesianY = $terezka$elm_charts$Internal$Coordinates$scaleCartesianY;
@@ -20167,7 +20195,7 @@ var $terezka$elm_charts$Internal$Svg$line = F2(
 					$elm$svg$Svg$Attributes$strokeWidth(
 					$elm$core$String$fromFloat(config.cA)),
 					$elm$svg$Svg$Attributes$strokeOpacity(
-					$elm$core$String$fromFloat(config.Y)),
+					$elm$core$String$fromFloat(config.X)),
 					$elm$svg$Svg$Attributes$strokeDasharray(
 					A2(
 						$elm$core$String$join,
@@ -20534,7 +20562,7 @@ var $terezka$elm_charts$Chart$chart = F2(
 				c2: 300,
 				bt: _List_Nil,
 				ax: {cM: 0, df: 0, dG: 0, dR: 0},
-				_: {cM: 0, df: 0, dG: 0, dR: 0},
+				Z: {cM: 0, df: 0, dG: 0, dR: 0},
 				ch: _List_Nil,
 				bA: true,
 				cA: 300
@@ -21091,7 +21119,7 @@ var $terezka$elm_charts$Chart$HtmlElement = function (a) {
 };
 var $terezka$elm_charts$Internal$Coordinates$Axis = F7(
 	function (length, marginMin, marginMax, dataMin, dataMax, min, max) {
-		return {eN: dataMax, eO: dataMin, W: length, fu: marginMax, fv: marginMin, bw: max, di: min};
+		return {eN: dataMax, eO: dataMin, V: length, fu: marginMax, fv: marginMin, bw: max, di: min};
 	});
 var $terezka$elm_charts$Internal$Svg$defaultContainer = {
 	D: _List_fromArray(
@@ -21177,8 +21205,8 @@ var $terezka$elm_charts$Internal$Svg$defaultLegends = {cK: 0, i: $elm$core$Maybe
 var $elm$html$Html$node = $elm$virtual_dom$VirtualDom$node;
 var $terezka$elm_charts$Internal$Svg$positionHtml = F7(
 	function (plane, x, y, xOff, yOff, attrs, content) {
-		var yPercentage = ((A2($terezka$elm_charts$Internal$Coordinates$toSVGY, plane, y) - yOff) * 100) / plane.d3.W;
-		var xPercentage = ((A2($terezka$elm_charts$Internal$Coordinates$toSVGX, plane, x) + xOff) * 100) / plane.d2.W;
+		var yPercentage = ((A2($terezka$elm_charts$Internal$Coordinates$toSVGY, plane, y) - yOff) * 100) / plane.d3.V;
+		var xPercentage = ((A2($terezka$elm_charts$Internal$Coordinates$toSVGX, plane, x) + xOff) * 100) / plane.d2.V;
 		var posititonStyles = _List_fromArray(
 			[
 				A2(
@@ -21297,7 +21325,7 @@ var $terezka$elm_charts$Chart$Svg$legendsAt = F4(
 			y,
 			A2($terezka$elm_charts$Internal$Helpers$apply, edits, $terezka$elm_charts$Internal$Svg$defaultLegends));
 	});
-var $terezka$elm_charts$Internal$Svg$defaultInterpolation = {D: _List_Nil, eF: $terezka$elm_charts$Internal$Helpers$pink, bn: _List_Nil, bR: $elm$core$Maybe$Nothing, fw: $elm$core$Maybe$Nothing, Y: 0, cA: 1};
+var $terezka$elm_charts$Internal$Svg$defaultInterpolation = {D: _List_Nil, eF: $terezka$elm_charts$Internal$Helpers$pink, bn: _List_Nil, bR: $elm$core$Maybe$Nothing, fw: $elm$core$Maybe$Nothing, X: 0, cA: 1};
 var $terezka$elm_charts$Internal$Svg$defaultLineLegend = {eF: '#808BAB', k: $elm$core$Maybe$Nothing, c2: 16, bt: _List_Nil, f3: 10, gu: '', cA: 30, g: 0, h: 0};
 var $terezka$elm_charts$Internal$Svg$Point = F2(
 	function (x, y) {
@@ -21655,7 +21683,7 @@ var $terezka$elm_charts$Internal$Svg$area = F6(
 						$elm$svg$Svg$Attributes$class('elm-charts__area-section'),
 						$elm$svg$Svg$Attributes$fill(fill),
 						$elm$svg$Svg$Attributes$fillOpacity(
-						$elm$core$String$fromFloat(config.Y)),
+						$elm$core$String$fromFloat(config.X)),
 						$elm$svg$Svg$Attributes$strokeWidth('0'),
 						$elm$svg$Svg$Attributes$fillRule('evenodd'),
 						$elm$svg$Svg$Attributes$d(
@@ -21711,7 +21739,7 @@ var $terezka$elm_charts$Internal$Svg$area = F6(
 								A2($terezka$elm_charts$Internal$Commands$Line, end.d2, 0)
 							]))));
 		};
-		if (config.Y <= 0) {
+		if (config.X <= 0) {
 			return $elm$svg$Svg$text('');
 		} else {
 			var _v2 = config.fw;
@@ -21846,7 +21874,7 @@ var $terezka$elm_charts$Internal$Svg$lineLegend = F3(
 			d2: A7($terezka$elm_charts$Internal$Coordinates$Axis, config.cA, 0, 0, 0, 10, 0, 10),
 			d3: A7($terezka$elm_charts$Internal$Coordinates$Axis, config.c2, 0, 0, 0, 10, 0, 10)
 		};
-		var bottomMargin = (!interConfig.Y) ? topMargin : 0;
+		var bottomMargin = (!interConfig.X) ? topMargin : 0;
 		return A2(
 			$elm$html$Html$div,
 			_Utils_ap(
@@ -21946,7 +21974,7 @@ var $terezka$elm_charts$Chart$Attributes$opacity = F2(
 	function (v, config) {
 		return _Utils_update(
 			config,
-			{Y: v});
+			{X: v});
 	});
 var $terezka$elm_charts$Chart$Svg$lineLegend = F3(
 	function (edits, interAttrsOrg, dotAttrsOrg) {
@@ -22169,20 +22197,20 @@ var $terezka$elm_charts$Internal$Svg$tooltipPointerStyle = F4(
 		var config = function () {
 			switch (direction) {
 				case 0:
-					return {ar: 'right', T: 'top', ag: 'left'};
+					return {ar: 'right', T: 'top', af: 'left'};
 				case 3:
-					return {ar: 'right', T: 'bottom', ag: 'left'};
+					return {ar: 'right', T: 'bottom', af: 'left'};
 				case 1:
-					return {ar: 'bottom', T: 'left', ag: 'top'};
+					return {ar: 'bottom', T: 'left', af: 'top'};
 				case 2:
-					return {ar: 'bottom', T: 'right', ag: 'top'};
+					return {ar: 'bottom', T: 'right', af: 'top'};
 				case 4:
-					return {ar: 'bottom', T: 'left', ag: 'top'};
+					return {ar: 'bottom', T: 'left', af: 'top'};
 				default:
-					return {ar: 'right', T: 'top', ag: 'left'};
+					return {ar: 'right', T: 'top', af: 'left'};
 			}
 		}();
-		return '\n  .' + (className + (':before, .' + (className + (':after {\n    content: "";\n    position: absolute;\n    border-' + (config.ag + (': 5px solid transparent;\n    border-' + (config.ar + (': 5px solid transparent;\n    ' + (config.T + (': 100%;\n    ' + (config.ag + (': 50%;\n    margin-' + (config.ag + (': -5px;\n  }\n\n  .' + (className + (':after {\n    border-' + (config.T + (': 5px solid ' + (background + (';\n    margin-' + (config.T + (': -1px;\n    z-index: 1;\n    height: 0px;\n  }\n\n  .' + (className + (':before {\n    border-' + (config.T + (': 5px solid ' + (borderColor + ';\n    height: 0px;\n  }\n  ')))))))))))))))))))))))))));
+		return '\n  .' + (className + (':before, .' + (className + (':after {\n    content: "";\n    position: absolute;\n    border-' + (config.af + (': 5px solid transparent;\n    border-' + (config.ar + (': 5px solid transparent;\n    ' + (config.T + (': 100%;\n    ' + (config.af + (': 50%;\n    margin-' + (config.af + (': -5px;\n  }\n\n  .' + (className + (':after {\n    border-' + (config.T + (': 5px solid ' + (background + (';\n    margin-' + (config.T + (': -1px;\n    z-index: 1;\n    height: 0px;\n  }\n\n  .' + (className + (':before {\n    border-' + (config.T + (': 5px solid ' + (borderColor + ';\n    height: 0px;\n  }\n  ')))))))))))))))))))))))))));
 	});
 var $terezka$elm_charts$Internal$Coordinates$top = function (pos) {
 	return {d2: pos.aW + ((pos.ba - pos.aW) / 2), d3: pos.cF};
@@ -22190,9 +22218,9 @@ var $terezka$elm_charts$Internal$Coordinates$top = function (pos) {
 var $terezka$elm_charts$Internal$Svg$tooltip = F5(
 	function (plane, pos, config, htmlAttrs, content) {
 		var distanceTop = A2($terezka$elm_charts$Internal$Coordinates$toSVGY, plane, pos.cF);
-		var distanceRight = plane.d2.W - A2($terezka$elm_charts$Internal$Coordinates$toSVGX, plane, pos.aW);
+		var distanceRight = plane.d2.V - A2($terezka$elm_charts$Internal$Coordinates$toSVGX, plane, pos.aW);
 		var distanceLeft = A2($terezka$elm_charts$Internal$Coordinates$toSVGX, plane, pos.ba);
-		var distanceBottom = plane.d3.W - A2($terezka$elm_charts$Internal$Coordinates$toSVGY, plane, pos.gN);
+		var distanceBottom = plane.d3.V - A2($terezka$elm_charts$Internal$Coordinates$toSVGY, plane, pos.gN);
 		var direction = function () {
 			var _v5 = config.eV;
 			if (!_v5.$) {
@@ -22350,7 +22378,7 @@ var $terezka$elm_charts$Chart$AxisElement = F2(
 var $elm$svg$Svg$polygon = $elm$svg$Svg$trustedNode('polygon');
 var $terezka$elm_charts$Internal$Svg$arrow = F3(
 	function (plane, config, point) {
-		var points_ = '0,0 ' + ($elm$core$String$fromFloat(config.W) + (',' + ($elm$core$String$fromFloat(config.cA) + (' 0, ' + $elm$core$String$fromFloat(config.cA * 2)))));
+		var points_ = '0,0 ' + ($elm$core$String$fromFloat(config.V) + (',' + ($elm$core$String$fromFloat(config.cA) + (' 0, ' + $elm$core$String$fromFloat(config.cA * 2)))));
 		var commands = 'rotate(' + ($elm$core$String$fromFloat(config.o) + (') translate(0 ' + ($elm$core$String$fromFloat(-config.cA) + ') ')));
 		return A2(
 			$elm$svg$Svg$g,
@@ -22374,7 +22402,7 @@ var $terezka$elm_charts$Internal$Svg$arrow = F3(
 					_List_Nil)
 				]));
 	});
-var $terezka$elm_charts$Internal$Svg$defaultArrow = {D: _List_Nil, eF: 'rgb(210, 210, 210)', W: 7, o: 0, cA: 4, g: 0, h: 0};
+var $terezka$elm_charts$Internal$Svg$defaultArrow = {D: _List_Nil, eF: 'rgb(210, 210, 210)', V: 7, o: 0, cA: 4, g: 0, h: 0};
 var $terezka$elm_charts$Chart$Svg$arrow = F2(
 	function (plane, edits) {
 		return A2(
@@ -24659,9 +24687,9 @@ var $terezka$elm_charts$Chart$Attributes$length = F2(
 	function (v, config) {
 		return _Utils_update(
 			config,
-			{W: v});
+			{V: v});
 	});
-var $terezka$elm_charts$Internal$Svg$defaultTick = {D: _List_Nil, eF: 'rgb(210, 210, 210)', W: 5, cA: 1};
+var $terezka$elm_charts$Internal$Svg$defaultTick = {D: _List_Nil, eF: 'rgb(210, 210, 210)', V: 5, cA: 1};
 var $terezka$elm_charts$Internal$Svg$tick = F4(
 	function (plane, config, isX, point) {
 		return A4(
@@ -24679,13 +24707,13 @@ var $terezka$elm_charts$Internal$Svg$tick = F4(
 						A2($terezka$elm_charts$Internal$Coordinates$toSVGX, plane, point.d2))),
 					$elm$svg$Svg$Attributes$x2(
 					$elm$core$String$fromFloat(
-						A2($terezka$elm_charts$Internal$Coordinates$toSVGX, plane, point.d2) + (isX ? 0 : (-config.W)))),
+						A2($terezka$elm_charts$Internal$Coordinates$toSVGX, plane, point.d2) + (isX ? 0 : (-config.V)))),
 					$elm$svg$Svg$Attributes$y1(
 					$elm$core$String$fromFloat(
 						A2($terezka$elm_charts$Internal$Coordinates$toSVGY, plane, point.d3))),
 					$elm$svg$Svg$Attributes$y2(
 					$elm$core$String$fromFloat(
-						A2($terezka$elm_charts$Internal$Coordinates$toSVGY, plane, point.d3) + (isX ? config.W : 0)))
+						A2($terezka$elm_charts$Internal$Coordinates$toSVGY, plane, point.d3) + (isX ? config.V : 0)))
 				]),
 			_List_Nil);
 	});
@@ -24704,7 +24732,7 @@ var $terezka$elm_charts$Chart$xTicks = function (edits) {
 	var config = A2(
 		$terezka$elm_charts$Internal$Helpers$apply,
 		edits,
-		{R: 5, eF: '', e: false, V: $terezka$elm_charts$Internal$Svg$Floats, e6: true, c2: 5, x: _List_Nil, n: $terezka$elm_charts$Chart$Attributes$zero, cA: 1});
+		{R: 5, eF: '', e: false, U: $terezka$elm_charts$Internal$Svg$Floats, e6: true, c2: 5, x: _List_Nil, n: $terezka$elm_charts$Chart$Attributes$zero, cA: 1});
 	var toTicks = function (p) {
 		return A2(
 			$elm$core$List$map,
@@ -24714,7 +24742,7 @@ var $terezka$elm_charts$Chart$xTicks = function (edits) {
 			A4(
 				$terezka$elm_charts$Chart$generateValues,
 				config.R,
-				config.V,
+				config.U,
 				$elm$core$Maybe$Nothing,
 				A3(
 					$elm$core$List$foldl,
@@ -24857,7 +24885,7 @@ var $terezka$elm_charts$Chart$yLabels = function (edits) {
 			return A4(
 				$terezka$elm_charts$Chart$generateValues,
 				config.R,
-				config.V,
+				config.U,
 				config.L,
 				A3(
 					$elm$core$List$foldl,
@@ -24887,7 +24915,7 @@ var $terezka$elm_charts$Chart$yLabels = function (edits) {
 		return A2(
 			$terezka$elm_charts$Internal$Helpers$apply,
 			edits,
-			{R: 5, i: $elm$core$Maybe$Nothing, D: _List_Nil, eF: '#808BAB', j: $elm$core$Maybe$Nothing, e: false, k: $elm$core$Maybe$Nothing, L: $elm$core$Maybe$Nothing, V: $terezka$elm_charts$Internal$Svg$Floats, e6: false, l: false, x: _List_Nil, n: $terezka$elm_charts$Chart$Attributes$zero, o: 0, q: false, g: -10, h: 3});
+			{R: 5, i: $elm$core$Maybe$Nothing, D: _List_Nil, eF: '#808BAB', j: $elm$core$Maybe$Nothing, e: false, k: $elm$core$Maybe$Nothing, L: $elm$core$Maybe$Nothing, U: $terezka$elm_charts$Internal$Svg$Floats, e6: false, l: false, x: _List_Nil, n: $terezka$elm_charts$Chart$Attributes$zero, o: 0, q: false, g: -10, h: 3});
 	};
 	return A3(
 		$terezka$elm_charts$Chart$LabelsElement,
@@ -24959,7 +24987,7 @@ var $terezka$elm_charts$Chart$yTicks = function (edits) {
 	var config = A2(
 		$terezka$elm_charts$Internal$Helpers$apply,
 		edits,
-		{R: 5, eF: '', e: false, V: $terezka$elm_charts$Internal$Svg$Floats, e6: true, c2: 5, x: _List_Nil, n: $terezka$elm_charts$Chart$Attributes$zero, cA: 1});
+		{R: 5, eF: '', e: false, U: $terezka$elm_charts$Internal$Svg$Floats, e6: true, c2: 5, x: _List_Nil, n: $terezka$elm_charts$Chart$Attributes$zero, cA: 1});
 	var toTicks = function (p) {
 		return A2(
 			$elm$core$List$map,
@@ -24969,7 +24997,7 @@ var $terezka$elm_charts$Chart$yTicks = function (edits) {
 			A4(
 				$terezka$elm_charts$Chart$generateValues,
 				config.R,
-				config.V,
+				config.U,
 				$elm$core$Maybe$Nothing,
 				A3(
 					$elm$core$List$foldl,
@@ -25089,7 +25117,7 @@ var $author$project$Main$viewChart = F3(
 					$terezka$elm_charts$Chart$yLabels(_List_Nil),
 					$terezka$elm_charts$Chart$xAxis(_List_Nil),
 					$terezka$elm_charts$Chart$yAxis(_List_Nil),
-					A3($terezka$elm_charts$Chart$bars, _List_Nil, bars, interestListTable.aa),
+					A3($terezka$elm_charts$Chart$bars, _List_Nil, bars, interestListTable._),
 					A2(
 					$terezka$elm_charts$Chart$binLabels,
 					getLabel,
@@ -25239,7 +25267,7 @@ var $mdgriffith$elm_ui$Element$tableHelper = F2(
 						cursor,
 						{
 							ak: cursor.ak + 1,
-							ah: A2(
+							ag: A2(
 								$elm$core$List$cons,
 								A3(
 									onGrid,
@@ -25249,20 +25277,20 @@ var $mdgriffith$elm_ui$Element$tableHelper = F2(
 										col.bH,
 										_Utils_eq(maybeHeaders, $elm$core$Maybe$Nothing) ? (cursor.dH - 1) : (cursor.dH - 2),
 										cell)),
-								cursor.ah)
+								cursor.ag)
 						});
 				} else {
 					var col = columnConfig.a;
 					return {
 						ak: cursor.ak + 1,
-						ah: A2(
+						ag: A2(
 							$elm$core$List$cons,
 							A3(
 								onGrid,
 								cursor.dH,
 								cursor.ak,
 								col.bH(cell)),
-							cursor.ah),
+							cursor.ag),
 						dH: cursor.dH
 					};
 				}
@@ -25274,14 +25302,14 @@ var $mdgriffith$elm_ui$Element$tableHelper = F2(
 					add(rowData),
 					cursor,
 					columns);
-				return {ak: 1, ah: newCursor.ah, dH: cursor.dH + 1};
+				return {ak: 1, ag: newCursor.ag, dH: cursor.dH + 1};
 			});
 		var children = A3(
 			$elm$core$List$foldl,
 			build(config.eG),
 			{
 				ak: 1,
-				ah: _List_Nil,
+				ag: _List_Nil,
 				dH: _Utils_eq(maybeHeaders, $elm$core$Maybe$Nothing) ? 1 : 2
 			},
 			config.eM);
@@ -25316,12 +25344,12 @@ var $mdgriffith$elm_ui$Element$tableHelper = F2(
 			$mdgriffith$elm_ui$Internal$Model$Unkeyed(
 				function () {
 					if (maybeHeaders.$ === 1) {
-						return children.ah;
+						return children.ag;
 					} else {
 						var renderedHeaders = maybeHeaders.a;
 						return _Utils_ap(
 							renderedHeaders,
-							$elm$core$List$reverse(children.ah));
+							$elm$core$List$reverse(children.ag));
 					}
 				}()));
 	});
@@ -25394,14 +25422,14 @@ var $author$project$Main$viewInterestListTableAsTable = F3(
 										var f = _v0.a.a;
 										return A2(
 											$mdgriffith$elm_ui$Element$el,
-											A2($elm$core$List$cons, $mdgriffith$elm_ui$Element$Font$alignRight, $author$project$Styling$fonts.U),
+											A2($elm$core$List$cons, $mdgriffith$elm_ui$Element$Font$alignRight, $author$project$Styling$fonts.ah),
 											$mdgriffith$elm_ui$Element$text(
 												$author$project$Styling$formatGermanNumber(f)));
 									case 2:
 										var s = _v0.a.a;
 										return A2(
 											$mdgriffith$elm_ui$Element$el,
-											A2($elm$core$List$cons, $mdgriffith$elm_ui$Element$Font$alignRight, $author$project$Styling$fonts.U),
+											A2($elm$core$List$cons, $mdgriffith$elm_ui$Element$Font$alignRight, $author$project$Styling$fonts.ah),
 											$mdgriffith$elm_ui$Element$text(s));
 									default:
 										var _v1 = _v0.a;
@@ -25410,7 +25438,7 @@ var $author$project$Main$viewInterestListTableAsTable = F3(
 											A2(
 												$elm$core$List$cons,
 												$mdgriffith$elm_ui$Element$Font$alignRight,
-												A2($elm$core$List$cons, $mdgriffith$elm_ui$Element$Font$bold, $author$project$Styling$fonts.U)),
+												A2($elm$core$List$cons, $mdgriffith$elm_ui$Element$Font$bold, $author$project$Styling$fonts.ah)),
 											$mdgriffith$elm_ui$Element$text('bold'));
 								}
 							} else {
@@ -25440,7 +25468,7 @@ var $author$project$Main$viewInterestListTableAsTable = F3(
 						dataColumns,
 						_List_fromArray(
 							[deleteColumn]))),
-				eM: interestListTable.aa
+				eM: interestListTable._
 			});
 	});
 var $author$project$Main$viewInterestList = F6(
@@ -25722,72 +25750,90 @@ var $author$project$Main$viewTree = F3(
 				},
 				$elm$core$Dict$toList(tree)));
 	});
+var $author$project$Main$nullValueElement = A2(
+	$mdgriffith$elm_ui$Element$el,
+	A2(
+		$elm$core$List$cons,
+		$mdgriffith$elm_ui$Element$Font$alignRight,
+		A2($elm$core$List$cons, $mdgriffith$elm_ui$Element$Font$bold, $author$project$Styling$fonts.ah)),
+	$mdgriffith$elm_ui$Element$text('null'));
+var $author$project$Main$viewFloatValue = function (f) {
+	return A2(
+		$mdgriffith$elm_ui$Element$el,
+		A2($elm$core$List$cons, $mdgriffith$elm_ui$Element$Font$alignRight, $author$project$Styling$fonts.ah),
+		$mdgriffith$elm_ui$Element$text(
+			$author$project$Styling$formatGermanNumber(f)));
+};
+var $author$project$Main$viewStringValue = function (s) {
+	return A2(
+		$mdgriffith$elm_ui$Element$el,
+		A2($elm$core$List$cons, $mdgriffith$elm_ui$Element$Font$alignRight, $author$project$Styling$fonts.ah),
+		$mdgriffith$elm_ui$Element$text(s));
+};
+var $author$project$Main$viewValue = function (v) {
+	switch (v.$) {
+		case 1:
+			return $author$project$Main$nullValueElement;
+		case 2:
+			var s = v.a;
+			return $author$project$Main$viewStringValue(s);
+		default:
+			var f = v.a;
+			return $author$project$Main$viewFloatValue(f);
+	}
+};
 var $author$project$Main$viewDiffTree = F3(
 	function (id, collapseStatus, tree) {
+		var missingElement = A2(
+			$mdgriffith$elm_ui$Element$el,
+			A2($elm$core$List$cons, $mdgriffith$elm_ui$Element$Font$alignRight, $author$project$Styling$fonts.ah),
+			$mdgriffith$elm_ui$Element$text('∅'));
 		var viewLeaf = F3(
 			function (pathToParent, name, leaf) {
 				switch (leaf.$) {
 					case 0:
+						var v = leaf.a;
 						return _List_fromArray(
 							[
-								$mdgriffith$elm_ui$Element$text('TODO left')
+								A2(
+								$mdgriffith$elm_ui$Element$el,
+								_List_fromArray(
+									[
+										$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
+									]),
+								$mdgriffith$elm_ui$Element$text(name)),
+								$author$project$Main$viewValue(v),
+								missingElement
 							]);
-					case 1:
+					case 2:
+						var a = leaf.a;
+						var b = leaf.b;
 						return _List_fromArray(
 							[
-								$mdgriffith$elm_ui$Element$text('TODO right')
+								A2(
+								$mdgriffith$elm_ui$Element$el,
+								_List_fromArray(
+									[
+										$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
+									]),
+								$mdgriffith$elm_ui$Element$text(name)),
+								$author$project$Main$viewValue(a),
+								$author$project$Main$viewValue(b)
 							]);
 					default:
-						if (leaf.a.$ === 1) {
-							if (leaf.b.$ === 1) {
-								if ((!leaf.a.a.$) && (!leaf.b.a.$)) {
-									var f1 = leaf.a.a.a;
-									var f2 = leaf.b.a.a;
-									return _List_fromArray(
-										[
-											A2(
-											$mdgriffith$elm_ui$Element$el,
-											_List_fromArray(
-												[
-													$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
-												]),
-											$mdgriffith$elm_ui$Element$text(name)),
-											A2(
-											$mdgriffith$elm_ui$Element$el,
-											A2($elm$core$List$cons, $mdgriffith$elm_ui$Element$Font$alignRight, $author$project$Styling$fonts.U),
-											$mdgriffith$elm_ui$Element$text(
-												$author$project$Styling$formatGermanNumber(f1))),
-											A2(
-											$mdgriffith$elm_ui$Element$el,
-											A2($elm$core$List$cons, $mdgriffith$elm_ui$Element$Font$alignRight, $author$project$Styling$fonts.U),
-											$mdgriffith$elm_ui$Element$text(
-												$author$project$Styling$formatGermanNumber(f2)))
-										]);
-								} else {
-									return _List_fromArray(
-										[
-											$mdgriffith$elm_ui$Element$text('TODO unequal non floats')
-										]);
-								}
-							} else {
-								return _List_fromArray(
+						var v = leaf.a;
+						return _List_fromArray(
+							[
+								A2(
+								$mdgriffith$elm_ui$Element$el,
+								_List_fromArray(
 									[
-										$mdgriffith$elm_ui$Element$text('TODO unequal leaf vs tree')
-									]);
-							}
-						} else {
-							if (!leaf.b.$) {
-								return _List_fromArray(
-									[
-										$mdgriffith$elm_ui$Element$text('TODO unequal tree')
-									]);
-							} else {
-								return _List_fromArray(
-									[
-										$mdgriffith$elm_ui$Element$text('TODO unequal tree vs leaf')
-									]);
-							}
-						}
+										$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
+									]),
+								$mdgriffith$elm_ui$Element$text(name)),
+								missingElement,
+								$author$project$Main$viewValue(v)
+							]);
 				}
 			});
 		return A3(
@@ -25990,7 +26036,7 @@ var $author$project$Main$AddToInterestListClicked = function (a) {
 var $author$project$InterestList$member = F2(
 	function (p, _v0) {
 		var i = _v0;
-		return A2($elm$core$Set$member, p, i.aa);
+		return A2($elm$core$Set$member, p, i._);
 	});
 var $author$project$Main$OverrideEditFinished = {$: 7};
 var $author$project$Main$OverrideEdited = F3(
@@ -26057,7 +26103,7 @@ var $author$project$Main$viewEntryAndOverride = F5(
 												[
 													$mdgriffith$elm_ui$Element$Font$color($author$project$Styling$germanZeroYellow)
 												])),
-										$author$project$Styling$fonts.U))),
+										$author$project$Styling$fonts.ah))),
 							{
 								aM: $mdgriffith$elm_ui$Element$text(newFormattedF),
 								a$: $elm$core$Maybe$Just(
@@ -26121,7 +26167,7 @@ var $author$project$Main$viewEntryAndOverride = F5(
 				A2(
 					$elm$core$List$cons,
 					$mdgriffith$elm_ui$Element$Font$alignRight,
-					_Utils_ap($author$project$Styling$fonts.U, originalStyle)),
+					_Utils_ap($author$project$Styling$fonts.ah, originalStyle)),
 				{
 					aM: $mdgriffith$elm_ui$Element$text(formattedF),
 					a$: $elm$core$Maybe$Just(action)
@@ -26151,13 +26197,7 @@ var $author$project$Main$viewValueTree = F8(
 										$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
 									]),
 								$mdgriffith$elm_ui$Element$text(name)),
-								A2(
-								$mdgriffith$elm_ui$Element$el,
-								A2(
-									$elm$core$List$cons,
-									$mdgriffith$elm_ui$Element$Font$alignRight,
-									A2($elm$core$List$cons, $mdgriffith$elm_ui$Element$Font$bold, $author$project$Styling$fonts.U)),
-								$mdgriffith$elm_ui$Element$text('null'))
+								$author$project$Main$nullValueElement
 							]);
 					case 2:
 						var s = value.a;
@@ -26178,10 +26218,7 @@ var $author$project$Main$viewValueTree = F8(
 										$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
 									]),
 								$mdgriffith$elm_ui$Element$text(name)),
-								A2(
-								$mdgriffith$elm_ui$Element$el,
-								A2($elm$core$List$cons, $mdgriffith$elm_ui$Element$Font$alignRight, $author$project$Styling$fonts.U),
-								$mdgriffith$elm_ui$Element$text(s))
+								$author$project$Main$viewStringValue(s)
 							]);
 					default:
 						var f = value.a;
@@ -26201,11 +26238,7 @@ var $author$project$Main$viewValueTree = F8(
 							$author$project$Styling$size16($feathericons$elm_feather$FeatherIcons$plus),
 							$author$project$Main$AddToInterestListClicked(thisPath));
 						var _v1 = isEntry ? A5($author$project$Main$viewEntryAndOverride, runId, name, overrides, activeOverrideEditor, f) : _Utils_Tuple2(
-							A2(
-								$mdgriffith$elm_ui$Element$el,
-								A2($elm$core$List$cons, $mdgriffith$elm_ui$Element$Font$alignRight, $author$project$Styling$fonts.U),
-								$mdgriffith$elm_ui$Element$text(
-									$author$project$Styling$formatGermanNumber(f))),
+							$author$project$Main$viewFloatValue(f),
 							$mdgriffith$elm_ui$Element$none);
 						var originalValue = _v1.a;
 						var maybeOverride = _v1.b;
@@ -26462,8 +26495,8 @@ var $author$project$Main$viewRunsAndComparisons = function (model) {
 									$yotamDvir$elm_pivot$Pivot$lengthL(model.v),
 									$yotamDvir$elm_pivot$Pivot$getC(model.v),
 									model.aK,
+									model.ad,
 									model.ae,
-									model.af,
 									model.aC,
 									ir);
 							},
@@ -26616,7 +26649,7 @@ var $author$project$Main$viewModel = function (model) {
 };
 var $author$project$Main$view = function (model) {
 	var dialog = function () {
-		var _v0 = model.ac;
+		var _v0 = model.ab;
 		if (_v0.$ === 1) {
 			return $mdgriffith$elm_ui$Element$none;
 		} else {
