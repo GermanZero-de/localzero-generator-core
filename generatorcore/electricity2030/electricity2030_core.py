@@ -2,6 +2,30 @@ from dataclasses import dataclass, field
 
 from ..inputs import Inputs
 
+
+@dataclass
+class FossilFuelsProduction:
+    """This describes energy produced by fossil fuels. Which we do not do in 2030, so this
+    just describes the effect of shutting those energy providers down."""
+
+    energy: float = None  # type: ignore
+    cost_fuel_per_MWh: float = None  # type: ignore
+    cost_fuel: float = None  # type: ignore
+    CO2e_combustion_based_per_MWh: float = None  # type: ignore
+    CO2e_combustion_based: float = None  # type: ignore
+    cost_climate_saved: float = None  # type: ignore
+    cost_mro: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    CO2e_total_2021_estimated: float = None  # type: ignore
+    change_energy_MWh: float = None  # type: ignore
+    change_energy_pct: float = None  # type: ignore
+    change_CO2e_t: float = None  # type: ignore
+    change_CO2e_pct: float = None  # type: ignore
+    change_cost_energy: float = None  # type: ignore
+    change_cost_mro: float = None  # type: ignore
+    cost_mro_per_MWh: float = None  # type: ignore
+
+
 # Definition der relevanten Spaltennamen für den Sektor E
 @dataclass
 class EColVars2030:
@@ -81,13 +105,19 @@ class E30:
     p_fossil_and_renew: EColVars2030 = field(default_factory=EColVars2030)
     p_fossil: EColVars2030 = field(default_factory=EColVars2030)
     p_fossil_nuclear: EColVars2030 = field(default_factory=EColVars2030)
-    p_fossil_coal_brown: EColVars2030 = field(default_factory=EColVars2030)
+    p_fossil_coal_brown: FossilFuelsProduction = field(
+        default_factory=FossilFuelsProduction
+    )
     p_fossil_coal_brown_cogen: EColVars2030 = field(default_factory=EColVars2030)
-    p_fossil_coal_black: EColVars2030 = field(default_factory=EColVars2030)
+    p_fossil_coal_black: FossilFuelsProduction = field(
+        default_factory=FossilFuelsProduction
+    )
     p_fossil_coal_black_cogen: EColVars2030 = field(default_factory=EColVars2030)
-    p_fossil_gas: EColVars2030 = field(default_factory=EColVars2030)
+    p_fossil_gas: FossilFuelsProduction = field(default_factory=FossilFuelsProduction)
     p_fossil_gas_cogen: EColVars2030 = field(default_factory=EColVars2030)
-    p_fossil_ofossil: EColVars2030 = field(default_factory=EColVars2030)
+    p_fossil_ofossil: FossilFuelsProduction = field(
+        default_factory=FossilFuelsProduction
+    )
     p_fossil_ofossil_cogen: EColVars2030 = field(default_factory=EColVars2030)
     p_renew: EColVars2030 = field(default_factory=EColVars2030)
     p_renew_pv: EColVars2030 = field(default_factory=EColVars2030)
