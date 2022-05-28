@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from generatorcore.inputs import Inputs
 
@@ -18,24 +18,23 @@ from .. import (
 
 @dataclass
 class EnergySourceCalcIntermediate:
+    """
+    This class is a contains all relevant parameters for the conversion calculation from the "Einflussbilanz" to the "BISKO Bilanz" (See Readme) for a single energy source
+    like petrol or electricity. Einflussbilanz attributes (eb-prefix) are saved intermediatly for conveniance. 
+    """
+    #New attributes for Bisko:
+    energy: float = field(init=False)
+    CO2e_cb: float = field(init=False) 
+    CO2e_pb: float = field(init=False)
 
+    # Variables that are calculated for the Einflussbilanz (eb)
     eb_energy_from_same_sector: float
-
-    eb_CO2e_cb_from_same_sector: float | None = None
-
     eb_energy_from_agri: float | None = None
-
+    eb_CO2e_cb_from_same_sector: float | None = None    
     eb_CO2e_cb_from_heat: float | None = None
     eb_CO2e_cb_from_elec: float | None = None
     eb_CO2e_cb_from_fuels: float | None = None
     eb_CO2e_cb_from_agri: float | None = None
-
-    energy: float = 0
-    CO2e_cb: float = 0
-
-    # production based Emissions
-    CO2e_pb: float | None = None
-
     eb_CO2e_pb_from_heat: float | None = None
 
     def __post_init__(self):
@@ -59,20 +58,22 @@ class EnergySourceCalcIntermediate:
         self.energy = sum_over_none_and_float(
             self.eb_energy_from_same_sector, self.eb_energy_from_agri
         )
-        self.CO2e_pb = self.eb_CO2e_pb_from_heat
+
+        self.CO2e_pb = sum_over_none_and_float(self.eb_CO2e_pb_from_heat)
 
 
 @dataclass
-class SumClass:
+class Sums:
+    """
+    This class represents a sum over instances of class EnergySourceCalcIntermediate. 
+    """
     # energy consumption
     energy: float
-
     energy_from_same_eb_sector: float
     energy_from_eb_agri_sector: float
 
     # combustion based Emissions
     CO2e_cb: float
-
     eb_CO2e_from_same_sector: float
     eb_CO2e_cb_from_agri: float
     eb_CO2e_cb_from_heat: float
@@ -158,6 +159,9 @@ class SumClass:
 
 @dataclass
 class EnergySource:
+    """
+    This class is used as a result class only taking the relevant attributes from class EnergySourceCalcIntermediate for the result dict.
+    """
     # energy consumption
     energy: float = 0
 
@@ -175,8 +179,8 @@ class EnergySource:
 
 @dataclass
 class BiskoSector:
-
-    total: SumClass
+    # shared BISKO sector variables
+    total: Sums
 
     lpg: EnergySource
     gas: EnergySource
@@ -184,7 +188,10 @@ class BiskoSector:
 
 
 @dataclass
-class BiskoPH(BiskoSector):
+class BiskoPrivResidences(BiskoSector):
+    """
+    Bisko Sector for private residences.
+    """
     petrol: EnergySource
     fueloil: EnergySource
     coal: EnergySource
@@ -194,13 +201,13 @@ class BiskoPH(BiskoSector):
     heatpump: EnergySource
 
     @classmethod
-    def calc_ph_bisko(
+    def calc_priv_residences_bisko(
         cls,
         r18: residences2018.R18,
         h18: heat2018.H18,
         f18: fuels2018.F18,
         e18: electricity2018.E18,
-    ) -> "BiskoPH":
+    ) -> "BiskoPrivResidences":
 
         petrol = EnergySourceCalcIntermediate(
             eb_energy_from_same_sector=r18.s_petrol.energy,
@@ -266,7 +273,7 @@ class BiskoPH(BiskoSector):
             eb_CO2e_cb_from_elec=e18.p.CO2e_total * div(e18.d_r.energy, e18.d.energy),
         )
 
-        total = SumClass.calc(
+        total = Sums.calc(
             petrol, fueloil, coal, lpg, gas, heatnet, biomass, solarth, heatpump, elec
         )
 
@@ -286,7 +293,7 @@ class BiskoPH(BiskoSector):
 
 
 @dataclass
-class BiskoGHD(BiskoSector):
+class BiskoBuissenesses(BiskoSector):
     petrol: EnergySource
     diesel: EnergySource
     jetfuel: EnergySource
@@ -298,14 +305,14 @@ class BiskoGHD(BiskoSector):
     heatpump: EnergySource
 
     @classmethod
-    def calc_ghd_bisko(
+    def calc_buissenesses_bisko(
         cls,
         b18: business2018.B18,
         h18: heat2018.H18,
         f18: fuels2018.F18,
         e18: electricity2018.E18,
         a18: agri2018.A18,
-    ) -> "BiskoGHD":
+    ) -> "BiskoBuissenesses":
 
         petrol = EnergySourceCalcIntermediate(
             eb_energy_from_same_sector=b18.s_petrol.energy,
@@ -399,7 +406,7 @@ class BiskoGHD(BiskoSector):
             * div(e18.d_b.energy + e18.d_a.energy, e18.d.energy),
         )
 
-        total = SumClass.calc(
+        total = Sums.calc(
             petrol,
             diesel,
             jetfuel,
@@ -432,8 +439,10 @@ class BiskoGHD(BiskoSector):
 
 
 @dataclass
-class BiskoTraffic(BiskoSector):
-
+class BiskoTransport(BiskoSector):
+    """
+    Bisko sector for transportation.
+    """
     petrol: EnergySource
     diesel: EnergySource
     jetfuel: EnergySource
@@ -442,14 +451,14 @@ class BiskoTraffic(BiskoSector):
     biogas: EnergySource
 
     @classmethod
-    def calc_traffic_bisko(
+    def calc_transport_bisko(
         cls,
         inputs: Inputs,
         t18: transport2018.T18,
         h18: heat2018.H18,
         f18: fuels2018.F18,
         e18: electricity2018.E18,
-    ) -> "BiskoTraffic":
+    ) -> "BiskoTransport":
 
         fact = inputs.fact
         ass = inputs.ass
@@ -519,7 +528,7 @@ class BiskoTraffic(BiskoSector):
             eb_CO2e_cb_from_elec=e18.p.CO2e_total * div(e18.d_t.energy, e18.d.energy),
         )
 
-        total = SumClass.calc(
+        total = Sums.calc(
             petrol, diesel, jetfuel, bioethanol, biodiesel, biogas, lpg, gas, elec
         )
 
@@ -555,6 +564,11 @@ class SubSector:
 
 @dataclass
 class BiskoIndustry(BiskoSector):
+    """
+    Bisko sector for industry. We are currently not able to calculate any single energy source emissions in the eb_industry sector.
+    Therefore it is not possible to calculate bisko single energy source emissions, except from single energy source emissions coming from other "Einflussbilanz" sectors.
+    Instead the emissions are only calculated for the industry sub sectors.
+    """
     diesel: EnergySource
     fueloil: EnergySource
     coal: EnergySource
@@ -643,7 +657,7 @@ class BiskoIndustry(BiskoSector):
             eb_CO2e_cb_from_elec=e18.p.CO2e_total * div(e18.d_i.energy, e18.d.energy),
         )
         # total Bereitstellung
-        total_supply = SumClass.calc(
+        total_supply = Sums.calc(
             diesel,
             fueloil,
             coal,
@@ -713,12 +727,15 @@ class ProductionBasedEmission:
 
 
 @dataclass
-class BiskoProduktionBasedOnly:
+class BiskoProductionBasedOnly:
+    """
+    This super class contains shared production based only attributes.  
+    """
     total: ProductionBasedEmission
 
 
 @dataclass
-class BiskoAgriculture(BiskoProduktionBasedOnly):
+class BiskoAgriculture(BiskoProductionBasedOnly):
 
     forest: ProductionBasedEmission
     manure: ProductionBasedEmission
@@ -738,7 +755,7 @@ class BiskoAgriculture(BiskoProduktionBasedOnly):
 
 
 @dataclass
-class BiskoLULUCF(BiskoProduktionBasedOnly):
+class BiskoLULUCF(BiskoProductionBasedOnly):
 
     forest: ProductionBasedEmission
     crop: ProductionBasedEmission
@@ -784,9 +801,9 @@ class BiskoLULUCF(BiskoProduktionBasedOnly):
 
 @dataclass
 class Bisko:
-    ph: BiskoPH
-    ghd: BiskoGHD
-    traffic: BiskoTraffic
+    priv_residences: BiskoPrivResidences
+    buissenesses: BiskoBuissenesses
+    transport: BiskoTransport
     industry: BiskoIndustry
 
     agri: BiskoAgriculture
@@ -814,9 +831,9 @@ class Bisko:
         t18: transport2018.T18,
     ) -> "Bisko":
 
-        ph_bisko = BiskoPH.calc_ph_bisko(r18=r18, h18=h18, f18=f18, e18=e18)
-        ghd_bisko = BiskoGHD.calc_ghd_bisko(b18=b18, h18=h18, f18=f18, e18=e18, a18=a18)
-        traffic_bisko = BiskoTraffic.calc_traffic_bisko(
+        priv_residences_bisko = BiskoPrivResidences.calc_priv_residences_bisko(r18=r18, h18=h18, f18=f18, e18=e18)
+        buissenesses_bisko = BiskoBuissenesses.calc_buissenesses_bisko(b18=b18, h18=h18, f18=f18, e18=e18, a18=a18)
+        transport_bisko = BiskoTransport.calc_transport_bisko(
             inputs=inputs, t18=t18, h18=h18, f18=f18, e18=e18
         )
         industry_bisko = BiskoIndustry.calc_industry_bisko(
@@ -826,32 +843,32 @@ class Bisko:
         lulucf_bisko = BiskoLULUCF.calc_bisko_lulucf(l18=l18)
 
         total_energy = (
-            ph_bisko.total.energy
-            + ghd_bisko.total.energy
-            + traffic_bisko.total.energy
+            priv_residences_bisko.total.energy
+            + buissenesses_bisko.total.energy
+            + transport_bisko.total.energy
             + industry_bisko.total.energy
         )
         total_CO2e_combustion_based = (
-            ph_bisko.total.CO2e_cb
-            + ghd_bisko.total.CO2e_cb
-            + traffic_bisko.total.CO2e_cb
+            priv_residences_bisko.total.CO2e_cb
+            + buissenesses_bisko.total.CO2e_cb
+            + transport_bisko.total.CO2e_cb
             + industry_bisko.total.CO2e_cb
         )
         total_CO2e_production_based = (
-            ph_bisko.total.CO2e_pb
-            + ghd_bisko.total.CO2e_pb
-            + traffic_bisko.total.CO2e_pb
+            priv_residences_bisko.total.CO2e_pb
+            + buissenesses_bisko.total.CO2e_pb
+            + transport_bisko.total.CO2e_pb
             + industry_bisko.total.CO2e_pb
             + agri_bisko.total.CO2e_pb
             + lulucf_bisko.total.CO2e_pb
         )
 
-        bisko_quality = traffic_bisko.total.energy * div(0.5, total_energy)
+        bisko_quality = transport_bisko.total.energy * div(0.5, total_energy)
 
         return cls(
-            ph=ph_bisko,
-            ghd=ghd_bisko,
-            traffic=traffic_bisko,
+            priv_residences=priv_residences_bisko,
+            buissenesses=buissenesses_bisko,
+            transport=transport_bisko,
             industry=industry_bisko,
             agri=agri_bisko,
             lulucf=lulucf_bisko,
