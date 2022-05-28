@@ -1036,6 +1036,35 @@ viewTree cfg path tree =
                 )
 
 
+nullValueElement : Element msg
+nullValueElement =
+    el (Font.alignRight :: Font.bold :: fonts.explorerValues) <| text "null"
+
+
+viewStringValue : String -> Element msg
+viewStringValue s =
+    el (Font.alignRight :: fonts.explorerValues) <| text s
+
+
+viewFloatValue : Float -> Element msg
+viewFloatValue f =
+    el (Font.alignRight :: fonts.explorerValues) <|
+        text (formatGermanNumber f)
+
+
+viewValue : Value -> Element msg
+viewValue v =
+    case v of
+        Null ->
+            nullValueElement
+
+        String s ->
+            viewStringValue s
+
+        Float f ->
+            viewFloatValue f
+
+
 viewValueTree :
     RunId
     -> InterestListId
@@ -1054,13 +1083,13 @@ viewValueTree runId interestListId path checkIsCollapsed interestList overrides 
                 Null ->
                     [ el [ width (px 16) ] Element.none
                     , el [ width fill ] (text name)
-                    , el (Font.alignRight :: Font.bold :: fonts.explorerValues) <| text "null"
+                    , nullValueElement
                     ]
 
                 String s ->
                     [ el [ width (px 16) ] Element.none
                     , el [ width fill ] (text name)
-                    , el (Font.alignRight :: fonts.explorerValues) <| text s
+                    , viewStringValue s
                     ]
 
                 Float f ->
@@ -1086,8 +1115,7 @@ viewValueTree runId interestListId path checkIsCollapsed interestList overrides 
                                 viewEntryAndOverride runId name overrides activeOverrideEditor f
 
                             else
-                                ( el (Font.alignRight :: fonts.explorerValues) <|
-                                    text (formatGermanNumber f)
+                                ( viewFloatValue f
                                 , Element.none
                                 )
                     in
@@ -1114,35 +1142,31 @@ buttons l =
 viewDiffTree : Explorable.Id -> CollapseStatus -> Tree (Diff.Diff Value) -> Element Msg
 viewDiffTree id collapseStatus tree =
     let
+        missingElement =
+            el (Font.alignRight :: fonts.explorerValues) <|
+                text "∅"
+
         viewLeaf : Run.Path -> String -> Diff.Diff Value -> List (Element Msg)
         viewLeaf pathToParent name leaf =
             -- TODO: Make the diff display something useful in more cases
             case leaf of
-                Left _ ->
-                    [ text "TODO left" ]
-
-                Right _ ->
-                    [ text "TODO right" ]
-
-                Unequal (Tree _) (Tree _) ->
-                    [ text "TODO unequal tree" ]
-
-                Unequal (Leaf (Float f1)) (Leaf (Float f2)) ->
+                LeftOnly v ->
                     [ el [ width fill ] (text name)
-                    , el (Font.alignRight :: fonts.explorerValues) <|
-                        text (formatGermanNumber f1)
-                    , el (Font.alignRight :: fonts.explorerValues) <|
-                        text (formatGermanNumber f2)
+                    , viewValue v
+                    , missingElement
                     ]
 
-                Unequal (Leaf _) (Leaf _) ->
-                    [ text "TODO unequal non floats" ]
+                Unequal a b ->
+                    [ el [ width fill ] (text name)
+                    , viewValue a
+                    , viewValue b
+                    ]
 
-                Unequal (Leaf _) (Tree _) ->
-                    [ text "TODO unequal leaf vs tree" ]
-
-                Unequal (Tree _) (Leaf _) ->
-                    [ text "TODO unequal tree vs leaf" ]
+                RightOnly v ->
+                    [ el [ width fill ] (text name)
+                    , missingElement
+                    , viewValue v
+                    ]
     in
     viewTree
         { isCollapsed = \p -> isCollapsed id p collapseStatus
