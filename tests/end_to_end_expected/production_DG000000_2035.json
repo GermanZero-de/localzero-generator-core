@@ -10851,7 +10851,17 @@
         "CO2e_2022_to_year_target": 5875175474.745388
     },
     "bisko": {
-        "ph": {
+        "priv_residences": {
+            "communal_facilities": {
+                "energy": 31316310.55555556,
+                "CO2e_cb": 8367326.89179433,
+                "CO2e_pb": 158550.63945921866
+            },
+            "sector_without_communal_facilities": {
+                "energy": 613100633.8888888,
+                "CO2e_cb": 163812828.852043,
+                "CO2e_pb": 3104053.313799153
+            },
             "total": {
                 "energy": 644416944.4444444,
                 "energy_from_same_eb_sector": 644416944.4444444,
@@ -10868,7 +10878,7 @@
             "lpg": {
                 "energy": 10110555.555555556,
                 "CO2e_cb": 2680060.1332995463,
-                "CO2e_pb": null
+                "CO2e_pb": 0
             },
             "gas": {
                 "energy": 255496388.8888889,
@@ -10878,17 +10888,17 @@
             "elec": {
                 "energy": 126600000.0,
                 "CO2e_cb": 67260306.27118805,
-                "CO2e_pb": null
+                "CO2e_pb": 0
             },
             "petrol": {
                 "energy": 1130555.5555555555,
                 "CO2e_cb": 304444.3652346137,
-                "CO2e_pb": null
+                "CO2e_pb": 0
             },
             "fueloil": {
                 "energy": 107194722.22222222,
                 "CO2e_cb": 29895740.442807335,
-                "CO2e_pb": null
+                "CO2e_pb": 0
             },
             "coal": {
                 "energy": 5742777.777777778,
@@ -10898,7 +10908,7 @@
             "heatnet": {
                 "energy": 49785277.777777776,
                 "CO2e_cb": 12634641.252949513,
-                "CO2e_pb": null
+                "CO2e_pb": 0
             },
             "biomass": {
                 "energy": 67235555.55555555,
@@ -10916,7 +10926,17 @@
                 "CO2e_pb": 0.0
             }
         },
-        "ghd": {
+        "buissenesses": {
+            "communal_facilities": {
+                "energy": 36625441.12323233,
+                "CO2e_cb": 12754531.796781098,
+                "CO2e_pb": 113103.16325669664
+            },
+            "sector_without_communal_facilities": {
+                "energy": 324235669.9878788,
+                "CO2e_cb": 112912610.35181908,
+                "CO2e_pb": 1001273.3988075181
+            },
             "total": {
                 "energy": 360861111.1111111,
                 "energy_from_same_eb_sector": 319388888.8888889,
@@ -10933,7 +10953,7 @@
             "lpg": {
                 "energy": 5396111.111111111,
                 "CO2e_cb": 1381775.345130588,
-                "CO2e_pb": null
+                "CO2e_pb": 0
             },
             "gas": {
                 "energy": 101546944.44444445,
@@ -10943,27 +10963,27 @@
             "elec": {
                 "energy": 148940000.0,
                 "CO2e_cb": 79129147.04605646,
-                "CO2e_pb": null
+                "CO2e_pb": 0
             },
             "petrol": {
                 "energy": 2001111.111111111,
                 "CO2e_cb": 695283.9694762614,
-                "CO2e_pb": null
+                "CO2e_pb": 0
             },
             "diesel": {
                 "energy": 28199722.22222222,
                 "CO2e_cb": 7752660.0506476415,
-                "CO2e_pb": null
+                "CO2e_pb": 0
             },
             "jetfuel": {
                 "energy": 284722.2222222222,
                 "CO2e_cb": 84234.02772524497,
-                "CO2e_pb": null
+                "CO2e_pb": 0
             },
             "fueloil": {
                 "energy": 35786944.44444444,
                 "CO2e_cb": 10004599.996888006,
-                "CO2e_pb": null
+                "CO2e_pb": 0
             },
             "coal": {
                 "energy": 232777.77777777778,
@@ -10973,7 +10993,7 @@
             "heatnet": {
                 "energy": 6521944.444444444,
                 "CO2e_cb": 4027769.8832350858,
-                "CO2e_pb": null
+                "CO2e_pb": 0
             },
             "biomass": {
                 "energy": 29832500.0,
@@ -10991,7 +11011,7 @@
                 "CO2e_pb": 0.0
             }
         },
-        "traffic": {
+        "transport": {
             "total": {
                 "energy": 831730678.6809531,
                 "energy_from_same_eb_sector": 831730678.6809531,
@@ -11008,7 +11028,7 @@
             "lpg": {
                 "energy": 5041261.908542714,
                 "CO2e_cb": 1217063.7673502604,
-                "CO2e_pb": null
+                "CO2e_pb": 0
             },
             "gas": {
                 "energy": 1103087.940031202,
@@ -11018,37 +11038,37 @@
             "elec": {
                 "energy": 11858971.096230889,
                 "CO2e_cb": 6300458.3569799075,
-                "CO2e_pb": null
+                "CO2e_pb": 0
             },
             "petrol": {
                 "energy": 213636569.12698975,
                 "CO2e_cb": 62301982.559216075,
-                "CO2e_pb": null
+                "CO2e_pb": 0
             },
             "diesel": {
                 "energy": 443098275.8081123,
                 "CO2e_cb": 124698880.077345,
-                "CO2e_pb": null
+                "CO2e_pb": 0
             },
             "jetfuel": {
                 "energy": 121527777.77777778,
                 "CO2e_cb": 32974222.90940544,
-                "CO2e_pb": null
+                "CO2e_pb": 0
             },
             "bioethanol": {
                 "energy": 9594280.129124003,
                 "CO2e_cb": 0.0,
-                "CO2e_pb": null
+                "CO2e_pb": 0
             },
             "biodiesel": {
                 "energy": 25611705.87117407,
                 "CO2e_cb": 0.0,
-                "CO2e_pb": null
+                "CO2e_pb": 0
             },
             "biogas": {
                 "energy": 258749.02297028195,
                 "CO2e_cb": 0.0,
-                "CO2e_pb": null
+                "CO2e_pb": 0
             }
         },
         "industry": {
@@ -11068,7 +11088,7 @@
             "lpg": {
                 "energy": 1359444.4444444445,
                 "CO2e_cb": 253189.77757973262,
-                "CO2e_pb": null
+                "CO2e_pb": 0
             },
             "gas": {
                 "energy": 249600555.55555555,
@@ -11078,17 +11098,17 @@
             "elec": {
                 "energy": 226095000.0,
                 "CO2e_cb": 120120212.84663714,
-                "CO2e_pb": null
+                "CO2e_pb": 0
             },
             "diesel": {
                 "energy": 134444.44444444444,
                 "CO2e_cb": 1067.2638049806326,
-                "CO2e_pb": null
+                "CO2e_pb": 0
             },
             "fueloil": {
                 "energy": 7472500.0,
                 "CO2e_cb": 1327179.8197082435,
-                "CO2e_pb": null
+                "CO2e_pb": 0
             },
             "coal": {
                 "energy": 117908055.55555555,
@@ -11103,7 +11123,7 @@
             "heatnet": {
                 "energy": 53165277.777777776,
                 "CO2e_cb": 12133948.174009291,
-                "CO2e_pb": null
+                "CO2e_pb": 0
             },
             "biomass": {
                 "energy": 31304444.444444444,
@@ -11194,9 +11214,16 @@
                 "CO2e_pb": -3244437.0562904244
             }
         },
-        "total_energy": 2559449012.0142865,
-        "total_CO2e_combustion_based": 668489413.5577459,
-        "total_CO2e_production_based": 47307154.579921156,
+        "total": {
+            "energy": 2559449012.0142865,
+            "CO2e_cb": 668489413.5577459,
+            "CO2e_pb": 8442939.234125897
+        },
+        "communal_facilities": {
+            "energy": 67941751.67878789,
+            "CO2e_cb": 21121858.688575428,
+            "CO2e_pb": 271653.8027159153
+        },
         "bisko_quality": 0.1624823692085159
     }
 }
