@@ -20,7 +20,7 @@ from .. import (
 class EnergySourceCalcIntermediate:
     """
     This class is a contains all relevant parameters for the conversion calculation from the "Einflussbilanz" to the "BISKO Bilanz" (See Readme) for a single energy source
-    like petrol or electricity. Einflussbilanz attributes (eb-prefix) are saved intermediatly for conveniance. 
+    like petrol or electricity. Einflussbilanz attributes (eb-prefix) are saved intermediately for convenience. 
     """
     #New attributes for Bisko:
     energy: float = field(init=False)
@@ -155,6 +155,7 @@ class Sums:
             eb_CO2e_pb_from_heat=eb_CO2e_pb_from_heat,
         )
 
+#TODO: We might need a better name for EnergySource! It is rather a row
 @dataclass
 class EnergySource:
     """
@@ -191,7 +192,7 @@ class BiskoSectorWithExtraCommunalFacilities:
     """
     Some Bisko GHG balances also show the emissions and energy consumptions of communal facilities. This is only relevant for the private residences and the buisness sector.
     """
-    #TODO: We might need a better name for EnergySource!
+    #We might need a better name for EnergySource!
     communal_facilities: EnergySource
     sector_without_communal_facilities: EnergySource
 
