@@ -15,7 +15,6 @@ from .. import (
     transport2018,
 )
 
-
 @dataclass
 class EnergySourceCalcIntermediate:
     """
@@ -60,7 +59,6 @@ class EnergySourceCalcIntermediate:
         )
 
         self.CO2e_pb = sum_over_none_and_float(self.eb_CO2e_pb_from_heat)
-
 
 @dataclass
 class Sums:
@@ -156,7 +154,6 @@ class Sums:
             eb_CO2e_pb_from_heat=eb_CO2e_pb_from_heat,
         )
 
-
 @dataclass
 class EnergySource:
     """
@@ -178,6 +175,13 @@ class EnergySource:
             CO2e_cb = energy_source_intermediate.CO2e_cb,
             CO2e_pb = energy_source_intermediate.CO2e_pb,
             )
+    @classmethod
+    def calc_sum(cls,*args: "EnergySource"|Sums)->"EnergySource":
+        return cls(
+            energy = sum([elem.energy if elem.energy != None else 0 for elem in args]),
+            CO2e_cb = sum([elem.CO2e_cb if elem.CO2e_cb != None else 0 for elem in args]),
+            CO2e_pb = sum([elem.CO2e_pb if elem.CO2e_pb != None else 0 for elem in args])
+        ) 
 
 @dataclass
 class BiskoSectorWithExtraCommunalFacilities:
@@ -196,7 +200,6 @@ class BiskoSector:
     lpg: EnergySource
     gas: EnergySource
     elec: EnergySource
-
 
 @dataclass
 class BiskoPrivResidences(BiskoSector,BiskoSectorWithExtraCommunalFacilities):
@@ -306,7 +309,6 @@ class BiskoPrivResidences(BiskoSector,BiskoSectorWithExtraCommunalFacilities):
             communal_facilities=communal_facilities,
             sector_without_communal_facilities=sector_without_communal_facilities,
         )
-
 
 @dataclass
 class BiskoBuissenesses(BiskoSector,BiskoSectorWithExtraCommunalFacilities):
@@ -459,7 +461,6 @@ class BiskoBuissenesses(BiskoSector,BiskoSectorWithExtraCommunalFacilities):
             sector_without_communal_facilities=sector_without_communal_facilities
         )
 
-
 @dataclass
 class BiskoTransport(BiskoSector):
     """
@@ -567,7 +568,6 @@ class BiskoTransport(BiskoSector):
             total=total,
         )
 
-
 @dataclass
 class SubSector:
     CO2e_cb: float
@@ -582,7 +582,6 @@ class SubSector:
             [elem.CO2e_pb if elem.CO2e_pb != None else 0 for elem in args]
         )
         return cls(CO2e_cb=CO2e_cb, CO2e_pb=CO2e_pb)
-
 
 @dataclass
 class BiskoIndustry(BiskoSector):
@@ -737,7 +736,6 @@ class BiskoIndustry(BiskoSector):
             total_industry=total_industry,
         )
 
-
 @dataclass
 class ProductionBasedEmission:
     CO2e_pb: float
@@ -747,14 +745,12 @@ class ProductionBasedEmission:
         CO2e_pb = sum([elem.CO2e_pb for elem in args])
         return cls(CO2e_pb=CO2e_pb)
 
-
 @dataclass
 class BiskoProductionBasedOnly:
     """
     This super class contains shared production based only attributes.  
     """
     total: ProductionBasedEmission
-
 
 @dataclass
 class BiskoAgriculture(BiskoProductionBasedOnly):
@@ -774,7 +770,6 @@ class BiskoAgriculture(BiskoProductionBasedOnly):
         total = ProductionBasedEmission.calc_sum(forest, manure, soil, other)
 
         return cls(forest=forest, manure=manure, soil=soil, other=other, total=total)
-
 
 @dataclass
 class BiskoLULUCF(BiskoProductionBasedOnly):
@@ -831,9 +826,8 @@ class Bisko:
     agri: BiskoAgriculture
     lulucf: BiskoLULUCF
 
-    total_energy: float
-    total_CO2e_combustion_based: float
-    total_CO2e_production_based: float
+    total: EnergySource
+    communal_facilities: EnergySource
 
     bisko_quality: float
 
@@ -864,28 +858,10 @@ class Bisko:
         agri_bisko = BiskoAgriculture.calc_bisko_agri(a18=a18)
         lulucf_bisko = BiskoLULUCF.calc_bisko_lulucf(l18=l18)
 
-        total_energy = (
-            priv_residences_bisko.total.energy
-            + buissenesses_bisko.total.energy
-            + transport_bisko.total.energy
-            + industry_bisko.total.energy
-        )
-        total_CO2e_combustion_based = (
-            priv_residences_bisko.total.CO2e_cb
-            + buissenesses_bisko.total.CO2e_cb
-            + transport_bisko.total.CO2e_cb
-            + industry_bisko.total.CO2e_cb
-        )
-        total_CO2e_production_based = (
-            priv_residences_bisko.total.CO2e_pb
-            + buissenesses_bisko.total.CO2e_pb
-            + transport_bisko.total.CO2e_pb
-            + industry_bisko.total.CO2e_pb
-            + agri_bisko.total.CO2e_pb
-            + lulucf_bisko.total.CO2e_pb
-        )
+        total=EnergySource.calc_sum(priv_residences_bisko.total,buissenesses_bisko.total,transport_bisko.total,industry_bisko.total)
+        communal_facilities=EnergySource.calc_sum(priv_residences_bisko.communal_facilities,buissenesses_bisko.communal_facilities)
+        bisko_quality = transport_bisko.total.energy * div(0.5, total.energy)
 
-        bisko_quality = transport_bisko.total.energy * div(0.5, total_energy)
 
         return cls(
             priv_residences=priv_residences_bisko,
@@ -894,8 +870,7 @@ class Bisko:
             industry=industry_bisko,
             agri=agri_bisko,
             lulucf=lulucf_bisko,
-            total_energy=total_energy,
-            total_CO2e_combustion_based=total_CO2e_combustion_based,
-            total_CO2e_production_based=total_CO2e_production_based,
+            total=total,
+            communal_facilities=communal_facilities,
             bisko_quality=bisko_quality,
-        )
+            )
