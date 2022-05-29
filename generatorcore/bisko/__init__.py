@@ -171,11 +171,22 @@ class EnergySource:
     # production based Emissions
     CO2e_pb: float | None = None
 
-    def __init__(self, energy_source_intermediate: EnergySourceCalcIntermediate):
-        self.energy = energy_source_intermediate.energy
-        self.CO2e_cb = energy_source_intermediate.CO2e_cb
-        self.CO2e_pb = energy_source_intermediate.CO2e_pb
+    @classmethod
+    def calc_energy_source(cls, energy_source_intermediate: EnergySourceCalcIntermediate) -> "EnergySource":
+        return cls(
+            energy = energy_source_intermediate.energy,
+            CO2e_cb = energy_source_intermediate.CO2e_cb,
+            CO2e_pb = energy_source_intermediate.CO2e_pb,
+            )
 
+@dataclass
+class BiskoSectorWithExtraCommunalFacilities:
+    """
+    Some Bisko GHG balances also show the emissions and energy consumptions of communal facilities. This is only relevant for the private residences and the buisness sector.
+    """
+    #TODO: We might need a better name for EnergySource!
+    communal_facilities: EnergySource
+    sector_without_communal_facilities: EnergySource
 
 @dataclass
 class BiskoSector:
@@ -188,7 +199,7 @@ class BiskoSector:
 
 
 @dataclass
-class BiskoPrivResidences(BiskoSector):
+class BiskoPrivResidences(BiskoSector,BiskoSectorWithExtraCommunalFacilities):
     """
     Bisko Sector for private residences.
     """
@@ -277,23 +288,28 @@ class BiskoPrivResidences(BiskoSector):
             petrol, fueloil, coal, lpg, gas, heatnet, biomass, solarth, heatpump, elec
         )
 
+        communal_facilities = EnergySource(energy=r18.p_buildings_area_m2_com.energy,CO2e_cb=total.CO2e_cb * div(r18.p_buildings_area_m2_com.energy,total.energy),CO2e_pb=total.CO2e_pb * div(r18.p_buildings_area_m2_com.energy,total.energy)) 
+        sector_without_communal_facilities = EnergySource(energy=total.energy-communal_facilities.energy,CO2e_cb=total.CO2e_cb * div(total.energy-communal_facilities.energy,total.energy),CO2e_pb=total.CO2e_pb * div(total.energy-communal_facilities.energy,total.energy))
+        
         return cls(
-            petrol=EnergySource(petrol),
-            fueloil=EnergySource(fueloil),
-            coal=EnergySource(coal),
-            lpg=EnergySource(lpg),
-            gas=EnergySource(gas),
-            heatnet=EnergySource(heatnet),
-            biomass=EnergySource(biomass),
-            solarth=EnergySource(solarth),
-            heatpump=EnergySource(heatpump),
-            elec=EnergySource(elec),
+            petrol=EnergySource.calc_energy_source(petrol),
+            fueloil=EnergySource.calc_energy_source(fueloil),
+            coal=EnergySource.calc_energy_source(coal),
+            lpg=EnergySource.calc_energy_source(lpg),
+            gas=EnergySource.calc_energy_source(gas),
+            heatnet=EnergySource.calc_energy_source(heatnet),
+            biomass=EnergySource.calc_energy_source(biomass),
+            solarth=EnergySource.calc_energy_source(solarth),
+            heatpump=EnergySource.calc_energy_source(heatpump),
+            elec=EnergySource.calc_energy_source(elec),
             total=total,
+            communal_facilities=communal_facilities,
+            sector_without_communal_facilities=sector_without_communal_facilities,
         )
 
 
 @dataclass
-class BiskoBuissenesses(BiskoSector):
+class BiskoBuissenesses(BiskoSector,BiskoSectorWithExtraCommunalFacilities):
     petrol: EnergySource
     diesel: EnergySource
     jetfuel: EnergySource
@@ -420,21 +436,27 @@ class BiskoBuissenesses(BiskoSector):
             heatpump,
             elec,
         )
+    
+        communal_facilities = EnergySource(energy=b18.p_nonresi_com.energy,CO2e_cb=total.CO2e_cb * div(b18.p_nonresi_com.energy,total.energy),CO2e_pb=total.CO2e_pb * div(b18.p_nonresi_com.energy,total.energy)) 
+        sector_without_communal_facilities = EnergySource(energy=total.energy-communal_facilities.energy,CO2e_cb=total.CO2e_cb * div(total.energy-communal_facilities.energy,total.energy),CO2e_pb=total.CO2e_pb * div(total.energy-communal_facilities.energy,total.energy))
+        
 
         return cls(
-            petrol=EnergySource(petrol),
-            diesel=EnergySource(diesel),
-            jetfuel=EnergySource(jetfuel),
-            fueloil=EnergySource(fueloil),
-            coal=EnergySource(coal),
-            lpg=EnergySource(lpg),
-            gas=EnergySource(gas),
-            heatnet=EnergySource(heatnet),
-            biomass=EnergySource(biomass),
-            solarth=EnergySource(solarth),
-            heatpump=EnergySource(heatpump),
-            elec=EnergySource(elec),
+            petrol=EnergySource.calc_energy_source(petrol),
+            diesel=EnergySource.calc_energy_source(diesel),
+            jetfuel=EnergySource.calc_energy_source(jetfuel),
+            fueloil=EnergySource.calc_energy_source(fueloil),
+            coal=EnergySource.calc_energy_source(coal),
+            lpg=EnergySource.calc_energy_source(lpg),
+            gas=EnergySource.calc_energy_source(gas),
+            heatnet=EnergySource.calc_energy_source(heatnet),
+            biomass=EnergySource.calc_energy_source(biomass),
+            solarth=EnergySource.calc_energy_source(solarth),
+            heatpump=EnergySource.calc_energy_source(heatpump),
+            elec=EnergySource.calc_energy_source(elec),
             total=total,
+            communal_facilities=communal_facilities,
+            sector_without_communal_facilities=sector_without_communal_facilities
         )
 
 
@@ -533,15 +555,15 @@ class BiskoTransport(BiskoSector):
         )
 
         return cls(
-            petrol=EnergySource(petrol),
-            diesel=EnergySource(diesel),
-            jetfuel=EnergySource(jetfuel),
-            bioethanol=EnergySource(bioethanol),
-            biodiesel=EnergySource(biodiesel),
-            biogas=EnergySource(biogas),
-            lpg=EnergySource(lpg),
-            gas=EnergySource(gas),
-            elec=EnergySource(elec),
+            petrol=EnergySource.calc_energy_source(petrol),
+            diesel=EnergySource.calc_energy_source(diesel),
+            jetfuel=EnergySource.calc_energy_source(jetfuel),
+            bioethanol=EnergySource.calc_energy_source(bioethanol),
+            biodiesel=EnergySource.calc_energy_source(biodiesel),
+            biogas=EnergySource.calc_energy_source(biogas),
+            lpg=EnergySource.calc_energy_source(lpg),
+            gas=EnergySource.calc_energy_source(gas),
+            elec=EnergySource.calc_energy_source(elec),
             total=total,
         )
 
@@ -695,17 +717,17 @@ class BiskoIndustry(BiskoSector):
         )
 
         return cls(
-            diesel=EnergySource(diesel),
-            fueloil=EnergySource(fueloil),
-            coal=EnergySource(coal),
-            lpg=EnergySource(lpg),
-            gas=EnergySource(gas),
-            other_fossil=EnergySource(other_fossil),
-            heatnet=EnergySource(heatnet),
-            biomass=EnergySource(biomass),
-            solarth=EnergySource(solarth),
-            heatpump=EnergySource(heatpump),
-            elec=EnergySource(elec),
+            diesel=EnergySource.calc_energy_source(diesel),
+            fueloil=EnergySource.calc_energy_source(fueloil),
+            coal=EnergySource.calc_energy_source(coal),
+            lpg=EnergySource.calc_energy_source(lpg),
+            gas=EnergySource.calc_energy_source(gas),
+            other_fossil=EnergySource.calc_energy_source(other_fossil),
+            heatnet=EnergySource.calc_energy_source(heatnet),
+            biomass=EnergySource.calc_energy_source(biomass),
+            solarth=EnergySource.calc_energy_source(solarth),
+            heatpump=EnergySource.calc_energy_source(heatpump),
+            elec=EnergySource.calc_energy_source(elec),
             total=total_supply,
             miner=miner,
             chemistry=chem,
