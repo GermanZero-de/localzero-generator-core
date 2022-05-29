@@ -1,3 +1,4 @@
+from typing import Union
 from dataclasses import dataclass, field
 
 from generatorcore.inputs import Inputs
@@ -175,8 +176,10 @@ class EnergySource:
             CO2e_cb = energy_source_intermediate.CO2e_cb,
             CO2e_pb = energy_source_intermediate.CO2e_pb,
             )
+
+    #TODO: find a solution for typing annotations for *args     
     @classmethod
-    def calc_sum(cls,*args: "EnergySource"|Sums)->"EnergySource":
+    def calc_sum(cls,*args)->"EnergySource":
         return cls(
             energy = sum([elem.energy if elem.energy != None else 0 for elem in args]),
             CO2e_cb = sum([elem.CO2e_cb if elem.CO2e_cb != None else 0 for elem in args]),
