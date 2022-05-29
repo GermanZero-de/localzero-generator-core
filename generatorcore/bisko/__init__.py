@@ -15,9 +15,11 @@ from .. import (
     transport2018,
 )
 
+
 @dataclass
 class DataContainer:
     pass
+
 
 @dataclass
 class EnergyAndEmissionsCalcIntermediate(DataContainer):
@@ -25,6 +27,7 @@ class EnergyAndEmissionsCalcIntermediate(DataContainer):
     This class is a contains all relevant parameters for the conversion calculation from the "Einflussbilanz" to the "BISKO Bilanz" (See Readme) for a single energy source
     like petrol or electricity. Einflussbilanz attributes (eb-prefix) are saved intermediately for convenience.
     """
+
     energy: float = 0
     CO2e_cb: float = 0
     CO2e_pb: float = 0
@@ -47,6 +50,7 @@ class EnergyAndEmissionsCalcIntermediate(DataContainer):
                 return_float += elem
 
             return return_float
+
         self.energy = sum_over_none_and_float(
             self.eb_energy_from_same_sector, self.eb_energy_from_agri
         )
@@ -60,12 +64,12 @@ class EnergyAndEmissionsCalcIntermediate(DataContainer):
         self.CO2e_pb = sum_over_none_and_float(self.eb_CO2e_pb_from_heat)
 
 
-
 @dataclass
 class EnergyAndEmissions(DataContainer):
     """
     This class is used as a result class only taking the relevant attributes from class EnergyAndEmissionsCalcIntermediate for the result dict.
     """
+
     # energy consumption
     energy: float
 
@@ -86,18 +90,20 @@ class EnergyAndEmissions(DataContainer):
         )
 
     @classmethod
-    def calc_sum(cls, *args:"EnergyAndEmissions") -> "EnergyAndEmissions":
+    def calc_sum(cls, *args: "EnergyAndEmissions") -> "EnergyAndEmissions":
         return cls(
             energy=sum([elem.energy if elem.energy != None else 0 for elem in args]),
             CO2e_cb=sum([elem.CO2e_cb if elem.CO2e_cb != None else 0 for elem in args]),
             CO2e_pb=sum([elem.CO2e_pb if elem.CO2e_pb != None else 0 for elem in args]),
         )
 
+
 @dataclass
 class Sums(EnergyAndEmissions):
     """
     This class represents a sum over instances of class EnergyAndEmissionsCalcIntermediate.
     """
+
     # energy consumption
     energy_from_same_eb_sector: float
     energy_from_eb_agri_sector: float
@@ -226,6 +232,7 @@ class BiskoSectorWithExtraCommunalFacilities:
     """
     Some Bisko GHG balances also show the emissions and energy consumptions of communal facilities. This is only relevant for the private residences and the buisness sector.
     """
+
     communal_facilities: EnergyAndEmissions
     sector_without_communal_facilities: EnergyAndEmissions
 
