@@ -229,8 +229,8 @@ class BiskoSector:
 @dataclass
 class BiskoSectorWithExtraCommunalFacilities:
     """
-    Some Bisko GHG balances also show the emissions and energy consumptions of 
-    communal facilities. This is only relevant for the private residences and 
+    Some Bisko GHG balances also show the emissions and energy consumptions of
+    communal facilities. This is only relevant for the private residences and
     the buisness sector.
     """
 
