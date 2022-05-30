@@ -49,7 +49,7 @@ create interestList allRuns =
                                             |> Tree.get path
                                     of
                                         Nothing ->
-                                            ( ( runId, path ), String "NOTHING" )
+                                            ( ( runId, path ), String "" )
 
                                         Just (Tree.Tree _) ->
                                             ( ( runId, path ), String "TREE" )
