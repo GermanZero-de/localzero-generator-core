@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 from generatorcore.inputs import Inputs
 
@@ -22,10 +22,38 @@ class DataContainer:
 
 
 @dataclass
-class EnergyAndEmissionsCalcIntermediate(DataContainer):
+class EnergyAndEmissions(DataContainer):
     """
-    This class is a contains all relevant parameters for the conversion calculation from the "Einflussbilanz" to the "BISKO Bilanz" (See Readme) for a single energy source
-    like petrol or electricity. Einflussbilanz attributes (eb-prefix) are saved intermediately for convenience.
+    This class contains the relevant data attributes for the Bisko greenhous gas (GHG)
+    balance for a energy source like petrol/electricitiy or the data for a sub sector
+    like the communal facilities.
+    """
+
+    # energy consumption
+    energy: float
+
+    # combustion based Emissions
+    CO2e_cb: float
+
+    # production based Emissions
+    CO2e_pb: float
+
+    @classmethod
+    def calc_sum(cls, *args: "EnergyAndEmissions") -> "EnergyAndEmissions":
+        return cls(
+            energy=sum([elem.energy if elem.energy != None else 0 for elem in args]),
+            CO2e_cb=sum([elem.CO2e_cb if elem.CO2e_cb != None else 0 for elem in args]),
+            CO2e_pb=sum([elem.CO2e_pb if elem.CO2e_pb != None else 0 for elem in args]),
+        )
+
+
+@dataclass
+class EnergyAndEmissionsCalcIntermediate(EnergyAndEmissions):
+    """
+    This class is a contains all relevant parameters for the conversion calculation
+    from the "Einflussbilanz" to the "BISKO Bilanz" (See Readme) for a single energy
+    source like petrol or electricity. Einflussbilanz attributes (eb-prefix) are saved
+    intermediately for convenience.
     """
 
     energy: float = 0
@@ -63,38 +91,9 @@ class EnergyAndEmissionsCalcIntermediate(DataContainer):
         )
         self.CO2e_pb = sum_over_none_and_float(self.eb_CO2e_pb_from_heat)
 
-
-@dataclass
-class EnergyAndEmissions(DataContainer):
-    """
-    This class is used as a result class only taking the relevant attributes from class EnergyAndEmissionsCalcIntermediate for the result dict.
-    """
-
-    # energy consumption
-    energy: float
-
-    # combustion based Emissions
-    CO2e_cb: float
-
-    # production based Emissions
-    CO2e_pb: float
-
-    @classmethod
-    def calc_energy_source(
-        cls, energy_source_intermediate: EnergyAndEmissionsCalcIntermediate
-    ) -> "EnergyAndEmissions":
-        return cls(
-            energy=energy_source_intermediate.energy,
-            CO2e_cb=energy_source_intermediate.CO2e_cb,
-            CO2e_pb=energy_source_intermediate.CO2e_pb,
-        )
-
-    @classmethod
-    def calc_sum(cls, *args: "EnergyAndEmissions") -> "EnergyAndEmissions":
-        return cls(
-            energy=sum([elem.energy if elem.energy != None else 0 for elem in args]),
-            CO2e_cb=sum([elem.CO2e_cb if elem.CO2e_cb != None else 0 for elem in args]),
-            CO2e_pb=sum([elem.CO2e_pb if elem.CO2e_pb != None else 0 for elem in args]),
+    def to_energy_and_emissions(self) -> EnergyAndEmissions:
+        return EnergyAndEmissions(
+            energy=self.energy, CO2e_cb=self.CO2e_cb, CO2e_pb=self.CO2e_pb
         )
 
 
@@ -230,7 +229,9 @@ class BiskoSector:
 @dataclass
 class BiskoSectorWithExtraCommunalFacilities:
     """
-    Some Bisko GHG balances also show the emissions and energy consumptions of communal facilities. This is only relevant for the private residences and the buisness sector.
+    Some Bisko GHG balances also show the emissions and energy consumptions of 
+    communal facilities. This is only relevant for the private residences and 
+    the buisness sector.
     """
 
     communal_facilities: EnergyAndEmissions
@@ -344,16 +345,16 @@ class BiskoPrivResidences(BiskoSector, BiskoSectorWithExtraCommunalFacilities):
         )
 
         return cls(
-            petrol=EnergyAndEmissions.calc_energy_source(petrol),
-            fueloil=EnergyAndEmissions.calc_energy_source(fueloil),
-            coal=EnergyAndEmissions.calc_energy_source(coal),
-            lpg=EnergyAndEmissions.calc_energy_source(lpg),
-            gas=EnergyAndEmissions.calc_energy_source(gas),
-            heatnet=EnergyAndEmissions.calc_energy_source(heatnet),
-            biomass=EnergyAndEmissions.calc_energy_source(biomass),
-            solarth=EnergyAndEmissions.calc_energy_source(solarth),
-            heatpump=EnergyAndEmissions.calc_energy_source(heatpump),
-            elec=EnergyAndEmissions.calc_energy_source(elec),
+            petrol=petrol.to_energy_and_emissions(),
+            fueloil=fueloil.to_energy_and_emissions(),
+            coal=coal.to_energy_and_emissions(),
+            lpg=lpg.to_energy_and_emissions(),
+            gas=gas.to_energy_and_emissions(),
+            heatnet=heatnet.to_energy_and_emissions(),
+            biomass=biomass.to_energy_and_emissions(),
+            solarth=solarth.to_energy_and_emissions(),
+            heatpump=heatpump.to_energy_and_emissions(),
+            elec=elec.to_energy_and_emissions(),
             total=total,
             communal_facilities=communal_facilities,
             sector_without_communal_facilities=sector_without_communal_facilities,
@@ -503,18 +504,18 @@ class BiskoBuissenesses(BiskoSector, BiskoSectorWithExtraCommunalFacilities):
         )
 
         return cls(
-            petrol=EnergyAndEmissions.calc_energy_source(petrol),
-            diesel=EnergyAndEmissions.calc_energy_source(diesel),
-            jetfuel=EnergyAndEmissions.calc_energy_source(jetfuel),
-            fueloil=EnergyAndEmissions.calc_energy_source(fueloil),
-            coal=EnergyAndEmissions.calc_energy_source(coal),
-            lpg=EnergyAndEmissions.calc_energy_source(lpg),
-            gas=EnergyAndEmissions.calc_energy_source(gas),
-            heatnet=EnergyAndEmissions.calc_energy_source(heatnet),
-            biomass=EnergyAndEmissions.calc_energy_source(biomass),
-            solarth=EnergyAndEmissions.calc_energy_source(solarth),
-            heatpump=EnergyAndEmissions.calc_energy_source(heatpump),
-            elec=EnergyAndEmissions.calc_energy_source(elec),
+            petrol=petrol.to_energy_and_emissions(),
+            diesel=diesel.to_energy_and_emissions(),
+            jetfuel=jetfuel.to_energy_and_emissions(),
+            fueloil=fueloil.to_energy_and_emissions(),
+            coal=coal.to_energy_and_emissions(),
+            lpg=lpg.to_energy_and_emissions(),
+            gas=gas.to_energy_and_emissions(),
+            heatnet=heatnet.to_energy_and_emissions(),
+            biomass=biomass.to_energy_and_emissions(),
+            solarth=solarth.to_energy_and_emissions(),
+            heatpump=heatpump.to_energy_and_emissions(),
+            elec=elec.to_energy_and_emissions(),
             total=total,
             communal_facilities=communal_facilities,
             sector_without_communal_facilities=sector_without_communal_facilities,
@@ -617,15 +618,15 @@ class BiskoTransport(BiskoSector):
         )
 
         return cls(
-            petrol=EnergyAndEmissions.calc_energy_source(petrol),
-            diesel=EnergyAndEmissions.calc_energy_source(diesel),
-            jetfuel=EnergyAndEmissions.calc_energy_source(jetfuel),
-            bioethanol=EnergyAndEmissions.calc_energy_source(bioethanol),
-            biodiesel=EnergyAndEmissions.calc_energy_source(biodiesel),
-            biogas=EnergyAndEmissions.calc_energy_source(biogas),
-            lpg=EnergyAndEmissions.calc_energy_source(lpg),
-            gas=EnergyAndEmissions.calc_energy_source(gas),
-            elec=EnergyAndEmissions.calc_energy_source(elec),
+            petrol=petrol.to_energy_and_emissions(),
+            diesel=diesel.to_energy_and_emissions(),
+            jetfuel=jetfuel.to_energy_and_emissions(),
+            bioethanol=bioethanol.to_energy_and_emissions(),
+            biodiesel=biodiesel.to_energy_and_emissions(),
+            biogas=biogas.to_energy_and_emissions(),
+            lpg=lpg.to_energy_and_emissions(),
+            gas=gas.to_energy_and_emissions(),
+            elec=elec.to_energy_and_emissions(),
             total=total,
         )
 
@@ -633,9 +634,11 @@ class BiskoTransport(BiskoSector):
 @dataclass
 class BiskoIndustry(BiskoSector):
     """
-    Bisko sector for industry. We are currently not able to calculate any single energy source emissions in the eb_industry sector.
-    Therefore it is not possible to calculate bisko single energy source emissions, except from single energy source emissions coming from other "Einflussbilanz" sectors.
-    Instead the emissions are only calculated for the industry sub sectors.
+    Bisko sector for industry. We are currently not able to calculate any
+    single energy source emissions in the eb_industry sector. Therefore
+    it is not possible to calculate bisko single energy source emissions,
+    except from single energy source emissions coming from other "Einflussbilanz"
+    sectors. Instead the emissions are only calculated for the industry sub sectors.
     """
 
     diesel: EnergyAndEmissions
@@ -764,17 +767,17 @@ class BiskoIndustry(BiskoSector):
         )
 
         return cls(
-            diesel=EnergyAndEmissions.calc_energy_source(diesel),
-            fueloil=EnergyAndEmissions.calc_energy_source(fueloil),
-            coal=EnergyAndEmissions.calc_energy_source(coal),
-            lpg=EnergyAndEmissions.calc_energy_source(lpg),
-            gas=EnergyAndEmissions.calc_energy_source(gas),
-            other_fossil=EnergyAndEmissions.calc_energy_source(other_fossil),
-            heatnet=EnergyAndEmissions.calc_energy_source(heatnet),
-            biomass=EnergyAndEmissions.calc_energy_source(biomass),
-            solarth=EnergyAndEmissions.calc_energy_source(solarth),
-            heatpump=EnergyAndEmissions.calc_energy_source(heatpump),
-            elec=EnergyAndEmissions.calc_energy_source(elec),
+            diesel=diesel.to_energy_and_emissions(),
+            fueloil=fueloil.to_energy_and_emissions(),
+            coal=coal.to_energy_and_emissions(),
+            lpg=lpg.to_energy_and_emissions(),
+            gas=gas.to_energy_and_emissions(),
+            other_fossil=other_fossil.to_energy_and_emissions(),
+            heatnet=heatnet.to_energy_and_emissions(),
+            biomass=biomass.to_energy_and_emissions(),
+            solarth=solarth.to_energy_and_emissions(),
+            heatpump=heatpump.to_energy_and_emissions(),
+            elec=elec.to_energy_and_emissions(),
             total=total_supply,
             miner=miner,
             chemistry=chem,
