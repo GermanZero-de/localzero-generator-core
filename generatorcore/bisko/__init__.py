@@ -20,23 +20,40 @@ from .. import (
 class DataContainer:
     pass
 
+@dataclass
+class ProductionBasedEmission(DataContainer):
+    # production based Emissions
+    CO2e_pb: float
+
+    @classmethod
+    def calc_sum(cls, *args: "ProductionBasedEmission") -> "ProductionBasedEmission":
+        CO2e_pb = sum([elem.CO2e_pb for elem in args])
+        return cls(CO2e_pb=CO2e_pb)
 
 @dataclass
-class EnergyAndEmissions(DataContainer):
+class Emissions(ProductionBasedEmission):
+    # combustion based Emissions
+    CO2e_cb: float
+    
+    @classmethod
+    def calc_sum(cls, *args: "Emissions") -> "Emissions":
+        CO2e_cb: float = sum(
+            [elem.CO2e_cb if elem.CO2e_cb != None else 0 for elem in args]
+        )
+        CO2e_pb: float = sum(
+            [elem.CO2e_pb if elem.CO2e_pb != None else 0 for elem in args]
+        )
+        return cls(CO2e_cb=CO2e_cb, CO2e_pb=CO2e_pb)
+
+@dataclass
+class EnergyAndEmissions(Emissions):
     """
     This class contains the relevant data attributes for the Bisko greenhous gas (GHG)
     balance for a energy source like petrol/electricitiy or the data for a sub sector
     like the communal facilities.
     """
-
     # energy consumption
     energy: float
-
-    # combustion based Emissions
-    CO2e_cb: float
-
-    # production based Emissions
-    CO2e_pb: float
 
     @classmethod
     def calc_sum(cls, *args: "EnergyAndEmissions") -> "EnergyAndEmissions":
@@ -188,32 +205,6 @@ class Sums(EnergyAndEmissions):
             CO2e_pb=CO2e_pb,
             eb_CO2e_pb_from_heat=eb_CO2e_pb_from_heat,
         )
-
-
-@dataclass
-class SubSector(DataContainer):
-    CO2e_cb: float
-    CO2e_pb: float
-
-    @classmethod
-    def calc_sum(cls, *args: "SubSector") -> "SubSector":
-        CO2e_cb: float = sum(
-            [elem.CO2e_cb if elem.CO2e_cb != None else 0 for elem in args]
-        )
-        CO2e_pb: float = sum(
-            [elem.CO2e_pb if elem.CO2e_pb != None else 0 for elem in args]
-        )
-        return cls(CO2e_cb=CO2e_cb, CO2e_pb=CO2e_pb)
-
-
-@dataclass
-class ProductionBasedEmission(DataContainer):
-    CO2e_pb: float
-
-    @classmethod
-    def calc_sum(cls, *args: "ProductionBasedEmission") -> "ProductionBasedEmission":
-        CO2e_pb = sum([elem.CO2e_pb for elem in args])
-        return cls(CO2e_pb=CO2e_pb)
 
 
 @dataclass
@@ -650,13 +641,13 @@ class BiskoIndustry(BiskoSector):
     solarth: EnergyAndEmissions
     heatpump: EnergyAndEmissions
 
-    miner: SubSector
-    chemistry: SubSector
-    metal: SubSector
-    other: SubSector
+    miner: Emissions
+    chemistry: Emissions
+    metal: Emissions
+    other: Emissions
 
-    total_production: SubSector
-    total_industry: SubSector
+    total_production: Emissions
+    total_industry: Emissions
 
     @classmethod
     def calc_industry_bisko(
@@ -743,28 +734,25 @@ class BiskoIndustry(BiskoSector):
             elec,
         )
 
-        miner = SubSector(
+        miner = Emissions(
             CO2e_cb=i18.p_miner.CO2e_combustion_based,
             CO2e_pb=i18.p_miner.CO2e_production_based,
         )
-        chem = SubSector(
+        chem = Emissions(
             CO2e_cb=i18.p_chem.CO2e_combustion_based,
             CO2e_pb=i18.p_chem.CO2e_production_based,
         )
-        metal = SubSector(
+        metal = Emissions(
             CO2e_cb=i18.p_metal.CO2e_combustion_based,
             CO2e_pb=i18.p_metal.CO2e_production_based,
         )
-        other = SubSector(
+        other = Emissions(
             CO2e_cb=i18.p_other.CO2e_combustion_based,
             CO2e_pb=i18.p_other.CO2e_production_based,
         )
 
-        total_production = SubSector.calc_sum(miner, chem, metal, other)
-        total_industry = SubSector(
-            CO2e_cb=total_production.CO2e_cb + total_supply.CO2e_cb,
-            CO2e_pb=total_production.CO2e_pb + total_supply.CO2e_pb,
-        )
+        total_production = Emissions.calc_sum(miner, chem, metal, other)
+        total_industry = Emissions.calc_sum(total_production,total_supply)
 
         return cls(
             diesel=diesel.to_energy_and_emissions(),
