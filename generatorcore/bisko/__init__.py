@@ -161,7 +161,7 @@ class Sums(EnergyAndEmissions):
 @dataclass
 class BiskoSector:
     # shared BISKO sector variables
-    total: Sums
+    total: Sums | EnergyAndEmissions
 
     lpg: EnergyAndEmissions
     gas: EnergyAndEmissions
@@ -597,8 +597,9 @@ class BiskoIndustry(BiskoSector):
     metal: Emissions
     other: Emissions
 
+    total_supply: Sums
     total_production: Emissions
-    total_industry: Emissions
+    
 
     @classmethod
     def calc_industry_bisko(
@@ -703,7 +704,7 @@ class BiskoIndustry(BiskoSector):
         )
 
         total_production = Emissions.calc_sum(miner, chem, metal, other)
-        total_industry = Emissions.calc_sum(total_production, total_supply)
+        total = EnergyAndEmissions(energy =  total_supply.energy,CO2e_cb= total_supply.CO2e_cb+total_production.CO2e_cb,CO2e_pb=total_supply.CO2e_pb+total_production.CO2e_pb)
 
         return cls(
             diesel=diesel.to_energy_and_emissions(),
@@ -717,13 +718,13 @@ class BiskoIndustry(BiskoSector):
             solarth=solarth.to_energy_and_emissions(),
             heatpump=heatpump.to_energy_and_emissions(),
             elec=elec.to_energy_and_emissions(),
-            total=total_supply,
+            total_supply=total_supply,
             miner=miner,
             chemistry=chem,
             metal=metal,
             other=other,
             total_production=total_production,
-            total_industry=total_industry,
+            total=total,
         )
 
 
