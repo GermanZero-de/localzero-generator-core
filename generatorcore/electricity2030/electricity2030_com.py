@@ -51,59 +51,6 @@ def calc_stop_production_by_fossil_fuels(
     return result
 
 
-def calc_production_fossil_coal_black(
-    inputs: Inputs, *, e18: electricity2018.E18
-) -> electricity2030_core.FossilFuelsProduction:
-    fact = inputs.fact
-    entries = inputs.entries
-
-    KlimaneutraleJahre = entries.m_duration_neutral
-
-    p_fossil_coal_black = electricity2030_core.FossilFuelsProduction()
-    p_fossil_coal_black.energy = 0
-    p_fossil_coal_black.CO2e_total_2021_estimated = (
-        e18.p_fossil_coal_black.CO2e_combustion_based
-        * fact("Fact_M_CO2e_wo_lulucf_2021_vs_2018")
-    )
-    p_fossil_coal_black.cost_fuel_per_MWh = e18.p_fossil_coal_black.cost_fuel_per_MWh
-    p_fossil_coal_black.cost_mro_per_MWh = e18.p_fossil_coal_black.cost_mro_per_MWh
-    p_fossil_coal_black.CO2e_combustion_based_per_MWh = (
-        e18.p_fossil_coal_black.CO2e_combustion_based_per_MWh
-    )
-    p_fossil_coal_black.change_energy_MWh = (
-        p_fossil_coal_black.energy - e18.p_fossil_coal_black.energy
-    )
-    p_fossil_coal_black.cost_fuel = (
-        p_fossil_coal_black.cost_fuel_per_MWh * p_fossil_coal_black.energy / 1000000
-    )
-    p_fossil_coal_black.cost_mro = (
-        p_fossil_coal_black.cost_mro_per_MWh * p_fossil_coal_black.energy / 1000000
-    )
-    p_fossil_coal_black.CO2e_combustion_based = (
-        p_fossil_coal_black.energy * p_fossil_coal_black.CO2e_combustion_based_per_MWh
-    )
-    p_fossil_coal_black.change_energy_pct = div(
-        p_fossil_coal_black.change_energy_MWh, e18.p_fossil_coal_black.energy
-    )
-    p_fossil_coal_black.change_cost_energy = (
-        p_fossil_coal_black.cost_fuel - e18.p_fossil_coal_black.cost_fuel
-    )
-    p_fossil_coal_black.change_cost_mro = (
-        p_fossil_coal_black.cost_mro - e18.p_fossil_coal_black.cost_mro
-    )
-    p_fossil_coal_black.CO2e_total = p_fossil_coal_black.CO2e_combustion_based
-    p_fossil_coal_black.cost_climate_saved = (
-        (
-            p_fossil_coal_black.CO2e_total_2021_estimated
-            - p_fossil_coal_black.CO2e_combustion_based
-        )
-        * KlimaneutraleJahre
-        * fact("Fact_M_cost_per_CO2e_2020")
-    )
-
-    return p_fossil_coal_black
-
-
 def calc(
     inputs: Inputs,
     *,
