@@ -32,6 +32,9 @@ from . import lulucf2030
 from . import industry2030
 from .lulucf2030 import lulucf2030_pyr
 
+from .bisko import Bisko
+from generatorcore import bisko
+
 
 def _convert_item(v: object) -> object:
     if dataclasses.is_dataclass(v) and not isinstance(v, type):
@@ -89,6 +92,7 @@ class Result:
     a30: agri2030.A30
 
     m183X: methodology183x.M183X
+    bisko: bisko.Bisko
 
     def result_dict(self):
         return dataclass_to_result_dict(self)
@@ -242,6 +246,20 @@ def calculate(inputs: Inputs) -> Result:
         t30=t30,
     )
 
+    print("Bisko_calc", file=sys.stderr)
+    bisko = Bisko.calc(
+        inputs,
+        r18=r18,
+        b18=b18,
+        i18=i18,
+        t18=t18,
+        f18=f18,
+        l18=l18,
+        a18=a18,
+        e18=e18,
+        h18=h18,
+    )
+
     return Result(
         r18=r18,
         b18=b18,
@@ -262,6 +280,7 @@ def calculate(inputs: Inputs) -> Result:
         a30=a30,
         h30=h30,
         m183X=m183X,
+        bisko=bisko,
     )
 
 
