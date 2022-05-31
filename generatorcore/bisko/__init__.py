@@ -66,10 +66,11 @@ class EnergyAndEmissionsCalcIntermediate(EnergyAndEmissions):
     from the "Einflussbilanz" (EB) to the "BISKO Bilanz" (see Readme) for a single energy
     source like petrol or electricity. Various contributions from EB
     sectors are combined to form the new variables of the BISKO balance. EB
-    attributes (eb-prefix) are saved intermediately for convenience. 
+    attributes (eb-prefix) are saved intermediately for convenience.
     Most instances of this class do not have contributions from all possible EB sectors.
     To avoid creating classes for all occuring subsets, all attributes are initialized with 0.
     """
+
     # these variables are calculated by the __post_init__ function.
     energy: float = 0
     CO2e_cb: float = 0
@@ -599,7 +600,6 @@ class BiskoIndustry(BiskoSector):
 
     total_supply: Sums
     total_production: Emissions
-    
 
     @classmethod
     def calc_industry_bisko(
@@ -704,7 +704,11 @@ class BiskoIndustry(BiskoSector):
         )
 
         total_production = Emissions.calc_sum(miner, chem, metal, other)
-        total = EnergyAndEmissions(energy =  total_supply.energy,CO2e_cb= total_supply.CO2e_cb+total_production.CO2e_cb,CO2e_pb=total_supply.CO2e_pb+total_production.CO2e_pb)
+        total = EnergyAndEmissions(
+            energy=total_supply.energy,
+            CO2e_cb=total_supply.CO2e_cb + total_production.CO2e_cb,
+            CO2e_pb=total_supply.CO2e_pb + total_production.CO2e_pb,
+        )
 
         return cls(
             diesel=diesel.to_energy_and_emissions(),
