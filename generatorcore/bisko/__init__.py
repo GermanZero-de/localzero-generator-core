@@ -17,11 +17,7 @@ from .. import (
 
 
 @dataclass
-class DataContainer:
-    pass
-
-@dataclass
-class ProductionBasedEmission(DataContainer):
+class ProductionBasedEmission:
     # production based Emissions
     CO2e_pb: float
 
