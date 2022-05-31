@@ -15,7 +15,7 @@ from .. import (
 )
 
 
-def calc_production_fossil_fuels(
+def calc_stop_production_by_fossil_fuels(
     inputs: Inputs, *, e18_production: electricity2018.FossilFuelsProduction
 ) -> electricity2030_core.FossilFuelsProduction:
     """Compute what happens if we stop producing electricity from a fossil fuel."""
@@ -273,102 +273,23 @@ def calc(
         * fact("Fact_M_cost_per_CO2e_2020")
     )
 
-    p_fossil_coal_brown = calc_production_fossil_fuels(
+    p_fossil_coal_brown = calc_stop_production_by_fossil_fuels(
         inputs, e18_production=e18.p_fossil_coal_brown
     )
-    p_fossil_coal_black = calc_production_fossil_fuels(
+    p_fossil_coal_black = calc_stop_production_by_fossil_fuels(
         inputs, e18_production=e18.p_fossil_coal_black
     )
-    p_fossil_gas = calc_production_fossil_fuels(inputs, e18_production=e18.p_fossil_gas)
+    p_fossil_gas = calc_stop_production_by_fossil_fuels(
+        inputs, e18_production=e18.p_fossil_gas
+    )
+    p_fossil_ofossil = calc_stop_production_by_fossil_fuels(
+        inputs, e18_production=e18.p_fossil_ofossil
+    )
 
     e30.p_fossil_coal_brown = p_fossil_coal_brown
     e30.p_fossil_coal_black = p_fossil_coal_black
     e30.p_fossil_gas = p_fossil_gas
-
-    # p_fossil_gas.energy = 0
-    # p_fossil_gas.CO2e_total_2021_estimated = (
-    #     e18.p_fossil_gas.CO2e_combustion_based
-    #     * fact("Fact_M_CO2e_wo_lulucf_2021_vs_2018")
-    # )
-    # p_fossil_gas.cost_fuel_per_MWh = e18.p_fossil_gas.cost_fuel_per_MWh
-    # p_fossil_gas.cost_mro_per_MWh = e18.p_fossil_gas.cost_mro_per_MWh
-    # p_fossil_gas.CO2e_combustion_based_per_MWh = (
-    #     e18.p_fossil_gas.CO2e_combustion_based_per_MWh
-    # )
-    # p_fossil_gas.change_energy_MWh = p_fossil_gas.energy - e18.p_fossil_gas.energy
-    # p_fossil_gas.cost_fuel = (
-    #     p_fossil_gas.cost_fuel_per_MWh * p_fossil_gas.energy / 1000000
-    # )
-    # p_fossil_gas.cost_mro = (
-    #     p_fossil_gas.cost_mro_per_MWh * p_fossil_gas.energy / 1000000
-    # )
-    # p_fossil_gas.CO2e_combustion_based = (
-    #     p_fossil_gas.energy * p_fossil_gas.CO2e_combustion_based_per_MWh
-    # )
-    # p_fossil_gas.change_energy_pct = div(
-    #     p_fossil_gas.change_energy_MWh, e18.p_fossil_gas.energy
-    # )
-    # p_fossil_gas.change_cost_energy = (
-    #     p_fossil_gas.cost_fuel - e18.p_fossil_gas.cost_fuel
-    # )
-    # p_fossil_gas.change_cost_mro = p_fossil_gas.cost_mro - e18.p_fossil_gas.cost_mro
-    # p_fossil_gas.CO2e_total = p_fossil_gas.CO2e_combustion_based
-    # p_fossil_gas.cost_climate_saved = (
-    #     (p_fossil_gas.CO2e_total_2021_estimated - p_fossil_gas.CO2e_combustion_based)
-    #     * KlimaneutraleJahre
-    #     * fact("Fact_M_cost_per_CO2e_2020")
-    # )
-    # p_fossil_gas.change_CO2e_t = p_fossil_gas.CO2e_total - e18.p_fossil_gas.CO2e_total
-    # p_fossil_gas.change_CO2e_pct = div(
-    #     p_fossil_gas.change_CO2e_t, e18.p_fossil_gas.CO2e_total
-    # )
-
-    p_fossil_ofossil.energy = 0
-    p_fossil_ofossil.CO2e_total_2021_estimated = (
-        e18.p_fossil_ofossil.CO2e_combustion_based
-        * fact("Fact_M_CO2e_wo_lulucf_2021_vs_2018")
-    )
-    p_fossil_ofossil.cost_fuel_per_MWh = e18.p_fossil_ofossil.cost_fuel_per_MWh
-    p_fossil_ofossil.cost_mro_per_MWh = e18.p_fossil_ofossil.cost_mro_per_MWh
-    p_fossil_ofossil.CO2e_combustion_based_per_MWh = (
-        e18.p_fossil_ofossil.CO2e_combustion_based_per_MWh
-    )
-    p_fossil_ofossil.change_energy_MWh = (
-        p_fossil_ofossil.energy - e18.p_fossil_ofossil.energy
-    )
-    p_fossil_ofossil.cost_fuel = (
-        p_fossil_ofossil.cost_fuel_per_MWh * p_fossil_ofossil.energy / 1000000
-    )
-    p_fossil_ofossil.cost_mro = (
-        p_fossil_ofossil.cost_mro_per_MWh * p_fossil_ofossil.energy / 1000000
-    )
-    p_fossil_ofossil.CO2e_combustion_based = (
-        p_fossil_ofossil.energy * p_fossil_ofossil.CO2e_combustion_based_per_MWh
-    )
-    p_fossil_ofossil.change_energy_pct = div(
-        p_fossil_ofossil.change_energy_MWh, e18.p_fossil_ofossil.energy
-    )
-    p_fossil_ofossil.change_cost_energy = (
-        p_fossil_ofossil.cost_fuel - e18.p_fossil_ofossil.cost_fuel
-    )
-    p_fossil_ofossil.change_cost_mro = (
-        p_fossil_ofossil.cost_mro - e18.p_fossil_ofossil.cost_mro
-    )
-    p_fossil_ofossil.CO2e_total = p_fossil_ofossil.CO2e_combustion_based
-    p_fossil_ofossil.cost_climate_saved = (
-        (
-            p_fossil_ofossil.CO2e_total_2021_estimated
-            - p_fossil_ofossil.CO2e_combustion_based
-        )
-        * KlimaneutraleJahre
-        * fact("Fact_M_cost_per_CO2e_2020")
-    )
-    p_fossil_ofossil.change_CO2e_t = (
-        p_fossil_ofossil.CO2e_total - e18.p_fossil_ofossil.CO2e_total
-    )
-    p_fossil_ofossil.change_CO2e_pct = div(
-        p_fossil_ofossil.change_CO2e_t, e18.p_fossil_ofossil.CO2e_total
-    )
+    e30.p_fossil_ofossil = p_fossil_ofossil
 
     p_fossil.energy = (
         p_fossil_nuclear.energy
