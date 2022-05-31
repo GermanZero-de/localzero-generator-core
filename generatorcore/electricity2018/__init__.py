@@ -61,7 +61,7 @@ class Vars6:
 
 
 @dataclass
-class Vars7:
+class FossilFuelsProduction:
     # Used by p_fossil_nuclear, p_fossil_coal_brown, p_fossil_coal_black, p_fossil_gas, p_fossil_ofossil
     CO2e_combustion_based: float = None  # type: ignore
     CO2e_combustion_based_per_MWh: float = None  # type: ignore
@@ -207,14 +207,22 @@ class E18:
     d_f_hydrogen_reconv: Vars4 = field(default_factory=Vars4)
     p: Vars5 = field(default_factory=Vars5)
     p_fossil: Vars6 = field(default_factory=Vars6)
-    p_fossil_nuclear: Vars7 = field(default_factory=Vars7)
-    p_fossil_coal_brown: Vars7 = field(default_factory=Vars7)
+    p_fossil_nuclear: FossilFuelsProduction = field(
+        default_factory=FossilFuelsProduction
+    )
+    p_fossil_coal_brown: FossilFuelsProduction = field(
+        default_factory=FossilFuelsProduction
+    )
     p_fossil_coal_brown_cogen: Vars8 = field(default_factory=Vars8)
-    p_fossil_coal_black: Vars7 = field(default_factory=Vars7)
+    p_fossil_coal_black: FossilFuelsProduction = field(
+        default_factory=FossilFuelsProduction
+    )
     p_fossil_coal_black_cogen: Vars8 = field(default_factory=Vars8)
-    p_fossil_gas: Vars7 = field(default_factory=Vars7)
+    p_fossil_gas: FossilFuelsProduction = field(default_factory=FossilFuelsProduction)
     p_fossil_gas_cogen: Vars8 = field(default_factory=Vars8)
-    p_fossil_ofossil: Vars7 = field(default_factory=Vars7)
+    p_fossil_ofossil: FossilFuelsProduction = field(
+        default_factory=FossilFuelsProduction
+    )
     p_fossil_ofossil_cogen: Vars8 = field(default_factory=Vars8)
     p_renew: Vars9 = field(default_factory=Vars9)
     p_renew_pv: Vars10 = field(default_factory=Vars10)
