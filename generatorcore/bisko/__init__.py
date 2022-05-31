@@ -26,20 +26,18 @@ class ProductionBasedEmission:
         CO2e_pb = sum([elem.CO2e_pb for elem in args])
         return cls(CO2e_pb=CO2e_pb)
 
+
 @dataclass
 class Emissions(ProductionBasedEmission):
     # combustion based Emissions
     CO2e_cb: float
-    
+
     @classmethod
     def calc_sum(cls, *args: "Emissions") -> "Emissions":
-        CO2e_cb: float = sum(
-            [elem.CO2e_cb if elem.CO2e_cb != None else 0 for elem in args]
-        )
-        CO2e_pb: float = sum(
-            [elem.CO2e_pb if elem.CO2e_pb != None else 0 for elem in args]
-        )
+        CO2e_cb: float = sum([elem.CO2e_cb for elem in args])
+        CO2e_pb: float = sum([elem.CO2e_pb for elem in args])
         return cls(CO2e_cb=CO2e_cb, CO2e_pb=CO2e_pb)
+
 
 @dataclass
 class EnergyAndEmissions(Emissions):
@@ -48,15 +46,16 @@ class EnergyAndEmissions(Emissions):
     balance for a energy source like petrol/electricitiy or the data for a sub sector
     like the communal facilities.
     """
+
     # energy consumption
     energy: float
 
     @classmethod
     def calc_sum(cls, *args: "EnergyAndEmissions") -> "EnergyAndEmissions":
         return cls(
-            energy=sum([elem.energy if elem.energy != None else 0 for elem in args]),
-            CO2e_cb=sum([elem.CO2e_cb if elem.CO2e_cb != None else 0 for elem in args]),
-            CO2e_pb=sum([elem.CO2e_pb if elem.CO2e_pb != None else 0 for elem in args]),
+            energy=sum([elem.energy for elem in args]),
+            CO2e_cb=sum([elem.CO2e_cb for elem in args]),
+            CO2e_pb=sum([elem.CO2e_pb for elem in args]),
         )
 
 
@@ -64,45 +63,41 @@ class EnergyAndEmissions(Emissions):
 class EnergyAndEmissionsCalcIntermediate(EnergyAndEmissions):
     """
     This class is a contains all relevant parameters for the conversion calculation
-    from the "Einflussbilanz" to the "BISKO Bilanz" (See Readme) for a single energy
-    source like petrol or electricity. Einflussbilanz attributes (eb-prefix) are saved
-    intermediately for convenience.
+    from the "Einflussbilanz" (EB) to the "BISKO Bilanz" (see Readme) for a single energy
+    source like petrol or electricity. Various contributions from EB
+    sectors are combined to form the new variables of the BISKO balance. EB
+    attributes (eb-prefix) are saved intermediately for convenience. 
+    Most instances of this class do not have contributions from all possible EB sectors.
+    To avoid creating classes for all occuring subsets, all attributes are initialized with 0.
     """
-
+    # these variables are calculated by the __post_init__ function.
     energy: float = 0
     CO2e_cb: float = 0
     CO2e_pb: float = 0
+
     # Variables that are calculated for the Einflussbilanz (eb)
-    eb_energy_from_same_sector: float | None = None
-    eb_energy_from_agri: float | None = None
-    eb_CO2e_cb_from_same_sector: float | None = None
-    eb_CO2e_cb_from_heat: float | None = None
-    eb_CO2e_cb_from_elec: float | None = None
-    eb_CO2e_cb_from_fuels: float | None = None
-    eb_CO2e_cb_from_agri: float | None = None
-    eb_CO2e_pb_from_heat: float | None = None
+    eb_energy_from_same_sector: float = 0
+    eb_energy_from_agri: float = 0
+    eb_CO2e_cb_from_same_sector: float = 0
+    eb_CO2e_cb_from_heat: float = 0
+    eb_CO2e_cb_from_elec: float = 0
+    eb_CO2e_cb_from_fuels: float = 0
+    eb_CO2e_cb_from_agri: float = 0
+    eb_CO2e_pb_from_heat: float = 0
 
     def __post_init__(self):
-        def sum_over_none_and_float(*args: float | None) -> float:
-            return_float: float = 0
-            for elem in args:
-                if elem is None:
-                    continue
-                return_float += elem
 
-            return return_float
-
-        self.energy = sum_over_none_and_float(
-            self.eb_energy_from_same_sector, self.eb_energy_from_agri
+        self.energy = sum([self.eb_energy_from_same_sector, self.eb_energy_from_agri])
+        self.CO2e_cb = sum(
+            [
+                self.eb_CO2e_cb_from_same_sector,
+                self.eb_CO2e_cb_from_heat,
+                self.eb_CO2e_cb_from_elec,
+                self.eb_CO2e_cb_from_fuels,
+                self.eb_CO2e_cb_from_agri,
+            ]
         )
-        self.CO2e_cb = sum_over_none_and_float(
-            self.eb_CO2e_cb_from_same_sector,
-            self.eb_CO2e_cb_from_heat,
-            self.eb_CO2e_cb_from_elec,
-            self.eb_CO2e_cb_from_fuels,
-            self.eb_CO2e_cb_from_agri,
-        )
-        self.CO2e_pb = sum_over_none_and_float(self.eb_CO2e_pb_from_heat)
+        self.CO2e_pb = sum([self.eb_CO2e_pb_from_heat])
 
     def to_energy_and_emissions(self) -> EnergyAndEmissions:
         return EnergyAndEmissions(
@@ -132,61 +127,21 @@ class Sums(EnergyAndEmissions):
 
     @classmethod
     def calc(cls, *args: EnergyAndEmissionsCalcIntermediate):
-        energy = sum([elem.energy if elem.energy != None else 0 for elem in args])
+        energy = sum([elem.energy for elem in args])
         energy_from_same_eb_sector = sum(
-            [
-                elem.eb_energy_from_same_sector
-                if elem.eb_energy_from_same_sector != None
-                else 0
-                for elem in args
-            ]
+            [elem.eb_energy_from_same_sector for elem in args]
         )
-        energy_from_eb_agri_sector = sum(
-            [
-                elem.eb_energy_from_agri if elem.eb_energy_from_agri != None else 0
-                for elem in args
-            ]
-        )
-        CO2e_cb = sum([elem.CO2e_cb if elem.CO2e_cb != None else 0 for elem in args])
+        energy_from_eb_agri_sector = sum([elem.eb_energy_from_agri for elem in args])
+        CO2e_cb = sum([elem.CO2e_cb for elem in args])
         eb_CO2e_from_same_sector = sum(
-            [
-                elem.eb_CO2e_cb_from_same_sector
-                if elem.eb_CO2e_cb_from_same_sector != None
-                else 0
-                for elem in args
-            ]
+            [elem.eb_CO2e_cb_from_same_sector for elem in args]
         )
-        eb_CO2e_cb_from_agri = sum(
-            [
-                elem.eb_CO2e_cb_from_agri if elem.eb_CO2e_cb_from_agri != None else 0
-                for elem in args
-            ]
-        )
-        eb_CO2e_cb_from_heat = sum(
-            [
-                elem.eb_CO2e_cb_from_heat if elem.eb_CO2e_cb_from_heat != None else 0
-                for elem in args
-            ]
-        )
-        eb_CO2e_cb_from_elec = sum(
-            [
-                elem.eb_CO2e_cb_from_elec if elem.eb_CO2e_cb_from_elec != None else 0
-                for elem in args
-            ]
-        )
-        eb_CO2e_cb_from_fuels = sum(
-            [
-                elem.eb_CO2e_cb_from_fuels if elem.eb_CO2e_cb_from_fuels != None else 0
-                for elem in args
-            ]
-        )
-        CO2e_pb = sum([elem.CO2e_pb if elem.CO2e_pb != None else 0 for elem in args])
-        eb_CO2e_pb_from_heat = sum(
-            [
-                elem.eb_CO2e_pb_from_heat if elem.eb_CO2e_pb_from_heat != None else 0
-                for elem in args
-            ]
-        )
+        eb_CO2e_cb_from_agri = sum([elem.eb_CO2e_cb_from_agri for elem in args])
+        eb_CO2e_cb_from_heat = sum([elem.eb_CO2e_cb_from_heat for elem in args])
+        eb_CO2e_cb_from_elec = sum([elem.eb_CO2e_cb_from_elec for elem in args])
+        eb_CO2e_cb_from_fuels = sum([elem.eb_CO2e_cb_from_fuels for elem in args])
+        CO2e_pb = sum([elem.CO2e_pb for elem in args])
+        eb_CO2e_pb_from_heat = sum([elem.eb_CO2e_pb_from_heat for elem in args])
 
         return cls(
             energy=energy,
@@ -748,7 +703,7 @@ class BiskoIndustry(BiskoSector):
         )
 
         total_production = Emissions.calc_sum(miner, chem, metal, other)
-        total_industry = Emissions.calc_sum(total_production,total_supply)
+        total_industry = Emissions.calc_sum(total_production, total_supply)
 
         return cls(
             diesel=diesel.to_energy_and_emissions(),
