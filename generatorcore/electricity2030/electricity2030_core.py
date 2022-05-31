@@ -104,7 +104,13 @@ class E30:
     p: EColVars2030 = field(default_factory=EColVars2030)
     p_fossil_and_renew: EColVars2030 = field(default_factory=EColVars2030)
     p_fossil: EColVars2030 = field(default_factory=EColVars2030)
-    p_fossil_nuclear: EColVars2030 = field(default_factory=EColVars2030)
+    # We treat nuclear like another fossil fuel (that is a energy source we should stop
+    # using). Different countries have made other decisions but for Germany this seems
+    # like the only solution currently plausible to be actually implemented (because
+    # the political consensus to exit nuclear is very very high).
+    p_fossil_nuclear: FossilFuelsProduction = field(
+        default_factory=FossilFuelsProduction
+    )
     p_fossil_coal_brown: FossilFuelsProduction = field(
         default_factory=FossilFuelsProduction
     )
