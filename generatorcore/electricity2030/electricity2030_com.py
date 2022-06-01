@@ -741,26 +741,6 @@ def calc(
         g_grid_offshore.invest * ass("Ass_E_G_grid_offshore_mro") / Million
     )
     g_grid_offshore.invest_pa = g_grid_offshore.invest / entries.m_duration_target
-    d_h.change_energy_MWh = d_h.energy - e18.d_h.energy  #
-    d_r.change_energy_MWh = d_r.energy - e18.d_r.energy
-    d_b.change_energy_MWh = d_b.energy - e18.d_b.energy
-    d_i.change_energy_MWh = d_i.energy - e18.d_i.energy
-    d_t.change_energy_MWh = d_t.energy - e18.d_t.energy
-    d_a.change_energy_MWh = d_a.energy - e18.d_a.energy
-    d_f_wo_hydrogen.change_energy_MWh = d_f_wo_hydrogen.energy - 0
-    d.energy = (
-        d_h.energy
-        + d_r.energy
-        + d_b.energy
-        + d_i.energy
-        + d_t.energy
-        + d_a.energy
-        + d_f_wo_hydrogen.energy
-        + d_f_hydrogen_reconv.energy
-    )  #
-    d_f_hydrogen_reconv.change_energy_MWh = (
-        d_f_hydrogen_reconv.energy - e18.d_f_hydrogen_reconv.energy
-    )
     p_fossil_and_renew.invest_pa_com = p_renew.invest_pa_com
     p_fossil_and_renew.invest_com = p_renew.invest_com
     p_renew.pct_energy = (
@@ -825,6 +805,28 @@ def calc(
     )
 
     g_grid_offshore.cost_wage = g_grid_offshore.invest_pa * g_grid_offshore.pct_of_wage
+
+    d_h.change_energy_MWh = d_h.energy - e18.d_h.energy  #
+    d_r.change_energy_MWh = d_r.energy - e18.d_r.energy
+    d_b.change_energy_MWh = d_b.energy - e18.d_b.energy
+    d_i.change_energy_MWh = d_i.energy - e18.d_i.energy
+    d_t.change_energy_MWh = d_t.energy - e18.d_t.energy
+    d_a.change_energy_MWh = d_a.energy - e18.d_a.energy
+    d_f_wo_hydrogen.change_energy_MWh = d_f_wo_hydrogen.energy - 0
+    d.energy = (
+        d_h.energy
+        + d_r.energy
+        + d_b.energy
+        + d_i.energy
+        + d_t.energy
+        + d_a.energy
+        + d_f_wo_hydrogen.energy
+        + d_f_hydrogen_reconv.energy
+    )  #
+    d_f_hydrogen_reconv.change_energy_MWh = (
+        d_f_hydrogen_reconv.energy - e18.d_f_hydrogen_reconv.energy
+    )
+
     d_h.change_energy_pct = div(d_h.change_energy_MWh, e18.d_h.energy)
     d_r.change_energy_pct = div(d_r.change_energy_MWh, e18.d_r.energy)
     d_b.change_energy_pct = div(d_b.change_energy_MWh, e18.d_b.energy)
@@ -832,6 +834,7 @@ def calc(
     d_t.change_energy_pct = div(d_t.change_energy_MWh, e18.d_t.energy)
     d_a.change_energy_pct = div(d_a.change_energy_MWh, e18.d_a.energy)
     d.change_energy_MWh = d.energy - e18.d.energy
+    d.change_energy_pct = div(d.change_energy_MWh, e18.d.energy)
     d_h.pct_energy = div(d_h.energy, d.energy)
     d_r.pct_energy = div(d_r.energy, d.energy)
     d_b.pct_energy = div(d_b.energy, d.energy)
@@ -840,6 +843,17 @@ def calc(
     d_a.pct_energy = div(d_a.energy, d.energy)
     d_f_wo_hydrogen.pct_energy = div(d_f_wo_hydrogen.energy, d.energy)
     d_f_hydrogen_reconv.pct_energy = div(d_f_hydrogen_reconv.energy, d.energy)
+    d.pct_energy = (
+        d_h.pct_energy
+        + d_r.pct_energy
+        + d_b.pct_energy
+        + d_i.pct_energy
+        + d_t.pct_energy
+        + d_a.pct_energy
+        + d_f_wo_hydrogen.pct_energy
+        + d_f_hydrogen_reconv.pct_energy
+    )
+
     p_renew_geoth.invest_outside = (
         p_renew_geoth.invest * d.energy / ass("Ass_E_P_renew_nep_total_2035")
     )
@@ -950,17 +964,6 @@ def calc(
 
     g_grid_offshore.demand_emplo = div(
         g_grid_offshore.cost_wage, g_grid_offshore.ratio_wage_to_emplo
-    )
-    d.change_energy_pct = div(d.change_energy_MWh, e18.d.energy)
-    d.pct_energy = (
-        d_h.pct_energy
-        + d_r.pct_energy
-        + d_b.pct_energy
-        + d_i.pct_energy
-        + d_t.pct_energy
-        + d_a.pct_energy
-        + d_f_wo_hydrogen.pct_energy
-        + d_f_hydrogen_reconv.pct_energy
     )
     p_fossil.change_energy_pct = div(p_fossil.change_energy_MWh, e18.p_fossil.energy)
     # p_fossil_coal_brown.change_CO2e_t = (
