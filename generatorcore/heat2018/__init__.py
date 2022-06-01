@@ -13,7 +13,7 @@ class Vars0:
 
 @dataclass
 class Vars1:
-    # Used by d, d_r, d_b, d_i, d_t, a_t
+    # Used by d, d_r, d_b, d_i, d_t, d_a
     energy: float = None  # type: ignore
 
 
@@ -97,7 +97,7 @@ class H18:
     d_b: Vars1 = field(default_factory=Vars1)
     d_i: Vars1 = field(default_factory=Vars1)
     d_t: Vars1 = field(default_factory=Vars1)
-    a_t: Vars1 = field(default_factory=Vars1)
+    d_a: Vars1 = field(default_factory=Vars1)
     h: Vars2 = field(default_factory=Vars2)
     p: Vars3 = field(default_factory=Vars3)
     p_gas: Vars4 = field(default_factory=Vars4)
@@ -156,15 +156,15 @@ def calc(inputs: Inputs, *, t18: transport2018.T18, e18: electricity2018.E18) ->
     )
     d_t = h18.d_t
     d_t.energy = t18.t.demand_fueloil + t18.t.demand_lpg + t18.t.demand_gas
-    a_t = h18.a_t
-    a_t.energy = (
+    d_a = h18.d_a
+    d_a.energy = (
         entries.a_fueloil_fec
         + entries.a_lpg_fec
         + entries.a_gas_fec
         + entries.a_biomass_fec
     )
     d = h18.d
-    d.energy = d_r.energy + d_b.energy + d_i.energy + d_t.energy + a_t.energy
+    d.energy = d_r.energy + d_b.energy + d_i.energy + d_t.energy + d_a.energy
     p = h18.p
     p.energy = d.energy
     p_gas = h18.p_gas
