@@ -26,6 +26,21 @@ class FossilFuelsProduction:
     cost_mro_per_MWh: float = None  # type: ignore
 
 
+@dataclass
+class EnergyDemand:
+    energy: float = None  # type: ignore
+    cost_fuel: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
+    change_energy_MWh: float = None  # type: ignore
+    change_energy_pct: float = None  # type: ignore
+
+
+@dataclass
+class EnergyDemandWithCostFuel(EnergyDemand):
+    cost_fuel_per_MWh: float = None  # type: ignore
+    cost_fuel: float = None  # type: ignore
+
+
 # Definition der relevanten Spaltennamen für den Sektor E
 @dataclass
 class EColVars2030:
@@ -90,13 +105,13 @@ class E30:
     g_grid_offshore: EColVars2030 = field(default_factory=EColVars2030)
     g_grid_onshore: EColVars2030 = field(default_factory=EColVars2030)
     g_grid_pv: EColVars2030 = field(default_factory=EColVars2030)
-    d: EColVars2030 = field(default_factory=EColVars2030)
-    d_r: EColVars2030 = field(default_factory=EColVars2030)
-    d_b: EColVars2030 = field(default_factory=EColVars2030)
-    d_h: EColVars2030 = field(default_factory=EColVars2030)
-    d_i: EColVars2030 = field(default_factory=EColVars2030)
-    d_t: EColVars2030 = field(default_factory=EColVars2030)
-    d_a: EColVars2030 = field(default_factory=EColVars2030)
+    d: EnergyDemand = field(default_factory=EnergyDemand)
+    d_r: EnergyDemandWithCostFuel = field(default_factory=EnergyDemandWithCostFuel)
+    d_b: EnergyDemandWithCostFuel = field(default_factory=EnergyDemandWithCostFuel)
+    d_h: EnergyDemand = field(default_factory=EnergyDemand)
+    d_i: EnergyDemandWithCostFuel = field(default_factory=EnergyDemandWithCostFuel)
+    d_t: EnergyDemandWithCostFuel = field(default_factory=EnergyDemandWithCostFuel)
+    d_a: EnergyDemandWithCostFuel = field(default_factory=EnergyDemandWithCostFuel)
     d_f_hydrogen_reconv: EColVars2030 = field(default_factory=EColVars2030)
     d_e_hydrogen: EColVars2030 = field(default_factory=EColVars2030)
     d_e_hydrogen_local: EColVars2030 = field(default_factory=EColVars2030)
