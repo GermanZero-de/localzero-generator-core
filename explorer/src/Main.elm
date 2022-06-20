@@ -52,6 +52,7 @@ import Filter
 import Html exposing (Html)
 import Html.Attributes
 import Html.Events
+import Html5.DragDrop as DragDrop
 import Http
 import InterestList exposing (InterestList)
 import InterestListTable exposing (InterestListTable)
@@ -135,6 +136,10 @@ type alias DiffData =
     }
 
 
+type alias ExplorerDragDrop =
+    DragDrop.Model Path ()
+
+
 type alias Model =
     { runs : AllRuns
     , collapseStatus : CollapseStatus
@@ -147,6 +152,7 @@ type alias Model =
     , diffs : Dict DiffId DiffData
     , selectedForComparison : Maybe RunId
     , leftPaneWidth : Int
+    , dragDrop : ExplorerDragDrop
     }
 
 
@@ -210,6 +216,7 @@ init _ =
       , diffs = Dict.empty
       , selectedForComparison = Nothing
       , leftPaneWidth = 600
+      , dragDrop = DragDrop.init
       }
     , Cmd.none
     )
@@ -252,6 +259,7 @@ type Msg
     | ToggleSelectForCompareClicked RunId
     | LeftPaneMoved Int
     | DiffToleranceUpdated RunId RunId Float
+    | DragDropMsg (DragDrop.Msg Path ())
 
 
 type ModalMsg
@@ -712,6 +720,14 @@ update msg model =
             { model | leftPaneWidth = w }
                 |> withNoCmd
 
+        DragDropMsg dragMsg ->
+            let
+                ( newDragDrop, _ ) =
+                    DragDrop.update dragMsg model.dragDrop
+            in
+            { model | dragDrop = newDragDrop }
+                |> withCmd (DragDrop.fixFirefoxDragStartCmd dragMsg)
+
 
 diffRunsById : RunId -> RunId -> Float -> Model -> Maybe DiffData
 diffRunsById idA idB tolerance model =
@@ -1120,7 +1136,12 @@ viewValueTree runId interestListId path checkIsCollapsed interestList overrides 
                                 )
                     in
                     [ button
-                    , el [ width fill ] (text name)
+                    , el
+                        ([ width fill
+                         ]
+                            ++ List.map Element.htmlAttribute (DragDrop.draggable DragDropMsg thisPath)
+                        )
+                        (text name)
                     , originalValue
                     , maybeOverride
                     ]
