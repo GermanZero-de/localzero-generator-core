@@ -78,56 +78,79 @@ def calc_production_renewable_geothermal(
 
     Kalkulationszeitraum = entries.m_duration_target
 
-    p_renew_geoth = electricity2030_core.RenewableGeothermalProduction()
-    p_renew_geoth.pct_energy = ass("Ass_E_P_renew_geoth_pct_of_nep_2035")
-    p_renew_geoth.CO2e_total = 0
-    p_renew_geoth.invest = 0
-    p_renew_geoth.demand_emplo = 0
-    p_renew_geoth.cost_mro_per_MWh = ass("Ass_E_P_renew_geoth_mro_per_MWh")
-    p_renew_geoth.CO2e_combustion_based_per_MWh = fact(
+    pct_energy = ass("Ass_E_P_renew_geoth_pct_of_nep_2035")
+    CO2e_total = 0
+    invest = 0
+    demand_emplo = 0
+    cost_mro_per_MWh = ass("Ass_E_P_renew_geoth_mro_per_MWh")
+    CO2e_combustion_based_per_MWh = fact(
         "Fact_E_P_climate_neutral_ratio_CO2e_cb_to_fec"
     )
-    p_renew_geoth.invest_per_x = ass("Ass_E_P_renew_geoth_invest") * 1000
-    p_renew_geoth.pct_of_wage = ass("Ass_E_P_constr_plant_invest_pct_of_wage_2017")
-    p_renew_geoth.ratio_wage_to_emplo = ass(
-        "Ass_E_P_constr_elec_ratio_wage_to_emplo_2017"
-    )
-    p_renew_geoth.emplo_existing = 0
-    p_renew_geoth.power_installable = ass("Ass_E_P_renew_geoth_power_installable")
-    p_renew_geoth.power_to_be_installed_pct = ass(
-        "Ass_E_P_renew_geoth_power_to_be_installed_2035"
-    )
-    p_renew_geoth.power_installed = fact("Fact_E_P_geoth_power_installed_2018")
-    p_renew_geoth.full_load_hour = fact("Fact_E_P_geoth_full_load_hours")
+    invest_per_x = ass("Ass_E_P_renew_geoth_invest") * 1000
+    pct_of_wage = ass("Ass_E_P_constr_plant_invest_pct_of_wage_2017")
+    ratio_wage_to_emplo = ass("Ass_E_P_constr_elec_ratio_wage_to_emplo_2017")
+    emplo_existing = 0
+    power_installable = ass("Ass_E_P_renew_geoth_power_installable")
+    power_to_be_installed_pct = ass("Ass_E_P_renew_geoth_power_to_be_installed_2035")
+    power_installed = fact("Fact_E_P_geoth_power_installed_2018")
+    full_load_hour = fact("Fact_E_P_geoth_full_load_hours")
 
-    p_renew_geoth.invest_pa = p_renew_geoth.invest / Kalkulationszeitraum
-    p_renew_geoth.demand_emplo_new = max(
-        0, p_renew_geoth.demand_emplo - p_renew_geoth.emplo_existing
-    )
-    p_renew_geoth.power_to_be_installed = max(
+    invest_pa = invest / Kalkulationszeitraum
+    demand_emplo_new = max(0, demand_emplo - emplo_existing)
+    power_to_be_installed = max(
         0,
-        p_renew_geoth.power_installable * p_renew_geoth.power_to_be_installed_pct
-        - p_renew_geoth.power_installed,
+        power_installable * power_to_be_installed_pct - power_installed,
     )
-    p_renew_geoth.energy_installable = (
-        p_renew_geoth.full_load_hour
-        * p_renew_geoth.power_installable
+    energy_installable = (
+        full_load_hour
+        * power_installable
         * (1 - ass("Ass_E_P_renew_loss_brutto_to_netto"))
     )
-    p_renew_geoth.invest_outside = (
-        p_renew_geoth.invest * d_energy / ass("Ass_E_P_renew_nep_total_2035")
-    )
-    p_renew_geoth.cost_wage = p_renew_geoth.invest_pa * p_renew_geoth.pct_of_wage
-    p_renew_geoth.invest_pa_outside = (
-        p_renew_geoth.power_to_be_installed
-        * p_renew_geoth.invest_per_x
+    invest_outside = invest * d_energy / ass("Ass_E_P_renew_nep_total_2035")
+    cost_wage = invest_pa * pct_of_wage
+    invest_pa_outside = (
+        power_to_be_installed
+        * invest_per_x
         / Kalkulationszeitraum
         * d_energy
         / ass("Ass_E_P_renew_nep_total_2035")
     )
-    p_renew_geoth.change_CO2e_pct = 0
-    p_renew_geoth.cost_climate_saved = 0
-    return p_renew_geoth
+    change_CO2e_pct = 0
+    cost_climate_saved = 0
+
+    return electricity2030_core.RenewableGeothermalProduction(
+        # energy=energy, \
+        energy_installable=energy_installable,
+        pct_energy=pct_energy,
+        CO2e_combustion_based_per_MWh=CO2e_combustion_based_per_MWh,
+        # CO2e_combustion_based=CO2e_combustion_based,\
+        cost_climate_saved=cost_climate_saved,
+        # cost_mro=cost_mro, \
+        CO2e_total=CO2e_total,
+        demand_emplo=demand_emplo,
+        power_installed=power_installed,
+        power_to_be_installed_pct=power_to_be_installed_pct,
+        power_to_be_installed=power_to_be_installed,
+        power_installable=power_installable,
+        # change_energy_MWh=change_energy_MWh, \
+        # change_energy_pct=change_energy_pct, \
+        # change_CO2e_t=change_CO2e_t,\
+        change_CO2e_pct=change_CO2e_pct,
+        # change_cost_mro=change_cost_mro, \
+        invest=invest,
+        invest_pa=invest_pa,
+        invest_outside=invest_outside,
+        invest_pa_outside=invest_pa_outside,
+        invest_per_x=invest_per_x,
+        pct_of_wage=pct_of_wage,
+        # pct_x=pct_x, \
+        ratio_wage_to_emplo=ratio_wage_to_emplo,
+        cost_wage=cost_wage,
+        cost_mro_per_MWh=cost_mro_per_MWh,
+        emplo_existing=emplo_existing,
+        demand_emplo_new=demand_emplo_new,
+        full_load_hour=full_load_hour,
+    )
 
 
 def calc(
@@ -1280,7 +1303,24 @@ def calc(
     p_local_wind_onshore.pct_energy = div(p_local_wind_onshore.energy, p_local.energy)
     p_local_biomass.pct_energy = div(p_local_biomass.energy, p_local.energy)
     p_local_hydro.pct_energy = div(p_local_hydro.energy, p_local.energy)
+
+    # The amount of energy we produce locally above the local demand
     p_local_surplus.energy = p_local.energy - d.energy
+    p_renew.energy = max(0, -p_local_surplus.energy)
+
+    p_renew_geoth.energy = p_renew.energy * p_renew_geoth.pct_energy
+    p_renew_geoth.cost_mro = (
+        p_renew_geoth.energy * p_renew_geoth.cost_mro_per_MWh / Million
+    )
+    p_renew_geoth.CO2e_combustion_based = (
+        p_renew_geoth.energy * p_renew_geoth.CO2e_combustion_based_per_MWh
+    )
+    p_renew_geoth.change_energy_MWh = p_renew_geoth.energy - e18.p_renew_geoth.energy
+    p_renew_geoth.change_cost_mro = p_renew_geoth.cost_mro - e18.p_renew_geoth.cost_mro
+    p_renew_geoth.change_energy_pct = div(
+        p_renew_geoth.change_energy_MWh, e18.p_renew_geoth.energy
+    )
+    p_renew_geoth.change_CO2e_t = 0
 
     p_local.CO2e_combustion_based = (
         p_local_pv.CO2e_combustion_based
@@ -1333,8 +1373,6 @@ def calc(
         + p_local_hydro.pct_energy
     )
 
-    p_renew.energy = max(0, -p_local_surplus.energy)
-
     p_local.CO2e_combustion_based_per_MWh = div(
         p_local.CO2e_combustion_based, p_local.energy
     )
@@ -1369,8 +1407,14 @@ def calc(
     p_renew_wind_onshore.energy = p_renew.energy * p_renew_wind_onshore.pct_energy
     p_renew_wind_offshore.energy = p_renew.energy * p_renew_wind_offshore.pct_energy
     p_renew_biomass.energy = p_renew.energy * p_renew_biomass.pct_energy
-    p_renew_geoth.energy = p_renew.energy * p_renew_geoth.pct_energy
     p_renew_hydro.energy = p_renew.energy * p_renew_hydro.pct_energy
+    p_renew_hydro.cost_mro = (
+        p_renew_hydro.energy * p_renew_hydro.cost_mro_per_MWh / Million
+    )
+    p_renew_hydro.CO2e_combustion_based = (
+        p_renew_hydro.energy * p_renew_hydro.CO2e_combustion_based_per_MWh
+    )
+    p_renew_hydro.change_energy_MWh = p_renew_hydro.energy - e18.p_renew_hydro.energy
     p_renew_reverse.energy = p_renew.energy * p_renew_reverse.pct_energy
     p.cost_wage = p_fossil_and_renew.cost_wage + p_local.cost_wage
     p_local.demand_emplo = (
@@ -1425,20 +1469,7 @@ def calc(
     p_renew_biomass.change_energy_MWh = (
         p_renew_biomass.energy - e18.p_renew_biomass.energy
     )
-    p_renew_geoth.cost_mro = (
-        p_renew_geoth.energy * p_renew_geoth.cost_mro_per_MWh / Million
-    )
-    p_renew_geoth.CO2e_combustion_based = (
-        p_renew_geoth.energy * p_renew_geoth.CO2e_combustion_based_per_MWh
-    )
-    p_renew_geoth.change_energy_MWh = p_renew_geoth.energy - e18.p_renew_geoth.energy
-    p_renew_hydro.cost_mro = (
-        p_renew_hydro.energy * p_renew_hydro.cost_mro_per_MWh / Million
-    )
-    p_renew_hydro.CO2e_combustion_based = (
-        p_renew_hydro.energy * p_renew_hydro.CO2e_combustion_based_per_MWh
-    )
-    p_renew_hydro.change_energy_MWh = p_renew_hydro.energy - e18.p_renew_hydro.energy
+
     p_renew_reverse.cost_mro = (
         p_renew_reverse.energy * p_renew_reverse.cost_mro_per_MWh / Million
     )
@@ -1570,10 +1601,6 @@ def calc(
     )
     p_renew_biomass.change_energy_pct = div(
         p_renew_biomass.change_energy_MWh, e18.p_renew_biomass.energy
-    )
-    p_renew_geoth.change_cost_mro = p_renew_geoth.cost_mro - e18.p_renew_geoth.cost_mro
-    p_renew_geoth.change_energy_pct = div(
-        p_renew_geoth.change_energy_MWh, e18.p_renew_geoth.energy
     )
     p_renew_hydro.change_cost_mro = p_renew_hydro.cost_mro - e18.p_renew_hydro.cost_mro
     p_renew_hydro.change_energy_pct = div(
@@ -1776,8 +1803,6 @@ def calc(
     p_renew_pv_agri.change_CO2e_t = 0
     p_renew_pv_facade.change_CO2e_t = 0
     p_renew_pv_park.change_CO2e_t = 0
-
-    p_renew_geoth.change_CO2e_t = 0
 
     p_local_pv_agri.CO2e_total = 0
     p_local_pv_roof.CO2e_total = 0
