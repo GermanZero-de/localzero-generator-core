@@ -1,6 +1,8 @@
 module Lens exposing
-    ( Lens
+    ( CellContent(..)
+    , Lens
     , TableData
+    , TableEditMode(..)
     , addExtraColumn
     , addExtraRow
     , asUserDefinedTable
@@ -13,10 +15,11 @@ module Lens exposing
     , getShortPathLabels
     , getShowGraph
     , insert
-    , mapGrid
+    , mapCells
     , mapLabel
     , member
     , remove
+    , setEditCell
     , toList
     , toggleEditTable
     , toggleShowGraph
@@ -27,7 +30,7 @@ A Lens tells you how to see the data, it does not contain the data itself.
 -}
 
 import Dict exposing (Dict)
-import Grid exposing (Grid)
+import Grid
 import Json.Decode as Decode
 import Json.Encode as Encode
 import List.Extra
@@ -43,10 +46,24 @@ type alias ClassicData =
     }
 
 
+type CellContent
+    = ValueAt Path
+    | Label String
+
+
+type alias Cells =
+    Grid.Grid (Maybe CellContent)
+
+
 type alias TableData =
-    { grid : Grid (Maybe Path)
-    , editing : Maybe ()
+    { grid : Cells
+    , editing : Maybe TableEditMode
     }
+
+
+type TableEditMode
+    = All
+    | Cell { x : Int, y : Int }
 
 
 type VisualisationKind
@@ -183,8 +200,8 @@ mapKind fnClassic fnTable (Lens i) =
             Lens { i | vkind = Classic (fnClassic c) }
 
 
-mapGrid : (Grid (Maybe Path) -> Grid (Maybe Path)) -> Lens -> Lens
-mapGrid fn l =
+mapCells : (Cells -> Cells) -> Lens -> Lens
+mapCells fn l =
     mapKind
         identity
         (\td -> { td | grid = fn td.grid })
@@ -239,10 +256,21 @@ toggleEditTable =
             { t
                 | editing =
                     if t.editing == Nothing then
-                        Just ()
+                        Just All
 
                     else
                         Nothing
+            }
+        )
+
+
+setEditCell : { x : Int, y : Int } -> Lens -> Lens
+setEditCell pos =
+    mapKind
+        identity
+        (\t ->
+            { t
+                | editing = Just (Cell pos)
             }
         )
 
@@ -289,7 +317,7 @@ remove p il =
                     | grid =
                         Grid.map
                             (\cell ->
-                                if cell == Just p then
+                                if cell == Just (ValueAt p) then
                                     Nothing
 
                                 else
@@ -301,7 +329,7 @@ remove p il =
         |> updateShortPathLabels
 
 
-addExtraRow : Grid (Maybe Path) -> Grid (Maybe Path)
+addExtraRow : Cells -> Cells
 addExtraRow g =
     let
         h =
@@ -318,7 +346,7 @@ addExtraRow g =
         )
 
 
-addExtraColumn : Grid (Maybe Path) -> Grid (Maybe Path)
+addExtraColumn : Cells -> Cells
 addExtraColumn g =
     let
         h =
@@ -335,7 +363,7 @@ addExtraColumn g =
         )
 
 
-findInGrid : (Int -> Int -> Maybe Path -> Maybe x) -> Grid (Maybe Path) -> Maybe x
+findInGrid : (Int -> Int -> Maybe CellContent -> Maybe x) -> Cells -> Maybe x
 findInGrid fn g =
     findInGridHelper 0 0 fn g
 
@@ -362,7 +390,7 @@ findInGridHelper x y fn g =
                         Just res
 
 
-findEmptySpot : Grid (Maybe Path) -> Maybe ( Int, Int )
+findEmptySpot : Cells -> Maybe ( Int, Int )
 findEmptySpot g =
     findInGrid
         (\x y mp ->
@@ -391,10 +419,10 @@ insert p il =
                                     h =
                                         Grid.height td.grid
                                 in
-                                Grid.set ( 0, h ) (Just p) (addExtraRow td.grid)
+                                Grid.set ( 0, h ) (Just (ValueAt p)) (addExtraRow td.grid)
 
                             Just spot ->
-                                Grid.set spot (Just p) td.grid
+                                Grid.set spot (Just (ValueAt p)) td.grid
                 }
             )
         |> updateShortPathLabels
@@ -409,7 +437,7 @@ member p (Lens i) =
         Table td ->
             findInGrid
                 (\_ _ mp ->
-                    if mp == Just p then
+                    if mp == Just (ValueAt p) then
                         Just ()
 
                     else
@@ -432,8 +460,11 @@ toList (Lens i) =
                         Nothing ->
                             l
 
-                        Just c ->
+                        Just (ValueAt c) ->
                             c :: l
+
+                        Just (Label _) ->
+                            l
                 )
                 []
                 td.grid
@@ -457,8 +488,11 @@ encode (Lens i) =
                                 Nothing ->
                                     Encode.null
 
-                                Just p ->
+                                Just (ValueAt p) ->
                                     Encode.list Encode.string p
+
+                                Just (Label s) ->
+                                    Encode.string s
                     in
                     [ ( "kind", Encode.string "table" )
                     , ( "table"
@@ -469,6 +503,16 @@ encode (Lens i) =
     in
     Encode.object
         (( "label", Encode.string i.label ) :: kindFields)
+
+
+cellDecoder : Decode.Decoder (Maybe CellContent)
+cellDecoder =
+    Decode.nullable
+        (Decode.oneOf
+            [ Decode.string |> Decode.map Label
+            , Decode.list Decode.string |> Decode.map ValueAt
+            ]
+        )
 
 
 asUserDefinedTable : Lens -> Maybe TableData
@@ -500,7 +544,7 @@ classicDecoder =
 
 tableDecoder : Decode.Decoder TableData
 tableDecoder =
-    Decode.list (Decode.list (Decode.nullable (Decode.list Decode.string)))
+    Decode.list (Decode.list cellDecoder)
         |> Decode.andThen
             (\l ->
                 case Grid.fromList l of

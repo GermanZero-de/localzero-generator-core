@@ -272,6 +272,7 @@ type Msg
     | ToggleEditLensTableClicked LensId
     | AddRowToLensTableClicked LensId
     | AddColumnToLensTableClicked LensId
+    | CellOfLensTableEdited LensId { x : Int, y : Int } String
 
 
 type ModalMsg
@@ -338,13 +339,13 @@ update msg model =
         AddRowToLensTableClicked id ->
             model
                 |> activateLens id
-                |> mapActiveLens (Lens.mapGrid Lens.addExtraRow)
+                |> mapActiveLens (Lens.mapCells Lens.addExtraRow)
                 |> withNoCmd
 
         AddColumnToLensTableClicked id ->
             model
                 |> activateLens id
-                |> mapActiveLens (Lens.mapGrid Lens.addExtraColumn)
+                |> mapActiveLens (Lens.mapCells Lens.addExtraColumn)
                 |> withNoCmd
 
         DownloadClicked ->
@@ -684,6 +685,13 @@ update msg model =
             model
                 |> activateLens id
                 |> mapActiveLens Lens.toggleEditTable
+                |> withNoCmd
+
+        CellOfLensTableEdited id pos value ->
+            model
+                |> activateLens id
+                |> mapActiveLens (Lens.setEditCell pos)
+                |> mapActiveLens (Lens.mapCells (Grid.set ( pos.x, pos.y ) (Just (Lens.Label value))))
                 |> withNoCmd
 
         ActivateLensClicked id ->
@@ -1463,24 +1471,47 @@ viewValueSetAsUserDefinedTable lensId td valueSet =
                 |> Array.toList
                 |> List.map Array.toList
 
-        viewCell : Maybe Path -> { row : Int, column : Int } -> Element Msg
+        viewCell : Maybe Lens.CellContent -> { row : Int, column : Int } -> Element Msg
         viewCell cell { row, column } =
             let
-                cellElement attrs v =
+                editOnClick editValue =
+                    if td.editing /= Nothing then
+                        [ Events.onClick
+                            (CellOfLensTableEdited lensId { x = column, y = row } editValue)
+                        ]
+
+                    else
+                        []
+
+                cellElement attrs editValue v =
                     el
-                        ([ Background.color Styling.emptyCellColor
-                         , width fill
-                         , padding sizes.small
-                         ]
+                        (([ Background.color Styling.emptyCellColor
+                          , width fill
+                          , padding sizes.small
+                          ]
+                            ++ editOnClick editValue
+                         )
                             ++ attrs
                         )
                         v
             in
             case cell of
                 Nothing ->
-                    cellElement [] (text " ")
+                    cellElement [] "" (text " ")
 
-                Just p ->
+                Just (Lens.Label l) ->
+                    if td.editing == Just (Lens.Cell { x = column, y = row }) then
+                        Input.text [ width fill, Font.bold, padding sizes.small ]
+                            { onChange = CellOfLensTableEdited lensId { x = column, y = row }
+                            , text = l
+                            , placeholder = Nothing
+                            , label = Input.labelHidden "label"
+                            }
+
+                    else
+                        cellElement [ Font.bold ] l (paragraph [] [ text l ])
+
+                Just (Lens.ValueAt p) ->
                     let
                         value =
                             case valueSet.runs of
@@ -1491,22 +1522,29 @@ viewValueSetAsUserDefinedTable lensId td valueSet =
                                     Dict.get ( r, p ) valueSet.values
                     in
                     if td.editing /= Nothing then
-                        cellElement [ Font.size 12 ] (text (String.join "." p))
+                        cellElement [ Font.size 12 ]
+                            ""
+                            (paragraph [] (List.map text (List.intersperse "." p)))
 
                     else
                         case value of
                             Nothing ->
                                 -- Making the compiler happy
-                                cellElement [ Font.alignRight ] (text "INTERNAL ERROR")
+                                cellElement [ Font.alignRight ] "" (text "INTERNAL ERROR")
 
                             Just (Float f) ->
-                                cellElement [ Font.alignRight ] (text (formatGermanNumber f))
+                                cellElement [ Font.alignRight ] "" (text (formatGermanNumber f))
 
                             Just Null ->
-                                cellElement [ Font.bold ] (text "null")
+                                cellElement [ Font.alignRight, Font.bold ] "" (text "null")
 
                             Just (String s) ->
-                                cellElement [ Font.family [ Font.monospace ] ] (text s)
+                                cellElement
+                                    [ Font.alignRight
+                                    , Font.family [ Font.monospace ]
+                                    ]
+                                    ""
+                                    (text s)
 
         rows =
             cells
@@ -1529,29 +1567,30 @@ viewValueSetAsUserDefinedTable lensId td valueSet =
                 ( Element.none, Element.none )
 
             else
-                ( Input.button
-                    [ width fill
-                    , padding 2
-                    , Background.color germanZeroGreen
-                    , Element.mouseOver
-                        [ Background.color germanZeroYellow
-                        ]
-                    ]
-                    { onPress = Just (AddRowToLensTableClicked lensId)
-                    , label = icon FeatherIcons.plusCircle
-                    }
-                , column [ height fill ]
-                    [ Input.button
-                        [ height fill
-                        , padding 2
-                        , Background.color germanZeroGreen
-                        , Element.mouseOver
-                            [ Background.color germanZeroYellow
+                let
+                    addButton iconAlign fillDir msg =
+                        Input.button
+                            [ padding 2
+                            , Border.width 1
+                            , Border.color germanZeroGreen
+                            , Font.color germanZeroGreen
+                            , Element.mouseOver
+                                [ Border.color germanZeroYellow
+                                , Font.color
+                                    germanZeroYellow
+                                ]
+                            , fillDir fill
                             ]
-                        ]
-                        { onPress = Just (AddColumnToLensTableClicked lensId)
-                        , label = el [ Element.centerY ] (icon FeatherIcons.plusCircle)
-                        }
+                            { onPress = Just msg
+                            , label = el [ iconAlign ] (icon FeatherIcons.plusCircle)
+                            }
+                in
+                ( addButton Element.centerX width (AddRowToLensTableClicked lensId)
+                , column [ height fill ]
+                    [ addButton
+                        Element.centerY
+                        height
+                        (AddColumnToLensTableClicked lensId)
                     , el [ width fill, padding 2, height (px 32) ] Element.none
                     ]
                 )
