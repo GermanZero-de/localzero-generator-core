@@ -54,7 +54,6 @@ import Html.Attributes
 import Html.Events
 import Html5.DragDrop as DragDrop
 import Http
-import InterestListTable exposing (ValueSet)
 import Json.Decode as Decode
 import Json.Encode as Encode
 import Lens exposing (Lens)
@@ -86,6 +85,7 @@ import Styling
 import Task
 import Tree exposing (Node(..), Tree)
 import Value exposing (Value(..))
+import ValueSet exposing (ValueSet)
 
 
 
@@ -1430,11 +1430,11 @@ viewRunsAndComparisons model =
         ]
 
 
-viewInterestListTableAsTable : Dict Run.Path String -> LensId -> ValueSet -> Element Msg
-viewInterestListTableAsTable shortPathLabels lensId interestListTable =
+viewValueSetAsTable : Dict Run.Path String -> LensId -> ValueSet -> Element Msg
+viewValueSetAsTable shortPathLabels lensId valueSet =
     let
         dataColumns =
-            interestListTable.runs
+            valueSet.runs
                 |> List.map
                     (\runId ->
                         { header = el [ Font.bold, Font.alignRight ] (Element.text (String.fromInt runId))
@@ -1443,7 +1443,7 @@ viewInterestListTableAsTable shortPathLabels lensId interestListTable =
                             \path ->
                                 let
                                     value =
-                                        case Dict.get ( runId, path ) interestListTable.values of
+                                        case Dict.get ( runId, path ) valueSet.values of
                                             Just (Float f) ->
                                                 el (Font.alignRight :: fonts.explorerValues) <|
                                                     text (formatGermanNumber f)
@@ -1490,16 +1490,16 @@ viewInterestListTableAsTable shortPathLabels lensId interestListTable =
         , spacing sizes.large
         , padding sizes.large
         ]
-        { data = interestListTable.paths
+        { data = valueSet.paths
         , columns = shortPathLabelColumn :: dataColumns ++ [ deleteColumn ]
         }
 
 
-viewInterestList : LensId -> Bool -> Bool -> Lens -> ChartHovering -> AllRuns -> Element Msg
-viewInterestList id editingActiveLensLabel isActive lens chartHovering allRuns =
+viewLens : LensId -> Bool -> Bool -> Lens -> ChartHovering -> AllRuns -> Element Msg
+viewLens id editingActiveLensLabel isActive lens chartHovering allRuns =
     let
-        interestListTable =
-            InterestListTable.create lens allRuns
+        valueSet =
+            ValueSet.create lens allRuns
 
         showGraph =
             Lens.getShowGraph lens
@@ -1578,11 +1578,11 @@ viewInterestList id editingActiveLensLabel isActive lens chartHovering allRuns =
             ]
         , column [ width fill, spacing 40 ]
             [ if showGraph then
-                viewChart chartHovering shortPathLabels interestListTable
+                viewChart chartHovering shortPathLabels valueSet
 
               else
                 Element.none
-            , viewInterestListTableAsTable shortPathLabels id interestListTable
+            , viewValueSetAsTable shortPathLabels id valueSet
             ]
         ]
 
@@ -1616,7 +1616,7 @@ viewModel model =
                             activePos =
                                 Pivot.lengthL model.lenses
                         in
-                        viewInterestList pos
+                        viewLens pos
                             model.editingActiveLensLabel
                             (pos == activePos)
                             il
