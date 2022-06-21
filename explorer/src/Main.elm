@@ -250,6 +250,7 @@ type Msg
     | RemoveInterestListClicked InterestListId
     | ActivateInterestListClicked InterestListId
     | NewInterestListClicked
+    | NewTableClicked
     | DownloadClicked
     | UploadClicked
     | FileUploaded File
@@ -620,6 +621,11 @@ update msg model =
         NewInterestListClicked ->
             model
                 |> mapInterestLists (Pivot.appendR InterestList.empty)
+                |> withNoCmd
+
+        NewTableClicked ->
+            model
+                |> mapInterestLists (Pivot.appendR InterestList.emptyTable)
                 |> withNoCmd
 
         DuplicateInterestListClicked id ->
@@ -1630,7 +1636,17 @@ viewModel model =
                 [ width fill
                 , height (minimum 0 fill)
                 , Element.inFront
-                    (floatingActionButton FeatherIcons.plus NewInterestListClicked)
+                    (row
+                        [ spacing 10
+                        , Element.alignBottom
+                        , Element.moveUp 10
+                        , Element.alignRight
+                        , padding 0
+                        ]
+                        [ floatingActionButton FeatherIcons.plus NewInterestListClicked
+                        , floatingActionButton FeatherIcons.grid NewTableClicked
+                        ]
+                    )
                 ]
                 (column
                     [ width fill
