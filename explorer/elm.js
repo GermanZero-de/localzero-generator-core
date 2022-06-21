@@ -4358,6 +4358,43 @@ function _Browser_load(url)
 
 
 
+var _Bitwise_and = F2(function(a, b)
+{
+	return a & b;
+});
+
+var _Bitwise_or = F2(function(a, b)
+{
+	return a | b;
+});
+
+var _Bitwise_xor = F2(function(a, b)
+{
+	return a ^ b;
+});
+
+function _Bitwise_complement(a)
+{
+	return ~a;
+};
+
+var _Bitwise_shiftLeftBy = F2(function(offset, a)
+{
+	return a << offset;
+});
+
+var _Bitwise_shiftRightBy = F2(function(offset, a)
+{
+	return a >> offset;
+});
+
+var _Bitwise_shiftRightZfBy = F2(function(offset, a)
+{
+	return a >>> offset;
+});
+
+
+
 // DECODER
 
 var _File_decoder = _Json_decodePrim(function(value) {
@@ -4708,44 +4745,7 @@ function _Http_track(router, xhr, tracker)
 			size: event.lengthComputable ? $elm$core$Maybe$Just(event.total) : $elm$core$Maybe$Nothing
 		}))));
 	});
-}
-
-
-var _Bitwise_and = F2(function(a, b)
-{
-	return a & b;
-});
-
-var _Bitwise_or = F2(function(a, b)
-{
-	return a | b;
-});
-
-var _Bitwise_xor = F2(function(a, b)
-{
-	return a ^ b;
-});
-
-function _Bitwise_complement(a)
-{
-	return ~a;
-};
-
-var _Bitwise_shiftLeftBy = F2(function(offset, a)
-{
-	return a << offset;
-});
-
-var _Bitwise_shiftRightBy = F2(function(offset, a)
-{
-	return a >> offset;
-});
-
-var _Bitwise_shiftRightZfBy = F2(function(offset, a)
-{
-	return a >>> offset;
-});
-var $elm$core$Basics$EQ = {$: 'EQ'};
+}var $elm$core$Basics$EQ = {$: 'EQ'};
 var $elm$core$Basics$GT = {$: 'GT'};
 var $elm$core$Basics$LT = {$: 'LT'};
 var $elm$core$List$cons = _List_cons;
@@ -5549,11 +5549,18 @@ var $author$project$AllRuns$AllRuns = function (a) {
 };
 var $author$project$AllRuns$empty = $author$project$AllRuns$AllRuns(
 	{nextId: 1, runs: $elm$core$Dict$empty});
-var $author$project$InterestList$InterestList = function (a) {
-	return {$: 'InterestList', a: a};
+var $author$project$Lens$Classic = function (a) {
+	return {$: 'Classic', a: a};
 };
-var $author$project$InterestList$empty = $author$project$InterestList$InterestList(
-	{guessedShortLabels: $elm$core$Dict$empty, label: 'data', paths: $elm$core$Set$empty, showGraph: false});
+var $author$project$Lens$Lens = function (a) {
+	return {$: 'Lens', a: a};
+};
+var $author$project$Lens$empty = $author$project$Lens$Lens(
+	{
+		label: 'data',
+		vkind: $author$project$Lens$Classic(
+			{guessedShortLabels: $elm$core$Dict$empty, paths: $elm$core$Set$empty, showGraph: false})
+	});
 var $author$project$Html5$DragDrop$NotDragging = {$: 'NotDragging'};
 var $author$project$Html5$DragDrop$init = $author$project$Html5$DragDrop$NotDragging;
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
@@ -5582,9 +5589,9 @@ var $author$project$Main$init = function (_v0) {
 			collapseStatus: $author$project$CollapseStatus$allCollapsed,
 			diffs: $elm$core$Dict$empty,
 			dragDrop: $author$project$Html5$DragDrop$init,
-			editingActiveInterestListLabel: false,
-			interestLists: $yotamDvir$elm_pivot$Pivot$singleton($author$project$InterestList$empty),
+			editingActiveLensLabel: false,
 			leftPaneWidth: 600,
+			lenses: $yotamDvir$elm_pivot$Pivot$singleton($author$project$Lens$empty),
 			runs: $author$project$AllRuns$empty,
 			selectedForComparison: $elm$core$Maybe$Nothing,
 			showModal: $elm$core$Maybe$Nothing
@@ -5722,15 +5729,15 @@ var $yotamDvir$elm_pivot$Pivot$Utilities$withRollback = F2(
 			f(x));
 	});
 var $yotamDvir$elm_pivot$Pivot$withRollback = $yotamDvir$elm_pivot$Pivot$Utilities$withRollback;
-var $author$project$Main$activateInterestList = F2(
+var $author$project$Main$activateLens = F2(
 	function (id, model) {
 		return _Utils_update(
 			model,
 			{
-				interestLists: A2(
+				lenses: A2(
 					$yotamDvir$elm_pivot$Pivot$withRollback,
 					$yotamDvir$elm_pivot$Pivot$goTo(id),
-					model.interestLists)
+					model.lenses)
 			});
 	});
 var $elm$core$Dict$Black = {$: 'Black'};
@@ -5878,24 +5885,6 @@ var $yotamDvir$elm_pivot$Pivot$Modify$appendGoR = function (val) {
 		$yotamDvir$elm_pivot$Pivot$Modify$appendGoL(val));
 };
 var $yotamDvir$elm_pivot$Pivot$appendGoR = $yotamDvir$elm_pivot$Pivot$Modify$appendGoR;
-var $yotamDvir$elm_pivot$Pivot$Modify$appendL = F2(
-	function (val, _v0) {
-		var c = _v0.a;
-		var _v1 = _v0.b;
-		var l = _v1.a;
-		var r = _v1.b;
-		return A2(
-			$yotamDvir$elm_pivot$Pivot$Types$Pivot,
-			c,
-			_Utils_Tuple2(
-				A2($elm$core$List$cons, val, l),
-				r));
-	});
-var $yotamDvir$elm_pivot$Pivot$Modify$appendR = function (val) {
-	return $yotamDvir$elm_pivot$Pivot$Utilities$mirror(
-		$yotamDvir$elm_pivot$Pivot$Modify$appendL(val));
-};
-var $yotamDvir$elm_pivot$Pivot$appendR = $yotamDvir$elm_pivot$Pivot$Modify$appendR;
 var $elm$core$Basics$composeL = F3(
 	function (g, f, x) {
 		return g(
@@ -5936,6 +5925,9 @@ var $elm$json$Json$Decode$andThen = _Json_andThen;
 var $elm$json$Json$Decode$fail = _Json_fail;
 var $elm$json$Json$Decode$field = _Json_decodeField;
 var $elm$json$Json$Decode$int = _Json_decodeInt;
+var $author$project$Lens$Table = function (a) {
+	return {$: 'Table', a: a};
+};
 var $elm$json$Json$Decode$bool = _Json_decodeBool;
 var $elm$core$Set$insert = F2(
 	function (key, _v0) {
@@ -5947,8 +5939,317 @@ var $elm$core$Set$fromList = function (list) {
 	return A3($elm$core$List$foldl, $elm$core$Set$insert, $elm$core$Set$empty, list);
 };
 var $elm$json$Json$Decode$list = _Json_decodeList;
-var $elm$json$Json$Decode$map3 = _Json_map3;
 var $elm$json$Json$Decode$string = _Json_decodeString;
+var $author$project$Lens$classicDecoder = A3(
+	$elm$json$Json$Decode$map2,
+	F2(
+		function (showGraph, paths) {
+			return {guessedShortLabels: $elm$core$Dict$empty, paths: paths, showGraph: showGraph};
+		}),
+	A2($elm$json$Json$Decode$field, 'showGraph', $elm$json$Json$Decode$bool),
+	A2(
+		$elm$json$Json$Decode$field,
+		'paths',
+		A2(
+			$elm$json$Json$Decode$map,
+			$elm$core$Set$fromList,
+			$elm$json$Json$Decode$list(
+				$elm$json$Json$Decode$list($elm$json$Json$Decode$string)))));
+var $elm$json$Json$Decode$oneOf = _Json_oneOf;
+var $elm$json$Json$Decode$maybe = function (decoder) {
+	return $elm$json$Json$Decode$oneOf(
+		_List_fromArray(
+			[
+				A2($elm$json$Json$Decode$map, $elm$core$Maybe$Just, decoder),
+				$elm$json$Json$Decode$succeed($elm$core$Maybe$Nothing)
+			]));
+};
+var $LesleyLai$elm_grid$Grid$Grid = function (a) {
+	return {$: 'Grid', a: a};
+};
+var $elm$core$Elm$JsArray$appendN = _JsArray_appendN;
+var $elm$core$Elm$JsArray$slice = _JsArray_slice;
+var $elm$core$Array$appendHelpBuilder = F2(
+	function (tail, builder) {
+		var tailLen = $elm$core$Elm$JsArray$length(tail);
+		var notAppended = ($elm$core$Array$branchFactor - $elm$core$Elm$JsArray$length(builder.tail)) - tailLen;
+		var appended = A3($elm$core$Elm$JsArray$appendN, $elm$core$Array$branchFactor, builder.tail, tail);
+		return (notAppended < 0) ? {
+			nodeList: A2(
+				$elm$core$List$cons,
+				$elm$core$Array$Leaf(appended),
+				builder.nodeList),
+			nodeListSize: builder.nodeListSize + 1,
+			tail: A3($elm$core$Elm$JsArray$slice, notAppended, tailLen, tail)
+		} : ((!notAppended) ? {
+			nodeList: A2(
+				$elm$core$List$cons,
+				$elm$core$Array$Leaf(appended),
+				builder.nodeList),
+			nodeListSize: builder.nodeListSize + 1,
+			tail: $elm$core$Elm$JsArray$empty
+		} : {nodeList: builder.nodeList, nodeListSize: builder.nodeListSize, tail: appended});
+	});
+var $elm$core$Bitwise$and = _Bitwise_and;
+var $elm$core$Bitwise$shiftRightZfBy = _Bitwise_shiftRightZfBy;
+var $elm$core$Array$bitMask = 4294967295 >>> (32 - $elm$core$Array$shiftStep);
+var $elm$core$Basics$ge = _Utils_ge;
+var $elm$core$Elm$JsArray$push = _JsArray_push;
+var $elm$core$Elm$JsArray$singleton = _JsArray_singleton;
+var $elm$core$Elm$JsArray$unsafeGet = _JsArray_unsafeGet;
+var $elm$core$Elm$JsArray$unsafeSet = _JsArray_unsafeSet;
+var $elm$core$Array$insertTailInTree = F4(
+	function (shift, index, tail, tree) {
+		var pos = $elm$core$Array$bitMask & (index >>> shift);
+		if (_Utils_cmp(
+			pos,
+			$elm$core$Elm$JsArray$length(tree)) > -1) {
+			if (shift === 5) {
+				return A2(
+					$elm$core$Elm$JsArray$push,
+					$elm$core$Array$Leaf(tail),
+					tree);
+			} else {
+				var newSub = $elm$core$Array$SubTree(
+					A4($elm$core$Array$insertTailInTree, shift - $elm$core$Array$shiftStep, index, tail, $elm$core$Elm$JsArray$empty));
+				return A2($elm$core$Elm$JsArray$push, newSub, tree);
+			}
+		} else {
+			var value = A2($elm$core$Elm$JsArray$unsafeGet, pos, tree);
+			if (value.$ === 'SubTree') {
+				var subTree = value.a;
+				var newSub = $elm$core$Array$SubTree(
+					A4($elm$core$Array$insertTailInTree, shift - $elm$core$Array$shiftStep, index, tail, subTree));
+				return A3($elm$core$Elm$JsArray$unsafeSet, pos, newSub, tree);
+			} else {
+				var newSub = $elm$core$Array$SubTree(
+					A4(
+						$elm$core$Array$insertTailInTree,
+						shift - $elm$core$Array$shiftStep,
+						index,
+						tail,
+						$elm$core$Elm$JsArray$singleton(value)));
+				return A3($elm$core$Elm$JsArray$unsafeSet, pos, newSub, tree);
+			}
+		}
+	});
+var $elm$core$Bitwise$shiftLeftBy = _Bitwise_shiftLeftBy;
+var $elm$core$Array$unsafeReplaceTail = F2(
+	function (newTail, _v0) {
+		var len = _v0.a;
+		var startShift = _v0.b;
+		var tree = _v0.c;
+		var tail = _v0.d;
+		var originalTailLen = $elm$core$Elm$JsArray$length(tail);
+		var newTailLen = $elm$core$Elm$JsArray$length(newTail);
+		var newArrayLen = len + (newTailLen - originalTailLen);
+		if (_Utils_eq(newTailLen, $elm$core$Array$branchFactor)) {
+			var overflow = _Utils_cmp(newArrayLen >>> $elm$core$Array$shiftStep, 1 << startShift) > 0;
+			if (overflow) {
+				var newShift = startShift + $elm$core$Array$shiftStep;
+				var newTree = A4(
+					$elm$core$Array$insertTailInTree,
+					newShift,
+					len,
+					newTail,
+					$elm$core$Elm$JsArray$singleton(
+						$elm$core$Array$SubTree(tree)));
+				return A4($elm$core$Array$Array_elm_builtin, newArrayLen, newShift, newTree, $elm$core$Elm$JsArray$empty);
+			} else {
+				return A4(
+					$elm$core$Array$Array_elm_builtin,
+					newArrayLen,
+					startShift,
+					A4($elm$core$Array$insertTailInTree, startShift, len, newTail, tree),
+					$elm$core$Elm$JsArray$empty);
+			}
+		} else {
+			return A4($elm$core$Array$Array_elm_builtin, newArrayLen, startShift, tree, newTail);
+		}
+	});
+var $elm$core$Array$appendHelpTree = F2(
+	function (toAppend, array) {
+		var len = array.a;
+		var tree = array.c;
+		var tail = array.d;
+		var itemsToAppend = $elm$core$Elm$JsArray$length(toAppend);
+		var notAppended = ($elm$core$Array$branchFactor - $elm$core$Elm$JsArray$length(tail)) - itemsToAppend;
+		var appended = A3($elm$core$Elm$JsArray$appendN, $elm$core$Array$branchFactor, tail, toAppend);
+		var newArray = A2($elm$core$Array$unsafeReplaceTail, appended, array);
+		if (notAppended < 0) {
+			var nextTail = A3($elm$core$Elm$JsArray$slice, notAppended, itemsToAppend, toAppend);
+			return A2($elm$core$Array$unsafeReplaceTail, nextTail, newArray);
+		} else {
+			return newArray;
+		}
+	});
+var $elm$core$Elm$JsArray$foldl = _JsArray_foldl;
+var $elm$core$Array$builderFromArray = function (_v0) {
+	var len = _v0.a;
+	var tree = _v0.c;
+	var tail = _v0.d;
+	var helper = F2(
+		function (node, acc) {
+			if (node.$ === 'SubTree') {
+				var subTree = node.a;
+				return A3($elm$core$Elm$JsArray$foldl, helper, acc, subTree);
+			} else {
+				return A2($elm$core$List$cons, node, acc);
+			}
+		});
+	return {
+		nodeList: A3($elm$core$Elm$JsArray$foldl, helper, _List_Nil, tree),
+		nodeListSize: (len / $elm$core$Array$branchFactor) | 0,
+		tail: tail
+	};
+};
+var $elm$core$Array$append = F2(
+	function (a, _v0) {
+		var aTail = a.d;
+		var bLen = _v0.a;
+		var bTree = _v0.c;
+		var bTail = _v0.d;
+		if (_Utils_cmp(bLen, $elm$core$Array$branchFactor * 4) < 1) {
+			var foldHelper = F2(
+				function (node, array) {
+					if (node.$ === 'SubTree') {
+						var tree = node.a;
+						return A3($elm$core$Elm$JsArray$foldl, foldHelper, array, tree);
+					} else {
+						var leaf = node.a;
+						return A2($elm$core$Array$appendHelpTree, leaf, array);
+					}
+				});
+			return A2(
+				$elm$core$Array$appendHelpTree,
+				bTail,
+				A3($elm$core$Elm$JsArray$foldl, foldHelper, a, bTree));
+		} else {
+			var foldHelper = F2(
+				function (node, builder) {
+					if (node.$ === 'SubTree') {
+						var tree = node.a;
+						return A3($elm$core$Elm$JsArray$foldl, foldHelper, builder, tree);
+					} else {
+						var leaf = node.a;
+						return A2($elm$core$Array$appendHelpBuilder, leaf, builder);
+					}
+				});
+			return A2(
+				$elm$core$Array$builderToArray,
+				true,
+				A2(
+					$elm$core$Array$appendHelpBuilder,
+					bTail,
+					A3(
+						$elm$core$Elm$JsArray$foldl,
+						foldHelper,
+						$elm$core$Array$builderFromArray(a),
+						bTree)));
+		}
+	});
+var $elm$core$Array$fromListHelp = F3(
+	function (list, nodeList, nodeListSize) {
+		fromListHelp:
+		while (true) {
+			var _v0 = A2($elm$core$Elm$JsArray$initializeFromList, $elm$core$Array$branchFactor, list);
+			var jsArray = _v0.a;
+			var remainingItems = _v0.b;
+			if (_Utils_cmp(
+				$elm$core$Elm$JsArray$length(jsArray),
+				$elm$core$Array$branchFactor) < 0) {
+				return A2(
+					$elm$core$Array$builderToArray,
+					true,
+					{nodeList: nodeList, nodeListSize: nodeListSize, tail: jsArray});
+			} else {
+				var $temp$list = remainingItems,
+					$temp$nodeList = A2(
+					$elm$core$List$cons,
+					$elm$core$Array$Leaf(jsArray),
+					nodeList),
+					$temp$nodeListSize = nodeListSize + 1;
+				list = $temp$list;
+				nodeList = $temp$nodeList;
+				nodeListSize = $temp$nodeListSize;
+				continue fromListHelp;
+			}
+		}
+	});
+var $elm$core$Array$fromList = function (list) {
+	if (!list.b) {
+		return $elm$core$Array$empty;
+	} else {
+		return A3($elm$core$Array$fromListHelp, list, _List_Nil, 0);
+	}
+};
+var $elm$core$Array$length = function (_v0) {
+	var len = _v0.a;
+	return len;
+};
+var $LesleyLai$elm_grid$Grid$fromList = function (lst) {
+	if (!lst.b) {
+		return $elm$core$Maybe$Just(
+			$LesleyLai$elm_grid$Grid$Grid(
+				{
+					data: $elm$core$Array$fromList(_List_Nil),
+					h: 0,
+					w: 0
+				}));
+	} else {
+		var row = lst.a;
+		var tails = lst.b;
+		return A2(
+			$elm$core$Maybe$andThen,
+			function (remainGrid) {
+				var w = remainGrid.a.w;
+				var h = remainGrid.a.h;
+				var data = remainGrid.a.data;
+				var rowData = $elm$core$Array$fromList(row);
+				var rowWidth = $elm$core$Array$length(rowData);
+				var maybeNewWidth = (!w) ? $elm$core$Maybe$Just(
+					$elm$core$Array$length(rowData)) : (_Utils_eq(w, rowWidth) ? $elm$core$Maybe$Just(w) : $elm$core$Maybe$Nothing);
+				return A2(
+					$elm$core$Maybe$andThen,
+					function (newWidth) {
+						return $elm$core$Maybe$Just(
+							$LesleyLai$elm_grid$Grid$Grid(
+								{
+									data: A2($elm$core$Array$append, rowData, data),
+									h: h + 1,
+									w: newWidth
+								}));
+					},
+					maybeNewWidth);
+			},
+			$LesleyLai$elm_grid$Grid$fromList(tails));
+	}
+};
+var $elm$json$Json$Decode$null = _Json_decodeNull;
+var $elm$json$Json$Decode$nullable = function (decoder) {
+	return $elm$json$Json$Decode$oneOf(
+		_List_fromArray(
+			[
+				$elm$json$Json$Decode$null($elm$core$Maybe$Nothing),
+				A2($elm$json$Json$Decode$map, $elm$core$Maybe$Just, decoder)
+			]));
+};
+var $author$project$Lens$tableDecoder = A2(
+	$elm$json$Json$Decode$andThen,
+	function (l) {
+		var _v0 = $LesleyLai$elm_grid$Grid$fromList(l);
+		if (_v0.$ === 'Nothing') {
+			return $elm$json$Json$Decode$fail('invalid grid');
+		} else {
+			var g = _v0.a;
+			return $elm$json$Json$Decode$succeed(
+				{editing: $elm$core$Maybe$Nothing, grid: g});
+		}
+	},
+	$elm$json$Json$Decode$list(
+		$elm$json$Json$Decode$list(
+			$elm$json$Json$Decode$nullable(
+				$elm$json$Json$Decode$list($elm$json$Json$Decode$string)))));
 var $elm$core$Dict$fromList = function (assocs) {
 	return A3(
 		$elm$core$List$foldl,
@@ -5992,7 +6293,7 @@ var $elm_community$list_extra$List$Extra$unconsLast = function (list) {
 				$elm$core$List$reverse(rest)));
 	}
 };
-var $author$project$InterestList$mapLast = F2(
+var $author$project$Lens$mapLast = F2(
 	function (f, l) {
 		var _v0 = $elm_community$list_extra$List$Extra$unconsLast(l);
 		if (_v0.$ === 'Nothing') {
@@ -6013,10 +6314,10 @@ var $elm$core$Tuple$pair = F2(
 	function (a, b) {
 		return _Utils_Tuple2(a, b);
 	});
-var $author$project$InterestList$Skip = function (a) {
+var $author$project$Lens$Skip = function (a) {
 	return {$: 'Skip', a: a};
 };
-var $author$project$InterestList$Take = {$: 'Take'};
+var $author$project$Lens$Take = {$: 'Take'};
 var $elm$core$List$any = F2(
 	function (isOkay, list) {
 		any:
@@ -6083,7 +6384,7 @@ var $elm$core$List$isEmpty = function (xs) {
 		return false;
 	}
 };
-var $author$project$InterestList$shorten = F2(
+var $author$project$Lens$shorten = F2(
 	function (delim, lists) {
 		var makeShortener = F2(
 			function (res, ps) {
@@ -6107,7 +6408,7 @@ var $author$project$InterestList$shorten = F2(
 								rest)) {
 								var $temp$res = A2(
 									$elm$core$List$cons,
-									$author$project$InterestList$Skip(
+									$author$project$Lens$Skip(
 										A2(
 											$elm$core$Maybe$withDefault,
 											'',
@@ -6121,7 +6422,7 @@ var $author$project$InterestList$shorten = F2(
 								ps = $temp$ps;
 								continue makeShortener;
 							} else {
-								var $temp$res = A2($elm$core$List$cons, $author$project$InterestList$Take, res),
+								var $temp$res = A2($elm$core$List$cons, $author$project$Lens$Take, res),
 									$temp$ps = A2(
 									$elm$core$List$map,
 									$elm$core$List$drop(1),
@@ -6192,11 +6493,10 @@ var $elm$core$Dict$singleton = F2(
 	function (key, value) {
 		return A5($elm$core$Dict$RBNode_elm_builtin, $elm$core$Dict$Black, key, value, $elm$core$Dict$RBEmpty_elm_builtin, $elm$core$Dict$RBEmpty_elm_builtin);
 	});
-var $author$project$InterestList$guessShortPathLabels = function (_v0) {
-	var il = _v0.a;
-	var _v1 = $elm$core$Set$toList(il.paths);
-	if (_v1.b && (!_v1.b.b)) {
-		var onlyOne = _v1.a;
+var $author$project$Lens$guessShortPathLabels = function (paths) {
+	var _v0 = $elm$core$Set$toList(paths);
+	if (_v0.b && (!_v0.b.b)) {
+		var onlyOne = _v0.a;
 		return A2(
 			$elm$core$Dict$singleton,
 			onlyOne,
@@ -6205,10 +6505,10 @@ var $author$project$InterestList$guessShortPathLabels = function (_v0) {
 				'',
 				$elm_community$list_extra$List$Extra$last(onlyOne)));
 	} else {
-		var paths = _v1;
+		var pathList = _v0;
 		var shortLabels = function () {
 			var shortenedLastElements = A2(
-				$author$project$InterestList$shorten,
+				$author$project$Lens$shorten,
 				'_',
 				A2(
 					$elm$core$List$map,
@@ -6219,53 +6519,77 @@ var $author$project$InterestList$guessShortPathLabels = function (_v0) {
 							$elm$core$String$split('_'),
 							$elm$core$Maybe$withDefault('')),
 						$elm_community$list_extra$List$Extra$last),
-					paths));
+					pathList));
 			return A2(
-				$author$project$InterestList$shorten,
+				$author$project$Lens$shorten,
 				'.',
 				A3(
 					$elm$core$List$map2,
 					F2(
 						function (l, e) {
 							return A2(
-								$author$project$InterestList$mapLast,
+								$author$project$Lens$mapLast,
 								$elm$core$Basics$always(e),
 								l);
 						}),
-					paths,
+					pathList,
 					shortenedLastElements));
 		}();
 		return $elm$core$Dict$fromList(
-			A3($elm$core$List$map2, $elm$core$Tuple$pair, paths, shortLabels));
+			A3($elm$core$List$map2, $elm$core$Tuple$pair, pathList, shortLabels));
 	}
 };
-var $author$project$InterestList$updateShortPathLabels = function (i) {
-	var il = i.a;
-	return $author$project$InterestList$InterestList(
-		_Utils_update(
-			il,
+var $author$project$Lens$mapClassic = F2(
+	function (fn, _v0) {
+		var i = _v0.a;
+		var _v1 = i.vkind;
+		if (_v1.$ === 'Table') {
+			return $author$project$Lens$Lens(i);
+		} else {
+			var c = _v1.a;
+			return $author$project$Lens$Lens(
+				_Utils_update(
+					i,
+					{
+						vkind: $author$project$Lens$Classic(
+							fn(c))
+					}));
+		}
+	});
+var $author$project$Lens$updateShortPathLabels = $author$project$Lens$mapClassic(
+	function (c) {
+		return _Utils_update(
+			c,
 			{
-				guessedShortLabels: $author$project$InterestList$guessShortPathLabels(i)
-			}));
-};
-var $author$project$InterestList$decoder = A4(
-	$elm$json$Json$Decode$map3,
-	F3(
-		function (label, showGraph, paths) {
-			return $author$project$InterestList$updateShortPathLabels(
-				$author$project$InterestList$InterestList(
-					{guessedShortLabels: $elm$core$Dict$empty, label: label, paths: paths, showGraph: showGraph}));
+				guessedShortLabels: $author$project$Lens$guessShortPathLabels(c.paths)
+			});
+	});
+var $author$project$Lens$decoder = A3(
+	$elm$json$Json$Decode$map2,
+	F2(
+		function (label, vkind) {
+			return $author$project$Lens$updateShortPathLabels(
+				$author$project$Lens$Lens(
+					{label: label, vkind: vkind}));
 		}),
 	A2($elm$json$Json$Decode$field, 'label', $elm$json$Json$Decode$string),
-	A2($elm$json$Json$Decode$field, 'showGraph', $elm$json$Json$Decode$bool),
 	A2(
-		$elm$json$Json$Decode$field,
-		'paths',
+		$elm$json$Json$Decode$andThen,
+		function (kind) {
+			switch (kind) {
+				case 'classic':
+					return A2($elm$json$Json$Decode$map, $author$project$Lens$Classic, $author$project$Lens$classicDecoder);
+				case 'table':
+					return A2($elm$json$Json$Decode$map, $author$project$Lens$Table, $author$project$Lens$tableDecoder);
+				default:
+					return $elm$json$Json$Decode$fail('Invalid kind');
+			}
+		},
 		A2(
 			$elm$json$Json$Decode$map,
-			$elm$core$Set$fromList,
-			$elm$json$Json$Decode$list(
-				$elm$json$Json$Decode$list($elm$json$Json$Decode$string)))));
+			$elm$core$Maybe$withDefault('table'),
+			$elm$json$Json$Decode$maybe(
+				A2($elm$json$Json$Decode$field, 'kind', $elm$json$Json$Decode$string)))));
 var $author$project$Storage$v1Decoder = A2(
 	$elm$json$Json$Decode$map,
 	function (l) {
@@ -6274,7 +6598,7 @@ var $author$project$Storage$v1Decoder = A2(
 	A2(
 		$elm$json$Json$Decode$field,
 		'interestLists',
-		$elm$json$Json$Decode$list($author$project$InterestList$decoder)));
+		$elm$json$Json$Decode$list($author$project$Lens$decoder)));
 var $author$project$Storage$decoder = A2(
 	$elm$json$Json$Decode$andThen,
 	function (v) {
@@ -6702,6 +7026,35 @@ var $author$project$Main$diffRunsById = F4(
 			}
 		}
 	});
+var $elm$core$Array$foldl = F3(
+	function (func, baseCase, _v0) {
+		var tree = _v0.c;
+		var tail = _v0.d;
+		var helper = F2(
+			function (node, acc) {
+				if (node.$ === 'SubTree') {
+					var subTree = node.a;
+					return A3($elm$core$Elm$JsArray$foldl, helper, acc, subTree);
+				} else {
+					var values = node.a;
+					return A3($elm$core$Elm$JsArray$foldl, func, acc, values);
+				}
+			});
+		return A3(
+			$elm$core$Elm$JsArray$foldl,
+			func,
+			A3($elm$core$Elm$JsArray$foldl, helper, baseCase, tree),
+			tail);
+	});
+var $elm$json$Json$Encode$array = F2(
+	function (func, entries) {
+		return _Json_wrap(
+			A3(
+				$elm$core$Array$foldl,
+				_Json_addEntry(func),
+				_Json_emptyArray(_Utils_Tuple0),
+				entries));
+	});
 var $elm$json$Json$Encode$bool = _Json_wrap;
 var $elm$json$Json$Encode$list = F2(
 	function (func, entries) {
@@ -6712,6 +7065,7 @@ var $elm$json$Json$Encode$list = F2(
 				_Json_emptyArray(_Utils_Tuple0),
 				entries));
 	});
+var $elm$json$Json$Encode$null = _Json_encodeNull;
 var $elm$json$Json$Encode$object = function (pairs) {
 	return _Json_wrap(
 		A3(
@@ -6724,6 +7078,225 @@ var $elm$json$Json$Encode$object = function (pairs) {
 				}),
 			_Json_emptyObject(_Utils_Tuple0),
 			pairs));
+};
+var $elm$core$Elm$JsArray$map = _JsArray_map;
+var $elm$core$Array$map = F2(
+	function (func, _v0) {
+		var len = _v0.a;
+		var startShift = _v0.b;
+		var tree = _v0.c;
+		var tail = _v0.d;
+		var helper = function (node) {
+			if (node.$ === 'SubTree') {
+				var subTree = node.a;
+				return $elm$core$Array$SubTree(
+					A2($elm$core$Elm$JsArray$map, helper, subTree));
+			} else {
+				var values = node.a;
+				return $elm$core$Array$Leaf(
+					A2($elm$core$Elm$JsArray$map, func, values));
+			}
+		};
+		return A4(
+			$elm$core$Array$Array_elm_builtin,
+			len,
+			startShift,
+			A2($elm$core$Elm$JsArray$map, helper, tree),
+			A2($elm$core$Elm$JsArray$map, func, tail));
+	});
+var $elm$core$Array$tailIndex = function (len) {
+	return (len >>> 5) << 5;
+};
+var $elm$core$Array$sliceLeft = F2(
+	function (from, array) {
+		var len = array.a;
+		var tree = array.c;
+		var tail = array.d;
+		if (!from) {
+			return array;
+		} else {
+			if (_Utils_cmp(
+				from,
+				$elm$core$Array$tailIndex(len)) > -1) {
+				return A4(
+					$elm$core$Array$Array_elm_builtin,
+					len - from,
+					$elm$core$Array$shiftStep,
+					$elm$core$Elm$JsArray$empty,
+					A3(
+						$elm$core$Elm$JsArray$slice,
+						from - $elm$core$Array$tailIndex(len),
+						$elm$core$Elm$JsArray$length(tail),
+						tail));
+			} else {
+				var skipNodes = (from / $elm$core$Array$branchFactor) | 0;
+				var helper = F2(
+					function (node, acc) {
+						if (node.$ === 'SubTree') {
+							var subTree = node.a;
+							return A3($elm$core$Elm$JsArray$foldr, helper, acc, subTree);
+						} else {
+							var leaf = node.a;
+							return A2($elm$core$List$cons, leaf, acc);
+						}
+					});
+				var leafNodes = A3(
+					$elm$core$Elm$JsArray$foldr,
+					helper,
+					_List_fromArray(
+						[tail]),
+					tree);
+				var nodesToInsert = A2($elm$core$List$drop, skipNodes, leafNodes);
+				if (!nodesToInsert.b) {
+					return $elm$core$Array$empty;
+				} else {
+					var head = nodesToInsert.a;
+					var rest = nodesToInsert.b;
+					var firstSlice = from - (skipNodes * $elm$core$Array$branchFactor);
+					var initialBuilder = {
+						nodeList: _List_Nil,
+						nodeListSize: 0,
+						tail: A3(
+							$elm$core$Elm$JsArray$slice,
+							firstSlice,
+							$elm$core$Elm$JsArray$length(head),
+							head)
+					};
+					return A2(
+						$elm$core$Array$builderToArray,
+						true,
+						A3($elm$core$List$foldl, $elm$core$Array$appendHelpBuilder, initialBuilder, rest));
+				}
+			}
+		}
+	});
+var $elm$core$Array$fetchNewTail = F4(
+	function (shift, end, treeEnd, tree) {
+		fetchNewTail:
+		while (true) {
+			var pos = $elm$core$Array$bitMask & (treeEnd >>> shift);
+			var _v0 = A2($elm$core$Elm$JsArray$unsafeGet, pos, tree);
+			if (_v0.$ === 'SubTree') {
+				var sub = _v0.a;
+				var $temp$shift = shift - $elm$core$Array$shiftStep,
+					$temp$end = end,
+					$temp$treeEnd = treeEnd,
+					$temp$tree = sub;
+				shift = $temp$shift;
+				end = $temp$end;
+				treeEnd = $temp$treeEnd;
+				tree = $temp$tree;
+				continue fetchNewTail;
+			} else {
+				var values = _v0.a;
+				return A3($elm$core$Elm$JsArray$slice, 0, $elm$core$Array$bitMask & end, values);
+			}
+		}
+	});
+var $elm$core$Array$hoistTree = F3(
+	function (oldShift, newShift, tree) {
+		hoistTree:
+		while (true) {
+			if ((_Utils_cmp(oldShift, newShift) < 1) || (!$elm$core$Elm$JsArray$length(tree))) {
+				return tree;
+			} else {
+				var _v0 = A2($elm$core$Elm$JsArray$unsafeGet, 0, tree);
+				if (_v0.$ === 'SubTree') {
+					var sub = _v0.a;
+					var $temp$oldShift = oldShift - $elm$core$Array$shiftStep,
+						$temp$newShift = newShift,
+						$temp$tree = sub;
+					oldShift = $temp$oldShift;
+					newShift = $temp$newShift;
+					tree = $temp$tree;
+					continue hoistTree;
+				} else {
+					return tree;
+				}
+			}
+		}
+	});
+var $elm$core$Array$sliceTree = F3(
+	function (shift, endIdx, tree) {
+		var lastPos = $elm$core$Array$bitMask & (endIdx >>> shift);
+		var _v0 = A2($elm$core$Elm$JsArray$unsafeGet, lastPos, tree);
+		if (_v0.$ === 'SubTree') {
+			var sub = _v0.a;
+			var newSub = A3($elm$core$Array$sliceTree, shift - $elm$core$Array$shiftStep, endIdx, sub);
+			return (!$elm$core$Elm$JsArray$length(newSub)) ? A3($elm$core$Elm$JsArray$slice, 0, lastPos, tree) : A3(
+				$elm$core$Elm$JsArray$unsafeSet,
+				lastPos,
+				$elm$core$Array$SubTree(newSub),
+				A3($elm$core$Elm$JsArray$slice, 0, lastPos + 1, tree));
+		} else {
+			return A3($elm$core$Elm$JsArray$slice, 0, lastPos, tree);
+		}
+	});
+var $elm$core$Array$sliceRight = F2(
+	function (end, array) {
+		var len = array.a;
+		var startShift = array.b;
+		var tree = array.c;
+		var tail = array.d;
+		if (_Utils_eq(end, len)) {
+			return array;
+		} else {
+			if (_Utils_cmp(
+				end,
+				$elm$core$Array$tailIndex(len)) > -1) {
+				return A4(
+					$elm$core$Array$Array_elm_builtin,
+					end,
+					startShift,
+					tree,
+					A3($elm$core$Elm$JsArray$slice, 0, $elm$core$Array$bitMask & end, tail));
+			} else {
+				var endIdx = $elm$core$Array$tailIndex(end);
+				var depth = $elm$core$Basics$floor(
+					A2(
+						$elm$core$Basics$logBase,
+						$elm$core$Array$branchFactor,
+						A2($elm$core$Basics$max, 1, endIdx - 1)));
+				var newShift = A2($elm$core$Basics$max, 5, depth * $elm$core$Array$shiftStep);
+				return A4(
+					$elm$core$Array$Array_elm_builtin,
+					end,
+					newShift,
+					A3(
+						$elm$core$Array$hoistTree,
+						startShift,
+						newShift,
+						A3($elm$core$Array$sliceTree, startShift, endIdx, tree)),
+					A4($elm$core$Array$fetchNewTail, startShift, end, endIdx, tree));
+			}
+		}
+	});
+var $elm$core$Array$translateIndex = F2(
+	function (index, _v0) {
+		var len = _v0.a;
+		var posIndex = (index < 0) ? (len + index) : index;
+		return (posIndex < 0) ? 0 : ((_Utils_cmp(posIndex, len) > 0) ? len : posIndex);
+	});
+var $elm$core$Array$slice = F3(
+	function (from, to, array) {
+		var correctTo = A2($elm$core$Array$translateIndex, to, array);
+		var correctFrom = A2($elm$core$Array$translateIndex, from, array);
+		return (_Utils_cmp(correctFrom, correctTo) > 0) ? $elm$core$Array$empty : A2(
+			$elm$core$Array$sliceLeft,
+			correctFrom,
+			A2($elm$core$Array$sliceRight, correctTo, array));
+	});
+var $LesleyLai$elm_grid$Grid$rows = function (_v0) {
+	var w = _v0.a.w;
+	var h = _v0.a.h;
+	var data = _v0.a.data;
+	return A2(
+		$elm$core$Array$map,
+		function (y) {
+			return A3($elm$core$Array$slice, w * y, (w * y) + w, data);
+		},
+		$elm$core$Array$fromList(
+			A2($elm$core$List$range, 0, h - 1)));
 };
 var $elm$core$Set$foldl = F3(
 	function (func, initialState, _v0) {
@@ -6747,24 +7320,58 @@ var $elm$json$Json$Encode$set = F2(
 				entries));
 	});
 var $elm$json$Json$Encode$string = _Json_wrap;
-var $author$project$InterestList$encode = function (_v0) {
+var $author$project$Lens$encode = function (_v0) {
 	var i = _v0.a;
+	var kindFields = function () {
+		var _v1 = i.vkind;
+		if (_v1.$ === 'Classic') {
+			var c = _v1.a;
+			return _List_fromArray(
+				[
+					_Utils_Tuple2(
+					'kind',
+					$elm$json$Json$Encode$string('classic')),
+					_Utils_Tuple2(
+					'showGraph',
+					$elm$json$Json$Encode$bool(c.showGraph)),
+					_Utils_Tuple2(
+					'paths',
+					A2(
+						$elm$json$Json$Encode$set,
+						$elm$json$Json$Encode$list($elm$json$Json$Encode$string),
+						c.paths))
+				]);
+		} else {
+			var td = _v1.a;
+			var encodeCell = function (mp) {
+				if (mp.$ === 'Nothing') {
+					return $elm$json$Json$Encode$null;
+				} else {
+					var p = mp.a;
+					return A2($elm$json$Json$Encode$list, $elm$json$Json$Encode$string, p);
+				}
+			};
+			return _List_fromArray(
+				[
+					_Utils_Tuple2(
+					'kind',
+					$elm$json$Json$Encode$string('table')),
+					_Utils_Tuple2(
+					'table',
+					A2(
+						$elm$json$Json$Encode$array,
+						$elm$json$Json$Encode$array(encodeCell),
+						$LesleyLai$elm_grid$Grid$rows(td.grid)))
+				]);
+		}
+	}();
 	return $elm$json$Json$Encode$object(
-		_List_fromArray(
-			[
-				_Utils_Tuple2(
+		A2(
+			$elm$core$List$cons,
+			_Utils_Tuple2(
 				'label',
 				$elm$json$Json$Encode$string(i.label)),
-				_Utils_Tuple2(
-				'showGraph',
-				$elm$json$Json$Encode$bool(i.showGraph)),
-				_Utils_Tuple2(
-				'paths',
-				A2(
-					$elm$json$Json$Encode$set,
-					$elm$json$Json$Encode$list($elm$json$Json$Encode$string),
-					i.paths))
-			]));
+			kindFields));
 };
 var $elm$json$Json$Encode$int = _Json_wrap;
 var $author$project$Storage$encodeV1 = function (_v0) {
@@ -6777,7 +7384,7 @@ var $author$project$Storage$encodeV1 = function (_v0) {
 				$elm$json$Json$Encode$int(1)),
 				_Utils_Tuple2(
 				'interestLists',
-				A2($elm$json$Json$Encode$list, $author$project$InterestList$encode, interestLists))
+				A2($elm$json$Json$Encode$list, $author$project$Lens$encode, interestLists))
 			]));
 };
 var $author$project$Storage$encode = function (s) {
@@ -6829,10 +7436,34 @@ var $author$project$Main$downloadCmd = function (model) {
 		0,
 		$author$project$Storage$encode(
 			{
-				interestLists: $yotamDvir$elm_pivot$Pivot$toList(model.interestLists)
+				interestLists: $yotamDvir$elm_pivot$Pivot$toList(model.lenses)
 			}));
 	return A3($elm$file$File$Download$string, 'explorer.json', 'text/json', content);
 };
+var $elm$core$Array$repeat = F2(
+	function (n, e) {
+		return A2(
+			$elm$core$Array$initialize,
+			n,
+			function (_v0) {
+				return e;
+			});
+	});
+var $LesleyLai$elm_grid$Grid$repeat = F3(
+	function (w, h, elem) {
+		var data = A2($elm$core$Array$repeat, w * h, elem);
+		return $LesleyLai$elm_grid$Grid$Grid(
+			{data: data, h: h, w: w});
+	});
+var $author$project$Lens$emptyTable = $author$project$Lens$Lens(
+	{
+		label: 'data',
+		vkind: $author$project$Lens$Table(
+			{
+				editing: $elm$core$Maybe$Nothing,
+				grid: A3($LesleyLai$elm_grid$Grid$repeat, 2, 2, $elm$core$Maybe$Nothing)
+			})
+	});
 var $elm$core$List$append = F2(
 	function (xs, ys) {
 		if (!ys.b) {
@@ -7076,7 +7707,6 @@ var $elm$json$Json$Decode$lazy = function (thunk) {
 		thunk,
 		$elm$json$Json$Decode$succeed(_Utils_Tuple0));
 };
-var $elm$json$Json$Decode$oneOf = _Json_oneOf;
 var $author$project$Tree$nodeDecoder = function (valueDecoder) {
 	return $elm$json$Json$Decode$oneOf(
 		_List_fromArray(
@@ -7104,7 +7734,6 @@ var $author$project$Value$String = function (a) {
 	return {$: 'String', a: a};
 };
 var $elm$json$Json$Decode$float = _Json_decodeFloat;
-var $elm$json$Json$Decode$null = _Json_decodeNull;
 var $author$project$Value$decoder = $elm$json$Json$Decode$oneOf(
 	_List_fromArray(
 		[
@@ -7804,16 +8433,294 @@ var $author$project$Main$initiateMakeEntries = F4(
 					url: 'http://localhost:4070/make-entries/' + (inputs.ags + ('/' + $elm$core$String$fromInt(inputs.year)))
 				}));
 	});
-var $author$project$InterestList$insert = F2(
-	function (p, _v0) {
+var $elm$core$Array$getHelp = F3(
+	function (shift, index, tree) {
+		getHelp:
+		while (true) {
+			var pos = $elm$core$Array$bitMask & (index >>> shift);
+			var _v0 = A2($elm$core$Elm$JsArray$unsafeGet, pos, tree);
+			if (_v0.$ === 'SubTree') {
+				var subTree = _v0.a;
+				var $temp$shift = shift - $elm$core$Array$shiftStep,
+					$temp$index = index,
+					$temp$tree = subTree;
+				shift = $temp$shift;
+				index = $temp$index;
+				tree = $temp$tree;
+				continue getHelp;
+			} else {
+				var values = _v0.a;
+				return A2($elm$core$Elm$JsArray$unsafeGet, $elm$core$Array$bitMask & index, values);
+			}
+		}
+	});
+var $elm$core$Array$get = F2(
+	function (index, _v0) {
+		var len = _v0.a;
+		var startShift = _v0.b;
+		var tree = _v0.c;
+		var tail = _v0.d;
+		return ((index < 0) || (_Utils_cmp(index, len) > -1)) ? $elm$core$Maybe$Nothing : ((_Utils_cmp(
+			index,
+			$elm$core$Array$tailIndex(len)) > -1) ? $elm$core$Maybe$Just(
+			A2($elm$core$Elm$JsArray$unsafeGet, $elm$core$Array$bitMask & index, tail)) : $elm$core$Maybe$Just(
+			A3($elm$core$Array$getHelp, startShift, index, tree)));
+	});
+var $LesleyLai$elm_grid$Grid$inRange = F4(
+	function (x, y, w, h) {
+		return (x >= 0) && ((y >= 0) && ((_Utils_cmp(x, w) < 0) && (_Utils_cmp(y, h) < 0)));
+	});
+var $LesleyLai$elm_grid$Grid$get = F2(
+	function (_v0, grid) {
+		var x = _v0.a;
+		var y = _v0.b;
+		var w = grid.a.w;
+		var h = grid.a.h;
+		var data = grid.a.data;
+		return A4($LesleyLai$elm_grid$Grid$inRange, x, y, w, h) ? A2($elm$core$Array$get, x + (y * w), data) : $elm$core$Maybe$Nothing;
+	});
+var $LesleyLai$elm_grid$Grid$height = function (_v0) {
+	var w = _v0.a.w;
+	var h = _v0.a.h;
+	var data = _v0.a.data;
+	return h;
+};
+var $LesleyLai$elm_grid$Grid$initialize = F3(
+	function (w, h, f) {
+		var indices = A2(
+			$elm$core$List$concatMap,
+			function (y) {
+				return A2(
+					$elm$core$List$map,
+					function (x) {
+						return _Utils_Tuple2(x, y);
+					},
+					A2($elm$core$List$range, 0, w - 1));
+			},
+			A2($elm$core$List$range, 0, h - 1));
+		var data = $elm$core$Array$fromList(
+			A2(
+				$elm$core$List$map,
+				function (_v0) {
+					var x = _v0.a;
+					var y = _v0.b;
+					return A2(f, x, y);
+				},
+				indices));
+		return $LesleyLai$elm_grid$Grid$Grid(
+			{data: data, h: h, w: w});
+	});
+var $elm_community$maybe_extra$Maybe$Extra$join = function (mx) {
+	if (mx.$ === 'Just') {
+		var x = mx.a;
+		return x;
+	} else {
+		return $elm$core$Maybe$Nothing;
+	}
+};
+var $LesleyLai$elm_grid$Grid$width = function (_v0) {
+	var w = _v0.a.w;
+	var h = _v0.a.h;
+	var data = _v0.a.data;
+	return w;
+};
+var $author$project$Lens$addExtraRow = function (g) {
+	var w = $LesleyLai$elm_grid$Grid$width(g);
+	var h = $LesleyLai$elm_grid$Grid$height(g);
+	return A3(
+		$LesleyLai$elm_grid$Grid$initialize,
+		w,
+		h + 1,
+		F2(
+			function (x, y) {
+				return $elm_community$maybe_extra$Maybe$Extra$join(
+					A2(
+						$LesleyLai$elm_grid$Grid$get,
+						_Utils_Tuple2(x, y),
+						g));
+			}));
+};
+var $author$project$Lens$findInGridHelper = F4(
+	function (x, y, fn, g) {
+		findInGridHelper:
+		while (true) {
+			if (_Utils_cmp(
+				y,
+				$LesleyLai$elm_grid$Grid$height(g)) > -1) {
+				return $elm$core$Maybe$Nothing;
+			} else {
+				if (_Utils_cmp(
+					x,
+					$LesleyLai$elm_grid$Grid$width(g)) > -1) {
+					var $temp$x = 0,
+						$temp$y = y + 1,
+						$temp$fn = fn,
+						$temp$g = g;
+					x = $temp$x;
+					y = $temp$y;
+					fn = $temp$fn;
+					g = $temp$g;
+					continue findInGridHelper;
+				} else {
+					var _v0 = A2(
+						$LesleyLai$elm_grid$Grid$get,
+						_Utils_Tuple2(x, y),
+						g);
+					if (_v0.$ === 'Nothing') {
+						return $elm$core$Maybe$Nothing;
+					} else {
+						var cell = _v0.a;
+						var _v1 = A3(fn, x, y, cell);
+						if (_v1.$ === 'Nothing') {
+							var $temp$x = x + 1,
+								$temp$y = y,
+								$temp$fn = fn,
+								$temp$g = g;
+							x = $temp$x;
+							y = $temp$y;
+							fn = $temp$fn;
+							g = $temp$g;
+							continue findInGridHelper;
+						} else {
+							var res = _v1.a;
+							return $elm$core$Maybe$Just(res);
+						}
+					}
+				}
+			}
+		}
+	});
+var $author$project$Lens$findInGrid = F2(
+	function (fn, g) {
+		return A4($author$project$Lens$findInGridHelper, 0, 0, fn, g);
+	});
+var $author$project$Lens$findEmptySpot = function (g) {
+	return A2(
+		$author$project$Lens$findInGrid,
+		F3(
+			function (x, y, mp) {
+				return _Utils_eq(mp, $elm$core$Maybe$Nothing) ? $elm$core$Maybe$Just(
+					_Utils_Tuple2(x, y)) : $elm$core$Maybe$Nothing;
+			}),
+		g);
+};
+var $author$project$Lens$mapKind = F3(
+	function (fnClassic, fnTable, _v0) {
 		var i = _v0.a;
-		return $author$project$InterestList$updateShortPathLabels(
-			$author$project$InterestList$InterestList(
+		var _v1 = i.vkind;
+		if (_v1.$ === 'Table') {
+			var t = _v1.a;
+			return $author$project$Lens$Lens(
 				_Utils_update(
 					i,
 					{
-						paths: A2($elm$core$Set$insert, p, i.paths)
-					})));
+						vkind: $author$project$Lens$Table(
+							fnTable(t))
+					}));
+		} else {
+			var c = _v1.a;
+			return $author$project$Lens$Lens(
+				_Utils_update(
+					i,
+					{
+						vkind: $author$project$Lens$Classic(
+							fnClassic(c))
+					}));
+		}
+	});
+var $elm$core$Array$setHelp = F4(
+	function (shift, index, value, tree) {
+		var pos = $elm$core$Array$bitMask & (index >>> shift);
+		var _v0 = A2($elm$core$Elm$JsArray$unsafeGet, pos, tree);
+		if (_v0.$ === 'SubTree') {
+			var subTree = _v0.a;
+			var newSub = A4($elm$core$Array$setHelp, shift - $elm$core$Array$shiftStep, index, value, subTree);
+			return A3(
+				$elm$core$Elm$JsArray$unsafeSet,
+				pos,
+				$elm$core$Array$SubTree(newSub),
+				tree);
+		} else {
+			var values = _v0.a;
+			var newLeaf = A3($elm$core$Elm$JsArray$unsafeSet, $elm$core$Array$bitMask & index, value, values);
+			return A3(
+				$elm$core$Elm$JsArray$unsafeSet,
+				pos,
+				$elm$core$Array$Leaf(newLeaf),
+				tree);
+		}
+	});
+var $elm$core$Array$set = F3(
+	function (index, value, array) {
+		var len = array.a;
+		var startShift = array.b;
+		var tree = array.c;
+		var tail = array.d;
+		return ((index < 0) || (_Utils_cmp(index, len) > -1)) ? array : ((_Utils_cmp(
+			index,
+			$elm$core$Array$tailIndex(len)) > -1) ? A4(
+			$elm$core$Array$Array_elm_builtin,
+			len,
+			startShift,
+			tree,
+			A3($elm$core$Elm$JsArray$unsafeSet, $elm$core$Array$bitMask & index, value, tail)) : A4(
+			$elm$core$Array$Array_elm_builtin,
+			len,
+			startShift,
+			A4($elm$core$Array$setHelp, startShift, index, value, tree),
+			tail));
+	});
+var $LesleyLai$elm_grid$Grid$set = F3(
+	function (_v0, elem, grid) {
+		var x = _v0.a;
+		var y = _v0.b;
+		var w = grid.a.w;
+		var h = grid.a.h;
+		var data = grid.a.data;
+		return A4($LesleyLai$elm_grid$Grid$inRange, x, y, w, h) ? $LesleyLai$elm_grid$Grid$Grid(
+			{
+				data: A3($elm$core$Array$set, x + (y * w), elem, data),
+				h: h,
+				w: w
+			}) : grid;
+	});
+var $author$project$Lens$insert = F2(
+	function (p, il) {
+		return $author$project$Lens$updateShortPathLabels(
+			A3(
+				$author$project$Lens$mapKind,
+				function (c) {
+					return _Utils_update(
+						c,
+						{
+							paths: A2($elm$core$Set$insert, p, c.paths)
+						});
+				},
+				function (td) {
+					return _Utils_update(
+						td,
+						{
+							grid: function () {
+								var _v0 = $author$project$Lens$findEmptySpot(td.grid);
+								if (_v0.$ === 'Nothing') {
+									var h = $LesleyLai$elm_grid$Grid$height(td.grid);
+									return A3(
+										$LesleyLai$elm_grid$Grid$set,
+										_Utils_Tuple2(0, h),
+										$elm$core$Maybe$Just(p),
+										$author$project$Lens$addExtraRow(td.grid));
+								} else {
+									var spot = _v0.a;
+									return A3(
+										$LesleyLai$elm_grid$Grid$set,
+										spot,
+										$elm$core$Maybe$Just(p),
+										td.grid);
+								}
+							}()
+						});
+				},
+				il));
 	});
 var $author$project$Main$insertDiff = F4(
 	function (runA, runB, diffData, model) {
@@ -7849,16 +8756,16 @@ var $yotamDvir$elm_pivot$Pivot$Map$mapC = function (onC) {
 	return A2($yotamDvir$elm_pivot$Pivot$Map$mapCS, onC, $elm$core$Basics$identity);
 };
 var $yotamDvir$elm_pivot$Pivot$mapC = $yotamDvir$elm_pivot$Pivot$Map$mapC;
-var $author$project$Main$mapInterestLists = F2(
+var $author$project$Main$mapLens = F2(
 	function (f, m) {
 		return _Utils_update(
 			m,
 			{
-				interestLists: f(m.interestLists)
+				lenses: f(m.lenses)
 			});
 	});
-var $author$project$Main$mapActiveInterestList = function (f) {
-	return $author$project$Main$mapInterestLists(
+var $author$project$Main$mapActiveLens = function (f) {
+	return $author$project$Main$mapLens(
 		$yotamDvir$elm_pivot$Pivot$mapC(f));
 };
 var $elm$core$Tuple$mapFirst = F2(
@@ -7869,10 +8776,10 @@ var $elm$core$Tuple$mapFirst = F2(
 			func(x),
 			y);
 	});
-var $author$project$InterestList$mapLabel = F2(
+var $author$project$Lens$mapLabel = F2(
 	function (f, _v0) {
 		var l = _v0.a;
-		return $author$project$InterestList$InterestList(
+		return $author$project$Lens$Lens(
 			_Utils_update(
 				l,
 				{
@@ -7914,22 +8821,51 @@ var $author$project$Styling$parseGermanNumber = function (s) {
 			'.',
 			A3($elm$core$String$replace, '.', '', s)));
 };
+var $LesleyLai$elm_grid$Grid$map = F2(
+	function (func, _v0) {
+		var w = _v0.a.w;
+		var h = _v0.a.h;
+		var data = _v0.a.data;
+		return $LesleyLai$elm_grid$Grid$Grid(
+			{
+				data: A2($elm$core$Array$map, func, data),
+				h: h,
+				w: w
+			});
+	});
 var $elm$core$Set$remove = F2(
 	function (key, _v0) {
 		var dict = _v0.a;
 		return $elm$core$Set$Set_elm_builtin(
 			A2($elm$core$Dict$remove, key, dict));
 	});
-var $author$project$InterestList$remove = F2(
-	function (p, _v0) {
-		var i = _v0.a;
-		return $author$project$InterestList$updateShortPathLabels(
-			$author$project$InterestList$InterestList(
-				_Utils_update(
-					i,
-					{
-						paths: A2($elm$core$Set$remove, p, i.paths)
-					})));
+var $author$project$Lens$remove = F2(
+	function (p, il) {
+		return $author$project$Lens$updateShortPathLabels(
+			A3(
+				$author$project$Lens$mapKind,
+				function (c) {
+					return _Utils_update(
+						c,
+						{
+							paths: A2($elm$core$Set$remove, p, c.paths)
+						});
+				},
+				function (td) {
+					return _Utils_update(
+						td,
+						{
+							grid: A2(
+								$LesleyLai$elm_grid$Grid$map,
+								function (cell) {
+									return _Utils_eq(
+										cell,
+										$elm$core$Maybe$Just(p)) ? $elm$core$Maybe$Nothing : cell;
+								},
+								td.grid)
+						});
+				},
+				il));
 	});
 var $author$project$Main$removeDiff = F3(
 	function (aId, bId, model) {
@@ -8013,7 +8949,6 @@ var $author$project$AllRuns$set = F3(
 	});
 var $elm$file$File$toString = _File_toString;
 var $elm$core$Bitwise$or = _Bitwise_or;
-var $elm$core$Bitwise$shiftLeftBy = _Bitwise_shiftLeftBy;
 var $author$project$Explorable$toComparable = function (e) {
 	if (e.$ === 'Run') {
 		var r = e.a;
@@ -8074,13 +9009,22 @@ var $author$project$CollapseStatus$toggle = F3(
 	function (i, p, s) {
 		return A3($author$project$CollapseStatus$isCollapsed, i, p, s) ? A3($author$project$CollapseStatus$expand, i, p, s) : A3($author$project$CollapseStatus$collapse, i, p, s);
 	});
-var $author$project$InterestList$toggleShowGraph = function (_v0) {
-	var il = _v0.a;
-	return $author$project$InterestList$InterestList(
-		_Utils_update(
-			il,
-			{showGraph: !il.showGraph}));
-};
+var $author$project$Lens$toggleEditTable = A2(
+	$author$project$Lens$mapKind,
+	$elm$core$Basics$identity,
+	function (t) {
+		return _Utils_update(
+			t,
+			{
+				editing: _Utils_eq(t.editing, $elm$core$Maybe$Nothing) ? $elm$core$Maybe$Just(_Utils_Tuple0) : $elm$core$Maybe$Nothing
+			});
+	});
+var $author$project$Lens$toggleShowGraph = $author$project$Lens$mapClassic(
+	function (c) {
+		return _Utils_update(
+			c,
+			{showGraph: !c.showGraph});
+	});
 var $author$project$AllRuns$update = F3(
 	function (id, f, _v0) {
 		var a = _v0.a;
@@ -8263,11 +9207,11 @@ var $Janiczek$cmd_extra$Cmd$Extra$withCmd = F2(
 	function (cmd, model) {
 		return _Utils_Tuple2(model, cmd);
 	});
-var $author$project$Main$withEditingActiveInterestListLabel = F2(
+var $author$project$Main$withEditingActiveLensLabel = F2(
 	function (b, m) {
 		return _Utils_update(
 			m,
-			{editingActiveInterestListLabel: b});
+			{editingActiveLensLabel: b});
 	});
 var $author$project$Main$withLoadFailure = F2(
 	function (msg, model) {
@@ -8315,10 +9259,10 @@ var $author$project$Main$update = F2(
 					return A2($author$project$Main$withLoadFailure, 'Failed to load file', model);
 				} else {
 					var storage = _v1.a;
-					var ils = function () {
+					var ls = function () {
 						var _v2 = $yotamDvir$elm_pivot$Pivot$fromList(storage.interestLists);
 						if (_v2.$ === 'Nothing') {
-							return model.interestLists;
+							return model.lenses;
 						} else {
 							var i = _v2.a;
 							return i;
@@ -8327,7 +9271,7 @@ var $author$project$Main$update = F2(
 					return $Janiczek$cmd_extra$Cmd$Extra$withNoCmd(
 						_Utils_update(
 							model,
-							{interestLists: ils}));
+							{lenses: ls}));
 				}
 			case 'GotEntries':
 				if (msg.d.$ === 'Ok') {
@@ -8531,13 +9475,13 @@ var $author$project$Main$update = F2(
 					var paths = $author$project$Tree$expand(a.result);
 					return $Janiczek$cmd_extra$Cmd$Extra$withNoCmd(
 						A2(
-							$author$project$Main$mapActiveInterestList,
+							$author$project$Main$mapActiveLens,
 							function (il) {
 								return A3(
 									$elm$core$List$foldl,
 									F2(
 										function (p, i) {
-											return A2($author$project$InterestList$insert, p, i);
+											return A2($author$project$Lens$insert, p, i);
 										}),
 									il,
 									paths);
@@ -8641,74 +9585,87 @@ var $author$project$Main$update = F2(
 									model.activeOverrideEditor)
 							}));
 				}
-			case 'AddToInterestListClicked':
+			case 'AddToLensClicked':
 				var path = msg.a;
 				return $Janiczek$cmd_extra$Cmd$Extra$withNoCmd(
 					A2(
-						$author$project$Main$mapActiveInterestList,
-						$author$project$InterestList$insert(path),
+						$author$project$Main$mapActiveLens,
+						$author$project$Lens$insert(path),
 						model));
-			case 'RemoveFromInterestListClicked':
+			case 'RemoveFromLensClicked':
 				var id = msg.a;
 				var path = msg.b;
 				return $Janiczek$cmd_extra$Cmd$Extra$withNoCmd(
 					A2(
-						$author$project$Main$mapActiveInterestList,
-						$author$project$InterestList$remove(path),
-						A2($author$project$Main$activateInterestList, id, model)));
+						$author$project$Main$mapActiveLens,
+						$author$project$Lens$remove(path),
+						A2($author$project$Main$activateLens, id, model)));
 			case 'ToggleShowGraphClicked':
 				var id = msg.a;
 				return $Janiczek$cmd_extra$Cmd$Extra$withNoCmd(
 					A2(
-						$author$project$Main$mapActiveInterestList,
-						$author$project$InterestList$toggleShowGraph,
-						A2($author$project$Main$activateInterestList, id, model)));
-			case 'NewInterestListClicked':
+						$author$project$Main$mapActiveLens,
+						$author$project$Lens$toggleShowGraph,
+						A2($author$project$Main$activateLens, id, model)));
+			case 'NewLensClicked':
 				return $Janiczek$cmd_extra$Cmd$Extra$withNoCmd(
 					A2(
-						$author$project$Main$mapInterestLists,
-						$yotamDvir$elm_pivot$Pivot$appendR($author$project$InterestList$empty),
+						$author$project$Main$mapLens,
+						$yotamDvir$elm_pivot$Pivot$appendGoR($author$project$Lens$empty),
 						model));
-			case 'DuplicateInterestListClicked':
+			case 'NewTableClicked':
+				return $Janiczek$cmd_extra$Cmd$Extra$withNoCmd(
+					A2(
+						$author$project$Main$mapLens,
+						$yotamDvir$elm_pivot$Pivot$appendGoR($author$project$Lens$emptyTable),
+						model));
+			case 'DuplicateLensClicked':
 				var id = msg.a;
 				return $Janiczek$cmd_extra$Cmd$Extra$withNoCmd(
 					A2(
-						$author$project$Main$mapInterestLists,
+						$author$project$Main$mapLens,
 						function (p) {
 							return A2(
 								$yotamDvir$elm_pivot$Pivot$appendGoR,
 								A2(
-									$author$project$InterestList$mapLabel,
+									$author$project$Lens$mapLabel,
 									function (l) {
 										return l + ' Copy';
 									},
 									$yotamDvir$elm_pivot$Pivot$getC(p)),
 								p);
 						},
-						A2($author$project$Main$activateInterestList, id, model)));
-			case 'RemoveInterestListClicked':
+						A2($author$project$Main$activateLens, id, model)));
+			case 'RemoveLensClicked':
 				var id = msg.a;
 				return $Janiczek$cmd_extra$Cmd$Extra$withNoCmd(
 					A2(
-						$author$project$Main$mapInterestLists,
+						$author$project$Main$mapLens,
 						function (ils) {
 							var _v23 = $yotamDvir$elm_pivot$Pivot$removeGoR(ils);
 							if (_v23.$ === 'Nothing') {
 								return A2(
 									$elm$core$Maybe$withDefault,
-									$yotamDvir$elm_pivot$Pivot$singleton($author$project$InterestList$empty),
+									$yotamDvir$elm_pivot$Pivot$singleton($author$project$Lens$empty),
 									$yotamDvir$elm_pivot$Pivot$removeGoL(ils));
 							} else {
 								var without = _v23.a;
 								return without;
 							}
 						},
-						A2($author$project$Main$activateInterestList, id, model)));
-			case 'ActivateInterestListClicked':
+						A2($author$project$Main$activateLens, id, model)));
+			case 'ToggleEditLensTableClicked':
 				var id = msg.a;
 				return $Janiczek$cmd_extra$Cmd$Extra$withNoCmd(
-					A2($author$project$Main$activateInterestList, id, model));
-			case 'InterestListLabelEdited':
+					A2(
+						$author$project$Main$mapActiveLens,
+						$author$project$Lens$toggleEditTable,
+						A2($author$project$Main$activateLens, id, model)));
+			case 'ActivateLensClicked':
+				var id = msg.a;
+				return $Janiczek$cmd_extra$Cmd$Extra$withNoCmd(
+					A2($author$project$Main$activateLens, id, model));
+			case 'LensLabelEdited':
 				var id = msg.a;
 				var newLabel = msg.b;
 				return A2(
@@ -8720,16 +9677,16 @@ var $author$project$Main$update = F2(
 						},
 						$elm$browser$Browser$Dom$focus('interestlabel')),
 					A2(
-						$author$project$Main$mapActiveInterestList,
-						$author$project$InterestList$mapLabel(
+						$author$project$Main$mapActiveLens,
+						$author$project$Lens$mapLabel(
 							$elm$core$Basics$always(newLabel)),
 						A2(
-							$author$project$Main$withEditingActiveInterestListLabel,
+							$author$project$Main$withEditingActiveLensLabel,
 							true,
-							A2($author$project$Main$activateInterestList, id, model))));
-			case 'InterestListLabelEditFinished':
+							A2($author$project$Main$activateLens, id, model))));
+			case 'LensLabelEditFinished':
 				return $Janiczek$cmd_extra$Cmd$Extra$withNoCmd(
-					A2($author$project$Main$withEditingActiveInterestListLabel, false, model));
+					A2($author$project$Main$withEditingActiveLensLabel, false, model));
 			case 'OnChartHover':
 				var hovering = msg.a;
 				return $Janiczek$cmd_extra$Cmd$Extra$withNoCmd(
@@ -12382,7 +13339,6 @@ var $elm$virtual_dom$VirtualDom$keyedNode = function (tag) {
 		_VirtualDom_noScript(tag));
 };
 var $elm$html$Html$p = _VirtualDom_node('p');
-var $elm$core$Bitwise$and = _Bitwise_and;
 var $mdgriffith$elm_ui$Internal$Flag$present = F2(
 	function (myFlag, _v0) {
 		var fieldOne = _v0.a;
@@ -13222,7 +14178,6 @@ var $mdgriffith$elm_ui$Internal$Model$renderWidth = function (w) {
 	}
 };
 var $mdgriffith$elm_ui$Internal$Flag$borderWidth = $mdgriffith$elm_ui$Internal$Flag$flag(27);
-var $elm$core$Basics$ge = _Utils_ge;
 var $mdgriffith$elm_ui$Internal$Model$skippable = F2(
 	function (flag, style) {
 		if (_Utils_eq(flag, $mdgriffith$elm_ui$Internal$Flag$borderWidth)) {
@@ -16579,8 +17534,13 @@ var $author$project$Main$viewModalDialogBox = F2(
 				]));
 	});
 var $author$project$Main$DownloadClicked = {$: 'DownloadClicked'};
-var $author$project$Main$NewInterestListClicked = {$: 'NewInterestListClicked'};
+var $author$project$Main$NewLensClicked = {$: 'NewLensClicked'};
+var $author$project$Main$NewTableClicked = {$: 'NewTableClicked'};
 var $author$project$Main$UploadClicked = {$: 'UploadClicked'};
+var $mdgriffith$elm_ui$Internal$Model$Bottom = {$: 'Bottom'};
+var $mdgriffith$elm_ui$Element$alignBottom = $mdgriffith$elm_ui$Internal$Model$AlignY($mdgriffith$elm_ui$Internal$Model$Bottom);
+var $mdgriffith$elm_ui$Internal$Model$Right = {$: 'Right'};
+var $mdgriffith$elm_ui$Element$alignRight = $mdgriffith$elm_ui$Internal$Model$AlignX($mdgriffith$elm_ui$Internal$Model$Right);
 var $author$project$Styling$black = A3($mdgriffith$elm_ui$Element$rgb255, 0, 0, 0);
 var $author$project$Main$buttons = function (l) {
 	return A2(
@@ -16628,10 +17588,6 @@ var $feathericons$elm_feather$FeatherIcons$download = A2(
 				]),
 			_List_Nil)
 		]));
-var $mdgriffith$elm_ui$Internal$Model$Bottom = {$: 'Bottom'};
-var $mdgriffith$elm_ui$Element$alignBottom = $mdgriffith$elm_ui$Internal$Model$AlignY($mdgriffith$elm_ui$Internal$Model$Bottom);
-var $mdgriffith$elm_ui$Internal$Model$Right = {$: 'Right'};
-var $mdgriffith$elm_ui$Element$alignRight = $mdgriffith$elm_ui$Internal$Model$AlignX($mdgriffith$elm_ui$Internal$Model$Right);
 var $mdgriffith$elm_ui$Internal$Model$MoveX = function (a) {
 	return {$: 'MoveX', a: a};
 };
@@ -16737,6 +17693,55 @@ var $author$project$Styling$fonts = {
 				[$mdgriffith$elm_ui$Element$Font$monospace]))
 		])
 };
+var $elm$svg$Svg$rect = $elm$svg$Svg$trustedNode('rect');
+var $elm$svg$Svg$Attributes$x = _VirtualDom_attribute('x');
+var $elm$svg$Svg$Attributes$y = _VirtualDom_attribute('y');
+var $feathericons$elm_feather$FeatherIcons$grid = A2(
+	$feathericons$elm_feather$FeatherIcons$makeBuilder,
+	'grid',
+	_List_fromArray(
+		[
+			A2(
+			$elm$svg$Svg$rect,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$x('3'),
+					$elm$svg$Svg$Attributes$y('3'),
+					$elm$svg$Svg$Attributes$width('7'),
+					$elm$svg$Svg$Attributes$height('7')
+				]),
+			_List_Nil),
+			A2(
+			$elm$svg$Svg$rect,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$x('14'),
+					$elm$svg$Svg$Attributes$y('3'),
+					$elm$svg$Svg$Attributes$width('7'),
+					$elm$svg$Svg$Attributes$height('7')
+				]),
+			_List_Nil),
+			A2(
+			$elm$svg$Svg$rect,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$x('14'),
+					$elm$svg$Svg$Attributes$y('14'),
+					$elm$svg$Svg$Attributes$width('7'),
+					$elm$svg$Svg$Attributes$height('7')
+				]),
+			_List_Nil),
+			A2(
+			$elm$svg$Svg$rect,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$x('3'),
+					$elm$svg$Svg$Attributes$y('14'),
+					$elm$svg$Svg$Attributes$width('7'),
+					$elm$svg$Svg$Attributes$height('7')
+				]),
+			_List_Nil)
+		]));
 var $yotamDvir$elm_pivot$Pivot$Position$lengthL = function (_v0) {
 	var _v1 = _v0.b;
 	var l = _v1.a;
@@ -16833,28 +17838,38 @@ var $feathericons$elm_feather$FeatherIcons$upload = A2(
 				]),
 			_List_Nil)
 		]));
-var $author$project$Main$ActivateInterestListClicked = function (a) {
-	return {$: 'ActivateInterestListClicked', a: a};
+var $author$project$Main$ActivateLensClicked = function (a) {
+	return {$: 'ActivateLensClicked', a: a};
 };
-var $author$project$Main$DuplicateInterestListClicked = function (a) {
-	return {$: 'DuplicateInterestListClicked', a: a};
+var $author$project$Main$DuplicateLensClicked = function (a) {
+	return {$: 'DuplicateLensClicked', a: a};
 };
-var $author$project$Main$InterestListLabelEditFinished = {$: 'InterestListLabelEditFinished'};
-var $author$project$Main$InterestListLabelEdited = F2(
+var $author$project$Main$LensLabelEditFinished = {$: 'LensLabelEditFinished'};
+var $author$project$Main$LensLabelEdited = F2(
 	function (a, b) {
-		return {$: 'InterestListLabelEdited', a: a, b: b};
+		return {$: 'LensLabelEdited', a: a, b: b};
 	});
-var $author$project$Main$RemoveInterestListClicked = function (a) {
-	return {$: 'RemoveInterestListClicked', a: a};
+var $author$project$Main$RemoveLensClicked = function (a) {
+	return {$: 'RemoveLensClicked', a: a};
+};
+var $author$project$Main$ToggleEditLensTableClicked = function (a) {
+	return {$: 'ToggleEditLensTableClicked', a: a};
 };
 var $author$project$Main$ToggleShowGraphClicked = function (a) {
 	return {$: 'ToggleShowGraphClicked', a: a};
 };
-var $elm$svg$Svg$rect = $elm$svg$Svg$trustedNode('rect');
+var $author$project$Lens$asUserDefinedTable = function (_v0) {
+	var l = _v0.a;
+	var _v1 = l.vkind;
+	if (_v1.$ === 'Classic') {
+		return $elm$core$Maybe$Nothing;
+	} else {
+		var g = _v1.a;
+		return $elm$core$Maybe$Just(g);
+	}
+};
 var $elm$svg$Svg$Attributes$rx = _VirtualDom_attribute('rx');
 var $elm$svg$Svg$Attributes$ry = _VirtualDom_attribute('ry');
-var $elm$svg$Svg$Attributes$x = _VirtualDom_attribute('x');
-var $elm$svg$Svg$Attributes$y = _VirtualDom_attribute('y');
 var $feathericons$elm_feather$FeatherIcons$copy = A2(
 	$feathericons$elm_feather$FeatherIcons$makeBuilder,
 	'copy',
@@ -16909,15 +17924,41 @@ var $author$project$AllRuns$toList = function (_v0) {
 	var a = _v0.a;
 	return $elm$core$Dict$toList(a.runs);
 };
-var $author$project$InterestList$toList = function (_v0) {
+var $LesleyLai$elm_grid$Grid$foldl = F3(
+	function (func, acc, _v0) {
+		var w = _v0.a.w;
+		var h = _v0.a.h;
+		var data = _v0.a.data;
+		return A3($elm$core$Array$foldl, func, acc, data);
+	});
+var $author$project$Lens$toList = function (_v0) {
 	var i = _v0.a;
-	return $elm$core$Set$toList(i.paths);
+	var _v1 = i.vkind;
+	if (_v1.$ === 'Classic') {
+		var c = _v1.a;
+		return $elm$core$Set$toList(c.paths);
+	} else {
+		var td = _v1.a;
+		return A3(
+			$LesleyLai$elm_grid$Grid$foldl,
+			F2(
+				function (cell, l) {
+					if (cell.$ === 'Nothing') {
+						return l;
+					} else {
+						var c = cell.a;
+						return A2($elm$core$List$cons, c, l);
+					}
+				}),
+			_List_Nil,
+			td.grid);
+	}
 };
-var $author$project$InterestListTable$create = F2(
-	function (interestList, allRuns) {
+var $author$project$ValueSet$create = F2(
+	function (lens, allRuns) {
 		var runList = $author$project$AllRuns$toList(allRuns);
 		var runs = A2($elm$core$List$map, $elm$core$Tuple$first, runList);
-		var paths = $author$project$InterestList$toList(interestList);
+		var paths = $author$project$Lens$toList(lens);
 		var values = $elm$core$Dict$fromList(
 			A2(
 				$elm$core$List$concatMap,
@@ -16972,6 +18013,26 @@ var $author$project$Styling$dangerousIconButton = F2(
 	function (i, op) {
 		return A3($author$project$Styling$iconButtonWithStyle, $author$project$Styling$dangerousIconButtonStyle, i, op);
 	});
+var $feathericons$elm_feather$FeatherIcons$edit = A2(
+	$feathericons$elm_feather$FeatherIcons$makeBuilder,
+	'edit',
+	_List_fromArray(
+		[
+			A2(
+			$elm$svg$Svg$path,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$d('M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7')
+				]),
+			_List_Nil),
+			A2(
+			$elm$svg$Svg$path,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$d('M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z')
+				]),
+			_List_Nil)
+		]));
 var $elm$svg$Svg$circle = $elm$svg$Svg$trustedNode('circle');
 var $elm$svg$Svg$Attributes$cx = _VirtualDom_attribute('cx');
 var $elm$svg$Svg$Attributes$cy = _VirtualDom_attribute('cy');
@@ -17021,17 +18082,29 @@ var $feathericons$elm_feather$FeatherIcons$eyeOff = A2(
 				]),
 			_List_Nil)
 		]));
-var $author$project$InterestList$getLabel = function (_v0) {
+var $author$project$Lens$getLabel = function (_v0) {
 	var l = _v0.a;
 	return l.label;
 };
-var $author$project$InterestList$getShortPathLabels = function (_v0) {
+var $author$project$Lens$getShortPathLabels = function (_v0) {
 	var il = _v0.a;
-	return il.guessedShortLabels;
+	var _v1 = il.vkind;
+	if (_v1.$ === 'Classic') {
+		var guessedShortLabels = _v1.a.guessedShortLabels;
+		return guessedShortLabels;
+	} else {
+		return $elm$core$Dict$empty;
+	}
 };
-var $author$project$InterestList$getShowGraph = function (_v0) {
+var $author$project$Lens$getShowGraph = function (_v0) {
 	var il = _v0.a;
-	return il.showGraph;
+	var _v1 = il.vkind;
+	if (_v1.$ === 'Classic') {
+		var c = _v1.a;
+		return c.showGraph;
+	} else {
+		return false;
+	}
 };
 var $elm$html$Html$Attributes$id = $elm$html$Html$Attributes$stringProperty('id');
 var $mdgriffith$elm_ui$Element$Input$HiddenLabel = function (a) {
@@ -19115,6 +20188,7 @@ var $terezka$elm_charts$Internal$Svg$Event = F2(
 		return {handler: handler, name: name};
 	});
 var $elm$svg$Svg$clipPath = $elm$svg$Svg$trustedNode('clipPath');
+var $elm$json$Json$Decode$map3 = _Json_map3;
 var $debois$elm_dom$DOM$offsetHeight = A2($elm$json$Json$Decode$field, 'offsetHeight', $elm$json$Json$Decode$float);
 var $debois$elm_dom$DOM$offsetWidth = A2($elm$json$Json$Decode$field, 'offsetWidth', $elm$json$Json$Decode$float);
 var $elm$json$Json$Decode$map4 = _Json_map4;
@@ -25427,9 +26501,9 @@ var $author$project$Main$viewChart = F3(
 				]),
 			$mdgriffith$elm_ui$Element$html(chart));
 	});
-var $author$project$Main$RemoveFromInterestListClicked = F2(
+var $author$project$Main$RemoveFromLensClicked = F2(
 	function (a, b) {
-		return {$: 'RemoveFromInterestListClicked', a: a, b: b};
+		return {$: 'RemoveFromLensClicked', a: a, b: b};
 	});
 var $mdgriffith$elm_ui$Internal$Flag$fontWeight = $mdgriffith$elm_ui$Internal$Flag$flag(13);
 var $mdgriffith$elm_ui$Element$Font$bold = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$fontWeight, $mdgriffith$elm_ui$Internal$Style$classes.bold);
@@ -25624,8 +26698,8 @@ var $mdgriffith$elm_ui$Element$table = F2(
 				data: config.data
 			});
 	});
-var $author$project$Main$viewInterestListTableAsTable = F3(
-	function (shortPathLabels, interestListId, interestListTable) {
+var $author$project$Main$viewValueSetAsClassicTable = F3(
+	function (shortPathLabels, lensId, valueSet) {
 		var shortPathLabelColumn = {
 			header: $mdgriffith$elm_ui$Element$none,
 			view: function (path) {
@@ -25657,7 +26731,7 @@ var $author$project$Main$viewInterestListTableAsTable = F3(
 				return A2(
 					$author$project$Styling$dangerousIconButton,
 					$author$project$Styling$size16($feathericons$elm_feather$FeatherIcons$trash2),
-					A2($author$project$Main$RemoveFromInterestListClicked, interestListId, path));
+					A2($author$project$Main$RemoveFromLensClicked, lensId, path));
 			},
 			width: $mdgriffith$elm_ui$Element$shrink
 		};
@@ -25676,7 +26750,7 @@ var $author$project$Main$viewInterestListTableAsTable = F3(
 							var _v0 = A2(
 								$elm$core$Dict$get,
 								_Utils_Tuple2(runId, path),
-								interestListTable.values);
+								valueSet.values);
 							if (_v0.$ === 'Just') {
 								switch (_v0.a.$) {
 									case 'Float':
@@ -25711,7 +26785,7 @@ var $author$project$Main$viewInterestListTableAsTable = F3(
 					width: $mdgriffith$elm_ui$Element$shrink
 				};
 			},
-			interestListTable.runs);
+			valueSet.runs);
 		return A2(
 			$mdgriffith$elm_ui$Element$table,
 			_List_fromArray(
@@ -25729,15 +26803,154 @@ var $author$project$Main$viewInterestListTableAsTable = F3(
 						dataColumns,
 						_List_fromArray(
 							[deleteColumn]))),
-				data: interestListTable.paths
+				data: valueSet.paths
 			});
 	});
-var $author$project$Main$viewInterestList = F6(
-	function (id, editingActiveInterestListLabel, isActive, interestList, chartHovering, allRuns) {
-		var showGraph = $author$project$InterestList$getShowGraph(interestList);
-		var shortPathLabels = $author$project$InterestList$getShortPathLabels(interestList);
-		var labelText = $author$project$InterestList$getLabel(interestList);
-		var interestListTable = A2($author$project$InterestListTable$create, interestList, allRuns);
+var $author$project$Styling$emptyCellColor = A3($mdgriffith$elm_ui$Element$rgb255, 240, 240, 240);
+var $author$project$Main$viewValueSetAsUserDefinedTable = F3(
+	function (lensId, td, valueSet) {
+		var viewCell = F2(
+			function (cell, _v4) {
+				var row = _v4.row;
+				var column = _v4.column;
+				var cellElement = F2(
+					function (attrs, v) {
+						return A2(
+							$mdgriffith$elm_ui$Element$el,
+							_Utils_ap(
+								_List_fromArray(
+									[
+										$mdgriffith$elm_ui$Element$Background$color($author$project$Styling$emptyCellColor),
+										$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+										$mdgriffith$elm_ui$Element$padding($author$project$Styling$sizes.small)
+									]),
+								attrs),
+							v);
+					});
+				if (cell.$ === 'Nothing') {
+					return A2(
+						cellElement,
+						_List_Nil,
+						$mdgriffith$elm_ui$Element$text(' '));
+				} else {
+					var p = cell.a;
+					var value = function () {
+						var _v3 = valueSet.runs;
+						if (!_v3.b) {
+							return $elm$core$Maybe$Nothing;
+						} else {
+							var r = _v3.a;
+							return A2(
+								$elm$core$Dict$get,
+								_Utils_Tuple2(r, p),
+								valueSet.values);
+						}
+					}();
+					if (!_Utils_eq(td.editing, $elm$core$Maybe$Nothing)) {
+						return A2(
+							cellElement,
+							_List_fromArray(
+								[
+									$mdgriffith$elm_ui$Element$Font$size(12)
+								]),
+							$mdgriffith$elm_ui$Element$text(
+								A2($elm$core$String$join, '.', p)));
+					} else {
+						if (value.$ === 'Nothing') {
+							return A2(
+								cellElement,
+								_List_fromArray(
+									[$mdgriffith$elm_ui$Element$Font$alignRight]),
+								$mdgriffith$elm_ui$Element$text('INTERNAL ERROR'));
+						} else {
+							switch (value.a.$) {
+								case 'Float':
+									var f = value.a.a;
+									return A2(
+										cellElement,
+										_List_fromArray(
+											[$mdgriffith$elm_ui$Element$Font$alignRight]),
+										$mdgriffith$elm_ui$Element$text(
+											$author$project$Styling$formatGermanNumber(f)));
+								case 'Null':
+									var _v2 = value.a;
+									return A2(
+										cellElement,
+										_List_fromArray(
+											[$mdgriffith$elm_ui$Element$Font$bold]),
+										$mdgriffith$elm_ui$Element$text('null'));
+								default:
+									var s = value.a.a;
+									return A2(
+										cellElement,
+										_List_fromArray(
+											[
+												$mdgriffith$elm_ui$Element$Font$family(
+												_List_fromArray(
+													[$mdgriffith$elm_ui$Element$Font$monospace]))
+											]),
+										$mdgriffith$elm_ui$Element$text(s));
+							}
+						}
+					}
+				}
+			});
+		var cells = A2(
+			$elm$core$List$map,
+			$elm$core$Array$toList,
+			$elm$core$Array$toList(
+				$LesleyLai$elm_grid$Grid$rows(td.grid)));
+		var rows = A2(
+			$elm$core$List$indexedMap,
+			F2(
+				function (rowNum, cellsOfRow) {
+					return A2(
+						$mdgriffith$elm_ui$Element$row,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+								$mdgriffith$elm_ui$Element$spacing($author$project$Styling$sizes.small)
+							]),
+						A2(
+							$elm$core$List$indexedMap,
+							F2(
+								function (columnNum, cell) {
+									return A2(
+										viewCell,
+										cell,
+										{column: columnNum, row: rowNum});
+								}),
+							cellsOfRow));
+				}),
+			cells);
+		return A2(
+			$mdgriffith$elm_ui$Element$column,
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+					$mdgriffith$elm_ui$Element$spacing($author$project$Styling$sizes.small),
+					$mdgriffith$elm_ui$Element$padding($author$project$Styling$sizes.large)
+				]),
+			_Utils_ap(rows, _List_Nil));
+	});
+var $author$project$Main$viewLens = F6(
+	function (id, editingActiveLensLabel, isActive, lens, chartHovering, allRuns) {
+		var valueSet = A2($author$project$ValueSet$create, lens, allRuns);
+		var showGraph = $author$project$Lens$getShowGraph(lens);
+		var shortPathLabels = $author$project$Lens$getShortPathLabels(lens);
+		var maybeEditTableButton = function () {
+			var _v2 = $author$project$Lens$asUserDefinedTable(lens);
+			if (_v2.$ === 'Nothing') {
+				return $mdgriffith$elm_ui$Element$none;
+			} else {
+				var t = _v2.a;
+				return A2(
+					$author$project$Styling$iconButton,
+					_Utils_eq(t.editing, $elm$core$Maybe$Nothing) ? $feathericons$elm_feather$FeatherIcons$edit : $feathericons$elm_feather$FeatherIcons$check,
+					$author$project$Main$ToggleEditLensTableClicked(id));
+			}
+		}();
+		var labelText = $author$project$Lens$getLabel(lens);
 		var _v0 = isActive ? _Utils_Tuple2($author$project$Styling$germanZeroYellow, 2) : _Utils_Tuple2($author$project$Styling$germanZeroGreen, 1);
 		var borderColor = _v0.a;
 		var borderWidth = _v0.b;
@@ -25747,7 +26960,7 @@ var $author$project$Main$viewInterestList = F6(
 				[
 					$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
 					$mdgriffith$elm_ui$Element$Events$onClick(
-					$author$project$Main$ActivateInterestListClicked(id)),
+					$author$project$Main$ActivateLensClicked(id)),
 					$mdgriffith$elm_ui$Element$mouseOver(
 					_List_fromArray(
 						[
@@ -25769,18 +26982,18 @@ var $author$project$Main$viewInterestList = F6(
 						]),
 					_List_fromArray(
 						[
-							(editingActiveInterestListLabel && isActive) ? A2(
+							(editingActiveLensLabel && isActive) ? A2(
 							$mdgriffith$elm_ui$Element$Input$text,
 							_List_fromArray(
 								[
-									$mdgriffith$elm_ui$Element$Events$onLoseFocus($author$project$Main$InterestListLabelEditFinished),
-									$author$project$Main$onEnter($author$project$Main$InterestListLabelEditFinished),
+									$mdgriffith$elm_ui$Element$Events$onLoseFocus($author$project$Main$LensLabelEditFinished),
+									$author$project$Main$onEnter($author$project$Main$LensLabelEditFinished),
 									$mdgriffith$elm_ui$Element$htmlAttribute(
 									$elm$html$Html$Attributes$id('interestlabel'))
 								]),
 							{
 								label: $mdgriffith$elm_ui$Element$Input$labelHidden('interest list'),
-								onChange: $author$project$Main$InterestListLabelEdited(id),
+								onChange: $author$project$Main$LensLabelEdited(id),
 								placeholder: $elm$core$Maybe$Just(
 									A2(
 										$mdgriffith$elm_ui$Element$Input$placeholder,
@@ -25792,7 +27005,7 @@ var $author$project$Main$viewInterestList = F6(
 							_List_fromArray(
 								[
 									$mdgriffith$elm_ui$Element$Events$onClick(
-									A2($author$project$Main$InterestListLabelEdited, id, labelText)),
+									A2($author$project$Main$LensLabelEdited, id, labelText)),
 									$mdgriffith$elm_ui$Element$Font$color(
 									(labelText === '') ? $author$project$Styling$modalDim : $author$project$Styling$black),
 									$mdgriffith$elm_ui$Element$mouseOver(
@@ -25813,6 +27026,7 @@ var $author$project$Main$viewInterestList = F6(
 							$author$project$Main$buttons(
 							_List_fromArray(
 								[
+									maybeEditTableButton,
 									A2(
 									$author$project$Styling$iconButton,
 									showGraph ? $feathericons$elm_feather$FeatherIcons$eye : $feathericons$elm_feather$FeatherIcons$eyeOff,
@@ -25820,11 +27034,11 @@ var $author$project$Main$viewInterestList = F6(
 									A2(
 									$author$project$Styling$iconButton,
 									$feathericons$elm_feather$FeatherIcons$copy,
-									$author$project$Main$DuplicateInterestListClicked(id)),
+									$author$project$Main$DuplicateLensClicked(id)),
 									A2(
 									$author$project$Styling$dangerousIconButton,
 									$feathericons$elm_feather$FeatherIcons$trash2,
-									$author$project$Main$RemoveInterestListClicked(id))
+									$author$project$Main$RemoveLensClicked(id))
 								]))
 						])),
 					A2(
@@ -25836,8 +27050,16 @@ var $author$project$Main$viewInterestList = F6(
 						]),
 					_List_fromArray(
 						[
-							showGraph ? A3($author$project$Main$viewChart, chartHovering, shortPathLabels, interestListTable) : $mdgriffith$elm_ui$Element$none,
-							A3($author$project$Main$viewInterestListTableAsTable, shortPathLabels, id, interestListTable)
+							showGraph ? A3($author$project$Main$viewChart, chartHovering, shortPathLabels, valueSet) : $mdgriffith$elm_ui$Element$none,
+							function () {
+							var _v1 = $author$project$Lens$asUserDefinedTable(lens);
+							if (_v1.$ === 'Nothing') {
+								return A3($author$project$Main$viewValueSetAsClassicTable, shortPathLabels, id, valueSet);
+							} else {
+								var g = _v1.a;
+								return A3($author$project$Main$viewValueSetAsUserDefinedTable, id, g, valueSet);
+							}
+						}()
 						]))
 				]));
 	});
@@ -26220,26 +27442,6 @@ var $author$project$Explorable$Run = function (a) {
 var $author$project$Main$ToggleSelectForCompareClicked = function (a) {
 	return {$: 'ToggleSelectForCompareClicked', a: a};
 };
-var $feathericons$elm_feather$FeatherIcons$edit = A2(
-	$feathericons$elm_feather$FeatherIcons$makeBuilder,
-	'edit',
-	_List_fromArray(
-		[
-			A2(
-			$elm$svg$Svg$path,
-			_List_fromArray(
-				[
-					$elm$svg$Svg$Attributes$d('M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7')
-				]),
-			_List_Nil),
-			A2(
-			$elm$svg$Svg$path,
-			_List_fromArray(
-				[
-					$elm$svg$Svg$Attributes$d('M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z')
-				]),
-			_List_Nil)
-		]));
 var $feathericons$elm_feather$FeatherIcons$filter = A2(
 	$feathericons$elm_feather$FeatherIcons$makeBuilder,
 	'filter',
@@ -26291,8 +27493,8 @@ var $feathericons$elm_feather$FeatherIcons$trello = A2(
 				]),
 			_List_Nil)
 		]));
-var $author$project$Main$AddToInterestListClicked = function (a) {
-	return {$: 'AddToInterestListClicked', a: a};
+var $author$project$Main$AddToLensClicked = function (a) {
+	return {$: 'AddToLensClicked', a: a};
 };
 var $author$project$Main$DragDropMsg = function (a) {
 	return {$: 'DragDropMsg', a: a};
@@ -26351,10 +27553,27 @@ var $author$project$Html5$DragDrop$draggable = F2(
 					wrap($author$project$Html5$DragDrop$DragEnd)))
 			]);
 	});
-var $author$project$InterestList$member = F2(
+var $author$project$Lens$member = F2(
 	function (p, _v0) {
 		var i = _v0.a;
-		return A2($elm$core$Set$member, p, i.paths);
+		var _v1 = i.vkind;
+		if (_v1.$ === 'Classic') {
+			var c = _v1.a;
+			return A2($elm$core$Set$member, p, c.paths);
+		} else {
+			var td = _v1.a;
+			return !_Utils_eq(
+				A2(
+					$author$project$Lens$findInGrid,
+					F3(
+						function (_v2, _v3, mp) {
+							return _Utils_eq(
+								mp,
+								$elm$core$Maybe$Just(p)) ? $elm$core$Maybe$Just(_Utils_Tuple0) : $elm$core$Maybe$Nothing;
+						}),
+					td.grid),
+				$elm$core$Maybe$Nothing);
+		}
 	});
 var $author$project$Main$OverrideEditFinished = {$: 'OverrideEditFinished'};
 var $author$project$Main$OverrideEdited = F3(
@@ -26493,7 +27712,7 @@ var $author$project$Main$viewEntryAndOverride = F5(
 			o);
 	});
 var $author$project$Main$viewValueTree = F8(
-	function (runId, interestListId, path, checkIsCollapsed, interestList, overrides, activeOverrideEditor, tree) {
+	function (runId, lensId, path, checkIsCollapsed, lens, overrides, activeOverrideEditor, tree) {
 		var viewLeaf = F3(
 			function (pathToParent, name, value) {
 				switch (value.$) {
@@ -26548,13 +27767,13 @@ var $author$project$Main$viewValueTree = F8(
 							pathToParent,
 							_List_fromArray(
 								['entries']));
-						var button = A2($author$project$InterestList$member, thisPath, interestList) ? A2(
+						var button = A2($author$project$Lens$member, thisPath, lens) ? A2(
 							$author$project$Styling$dangerousIconButton,
 							$author$project$Styling$size16($feathericons$elm_feather$FeatherIcons$trash2),
-							A2($author$project$Main$RemoveFromInterestListClicked, interestListId, thisPath)) : A2(
+							A2($author$project$Main$RemoveFromLensClicked, lensId, thisPath)) : A2(
 							$author$project$Styling$iconButton,
 							$author$project$Styling$size16($feathericons$elm_feather$FeatherIcons$plus),
-							$author$project$Main$AddToInterestListClicked(thisPath));
+							$author$project$Main$AddToLensClicked(thisPath));
 						var _v1 = isEntry ? A5($author$project$Main$viewEntryAndOverride, runId, name, overrides, activeOverrideEditor, f) : _Utils_Tuple2(
 							$author$project$Main$viewFloatValue(f),
 							$mdgriffith$elm_ui$Element$none);
@@ -26592,7 +27811,7 @@ var $author$project$Main$viewValueTree = F8(
 			tree);
 	});
 var $author$project$Main$viewRun = F8(
-	function (runId, interestListId, interestList, collapseStatus, activeOverrideEditor, activeSearch, selectedForComparison, run) {
+	function (runId, lensId, lens, collapseStatus, activeOverrideEditor, activeSearch, selectedForComparison, run) {
 		var overrides = $author$project$Run$getOverrides(run);
 		var isSelectedForComparison = function () {
 			if (selectedForComparison.$ === 'Nothing') {
@@ -26767,7 +27986,7 @@ var $author$project$Main$viewRun = F8(
 								]))
 						])),
 					differentIfFilterActive.filterPatternField,
-					A8($author$project$Main$viewValueTree, runId, interestListId, _List_Nil, differentIfFilterActive.isCollapsed, interestList, overrides, activeOverrideEditor, differentIfFilterActive.treeToDisplay)
+					A8($author$project$Main$viewValueTree, runId, lensId, _List_Nil, differentIfFilterActive.isCollapsed, lens, overrides, activeOverrideEditor, differentIfFilterActive.treeToDisplay)
 				]));
 	});
 var $author$project$Main$viewRunsAndComparisons = function (model) {
@@ -26815,8 +28034,8 @@ var $author$project$Main$viewRunsAndComparisons = function (model) {
 								return A8(
 									$author$project$Main$viewRun,
 									resultNdx,
-									$yotamDvir$elm_pivot$Pivot$lengthL(model.interestLists),
-									$yotamDvir$elm_pivot$Pivot$getC(model.interestLists),
+									$yotamDvir$elm_pivot$Pivot$lengthL(model.lenses),
+									$yotamDvir$elm_pivot$Pivot$getC(model.lenses),
 									model.collapseStatus,
 									model.activeOverrideEditor,
 									model.activeSearch,
@@ -26900,18 +28119,18 @@ var $author$project$Main$viewModel = function (model) {
 		function (_v0) {
 			var pos = _v0.a;
 			var il = _v0.b;
-			var activePos = $yotamDvir$elm_pivot$Pivot$lengthL(model.interestLists);
+			var activePos = $yotamDvir$elm_pivot$Pivot$lengthL(model.lenses);
 			return A6(
-				$author$project$Main$viewInterestList,
+				$author$project$Main$viewLens,
 				pos,
-				model.editingActiveInterestListLabel,
+				model.editingActiveLensLabel,
 				_Utils_eq(pos, activePos),
 				il,
 				model.chartHovering,
 				model.runs);
 		},
 		$yotamDvir$elm_pivot$Pivot$toList(
-			$yotamDvir$elm_pivot$Pivot$indexAbsolute(model.interestLists)));
+			$yotamDvir$elm_pivot$Pivot$indexAbsolute(model.lenses)));
 	return A2(
 		$mdgriffith$elm_ui$Element$column,
 		_List_fromArray(
@@ -26953,7 +28172,21 @@ var $author$project$Main$viewModel = function (model) {
 								$mdgriffith$elm_ui$Element$height(
 								A2($mdgriffith$elm_ui$Element$minimum, 0, $mdgriffith$elm_ui$Element$fill)),
 								$mdgriffith$elm_ui$Element$inFront(
-								A2($author$project$Styling$floatingActionButton, $feathericons$elm_feather$FeatherIcons$plus, $author$project$Main$NewInterestListClicked))
+								A2(
+									$mdgriffith$elm_ui$Element$row,
+									_List_fromArray(
+										[
+											$mdgriffith$elm_ui$Element$spacing(10),
+											$mdgriffith$elm_ui$Element$alignBottom,
+											$mdgriffith$elm_ui$Element$moveUp(10),
+											$mdgriffith$elm_ui$Element$alignRight,
+											$mdgriffith$elm_ui$Element$padding(0)
+										]),
+									_List_fromArray(
+										[
+											A2($author$project$Styling$floatingActionButton, $feathericons$elm_feather$FeatherIcons$plus, $author$project$Main$NewLensClicked),
+											A2($author$project$Styling$floatingActionButton, $feathericons$elm_feather$FeatherIcons$grid, $author$project$Main$NewTableClicked)
+										])))
 							]),
 						A2(
 							$mdgriffith$elm_ui$Element$column,

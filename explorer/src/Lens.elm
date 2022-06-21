@@ -1,18 +1,21 @@
 module Lens exposing
     ( Lens
+    , TableData
+    , asUserDefinedTable
     , decoder
     , empty
     , emptyTable
     , encode
+    , getEditTable
     , getLabel
     , getShortPathLabels
     , getShowGraph
     , insert
-    , isTable
     , mapLabel
     , member
     , remove
     , toList
+    , toggleEditTable
     , toggleShowGraph
     )
 
@@ -37,9 +40,15 @@ type alias ClassicData =
     }
 
 
+type alias TableData =
+    { grid : Grid (Maybe Path)
+    , editing : Maybe ()
+    }
+
+
 type VisualisationKind
     = Classic ClassicData
-    | Table (Grid (Maybe Path))
+    | Table TableData
 
 
 type Lens
@@ -159,7 +168,7 @@ mapClassic fn (Lens i) =
 
 mapKind :
     (ClassicData -> ClassicData)
-    -> (Grid (Maybe Path) -> Grid (Maybe Path))
+    -> (TableData -> TableData)
     -> Lens
     -> Lens
 mapKind fnClassic fnTable (Lens i) =
@@ -200,13 +209,41 @@ emptyTable =
         { label = "data"
         , vkind =
             Table
-                (Grid.repeat 2 2 Nothing)
+                { grid = Grid.repeat 2 2 Nothing
+                , editing = Nothing
+                }
         }
 
 
 toggleShowGraph : Lens -> Lens
 toggleShowGraph =
     mapClassic (\c -> { c | showGraph = not c.showGraph })
+
+
+toggleEditTable : Lens -> Lens
+toggleEditTable =
+    mapKind
+        identity
+        (\t ->
+            { t
+                | editing =
+                    if t.editing == Nothing then
+                        Just ()
+
+                    else
+                        Nothing
+            }
+        )
+
+
+getEditTable : Lens -> Bool
+getEditTable (Lens l) =
+    case l.vkind of
+        Classic _ ->
+            False
+
+        Table t ->
+            t.editing /= Nothing
 
 
 getShowGraph : Lens -> Bool
@@ -236,14 +273,19 @@ remove p il =
             (\c ->
                 { c | paths = Set.remove p c.paths }
             )
-            (Grid.map
-                (\cell ->
-                    if cell == Just p then
-                        Nothing
+            (\td ->
+                { td
+                    | grid =
+                        Grid.map
+                            (\cell ->
+                                if cell == Just p then
+                                    Nothing
 
-                    else
-                        cell
-                )
+                                else
+                                    cell
+                            )
+                            td.grid
+                }
             )
         |> updateShortPathLabels
 
@@ -255,10 +297,27 @@ addExtraRow g =
             Grid.height g
 
         w =
-            Grid.height g
+            Grid.width g
     in
     Grid.initialize w
         (h + 1)
+        (\x y ->
+            Grid.get ( x, y ) g
+                |> Maybe.Extra.join
+        )
+
+
+addExtraColumn : Grid (Maybe Path) -> Grid (Maybe Path)
+addExtraColumn g =
+    let
+        h =
+            Grid.height g
+
+        w =
+            Grid.width g
+    in
+    Grid.initialize (w + 1)
+        h
         (\x y ->
             Grid.get ( x, y ) g
                 |> Maybe.Extra.join
@@ -312,17 +371,20 @@ insert p il =
             (\c ->
                 { c | paths = Set.insert p c.paths }
             )
-            (\g ->
-                case findEmptySpot g of
-                    Nothing ->
-                        let
-                            h =
-                                Grid.height g
-                        in
-                        Grid.set ( 0, h ) (Just p) (addExtraRow g)
+            (\td ->
+                { td
+                    | grid =
+                        case findEmptySpot td.grid of
+                            Nothing ->
+                                let
+                                    h =
+                                        Grid.height td.grid
+                                in
+                                Grid.set ( 0, h ) (Just p) (addExtraRow td.grid)
 
-                    Just spot ->
-                        Grid.set spot (Just p) g
+                            Just spot ->
+                                Grid.set spot (Just p) td.grid
+                }
             )
         |> updateShortPathLabels
 
@@ -333,7 +395,7 @@ member p (Lens i) =
         Classic c ->
             Set.member p c.paths
 
-        Table g ->
+        Table td ->
             findInGrid
                 (\_ _ mp ->
                     if mp == Just p then
@@ -342,7 +404,7 @@ member p (Lens i) =
                     else
                         Nothing
                 )
-                g
+                td.grid
                 /= Nothing
 
 
@@ -352,7 +414,7 @@ toList (Lens i) =
         Classic c ->
             Set.toList c.paths
 
-        Table g ->
+        Table td ->
             Grid.foldl
                 (\cell l ->
                     case cell of
@@ -363,7 +425,7 @@ toList (Lens i) =
                             c :: l
                 )
                 []
-                g
+                td.grid
 
 
 encode : Lens -> Encode.Value
@@ -377,7 +439,7 @@ encode (Lens i) =
                     , ( "paths", Encode.set (Encode.list Encode.string) c.paths )
                     ]
 
-                Table g ->
+                Table td ->
                     let
                         encodeCell mp =
                             case mp of
@@ -389,7 +451,7 @@ encode (Lens i) =
                     in
                     [ ( "kind", Encode.string "table" )
                     , ( "table"
-                      , Grid.rows g
+                      , Grid.rows td.grid
                             |> Encode.array (Encode.array encodeCell)
                       )
                     ]
@@ -398,8 +460,8 @@ encode (Lens i) =
         (( "label", Encode.string i.label ) :: kindFields)
 
 
-isTable : Lens -> Maybe (Grid (Maybe Path))
-isTable (Lens l) =
+asUserDefinedTable : Lens -> Maybe TableData
+asUserDefinedTable (Lens l) =
     case l.vkind of
         Classic _ ->
             Nothing
@@ -425,7 +487,7 @@ classicDecoder =
         )
 
 
-tableDecoder : Decode.Decoder (Grid (Maybe Path))
+tableDecoder : Decode.Decoder TableData
 tableDecoder =
     Decode.list (Decode.list (Decode.nullable (Decode.list Decode.string)))
         |> Decode.andThen
@@ -435,7 +497,7 @@ tableDecoder =
                         Decode.fail "invalid grid"
 
                     Just g ->
-                        Decode.succeed g
+                        Decode.succeed { grid = g, editing = Nothing }
             )
 
 

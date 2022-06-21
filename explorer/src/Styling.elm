@@ -1,6 +1,7 @@
 module Styling exposing
     ( black
     , dangerousIconButton
+    , emptyCellColor
     , floatingActionButton
     , fonts
     , formatGermanNumber
@@ -72,6 +73,11 @@ modalDim =
 shadowColor : Element.Color
 shadowColor =
     Element.rgba255 100 100 100 0.6
+
+
+emptyCellColor : Element.Color
+emptyCellColor =
+    Element.rgb255 240 240 240
 
 
 germanZeroYellow : Element.Color

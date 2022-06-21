@@ -7,6 +7,7 @@ import AllRuns
         ( AllRuns
         , RunId
         )
+import Array
 import Browser
 import Browser.Dom
 import Chart as C
@@ -49,6 +50,7 @@ import File exposing (File)
 import File.Download as Download
 import File.Select
 import Filter
+import Grid exposing (Grid)
 import Html exposing (Html)
 import Html.Attributes
 import Html.Events
@@ -57,9 +59,11 @@ import Http
 import Json.Decode as Decode
 import Json.Encode as Encode
 import Lens exposing (Lens)
+import List.Extra
 import Maybe.Extra
 import Pivot exposing (Pivot)
 import Run exposing (OverrideHandling(..), Path, Run)
+import Set exposing (Set)
 import Storage
 import Styling
     exposing
@@ -265,6 +269,7 @@ type Msg
     | LeftPaneMoved Int
     | DiffToleranceUpdated RunId RunId Float
     | DragDropMsg (DragDrop.Msg Path ())
+    | ToggleEditLensTableClicked LensId
 
 
 type ModalMsg
@@ -624,12 +629,12 @@ update msg model =
 
         NewLensClicked ->
             model
-                |> mapLens (Pivot.appendR Lens.empty)
+                |> mapLens (Pivot.appendGoR Lens.empty)
                 |> withNoCmd
 
         NewTableClicked ->
             model
-                |> mapLens (Pivot.appendR Lens.emptyTable)
+                |> mapLens (Pivot.appendGoR Lens.emptyTable)
                 |> withNoCmd
 
         DuplicateLensClicked id ->
@@ -659,6 +664,12 @@ update msg model =
                             Just without ->
                                 without
                     )
+                |> withNoCmd
+
+        ToggleEditLensTableClicked id ->
+            model
+                |> activateLens id
+                |> mapActiveLens Lens.toggleEditTable
                 |> withNoCmd
 
         ActivateLensClicked id ->
@@ -1430,8 +1441,90 @@ viewRunsAndComparisons model =
         ]
 
 
-viewValueSetAsTable : Dict Run.Path String -> LensId -> ValueSet -> Element Msg
-viewValueSetAsTable shortPathLabels lensId valueSet =
+viewValueSetAsUserDefinedTable : LensId -> Lens.TableData -> ValueSet -> Element Msg
+viewValueSetAsUserDefinedTable lensId td valueSet =
+    let
+        cells =
+            Grid.rows td.grid
+                |> Array.toList
+                |> List.map Array.toList
+
+        viewCell : Maybe Path -> { row : Int, column : Int } -> Element Msg
+        viewCell cell { row, column } =
+            let
+                cellElement attrs v =
+                    el
+                        ([ Background.color Styling.emptyCellColor
+                         , width fill
+                         , padding sizes.small
+                         ]
+                            ++ attrs
+                        )
+                        v
+            in
+            case cell of
+                Nothing ->
+                    cellElement [] (text " ")
+
+                Just p ->
+                    let
+                        value =
+                            case valueSet.runs of
+                                [] ->
+                                    Nothing
+
+                                r :: _ ->
+                                    Dict.get ( r, p ) valueSet.values
+                    in
+                    if td.editing /= Nothing then
+                        cellElement [ Font.size 12 ] (text (String.join "." p))
+
+                    else
+                        case value of
+                            Nothing ->
+                                -- Making the compiler happy
+                                cellElement [ Font.alignRight ] (text "INTERNAL ERROR")
+
+                            Just (Float f) ->
+                                cellElement [ Font.alignRight ] (text (formatGermanNumber f))
+
+                            Just Null ->
+                                cellElement [ Font.bold ] (text "null")
+
+                            Just (String s) ->
+                                cellElement [ Font.family [ Font.monospace ] ] (text s)
+
+        rows =
+            cells
+                |> List.indexedMap
+                    (\rowNum cellsOfRow ->
+                        row
+                            [ width fill
+                            , spacing sizes.small
+                            ]
+                            (cellsOfRow
+                                |> List.indexedMap
+                                    (\columnNum cell ->
+                                        viewCell cell { row = rowNum, column = columnNum }
+                                    )
+                            )
+                    )
+    in
+    column
+        [ width fill
+        , spacing sizes.small
+        , padding sizes.large
+        ]
+        (rows
+            ++ []
+        )
+
+
+{-| View valueset as table of values
+where the rows are indexed by path names and the columns by runs
+-}
+viewValueSetAsClassicTable : Dict Run.Path String -> LensId -> ValueSet -> Element Msg
+viewValueSetAsClassicTable shortPathLabels lensId valueSet =
     let
         dataColumns =
             valueSet.runs
@@ -1516,6 +1609,21 @@ viewLens id editingActiveLensLabel isActive lens chartHovering allRuns =
 
             else
                 ( germanZeroGreen, 1 )
+
+        maybeEditTableButton =
+            case Lens.asUserDefinedTable lens of
+                Nothing ->
+                    Element.none
+
+                Just t ->
+                    iconButton
+                        (if t.editing == Nothing then
+                            FeatherIcons.edit
+
+                         else
+                            FeatherIcons.check
+                        )
+                        (ToggleEditLensTableClicked id)
     in
     column
         [ width fill
@@ -1564,7 +1672,8 @@ viewLens id editingActiveLensLabel isActive lens chartHovering allRuns =
                     )
             , el [ width fill ] Element.none
             , buttons
-                [ iconButton
+                [ maybeEditTableButton
+                , iconButton
                     (if showGraph then
                         FeatherIcons.eye
 
@@ -1582,7 +1691,12 @@ viewLens id editingActiveLensLabel isActive lens chartHovering allRuns =
 
               else
                 Element.none
-            , viewValueSetAsTable shortPathLabels id valueSet
+            , case Lens.asUserDefinedTable lens of
+                Nothing ->
+                    viewValueSetAsClassicTable shortPathLabels id valueSet
+
+                Just g ->
+                    viewValueSetAsUserDefinedTable id g valueSet
             ]
         ]
 
