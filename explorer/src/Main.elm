@@ -57,7 +57,7 @@ import Http
 import InterestListTable exposing (InterestListTable)
 import Json.Decode as Decode
 import Json.Encode as Encode
-import Lens exposing (InterestList)
+import Lens exposing (Lens)
 import Maybe.Extra
 import Pivot exposing (Pivot)
 import Run exposing (OverrideHandling(..), Path, Run)
@@ -147,7 +147,7 @@ type alias ExplorerDragDrop =
 type alias Model =
     { runs : AllRuns
     , collapseStatus : CollapseStatus
-    , lenses : Pivot InterestList
+    , lenses : Pivot Lens
     , editingActiveLensLabel : Bool
     , showModal : Maybe ModalState
     , activeOverrideEditor : Maybe ActiveOverrideEditor
@@ -272,12 +272,12 @@ type ModalMsg
     | CalculateModalAgsUpdated String
 
 
-mapActiveInterestList : (InterestList -> InterestList) -> Model -> Model
+mapActiveInterestList : (Lens -> Lens) -> Model -> Model
 mapActiveInterestList f =
     mapLens (Pivot.mapC f)
 
 
-mapLens : (Pivot InterestList -> Pivot InterestList) -> Model -> Model
+mapLens : (Pivot Lens -> Pivot Lens) -> Model -> Model
 mapLens f m =
     { m | lenses = f m.lenses }
 
@@ -1096,7 +1096,7 @@ viewValueTree :
     -> InterestListId
     -> Run.Path
     -> (RunId -> Run.Path -> Bool)
-    -> InterestList
+    -> Lens
     -> Run.Overrides
     -> Maybe ActiveOverrideEditor
     -> Tree Value
@@ -1273,7 +1273,7 @@ viewComparison aId bId collapseStatus diffData =
         ]
 
 
-viewRun : RunId -> InterestListId -> InterestList -> CollapseStatus -> Maybe ActiveOverrideEditor -> Maybe ActiveSearch -> Maybe RunId -> Run -> Element Msg
+viewRun : RunId -> InterestListId -> Lens -> CollapseStatus -> Maybe ActiveOverrideEditor -> Maybe ActiveSearch -> Maybe RunId -> Run -> Element Msg
 viewRun runId interestListId interestList collapseStatus activeOverrideEditor activeSearch selectedForComparison run =
     let
         inputs =
@@ -1495,7 +1495,7 @@ viewInterestListTableAsTable shortPathLabels interestListId interestListTable =
         }
 
 
-viewInterestList : InterestListId -> Bool -> Bool -> InterestList -> ChartHovering -> AllRuns -> Element Msg
+viewInterestList : InterestListId -> Bool -> Bool -> Lens -> ChartHovering -> AllRuns -> Element Msg
 viewInterestList id editingActiveLensLabel isActive interestList chartHovering allRuns =
     let
         interestListTable =

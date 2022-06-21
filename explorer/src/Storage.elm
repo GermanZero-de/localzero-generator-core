@@ -2,11 +2,11 @@ module Storage exposing (Storage, decoder, encode)
 
 import Json.Decode as Decode
 import Json.Encode as Encode
-import Lens exposing (InterestList)
+import Lens exposing (Lens)
 
 
 type alias Storage =
-    { interestLists : List InterestList
+    { interestLists : List Lens
     }
 
 

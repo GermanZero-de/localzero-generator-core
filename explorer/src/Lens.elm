@@ -1,5 +1,5 @@
 module Lens exposing
-    ( InterestList
+    ( Lens
     , decoder
     , empty
     , emptyTable
@@ -37,7 +37,7 @@ type VisualisationKind
     | Table (Grid (Maybe Path))
 
 
-type InterestList
+type Lens
     = InterestList
         { label : String
         , vkind : VisualisationKind
@@ -131,7 +131,7 @@ guessShortPathLabels paths =
             Dict.fromList (List.map2 Tuple.pair pathList shortLabels)
 
 
-getShortPathLabels : InterestList -> Dict Path String
+getShortPathLabels : Lens -> Dict Path String
 getShortPathLabels (InterestList il) =
     case il.vkind of
         Classic { guessedShortLabels } ->
@@ -142,7 +142,7 @@ getShortPathLabels (InterestList il) =
             Dict.empty
 
 
-mapClassic : (ClassicData -> ClassicData) -> InterestList -> InterestList
+mapClassic : (ClassicData -> ClassicData) -> Lens -> Lens
 mapClassic fn (InterestList i) =
     case i.vkind of
         Table _ ->
@@ -155,8 +155,8 @@ mapClassic fn (InterestList i) =
 mapKind :
     (ClassicData -> ClassicData)
     -> (Grid (Maybe Path) -> Grid (Maybe Path))
-    -> InterestList
-    -> InterestList
+    -> Lens
+    -> Lens
 mapKind fnClassic fnTable (InterestList i) =
     case i.vkind of
         Table t ->
@@ -166,7 +166,7 @@ mapKind fnClassic fnTable (InterestList i) =
             InterestList { i | vkind = Classic (fnClassic c) }
 
 
-updateShortPathLabels : InterestList -> InterestList
+updateShortPathLabels : Lens -> Lens
 updateShortPathLabels =
     mapClassic
         (\c ->
@@ -176,7 +176,7 @@ updateShortPathLabels =
         )
 
 
-empty : InterestList
+empty : Lens
 empty =
     InterestList
         { label = "data"
@@ -189,7 +189,7 @@ empty =
         }
 
 
-emptyTable : InterestList
+emptyTable : Lens
 emptyTable =
     InterestList
         { label = "data"
@@ -199,12 +199,12 @@ emptyTable =
         }
 
 
-toggleShowGraph : InterestList -> InterestList
+toggleShowGraph : Lens -> Lens
 toggleShowGraph =
     mapClassic (\c -> { c | showGraph = not c.showGraph })
 
 
-getShowGraph : InterestList -> Bool
+getShowGraph : Lens -> Bool
 getShowGraph (InterestList il) =
     case il.vkind of
         Classic c ->
@@ -214,17 +214,17 @@ getShowGraph (InterestList il) =
             False
 
 
-getLabel : InterestList -> String
+getLabel : Lens -> String
 getLabel (InterestList l) =
     l.label
 
 
-mapLabel : (String -> String) -> InterestList -> InterestList
+mapLabel : (String -> String) -> Lens -> Lens
 mapLabel f (InterestList l) =
     InterestList { l | label = f l.label }
 
 
-remove : Path -> InterestList -> InterestList
+remove : Path -> Lens -> Lens
 remove p il =
     il
         |> mapKind
@@ -300,7 +300,7 @@ findEmptySpot g =
         g
 
 
-insert : Path -> InterestList -> InterestList
+insert : Path -> Lens -> Lens
 insert p il =
     il
         |> mapKind
@@ -322,7 +322,7 @@ insert p il =
         |> updateShortPathLabels
 
 
-member : Path -> InterestList -> Bool
+member : Path -> Lens -> Bool
 member p (InterestList i) =
     case i.vkind of
         Classic c ->
@@ -341,7 +341,7 @@ member p (InterestList i) =
                 /= Nothing
 
 
-toList : InterestList -> List Path
+toList : Lens -> List Path
 toList (InterestList i) =
     case i.vkind of
         Classic c ->
@@ -361,7 +361,7 @@ toList (InterestList i) =
                 g
 
 
-encode : InterestList -> Encode.Value
+encode : Lens -> Encode.Value
 encode (InterestList i) =
     let
         kindFields =
@@ -424,7 +424,7 @@ tableDecoder =
             )
 
 
-decoder : Decode.Decoder InterestList
+decoder : Decode.Decoder Lens
 decoder =
     Decode.map2
         (\label vkind ->

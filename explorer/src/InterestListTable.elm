@@ -6,7 +6,7 @@ to all the runs.
 
 import AllRuns exposing (AllRuns, RunId)
 import Dict exposing (Dict)
-import Lens exposing (InterestList)
+import Lens exposing (Lens)
 import Run
 import Tree
 import Value exposing (Value(..))
@@ -19,7 +19,7 @@ type alias InterestListTable =
     }
 
 
-create : InterestList -> AllRuns -> InterestListTable
+create : Lens -> AllRuns -> InterestListTable
 create interestList allRuns =
     -- The withDefault handles the case if we somehow managed to get two
     -- differently structured result values into the explorer, this can only
