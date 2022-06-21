@@ -54,7 +54,7 @@ import Html.Attributes
 import Html.Events
 import Html5.DragDrop as DragDrop
 import Http
-import InterestListTable exposing (InterestListTable)
+import InterestListTable exposing (ValueSet)
 import Json.Decode as Decode
 import Json.Encode as Encode
 import Lens exposing (Lens)
@@ -800,7 +800,7 @@ subscriptions model =
 -- VIEW
 
 
-viewChart : ChartHovering -> Dict Run.Path String -> InterestListTable -> Element Msg
+viewChart : ChartHovering -> Dict Run.Path String -> ValueSet -> Element Msg
 viewChart chartHovering shortPathLabels interestListTable =
     let
         widthChart =
@@ -1430,7 +1430,7 @@ viewRunsAndComparisons model =
         ]
 
 
-viewInterestListTableAsTable : Dict Run.Path String -> LensId -> InterestListTable -> Element Msg
+viewInterestListTableAsTable : Dict Run.Path String -> LensId -> ValueSet -> Element Msg
 viewInterestListTableAsTable shortPathLabels lensId interestListTable =
     let
         dataColumns =

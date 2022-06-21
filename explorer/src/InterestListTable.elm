@@ -1,4 +1,4 @@
-module InterestListTable exposing (InterestListTable, create)
+module InterestListTable exposing (ValueSet, create)
 
 {-| A InterestListTable is the result of applying an InterestList
 to all the runs.
@@ -12,14 +12,14 @@ import Tree
 import Value exposing (Value(..))
 
 
-type alias InterestListTable =
+type alias ValueSet =
     { paths : List Run.Path
     , runs : List RunId
     , values : Dict ( RunId, Run.Path ) Value
     }
 
 
-create : Lens -> AllRuns -> InterestListTable
+create : Lens -> AllRuns -> ValueSet
 create interestList allRuns =
     -- The withDefault handles the case if we somehow managed to get two
     -- differently structured result values into the explorer, this can only
