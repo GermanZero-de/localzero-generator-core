@@ -269,7 +269,7 @@ type Msg
     | LeftPaneMoved Int
     | DiffToleranceUpdated RunId RunId Float
     | DragDropMsg (DragDrop.Msg Path ())
-    | ToggleEditLensTableClicked LensId
+    | LensTableEditModeChanged LensId (Maybe Lens.TableEditMode)
     | AddRowToLensTableClicked LensId
     | AddColumnToLensTableClicked LensId
     | CellOfLensTableEdited LensId { x : Int, y : Int } String
@@ -681,16 +681,16 @@ update msg model =
                     )
                 |> withNoCmd
 
-        ToggleEditLensTableClicked id ->
+        LensTableEditModeChanged id mode ->
             model
                 |> activateLens id
-                |> mapActiveLens Lens.toggleEditTable
+                |> mapActiveLens (Lens.setTableEditMode mode)
                 |> withNoCmd
 
         CellOfLensTableEdited id pos value ->
             model
                 |> activateLens id
-                |> mapActiveLens (Lens.setEditCell pos)
+                |> mapActiveLens (Lens.setTableEditMode (Just (Lens.Cell pos)))
                 |> mapActiveLens (Lens.mapCells (Grid.set ( pos.x, pos.y ) (Just (Lens.Label value))))
                 |> withNoCmd
 
@@ -1501,12 +1501,20 @@ viewValueSetAsUserDefinedTable lensId td valueSet =
 
                 Just (Lens.Label l) ->
                     if td.editing == Just (Lens.Cell { x = column, y = row }) then
-                        Input.text [ width fill, Font.bold, padding sizes.small ]
+                        Input.text
+                            [ width fill
+                            , Font.bold
+                            , padding sizes.small
+                            , onEnter (LensTableEditModeChanged lensId (Just Lens.All))
+                            ]
                             { onChange = CellOfLensTableEdited lensId { x = column, y = row }
                             , text = l
                             , placeholder = Nothing
                             , label = Input.labelHidden "label"
                             }
+
+                    else if l == "" then
+                        cellElement [] "" (text " ")
 
                     else
                         cellElement [ Font.bold ] l (paragraph [] [ text l ])
@@ -1703,14 +1711,12 @@ viewLens id editingActiveLensLabel isActive lens chartHovering allRuns =
                     Element.none
 
                 Just t ->
-                    iconButton
-                        (if t.editing == Nothing then
-                            FeatherIcons.edit
+                    if t.editing == Nothing then
+                        iconButton FeatherIcons.edit
+                            (LensTableEditModeChanged id (Just Lens.All))
 
-                         else
-                            FeatherIcons.check
-                        )
-                        (ToggleEditLensTableClicked id)
+                    else
+                        iconButton FeatherIcons.check (LensTableEditModeChanged id Nothing)
     in
     column
         [ width fill

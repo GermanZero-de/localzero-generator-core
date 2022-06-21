@@ -19,7 +19,7 @@ module Lens exposing
     , mapLabel
     , member
     , remove
-    , setEditCell
+    , setTableEditMode
     , toList
     , toggleEditTable
     , toggleShowGraph
@@ -264,13 +264,13 @@ toggleEditTable =
         )
 
 
-setEditCell : { x : Int, y : Int } -> Lens -> Lens
-setEditCell pos =
+setTableEditMode : Maybe TableEditMode -> Lens -> Lens
+setTableEditMode mode =
     mapKind
         identity
         (\t ->
             { t
-                | editing = Just (Cell pos)
+                | editing = mode
             }
         )
 
