@@ -6,7 +6,7 @@ to all the runs.
 
 import AllRuns exposing (AllRuns, RunId)
 import Dict exposing (Dict)
-import InterestList exposing (InterestList)
+import Lens exposing (InterestList)
 import Run
 import Tree
 import Value exposing (Value(..))
@@ -29,7 +29,7 @@ create interestList allRuns =
     -- at a TREE
     let
         paths =
-            InterestList.toList interestList
+            Lens.toList interestList
 
         runList =
             AllRuns.toList allRuns

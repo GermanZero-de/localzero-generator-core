@@ -1,8 +1,8 @@
 module Storage exposing (Storage, decoder, encode)
 
-import InterestList exposing (InterestList)
 import Json.Decode as Decode
 import Json.Encode as Encode
+import Lens exposing (InterestList)
 
 
 type alias Storage =
@@ -14,7 +14,7 @@ encodeV1 : Storage -> Encode.Value
 encodeV1 { interestLists } =
     Encode.object
         [ ( "version", Encode.int 1 )
-        , ( "interestLists", Encode.list InterestList.encode interestLists )
+        , ( "interestLists", Encode.list Lens.encode interestLists )
         ]
 
 
@@ -25,7 +25,7 @@ encode s =
 
 v1Decoder : Decode.Decoder Storage
 v1Decoder =
-    Decode.field "interestLists" (Decode.list InterestList.decoder)
+    Decode.field "interestLists" (Decode.list Lens.decoder)
         |> Decode.map (\l -> { interestLists = l })
 
 

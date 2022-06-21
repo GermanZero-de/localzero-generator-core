@@ -54,10 +54,10 @@ import Html.Attributes
 import Html.Events
 import Html5.DragDrop as DragDrop
 import Http
-import InterestList exposing (InterestList)
 import InterestListTable exposing (InterestListTable)
 import Json.Decode as Decode
 import Json.Encode as Encode
+import Lens exposing (InterestList)
 import Maybe.Extra
 import Pivot exposing (Pivot)
 import Run exposing (OverrideHandling(..), Path, Run)
@@ -106,7 +106,11 @@ main =
 
 
 type alias ActiveOverrideEditor =
-    { runId : RunId, name : String, value : String, asFloat : Maybe Float }
+    { runId : RunId
+    , name : String
+    , value : String
+    , asFloat : Maybe Float
+    }
 
 
 type alias ActiveSearch =
@@ -143,8 +147,8 @@ type alias ExplorerDragDrop =
 type alias Model =
     { runs : AllRuns
     , collapseStatus : CollapseStatus
-    , interestLists : Pivot InterestList
-    , editingActiveInterestListLabel : Bool
+    , lenses : Pivot InterestList
+    , editingActiveLensLabel : Bool
     , showModal : Maybe ModalState
     , activeOverrideEditor : Maybe ActiveOverrideEditor
     , activeSearch : Maybe ActiveSearch
@@ -196,10 +200,10 @@ initiateMakeEntries maybeNdx inputs overrides model =
     )
 
 
-activateInterestList : InterestListId -> Model -> Model
-activateInterestList id model =
+activateLens : InterestListId -> Model -> Model
+activateLens id model =
     { model
-        | interestLists = Pivot.withRollback (Pivot.goTo id) model.interestLists
+        | lenses = Pivot.withRollback (Pivot.goTo id) model.lenses
     }
 
 
@@ -207,8 +211,8 @@ init : () -> ( Model, Cmd Msg )
 init _ =
     ( { runs = AllRuns.empty
       , showModal = Nothing
-      , interestLists = Pivot.singleton InterestList.empty
-      , editingActiveInterestListLabel = False
+      , lenses = Pivot.singleton Lens.empty
+      , editingActiveLensLabel = False
       , collapseStatus = allCollapsed
       , activeOverrideEditor = Nothing
       , activeSearch = Nothing
@@ -229,8 +233,8 @@ init _ =
 type Msg
     = GotGeneratorResult (Maybe RunId) Run.Inputs Run.Entries Run.Overrides (Result Http.Error (Tree Value))
     | GotEntries (Maybe RunId) Run.Inputs Run.Overrides (Result Http.Error Run.Entries)
-    | AddToInterestListClicked Run.Path
-    | RemoveFromInterestListClicked InterestListId Run.Path
+    | AddToLensClicked Run.Path
+    | RemoveFromLensClicked InterestListId Run.Path
     | AddOrUpdateOverrideClicked RunId String Float
     | RemoveOverrideClicked RunId String
     | OverrideEdited RunId String String
@@ -243,13 +247,13 @@ type Msg
     | DisplayCalculateModalClicked (Maybe RunId) Run.Inputs Run.Overrides
     | CalculateModalOkClicked (Maybe RunId) Run.Inputs Run.Overrides
     | RemoveExplorableClicked Explorable.Id
-    | InterestListLabelEdited InterestListId String
-    | InterestListLabelEditFinished
+    | LensLabelEdited InterestListId String
+    | LensLabelEditFinished
     | ToggleShowGraphClicked InterestListId
-    | DuplicateInterestListClicked InterestListId
-    | RemoveInterestListClicked InterestListId
-    | ActivateInterestListClicked InterestListId
-    | NewInterestListClicked
+    | DuplicateLensClicked InterestListId
+    | RemoveLensClicked InterestListId
+    | ActivateLensClicked InterestListId
+    | NewLensClicked
     | NewTableClicked
     | DownloadClicked
     | UploadClicked
@@ -270,12 +274,12 @@ type ModalMsg
 
 mapActiveInterestList : (InterestList -> InterestList) -> Model -> Model
 mapActiveInterestList f =
-    mapInterestLists (Pivot.mapC f)
+    mapLens (Pivot.mapC f)
 
 
-mapInterestLists : (Pivot InterestList -> Pivot InterestList) -> Model -> Model
-mapInterestLists f m =
-    { m | interestLists = f m.interestLists }
+mapLens : (Pivot InterestList -> Pivot InterestList) -> Model -> Model
+mapLens f m =
+    { m | lenses = f m.lenses }
 
 
 withLoadFailure : String -> Model -> ( Model, Cmd Msg )
@@ -283,16 +287,16 @@ withLoadFailure msg model =
     ( { model | showModal = Just (LoadFailure msg) }, Cmd.none )
 
 
-withEditingActiveInterestListLabel : Bool -> Model -> Model
-withEditingActiveInterestListLabel b m =
-    { m | editingActiveInterestListLabel = b }
+withEditingActiveLensLabel : Bool -> Model -> Model
+withEditingActiveLensLabel b m =
+    { m | editingActiveLensLabel = b }
 
 
 downloadCmd : Model -> Cmd msg
 downloadCmd model =
     let
         content =
-            Storage.encode { interestLists = Pivot.toList model.interestLists }
+            Storage.encode { interestLists = Pivot.toList model.lenses }
                 |> Encode.encode 0
     in
     Download.string "explorer.json" "text/json" content
@@ -344,15 +348,15 @@ update msg model =
 
                 Ok storage ->
                     let
-                        ils =
+                        ls =
                             case Pivot.fromList storage.interestLists of
                                 Nothing ->
-                                    model.interestLists
+                                    model.lenses
 
                                 Just i ->
                                     i
                     in
-                    { model | interestLists = ils }
+                    { model | lenses = ls }
                         |> withNoCmd
 
         GotEntries maybeRunId inputs overrides (Ok entries) ->
@@ -522,7 +526,7 @@ update msg model =
                     { model | activeSearch = Nothing }
                         |> mapActiveInterestList
                             (\il ->
-                                List.foldl (\p i -> InterestList.insert p i) il paths
+                                List.foldl (\p i -> Lens.insert p i) il paths
                             )
                         |> withNoCmd
 
@@ -601,78 +605,78 @@ update msg model =
                                 |> Dict.remove name
                             )
 
-        AddToInterestListClicked path ->
+        AddToLensClicked path ->
             model
-                |> mapActiveInterestList (InterestList.insert path)
+                |> mapActiveInterestList (Lens.insert path)
                 |> withNoCmd
 
-        RemoveFromInterestListClicked id path ->
+        RemoveFromLensClicked id path ->
             model
-                |> activateInterestList id
-                |> mapActiveInterestList (InterestList.remove path)
+                |> activateLens id
+                |> mapActiveInterestList (Lens.remove path)
                 |> withNoCmd
 
         ToggleShowGraphClicked id ->
             model
-                |> activateInterestList id
-                |> mapActiveInterestList InterestList.toggleShowGraph
+                |> activateLens id
+                |> mapActiveInterestList Lens.toggleShowGraph
                 |> withNoCmd
 
-        NewInterestListClicked ->
+        NewLensClicked ->
             model
-                |> mapInterestLists (Pivot.appendR InterestList.empty)
+                |> mapLens (Pivot.appendR Lens.empty)
                 |> withNoCmd
 
         NewTableClicked ->
             model
-                |> mapInterestLists (Pivot.appendR InterestList.emptyTable)
+                |> mapLens (Pivot.appendR Lens.emptyTable)
                 |> withNoCmd
 
-        DuplicateInterestListClicked id ->
+        DuplicateLensClicked id ->
             model
-                |> activateInterestList id
-                |> mapInterestLists
+                |> activateLens id
+                |> mapLens
                     (\p ->
                         Pivot.appendGoR
                             (Pivot.getC p
-                                |> InterestList.mapLabel (\l -> l ++ " Copy")
+                                |> Lens.mapLabel (\l -> l ++ " Copy")
                             )
                             p
                     )
                 |> withNoCmd
 
-        RemoveInterestListClicked id ->
+        RemoveLensClicked id ->
             model
-                |> activateInterestList id
-                |> mapInterestLists
+                |> activateLens id
+                |> mapLens
                     (\ils ->
                         case Pivot.removeGoR ils of
                             Nothing ->
                                 -- If List was singleton, delete becomes
                                 -- reset to empty
-                                Maybe.withDefault (Pivot.singleton InterestList.empty) (Pivot.removeGoL ils)
+                                Maybe.withDefault (Pivot.singleton Lens.empty) (Pivot.removeGoL ils)
 
                             Just without ->
                                 without
                     )
                 |> withNoCmd
 
-        ActivateInterestListClicked id ->
+        ActivateLensClicked id ->
             model
-                |> activateInterestList id
+                |> activateLens id
                 |> withNoCmd
 
-        InterestListLabelEdited id newLabel ->
+        LensLabelEdited id newLabel ->
             model
-                |> activateInterestList id
-                |> withEditingActiveInterestListLabel True
-                |> mapActiveInterestList (InterestList.mapLabel (always newLabel))
+                |> activateLens id
+                |> withEditingActiveLensLabel True
+                |> mapActiveInterestList (Lens.mapLabel (always newLabel))
                 |> withCmd
                     (Task.attempt (\_ -> Noop) (Browser.Dom.focus "interestlabel"))
 
-        InterestListLabelEditFinished ->
+        LensLabelEditFinished ->
             model
-                |> withEditingActiveInterestListLabel False
+                |> withEditingActiveLensLabel False
                 |> withNoCmd
 
         OnChartHover hovering ->
@@ -1123,12 +1127,12 @@ viewValueTree runId interestListId path checkIsCollapsed interestList overrides 
                             pathToParent ++ [ name ]
 
                         button =
-                            if InterestList.member thisPath interestList then
+                            if Lens.member thisPath interestList then
                                 dangerousIconButton (size16 FeatherIcons.trash2)
-                                    (RemoveFromInterestListClicked interestListId thisPath)
+                                    (RemoveFromLensClicked interestListId thisPath)
 
                             else
-                                iconButton (size16 FeatherIcons.plus) (AddToInterestListClicked thisPath)
+                                iconButton (size16 FeatherIcons.plus) (AddToLensClicked thisPath)
 
                         ( originalValue, maybeOverride ) =
                             -- Clicking on original value should start or revert
@@ -1405,8 +1409,8 @@ viewRunsAndComparisons model =
                     |> List.map
                         (\( resultNdx, ir ) ->
                             viewRun resultNdx
-                                (Pivot.lengthL model.interestLists)
-                                (Pivot.getC model.interestLists)
+                                (Pivot.lengthL model.lenses)
+                                (Pivot.getC model.lenses)
                                 model.collapseStatus
                                 model.activeOverrideEditor
                                 model.activeSearch
@@ -1477,7 +1481,7 @@ viewInterestListTableAsTable shortPathLabels interestListId interestListTable =
             , width = shrink
             , view =
                 \path ->
-                    dangerousIconButton (size16 FeatherIcons.trash2) (RemoveFromInterestListClicked interestListId path)
+                    dangerousIconButton (size16 FeatherIcons.trash2) (RemoveFromLensClicked interestListId path)
             }
     in
     Element.table
@@ -1492,19 +1496,19 @@ viewInterestListTableAsTable shortPathLabels interestListId interestListTable =
 
 
 viewInterestList : InterestListId -> Bool -> Bool -> InterestList -> ChartHovering -> AllRuns -> Element Msg
-viewInterestList id editingActiveInterestListLabel isActive interestList chartHovering allRuns =
+viewInterestList id editingActiveLensLabel isActive interestList chartHovering allRuns =
     let
         interestListTable =
             InterestListTable.create interestList allRuns
 
         showGraph =
-            InterestList.getShowGraph interestList
+            Lens.getShowGraph interestList
 
         labelText =
-            InterestList.getLabel interestList
+            Lens.getLabel interestList
 
         shortPathLabels =
-            InterestList.getShortPathLabels interestList
+            Lens.getShortPathLabels interestList
 
         ( borderColor, borderWidth ) =
             if isActive then
@@ -1515,7 +1519,7 @@ viewInterestList id editingActiveInterestListLabel isActive interestList chartHo
     in
     column
         [ width fill
-        , Events.onClick (ActivateInterestListClicked id)
+        , Events.onClick (ActivateLensClicked id)
         , Element.mouseOver [ Border.color germanZeroYellow ]
         , Border.color borderColor
         , Border.width borderWidth
@@ -1526,13 +1530,13 @@ viewInterestList id editingActiveInterestListLabel isActive interestList chartHo
             , Font.size 24
             , Element.paddingXY sizes.large sizes.medium
             ]
-            [ if editingActiveInterestListLabel && isActive then
+            [ if editingActiveLensLabel && isActive then
                 Input.text
-                    [ Events.onLoseFocus InterestListLabelEditFinished
-                    , onEnter InterestListLabelEditFinished
+                    [ Events.onLoseFocus LensLabelEditFinished
+                    , onEnter LensLabelEditFinished
                     , Element.htmlAttribute (Html.Attributes.id "interestlabel")
                     ]
-                    { onChange = InterestListLabelEdited id
+                    { onChange = LensLabelEdited id
                     , text = labelText
                     , label = Input.labelHidden "interest list"
                     , placeholder = Just (Input.placeholder [] (text "label"))
@@ -1540,7 +1544,7 @@ viewInterestList id editingActiveInterestListLabel isActive interestList chartHo
 
               else
                 el
-                    [ Events.onClick (InterestListLabelEdited id labelText)
+                    [ Events.onClick (LensLabelEdited id labelText)
                     , Font.color
                         (if labelText == "" then
                             modalDim
@@ -1568,8 +1572,8 @@ viewInterestList id editingActiveInterestListLabel isActive interestList chartHo
                         FeatherIcons.eyeOff
                     )
                     (ToggleShowGraphClicked id)
-                , iconButton FeatherIcons.copy (DuplicateInterestListClicked id)
-                , dangerousIconButton FeatherIcons.trash2 (RemoveInterestListClicked id)
+                , iconButton FeatherIcons.copy (DuplicateLensClicked id)
+                , dangerousIconButton FeatherIcons.trash2 (RemoveLensClicked id)
                 ]
             ]
         , column [ width fill, spacing 40 ]
@@ -1604,15 +1608,20 @@ viewModel model =
                 ]
 
         interestLists =
-            Pivot.indexAbsolute model.interestLists
+            Pivot.indexAbsolute model.lenses
                 |> Pivot.toList
                 |> List.map
                     (\( pos, il ) ->
                         let
                             activePos =
-                                Pivot.lengthL model.interestLists
+                                Pivot.lengthL model.lenses
                         in
-                        viewInterestList pos model.editingActiveInterestListLabel (pos == activePos) il model.chartHovering model.runs
+                        viewInterestList pos
+                            model.editingActiveLensLabel
+                            (pos == activePos)
+                            il
+                            model.chartHovering
+                            model.runs
                     )
     in
     column
@@ -1643,7 +1652,7 @@ viewModel model =
                         , Element.alignRight
                         , padding 0
                         ]
-                        [ floatingActionButton FeatherIcons.plus NewInterestListClicked
+                        [ floatingActionButton FeatherIcons.plus NewLensClicked
                         , floatingActionButton FeatherIcons.grid NewTableClicked
                         ]
                     )

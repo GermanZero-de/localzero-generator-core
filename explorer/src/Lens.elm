@@ -1,4 +1,4 @@
-module InterestList exposing
+module Lens exposing
     ( InterestList
     , decoder
     , empty
