@@ -15,6 +15,10 @@ module Lens exposing
     , toggleShowGraph
     )
 
+{-| Lenses are ways to visualise a subset of the data in a explorer run.
+A Lens tells you how to see the data, it does not contain the data itself.
+-}
+
 import Dict exposing (Dict)
 import Grid exposing (Grid)
 import Json.Decode as Decode

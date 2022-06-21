@@ -122,7 +122,7 @@ type alias ActiveSearch =
 
 {-| Position of interestlist in pivot
 -}
-type alias InterestListId =
+type alias LensId =
     Int
 
 
@@ -200,7 +200,7 @@ initiateMakeEntries maybeNdx inputs overrides model =
     )
 
 
-activateLens : InterestListId -> Model -> Model
+activateLens : LensId -> Model -> Model
 activateLens id model =
     { model
         | lenses = Pivot.withRollback (Pivot.goTo id) model.lenses
@@ -234,7 +234,7 @@ type Msg
     = GotGeneratorResult (Maybe RunId) Run.Inputs Run.Entries Run.Overrides (Result Http.Error (Tree Value))
     | GotEntries (Maybe RunId) Run.Inputs Run.Overrides (Result Http.Error Run.Entries)
     | AddToLensClicked Run.Path
-    | RemoveFromLensClicked InterestListId Run.Path
+    | RemoveFromLensClicked LensId Run.Path
     | AddOrUpdateOverrideClicked RunId String Float
     | RemoveOverrideClicked RunId String
     | OverrideEdited RunId String String
@@ -247,12 +247,12 @@ type Msg
     | DisplayCalculateModalClicked (Maybe RunId) Run.Inputs Run.Overrides
     | CalculateModalOkClicked (Maybe RunId) Run.Inputs Run.Overrides
     | RemoveExplorableClicked Explorable.Id
-    | LensLabelEdited InterestListId String
+    | LensLabelEdited LensId String
     | LensLabelEditFinished
-    | ToggleShowGraphClicked InterestListId
-    | DuplicateLensClicked InterestListId
-    | RemoveLensClicked InterestListId
-    | ActivateLensClicked InterestListId
+    | ToggleShowGraphClicked LensId
+    | DuplicateLensClicked LensId
+    | RemoveLensClicked LensId
+    | ActivateLensClicked LensId
     | NewLensClicked
     | NewTableClicked
     | DownloadClicked
@@ -272,8 +272,8 @@ type ModalMsg
     | CalculateModalAgsUpdated String
 
 
-mapActiveInterestList : (Lens -> Lens) -> Model -> Model
-mapActiveInterestList f =
+mapActiveLens : (Lens -> Lens) -> Model -> Model
+mapActiveLens f =
     mapLens (Pivot.mapC f)
 
 
@@ -524,7 +524,7 @@ update msg model =
                             Tree.expand a.result
                     in
                     { model | activeSearch = Nothing }
-                        |> mapActiveInterestList
+                        |> mapActiveLens
                             (\il ->
                                 List.foldl (\p i -> Lens.insert p i) il paths
                             )
@@ -607,19 +607,19 @@ update msg model =
 
         AddToLensClicked path ->
             model
-                |> mapActiveInterestList (Lens.insert path)
+                |> mapActiveLens (Lens.insert path)
                 |> withNoCmd
 
         RemoveFromLensClicked id path ->
             model
                 |> activateLens id
-                |> mapActiveInterestList (Lens.remove path)
+                |> mapActiveLens (Lens.remove path)
                 |> withNoCmd
 
         ToggleShowGraphClicked id ->
             model
                 |> activateLens id
-                |> mapActiveInterestList Lens.toggleShowGraph
+                |> mapActiveLens Lens.toggleShowGraph
                 |> withNoCmd
 
         NewLensClicked ->
@@ -670,7 +670,7 @@ update msg model =
             model
                 |> activateLens id
                 |> withEditingActiveLensLabel True
-                |> mapActiveInterestList (Lens.mapLabel (always newLabel))
+                |> mapActiveLens (Lens.mapLabel (always newLabel))
                 |> withCmd
                     (Task.attempt (\_ -> Noop) (Browser.Dom.focus "interestlabel"))
 
@@ -1093,7 +1093,7 @@ viewValue v =
 
 viewValueTree :
     RunId
-    -> InterestListId
+    -> LensId
     -> Run.Path
     -> (RunId -> Run.Path -> Bool)
     -> Lens
@@ -1101,7 +1101,7 @@ viewValueTree :
     -> Maybe ActiveOverrideEditor
     -> Tree Value
     -> Element Msg
-viewValueTree runId interestListId path checkIsCollapsed interestList overrides activeOverrideEditor tree =
+viewValueTree runId lensId path checkIsCollapsed lens overrides activeOverrideEditor tree =
     let
         viewLeaf : Run.Path -> String -> Value -> List (Element Msg)
         viewLeaf pathToParent name value =
@@ -1127,9 +1127,9 @@ viewValueTree runId interestListId path checkIsCollapsed interestList overrides 
                             pathToParent ++ [ name ]
 
                         button =
-                            if Lens.member thisPath interestList then
+                            if Lens.member thisPath lens then
                                 dangerousIconButton (size16 FeatherIcons.trash2)
-                                    (RemoveFromLensClicked interestListId thisPath)
+                                    (RemoveFromLensClicked lensId thisPath)
 
                             else
                                 iconButton (size16 FeatherIcons.plus) (AddToLensClicked thisPath)
@@ -1273,8 +1273,8 @@ viewComparison aId bId collapseStatus diffData =
         ]
 
 
-viewRun : RunId -> InterestListId -> Lens -> CollapseStatus -> Maybe ActiveOverrideEditor -> Maybe ActiveSearch -> Maybe RunId -> Run -> Element Msg
-viewRun runId interestListId interestList collapseStatus activeOverrideEditor activeSearch selectedForComparison run =
+viewRun : RunId -> LensId -> Lens -> CollapseStatus -> Maybe ActiveOverrideEditor -> Maybe ActiveSearch -> Maybe RunId -> Run -> Element Msg
+viewRun runId lensId lens collapseStatus activeOverrideEditor activeSearch selectedForComparison run =
     let
         inputs =
             Run.getInputs run
@@ -1365,10 +1365,10 @@ viewRun runId interestListId interestList collapseStatus activeOverrideEditor ac
         , differentIfFilterActive.filterPatternField
         , viewValueTree
             runId
-            interestListId
+            lensId
             []
             differentIfFilterActive.isCollapsed
-            interestList
+            lens
             overrides
             activeOverrideEditor
             differentIfFilterActive.treeToDisplay
@@ -1430,8 +1430,8 @@ viewRunsAndComparisons model =
         ]
 
 
-viewInterestListTableAsTable : Dict Run.Path String -> InterestListId -> InterestListTable -> Element Msg
-viewInterestListTableAsTable shortPathLabels interestListId interestListTable =
+viewInterestListTableAsTable : Dict Run.Path String -> LensId -> InterestListTable -> Element Msg
+viewInterestListTableAsTable shortPathLabels lensId interestListTable =
     let
         dataColumns =
             interestListTable.runs
@@ -1481,7 +1481,7 @@ viewInterestListTableAsTable shortPathLabels interestListId interestListTable =
             , width = shrink
             , view =
                 \path ->
-                    dangerousIconButton (size16 FeatherIcons.trash2) (RemoveFromLensClicked interestListId path)
+                    dangerousIconButton (size16 FeatherIcons.trash2) (RemoveFromLensClicked lensId path)
             }
     in
     Element.table
@@ -1495,20 +1495,20 @@ viewInterestListTableAsTable shortPathLabels interestListId interestListTable =
         }
 
 
-viewInterestList : InterestListId -> Bool -> Bool -> Lens -> ChartHovering -> AllRuns -> Element Msg
-viewInterestList id editingActiveLensLabel isActive interestList chartHovering allRuns =
+viewInterestList : LensId -> Bool -> Bool -> Lens -> ChartHovering -> AllRuns -> Element Msg
+viewInterestList id editingActiveLensLabel isActive lens chartHovering allRuns =
     let
         interestListTable =
-            InterestListTable.create interestList allRuns
+            InterestListTable.create lens allRuns
 
         showGraph =
-            Lens.getShowGraph interestList
+            Lens.getShowGraph lens
 
         labelText =
-            Lens.getLabel interestList
+            Lens.getLabel lens
 
         shortPathLabels =
-            Lens.getShortPathLabels interestList
+            Lens.getShortPathLabels lens
 
         ( borderColor, borderWidth ) =
             if isActive then
