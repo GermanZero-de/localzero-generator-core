@@ -51,7 +51,7 @@ import File.Download as Download
 import File.Select
 import Filter
 import Grid exposing (Grid)
-import Html exposing (Html)
+import Html exposing (Html, p)
 import Html.Attributes
 import Html.Events
 import Html5.DragDrop as DragDrop
@@ -270,6 +270,8 @@ type Msg
     | DiffToleranceUpdated RunId RunId Float
     | DragDropMsg (DragDrop.Msg Path ())
     | ToggleEditLensTableClicked LensId
+    | AddRowToLensTableClicked LensId
+    | AddColumnToLensTableClicked LensId
 
 
 type ModalMsg
@@ -331,6 +333,18 @@ update msg model =
     case msg of
         Noop ->
             model
+                |> withNoCmd
+
+        AddRowToLensTableClicked id ->
+            model
+                |> activateLens id
+                |> mapActiveLens (Lens.mapGrid Lens.addExtraRow)
+                |> withNoCmd
+
+        AddColumnToLensTableClicked id ->
+            model
+                |> activateLens id
+                |> mapActiveLens (Lens.mapGrid Lens.addExtraColumn)
                 |> withNoCmd
 
         DownloadClicked ->
@@ -1509,15 +1523,49 @@ viewValueSetAsUserDefinedTable lensId td valueSet =
                                     )
                             )
                     )
+
+        ( addNewRowElement, addNewColumnElement ) =
+            if td.editing == Nothing then
+                ( Element.none, Element.none )
+
+            else
+                ( Input.button
+                    [ width fill
+                    , padding 2
+                    , Background.color germanZeroGreen
+                    , Element.mouseOver
+                        [ Background.color germanZeroYellow
+                        ]
+                    ]
+                    { onPress = Just (AddRowToLensTableClicked lensId)
+                    , label = icon FeatherIcons.plusCircle
+                    }
+                , column [ height fill ]
+                    [ Input.button
+                        [ height fill
+                        , padding 2
+                        , Background.color germanZeroGreen
+                        , Element.mouseOver
+                            [ Background.color germanZeroYellow
+                            ]
+                        ]
+                        { onPress = Just (AddColumnToLensTableClicked lensId)
+                        , label = el [ Element.centerY ] (icon FeatherIcons.plusCircle)
+                        }
+                    , el [ width fill, padding 2, height (px 32) ] Element.none
+                    ]
+                )
     in
-    column
-        [ width fill
-        , spacing sizes.small
-        , padding sizes.large
+    row [ width fill, spacing sizes.small, padding sizes.large ]
+        [ column
+            [ width fill
+            , spacing sizes.small
+            ]
+            (rows
+                ++ [ addNewRowElement ]
+            )
+        , addNewColumnElement
         ]
-        (rows
-            ++ []
-        )
 
 
 {-| View valueset as table of values

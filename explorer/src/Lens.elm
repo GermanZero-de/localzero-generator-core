@@ -1,6 +1,8 @@
 module Lens exposing
     ( Lens
     , TableData
+    , addExtraColumn
+    , addExtraRow
     , asUserDefinedTable
     , decoder
     , empty
@@ -11,6 +13,7 @@ module Lens exposing
     , getShortPathLabels
     , getShowGraph
     , insert
+    , mapGrid
     , mapLabel
     , member
     , remove
@@ -178,6 +181,14 @@ mapKind fnClassic fnTable (Lens i) =
 
         Classic c ->
             Lens { i | vkind = Classic (fnClassic c) }
+
+
+mapGrid : (Grid (Maybe Path) -> Grid (Maybe Path)) -> Lens -> Lens
+mapGrid fn l =
+    mapKind
+        identity
+        (\td -> { td | grid = fn td.grid })
+        l
 
 
 updateShortPathLabels : Lens -> Lens
