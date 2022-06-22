@@ -1,4 +1,4 @@
-module Main exposing (Model, Msg(..), init, main, subscriptions, update, view)
+port module Main exposing (Model, Msg(..), init, main, subscriptions, update, view)
 
 --import Element.Background as Background
 
@@ -80,6 +80,7 @@ import Styling
         , modalDim
         , parseGermanNumber
         , red
+        , scrollableText
         , size16
         , size32
         , sizes
@@ -144,8 +145,12 @@ type alias DiffData =
     }
 
 
+type DropTarget
+    = DropOnCell RunId { x : Int, y : Int }
+
+
 type alias ExplorerDragDrop =
-    DragDrop.Model Path ()
+    DragDrop.Model Path DropTarget
 
 
 type alias Model =
@@ -167,7 +172,7 @@ type alias Model =
 type ModalState
     = PrepareCalculate (Maybe RunId) Run.Inputs Run.Overrides
     | Loading
-    | LoadFailure String
+    | ErrorMessage String String
 
 
 filterFieldId : String
@@ -181,6 +186,9 @@ encodeOverrides d =
         identity
         Encode.float
         d
+
+
+port save : Encode.Value -> Cmd msg
 
 
 initiateCalculate : Maybe RunId -> Run.Inputs -> Run.Entries -> Run.Overrides -> Model -> ( Model, Cmd Msg )
@@ -211,23 +219,22 @@ activateLens id model =
     }
 
 
-init : () -> ( Model, Cmd Msg )
-init _ =
-    ( { runs = AllRuns.empty
-      , showModal = Nothing
-      , lenses = Pivot.singleton Lens.empty
-      , editingActiveLensLabel = False
-      , collapseStatus = allCollapsed
-      , activeOverrideEditor = Nothing
-      , activeSearch = Nothing
-      , chartHovering = []
-      , diffs = Dict.empty
-      , selectedForComparison = Nothing
-      , leftPaneWidth = 600
-      , dragDrop = DragDrop.init
-      }
-    , Cmd.none
-    )
+init : Decode.Value -> ( Model, Cmd Msg )
+init storage =
+    { runs = AllRuns.empty
+    , showModal = Nothing
+    , lenses = Pivot.singleton Lens.empty
+    , editingActiveLensLabel = False
+    , collapseStatus = allCollapsed
+    , activeOverrideEditor = Nothing
+    , activeSearch = Nothing
+    , chartHovering = []
+    , diffs = Dict.empty
+    , selectedForComparison = Nothing
+    , leftPaneWidth = 600
+    , dragDrop = DragDrop.init
+    }
+        |> update (LocalStorageLoaded storage)
 
 
 
@@ -235,44 +242,56 @@ init _ =
 
 
 type Msg
-    = GotGeneratorResult (Maybe RunId) Run.Inputs Run.Entries Run.Overrides (Result Http.Error (Tree Value))
+    = -- Running the generator
+      GotGeneratorResult (Maybe RunId) Run.Inputs Run.Entries Run.Overrides (Result Http.Error (Tree Value))
     | GotEntries (Maybe RunId) Run.Inputs Run.Overrides (Result Http.Error Run.Entries)
-    | AddToLensClicked Run.Path
-    | RemoveFromLensClicked LensId Run.Path
+      -- Override handling
     | AddOrUpdateOverrideClicked RunId String Float
     | RemoveOverrideClicked RunId String
     | OverrideEdited RunId String String
     | OverrideEditFinished
+      -- Filter
     | FilterEdited RunId String
     | FilterFinished
     | FilterQuickAddRequested
+      -- Tree navigation
     | ToggleCollapseTreeClicked Explorable.Id Path
+      -- Modal dialog
     | ModalMsg ModalMsg
     | DisplayCalculateModalClicked (Maybe RunId) Run.Inputs Run.Overrides
     | CalculateModalOkClicked (Maybe RunId) Run.Inputs Run.Overrides
     | RemoveExplorableClicked Explorable.Id
+    | ModalDismissed
+      -- Lens Modifications
+    | AddToLensClicked Run.Path
+    | RemoveFromLensClicked LensId Run.Path
     | LensLabelEdited LensId String
     | LensLabelEditFinished
-    | ToggleShowGraphClicked LensId
     | DuplicateLensClicked LensId
     | RemoveLensClicked LensId
     | ActivateLensClicked LensId
     | NewLensClicked
     | NewTableClicked
-    | DownloadClicked
-    | UploadClicked
-    | FileUploaded File
-    | FileContentLoaded String
-    | OnChartHover ChartHovering
-    | Noop
-    | ToggleSelectForCompareClicked RunId
-    | LeftPaneMoved Int
-    | DiffToleranceUpdated RunId RunId Float
-    | DragDropMsg (DragDrop.Msg Path ())
     | LensTableEditModeChanged LensId (Maybe Lens.TableEditMode)
     | AddRowToLensTableClicked LensId
     | AddColumnToLensTableClicked LensId
     | CellOfLensTableEdited LensId { x : Int, y : Int } String
+      -- Graphics
+    | ToggleShowGraphClicked LensId
+    | OnChartHover ChartHovering
+      -- Upload / Download / Storage
+    | DownloadClicked
+    | UploadClicked
+    | FileUploaded File
+    | FileContentLoaded String
+    | LocalStorageLoaded Decode.Value
+      -- Misc
+    | Noop
+    | LeftPaneMoved Int
+    | DragDropMsg (DragDrop.Msg Path DropTarget)
+      -- Comparison
+    | ToggleSelectForCompareClicked RunId
+    | DiffToleranceUpdated RunId RunId Float
 
 
 type ModalMsg
@@ -290,9 +309,9 @@ mapLens f m =
     { m | lenses = f m.lenses }
 
 
-withLoadFailure : String -> Model -> ( Model, Cmd Msg )
-withLoadFailure msg model =
-    ( { model | showModal = Just (LoadFailure msg) }, Cmd.none )
+withErrorMessage : String -> String -> Model -> ( Model, Cmd Msg )
+withErrorMessage title msg model =
+    ( { model | showModal = Just (ErrorMessage title msg) }, Cmd.none )
 
 
 withEditingActiveLensLabel : Bool -> Model -> Model
@@ -308,6 +327,21 @@ downloadCmd model =
                 |> Encode.encode 0
     in
     Download.string "explorer.json" "text/json" content
+
+
+saveCmd : Model -> Cmd msg
+saveCmd model =
+    let
+        content =
+            Storage.encode { interestLists = Pivot.toList model.lenses }
+    in
+    save content
+
+
+withSaveCmd : Model -> ( Model, Cmd Msg )
+withSaveCmd model =
+    model
+        |> withCmd (saveCmd model)
 
 
 removeRunAndDiffsThatDependOnIt : RunId -> Model -> Model
@@ -340,13 +374,13 @@ update msg model =
             model
                 |> activateLens id
                 |> mapActiveLens (Lens.mapCells Lens.addExtraRow)
-                |> withNoCmd
+                |> withSaveCmd
 
         AddColumnToLensTableClicked id ->
             model
                 |> activateLens id
                 |> mapActiveLens (Lens.mapCells Lens.addExtraColumn)
-                |> withNoCmd
+                |> withSaveCmd
 
         DownloadClicked ->
             model
@@ -360,11 +394,37 @@ update msg model =
             model
                 |> withCmd (Task.perform FileContentLoaded (File.toString file))
 
+        LocalStorageLoaded value ->
+            case Decode.decodeValue (Decode.nullable Storage.decoder) value of
+                Err e ->
+                    model
+                        |> withErrorMessage "Failed to load previous session"
+                            (Decode.errorToString e)
+
+                Ok Nothing ->
+                    -- no previous localstorage
+                    model
+                        |> withNoCmd
+
+                Ok (Just storage) ->
+                    let
+                        ls =
+                            case Pivot.fromList storage.interestLists of
+                                Nothing ->
+                                    model.lenses
+
+                                Just i ->
+                                    i
+                    in
+                    { model | lenses = ls }
+                        |> withNoCmd
+
         FileContentLoaded content ->
             case Decode.decodeString Storage.decoder content of
-                Err _ ->
+                Err e ->
                     model
-                        |> withLoadFailure "Failed to load file"
+                        |> withErrorMessage "Failed to load file"
+                            (Decode.errorToString e)
 
                 Ok storage ->
                     let
@@ -377,7 +437,7 @@ update msg model =
                                     i
                     in
                     { model | lenses = ls }
-                        |> withNoCmd
+                        |> withSaveCmd
 
         GotEntries maybeRunId inputs overrides (Ok entries) ->
             model
@@ -437,27 +497,28 @@ update msg model =
                         | diffs = newDiffs
                         , showModal = Nothing
                     }
-                        |> withNoCmd
+                        |> withSaveCmd
 
                 Err (Http.BadUrl s) ->
                     model
-                        |> withLoadFailure ("BAD URL: " ++ s)
+                        |> withErrorMessage "BAD URL: " s
 
                 Err Http.Timeout ->
                     model
-                        |> withLoadFailure "TIMEOUT"
+                        |> withErrorMessage "TIMEOUT" ""
 
                 Err Http.NetworkError ->
                     model
-                        |> withLoadFailure "NETWORK ERROR"
+                        |> withErrorMessage "NETWORK ERROR" ""
 
                 Err (Http.BadStatus code) ->
                     model
-                        |> withLoadFailure ("BAD STATUS CODE" ++ String.fromInt code)
+                        |> withErrorMessage ("BAD STATUS CODE" ++ String.fromInt code)
+                            ""
 
                 Err (Http.BadBody error) ->
                     model
-                        |> withLoadFailure ("Failed to decode: " ++ error)
+                        |> withErrorMessage "Failed to decode" error
 
         ToggleCollapseTreeClicked i path ->
             { model | collapseStatus = CollapseStatus.toggle i path model.collapseStatus }
@@ -467,7 +528,7 @@ update msg model =
             case id of
                 Explorable.Run runId ->
                     removeRunAndDiffsThatDependOnIt runId model
-                        |> withNoCmd
+                        |> withSaveCmd
 
                 Explorable.Diff runA runB ->
                     removeDiff runA runB model
@@ -477,6 +538,10 @@ update msg model =
             updateModal modalMsg model.showModal
                 |> Tuple.mapFirst (\md -> { model | showModal = md })
                 |> Tuple.mapSecond (Cmd.map ModalMsg)
+
+        ModalDismissed ->
+            { model | showModal = Nothing }
+                |> withNoCmd
 
         DisplayCalculateModalClicked maybeNdx inputs overrides ->
             let
@@ -496,7 +561,7 @@ update msg model =
                     model.runs
                         |> AllRuns.update ndx (Run.mapOverrides (Dict.insert name f))
             }
-                |> withNoCmd
+                |> withSaveCmd
 
         FilterEdited runId pattern ->
             let
@@ -628,29 +693,29 @@ update msg model =
         AddToLensClicked path ->
             model
                 |> mapActiveLens (Lens.insert path)
-                |> withNoCmd
+                |> withSaveCmd
 
         RemoveFromLensClicked id path ->
             model
                 |> activateLens id
                 |> mapActiveLens (Lens.remove path)
-                |> withNoCmd
+                |> withSaveCmd
 
         ToggleShowGraphClicked id ->
             model
                 |> activateLens id
                 |> mapActiveLens Lens.toggleShowGraph
-                |> withNoCmd
+                |> withSaveCmd
 
         NewLensClicked ->
             model
                 |> mapLens (Pivot.appendGoR Lens.empty)
-                |> withNoCmd
+                |> withSaveCmd
 
         NewTableClicked ->
             model
                 |> mapLens (Pivot.appendGoR Lens.emptyTable)
-                |> withNoCmd
+                |> withSaveCmd
 
         DuplicateLensClicked id ->
             model
@@ -663,7 +728,7 @@ update msg model =
                             )
                             p
                     )
-                |> withNoCmd
+                |> withSaveCmd
 
         RemoveLensClicked id ->
             model
@@ -679,25 +744,25 @@ update msg model =
                             Just without ->
                                 without
                     )
-                |> withNoCmd
+                |> withSaveCmd
 
         LensTableEditModeChanged id mode ->
             model
                 |> activateLens id
                 |> mapActiveLens (Lens.setTableEditMode mode)
-                |> withNoCmd
+                |> withSaveCmd
 
         CellOfLensTableEdited id pos value ->
             model
                 |> activateLens id
                 |> mapActiveLens (Lens.setTableEditMode (Just (Lens.Cell pos)))
                 |> mapActiveLens (Lens.mapCells (Grid.set ( pos.x, pos.y ) (Just (Lens.Label value))))
-                |> withNoCmd
+                |> withSaveCmd
 
         ActivateLensClicked id ->
             model
                 |> activateLens id
-                |> withNoCmd
+                |> withSaveCmd
 
         LensLabelEdited id newLabel ->
             model
@@ -710,7 +775,7 @@ update msg model =
         LensLabelEditFinished ->
             model
                 |> withEditingActiveLensLabel False
-                |> withNoCmd
+                |> withSaveCmd
 
         OnChartHover hovering ->
             { model | chartHovering = hovering }
@@ -725,7 +790,7 @@ update msg model =
                 Just d ->
                     model
                         |> insertDiff aId bId d
-                        |> withNoCmd
+                        |> withSaveCmd
 
         ToggleSelectForCompareClicked runId ->
             case model.selectedForComparison of
@@ -757,7 +822,7 @@ update msg model =
                             Just d ->
                                 withoutComparison
                                     |> insertDiff idA idB d
-                                    |> withNoCmd
+                                    |> withSaveCmd
 
         LeftPaneMoved w ->
             { model | leftPaneWidth = w }
@@ -815,8 +880,8 @@ updateModal msg model =
             Just Loading
                 |> withNoCmd
 
-        Just (LoadFailure f) ->
-            Just (LoadFailure f)
+        Just (ErrorMessage title m) ->
+            Just (ErrorMessage title m)
                 |> withNoCmd
 
 
@@ -1483,6 +1548,10 @@ viewValueSetAsUserDefinedTable lensId td valueSet =
                     else
                         []
 
+                dropTarget =
+                    List.map Element.htmlAttribute
+                        (DragDrop.droppable DragDropMsg (DropOnCell lensId { x = column, y = row }))
+
                 cellElement attrs editValue v =
                     el
                         (([ Background.color Styling.emptyCellColor
@@ -1490,6 +1559,7 @@ viewValueSetAsUserDefinedTable lensId td valueSet =
                           , padding sizes.small
                           ]
                             ++ editOnClick editValue
+                            ++ dropTarget
                          )
                             ++ attrs
                         )
@@ -1896,14 +1966,22 @@ viewModalDialogBox title content =
                 , height (minimum 400 fill)
                 , padding sizes.large
                 ]
-                [ el
+                [ row
                     [ width fill
                     , Font.color white
                     , Background.color germanZeroYellow
                     , Font.size 24
                     , padding 8
                     ]
-                    (text title)
+                    [ el [ width fill ] <| text title
+                    , el
+                        [ padding 2
+                        , Background.color white
+                        , Border.rounded 5
+                        ]
+                      <|
+                        iconButton FeatherIcons.x ModalDismissed
+                    ]
                 , el
                     [ Background.color white
                     , width fill
@@ -1986,12 +2064,12 @@ view model =
 
                                 Loading ->
                                     ( "Loading"
-                                    , paragraph [ width fill, height fill ]
-                                        [ text "This should be done immediately. If it doesn't go away something is probably broken." ]
+                                    , scrollableText
+                                        "This should be done immediately. If it doesn't go away something is probably broken."
                                     )
 
-                                LoadFailure msg ->
-                                    ( "Loading failed", text msg )
+                                ErrorMessage t m ->
+                                    ( t, scrollableText m )
                     in
                     viewModalDialogBox title content
     in

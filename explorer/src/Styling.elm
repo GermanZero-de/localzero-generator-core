@@ -13,6 +13,7 @@ module Styling exposing
     , modalDim
     , parseGermanNumber
     , red
+    , scrollableText
     , size16
     , size32
     , sizes
@@ -20,7 +21,17 @@ module Styling exposing
     , white
     )
 
-import Element exposing (Element, padding)
+import Element
+    exposing
+        ( Element
+        , fill
+        , height
+        , padding
+        , paragraph
+        , scrollbarY
+        , text
+        , width
+        )
 import Element.Background as Background
 import Element.Border as Border
 import Element.Font as Font
@@ -28,6 +39,22 @@ import Element.Input as Input
 import FeatherIcons
 import FormatNumber exposing (format)
 import FormatNumber.Locales exposing (spanishLocale)
+
+
+scrollableText : String -> Element msg
+scrollableText s =
+    -- Here we recover the line information and put each line into
+    -- a separate paragraph
+    -- Also error messages are sometimes formatted so we replace
+    -- consecutive spaces by spaces followed by nbsp spaces
+    Element.column [ width fill, height fill, scrollbarY ]
+        (String.lines s
+            |> List.map
+                (\l ->
+                    paragraph [ width fill ]
+                        [ text (String.replace "  " " \u{00A0}" l) ]
+                )
+        )
 
 
 germanLocale =

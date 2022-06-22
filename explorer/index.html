@@ -14,9 +14,14 @@
       event.dataTransfer.setData('text', '');
   }
 
+  function saveToStorage(storage) {
+    localStorage.setItem('storage', JSON.stringify(storage));
+  }
+
   function setupEverything() {
-    const app = Elm.Main.init({node: document.getElementById('app')});
+    const app = Elm.Main.init({node: document.getElementById('app'), flags: JSON.parse(localStorage.getItem('storage'))});
     app.ports.dragstart.subscribe(firefoxDragDropFix);
+    app.ports.save.subscribe(saveToStorage);
   }
 
   setupEverything();

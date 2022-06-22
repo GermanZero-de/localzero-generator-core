@@ -574,7 +574,7 @@ decoder =
                                 |> Decode.map Classic
 
                         "table" ->
-                            tableDecoder
+                            Decode.field "table" tableDecoder
                                 |> Decode.map Table
 
                         _ ->
