@@ -146,11 +146,16 @@ type alias DiffData =
 
 
 type DropTarget
-    = DropOnCell LensId Cells.Pos
+    = DropOnCell LensId Cells.Pos Lens.CellContent
+
+
+type DropSource
+    = DragFromRun RunId Path
+    | DragFromCell LensId Cells.Pos Lens.CellContent
 
 
 type alias DragDrop =
-    DragDrop.Model Path DropTarget
+    DragDrop.Model DropSource DropTarget
 
 
 type alias Model =
@@ -277,6 +282,7 @@ type Msg
     | AddColumnToLensTableClicked LensId Int
     | CellOfLensTableEdited LensId Cells.Pos String
     | MoveToCellRequested Path LensId Cells.Pos
+    | SwapCellsRequested LensId Cells.Pos Lens.CellContent LensId Cells.Pos Lens.CellContent
       -- Graphics
     | ToggleShowGraphClicked LensId
     | OnChartHover ChartHovering
@@ -289,7 +295,7 @@ type Msg
       -- Misc
     | Noop
     | LeftPaneMoved Int
-    | DragDropMsg (DragDrop.Msg Path DropTarget)
+    | DragDropMsg (DragDrop.Msg DropSource DropTarget)
       -- Comparison
     | ToggleSelectForCompareClicked RunId
     | DiffToleranceUpdated RunId RunId Float
@@ -835,6 +841,32 @@ update msg model =
                 |> mapActiveLens (Lens.mapCells (Cells.set cellPos (Lens.ValueAt path)))
                 |> withSaveCmd
 
+        SwapCellsRequested l1 p1 cv1 l2 p2 cv2 ->
+            let
+                _ =
+                    Debug.log "swap" ( ( l1, p1, cv1 ), ( l2, p2, cv2 ) )
+
+                callIf p f x =
+                    if p then
+                        f x
+
+                    else
+                        x
+            in
+            model
+                |> mapLens
+                    (Pivot.indexAbsolute
+                        >> Pivot.mapA
+                            (\( lensId, lens ) ->
+                                lens
+                                    |> callIf (lensId == l1)
+                                        (Lens.mapCells (Cells.set p1 cv2))
+                                    |> callIf (lensId == l2)
+                                        (Lens.mapCells (Cells.set p2 cv1))
+                            )
+                    )
+                |> withSaveCmd
+
         DragDropMsg dragMsg ->
             let
                 ( newDragDrop, dropEvent ) =
@@ -845,8 +877,11 @@ update msg model =
                         Nothing ->
                             identity
 
-                        Just ( path, DropOnCell lensId pos ) ->
+                        Just ( DragFromRun _ path, DropOnCell lensId pos _ ) ->
                             Cmd.Extra.andThen (update (MoveToCellRequested path lensId pos))
+
+                        Just ( DragFromCell l1 p1 cv1, DropOnCell l2 p2 cv2 ) ->
+                            Cmd.Extra.andThen (update (SwapCellsRequested l1 p1 cv1 l2 p2 cv2))
             in
             { model | dragDrop = newDragDrop }
                 |> withCmd (DragDrop.fixFirefoxDragStartCmd dragMsg)
@@ -1263,7 +1298,8 @@ viewValueTree runId lensId path checkIsCollapsed lens overrides activeOverrideEd
                     , el
                         ([ width fill
                          ]
-                            ++ List.map Element.htmlAttribute (DragDrop.draggable DragDropMsg thisPath)
+                            ++ List.map Element.htmlAttribute
+                                (DragDrop.draggable DragDropMsg (DragFromRun runId thisPath))
                         )
                         (text name)
                     , originalValue
@@ -1564,14 +1600,18 @@ viewValueSetAsUserDefinedTable lensId dragDrop td valueSet =
 
                 dropTarget =
                     List.map Element.htmlAttribute
-                        (DragDrop.droppable DragDropMsg (DropOnCell lensId pos))
+                        (DragDrop.droppable DragDropMsg (DropOnCell lensId pos cell))
+
+                draggable =
+                    List.map Element.htmlAttribute
+                        (DragDrop.draggable DragDropMsg (DragFromCell lensId pos cell))
 
                 highlight =
                     case DragDrop.getDropId dragDrop of
                         Nothing ->
                             []
 
-                        Just (DropOnCell li p) ->
+                        Just (DropOnCell li p _) ->
                             if lensId == li && p == pos then
                                 [ Border.glow Styling.germanZeroGreen 2 ]
 
@@ -1588,6 +1628,7 @@ viewValueSetAsUserDefinedTable lensId dragDrop td valueSet =
                             ++ editOnClick editValue
                             ++ dropTarget
                             ++ highlight
+                            ++ draggable
                          )
                             ++ attrs
                         )
