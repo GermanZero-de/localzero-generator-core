@@ -15,7 +15,7 @@ import Chart as C
 import Chart.Attributes as CA
 import Chart.Events
 import Chart.Item
-import Cmd.Extra exposing (withCmd, withNoCmd)
+import Cmd.Extra exposing (addCmd, withCmd, withNoCmd)
 import CollapseStatus exposing (CollapseStatus, allCollapsed, isCollapsed)
 import Dict exposing (Dict)
 import Diff exposing (Diff(..))
@@ -788,6 +788,8 @@ update msg model =
                 |> mapActiveLens (Lens.setTableEditMode (Just (Lens.Cell pos)))
                 |> mapActiveLens (Lens.mapCells (Cells.set pos (Lens.Label value)))
                 |> withSaveCmd
+                |> addCmd
+                    (Task.attempt (\_ -> Noop) (Browser.Dom.focus "cell"))
 
         ActivateLensClicked id ->
             model
@@ -1714,6 +1716,7 @@ viewValueSetAsUserDefinedTable lensId dragDrop td valueSet =
                              , Font.bold
                              , padding 2
                              , onEnter (LensTableEditModeChanged lensId (Just Lens.All))
+                             , Element.htmlAttribute <| Html.Attributes.id "cell"
                              ]
                                 ++ fonts.table
                             )
