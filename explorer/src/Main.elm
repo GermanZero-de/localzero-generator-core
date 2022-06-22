@@ -10,6 +10,7 @@ import AllRuns
 import Array
 import Browser
 import Browser.Dom
+import Cells
 import Chart as C
 import Chart.Attributes as CA
 import Chart.Events
@@ -50,7 +51,6 @@ import File exposing (File)
 import File.Download as Download
 import File.Select
 import Filter
-import Grid exposing (Grid)
 import Html exposing (Html, p)
 import Html.Attributes
 import Html.Events
@@ -146,10 +146,10 @@ type alias DiffData =
 
 
 type DropTarget
-    = DropOnCell RunId { x : Int, y : Int }
+    = DropOnCell LensId Cells.Pos
 
 
-type alias ExplorerDragDrop =
+type alias DragDrop =
     DragDrop.Model Path DropTarget
 
 
@@ -165,7 +165,7 @@ type alias Model =
     , diffs : Dict DiffId DiffData
     , selectedForComparison : Maybe RunId
     , leftPaneWidth : Int
-    , dragDrop : ExplorerDragDrop
+    , dragDrop : DragDrop
     }
 
 
@@ -273,9 +273,10 @@ type Msg
     | NewLensClicked
     | NewTableClicked
     | LensTableEditModeChanged LensId (Maybe Lens.TableEditMode)
-    | AddRowToLensTableClicked LensId
-    | AddColumnToLensTableClicked LensId
-    | CellOfLensTableEdited LensId { x : Int, y : Int } String
+    | AddRowToLensTableClicked LensId Int
+    | AddColumnToLensTableClicked LensId Int
+    | CellOfLensTableEdited LensId Cells.Pos String
+    | MoveToCellRequested Path LensId Cells.Pos
       -- Graphics
     | ToggleShowGraphClicked LensId
     | OnChartHover ChartHovering
@@ -370,16 +371,16 @@ update msg model =
             model
                 |> withNoCmd
 
-        AddRowToLensTableClicked id ->
+        AddRowToLensTableClicked id num ->
             model
                 |> activateLens id
-                |> mapActiveLens (Lens.mapCells Lens.addExtraRow)
+                |> mapActiveLens (Lens.mapCells (Cells.addRow num))
                 |> withSaveCmd
 
-        AddColumnToLensTableClicked id ->
+        AddColumnToLensTableClicked id num ->
             model
                 |> activateLens id
-                |> mapActiveLens (Lens.mapCells Lens.addExtraColumn)
+                |> mapActiveLens (Lens.mapCells (Cells.addColumn num))
                 |> withSaveCmd
 
         DownloadClicked ->
@@ -756,7 +757,7 @@ update msg model =
             model
                 |> activateLens id
                 |> mapActiveLens (Lens.setTableEditMode (Just (Lens.Cell pos)))
-                |> mapActiveLens (Lens.mapCells (Grid.set ( pos.x, pos.y ) (Just (Lens.Label value))))
+                |> mapActiveLens (Lens.mapCells (Cells.set pos (Lens.Label value)))
                 |> withSaveCmd
 
         ActivateLensClicked id ->
@@ -828,13 +829,28 @@ update msg model =
             { model | leftPaneWidth = w }
                 |> withNoCmd
 
+        MoveToCellRequested path lensId cellPos ->
+            model
+                |> activateLens lensId
+                |> mapActiveLens (Lens.mapCells (Cells.set cellPos (Lens.ValueAt path)))
+                |> withSaveCmd
+
         DragDropMsg dragMsg ->
             let
-                ( newDragDrop, _ ) =
+                ( newDragDrop, dropEvent ) =
                     DragDrop.update dragMsg model.dragDrop
+
+                applyDrop =
+                    case dropEvent of
+                        Nothing ->
+                            identity
+
+                        Just ( path, DropOnCell lensId pos ) ->
+                            Cmd.Extra.andThen (update (MoveToCellRequested path lensId pos))
             in
             { model | dragDrop = newDragDrop }
                 |> withCmd (DragDrop.fixFirefoxDragStartCmd dragMsg)
+                |> applyDrop
 
 
 diffRunsById : RunId -> RunId -> Float -> Model -> Maybe DiffData
@@ -1528,21 +1544,19 @@ viewRunsAndComparisons model =
         ]
 
 
-viewValueSetAsUserDefinedTable : LensId -> Lens.TableData -> ValueSet -> Element Msg
-viewValueSetAsUserDefinedTable lensId td valueSet =
+viewValueSetAsUserDefinedTable : LensId -> DragDrop -> Lens.TableData -> ValueSet -> Element Msg
+viewValueSetAsUserDefinedTable lensId dragDrop td valueSet =
     let
         cells =
-            Grid.rows td.grid
-                |> Array.toList
-                |> List.map Array.toList
+            Cells.toList td.grid
 
-        viewCell : Maybe Lens.CellContent -> { row : Int, column : Int } -> Element Msg
-        viewCell cell { row, column } =
+        viewCell : Lens.CellContent -> Cells.Pos -> Element Msg
+        viewCell cell pos =
             let
                 editOnClick editValue =
                     if td.editing /= Nothing then
                         [ Events.onClick
-                            (CellOfLensTableEdited lensId { x = column, y = row } editValue)
+                            (CellOfLensTableEdited lensId pos editValue)
                         ]
 
                     else
@@ -1550,34 +1564,45 @@ viewValueSetAsUserDefinedTable lensId td valueSet =
 
                 dropTarget =
                     List.map Element.htmlAttribute
-                        (DragDrop.droppable DragDropMsg (DropOnCell lensId { x = column, y = row }))
+                        (DragDrop.droppable DragDropMsg (DropOnCell lensId pos))
+
+                highlight =
+                    case DragDrop.getDropId dragDrop of
+                        Nothing ->
+                            []
+
+                        Just (DropOnCell li p) ->
+                            if lensId == li && p == pos then
+                                [ Border.glow Styling.germanZeroGreen 2 ]
+
+                            else
+                                []
 
                 cellElement attrs editValue v =
                     el
                         (([ Background.color Styling.emptyCellColor
                           , width fill
                           , padding sizes.small
+                          , Font.size 15
                           ]
                             ++ editOnClick editValue
                             ++ dropTarget
+                            ++ highlight
                          )
                             ++ attrs
                         )
                         v
             in
             case cell of
-                Nothing ->
-                    cellElement [] "" (text " ")
-
-                Just (Lens.Label l) ->
-                    if td.editing == Just (Lens.Cell { x = column, y = row }) then
+                Lens.Label l ->
+                    if td.editing == Just (Lens.Cell pos) then
                         Input.text
                             [ width fill
                             , Font.bold
                             , padding sizes.small
                             , onEnter (LensTableEditModeChanged lensId (Just Lens.All))
                             ]
-                            { onChange = CellOfLensTableEdited lensId { x = column, y = row }
+                            { onChange = CellOfLensTableEdited lensId pos
                             , text = l
                             , placeholder = Nothing
                             , label = Input.labelHidden "label"
@@ -1589,7 +1614,7 @@ viewValueSetAsUserDefinedTable lensId td valueSet =
                     else
                         cellElement [ Font.bold ] l (paragraph [] [ text l ])
 
-                Just (Lens.ValueAt p) ->
+                Lens.ValueAt p ->
                     let
                         value =
                             case valueSet.runs of
@@ -1600,7 +1625,7 @@ viewValueSetAsUserDefinedTable lensId td valueSet =
                                     Dict.get ( r, p ) valueSet.values
                     in
                     if td.editing /= Nothing then
-                        cellElement [ Font.size 12 ]
+                        cellElement []
                             ""
                             (paragraph [] (List.map text (List.intersperse "." p)))
 
@@ -1646,6 +1671,11 @@ viewValueSetAsUserDefinedTable lensId td valueSet =
 
             else
                 let
+                    addButton :
+                        Element.Attribute Msg
+                        -> (Element.Length -> Element.Attribute Msg)
+                        -> Msg
+                        -> Element Msg
                     addButton iconAlign fillDir msg =
                         Input.button
                             [ padding 2
@@ -1663,12 +1693,14 @@ viewValueSetAsUserDefinedTable lensId td valueSet =
                             , label = el [ iconAlign ] (icon FeatherIcons.plusCircle)
                             }
                 in
-                ( addButton Element.centerX width (AddRowToLensTableClicked lensId)
+                ( addButton Element.centerX
+                    width
+                    (AddRowToLensTableClicked lensId (Cells.rows td.grid))
                 , column [ height fill ]
                     [ addButton
                         Element.centerY
                         height
-                        (AddColumnToLensTableClicked lensId)
+                        (AddColumnToLensTableClicked lensId (Cells.columns td.grid))
                     , el [ width fill, padding 2, height (px 32) ] Element.none
                     ]
                 )
@@ -1753,8 +1785,8 @@ viewValueSetAsClassicTable shortPathLabels lensId valueSet =
         }
 
 
-viewLens : LensId -> Bool -> Bool -> Lens -> ChartHovering -> AllRuns -> Element Msg
-viewLens id editingActiveLensLabel isActive lens chartHovering allRuns =
+viewLens : LensId -> DragDrop -> Bool -> Bool -> Lens -> ChartHovering -> AllRuns -> Element Msg
+viewLens id dragDrop editingActiveLensLabel isActive lens chartHovering allRuns =
     let
         valueSet =
             ValueSet.create lens allRuns
@@ -1859,7 +1891,7 @@ viewLens id editingActiveLensLabel isActive lens chartHovering allRuns =
                     viewValueSetAsClassicTable shortPathLabels id valueSet
 
                 Just g ->
-                    viewValueSetAsUserDefinedTable id g valueSet
+                    viewValueSetAsUserDefinedTable id dragDrop g valueSet
             ]
         ]
 
@@ -1894,6 +1926,7 @@ viewModel model =
                                 Pivot.lengthL model.lenses
                         in
                         viewLens pos
+                            model.dragDrop
                             model.editingActiveLensLabel
                             (pos == activePos)
                             il

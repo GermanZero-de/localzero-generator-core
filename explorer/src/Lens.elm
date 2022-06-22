@@ -3,8 +3,6 @@ module Lens exposing
     , Lens
     , TableData
     , TableEditMode(..)
-    , addExtraColumn
-    , addExtraRow
     , asUserDefinedTable
     , decoder
     , empty
@@ -29,8 +27,8 @@ module Lens exposing
 A Lens tells you how to see the data, it does not contain the data itself.
 -}
 
+import Cells
 import Dict exposing (Dict)
-import Grid
 import Json.Decode as Decode
 import Json.Encode as Encode
 import List.Extra
@@ -52,7 +50,7 @@ type CellContent
 
 
 type alias Cells =
-    Grid.Grid (Maybe CellContent)
+    Cells.Cells CellContent
 
 
 type alias TableData =
@@ -63,7 +61,7 @@ type alias TableData =
 
 type TableEditMode
     = All
-    | Cell { x : Int, y : Int }
+    | Cell Cells.Pos
 
 
 type VisualisationKind
@@ -237,7 +235,7 @@ emptyTable =
         { label = "data"
         , vkind =
             Table
-                { grid = Grid.repeat 2 2 Nothing
+                { grid = Cells.repeat (Label "") 2 2
                 , editing = Nothing
                 }
         }
@@ -315,10 +313,10 @@ remove p il =
             (\td ->
                 { td
                     | grid =
-                        Grid.map
+                        Cells.map
                             (\cell ->
-                                if cell == Just (ValueAt p) then
-                                    Nothing
+                                if cell == ValueAt p then
+                                    Label ""
 
                                 else
                                     cell
@@ -329,73 +327,37 @@ remove p il =
         |> updateShortPathLabels
 
 
-addExtraRow : Cells -> Cells
-addExtraRow g =
-    let
-        h =
-            Grid.height g
-
-        w =
-            Grid.width g
-    in
-    Grid.initialize w
-        (h + 1)
-        (\x y ->
-            Grid.get ( x, y ) g
-                |> Maybe.Extra.join
-        )
+findInCells : (Cells.Pos -> CellContent -> Maybe x) -> Cells -> Maybe x
+findInCells fn cells =
+    findInCellsHelper 0 0 fn cells
 
 
-addExtraColumn : Cells -> Cells
-addExtraColumn g =
-    let
-        h =
-            Grid.height g
-
-        w =
-            Grid.width g
-    in
-    Grid.initialize (w + 1)
-        h
-        (\x y ->
-            Grid.get ( x, y ) g
-                |> Maybe.Extra.join
-        )
-
-
-findInGrid : (Int -> Int -> Maybe CellContent -> Maybe x) -> Cells -> Maybe x
-findInGrid fn g =
-    findInGridHelper 0 0 fn g
-
-
-findInGridHelper x y fn g =
-    if y >= Grid.height g then
+findInCellsHelper row column fn g =
+    if row >= Cells.rows g then
         Nothing
 
-    else if x >= Grid.width g then
-        findInGridHelper 0 (y + 1) fn g
+    else if column >= Cells.columns g then
+        findInCellsHelper (row + 1) 0 fn g
 
     else
-        case Grid.get ( x, y ) g of
+        let
+            pos =
+                { row = row, column = column }
+        in
+        case fn pos (Cells.get pos g) of
             Nothing ->
-                Nothing
+                findInCellsHelper row (column + 1) fn g
 
-            -- compiler happyness
-            Just cell ->
-                case fn x y cell of
-                    Nothing ->
-                        findInGridHelper (x + 1) y fn g
-
-                    Just res ->
-                        Just res
+            Just res ->
+                Just res
 
 
-findEmptySpot : Cells -> Maybe ( Int, Int )
+findEmptySpot : Cells -> Maybe Cells.Pos
 findEmptySpot g =
-    findInGrid
-        (\x y mp ->
-            if mp == Nothing then
-                Just ( x, y )
+    findInCells
+        (\pos mp ->
+            if mp == Label "" then
+                Just pos
 
             else
                 Nothing
@@ -416,13 +378,15 @@ insert p il =
                         case findEmptySpot td.grid of
                             Nothing ->
                                 let
-                                    h =
-                                        Grid.height td.grid
+                                    r =
+                                        Cells.rows td.grid
                                 in
-                                Grid.set ( 0, h ) (Just (ValueAt p)) (addExtraRow td.grid)
+                                Cells.set { row = r, column = 0 }
+                                    (ValueAt p)
+                                    (Cells.addRow (r + 1) td.grid)
 
                             Just spot ->
-                                Grid.set spot (Just (ValueAt p)) td.grid
+                                Cells.set spot (ValueAt p) td.grid
                 }
             )
         |> updateShortPathLabels
@@ -435,9 +399,9 @@ member p (Lens i) =
             Set.member p c.paths
 
         Table td ->
-            findInGrid
-                (\_ _ mp ->
-                    if mp == Just (ValueAt p) then
+            findInCells
+                (\_ mp ->
+                    if mp == ValueAt p then
                         Just ()
 
                     else
@@ -454,16 +418,13 @@ toList (Lens i) =
             Set.toList c.paths
 
         Table td ->
-            Grid.foldl
-                (\cell l ->
+            Cells.foldRowMajor
+                (\_ cell l ->
                     case cell of
-                        Nothing ->
-                            l
-
-                        Just (ValueAt c) ->
+                        ValueAt c ->
                             c :: l
 
-                        Just (Label _) ->
+                        Label _ ->
                             l
                 )
                 []
@@ -485,19 +446,15 @@ encode (Lens i) =
                     let
                         encodeCell mp =
                             case mp of
-                                Nothing ->
-                                    Encode.null
-
-                                Just (ValueAt p) ->
+                                ValueAt p ->
                                     Encode.list Encode.string p
 
-                                Just (Label s) ->
+                                Label s ->
                                     Encode.string s
                     in
                     [ ( "kind", Encode.string "table" )
                     , ( "table"
-                      , Grid.rows td.grid
-                            |> Encode.array (Encode.array encodeCell)
+                      , Cells.encode encodeCell td.grid
                       )
                     ]
     in
@@ -505,14 +462,12 @@ encode (Lens i) =
         (( "label", Encode.string i.label ) :: kindFields)
 
 
-cellDecoder : Decode.Decoder (Maybe CellContent)
+cellDecoder : Decode.Decoder CellContent
 cellDecoder =
-    Decode.nullable
-        (Decode.oneOf
-            [ Decode.string |> Decode.map Label
-            , Decode.list Decode.string |> Decode.map ValueAt
-            ]
-        )
+    Decode.oneOf
+        [ Decode.string |> Decode.map Label
+        , Decode.list Decode.string |> Decode.map ValueAt
+        ]
 
 
 asUserDefinedTable : Lens -> Maybe TableData
@@ -544,16 +499,8 @@ classicDecoder =
 
 tableDecoder : Decode.Decoder TableData
 tableDecoder =
-    Decode.list (Decode.list cellDecoder)
-        |> Decode.andThen
-            (\l ->
-                case Grid.fromList l of
-                    Nothing ->
-                        Decode.fail "invalid grid"
-
-                    Just g ->
-                        Decode.succeed { grid = g, editing = Nothing }
-            )
+    Cells.decoder (Label "") cellDecoder
+        |> Decode.map (\g -> { grid = g, editing = Nothing })
 
 
 decoder : Decode.Decoder Lens
