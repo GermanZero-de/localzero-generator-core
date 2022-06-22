@@ -907,10 +907,6 @@ update msg model =
                 |> withSaveCmd
 
         SwapCellsRequested l1 p1 cv1 l2 p2 cv2 ->
-            let
-                _ =
-                    Debug.log "swap" ( ( l1, p1, cv1 ), ( l2, p2, cv2 ) )
-            in
             model
                 |> mapLens
                     (Pivot.indexAbsolute
