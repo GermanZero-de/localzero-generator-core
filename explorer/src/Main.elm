@@ -54,7 +54,7 @@ import Filter
 import Html exposing (Html, p)
 import Html.Attributes
 import Html.Events
-import Html5.DragDrop as DragDrop
+import Html5.DragDrop as DragDrop exposing (droppable)
 import Http
 import Json.Decode as Decode
 import Json.Encode as Encode
@@ -147,6 +147,8 @@ type alias DiffData =
 
 type DropTarget
     = DropOnCell LensId Cells.Pos Lens.CellContent
+    | DropInNewColumn LensId Cells.Pos
+    | DropInNewRow LensId Cells.Pos
 
 
 type DropSource
@@ -283,6 +285,8 @@ type Msg
     | CellOfLensTableEdited LensId Cells.Pos String
     | MoveToCellRequested Path LensId Cells.Pos
     | SwapCellsRequested LensId Cells.Pos Lens.CellContent LensId Cells.Pos Lens.CellContent
+    | MoveIntoNewColumnRequested (Maybe ( LensId, Cells.Pos )) Lens.CellContent LensId Cells.Pos
+    | MoveIntoNewRowRequested (Maybe ( LensId, Cells.Pos )) Lens.CellContent LensId Cells.Pos
       -- Graphics
     | ToggleShowGraphClicked LensId
     | OnChartHover ChartHovering
@@ -368,6 +372,25 @@ removeDiff aId bId model =
 insertDiff : RunId -> RunId -> DiffData -> Model -> Model
 insertDiff runA runB diffData model =
     { model | diffs = Dict.insert ( runA, runB ) diffData model.diffs }
+
+
+callIf : Bool -> (a -> a) -> a -> a
+callIf p f x =
+    if p then
+        f x
+
+    else
+        x
+
+
+callIfJust : Maybe x -> (x -> a -> a) -> a -> a
+callIfJust mb fn x =
+    case mb of
+        Just a ->
+            fn a x
+
+        Nothing ->
+            x
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -841,17 +864,52 @@ update msg model =
                 |> mapActiveLens (Lens.mapCells (Cells.set cellPos (Lens.ValueAt path)))
                 |> withSaveCmd
 
+        MoveIntoNewRowRequested sourceCell cv1 l2 p2 ->
+            model
+                |> mapLens
+                    (Pivot.indexAbsolute
+                        >> Pivot.mapA
+                            (\( lensId, lens ) ->
+                                lens
+                                    |> callIfJust sourceCell
+                                        (\( l1, p1 ) ->
+                                            callIf (lensId == l1) (Lens.mapCells (Cells.set p1 (Lens.Label "")))
+                                        )
+                                    |> callIf (lensId == l2)
+                                        (Lens.mapCells
+                                            (Cells.addRow p2.column
+                                                >> Cells.set p2 cv1
+                                            )
+                                        )
+                            )
+                    )
+                |> withSaveCmd
+
+        MoveIntoNewColumnRequested sourceCell cv1 l2 p2 ->
+            model
+                |> mapLens
+                    (Pivot.indexAbsolute
+                        >> Pivot.mapA
+                            (\( lensId, lens ) ->
+                                lens
+                                    |> callIfJust sourceCell
+                                        (\( l1, p1 ) ->
+                                            callIf (lensId == l1) (Lens.mapCells (Cells.set p1 (Lens.Label "")))
+                                        )
+                                    |> callIf (lensId == l2)
+                                        (Lens.mapCells
+                                            (Cells.addColumn p2.column
+                                                >> Cells.set p2 cv1
+                                            )
+                                        )
+                            )
+                    )
+                |> withSaveCmd
+
         SwapCellsRequested l1 p1 cv1 l2 p2 cv2 ->
             let
                 _ =
                     Debug.log "swap" ( ( l1, p1, cv1 ), ( l2, p2, cv2 ) )
-
-                callIf p f x =
-                    if p then
-                        f x
-
-                    else
-                        x
             in
             model
                 |> mapLens
@@ -882,6 +940,18 @@ update msg model =
 
                         Just ( DragFromCell l1 p1 cv1, DropOnCell l2 p2 cv2 ) ->
                             Cmd.Extra.andThen (update (SwapCellsRequested l1 p1 cv1 l2 p2 cv2))
+
+                        Just ( DragFromCell l1 p1 cv1, DropInNewRow l2 p2 ) ->
+                            Cmd.Extra.andThen (update (MoveIntoNewRowRequested (Just ( l1, p1 )) cv1 l2 p2))
+
+                        Just ( DragFromRun _ path, DropInNewRow l2 p2 ) ->
+                            Cmd.Extra.andThen (update (MoveIntoNewRowRequested Nothing (Lens.ValueAt path) l2 p2))
+
+                        Just ( DragFromRun _ path, DropInNewColumn l2 p2 ) ->
+                            Cmd.Extra.andThen (update (MoveIntoNewColumnRequested Nothing (Lens.ValueAt path) l2 p2))
+
+                        Just ( DragFromCell l1 p1 cv1, DropInNewColumn l2 p2 ) ->
+                            Cmd.Extra.andThen (update (MoveIntoNewColumnRequested (Just ( l1, p1 )) cv1 l2 p2))
             in
             { model | dragDrop = newDragDrop }
                 |> withCmd (DragDrop.fixFirefoxDragStartCmd dragMsg)
@@ -1618,13 +1688,19 @@ viewValueSetAsUserDefinedTable lensId dragDrop td valueSet =
                             else
                                 []
 
+                        Just (DropInNewColumn _ _) ->
+                            []
+
+                        Just (DropInNewRow _ _) ->
+                            []
+
                 cellElement attrs editValue v =
                     el
                         (([ Background.color Styling.emptyCellColor
                           , width fill
-                          , padding sizes.small
-                          , Font.size 15
+                          , padding 2
                           ]
+                            ++ fonts.table
                             ++ editOnClick editValue
                             ++ dropTarget
                             ++ highlight
@@ -1638,11 +1714,13 @@ viewValueSetAsUserDefinedTable lensId dragDrop td valueSet =
                 Lens.Label l ->
                     if td.editing == Just (Lens.Cell pos) then
                         Input.text
-                            [ width fill
-                            , Font.bold
-                            , padding sizes.small
-                            , onEnter (LensTableEditModeChanged lensId (Just Lens.All))
-                            ]
+                            ([ width fill
+                             , Font.bold
+                             , padding 2
+                             , onEnter (LensTableEditModeChanged lensId (Just Lens.All))
+                             ]
+                                ++ fonts.table
+                            )
                             { onChange = CellOfLensTableEdited lensId pos
                             , text = l
                             , placeholder = Nothing
@@ -1690,19 +1768,98 @@ viewValueSetAsUserDefinedTable lensId dragDrop td valueSet =
                                     ""
                                     (text s)
 
+        insertColumnSeparator pos =
+            let
+                highlight : List (Element.Attribute Msg)
+                highlight =
+                    case DragDrop.getDropId dragDrop of
+                        Nothing ->
+                            []
+
+                        Just (DropInNewRow _ _) ->
+                            []
+
+                        Just (DropOnCell _ _ _) ->
+                            []
+
+                        Just (DropInNewColumn li p) ->
+                            if lensId == li && pos == p then
+                                [ Border.glow germanZeroGreen 2 ]
+
+                            else
+                                []
+
+                droppable =
+                    List.map Element.htmlAttribute (DragDrop.droppable DragDropMsg (DropInNewColumn lensId pos))
+            in
+            el
+                ([ width (px sizes.tableGap)
+                 , height fill
+                 ]
+                    ++ highlight
+                    ++ droppable
+                )
+                Element.none
+
+        insertRowSeparator pos =
+            let
+                highlight =
+                    case DragDrop.getDropId dragDrop of
+                        Nothing ->
+                            []
+
+                        Just (DropInNewRow li p) ->
+                            if lensId == li && pos == p then
+                                [ Border.glow germanZeroGreen 2 ]
+
+                            else
+                                []
+
+                        Just (DropOnCell _ _ _) ->
+                            []
+
+                        Just (DropInNewColumn _ _) ->
+                            []
+
+                droppable =
+                    List.map Element.htmlAttribute (DragDrop.droppable DragDropMsg (DropInNewRow lensId pos))
+            in
+            el
+                ([ height (px sizes.tableGap)
+                 , width fill
+                 ]
+                    ++ highlight
+                    ++ droppable
+                )
+                Element.none
+
         rows =
             cells
                 |> List.indexedMap
                     (\rowNum cellsOfRow ->
                         row
                             [ width fill
-                            , spacing sizes.small
                             ]
                             (cellsOfRow
                                 |> List.indexedMap
                                     (\columnNum cell ->
-                                        viewCell cell { row = rowNum, column = columnNum }
+                                        let
+                                            pos =
+                                                { row = rowNum, column = columnNum }
+                                        in
+                                        [ insertColumnSeparator pos
+                                        , column [ width fill ]
+                                            [ insertRowSeparator pos
+                                            , viewCell cell pos
+                                            , if rowNum == Cells.rows td.grid - 1 then
+                                                insertRowSeparator { pos | row = pos.row + 1 }
+
+                                              else
+                                                Element.none
+                                            ]
+                                        ]
                                     )
+                                |> List.concat
                             )
                     )
 
@@ -1749,7 +1906,6 @@ viewValueSetAsUserDefinedTable lensId dragDrop td valueSet =
     row [ width fill, spacing sizes.small, padding sizes.large ]
         [ column
             [ width fill
-            , spacing sizes.small
             ]
             (rows
                 ++ [ addNewRowElement ]
