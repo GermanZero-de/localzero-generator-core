@@ -1648,6 +1648,24 @@ viewRunsAndComparisons model =
         ]
 
 
+type TableElement
+    = Data Int
+    | GapBefore Int
+
+
+tableElementFromIndex : Int -> TableElement
+tableElementFromIndex ndx =
+    let
+        element =
+            ndx // 2
+    in
+    if remainderBy 2 ndx == 0 then
+        GapBefore element
+
+    else
+        Data element
+
+
 viewValueSetAsUserDefinedTable : LensId -> DragDrop -> Lens.TableData -> ValueSet -> Element Msg
 viewValueSetAsUserDefinedTable lensId dragDrop td valueSet =
     let
@@ -1832,48 +1850,48 @@ viewValueSetAsUserDefinedTable lensId dragDrop td valueSet =
                 )
                 Element.none
 
-        rows =
-            cells
-                |> List.indexedMap
-                    (\rowNum cellsOfRow ->
-                        row
-                            [ width fill
-                            , spacing 1
-                            ]
-                            (cellsOfRow
-                                |> List.indexedMap
-                                    (\columnNum cell ->
-                                        let
-                                            pos =
-                                                { row = rowNum, column = columnNum }
-                                        in
-                                        [ insertColumnSeparator pos
-                                        , column [ width fill ]
-                                            [ insertRowSeparator pos
-                                            , viewCell cell pos
-                                            , if rowNum == Cells.rows td.grid - 1 then
-                                                insertRowSeparator { pos | row = pos.row + 1 }
+        columnDefs =
+            List.Extra.initialize (Cells.columns td.grid * 2 + 1)
+                (\columnNdx ->
+                    let
+                        columnElement =
+                            tableElementFromIndex columnNdx
+                    in
+                    { header = Element.none
+                    , width =
+                        case columnElement of
+                            GapBefore _ ->
+                                px sizes.tableGap
 
-                                              else
-                                                Element.none
-                                            ]
-                                        , if columnNum == Cells.columns td.grid - 1 then
-                                            insertColumnSeparator { pos | column = pos.column + 1 }
+                            Data _ ->
+                                fill |> Element.minimum 60 |> Element.maximum 300
+                    , view =
+                        \rowNdx ->
+                            case ( tableElementFromIndex rowNdx, columnElement ) of
+                                ( GapBefore _, GapBefore _ ) ->
+                                    Element.none
 
-                                          else
-                                            Element.none
-                                        ]
-                                    )
-                                |> List.concat
-                            )
-                    )
+                                ( GapBefore row, Data column ) ->
+                                    insertRowSeparator { row = row, column = column }
+
+                                ( Data row, GapBefore column ) ->
+                                    insertColumnSeparator { row = row, column = column }
+
+                                ( Data row, Data column ) ->
+                                    let
+                                        pos =
+                                            { row = row, column = column }
+                                    in
+                                    viewCell (Cells.get pos td.grid) pos
+                    }
+                )
     in
-    column
-        [ width fill
-        , padding sizes.large
-        , spacing 1
+    Element.table
+        [ padding sizes.large
         ]
-        rows
+        { columns = columnDefs
+        , data = List.range 0 (Cells.rows td.grid * 2)
+        }
 
 
 {-| View valueset as table of values
