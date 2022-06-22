@@ -877,7 +877,7 @@ update msg model =
                                         )
                                     |> callIf (lensId == l2)
                                         (Lens.mapCells
-                                            (Cells.addRow p2.column
+                                            (Cells.addRow p2.row
                                                 >> Cells.set p2 cv1
                                             )
                                         )
@@ -1835,6 +1835,7 @@ viewValueSetAsUserDefinedTable lensId dragDrop td valueSet =
                     (\rowNum cellsOfRow ->
                         row
                             [ width fill
+                            , spacing 1
                             ]
                             (cellsOfRow
                                 |> List.indexedMap
@@ -1853,61 +1854,23 @@ viewValueSetAsUserDefinedTable lensId dragDrop td valueSet =
                                               else
                                                 Element.none
                                             ]
+                                        , if columnNum == Cells.columns td.grid - 1 then
+                                            insertColumnSeparator { pos | column = pos.column + 1 }
+
+                                          else
+                                            Element.none
                                         ]
                                     )
                                 |> List.concat
                             )
                     )
-
-        ( addNewRowElement, addNewColumnElement ) =
-            if td.editing == Nothing then
-                ( Element.none, Element.none )
-
-            else
-                let
-                    addButton :
-                        Element.Attribute Msg
-                        -> (Element.Length -> Element.Attribute Msg)
-                        -> Msg
-                        -> Element Msg
-                    addButton iconAlign fillDir msg =
-                        Input.button
-                            [ padding 2
-                            , Border.width 1
-                            , Border.color germanZeroGreen
-                            , Font.color germanZeroGreen
-                            , Element.mouseOver
-                                [ Border.color germanZeroYellow
-                                , Font.color
-                                    germanZeroYellow
-                                ]
-                            , fillDir fill
-                            ]
-                            { onPress = Just msg
-                            , label = el [ iconAlign ] (icon FeatherIcons.plusCircle)
-                            }
-                in
-                ( addButton Element.centerX
-                    width
-                    (AddRowToLensTableClicked lensId (Cells.rows td.grid))
-                , column [ height fill ]
-                    [ addButton
-                        Element.centerY
-                        height
-                        (AddColumnToLensTableClicked lensId (Cells.columns td.grid))
-                    , el [ width fill, padding 2, height (px 32) ] Element.none
-                    ]
-                )
     in
-    row [ width fill, spacing sizes.small, padding sizes.large ]
-        [ column
-            [ width fill
-            ]
-            (rows
-                ++ [ addNewRowElement ]
-            )
-        , addNewColumnElement
+    column
+        [ width fill
+        , padding sizes.large
+        , spacing 1
         ]
+        rows
 
 
 {-| View valueset as table of values
