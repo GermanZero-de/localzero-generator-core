@@ -14,6 +14,7 @@ module Cells exposing
     , rows
     , set
     , toList
+    , toListOfArrays
     )
 
 import Array exposing (Array)
