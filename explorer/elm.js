@@ -27899,177 +27899,180 @@ var $author$project$Main$viewValueSetAsUserDefinedTable = F4(
 									$mdgriffith$elm_ui$Element$text(l)
 								])));
 				};
-				if (cell.$ === 1) {
-					var l = cell.a;
-					var _v3 = td.al;
-					if (_v3.$ === 1) {
+				var displayCell = function (c) {
+					if (cell.$ === 1) {
+						var l = cell.a;
 						return displayLabel(l);
 					} else {
-						if (!_v3.a.$) {
-							var _v4 = _v3.a;
-							return displayLabel(l);
-						} else {
-							var _v5 = _v3.a;
-							var p = _v5.a;
-							var editValue = _v5.b;
-							if (_Utils_eq(p, pos)) {
-								var tabKey = function () {
-									var _v7 = A2($author$project$Cells$nextPos, pos, td.y);
-									if (_v7.$ === 1) {
-										return _List_Nil;
-									} else {
-										var nextPos = _v7.a;
-										return _List_fromArray(
-											[
-												A3(
-												$author$project$Main$bind,
-												$author$project$KeyBindings$noModifiers,
-												$SwiftsNamesake$proper_keyboard$Keyboard$Key$Tab,
-												A5(
-													$author$project$Main$MoveCellEditorRequested,
-													lensId,
-													pos,
-													editValue,
-													nextPos,
-													labelOrEmpty(
-														A2($author$project$Cells$get, nextPos, td.y))))
-											]);
-									}
-								}();
-								var shiftTabKey = function () {
-									var _v6 = A2($author$project$Cells$prevPos, pos, td.y);
-									if (_v6.$ === 1) {
-										return _List_Nil;
-									} else {
-										var prevPos = _v6.a;
-										return _List_fromArray(
-											[
-												A3(
-												$author$project$Main$bind,
-												$author$project$KeyBindings$shift,
-												$SwiftsNamesake$proper_keyboard$Keyboard$Key$Tab,
-												A5(
-													$author$project$Main$MoveCellEditorRequested,
-													lensId,
-													pos,
-													editValue,
-													prevPos,
-													labelOrEmpty(
-														A2($author$project$Cells$get, prevPos, td.y))))
-											]);
-									}
-								}();
-								return A2(
-									$mdgriffith$elm_ui$Element$Input$text,
-									_Utils_ap(
-										_List_fromArray(
-											[
-												$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
-												$mdgriffith$elm_ui$Element$Font$bold,
-												$mdgriffith$elm_ui$Element$padding(2),
-												$mdgriffith$elm_ui$Element$Events$onLoseFocus(
-												A3($author$project$Main$CellOfLensTableEditFinished, lensId, pos, editValue)),
-												$author$project$KeyBindings$on(
-												_Utils_ap(
-													_List_fromArray(
-														[
-															A3(
-															$author$project$Main$bind,
-															$author$project$KeyBindings$noModifiers,
-															$SwiftsNamesake$proper_keyboard$Keyboard$Key$Enter,
-															A3($author$project$Main$CellOfLensTableEditFinished, lensId, pos, editValue)),
-															A3(
-															$author$project$Main$bind,
-															$author$project$KeyBindings$noModifiers,
-															$SwiftsNamesake$proper_keyboard$Keyboard$Key$Escape,
-															A2(
-																$author$project$Main$LensTableEditModeChanged,
-																lensId,
-																$elm$core$Maybe$Just($author$project$Lens$All)))
-														]),
-													_Utils_ap(tabKey, shiftTabKey))),
-												$mdgriffith$elm_ui$Element$htmlAttribute(
-												$elm$html$Html$Attributes$id('cell'))
-											]),
-										$author$project$Styling$fonts.d4),
-									{
-										aF: $mdgriffith$elm_ui$Element$Input$labelHidden('label'),
-										aI: A2($author$project$Main$CellOfLensTableEdited, lensId, pos),
-										bc: $elm$core$Maybe$Nothing,
-										bh: editValue
-									});
+						var p = cell.a;
+						var value = function () {
+							var _v10 = valueSet.F;
+							if (!_v10.b) {
+								return $elm$core$Maybe$Nothing;
 							} else {
-								return displayLabel(l);
+								var r = _v10.a;
+								return A2(
+									$elm$core$Dict$get,
+									_Utils_Tuple2(r, p),
+									valueSet.ap);
+							}
+						}();
+						if (!_Utils_eq(td.al, $elm$core$Maybe$Nothing)) {
+							return A3(
+								cellElement,
+								_List_Nil,
+								'',
+								A2(
+									$mdgriffith$elm_ui$Element$paragraph,
+									_List_Nil,
+									A2(
+										$elm$core$List$map,
+										$mdgriffith$elm_ui$Element$text,
+										A2($elm$core$List$intersperse, '.', p))));
+						} else {
+							if (value.$ === 1) {
+								return A3(
+									cellElement,
+									_List_fromArray(
+										[$mdgriffith$elm_ui$Element$Font$alignRight]),
+									'',
+									$mdgriffith$elm_ui$Element$text('INTERNAL ERROR'));
+							} else {
+								switch (value.a.$) {
+									case 0:
+										var f = value.a.a;
+										return A3(
+											cellElement,
+											_List_fromArray(
+												[$mdgriffith$elm_ui$Element$Font$alignRight]),
+											'',
+											$mdgriffith$elm_ui$Element$text(
+												$author$project$Styling$formatGermanNumber(f)));
+									case 1:
+										var _v9 = value.a;
+										return A3(
+											cellElement,
+											_List_fromArray(
+												[$mdgriffith$elm_ui$Element$Font$alignRight, $mdgriffith$elm_ui$Element$Font$bold]),
+											'',
+											$mdgriffith$elm_ui$Element$text('null'));
+									default:
+										var s = value.a.a;
+										return A3(
+											cellElement,
+											_List_fromArray(
+												[
+													$mdgriffith$elm_ui$Element$Font$alignRight,
+													$mdgriffith$elm_ui$Element$Font$family(
+													_List_fromArray(
+														[$mdgriffith$elm_ui$Element$Font$monospace]))
+												]),
+											'',
+											$mdgriffith$elm_ui$Element$text(s));
+								}
 							}
 						}
 					}
+				};
+				var _v2 = td.al;
+				if (_v2.$ === 1) {
+					return displayCell(cell);
 				} else {
-					var p = cell.a;
-					var value = function () {
-						var _v10 = valueSet.F;
-						if (!_v10.b) {
-							return $elm$core$Maybe$Nothing;
-						} else {
-							var r = _v10.a;
-							return A2(
-								$elm$core$Dict$get,
-								_Utils_Tuple2(r, p),
-								valueSet.ap);
-						}
-					}();
-					if (!_Utils_eq(td.al, $elm$core$Maybe$Nothing)) {
-						return A3(
-							cellElement,
-							_List_Nil,
-							'',
-							A2(
-								$mdgriffith$elm_ui$Element$paragraph,
-								_List_Nil,
-								A2(
-									$elm$core$List$map,
-									$mdgriffith$elm_ui$Element$text,
-									A2($elm$core$List$intersperse, '.', p))));
+					if (!_v2.a.$) {
+						var _v3 = _v2.a;
+						return displayCell(cell);
 					} else {
-						if (value.$ === 1) {
-							return A3(
-								cellElement,
-								_List_fromArray(
-									[$mdgriffith$elm_ui$Element$Font$alignRight]),
-								'',
-								$mdgriffith$elm_ui$Element$text('INTERNAL ERROR'));
-						} else {
-							switch (value.a.$) {
-								case 0:
-									var f = value.a.a;
-									return A3(
-										cellElement,
-										_List_fromArray(
-											[$mdgriffith$elm_ui$Element$Font$alignRight]),
-										'',
-										$mdgriffith$elm_ui$Element$text(
-											$author$project$Styling$formatGermanNumber(f)));
-								case 1:
-									var _v9 = value.a;
-									return A3(
-										cellElement,
-										_List_fromArray(
-											[$mdgriffith$elm_ui$Element$Font$alignRight, $mdgriffith$elm_ui$Element$Font$bold]),
-										'',
-										$mdgriffith$elm_ui$Element$text('null'));
-								default:
-									var s = value.a.a;
-									return A3(
-										cellElement,
-										_List_fromArray(
-											[
-												$mdgriffith$elm_ui$Element$Font$alignRight,
-												$mdgriffith$elm_ui$Element$Font$family(
+						var _v4 = _v2.a;
+						var p = _v4.a;
+						var editValue = _v4.b;
+						if (_Utils_eq(p, pos)) {
+							var tabKey = function () {
+								var _v6 = A2($author$project$Cells$nextPos, pos, td.y);
+								if (_v6.$ === 1) {
+									return _List_Nil;
+								} else {
+									var nextPos = _v6.a;
+									return _List_fromArray(
+										[
+											A3(
+											$author$project$Main$bind,
+											$author$project$KeyBindings$noModifiers,
+											$SwiftsNamesake$proper_keyboard$Keyboard$Key$Tab,
+											A5(
+												$author$project$Main$MoveCellEditorRequested,
+												lensId,
+												pos,
+												editValue,
+												nextPos,
+												labelOrEmpty(
+													A2($author$project$Cells$get, nextPos, td.y))))
+										]);
+								}
+							}();
+							var shiftTabKey = function () {
+								var _v5 = A2($author$project$Cells$prevPos, pos, td.y);
+								if (_v5.$ === 1) {
+									return _List_Nil;
+								} else {
+									var prevPos = _v5.a;
+									return _List_fromArray(
+										[
+											A3(
+											$author$project$Main$bind,
+											$author$project$KeyBindings$shift,
+											$SwiftsNamesake$proper_keyboard$Keyboard$Key$Tab,
+											A5(
+												$author$project$Main$MoveCellEditorRequested,
+												lensId,
+												pos,
+												editValue,
+												prevPos,
+												labelOrEmpty(
+													A2($author$project$Cells$get, prevPos, td.y))))
+										]);
+								}
+							}();
+							return A2(
+								$mdgriffith$elm_ui$Element$Input$text,
+								_Utils_ap(
+									_List_fromArray(
+										[
+											$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+											$mdgriffith$elm_ui$Element$Font$bold,
+											$mdgriffith$elm_ui$Element$padding(2),
+											$mdgriffith$elm_ui$Element$Events$onLoseFocus(
+											A3($author$project$Main$CellOfLensTableEditFinished, lensId, pos, editValue)),
+											$author$project$KeyBindings$on(
+											_Utils_ap(
 												_List_fromArray(
-													[$mdgriffith$elm_ui$Element$Font$monospace]))
-											]),
-										'',
-										$mdgriffith$elm_ui$Element$text(s));
-							}
+													[
+														A3(
+														$author$project$Main$bind,
+														$author$project$KeyBindings$noModifiers,
+														$SwiftsNamesake$proper_keyboard$Keyboard$Key$Enter,
+														A3($author$project$Main$CellOfLensTableEditFinished, lensId, pos, editValue)),
+														A3(
+														$author$project$Main$bind,
+														$author$project$KeyBindings$noModifiers,
+														$SwiftsNamesake$proper_keyboard$Keyboard$Key$Escape,
+														A2(
+															$author$project$Main$LensTableEditModeChanged,
+															lensId,
+															$elm$core$Maybe$Just($author$project$Lens$All)))
+													]),
+												_Utils_ap(tabKey, shiftTabKey))),
+											$mdgriffith$elm_ui$Element$htmlAttribute(
+											$elm$html$Html$Attributes$id('cell'))
+										]),
+									$author$project$Styling$fonts.d4),
+								{
+									aF: $mdgriffith$elm_ui$Element$Input$labelHidden('label'),
+									aI: A2($author$project$Main$CellOfLensTableEdited, lensId, pos),
+									bc: $elm$core$Maybe$Nothing,
+									bh: editValue
+								});
+						} else {
+							return displayCell(cell);
 						}
 					}
 				}

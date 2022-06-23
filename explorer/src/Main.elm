@@ -1772,110 +1772,117 @@ viewValueSetAsUserDefinedTable lensId dragDrop td valueSet =
 
                     else
                         cellElement [ Font.bold ] l (paragraph [] [ text l ])
-            in
-            case cell of
-                Lens.Label l ->
-                    case td.editing of
-                        Nothing ->
+
+                displayCell c =
+                    case cell of
+                        Lens.Label l ->
                             displayLabel l
 
-                        Just Lens.All ->
-                            displayLabel l
+                        Lens.ValueAt p ->
+                            let
+                                value =
+                                    case valueSet.runs of
+                                        [] ->
+                                            Nothing
 
-                        Just (Lens.Cell p editValue) ->
-                            if p == pos then
-                                let
-                                    tabKey =
-                                        case Cells.nextPos pos td.grid of
-                                            Nothing ->
-                                                []
-
-                                            Just nextPos ->
-                                                [ bind noModifiers
-                                                    K.Tab
-                                                    (MoveCellEditorRequested lensId
-                                                        pos
-                                                        editValue
-                                                        nextPos
-                                                        (Cells.get nextPos td.grid |> labelOrEmpty)
-                                                    )
-                                                ]
-
-                                    shiftTabKey =
-                                        case Cells.prevPos pos td.grid of
-                                            Nothing ->
-                                                []
-
-                                            Just prevPos ->
-                                                [ bind shift
-                                                    K.Tab
-                                                    (MoveCellEditorRequested lensId
-                                                        pos
-                                                        editValue
-                                                        prevPos
-                                                        (Cells.get prevPos td.grid |> labelOrEmpty)
-                                                    )
-                                                ]
-                                in
-                                Input.text
-                                    ([ width fill
-                                     , Font.bold
-                                     , padding 2
-                                     , Events.onLoseFocus (CellOfLensTableEditFinished lensId pos editValue)
-                                     , KeyBindings.on
-                                        ([ bind noModifiers K.Enter (CellOfLensTableEditFinished lensId pos editValue)
-                                         , bind noModifiers K.Escape (LensTableEditModeChanged lensId (Just Lens.All))
-                                         ]
-                                            ++ tabKey
-                                            ++ shiftTabKey
-                                        )
-                                     , Element.htmlAttribute <| Html.Attributes.id "cell"
-                                     ]
-                                        ++ fonts.table
-                                    )
-                                    { onChange = CellOfLensTableEdited lensId pos
-                                    , text = editValue
-                                    , placeholder = Nothing
-                                    , label = Input.labelHidden "label"
-                                    }
+                                        r :: _ ->
+                                            Dict.get ( r, p ) valueSet.values
+                            in
+                            if td.editing /= Nothing then
+                                -- We are in editing mode, but not editing THIS cell.
+                                -- So display the path itself
+                                cellElement []
+                                    ""
+                                    (paragraph [] (List.map text (List.intersperse "." p)))
 
                             else
-                                displayLabel l
+                                -- We are not in editing mode at all. Display the value at the
+                                -- path
+                                case value of
+                                    Nothing ->
+                                        -- Making the compiler happy
+                                        cellElement [ Font.alignRight ] "" (text "INTERNAL ERROR")
 
-                Lens.ValueAt p ->
-                    let
-                        value =
-                            case valueSet.runs of
-                                [] ->
-                                    Nothing
+                                    Just (Float f) ->
+                                        cellElement [ Font.alignRight ] "" (text (formatGermanNumber f))
 
-                                r :: _ ->
-                                    Dict.get ( r, p ) valueSet.values
-                    in
-                    if td.editing /= Nothing then
-                        cellElement []
-                            ""
-                            (paragraph [] (List.map text (List.intersperse "." p)))
+                                    Just Null ->
+                                        cellElement [ Font.alignRight, Font.bold ] "" (text "null")
+
+                                    Just (String s) ->
+                                        cellElement
+                                            [ Font.alignRight
+                                            , Font.family [ Font.monospace ]
+                                            ]
+                                            ""
+                                            (text s)
+            in
+            case td.editing of
+                Nothing ->
+                    displayCell cell
+
+                Just Lens.All ->
+                    displayCell cell
+
+                Just (Lens.Cell p editValue) ->
+                    if p == pos then
+                        let
+                            tabKey =
+                                case Cells.nextPos pos td.grid of
+                                    Nothing ->
+                                        []
+
+                                    Just nextPos ->
+                                        [ bind noModifiers
+                                            K.Tab
+                                            (MoveCellEditorRequested lensId
+                                                pos
+                                                editValue
+                                                nextPos
+                                                (Cells.get nextPos td.grid |> labelOrEmpty)
+                                            )
+                                        ]
+
+                            shiftTabKey =
+                                case Cells.prevPos pos td.grid of
+                                    Nothing ->
+                                        []
+
+                                    Just prevPos ->
+                                        [ bind shift
+                                            K.Tab
+                                            (MoveCellEditorRequested lensId
+                                                pos
+                                                editValue
+                                                prevPos
+                                                (Cells.get prevPos td.grid |> labelOrEmpty)
+                                            )
+                                        ]
+                        in
+                        Input.text
+                            ([ width fill
+                             , Font.bold
+                             , padding 2
+                             , Events.onLoseFocus (CellOfLensTableEditFinished lensId pos editValue)
+                             , KeyBindings.on
+                                ([ bind noModifiers K.Enter (CellOfLensTableEditFinished lensId pos editValue)
+                                 , bind noModifiers K.Escape (LensTableEditModeChanged lensId (Just Lens.All))
+                                 ]
+                                    ++ tabKey
+                                    ++ shiftTabKey
+                                )
+                             , Element.htmlAttribute <| Html.Attributes.id "cell"
+                             ]
+                                ++ fonts.table
+                            )
+                            { onChange = CellOfLensTableEdited lensId pos
+                            , text = editValue
+                            , placeholder = Nothing
+                            , label = Input.labelHidden "label"
+                            }
 
                     else
-                        case value of
-                            Nothing ->
-                                -- Making the compiler happy
-                                cellElement [ Font.alignRight ] "" (text "INTERNAL ERROR")
-
-                            Just (Float f) ->
-                                cellElement [ Font.alignRight ] "" (text (formatGermanNumber f))
-
-                            Just Null ->
-                                cellElement [ Font.alignRight, Font.bold ] "" (text "null")
-
-                            Just (String s) ->
-                                cellElement
-                                    [ Font.alignRight
-                                    , Font.family [ Font.monospace ]
-                                    ]
-                                    ""
-                                    (text s)
+                        displayCell cell
 
         insertColumnSeparator pos =
             let
