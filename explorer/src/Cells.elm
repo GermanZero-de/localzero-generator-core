@@ -10,6 +10,8 @@ module Cells exposing
     , get
     , initialize
     , map
+    , nextPos
+    , prevPos
     , repeat
     , rows
     , set
@@ -52,6 +54,32 @@ columns (Cells c) =
 rows : Cells a -> Int
 rows (Cells c) =
     c.rows
+
+
+nextPos : Pos -> Cells a -> Maybe Pos
+nextPos p cs =
+    if p.column >= columns cs - 1 then
+        if p.row >= rows cs - 1 then
+            Nothing
+
+        else
+            Just { row = p.row + 1, column = 0 }
+
+    else
+        Just { p | column = p.column + 1 }
+
+
+prevPos : Pos -> Cells a -> Maybe Pos
+prevPos p cs =
+    if p.column == 0 then
+        if p.row == 0 then
+            Nothing
+
+        else
+            Just { row = p.row - 1, column = columns cs - 1 }
+
+    else
+        Just { p | column = p.column - 1 }
 
 
 repeat : a -> Int -> Int -> Cells a

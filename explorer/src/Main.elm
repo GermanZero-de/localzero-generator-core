@@ -58,6 +58,8 @@ import Html5.DragDrop as DragDrop exposing (droppable)
 import Http
 import Json.Decode as Decode
 import Json.Encode as Encode
+import KeyBindings exposing (noModifiers, shift)
+import Keyboard.Key as K
 import Lens exposing (Lens)
 import List.Extra
 import Maybe.Extra
@@ -91,6 +93,11 @@ import Task
 import Tree exposing (Node(..), Tree)
 import Value exposing (Value(..))
 import ValueSet exposing (ValueSet)
+
+
+bind m k msg =
+    -- In this project I'm not using the ability to generate documentations for key bindings
+    KeyBindings.bind m k msg ""
 
 
 
@@ -283,10 +290,12 @@ type Msg
     | AddRowToLensTableClicked LensId Int
     | AddColumnToLensTableClicked LensId Int
     | CellOfLensTableEdited LensId Cells.Pos String
+    | CellOfLensTableEditFinished LensId Cells.Pos String
     | MoveToCellRequested Path LensId Cells.Pos
     | SwapCellsRequested LensId Cells.Pos Lens.CellContent LensId Cells.Pos Lens.CellContent
     | MoveIntoNewColumnRequested (Maybe ( LensId, Cells.Pos )) Lens.CellContent LensId Cells.Pos
     | MoveIntoNewRowRequested (Maybe ( LensId, Cells.Pos )) Lens.CellContent LensId Cells.Pos
+    | MoveCellEditorRequested LensId Cells.Pos String Cells.Pos String
       -- Graphics
     | ToggleShowGraphClicked LensId
     | OnChartHover ChartHovering
@@ -782,11 +791,47 @@ update msg model =
                 |> mapActiveLens (Lens.setTableEditMode mode)
                 |> withSaveCmd
 
+        MoveCellEditorRequested id currentPos currentValue nextPos nextValue ->
+            -- NOTE: This event may happen BEFORE we have saved the currently
+            -- edited cell (because loseFocus hasn't happened yet)
+            model
+                |> activateLens id
+                |> mapActiveLens (Lens.mapCells (Cells.set currentPos (Lens.Label currentValue)))
+                |> mapActiveLens
+                    (Lens.setTableEditMode (Just (Lens.Cell nextPos nextValue)))
+                |> withSaveCmd
+                |> addCmd
+                    (Task.attempt (\_ -> Noop) (Browser.Dom.focus "cell"))
+
+        CellOfLensTableEditFinished id pos value ->
+            -- NOTE: This event may happen after MoveCellEditorRequested has changed
+            -- the TableEditMode
+            model
+                |> mapActiveLens
+                    (Lens.mapTableEditMode
+                        (Maybe.map
+                            (\me ->
+                                case me of
+                                    Lens.All ->
+                                        Lens.All
+
+                                    Lens.Cell p _ ->
+                                        if p == pos then
+                                            -- Only if we haven't moved away already quit edit cell mode
+                                            Lens.All
+
+                                        else
+                                            me
+                            )
+                        )
+                    )
+                |> mapActiveLens (Lens.mapCells (Cells.set pos (Lens.Label value)))
+                |> withSaveCmd
+
         CellOfLensTableEdited id pos value ->
             model
                 |> activateLens id
-                |> mapActiveLens (Lens.setTableEditMode (Just (Lens.Cell pos)))
-                |> mapActiveLens (Lens.mapCells (Cells.set pos (Lens.Label value)))
+                |> mapActiveLens (Lens.setTableEditMode (Just (Lens.Cell pos value)))
                 |> withSaveCmd
                 |> addCmd
                     (Task.attempt (\_ -> Noop) (Browser.Dom.focus "cell"))
@@ -1110,33 +1155,6 @@ collapsedStatusIcon collapsed =
     el iconButtonStyle (icon (size16 i))
 
 
-onKeys : List ( String, msg ) -> Element.Attribute msg
-onKeys keys =
-    let
-        keyDict =
-            Dict.fromList keys
-    in
-    Element.htmlAttribute
-        (Html.Events.on "keyup"
-            (Decode.field "key" Decode.string
-                |> Decode.andThen
-                    (\k ->
-                        case Dict.get k keyDict of
-                            Just msg ->
-                                Decode.succeed msg
-
-                            Nothing ->
-                                Decode.fail "Not the expected key"
-                    )
-            )
-        )
-
-
-onEnter : msg -> Element.Attribute msg
-onEnter k =
-    onKeys [ ( "Enter", k ) ]
-
-
 viewEntryAndOverride : Int -> String -> Run.Overrides -> Maybe ActiveOverrideEditor -> Float -> ( Element Msg, Element Msg )
 viewEntryAndOverride runId name overrides activeOverrideEditor f =
     let
@@ -1187,12 +1205,15 @@ viewEntryAndOverride runId name overrides activeOverrideEditor f =
                 Just editor ->
                     let
                         textStyle =
+                            -- TODO: textStyle is a bad name for this. Restructure!
                             case editor.asFloat of
                                 Nothing ->
                                     [ Border.color red, Border.width 1 ]
 
                                 Just _ ->
-                                    [ onEnter OverrideEditFinished
+                                    [ KeyBindings.on
+                                        [ bind noModifiers K.Enter OverrideEditFinished
+                                        ]
                                     ]
 
                         textAttributes =
@@ -1538,9 +1559,9 @@ viewRun runId lensId lens collapseStatus activeOverrideEditor activeSearch selec
                                 [ width fill
                                 , Font.size 18
                                 , Element.htmlAttribute (Html.Attributes.id filterFieldId)
-                                , onKeys
-                                    [ ( "Escape", FilterFinished )
-                                    , ( "Enter", FilterQuickAddRequested )
+                                , KeyBindings.on
+                                    [ bind noModifiers K.Escape FilterFinished
+                                    , bind noModifiers K.Enter FilterQuickAddRequested
                                     ]
                                 ]
                                 { onChange = FilterEdited runId
@@ -1672,52 +1693,71 @@ viewValueSetAsUserDefinedTable lensId dragDrop td valueSet =
         cells =
             Cells.toList td.grid
 
+        ifEditing =
+            if td.editing /= Nothing then
+                identity
+
+            else
+                always []
+
+        labelOrEmpty : Lens.CellContent -> String
+        labelOrEmpty c =
+            case c of
+                Lens.Label s ->
+                    s
+
+                Lens.ValueAt _ ->
+                    ""
+
         viewCell : Lens.CellContent -> Cells.Pos -> Element Msg
         viewCell cell pos =
             let
                 editOnClick editValue =
-                    if td.editing /= Nothing then
+                    ifEditing
                         [ Events.onClick
                             (CellOfLensTableEdited lensId pos editValue)
                         ]
 
-                    else
-                        []
-
                 dropTarget =
-                    List.map Element.htmlAttribute
-                        (DragDrop.droppable DragDropMsg (DropOnCell lensId pos cell))
+                    ifEditing
+                        (List.map Element.htmlAttribute
+                            (DragDrop.droppable DragDropMsg (DropOnCell lensId pos cell))
+                        )
 
                 draggable =
-                    List.map Element.htmlAttribute
-                        (DragDrop.draggable DragDropMsg (DragFromCell lensId pos cell))
+                    ifEditing
+                        (List.map Element.htmlAttribute
+                            (DragDrop.draggable DragDropMsg (DragFromCell lensId pos cell))
+                        )
 
                 highlight =
-                    case DragDrop.getDropId dragDrop of
-                        Nothing ->
-                            []
-
-                        Just (DropOnCell li p _) ->
-                            if lensId == li && p == pos then
-                                [ Border.glow Styling.germanZeroGreen 2 ]
-
-                            else
+                    ifEditing <|
+                        case DragDrop.getDropId dragDrop of
+                            Nothing ->
                                 []
 
-                        Just (DropInNewColumn _ _) ->
-                            []
+                            Just (DropOnCell li p _) ->
+                                if lensId == li && p == pos then
+                                    [ Border.glow Styling.germanZeroGreen 2 ]
 
-                        Just (DropInNewRow _ _) ->
-                            []
+                                else
+                                    []
+
+                            Just (DropInNewColumn _ _) ->
+                                []
+
+                            Just (DropInNewRow _ _) ->
+                                []
 
                 cellElement attrs editValue v =
                     el
                         (([ Background.color Styling.emptyCellColor
                           , width fill
                           , padding 2
+                          , Element.htmlAttribute <| Html.Attributes.tabindex 0
                           ]
-                            ++ fonts.table
                             ++ editOnClick editValue
+                            ++ fonts.table
                             ++ dropTarget
                             ++ highlight
                             ++ draggable
@@ -1725,30 +1765,82 @@ viewValueSetAsUserDefinedTable lensId dragDrop td valueSet =
                             ++ attrs
                         )
                         v
-            in
-            case cell of
-                Lens.Label l ->
-                    if td.editing == Just (Lens.Cell pos) then
-                        Input.text
-                            ([ width fill
-                             , Font.bold
-                             , padding 2
-                             , onEnter (LensTableEditModeChanged lensId (Just Lens.All))
-                             , Element.htmlAttribute <| Html.Attributes.id "cell"
-                             ]
-                                ++ fonts.table
-                            )
-                            { onChange = CellOfLensTableEdited lensId pos
-                            , text = l
-                            , placeholder = Nothing
-                            , label = Input.labelHidden "label"
-                            }
 
-                    else if l == "" then
+                displayLabel l =
+                    if l == "" then
                         cellElement [] "" (text " ")
 
                     else
                         cellElement [ Font.bold ] l (paragraph [] [ text l ])
+            in
+            case cell of
+                Lens.Label l ->
+                    case td.editing of
+                        Nothing ->
+                            displayLabel l
+
+                        Just Lens.All ->
+                            displayLabel l
+
+                        Just (Lens.Cell p editValue) ->
+                            if p == pos then
+                                let
+                                    tabKey =
+                                        case Cells.nextPos pos td.grid of
+                                            Nothing ->
+                                                []
+
+                                            Just nextPos ->
+                                                [ bind noModifiers
+                                                    K.Tab
+                                                    (MoveCellEditorRequested lensId
+                                                        pos
+                                                        editValue
+                                                        nextPos
+                                                        (Cells.get nextPos td.grid |> labelOrEmpty)
+                                                    )
+                                                ]
+
+                                    shiftTabKey =
+                                        case Cells.prevPos pos td.grid of
+                                            Nothing ->
+                                                []
+
+                                            Just prevPos ->
+                                                [ bind shift
+                                                    K.Tab
+                                                    (MoveCellEditorRequested lensId
+                                                        pos
+                                                        editValue
+                                                        prevPos
+                                                        (Cells.get prevPos td.grid |> labelOrEmpty)
+                                                    )
+                                                ]
+                                in
+                                Input.text
+                                    ([ width fill
+                                     , Font.bold
+                                     , padding 2
+                                     , Events.onLoseFocus (CellOfLensTableEditFinished lensId pos editValue)
+                                     , KeyBindings.on
+                                        ([ bind noModifiers K.Enter (CellOfLensTableEditFinished lensId pos editValue)
+                                         , bind noModifiers K.Escape (LensTableEditModeChanged lensId (Just Lens.All))
+                                         ]
+                                            ++ tabKey
+                                            ++ shiftTabKey
+                                        )
+                                     , Element.htmlAttribute <| Html.Attributes.id "cell"
+                                     ]
+                                        ++ fonts.table
+                                    )
+                                    { onChange = CellOfLensTableEdited lensId pos
+                                    , text = editValue
+                                    , placeholder = Nothing
+                                    , label = Input.labelHidden "label"
+                                    }
+
+                            else
+                                displayLabel l
 
                 Lens.ValueAt p ->
                     let
@@ -1789,25 +1881,28 @@ viewValueSetAsUserDefinedTable lensId dragDrop td valueSet =
             let
                 highlight : List (Element.Attribute Msg)
                 highlight =
-                    case DragDrop.getDropId dragDrop of
-                        Nothing ->
-                            []
-
-                        Just (DropInNewRow _ _) ->
-                            []
-
-                        Just (DropOnCell _ _ _) ->
-                            []
-
-                        Just (DropInNewColumn li p) ->
-                            if lensId == li && pos == p then
-                                [ Border.glow germanZeroGreen 2 ]
-
-                            else
+                    ifEditing <|
+                        case DragDrop.getDropId dragDrop of
+                            Nothing ->
                                 []
 
+                            Just (DropInNewRow _ _) ->
+                                []
+
+                            Just (DropOnCell _ _ _) ->
+                                []
+
+                            Just (DropInNewColumn li p) ->
+                                if lensId == li && pos == p then
+                                    [ Border.glow germanZeroGreen 2 ]
+
+                                else
+                                    []
+
                 droppable =
-                    List.map Element.htmlAttribute (DragDrop.droppable DragDropMsg (DropInNewColumn lensId pos))
+                    ifEditing <|
+                        List.map Element.htmlAttribute
+                            (DragDrop.droppable DragDropMsg (DropInNewColumn lensId pos))
             in
             el
                 ([ width (px sizes.tableGap)
@@ -1821,25 +1916,28 @@ viewValueSetAsUserDefinedTable lensId dragDrop td valueSet =
         insertRowSeparator pos =
             let
                 highlight =
-                    case DragDrop.getDropId dragDrop of
-                        Nothing ->
-                            []
-
-                        Just (DropInNewRow li p) ->
-                            if lensId == li && pos == p then
-                                [ Border.glow germanZeroGreen 2 ]
-
-                            else
+                    ifEditing <|
+                        case DragDrop.getDropId dragDrop of
+                            Nothing ->
                                 []
 
-                        Just (DropOnCell _ _ _) ->
-                            []
+                            Just (DropInNewRow li p) ->
+                                if lensId == li && pos == p then
+                                    [ Border.glow germanZeroGreen 2 ]
 
-                        Just (DropInNewColumn _ _) ->
-                            []
+                                else
+                                    []
+
+                            Just (DropOnCell _ _ _) ->
+                                []
+
+                            Just (DropInNewColumn _ _) ->
+                                []
 
                 droppable =
-                    List.map Element.htmlAttribute (DragDrop.droppable DragDropMsg (DropInNewRow lensId pos))
+                    ifEditing <|
+                        List.map Element.htmlAttribute
+                            (DragDrop.droppable DragDropMsg (DropInNewRow lensId pos))
             in
             el
                 ([ height (px sizes.tableGap)
@@ -2013,7 +2111,9 @@ viewLens id dragDrop editingActiveLensLabel isActive lens chartHovering allRuns 
             [ if editingActiveLensLabel && isActive then
                 Input.text
                     [ Events.onLoseFocus LensLabelEditFinished
-                    , onEnter LensLabelEditFinished
+                    , KeyBindings.on
+                        [ bind noModifiers K.Enter LensLabelEditFinished
+                        ]
                     , Element.htmlAttribute (Html.Attributes.id "interestlabel")
                     ]
                     { onChange = LensLabelEdited id

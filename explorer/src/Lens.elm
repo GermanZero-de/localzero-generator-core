@@ -15,6 +15,7 @@ module Lens exposing
     , insert
     , mapCells
     , mapLabel
+    , mapTableEditMode
     , member
     , remove
     , setTableEditMode
@@ -61,7 +62,7 @@ type alias TableData =
 
 type TableEditMode
     = All
-    | Cell Cells.Pos
+    | Cell Cells.Pos String
 
 
 type VisualisationKind
@@ -273,14 +274,25 @@ setTableEditMode mode =
         )
 
 
-getEditTable : Lens -> Bool
+mapTableEditMode : (Maybe TableEditMode -> Maybe TableEditMode) -> Lens -> Lens
+mapTableEditMode fn =
+    mapKind
+        identity
+        (\t ->
+            { t
+                | editing = fn t.editing
+            }
+        )
+
+
+getEditTable : Lens -> Maybe TableEditMode
 getEditTable (Lens l) =
     case l.vkind of
         Classic _ ->
-            False
+            Nothing
 
         Table t ->
-            t.editing /= Nothing
+            t.editing
 
 
 getShowGraph : Lens -> Bool
