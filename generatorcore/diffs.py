@@ -2,14 +2,15 @@
 
 During testing and development it is often necessary to compare two result dictionaries.
 """
+# pyright: strict
 from dataclasses import dataclass
 import collections.abc
 import math
 import numbers
-import typing
+from typing import Any, Iterator
 
 
-def float_matches(actual, expected, rel):
+def float_matches(actual: Any, expected: Any, rel: Any):
     if math.isnan(actual) and math.isnan(expected):
         return True
     elif math.isnan(actual):
@@ -43,12 +44,12 @@ class Diff:
         return f"at {self.path} expected {self.expected} got {self.actual}"
 
 
-def all_helper(path: str, actual, expected, *, rel) -> typing.Iterator[Diff]:
+def all_helper(path: str, actual: Any, expected: Any, *, rel: Any) -> Iterator[Diff]:
     if isinstance(actual, collections.abc.Mapping) and isinstance(
         expected, collections.abc.Mapping
     ):
-        keys1 = frozenset(actual.keys())
-        keys2 = frozenset(expected.keys())
+        keys1: Any = frozenset(actual.keys())  # type: ignore
+        keys2: Any = frozenset(expected.keys())  # type: ignore
         shared_keys = keys1.intersection(keys2)
         for k in shared_keys:
             yield from all_helper(path + "." + k, actual[k], expected[k], rel=rel)
@@ -59,18 +60,18 @@ def all_helper(path: str, actual, expected, *, rel) -> typing.Iterator[Diff]:
                 path + "." + k, MISSING_SENTINEL, expected[k], rel=rel
             )
     elif isinstance(actual, collections.abc.Mapping) and expected is MISSING_SENTINEL:
-        for k in actual.keys():
-            yield from all_helper(path + "." + k, actual[k], MISSING_SENTINEL, rel=rel)
+        for k in actual.keys():  # type: ignore
+            yield from all_helper(path + "." + k, actual[k], MISSING_SENTINEL, rel=rel)  # type: ignore
     elif isinstance(expected, collections.abc.Mapping) and actual is MISSING_SENTINEL:
-        for k in expected.keys():
+        for k in expected.keys():  # type: ignore
             yield from all_helper(
-                path + "." + k, MISSING_SENTINEL, expected[k], rel=rel
+                path + "." + k, MISSING_SENTINEL, expected[k], rel=rel  # type: ignore
             )
     elif isinstance(actual, numbers.Number) and isinstance(expected, numbers.Number):
         if not float_matches(actual=actual, expected=expected, rel=rel):
             yield Diff(path=path, actual=actual, expected=expected)
     elif actual != expected:
-        yield Diff(path=path, actual=actual, expected=expected)
+        yield Diff(path=path, actual=actual, expected=expected)  # type: ignore
 
 
 def all(*, actual, expected, rel=1e-9):
