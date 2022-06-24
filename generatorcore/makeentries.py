@@ -1,3 +1,4 @@
+# pyright: strict
 from dataclasses import dataclass
 
 from . import refdata
@@ -681,7 +682,7 @@ def make_entries(data: refdata.RefData, ags: str, year: int):
         assert False, "TODO here we should compute the natoional factor instead"
 
     def compute_efactor_from_n2o(
-        what: str, area: float, data_nat_agri: refdata.Row = data_nat_agri_sta
+        what: str, area: float, data_nat_agri: refdata.Row = data_nat_agri_sta  # type: ignore
     ):
         n2o = data_nat_agri.float(what + "_n2o")
         co2e = n2o * 298.0
