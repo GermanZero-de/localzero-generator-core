@@ -1,3 +1,4 @@
+# pyright: strict
 from ..inputs import Inputs
 from ..utils import div, MILLION
 from . import electricity2030_core
@@ -57,7 +58,7 @@ def calc(
     d_t = e30.d_t
     d_a = e30.d_a
     d_f_hydrogen_reconv = e30.d_f_hydrogen_reconv
-    d_e_hydrogen = e30.d_e_hydrogen
+    # d_e_hydrogen = e30.d_e_hydrogen
     d_f_wo_hydrogen = e30.d_f_wo_hydrogen
 
     p = e30.p
