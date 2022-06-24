@@ -74,5 +74,5 @@ def all_helper(path: str, actual: Any, expected: Any, *, rel: Any) -> Iterator[D
         yield Diff(path=path, actual=actual, expected=expected)  # type: ignore
 
 
-def all(*, actual, expected, rel=1e-9):
+def all(*, actual, expected, rel=1e-9):  # type: ignore
     return all_helper("", actual, expected, rel=rel)
