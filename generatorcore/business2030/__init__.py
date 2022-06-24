@@ -1,5 +1,5 @@
 from ..inputs import Inputs
-from ..utils import div
+from ..utils import div, MILLION
 from .. import business2018, residences2018, residences2030
 from .b30 import B30
 
@@ -20,7 +20,6 @@ def calc(
     ass = inputs.ass
     entries = inputs.entries
 
-    Million = 1000000.0
     Kalkulationszeitraum = entries.m_duration_target
 
     b30 = B30()
@@ -264,13 +263,13 @@ def calc(
 
     s_gas.cost_fuel_per_MWh = ass("Ass_R_S_gas_energy_cost_factor_2035")
     s_biomass.cost_fuel_per_MWh = b18.s_biomass.cost_fuel_per_MWh
-    s_biomass.cost_fuel = s_biomass.energy * s_biomass.cost_fuel_per_MWh / Million
+    s_biomass.cost_fuel = s_biomass.energy * s_biomass.cost_fuel_per_MWh / MILLION
     s_heatnet.cost_fuel_per_MWh = 0
 
-    s_gas.cost_fuel = s_gas.energy * s_gas.cost_fuel_per_MWh / Million
+    s_gas.cost_fuel = s_gas.energy * s_gas.cost_fuel_per_MWh / MILLION
     s_fueloil.cost_fuel = 0
     s_coal.cost_fuel = 0
-    s_heatnet.cost_fuel = s_heatnet.energy * s_heatnet.cost_fuel_per_MWh / Million
+    s_heatnet.cost_fuel = s_heatnet.energy * s_heatnet.cost_fuel_per_MWh / MILLION
     s_heatpump.cost_fuel = 0
 
     s.cost_fuel = s_biomass.cost_fuel

@@ -1,5 +1,5 @@
 from ..inputs import Inputs
-from ..utils import div
+from ..utils import div, MILLION
 from .. import transport2018
 from .e18 import E18
 
@@ -8,8 +8,6 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
     fact = inputs.fact
     ass = inputs.ass
     entries = inputs.entries
-
-    Million = 1000000
 
     e18 = E18()
 
@@ -67,7 +65,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
     d_f_hydrogen_reconv.energy = 0
     d_r.energy = entries.r_elec_fec
     d_r.cost_fuel_per_MWh = fact("Fact_E_D_R_cost_fuel_per_MWh_2018")
-    d_r.cost_fuel = d_r.cost_fuel_per_MWh * d_r.energy / Million
+    d_r.cost_fuel = d_r.cost_fuel_per_MWh * d_r.energy / MILLION
     d_b.energy = entries.b_elec_fec
     d_b.cost_fuel_per_MWh = fact("Fact_E_D_B_cost_fuel_per_MWh_2018")
     d_b.cost_fuel = d_b.cost_fuel_per_MWh * d_b.energy / 1000000
@@ -141,7 +139,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
         * 1000
     )
     p_local_wind_onshore.cost_mro = (
-        p_local_wind_onshore.energy * p_local_wind_onshore.cost_mro_per_MWh / Million
+        p_local_wind_onshore.energy * p_local_wind_onshore.cost_mro_per_MWh / MILLION
     )
 
     p_local_biomass.CO2e_total = 0.0
@@ -152,7 +150,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
     )
     p_local_biomass.cost_mro_per_MWh = ass("Ass_E_P_local_biomass_mro_per_MWh")
     p_local_biomass.cost_mro = (
-        p_local_biomass.energy * p_local_biomass.cost_mro_per_MWh / Million
+        p_local_biomass.energy * p_local_biomass.cost_mro_per_MWh / MILLION
     )
     p_local_biomass.cost_fuel_per_MWh = ass(
         "Ass_E_P_local_biomass_material_costs"
@@ -177,7 +175,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
     )
     p_local_hydro.cost_mro_per_MWh = ass("Ass_E_P_local_hydro_mro_per_MWh")
     p_local_hydro.cost_mro = (
-        p_local_hydro.energy * p_local_hydro.cost_mro_per_MWh / Million
+        p_local_hydro.energy * p_local_hydro.cost_mro_per_MWh / MILLION
     )
 
     p.energy = d.energy
@@ -438,7 +436,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
         p_renew_pv_roof.energy
         * p_renew_pv_roof.cost_mro_per_MWh
         * fact("Fact_E_P_ratio_gross_electricity_prod_to_fec_electricity_2018")
-        / Million
+        / MILLION
     )
     p_renew_pv_roof.CO2e_combustion_based_per_MWh = fact(
         "Fact_E_P_climate_neutral_ratio_CO2e_cb_to_fec"
@@ -459,7 +457,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
         p_renew_pv_facade.energy
         * p_renew_pv_facade.cost_mro_per_MWh
         * fact("Fact_E_P_ratio_gross_electricity_prod_to_fec_electricity_2018")
-        / Million
+        / MILLION
     )
     p_renew_pv_facade.CO2e_combustion_based_per_MWh = fact(
         "Fact_E_P_climate_neutral_ratio_CO2e_cb_to_fec"
@@ -480,7 +478,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
         p_renew_pv_park.energy
         * p_renew_pv_park.cost_mro_per_MWh
         * fact("Fact_E_P_ratio_gross_electricity_prod_to_fec_electricity_2018")
-        / Million
+        / MILLION
     )
     p_renew_pv_park.CO2e_combustion_based_per_MWh = fact(
         "Fact_E_P_climate_neutral_ratio_CO2e_cb_to_fec"
@@ -501,7 +499,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
         p_renew_pv_agri.energy
         * p_renew_pv_agri.cost_mro_per_MWh
         * fact("Fact_E_P_ratio_gross_electricity_prod_to_fec_electricity_2018")
-        / Million
+        / MILLION
     )
     p_renew_pv_agri.CO2e_combustion_based_per_MWh = fact(
         "Fact_E_P_climate_neutral_ratio_CO2e_cb_to_fec"
@@ -577,7 +575,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
         p_renew_biomass.energy
         * p_renew_biomass.cost_mro_per_MWh
         * fact("Fact_E_P_ratio_gross_electricity_prod_to_fec_electricity_2018")
-        / Million
+        / MILLION
     )
     p_renew_biomass.CO2e_combustion_based = (
         p_renew_biomass_waste.CO2e_combustion_based
@@ -604,7 +602,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
         p_renew_hydro.energy
         * p_renew_hydro.cost_mro_per_MWh
         * fact("Fact_E_P_ratio_gross_electricity_prod_to_fec_electricity_2018")
-        / Million
+        / MILLION
     )
     p_renew_hydro.CO2e_combustion_based_per_MWh = fact(
         "Fact_E_P_climate_neutral_ratio_CO2e_cb_to_fec"
@@ -622,7 +620,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
         p_renew_geoth.energy
         * p_renew_geoth.cost_mro_per_MWh
         * fact("Fact_E_P_ratio_gross_electricity_prod_to_fec_electricity_2018")
-        / Million
+        / MILLION
     )
     p_renew_geoth.CO2e_combustion_based_per_MWh = fact(
         "Fact_E_P_climate_neutral_ratio_CO2e_cb_to_fec"
@@ -668,7 +666,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
     )
     p_local_pv_roof.cost_mro_per_MWh = p_renew_pv_roof.cost_mro_per_MWh
     p_local_pv_roof.cost_mro = (
-        p_local_pv_roof.energy * p_local_pv_roof.cost_mro_per_MWh / Million
+        p_local_pv_roof.energy * p_local_pv_roof.cost_mro_per_MWh / MILLION
     )
     p_local_pv_facade.energy = (
         entries.e_PV_power_inst_facade
@@ -682,7 +680,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
         * 1000
     )
     p_local_pv_facade.cost_mro = (
-        p_local_pv_facade.energy * p_local_pv_facade.cost_mro_per_MWh / Million
+        p_local_pv_facade.energy * p_local_pv_facade.cost_mro_per_MWh / MILLION
     )
     p_local_pv_park.energy = (
         entries.e_PV_power_inst_park
@@ -691,7 +689,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
     )
     p_local_pv_park.cost_mro_per_MWh = p_renew_pv_park.cost_mro_per_MWh
     p_local_pv_park.cost_mro = (
-        p_local_pv_park.energy * p_local_pv_park.cost_mro_per_MWh / Million
+        p_local_pv_park.energy * p_local_pv_park.cost_mro_per_MWh / MILLION
     )
     p_local_pv_agri.energy = (
         entries.e_PV_power_inst_agripv
@@ -700,7 +698,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
     )
     p_local_pv_agri.cost_mro_per_MWh = p_renew_pv_agri.cost_mro_per_MWh
     p_local_pv_agri.cost_mro = (
-        p_local_pv_agri.energy * p_local_pv_agri.cost_mro_per_MWh / Million
+        p_local_pv_agri.energy * p_local_pv_agri.cost_mro_per_MWh / MILLION
     )
 
     p_local_pv.CO2e_combustion_based = 0.0

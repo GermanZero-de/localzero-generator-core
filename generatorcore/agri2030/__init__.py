@@ -1,5 +1,5 @@
 from ..inputs import Inputs
-from ..utils import div
+from ..utils import div, MILLION
 from .. import agri2018, lulucf2030
 from .a30 import A30
 
@@ -8,8 +8,6 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
     fact = inputs.fact
     ass = inputs.ass
     entries = inputs.entries
-
-    Million = 1000000
 
     a30 = A30()
 
@@ -1321,7 +1319,7 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
         "Fact_R_S_heatpump_mean_annual_performance_factor_all"
     )
     s_heatpump.cost_fuel = 0
-    s_heatpump.cost_fuel = s_heatpump.energy * s_heatpump.cost_fuel_per_MWh / Million
+    s_heatpump.cost_fuel = s_heatpump.energy * s_heatpump.cost_fuel_per_MWh / MILLION
     s_heatpump.CO2e_combustion_based = (
         s_heatpump.energy * s_heatpump.CO2e_combustion_based_per_MWh
     )

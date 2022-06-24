@@ -1,5 +1,5 @@
 from ..inputs import Inputs
-from ..utils import div
+from ..utils import div, MILLION
 from .r18 import R18
 
 
@@ -279,8 +279,6 @@ def calc(inputs: Inputs) -> R18:
 
     ### S - Section ###
 
-    Million = 1000000
-
     # Definitions
 
     s = r18.s
@@ -520,18 +518,18 @@ def calc(inputs: Inputs) -> R18:
     s_gas.cost_fuel_per_MWh = fact("Fact_R_S_gas_energy_cost_factor_2018")
 
     # cost_fuel
-    s_fueloil.cost_fuel = s_fueloil.energy * s_fueloil.cost_fuel_per_MWh / Million
-    s_lpg.cost_fuel = s_lpg.energy * s_lpg.cost_fuel_per_MWh / Million
-    s_biomass.cost_fuel = s_biomass.energy * s_biomass.cost_fuel_per_MWh / Million
-    s_coal.cost_fuel = s_coal.energy * s_coal.cost_fuel_per_MWh / Million
-    s_petrol.cost_fuel = s_petrol.energy * s_petrol.cost_fuel_per_MWh / Million
-    s_heatnet.cost_fuel = s_heatnet.energy * s_heatnet.cost_fuel_per_MWh / Million
-    s_solarth.cost_fuel = s_solarth.energy * s_solarth.cost_fuel_per_MWh / Million
-    s_heatpump.cost_fuel = s_heatpump.energy * s_heatpump.cost_fuel_per_MWh / Million
+    s_fueloil.cost_fuel = s_fueloil.energy * s_fueloil.cost_fuel_per_MWh / MILLION
+    s_lpg.cost_fuel = s_lpg.energy * s_lpg.cost_fuel_per_MWh / MILLION
+    s_biomass.cost_fuel = s_biomass.energy * s_biomass.cost_fuel_per_MWh / MILLION
+    s_coal.cost_fuel = s_coal.energy * s_coal.cost_fuel_per_MWh / MILLION
+    s_petrol.cost_fuel = s_petrol.energy * s_petrol.cost_fuel_per_MWh / MILLION
+    s_heatnet.cost_fuel = s_heatnet.energy * s_heatnet.cost_fuel_per_MWh / MILLION
+    s_solarth.cost_fuel = s_solarth.energy * s_solarth.cost_fuel_per_MWh / MILLION
+    s_heatpump.cost_fuel = s_heatpump.energy * s_heatpump.cost_fuel_per_MWh / MILLION
     s_elec_heating.cost_fuel = (
-        s_elec_heating.energy * s_elec_heating.cost_fuel_per_MWh / Million
+        s_elec_heating.energy * s_elec_heating.cost_fuel_per_MWh / MILLION
     )
-    s_gas.cost_fuel = s_gas.energy * s_gas.cost_fuel_per_MWh / Million
+    s_gas.cost_fuel = s_gas.energy * s_gas.cost_fuel_per_MWh / MILLION
 
     s.cost_fuel = (
         s_fueloil.cost_fuel

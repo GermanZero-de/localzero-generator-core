@@ -1,6 +1,6 @@
 from ..electricity2030.electricity2030_core import EColVars2030
 from ..inputs import Inputs
-from ..utils import div
+from ..utils import div, MILLION
 from .. import residences2030, business2030, heat2018, agri2030, industry2030
 from .h30 import H30
 
@@ -20,8 +20,6 @@ def calc(
     entries = inputs.entries
 
     h30 = H30()
-
-    Million = 1000000
 
     h = h30.h
     g = h30.g
@@ -196,7 +194,7 @@ def calc(
         r30.s_heatpump.energy + b30.s_heatpump.energy + a30.s_heatpump.energy
     )
     p_fueloil.cost_fuel_per_MWh = ass("Ass_R_S_fueloil_energy_cost_factor_2035")
-    p_gas.cost_fuel = p_gas.energy * p_gas.cost_fuel_per_MWh / Million
+    p_gas.cost_fuel = p_gas.energy * p_gas.cost_fuel_per_MWh / MILLION
     p_opetpro.CO2e_production_based = (
         p_opetpro.energy * p_opetpro.CO2e_production_based_per_MWh
     )
@@ -253,7 +251,7 @@ def calc(
     )
     p_opetpro.pct_energy = div(p_opetpro.energy, p.energy)
     p_coal.cost_fuel_per_MWh = ass("Ass_R_S_coal_energy_cost_factor_2035")
-    p_fueloil.cost_fuel = p_fueloil.energy * p_fueloil.cost_fuel_per_MWh / Million
+    p_fueloil.cost_fuel = p_fueloil.energy * p_fueloil.cost_fuel_per_MWh / MILLION
     p_coal.CO2e_total = p_coal.CO2e_production_based + p_coal.CO2e_combustion_based
     p_heatnet_cogen.CO2e_production_based_per_MWh = fact(
         "Fact_H_P_biomass_ratio_CO2e_pb_to_fec_2018"
@@ -304,7 +302,7 @@ def calc(
     p.change_energy_MWh = p.energy - h18.p.energy
     p_heatnet.pct_energy = div(p_heatnet.energy, p.energy)
     p_biomass.cost_fuel_per_MWh = fact("Fact_R_S_wood_energy_cost_factor_2018")
-    p_coal.cost_fuel = p_coal.energy * p_coal.cost_fuel_per_MWh / Million
+    p_coal.cost_fuel = p_coal.energy * p_coal.cost_fuel_per_MWh / MILLION
     p_heatnet_lheatpump.invest_pa = (
         p_heatnet_lheatpump.invest / entries.m_duration_target
     )
@@ -587,7 +585,7 @@ def calc(
     p.change_energy_pct = div(p.change_energy_MWh, h18.p.energy)
     p_fueloil.pct_energy = div(p_fueloil.energy, p.energy)
     p_ofossil.pct_energy = div(p_ofossil.energy, p.energy)
-    p_biomass.cost_fuel = p_biomass.energy * p_biomass.cost_fuel_per_MWh / Million
+    p_biomass.cost_fuel = p_biomass.energy * p_biomass.cost_fuel_per_MWh / MILLION
     p.cost_fuel = (
         p_gas.cost_fuel + p_fueloil.cost_fuel + p_coal.cost_fuel + p_biomass.cost_fuel
     )

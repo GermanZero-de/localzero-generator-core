@@ -1,5 +1,5 @@
 from ..inputs import Inputs
-from ..utils import div
+from ..utils import div, MILLION
 from .. import residences2018
 from .b18 import B18
 
@@ -12,12 +12,10 @@ def calc(inputs: Inputs, *, r18: residences2018.R18) -> B18:
     ass = inputs.ass
     entries = inputs.entries
 
-    Million = 1000000.0
-
     b18 = B18()
     b18.s_gas.energy = entries.b_gas_fec
     b18.s_gas.cost_fuel_per_MWh = fact("Fact_R_S_gas_energy_cost_factor_2018")
-    b18.s_gas.cost_fuel = b18.s_gas.energy * b18.s_gas.cost_fuel_per_MWh / Million
+    b18.s_gas.cost_fuel = b18.s_gas.energy * b18.s_gas.cost_fuel_per_MWh / MILLION
     b18.s_gas.CO2e_combustion_based_per_MWh = fact("Fact_H_P_ngas_cb_EF")
     b18.s_gas.CO2e_combustion_based = (
         b18.s_gas.energy * b18.s_gas.CO2e_combustion_based_per_MWh
@@ -25,7 +23,7 @@ def calc(inputs: Inputs, *, r18: residences2018.R18) -> B18:
     b18.s_gas.CO2e_total = b18.s_gas.CO2e_combustion_based
     b18.s_lpg.energy = entries.b_lpg_fec
     b18.s_lpg.cost_fuel_per_MWh = fact("Fact_R_S_lpg_energy_cost_factor_2018")
-    b18.s_lpg.cost_fuel = b18.s_lpg.energy * b18.s_lpg.cost_fuel_per_MWh / Million
+    b18.s_lpg.cost_fuel = b18.s_lpg.energy * b18.s_lpg.cost_fuel_per_MWh / MILLION
     b18.s_lpg.CO2e_combustion_based_per_MWh = fact("Fact_H_P_LPG_cb_EF")
     b18.s_lpg.CO2e_combustion_based = (
         b18.s_lpg.energy * b18.s_lpg.CO2e_combustion_based_per_MWh
@@ -34,7 +32,7 @@ def calc(inputs: Inputs, *, r18: residences2018.R18) -> B18:
     b18.s_petrol.energy = entries.b_petrol_fec
     b18.s_petrol.cost_fuel_per_MWh = fact("Fact_R_S_petrol_energy_cost_factor_2018")
     b18.s_petrol.cost_fuel = (
-        b18.s_petrol.energy * b18.s_petrol.cost_fuel_per_MWh / Million
+        b18.s_petrol.energy * b18.s_petrol.cost_fuel_per_MWh / MILLION
     )
     b18.s_petrol.CO2e_combustion_based_per_MWh = fact("Fact_H_P_petrol_cb_EF")
     b18.s_petrol.CO2e_combustion_based = (
@@ -44,7 +42,7 @@ def calc(inputs: Inputs, *, r18: residences2018.R18) -> B18:
     b18.s_jetfuel.energy = entries.b_jetfuel_fec
     b18.s_jetfuel.cost_fuel_per_MWh = fact("Fact_R_S_kerosine_energy_cost_factor_2018")
     b18.s_jetfuel.cost_fuel = (
-        b18.s_jetfuel.energy * b18.s_jetfuel.cost_fuel_per_MWh / Million
+        b18.s_jetfuel.energy * b18.s_jetfuel.cost_fuel_per_MWh / MILLION
     )
     b18.s_jetfuel.CO2e_combustion_based_per_MWh = fact("Fact_H_P_kerosene_cb_EF")
     b18.s_jetfuel.CO2e_combustion_based = (
@@ -54,7 +52,7 @@ def calc(inputs: Inputs, *, r18: residences2018.R18) -> B18:
     b18.s_diesel.energy = entries.b_diesel_fec
     b18.s_diesel.cost_fuel_per_MWh = fact("Fact_R_S_fueloil_energy_cost_factor_2018")
     b18.s_diesel.cost_fuel = (
-        b18.s_diesel.energy * b18.s_diesel.cost_fuel_per_MWh / Million
+        b18.s_diesel.energy * b18.s_diesel.cost_fuel_per_MWh / MILLION
     )
     b18.s_diesel.CO2e_combustion_based_per_MWh = fact("Fact_H_P_fueloil_cb_EF")
     b18.s_diesel.CO2e_combustion_based = (
@@ -64,7 +62,7 @@ def calc(inputs: Inputs, *, r18: residences2018.R18) -> B18:
     b18.s_fueloil.energy = entries.b_fueloil_fec
     b18.s_fueloil.cost_fuel_per_MWh = fact("Fact_R_S_fueloil_energy_cost_factor_2018")
     b18.s_fueloil.cost_fuel = (
-        b18.s_fueloil.energy * b18.s_fueloil.cost_fuel_per_MWh / Million
+        b18.s_fueloil.energy * b18.s_fueloil.cost_fuel_per_MWh / MILLION
     )
     b18.s_fueloil.CO2e_combustion_based_per_MWh = fact("Fact_H_P_fueloil_cb_EF")
     b18.s_fueloil.CO2e_combustion_based = (
@@ -74,7 +72,7 @@ def calc(inputs: Inputs, *, r18: residences2018.R18) -> B18:
     b18.s_biomass.energy = entries.b_biomass_fec
     b18.s_biomass.cost_fuel_per_MWh = fact("Fact_R_S_wood_energy_cost_factor_2018")
     b18.s_biomass.cost_fuel = (
-        b18.s_biomass.energy * b18.s_biomass.cost_fuel_per_MWh / Million
+        b18.s_biomass.energy * b18.s_biomass.cost_fuel_per_MWh / MILLION
     )
     b18.s_biomass.CO2e_combustion_based_per_MWh = fact("Fact_RB_S_biomass_CO2e_EF")
     b18.s_biomass.CO2e_combustion_based = (
@@ -83,7 +81,7 @@ def calc(inputs: Inputs, *, r18: residences2018.R18) -> B18:
     b18.s_biomass.CO2e_total = b18.s_biomass.CO2e_combustion_based
     b18.s_coal.energy = entries.b_coal_fec
     b18.s_coal.cost_fuel_per_MWh = fact("Fact_R_S_coal_energy_cost_factor_2018")
-    b18.s_coal.cost_fuel = b18.s_coal.energy * b18.s_coal.cost_fuel_per_MWh / Million
+    b18.s_coal.cost_fuel = b18.s_coal.energy * b18.s_coal.cost_fuel_per_MWh / MILLION
     b18.s_coal.CO2e_combustion_based_per_MWh = fact("Fact_R_S_coal_CO2e_EF")
     b18.s_coal.CO2e_combustion_based = (
         b18.s_coal.energy * b18.s_coal.CO2e_combustion_based_per_MWh
@@ -92,7 +90,7 @@ def calc(inputs: Inputs, *, r18: residences2018.R18) -> B18:
     b18.s_heatnet.energy = entries.b_heatnet_fec
     b18.s_heatnet.cost_fuel_per_MWh = fact("Fact_R_S_heatnet_energy_cost_factor_2018")
     b18.s_heatnet.cost_fuel = (
-        b18.s_heatnet.energy * b18.s_heatnet.cost_fuel_per_MWh / Million
+        b18.s_heatnet.energy * b18.s_heatnet.cost_fuel_per_MWh / MILLION
     )
     b18.s_heatnet.CO2e_combustion_based = 0
     b18.s_heatnet.CO2e_combustion_based_per_MWh = 0
@@ -117,7 +115,7 @@ def calc(inputs: Inputs, *, r18: residences2018.R18) -> B18:
         * 2
     )
     b18.s_heatpump.cost_fuel = (
-        b18.s_heatpump.energy * b18.s_heatpump.cost_fuel_per_MWh / Million
+        b18.s_heatpump.energy * b18.s_heatpump.cost_fuel_per_MWh / MILLION
     )
     b18.s_heatpump.CO2e_combustion_based = 0
     b18.s_heatpump.CO2e_combustion_based_per_MWh = 0
