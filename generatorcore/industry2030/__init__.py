@@ -5,12 +5,8 @@ from .i30 import I30
 
 
 def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
-    def fact(n):
-        return inputs.fact(n)
-
-    def ass(n):
-        return inputs.ass(n)
-
+    fact = inputs.fact
+    ass = inputs.ass
     entries = inputs.entries
 
     i30 = I30()

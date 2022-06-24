@@ -3,9 +3,7 @@ from .l18 import L18
 
 
 def calc(inputs: Inputs) -> L18:
-    def fact(n):
-        return inputs.fact(n)
-
+    fact = inputs.fact
     entries = inputs.entries
 
     l18 = L18()

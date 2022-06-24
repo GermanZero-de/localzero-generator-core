@@ -12,12 +12,8 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
     Most notably the pyr sector and most of l are computed in lulucf2030_pyr.calc
     """
 
-    def fact(n):
-        return inputs.fact(n)
-
-    def ass(n):
-        return inputs.ass(n)
-
+    fact = inputs.fact
+    ass = inputs.ass
     entries = inputs.entries
 
     l30 = L30()

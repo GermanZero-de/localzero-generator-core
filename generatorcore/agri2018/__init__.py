@@ -17,9 +17,7 @@ from .a18 import A18
 
 
 def calc(inputs: Inputs, *, l18: lulucf2018.L18, b18: business2018.B18) -> A18:
-    def fact(n):
-        return inputs.fact(n)
-
+    fact = inputs.fact
     entries = inputs.entries
 
     # Fermen

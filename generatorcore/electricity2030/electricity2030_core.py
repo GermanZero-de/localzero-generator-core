@@ -215,12 +215,8 @@ class E30:
 
 
 def calc_biomass(inputs: Inputs) -> EColVars2030:
-    def fact(n):
-        return inputs.fact(n)
-
-    def ass(n):
-        return inputs.ass(n)
-
+    fact = inputs.fact
+    ass = inputs.ass
     entries = inputs.entries
 
     p_local_biomass = EColVars2030()
@@ -250,8 +246,7 @@ def calc_biomass(inputs: Inputs) -> EColVars2030:
 def calc_biomass_cogen(
     inputs: Inputs, *, p_local_biomass: EColVars2030
 ) -> EColVars2030:
-    def fact(n):
-        return inputs.fact(n)
+    fact = inputs.fact
 
     p_local_biomass_cogen = EColVars2030()
 

@@ -4,9 +4,7 @@ from .r18 import R18
 
 
 def calc(inputs: Inputs) -> R18:
-    def fact(n):
-        return inputs.fact(n)
-
+    fact = inputs.fact
     entries = inputs.entries
 
     ### P - Section ###

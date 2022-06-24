@@ -16,12 +16,8 @@ def calc(
     r18: residences2018.R18,
     r30: residences2030.R30,
 ) -> B30:
-    def fact(n):
-        return inputs.fact(n)
-
-    def ass(n):
-        return inputs.ass(n)
-
+    fact = inputs.fact
+    ass = inputs.ass
     entries = inputs.entries
 
     Million = 1000000.0

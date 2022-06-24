@@ -15,12 +15,8 @@ def calc(
     i30: industry2030.I30,
     p_local_biomass_cogen: EColVars2030,
 ) -> H30:
-    def fact(n):
-        return inputs.fact(n)
-
-    def ass(n):
-        return inputs.ass(n)
-
+    fact = inputs.fact
+    ass = inputs.ass
     entries = inputs.entries
 
     h30 = H30()

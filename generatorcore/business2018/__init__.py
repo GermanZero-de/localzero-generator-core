@@ -11,7 +11,9 @@ def calc(inputs: Inputs, *, r18: residences2018.R18) -> B18:
     fact = inputs.fact
     ass = inputs.ass
     entries = inputs.entries
+
     Million = 1000000.0
+
     b18 = B18()
     b18.s_gas.energy = entries.b_gas_fec
     b18.s_gas.cost_fuel_per_MWh = fact("Fact_R_S_gas_energy_cost_factor_2018")

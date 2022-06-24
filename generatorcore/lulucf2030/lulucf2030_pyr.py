@@ -30,12 +30,8 @@ def calc(
 ) -> None:
     """This updates the l and pyr sections in l30 inplace."""
 
-    def fact(n):
-        return inputs.fact(n)
-
-    def ass(n):
-        return inputs.ass(n)
-
+    fact = inputs.fact
+    ass = inputs.ass
     entries = inputs.entries
 
     pyr = l30.pyr

@@ -5,12 +5,8 @@ from .e18 import E18
 
 
 def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
-    def fact(n):
-        return inputs.fact(n)
-
-    def ass(n):
-        return inputs.ass(n)
-
+    fact = inputs.fact
+    ass = inputs.ass
     entries = inputs.entries
 
     Million = 1000000

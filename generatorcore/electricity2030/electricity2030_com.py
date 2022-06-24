@@ -148,12 +148,8 @@ def calc(
     p_local_biomass_cogen: electricity2030_core.EColVars2030,
     p_local_biomass: electricity2030_core.EColVars2030,
 ) -> electricity2030_core.E30:
-    def fact(n):
-        return inputs.fact(n)
-
-    def ass(n):
-        return inputs.ass(n)
-
+    fact = inputs.fact
+    ass = inputs.ass
     entries = inputs.entries
 
     Million = 1000000

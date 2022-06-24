@@ -1,4 +1,3 @@
-import imp
 from .. import residences2018, business2018
 from ..inputs import Inputs
 from ..utils import div
@@ -6,12 +5,8 @@ from .r30 import R30
 
 
 def calc(inputs: Inputs, *, r18: residences2018.R18, b18: business2018.B18) -> R30:
-    def fact(n):
-        return inputs.fact(n)
-
-    def ass(n):
-        return inputs.ass(n)
-
+    fact = inputs.fact
+    ass = inputs.ass
     entries = inputs.entries
 
     ### P - Section ###
