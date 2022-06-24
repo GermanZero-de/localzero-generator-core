@@ -1,26 +1,25 @@
-module InterestListTable exposing (InterestListTable, create)
+module ValueSet exposing (ValueSet, create)
 
-{-| A InterestListTable is the result of applying an InterestList
-to all the runs.
+{-| A ValueSet is the result of applying a Lens to all the runs.
 -}
 
 import AllRuns exposing (AllRuns, RunId)
 import Dict exposing (Dict)
-import InterestList exposing (InterestList)
+import Lens exposing (Lens)
 import Run
 import Tree
 import Value exposing (Value(..))
 
 
-type alias InterestListTable =
+type alias ValueSet =
     { paths : List Run.Path
     , runs : List RunId
     , values : Dict ( RunId, Run.Path ) Value
     }
 
 
-create : InterestList -> AllRuns -> InterestListTable
-create interestList allRuns =
+create : Lens -> AllRuns -> ValueSet
+create lens allRuns =
     -- The withDefault handles the case if we somehow managed to get two
     -- differently structured result values into the explorer, this can only
     -- really happen when two different versions of the python code are
@@ -29,7 +28,7 @@ create interestList allRuns =
     -- at a TREE
     let
         paths =
-            InterestList.toList interestList
+            Lens.toList lens
 
         runList =
             AllRuns.toList allRuns

@@ -6,7 +6,9 @@
     "elm-version": "0.19.1",
     "dependencies": {
         "direct": {
+            "Gizra/elm-keyboard-event": "1.0.1",
             "Janiczek/cmd-extra": "1.1.0",
+            "SwiftsNamesake/proper-keyboard": "4.0.0",
             "coinop-logan/elm-format-number": "1.0.0",
             "elm/browser": "1.0.2",
             "elm/core": "1.0.5",
