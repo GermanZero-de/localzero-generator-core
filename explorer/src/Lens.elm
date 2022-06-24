@@ -8,6 +8,7 @@ module Lens exposing
     , empty
     , emptyTable
     , encode
+    , getCells
     , getEditTable
     , getLabel
     , getShortPathLabels
@@ -205,6 +206,16 @@ mapCells fn l =
         identity
         (\td -> { td | grid = fn td.grid })
         l
+
+
+getCells : Lens -> Maybe Cells
+getCells (Lens l) =
+    case l.vkind of
+        Table { grid } ->
+            Just grid
+
+        Classic _ ->
+            Nothing
 
 
 updateShortPathLabels : Lens -> Lens
