@@ -5576,7 +5576,7 @@ var $author$project$Main$FileContentLoaded = function (a) {
 var $author$project$Main$FileUploaded = function (a) {
 	return {$: 38, a: a};
 };
-var $author$project$Lens$Label = function (a) {
+var $author$project$Lens$CellContent$Label = function (a) {
 	return {$: 1, a: a};
 };
 var $author$project$Main$ModalMsg = function (a) {
@@ -5603,7 +5603,7 @@ var $author$project$Main$SwapCellsRequested = F6(
 	function (a, b, c, d, e, f) {
 		return {$: 30, a: a, b: b, c: c, d: d, e: e, f: f};
 	});
-var $author$project$Lens$ValueAt = function (a) {
+var $author$project$Lens$CellContent$ValueAt = function (a) {
 	return {$: 0, a: a};
 };
 var $author$project$Run$WithoutOverrides = 1;
@@ -6101,10 +6101,10 @@ var $elm$json$Json$Decode$maybe = function (decoder) {
 var $author$project$Lens$cellDecoder = $elm$json$Json$Decode$oneOf(
 	_List_fromArray(
 		[
-			A2($elm$json$Json$Decode$map, $author$project$Lens$Label, $elm$json$Json$Decode$string),
+			A2($elm$json$Json$Decode$map, $author$project$Lens$CellContent$Label, $elm$json$Json$Decode$string),
 			A2(
 			$elm$json$Json$Decode$map,
-			$author$project$Lens$ValueAt,
+			$author$project$Lens$CellContent$ValueAt,
 			$elm$json$Json$Decode$list($elm$json$Json$Decode$string))
 		]));
 var $elm$core$List$any = F2(
@@ -6240,7 +6240,7 @@ var $author$project$Lens$tableDecoder = A2(
 	},
 	A2(
 		$author$project$Cells$decoder,
-		$author$project$Lens$Label(''),
+		$author$project$Lens$CellContent$Label(''),
 		$author$project$Lens$cellDecoder));
 var $elm$core$Dict$fromList = function (assocs) {
 	return A3(
@@ -7430,7 +7430,7 @@ var $author$project$Lens$emptyTable = {
 			al: $elm$core$Maybe$Nothing,
 			y: A3(
 				$author$project$Cells$repeat,
-				$author$project$Lens$Label(''),
+				$author$project$Lens$CellContent$Label(''),
 				2,
 				2)
 		})
@@ -8490,7 +8490,7 @@ var $author$project$Lens$findEmptySpot = function (g) {
 			function (pos, mp) {
 				return _Utils_eq(
 					mp,
-					$author$project$Lens$Label('')) ? $elm$core$Maybe$Just(pos) : $elm$core$Maybe$Nothing;
+					$author$project$Lens$CellContent$Label('')) ? $elm$core$Maybe$Just(pos) : $elm$core$Maybe$Nothing;
 			}),
 		g);
 };
@@ -8591,14 +8591,14 @@ var $author$project$Lens$insert = F2(
 									return A3(
 										$author$project$Cells$set,
 										{g: 0, s: r},
-										$author$project$Lens$ValueAt(p),
+										$author$project$Lens$CellContent$ValueAt(p),
 										A2($author$project$Cells$addRow, r + 1, td.y));
 								} else {
 									var spot = _v0.a;
 									return A3(
 										$author$project$Cells$set,
 										spot,
-										$author$project$Lens$ValueAt(p),
+										$author$project$Lens$CellContent$ValueAt(p),
 										td.y);
 								}
 							}()
@@ -8802,7 +8802,7 @@ var $author$project$Lens$remove = F2(
 								function (cell) {
 									return _Utils_eq(
 										cell,
-										$author$project$Lens$ValueAt(p)) ? $author$project$Lens$Label('') : cell;
+										$author$project$Lens$CellContent$ValueAt(p)) ? $author$project$Lens$CellContent$Label('') : cell;
 								},
 								td.y)
 						});
@@ -9702,10 +9702,7 @@ var $author$project$Main$update = F2(
 							A2(
 								$author$project$Main$mapActiveLens,
 								$author$project$Lens$mapCells(
-									A2(
-										$author$project$Cells$set,
-										currentPos,
-										$author$project$Lens$Label(currentValue))),
+									A2($author$project$Cells$set, currentPos, currentValue)),
 								A2($author$project$Main$activateLens, id, model)))));
 			case 28:
 				var id = msg.a;
@@ -9715,10 +9712,7 @@ var $author$project$Main$update = F2(
 					A2(
 						$author$project$Main$mapActiveLens,
 						$author$project$Lens$mapCells(
-							A2(
-								$author$project$Cells$set,
-								pos,
-								$author$project$Lens$Label(value))),
+							A2($author$project$Cells$set, pos, value)),
 						A2(
 							$author$project$Main$mapActiveLens,
 							$author$project$Lens$mapTableEditMode(
@@ -9845,7 +9839,7 @@ var $author$project$Main$update = F2(
 							A2(
 								$author$project$Cells$set,
 								cellPos,
-								$author$project$Lens$ValueAt(path))),
+								$author$project$Lens$CellContent$ValueAt(path))),
 						A2($author$project$Main$activateLens, lensId, model)));
 			case 32:
 				var sourceCell = msg.a;
@@ -9883,7 +9877,7 @@ var $author$project$Main$update = F2(
 														A2(
 															$author$project$Cells$set,
 															p1,
-															$author$project$Lens$Label(''))));
+															$author$project$Lens$CellContent$Label(''))));
 											},
 											lens));
 								})),
@@ -9924,7 +9918,7 @@ var $author$project$Main$update = F2(
 														A2(
 															$author$project$Cells$set,
 															p1,
-															$author$project$Lens$Label(''))));
+															$author$project$Lens$CellContent$Label(''))));
 											},
 											lens));
 								})),
@@ -9992,7 +9986,7 @@ var $author$project$Main$update = F2(
 											A4(
 												$author$project$Main$MoveIntoNewRowRequested,
 												$elm$core$Maybe$Nothing,
-												$author$project$Lens$ValueAt(path),
+												$author$project$Lens$CellContent$ValueAt(path),
 												l2,
 												p2)));
 								default:
@@ -10007,7 +10001,7 @@ var $author$project$Main$update = F2(
 											A4(
 												$author$project$Main$MoveIntoNewColumnRequested,
 												$elm$core$Maybe$Nothing,
-												$author$project$Lens$ValueAt(path),
+												$author$project$Lens$CellContent$ValueAt(path),
 												l2,
 												p2)));
 							}
@@ -27628,6 +27622,22 @@ var $author$project$Html5$DragDrop$getDropId = function (model) {
 			return $elm$core$Maybe$Just(dropId);
 	}
 };
+var $author$project$Lens$CellContent$getLabel = function (cc) {
+	if (!cc.$) {
+		return $elm$core$Maybe$Nothing;
+	} else {
+		var l = cc.a;
+		return $elm$core$Maybe$Just(l);
+	}
+};
+var $author$project$Lens$CellContent$getValueAt = function (cc) {
+	if (!cc.$) {
+		var p = cc.a;
+		return $elm$core$Maybe$Just(p);
+	} else {
+		return $elm$core$Maybe$Nothing;
+	}
+};
 var $mdgriffith$elm_ui$Element$Border$glow = F2(
 	function (clr, size) {
 		return $mdgriffith$elm_ui$Element$Border$shadow(
@@ -27708,14 +27718,6 @@ var $author$project$Cells$toList = function (cs) {
 };
 var $author$project$Main$viewValueSetAsUserDefinedTable = F4(
 	function (lensId, dragDrop, td, valueSet) {
-		var labelOrEmpty = function (c) {
-			if (c.$ === 1) {
-				var s = c.a;
-				return s;
-			} else {
-				return '';
-			}
-		};
 		var ifEditing = (!_Utils_eq(td.al, $elm$core$Maybe$Nothing)) ? $elm$core$Basics$identity : $elm$core$Basics$always(_List_Nil);
 		var insertColumnSeparator = function (pos) {
 			var highlight = ifEditing(
@@ -27809,6 +27811,15 @@ var $author$project$Main$viewValueSetAsUserDefinedTable = F4(
 		};
 		var viewCell = F2(
 			function (cell, pos) {
+				var viewPath = function (p) {
+					return A2(
+						$mdgriffith$elm_ui$Element$paragraph,
+						_List_Nil,
+						A2(
+							$elm$core$List$map,
+							$mdgriffith$elm_ui$Element$text,
+							A2($elm$core$List$intersperse, '.', p)));
+				};
 				var highlight = ifEditing(
 					function () {
 						var _v11 = $author$project$Html5$DragDrop$getDropId(dragDrop);
@@ -27833,14 +27844,12 @@ var $author$project$Main$viewValueSetAsUserDefinedTable = F4(
 							}
 						}
 					}());
-				var editOnClick = function (editValue) {
-					return ifEditing(
-						_List_fromArray(
-							[
-								$mdgriffith$elm_ui$Element$Events$onClick(
-								A3($author$project$Main$CellOfLensTableEdited, lensId, pos, editValue))
-							]));
-				};
+				var editOnClick = ifEditing(
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$Events$onClick(
+							A3($author$project$Main$CellOfLensTableEdited, lensId, pos, cell))
+						]));
 				var dropTarget = ifEditing(
 					A2(
 						$elm$core$List$map,
@@ -27857,8 +27866,8 @@ var $author$project$Main$viewValueSetAsUserDefinedTable = F4(
 							$author$project$Html5$DragDrop$draggable,
 							$author$project$Main$DragDropMsg,
 							A3($author$project$Main$DragFromCell, lensId, pos, cell))));
-				var cellElement = F3(
-					function (attrs, editValue, v) {
+				var cellElement = F2(
+					function (attrs, v) {
 						return A2(
 							$mdgriffith$elm_ui$Element$el,
 							_Utils_ap(
@@ -27872,7 +27881,7 @@ var $author$project$Main$viewValueSetAsUserDefinedTable = F4(
 											$elm$html$Html$Attributes$tabindex(0))
 										]),
 									_Utils_ap(
-										editOnClick(editValue),
+										editOnClick,
 										_Utils_ap(
 											$author$project$Styling$fonts.d4,
 											_Utils_ap(
@@ -27882,15 +27891,13 @@ var $author$project$Main$viewValueSetAsUserDefinedTable = F4(
 							v);
 					});
 				var displayLabel = function (l) {
-					return (l === '') ? A3(
+					return (l === '') ? A2(
 						cellElement,
 						_List_Nil,
-						'',
-						$mdgriffith$elm_ui$Element$text(' ')) : A3(
+						$mdgriffith$elm_ui$Element$text(' ')) : A2(
 						cellElement,
 						_List_fromArray(
 							[$mdgriffith$elm_ui$Element$Font$bold]),
-						l,
 						A2(
 							$mdgriffith$elm_ui$Element$paragraph,
 							_List_Nil,
@@ -27918,47 +27925,37 @@ var $author$project$Main$viewValueSetAsUserDefinedTable = F4(
 							}
 						}();
 						if (!_Utils_eq(td.al, $elm$core$Maybe$Nothing)) {
-							return A3(
+							return A2(
 								cellElement,
 								_List_Nil,
-								'',
-								A2(
-									$mdgriffith$elm_ui$Element$paragraph,
-									_List_Nil,
-									A2(
-										$elm$core$List$map,
-										$mdgriffith$elm_ui$Element$text,
-										A2($elm$core$List$intersperse, '.', p))));
+								viewPath(p));
 						} else {
 							if (value.$ === 1) {
-								return A3(
+								return A2(
 									cellElement,
 									_List_fromArray(
 										[$mdgriffith$elm_ui$Element$Font$alignRight]),
-									'',
 									$mdgriffith$elm_ui$Element$text('INTERNAL ERROR'));
 							} else {
 								switch (value.a.$) {
 									case 0:
 										var f = value.a.a;
-										return A3(
+										return A2(
 											cellElement,
 											_List_fromArray(
 												[$mdgriffith$elm_ui$Element$Font$alignRight]),
-											'',
 											$mdgriffith$elm_ui$Element$text(
 												$author$project$Styling$formatGermanNumber(f)));
 									case 1:
 										var _v9 = value.a;
-										return A3(
+										return A2(
 											cellElement,
 											_List_fromArray(
 												[$mdgriffith$elm_ui$Element$Font$alignRight, $mdgriffith$elm_ui$Element$Font$bold]),
-											'',
 											$mdgriffith$elm_ui$Element$text('null'));
 									default:
 										var s = value.a.a;
-										return A3(
+										return A2(
 											cellElement,
 											_List_fromArray(
 												[
@@ -27967,7 +27964,6 @@ var $author$project$Main$viewValueSetAsUserDefinedTable = F4(
 													_List_fromArray(
 														[$mdgriffith$elm_ui$Element$Font$monospace]))
 												]),
-											'',
 											$mdgriffith$elm_ui$Element$text(s));
 								}
 							}
@@ -28004,8 +28000,7 @@ var $author$project$Main$viewValueSetAsUserDefinedTable = F4(
 												pos,
 												editValue,
 												nextPos,
-												labelOrEmpty(
-													A2($author$project$Cells$get, nextPos, td.y))))
+												A2($author$project$Cells$get, nextPos, td.y)))
 										]);
 								}
 							}();
@@ -28027,8 +28022,7 @@ var $author$project$Main$viewValueSetAsUserDefinedTable = F4(
 												pos,
 												editValue,
 												prevPos,
-												labelOrEmpty(
-													A2($author$project$Cells$get, prevPos, td.y))))
+												A2($author$project$Cells$get, prevPos, td.y)))
 										]);
 								}
 							}();
@@ -28067,9 +28061,21 @@ var $author$project$Main$viewValueSetAsUserDefinedTable = F4(
 									$author$project$Styling$fonts.d4),
 								{
 									aF: $mdgriffith$elm_ui$Element$Input$labelHidden('label'),
-									aI: A2($author$project$Main$CellOfLensTableEdited, lensId, pos),
-									bc: $elm$core$Maybe$Nothing,
-									bh: editValue
+									aI: A2(
+										$elm$core$Basics$composeL,
+										A2($author$project$Main$CellOfLensTableEdited, lensId, pos),
+										$author$project$Lens$CellContent$Label),
+									bc: A2(
+										$elm$core$Maybe$map,
+										A2(
+											$elm$core$Basics$composeR,
+											viewPath,
+											$mdgriffith$elm_ui$Element$Input$placeholder(_List_Nil)),
+										$author$project$Lens$CellContent$getValueAt(cell)),
+									bh: A2(
+										$elm$core$Maybe$withDefault,
+										'',
+										$author$project$Lens$CellContent$getLabel(editValue))
 								});
 						} else {
 							return displayCell(cell);
@@ -28734,7 +28740,7 @@ var $author$project$Lens$member = F2(
 						function (_v2, mp) {
 							return _Utils_eq(
 								mp,
-								$author$project$Lens$ValueAt(p)) ? $elm$core$Maybe$Just(0) : $elm$core$Maybe$Nothing;
+								$author$project$Lens$CellContent$ValueAt(p)) ? $elm$core$Maybe$Just(0) : $elm$core$Maybe$Nothing;
 						}),
 					td.y),
 				$elm$core$Maybe$Nothing);

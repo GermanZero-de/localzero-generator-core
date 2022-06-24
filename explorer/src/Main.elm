@@ -61,6 +61,7 @@ import Json.Encode as Encode
 import KeyBindings exposing (noModifiers, shift)
 import Keyboard.Key as K
 import Lens exposing (Lens)
+import Lens.CellContent as CellContent
 import List.Extra
 import Maybe.Extra
 import Pivot exposing (Pivot)
@@ -289,13 +290,13 @@ type Msg
     | LensTableEditModeChanged LensId (Maybe Lens.TableEditMode)
     | AddRowToLensTableClicked LensId Int
     | AddColumnToLensTableClicked LensId Int
-    | CellOfLensTableEdited LensId Cells.Pos String
-    | CellOfLensTableEditFinished LensId Cells.Pos String
+    | CellOfLensTableEdited LensId Cells.Pos Lens.CellContent
+    | CellOfLensTableEditFinished LensId Cells.Pos Lens.CellContent
     | MoveToCellRequested Path LensId Cells.Pos
     | SwapCellsRequested LensId Cells.Pos Lens.CellContent LensId Cells.Pos Lens.CellContent
     | MoveIntoNewColumnRequested (Maybe ( LensId, Cells.Pos )) Lens.CellContent LensId Cells.Pos
     | MoveIntoNewRowRequested (Maybe ( LensId, Cells.Pos )) Lens.CellContent LensId Cells.Pos
-    | MoveCellEditorRequested LensId Cells.Pos String Cells.Pos String
+    | MoveCellEditorRequested LensId Cells.Pos Lens.CellContent Cells.Pos Lens.CellContent
       -- Graphics
     | ToggleShowGraphClicked LensId
     | OnChartHover ChartHovering
@@ -796,7 +797,7 @@ update msg model =
             -- edited cell (because loseFocus hasn't happened yet)
             model
                 |> activateLens id
-                |> mapActiveLens (Lens.mapCells (Cells.set currentPos (Lens.Label currentValue)))
+                |> mapActiveLens (Lens.mapCells (Cells.set currentPos currentValue))
                 |> mapActiveLens
                     (Lens.setTableEditMode (Just (Lens.Cell nextPos nextValue)))
                 |> withSaveCmd
@@ -825,7 +826,7 @@ update msg model =
                             )
                         )
                     )
-                |> mapActiveLens (Lens.mapCells (Cells.set pos (Lens.Label value)))
+                |> mapActiveLens (Lens.mapCells (Cells.set pos value))
                 |> withSaveCmd
 
         CellOfLensTableEdited id pos value ->
@@ -908,7 +909,7 @@ update msg model =
         MoveToCellRequested path lensId cellPos ->
             model
                 |> activateLens lensId
-                |> mapActiveLens (Lens.mapCells (Cells.set cellPos (Lens.ValueAt path)))
+                |> mapActiveLens (Lens.mapCells (Cells.set cellPos (CellContent.ValueAt path)))
                 |> withSaveCmd
 
         MoveIntoNewRowRequested sourceCell cv1 l2 p2 ->
@@ -920,7 +921,8 @@ update msg model =
                                 lens
                                     |> callIfJust sourceCell
                                         (\( l1, p1 ) ->
-                                            callIf (lensId == l1) (Lens.mapCells (Cells.set p1 (Lens.Label "")))
+                                            callIf (lensId == l1)
+                                                (Lens.mapCells (Cells.set p1 (CellContent.Label "")))
                                         )
                                     |> callIf (lensId == l2)
                                         (Lens.mapCells
@@ -941,7 +943,10 @@ update msg model =
                                 lens
                                     |> callIfJust sourceCell
                                         (\( l1, p1 ) ->
-                                            callIf (lensId == l1) (Lens.mapCells (Cells.set p1 (Lens.Label "")))
+                                            callIf (lensId == l1)
+                                                (Lens.mapCells
+                                                    (Cells.set p1 (CellContent.Label ""))
+                                                )
                                         )
                                     |> callIf (lensId == l2)
                                         (Lens.mapCells
@@ -988,10 +993,12 @@ update msg model =
                             Cmd.Extra.andThen (update (MoveIntoNewRowRequested (Just ( l1, p1 )) cv1 l2 p2))
 
                         Just ( DragFromRun _ path, DropInNewRow l2 p2 ) ->
-                            Cmd.Extra.andThen (update (MoveIntoNewRowRequested Nothing (Lens.ValueAt path) l2 p2))
+                            Cmd.Extra.andThen
+                                (update (MoveIntoNewRowRequested Nothing (CellContent.ValueAt path) l2 p2))
 
                         Just ( DragFromRun _ path, DropInNewColumn l2 p2 ) ->
-                            Cmd.Extra.andThen (update (MoveIntoNewColumnRequested Nothing (Lens.ValueAt path) l2 p2))
+                            Cmd.Extra.andThen
+                                (update (MoveIntoNewColumnRequested Nothing (CellContent.ValueAt path) l2 p2))
 
                         Just ( DragFromCell l1 p1 cv1, DropInNewColumn l2 p2 ) ->
                             Cmd.Extra.andThen (update (MoveIntoNewColumnRequested (Just ( l1, p1 )) cv1 l2 p2))
@@ -1700,22 +1707,13 @@ viewValueSetAsUserDefinedTable lensId dragDrop td valueSet =
             else
                 always []
 
-        labelOrEmpty : Lens.CellContent -> String
-        labelOrEmpty c =
-            case c of
-                Lens.Label s ->
-                    s
-
-                Lens.ValueAt _ ->
-                    ""
-
         viewCell : Lens.CellContent -> Cells.Pos -> Element Msg
         viewCell cell pos =
             let
-                editOnClick editValue =
+                editOnClick =
                     ifEditing
                         [ Events.onClick
-                            (CellOfLensTableEdited lensId pos editValue)
+                            (CellOfLensTableEdited lensId pos cell)
                         ]
 
                 dropTarget =
@@ -1749,14 +1747,14 @@ viewValueSetAsUserDefinedTable lensId dragDrop td valueSet =
                             Just (DropInNewRow _ _) ->
                                 []
 
-                cellElement attrs editValue v =
+                cellElement attrs v =
                     el
                         (([ Background.color Styling.emptyCellColor
                           , width fill
                           , padding 2
                           , Element.htmlAttribute <| Html.Attributes.tabindex 0
                           ]
-                            ++ editOnClick editValue
+                            ++ editOnClick
                             ++ fonts.table
                             ++ dropTarget
                             ++ highlight
@@ -1768,17 +1766,21 @@ viewValueSetAsUserDefinedTable lensId dragDrop td valueSet =
 
                 displayLabel l =
                     if l == "" then
-                        cellElement [] "" (text " ")
+                        cellElement [] (text " ")
 
                     else
-                        cellElement [ Font.bold ] l (paragraph [] [ text l ])
+                        cellElement [ Font.bold ] (paragraph [] [ text l ])
+
+                viewPath : List String -> Element msg
+                viewPath p =
+                    paragraph [] (List.map text (List.intersperse "." p))
 
                 displayCell c =
                     case cell of
-                        Lens.Label l ->
+                        CellContent.Label l ->
                             displayLabel l
 
-                        Lens.ValueAt p ->
+                        CellContent.ValueAt p ->
                             let
                                 value =
                                     case valueSet.runs of
@@ -1792,8 +1794,7 @@ viewValueSetAsUserDefinedTable lensId dragDrop td valueSet =
                                 -- We are in editing mode, but not editing THIS cell.
                                 -- So display the path itself
                                 cellElement []
-                                    ""
-                                    (paragraph [] (List.map text (List.intersperse "." p)))
+                                    (viewPath p)
 
                             else
                                 -- We are not in editing mode at all. Display the value at the
@@ -1801,20 +1802,19 @@ viewValueSetAsUserDefinedTable lensId dragDrop td valueSet =
                                 case value of
                                     Nothing ->
                                         -- Making the compiler happy
-                                        cellElement [ Font.alignRight ] "" (text "INTERNAL ERROR")
+                                        cellElement [ Font.alignRight ] (text "INTERNAL ERROR")
 
                                     Just (Float f) ->
-                                        cellElement [ Font.alignRight ] "" (text (formatGermanNumber f))
+                                        cellElement [ Font.alignRight ] (text (formatGermanNumber f))
 
                                     Just Null ->
-                                        cellElement [ Font.alignRight, Font.bold ] "" (text "null")
+                                        cellElement [ Font.alignRight, Font.bold ] (text "null")
 
                                     Just (String s) ->
                                         cellElement
                                             [ Font.alignRight
                                             , Font.family [ Font.monospace ]
                                             ]
-                                            ""
                                             (text s)
             in
             case td.editing of
@@ -1839,7 +1839,7 @@ viewValueSetAsUserDefinedTable lensId dragDrop td valueSet =
                                                 pos
                                                 editValue
                                                 nextPos
-                                                (Cells.get nextPos td.grid |> labelOrEmpty)
+                                                (Cells.get nextPos td.grid)
                                             )
                                         ]
 
@@ -1855,7 +1855,7 @@ viewValueSetAsUserDefinedTable lensId dragDrop td valueSet =
                                                 pos
                                                 editValue
                                                 prevPos
-                                                (Cells.get prevPos td.grid |> labelOrEmpty)
+                                                (Cells.get prevPos td.grid)
                                             )
                                         ]
                         in
@@ -1875,9 +1875,11 @@ viewValueSetAsUserDefinedTable lensId dragDrop td valueSet =
                              ]
                                 ++ fonts.table
                             )
-                            { onChange = CellOfLensTableEdited lensId pos
-                            , text = editValue
-                            , placeholder = Nothing
+                            { onChange = CellOfLensTableEdited lensId pos << CellContent.Label
+                            , text = CellContent.getLabel editValue |> Maybe.withDefault ""
+                            , placeholder =
+                                CellContent.getValueAt cell
+                                    |> Maybe.map (viewPath >> Input.placeholder [])
                             , label = Input.labelHidden "label"
                             }
 

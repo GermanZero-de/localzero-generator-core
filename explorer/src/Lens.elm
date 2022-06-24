@@ -1,5 +1,5 @@
 module Lens exposing
-    ( CellContent(..)
+    ( CellContent
     , Lens
     , TableData
     , TableEditMode(..)
@@ -32,10 +32,15 @@ import Cells
 import Dict exposing (Dict)
 import Json.Decode as Decode
 import Json.Encode as Encode
+import Lens.CellContent as CellContent
 import List.Extra
 import Maybe.Extra
 import Run exposing (Path)
 import Set exposing (Set)
+
+
+type alias CellContent =
+    CellContent.CellContent
 
 
 type alias ClassicData =
@@ -43,11 +48,6 @@ type alias ClassicData =
     , showGraph : Bool
     , guessedShortLabels : Dict Path String
     }
-
-
-type CellContent
-    = ValueAt Path
-    | Label String
 
 
 type alias Cells =
@@ -62,7 +62,7 @@ type alias TableData =
 
 type TableEditMode
     = All
-    | Cell Cells.Pos String
+    | Cell Cells.Pos CellContent
 
 
 type VisualisationKind
@@ -236,7 +236,7 @@ emptyTable =
         { label = "data"
         , vkind =
             Table
-                { grid = Cells.repeat (Label "") 2 2
+                { grid = Cells.repeat (CellContent.Label "") 2 2
                 , editing = Nothing
                 }
         }
@@ -327,8 +327,8 @@ remove p il =
                     | grid =
                         Cells.map
                             (\cell ->
-                                if cell == ValueAt p then
-                                    Label ""
+                                if cell == CellContent.ValueAt p then
+                                    CellContent.Label ""
 
                                 else
                                     cell
@@ -368,7 +368,7 @@ findEmptySpot : Cells -> Maybe Cells.Pos
 findEmptySpot g =
     findInCells
         (\pos mp ->
-            if mp == Label "" then
+            if mp == CellContent.Label "" then
                 Just pos
 
             else
@@ -394,11 +394,11 @@ insert p il =
                                         Cells.rows td.grid
                                 in
                                 Cells.set { row = r, column = 0 }
-                                    (ValueAt p)
+                                    (CellContent.ValueAt p)
                                     (Cells.addRow (r + 1) td.grid)
 
                             Just spot ->
-                                Cells.set spot (ValueAt p) td.grid
+                                Cells.set spot (CellContent.ValueAt p) td.grid
                 }
             )
         |> updateShortPathLabels
@@ -413,7 +413,7 @@ member p (Lens i) =
         Table td ->
             findInCells
                 (\_ mp ->
-                    if mp == ValueAt p then
+                    if mp == CellContent.ValueAt p then
                         Just ()
 
                     else
@@ -433,10 +433,10 @@ toList (Lens i) =
             Cells.foldRowMajor
                 (\_ cell l ->
                     case cell of
-                        ValueAt c ->
+                        CellContent.ValueAt c ->
                             c :: l
 
-                        Label _ ->
+                        CellContent.Label _ ->
                             l
                 )
                 []
@@ -458,10 +458,10 @@ encode (Lens i) =
                     let
                         encodeCell mp =
                             case mp of
-                                ValueAt p ->
+                                CellContent.ValueAt p ->
                                     Encode.list Encode.string p
 
-                                Label s ->
+                                CellContent.Label s ->
                                     Encode.string s
                     in
                     [ ( "kind", Encode.string "table" )
@@ -477,8 +477,8 @@ encode (Lens i) =
 cellDecoder : Decode.Decoder CellContent
 cellDecoder =
     Decode.oneOf
-        [ Decode.string |> Decode.map Label
-        , Decode.list Decode.string |> Decode.map ValueAt
+        [ Decode.string |> Decode.map CellContent.Label
+        , Decode.list Decode.string |> Decode.map CellContent.ValueAt
         ]
 
 
@@ -511,7 +511,7 @@ classicDecoder =
 
 tableDecoder : Decode.Decoder TableData
 tableDecoder =
-    Cells.decoder (Label "") cellDecoder
+    Cells.decoder (CellContent.Label "") cellDecoder
         |> Decode.map (\g -> { grid = g, editing = Nothing })
 
 
