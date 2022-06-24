@@ -1,7 +1,9 @@
+# pyright: strict
 import subprocess
+from typing import Any
 
 
-def cmd_ready_to_rock(args) -> None:
+def cmd_ready_to_rock(args: Any) -> None:
     try:
         subprocess.run(["pyright"], check=True)
         subprocess.run(["pytest"], check=True)
