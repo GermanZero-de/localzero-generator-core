@@ -2221,6 +2221,21 @@ viewLens id dragDrop editingActiveLensLabel isActive lens chartHovering allRuns 
                     else
                         iconButton FeatherIcons.check (LensTableEditModeChanged id Nothing)
 
+        maybeShowGraphButton =
+            case Lens.asUserDefinedTable lens of
+                Nothing ->
+                    iconButton
+                        (if showGraph then
+                            FeatherIcons.eye
+
+                         else
+                            FeatherIcons.eyeOff
+                        )
+                        (ToggleShowGraphClicked id)
+
+                Just _ ->
+                    Element.none
+
         maybeCopyToClipboardButton =
             case Lens.asUserDefinedTable lens of
                 Nothing ->
@@ -2279,14 +2294,7 @@ viewLens id dragDrop editingActiveLensLabel isActive lens chartHovering allRuns 
             , el [ width fill ] Element.none
             , buttons
                 [ maybeEditTableButton
-                , iconButton
-                    (if showGraph then
-                        FeatherIcons.eye
-
-                     else
-                        FeatherIcons.eyeOff
-                    )
-                    (ToggleShowGraphClicked id)
+                , maybeShowGraphButton
                 , maybeCopyToClipboardButton
                 , iconButton FeatherIcons.copy (DuplicateLensClicked id)
                 , dangerousIconButton FeatherIcons.trash2 (RemoveLensClicked id)

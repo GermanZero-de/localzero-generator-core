@@ -28364,6 +28364,17 @@ var $author$project$Main$viewLens = F7(
 		var valueSet = A2($author$project$ValueSet$create, lens, allRuns);
 		var showGraph = $author$project$Lens$getShowGraph(lens);
 		var shortPathLabels = $author$project$Lens$getShortPathLabels(lens);
+		var maybeShowGraphButton = function () {
+			var _v4 = $author$project$Lens$asUserDefinedTable(lens);
+			if (_v4.$ === 1) {
+				return A2(
+					$author$project$Styling$iconButton,
+					showGraph ? $feathericons$elm_feather$FeatherIcons$eye : $feathericons$elm_feather$FeatherIcons$eyeOff,
+					$author$project$Main$ToggleShowGraphClicked(id));
+			} else {
+				return $mdgriffith$elm_ui$Element$none;
+			}
+		}();
 		var maybeEditTableButton = function () {
 			var _v3 = $author$project$Lens$asUserDefinedTable(lens);
 			if (_v3.$ === 1) {
@@ -28475,10 +28486,7 @@ var $author$project$Main$viewLens = F7(
 							_List_fromArray(
 								[
 									maybeEditTableButton,
-									A2(
-									$author$project$Styling$iconButton,
-									showGraph ? $feathericons$elm_feather$FeatherIcons$eye : $feathericons$elm_feather$FeatherIcons$eyeOff,
-									$author$project$Main$ToggleShowGraphClicked(id)),
+									maybeShowGraphButton,
 									maybeCopyToClipboardButton,
 									A2(
 									$author$project$Styling$iconButton,
