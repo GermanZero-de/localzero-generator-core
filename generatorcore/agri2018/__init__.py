@@ -1,3 +1,4 @@
+# pyright: strict
 from .. import business2018, lulucf2018
 from ..inputs import Inputs
 

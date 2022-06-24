@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from datetime import date
 
 from . import refdata
 from .utils import div

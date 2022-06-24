@@ -16,8 +16,6 @@ from .. import (
 
 
 # Berechnungsfunktion im Sektor E für 203X
-
-
 def calc(
     inputs: Inputs,
     *,

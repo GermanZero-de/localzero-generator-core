@@ -1,3 +1,4 @@
+# pyright: strict
 from ..inputs import Inputs
 from ..utils import div, MILLION
 from .. import transport2018

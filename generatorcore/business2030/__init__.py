@@ -1,14 +1,11 @@
+# pyright: strict
 from ..inputs import Inputs
 from ..utils import div, MILLION
 from .. import business2018, residences2018, residences2030
 from .b30 import B30
 
-import time
-
 
 # Berechnungsfunktion im Sektor GHD für 2030
-
-
 def calc(
     inputs: Inputs,
     *,

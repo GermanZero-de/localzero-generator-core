@@ -1,3 +1,4 @@
+# pyright: strict
 from ..electricity2030.electricity2030_core import EColVars2030
 from ..inputs import Inputs
 from ..utils import div, MILLION

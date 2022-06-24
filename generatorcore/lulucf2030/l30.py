@@ -1,3 +1,4 @@
+# pyright: strict
 from dataclasses import dataclass, field
 
 from .dataclasses import LColVars2030

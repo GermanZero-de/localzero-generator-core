@@ -1,3 +1,4 @@
+# pyright: strict
 from .. import residences2018, business2018
 from ..inputs import Inputs
 from ..utils import div, MILLION

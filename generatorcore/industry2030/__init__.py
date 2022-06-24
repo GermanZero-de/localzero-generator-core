@@ -1,3 +1,4 @@
+# pyright: strict
 from .. import industry2018
 from ..inputs import Inputs
 from ..utils import div

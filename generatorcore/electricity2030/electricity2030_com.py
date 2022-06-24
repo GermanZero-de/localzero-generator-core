@@ -1,4 +1,6 @@
 from ..inputs import Inputs
+
+# pyright: strict
 from ..utils import div, MILLION
 from . import electricity2030_core
 from .. import (
@@ -13,8 +15,6 @@ from .. import (
     residences2030,
     transport2030,
 )
-
-from ..electricity2018.dataclasses import FossilFuelsProduction
 
 
 def calc_stop_production_by_fossil_fuels(

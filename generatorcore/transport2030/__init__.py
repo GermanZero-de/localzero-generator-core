@@ -1,5 +1,4 @@
 # pyright: strict
-
 from ..inputs import Inputs
 from ..transport2018 import T18
 from .investmentaction import InvestmentAction

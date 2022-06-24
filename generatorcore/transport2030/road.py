@@ -1,5 +1,4 @@
 # pyright: strict
-
 from dataclasses import dataclass, asdict
 from ..inputs import Inputs
 from ..utils import div

@@ -1,3 +1,4 @@
+# pyright: strict
 from ..inputs import Inputs
 from . import electricity2030_core, electricity2030_com, electricity2030_ger
 from .. import (

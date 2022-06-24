@@ -1,3 +1,4 @@
+# pyright: strict
 from ..inputs import Inputs
 from .l18 import L18
 

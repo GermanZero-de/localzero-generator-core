@@ -1,3 +1,4 @@
+# pyright: strict
 from ..inputs import Inputs
 from ..utils import div
 from .. import lulucf2018
