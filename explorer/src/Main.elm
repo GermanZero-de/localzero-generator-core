@@ -297,6 +297,8 @@ type Msg
     | MoveIntoNewColumnRequested (Maybe ( LensId, Cells.Pos )) Lens.CellContent LensId Cells.Pos
     | MoveIntoNewRowRequested (Maybe ( LensId, Cells.Pos )) Lens.CellContent LensId Cells.Pos
     | MoveCellEditorRequested LensId Cells.Pos Lens.CellContent Cells.Pos Lens.CellContent
+    | DeleteRowClicked LensId Int
+    | DeleteColumnClicked LensId Int
       -- Graphics
     | ToggleShowGraphClicked LensId
     | OnChartHover ChartHovering
@@ -790,6 +792,28 @@ update msg model =
             model
                 |> activateLens id
                 |> mapActiveLens (Lens.setTableEditMode mode)
+                |> withSaveCmd
+
+        DeleteRowClicked id row ->
+            model
+                |> activateLens id
+                |> mapActiveLens
+                    (Lens.mapCells
+                        (Cells.deleteRow row
+                            >> Cells.ifHasAZeroDimensionReplaceByOneCell
+                        )
+                    )
+                |> withSaveCmd
+
+        DeleteColumnClicked id column ->
+            model
+                |> activateLens id
+                |> mapActiveLens
+                    (Lens.mapCells
+                        (Cells.deleteColumn column
+                            >> Cells.ifHasAZeroDimensionReplaceByOneCell
+                        )
+                    )
                 |> withSaveCmd
 
         MoveCellEditorRequested id currentPos currentValue nextPos nextValue ->
@@ -1957,6 +1981,21 @@ viewValueSetAsUserDefinedTable lensId dragDrop td valueSet =
                 )
                 Element.none
 
+        deleteRowButtonColumn =
+            { header = Element.none
+            , width = shrink
+            , view =
+                \rowNdx ->
+                    case tableElementFromIndex rowNdx of
+                        GapBefore _ ->
+                            Element.none
+
+                        Data row ->
+                            dangerousIconButton
+                                (FeatherIcons.withSize (toFloat sizes.tableFontSize) FeatherIcons.trash2)
+                                (DeleteRowClicked lensId row)
+            }
+
         columnDefs =
             List.Extra.initialize (Cells.columns td.grid * 2 + 1)
                 (\columnNdx ->
@@ -1964,7 +2003,20 @@ viewValueSetAsUserDefinedTable lensId dragDrop td valueSet =
                         columnElement =
                             tableElementFromIndex columnNdx
                     in
-                    { header = Element.none
+                    { header =
+                        if td.editing == Nothing then
+                            Element.none
+
+                        else
+                            case columnElement of
+                                GapBefore _ ->
+                                    Element.none
+
+                                Data column ->
+                                    el [ centerX ] <|
+                                        dangerousIconButton
+                                            (FeatherIcons.withSize (toFloat sizes.tableFontSize) FeatherIcons.trash2)
+                                            (DeleteColumnClicked lensId column)
                     , width =
                         case columnElement of
                             GapBefore _ ->
@@ -1996,7 +2048,13 @@ viewValueSetAsUserDefinedTable lensId dragDrop td valueSet =
     Element.table
         [ padding sizes.large
         ]
-        { columns = columnDefs
+        { columns =
+            case td.editing of
+                Nothing ->
+                    columnDefs
+
+                Just _ ->
+                    deleteRowButtonColumn :: columnDefs
         , data = List.range 0 (Cells.rows td.grid * 2)
         }
 

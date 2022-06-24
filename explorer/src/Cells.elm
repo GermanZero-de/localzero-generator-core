@@ -5,9 +5,12 @@ module Cells exposing
     , addRow
     , columns
     , decoder
+    , deleteColumn
+    , deleteRow
     , encode
     , foldRowMajor
     , get
+    , ifHasAZeroDimensionReplaceByOneCell
     , initialize
     , map
     , nextPos
@@ -20,6 +23,7 @@ module Cells exposing
     )
 
 import Array exposing (Array)
+import Html exposing (a)
 import Json.Decode as Decode
 import Json.Encode as Encode
 import List.Extra
@@ -176,6 +180,45 @@ addRow rowNum cs =
             else
                 get { p | row = p.row - 1 } cs
         )
+
+
+deleteRow : Int -> Cells a -> Cells a
+deleteRow rowNum cs =
+    initialize
+        (emptyValue cs)
+        (rows cs - 1)
+        (columns cs)
+        (\p ->
+            if p.row < rowNum then
+                get p cs
+
+            else
+                get { p | row = p.row + 1 } cs
+        )
+
+
+deleteColumn : Int -> Cells a -> Cells a
+deleteColumn columnNum cs =
+    initialize
+        (emptyValue cs)
+        (rows cs)
+        (columns cs - 1)
+        (\p ->
+            if p.column < columnNum then
+                get p cs
+
+            else
+                get { p | column = p.column + 1 } cs
+        )
+
+
+ifHasAZeroDimensionReplaceByOneCell : Cells a -> Cells a
+ifHasAZeroDimensionReplaceByOneCell cs =
+    if rows cs == 0 || columns cs == 0 then
+        repeat (emptyValue cs) 1 1
+
+    else
+        cs
 
 
 addColumn : Int -> Cells a -> Cells a
