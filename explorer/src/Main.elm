@@ -209,9 +209,46 @@ port save : Encode.Value -> Cmd msg
 port copyToClipboard : Encode.Value -> Cmd msg
 
 
-cellsToClipboardData : Cells.Cells Lens.CellContent -> Encode.Value
-cellsToClipboardData cells =
-    Encode.list (Encode.list Encode.string) [ [ "Hello", "World" ], [ "This is a test", "Of what can be" ] ]
+toClipboardData : Lens -> AllRuns -> Encode.Value
+toClipboardData lens allRuns =
+    let
+        valueSet =
+            ValueSet.create lens allRuns
+
+        encodeCell : Lens.CellContent -> Encode.Value
+        encodeCell content =
+            case content of
+                CellContent.ValueAt p ->
+                    let
+                        value =
+                            case valueSet.runs of
+                                [] ->
+                                    Value.Null
+
+                                r :: _ ->
+                                    Dict.get ( r, p ) valueSet.values
+                                        |> Maybe.withDefault Value.Null
+                    in
+                    case value of
+                        Value.Float f ->
+                            Encode.string (String.fromFloat f)
+
+                        Value.String s ->
+                            Encode.string s
+
+                        Value.Null ->
+                            Encode.string ""
+
+                CellContent.Label s ->
+                    Encode.string s
+    in
+    case Lens.getCells lens of
+        Nothing ->
+            Encode.string "Copying classic lenses not supported yet"
+
+        Just cells ->
+            Cells.toList cells
+                |> Encode.list (Encode.list encodeCell)
 
 
 initiateCalculate : Maybe RunId -> Run.Inputs -> Run.Entries -> Run.Overrides -> Model -> ( Model, Cmd Msg )
@@ -880,14 +917,8 @@ update msg model =
                 lens =
                     getActiveLens model
             in
-            case Lens.getCells lens of
-                Nothing ->
-                    model
-                        |> withNoCmd
-
-                Just cells ->
-                    model
-                        |> withCmd (copyToClipboard (cellsToClipboardData cells))
+            model
+                |> withCmd (copyToClipboard (toClipboardData lens model.runs))
 
         ActivateLensClicked id ->
             model

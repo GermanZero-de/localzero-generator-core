@@ -6046,28 +6046,6 @@ var $author$project$Main$callIfJust = F3(
 			return x;
 		}
 	});
-var $elm$json$Json$Encode$list = F2(
-	function (func, entries) {
-		return _Json_wrap(
-			A3(
-				$elm$core$List$foldl,
-				_Json_addEntry(func),
-				_Json_emptyArray(0),
-				entries));
-	});
-var $elm$json$Json$Encode$string = _Json_wrap;
-var $author$project$Main$cellsToClipboardData = function (cells) {
-	return A2(
-		$elm$json$Json$Encode$list,
-		$elm$json$Json$Encode$list($elm$json$Json$Encode$string),
-		_List_fromArray(
-			[
-				_List_fromArray(
-				['Hello', 'World']),
-				_List_fromArray(
-				['This is a test', 'Of what can be'])
-			]));
-};
 var $author$project$Main$copyToClipboard = _Platform_outgoingPort('copyToClipboard', $elm$core$Basics$identity);
 var $author$project$Run$Run = $elm$core$Basics$identity;
 var $author$project$Run$create = function (_v0) {
@@ -7076,6 +7054,15 @@ var $elm$json$Json$Encode$array = F2(
 				_Json_emptyArray(0),
 				entries));
 	});
+var $elm$json$Json$Encode$list = F2(
+	function (func, entries) {
+		return _Json_wrap(
+			A3(
+				$elm$core$List$foldl,
+				_Json_addEntry(func),
+				_Json_emptyArray(0),
+				entries));
+	});
 var $elm_community$list_extra$List$Extra$initialize = F2(
 	function (n, f) {
 		var step = F2(
@@ -7352,6 +7339,7 @@ var $elm$json$Json$Encode$set = F2(
 				_Json_emptyArray(0),
 				entries));
 	});
+var $elm$json$Json$Encode$string = _Json_wrap;
 var $author$project$Lens$encode = function (_v0) {
 	var i = _v0;
 	var kindFields = function () {
@@ -7689,16 +7677,6 @@ var $yotamDvir$elm_pivot$Pivot$Get$getC = function (_v0) {
 var $yotamDvir$elm_pivot$Pivot$getC = $yotamDvir$elm_pivot$Pivot$Get$getC;
 var $author$project$Main$getActiveLens = function (model) {
 	return $yotamDvir$elm_pivot$Pivot$getC(model.x);
-};
-var $author$project$Lens$getCells = function (_v0) {
-	var l = _v0;
-	var _v1 = l.z;
-	if (_v1.$ === 1) {
-		var grid = _v1.a.v;
-		return $elm$core$Maybe$Just(grid);
-	} else {
-		return $elm$core$Maybe$Nothing;
-	}
 };
 var $author$project$Run$getInputs = function (_v0) {
 	var r = _v0;
@@ -8962,6 +8940,203 @@ var $author$project$Lens$setTableEditMode = function (mode) {
 				{al: mode});
 		});
 };
+var $author$project$Tree$getHelper = F2(
+	function (path, node) {
+		if (!path.b) {
+			return $elm$core$Maybe$Just(node);
+		} else {
+			var name = path.a;
+			var pathRest = path.b;
+			if (node.$ === 1) {
+				return $elm$core$Maybe$Nothing;
+			} else {
+				var t = node.a;
+				return A2(
+					$elm$core$Maybe$andThen,
+					$author$project$Tree$getHelper(pathRest),
+					A2($elm$core$Dict$get, name, t));
+			}
+		}
+	});
+var $author$project$Tree$get = F2(
+	function (p, t) {
+		return A2(
+			$author$project$Tree$getHelper,
+			p,
+			$author$project$Tree$Tree(t));
+	});
+var $author$project$AllRuns$toList = function (_v0) {
+	var a = _v0;
+	return $elm$core$Dict$toList(a.F);
+};
+var $author$project$Cells$foldRowMajor = F3(
+	function (fn, init, cs) {
+		var helper = F2(
+			function (acc, pos) {
+				helper:
+				while (true) {
+					if (_Utils_cmp(
+						pos.h,
+						$author$project$Cells$rows(cs)) > -1) {
+						return acc;
+					} else {
+						if (_Utils_cmp(
+							pos.e,
+							$author$project$Cells$columns(cs)) > -1) {
+							var $temp$acc = acc,
+								$temp$pos = {e: 0, h: pos.h + 1};
+							acc = $temp$acc;
+							pos = $temp$pos;
+							continue helper;
+						} else {
+							var $temp$acc = A3(
+								fn,
+								pos,
+								A2($author$project$Cells$get, pos, cs),
+								acc),
+								$temp$pos = _Utils_update(
+								pos,
+								{e: pos.e + 1});
+							acc = $temp$acc;
+							pos = $temp$pos;
+							continue helper;
+						}
+					}
+				}
+			});
+		return A2(
+			helper,
+			init,
+			{e: 0, h: 0});
+	});
+var $author$project$Lens$toList = function (_v0) {
+	var i = _v0;
+	var _v1 = i.z;
+	if (!_v1.$) {
+		var c = _v1.a;
+		return $elm$core$Set$toList(c.U);
+	} else {
+		var td = _v1.a;
+		return A3(
+			$author$project$Cells$foldRowMajor,
+			F3(
+				function (_v2, cell, l) {
+					if (!cell.$) {
+						var c = cell.a;
+						return A2($elm$core$List$cons, c, l);
+					} else {
+						return l;
+					}
+				}),
+			_List_Nil,
+			td.v);
+	}
+};
+var $author$project$ValueSet$create = F2(
+	function (lens, allRuns) {
+		var runList = $author$project$AllRuns$toList(allRuns);
+		var runs = A2($elm$core$List$map, $elm$core$Tuple$first, runList);
+		var paths = $author$project$Lens$toList(lens);
+		var values = $elm$core$Dict$fromList(
+			A2(
+				$elm$core$List$concatMap,
+				function (_v0) {
+					var runId = _v0.a;
+					var run = _v0.b;
+					return A2(
+						$elm$core$List$map,
+						function (path) {
+							var _v1 = A2(
+								$author$project$Tree$get,
+								path,
+								A2($author$project$Run$getTree, 0, run));
+							if (_v1.$ === 1) {
+								return _Utils_Tuple2(
+									_Utils_Tuple2(runId, path),
+									$author$project$Value$String(''));
+							} else {
+								if (!_v1.a.$) {
+									return _Utils_Tuple2(
+										_Utils_Tuple2(runId, path),
+										$author$project$Value$String('TREE'));
+								} else {
+									var v = _v1.a.a;
+									return _Utils_Tuple2(
+										_Utils_Tuple2(runId, path),
+										v);
+								}
+							}
+						},
+						paths);
+				},
+				runList));
+		return {U: paths, F: runs, ap: values};
+	});
+var $elm$core$String$fromFloat = _String_fromNumber;
+var $author$project$Lens$getCells = function (_v0) {
+	var l = _v0;
+	var _v1 = l.z;
+	if (_v1.$ === 1) {
+		var grid = _v1.a.v;
+		return $elm$core$Maybe$Just(grid);
+	} else {
+		return $elm$core$Maybe$Nothing;
+	}
+};
+var $author$project$Cells$toList = function (cs) {
+	return A2(
+		$elm$core$List$map,
+		$elm$core$Array$toList,
+		$author$project$Cells$toListOfArrays(cs));
+};
+var $author$project$Main$toClipboardData = F2(
+	function (lens, allRuns) {
+		var valueSet = A2($author$project$ValueSet$create, lens, allRuns);
+		var encodeCell = function (content) {
+			if (!content.$) {
+				var p = content.a;
+				var value = function () {
+					var _v3 = valueSet.F;
+					if (!_v3.b) {
+						return $author$project$Value$Null;
+					} else {
+						var r = _v3.a;
+						return A2(
+							$elm$core$Maybe$withDefault,
+							$author$project$Value$Null,
+							A2(
+								$elm$core$Dict$get,
+								_Utils_Tuple2(r, p),
+								valueSet.ap));
+					}
+				}();
+				switch (value.$) {
+					case 0:
+						var f = value.a;
+						return $elm$json$Json$Encode$string(
+							$elm$core$String$fromFloat(f));
+					case 2:
+						var s = value.a;
+						return $elm$json$Json$Encode$string(s);
+					default:
+						return $elm$json$Json$Encode$string('');
+				}
+			} else {
+				var s = content.a;
+				return $elm$json$Json$Encode$string(s);
+			}
+		};
+		var _v0 = $author$project$Lens$getCells(lens);
+		if (_v0.$ === 1) {
+			return $elm$json$Json$Encode$string('Copying classic lenses not supported yet');
+		} else {
+			var cells = _v0.a;
+			return A2(
+				$elm$json$Json$Encode$list,
+				$elm$json$Json$Encode$list(encodeCell),
+				$author$project$Cells$toList(cells));
+		}
+	});
 var $elm$file$File$toString = _File_toString;
 var $elm$core$Bitwise$or = _Bitwise_or;
 var $author$project$Explorable$toComparable = function (e) {
@@ -9837,17 +10012,11 @@ var $author$project$Main$update = F2(
 			case 36:
 				var id = msg.a;
 				var lens = $author$project$Main$getActiveLens(model);
-				var _v30 = $author$project$Lens$getCells(lens);
-				if (_v30.$ === 1) {
-					return $Janiczek$cmd_extra$Cmd$Extra$withNoCmd(model);
-				} else {
-					var cells = _v30.a;
-					return A2(
-						$Janiczek$cmd_extra$Cmd$Extra$withCmd,
-						$author$project$Main$copyToClipboard(
-							$author$project$Main$cellsToClipboardData(cells)),
-						model);
-				}
+				return A2(
+					$Janiczek$cmd_extra$Cmd$Extra$withCmd,
+					$author$project$Main$copyToClipboard(
+						A2($author$project$Main$toClipboardData, lens, model.F)),
+					model);
 			case 21:
 				var id = msg.a;
 				return $author$project$Main$withSaveCmd(
@@ -9859,7 +10028,7 @@ var $author$project$Main$update = F2(
 					$Janiczek$cmd_extra$Cmd$Extra$withCmd,
 					A2(
 						$elm$core$Task$attempt,
-						function (_v31) {
+						function (_v30) {
 							return $author$project$Main$Noop;
 						},
 						$elm$browser$Browser$Dom$focus('interestlabel')),
@@ -9884,18 +10053,18 @@ var $author$project$Main$update = F2(
 				var aId = msg.a;
 				var bId = msg.b;
 				var newTolerance = msg.c;
-				var _v32 = A4($author$project$Main$diffRunsById, aId, bId, newTolerance, model);
-				if (_v32.$ === 1) {
+				var _v31 = A4($author$project$Main$diffRunsById, aId, bId, newTolerance, model);
+				if (_v31.$ === 1) {
 					return $Janiczek$cmd_extra$Cmd$Extra$withNoCmd(model);
 				} else {
-					var d = _v32.a;
+					var d = _v31.a;
 					return $author$project$Main$withSaveCmd(
 						A4($author$project$Main$insertDiff, aId, bId, d, model));
 				}
 			case 47:
 				var runId = msg.a;
-				var _v33 = model.aN;
-				if (_v33.$ === 1) {
+				var _v32 = model.aN;
+				if (_v32.$ === 1) {
 					return $Janiczek$cmd_extra$Cmd$Extra$withNoCmd(
 						_Utils_update(
 							model,
@@ -9903,7 +10072,7 @@ var $author$project$Main$update = F2(
 								aN: $elm$core$Maybe$Just(runId)
 							}));
 				} else {
-					var r = _v33.a;
+					var r = _v32.a;
 					if (_Utils_eq(r, runId)) {
 						return $Janiczek$cmd_extra$Cmd$Extra$withNoCmd(
 							_Utils_update(
@@ -9915,11 +10084,11 @@ var $author$project$Main$update = F2(
 							{aN: $elm$core$Maybe$Nothing});
 						var idB = runId;
 						var idA = r;
-						var _v34 = A4($author$project$Main$diffRunsById, idA, idB, $author$project$Value$defaultTolerance, withoutComparison);
-						if (_v34.$ === 1) {
+						var _v33 = A4($author$project$Main$diffRunsById, idA, idB, $author$project$Value$defaultTolerance, withoutComparison);
+						if (_v33.$ === 1) {
 							return $Janiczek$cmd_extra$Cmd$Extra$withNoCmd(withoutComparison);
 						} else {
-							var d = _v34.a;
+							var d = _v33.a;
 							return $author$project$Main$withSaveCmd(
 								A4($author$project$Main$insertDiff, idA, idB, d, withoutComparison));
 						}
@@ -9956,9 +10125,9 @@ var $author$project$Main$update = F2(
 							$elm$core$Basics$composeR,
 							$yotamDvir$elm_pivot$Pivot$indexAbsolute,
 							$yotamDvir$elm_pivot$Pivot$mapA(
-								function (_v35) {
-									var lensId = _v35.a;
-									var lens = _v35.b;
+								function (_v34) {
+									var lensId = _v34.a;
+									var lens = _v34.b;
 									return A3(
 										$author$project$Main$callIf,
 										_Utils_eq(lensId, l2),
@@ -9970,9 +10139,9 @@ var $author$project$Main$update = F2(
 										A3(
 											$author$project$Main$callIfJust,
 											sourceCell,
-											function (_v36) {
-												var l1 = _v36.a;
-												var p1 = _v36.b;
+											function (_v35) {
+												var l1 = _v35.a;
+												var p1 = _v35.b;
 												return A2(
 													$author$project$Main$callIf,
 													_Utils_eq(lensId, l1),
@@ -9997,9 +10166,9 @@ var $author$project$Main$update = F2(
 							$elm$core$Basics$composeR,
 							$yotamDvir$elm_pivot$Pivot$indexAbsolute,
 							$yotamDvir$elm_pivot$Pivot$mapA(
-								function (_v37) {
-									var lensId = _v37.a;
-									var lens = _v37.b;
+								function (_v36) {
+									var lensId = _v36.a;
+									var lens = _v36.b;
 									return A3(
 										$author$project$Main$callIf,
 										_Utils_eq(lensId, l2),
@@ -10011,9 +10180,9 @@ var $author$project$Main$update = F2(
 										A3(
 											$author$project$Main$callIfJust,
 											sourceCell,
-											function (_v38) {
-												var l1 = _v38.a;
-												var p1 = _v38.b;
+											function (_v37) {
+												var l1 = _v37.a;
+												var p1 = _v37.b;
 												return A2(
 													$author$project$Main$callIf,
 													_Utils_eq(lensId, l1),
@@ -10040,9 +10209,9 @@ var $author$project$Main$update = F2(
 							$elm$core$Basics$composeR,
 							$yotamDvir$elm_pivot$Pivot$indexAbsolute,
 							$yotamDvir$elm_pivot$Pivot$mapA(
-								function (_v39) {
-									var lensId = _v39.a;
-									var lens = _v39.b;
+								function (_v38) {
+									var lensId = _v38.a;
+									var lens = _v38.b;
 									return A3(
 										$author$project$Main$callIf,
 										_Utils_eq(lensId, l2),
@@ -10058,9 +10227,9 @@ var $author$project$Main$update = F2(
 						model));
 			default:
 				var dragMsg = msg.a;
-				var _v40 = A2($author$project$Html5$DragDrop$update, dragMsg, model.a9);
-				var newDragDrop = _v40.a;
-				var dropEvent = _v40.b;
+				var _v39 = A2($author$project$Html5$DragDrop$update, dragMsg, model.a9);
+				var newDragDrop = _v39.a;
+				var dropEvent = _v39.b;
 				var applyDrop = function () {
 					if (dropEvent.$ === 1) {
 						return $elm$core$Basics$identity;
@@ -10068,22 +10237,22 @@ var $author$project$Main$update = F2(
 						if (!dropEvent.a.a.$) {
 							switch (dropEvent.a.b.$) {
 								case 0:
-									var _v42 = dropEvent.a;
-									var _v43 = _v42.a;
-									var path = _v43.b;
-									var _v44 = _v42.b;
-									var lensId = _v44.a;
-									var pos = _v44.b;
+									var _v41 = dropEvent.a;
+									var _v42 = _v41.a;
+									var path = _v42.b;
+									var _v43 = _v41.b;
+									var lensId = _v43.a;
+									var pos = _v43.b;
 									return $Janiczek$cmd_extra$Cmd$Extra$andThen(
 										$author$project$Main$update(
 											A3($author$project$Main$MoveToCellRequested, path, lensId, pos)));
 								case 2:
-									var _v51 = dropEvent.a;
-									var _v52 = _v51.a;
-									var path = _v52.b;
-									var _v53 = _v51.b;
-									var l2 = _v53.a;
-									var p2 = _v53.b;
+									var _v50 = dropEvent.a;
+									var _v51 = _v50.a;
+									var path = _v51.b;
+									var _v52 = _v50.b;
+									var l2 = _v52.a;
+									var p2 = _v52.b;
 									return $Janiczek$cmd_extra$Cmd$Extra$andThen(
 										$author$project$Main$update(
 											A4(
@@ -10093,12 +10262,12 @@ var $author$project$Main$update = F2(
 												l2,
 												p2)));
 								default:
-									var _v54 = dropEvent.a;
-									var _v55 = _v54.a;
-									var path = _v55.b;
-									var _v56 = _v54.b;
-									var l2 = _v56.a;
-									var p2 = _v56.b;
+									var _v53 = dropEvent.a;
+									var _v54 = _v53.a;
+									var path = _v54.b;
+									var _v55 = _v53.b;
+									var l2 = _v55.a;
+									var p2 = _v55.b;
 									return $Janiczek$cmd_extra$Cmd$Extra$andThen(
 										$author$project$Main$update(
 											A4(
@@ -10111,27 +10280,27 @@ var $author$project$Main$update = F2(
 						} else {
 							switch (dropEvent.a.b.$) {
 								case 0:
-									var _v45 = dropEvent.a;
-									var _v46 = _v45.a;
-									var l1 = _v46.a;
-									var p1 = _v46.b;
-									var cv1 = _v46.c;
-									var _v47 = _v45.b;
-									var l2 = _v47.a;
-									var p2 = _v47.b;
-									var cv2 = _v47.c;
+									var _v44 = dropEvent.a;
+									var _v45 = _v44.a;
+									var l1 = _v45.a;
+									var p1 = _v45.b;
+									var cv1 = _v45.c;
+									var _v46 = _v44.b;
+									var l2 = _v46.a;
+									var p2 = _v46.b;
+									var cv2 = _v46.c;
 									return $Janiczek$cmd_extra$Cmd$Extra$andThen(
 										$author$project$Main$update(
 											A6($author$project$Main$SwapCellsRequested, l1, p1, cv1, l2, p2, cv2)));
 								case 2:
-									var _v48 = dropEvent.a;
-									var _v49 = _v48.a;
-									var l1 = _v49.a;
-									var p1 = _v49.b;
-									var cv1 = _v49.c;
-									var _v50 = _v48.b;
-									var l2 = _v50.a;
-									var p2 = _v50.b;
+									var _v47 = dropEvent.a;
+									var _v48 = _v47.a;
+									var l1 = _v48.a;
+									var p1 = _v48.b;
+									var cv1 = _v48.c;
+									var _v49 = _v47.b;
+									var l2 = _v49.a;
+									var p2 = _v49.b;
 									return $Janiczek$cmd_extra$Cmd$Extra$andThen(
 										$author$project$Main$update(
 											A4(
@@ -10142,14 +10311,14 @@ var $author$project$Main$update = F2(
 												l2,
 												p2)));
 								default:
-									var _v57 = dropEvent.a;
-									var _v58 = _v57.a;
-									var l1 = _v58.a;
-									var p1 = _v58.b;
-									var cv1 = _v58.c;
-									var _v59 = _v57.b;
-									var l2 = _v59.a;
-									var p2 = _v59.b;
+									var _v56 = dropEvent.a;
+									var _v57 = _v56.a;
+									var l1 = _v57.a;
+									var p1 = _v57.b;
+									var cv1 = _v57.c;
+									var _v58 = _v56.b;
+									var l2 = _v58.a;
+									var p2 = _v58.b;
 									return $Janiczek$cmd_extra$Cmd$Extra$andThen(
 										$author$project$Main$update(
 											A4(
@@ -10535,7 +10704,6 @@ var $mdgriffith$elm_ui$Internal$Model$Style = F2(
 var $mdgriffith$elm_ui$Internal$Style$dot = function (c) {
 	return '.' + c;
 };
-var $elm$core$String$fromFloat = _String_fromNumber;
 var $mdgriffith$elm_ui$Internal$Model$formatColor = function (_v0) {
 	var red = _v0.a;
 	var green = _v0.b;
@@ -18391,138 +18559,6 @@ var $feathericons$elm_feather$FeatherIcons$copy = A2(
 				]),
 			_List_Nil)
 		]));
-var $author$project$Tree$getHelper = F2(
-	function (path, node) {
-		if (!path.b) {
-			return $elm$core$Maybe$Just(node);
-		} else {
-			var name = path.a;
-			var pathRest = path.b;
-			if (node.$ === 1) {
-				return $elm$core$Maybe$Nothing;
-			} else {
-				var t = node.a;
-				return A2(
-					$elm$core$Maybe$andThen,
-					$author$project$Tree$getHelper(pathRest),
-					A2($elm$core$Dict$get, name, t));
-			}
-		}
-	});
-var $author$project$Tree$get = F2(
-	function (p, t) {
-		return A2(
-			$author$project$Tree$getHelper,
-			p,
-			$author$project$Tree$Tree(t));
-	});
-var $author$project$AllRuns$toList = function (_v0) {
-	var a = _v0;
-	return $elm$core$Dict$toList(a.F);
-};
-var $author$project$Cells$foldRowMajor = F3(
-	function (fn, init, cs) {
-		var helper = F2(
-			function (acc, pos) {
-				helper:
-				while (true) {
-					if (_Utils_cmp(
-						pos.h,
-						$author$project$Cells$rows(cs)) > -1) {
-						return acc;
-					} else {
-						if (_Utils_cmp(
-							pos.e,
-							$author$project$Cells$columns(cs)) > -1) {
-							var $temp$acc = acc,
-								$temp$pos = {e: 0, h: pos.h + 1};
-							acc = $temp$acc;
-							pos = $temp$pos;
-							continue helper;
-						} else {
-							var $temp$acc = A3(
-								fn,
-								pos,
-								A2($author$project$Cells$get, pos, cs),
-								acc),
-								$temp$pos = _Utils_update(
-								pos,
-								{e: pos.e + 1});
-							acc = $temp$acc;
-							pos = $temp$pos;
-							continue helper;
-						}
-					}
-				}
-			});
-		return A2(
-			helper,
-			init,
-			{e: 0, h: 0});
-	});
-var $author$project$Lens$toList = function (_v0) {
-	var i = _v0;
-	var _v1 = i.z;
-	if (!_v1.$) {
-		var c = _v1.a;
-		return $elm$core$Set$toList(c.U);
-	} else {
-		var td = _v1.a;
-		return A3(
-			$author$project$Cells$foldRowMajor,
-			F3(
-				function (_v2, cell, l) {
-					if (!cell.$) {
-						var c = cell.a;
-						return A2($elm$core$List$cons, c, l);
-					} else {
-						return l;
-					}
-				}),
-			_List_Nil,
-			td.v);
-	}
-};
-var $author$project$ValueSet$create = F2(
-	function (lens, allRuns) {
-		var runList = $author$project$AllRuns$toList(allRuns);
-		var runs = A2($elm$core$List$map, $elm$core$Tuple$first, runList);
-		var paths = $author$project$Lens$toList(lens);
-		var values = $elm$core$Dict$fromList(
-			A2(
-				$elm$core$List$concatMap,
-				function (_v0) {
-					var runId = _v0.a;
-					var run = _v0.b;
-					return A2(
-						$elm$core$List$map,
-						function (path) {
-							var _v1 = A2(
-								$author$project$Tree$get,
-								path,
-								A2($author$project$Run$getTree, 0, run));
-							if (_v1.$ === 1) {
-								return _Utils_Tuple2(
-									_Utils_Tuple2(runId, path),
-									$author$project$Value$String(''));
-							} else {
-								if (!_v1.a.$) {
-									return _Utils_Tuple2(
-										_Utils_Tuple2(runId, path),
-										$author$project$Value$String('TREE'));
-								} else {
-									var v = _v1.a.a;
-									return _Utils_Tuple2(
-										_Utils_Tuple2(runId, path),
-										v);
-								}
-							}
-						},
-						paths);
-				},
-				runList));
-		return {U: paths, F: runs, ap: values};
-	});
 var $author$project$Styling$red = A3($mdgriffith$elm_ui$Element$rgb255, 197, 40, 61);
 var $author$project$Styling$dangerousIconButtonStyle = _List_fromArray(
 	[
@@ -27850,12 +27886,6 @@ var $author$project$Main$GapBefore = function (a) {
 var $author$project$Main$tableElementFromIndex = function (ndx) {
 	var element = (ndx / 2) | 0;
 	return (!(ndx % 2)) ? $author$project$Main$GapBefore(element) : $author$project$Main$Data(element);
-};
-var $author$project$Cells$toList = function (cs) {
-	return A2(
-		$elm$core$List$map,
-		$elm$core$Array$toList,
-		$author$project$Cells$toListOfArrays(cs));
 };
 var $author$project$Main$viewValueSetAsUserDefinedTable = F4(
 	function (lensId, dragDrop, td, valueSet) {
