@@ -14,9 +14,11 @@ from .. import (
     transport2030,
 )
 
+from ..electricity2018.dataclasses import FossilFuelsProduction
+
 
 def calc_stop_production_by_fossil_fuels(
-    inputs: Inputs, *, e18_production: electricity2018.FossilFuelsProduction
+    inputs: Inputs, *, e18_production: electricity2018.e18.FossilFuelsProduction
 ) -> electricity2030_core.FossilFuelsProduction:
     """Compute what happens if we stop producing electricity from a fossil fuel."""
     fact = inputs.fact
