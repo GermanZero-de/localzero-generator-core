@@ -3,6 +3,7 @@ import collections.abc
 import typing
 import numbers
 import math
+from typing import Any
 
 
 def sanitize_excel(e):
@@ -69,7 +70,7 @@ def find_diffs(
         yield (path, d1, d2)
 
 
-def cmd_compare_to_excel(args):
+def cmd_compare_to_excel(args: Any):
     def pr3(a, b, c):
         if b is None:
             b = "MISSING"
