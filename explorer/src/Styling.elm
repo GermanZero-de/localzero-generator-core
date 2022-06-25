@@ -24,6 +24,7 @@ module Styling exposing
 import Element
     exposing
         ( Element
+        , centerY
         , fill
         , height
         , padding
@@ -76,12 +77,13 @@ parseGermanNumber s =
         |> String.toFloat
 
 
-sizes : { small : Int, tableGap : Int, medium : Int, large : Int }
+sizes : { small : Int, tableGap : Int, medium : Int, large : Int, tableFontSize : Int }
 sizes =
     { small = 4
     , tableGap = 5
     , medium = 8
     , large = 12
+    , tableFontSize = 14
     }
 
 
@@ -90,7 +92,7 @@ fonts =
     , explorerItems = [ Font.size 16 ]
     , explorerValues = [ Font.size 16, Font.family [ Font.monospace ] ]
     , explorerNodeSize = [ Font.size 16 ]
-    , table = [ Font.size 14 ]
+    , table = [ Font.size sizes.tableFontSize ]
     }
 
 
@@ -177,6 +179,7 @@ iconButtonStyle =
     [ Font.color germanZeroGreen
     , Element.mouseOver [ Font.color germanZeroYellow ]
     , Element.focused [ Border.color germanZeroYellow ]
+    , centerY
     ]
 
 
@@ -227,6 +230,7 @@ dangerousIconButtonStyle =
     [ Font.color red
     , Element.mouseOver [ Font.color germanZeroYellow ]
     , Element.focused [ Border.color germanZeroYellow ]
+    , centerY
     ]
 
 
