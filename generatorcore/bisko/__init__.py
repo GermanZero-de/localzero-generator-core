@@ -167,6 +167,7 @@ class BiskoSector:
     lpg: EnergyAndEmissions
     gas: EnergyAndEmissions
     elec: EnergyAndEmissions
+    fueloil: EnergyAndEmissions
 
 
 @dataclass
@@ -188,7 +189,6 @@ class BiskoPrivResidences(BiskoSector, BiskoSectorWithExtraCommunalFacilities):
     """
 
     petrol: EnergyAndEmissions
-    fueloil: EnergyAndEmissions
     coal: EnergyAndEmissions
     heatnet: EnergyAndEmissions
     biomass: EnergyAndEmissions
@@ -309,7 +309,6 @@ class BiskoBuissenesses(BiskoSector, BiskoSectorWithExtraCommunalFacilities):
     petrol: EnergyAndEmissions
     diesel: EnergyAndEmissions
     jetfuel: EnergyAndEmissions
-    fueloil: EnergyAndEmissions
     coal: EnergyAndEmissions
     heatnet: EnergyAndEmissions
     biomass: EnergyAndEmissions
@@ -512,6 +511,7 @@ class BiskoTransport(BiskoSector):
             eb_CO2e_cb_from_fuels=f18.p_jetfuel.CO2e_production_based
             * div(f18.d_t.energy, f18.d.energy),
         )
+
         bioethanol = EnergyAndEmissionsCalcIntermediate(
             eb_energy_from_same_sector=t18.s_bioethanol.energy,
             eb_CO2e_cb_from_same_sector=t18.s_bioethanol.energy
@@ -533,6 +533,15 @@ class BiskoTransport(BiskoSector):
             eb_CO2e_cb_from_fuels=f18.p_biogas.CO2e_production_based
             * div(f18.d_t.energy, f18.d.energy),
         )
+
+        fueloil = EnergyAndEmissionsCalcIntermediate(
+            eb_energy_from_same_sector=t18.s_fueloil.energy,
+            eb_CO2e_cb_from_same_sector=t18.s_fueloil.energy
+            * fact("Fact_T_S_fueloil_EmFa_tank_wheel_2018"),
+            eb_CO2e_cb_from_heat=h18.p_fueloil.CO2e_combustion_based
+            * div(h18.d_t.energy, h18.d.energy),
+        ) 
+
         lpg = EnergyAndEmissionsCalcIntermediate(
             eb_energy_from_same_sector=t18.s_lpg.energy,
             eb_CO2e_cb_from_same_sector=t18.s_lpg.energy
@@ -557,7 +566,7 @@ class BiskoTransport(BiskoSector):
         )
 
         total = Sums.calc(
-            petrol, diesel, jetfuel, bioethanol, biodiesel, biogas, lpg, gas, elec
+            petrol, diesel, jetfuel, bioethanol, biodiesel, biogas, fueloil, lpg, gas, elec
         )
 
         return cls(
@@ -567,6 +576,7 @@ class BiskoTransport(BiskoSector):
             bioethanol=bioethanol.to_energy_and_emissions(),
             biodiesel=biodiesel.to_energy_and_emissions(),
             biogas=biogas.to_energy_and_emissions(),
+            fueloil=fueloil.to_energy_and_emissions(),
             lpg=lpg.to_energy_and_emissions(),
             gas=gas.to_energy_and_emissions(),
             elec=elec.to_energy_and_emissions(),
@@ -585,7 +595,6 @@ class BiskoIndustry(BiskoSector):
     """
 
     diesel: EnergyAndEmissions
-    fueloil: EnergyAndEmissions
     coal: EnergyAndEmissions
     other_fossil: EnergyAndEmissions
     heatnet: EnergyAndEmissions
