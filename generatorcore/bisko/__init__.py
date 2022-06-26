@@ -305,7 +305,7 @@ class BiskoPrivResidences(BiskoSector, BiskoSectorWithExtraCommunalFacilities):
 
 
 @dataclass
-class BiskoBuissenesses(BiskoSector, BiskoSectorWithExtraCommunalFacilities):
+class BiskoBusiness(BiskoSector, BiskoSectorWithExtraCommunalFacilities):
     petrol: EnergyAndEmissions
     diesel: EnergyAndEmissions
     jetfuel: EnergyAndEmissions
@@ -316,14 +316,14 @@ class BiskoBuissenesses(BiskoSector, BiskoSectorWithExtraCommunalFacilities):
     heatpump: EnergyAndEmissions
 
     @classmethod
-    def calc_buissenesses_bisko(
+    def calc_business_bisko(
         cls,
         b18: business2018.B18,
         h18: heat2018.H18,
         f18: fuels2018.F18,
         e18: electricity2018.E18,
         a18: agri2018.A18,
-    ) -> "BiskoBuissenesses":
+    ) -> "BiskoBusiness":
 
         petrol = EnergyAndEmissionsCalcIntermediate(
             eb_energy_from_same_sector=b18.s_petrol.energy,
@@ -818,7 +818,7 @@ class BiskoLULUCF(BiskoProductionBasedOnly):
 @dataclass
 class Bisko:
     priv_residences: BiskoPrivResidences
-    buissenesses: BiskoBuissenesses
+    business: BiskoBusiness
     transport: BiskoTransport
     industry: BiskoIndustry
 
@@ -849,7 +849,7 @@ class Bisko:
         priv_residences_bisko = BiskoPrivResidences.calc_priv_residences_bisko(
             r18=r18, h18=h18, f18=f18, e18=e18
         )
-        buissenesses_bisko = BiskoBuissenesses.calc_buissenesses_bisko(
+        business_bisko = BiskoBusiness.calc_business_bisko(
             b18=b18, h18=h18, f18=f18, e18=e18, a18=a18
         )
         transport_bisko = BiskoTransport.calc_transport_bisko(
@@ -863,19 +863,19 @@ class Bisko:
 
         total = EnergyAndEmissions.calc_sum(
             priv_residences_bisko.total,
-            buissenesses_bisko.total,
+            business_bisko.total,
             transport_bisko.total,
             industry_bisko.total,
         )
         communal_facilities = EnergyAndEmissions.calc_sum(
             priv_residences_bisko.communal_facilities,
-            buissenesses_bisko.communal_facilities,
+            business_bisko.communal_facilities,
         )
         bisko_quality = transport_bisko.total.energy * div(0.5, total.energy)
 
         return cls(
             priv_residences=priv_residences_bisko,
-            buissenesses=buissenesses_bisko,
+            business=business_bisko,
             transport=transport_bisko,
             industry=industry_bisko,
             agri=agri_bisko,
