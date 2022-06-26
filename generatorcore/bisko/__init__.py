@@ -25,6 +25,9 @@ class ProductionBasedEmission:
     def calc_sum(cls, *args: "ProductionBasedEmission") -> "ProductionBasedEmission":
         CO2e_pb = sum([elem.CO2e_pb for elem in args])
         return cls(CO2e_pb=CO2e_pb)
+    
+    def add_production_based_emission(self,*args:"ProductionBasedEmission"):
+        self.CO2e_pb = self.CO2e_pb + sum([elem.CO2e_pb for elem in args]) 
 
 
 @dataclass
@@ -51,7 +54,7 @@ class EnergyAndEmissions(Emissions):
     energy: float
 
     @classmethod
-    def calc_sum(cls, *args: "EnergyAndEmissions") -> "EnergyAndEmissions":
+    def calc_sum(cls, *args:"EnergyAndEmissions" ) -> "EnergyAndEmissions":
         return cls(
             energy=sum([elem.energy for elem in args]),
             CO2e_cb=sum([elem.CO2e_cb for elem in args]),
@@ -867,6 +870,9 @@ class Bisko:
             transport_bisko.total,
             industry_bisko.total,
         )
+        
+        total.add_production_based_emission(agri_bisko.total,lulucf_bisko.total)
+
         communal_facilities = EnergyAndEmissions.calc_sum(
             priv_residences_bisko.communal_facilities,
             business_bisko.communal_facilities,
