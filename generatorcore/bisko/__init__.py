@@ -785,17 +785,17 @@ class BiskoLULUCF(BiskoProductionBasedOnly):
 
     @classmethod
     def calc_bisko_lulucf(cls, l18: lulucf2018.L18) -> "BiskoLULUCF":
-        forest = ProductionBasedEmission(CO2e_pb=l18.g_forest.CO2e_production_based)
-        crop = ProductionBasedEmission(CO2e_pb=l18.g_crop.CO2e_production_based)
-        grass = ProductionBasedEmission(CO2e_pb=l18.g_grass.CO2e_production_based)
-        grove = ProductionBasedEmission(CO2e_pb=l18.g_grove.CO2e_production_based)
-        wet = ProductionBasedEmission(CO2e_pb=l18.g_wet.CO2e_production_based)
-        water = ProductionBasedEmission(CO2e_pb=l18.g_water.CO2e_production_based)
+        forest = ProductionBasedEmission(CO2e_pb=l18.g_forest.CO2e_total)
+        crop = ProductionBasedEmission(CO2e_pb=l18.g_crop.CO2e_total)
+        grass = ProductionBasedEmission(CO2e_pb=l18.g_grass.CO2e_total)
+        grove = ProductionBasedEmission(CO2e_pb=l18.g_grove.CO2e_total)
+        wet = ProductionBasedEmission(CO2e_pb=l18.g_wet.CO2e_total)
+        water = ProductionBasedEmission(CO2e_pb=l18.g_water.CO2e_total)
         settlement = ProductionBasedEmission(
-            CO2e_pb=l18.g_settlement.CO2e_production_based
+            CO2e_pb=l18.g_settlement.CO2e_total
         )
-        other = ProductionBasedEmission(CO2e_pb=l18.g_other.CO2e_production_based)
-        wood = ProductionBasedEmission(CO2e_pb=l18.g_wood.CO2e_production_based)
+        other = ProductionBasedEmission(CO2e_pb=l18.g_other.CO2e_total)
+        wood = ProductionBasedEmission(CO2e_pb=l18.g_wood.CO2e_total)
 
         total = ProductionBasedEmission.calc_sum(
             forest, crop, grass, grove, wet, water, settlement, other, wood
