@@ -1,6 +1,10 @@
 # pyright: strict
 from dataclasses import dataclass
 
+from ..utils import div
+from ..agri2018.a18 import A18
+from ..inputs import Inputs
+
 
 @dataclass
 class Vars0:
@@ -107,7 +111,7 @@ class Vars5:
 
 @dataclass
 class Vars6:
-    # Used by p_fermen_dairycow, p_fermen_nondairy, p_fermen_swine, p_fermen_poultry, p_fermen_oanimal, p_manure_dairycow, p_manure_nondairy, p_manure_swine, p_manure_poultry, p_manure_oanimal, p_manure_deposition
+    # Used by p_manure_deposition
     CO2e_combustion_based: float = None  # type: ignore
     CO2e_production_based: float = None  # type: ignore
     CO2e_production_based_per_t: float = None  # type: ignore
@@ -118,6 +122,76 @@ class Vars6:
     change_CO2e_t: float = None  # type: ignore
     cost_climate_saved: float = None  # type: ignore
     demand_change: float = None  # type: ignore
+
+    @classmethod
+    def calc_fermen(
+        cls, inputs: Inputs, what: str, ass_demand_change: str, a18: A18
+    ) -> "Vars6":
+        demand_change = inputs.ass(ass_demand_change)
+        CO2e_production_based_per_t = getattr(a18, what).CO2e_production_based_per_t
+        CO2e_combustion_based = 0
+        CO2e_total_2021_estimated = getattr(a18, what).CO2e_total * inputs.fact(
+            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+        )
+        amount = getattr(a18, what).amount * (1 + demand_change)
+        CO2e_production_based = amount * CO2e_production_based_per_t
+        CO2e_total = CO2e_production_based + CO2e_combustion_based
+        change_CO2e_t = CO2e_total - getattr(a18, what).CO2e_total
+        cost_climate_saved = (
+            (CO2e_total_2021_estimated - CO2e_total)
+            * inputs.entries.m_duration_neutral
+            * inputs.fact("Fact_M_cost_per_CO2e_2020")
+        )
+        change_CO2e_pct = div(change_CO2e_t, getattr(a18, what).CO2e_total)
+
+        return cls(
+            CO2e_combustion_based=CO2e_combustion_based,
+            CO2e_production_based=CO2e_production_based,
+            CO2e_production_based_per_t=CO2e_production_based_per_t,
+            CO2e_total=CO2e_total,
+            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+            amount=amount,
+            change_CO2e_pct=change_CO2e_pct,
+            change_CO2e_t=change_CO2e_t,
+            cost_climate_saved=cost_climate_saved,
+            demand_change=demand_change,
+        )
+
+    @classmethod
+    def calc_manure(
+        cls, inputs: Inputs, what: str, a18: A18, fermen: "Vars6"
+    ) -> "Vars6":
+        demand_change = inputs.ass("Ass_A_P_manure_ratio_CO2e_to_amount_change")
+        CO2e_combustion_based = 0
+        CO2e_total_2021_estimated = getattr(a18, what).CO2e_total * inputs.fact(
+            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+        )
+        CO2e_production_based_per_t = getattr(a18, what).CO2e_production_based_per_t * (
+            1 + demand_change
+        )
+        amount = fermen.amount
+        CO2e_production_based = amount * CO2e_production_based_per_t
+        CO2e_total = CO2e_production_based + CO2e_combustion_based
+        change_CO2e_t = CO2e_total - getattr(a18, what).CO2e_total
+        cost_climate_saved = (
+            (CO2e_total_2021_estimated - CO2e_total)
+            * inputs.entries.m_duration_neutral
+            * inputs.fact("Fact_M_cost_per_CO2e_2020")
+        )
+        change_CO2e_pct = div(change_CO2e_t, getattr(a18, what).CO2e_total)
+
+        return cls(
+            CO2e_combustion_based=CO2e_combustion_based,
+            CO2e_production_based=CO2e_production_based,
+            CO2e_production_based_per_t=CO2e_production_based_per_t,
+            CO2e_total=CO2e_total,
+            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+            amount=amount,
+            change_CO2e_pct=change_CO2e_pct,
+            change_CO2e_t=change_CO2e_t,
+            cost_climate_saved=cost_climate_saved,
+            demand_change=demand_change,
+        )
 
 
 @dataclass
