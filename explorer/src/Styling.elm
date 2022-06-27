@@ -1,6 +1,7 @@
 module Styling exposing
     ( black
     , dangerousIconButton
+    , emptyCellColor
     , floatingActionButton
     , fonts
     , formatGermanNumber
@@ -12,6 +13,7 @@ module Styling exposing
     , modalDim
     , parseGermanNumber
     , red
+    , scrollableText
     , size16
     , size32
     , sizes
@@ -19,7 +21,18 @@ module Styling exposing
     , white
     )
 
-import Element exposing (Element, padding)
+import Element
+    exposing
+        ( Element
+        , centerY
+        , fill
+        , height
+        , padding
+        , paragraph
+        , scrollbarY
+        , text
+        , width
+        )
 import Element.Background as Background
 import Element.Border as Border
 import Element.Font as Font
@@ -27,6 +40,22 @@ import Element.Input as Input
 import FeatherIcons
 import FormatNumber exposing (format)
 import FormatNumber.Locales exposing (spanishLocale)
+
+
+scrollableText : String -> Element msg
+scrollableText s =
+    -- Here we recover the line information and put each line into
+    -- a separate paragraph
+    -- Also error messages are sometimes formatted so we replace
+    -- consecutive spaces by spaces followed by nbsp spaces
+    Element.column [ width fill, height fill, scrollbarY ]
+        (String.lines s
+            |> List.map
+                (\l ->
+                    paragraph [ width fill ]
+                        [ text (String.replace "  " " \u{00A0}" l) ]
+                )
+        )
 
 
 germanLocale =
@@ -48,11 +77,13 @@ parseGermanNumber s =
         |> String.toFloat
 
 
-sizes : { small : Int, medium : Int, large : Int }
+sizes : { small : Int, tableGap : Int, medium : Int, large : Int, tableFontSize : Int }
 sizes =
     { small = 4
+    , tableGap = 5
     , medium = 8
     , large = 12
+    , tableFontSize = 14
     }
 
 
@@ -61,6 +92,7 @@ fonts =
     , explorerItems = [ Font.size 16 ]
     , explorerValues = [ Font.size 16, Font.family [ Font.monospace ] ]
     , explorerNodeSize = [ Font.size 16 ]
+    , table = [ Font.size sizes.tableFontSize ]
     }
 
 
@@ -72,6 +104,11 @@ modalDim =
 shadowColor : Element.Color
 shadowColor =
     Element.rgba255 100 100 100 0.6
+
+
+emptyCellColor : Element.Color
+emptyCellColor =
+    Element.rgb255 240 240 240
 
 
 germanZeroYellow : Element.Color
@@ -142,6 +179,7 @@ iconButtonStyle =
     [ Font.color germanZeroGreen
     , Element.mouseOver [ Font.color germanZeroYellow ]
     , Element.focused [ Border.color germanZeroYellow ]
+    , centerY
     ]
 
 
@@ -192,6 +230,7 @@ dangerousIconButtonStyle =
     [ Font.color red
     , Element.mouseOver [ Font.color germanZeroYellow ]
     , Element.focused [ Border.color germanZeroYellow ]
+    , centerY
     ]
 
 

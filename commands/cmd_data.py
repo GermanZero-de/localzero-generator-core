@@ -62,6 +62,10 @@ def bold(s, end=None, file=sys.stdout):
     print(f"\033[1m{s}\033[0m", end=end, file=file)
 
 
+def faint(s, end=None, file=sys.stdout):
+    print(f"\033[2m{s}\033[0m", end=end, file=file)
+
+
 def lookup_by_ags(ags, *, fix_missing_entries):
     ags_dis = ags[:5] + "000"  # This identifies the administrative district (Landkreis)
     ags_sta = ags[:2] + "000000"  # This identifies the federal state (Bundesland)
@@ -134,17 +138,22 @@ def lookup_fact_or_ass(
     data = refdata.RefData.load()
     try:
         res = lookup(data.facts_and_assumptions(), pattern)
-        bold(pattern, end=": ")
+        bold(pattern)
         print(res.value, end="")
-        print(f" {res.unit}\t({res.description})")
+        if res.unit != "":
+            print(f" {res.unit}\t({res.description})")
+        else:
+            print(f"\t({res.description})")
         print("")
-        print(res.rationale)
+        if res.rationale:
+            print(res.rationale)
         if res.reference or res.link:
             bold("reference")
             print(res.reference)
             print(res.link)
         else:
-            bold("no reference data available")
+            bold("reference")
+            faint("no reference provided")
     except:
         bold(f"No {what} called {pattern} found!", file=sys.stderr)
         exit(1)

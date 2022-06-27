@@ -26,6 +26,58 @@ class FossilFuelsProduction:
     cost_mro_per_MWh: float = None  # type: ignore
 
 
+@dataclass
+class EnergyDemand:
+    energy: float = None  # type: ignore
+    cost_fuel: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
+    change_energy_MWh: float = None  # type: ignore
+    change_energy_pct: float = None  # type: ignore
+
+
+@dataclass
+class RenewableGeothermalProduction:
+    """Energy production using geothermal."""
+
+    energy: float = None  # type: ignore
+    energy_installable: float = None  # type: ignore
+    pct_energy: float = None  # type: ignore
+    CO2e_combustion_based_per_MWh: float = None  # type: ignore
+    CO2e_combustion_based: float = None  # type: ignore
+    cost_climate_saved: float = None  # type: ignore
+    cost_mro: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    demand_emplo: float = None  # type: ignore
+    power_installed: float = None  # type: ignore
+    power_to_be_installed_pct: float = None  # type: ignore
+    power_to_be_installed: float = None  # type: ignore
+    power_installable: float = None  # type: ignore
+    change_energy_MWh: float = None  # type: ignore
+    change_energy_pct: float = None  # type: ignore
+    change_CO2e_t: float = None  # type: ignore
+    change_CO2e_pct: float = None  # type: ignore
+    change_cost_mro: float = None  # type: ignore
+    invest: float = None  # type: ignore
+    invest_pa: float = None  # type: ignore
+    invest_outside: float = None  # type: ignore
+    invest_pa_outside: float = None  # type: ignore
+    invest_per_x: float = None  # type: ignore
+    pct_of_wage: float = None  # type: ignore
+    pct_x: float = None  # type: ignore
+    ratio_wage_to_emplo: float = None  # type: ignore
+    cost_wage: float = None  # type: ignore
+    cost_mro_per_MWh: float = None  # type: ignore
+    emplo_existing: float = None  # type: ignore
+    demand_emplo_new: float = None  # type: ignore
+    full_load_hour: float = None  # type: ignore
+
+
+@dataclass
+class EnergyDemandWithCostFuel(EnergyDemand):
+    cost_fuel_per_MWh: float = None  # type: ignore
+    cost_fuel: float = None  # type: ignore
+
+
 # Definition der relevanten Spaltennamen für den Sektor E
 @dataclass
 class EColVars2030:
@@ -90,13 +142,13 @@ class E30:
     g_grid_offshore: EColVars2030 = field(default_factory=EColVars2030)
     g_grid_onshore: EColVars2030 = field(default_factory=EColVars2030)
     g_grid_pv: EColVars2030 = field(default_factory=EColVars2030)
-    d: EColVars2030 = field(default_factory=EColVars2030)
-    d_r: EColVars2030 = field(default_factory=EColVars2030)
-    d_b: EColVars2030 = field(default_factory=EColVars2030)
-    d_h: EColVars2030 = field(default_factory=EColVars2030)
-    d_i: EColVars2030 = field(default_factory=EColVars2030)
-    d_t: EColVars2030 = field(default_factory=EColVars2030)
-    d_a: EColVars2030 = field(default_factory=EColVars2030)
+    d: EnergyDemand = field(default_factory=EnergyDemand)
+    d_r: EnergyDemandWithCostFuel = field(default_factory=EnergyDemandWithCostFuel)
+    d_b: EnergyDemandWithCostFuel = field(default_factory=EnergyDemandWithCostFuel)
+    d_h: EnergyDemand = field(default_factory=EnergyDemand)
+    d_i: EnergyDemandWithCostFuel = field(default_factory=EnergyDemandWithCostFuel)
+    d_t: EnergyDemandWithCostFuel = field(default_factory=EnergyDemandWithCostFuel)
+    d_a: EnergyDemandWithCostFuel = field(default_factory=EnergyDemandWithCostFuel)
     d_f_hydrogen_reconv: EColVars2030 = field(default_factory=EColVars2030)
     d_e_hydrogen: EColVars2030 = field(default_factory=EColVars2030)
     d_e_hydrogen_local: EColVars2030 = field(default_factory=EColVars2030)
@@ -104,7 +156,13 @@ class E30:
     p: EColVars2030 = field(default_factory=EColVars2030)
     p_fossil_and_renew: EColVars2030 = field(default_factory=EColVars2030)
     p_fossil: EColVars2030 = field(default_factory=EColVars2030)
-    p_fossil_nuclear: EColVars2030 = field(default_factory=EColVars2030)
+    # We treat nuclear like another fossil fuel (that is a energy source we should stop
+    # using). Different countries have made other decisions but for Germany this seems
+    # like the only solution currently plausible to be actually implemented (because
+    # the political consensus to exit nuclear is very very high).
+    p_fossil_nuclear: FossilFuelsProduction = field(
+        default_factory=FossilFuelsProduction
+    )
     p_fossil_coal_brown: FossilFuelsProduction = field(
         default_factory=FossilFuelsProduction
     )
@@ -133,7 +191,9 @@ class E30:
     p_renew_biomass_solid: EColVars2030 = field(default_factory=EColVars2030)
     p_renew_biomass_gaseous: EColVars2030 = field(default_factory=EColVars2030)
     p_renew_biomass_cogen: EColVars2030 = field(default_factory=EColVars2030)
-    p_renew_geoth: EColVars2030 = field(default_factory=EColVars2030)
+    p_renew_geoth: RenewableGeothermalProduction = field(
+        default_factory=RenewableGeothermalProduction
+    )
     p_renew_hydro: EColVars2030 = field(default_factory=EColVars2030)
     p_renew_geoth_local: EColVars2030 = field(default_factory=EColVars2030)
     p_renew_hydro_local: EColVars2030 = field(default_factory=EColVars2030)
