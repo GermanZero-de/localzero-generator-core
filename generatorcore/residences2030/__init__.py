@@ -1,17 +1,13 @@
-import imp
+# pyright: strict
 from .. import residences2018, business2018
 from ..inputs import Inputs
-from ..utils import div
+from ..utils import div, MILLION
 from .r30 import R30
 
 
 def calc(inputs: Inputs, *, r18: residences2018.R18, b18: business2018.B18) -> R30:
-    def fact(n):
-        return inputs.fact(n)
-
-    def ass(n):
-        return inputs.ass(n)
-
+    fact = inputs.fact
+    ass = inputs.ass
     entries = inputs.entries
 
     ### P - Section ###
@@ -441,8 +437,6 @@ def calc(inputs: Inputs, *, r18: residences2018.R18, b18: business2018.B18) -> R
 
     ### S - Section ###
 
-    Million = 1000000
-
     # Definitions
     s = r30.s
 
@@ -635,14 +629,14 @@ def calc(inputs: Inputs, *, r18: residences2018.R18, b18: business2018.B18) -> R
     s_solarth.cost_fuel_per_MWh = 0
     s_heatpump.cost_fuel_per_MWh = 0
 
-    s_fueloil.cost_fuel = s_fueloil.energy * s_fueloil.cost_fuel_per_MWh / Million
-    s_lpg.cost_fuel = s_lpg.energy * s_lpg.cost_fuel_per_MWh / Million
-    s_biomass.cost_fuel = s_biomass.energy * s_biomass.cost_fuel_per_MWh / Million
-    s_coal.cost_fuel = s_coal.energy * s_coal.cost_fuel_per_MWh / Million
-    s_petrol.cost_fuel = s_petrol.energy * s_petrol.cost_fuel_per_MWh / Million
-    s_heatnet.cost_fuel = s_heatnet.energy * s_heatnet.cost_fuel_per_MWh / Million
-    s_solarth.cost_fuel = s_solarth.energy * s_solarth.cost_fuel_per_MWh / Million
-    s_heatpump.cost_fuel = s_heatpump.energy * s_heatpump.cost_fuel_per_MWh / Million
+    s_fueloil.cost_fuel = s_fueloil.energy * s_fueloil.cost_fuel_per_MWh / MILLION
+    s_lpg.cost_fuel = s_lpg.energy * s_lpg.cost_fuel_per_MWh / MILLION
+    s_biomass.cost_fuel = s_biomass.energy * s_biomass.cost_fuel_per_MWh / MILLION
+    s_coal.cost_fuel = s_coal.energy * s_coal.cost_fuel_per_MWh / MILLION
+    s_petrol.cost_fuel = s_petrol.energy * s_petrol.cost_fuel_per_MWh / MILLION
+    s_heatnet.cost_fuel = s_heatnet.energy * s_heatnet.cost_fuel_per_MWh / MILLION
+    s_solarth.cost_fuel = s_solarth.energy * s_solarth.cost_fuel_per_MWh / MILLION
+    s_heatpump.cost_fuel = s_heatpump.energy * s_heatpump.cost_fuel_per_MWh / MILLION
     s_emethan.cost_fuel = 0
     s.cost_fuel = (
         s_fueloil.cost_fuel
@@ -1006,7 +1000,7 @@ def calc(inputs: Inputs, *, r18: residences2018.R18, b18: business2018.B18) -> R
     s_heatpump.power_to_be_installed = (
         p_buildings_total.area_m2_rehab
         * ass("Ass_R_S_heating_power_renovated")
-        / Million
+        / MILLION
         - s_heatpump.power_installed
     )
     s_heatpump.invest = (
@@ -1132,7 +1126,7 @@ def calc(inputs: Inputs, *, r18: residences2018.R18, b18: business2018.B18) -> R
     g_consult.invest_pa = g_consult.invest / Kalkulationszeitraum
     s_gas.pct_energy = div(s_gas.energy, s.energy)
     s_gas.cost_fuel_per_MWh = ass("Ass_R_S_gas_energy_cost_factor_2035")
-    s_gas.cost_fuel = s_gas.energy * s_gas.cost_fuel_per_MWh / Million
+    s_gas.cost_fuel = s_gas.energy * s_gas.cost_fuel_per_MWh / MILLION
     s_gas.change_energy_MWh = s_gas.energy - r18.s_gas.energy
     s_gas.change_energy_pct = div(s_gas.change_energy_MWh, r18.s_gas.energy)
     s_gas.change_CO2e_t = s_gas.CO2e_combustion_based - r18.s_gas.CO2e_combustion_based

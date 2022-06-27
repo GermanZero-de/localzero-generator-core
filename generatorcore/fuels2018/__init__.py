@@ -1,3 +1,4 @@
+# pyright: strict
 from .. import transport2018
 from ..inputs import Inputs
 from .f18 import F18

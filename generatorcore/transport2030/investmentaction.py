@@ -1,3 +1,4 @@
+# pyright: strict
 from dataclasses import dataclass
 from ..inputs import Inputs
 from ..utils import div
