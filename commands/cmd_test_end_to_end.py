@@ -45,7 +45,7 @@ def expectation_files(pattern: str) -> Iterator[tuple[str, str, int]]:
             yield (file_path, ags, year)
 
 
-def cmd_test_end_to_end_update_expectations():
+def cmd_test_end_to_end_update_expectations(args: Any):
     expect_entries_pattern = r"entries_((\d+)|(DG000000))_(20\d\d)\.json"
     expect_file_pattern = r"production_((\d+)|(DG000000))_(20\d\d)\.json"
 
