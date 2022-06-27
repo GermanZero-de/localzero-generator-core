@@ -27647,6 +27647,14 @@ var $author$project$Main$viewValueSetAsClassicTable = F3(
 				c5: valueSet.U
 			});
 	});
+var $author$project$Main$AddColumnToLensTableClicked = F2(
+	function (a, b) {
+		return {$: 26, a: a, b: b};
+	});
+var $author$project$Main$AddRowToLensTableClicked = F2(
+	function (a, b) {
+		return {$: 25, a: a, b: b};
+	});
 var $author$project$Main$CellOfLensTableEditFinished = F3(
 	function (a, b, c) {
 		return {$: 28, a: a, b: b, c: c};
@@ -27825,6 +27833,27 @@ var $mdgriffith$elm_ui$Element$Border$glow = F2(
 				gm: size
 			});
 	});
+var $mdgriffith$elm_ui$Element$Border$innerShadow = function (almostShade) {
+	var shade = {eJ: almostShade.eJ, eY: almostShade.eY, dt: true, fW: almostShade.fW, gm: almostShade.gm};
+	return A2(
+		$mdgriffith$elm_ui$Internal$Model$StyleClass,
+		$mdgriffith$elm_ui$Internal$Flag$shadows,
+		A3(
+			$mdgriffith$elm_ui$Internal$Model$Single,
+			$mdgriffith$elm_ui$Internal$Model$boxShadowClass(shade),
+			'box-shadow',
+			$mdgriffith$elm_ui$Internal$Model$formatBoxShadow(shade)));
+};
+var $mdgriffith$elm_ui$Element$Border$innerGlow = F2(
+	function (clr, size) {
+		return $mdgriffith$elm_ui$Element$Border$innerShadow(
+			{
+				eJ: size * 2,
+				eY: clr,
+				fW: _Utils_Tuple2(0, 0),
+				gm: size
+			});
+	});
 var $elm$core$List$intersperse = F2(
 	function (sep, xs) {
 		if (!xs.b) {
@@ -27890,96 +27919,77 @@ var $author$project$Main$tableElementFromIndex = function (ndx) {
 var $author$project$Main$viewValueSetAsUserDefinedTable = F4(
 	function (lensId, dragDrop, td, valueSet) {
 		var ifEditing = (!_Utils_eq(td.al, $elm$core$Maybe$Nothing)) ? $elm$core$Basics$identity : $elm$core$Basics$always(_List_Nil);
-		var insertColumnSeparator = function (pos) {
-			var highlight = ifEditing(
-				function () {
-					var _v22 = $author$project$Html5$DragDrop$getDropId(dragDrop);
-					if (_v22.$ === 1) {
-						return _List_Nil;
-					} else {
-						switch (_v22.a.$) {
-							case 2:
-								var _v23 = _v22.a;
-								return _List_Nil;
-							case 0:
-								var _v24 = _v22.a;
-								return _List_Nil;
-							default:
-								var _v25 = _v22.a;
-								var li = _v25.a;
-								var p = _v25.b;
-								return (_Utils_eq(lensId, li) && _Utils_eq(pos, p)) ? _List_fromArray(
-									[
-										A2($mdgriffith$elm_ui$Element$Border$glow, $author$project$Styling$germanZeroGreen, 2)
-									]) : _List_Nil;
+		var separator = F2(
+			function (isColumn, pos) {
+				var highlight = ifEditing(
+					function () {
+						var background = $mdgriffith$elm_ui$Element$Background$color($author$project$Styling$germanZeroGreen);
+						var _v18 = $author$project$Html5$DragDrop$getDropId(dragDrop);
+						if (_v18.$ === 1) {
+							return _List_fromArray(
+								[
+									background,
+									$mdgriffith$elm_ui$Element$Events$onClick(
+									isColumn ? A2($author$project$Main$AddColumnToLensTableClicked, lensId, pos.e) : A2($author$project$Main$AddRowToLensTableClicked, lensId, pos.h)),
+									$mdgriffith$elm_ui$Element$mouseOver(
+									_List_fromArray(
+										[
+											$mdgriffith$elm_ui$Element$Background$color($author$project$Styling$germanZeroYellow)
+										]))
+								]);
+						} else {
+							switch (_v18.a.$) {
+								case 2:
+									var _v19 = _v18.a;
+									var li = _v19.a;
+									var p = _v19.b;
+									return (_Utils_eq(lensId, li) && (_Utils_eq(pos, p) && (!isColumn))) ? _List_fromArray(
+										[
+											$mdgriffith$elm_ui$Element$Background$color($author$project$Styling$germanZeroYellow),
+											A2($mdgriffith$elm_ui$Element$Border$glow, $author$project$Styling$germanZeroYellow, 2)
+										]) : _List_fromArray(
+										[background]);
+								case 0:
+									var _v20 = _v18.a;
+									return _List_fromArray(
+										[background]);
+								default:
+									var _v21 = _v18.a;
+									var li = _v21.a;
+									var p = _v21.b;
+									return (_Utils_eq(lensId, li) && (_Utils_eq(pos, p) && isColumn)) ? _List_fromArray(
+										[
+											$mdgriffith$elm_ui$Element$Background$color($author$project$Styling$germanZeroYellow),
+											A2($mdgriffith$elm_ui$Element$Border$glow, $author$project$Styling$germanZeroYellow, 2)
+										]) : _List_fromArray(
+										[background]);
+							}
 						}
-					}
-				}());
-			var droppable = ifEditing(
-				A2(
-					$elm$core$List$map,
-					$mdgriffith$elm_ui$Element$htmlAttribute,
-					A2(
-						$author$project$Html5$DragDrop$droppable,
-						$author$project$Main$DragDropMsg,
-						A2($author$project$Main$DropInNewColumn, lensId, pos))));
-			return A2(
-				$mdgriffith$elm_ui$Element$el,
-				_Utils_ap(
-					_List_fromArray(
-						[
-							$mdgriffith$elm_ui$Element$width(
-							$mdgriffith$elm_ui$Element$px($author$project$Styling$sizes.cO)),
-							$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill)
-						]),
-					_Utils_ap(highlight, droppable)),
-				$mdgriffith$elm_ui$Element$none);
-		};
-		var insertRowSeparator = function (pos) {
-			var highlight = ifEditing(
-				function () {
-					var _v18 = $author$project$Html5$DragDrop$getDropId(dragDrop);
-					if (_v18.$ === 1) {
-						return _List_Nil;
-					} else {
-						switch (_v18.a.$) {
-							case 2:
-								var _v19 = _v18.a;
-								var li = _v19.a;
-								var p = _v19.b;
-								return (_Utils_eq(lensId, li) && _Utils_eq(pos, p)) ? _List_fromArray(
-									[
-										A2($mdgriffith$elm_ui$Element$Border$glow, $author$project$Styling$germanZeroGreen, 2)
-									]) : _List_Nil;
-							case 0:
-								var _v20 = _v18.a;
-								return _List_Nil;
-							default:
-								var _v21 = _v18.a;
-								return _List_Nil;
-						}
-					}
-				}());
-			var droppable = ifEditing(
-				A2(
-					$elm$core$List$map,
-					$mdgriffith$elm_ui$Element$htmlAttribute,
-					A2(
-						$author$project$Html5$DragDrop$droppable,
-						$author$project$Main$DragDropMsg,
-						A2($author$project$Main$DropInNewRow, lensId, pos))));
-			return A2(
-				$mdgriffith$elm_ui$Element$el,
-				_Utils_ap(
-					_List_fromArray(
-						[
-							$mdgriffith$elm_ui$Element$height(
-							$mdgriffith$elm_ui$Element$px($author$project$Styling$sizes.cO)),
-							$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
-						]),
-					_Utils_ap(highlight, droppable)),
-				$mdgriffith$elm_ui$Element$none);
-		};
+					}());
+				var droppable = ifEditing(
+					(!_Utils_eq(
+						$author$project$Html5$DragDrop$getDropId(dragDrop),
+						$elm$core$Maybe$Nothing)) ? A2(
+						$elm$core$List$map,
+						$mdgriffith$elm_ui$Element$htmlAttribute,
+						A2(
+							$author$project$Html5$DragDrop$droppable,
+							$author$project$Main$DragDropMsg,
+							isColumn ? A2($author$project$Main$DropInNewColumn, lensId, pos) : A2($author$project$Main$DropInNewRow, lensId, pos))) : _List_Nil);
+				return A2(
+					$mdgriffith$elm_ui$Element$el,
+					_Utils_ap(
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$width(
+								isColumn ? $mdgriffith$elm_ui$Element$px($author$project$Styling$sizes.cO) : $mdgriffith$elm_ui$Element$fill),
+								$mdgriffith$elm_ui$Element$height(
+								isColumn ? $mdgriffith$elm_ui$Element$fill : $mdgriffith$elm_ui$Element$px($author$project$Styling$sizes.cO)),
+								$mdgriffith$elm_ui$Element$Border$rounded(2)
+							]),
+						_Utils_ap(highlight, droppable)),
+					$mdgriffith$elm_ui$Element$none);
+			});
 		var viewCell = F2(
 			function (cell, pos) {
 				var viewPath = function (p) {
@@ -28004,7 +28014,8 @@ var $author$project$Main$viewValueSetAsUserDefinedTable = F4(
 									var p = _v15.b;
 									return (_Utils_eq(lensId, li) && _Utils_eq(p, pos)) ? _List_fromArray(
 										[
-											A2($mdgriffith$elm_ui$Element$Border$glow, $author$project$Styling$germanZeroGreen, 2)
+											$mdgriffith$elm_ui$Element$Background$color($author$project$Styling$germanZeroYellow),
+											A2($mdgriffith$elm_ui$Element$Border$glow, $author$project$Styling$germanZeroYellow, 2)
 										]) : _List_Nil;
 								case 1:
 									var _v16 = _v14.a;
@@ -28047,7 +28058,7 @@ var $author$project$Main$viewValueSetAsUserDefinedTable = F4(
 										[
 											$mdgriffith$elm_ui$Element$Background$color($author$project$Styling$emptyCellColor),
 											$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
-											$mdgriffith$elm_ui$Element$padding(2),
+											$mdgriffith$elm_ui$Element$padding(3),
 											$mdgriffith$elm_ui$Element$htmlAttribute(
 											$elm$html$Html$Attributes$tabindex(0))
 										]),
@@ -28204,7 +28215,7 @@ var $author$project$Main$viewValueSetAsUserDefinedTable = F4(
 										[
 											$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
 											$mdgriffith$elm_ui$Element$Font$bold,
-											$mdgriffith$elm_ui$Element$padding(2),
+											$mdgriffith$elm_ui$Element$padding(3),
 											$mdgriffith$elm_ui$Element$Events$onLoseFocus(
 											A3($author$project$Main$CellOfLensTableEditFinished, lensId, pos, editValue)),
 											$author$project$KeyBindings$on(
@@ -28227,7 +28238,12 @@ var $author$project$Main$viewValueSetAsUserDefinedTable = F4(
 													]),
 												_Utils_ap(tabKey, shiftTabKey))),
 											$mdgriffith$elm_ui$Element$htmlAttribute(
-											$elm$html$Html$Attributes$id('cell'))
+											$elm$html$Html$Attributes$id('cell')),
+											$mdgriffith$elm_ui$Element$focused(
+											_List_fromArray(
+												[
+													A2($mdgriffith$elm_ui$Element$Border$innerGlow, $author$project$Styling$germanZeroYellow, 1.0)
+												]))
 										]),
 									$author$project$Styling$fonts.d4),
 								{
@@ -28305,14 +28321,18 @@ var $author$project$Main$viewValueSetAsUserDefinedTable = F4(
 							} else {
 								var row = _v2.a.a;
 								var column = _v2.b.a;
-								return insertRowSeparator(
+								return A2(
+									separator,
+									false,
 									{e: column, h: row});
 							}
 						} else {
 							if (_v2.b.$ === 1) {
 								var row = _v2.a.a;
 								var column = _v2.b.a;
-								return insertColumnSeparator(
+								return A2(
+									separator,
+									true,
 									{e: column, h: row});
 							} else {
 								var row = _v2.a.a;

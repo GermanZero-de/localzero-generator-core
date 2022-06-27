@@ -53,7 +53,7 @@ import File.Select
 import Filter
 import Html exposing (Html, p)
 import Html.Attributes
-import Html.Events
+import Html.Events exposing (onFocus)
 import Html5.DragDrop as DragDrop exposing (droppable)
 import Http
 import Json.Decode as Decode
@@ -1819,7 +1819,9 @@ viewValueSetAsUserDefinedTable lensId dragDrop td valueSet =
 
                             Just (DropOnCell li p _) ->
                                 if lensId == li && p == pos then
-                                    [ Border.glow Styling.germanZeroGreen 2 ]
+                                    [ Background.color Styling.germanZeroYellow
+                                    , Border.glow Styling.germanZeroYellow 2
+                                    ]
 
                                 else
                                     []
@@ -1834,7 +1836,7 @@ viewValueSetAsUserDefinedTable lensId dragDrop td valueSet =
                     el
                         (([ Background.color Styling.emptyCellColor
                           , width fill
-                          , padding 2
+                          , padding 3
                           , Element.htmlAttribute <| Html.Attributes.tabindex 0
                           ]
                             ++ editOnClick
@@ -1945,7 +1947,7 @@ viewValueSetAsUserDefinedTable lensId dragDrop td valueSet =
                         Input.text
                             ([ width fill
                              , Font.bold
-                             , padding 2
+                             , padding 3
                              , Events.onLoseFocus (CellOfLensTableEditFinished lensId pos editValue)
                              , KeyBindings.on
                                 ([ bind noModifiers K.Enter (CellOfLensTableEditFinished lensId pos editValue)
@@ -1955,6 +1957,9 @@ viewValueSetAsUserDefinedTable lensId dragDrop td valueSet =
                                     ++ shiftTabKey
                                 )
                              , Element.htmlAttribute <| Html.Attributes.id "cell"
+                             , Element.focused
+                                [ Border.innerGlow germanZeroYellow 1.0
+                                ]
                              ]
                                 ++ fonts.table
                             )
@@ -1969,71 +1974,79 @@ viewValueSetAsUserDefinedTable lensId dragDrop td valueSet =
                     else
                         displayCell cell
 
-        insertColumnSeparator pos =
+        separator isColumn pos =
             let
                 highlight : List (Element.Attribute Msg)
                 highlight =
                     ifEditing <|
+                        let
+                            background =
+                                Background.color germanZeroGreen
+                        in
                         case DragDrop.getDropId dragDrop of
                             Nothing ->
-                                []
+                                [ background
+                                , Events.onClick
+                                    (if isColumn then
+                                        AddColumnToLensTableClicked lensId pos.column
 
-                            Just (DropInNewRow _ _) ->
-                                []
-
-                            Just (DropOnCell _ _ _) ->
-                                []
-
-                            Just (DropInNewColumn li p) ->
-                                if lensId == li && pos == p then
-                                    [ Border.glow germanZeroGreen 2 ]
-
-                                else
-                                    []
-
-                droppable =
-                    ifEditing <|
-                        List.map Element.htmlAttribute
-                            (DragDrop.droppable DragDropMsg (DropInNewColumn lensId pos))
-            in
-            el
-                ([ width (px sizes.tableGap)
-                 , height fill
-                 ]
-                    ++ highlight
-                    ++ droppable
-                )
-                Element.none
-
-        insertRowSeparator pos =
-            let
-                highlight =
-                    ifEditing <|
-                        case DragDrop.getDropId dragDrop of
-                            Nothing ->
-                                []
+                                     else
+                                        AddRowToLensTableClicked lensId pos.row
+                                    )
+                                , Element.mouseOver
+                                    [ Background.color germanZeroYellow
+                                    ]
+                                ]
 
                             Just (DropInNewRow li p) ->
-                                if lensId == li && pos == p then
-                                    [ Border.glow germanZeroGreen 2 ]
+                                if lensId == li && pos == p && not isColumn then
+                                    [ Background.color germanZeroYellow, Border.glow germanZeroYellow 2 ]
 
                                 else
-                                    []
+                                    [ background ]
 
                             Just (DropOnCell _ _ _) ->
-                                []
+                                [ background ]
 
-                            Just (DropInNewColumn _ _) ->
-                                []
+                            Just (DropInNewColumn li p) ->
+                                if lensId == li && pos == p && isColumn then
+                                    [ Background.color germanZeroYellow, Border.glow germanZeroYellow 2 ]
+
+                                else
+                                    [ background ]
 
                 droppable =
                     ifEditing <|
-                        List.map Element.htmlAttribute
-                            (DragDrop.droppable DragDropMsg (DropInNewRow lensId pos))
+                        if DragDrop.getDropId dragDrop /= Nothing then
+                            List.map Element.htmlAttribute
+                                (DragDrop.droppable DragDropMsg
+                                    (if isColumn then
+                                        DropInNewColumn lensId pos
+
+                                     else
+                                        DropInNewRow lensId pos
+                                    )
+                                )
+
+                        else
+                            []
             in
             el
-                ([ height (px sizes.tableGap)
-                 , width fill
+                ([ width
+                    (if isColumn then
+                        px sizes.tableGap
+
+                     else
+                        fill
+                    )
+                 , height
+                    (if isColumn then
+                        fill
+
+                     else
+                        px sizes.tableGap
+                    )
+                 , Border.rounded 2
                  ]
                     ++ highlight
                     ++ droppable
@@ -2090,10 +2103,10 @@ viewValueSetAsUserDefinedTable lensId dragDrop td valueSet =
                                     Element.none
 
                                 ( GapBefore row, Data column ) ->
-                                    insertRowSeparator { row = row, column = column }
+                                    separator False { row = row, column = column }
 
                                 ( Data row, GapBefore column ) ->
-                                    insertColumnSeparator { row = row, column = column }
+                                    separator True { row = row, column = column }
 
                                 ( Data row, Data column ) ->
                                     let
