@@ -348,7 +348,6 @@ class BiskoBuissenesses(BiskoSector, BiskoSectorWithExtraCommunalFacilities):
             eb_CO2e_cb_from_fuels=f18.p_jetfuel.CO2e_production_based
             * div(f18.d_b.energy, f18.d.energy),
         )
-        # TODO: fix h.18.d_a....
         fueloil = EnergyAndEmissionsCalcIntermediate(
             eb_energy_from_same_sector=b18.s_fueloil.energy,
             eb_energy_from_agri=a18.s_fueloil.energy,
