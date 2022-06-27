@@ -206,6 +206,51 @@ encodeOverrides d =
 port save : Encode.Value -> Cmd msg
 
 
+port copyToClipboard : Encode.Value -> Cmd msg
+
+
+toClipboardData : Lens -> AllRuns -> Encode.Value
+toClipboardData lens allRuns =
+    let
+        valueSet =
+            ValueSet.create lens allRuns
+
+        encodeCell : Lens.CellContent -> Encode.Value
+        encodeCell content =
+            case content of
+                CellContent.ValueAt p ->
+                    let
+                        value =
+                            case valueSet.runs of
+                                [] ->
+                                    Value.Null
+
+                                r :: _ ->
+                                    Dict.get ( r, p ) valueSet.values
+                                        |> Maybe.withDefault Value.Null
+                    in
+                    case value of
+                        Value.Float f ->
+                            Encode.string (String.fromFloat f)
+
+                        Value.String s ->
+                            Encode.string s
+
+                        Value.Null ->
+                            Encode.string ""
+
+                CellContent.Label s ->
+                    Encode.string s
+    in
+    case Lens.getCells lens of
+        Nothing ->
+            Encode.string "Copying classic lenses not supported yet"
+
+        Just cells ->
+            Cells.toList cells
+                |> Encode.list (Encode.list encodeCell)
+
+
 initiateCalculate : Maybe RunId -> Run.Inputs -> Run.Entries -> Run.Overrides -> Model -> ( Model, Cmd Msg )
 initiateCalculate maybeNdx inputs entries overrides model =
     ( { model | showModal = Just Loading }
@@ -299,6 +344,7 @@ type Msg
     | MoveCellEditorRequested LensId Cells.Pos Lens.CellContent Cells.Pos Lens.CellContent
     | DeleteRowClicked LensId Int
     | DeleteColumnClicked LensId Int
+    | CopyToClipboardRequested LensId
       -- Graphics
     | ToggleShowGraphClicked LensId
     | OnChartHover ChartHovering
@@ -322,13 +368,18 @@ type ModalMsg
     | CalculateModalAgsUpdated String
 
 
+getActiveLens : Model -> Lens
+getActiveLens model =
+    Pivot.getC model.lenses
+
+
 mapActiveLens : (Lens -> Lens) -> Model -> Model
 mapActiveLens f =
-    mapLens (Pivot.mapC f)
+    mapLenses (Pivot.mapC f)
 
 
-mapLens : (Pivot Lens -> Pivot Lens) -> Model -> Model
-mapLens f m =
+mapLenses : (Pivot Lens -> Pivot Lens) -> Model -> Model
+mapLenses f m =
     { m | lenses = f m.lenses }
 
 
@@ -751,18 +802,18 @@ update msg model =
 
         NewLensClicked ->
             model
-                |> mapLens (Pivot.appendGoR Lens.empty)
+                |> mapLenses (Pivot.appendGoR Lens.empty)
                 |> withSaveCmd
 
         NewTableClicked ->
             model
-                |> mapLens (Pivot.appendGoR Lens.emptyTable)
+                |> mapLenses (Pivot.appendGoR Lens.emptyTable)
                 |> withSaveCmd
 
         DuplicateLensClicked id ->
             model
                 |> activateLens id
-                |> mapLens
+                |> mapLenses
                     (\p ->
                         Pivot.appendGoR
                             (Pivot.getC p
@@ -775,7 +826,7 @@ update msg model =
         RemoveLensClicked id ->
             model
                 |> activateLens id
-                |> mapLens
+                |> mapLenses
                     (\ils ->
                         case Pivot.removeGoR ils of
                             Nothing ->
@@ -861,6 +912,14 @@ update msg model =
                 |> addCmd
                     (Task.attempt (\_ -> Noop) (Browser.Dom.focus "cell"))
 
+        CopyToClipboardRequested id ->
+            let
+                lens =
+                    getActiveLens model
+            in
+            model
+                |> withCmd (copyToClipboard (toClipboardData lens model.runs))
+
         ActivateLensClicked id ->
             model
                 |> activateLens id
@@ -938,7 +997,7 @@ update msg model =
 
         MoveIntoNewRowRequested sourceCell cv1 l2 p2 ->
             model
-                |> mapLens
+                |> mapLenses
                     (Pivot.indexAbsolute
                         >> Pivot.mapA
                             (\( lensId, lens ) ->
@@ -960,7 +1019,7 @@ update msg model =
 
         MoveIntoNewColumnRequested sourceCell cv1 l2 p2 ->
             model
-                |> mapLens
+                |> mapLenses
                     (Pivot.indexAbsolute
                         >> Pivot.mapA
                             (\( lensId, lens ) ->
@@ -984,7 +1043,7 @@ update msg model =
 
         SwapCellsRequested l1 p1 cv1 l2 p2 cv2 ->
             model
-                |> mapLens
+                |> mapLenses
                     (Pivot.indexAbsolute
                         >> Pivot.mapA
                             (\( lensId, lens ) ->
@@ -1680,7 +1739,7 @@ viewRunsAndComparisons model =
                         (\( resultNdx, ir ) ->
                             viewRun resultNdx
                                 (Pivot.lengthL model.lenses)
-                                (Pivot.getC model.lenses)
+                                (getActiveLens model)
                                 model.collapseStatus
                                 model.activeOverrideEditor
                                 model.activeSearch
@@ -2161,6 +2220,29 @@ viewLens id dragDrop editingActiveLensLabel isActive lens chartHovering allRuns 
 
                     else
                         iconButton FeatherIcons.check (LensTableEditModeChanged id Nothing)
+
+        maybeShowGraphButton =
+            case Lens.asUserDefinedTable lens of
+                Nothing ->
+                    iconButton
+                        (if showGraph then
+                            FeatherIcons.eye
+
+                         else
+                            FeatherIcons.eyeOff
+                        )
+                        (ToggleShowGraphClicked id)
+
+                Just _ ->
+                    Element.none
+
+        maybeCopyToClipboardButton =
+            case Lens.asUserDefinedTable lens of
+                Nothing ->
+                    Element.none
+
+                Just t ->
+                    iconButton FeatherIcons.clipboard (CopyToClipboardRequested id)
     in
     column
         [ width fill
@@ -2212,14 +2294,8 @@ viewLens id dragDrop editingActiveLensLabel isActive lens chartHovering allRuns 
             , el [ width fill ] Element.none
             , buttons
                 [ maybeEditTableButton
-                , iconButton
-                    (if showGraph then
-                        FeatherIcons.eye
-
-                     else
-                        FeatherIcons.eyeOff
-                    )
-                    (ToggleShowGraphClicked id)
+                , maybeShowGraphButton
+                , maybeCopyToClipboardButton
                 , iconButton FeatherIcons.copy (DuplicateLensClicked id)
                 , dangerousIconButton FeatherIcons.trash2 (RemoveLensClicked id)
                 ]
