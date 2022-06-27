@@ -1,3 +1,4 @@
+# pyright: strict
 from dataclasses import dataclass
 
 from generatorcore.inputs import Inputs
@@ -33,7 +34,7 @@ class Emissions(ProductionBasedEmission):
     CO2e_cb: float
 
     @classmethod
-    def calc_sum(cls, *args: "Emissions") -> "Emissions":
+    def calc_sum(cls, *args: "Emissions") -> "Emissions":  # type: ignore
         CO2e_cb: float = sum([elem.CO2e_cb for elem in args])
         CO2e_pb: float = sum([elem.CO2e_pb for elem in args])
         return cls(CO2e_cb=CO2e_cb, CO2e_pb=CO2e_pb)
@@ -51,7 +52,7 @@ class EnergyAndEmissions(Emissions):
     energy: float
 
     @classmethod
-    def calc_sum(cls, *args: "EnergyAndEmissions") -> "EnergyAndEmissions":
+    def calc_sum(cls, *args: "EnergyAndEmissions") -> "EnergyAndEmissions":  # type: ignore
         return cls(
             energy=sum([elem.energy for elem in args]),
             CO2e_cb=sum([elem.CO2e_cb for elem in args]),
