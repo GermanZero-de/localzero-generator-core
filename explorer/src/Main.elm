@@ -7,6 +7,7 @@ import AllRuns
         ( AllRuns
         , RunId
         )
+import Array
 import Browser
 import Browser.Dom
 import Cells
@@ -50,6 +51,7 @@ import File exposing (File)
 import File.Download as Download
 import File.Select
 import Filter
+import Hex
 import Html exposing (Html, p)
 import Html.Attributes
 import Html5.DragDrop as DragDrop exposing (droppable)
@@ -113,6 +115,67 @@ main =
 
 
 -- MODEL
+
+
+runColor : RunId -> ( Int, Int, Int )
+runColor =
+    let
+        -- I'm basically assuming that we never compare more
+        -- than the below number of runs simultaneously
+        -- and even that you don't add and remove runs
+        -- a lot (because than you would run into the same
+        -- colors again).
+        -- But then if they do happen again, it's still very
+        -- unlikely they will end up next to each other
+        -- so this should be fine
+        colors =
+            Array.fromList
+                [ -- pink
+                  ( 0xEA, 0x60, 0xDF )
+                , -- purple
+                  ( 0x7B, 0x4D, 0xFF )
+                , -- blue
+                  ( 0x12, 0xA5, 0xED )
+                , -- moss
+                  ( 0x92, 0xB4, 0x2C )
+                , -- brown
+                  ( 0x87, 0x1C, 0x1C )
+                , -- mint
+                  ( 0x6D, 0xF0, 0xD2 )
+                , -- coral
+                  ( 0xEA, 0x73, 0x69 )
+                , -- turquoise
+                  ( 0x22, 0xD2, 0xBA )
+                , -- magenta
+                  ( 0xDB, 0x4C, 0xB2 )
+                ]
+
+        numColors =
+            Array.length colors
+    in
+    \runId ->
+        Array.get (remainderBy numColors (runId - 1)) colors
+            -- can't happen because of the remainderBy
+            |> Maybe.withDefault ( 0, 0, 0 )
+
+
+runColorForChart : RunId -> String
+runColorForChart ri =
+    let
+        ( r, g, b ) =
+            runColor ri
+    in
+    String.concat
+        [ "#", Hex.toString r, Hex.toString g, Hex.toString b ]
+
+
+runColorForUI : RunId -> Element.Color
+runColorForUI ri =
+    let
+        ( r, g, b ) =
+            runColor ri
+    in
+    Element.rgb255 r g b
 
 
 type alias ActiveOverrideEditor =
@@ -1161,7 +1224,7 @@ viewChart chartHovering shortPathLabels interestListTable =
                                     Nothing ->
                                         0.0
                         in
-                        C.bar get []
+                        C.bar get [ CA.color (runColorForChart runId) ]
                             |> C.named (String.fromInt runId)
                             |> C.format (\v -> formatGermanNumber v)
                     )
@@ -1189,14 +1252,6 @@ viewChart chartHovering shortPathLabels interestListTable =
                 , C.yAxis []
                 , C.bars [] bars interestListTable.paths
                 , C.binLabels getLabel [ CA.moveDown 40 ]
-                , C.legendsAt .max
-                    .max
-                    [ CA.column
-                    , CA.moveRight 20
-                    , CA.alignRight
-                    , CA.spacing 5
-                    ]
-                    []
                 , C.each chartHovering
                     (\p item ->
                         [ C.tooltip item [] [] [] ]
@@ -1537,7 +1592,7 @@ viewComparison aId bId collapseStatus diffData =
                 { label =
                     row [ spacing sizes.medium ]
                         [ collapsedStatusIcon (isCollapsed id [] collapseStatus)
-                        , el [ Font.bold ] (text (String.fromInt aId ++ " ≈ " ++ String.fromInt bId))
+                        , row [] [ viewRunId [] aId, text " ≈ ", viewRunId [] bId ]
                         ]
                 , onPress = Just (ToggleCollapseTreeClicked id [])
                 }
@@ -1659,7 +1714,7 @@ viewRun runId lensId lens collapseStatus activeOverrideEditor activeSearch selec
                 { label =
                     row [ width fill, spacing sizes.medium ]
                         [ collapsedStatusIcon (differentIfFilterActive.isCollapsed runId [])
-                        , el [ Font.bold ] (text (String.fromInt runId ++ ":"))
+                        , viewRunId [] runId
                         , text (inputs.ags ++ " " ++ String.fromInt inputs.year)
                         ]
                 , onPress = Just (ToggleCollapseTreeClicked (Explorable.Run runId) [])
@@ -1841,6 +1896,13 @@ viewValueSetAsUserDefinedTable lensId dragDrop td valueSet =
                 viewPath p =
                     paragraph [] (List.map text (List.intersperse "." p))
 
+                viewAbsolutePath ( runId, path ) =
+                    row []
+                        [ viewRunId [] runId
+                        , text " "
+                        , viewPath path
+                        ]
+
                 displayCell c =
                     case cell of
                         CellContent.Label l ->
@@ -1855,7 +1917,7 @@ viewValueSetAsUserDefinedTable lensId dragDrop td valueSet =
                                 -- We are in editing mode, but not editing THIS cell.
                                 -- So display the path itself
                                 cellElement []
-                                    (viewPath p)
+                                    (viewAbsolutePath ( r, p ))
 
                             else
                                 -- We are not in editing mode at all. Display the value at the
@@ -1943,7 +2005,7 @@ viewValueSetAsUserDefinedTable lensId dragDrop td valueSet =
                             , text = CellContent.getLabel editValue |> Maybe.withDefault ""
                             , placeholder =
                                 CellContent.getValueAt cell
-                                    |> Maybe.map (Tuple.second >> viewPath >> Input.placeholder [])
+                                    |> Maybe.map (viewAbsolutePath >> Input.placeholder [])
                             , label = Input.labelHidden "label"
                             }
 
@@ -2107,6 +2169,11 @@ viewValueSetAsUserDefinedTable lensId dragDrop td valueSet =
         }
 
 
+viewRunId : List (Element.Attribute msg) -> RunId -> Element msg
+viewRunId attrs runId =
+    el (attrs ++ [ Font.bold, Font.color (runColorForUI runId) ]) (text (String.fromInt runId))
+
+
 {-| View valueset as table of values
 where the rows are indexed by path names and the columns by runs
 -}
@@ -2117,7 +2184,7 @@ viewValueSetAsClassicTable shortPathLabels lensId valueSet =
             valueSet.runs
                 |> List.map
                     (\runId ->
-                        { header = el [ Font.bold, Font.alignRight ] (Element.text (String.fromInt runId))
+                        { header = viewRunId [ Font.alignRight ] runId
                         , width = shrink
                         , view =
                             \path ->
