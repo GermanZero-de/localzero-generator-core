@@ -26,7 +26,12 @@ class FuelProduction:
     CO2e_total: float
     energy: float
 
-    def __init__(self, energy: float, CO2e_production_based_per_MWh: float = 0, CO2e_combustion_based_per_MWh: float = 0, ):
+    def __init__(
+        self,
+        energy: float,
+        CO2e_production_based_per_MWh: float = 0,
+        CO2e_combustion_based_per_MWh: float = 0,
+    ):
         self.CO2e_production_based_per_MWh = CO2e_production_based_per_MWh
         self.CO2e_combustion_based_per_MWh = CO2e_combustion_based_per_MWh
         self.energy = energy
