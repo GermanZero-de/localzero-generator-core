@@ -8,6 +8,7 @@ module Lens exposing
     , empty
     , emptyTable
     , encode
+    , getCells
     , getEditTable
     , getLabel
     , getShortPathLabels
@@ -18,6 +19,7 @@ module Lens exposing
     , mapTableEditMode
     , member
     , remove
+    , removeList
     , setTableEditMode
     , toList
     , toggleEditTable
@@ -28,6 +30,7 @@ module Lens exposing
 A Lens tells you how to see the data, it does not contain the data itself.
 -}
 
+import AllRuns exposing (AllRuns)
 import Cells
 import Dict exposing (Dict)
 import Json.Decode as Decode
@@ -207,6 +210,16 @@ mapCells fn l =
         l
 
 
+getCells : Lens -> Maybe Cells
+getCells (Lens l) =
+    case l.vkind of
+        Table { grid } ->
+            Just grid
+
+        Classic _ ->
+            Nothing
+
+
 updateShortPathLabels : Lens -> Lens
 updateShortPathLabels =
     mapClassic
@@ -315,8 +328,8 @@ mapLabel f (Lens l) =
     Lens { l | label = f l.label }
 
 
-remove : Path -> Lens -> Lens
-remove p il =
+remove : AllRuns.RunId -> Path -> Lens -> Lens
+remove ri p il =
     il
         |> mapKind
             (\c ->
@@ -327,7 +340,7 @@ remove p il =
                     | grid =
                         Cells.map
                             (\cell ->
-                                if cell == CellContent.ValueAt p then
+                                if cell == CellContent.ValueAt ri p then
                                     CellContent.Label ""
 
                                 else
@@ -337,6 +350,14 @@ remove p il =
                 }
             )
         |> updateShortPathLabels
+
+
+removeList : List ( AllRuns.RunId, Path ) -> Lens -> Lens
+removeList list lens =
+    List.foldl
+        (\( ri, p ) l -> remove ri p l)
+        lens
+        list
 
 
 findInCells : (Cells.Pos -> CellContent -> Maybe x) -> Cells -> Maybe x
@@ -377,9 +398,9 @@ findEmptySpot g =
         g
 
 
-insert : Path -> Lens -> Lens
-insert p il =
-    il
+insert : AllRuns.RunId -> Path -> Lens -> Lens
+insert ri p lens =
+    lens
         |> mapKind
             (\c ->
                 { c | paths = Set.insert p c.paths }
@@ -394,26 +415,26 @@ insert p il =
                                         Cells.rows td.grid
                                 in
                                 Cells.set { row = r, column = 0 }
-                                    (CellContent.ValueAt p)
+                                    (CellContent.ValueAt ri p)
                                     (Cells.addRow (r + 1) td.grid)
 
                             Just spot ->
-                                Cells.set spot (CellContent.ValueAt p) td.grid
+                                Cells.set spot (CellContent.ValueAt ri p) td.grid
                 }
             )
         |> updateShortPathLabels
 
 
-member : Path -> Lens -> Bool
-member p (Lens i) =
-    case i.vkind of
+member : AllRuns.RunId -> Path -> Lens -> Bool
+member ri p (Lens l) =
+    case l.vkind of
         Classic c ->
             Set.member p c.paths
 
         Table td ->
             findInCells
                 (\_ mp ->
-                    if mp == CellContent.ValueAt p then
+                    if mp == CellContent.ValueAt ri p then
                         Just ()
 
                     else
@@ -423,21 +444,30 @@ member p (Lens i) =
                 /= Nothing
 
 
-toList : Lens -> List Path
-toList (Lens i) =
-    case i.vkind of
+toList : AllRuns -> Lens -> List ( AllRuns.RunId, Path )
+toList runs (Lens l) =
+    case l.vkind of
         Classic c ->
-            Set.toList c.paths
+            let
+                allPaths =
+                    Set.toList c.paths
+            in
+            AllRuns.toList runs
+                |> List.concatMap
+                    (\( ri, _ ) ->
+                        allPaths
+                            |> List.map (\p -> ( ri, p ))
+                    )
 
         Table td ->
             Cells.foldRowMajor
-                (\_ cell l ->
+                (\_ cell acc ->
                     case cell of
-                        CellContent.ValueAt c ->
-                            c :: l
+                        CellContent.ValueAt ri c ->
+                            ( ri, c ) :: acc
 
                         CellContent.Label _ ->
-                            l
+                            acc
                 )
                 []
                 td.grid
@@ -458,8 +488,11 @@ encode (Lens i) =
                     let
                         encodeCell mp =
                             case mp of
-                                CellContent.ValueAt p ->
-                                    Encode.list Encode.string p
+                                CellContent.ValueAt ri p ->
+                                    Encode.object
+                                        [ ( "run", Encode.int ri )
+                                        , ( "path", Encode.list Encode.string p )
+                                        ]
 
                                 CellContent.Label s ->
                                     Encode.string s
@@ -478,7 +511,11 @@ cellDecoder : Decode.Decoder CellContent
 cellDecoder =
     Decode.oneOf
         [ Decode.string |> Decode.map CellContent.Label
-        , Decode.list Decode.string |> Decode.map CellContent.ValueAt
+        , -- old style generic path
+          Decode.list Decode.string |> Decode.map (CellContent.ValueAt AllRuns.firstId)
+        , Decode.map2 CellContent.ValueAt
+            (Decode.field "run" Decode.int)
+            (Decode.field "path" (Decode.list Decode.string))
         ]
 
 

@@ -1,3 +1,4 @@
+# pyright: strict
 from dataclasses import dataclass
 
 
@@ -20,20 +21,30 @@ class FuelProduction:
     # Used by p_petrol, p_jetfuel, p_diesel, p_bioethanol, p_biodiesel, p_biogas
     CO2e_production_based: float
     CO2e_production_based_per_MWh: float
+    CO2e_combustion_based: float
+    CO2e_combustion_based_per_MWh: float
     CO2e_total: float
     energy: float
 
-    def __init__(self, energy: float, CO2e_production_based_per_MWh: float):
+    def __init__(
+        self,
+        energy: float,
+        CO2e_production_based_per_MWh: float = 0,
+        CO2e_combustion_based_per_MWh: float = 0,
+    ):
         self.CO2e_production_based_per_MWh = CO2e_production_based_per_MWh
+        self.CO2e_combustion_based_per_MWh = CO2e_combustion_based_per_MWh
         self.energy = energy
         self.CO2e_production_based = CO2e_production_based_per_MWh * energy
-        self.CO2e_total = self.CO2e_production_based
+        self.CO2e_combustion_based = CO2e_combustion_based_per_MWh * energy
+        self.CO2e_total = self.CO2e_production_based + self.CO2e_combustion_based
 
 
 @dataclass
 class TotalFuelProduction:
     # Used by p
     CO2e_production_based: float = None  # type: ignore
+    CO2e_combustion_based: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     energy: float = None  # type: ignore
 
@@ -41,5 +52,8 @@ class TotalFuelProduction:
         self.CO2e_production_based = sum(
             p.CO2e_production_based for p in fuel_productions
         )
+        self.CO2e_combustion_based = sum(
+            p.CO2e_combustion_based for p in fuel_productions
+        )
         self.energy = sum(p.energy for p in fuel_productions)
-        self.CO2e_total = self.CO2e_production_based
+        self.CO2e_total = self.CO2e_production_based + self.CO2e_combustion_based

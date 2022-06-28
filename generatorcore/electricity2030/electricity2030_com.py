@@ -1,5 +1,7 @@
 from ..inputs import Inputs
-from ..utils import div
+
+# pyright: strict
+from ..utils import div, MILLION
 from . import electricity2030_core
 from .. import (
     electricity2018,
@@ -13,8 +15,6 @@ from .. import (
     residences2030,
     transport2030,
 )
-
-from ..electricity2018.dataclasses import FossilFuelsProduction
 
 
 def calc_stop_production_by_fossil_fuels(
@@ -148,15 +148,10 @@ def calc(
     p_local_biomass_cogen: electricity2030_core.EColVars2030,
     p_local_biomass: electricity2030_core.EColVars2030,
 ) -> electricity2030_core.E30:
-    def fact(n):
-        return inputs.fact(n)
-
-    def ass(n):
-        return inputs.ass(n)
-
+    fact = inputs.fact
+    ass = inputs.ass
     entries = inputs.entries
 
-    Million = 1000000
     Kalkulationszeitraum = entries.m_duration_target
     KlimaneutraleJahre = entries.m_duration_neutral
 
@@ -630,7 +625,7 @@ def calc(
         p_local_pv_park.power_to_be_installed * p_local_pv_park.invest_per_x
     )
     p_local_pv_park.cost_mro = (
-        p_local_pv_park.energy * p_local_pv_park.cost_mro_per_MWh / Million
+        p_local_pv_park.energy * p_local_pv_park.cost_mro_per_MWh / MILLION
     )
     p_local_pv_park.change_energy_MWh = (
         p_local_pv_park.energy - e18.p_local_pv_park.energy
@@ -689,7 +684,7 @@ def calc(
         p_local_pv_agri.power_to_be_installed * p_local_pv_agri.invest_per_x
     )
     p_local_pv_agri.cost_mro = (
-        p_local_pv_agri.energy * p_local_pv_agri.cost_mro_per_MWh / Million
+        p_local_pv_agri.energy * p_local_pv_agri.cost_mro_per_MWh / MILLION
     )
     p_local_pv_agri.change_energy_MWh = (
         p_local_pv_agri.energy - e18.p_local_pv_agri.energy
@@ -768,10 +763,10 @@ def calc(
         * (1 - ass("Ass_E_P_renew_loss_brutto_to_netto"))
     )
     p_local_biomass.cost_fuel = (
-        p_local_biomass.cost_fuel_per_MWh * p_local_biomass.energy / Million
+        p_local_biomass.cost_fuel_per_MWh * p_local_biomass.energy / MILLION
     )
     p_local_biomass.cost_mro = (
-        p_local_biomass.energy * p_local_biomass.cost_mro_per_MWh / Million
+        p_local_biomass.energy * p_local_biomass.cost_mro_per_MWh / MILLION
     )
     p_local_biomass.CO2e_combustion_based = (
         p_local_biomass.energy * p_local_biomass.CO2e_combustion_based_per_MWh
@@ -818,7 +813,7 @@ def calc(
         * (1 - ass("Ass_E_P_renew_loss_brutto_to_netto"))
     )
     p_local_hydro.cost_mro = (
-        p_local_hydro.energy * p_local_hydro.cost_mro_per_MWh / Million
+        p_local_hydro.energy * p_local_hydro.cost_mro_per_MWh / MILLION
     )
     p_local_hydro.CO2e_combustion_based = (
         p_local_hydro.energy * p_local_hydro.CO2e_combustion_based_per_MWh
@@ -830,7 +825,7 @@ def calc(
     p_local_hydro.cost_climate_saved = 0
 
     g_grid_offshore.cost_mro = (
-        g_grid_offshore.invest * ass("Ass_E_G_grid_offshore_mro") / Million
+        g_grid_offshore.invest * ass("Ass_E_G_grid_offshore_mro") / MILLION
     )
     g_grid_offshore.invest_pa = g_grid_offshore.invest / entries.m_duration_target
     p_fossil_and_renew.invest_pa_com = p_renew.invest_pa_com
@@ -1104,7 +1099,7 @@ def calc(
         + p_renew_reverse.invest_outside
     )
     p_local_pv_roof.cost_mro = (
-        p_local_pv_roof.energy * p_local_pv_roof.cost_mro_per_MWh / Million
+        p_local_pv_roof.energy * p_local_pv_roof.cost_mro_per_MWh / MILLION
     )
     p_local_pv_roof.change_energy_MWh = (
         p_local_pv_roof.energy - e18.p_local_pv_roof.energy
@@ -1116,7 +1111,7 @@ def calc(
         b18.p_nonresi.area_m2 + r18.p_buildings_total.area_m2,
     )
     p_local_pv_facade.cost_mro = (
-        p_local_pv_facade.energy * p_local_pv_facade.cost_mro_per_MWh / Million
+        p_local_pv_facade.energy * p_local_pv_facade.cost_mro_per_MWh / MILLION
     )
     p_local_pv_facade.change_energy_MWh = (
         p_local_pv_facade.energy - e18.p_local_pv_facade.energy
@@ -1145,7 +1140,7 @@ def calc(
         g_grid_onshore.power_to_be_installed * g_grid_onshore.invest_per_x
     )
     p_local_wind_onshore.cost_mro = (
-        p_local_wind_onshore.energy * p_local_wind_onshore.cost_mro_per_MWh / Million
+        p_local_wind_onshore.energy * p_local_wind_onshore.cost_mro_per_MWh / MILLION
     )
     p_local_wind_onshore.CO2e_combustion_based = (
         p_local_wind_onshore.energy * p_local_wind_onshore.CO2e_combustion_based_per_MWh
@@ -1227,7 +1222,7 @@ def calc(
         + p_local_pv_agri.invest_pa
     )  # (
     g_grid_onshore.cost_mro = (
-        g_grid_onshore.invest * ass("Ass_E_G_grid_onshore_mro") / Million
+        g_grid_onshore.invest * ass("Ass_E_G_grid_onshore_mro") / MILLION
     )
     g_grid_onshore.invest_pa = g_grid_onshore.invest / entries.m_duration_target
     p_local_wind_onshore.change_cost_mro = (
@@ -1275,7 +1270,7 @@ def calc(
         p_local_pv_park.cost_wage, p_local_pv_park.ratio_wage_to_emplo
     )
     g.invest = g_grid_offshore.invest + g_grid_onshore.invest + g_grid_pv.invest
-    g_grid_pv.cost_mro = g_grid_pv.invest * ass("Ass_E_G_grid_pv_mro") / Million
+    g_grid_pv.cost_mro = g_grid_pv.invest * ass("Ass_E_G_grid_pv_mro") / MILLION
     g_grid_pv.invest_pa = g_grid_pv.invest / entries.m_duration_target
     p_local.change_energy_MWh = p_local.energy - e18.p_local.energy
     p_local_pv.pct_energy = div(p_local_pv.energy, p_local.energy)
@@ -1403,23 +1398,23 @@ def calc(
     p_renew_pv_park.energy = p_renew_pv.energy * p_renew_pv_park.pct_energy
     p_renew_pv_agri.energy = p_renew_pv.energy * p_renew_pv_agri.pct_energy
     p_renew_wind_onshore.cost_mro = (
-        p_renew_wind_onshore.energy * p_renew_wind_onshore.cost_mro_per_MWh / Million
+        p_renew_wind_onshore.energy * p_renew_wind_onshore.cost_mro_per_MWh / MILLION
     )
     p_renew_wind_onshore.change_energy_MWh = (
         p_renew_wind_onshore.energy - e18.p_renew_wind_onshore.energy
     )
     p_renew_wind.energy = p_renew_wind_onshore.energy + p_renew_wind_offshore.energy
     p_renew_wind_offshore.cost_mro = (
-        p_renew_wind_offshore.energy * p_renew_wind_offshore.cost_mro_per_MWh / Million
+        p_renew_wind_offshore.energy * p_renew_wind_offshore.cost_mro_per_MWh / MILLION
     )
     p_renew_wind_offshore.change_energy_MWh = (
         p_renew_wind_offshore.energy - e18.p_renew_wind_offshore.energy
     )
     p_renew_biomass.cost_fuel = (
-        p_renew_biomass.energy * p_renew_biomass.cost_fuel_per_MWh / Million
+        p_renew_biomass.energy * p_renew_biomass.cost_fuel_per_MWh / MILLION
     )
     p_renew_biomass.cost_mro = (
-        p_renew_biomass.energy * p_renew_biomass.cost_mro_per_MWh / Million
+        p_renew_biomass.energy * p_renew_biomass.cost_mro_per_MWh / MILLION
     )
     p_renew_biomass.CO2e_combustion_based = (
         p_renew_biomass.energy * p_renew_biomass.CO2e_combustion_based_per_MWh
@@ -1428,21 +1423,21 @@ def calc(
         p_renew_biomass.energy - e18.p_renew_biomass.energy
     )
     p_renew_geoth.cost_mro = (
-        p_renew_geoth.energy * p_renew_geoth.cost_mro_per_MWh / Million
+        p_renew_geoth.energy * p_renew_geoth.cost_mro_per_MWh / MILLION
     )
     p_renew_geoth.CO2e_combustion_based = (
         p_renew_geoth.energy * p_renew_geoth.CO2e_combustion_based_per_MWh
     )
     p_renew_geoth.change_energy_MWh = p_renew_geoth.energy - e18.p_renew_geoth.energy
     p_renew_hydro.cost_mro = (
-        p_renew_hydro.energy * p_renew_hydro.cost_mro_per_MWh / Million
+        p_renew_hydro.energy * p_renew_hydro.cost_mro_per_MWh / MILLION
     )
     p_renew_hydro.CO2e_combustion_based = (
         p_renew_hydro.energy * p_renew_hydro.CO2e_combustion_based_per_MWh
     )
     p_renew_hydro.change_energy_MWh = p_renew_hydro.energy - e18.p_renew_hydro.energy
     p_renew_reverse.cost_mro = (
-        p_renew_reverse.energy * p_renew_reverse.cost_mro_per_MWh / Million
+        p_renew_reverse.energy * p_renew_reverse.cost_mro_per_MWh / MILLION
     )
     p_renew_reverse.CO2e_combustion_based = (
         p_renew_reverse.energy * p_renew_reverse.CO2e_combustion_based_per_MWh
@@ -1465,35 +1460,35 @@ def calc(
         * d_r.cost_fuel_per_MWh
         * p_fossil_and_renew.energy
         / p.energy
-        / Million
+        / MILLION
     )
     d_b.cost_fuel = (
         d_b.energy
         * d_b.cost_fuel_per_MWh
         * p_fossil_and_renew.energy
         / p.energy
-        / Million
+        / MILLION
     )
     d_i.cost_fuel = (
         d_i.energy
         * d_i.cost_fuel_per_MWh
         * p_fossil_and_renew.energy
         / p.energy
-        / Million
+        / MILLION
     )
     d_t.cost_fuel = (
         d_t.energy
         * d_t.cost_fuel_per_MWh
         * p_fossil_and_renew.energy
         / p.energy
-        / Million
+        / MILLION
     )
     d_a.cost_fuel = (
         d_a.energy
         * d_a.cost_fuel_per_MWh
         * p_fossil_and_renew.energy
         / p.energy
-        / Million
+        / MILLION
     )
     p.change_energy_MWh = p.energy - e18.p.energy
     p_renew_wind_offshore.pct_x = div(p_renew_wind_offshore.energy, p.energy)
@@ -1510,25 +1505,25 @@ def calc(
         p_fossil_and_renew.change_energy_MWh, e18.p_fossil_and_renew.energy
     )
     p_renew_pv_roof.cost_mro = (
-        p_renew_pv_roof.energy * p_renew_pv_roof.cost_mro_per_MWh / Million
+        p_renew_pv_roof.energy * p_renew_pv_roof.cost_mro_per_MWh / MILLION
     )
     p_renew_pv_roof.change_energy_MWh = (
         p_renew_pv_roof.energy - e18.p_renew_pv_roof.energy
     )
     p_renew_pv_facade.cost_mro = (
-        p_renew_pv_facade.energy * p_renew_pv_facade.cost_mro_per_MWh / Million
+        p_renew_pv_facade.energy * p_renew_pv_facade.cost_mro_per_MWh / MILLION
     )
     p_renew_pv_facade.change_energy_MWh = (
         p_renew_pv_facade.energy - e18.p_renew_pv_facade.energy
     )
     p_renew_pv_park.cost_mro = (
-        p_renew_pv_park.energy * p_renew_pv_park.cost_mro_per_MWh / Million
+        p_renew_pv_park.energy * p_renew_pv_park.cost_mro_per_MWh / MILLION
     )
     p_renew_pv_park.change_energy_MWh = (
         p_renew_pv_park.energy - e18.p_renew_pv_park.energy
     )
     p_renew_pv_agri.cost_mro = (
-        p_renew_pv_agri.energy * p_renew_pv_agri.cost_mro_per_MWh / Million
+        p_renew_pv_agri.energy * p_renew_pv_agri.cost_mro_per_MWh / MILLION
     )
     p_renew_pv_agri.change_energy_MWh = (
         p_renew_pv_agri.energy - e18.p_renew_pv_agri.energy

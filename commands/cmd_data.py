@@ -1,14 +1,16 @@
+# pyright: strict
 import csv
 import sys
 import os.path
 import json
-from typing import Callable, Literal
+from typing import Callable, Literal, TextIO
 from dataclasses import asdict
+from typing import Any
 from generatorcore import ags, refdatatools, refdata, makeentries
 
 
-def cmd_data_normalize(args):
-    def sortby_and_check_ags_column(rows):
+def cmd_data_normalize(args: Any):
+    def sortby_and_check_ags_column(rows: Any):
         header = rows[0]
         if header[0] != "ags":
             # All files that have an AGS have it in the first column.
@@ -21,7 +23,7 @@ def cmd_data_normalize(args):
             exit(1)
         return sorted(rows, key=lambda r: r[0])
 
-    def find_duplicate_ags_in_sorted(rows):
+    def find_duplicate_ags_in_sorted(rows: Any) -> Any:
         dups = []
         current = []
         for r in rows:
@@ -29,9 +31,9 @@ def cmd_data_normalize(args):
                 current.append(r)
             else:
                 if len(current) > 1:
-                    dups.append(current)
+                    dups.append(current)  # type: ignore
                 current = [r]
-        return dups
+        return dups  # type: ignore
 
     with open(args.file, "r", newline="", encoding="utf-8") as fp:
         rows_with_header = list(csv.reader(fp))
@@ -51,30 +53,30 @@ def cmd_data_normalize(args):
             writer.writerow(row)
 
 
-def cmd_data_is_production(args):
+def cmd_data_is_production():
     ds = refdatatools.DataDirStatus.get(refdatatools.datadir())
     # TODO: Add a verbose option that prints a json of DataDirStatus
     if not ds.is_good():
         exit(1)
 
 
-def bold(s, end=None, file=sys.stdout):
-    print(f"\033[1m{s}\033[0m", end=end, file=file)
+def bold(s, end=None, file: TextIO = sys.stdout):  # type: ignore
+    print(f"\033[1m{s}\033[0m", end=end, file=file)  # type: ignore
 
 
-def faint(s, end=None, file=sys.stdout):
-    print(f"\033[2m{s}\033[0m", end=end, file=file)
+def faint(s, end=None, file: TextIO = sys.stdout):  # type: ignore
+    print(f"\033[2m{s}\033[0m", end=end, file=file)  # type: ignore
 
 
-def lookup_by_ags(ags, *, fix_missing_entries):
+def lookup_by_ags(ags: Any, *, fix_missing_entries: bool):
     ags_dis = ags[:5] + "000"  # This identifies the administrative district (Landkreis)
     ags_sta = ags[:2] + "000000"  # This identifies the federal state (Bundesland)
 
-    def print_lookup(name, lookup_fn, key):
+    def print_lookup(name: Any, lookup_fn: Any, key: Any):
         bold(name)
         try:
-            record = lookup_fn(key)
-        except Exception as e:
+            record: object = lookup_fn(key)
+        except Exception:
             record = None
 
         if record is None:
@@ -159,7 +161,7 @@ def lookup_fact_or_ass(
         exit(1)
 
 
-def cmd_data_lookup(args):
+def cmd_data_lookup(args: Any):
     pattern: str = args.pattern
     if ags.is_valid(pattern):
         lookup_by_ags(pattern, fix_missing_entries=args.fix_missing_entries)
@@ -176,7 +178,7 @@ def cmd_data_lookup(args):
         )
 
 
-def cmd_data_checkout(args):
+def cmd_data_checkout(args: Any):
     def update_existing(
         repo: refdatatools.PUBLIC_OR_PROPRIETARY, *, current: str, wanted: str
     ):
@@ -233,7 +235,7 @@ def cmd_data_checkout(args):
     )
 
 
-def cmd_data_entries_user_overrides_generate_defaults(args):
+def cmd_data_entries_user_overrides_generate_defaults(args: Any):
     data = refdata.RefData.load()
     result = []
     good = 0
@@ -246,13 +248,13 @@ def cmd_data_entries_user_overrides_generate_defaults(args):
         for (ags, description) in list(data.ags_master().items()):
             try:
                 entries = makeentries.make_entries(data, ags, 2035)
-                default_values = {
+                default_values: dict[str, str] = {
                     k: v
                     for (k, v) in asdict(entries).items()
                     if k in makeentries.USER_OVERRIDABLE_ENTRIES
                 }
                 default_values["city"] = description
-                result.append(default_values)
+                result.append(default_values)  # type: ignore
                 good = good + 1
             except refdata.LookupFailure as e:
                 errors = errors + 1

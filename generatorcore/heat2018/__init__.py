@@ -1,3 +1,4 @@
+# pyright: strict
 from .. import transport2018, electricity2018
 from ..inputs import Inputs
 from ..utils import div

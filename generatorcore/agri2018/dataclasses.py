@@ -1,3 +1,4 @@
+# pyright: strict
 from dataclasses import dataclass
 
 from .. import business2018
@@ -189,7 +190,7 @@ class OperationHeatEnergy(EnergyWithPercentage):
     factor_adapted_to_fec: float
 
     @classmethod
-    def calc(
+    def calc(  # type: ignore
         cls, inputs: Inputs, b18: business2018.B18, energy: float, total_energy: float
     ):
         area_m2 = (
@@ -216,7 +217,7 @@ class CO2eFromEnergyUse(CO2eEmissions):
     energy: float
 
     @classmethod
-    def sum(cls, *co2es: "CO2eFromEnergyUse") -> "CO2eFromEnergyUse":
+    def sum(cls, *co2es: "CO2eFromEnergyUse") -> "CO2eFromEnergyUse":  # type: ignore
         return cls(
             CO2e_combustion_based=sum(c.CO2e_combustion_based for c in co2es),
             CO2e_production_based=sum(c.CO2e_production_based for c in co2es),

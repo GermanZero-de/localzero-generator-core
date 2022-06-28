@@ -1,3 +1,4 @@
+# pyright: strict
 from .. import transport2018
 from ..inputs import Inputs
 from .f18 import F18
@@ -38,12 +39,12 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> F18:
         + entries.b_petrol_fec
         + entries.a_petrol_fec
         + t18.t.demand_petrol,
-        CO2e_production_based_per_MWh=fact("Fact_F_P_petrol_ratio_CO2e_pb_to_fec_2018"),
+        CO2e_combustion_based_per_MWh=fact("Fact_F_P_petrol_ratio_CO2e_cb_to_fec_2018"),
     )
     p_jetfuel = FuelProduction(
         energy=entries.b_jetfuel_fec + t18.s_jetfuel.energy,
-        CO2e_production_based_per_MWh=fact(
-            "Fact_F_P_jetfuel_ratio_CO2e_pb_to_fec_2018"
+        CO2e_combustion_based_per_MWh=fact(
+            "Fact_F_P_jetfuel_ratio_CO2e_cb_to_fec_2018"
         ),
     )
     p_diesel = FuelProduction(
@@ -53,7 +54,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> F18:
             + t18.t.demand_diesel
             + entries.a_diesel_fec
         ),
-        CO2e_production_based_per_MWh=fact("Fact_F_P_diesel_ratio_CO2e_pb_to_fec_2018"),
+        CO2e_combustion_based_per_MWh=fact("Fact_F_P_diesel_ratio_CO2e_cb_to_fec_2018"),
     )
     p_bioethanol = FuelProduction(
         energy=t18.t.demand_bioethanol,
@@ -84,7 +85,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> F18:
     )
 
     f = F(
-        CO2e_combustion_based=0,
+        CO2e_combustion_based=p.CO2e_combustion_based,
         CO2e_production_based=p.CO2e_production_based,
         CO2e_total=p.CO2e_total,
     )

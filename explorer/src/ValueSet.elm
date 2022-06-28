@@ -7,6 +7,7 @@ import AllRuns exposing (AllRuns, RunId)
 import Dict exposing (Dict)
 import Lens exposing (Lens)
 import Run
+import Set
 import Tree
 import Value exposing (Value(..))
 
@@ -27,35 +28,42 @@ create lens allRuns =
     -- Otherwise you can't add a path to the interest list that ends
     -- at a TREE
     let
-        paths =
-            Lens.toList lens
+        runsAndPaths =
+            Lens.toList allRuns lens
 
-        runList =
-            AllRuns.toList allRuns
+        paths =
+            List.map Tuple.second runsAndPaths
+                |> Set.fromList
+                |> Set.toList
 
         runs =
-            List.map Tuple.first runList
+            List.map Tuple.first runsAndPaths
+                -- Dedup
+                |> Set.fromList
+                |> Set.toList
 
         values =
-            runList
-                |> List.concatMap
-                    (\( runId, run ) ->
-                        paths
-                            |> List.map
-                                (\path ->
-                                    case
-                                        Run.getTree Run.WithOverrides run
-                                            |> Tree.get path
-                                    of
-                                        Nothing ->
-                                            ( ( runId, path ), String "" )
+            runsAndPaths
+                |> List.map
+                    (\( runId, path ) ->
+                        case AllRuns.get runId allRuns of
+                            Nothing ->
+                                -- TODO: Represent missing run
+                                ( ( runId, path ), String "" )
 
-                                        Just (Tree.Tree _) ->
-                                            ( ( runId, path ), String "TREE" )
+                            Just run ->
+                                case
+                                    Run.getTree Run.WithOverrides run
+                                        |> Tree.get path
+                                of
+                                    Nothing ->
+                                        ( ( runId, path ), String "" )
 
-                                        Just (Tree.Leaf v) ->
-                                            ( ( runId, path ), v )
-                                )
+                                    Just (Tree.Tree _) ->
+                                        ( ( runId, path ), String "TREE" )
+
+                                    Just (Tree.Leaf v) ->
+                                        ( ( runId, path ), v )
                     )
                 |> Dict.fromList
     in

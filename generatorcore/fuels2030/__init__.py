@@ -1,3 +1,4 @@
+# pyright: strict
 from ..inputs import Inputs
 from .. import (
     fuels2018,

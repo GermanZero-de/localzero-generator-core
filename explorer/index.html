@@ -6,9 +6,38 @@
 </head>
 <body>
   <div id='app'></div>
+  <table id='dataForClipboard' style="visibility:hidden;"></table>
   <script src="/elm.js"></script>
   <script>
   'use strict';
+
+  function copyToClipboard(data) {
+      const d = document.getElementById("dataForClipboard");
+      // add the content
+      data.forEach(rowData => {
+        const tr = document.createElement("tr");
+        d.appendChild(tr);
+        rowData.forEach(cellData => {
+            const td = document.createElement("td");
+            tr.appendChild(td);
+            const text = document.createTextNode(cellData);
+            td.appendChild(text);
+        });
+      });
+
+      d.style.visibility = "visible";
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      const range = document.createRange();
+      range.selectNode(d);
+      sel.addRange(range);
+      document.execCommand("copy");
+      d.style.visibility = "hidden";
+      // remove the content again
+      while (d.firstChild) {
+        d.removeChild(d.lastChild);
+      }
+  }
 
   function firefoxDragDropFix(event) {
       event.dataTransfer.setData('text', '');
@@ -22,6 +51,7 @@
     const app = Elm.Main.init({node: document.getElementById('app'), flags: JSON.parse(localStorage.getItem('storage'))});
     app.ports.dragstart.subscribe(firefoxDragDropFix);
     app.ports.save.subscribe(saveToStorage);
+    app.ports.copyToClipboard.subscribe(copyToClipboard);
   }
 
   setupEverything();

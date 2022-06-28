@@ -9,6 +9,7 @@ This is a simple wrapper around the generator to
       scripts and packages / modules shall not be mixed rule.
       See https://mail.python.org/pipermail/python-3000/2007-April/006793.html
 """
+# pyright: strict
 import argparse
 from commands.cmd_ready_to_rock import cmd_ready_to_rock
 from commands.cmd_run import cmd_run, cmd_make_entries
