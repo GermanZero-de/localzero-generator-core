@@ -7,7 +7,6 @@ import AllRuns
         ( AllRuns
         , RunId
         )
-import Array
 import Browser
 import Browser.Dom
 import Cells
@@ -53,7 +52,6 @@ import File.Select
 import Filter
 import Html exposing (Html, p)
 import Html.Attributes
-import Html.Events exposing (onFocus)
 import Html5.DragDrop as DragDrop exposing (droppable)
 import Http
 import Json.Decode as Decode
@@ -66,7 +64,6 @@ import List.Extra
 import Maybe.Extra
 import Pivot exposing (Pivot)
 import Run exposing (OverrideHandling(..), Path, Run)
-import Set exposing (Set)
 import Storage
 import Styling
     exposing
@@ -670,17 +667,6 @@ update msg model =
                                 , pattern = pattern
                                 , result = result
                                 }
-
-                activeSearchFieldChanged =
-                    case ( model.activeSearch, newActiveSearch ) of
-                        ( _, Nothing ) ->
-                            False
-
-                        ( Nothing, Just _ ) ->
-                            True
-
-                        ( Just a, Just b ) ->
-                            a.runId /= b.runId
             in
             { model | activeSearch = newActiveSearch }
                 |> withCmd (Task.attempt (\_ -> Noop) (Browser.Dom.focus filterFieldId))
