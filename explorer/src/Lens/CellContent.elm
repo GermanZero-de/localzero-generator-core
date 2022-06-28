@@ -1,18 +1,19 @@
 module Lens.CellContent exposing (CellContent(..), getLabel, getValueAt)
 
+import AllRuns exposing (RunId)
 import Run exposing (Path)
 
 
 type CellContent
-    = ValueAt Path
+    = ValueAt RunId Path
     | Label String
 
 
-getValueAt : CellContent -> Maybe Path
+getValueAt : CellContent -> Maybe ( RunId, Path )
 getValueAt cc =
     case cc of
-        ValueAt p ->
-            Just p
+        ValueAt ri p ->
+            Just ( ri, p )
 
         Label _ ->
             Nothing
@@ -21,7 +22,7 @@ getValueAt cc =
 getLabel : CellContent -> Maybe String
 getLabel cc =
     case cc of
-        ValueAt _ ->
+        ValueAt _ _ ->
             Nothing
 
         Label l ->

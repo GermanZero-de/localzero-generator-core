@@ -3,6 +3,7 @@ module AllRuns exposing
     , RunId
     , add
     , empty
+    , firstId
     , get
     , getValue
     , remove
@@ -36,9 +37,14 @@ type AllRuns
     = AllRuns { runs : Dict Int Run, nextId : Int }
 
 
+firstId : RunId
+firstId =
+    1
+
+
 empty : AllRuns
 empty =
-    AllRuns { runs = Dict.empty, nextId = 1 }
+    AllRuns { runs = Dict.empty, nextId = firstId }
 
 
 add : Run -> AllRuns -> AllRuns

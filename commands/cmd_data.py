@@ -235,7 +235,7 @@ def cmd_data_checkout(args: Any):
     )
 
 
-def cmd_data_entries_user_overrides_generate_defaults():
+def cmd_data_entries_user_overrides_generate_defaults(args: Any):
     data = refdata.RefData.load()
     result = []
     good = 0
