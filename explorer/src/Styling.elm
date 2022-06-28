@@ -82,18 +82,19 @@ parseGermanNumber s =
         |> String.toFloat
 
 
-sizes : { small : Int, tableGap : Int, medium : Int, large : Int, tableFontSize : Int }
+sizes : { small : Int, tableGap : Int, medium : Int, large : Int, tableFontSize : Int, fontSize : Int }
 sizes =
     { small = 4
     , tableGap = 5
     , medium = 8
     , large = 12
     , tableFontSize = 14
+    , fontSize = 24
     }
 
 
 fonts =
-    { explorer = [ Font.size 24 ]
+    { explorer = [ Font.size sizes.fontSize ]
     , explorerItems = [ Font.size 16 ]
     , explorerValues = [ Font.size 16, Font.family [ Font.monospace ] ]
     , explorerNodeSize = [ Font.size 16 ]

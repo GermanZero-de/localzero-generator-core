@@ -64,6 +64,7 @@ import List.Extra
 import Maybe.Extra
 import Pivot exposing (Pivot)
 import Run exposing (OverrideHandling(..), Path, Run)
+import Set
 import Storage
 import Styling
     exposing
@@ -185,6 +186,13 @@ type ModalState
     = PrepareCalculate (Maybe RunId) Run.Inputs Run.Overrides
     | Loading
     | ErrorMessage String String
+    | ReMap ReMapModalState
+
+
+type alias ReMapModalState =
+    { lensId : LensId
+    , mapping : Dict RunId RunId
+    }
 
 
 filterFieldId : String
@@ -314,6 +322,8 @@ type Msg
     | CalculateModalOkClicked (Maybe RunId) Run.Inputs Run.Overrides
     | RemoveExplorableClicked Explorable.Id
     | ModalDismissed
+    | DisplayReMapModalClicked LensId
+    | ReMapModalOkClicked LensId (Dict RunId RunId)
       -- Lens Modifications
     | AddToLensClicked RunId Run.Path
     | RemoveFromLensClicked LensId (List ( RunId, Run.Path ))
@@ -356,8 +366,11 @@ type Msg
 
 
 type ModalMsg
-    = CalculateModalTargetYearUpdated Int
+    = -- Modal: PrepareCalculate
+      CalculateModalTargetYearUpdated Int
     | CalculateModalAgsUpdated String
+      -- Modal: ReMap
+    | ReMapChangeMapping RunId RunId
 
 
 getActiveLens : Model -> Lens
@@ -636,9 +649,49 @@ update msg model =
             { model | showModal = Just modal }
                 |> withNoCmd
 
+        DisplayReMapModalClicked lensId ->
+            let
+                newModel =
+                    model
+                        |> activateLens lensId
+
+                lens =
+                    getActiveLens newModel
+
+                valueSet =
+                    ValueSet.create lens model.runs
+
+                mapping =
+                    valueSet.runs
+                        |> List.map (\ri -> ( ri, ri ))
+                        |> Dict.fromList
+            in
+            { model | showModal = Just (ReMap { lensId = lensId, mapping = mapping }) }
+                |> withNoCmd
+
         CalculateModalOkClicked maybeNdx inputs overrides ->
             model
                 |> initiateMakeEntries maybeNdx inputs overrides
+
+        ReMapModalOkClicked lensId mapping ->
+            { model | showModal = Nothing }
+                |> activateLens lensId
+                |> mapActiveLens
+                    (Lens.mapCells
+                        (Cells.map
+                            (\cc ->
+                                case cc of
+                                    CellContent.ValueAt ri p ->
+                                        CellContent.ValueAt
+                                            (Dict.get ri mapping |> Maybe.withDefault ri)
+                                            p
+
+                                    CellContent.Label _ ->
+                                        cc
+                            )
+                        )
+                    )
+                |> withSaveCmd
 
         AddOrUpdateOverrideClicked ndx name f ->
             { model
@@ -1109,6 +1162,24 @@ updateModal msg model =
 
                 CalculateModalTargetYearUpdated y ->
                     Just (PrepareCalculate ndx { inputs | year = y } overrides)
+                        |> withNoCmd
+
+                ReMapChangeMapping _ _ ->
+                    model
+                        |> withNoCmd
+
+        Just (ReMap reMapState) ->
+            case msg of
+                ReMapChangeMapping a b ->
+                    Just (ReMap { reMapState | mapping = Dict.insert a b reMapState.mapping })
+                        |> withNoCmd
+
+                CalculateModalAgsUpdated _ ->
+                    model
+                        |> withNoCmd
+
+                CalculateModalTargetYearUpdated _ ->
+                    model
                         |> withNoCmd
 
         Just Loading ->
@@ -2094,7 +2165,7 @@ viewValueSetAsUserDefinedTable lensId dragDrop td valueSet =
     in
     Element.column []
         [ Element.row [ spacing sizes.small, Font.size sizes.tableFontSize ]
-            [ text "Values of "
+            [ text "Showing values of "
             , case valueSet.runs of
                 [] ->
                     text "nothing"
@@ -2105,7 +2176,7 @@ viewValueSetAsUserDefinedTable lensId dragDrop td valueSet =
                         { label =
                             row [ spacing sizes.small ]
                                 (List.map (viewRunId []) valueSet.runs)
-                        , onPress = Nothing
+                        , onPress = Just (DisplayReMapModalClicked lensId)
                         }
             ]
         , Element.table
@@ -2519,6 +2590,64 @@ viewCalculateModal maybeNdx inputs overrides =
         ]
 
 
+viewRunReMapModal : ReMapModalState -> AllRuns -> Element Msg
+viewRunReMapModal { lensId, mapping } allRuns =
+    let
+        listOfMappings =
+            Dict.toList mapping
+
+        allActualRuns =
+            allRuns
+                |> AllRuns.toList
+                |> List.map Tuple.first
+
+        allMissingRuns =
+            Dict.keys mapping
+                |> List.filter (\ri -> AllRuns.get ri allRuns == Nothing)
+
+        options =
+            (allActualRuns ++ allMissingRuns)
+                -- dedup
+                |> Set.fromList
+                |> Set.toList
+                |> List.map
+                    (\ri ->
+                        Input.option ri (viewRunId [ Element.moveDown 1 ] ri)
+                    )
+    in
+    column
+        [ width fill
+        , height fill
+        , spacing sizes.medium
+        ]
+        ((listOfMappings
+            |> List.map
+                (\( fromRunId, toRunId ) ->
+                    Input.radioRow
+                        [ spacing (2 * sizes.large) ]
+                        { onChange = ModalMsg << ReMapChangeMapping fromRunId
+                        , options = options
+                        , selected = Just toRunId
+                        , label =
+                            Input.labelLeft [ Element.paddingXY sizes.large 0 ]
+                                (row (spacing sizes.medium :: fonts.explorer)
+                                    [ viewRunId [ Element.moveDown 1 ] fromRunId
+                                    , icon
+                                        (FeatherIcons.withSize (toFloat sizes.fontSize)
+                                            FeatherIcons.arrowRight
+                                        )
+                                    ]
+                                )
+                        }
+                )
+         )
+            ++ [ iconButton
+                    (size32 FeatherIcons.check)
+                    (ReMapModalOkClicked lensId mapping)
+               ]
+        )
+
+
 view : Model -> Html Msg
 view model =
     let
@@ -2549,6 +2678,11 @@ view model =
 
                                 ErrorMessage t m ->
                                     ( t, scrollableText m )
+
+                                ReMap reMapState ->
+                                    ( "Change which runs are shown"
+                                    , viewRunReMapModal reMapState model.runs
+                                    )
                     in
                     viewModalDialogBox title content
     in
