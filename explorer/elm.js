@@ -9002,10 +9002,6 @@ var $elm$core$Tuple$second = function (_v0) {
 	var y = _v0.b;
 	return y;
 };
-var $author$project$AllRuns$toList = function (_v0) {
-	var a = _v0;
-	return $elm$core$Dict$toList(a.F);
-};
 var $author$project$Cells$foldRowMajor = F3(
 	function (fn, init, cs) {
 		var helper = F2(
@@ -9046,6 +9042,10 @@ var $author$project$Cells$foldRowMajor = F3(
 			init,
 			{e: 0, h: 0});
 	});
+var $author$project$AllRuns$toList = function (_v0) {
+	var a = _v0;
+	return $elm$core$Dict$toList(a.F);
+};
 var $author$project$Lens$toList = F2(
 	function (runs, _v0) {
 		var l = _v0;
@@ -9125,8 +9125,7 @@ var $author$project$ValueSet$create = F2(
 					}
 				},
 				runsAndPaths));
-		var runList = $author$project$AllRuns$toList(allRuns);
-		var runs = A2($elm$core$List$map, $elm$core$Tuple$first, runList);
+		var runs = A2($elm$core$List$map, $elm$core$Tuple$first, runsAndPaths);
 		var paths = $elm$core$Set$toList(
 			$elm$core$Set$fromList(
 				A2($elm$core$List$map, $elm$core$Tuple$second, runsAndPaths)));

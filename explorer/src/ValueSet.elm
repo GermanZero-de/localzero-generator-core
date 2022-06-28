@@ -36,11 +36,8 @@ create lens allRuns =
                 |> Set.fromList
                 |> Set.toList
 
-        runList =
-            AllRuns.toList allRuns
-
         runs =
-            List.map Tuple.first runList
+            List.map Tuple.first runsAndPaths
 
         values =
             runsAndPaths
