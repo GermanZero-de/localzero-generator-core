@@ -13,6 +13,8 @@ module Styling exposing
     , modalDim
     , parseGermanNumber
     , red
+    , runColorForChart
+    , runColorForUI
     , scrollableText
     , size16
     , size32
@@ -21,6 +23,8 @@ module Styling exposing
     , white
     )
 
+import AllRuns exposing (RunId)
+import Array
 import Element
     exposing
         ( Element
@@ -40,6 +44,7 @@ import Element.Input as Input
 import FeatherIcons
 import FormatNumber exposing (format)
 import FormatNumber.Locales exposing (spanishLocale)
+import Hex
 
 
 scrollableText : String -> Element msg
@@ -93,6 +98,7 @@ fonts =
     , explorerValues = [ Font.size 16, Font.family [ Font.monospace ] ]
     , explorerNodeSize = [ Font.size 16 ]
     , table = [ Font.size sizes.tableFontSize ]
+    , smallTextButton = [ Font.size 12 ]
     }
 
 
@@ -240,3 +246,64 @@ dangerousIconButton i op =
         dangerousIconButtonStyle
         i
         op
+
+
+runColor : RunId -> ( Int, Int, Int )
+runColor =
+    let
+        -- I'm basically assuming that we never compare more
+        -- than the below number of runs simultaneously
+        -- and even that you don't add and remove runs
+        -- a lot (because than you would run into the same
+        -- colors again).
+        -- But then if they do happen again, it's still very
+        -- unlikely they will end up next to each other
+        -- so this should be fine
+        colors =
+            Array.fromList
+                [ -- pink
+                  ( 0xEA, 0x60, 0xDF )
+                , -- purple
+                  ( 0x7B, 0x4D, 0xFF )
+                , -- blue
+                  ( 0x12, 0xA5, 0xED )
+                , -- moss
+                  ( 0x92, 0xB4, 0x2C )
+                , -- brown
+                  ( 0x87, 0x1C, 0x1C )
+                , -- mint
+                  ( 0x6D, 0xF0, 0xD2 )
+                , -- coral
+                  ( 0xEA, 0x73, 0x69 )
+                , -- turquoise
+                  ( 0x22, 0xD2, 0xBA )
+                , -- magenta
+                  ( 0xDB, 0x4C, 0xB2 )
+                ]
+
+        numColors =
+            Array.length colors
+    in
+    \runId ->
+        Array.get (remainderBy numColors (runId - 1)) colors
+            -- can't happen because of the remainderBy
+            |> Maybe.withDefault ( 0, 0, 0 )
+
+
+runColorForChart : RunId -> String
+runColorForChart ri =
+    let
+        ( r, g, b ) =
+            runColor ri
+    in
+    String.concat
+        [ "#", Hex.toString r, Hex.toString g, Hex.toString b ]
+
+
+runColorForUI : RunId -> Element.Color
+runColorForUI ri =
+    let
+        ( r, g, b ) =
+            runColor ri
+    in
+    Element.rgb255 r g b

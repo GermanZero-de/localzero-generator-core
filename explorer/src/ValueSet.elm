@@ -38,6 +38,9 @@ create lens allRuns =
 
         runs =
             List.map Tuple.first runsAndPaths
+                -- Dedup
+                |> Set.fromList
+                |> Set.toList
 
         values =
             runsAndPaths

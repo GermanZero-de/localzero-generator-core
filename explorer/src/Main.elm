@@ -7,7 +7,6 @@ import AllRuns
         ( AllRuns
         , RunId
         )
-import Array
 import Browser
 import Browser.Dom
 import Cells
@@ -51,7 +50,6 @@ import File exposing (File)
 import File.Download as Download
 import File.Select
 import Filter
-import Hex
 import Html exposing (Html, p)
 import Html.Attributes
 import Html5.DragDrop as DragDrop exposing (droppable)
@@ -115,67 +113,6 @@ main =
 
 
 -- MODEL
-
-
-runColor : RunId -> ( Int, Int, Int )
-runColor =
-    let
-        -- I'm basically assuming that we never compare more
-        -- than the below number of runs simultaneously
-        -- and even that you don't add and remove runs
-        -- a lot (because than you would run into the same
-        -- colors again).
-        -- But then if they do happen again, it's still very
-        -- unlikely they will end up next to each other
-        -- so this should be fine
-        colors =
-            Array.fromList
-                [ -- pink
-                  ( 0xEA, 0x60, 0xDF )
-                , -- purple
-                  ( 0x7B, 0x4D, 0xFF )
-                , -- blue
-                  ( 0x12, 0xA5, 0xED )
-                , -- moss
-                  ( 0x92, 0xB4, 0x2C )
-                , -- brown
-                  ( 0x87, 0x1C, 0x1C )
-                , -- mint
-                  ( 0x6D, 0xF0, 0xD2 )
-                , -- coral
-                  ( 0xEA, 0x73, 0x69 )
-                , -- turquoise
-                  ( 0x22, 0xD2, 0xBA )
-                , -- magenta
-                  ( 0xDB, 0x4C, 0xB2 )
-                ]
-
-        numColors =
-            Array.length colors
-    in
-    \runId ->
-        Array.get (remainderBy numColors (runId - 1)) colors
-            -- can't happen because of the remainderBy
-            |> Maybe.withDefault ( 0, 0, 0 )
-
-
-runColorForChart : RunId -> String
-runColorForChart ri =
-    let
-        ( r, g, b ) =
-            runColor ri
-    in
-    String.concat
-        [ "#", Hex.toString r, Hex.toString g, Hex.toString b ]
-
-
-runColorForUI : RunId -> Element.Color
-runColorForUI ri =
-    let
-        ( r, g, b ) =
-            runColor ri
-    in
-    Element.rgb255 r g b
 
 
 type alias ActiveOverrideEditor =
@@ -1224,7 +1161,7 @@ viewChart chartHovering shortPathLabels interestListTable =
                                     Nothing ->
                                         0.0
                         in
-                        C.bar get [ CA.color (runColorForChart runId) ]
+                        C.bar get [ CA.color (Styling.runColorForChart runId) ]
                             |> C.named (String.fromInt runId)
                             |> C.format (\v -> formatGermanNumber v)
                     )
@@ -2155,23 +2092,46 @@ viewValueSetAsUserDefinedTable lensId dragDrop td valueSet =
                     }
                 )
     in
-    Element.table
-        [ padding sizes.large
-        ]
-        { columns =
-            case td.editing of
-                Nothing ->
-                    columnDefs
+    Element.column []
+        [ Element.row [ spacing sizes.small, Font.size sizes.tableFontSize ]
+            [ text "Values of "
+            , case valueSet.runs of
+                [] ->
+                    text "nothing"
 
-                Just _ ->
-                    deleteRowButtonColumn :: columnDefs
-        , data = List.range 0 (Cells.rows td.grid * 2)
-        }
+                _ ->
+                    Input.button
+                        []
+                        { label =
+                            row [ spacing sizes.small ]
+                                (List.map (viewRunId []) valueSet.runs)
+                        , onPress = Nothing
+                        }
+            ]
+        , Element.table
+            [ padding sizes.large
+            ]
+            { columns =
+                case td.editing of
+                    Nothing ->
+                        columnDefs
+
+                    Just _ ->
+                        deleteRowButtonColumn :: columnDefs
+            , data = List.range 0 (Cells.rows td.grid * 2)
+            }
+        ]
 
 
 viewRunId : List (Element.Attribute msg) -> RunId -> Element msg
 viewRunId attrs runId =
-    el (attrs ++ [ Font.bold, Font.color (runColorForUI runId) ]) (text (String.fromInt runId))
+    el
+        (attrs
+            ++ [ Font.bold
+               , Font.color (Styling.runColorForUI runId)
+               ]
+        )
+        (text (String.fromInt runId))
 
 
 {-| View valueset as table of values
@@ -2329,6 +2289,7 @@ viewLens id dragDrop editingActiveLensLabel isActive lens chartHovering allRuns 
                         [ bind noModifiers K.Enter LensLabelEditFinished
                         ]
                     , Element.htmlAttribute (Html.Attributes.id "interestlabel")
+                    , padding sizes.small
                     ]
                     { onChange = LensLabelEdited id
                     , text = labelText
@@ -2365,7 +2326,7 @@ viewLens id dragDrop editingActiveLensLabel isActive lens chartHovering allRuns 
                 , dangerousIconButton FeatherIcons.trash2 (RemoveLensClicked id)
                 ]
             ]
-        , column [ width fill, spacing 40 ]
+        , column [ width fill, spacing 40, padding sizes.large ]
             [ if showGraph then
                 viewChart chartHovering shortPathLabels valueSet
 
