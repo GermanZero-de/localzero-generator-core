@@ -218,16 +218,11 @@ toClipboardData lens allRuns =
         encodeCell : Lens.CellContent -> Encode.Value
         encodeCell content =
             case content of
-                CellContent.ValueAt p ->
+                CellContent.ValueAt r p ->
                     let
                         value =
-                            case valueSet.runs of
-                                [] ->
-                                    Value.Null
-
-                                r :: _ ->
-                                    Dict.get ( r, p ) valueSet.values
-                                        |> Maybe.withDefault Value.Null
+                            Dict.get ( r, p ) valueSet.values
+                                |> Maybe.withDefault Value.Null
                     in
                     case value of
                         Value.Float f ->
@@ -313,7 +308,7 @@ type Msg
       -- Filter
     | FilterEdited RunId String
     | FilterFinished
-    | FilterQuickAddRequested
+    | FilterQuickAddRequested RunId
       -- Tree navigation
     | ToggleCollapseTreeClicked Explorable.Id Path
       -- Modal dialog
@@ -323,8 +318,8 @@ type Msg
     | RemoveExplorableClicked Explorable.Id
     | ModalDismissed
       -- Lens Modifications
-    | AddToLensClicked Run.Path
-    | RemoveFromLensClicked LensId Run.Path
+    | AddToLensClicked RunId Run.Path
+    | RemoveFromLensClicked LensId (List ( RunId, Run.Path ))
     | LensLabelEdited LensId String
     | LensLabelEditFinished
     | DuplicateLensClicked LensId
@@ -337,7 +332,7 @@ type Msg
     | AddColumnToLensTableClicked LensId Int
     | CellOfLensTableEdited LensId Cells.Pos Lens.CellContent
     | CellOfLensTableEditFinished LensId Cells.Pos Lens.CellContent
-    | MoveToCellRequested Path LensId Cells.Pos
+    | MoveToCellRequested RunId Path LensId Cells.Pos
     | SwapCellsRequested LensId Cells.Pos Lens.CellContent LensId Cells.Pos Lens.CellContent
     | MoveIntoNewColumnRequested (Maybe ( LensId, Cells.Pos )) Lens.CellContent LensId Cells.Pos
     | MoveIntoNewRowRequested (Maybe ( LensId, Cells.Pos )) Lens.CellContent LensId Cells.Pos
@@ -690,7 +685,7 @@ update msg model =
             { model | activeSearch = newActiveSearch }
                 |> withCmd (Task.attempt (\_ -> Noop) (Browser.Dom.focus filterFieldId))
 
-        FilterQuickAddRequested ->
+        FilterQuickAddRequested run ->
             case model.activeSearch of
                 Nothing ->
                     model
@@ -703,8 +698,8 @@ update msg model =
                     in
                     { model | activeSearch = Nothing }
                         |> mapActiveLens
-                            (\il ->
-                                List.foldl (\p i -> Lens.insert p i) il paths
+                            (\lens ->
+                                List.foldl (\p i -> Lens.insert run p i) lens paths
                             )
                         |> withNoCmd
 
@@ -783,20 +778,20 @@ update msg model =
                                 |> Dict.remove name
                             )
 
-        AddToLensClicked path ->
+        AddToLensClicked runId path ->
             model
-                |> mapActiveLens (Lens.insert path)
+                |> mapActiveLens (Lens.insert runId path)
                 |> withSaveCmd
 
-        RemoveFromLensClicked id path ->
+        RemoveFromLensClicked lensId what ->
             model
-                |> activateLens id
-                |> mapActiveLens (Lens.remove path)
+                |> activateLens lensId
+                |> mapActiveLens (Lens.removeList what)
                 |> withSaveCmd
 
-        ToggleShowGraphClicked id ->
+        ToggleShowGraphClicked lensId ->
             model
-                |> activateLens id
+                |> activateLens lensId
                 |> mapActiveLens Lens.toggleShowGraph
                 |> withSaveCmd
 
@@ -989,10 +984,10 @@ update msg model =
             { model | leftPaneWidth = w }
                 |> withNoCmd
 
-        MoveToCellRequested path lensId cellPos ->
+        MoveToCellRequested runId path lensId cellPos ->
             model
                 |> activateLens lensId
-                |> mapActiveLens (Lens.mapCells (Cells.set cellPos (CellContent.ValueAt path)))
+                |> mapActiveLens (Lens.mapCells (Cells.set cellPos (CellContent.ValueAt runId path)))
                 |> withSaveCmd
 
         MoveIntoNewRowRequested sourceCell cv1 l2 p2 ->
@@ -1066,8 +1061,8 @@ update msg model =
                         Nothing ->
                             identity
 
-                        Just ( DragFromRun _ path, DropOnCell lensId pos _ ) ->
-                            Cmd.Extra.andThen (update (MoveToCellRequested path lensId pos))
+                        Just ( DragFromRun runId path, DropOnCell lensId pos _ ) ->
+                            Cmd.Extra.andThen (update (MoveToCellRequested runId path lensId pos))
 
                         Just ( DragFromCell l1 p1 cv1, DropOnCell l2 p2 cv2 ) ->
                             Cmd.Extra.andThen (update (SwapCellsRequested l1 p1 cv1 l2 p2 cv2))
@@ -1075,13 +1070,13 @@ update msg model =
                         Just ( DragFromCell l1 p1 cv1, DropInNewRow l2 p2 ) ->
                             Cmd.Extra.andThen (update (MoveIntoNewRowRequested (Just ( l1, p1 )) cv1 l2 p2))
 
-                        Just ( DragFromRun _ path, DropInNewRow l2 p2 ) ->
+                        Just ( DragFromRun runId path, DropInNewRow l2 p2 ) ->
                             Cmd.Extra.andThen
-                                (update (MoveIntoNewRowRequested Nothing (CellContent.ValueAt path) l2 p2))
+                                (update (MoveIntoNewRowRequested Nothing (CellContent.ValueAt runId path) l2 p2))
 
-                        Just ( DragFromRun _ path, DropInNewColumn l2 p2 ) ->
+                        Just ( DragFromRun runId path, DropInNewColumn l2 p2 ) ->
                             Cmd.Extra.andThen
-                                (update (MoveIntoNewColumnRequested Nothing (CellContent.ValueAt path) l2 p2))
+                                (update (MoveIntoNewColumnRequested Nothing (CellContent.ValueAt runId path) l2 p2))
 
                         Just ( DragFromCell l1 p1 cv1, DropInNewColumn l2 p2 ) ->
                             Cmd.Extra.andThen (update (MoveIntoNewColumnRequested (Just ( l1, p1 )) cv1 l2 p2))
@@ -1455,12 +1450,12 @@ viewValueTree runId lensId path checkIsCollapsed lens overrides activeOverrideEd
                             pathToParent ++ [ name ]
 
                         button =
-                            if Lens.member thisPath lens then
+                            if Lens.member runId thisPath lens then
                                 dangerousIconButton (size16 FeatherIcons.trash2)
-                                    (RemoveFromLensClicked lensId thisPath)
+                                    (RemoveFromLensClicked lensId [ ( runId, thisPath ) ])
 
                             else
-                                iconButton (size16 FeatherIcons.plus) (AddToLensClicked thisPath)
+                                iconButton (size16 FeatherIcons.plus) (AddToLensClicked runId thisPath)
 
                         ( originalValue, maybeOverride ) =
                             -- Clicking on original value should start or revert
@@ -1651,7 +1646,7 @@ viewRun runId lensId lens collapseStatus activeOverrideEditor activeSearch selec
                                 , Element.htmlAttribute (Html.Attributes.id filterFieldId)
                                 , KeyBindings.on
                                     [ bind noModifiers K.Escape FilterFinished
-                                    , bind noModifiers K.Enter FilterQuickAddRequested
+                                    , bind noModifiers K.Enter (FilterQuickAddRequested runId)
                                     ]
                                 ]
                                 { onChange = FilterEdited runId
@@ -1865,15 +1860,10 @@ viewValueSetAsUserDefinedTable lensId dragDrop td valueSet =
                         CellContent.Label l ->
                             displayLabel l
 
-                        CellContent.ValueAt p ->
+                        CellContent.ValueAt r p ->
                             let
                                 value =
-                                    case valueSet.runs of
-                                        [] ->
-                                            Nothing
-
-                                        r :: _ ->
-                                            Dict.get ( r, p ) valueSet.values
+                                    Dict.get ( r, p ) valueSet.values
                             in
                             if td.editing /= Nothing then
                                 -- We are in editing mode, but not editing THIS cell.
@@ -1967,7 +1957,7 @@ viewValueSetAsUserDefinedTable lensId dragDrop td valueSet =
                             , text = CellContent.getLabel editValue |> Maybe.withDefault ""
                             , placeholder =
                                 CellContent.getValueAt cell
-                                    |> Maybe.map (viewPath >> Input.placeholder [])
+                                    |> Maybe.map (Tuple.second >> viewPath >> Input.placeholder [])
                             , label = Input.labelHidden "label"
                             }
 
@@ -2095,7 +2085,7 @@ viewValueSetAsUserDefinedTable lensId dragDrop td valueSet =
                                 px sizes.tableGap
 
                             Data _ ->
-                                fill |> Element.minimum 60 |> Element.maximum 300
+                                shrink |> Element.minimum 60 |> Element.maximum 300
                     , view =
                         \rowNdx ->
                             case ( tableElementFromIndex rowNdx, columnElement ) of
@@ -2185,7 +2175,16 @@ viewValueSetAsClassicTable shortPathLabels lensId valueSet =
             , width = shrink
             , view =
                 \path ->
-                    dangerousIconButton (size16 FeatherIcons.trash2) (RemoveFromLensClicked lensId path)
+                    let
+                        removeMsg =
+                            valueSet.runs
+                                |> List.map
+                                    (\runId ->
+                                        ( runId, path )
+                                    )
+                                |> RemoveFromLensClicked lensId
+                    in
+                    dangerousIconButton (size16 FeatherIcons.trash2) removeMsg
             }
     in
     Element.table
