@@ -211,7 +211,7 @@ class BiskoPrivResidences(BiskoSector, BiskoSectorWithExtraCommunalFacilities):
         petrol = EnergyAndEmissionsCalcIntermediate(
             eb_energy_from_same_sector=r18.s_petrol.energy,
             eb_CO2e_cb_from_same_sector=r18.s_petrol.CO2e_total,
-            eb_CO2e_cb_from_fuels=f18.p_petrol.CO2e_production_based
+            eb_CO2e_cb_from_fuels=f18.p_petrol.CO2e_combustion_based
             * div(f18.d_r.energy, f18.d.energy),
         )
         fueloil = EnergyAndEmissionsCalcIntermediate(
@@ -334,7 +334,7 @@ class BiskoBusiness(BiskoSector, BiskoSectorWithExtraCommunalFacilities):
             eb_energy_from_agri=a18.s_petrol.energy,
             eb_CO2e_cb_from_same_sector=b18.s_petrol.CO2e_total,
             eb_CO2e_cb_from_agri=a18.s_petrol.CO2e_total,
-            eb_CO2e_cb_from_fuels=f18.p_petrol.CO2e_production_based
+            eb_CO2e_cb_from_fuels=f18.p_petrol.CO2e_combustion_based
             * div(f18.d_b.energy + f18.d_a.energy, f18.d.energy),
         )
         diesel = EnergyAndEmissionsCalcIntermediate(
@@ -342,16 +342,15 @@ class BiskoBusiness(BiskoSector, BiskoSectorWithExtraCommunalFacilities):
             eb_energy_from_agri=a18.s_diesel.energy,
             eb_CO2e_cb_from_same_sector=b18.s_diesel.CO2e_total,
             eb_CO2e_cb_from_agri=a18.s_diesel.CO2e_total,
-            eb_CO2e_cb_from_fuels=f18.p_diesel.CO2e_production_based
+            eb_CO2e_cb_from_fuels=f18.p_diesel.CO2e_combustion_based
             * div(f18.d_b.energy + f18.d_a.energy, f18.d.energy),
         )
         jetfuel = EnergyAndEmissionsCalcIntermediate(
             eb_energy_from_same_sector=b18.s_jetfuel.energy,
             eb_CO2e_cb_from_same_sector=b18.s_jetfuel.CO2e_total,
-            eb_CO2e_cb_from_fuels=f18.p_jetfuel.CO2e_production_based
+            eb_CO2e_cb_from_fuels=f18.p_jetfuel.CO2e_combustion_based
             * div(f18.d_b.energy, f18.d.energy),
         )
-        # TODO: fix h.18.a_t....
         fueloil = EnergyAndEmissionsCalcIntermediate(
             eb_energy_from_same_sector=b18.s_fueloil.energy,
             eb_energy_from_agri=a18.s_fueloil.energy,
@@ -498,21 +497,21 @@ class BiskoTransport(BiskoSector):
             eb_energy_from_same_sector=t18.s_petrol.energy,
             eb_CO2e_cb_from_same_sector=t18.s_petrol.energy
             * fact("Fact_T_S_petrol_EmFa_tank_wheel_2018"),
-            eb_CO2e_cb_from_fuels=f18.p_petrol.CO2e_production_based
+            eb_CO2e_cb_from_fuels=f18.p_petrol.CO2e_combustion_based
             * div(f18.d_t.energy, f18.d.energy),
         )
         diesel = EnergyAndEmissionsCalcIntermediate(
             eb_energy_from_same_sector=t18.s_diesel.energy,
             eb_CO2e_cb_from_same_sector=t18.s_diesel.energy
             * fact("Fact_T_S_diesel_EmFa_tank_wheel_2018"),
-            eb_CO2e_cb_from_fuels=f18.p_diesel.CO2e_production_based
+            eb_CO2e_cb_from_fuels=f18.p_diesel.CO2e_combustion_based
             * div(f18.d_t.energy + f18.d_a.energy, f18.d.energy),
         )
         jetfuel = EnergyAndEmissionsCalcIntermediate(
             eb_energy_from_same_sector=t18.s_jetfuel.energy,
             eb_CO2e_cb_from_same_sector=t18.s_jetfuel.energy
             * fact("Fact_T_S_jetfuel_EmFa_tank_wheel_2018"),
-            eb_CO2e_cb_from_fuels=f18.p_jetfuel.CO2e_production_based
+            eb_CO2e_cb_from_fuels=f18.p_jetfuel.CO2e_combustion_based
             * div(f18.d_t.energy, f18.d.energy),
         )
 
@@ -520,21 +519,21 @@ class BiskoTransport(BiskoSector):
             eb_energy_from_same_sector=t18.s_bioethanol.energy,
             eb_CO2e_cb_from_same_sector=t18.s_bioethanol.energy
             * ass("Ass_T_S_bioethanol_EmFa_tank_wheel"),
-            eb_CO2e_cb_from_fuels=f18.p_bioethanol.CO2e_production_based
+            eb_CO2e_cb_from_fuels=f18.p_bioethanol.CO2e_combustion_based
             * div(f18.d_t.energy, f18.d.energy),
         )
         biodiesel = EnergyAndEmissionsCalcIntermediate(
             eb_energy_from_same_sector=t18.s_biodiesel.energy,
             eb_CO2e_cb_from_same_sector=t18.s_biodiesel.energy
             * ass("Ass_T_S_biodiesel_EmFa_tank_wheel"),
-            eb_CO2e_cb_from_fuels=f18.p_biodiesel.CO2e_production_based
+            eb_CO2e_cb_from_fuels=f18.p_biodiesel.CO2e_combustion_based
             * div(f18.d_t.energy, f18.d.energy),
         )
         biogas = EnergyAndEmissionsCalcIntermediate(
             eb_energy_from_same_sector=t18.s_biogas.energy,
             eb_CO2e_cb_from_same_sector=t18.s_biogas.energy
             * ass("Ass_T_S_biogas_EmFa_tank_wheel"),
-            eb_CO2e_cb_from_fuels=f18.p_biogas.CO2e_production_based
+            eb_CO2e_cb_from_fuels=f18.p_biogas.CO2e_combustion_based
             * div(f18.d_t.energy, f18.d.energy),
         )
 
@@ -625,7 +624,7 @@ class BiskoIndustry(BiskoSector):
         # Bereitstellung
         diesel = EnergyAndEmissionsCalcIntermediate(
             eb_energy_from_same_sector=i18.s_fossil_diesel.energy,
-            eb_CO2e_cb_from_fuels=f18.p_diesel.CO2e_production_based
+            eb_CO2e_cb_from_fuels=f18.p_diesel.CO2e_combustion_based
             * div(f18.d_i.energy, f18.d.energy),
         )
         fueloil = EnergyAndEmissionsCalcIntermediate(
