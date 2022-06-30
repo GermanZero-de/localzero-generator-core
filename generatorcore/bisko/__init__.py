@@ -23,12 +23,14 @@ class ProductionBasedEmission:
     CO2e_pb: float
 
     @classmethod
-    def calc_sum_pb_emission(cls, *args: "ProductionBasedEmission") -> "ProductionBasedEmission":
+    def calc_sum_pb_emission(
+        cls, *args: "ProductionBasedEmission"
+    ) -> "ProductionBasedEmission":
         CO2e_pb = sum([elem.CO2e_pb for elem in args])
         return cls(CO2e_pb=CO2e_pb)
-    
-    def add_production_based_emission(self,*args:"ProductionBasedEmission"):
-        self.CO2e_pb = self.CO2e_pb + sum([elem.CO2e_pb for elem in args]) 
+
+    def add_production_based_emission(self, *args: "ProductionBasedEmission"):
+        self.CO2e_pb = self.CO2e_pb + sum([elem.CO2e_pb for elem in args])
 
 
 @dataclass
@@ -55,7 +57,9 @@ class EnergyAndEmissions(Emissions):
     energy: float
 
     @classmethod
-    def calc_sum_energy_and_emissions(cls, *args:"EnergyAndEmissions" ) -> "EnergyAndEmissions":
+    def calc_sum_energy_and_emissions(
+        cls, *args: "EnergyAndEmissions"
+    ) -> "EnergyAndEmissions":
         return cls(
             energy=sum([elem.energy for elem in args]),
             CO2e_cb=sum([elem.CO2e_cb for elem in args]),
@@ -543,7 +547,7 @@ class BiskoTransport(BiskoSector):
             * fact("Fact_T_S_fueloil_EmFa_tank_wheel_2018"),
             eb_CO2e_cb_from_heat=h18.p_fueloil.CO2e_combustion_based
             * div(h18.d_t.energy, h18.d.energy),
-        ) 
+        )
 
         lpg = EnergyAndEmissionsCalcIntermediate(
             eb_energy_from_same_sector=t18.s_lpg.energy,
@@ -569,7 +573,16 @@ class BiskoTransport(BiskoSector):
         )
 
         total = Sums.calc(
-            petrol, diesel, jetfuel, bioethanol, biodiesel, biogas, fueloil, lpg, gas, elec
+            petrol,
+            diesel,
+            jetfuel,
+            bioethanol,
+            biodiesel,
+            biogas,
+            fueloil,
+            lpg,
+            gas,
+            elec,
         )
 
         return cls(
@@ -768,7 +781,9 @@ class BiskoAgriculture(BiskoProductionBasedOnly):
         soil = ProductionBasedEmission(CO2e_pb=a18.p_soil.CO2e_production_based)
         other = ProductionBasedEmission(CO2e_pb=a18.p_other.CO2e_production_based)
 
-        total = ProductionBasedEmission.calc_sum_pb_emission(forest, manure, soil, other)
+        total = ProductionBasedEmission.calc_sum_pb_emission(
+            forest, manure, soil, other
+        )
 
         return cls(forest=forest, manure=manure, soil=soil, other=other, total=total)
 
@@ -794,9 +809,7 @@ class BiskoLULUCF(BiskoProductionBasedOnly):
         grove = ProductionBasedEmission(CO2e_pb=l18.g_grove.CO2e_total)
         wet = ProductionBasedEmission(CO2e_pb=l18.g_wet.CO2e_total)
         water = ProductionBasedEmission(CO2e_pb=l18.g_water.CO2e_total)
-        settlement = ProductionBasedEmission(
-            CO2e_pb=l18.g_settlement.CO2e_total
-        )
+        settlement = ProductionBasedEmission(CO2e_pb=l18.g_settlement.CO2e_total)
         other = ProductionBasedEmission(CO2e_pb=l18.g_other.CO2e_total)
         wood = ProductionBasedEmission(CO2e_pb=l18.g_wood.CO2e_total)
 
@@ -870,8 +883,8 @@ class Bisko:
             transport_bisko.total,
             industry_bisko.total,
         )
-        
-        total.add_production_based_emission(agri_bisko.total,lulucf_bisko.total)
+
+        total.add_production_based_emission(agri_bisko.total, lulucf_bisko.total)
 
         communal_facilities = EnergyAndEmissions.calc_sum_energy_and_emissions(
             priv_residences_bisko.communal_facilities,
