@@ -1306,6 +1306,8 @@ def calc(
 
     # The amount of energy we produce locally above the local demand
     p_local_surplus.energy = p_local.energy - d.energy
+    # The amount of energy we need from the German Grid (which by the
+    # time we need that needs to able to provide that)
     p_renew.energy = max(0, -p_local_surplus.energy)
 
     p_renew_geoth.energy = p_renew.energy * p_renew_geoth.pct_energy
