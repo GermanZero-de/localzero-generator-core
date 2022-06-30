@@ -1,7 +1,7 @@
-'''
+"""
 Agriculture 2030 works similarly to the 2018 calculation script, but considers
 demand changes with respect to 2018.
-'''
+"""
 
 # pyright: strict
 from ..inputs import Inputs

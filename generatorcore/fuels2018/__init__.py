@@ -1,14 +1,14 @@
-'''
-The fuel sector calculates emissions that are created during fuel production, 
-i.e. well-to-tank emissions. A commune's fuel demand by sector (e.g. traffic) and 
-by fuel type (e.g. Diesel) is considered. The fuel demand is multiplied by the 
-respective emission factor. (Note: bio fuels are multiplied by a factor of 0 given 
-that well-to-tank and tank-to-wheel emissions roughly cancel each other out.) 
-For 203x bio fuels are removed, fossil fuels are replaced by their e variant, 
-and e-methane and hydrogen are added. The electricity demand is estimated due 
-to the usage of e-fuels. Fuel demand again is multiplied by the respective 
+"""
+The fuel sector calculates emissions that are created during fuel production,
+i.e. well-to-tank emissions. A commune's fuel demand by sector (e.g. traffic) and
+by fuel type (e.g. Diesel) is considered. The fuel demand is multiplied by the
+respective emission factor. (Note: bio fuels are multiplied by a factor of 0 given
+that well-to-tank and tank-to-wheel emissions roughly cancel each other out.)
+For 203x bio fuels are removed, fossil fuels are replaced by their e variant,
+and e-methane and hydrogen are added. The electricity demand is estimated due
+to the usage of e-fuels. Fuel demand again is multiplied by the respective
 emission factors.
-'''
+"""
 
 # pyright: strict
 
