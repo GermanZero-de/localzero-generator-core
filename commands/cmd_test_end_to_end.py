@@ -1,4 +1,6 @@
+# pyright: strict
 import dataclasses
+from typing import Any
 import json
 import sys
 import os
@@ -12,7 +14,7 @@ from typing import Iterator
 test_dir = os.path.join("tests", "end_to_end_expected")
 
 
-def json_to_output_file(json_object, file_path):
+def json_to_output_file(json_object: Any, file_path: str):
     """Write json_object to a file"""
     if file_path is not None:
         with open(file_path, mode="w") as fp:
@@ -43,7 +45,7 @@ def expectation_files(pattern: str) -> Iterator[tuple[str, str, int]]:
             yield (file_path, ags, year)
 
 
-def cmd_test_end_to_end_update_expectations(args):
+def cmd_test_end_to_end_update_expectations(args: Any):
     expect_entries_pattern = r"entries_((\d+)|(DG000000))_(20\d\d)\.json"
     expect_file_pattern = r"production_((\d+)|(DG000000))_(20\d\d)\.json"
 
@@ -54,20 +56,20 @@ def cmd_test_end_to_end_update_expectations(args):
         update_expectation(ags=ags, year=year, file_path=file_path)
 
 
-def cmd_test_end_to_end_create_expectation(args):
+def cmd_test_end_to_end_create_expectation(args: Any):
     filename = "production_" + args.ags + "_" + str(args.year) + ".json"
     filepath = os.path.join(test_dir, filename)
     update_expectation(args.ags, int(args.year), filepath)
 
 
-def cmd_test_end_to_end_run_all_ags(args):
+def cmd_test_end_to_end_run_all_ags(args: Any):
     data = refdata.RefData.load()
     good = 0
     errors = 0
     with open("test_errors.txt", "w") as error_file:
-        for (ags, description) in list(data.ags_master().items()):
+        for ags in list(data.ags_master().keys()):
             try:
-                g = calculate_with_default_inputs(ags=ags, year=int(args.year))
+                calculate_with_default_inputs(ags=ags, year=int(args.year))
                 good = good + 1
             except Exception as e:
                 errors = errors + 1

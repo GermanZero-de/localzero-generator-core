@@ -3,7 +3,6 @@ module Filter exposing (filter)
 import Dict
 import Glob
 import Html.Attributes exposing (pattern)
-import Run exposing (Path)
 import Tree exposing (Node(..), Tree)
 
 

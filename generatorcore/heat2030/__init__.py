@@ -1,354 +1,9 @@
-from dataclasses import dataclass, field
-
+# pyright: strict
 from ..electricity2030.electricity2030_core import EColVars2030
 from ..inputs import Inputs
-from ..utils import div
+from ..utils import div, MILLION
 from .. import residences2030, business2030, heat2018, agri2030, industry2030
-
-
-@dataclass
-class Vars0:
-    # Used by h
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_production_based: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
-    change_CO2e_pct: float = None  # type: ignore
-    change_CO2e_t: float = None  # type: ignore
-    change_energy_MWh: float = None  # type: ignore
-    change_energy_pct: float = None  # type: ignore
-    cost_climate_saved: float = None  # type: ignore
-    cost_wage: float = None  # type: ignore
-    demand_emplo: float = None  # type: ignore
-    demand_emplo_com: float = None  # type: ignore
-    demand_emplo_new: float = None  # type: ignore
-    invest: float = None  # type: ignore
-    invest_com: float = None  # type: ignore
-    invest_pa: float = None  # type: ignore
-    invest_pa_com: float = None  # type: ignore
-
-
-@dataclass
-class Vars1:
-    # Used by g
-    cost_wage: float = None  # type: ignore
-    demand_emplo: float = None  # type: ignore
-    demand_emplo_com: float = None  # type: ignore
-    demand_emplo_new: float = None  # type: ignore
-    invest: float = None  # type: ignore
-    invest_com: float = None  # type: ignore
-    invest_pa: float = None  # type: ignore
-    invest_pa_com: float = None  # type: ignore
-
-
-@dataclass
-class Vars2:
-    # Used by g_storage
-    cost_wage: float = None  # type: ignore
-    demand_emplo: float = None  # type: ignore
-    demand_emplo_new: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    invest: float = None  # type: ignore
-    invest_com: float = None  # type: ignore
-    invest_pa: float = None  # type: ignore
-    invest_pa_com: float = None  # type: ignore
-    invest_per_x: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
-    pct_of_wage: float = None  # type: ignore
-    power_to_be_installed: float = None  # type: ignore
-    ratio_wage_to_emplo: float = None  # type: ignore
-
-
-@dataclass
-class Vars3:
-    # Used by g_planning
-    cost_wage: float = None  # type: ignore
-    demand_emplo: float = None  # type: ignore
-    demand_emplo_com: float = None  # type: ignore
-    demand_emplo_new: float = None  # type: ignore
-    invest: float = None  # type: ignore
-    invest_com: float = None  # type: ignore
-    invest_pa: float = None  # type: ignore
-    invest_pa_com: float = None  # type: ignore
-    pct_of_wage: float = None  # type: ignore
-    ratio_wage_to_emplo: float = None  # type: ignore
-
-
-@dataclass
-class Vars4:
-    # Used by d, d_r, d_b, d_i, d_t, a_t
-    energy: float = None  # type: ignore
-
-
-@dataclass
-class Vars5:
-    # Used by p
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_production_based: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
-    change_CO2e_pct: float = None  # type: ignore
-    change_CO2e_t: float = None  # type: ignore
-    change_energy_MWh: float = None  # type: ignore
-    change_energy_pct: float = None  # type: ignore
-    cost_climate_saved: float = None  # type: ignore
-    cost_fuel: float = None  # type: ignore
-    cost_wage: float = None  # type: ignore
-    demand_electricity: float = None  # type: ignore
-    demand_emplo: float = None  # type: ignore
-    demand_emplo_new: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    invest: float = None  # type: ignore
-    invest_com: float = None  # type: ignore
-    invest_pa: float = None  # type: ignore
-    invest_pa_com: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
-
-
-@dataclass
-class Vars6:
-    # Used by p_gas, p_coal
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_combustion_based_per_MWh: float = None  # type: ignore
-    CO2e_production_based: float = None  # type: ignore
-    CO2e_production_based_per_MWh: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
-    change_CO2e_pct: float = None  # type: ignore
-    change_CO2e_t: float = None  # type: ignore
-    change_energy_MWh: float = None  # type: ignore
-    change_energy_pct: float = None  # type: ignore
-    cost_climate_saved: float = None  # type: ignore
-    cost_fuel: float = None  # type: ignore
-    cost_fuel_per_MWh: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
-
-
-@dataclass
-class Vars7:
-    # Used by p_lpg
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_combustion_based_per_MWh: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
-    change_CO2e_pct: float = None  # type: ignore
-    change_CO2e_t: float = None  # type: ignore
-    change_energy_MWh: float = None  # type: ignore
-    change_energy_pct: float = None  # type: ignore
-    cost_climate_saved: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
-
-
-@dataclass
-class Vars8:
-    # Used by p_fueloil
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_combustion_based_per_MWh: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
-    change_CO2e_pct: float = None  # type: ignore
-    change_CO2e_t: float = None  # type: ignore
-    change_energy_MWh: float = None  # type: ignore
-    change_energy_pct: float = None  # type: ignore
-    cost_climate_saved: float = None  # type: ignore
-    cost_fuel: float = None  # type: ignore
-    cost_fuel_per_MWh: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
-
-
-@dataclass
-class Vars9:
-    # Used by p_opetpro, p_heatnet_cogen
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_combustion_based_per_MWh: float = None  # type: ignore
-    CO2e_production_based: float = None  # type: ignore
-    CO2e_production_based_per_MWh: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
-    change_CO2e_pct: float = None  # type: ignore
-    change_CO2e_t: float = None  # type: ignore
-    change_energy_MWh: float = None  # type: ignore
-    change_energy_pct: float = None  # type: ignore
-    cost_climate_saved: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
-
-
-@dataclass
-class Vars10:
-    # Used by p_heatnet
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_production_based: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
-    change_CO2e_pct: float = None  # type: ignore
-    change_CO2e_t: float = None  # type: ignore
-    change_energy_MWh: float = None  # type: ignore
-    change_energy_pct: float = None  # type: ignore
-    cost_climate_saved: float = None  # type: ignore
-    cost_wage: float = None  # type: ignore
-    demand_emplo: float = None  # type: ignore
-    demand_emplo_new: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    invest: float = None  # type: ignore
-    invest_com: float = None  # type: ignore
-    invest_pa: float = None  # type: ignore
-    invest_pa_com: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
-
-
-@dataclass
-class Vars11:
-    # Used by p_heatnet_plant
-    CO2e_production_based: float = None  # type: ignore
-    CO2e_production_based_per_MWh: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
-    area_ha_available: float = None  # type: ignore
-    change_CO2e_pct: float = None  # type: ignore
-    change_CO2e_t: float = None  # type: ignore
-    change_energy_MWh: float = None  # type: ignore
-    change_energy_pct: float = None  # type: ignore
-    cost_climate_saved: float = None  # type: ignore
-    cost_wage: float = None  # type: ignore
-    demand_emplo: float = None  # type: ignore
-    demand_emplo_new: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    invest: float = None  # type: ignore
-    invest_com: float = None  # type: ignore
-    invest_pa: float = None  # type: ignore
-    invest_pa_com: float = None  # type: ignore
-    invest_per_x: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
-    pct_of_wage: float = None  # type: ignore
-    ratio_wage_to_emplo: float = None  # type: ignore
-
-
-@dataclass
-class Vars12:
-    # Used by p_heatnet_lheatpump
-    CO2e_production_based: float = None  # type: ignore
-    CO2e_production_based_per_MWh: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
-    change_CO2e_pct: float = None  # type: ignore
-    change_CO2e_t: float = None  # type: ignore
-    change_energy_MWh: float = None  # type: ignore
-    change_energy_pct: float = None  # type: ignore
-    cost_climate_saved: float = None  # type: ignore
-    cost_wage: float = None  # type: ignore
-    demand_electricity: float = None  # type: ignore
-    demand_emplo: float = None  # type: ignore
-    demand_emplo_new: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    full_load_hour: float = None  # type: ignore
-    invest: float = None  # type: ignore
-    invest_com: float = None  # type: ignore
-    invest_pa: float = None  # type: ignore
-    invest_pa_com: float = None  # type: ignore
-    invest_per_x: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
-    pct_of_wage: float = None  # type: ignore
-    power_to_be_installed: float = None  # type: ignore
-    ratio_wage_to_emplo: float = None  # type: ignore
-
-
-@dataclass
-class Vars13:
-    # Used by p_heatnet_geoth
-    CO2e_production_based: float = None  # type: ignore
-    CO2e_production_based_per_MWh: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
-    change_CO2e_pct: float = None  # type: ignore
-    change_CO2e_t: float = None  # type: ignore
-    change_energy_MWh: float = None  # type: ignore
-    change_energy_pct: float = None  # type: ignore
-    cost_climate_saved: float = None  # type: ignore
-    cost_wage: float = None  # type: ignore
-    demand_emplo: float = None  # type: ignore
-    demand_emplo_new: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    full_load_hour: float = None  # type: ignore
-    invest: float = None  # type: ignore
-    invest_com: float = None  # type: ignore
-    invest_pa: float = None  # type: ignore
-    invest_pa_com: float = None  # type: ignore
-    invest_per_x: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
-    pct_of_wage: float = None  # type: ignore
-    power_to_be_installed: float = None  # type: ignore
-    ratio_wage_to_emplo: float = None  # type: ignore
-
-
-@dataclass
-class Vars14:
-    # Used by p_biomass
-    CO2e_production_based: float = None  # type: ignore
-    CO2e_production_based_per_MWh: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
-    change_CO2e_pct: float = None  # type: ignore
-    change_CO2e_t: float = None  # type: ignore
-    change_energy_MWh: float = None  # type: ignore
-    change_energy_pct: float = None  # type: ignore
-    cost_climate_saved: float = None  # type: ignore
-    cost_fuel: float = None  # type: ignore
-    cost_fuel_per_MWh: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
-
-
-@dataclass
-class Vars15:
-    # Used by p_ofossil, p_orenew, p_solarth, p_heatpump
-    CO2e_production_based: float = None  # type: ignore
-    CO2e_production_based_per_MWh: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
-    change_CO2e_pct: float = None  # type: ignore
-    change_CO2e_t: float = None  # type: ignore
-    change_energy_MWh: float = None  # type: ignore
-    change_energy_pct: float = None  # type: ignore
-    cost_climate_saved: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
-
-
-@dataclass
-class H30:
-    h: Vars0 = field(default_factory=Vars0)
-    g: Vars1 = field(default_factory=Vars1)
-    g_storage: Vars2 = field(default_factory=Vars2)
-    g_planning: Vars3 = field(default_factory=Vars3)
-    d: Vars4 = field(default_factory=Vars4)
-    d_r: Vars4 = field(default_factory=Vars4)
-    d_b: Vars4 = field(default_factory=Vars4)
-    d_i: Vars4 = field(default_factory=Vars4)
-    d_t: Vars4 = field(default_factory=Vars4)
-    a_t: Vars4 = field(default_factory=Vars4)
-    p: Vars5 = field(default_factory=Vars5)
-    p_gas: Vars6 = field(default_factory=Vars6)
-    p_lpg: Vars7 = field(default_factory=Vars7)
-    p_fueloil: Vars8 = field(default_factory=Vars8)
-    p_opetpro: Vars9 = field(default_factory=Vars9)
-    p_coal: Vars6 = field(default_factory=Vars6)
-    p_heatnet: Vars10 = field(default_factory=Vars10)
-    p_heatnet_cogen: Vars9 = field(default_factory=Vars9)
-    p_heatnet_plant: Vars11 = field(default_factory=Vars11)
-    p_heatnet_lheatpump: Vars12 = field(default_factory=Vars12)
-    p_heatnet_geoth: Vars13 = field(default_factory=Vars13)
-    p_biomass: Vars14 = field(default_factory=Vars14)
-    p_ofossil: Vars15 = field(default_factory=Vars15)
-    p_orenew: Vars15 = field(default_factory=Vars15)
-    p_solarth: Vars15 = field(default_factory=Vars15)
-    p_heatpump: Vars15 = field(default_factory=Vars15)
-
-    # for pdf
-    p_fossil_change_CO2e_t: float = None  # type: ignore
+from .h30 import H30
 
 
 def calc(
@@ -361,17 +16,11 @@ def calc(
     i30: industry2030.I30,
     p_local_biomass_cogen: EColVars2030,
 ) -> H30:
-    def fact(n):
-        return inputs.fact(n)
-
-    def ass(n):
-        return inputs.ass(n)
-
+    fact = inputs.fact
+    ass = inputs.ass
     entries = inputs.entries
 
     h30 = H30()
-
-    Million = 1000000
 
     h = h30.h
     g = h30.g
@@ -546,7 +195,7 @@ def calc(
         r30.s_heatpump.energy + b30.s_heatpump.energy + a30.s_heatpump.energy
     )
     p_fueloil.cost_fuel_per_MWh = ass("Ass_R_S_fueloil_energy_cost_factor_2035")
-    p_gas.cost_fuel = p_gas.energy * p_gas.cost_fuel_per_MWh / Million
+    p_gas.cost_fuel = p_gas.energy * p_gas.cost_fuel_per_MWh / MILLION
     p_opetpro.CO2e_production_based = (
         p_opetpro.energy * p_opetpro.CO2e_production_based_per_MWh
     )
@@ -603,7 +252,7 @@ def calc(
     )
     p_opetpro.pct_energy = div(p_opetpro.energy, p.energy)
     p_coal.cost_fuel_per_MWh = ass("Ass_R_S_coal_energy_cost_factor_2035")
-    p_fueloil.cost_fuel = p_fueloil.energy * p_fueloil.cost_fuel_per_MWh / Million
+    p_fueloil.cost_fuel = p_fueloil.energy * p_fueloil.cost_fuel_per_MWh / MILLION
     p_coal.CO2e_total = p_coal.CO2e_production_based + p_coal.CO2e_combustion_based
     p_heatnet_cogen.CO2e_production_based_per_MWh = fact(
         "Fact_H_P_biomass_ratio_CO2e_pb_to_fec_2018"
@@ -654,7 +303,7 @@ def calc(
     p.change_energy_MWh = p.energy - h18.p.energy
     p_heatnet.pct_energy = div(p_heatnet.energy, p.energy)
     p_biomass.cost_fuel_per_MWh = fact("Fact_R_S_wood_energy_cost_factor_2018")
-    p_coal.cost_fuel = p_coal.energy * p_coal.cost_fuel_per_MWh / Million
+    p_coal.cost_fuel = p_coal.energy * p_coal.cost_fuel_per_MWh / MILLION
     p_heatnet_lheatpump.invest_pa = (
         p_heatnet_lheatpump.invest / entries.m_duration_target
     )
@@ -937,7 +586,7 @@ def calc(
     p.change_energy_pct = div(p.change_energy_MWh, h18.p.energy)
     p_fueloil.pct_energy = div(p_fueloil.energy, p.energy)
     p_ofossil.pct_energy = div(p_ofossil.energy, p.energy)
-    p_biomass.cost_fuel = p_biomass.energy * p_biomass.cost_fuel_per_MWh / Million
+    p_biomass.cost_fuel = p_biomass.energy * p_biomass.cost_fuel_per_MWh / MILLION
     p.cost_fuel = (
         p_gas.cost_fuel + p_fueloil.cost_fuel + p_coal.cost_fuel + p_biomass.cost_fuel
     )

@@ -1,261 +1,14 @@
-from dataclasses import dataclass, field
+# pyright: strict
 from ..inputs import Inputs
-from ..utils import div
+from ..utils import div, MILLION
 from .. import transport2018
-
-# Definition der relevanten Spaltennamen für den Sektor E
-
-
-@dataclass
-class Vars0:
-    # Used by e
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_production_based: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-
-
-@dataclass
-class Vars2:
-    # Used by d
-    cost_fuel: float = None  # type: ignore
-    energy: float = None  # type: ignore
-
-
-@dataclass
-class Vars3:
-    # Used by d_r, d_b, d_i, d_t
-    cost_fuel: float = None  # type: ignore
-    cost_fuel_per_MWh: float = None  # type: ignore
-    energy: float = None  # type: ignore
-
-
-@dataclass
-class Vars4:
-    # Used by d_a, d_h, d_f_hydrogen_reconv, p_renew_reverse
-    energy: float = None  # type: ignore
-
-
-@dataclass
-class Vars5:
-    # Used by p
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_combustion_based_per_MWh: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    cost_certificate: float = None  # type: ignore
-    cost_fuel: float = None  # type: ignore
-    cost_mro: float = None  # type: ignore
-    energy: float = None  # type: ignore
-
-
-@dataclass
-class Vars6:
-    # Used by p_fossil
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_combustion_based_per_MWh: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    cost_certificate: float = None  # type: ignore
-    cost_fuel: float = None  # type: ignore
-    cost_mro: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
-
-
-@dataclass
-class Vars7:
-    # Used by p_fossil_nuclear, p_fossil_coal_brown, p_fossil_coal_black, p_fossil_gas, p_fossil_ofossil
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_combustion_based_per_MWh: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    cost_certificate: float = None  # type: ignore
-    cost_certificate_per_MWh: float = None  # type: ignore
-    cost_fuel: float = None  # type: ignore
-    cost_fuel_per_MWh: float = None  # type: ignore
-    cost_mro: float = None  # type: ignore
-    cost_mro_per_MWh: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
-
-
-@dataclass
-class Vars8:
-    # Used by p_fossil_coal_brown_cogen, p_fossil_coal_black_cogen, p_fossil_gas_cogen, p_fossil_ofossil_cogen, p_renew_biomass_cogen, p_local_biomass_cogen
-    energy: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
-
-
-@dataclass
-class Vars9:
-    # Used by p_renew
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_combustion_based_per_MWh: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    cost_fuel: float = None  # type: ignore
-    cost_mro: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
-
-
-@dataclass
-class Vars10:
-    # Used by p_renew_pv, p_renew_wind
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    cost_mro: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
-
-
-@dataclass
-class Vars11:
-    # Used by p_renew_pv_roof, p_renew_pv_facade, p_renew_pv_park, p_renew_pv_agri, p_renew_wind_onshore, p_renew_wind_offshore, p_renew_geoth, p_renew_hydro
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_combustion_based_per_MWh: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    cost_mro: float = None  # type: ignore
-    cost_mro_per_MWh: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
-
-
-@dataclass
-class Vars12:
-    # Used by p_renew_biomass
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_combustion_based_per_MWh: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    cost_fuel: float = None  # type: ignore
-    cost_fuel_per_MWh: float = None  # type: ignore
-    cost_mro: float = None  # type: ignore
-    cost_mro_per_MWh: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
-
-
-@dataclass
-class Vars13:
-    # Used by p_renew_biomass_waste, p_renew_biomass_solid, p_renew_biomass_gaseous, p_fossil_and_renew
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_combustion_based_per_MWh: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
-
-
-@dataclass
-class Vars14:
-    # Used by p_local_pv_roof, p_local_pv_facade, p_local_pv_park, p_local_pv_agri
-    cost_mro: float = None  # type: ignore
-    cost_mro_per_MWh: float = None  # type: ignore
-    energy: float = None  # type: ignore
-
-
-@dataclass
-class Vars15:
-    # Used by p_local_pv
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_combustion_based_per_MWh: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    cost_mro: float = None  # type: ignore
-    energy: float = None  # type: ignore
-
-
-@dataclass
-class Vars16:
-    # Used by p_local_wind_onshore, p_local_hydro
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_combustion_based_per_MWh: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    cost_mro: float = None  # type: ignore
-    cost_mro_per_MWh: float = None  # type: ignore
-    energy: float = None  # type: ignore
-
-
-@dataclass
-class Vars17:
-    # Used by p_local_biomass
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_combustion_based_per_MWh: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    cost_fuel: float = None  # type: ignore
-    cost_fuel_per_MWh: float = None  # type: ignore
-    cost_mro: float = None  # type: ignore
-    cost_mro_per_MWh: float = None  # type: ignore
-    energy: float = None  # type: ignore
-
-
-@dataclass
-class Vars18:
-    # Used by p_local
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    cost_fuel: float = None  # type: ignore
-    cost_mro: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
-
-
-@dataclass
-class E18:
-    e: Vars0 = field(default_factory=Vars0)
-    d: Vars2 = field(default_factory=Vars2)
-    d_r: Vars3 = field(default_factory=Vars3)
-    d_b: Vars3 = field(default_factory=Vars3)
-    d_i: Vars3 = field(default_factory=Vars3)
-    d_t: Vars3 = field(default_factory=Vars3)
-    d_a: Vars4 = field(default_factory=Vars4)
-    d_h: Vars4 = field(default_factory=Vars4)
-    d_f_hydrogen_reconv: Vars4 = field(default_factory=Vars4)
-    p: Vars5 = field(default_factory=Vars5)
-    p_fossil: Vars6 = field(default_factory=Vars6)
-    p_fossil_nuclear: Vars7 = field(default_factory=Vars7)
-    p_fossil_coal_brown: Vars7 = field(default_factory=Vars7)
-    p_fossil_coal_brown_cogen: Vars8 = field(default_factory=Vars8)
-    p_fossil_coal_black: Vars7 = field(default_factory=Vars7)
-    p_fossil_coal_black_cogen: Vars8 = field(default_factory=Vars8)
-    p_fossil_gas: Vars7 = field(default_factory=Vars7)
-    p_fossil_gas_cogen: Vars8 = field(default_factory=Vars8)
-    p_fossil_ofossil: Vars7 = field(default_factory=Vars7)
-    p_fossil_ofossil_cogen: Vars8 = field(default_factory=Vars8)
-    p_renew: Vars9 = field(default_factory=Vars9)
-    p_renew_pv: Vars10 = field(default_factory=Vars10)
-    p_renew_pv_roof: Vars11 = field(default_factory=Vars11)
-    p_renew_pv_facade: Vars11 = field(default_factory=Vars11)
-    p_renew_pv_park: Vars11 = field(default_factory=Vars11)
-    p_renew_pv_agri: Vars11 = field(default_factory=Vars11)
-    p_renew_wind: Vars10 = field(default_factory=Vars10)
-    p_renew_wind_onshore: Vars11 = field(default_factory=Vars11)
-    p_renew_wind_offshore: Vars11 = field(default_factory=Vars11)
-    p_renew_biomass: Vars12 = field(default_factory=Vars12)
-    p_renew_biomass_waste: Vars13 = field(default_factory=Vars13)
-    p_renew_biomass_solid: Vars13 = field(default_factory=Vars13)
-    p_renew_biomass_gaseous: Vars13 = field(default_factory=Vars13)
-    p_renew_biomass_cogen: Vars8 = field(default_factory=Vars8)
-    p_renew_geoth: Vars11 = field(default_factory=Vars11)
-    p_renew_hydro: Vars11 = field(default_factory=Vars11)
-    p_renew_reverse: Vars4 = field(default_factory=Vars4)
-    p_fossil_and_renew: Vars13 = field(default_factory=Vars13)
-    p_local_pv_roof: Vars14 = field(default_factory=Vars14)
-    p_local_pv_facade: Vars14 = field(default_factory=Vars14)
-    p_local_pv_park: Vars14 = field(default_factory=Vars14)
-    p_local_pv_agri: Vars14 = field(default_factory=Vars14)
-    p_local_pv: Vars15 = field(default_factory=Vars15)
-    p_local_wind_onshore: Vars16 = field(default_factory=Vars16)
-    p_local_biomass: Vars17 = field(default_factory=Vars17)
-    p_local_biomass_cogen: Vars8 = field(default_factory=Vars8)
-    p_local_hydro: Vars16 = field(default_factory=Vars16)
-    p_local: Vars18 = field(default_factory=Vars18)
+from .e18 import E18
 
 
 def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
-    def fact(n):
-        return inputs.fact(n)
-
-    def ass(n):
-        return inputs.ass(n)
-
+    fact = inputs.fact
+    ass = inputs.ass
     entries = inputs.entries
-
-    Million = 1000000
 
     e18 = E18()
 
@@ -313,7 +66,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
     d_f_hydrogen_reconv.energy = 0
     d_r.energy = entries.r_elec_fec
     d_r.cost_fuel_per_MWh = fact("Fact_E_D_R_cost_fuel_per_MWh_2018")
-    d_r.cost_fuel = d_r.cost_fuel_per_MWh * d_r.energy / Million
+    d_r.cost_fuel = d_r.cost_fuel_per_MWh * d_r.energy / MILLION
     d_b.energy = entries.b_elec_fec
     d_b.cost_fuel_per_MWh = fact("Fact_E_D_B_cost_fuel_per_MWh_2018")
     d_b.cost_fuel = d_b.cost_fuel_per_MWh * d_b.energy / 1000000
@@ -387,7 +140,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
         * 1000
     )
     p_local_wind_onshore.cost_mro = (
-        p_local_wind_onshore.energy * p_local_wind_onshore.cost_mro_per_MWh / Million
+        p_local_wind_onshore.energy * p_local_wind_onshore.cost_mro_per_MWh / MILLION
     )
 
     p_local_biomass.CO2e_total = 0.0
@@ -398,7 +151,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
     )
     p_local_biomass.cost_mro_per_MWh = ass("Ass_E_P_local_biomass_mro_per_MWh")
     p_local_biomass.cost_mro = (
-        p_local_biomass.energy * p_local_biomass.cost_mro_per_MWh / Million
+        p_local_biomass.energy * p_local_biomass.cost_mro_per_MWh / MILLION
     )
     p_local_biomass.cost_fuel_per_MWh = ass(
         "Ass_E_P_local_biomass_material_costs"
@@ -423,7 +176,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
     )
     p_local_hydro.cost_mro_per_MWh = ass("Ass_E_P_local_hydro_mro_per_MWh")
     p_local_hydro.cost_mro = (
-        p_local_hydro.energy * p_local_hydro.cost_mro_per_MWh / Million
+        p_local_hydro.energy * p_local_hydro.cost_mro_per_MWh / MILLION
     )
 
     p.energy = d.energy
@@ -684,7 +437,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
         p_renew_pv_roof.energy
         * p_renew_pv_roof.cost_mro_per_MWh
         * fact("Fact_E_P_ratio_gross_electricity_prod_to_fec_electricity_2018")
-        / Million
+        / MILLION
     )
     p_renew_pv_roof.CO2e_combustion_based_per_MWh = fact(
         "Fact_E_P_climate_neutral_ratio_CO2e_cb_to_fec"
@@ -705,7 +458,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
         p_renew_pv_facade.energy
         * p_renew_pv_facade.cost_mro_per_MWh
         * fact("Fact_E_P_ratio_gross_electricity_prod_to_fec_electricity_2018")
-        / Million
+        / MILLION
     )
     p_renew_pv_facade.CO2e_combustion_based_per_MWh = fact(
         "Fact_E_P_climate_neutral_ratio_CO2e_cb_to_fec"
@@ -726,7 +479,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
         p_renew_pv_park.energy
         * p_renew_pv_park.cost_mro_per_MWh
         * fact("Fact_E_P_ratio_gross_electricity_prod_to_fec_electricity_2018")
-        / Million
+        / MILLION
     )
     p_renew_pv_park.CO2e_combustion_based_per_MWh = fact(
         "Fact_E_P_climate_neutral_ratio_CO2e_cb_to_fec"
@@ -747,7 +500,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
         p_renew_pv_agri.energy
         * p_renew_pv_agri.cost_mro_per_MWh
         * fact("Fact_E_P_ratio_gross_electricity_prod_to_fec_electricity_2018")
-        / Million
+        / MILLION
     )
     p_renew_pv_agri.CO2e_combustion_based_per_MWh = fact(
         "Fact_E_P_climate_neutral_ratio_CO2e_cb_to_fec"
@@ -823,7 +576,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
         p_renew_biomass.energy
         * p_renew_biomass.cost_mro_per_MWh
         * fact("Fact_E_P_ratio_gross_electricity_prod_to_fec_electricity_2018")
-        / Million
+        / MILLION
     )
     p_renew_biomass.CO2e_combustion_based = (
         p_renew_biomass_waste.CO2e_combustion_based
@@ -850,7 +603,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
         p_renew_hydro.energy
         * p_renew_hydro.cost_mro_per_MWh
         * fact("Fact_E_P_ratio_gross_electricity_prod_to_fec_electricity_2018")
-        / Million
+        / MILLION
     )
     p_renew_hydro.CO2e_combustion_based_per_MWh = fact(
         "Fact_E_P_climate_neutral_ratio_CO2e_cb_to_fec"
@@ -868,7 +621,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
         p_renew_geoth.energy
         * p_renew_geoth.cost_mro_per_MWh
         * fact("Fact_E_P_ratio_gross_electricity_prod_to_fec_electricity_2018")
-        / Million
+        / MILLION
     )
     p_renew_geoth.CO2e_combustion_based_per_MWh = fact(
         "Fact_E_P_climate_neutral_ratio_CO2e_cb_to_fec"
@@ -914,7 +667,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
     )
     p_local_pv_roof.cost_mro_per_MWh = p_renew_pv_roof.cost_mro_per_MWh
     p_local_pv_roof.cost_mro = (
-        p_local_pv_roof.energy * p_local_pv_roof.cost_mro_per_MWh / Million
+        p_local_pv_roof.energy * p_local_pv_roof.cost_mro_per_MWh / MILLION
     )
     p_local_pv_facade.energy = (
         entries.e_PV_power_inst_facade
@@ -928,7 +681,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
         * 1000
     )
     p_local_pv_facade.cost_mro = (
-        p_local_pv_facade.energy * p_local_pv_facade.cost_mro_per_MWh / Million
+        p_local_pv_facade.energy * p_local_pv_facade.cost_mro_per_MWh / MILLION
     )
     p_local_pv_park.energy = (
         entries.e_PV_power_inst_park
@@ -937,7 +690,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
     )
     p_local_pv_park.cost_mro_per_MWh = p_renew_pv_park.cost_mro_per_MWh
     p_local_pv_park.cost_mro = (
-        p_local_pv_park.energy * p_local_pv_park.cost_mro_per_MWh / Million
+        p_local_pv_park.energy * p_local_pv_park.cost_mro_per_MWh / MILLION
     )
     p_local_pv_agri.energy = (
         entries.e_PV_power_inst_agripv
@@ -946,7 +699,7 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
     )
     p_local_pv_agri.cost_mro_per_MWh = p_renew_pv_agri.cost_mro_per_MWh
     p_local_pv_agri.cost_mro = (
-        p_local_pv_agri.energy * p_local_pv_agri.cost_mro_per_MWh / Million
+        p_local_pv_agri.energy * p_local_pv_agri.cost_mro_per_MWh / MILLION
     )
 
     p_local_pv.CO2e_combustion_based = 0.0

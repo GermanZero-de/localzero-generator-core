@@ -1357,49 +1357,62 @@
             "energy": 4246.250776256322
         },
         "p_petrol": {
-            "CO2e_production_based": 4052.075896097806,
-            "CO2e_production_based_per_MWh": 0.021090897363777908,
+            "CO2e_production_based": 0.0,
+            "CO2e_production_based_per_MWh": 0,
+            "CO2e_combustion_based": 4052.075896097806,
+            "CO2e_combustion_based_per_MWh": 0.021090897363777908,
             "CO2e_total": 4052.075896097806,
             "energy": 192124.39500355037
         },
         "p_jetfuel": {
-            "CO2e_production_based": 1386.4901793629863,
-            "CO2e_production_based_per_MWh": 0.007887567887205935,
+            "CO2e_production_based": 0.0,
+            "CO2e_production_based_per_MWh": 0,
+            "CO2e_combustion_based": 1386.4901793629863,
+            "CO2e_combustion_based_per_MWh": 0.007887567887205935,
             "CO2e_total": 1386.4901793629863,
             "energy": 175781.7110660878
         },
         "p_diesel": {
-            "CO2e_production_based": 5545.638943710121,
-            "CO2e_production_based_per_MWh": 0.014236778266521194,
+            "CO2e_production_based": 0.0,
+            "CO2e_production_based_per_MWh": 0,
+            "CO2e_combustion_based": 5545.638943710121,
+            "CO2e_combustion_based_per_MWh": 0.014236778266521194,
             "CO2e_total": 5545.638943710121,
             "energy": 389529.06618986186
         },
         "p_bioethanol": {
             "CO2e_production_based": 0.0,
             "CO2e_production_based_per_MWh": 0.0,
+            "CO2e_combustion_based": 0.0,
+            "CO2e_combustion_based_per_MWh": 0,
             "CO2e_total": 0.0,
             "energy": 8428.629266986021
         },
         "p_biodiesel": {
             "CO2e_production_based": 0.0,
             "CO2e_production_based_per_MWh": 0.0,
+            "CO2e_combustion_based": 0.0,
+            "CO2e_combustion_based_per_MWh": 0,
             "CO2e_total": 0.0,
             "energy": 21412.608038262737
         },
         "p_biogas": {
             "CO2e_production_based": 0.0,
             "CO2e_production_based_per_MWh": 0.0,
+            "CO2e_combustion_based": 0.0,
+            "CO2e_combustion_based_per_MWh": 0,
             "CO2e_total": 0.0,
             "energy": 219.49378595364558
         },
         "p": {
-            "CO2e_production_based": 10984.205019170913,
+            "CO2e_production_based": 0.0,
+            "CO2e_combustion_based": 10984.205019170913,
             "CO2e_total": 10984.205019170913,
             "energy": 787495.9033507024
         },
         "f": {
-            "CO2e_combustion_based": 0,
-            "CO2e_production_based": 10984.205019170913,
+            "CO2e_combustion_based": 10984.205019170913,
+            "CO2e_production_based": 0.0,
             "CO2e_total": 10984.205019170913
         }
     },
@@ -5034,367 +5047,57 @@
         },
         "d": {
             "energy": 2209509.98579874,
-            "pet_sites": null,
-            "energy_installable": null,
-            "cost_fuel_per_MWh": null,
             "cost_fuel": null,
             "pct_energy": 0.9999999999999999,
-            "mro_per_MWh": null,
-            "mro": null,
-            "CO2e_combustion_based_per_MWh": null,
-            "CO2e_combustion_based": null,
-            "cost_certificate_per_MWh": null,
-            "cost_certificate": null,
-            "cost_climate_saved": null,
-            "cost_mro": null,
-            "cost_mro_pa_com": null,
-            "CO2e_total": null,
-            "CO2e_total_2021_estimated": null,
-            "demand_electricity": null,
-            "demand_emplo": null,
-            "demand_emplo_com": null,
-            "power_installed": null,
-            "power_to_be_installed_pct": null,
-            "power_to_be_installed": null,
-            "power_installable": null,
-            "area_ha_available": null,
-            "area_ha_available_pct_of_action": null,
-            "ratio_power_to_area_ha": null,
-            "cost_mro_pa": null,
             "change_energy_MWh": 1645978.2428230518,
-            "change_energy_pct": 2.9208261350666493,
-            "change_CO2e_t": null,
-            "change_CO2e_pct": null,
-            "change_cost_energy": null,
-            "change_cost_mro": null,
-            "invest": null,
-            "invest_pa": null,
-            "invest_com": null,
-            "invest_pa_com": null,
-            "invest_outside": null,
-            "invest_pa_outside": null,
-            "invest_per_x": null,
-            "pct_of_wage": null,
-            "pct_x": null,
-            "ratio_wage_to_emplo": null,
-            "cost_wage": null,
-            "cost_mro_per_MWh": null,
-            "emplo_existing": null,
-            "demand_emplo_new": null,
-            "full_load_hour": null,
-            "lifecycle": null
+            "change_energy_pct": 2.9208261350666493
         },
         "d_r": {
             "energy": 150755.6465255107,
-            "pet_sites": null,
-            "energy_installable": null,
-            "cost_fuel_per_MWh": 298.8,
             "cost_fuel": 36.3389483644798,
             "pct_energy": 0.0682303531074617,
-            "mro_per_MWh": null,
-            "mro": null,
-            "CO2e_combustion_based_per_MWh": null,
-            "CO2e_combustion_based": null,
-            "cost_certificate_per_MWh": null,
-            "cost_certificate": null,
-            "cost_climate_saved": null,
-            "cost_mro": null,
-            "cost_mro_pa_com": null,
-            "CO2e_total": null,
-            "CO2e_total_2021_estimated": null,
-            "demand_electricity": null,
-            "demand_emplo": null,
-            "demand_emplo_com": null,
-            "power_installed": null,
-            "power_to_be_installed_pct": null,
-            "power_to_be_installed": null,
-            "power_installable": null,
-            "area_ha_available": null,
-            "area_ha_available_pct_of_action": null,
-            "ratio_power_to_area_ha": null,
-            "cost_mro_pa": null,
             "change_energy_MWh": -31934.673605565476,
             "change_energy_pct": -0.17480222040583798,
-            "change_CO2e_t": null,
-            "change_CO2e_pct": null,
-            "change_cost_energy": null,
-            "change_cost_mro": null,
-            "invest": null,
-            "invest_pa": null,
-            "invest_com": null,
-            "invest_pa_com": null,
-            "invest_outside": null,
-            "invest_pa_outside": null,
-            "invest_per_x": null,
-            "pct_of_wage": null,
-            "pct_x": null,
-            "ratio_wage_to_emplo": null,
-            "cost_wage": null,
-            "cost_mro_per_MWh": null,
-            "emplo_existing": null,
-            "demand_emplo_new": null,
-            "full_load_hour": null,
-            "lifecycle": null
+            "cost_fuel_per_MWh": 298.8
         },
         "d_b": {
             "energy": 185887.01257484243,
-            "pet_sites": null,
-            "energy_installable": null,
-            "cost_fuel_per_MWh": 215.6,
             "cost_fuel": 32.330764824758795,
             "pct_energy": 0.08413042428846236,
-            "mro_per_MWh": null,
-            "mro": null,
-            "CO2e_combustion_based_per_MWh": null,
-            "CO2e_combustion_based": null,
-            "cost_certificate_per_MWh": null,
-            "cost_certificate": null,
-            "cost_climate_saved": null,
-            "cost_mro": null,
-            "cost_mro_pa_com": null,
-            "CO2e_total": null,
-            "CO2e_total_2021_estimated": null,
-            "demand_electricity": null,
-            "demand_emplo": null,
-            "demand_emplo_com": null,
-            "power_installed": null,
-            "power_to_be_installed_pct": null,
-            "power_to_be_installed": null,
-            "power_installable": null,
-            "area_ha_available": null,
-            "area_ha_available_pct_of_action": null,
-            "ratio_power_to_area_ha": null,
-            "cost_mro_pa": null,
             "change_energy_MWh": -21465.057722427184,
             "change_energy_pct": -0.10351986209568043,
-            "change_CO2e_t": null,
-            "change_CO2e_pct": null,
-            "change_cost_energy": null,
-            "change_cost_mro": null,
-            "invest": null,
-            "invest_pa": null,
-            "invest_com": null,
-            "invest_pa_com": null,
-            "invest_outside": null,
-            "invest_pa_outside": null,
-            "invest_per_x": null,
-            "pct_of_wage": null,
-            "pct_x": null,
-            "ratio_wage_to_emplo": null,
-            "cost_wage": null,
-            "cost_mro_per_MWh": null,
-            "emplo_existing": null,
-            "demand_emplo_new": null,
-            "full_load_hour": null,
-            "lifecycle": null
+            "cost_fuel_per_MWh": 215.6
         },
         "d_h": {
             "energy": 20789.218677382698,
-            "pet_sites": null,
-            "energy_installable": null,
-            "cost_fuel_per_MWh": null,
             "cost_fuel": null,
             "pct_energy": 0.009408972492091895,
-            "mro_per_MWh": null,
-            "mro": null,
-            "CO2e_combustion_based_per_MWh": null,
-            "CO2e_combustion_based": null,
-            "cost_certificate_per_MWh": null,
-            "cost_certificate": null,
-            "cost_climate_saved": null,
-            "cost_mro": null,
-            "cost_mro_pa_com": null,
-            "CO2e_total": null,
-            "CO2e_total_2021_estimated": null,
-            "demand_electricity": null,
-            "demand_emplo": null,
-            "demand_emplo_com": null,
-            "power_installed": null,
-            "power_to_be_installed_pct": null,
-            "power_to_be_installed": null,
-            "power_installable": null,
-            "area_ha_available": null,
-            "area_ha_available_pct_of_action": null,
-            "ratio_power_to_area_ha": null,
-            "cost_mro_pa": null,
             "change_energy_MWh": 20789.218677382698,
-            "change_energy_pct": 0.0,
-            "change_CO2e_t": null,
-            "change_CO2e_pct": null,
-            "change_cost_energy": null,
-            "change_cost_mro": null,
-            "invest": null,
-            "invest_pa": null,
-            "invest_com": null,
-            "invest_pa_com": null,
-            "invest_outside": null,
-            "invest_pa_outside": null,
-            "invest_per_x": null,
-            "pct_of_wage": null,
-            "pct_x": null,
-            "ratio_wage_to_emplo": null,
-            "cost_wage": null,
-            "cost_mro_per_MWh": null,
-            "emplo_existing": null,
-            "demand_emplo_new": null,
-            "full_load_hour": null,
-            "lifecycle": null
+            "change_energy_pct": 0.0
         },
         "d_i": {
             "energy": 105727.70755360971,
-            "pet_sites": null,
-            "energy_installable": null,
-            "cost_fuel_per_MWh": 153.0,
             "cost_fuel": 13.049636685591794,
             "pct_energy": 0.04785120150311928,
-            "mro_per_MWh": null,
-            "mro": null,
-            "CO2e_combustion_based_per_MWh": null,
-            "CO2e_combustion_based": null,
-            "cost_certificate_per_MWh": null,
-            "cost_certificate": null,
-            "cost_climate_saved": null,
-            "cost_mro": null,
-            "cost_mro_pa_com": null,
-            "CO2e_total": null,
-            "CO2e_total_2021_estimated": null,
-            "demand_electricity": null,
-            "demand_emplo": null,
-            "demand_emplo_com": null,
-            "power_installed": null,
-            "power_to_be_installed_pct": null,
-            "power_to_be_installed": null,
-            "power_installable": null,
-            "area_ha_available": null,
-            "area_ha_available_pct_of_action": null,
-            "ratio_power_to_area_ha": null,
-            "cost_mro_pa": null,
             "change_energy_MWh": -48610.61601111031,
             "change_energy_pct": -0.31496141002675854,
-            "change_CO2e_t": null,
-            "change_CO2e_pct": null,
-            "change_cost_energy": null,
-            "change_cost_mro": null,
-            "invest": null,
-            "invest_pa": null,
-            "invest_com": null,
-            "invest_pa_com": null,
-            "invest_outside": null,
-            "invest_pa_outside": null,
-            "invest_per_x": null,
-            "pct_of_wage": null,
-            "pct_x": null,
-            "ratio_wage_to_emplo": null,
-            "cost_wage": null,
-            "cost_mro_per_MWh": null,
-            "emplo_existing": null,
-            "demand_emplo_new": null,
-            "full_load_hour": null,
-            "lifecycle": null
+            "cost_fuel_per_MWh": 153.0
         },
         "d_t": {
             "energy": 130175.0708976658,
-            "pet_sites": null,
-            "energy_installable": null,
-            "cost_fuel_per_MWh": 298.8,
             "cost_fuel": 31.37809620213659,
             "pct_energy": 0.05891581017254711,
-            "mro_per_MWh": null,
-            "mro": null,
-            "CO2e_combustion_based_per_MWh": null,
-            "CO2e_combustion_based": null,
-            "cost_certificate_per_MWh": null,
-            "cost_certificate": null,
-            "cost_climate_saved": null,
-            "cost_mro": null,
-            "cost_mro_pa_com": null,
-            "CO2e_total": null,
-            "CO2e_total_2021_estimated": null,
-            "demand_electricity": null,
-            "demand_emplo": null,
-            "demand_emplo_com": null,
-            "power_installed": null,
-            "power_to_be_installed_pct": null,
-            "power_to_be_installed": null,
-            "power_installable": null,
-            "area_ha_available": null,
-            "area_ha_available_pct_of_action": null,
-            "ratio_power_to_area_ha": null,
-            "cost_mro_pa": null,
             "change_energy_MWh": 112167.26327788172,
             "change_energy_pct": 6.228812837530002,
-            "change_CO2e_t": null,
-            "change_CO2e_pct": null,
-            "change_cost_energy": null,
-            "change_cost_mro": null,
-            "invest": null,
-            "invest_pa": null,
-            "invest_com": null,
-            "invest_pa_com": null,
-            "invest_outside": null,
-            "invest_pa_outside": null,
-            "invest_per_x": null,
-            "pct_of_wage": null,
-            "pct_x": null,
-            "ratio_wage_to_emplo": null,
-            "cost_wage": null,
-            "cost_mro_per_MWh": null,
-            "emplo_existing": null,
-            "demand_emplo_new": null,
-            "full_load_hour": null,
-            "lifecycle": null
+            "cost_fuel_per_MWh": 298.8
         },
         "d_a": {
             "energy": 2133.9908464775926,
-            "pet_sites": null,
-            "energy_installable": null,
-            "cost_fuel_per_MWh": 298.8,
             "cost_fuel": 0.5143885815732901,
             "pct_energy": 0.0009658208653472788,
-            "mro_per_MWh": null,
-            "mro": null,
-            "CO2e_combustion_based_per_MWh": null,
-            "CO2e_combustion_based": null,
-            "cost_certificate_per_MWh": null,
-            "cost_certificate": null,
-            "cost_climate_saved": null,
-            "cost_mro": null,
-            "cost_mro_pa_com": null,
-            "CO2e_total": null,
-            "CO2e_total_2021_estimated": null,
-            "demand_electricity": null,
-            "demand_emplo": null,
-            "demand_emplo_com": null,
-            "power_installed": null,
-            "power_to_be_installed_pct": null,
-            "power_to_be_installed": null,
-            "power_installable": null,
-            "area_ha_available": null,
-            "area_ha_available_pct_of_action": null,
-            "ratio_power_to_area_ha": null,
-            "cost_mro_pa": null,
             "change_energy_MWh": 990.7694836393523,
             "change_energy_pct": 0.8666471042664909,
-            "change_CO2e_t": null,
-            "change_CO2e_pct": null,
-            "change_cost_energy": null,
-            "change_cost_mro": null,
-            "invest": null,
-            "invest_pa": null,
-            "invest_com": null,
-            "invest_pa_com": null,
-            "invest_outside": null,
-            "invest_pa_outside": null,
-            "invest_per_x": null,
-            "pct_of_wage": null,
-            "pct_x": null,
-            "ratio_wage_to_emplo": null,
-            "cost_wage": null,
-            "cost_mro_per_MWh": null,
-            "emplo_existing": null,
-            "demand_emplo_new": null,
-            "full_load_hour": null,
-            "lifecycle": null
+            "cost_fuel_per_MWh": 298.8
         },
         "d_f_hydrogen_reconv": {
             "energy": 213885.1498785297,
@@ -5762,107 +5465,39 @@
         },
         "p_fossil_nuclear": {
             "energy": 0,
-            "pet_sites": null,
-            "energy_installable": null,
             "cost_fuel_per_MWh": 21.73913043478261,
             "cost_fuel": 0.0,
-            "pct_energy": null,
-            "mro_per_MWh": null,
-            "mro": null,
             "CO2e_combustion_based_per_MWh": 0,
             "CO2e_combustion_based": 0,
-            "cost_certificate_per_MWh": null,
-            "cost_certificate": null,
             "cost_climate_saved": 0.0,
             "cost_mro": 0.0,
-            "cost_mro_pa_com": null,
             "CO2e_total": 0,
             "CO2e_total_2021_estimated": 0.0,
-            "demand_electricity": null,
-            "demand_emplo": null,
-            "demand_emplo_com": null,
-            "power_installed": null,
-            "power_to_be_installed_pct": null,
-            "power_to_be_installed": null,
-            "power_installable": null,
-            "area_ha_available": null,
-            "area_ha_available_pct_of_action": null,
-            "ratio_power_to_area_ha": null,
-            "cost_mro_pa": null,
             "change_energy_MWh": -67060.2774141069,
             "change_energy_pct": -1.0,
             "change_CO2e_t": 0.0,
             "change_CO2e_pct": 0.0,
             "change_cost_energy": -1.827380592619073,
             "change_cost_mro": -0.44831737205587907,
-            "invest": null,
-            "invest_pa": null,
-            "invest_com": null,
-            "invest_pa_com": null,
-            "invest_outside": null,
-            "invest_pa_outside": null,
-            "invest_per_x": null,
-            "pct_of_wage": null,
-            "pct_x": null,
-            "ratio_wage_to_emplo": null,
-            "cost_wage": null,
-            "cost_mro_per_MWh": 5.333333333333333,
-            "emplo_existing": null,
-            "demand_emplo_new": null,
-            "full_load_hour": null,
-            "lifecycle": null
+            "cost_mro_per_MWh": 5.333333333333333
         },
         "p_fossil_coal_brown": {
             "energy": 0,
-            "pet_sites": null,
-            "energy_installable": null,
             "cost_fuel_per_MWh": 11.11111111111111,
             "cost_fuel": 0.0,
-            "pct_energy": null,
-            "mro_per_MWh": null,
-            "mro": null,
             "CO2e_combustion_based_per_MWh": 1.2604236008997947,
             "CO2e_combustion_based": 0.0,
-            "cost_certificate_per_MWh": null,
-            "cost_certificate": null,
             "cost_climate_saved": 781230284.1620911,
             "cost_mro": 0.0,
-            "cost_mro_pa_com": null,
             "CO2e_total": 0.0,
             "CO2e_total_2021_estimated": 151181.4773414787,
-            "demand_electricity": null,
-            "demand_emplo": null,
-            "demand_emplo_com": null,
-            "power_installed": null,
-            "power_to_be_installed_pct": null,
-            "power_to_be_installed": null,
-            "power_installable": null,
-            "area_ha_available": null,
-            "area_ha_available_pct_of_action": null,
-            "ratio_power_to_area_ha": null,
-            "cost_mro_pa": null,
             "change_energy_MWh": -128485.23739845691,
             "change_energy_pct": -1.0,
             "change_CO2e_t": -161945.82558422803,
             "change_CO2e_pct": -1.0,
             "change_cost_energy": -1.7895021153490973,
             "change_cost_mro": -1.2562304849750665,
-            "invest": null,
-            "invest_pa": null,
-            "invest_com": null,
-            "invest_pa_com": null,
-            "invest_outside": null,
-            "invest_pa_outside": null,
-            "invest_per_x": null,
-            "pct_of_wage": null,
-            "pct_x": null,
-            "ratio_wage_to_emplo": null,
-            "cost_wage": null,
-            "cost_mro_per_MWh": 7.8,
-            "emplo_existing": null,
-            "demand_emplo_new": null,
-            "full_load_hour": null,
-            "lifecycle": null
+            "cost_mro_per_MWh": 7.8
         },
         "p_fossil_coal_brown_cogen": {
             "energy": null,
@@ -5918,55 +5553,21 @@
         },
         "p_fossil_coal_black": {
             "energy": 0,
-            "pet_sites": null,
-            "energy_installable": null,
             "cost_fuel_per_MWh": 20.0,
             "cost_fuel": 0.0,
-            "pct_energy": null,
-            "mro_per_MWh": null,
-            "mro": null,
             "CO2e_combustion_based_per_MWh": 0.93421489713346,
             "CO2e_combustion_based": 0.0,
-            "cost_certificate_per_MWh": null,
-            "cost_certificate": null,
             "cost_climate_saved": 330154968.4752592,
             "cost_mro": 0.0,
-            "cost_mro_pa_com": null,
             "CO2e_total": 0.0,
             "CO2e_total_2021_estimated": 63890.6566957444,
-            "demand_electricity": null,
-            "demand_emplo": null,
-            "demand_emplo_com": null,
-            "power_installed": null,
-            "power_to_be_installed_pct": null,
-            "power_to_be_installed": null,
-            "power_installable": null,
-            "area_ha_available": null,
-            "area_ha_available_pct_of_action": null,
-            "ratio_power_to_area_ha": null,
-            "cost_mro_pa": null,
             "change_energy_MWh": -73259.12658683947,
             "change_energy_pct": -1.0,
             "change_CO2e_t": -68439.76740841135,
             "change_CO2e_pct": -1.0,
             "change_cost_energy": -1.8365942762793368,
             "change_cost_mro": -1.0030630278140995,
-            "invest": null,
-            "invest_pa": null,
-            "invest_com": null,
-            "invest_pa_com": null,
-            "invest_outside": null,
-            "invest_pa_outside": null,
-            "invest_per_x": null,
-            "pct_of_wage": null,
-            "pct_x": null,
-            "ratio_wage_to_emplo": null,
-            "cost_wage": null,
-            "cost_mro_per_MWh": 10.923076923076923,
-            "emplo_existing": null,
-            "demand_emplo_new": null,
-            "full_load_hour": null,
-            "lifecycle": null
+            "cost_mro_per_MWh": 10.923076923076923
         },
         "p_fossil_coal_black_cogen": {
             "energy": null,
@@ -6022,55 +5623,21 @@
         },
         "p_fossil_gas": {
             "energy": 0,
-            "pet_sites": null,
-            "energy_installable": null,
             "cost_fuel_per_MWh": 39.354066985645936,
             "cost_fuel": 0.0,
-            "pct_energy": null,
-            "mro_per_MWh": null,
-            "mro": null,
             "CO2e_combustion_based_per_MWh": 0.45858997184488764,
             "CO2e_combustion_based": 0.0,
-            "cost_certificate_per_MWh": null,
-            "cost_certificate": null,
             "cost_climate_saved": 160820704.6193778,
             "cost_mro": 0.0,
-            "cost_mro_pa_com": null,
             "CO2e_total": 0.0,
             "CO2e_total_2021_estimated": 31121.568383043596,
-            "demand_electricity": null,
-            "demand_emplo": null,
-            "demand_emplo_com": null,
-            "power_installed": null,
-            "power_to_be_installed_pct": null,
-            "power_to_be_installed": null,
-            "power_installable": null,
-            "area_ha_available": null,
-            "area_ha_available_pct_of_action": null,
-            "ratio_power_to_area_ha": null,
-            "cost_mro_pa": null,
             "change_energy_MWh": -72695.59484386377,
             "change_energy_pct": -1.0,
             "change_CO2e_t": -33337.47079269485,
             "change_CO2e_pct": -1.0,
             "change_cost_energy": -3.5860736878713353,
             "change_cost_mro": -1.177593821169402,
-            "invest": null,
-            "invest_pa": null,
-            "invest_com": null,
-            "invest_pa_com": null,
-            "invest_outside": null,
-            "invest_pa_outside": null,
-            "invest_per_x": null,
-            "pct_of_wage": null,
-            "pct_x": null,
-            "ratio_wage_to_emplo": null,
-            "cost_wage": null,
-            "cost_mro_per_MWh": 12.923076923076923,
-            "emplo_existing": null,
-            "demand_emplo_new": null,
-            "full_load_hour": null,
-            "lifecycle": null
+            "cost_mro_per_MWh": 12.923076923076923
         },
         "p_fossil_gas_cogen": {
             "energy": null,
@@ -6126,55 +5693,21 @@
         },
         "p_fossil_ofossil": {
             "energy": 0,
-            "pet_sites": null,
-            "energy_installable": null,
             "cost_fuel_per_MWh": 11.11111111111111,
             "cost_fuel": 0.0,
-            "pct_energy": null,
-            "mro_per_MWh": null,
-            "mro": null,
             "CO2e_combustion_based_per_MWh": 1.4070696055632725,
             "CO2e_combustion_based": 0.0,
-            "cost_certificate_per_MWh": null,
-            "cost_certificate": null,
             "cost_climate_saved": 153004170.8959333,
             "cost_mro": 0.0,
-            "cost_mro_pa_com": null,
             "CO2e_total": 0.0,
             "CO2e_total_2021_estimated": 29608.934861332036,
-            "demand_electricity": null,
-            "demand_emplo": null,
-            "demand_emplo_com": null,
-            "power_installed": null,
-            "power_to_be_installed_pct": null,
-            "power_to_be_installed": null,
-            "power_installable": null,
-            "area_ha_available": null,
-            "area_ha_available_pct_of_action": null,
-            "ratio_power_to_area_ha": null,
-            "cost_mro_pa": null,
             "change_energy_MWh": -22541.26971902753,
             "change_energy_pct": -1.0,
             "change_CO2e_t": -31717.135492447404,
             "change_CO2e_pct": -1.0,
             "change_cost_energy": -0.3139477395349294,
             "change_cost_mro": -0.22039131315352045,
-            "invest": null,
-            "invest_pa": null,
-            "invest_com": null,
-            "invest_pa_com": null,
-            "invest_outside": null,
-            "invest_pa_outside": null,
-            "invest_per_x": null,
-            "pct_of_wage": null,
-            "pct_x": null,
-            "ratio_wage_to_emplo": null,
-            "cost_wage": null,
-            "cost_mro_per_MWh": 7.8,
-            "emplo_existing": null,
-            "demand_emplo_new": null,
-            "full_load_hour": null,
-            "lifecycle": null
+            "cost_mro_per_MWh": 7.8
         },
         "p_fossil_ofossil_cogen": {
             "energy": null,
@@ -6958,43 +6491,25 @@
         },
         "p_renew_geoth": {
             "energy": 22071.915039242143,
-            "pet_sites": null,
             "energy_installable": 23202670.455305222,
-            "cost_fuel_per_MWh": null,
-            "cost_fuel": null,
             "pct_energy": 0.012383,
-            "mro_per_MWh": null,
-            "mro": null,
             "CO2e_combustion_based_per_MWh": 0.0,
             "CO2e_combustion_based": 0.0,
-            "cost_certificate_per_MWh": null,
-            "cost_certificate": null,
             "cost_climate_saved": 0,
             "cost_mro": 0.39729447070635854,
-            "cost_mro_pa_com": null,
             "CO2e_total": 0,
-            "CO2e_total_2021_estimated": null,
-            "demand_electricity": null,
             "demand_emplo": 0,
-            "demand_emplo_com": null,
             "power_installed": 42.0,
             "power_to_be_installed_pct": 0.7,
             "power_to_be_installed": 3956.006134969325,
             "power_installable": 5711.437335670465,
-            "area_ha_available": null,
-            "area_ha_available_pct_of_action": null,
-            "ratio_power_to_area_ha": null,
-            "cost_mro_pa": null,
             "change_energy_MWh": 21902.85551634944,
             "change_energy_pct": 129.55706452720844,
             "change_CO2e_t": 0,
             "change_CO2e_pct": 0,
-            "change_cost_energy": null,
             "change_cost_mro": 0.39348000567100916,
             "invest": 0,
             "invest_pa": 0.0,
-            "invest_com": null,
-            "invest_pa_com": null,
             "invest_outside": 0.0,
             "invest_pa_outside": 6442037.661150105,
             "invest_per_x": 2900000.0,
@@ -7005,8 +6520,7 @@
             "cost_mro_per_MWh": 18.0,
             "emplo_existing": 0,
             "demand_emplo_new": 0,
-            "full_load_hour": 4238.0952380952385,
-            "lifecycle": null
+            "full_load_hour": 4238.0952380952385
         },
         "p_renew_hydro": {
             "energy": 23472.91037323587,
@@ -10418,8 +9932,8 @@
         "z": {
             "energy_18": 2883287.091023166,
             "pct_energy_18": null,
-            "CO2e_production_based_18": 69843.05700967513,
-            "CO2e_combustion_based_18": 830464.8040745696,
+            "CO2e_production_based_18": 58858.85199050421,
+            "CO2e_combustion_based_18": 841449.0090937405,
             "CO2e_total_18": 900307.8610842448,
             "pct_CO2e_total_18": 1,
             "energy_30": 3548334.947959742,
@@ -10451,8 +9965,8 @@
         "s": {
             "energy_18": 2883287.091023166,
             "pct_energy_18": 1,
-            "CO2e_production_based_18": 20062.857605923033,
-            "CO2e_combustion_based_18": 355682.607144762,
+            "CO2e_production_based_18": 9078.65258675212,
+            "CO2e_combustion_based_18": 366666.81216393295,
             "CO2e_total_18": 375745.46475068503,
             "pct_CO2e_total_18": 0.41735219805608836,
             "energy_30": 3548334.947959742,
@@ -10849,5 +10363,382 @@
         "CO2e_per_capita_com_pct_of_nat": 0.7448528235907925,
         "GHG_budget_2022_to_year_target_nat": 2391448453.0,
         "CO2e_2022_to_year_target": 1681399.1322981827
+    },
+    "bisko": {
+        "priv_residences": {
+            "communal_facilities": {
+                "CO2e_pb": 130.5924879514703,
+                "CO2e_cb": 7278.741916798969,
+                "energy": 28423.74591026
+            },
+            "sector_without_communal_facilities": {
+                "CO2e_pb": 4750.3559972711655,
+                "CO2e_cb": 264767.2608083252,
+                "energy": 1033925.5646916801
+            },
+            "total": {
+                "CO2e_pb": 4880.948485222636,
+                "CO2e_cb": 272046.0027251242,
+                "energy": 1062349.3106019401,
+                "energy_from_same_eb_sector": 1062349.3106019401,
+                "energy_from_eb_agri_sector": 0,
+                "eb_CO2e_from_same_sector": 144479.7534925025,
+                "eb_CO2e_cb_from_agri": 0,
+                "eb_CO2e_cb_from_heat": 30506.163254757746,
+                "eb_CO2e_cb_from_elec": 97060.08597786396,
+                "eb_CO2e_cb_from_fuels": 0.0,
+                "eb_CO2e_pb_from_heat": 4880.948485222636
+            },
+            "lpg": {
+                "CO2e_pb": 0,
+                "CO2e_cb": 4522.825250274562,
+                "energy": 17020.185151377427
+            },
+            "gas": {
+                "CO2e_pb": 3924.8647287949966,
+                "CO2e_cb": 87421.62872355158,
+                "energy": 430104.5398052088
+            },
+            "elec": {
+                "CO2e_pb": 0,
+                "CO2e_cb": 97060.08597786396,
+                "energy": 182690.32013107618
+            },
+            "petrol": {
+                "CO2e_pb": 0,
+                "CO2e_cb": 502.2126458328503,
+                "energy": 1903.1857125695403
+            },
+            "fueloil": {
+                "CO2e_pb": 0,
+                "CO2e_cb": 50974.39751906556,
+                "energy": 180452.4004094099
+            },
+            "coal": {
+                "CO2e_pb": 956.0837564276395,
+                "CO2e_cb": 7570.275284640413,
+                "energy": 9667.435238737758
+            },
+            "heatnet": {
+                "CO2e_pb": 0,
+                "CO2e_cb": 21914.013610569822,
+                "energy": 91770.96793808899
+            },
+            "biomass": {
+                "CO2e_pb": 0.0,
+                "CO2e_cb": 2080.5637133254504,
+                "energy": 113184.83915381624
+            },
+            "solarth": {
+                "CO2e_pb": 0.0,
+                "CO2e_cb": 0.0,
+                "energy": 14372.559228878968
+            },
+            "heatpump": {
+                "CO2e_pb": 0.0,
+                "CO2e_cb": 0.0,
+                "energy": 21182.877832776452
+            }
+        },
+        "buissenesses": {
+            "communal_facilities": {
+                "CO2e_pb": 189.5231814137936,
+                "CO2e_cb": 21391.85671992529,
+                "energy": 61870.47234352317
+            },
+            "sector_without_communal_facilities": {
+                "CO2e_pb": 1374.4319211926688,
+                "CO2e_cb": 155134.8521595963,
+                "energy": 448687.86780516454
+            },
+            "total": {
+                "CO2e_pb": 1563.9551026064626,
+                "CO2e_cb": 176526.7088795216,
+                "energy": 510558.3401486877,
+                "energy_from_same_eb_sector": 501527.4962612936,
+                "energy_from_eb_agri_sector": 9030.843887394141,
+                "eb_CO2e_from_same_sector": 54504.685768528936,
+                "eb_CO2e_cb_from_agri": 1560.9376065676786,
+                "eb_CO2e_cb_from_heat": 9691.281609010011,
+                "eb_CO2e_cb_from_elec": 110769.80389541498,
+                "eb_CO2e_cb_from_fuels": 0.0,
+                "eb_CO2e_pb_from_heat": 1563.9551026064626
+            },
+            "lpg": {
+                "CO2e_pb": 0,
+                "CO2e_cb": 1480.2942850308357,
+                "energy": 5582.576436838335
+            },
+            "gas": {
+                "CO2e_pb": 1260.7958247764338,
+                "CO2e_cb": 33804.295413538675,
+                "energy": 166629.36076351552
+            },
+            "elec": {
+                "CO2e_pb": 0,
+                "CO2e_cb": 110769.80389541498,
+                "energy": 208495.29166010785
+            },
+            "petrol": {
+                "CO2e_pb": 0,
+                "CO2e_cb": 654.7499677225389,
+                "energy": 2479.2747102878025
+            },
+            "diesel": {
+                "CO2e_pb": 0,
+                "CO2e_cb": 4579.623840842509,
+                "energy": 17208.829678416834
+            },
+            "jetfuel": {
+                "CO2e_pb": 0,
+                "CO2e_cb": 103.5389452559614,
+                "energy": 410.8688303807992
+            },
+            "fueloil": {
+                "CO2e_pb": 0,
+                "CO2e_cb": 16038.103289807774,
+                "energy": 56702.020972532824
+            },
+            "coal": {
+                "CO2e_pb": 303.15927783002866,
+                "CO2e_cb": 1466.2838984732716,
+                "energy": 391.85985924650487
+            },
+            "heatnet": {
+                "CO2e_pb": 0,
+                "CO2e_cb": 6948.5926268224075,
+                "energy": 12022.131465785798
+            },
+            "biomass": {
+                "CO2e_pb": 0.0,
+                "CO2e_cb": 681.4227166126523,
+                "energy": 37070.10752979285
+            },
+            "solarth": {
+                "CO2e_pb": 0.0,
+                "CO2e_cb": 0,
+                "energy": 1441.4900399735789
+            },
+            "heatpump": {
+                "CO2e_pb": 0.0,
+                "CO2e_cb": 0,
+                "energy": 2124.5282018090543
+            }
+        },
+        "transport": {
+            "total": {
+                "CO2e_pb": 151.19472755012524,
+                "CO2e_cb": 207195.96088480495,
+                "energy": 788762.7469050277,
+                "energy_from_same_eb_sector": 788762.7469050277,
+                "energy_from_eb_agri_sector": 0,
+                "eb_CO2e_from_same_sector": 197573.818093637,
+                "eb_CO2e_cb_from_agri": 0,
+                "eb_CO2e_cb_from_heat": 54.918021979062345,
+                "eb_CO2e_cb_from_elec": 9567.224769188877,
+                "eb_CO2e_cb_from_fuels": 0.0,
+                "eb_CO2e_pb_from_heat": 151.19472755012524
+            },
+            "lpg": {
+                "CO2e_pb": 0,
+                "CO2e_cb": 1072.3736291358296,
+                "energy": 4417.233471962673
+            },
+            "gas": {
+                "CO2e_pb": 151.19472755012524,
+                "CO2e_cb": 225.81926553339247,
+                "energy": 935.7366664339628
+            },
+            "elec": {
+                "CO2e_pb": 0,
+                "CO2e_cb": 9567.224769188877,
+                "energy": 18007.80761978409
+            },
+            "petrol": {
+                "CO2e_pb": 0,
+                "CO2e_cb": 50883.62143263141,
+                "energy": 187741.93458069302
+            },
+            "diesel": {
+                "CO2e_pb": 0,
+                "CO2e_cb": 99197.84268056722,
+                "energy": 372228.4612392446
+            },
+            "jetfuel": {
+                "CO2e_pb": 0,
+                "CO2e_cb": 46249.07910774823,
+                "energy": 175370.842235707
+            },
+            "bioethanol": {
+                "CO2e_pb": 0,
+                "CO2e_cb": 0.0,
+                "energy": 8428.629266986021
+            },
+            "biodiesel": {
+                "CO2e_pb": 0,
+                "CO2e_cb": 0.0,
+                "energy": 21412.608038262737
+            },
+            "biogas": {
+                "CO2e_pb": 0,
+                "CO2e_cb": 0.0,
+                "energy": 219.49378595364558
+            }
+        },
+        "industry": {
+            "total": {
+                "CO2e_pb": 46623.091895542115,
+                "CO2e_cb": 158885.66767276055,
+                "energy": 493156.5109704012
+            },
+            "lpg": {
+                "CO2e_pb": 0,
+                "CO2e_cb": 175.58511730168402,
+                "energy": 927.9921118774307
+            },
+            "gas": {
+                "CO2e_pb": 1514.6072979375685,
+                "CO2e_cb": 374.5612947166014,
+                "energy": 170383.8267333077
+            },
+            "elec": {
+                "CO2e_pb": 0,
+                "CO2e_cb": 81997.1794024075,
+                "energy": 154338.32356472002
+            },
+            "diesel": {
+                "CO2e_pb": 0,
+                "CO2e_cb": 0.0,
+                "energy": 91.77527220038343
+            },
+            "fueloil": {
+                "CO2e_pb": 0,
+                "CO2e_cb": 1147.690886832709,
+                "energy": 5100.922722029988
+            },
+            "coal": {
+                "CO2e_pb": 368.9532085783393,
+                "CO2e_cb": 1617.877625177523,
+                "energy": 80487.10333806726
+            },
+            "other_fossil": {
+                "CO2e_pb": 558.1969258291551,
+                "CO2e_cb": 3035.054602284478,
+                "energy": 24079.821471072086
+            },
+            "heatnet": {
+                "CO2e_pb": 0,
+                "CO2e_cb": 8456.629014030383,
+                "energy": 36292.00046031485
+            },
+            "biomass": {
+                "CO2e_pb": 0.0,
+                "CO2e_cb": 0,
+                "energy": 21369.227429533905
+            },
+            "solarth": {
+                "CO2e_pb": 0.0,
+                "CO2e_cb": 0,
+                "energy": 34.568851184244785
+            },
+            "heatpump": {
+                "CO2e_pb": 0.0,
+                "CO2e_cb": 0,
+                "energy": 50.94901609338522
+            },
+            "miner": {
+                "CO2e_pb": 13352.885930842931,
+                "CO2e_cb": 9452.690723348165
+            },
+            "chemistry": {
+                "CO2e_pb": 4516.21942894805,
+                "CO2e_cb": 13446.124449779916
+            },
+            "metal": {
+                "CO2e_pb": 14668.779959042446,
+                "CO2e_cb": 26139.469434832765
+            },
+            "other": {
+                "CO2e_pb": 11643.449144363629,
+                "CO2e_cb": 13042.805122048823
+            },
+            "total_supply": {
+                "CO2e_pb": 2441.757432345063,
+                "CO2e_cb": 96804.57794275088,
+                "energy": 493156.5109704012,
+                "energy_from_same_eb_sector": 493156.5109704012,
+                "energy_from_eb_agri_sector": 0,
+                "eb_CO2e_from_same_sector": 0,
+                "eb_CO2e_cb_from_agri": 0,
+                "eb_CO2e_cb_from_heat": 14807.398540343378,
+                "eb_CO2e_cb_from_elec": 81997.1794024075,
+                "eb_CO2e_cb_from_fuels": 0.0,
+                "eb_CO2e_pb_from_heat": 2441.757432345063
+            },
+            "total_production": {
+                "CO2e_pb": 44181.334463197054,
+                "CO2e_cb": 62081.08973000967
+            }
+        },
+        "agri": {
+            "total": {
+                "CO2e_pb": 20116.612193354496
+            },
+            "forest": {
+                "CO2e_pb": 7559.454750139824
+            },
+            "manure": {
+                "CO2e_pb": 3544.9955036178635
+            },
+            "soil": {
+                "CO2e_pb": 7703.786458639805
+            },
+            "other": {
+                "CO2e_pb": 1308.375480957006
+            }
+        },
+        "lulucf": {
+            "total": {
+                "CO2e_pb": -14517.747252799454
+            },
+            "forest": {
+                "CO2e_pb": -22073.7188209576
+            },
+            "crop": {
+                "CO2e_pb": 3601.768278119962
+            },
+            "grass": {
+                "CO2e_pb": 3720.531969130205
+            },
+            "grove": {
+                "CO2e_pb": -775.2585332969029
+            },
+            "wet": {
+                "CO2e_pb": 172.53861408164187
+            },
+            "water": {
+                "CO2e_pb": 459.6127238888304
+            },
+            "settlement": {
+                "CO2e_pb": 1444.088149523891
+            },
+            "other": {
+                "CO2e_pb": 0.0
+            },
+            "wood": {
+                "CO2e_pb": -1067.309633289481
+            }
+        },
+        "total": {
+            "CO2e_pb": 53219.19021092134,
+            "CO2e_cb": 814654.3401622113,
+            "energy": 2854826.9086260567
+        },
+        "communal_facilities": {
+            "CO2e_pb": 320.1156693652639,
+            "CO2e_cb": 28670.59863672426,
+            "energy": 90294.21825378317
+        },
+        "bisko_quality": 0.13814545892812738
     }
 }

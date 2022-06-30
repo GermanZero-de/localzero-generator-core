@@ -1,3 +1,4 @@
+# pyright: strict
 from dataclasses import dataclass, field
 from .inputs import Inputs
 from .utils import div
@@ -177,9 +178,7 @@ def calc_budget(
 ) -> M183X:
     """Calculate the budget needed."""
 
-    def fact(n):
-        return inputs.fact(n)
-
+    fact = inputs.fact
     entries = inputs.entries
 
     ######################################
@@ -655,9 +654,7 @@ def calc_z(
 ):
     """This updates several values in m183X inplace."""
 
-    def fact(n):
-        return inputs.fact(n)
-
+    fact = inputs.fact
     entries = inputs.entries
 
     ##################################################################

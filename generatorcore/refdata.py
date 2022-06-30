@@ -270,12 +270,12 @@ class FactOrAssumptionCompleteRow:
         return cls(
             label=label,
             group=row.str("group"),
-            description=row.str("description"),
+            description=row.str("description").strip(),
             value=row.float("value"),
-            unit=row.str("unit"),
-            rationale=row.str("rationale"),
-            reference=row.str("reference"),
-            link=row.str("link"),
+            unit=row.str("unit").strip(),
+            rationale=row.str("rationale").strip(),
+            reference=row.str("reference").strip(),
+            link=row.str("link").strip(),
         )
 
 
