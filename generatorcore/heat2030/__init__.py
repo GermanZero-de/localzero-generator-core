@@ -30,7 +30,7 @@ def calc(
     d_r = h30.d_r
     d_b = h30.d_b
     d_i = h30.d_i
-    a_t = h30.a_t
+    d_a = h30.d_a
     d_t = h30.d_t
     p = h30.p
     p_gas = h30.p_gas
@@ -140,9 +140,9 @@ def calc(
         + b30.s_solarth.energy
     )
     d_i.energy = i30.s_renew_biomass.energy + i30.s_renew_heatnet.energy
-    a_t.energy = a30.s_biomass.energy + a30.s_heatpump.energy
+    d_a.energy = a30.s_biomass.energy + a30.s_heatpump.energy
     d_t.energy = 0.0
-    d.energy = d_r.energy + d_b.energy + d_i.energy + a_t.energy
+    d.energy = d_r.energy + d_b.energy + d_i.energy + d_a.energy
     p_heatnet_lheatpump.pct_energy = ass("Ass_H_P_heatnet_fraction_lheatpump_2050")
     p_fueloil.energy = r30.s_fueloil.energy + b30.s_fueloil.energy
     p_opetpro.energy = 0

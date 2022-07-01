@@ -361,7 +361,7 @@ class BiskoBusiness(BiskoSector, BiskoSectorWithExtraCommunalFacilities):
             eb_CO2e_cb_from_same_sector=b18.s_fueloil.CO2e_total,
             eb_CO2e_cb_from_agri=a18.s_fueloil.CO2e_combustion_based,
             eb_CO2e_cb_from_heat=h18.p_fueloil.CO2e_combustion_based
-            * div(h18.d_b.energy + h18.a_t.energy, h18.d.energy),
+            * div(h18.d_b.energy + h18.d_a.energy, h18.d.energy),
         )
         coal = EnergyAndEmissionsCalcIntermediate(
             eb_energy_from_same_sector=b18.s_coal.energy,
@@ -377,7 +377,7 @@ class BiskoBusiness(BiskoSector, BiskoSectorWithExtraCommunalFacilities):
             eb_CO2e_cb_from_same_sector=b18.s_lpg.CO2e_total,
             eb_CO2e_cb_from_agri=a18.s_lpg.CO2e_total,
             eb_CO2e_cb_from_heat=h18.p_lpg.CO2e_combustion_based
-            * div(h18.d_b.energy + h18.a_t.energy, h18.d.energy),
+            * div(h18.d_b.energy + h18.d_a.energy, h18.d.energy),
         )
         gas = EnergyAndEmissionsCalcIntermediate(
             eb_energy_from_same_sector=b18.s_gas.energy,
@@ -385,9 +385,9 @@ class BiskoBusiness(BiskoSector, BiskoSectorWithExtraCommunalFacilities):
             eb_CO2e_cb_from_same_sector=b18.s_gas.CO2e_total,
             eb_CO2e_cb_from_agri=a18.s_gas.CO2e_total,
             eb_CO2e_cb_from_heat=h18.p_gas.CO2e_combustion_based
-            * div(h18.d_b.energy + h18.a_t.energy, h18.d.energy),
+            * div(h18.d_b.energy + h18.d_a.energy, h18.d.energy),
             eb_CO2e_pb_from_heat=h18.p_gas.CO2e_production_based
-            * div(h18.d_b.energy + h18.a_t.energy, h18.d.energy),
+            * div(h18.d_b.energy + h18.d_a.energy, h18.d.energy),
         )
         heatnet = EnergyAndEmissionsCalcIntermediate(
             eb_energy_from_same_sector=b18.s_heatnet.energy,
@@ -401,7 +401,7 @@ class BiskoBusiness(BiskoSector, BiskoSectorWithExtraCommunalFacilities):
             eb_CO2e_cb_from_same_sector=b18.s_biomass.CO2e_total,
             eb_CO2e_cb_from_agri=a18.s_biomass.CO2e_total,
             eb_CO2e_pb_from_heat=h18.p_biomass.CO2e_production_based
-            * div(h18.d_b.energy + h18.a_t.energy, h18.d.energy),
+            * div(h18.d_b.energy + h18.d_a.energy, h18.d.energy),
         )
         solarth = EnergyAndEmissionsCalcIntermediate(
             eb_energy_from_same_sector=b18.s_solarth.energy,

@@ -32,7 +32,7 @@ class H30:
     d_b: Vars4 = field(default_factory=Vars4)
     d_i: Vars4 = field(default_factory=Vars4)
     d_t: Vars4 = field(default_factory=Vars4)
-    a_t: Vars4 = field(default_factory=Vars4)
+    d_a: Vars4 = field(default_factory=Vars4)
     p: Vars5 = field(default_factory=Vars5)
     p_gas: Vars6 = field(default_factory=Vars6)
     p_lpg: Vars7 = field(default_factory=Vars7)
