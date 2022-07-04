@@ -11,6 +11,9 @@ This is a simple wrapper around the generator to
 """
 # pyright: strict
 import argparse
+import sys
+from typing import Any
+
 from commands.cmd_run_parser import add_cmd_make_entries_parser, add_cmd_run_parser
 from commands.cmd_explorer_parser import add_cmd_explorer_parser
 from commands.cmd_ready_to_rock_parser import add_cmd_ready_to_rock_parser
@@ -19,24 +22,34 @@ from commands.cmd_data_parser import add_cmd_data_parser
 from commands.cmd_test_end_to_end_parser import add_cmd_test_end_to_end_parser
 
 
+class Devtool:
+    def __init__(self):
+        self.parser = argparse.ArgumentParser()
+
+    def parse_args(self, args: Any):
+        self.parser.set_defaults()
+        subcmd_parsers = self.parser.add_subparsers(dest="subcmd", title="Commands")
+
+        add_cmd_run_parser(subcmd_parsers)
+        add_cmd_make_entries_parser(subcmd_parsers)
+        add_cmd_explorer_parser(subcmd_parsers)
+        add_cmd_ready_to_rock_parser(subcmd_parsers)
+        add_cmd_compare_to_excel_parser(subcmd_parsers)
+        add_cmd_data_parser(subcmd_parsers)
+        add_cmd_test_end_to_end_parser(subcmd_parsers)
+
+        return self.parser.parse_args(args)
+
+
 def main():
-    parser = argparse.ArgumentParser()
-    parser.set_defaults()
-    subcmd_parsers = parser.add_subparsers(dest="subcmd", title="Commands")
+    devtool = Devtool()
+    args = devtool.parse_args(sys.argv[1:])
 
-    add_cmd_run_parser(subcmd_parsers)
-    add_cmd_make_entries_parser(subcmd_parsers)
-    add_cmd_explorer_parser(subcmd_parsers)
-    add_cmd_ready_to_rock_parser(subcmd_parsers)
-    add_cmd_compare_to_excel_parser(subcmd_parsers)
-    add_cmd_data_parser(subcmd_parsers)
-    add_cmd_test_end_to_end_parser(subcmd_parsers)
-
-    args = parser.parse_args()
     if args.subcmd is None:
-        parser.print_help()
+        devtool.parser.print_help()
     else:
         args.func(args)
 
 
-main()
+if __name__ == "__main__":
+    main()
