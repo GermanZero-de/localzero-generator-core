@@ -53,7 +53,7 @@ def cmd_data_normalize(args: Any):
             writer.writerow(row)
 
 
-def cmd_data_is_production():
+def cmd_data_is_production(args: Any):
     ds = refdatatools.DataDirStatus.get(refdatatools.datadir())
     # TODO: Add a verbose option that prints a json of DataDirStatus
     if not ds.is_good():
