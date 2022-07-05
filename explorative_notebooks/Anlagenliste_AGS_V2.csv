@@ -22,26 +22,26 @@ ID;Nummer;Betreiber;Anlagenname;Bundesland;PLZ;Ort Orignal;Ort;VET 2018 [t CO2 Ä
 210;14250-0024;Glaswerk Ernstthal GmbH;Anlage zur Herstellung von Glas;TH;98724;Lauscha;Lauscha;87.322;16;Herstellung von Glas;NACE 23.13;;16072011;1
 231;14250-0047;Heinz-Glas Produktion GmbH & Co. KGaA;Wanne2+3 mit Feedern und Kühlbahnen;BY;96355;Tettau;Tettau;5.753;16;Herstellung von Glas;NACE 23.13;;09476179;3
 262;14250-0078;Wiegand-Glashüttenwerke GmbH;Wiegand-Glashüttenwerke GmbH Werk Steinbach a. Wald;BY;96361;Steinbach a.Wald;Steinbach a.Wald;78.773;16;Herstellung von Glas;NACE 23.13;;09476175;1
-1882;14250-0093;Euroglas AG;Flachglasanlage;ST;39171;Osterweddingen;XXX;145.985;16;Herstellung von Glas;NACE 23.11;;#NV;0
-4139;14250-0101;f | glass GmbH;Anlage zum Herstellen von Flachglas;ST;39171;Osterweddingen;XXX;125.921;16;Herstellung von Glas;NACE 23.19;;#NV;0
+1882;14250-0093;Euroglas AG;Flachglasanlage;ST;39171;Osterweddingen;Sülzetal;145.985;16;Herstellung von Glas;NACE 23.11;;15083490;1
+4139;14250-0101;f | glass GmbH;Anlage zum Herstellen von Flachglas;ST;39171;Osterweddingen;Sülzetal;125.921;16;Herstellung von Glas;NACE 23.19;;15083490;1
 4168;14250-0106;Heinz-Glas Produktion GmbH & Co.KGaA;Wanne5;BY;96355;Tettau - Kleintettau;Tettau;5.529;16;Herstellung von Glas;NACE 23.13;;09476179;3
 3900;14255-0004;ROCKWOOL Operations GmbH & Co. KG;Werk Neuburg Mineralwollherstellung Linie 4 und 5;BY;86633;Neuburg a. d. Donau;Neuburg a.d.Donau;76.769;18;Herstellung von Mineralfasern;NACE 23.99;;#NV;0
 289;14260-0015;Erbersdobler Ziegel GmbH & Co. KG;Ziegelwerk Erbersdobler;BY;94081;Fürstenzell, Markt;Fürstenzell;22.588;17;Herstellung von Keramik;NACE 23.32;;09275122;1
-297;14260-0023;Leipfinger-Bader KG;Werk Puttenhausen;BY;84048;Puttenhausen;XXX;23.759;17;Herstellung von Keramik;NACE 23.32;;#NV;0
-298;14260-0024;Leipfinger Bader KG, Ziegelwerke;Werk Vatersdorf;BY;84172;Vatersdorf;XXX;18.471;17;Herstellung von Keramik;NACE 23.32;;#NV;0
-299;14260-0025;Ziegelwerk Englert GmbH;Ziegelwerk Englert;BY;97509;Zeilitzheim;XXX;5.660;17;Herstellung von Keramik;NACE 23.32;;#NV;0
+297;14260-0023;Leipfinger-Bader KG;Werk Puttenhausen;BY;84048;Puttenhausen;Rudelzhausen;23.759;17;Herstellung von Keramik;NACE 23.32;;09178122;1
+298;14260-0024;Leipfinger Bader KG, Ziegelwerke;Werk Vatersdorf;BY;84172;Vatersdorf;Buch a.Erlbach;18.471;17;Herstellung von Keramik;NACE 23.32;;09274121;1
+299;14260-0025;Ziegelwerk Englert GmbH;Ziegelwerk Englert;BY;97509;Zeilitzheim;Kolitzheim;5.660;17;Herstellung von Keramik;NACE 23.32;;09678150;1
 314;14260-0042;Refratechnik Ceramics GmbH;Feuerfestwerk;NI;49328;Melle;Melle;11.808;17;Herstellung von Keramik;NACE 23.20;;03459024;4
 316;14260-0045;Wienerberger GmbH;Hintermauerziegelwerk Buldern;NW;48249;Dülmen;Dülmen;11.352;17;Herstellung von Keramik;keine Information;;05558016;1
 325;14260-0054;Wienerberger GmbH;Hintermauerziegelwerk Erfurt;TH;99091;Erfurt;Erfurt;0;17;Herstellung von Keramik;keine Information;;16051000;1
-335;14260-0064;Wienerberger GmbH;Werk Bollstedt;TH;99998;Bollstedt;XXX;16.371;17;Herstellung von Keramik;NACE 23.32;;#NV;0
+335;14260-0064;Wienerberger GmbH;Werk Bollstedt;TH;99998;Bollstedt;Weinbergen;16.371;17;Herstellung von Keramik;NACE 23.32;;16064066;1
 205358;14260-0067;ERLUS AG;Dachziegelproduktion Neufahrn, bestehend aus den Anlagenteilen Werk 1, Werk 2 und Werk 3;BY;84088;Neufahrn NB.;Neufahrn i.NB;40.157;17;Herstellung von Keramik;NACE 23.32;;#NV;0
 205359;14260-0068;ERLUS AG;Kaminrohrwerk;BY;84088;Neufahrn NB.;Neufahrn i.NB;1.388;17;Herstellung von Keramik;NACE 23.49;;#NV;0
 361;14260-0097;Ziegelwerk Stengel GmbH;Ziegelwerk Stengel GmbH;BY;86633;Neuburg a. d. Donau;Neuburg a.d.Donau;4.513;17;Herstellung von Keramik;NACE 23.32;;#NV;0
 379;14260-0115;Wienerberger GmbH;Werk Reetz;BB;14827;Reetz;Gülitz-Reetz;49.223;17;Herstellung von Keramik;NACE 23.32;;12070145;1
 386;14260-0122;P-D Industriegesellschaft mbH;P-D Industriegesellschaft mbH Feuerfestwerke Wetro;SN;02699;Puschwitz;Puschwitz;6.916;17;Herstellung von Keramik;NACE 23.20;;14625460;1
-398;14260-0136;Ziegelsysteme Michael Kellerer GmbH & Co. KG;Ziegelsysteme Michael Kellerer GmbH & Co. KG;BY;82281;Oberweikertshofen;XXX;17.087;17;Herstellung von Keramik;NACE 23.32;;#NV;0
-431;14260-0172;Ziegelei Hebrok GmbH & Co. KG;Ziegelei Hebrok GmbH & Co. KG;NI;49170;Natrup Hagen;XXX;7.165;17;Herstellung von Keramik;NACE 23.32;;#NV;0
-432;14260-0173;Hollager Ziegelwerk Berentelg & Hebrok GmbH & Co.KG;Hollager Ziegelwerk;NI;49134;Wallenhorst Hollage;XXX;5.135;17;Herstellung von Keramik;NACE 23.32;;#NV;0
+398;14260-0136;Ziegelsysteme Michael Kellerer GmbH & Co. KG;Ziegelsysteme Michael Kellerer GmbH & Co. KG;BY;82281;Oberweikertshofen;Egenhofen;17.087;17;Herstellung von Keramik;NACE 23.32;;09179117;1
+431;14260-0172;Ziegelei Hebrok GmbH & Co. KG;Ziegelei Hebrok GmbH & Co. KG;NI;49170;Natrup Hagen;Hagen am Teutoburger Wald;7.165;17;Herstellung von Keramik;NACE 23.32;;03459020;1
+432;14260-0173;Hollager Ziegelwerk Berentelg & Hebrok GmbH & Co.KG;Hollager Ziegelwerk;NI;49134;Wallenhorst Hollage;Wallenhorst;5.135;17;Herstellung von Keramik;NACE 23.32;;03459033;1
 437;14260-0178;ABC Keramik H. & R. Berentelg GmbH & Co. KG;Keramikwerk Velpe;NW;49492;Westerkappeln - Velpe;Westerkappeln;6.700;17;Herstellung von Keramik;NACE 23.31;;05566092;1
 441;14260-0182;Ziegelwerk Ott Deisendorf GmbH;Ziegelwerk Ott Deisendorf;BW;88662;Überlingen - Deisendorf;Überlingen;8.976;17;Herstellung von Keramik;NACE 23.32;;08435059;1
 445;14260-0189;August Lücking GmbH & Co KG;Anlage zum Brennen keramischer Erzeugnisse;NW;34414;Warburg-Bonenburg;Warburg;22.014;17;Herstellung von Keramik;NACE 23.32;;05762036;1
@@ -49,7 +49,7 @@ ID;Nummer;Betreiber;Anlagenname;Bundesland;PLZ;Ort Orignal;Ort;VET 2018 [t CO2 Ä
 476;14260-0224;Ziegel- und Klinkerwerke Janinhoff GmbH & Co. KG;Ziegel- und Klinkerwerke Janinhoff GmbH & Co. KG;NW;48163;Münster - Hiltrup;Münster;9.105;17;Herstellung von Keramik;NACE 23.32;;09779187;9
 202376;14260-0246;Dachziegelwerke Nelskamp GmbH;Werk Groß Ammensleben;ST;39326;Verbandsgemeinde Niedere Börde OT Groß Ammensleben;Niedere Börde;42.839;17;Herstellung von Keramik;NACE 23.32;;15083390;1
 203615;14260-0252;Deutsche Steinzeug Cremer & Breuer AG;Werk Witterschlick;NW;53347;Alfter-Witterschlick;Alfter;22.443;17;Herstellung von Keramik;NACE 23.31;;05382004;1
-205343;14260-0259;KDW Klinkerdachziegelwerk GmbH & Co.KG;KDW Klinkerdachziegelwerk Natrup Hagen;NI;49170;Natrup Hagen;XXX;4.801;17;Herstellung von Keramik;NACE 23.32;;#NV;0
+205343;14260-0259;KDW Klinkerdachziegelwerk GmbH & Co.KG;KDW Klinkerdachziegelwerk Natrup Hagen;NI;49170;Natrup Hagen;Hagen am Teutoburger Wald;4.801;17;Herstellung von Keramik;NACE 23.32;;03459020;1
 201642;14260-0263;Creaton Produktions GmbH;Anlage zum Brennen keramischer Erzeugnisse;TH;99998;Weinbergen / Höngeda;Weinbergen;16.285;17;Herstellung von Keramik;NACE 23.32;;16064066;1
 201608;14260-0277;Creaton Produktions GmbH Werk Autenried;Anlage zum Brennen keramischer Erzeugnisse;BY;89335;Ichenhausen-Autenried;Ichenhausen;10.013;17;Herstellung von Keramik;NACE 23.32;;09774143;1
 201612;14260-0280;Creaton Produktions GmbH Werk Roggden;Anlage zum Brennen keramischer Erzeugnisse;BY;86637;Wertingen-Roggden;Wertingen;7.895;17;Herstellung von Keramik;NACE 23.32;;09773182;1
@@ -68,7 +68,7 @@ ID;Nummer;Betreiber;Anlagenname;Bundesland;PLZ;Ort Orignal;Ort;VET 2018 [t CO2 Ä
 544;14280-0054;Neu Kaliss Spezialpapier GmbH;Anlage zur Herstellung von Spezialpapier;MV;19294;Neu Kaliß, OT Heiddorf;Neu Kaliß;6.226;21;Herstellung von Papier;NACE 17.12;;13076103;2
 554;14280-0064;Essity Operations Mainz-Kostheim GmbH;Essity Kostheim;HE;55246;Mainz-Kostheim;Mainz;74.398;3;Energieumwandlung 20–50 MW FWL;NACE 35.30;;07315000;2
 572;14280-0084;Sprick GmbH Bielefelder Papier- und Wellpappenwerke & Co.;Papiermaschine;HE;34474;Diemelstadt-Wrexen;Diemelstadt;445;21;Herstellung von Papier;NACE 17.12;;06635008;1
-202469;14280-0153;Carl Macher GmbH & Co KG;Papierfabrik Brunnenthal;BY;95189;Brunnenthal;XXX;0;21;Herstellung von Papier;NACE 17.12;;#NV;0
+202469;14280-0153;Carl Macher GmbH & Co KG;Papierfabrik Brunnenthal;BY;95189;Brunnenthal;Köditz;0;21;Herstellung von Papier;NACE 17.12;;09475141;1
 203457;14280-0169;Glatfelter Ober-Schmitten GmbH;Glatfelter Ober-Schmitten GmbH;HE;63667;Nidda - Oberschmitten;Nidda;0;21;Herstellung von Papier;NACE 17.12;;06440016;2
 206266;14280-0173;Kartonfabrik Porstendorf GmbH;Kartonfabrik Porstendorf GmbH;TH;07778;Neuengönna / Porstendorf;Neuengönna;0;21;Herstellung von Papier;NACE 17.12;;16074063;1
 698;14310-0087;GHP Glunz Holzwerkstoffproduktions-GmbH;Anlage zur Herstellung von Holzfaser- und Spanplatten;NW;32805;Horn - Bad Meinberg;Horn - Bad Meinberg;12.088;2;Energieumwandlung ? 50 MW FWL;NACE 16.21;;#NV;0
@@ -168,9 +168,9 @@ ID;Nummer;Betreiber;Anlagenname;Bundesland;PLZ;Ort Orignal;Ort;VET 2018 [t CO2 Ä
 204137;14310-1807;MTU Aero Engines AG;Prüfstandsanlage 5;BY;80995;München;München;0;1;Verbrennung;NACE 30.30;;09162000;3
 201870;14310-1849;SWM Services GmbH;Heizwerk Freiham;BY;81249;München;München;5.257;2;Energieumwandlung ? 50 MW FWL;NACE 35.30;;09162000;3
 210456;14310-1943;Bayerische Motoren Werke Aktiengesellschaft;BMW Werk München Energiezentrale;BY;80788;München;München;1;3;Energieumwandlung 20–50 MW FWL;NACE 30.99;;09162000;3
-205504;14280-0162;Koehler Greiz GmbH & Co. KG;Papierfabrik Greiz;TH;07973;Greiz;XXX (Doppelt);0;21;Herstellung von Papier;NACE 17.12;;#NV;0
+205504;14280-0162;Koehler Greiz GmbH & Co. KG;Papierfabrik Greiz;TH;07973;Greiz;Greiz;0;21;Herstellung von Papier;NACE 17.12;16076022;16076022;2
 1875;14240-0077;Wünschendorfer Dolomitwerk GmbH;Schachtofenanlage Caaschwitz;TH;07586;Caaschwitz;Caaschwitz;69.603;15;Herstellung von Kalk;NACE 23.52;;16076012;1
-490;14270-0003;Zellstoff- und Papierfabrik Rosenthal GmbH;Zellstoff- und Papierfabrik Rosenthal GmbH, Zellstofffabrik;TH;07366;Rosenthal am Rennsteig;XXX;53.521;20;Herstellung von Zellstoff;NACE 17.11;;#NV;0
+490;14270-0003;Zellstoff- und Papierfabrik Rosenthal GmbH;Zellstoff- und Papierfabrik Rosenthal GmbH, Zellstofffabrik;TH;07366;Rosenthal am Rennsteig;Blankenstein;53.521;20;Herstellung von Zellstoff;NACE 17.11;;16075004;1
 7;14210-0007;Bayernoil Raffineriegesellschaft mbH;Standort Neustadt;BY;93333;Neustadt;Neustadt;1.099.625;7;Raffinerien;NACE 19.20;;16061073;23
 205507;14280-0155;Progroup Paper PM1 GmbH;PM1;ST;39288;Burg;Burg;6;21;Herstellung von Papier;NACE 17.12;;15086015;52
 1151;14310-0591;Sales & Solutions GmbH;Dampferzeugungsanlage Burg;ST;39288;Burg;Burg;90.927;2;Energieumwandlung ? 50 MW FWL;NACE 35.30;;15086015;52
@@ -227,7 +227,7 @@ ID;Nummer;Betreiber;Anlagenname;Bundesland;PLZ;Ort Orignal;Ort;VET 2018 [t CO2 Ä
 4156;14310-1756;Pollmeier Schnittholz GmbH & Co. KG;Werk Creuzburg;TH;99831;Creuzburg;Creuzburg;17;4;Energieumwandlung 20–50 MW FWL, andere Brennstoffe;NACE 16.10;;16063013;1
 977;14310-0399;TEAG Thüringer Energie AG;HKW Bad Salzungen;TH;36433;Bad Salzungen;Bad Salzungen;17.048;2;Energieumwandlung ? 50 MW FWL;NACE 35.30;;16063003;1
 902;14310-0312;DEUSA International GmbH;GMHKW Bleicherode;TH;99752;Bleicherode;Bleicherode;42.403;3;Energieumwandlung 20–50 MW FWL;NACE 20.15;;16062066;2
-406;14260-0146;Ziegelwerk Nordhausen Dipl.-Ing Sourell GmbH;Ziegelwerk Nordhausen Dipl.-Ing.Sourell GmbH;TH;99734;Nordhausen;XXX;5.052;17;Herstellung von Keramik;NACE 23.32;;#NV;0
+406;14260-0146;Ziegelwerk Nordhausen Dipl.-Ing Sourell GmbH;Ziegelwerk Nordhausen Dipl.-Ing.Sourell GmbH;TH;99734;Nordhausen;Nordhausen, Stadt;5.052;17;Herstellung von Keramik;NACE 23.32;16062041;#NV;0
 1155;14310-0597;Energieversorgung Nordhausen GmbH;BHKW Mitte;TH;99734;Nordhausen;Nordhausen;23.965;2;Energieumwandlung ? 50 MW FWL;NACE 35.30;;16062041;2
 338;14260-0070;ERLUS AG;Werk Teistungen;TH;37339;Teistungen;Teistungen;2.863;17;Herstellung von Keramik;NACE 23.32;;16061114;1
 116;14230-0045;Deuna Zement GmbH;Deuna Drehofenanlagen 1 und 4;TH;37355;Deuna;Deuna;1.010.775;14;Herstellung von Zementklinker;NACE 23.51;;16061022;1
@@ -298,12 +298,12 @@ ID;Nummer;Betreiber;Anlagenname;Bundesland;PLZ;Ort Orignal;Ort;VET 2018 [t CO2 Ä
 1871;14280-0144;Sofidel Germany GmbH;Anlage für die Herstellung von Tissuepapier (Mutterrollen) zur anschließenden weiteren Verarbeitung zu Servietten, Toilettenpapier sowie Küchen- und Papiertaschentüchern;ST;39596;Arneburg;Arneburg;22.159;21;Herstellung von Papier;NACE 17.12;;15090010;1
 633;14310-0016;KWG-Kraftwerksgesellschaft Staßfurt mbH;GuD-IKW Staßfurt;ST;39418;Staßfurt;Staßfurt;392.967;2;Energieumwandlung ? 50 MW FWL;NACE 35.30;;15089310;1
 204725;14641-0003;CIECH Soda Deutschland GmbH & Co. KG;Sodawerk Staßfurt;ST;39418;Staßfurt;Staßfurt;130.244;29;Herstellung von Soda;NACE 20.13;;15089310;1
-209;14250-0023;Ardagh Glass GmbH;Werk Nienburg;NI;31582;Nienburg;XXX (Doppelt);87.867;16;Herstellung von Glas;NACE 23.13;;#NV;0
+209;14250-0023;Ardagh Glass GmbH;Werk Nienburg;NI;31582;Nienburg;Nienburg (Weser), Stadt;87.867;16;Herstellung von Glas;NACE 23.13;3256022;#NV;0
 907;14310-0318;Industriepark Nienburg GmbH;Kesselhaus;NI;31582;Nienburg;Nienburg;19.908;3;Energieumwandlung 20–50 MW FWL;NACE 35.30;;15089235;3
 183;14240-0071;Pfeifer & Langen GmbH & Co. KG;Zuckerfabrik Könnern;ST;06420;Könnern;Könnern;109.999;15;Herstellung von Kalk;NACE 10.81;;15089195;1
 1042;14310-0471;Cargill Deutschland GmbH, Werk Barby;Dampfkesselanlage;ST;39249;Barby;Barby;128.976;2;Energieumwandlung ? 50 MW FWL;NACE 10.61;;15089026;2
 1839;14330-0040;VNG Gasspeicher GmbH;Bad Lauchstädt Gasturbinen;ST;06179;Teutschenthal;Teutschenthal;21.019;6;Antriebsmaschinen (Turbinen);NACE 35.23;;15088365;1
-618;14280-0141;Wepa Leuna GmbH;Tissue Anlage Leuna;ST;06237;Spergau;XXX;14.516;21;Herstellung von Papier;NACE 17.12;;#NV;0
+618;14280-0141;Wepa Leuna GmbH;Tissue Anlage Leuna;ST;06237;Spergau;Leuna;14.516;21;Herstellung von Papier;NACE 17.12;;15088205;1
 1376;14310-0831;Uniper Kraftwerke GmbH;Kraftwerk Schkopau;ST;06258;Schkopau;Schkopau;6.058.441;2;Energieumwandlung ? 50 MW FWL;NACE 35.11;;15088330;1
 1461;14310-0923;Dow Olefinverbund GmbH;Kraftwerk I72 Schkopau;ST;06258;Schkopau;Schkopau;19.616;2;Energieumwandlung ? 50 MW FWL;NACE 35.30;;15088330;1
 1872;14310-1364;Dow Olefinverbund GmbH;PET-Anlage;ST;06258;Schkopau;Schkopau;39.084;1;Verbrennung;NACE 20.16;;15088330;1
@@ -370,7 +370,7 @@ ID;Nummer;Betreiber;Anlagenname;Bundesland;PLZ;Ort Orignal;Ort;VET 2018 [t CO2 Ä
 214;14250-0029;URSA Deutschland GmbH;Ursa Deutschland GmbH _ Delitzsch;SN;04509;Delitzsch;Delitzsch;20.874;16;Herstellung von Glas;NACE 23.14;;14730070;2
 254;14250-0070;PQ Germany GmbH;Anlage zur Herstellung von Wasserglas;SN;04808;Wurzen;Wurzen;47.643;16;Herstellung von Glas;NACE 23.19;;14729410;1
 608;14280-0127;Julius Schulte Trebsen GmbH & Co. KG;Papierfabrik Trebsen;SN;04687;Trebsen;Trebsen;49.188;21;Herstellung von Papier;NACE 17.12;;14729400;1
-202350;14260-0270;Braas GmbH;Braas GmbH - Werk Narsdorf (OG 6);SN;04657;Narsdorf;XXX;7.870;17;Herstellung von Keramik;NACE 23.32;;#NV;0
+202350;14260-0270;Braas GmbH;Braas GmbH - Werk Narsdorf (OG 6);SN;04657;Narsdorf;Geithain;7.870;17;Herstellung von Keramik;NACE 23.32;;14729150;1
 1202;14310-0646;envia THERM GmbH;Spitzenlastkraftwerk Sermuth;SN;04668;Großbothen;Großbothen;287;3;Energieumwandlung 20–50 MW FWL;NACE 35.11;;14729180;1
 1444;14310-0904;Stadtwerke Leipzig GmbH;Heizkraftwerk Leipzig;SN;04105;Leipzig;Leipzig;182.266;2;Energieumwandlung ? 50 MW FWL;NACE 35.11;;14713000;4
 1762;14310-1317;Bayerische Motoren Werke Aktiengesellschaft;BMW Werk 07.10 Leipzig;SN;04349;Leipzig;Leipzig;36.807;2;Energieumwandlung ? 50 MW FWL;NACE 29.10;;14713000;4
@@ -392,7 +392,7 @@ ID;Nummer;Betreiber;Anlagenname;Bundesland;PLZ;Ort Orignal;Ort;VET 2018 [t CO2 Ä
 908;14310-0320;Wacker Chemie AG;Heizkraftwerk Nünchritz;SN;01612;Nünchritz;Nünchritz;67.426;2;Energieumwandlung ? 50 MW FWL;NACE 20.14;;14627190;1
 1134;14310-0572;Energieversorgungscenter Dresden-Wilschdorf GmbH & Co. KG;EVC I;SN;01468;Moritzburg;Moritzburg;109.849;2;Energieumwandlung ? 50 MW FWL;NACE 35.11;;14627150;1
 1868;14310-1380;Zweite Energieversorgungscenter Dresden-Wilschdorf GmbH & Co. KG;Energieversorgungscenter Dresden-Wilschdorf II;SN;01468;Moritzburg;Moritzburg;115.263;2;Energieumwandlung ? 50 MW FWL;NACE 35.11;;14627150;1
-204294;14260-0253;Meissen Keramik GmbH;Werk Meißen;SN;01662;Meißen;XXX (Doppelt);8.365;17;Herstellung von Keramik;NACE 23.31;;#NV;0
+204294;14260-0253;Meissen Keramik GmbH;Werk Meißen;SN;01662;Meißen;Meißen, Stadt;8.365;17;Herstellung von Keramik;NACE 23.31;14627140;#NV;0
 989;14310-0414;Meißener Stadtwerke GmbH;HKW Steinweg Gasturbinen-Kessel-Anlage;SN;01662;Meißen;Meißen;19.810;2;Energieumwandlung ? 50 MW FWL;NACE 35.30;;14627140;4
 684;14310-0071;Kronospan GmbH;Energieversorgungsanlagen des Standortes Lampertswalde;SN;01561;Lampertswalde;Lampertswalde;30.339;2;Energieumwandlung ? 50 MW FWL;NACE 16.21;;14627110;1
 72;14220-0042;Schmiedewerke Gröditz GmbH;Elektrostahlwerk Gröditz;SN;01609;Gröditz;Gröditz;11.907;10;Herstellung von Roheisen und Stahl;NACE 24.10;;14627050;1
@@ -405,17 +405,17 @@ ID;Nummer;Betreiber;Anlagenname;Bundesland;PLZ;Ort Orignal;Ort;VET 2018 [t CO2 Ä
 1307;14310-0758;Stadtwerke Görlitz AG;HKW Königshufen;SN;02828;Görlitz;Görlitz;18.466;2;Energieumwandlung ? 50 MW FWL;NACE 35.30;;14626110;3
 1453;14310-0915;Lausitz Energie Kraftwerke AG;Kraftwerk Boxberg Werk III;SN;02943;Boxberg;Boxberg;8.791.054;2;Energieumwandlung ? 50 MW FWL;NACE 35.11;;08128014;3
 1454;14310-0916;Lausitz Energie Kraftwerke AG;Kraftwerk Boxberg Werk IV;SN;02943;Boxberg;Boxberg;10.209.765;2;Energieumwandlung ? 50 MW FWL;NACE 35.11;;08128014;3
-330;14260-0059;Wienerberger GmbH;Werk Malsch;BW;69254;Malsch;XXX (Doppelt);39.563;17;Herstellung von Keramik;NACE 23.32;;#NV;0
-201617;14260-0279;Creaton Produktions GmbH;Anlage zum Brennen keramischer Erzeugnisse;BW;69254;Malsch;XXX (Doppelt);4.892;17;Herstellung von Keramik;NACE 23.32;;#NV;0
+330;14260-0059;Wienerberger GmbH;Werk Malsch;BW;69254;Malsch;Malsch;39.563;17;Herstellung von Keramik;NACE 23.32;8215046;08226046;3
+201617;14260-0279;Creaton Produktions GmbH;Anlage zum Brennen keramischer Erzeugnisse;BW;69254;Malsch;Malsch;4.892;17;Herstellung von Keramik;NACE 23.32;8215046;08226046;3
 201867;14260-0281;Creaton Produktions GmbH;Anlage zum Brennen keramischer Erzeugnisse;SN;02694;Malschwitz;Malschwitz;15.387;17;Herstellung von Keramik;NACE 23.32;;14625340;1
-250;14250-0066;O-I GLASSPACK GmbH & Co. KG;O-I Glasspack GmbH & Co. KG, Werk Bernsdorf;SN;02994;Bernsdorf;XXX (Doppelt);14.174;16;Herstellung von Glas;NACE 23.13;;#NV;0
+250;14250-0066;O-I GLASSPACK GmbH & Co. KG;O-I Glasspack GmbH & Co. KG, Werk Bernsdorf;SN;02994;Bernsdorf;Bernsdorf;14.174;16;Herstellung von Glas;NACE 23.13;14625030;14625030;2
 244;14250-0060;Glashütte Freital GmbH;Glaswerk Freital;SN;01705;Dresden;Dresden;11.875;16;Herstellung von Glas;NACE 23.13;;14612000;2
 739;14310-0129;DREWAG - Stadtwerke Dresden GmbH;HKW Dresden-Nossener Brücke;SN;01159;Dresden;Dresden;724.518;2;Energieumwandlung ? 50 MW FWL;NACE 35.30;;14612000;2
 751;14310-0145;DREWAG-Stadtwerke Dresden GmbH;HKW Dresden-Nord;SN;01099;Dresden;Dresden;17.243;2;Energieumwandlung ? 50 MW FWL;NACE 35.30;;14612000;2
 753;14310-0147;DREWAG-Stadtwerke Dresden GmbH;HKW Dresden-Reick;SN;01277;Dresden;Dresden;27.753;2;Energieumwandlung ? 50 MW FWL;NACE 35.30;;14612000;2
 754;14310-0148;DREWAG - Stadtwerke Dresden GmbH;HKW Dresden-Klotzsche;SN;01109;Dresden;Dresden;12.413;2;Energieumwandlung ? 50 MW FWL;NACE 35.30;;14612000;2
 813;14310-0214;DREWAG-Stadtwerke Dresden GmbH;HKW Dresden-Kaditz;SN;01139;Dresden;Dresden;7.343;3;Energieumwandlung 20–50 MW FWL;NACE 35.30;;14612000;2
-332;14260-0061;Wienerberger GmbH;Hintermauerziegelwerk Zwickau;SN;08056;Zwickau;XXX (Doppelt);20.488;17;Herstellung von Keramik;NACE 23.32;;#NV;0
+332;14260-0061;Wienerberger GmbH;Hintermauerziegelwerk Zwickau;SN;08056;Zwickau;Zwickau;20.488;17;Herstellung von Keramik;NACE 23.32;14524330;14524330;4
 916;14310-0328;Zwickauer Energieversorgung GmbH;Heizwerk Eckersbach Zwickau;SN;08066;Zwickau;Zwickau;7.375;3;Energieumwandlung 20–50 MW FWL;NACE 35.30;;14524330;4
 921;14310-0333;Zwickauer Energieversorgung GmbH;Heizwerk Süd Zwickau;SN;08066;Zwickau;Zwickau;8.978;2;Energieumwandlung ? 50 MW FWL;NACE 35.30;;14524330;4
 1109;14310-0546;Volkswagen Sachsen GmbH;Heizwerk Zwickau;SN;08056;Zwickau;Zwickau;40.103;2;Energieumwandlung ? 50 MW FWL;NACE 29.10;;14524330;4
@@ -433,7 +433,7 @@ ID;Nummer;Betreiber;Anlagenname;Bundesland;PLZ;Ort Orignal;Ort;VET 2018 [t CO2 Ä
 515;14280-0023;WEPA Papierfabrik Sachsen GmbH;Werk Kriebstein;SN;09648;Kriebstein;Kriebstein;17.793;21;Herstellung von Papier;NACE 17.12;;14522300;1
 1060;14310-0489;Freiberger Erdgas GmbH;Heizkraftwerk Freiberg Chemnitzer Straße 40;SN;09599;Freiberg;Freiberg;36.549;2;Energieumwandlung ? 50 MW FWL;NACE 35.30;;14522180;3
 202301;14633-0001;Befesa Zinc Freiberg GmbH;Befesa Zinc Freiberg GmbH;SN;09599;Freiberg;Freiberg;93.915;13;Verarbeitung von Nichteisenmetallen;NACE 24.43;;14522180;3
-222;14250-0037;GUARDIAN Flachglas GmbH;Flachglasproduktionsanlage;ST;06766;Thalheim;XXX;122.437;16;Herstellung von Glas;NACE 23.11;;#NV;0
+222;14250-0037;GUARDIAN Flachglas GmbH;Flachglasproduktionsanlage;ST;06766;Thalheim;Thalheim/Erzgeb., Stadt;122.437;16;Herstellung von Glas;NACE 23.11;;#NV;0
 207008;14280-0172;Krempel GmbH & Co. Pressspanwerk KG;Werk Thalheim;SN;09380;Thalheim;Thalheim;2.498;21;Herstellung von Papier;NACE 17.12;;14521620;1
 532;14280-0042;Schumacher Packaging GmbH Werk Schwarzenberg;Kartonerzeugungsanlage;SN;08340;Schwarzenberg;Schwarzenberg;21.310;21;Herstellung von Papier;NACE 17.12;;14521550;1
 1808;14330-0009;GASCADE Gastransport GmbH;Verdichterstation Olbernhau;SN;09526;Olbernhau;Olbernhau;234;6;Antriebsmaschinen (Turbinen);NACE 35.22;;14521460;1
@@ -605,7 +605,7 @@ ID;Nummer;Betreiber;Anlagenname;Bundesland;PLZ;Ort Orignal;Ort;VET 2018 [t CO2 Ä
 722;14310-0111;Allgäuer Überlandwerk GmbH;Gasturbinenanlage;BY;87448;Waltenhofen;Waltenhofen;436;2;Energieumwandlung ? 50 MW FWL;NACE 35.11;;09780143;1
 945;14310-0361;Käserei Champignon Hofmeister GmbH&Co. KG;Energiezentrale;BY;87493;Lauben;Lauben;26.317;3;Energieumwandlung 20–50 MW FWL;NACE 10.51;;09780125;3
 202348;14260-0269;Braas GmbH;Braas GmbH - Werk Buchen-Hainstadt;BW;74722;Buchen;Buchen (Odenwald);8.496;17;Herstellung von Keramik;NACE 23.32;;08225014;1
-3694;14240-0087;Südzucker AG;Zuckerfabrik Rain;BY;86641;Rain;XXX (Doppelt);79.651;15;Herstellung von Kalk;NACE 10.81;;#NV;0
+3694;14240-0087;Südzucker AG;Zuckerfabrik Rain;BY;86641;Rain;Rain;79.651;15;Herstellung von Kalk;NACE 10.81;9278177;09278177;3
 689;14310-0078;Westfälische Wilhelms-Universität Münster;KWK-Anlage Neu;NW;48149;Münster;Münster;26.277;2;Energieumwandlung ? 50 MW FWL;NACE 86.10;;09779187;9
 842;14310-0246;Westfälische Fernwärmeversorgung GmbH;Heizwerk Coerde der Westfälischen Fernwärmeversorgung GmbH;NW;48157;Münster;Münster;92;3;Energieumwandlung 20–50 MW FWL;NACE 35.30;;09779187;9
 854;14310-0259;Stadtwerke Münster GmbH;Heizkraftwerk Hafen der Stadtwerke Münster GmbH;NW;48155;Münster;Münster;216.341;2;Energieumwandlung ? 50 MW FWL;NACE 35.11;;09779187;9
@@ -639,9 +639,9 @@ ID;Nummer;Betreiber;Anlagenname;Bundesland;PLZ;Ort Orignal;Ort;VET 2018 [t CO2 Ä
 41;14220-0004;Lech-Stahlwerke GmbH;Lech-Stahlwerke GmbH;BY;86405;Meitingen;Meitingen;170.339;10;Herstellung von Roheisen und Stahl;NACE 24.10;;09772177;1
 339;14260-0072;Hörl & Hartmann Ziegeltechnik GmbH & Co.KG;Hörl & Hartmann Ziegeltechnik GmbH & Co.KG Werk Gersthofen;BY;86368;Gersthofen;Gersthofen;9.448;17;Herstellung von Keramik;NACE 23.32;;09772147;1
 892;14310-0301;MVV Industriepark Gersthofen GmbH;Kesselhaus (K 2 + K 5);BY;86368;Gersthofen;Gersthofen;6.811;3;Energieumwandlung 20–50 MW FWL;NACE 35.30;;09772147;1
-4117;14250-0100;LEDVANCE GmbH;Glasschmelzwanne C;BY;86153;Augsburg;XXX (Doppelt);10.175;16;Herstellung von Glas;NACE 23.19;;#NV;0
-4149;14250-0105;LEDVANCE GmbH;Glasschmelzwanne B;BY;86153;Augsburg;XXX (Doppelt);5.408;16;Herstellung von Glas;NACE 23.19;;#NV;0
-599;14280-0116;UPM GmbH, Werk Augsburg;Papierproduktion Augsburg;BY;86153;Augsburg;XXX (Doppelt);67.406;21;Herstellung von Papier;NACE 17.12;;#NV;0
+4117;14250-0100;LEDVANCE GmbH;Glasschmelzwanne C;BY;86153;Augsburg;Augsburg;10.175;16;Herstellung von Glas;NACE 23.19;9761000;09761000;2
+4149;14250-0105;LEDVANCE GmbH;Glasschmelzwanne B;BY;86153;Augsburg;Augsburg;5.408;16;Herstellung von Glas;NACE 23.19;9761000;09761000;2
+599;14280-0116;UPM GmbH, Werk Augsburg;Papierproduktion Augsburg;BY;86153;Augsburg;Augsburg;67.406;21;Herstellung von Papier;NACE 17.12;9761000;09761000;2
 654;14310-0038;Stadtwerke Augsburg Energie GmbH;HW-West Stadtwerke Augsburg;BY;86157;Augsburg;Augsburg;4.924;3;Energieumwandlung 20–50 MW FWL;NACE 35.30;;09761000;2
 656;14310-0040;Stadtwerke Augsburg Energie GmbH;Heizkraftwerk Stadtwerke Augsburg;BY;86152;Augsburg;Augsburg;39.172;2;Energieumwandlung ? 50 MW FWL;NACE 35.30;;09761000;2
 660;14310-0044;Stadtwerke Augsburg Energie GmbH;HW-Süd Stadtwerke Augsburg;BY;86159;Augsburg;Augsburg;5.796;3;Energieumwandlung 20–50 MW FWL;NACE 35.30;;09761000;2
@@ -671,12 +671,12 @@ ID;Nummer;Betreiber;Anlagenname;Bundesland;PLZ;Ort Orignal;Ort;VET 2018 [t CO2 Ä
 206289;14310-1879;Daimler AG Mercedes-Benz Werk Wörth;BHKW Werk Wörth;RP;76742;Wörth;Wörth;25.899;3;Energieumwandlung 20–50 MW FWL;NACE 29.10;;09177144;6
 738;14310-0127;Kraftwerk Obernburg GmbH;Heizwerk, Diphylanlagen;BY;63784;Obernburg;Obernburg;12.146;3;Energieumwandlung 20–50 MW FWL;NACE 35.30;;09676145;1
 877;14310-0285;Kraftwerk Obernburg GmbH;Kraftwerk Obernburg;BY;63784;Obernburg;Obernburg;296.547;2;Energieumwandlung ? 50 MW FWL;NACE 35.11;;09676145;1
-606;14280-0125;Papierfabrik Albert Friedrich KG;Papierfabrik;BY;63897;Miltenberg;XXX (Doppelt);18.754;21;Herstellung von Papier;NACE 17.12;;#NV;0
+606;14280-0125;Papierfabrik Albert Friedrich KG;Papierfabrik;BY;63897;Miltenberg;Miltenberg;18.754;21;Herstellung von Papier;NACE 17.12;9676139;09676000;2
 4119;14310-1423;Fripa Papierfabrik Albert Friedrich KG;Heizkraftwerk Fripa;BY;63897;Miltenberg;Miltenberg;36.333;3;Energieumwandlung 20–50 MW FWL;NACE 35.30;;09676000;2
 2699;14255-0009;Odenwald Faserplattenwerk GmbH;Anlage zum  Schmelzen mineralischer Stoffe und Herstellung von Mineralfasern;BY;63916;Amorbach;Amorbach;25.442;18;Herstellung von Mineralfasern;NACE 23.99;;09676112;1
 1757;14310-1310;Odenwald Faserplattenwerk GmbH;Rohplattenlinien;BY;63916;Amorbach;Amorbach;26.309;3;Energieumwandlung 20–50 MW FWL;NACE 23.99;;09676112;1
 349;14260-0083;Tonwerk Venus GmbH & Co. KG;Ziegelwerk Venus;BY;94374;Schwarzach;Schwarzach;11.674;17;Herstellung von Keramik;NACE 23.32;;08225116;4
-202763;14226-0076;Franken Guss GmbH & Co. KG;Gießerei;BY;97318;Kitzingen;XXX (Doppelt);49.101;11;Verarbeitung von Eisenmetallen;NACE 24.51;;#NV;0
+202763;14226-0076;Franken Guss GmbH & Co. KG;Gießerei;BY;97318;Kitzingen;Kitzingen;49.101;11;Verarbeitung von Eisenmetallen;NACE 24.51;9675141;09675141;2
 202521;14642-0011;Knauf Gips KG;Gipsbauplattenwerk Iphofen;BY;97346;Iphofen;Iphofen;59.694;19;Herstellung von Gips;NACE 23.62;;09675139;1
 499;14280-0006;Papierfabrik Palm GmbH & Co. KG;Werk Eltmann;BY;97483;Eltmann;Eltmann;22.040;21;Herstellung von Papier;NACE 17.12;;09674133;1
 2894;14310-1435;Palm Power GmbH & Co.KG;HKW Eltmann;BY;97483;Eltmann;Eltmann;163.816;2;Energieumwandlung ? 50 MW FWL;NACE 35.30;;09674133;1
@@ -685,7 +685,7 @@ ID;Nummer;Betreiber;Anlagenname;Bundesland;PLZ;Ort Orignal;Ort;VET 2018 [t CO2 Ä
 616;14280-0137;Sappi Stockstadt GmbH;Papiererzeugung;BY;63811;Stockstadt;Stockstadt a.Main;312.930;21;Herstellung von Papier;NACE 17.12;;09671155;1
 1469;14310-0932;Sappi Stockstadt GmbH;Zellstofferzeugung;BY;63811;Stockstadt;Stockstadt a.Main;19.103;20;Herstellung von Zellstoff;NACE 17.11;;09671155;1
 438;14260-0179;Adolf Zeller GmbH & Co. Poroton-Ziegelwerk KG;Adolf Zeller GmbH & Co. Poroton-Ziegelwerk KG;BY;63755;Alzenau;Alzenau;10.858;17;Herstellung von Keramik;NACE 23.32;;09671111;1
-203628;14280-0159;DS Smith Paper Deutschland GmbH;DS Smith Paper Aschaffenburg, PM;BY;63741;Aschaffenburg;XXX (Doppelt);0;21;Herstellung von Papier;NACE 17.12;;#NV;0
+203628;14280-0159;DS Smith Paper Deutschland GmbH;DS Smith Paper Aschaffenburg, PM;BY;63741;Aschaffenburg;Aschaffenburg;0;21;Herstellung von Papier;NACE 17.12;9661000;09661000;2
 205607;14310-1759;DS Smith Paper Deutschland GmbH;DS Smith Paper Aschaffenburg, GuD-HKW;BY;63741;Aschaffenburg;Aschaffenburg;179.800;2;Energieumwandlung ? 50 MW FWL;NACE 35.30;;09661000;2
 4167;14310-1762;Pollmeier Schnittholz GmbH & Co. KG;Werk Aschaffenburg;BY;63741;Aschaffenburg;Aschaffenburg;35;4;Energieumwandlung 20–50 MW FWL, andere Brennstoffe;NACE 16.10;;09661000;2
 76;14230-0004;Solnhofer Portland - Zementwerke GmbH & Co.KG;Drehrohrofen;BY;91807;Solnhofen;Solnhofen;291.754;14;Herstellung von Zementklinker;NACE 23.51;;09577168;1
@@ -711,7 +711,7 @@ ID;Nummer;Betreiber;Anlagenname;Bundesland;PLZ;Ort Orignal;Ort;VET 2018 [t CO2 Ä
 4120;14310-1463;Erlanger Stadtwerke AG;Heizwerk ESTW AG;BY;91056;Erlangen;Erlangen;261;2;Energieumwandlung ? 50 MW FWL;NACE 35.30;;09562000;2
 1818;14330-0019;MEGAL GmbH & Co. KG Mittel-Europäische-Gasleitungsgesellschaft;Mittel-Europäische-Gasleitungsgesellschaft mbH & Co. KG Rothenstadt;BY;92637;Weiden;Weiden;21.097;6;Antriebsmaschinen (Turbinen);NACE 49.50;;07134091;9
 203346;14642-0013;Etex Building Performance GmbH;Werk Hartershofen;BY;91628;Steinsfeld;Steinsfeld;25.856;19;Herstellung von Gips;NACE 23.62;;09571205;1
-322;14260-0051;Wienerberger GmbH;Werk Ansbach;BY;91522;Ansbach;XXX (Doppelt);20.891;17;Herstellung von Keramik;NACE 23.32;;#NV;0
+322;14260-0051;Wienerberger GmbH;Werk Ansbach;BY;91522;Ansbach;Ansbach;20.891;17;Herstellung von Keramik;NACE 23.32;09561000;09561000;2
 194;14250-0008;Glasfabrik Lamberts GmbH & Co. KG;Glasschmelzwanne zur Herstellung von Flachglas;BY;95632;Wunsiedel;Wunsiedel;18.965;16;Herstellung von Glas;NACE 23.11;;09479000;2
 210476;14310-1940;WUN Pellets GmbH;Pelletwerk mit Erdgas-BHKW;BY;95632;Wunsiedel;Wunsiedel;4.295;3;Energieumwandlung 20–50 MW FWL;NACE 16.29;;09479000;2
 342;14260-0075;Hart Keramik AG (vorm. Ziegelwerk Waldsassen AG);Werk Schirnding;BY;95706;Schirnding;Schirnding;6.753;17;Herstellung von Keramik;NACE 23.32;;09479147;1
@@ -723,17 +723,17 @@ ID;Nummer;Betreiber;Anlagenname;Bundesland;PLZ;Ort Orignal;Ort;VET 2018 [t CO2 Ä
 4172;14310-1699;Aluminium Oxid Stade GmbH;Aluminiumoxidwerk Stade - AOS;NI;21683;Stade;Stade;398.536;2;Energieumwandlung ? 50 MW FWL;NACE 24.42;;03359038;5
 4141;14310-1735;Dow Deutschland Anlagengesellschaft mbH Werk Stade;EA GuD-Anlage und Reservedampfkessel;NI;21683;Stade;Stade;522.931;2;Energieumwandlung ? 50 MW FWL;NACE 35.11;;03359038;5
 202389;14611-0010;Air Liquide Industriegase GmbH & Co. KG;CO Anlage;NI;21683;Stade;Stade;18.481;28;Herstellung von Wasserstoff und Synthesegas;NACE 20.11;;03359038;5
-204562;14616-0071;Dow Deutschland Anlagengesellschaft mbH Werk Stade;B Solvents;NI;21683;Stade;XXX (Doppelt);830;27;Herstellung organischer Grundchemikalien;NACE 20.14;;#NV;0
-204563;14616-0072;Dow Deutschland Anlagengesellschaft mbH Werk Stade;PO/PG-Anlage (Anlage F);NI;21683;Stade;XXX (Doppelt);0;27;Herstellung organischer Grundchemikalien;NACE 20.14;;#NV;0
-204564;14616-0170;Dow Deutschland Anlagengesellschaft mbH Werk Stade;Dowanol-Anlage (Anlage R/W);NI;21683;Stade;XXX (Doppelt);0;27;Herstellung organischer Grundchemikalien;NACE 20.14;;#NV;0
-204565;14616-0171;Blue Cube Germany Assets GmbH & Co. KG, Werk Stade;Anlage Q Bisphenol/Epoxy-Anlage;NI;21683;Stade;XXX (Doppelt);0;27;Herstellung organischer Grundchemikalien;NACE 20.14;;#NV;0
+204562;14616-0071;Dow Deutschland Anlagengesellschaft mbH Werk Stade;B Solvents;NI;21683;Stade;Stade, (Landkreis);830;27;Herstellung organischer Grundchemikalien;NACE 20.14;03359000;#NV;0
+204563;14616-0072;Dow Deutschland Anlagengesellschaft mbH Werk Stade;PO/PG-Anlage (Anlage F);NI;21683;Stade;Stade, (Landkreis);0;27;Herstellung organischer Grundchemikalien;NACE 20.14;03359000;#NV;0
+204564;14616-0170;Dow Deutschland Anlagengesellschaft mbH Werk Stade;Dowanol-Anlage (Anlage R/W);NI;21683;Stade;Stade, (Landkreis);0;27;Herstellung organischer Grundchemikalien;NACE 20.14;03359000;#NV;0
+204565;14616-0171;Blue Cube Germany Assets GmbH & Co. KG, Werk Stade;Anlage Q Bisphenol/Epoxy-Anlage;NI;21683;Stade;Stade, (Landkreis);0;27;Herstellung organischer Grundchemikalien;NACE 20.14;03359000;#NV;0
 356;14260-0092;Recker Ziegelwerk Berentelg & Hebrok OHG;Recker Ziegelwerk Berentelg & Hebrok OHG;NW;49509;Recke;Recke;13.138;17;Herstellung von Keramik;NACE 23.32;;05566072;4
 1040;14310-0469;Michelin Reifenwerke AG & Co. KGaA;Energieerzeugungsanlage;BY;96103;Hallstadt;Hallstadt;35.719;3;Energieumwandlung 20–50 MW FWL;NACE 22.11;;09471140;1
 226;14250-0042;Schott AG, Standort Mitterteich;Anlage zur Herstellung von Spezialglas;BY;95660;Mitterteich;Mitterteich;108.621;16;Herstellung von Glas;NACE 23.19;;09377141;1
 203617;14260-0251;Deutsche Steinzeug Cremer & Breuer AG;Werk Schwarzenfeld;BY;92521;Schwarzenfeld;Schwarzenfeld;24.034;17;Herstellung von Keramik;NACE 23.31;;09376163;1
 109;14230-0038;"HeidelbergCement AG";HeidelbergCement AG Zementwerk Burglengenfeld Schmidmühlener Str. 30 93133 Burglengenfeld;BY;93133;Burglengenfeld;Burglengenfeld;720.751;14;Herstellung von Zementklinker;NACE 23.51;;09376119;1
 1053;14310-0482;Südstärke GmbH Werk Sünching;Werk Sünching;BY;93104;Sünching;Sünching;16.927;3;Energieumwandlung 20–50 MW FWL;NACE 10.62;;09375201;1
-141;14240-0023;Walhalla Kalk GmbH & Co KG;Walhalla Kalk GmbH & Co KG;BY;93055;Regensburg;XXX (Doppelt);166.483;15;Herstellung von Kalk;NACE 23.52;;#NV;0
+141;14240-0023;Walhalla Kalk GmbH & Co KG;Walhalla Kalk GmbH & Co KG;BY;93055;Regensburg;Regensburg;166.483;15;Herstellung von Kalk;NACE 23.52;9362000;09362000;2
 1726;14310-1270;Universität Regensburg;Kesselhaus;BY;93053;Regensburg;Regensburg;6.903;3;Energieumwandlung 20–50 MW FWL;NACE 35.30;;09362000;2
 1761;14310-1315;Bayerische Motoren Werke Aktiengesellschaft;BMW Werk 06.10 Regensburg Energiezentrale;BY;93055;Regensburg;Regensburg;49.328;2;Energieumwandlung ? 50 MW FWL;keine Information;;09362000;2
 209081;14310-1910;Bayerische Motoren Werke Aktiengesellschaft;BMW Werk 06.10 Regensburg Lackiererei;BY;93055;Regensburg;Regensburg;19.919;2;Energieumwandlung ? 50 MW FWL;NACE 29.10;;09362000;2
@@ -860,8 +860,8 @@ ID;Nummer;Betreiber;Anlagenname;Bundesland;PLZ;Ort Orignal;Ort;VET 2018 [t CO2 Ä
 1447;14310-0907;Uniper Kraftwerke GmbH;Kraftwerk Ingolstadt;BY;85098;Großmehring;Großmehring;18.694;2;Energieumwandlung ? 50 MW FWL;NACE 35.11;;09176129;1
 311;14260-0039;Ernst Ziegelwerk GmbH & Co. KG;Ernst Ziegelwerk GmbH & Co. KG;BY;85177;Eitensheim;Eitensheim;3.972;17;Herstellung von Keramik;NACE 23.32;;09176124;1
 206141;14310-1870;Bayernwerk Natur GmbH;Heizwerk - Geothermie Poing;BY;85586;Poing;Poing;3.609;3;Energieumwandlung 20–50 MW FWL;NACE 35.30;;09175135;1
-343;14260-0076;Hörl & Hartmann Ziegeltechnik GmbH & Co. KG;Hörl & Hartmann GmbH & Co. KG Werk Dachau;BY;85221;Dachau;XXX (Doppelt);25.421;17;Herstellung von Keramik;NACE 23.32;;#NV;0
-391;14260-0127;Helfer Ziegel GmbH;Helfer Ziegel GmbH;BY;85221;Dachau;XXX (Doppelt);2.745;17;Herstellung von Keramik;NACE 23.32;;#NV;0
+343;14260-0076;Hörl & Hartmann Ziegeltechnik GmbH & Co. KG;Hörl & Hartmann GmbH & Co. KG Werk Dachau;BY;85221;Dachau;Dachau, (Landkreis);25.421;17;Herstellung von Keramik;NACE 23.32;9174000;#NV;0
+391;14260-0127;Helfer Ziegel GmbH;Helfer Ziegel GmbH;BY;85221;Dachau;Dachau, GKSt;2.745;17;Herstellung von Keramik;NACE 23.32;9174115;09174115;1
 1890;14330-0071;bayernets GmbH;Verdichterstation Haiming;BY;84533;Haiming;Haiming;1.361;6;Antriebsmaschinen (Turbinen);NACE 35.22;;09171118;1
 1083;14310-0518;Infraserv GmbH & Co. Gendorf KG;T02 Kraftwerk;BY;84508;Burgkirchen;Burgkirchen;196.377;2;Energieumwandlung ? 50 MW FWL;NACE 35.30;;09171113;1
 202194;14616-0036;Clariant Produkte (Deutschland) GmbH;Glykoletherbetrieb (Genehmigungsteil B05) (Nullemissionsanlage);BY;84508;Burgkirchen;Burgkirchen;0;27;Herstellung organischer Grundchemikalien;NACE 20.14;;09171113;1
@@ -979,7 +979,7 @@ ID;Nummer;Betreiber;Anlagenname;Bundesland;PLZ;Ort Orignal;Ort;VET 2018 [t CO2 Ä
 85;14230-0014;OPTERRA Wössingen GmbH;Drehrohrofenanlage zur Herstellung von Zementklinker;BW;75045;Walzbachtal;Walzbachtal;489.071;14;Herstellung von Zementklinker;NACE 23.51;;08215089;1
 857;14310-0262;EnBW Kernkraft GmbH;Kernkraftwerk Philippsburg Hilfskesselanlage;BW;76661;Philippsburg;Philippsburg;4.019;3;Energieumwandlung 20–50 MW FWL;NACE 35.30;;08215066;1
 11;14210-0011;Mineralölraffinerie Oberrhein GmbH & Co. KG;Werk 1 und Werk 2;BW;76187;Karlsruhe;Karlsruhe;2.691.854;7;Raffinerien;NACE 19.20;;08212000;2
-512;14280-0020;Stora Enso Maxau GmbH;Papiermaschinenanlage und Nebenanlagen;BW;76187;Karlsruhe;XXX (Doppelt);100.542;21;Herstellung von Papier;NACE 17.12;;#NV;0
+512;14280-0020;Stora Enso Maxau GmbH;Papiermaschinenanlage und Nebenanlagen;BW;76187;Karlsruhe;Karlsruhe, (Landkreis);100.542;21;Herstellung von Papier;NACE 17.12;8215000;#NV;0
 997;14310-0422;Stadtwerke Karlsruhe GmbH;HW Ahaweg;BW;76131;Karlsruhe;Karlsruhe;4.326;2;Energieumwandlung ? 50 MW FWL;NACE 35.30;;08212000;2
 1879;14310-0847;Stadtwerke Karlsruhe GmbH;HW Waldstadt;BW;76139;Karlsruhe;Karlsruhe;985;3;Energieumwandlung 20–50 MW FWL;NACE 35.30;;08212000;2
 1457;14310-0919;EnBW Energie Baden-Württemberg AG;Rheinhafen-Dampfkraftwerk Karlsruhe;BW;76189;Karlsruhe;Karlsruhe;3.702.300;2;Energieumwandlung ? 50 MW FWL;NACE 35.11;;08212000;2
@@ -1046,12 +1046,12 @@ ID;Nummer;Betreiber;Anlagenname;Bundesland;PLZ;Ort Orignal;Ort;VET 2018 [t CO2 Ä
 58;14220-0022;BENTELER Steel/Tube GmbH;Elektrostahlwerk;NI;49811;Lingen;Lingen (Ems);41.784;10;Herstellung von Roheisen und Stahl;NACE 24.10;;03454032;1
 1479;14310-0943;RWE Generation SE;Kraftwerk Emsland (Lingen);NI;49808;Lingen;Lingen;1.184.094;2;Energieumwandlung ? 50 MW FWL;NACE 35.11;;03454032;2
 205913;14616-0194;Baerlocher GmbH;Werk 3;NI;49811;Lingen;Lingen (Ems);0;27;Herstellung organischer Grundchemikalien;NACE 20.14;;03454032;1
-255;14250-0071;Ardagh Glass GmbH;Standort Germersheim;RP;76726;Germersheim;XXX (Doppelt);108.840;16;Herstellung von Glas;NACE 23.13;;#NV;0
+255;14250-0071;Ardagh Glass GmbH;Standort Germersheim;RP;76726;Germersheim;Germersheim;108.840;16;Herstellung von Glas;NACE 23.13;7334007;07334000;2
 203015;14310-1655;Nolte Holzwerkstoff GmbH & Co. KG;Nolte Holzwerkstoffe;RP;76726;Germersheim;Germersheim;10.761;2;Energieumwandlung ? 50 MW FWL;NACE 16.21;;07334000;2
 103;14230-0032;Dyckerhoff GmbH;Göllheim Drehofenanlage I und II;RP;67303;Göllheim;Göllheim;674.629;14;Herstellung von Zementklinker;NACE 23.51;;07333026;1
 1503;14310-0972;Julius Glatz GmbH;Heizkraftwerk Betriebsstätte Neidenfels;RP;67468;Neidenfels;Neidenfels;31.814;21;Herstellung von Papier;NACE 17.12;;07332037;1
-555;14280-0065;Cordier Spezialpapier GmbH;Papierfabrik mit Heizwerk Papierfabrik Cordier;RP;67098;Bad Dürkheim;XXX (Doppelt);60;21;Herstellung von Papier;NACE 17.12;;#NV;0
-1147;14310-0587;Cordier Spezialpapier GmbH;Papierfabrik Schleipen;RP;67098;Bad Dürkheim;XXX (Doppelt);670;21;Herstellung von Papier;NACE 17.12;;#NV;0
+555;14280-0065;Cordier Spezialpapier GmbH;Papierfabrik mit Heizwerk Papierfabrik Cordier;RP;67098;Bad Dürkheim;Bad Dürkheim;60;21;Herstellung von Papier;NACE 17.12;7332000;07332000;2
+1147;14310-0587;Cordier Spezialpapier GmbH;Papierfabrik Schleipen;RP;67098;Bad Dürkheim;Bad Dürkheim;670;21;Herstellung von Papier;NACE 17.12;7332000;07332000;2
 436;14260-0177;JUWÖ Poroton-Werke Ernst Jungk & Sohn GmbH;Ziegelwerk Jungk, Wöllstein;RP;55597;Wöllstein;Wöllstein;27.631;17;Herstellung von Keramik;NACE 23.32;;07331072;1
 2;14210-0002;Haltermann Carless Deutschland GmbH;Haltermann Carless Deutschland GmbH - Werk Speyer;RP;67346;Speyer;Speyer;464;7;Raffinerien;NACE 19.20;;07318000;1
 241;14250-0057;Saint-Gobain Isover G+H AG;Saint-Gobain Isover G+H AG, Werk Speyer;RP;67346;Speyer;Speyer;56.719;16;Herstellung von Glas;NACE 23.14;;07318000;1
@@ -1126,7 +1126,7 @@ ID;Nummer;Betreiber;Anlagenname;Bundesland;PLZ;Ort Orignal;Ort;VET 2018 [t CO2 Ä
 1703;14310-1237;Siegfried PharmaChemikalien Minden GmbH;Dampferzeugungsanlage;NW;32423;Minden;Minden;11.319;3;Energieumwandlung 20–50 MW FWL;NACE 21.10;;07232082;3
 1637;14310-1134;Bitburger Braugruppe GmbH Standort Bitburg;Wärme- und Stromerzeugung Braustätte Süd;RP;54634;Bitburg;Bitburg;18.213;3;Energieumwandlung 20–50 MW FWL;NACE 11.05;;07232018;1
 4152;14310-1754;elka-Holzwerke GmbH;Anlage zur Herstellung von Holzwerkstoffen;RP;54497;Morbach;Morbach;1.075;3;Energieumwandlung 20–50 MW FWL;NACE 16.21;;07231502;1
-202923;14226-0081;VDM Metals GmbH;Schmelzen, Gießen und Schmieden;NW;59425;Unna;XXX (Doppelt);22.445;11;Verarbeitung von Eisenmetallen;NACE 24.10;;#NV;0
+202923;14226-0081;VDM Metals GmbH;Schmelzen, Gießen und Schmieden;NW;59425;Unna;Unna, Stadt;22.445;11;Verarbeitung von Eisenmetallen;NACE 24.10;5978036;#NV;0
 218;14250-0033;Verallia Deutschland AG;Anlage zur Herstellung von Glas. Werk Wirges;RP;56422;Wirges;Wirges;72.154;16;Herstellung von Glas;NACE 23.13;;07143081;1
 ;14260-0295;Westerwälder Elektro Osmose Müller GmbH & Co. KG;Keramikbrennung;RP;56424;Staudt;Staudt;12.300;17;Herstellung von Keramik;NACE 23.32;;07143073;1
 201936;14260-0027;Alois Korzilius INTERBAU Fabrikation für moderne Baukeramik GmbH & Co. KG;Korzilius INTERBAU;RP;56235;Ransbach-Baumbach;Ransbach-Baumbach;9.638;17;Herstellung von Keramik;NACE 23.31;;07143062;1
@@ -1146,7 +1146,7 @@ ID;Nummer;Betreiber;Anlagenname;Bundesland;PLZ;Ort Orignal;Ort;VET 2018 [t CO2 Ä
 4122;14310-1451;IHKW Industrieheizkraftwerk Andernach GmbH;IHKW Andernach;RP;56626;Andernach;Andernach;92.638;2;Energieumwandlung ? 50 MW FWL;NACE 35.30;;07137003;1
 1328;14310-0781;OIE AG;Heizwerk Baumholder;RP;55774;Baumholder;Baumholder;15.809;3;Energieumwandlung 20–50 MW FWL;NACE 35.30;;07134005;1
 4153;14280-0152;EATON Technologies GmbH (früher E. Begerow GmbH & Co. KG);Herstellung von Tiefenfilterschichten;RP;55450;Langenlonsheim;Langenlonsheim;5.214;21;Herstellung von Papier;NACE 17.12;;07133054;1
-546;14280-0056;Pall Filtersystems GmbH;Filterschichtenherstellung Bad Kreuznach;RP;55543;Bad Kreuznach;XXX (Doppelt);10.098;21;Herstellung von Papier;NACE 17.12;;#NV;0
+546;14280-0056;Pall Filtersystems GmbH;Filterschichtenherstellung Bad Kreuznach;RP;55543;Bad Kreuznach;Bad Kreuznach;10.098;21;Herstellung von Papier;NACE 17.12;7133006;07133000;2
 926;14310-0338;Michelin Reifenwerke AG & Co. KGaA;Michelin Reifenwerke KGaA, Bad Kreuznach;RP;55543;Bad Kreuznach;Bad Kreuznach;46.700;2;Energieumwandlung ? 50 MW FWL;NACE 22.11;;07133000;2
 731;14310-0120;Stadtwerke Kempen GmbH;HKW Kempen;NW;47906;Kempen;Kempen;27.004;2;Energieumwandlung ? 50 MW FWL;NACE 35.30;;05166012;2
 1836;14330-0037;Nordrheinische Erdgastransportleitungsgesellschaft mbH & Co. KG;Nordrheinische Erdgastransportleitungsgesellschaft mbH & Co. KG Werk St. Hubert;NW;47906;Kempen;Kempen;137;6;Antriebsmaschinen (Turbinen);NACE 35.22;;05166012;2
@@ -1161,7 +1161,7 @@ ID;Nummer;Betreiber;Anlagenname;Bundesland;PLZ;Ort Orignal;Ort;VET 2018 [t CO2 Ä
 4107;14310-1458;MVV Enamic Korbach GmbH;Industrieheizkraftwerk der MVV Enamic Korbach GmbH Betriebseinheit 3 (Gaskessel K2 und Gas-/Ölkessel K3);HE;34497;Korbach;Korbach;3.093;3;Energieumwandlung 20–50 MW FWL;NACE 35.30;;06635015;1
 3599;14240-0081;Südzucker AG;Zuckerfabrik Wabern;HE;34590;Wabern;Wabern;42.092;15;Herstellung von Kalk;NACE 10.81;;06634025;1
 1115;14310-0552;B. Braun Melsungen AG;Feuerungsanlage mit zugehörigen Dampfkesseln;HE;34212;Melsungen;Melsungen;6.170;3;Energieumwandlung 20–50 MW FWL;NACE 35.30;;06634014;1
-611;14280-0130;Papierfabrik Adolf Jass GmbH & Co. KG;Papierfabrik der Adolf Jass GmbH & Co. KG;HE;36039;Fulda;XXX (Doppelt);176.651;21;Herstellung von Papier;NACE 17.12;;#NV;0
+611;14280-0130;Papierfabrik Adolf Jass GmbH & Co. KG;Papierfabrik der Adolf Jass GmbH & Co. KG;HE;36039;Fulda;Fulda, Stadt;176.651;21;Herstellung von Papier;NACE 17.12;6631009;#NV;0
 1567;14310-1051;RhönEnergie Fulda GmbH;Kraftwerk Fulda, Frankfurterstraße;HE;36043;Fulda;Fulda;750;2;Energieumwandlung ? 50 MW FWL;NACE 35.11;;06631009;4
 1529;14310-1005;Volkswagen AG;"Heizkraftwerk Kassel; HKW Kassel";HE;34225;Baunatal;Baunatal;201.595;2;Energieumwandlung ? 50 MW FWL;NACE 35.11;;06633003;1
 706;14310-0095;Städtische Werke Energie + Wärme GmbH;Fernwärmekraftwerk Kassel (FKK);HE;34117;Kassel;Kassel;127.787;2;Energieumwandlung ? 50 MW FWL;NACE 35.11;;06611000;2
@@ -1301,8 +1301,8 @@ ID;Nummer;Betreiber;Anlagenname;Bundesland;PLZ;Ort Orignal;Ort;VET 2018 [t CO2 Ä
 1369;14310-0824;thyssenkrupp Steel Europe AG;Dampfkesselanlage Bochum-Höntrop;NW;44793;Bochum;Bochum;8.989;3;Energieumwandlung 20–50 MW FWL;NACE 24.10;;05911000;1
 1483;14310-0947;RWE Generation SE;Kraftwerk Bochum;NW;44799;Bochum;Bochum;46.141;2;Energieumwandlung ? 50 MW FWL;NACE 35.11;;05911000;1
 210487;14310-1903;unique Wärme GmbH & Co. KG;Heizkraftwerk Technisches Zentrum;NW;44801;Bochum;Bochum;18.856;2;Energieumwandlung ? 50 MW FWL;NACE 35.30;;05911000;1
-204423;14226-0015;BENTELER Steel/Tube GmbH;Rohrwerk W41;NW;33104;Paderborn;XXX (Doppelt);27.680;11;Verarbeitung von Eisenmetallen;NACE 24.20;;#NV;0
-90;14230-0019;"HeidelbergCement AG";HeidelbergCement AG, Zementwerk Paderborn;NW;33106;Paderborn;XXX (Doppelt);260.421;14;Herstellung von Zementklinker;NACE 23.51;;#NV;0
+204423;14226-0015;BENTELER Steel/Tube GmbH;Rohrwerk W41;NW;33104;Paderborn;Paderborn;27.680;11;Verarbeitung von Eisenmetallen;NACE 24.20;5774032;05774032;2
+90;14230-0019;"HeidelbergCement AG";HeidelbergCement AG, Zementwerk Paderborn;NW;33106;Paderborn;Paderborn;260.421;14;Herstellung von Zementklinker;NACE 23.51;5774032;05774032;2
 890;14310-0299;Wincor Nixdorf International GmbH;Energiezentrale Paderborn;NW;33106;Paderborn;Paderborn;7.460;3;Energieumwandlung 20–50 MW FWL;NACE 35.30;;05774032;2
 1541;14310-1018;Paderborner Kühlhaus GmbH & Co.KG;Energiezentrale;NW;33106;Paderborn;Paderborn;9.499;2;Energieumwandlung ? 50 MW FWL;NACE 10.39;;05774032;2
 1573;14310-1058;Stute Nahrungsmittelwerke GmbH & Co.KG;Kesselhaus 1;NW;33098;Paderborn;Paderborn;10.550;3;Energieumwandlung 20–50 MW FWL;NACE 10.32;;05774032;2
@@ -1386,8 +1386,8 @@ ID;Nummer;Betreiber;Anlagenname;Bundesland;PLZ;Ort Orignal;Ort;VET 2018 [t CO2 Ä
 980;14310-0404;Veolia Industriepark Deutschland GmbH;Heizkraftwerk Heinsberg;NW;52525;Heinsberg;Heinsberg;2.033;2;Energieumwandlung ? 50 MW FWL;NACE 35.30;;05370016;2
 202808;14310-1473;Teijin Carbon Europe GmbH;CF Anlage, Heinsberg;NW;52525;Heinsberg;Heinsberg;34.464;1;Verbrennung;NACE 20.60;;05370016;2
 539;14280-0049;Smurfit Kappa Zülpich Papier GmbH;Anlage zur Papierherstellung;NW;53909;Zülpich;Zülpich;220.194;21;Herstellung von Papier;NACE 17.12;;05366044;1
-177;14240-0064;Pfeifer & Langen GmbH & Co. KG;Zuckerfabrik Euskirchen;NW;53879;Euskirchen;XXX (Doppelt);88.667;15;Herstellung von Kalk;NACE 10.81;;#NV;0
-598;14280-0115;Metsä Tissue GmbH;Metsä Tissue GmbH - Werk Stotzheim;NW;53881;Euskirchen;XXX (Doppelt);9.329;21;Herstellung von Papier;NACE 17.12;;#NV;0
+177;14240-0064;Pfeifer & Langen GmbH & Co. KG;Zuckerfabrik Euskirchen;NW;53879;Euskirchen;Euskirchen;88.667;15;Herstellung von Kalk;NACE 10.81;5366016;05366016;2
+598;14280-0115;Metsä Tissue GmbH;Metsä Tissue GmbH - Werk Stotzheim;NW;53881;Euskirchen;Euskirchen;9.329;21;Herstellung von Papier;NACE 17.12;5366016;05366016;2
 31;14210-0032;Shell Deutschland Oil GmbH Rheinland Raffinerie Werk Wesseling;Raffinerieanlagen Wesseling inklusive Kraftwerk, Olefinanlagen (Cracker), Schwerölvergasung und Notstromaggregate;NW;50389;Wesseling;Wesseling;2.149.694;7;Raffinerien;NACE 19.20;;05362040;1
 2197;14215-0003;Basell Polyolefine GmbH;Ethylenanlage OM4;NW;50389;Wesseling;Wesseling;384.601;27;Herstellung organischer Grundchemikalien;NACE 20.14;;05362040;1
 2196;14215-0004;Basell Polyolefine GmbH;Ethylenanlage OM6;NW;50389;Wesseling;Wesseling;732.685;27;Herstellung organischer Grundchemikalien;NACE 20.14;;05362040;1
@@ -1421,12 +1421,12 @@ ID;Nummer;Betreiber;Anlagenname;Bundesland;PLZ;Ort Orignal;Ort;VET 2018 [t CO2 Ä
 602;14280-0120;Metsä Tissue GmbH;Metsä Tissue GmbH - Werk Kreuzau;NW;52372;Kreuzau;Kreuzau;91.564;21;Herstellung von Papier;NACE 17.12;;05358028;1
 176;14240-0063;Pfeifer & Langen GmbH & Co. KG;Zuckerfabrik Jülich;NW;52428;Jülich;Jülich;180.683;15;Herstellung von Kalk;NACE 10.81;;05358024;1
 1293;14310-0744;Forschungszentrum Jülich GmbH;Heizkraftwerk FZJ;NW;52428;Jülich;Jülich;162;3;Energieumwandlung 20–50 MW FWL;NACE 35.30;;05358024;1
-206;14250-0020;GRACE Silica GmbH;Wasserglas-Anlage (Natriumsilikat-Anlage);NW;52355;Düren;XXX (Doppelt);17.239;16;Herstellung von Glas;NACE 23.19;;#NV;0
-541;14280-0051;KANZAN Spezialpapiere GmbH;Papiermaschine (PM6 inkl. Kesselhaus als Nebenanlage);NW;52349;Düren;XXX (Doppelt);7.453;21;Herstellung von Papier;NACE 17.12;;#NV;0
-585;14280-0099;Gebr. Hoffsümmer Spezialpapier GmbH & Co. KG;Gebr. Hoffsümmer Spezialpapier GmbH & Co. KG;NW;52349;Düren;XXX (Doppelt);12.518;21;Herstellung von Papier;NACE 17.12;;#NV;0
-604;14280-0123;Metsä Tissue GmbH;Metsä Tissue GmbH - Werk Düren;NW;52349;Düren;XXX (Doppelt);19.981;21;Herstellung von Papier;NACE 17.12;;#NV;0
-615;14280-0135;SCHOELLERSHAMMER GmbH & Co. KG;Papierfabrik Schoellershammer;NW;52355;Düren;XXX (Doppelt);188.795;21;Herstellung von Papier;NACE 17.12;;#NV;0
-202145;14280-0163;Reflex GmbH & Co. KG;Anlage zur Herstellung von Papier ohne eigene Energieversorgung;NW;52349;Düren;XXX (Doppelt);0;21;Herstellung von Papier;NACE 17.12;;#NV;0
+206;14250-0020;GRACE Silica GmbH;Wasserglas-Anlage (Natriumsilikat-Anlage);NW;52355;Düren;Düren, Stadt;17.239;16;Herstellung von Glas;NACE 23.19;5358008;#NV;0
+541;14280-0051;KANZAN Spezialpapiere GmbH;Papiermaschine (PM6 inkl. Kesselhaus als Nebenanlage);NW;52349;Düren;Düren, Stadt;7.453;21;Herstellung von Papier;NACE 17.12;5358008;#NV;0
+585;14280-0099;Gebr. Hoffsümmer Spezialpapier GmbH & Co. KG;Gebr. Hoffsümmer Spezialpapier GmbH & Co. KG;NW;52349;Düren;Düren, Stadt;12.518;21;Herstellung von Papier;NACE 17.12;5358008;#NV;0
+604;14280-0123;Metsä Tissue GmbH;Metsä Tissue GmbH - Werk Düren;NW;52349;Düren;Düren, Stadt;19.981;21;Herstellung von Papier;NACE 17.12;5358008;#NV;0
+615;14280-0135;SCHOELLERSHAMMER GmbH & Co. KG;Papierfabrik Schoellershammer;NW;52355;Düren;Düren, Stadt;188.795;21;Herstellung von Papier;NACE 17.12;5358008;#NV;0
+202145;14280-0163;Reflex GmbH & Co. KG;Anlage zur Herstellung von Papier ohne eigene Energieversorgung;NW;52349;Düren;Düren, Stadt;0;21;Herstellung von Papier;NACE 17.12;5358008;#NV;0
 886;14310-0295;Veolia Industriepark Deutschland GmbH;Heizkraftwerk Düren (ehemals Akzo Nobel Chemicals) +;NW;52355;Düren;Düren;24.532;3;Energieumwandlung 20–50 MW FWL;NACE 35.30;;05358008;2
 1433;14310-0892;Anker Gebr. Schoeller GmbH + Co.KG;Anker- Kesselhaus (Nr. 200);NW;52353;Düren;Düren;6.877;3;Energieumwandlung 20–50 MW FWL;NACE 13.93;;05358008;2
 195;14250-0009;SAINT-GOBAIN GLASS Deutschland GmbH;Glasschmelzanlage zur Herstellung von Flachglas nach dem Floatverfahren;NW;52134;Herzogenrath;Herzogenrath;76.491;16;Herstellung von Glas;NACE 23.11;;05354016;2
@@ -1531,7 +1531,7 @@ ID;Nummer;Betreiber;Anlagenname;Bundesland;PLZ;Ort Orignal;Ort;VET 2018 [t CO2 Ä
 147;14240-0029;Rheinkalk GmbH;Werk Flandersbach, Anlage zum Brennen von Kalkstein;NW;42489;Wülfrath;Wülfrath;1.941.442;15;Herstellung von Kalk;NACE 23.52;;05158036;1
 202573;14310-1499;Rheinkalk GmbH;Werk Flandersbach, Anlage zum Brechen, Mahlen und Klassieren von Kalkstein;NW;42489;Wülfrath;Wülfrath;20.177;1;Verbrennung;NACE 08.11;;05158036;1
 899;14310-0308;Stadtwerke Ratingen GmbH;Gesamtanlage Heizwerk Ratingen-West;NW;40878;Ratingen;Ratingen;25.692;3;Energieumwandlung 20–50 MW FWL;NACE 35.30;;05158028;1
-203633;14226-0066;GF Casting Solutions Mettmann GmbH;GF Casting Solutions Mettmann GmbH;NW;40822;Mettmann;XXX (Doppelt);98.610;11;Verarbeitung von Eisenmetallen;NACE 24.51;;#NV;0
+203633;14226-0066;GF Casting Solutions Mettmann GmbH;GF Casting Solutions Mettmann GmbH;NW;40822;Mettmann;Mettmann;98.610;11;Verarbeitung von Eisenmetallen;NACE 24.51;5158024;05158024;2
 737;14310-0126;innogy SE;FHW 132;NW;40699;Erkrath;Erkrath;14.474;2;Energieumwandlung ? 50 MW FWL;NACE 35.30;;05158004;1
 898;14310-0307;Stadtwerke Erkrath GmbH;BHKW NW-20_943215;NW;40699;Erkrath;Erkrath;23.380;3;Energieumwandlung 20–50 MW FWL;NACE 25.30;;05158004;1
 1507;14310-0976;ADM Spyck GmbH;Kraftwerk;NW;47533;Kleve;Kleve;45.857;3;Energieumwandlung 20–50 MW FWL;NACE 35.30;;01061052;4
@@ -1629,10 +1629,10 @@ ID;Nummer;Betreiber;Anlagenname;Bundesland;PLZ;Ort Orignal;Ort;VET 2018 [t CO2 Ä
 981;14310-0405;Bremerhavener Entsorgungsgesellschaft mbH;Hilfskesselanlage BEG;HB;27570;Bremerhaven;Bremerhaven;3.096;2;Energieumwandlung ? 50 MW FWL;NACE 35.30;;04012000;1
 1589;14310-1076;swb Services AG & Co. KG;DK_Schifferstraße;HB;27568;Bremerhaven;Bremerhaven;52;3;Energieumwandlung 20–50 MW FWL;NACE 35.30;;04012000;1
 1641;14310-1140;swb Services AG & Co. KG;BHKW Lipperkamp;HB;27568;Bremerhaven;Bremerhaven;1.426;3;Energieumwandlung 20–50 MW FWL;NACE 35.11;;04012000;1
-60;14220-0024;ArcelorMittal Bremen GmbH;Einheitliche Anlage;HB;28237;Bremen;XXX (Doppelt);2.621.007;10;Herstellung von Roheisen und Stahl;NACE 24.10;;#NV;0
-4151;14225-0015;BRE.M.A Warmwalz GmbH & Co. KG;BRE.M.A;HB;28237;Bremen;XXX (Doppelt);573.530;11;Verarbeitung von Eisenmetallen;NACE 24.10;;#NV;0
-204194;14226-0038;ArcelorMittal Bremen GmbH;Kaltwalzwerk;HB;28237;Bremen;XXX (Doppelt);22.843;11;Verarbeitung von Eisenmetallen;NACE 24.10;;#NV;0
-204192;14226-0074;ArcelorMittal Bremen GmbH;Bregal 1;HB;28237;Bremen;XXX (Doppelt);25.557;11;Verarbeitung von Eisenmetallen;NACE 24.10;;#NV;0
+60;14220-0024;ArcelorMittal Bremen GmbH;Einheitliche Anlage;HB;28237;Bremen;Bremen;2.621.007;10;Herstellung von Roheisen und Stahl;NACE 24.10;4011000;04011000;2
+4151;14225-0015;BRE.M.A Warmwalz GmbH & Co. KG;BRE.M.A;HB;28237;Bremen;Bremen;573.530;11;Verarbeitung von Eisenmetallen;NACE 24.10;4011000;04011000;2
+204194;14226-0038;ArcelorMittal Bremen GmbH;Kaltwalzwerk;HB;28237;Bremen;Bremen;22.843;11;Verarbeitung von Eisenmetallen;NACE 24.10;4011000;04011000;2
+204192;14226-0074;ArcelorMittal Bremen GmbH;Bregal 1;HB;28237;Bremen;Bremen;25.557;11;Verarbeitung von Eisenmetallen;NACE 24.10;4011000;04011000;2
 830;14310-0233;Brauerei Beck GmbH & Co. KG;Beck's Kesselhaus-0001;HB;28199;Bremen;Bremen;22.479;2;Energieumwandlung ? 50 MW FWL;NACE 11.05;;04011000;2
 999;14310-0424;ENGIE Deutschland AG;Kraftwerk Farge;HB;28777;Bremen;Bremen;1.176.866;2;Energieumwandlung ? 50 MW FWL;NACE 35.11;;04011000;2
 1031;14310-0459;swb Entsorgung GmbH & Co. KG;MHKW - Sicherungskesselanlagen;HB;28237;Bremen;Bremen;158;2;Energieumwandlung ? 50 MW FWL;NACE 35.30;;04011000;2
@@ -1657,7 +1657,7 @@ ID;Nummer;Betreiber;Anlagenname;Bundesland;PLZ;Ort Orignal;Ort;VET 2018 [t CO2 Ä
 203844;14633-0021;Nordenhamer Zinkhütte GmbH;Nordenhamer Zinkhütte GmbH;NI;26954;Nordenham;Nordenham;8.297;13;Verarbeitung von Nichteisenmetallen;NACE 24.43;;03461007;1
 210124;14280-0176;Omni Pac GmbH;Omni Pac GmbH;NI;26931;Elsfleth;Elsfleth;17.608;21;Herstellung von Papier;NACE 17.12;;03461004;1
 995;14310-0420;Uniper Kraftwerke GmbH;Kraftwerk Huntorf;NI;26931;Elsfleth;Elsfleth;9.811;2;Energieumwandlung ? 50 MW FWL;NACE 35.11;;03461004;1
-427;14260-0167;Olfry Ziegelwerke GmbH & Co. KG;Ziegelwerk für Verblendziegel;NI;49377;Vechta;XXX (Doppelt);13.363;17;Herstellung von Keramik;NACE 23.32;;#NV;0
+427;14260-0167;Olfry Ziegelwerke GmbH & Co. KG;Ziegelwerk für Verblendziegel;NI;49377;Vechta;Vechta;13.363;17;Herstellung von Keramik;NACE 23.32;3460009;03460009;2
 679;14310-0064;Delkeskamp Verpackungswerke GmbH;Papierfabrik mit Heizkraftwerk;NI;49638;Nortrup;Nortrup;75.693;21;Herstellung von Papier;NACE 17.12;;03459028;1
 54;14220-0017;Georgsmarienhütte GmbH;Stahlwerk;NI;49124;Georgsmarienhütte;Georgsmarienhütte;108.683;10;Herstellung von Roheisen und Stahl;NACE 24.10;;03459019;1
 202663;14226-0049;Georgsmarienhütte GmbH;Walzwerk;NI;49124;Georgsmarienhütte;Georgsmarienhütte;68.594;11;Verarbeitung von Eisenmetallen;NACE 24.10;;03459019;1
@@ -1665,14 +1665,14 @@ ID;Nummer;Betreiber;Anlagenname;Bundesland;PLZ;Ort Orignal;Ort;VET 2018 [t CO2 Ä
 421;14260-0161;Wienerberger GmbH;Ziegelwerk Pente;NI;49565;Bramsche;Bramsche;17.715;17;Herstellung von Keramik;NACE 23.32;;03459014;1
 428;14260-0169;Klinkerwerk B. Feldhaus GmbH & Co. KG;Klinkerwerk B. Feldhaus;NI;49196;Bad Laer;Bad Laer;11.958;17;Herstellung von Keramik;NACE 23.32;;03459005;1
 341;14260-0074;Argelith Bodenkeramik H.Bitter GmbH;Argelith Bodenkeramik H.Bitter GmbH;NI;49152;Bad Essen;Bad Essen;16.851;17;Herstellung von Keramik;NACE 23.31;;03459003;1
-504;14280-0012;Kämmerer Paper GmbH;Anlage zur Herstellung von Papier (Papiermaschine 6, AN 0179-003);NI;49090;Osnabrück;XXX (Doppelt);2.672;21;Herstellung von Papier;NACE 17.12;;#NV;0
-525;14280-0033;Schoeller Technocell GmbH & Co KG;TCO - Papiermaschine 15;NI;49086;Osnabrück;XXX (Doppelt);111;21;Herstellung von Papier;NACE 17.12;;#NV;0
-4131;14280-0150;Schoeller Technocell GmbH & Co KG;FSJ - Papiermaschine 1;NI;49086;Osnabrück;XXX (Doppelt);27;21;Herstellung von Papier;NACE 17.12;;#NV;0
-206822;14280-0174;Kämmerer Spezialpapiere GmbH;Anlage zur Herstellung von Papier (Papiermaschine 3, AN 0179-001 und Papiermaschine 4, AN 0179-002);NI;49090;Osnabrück;XXX (Doppelt);2.160;21;Herstellung von Papier;NACE 17.12;;#NV;0
+504;14280-0012;Kämmerer Paper GmbH;Anlage zur Herstellung von Papier (Papiermaschine 6, AN 0179-003);NI;49090;Osnabrück;Osnabrück;2.672;21;Herstellung von Papier;NACE 17.12;3404000;03404000;2
+525;14280-0033;Schoeller Technocell GmbH & Co KG;TCO - Papiermaschine 15;NI;49086;Osnabrück;Osnabrück;111;21;Herstellung von Papier;NACE 17.12;3404000;03404000;2
+4131;14280-0150;Schoeller Technocell GmbH & Co KG;FSJ - Papiermaschine 1;NI;49086;Osnabrück;Osnabrück;27;21;Herstellung von Papier;NACE 17.12;3404000;03404000;2
+206822;14280-0174;Kämmerer Spezialpapiere GmbH;Anlage zur Herstellung von Papier (Papiermaschine 3, AN 0179-001 und Papiermaschine 4, AN 0179-002);NI;49090;Osnabrück;Osnabrück;2.160;21;Herstellung von Papier;NACE 17.12;3404000;03404000;2
 929;14310-0342;Schoeller Technocell GmbH & Co KG;FSJ - Kraftwerk;NI;49086;Osnabrück;Osnabrück;120.527;2;Energieumwandlung ? 50 MW FWL;NACE 17.12;;03404000;2
 1393;14310-0850;Volkswagen Osnabrück GmbH;Neues Kesselhaus;NI;49084;Osnabrück;Osnabrück;9.315;3;Energieumwandlung 20–50 MW FWL;NACE 35.30;;03404000;2
 206823;14310-1884;Kämmerer Energie GmbH;Anlage zur Erzeugung von Strom und Dampf (Heizkraftwerk, AN 0179-005);NI;49090;Osnabrück;Osnabrück;122.863;2;Energieumwandlung ? 50 MW FWL;NACE 17.12;;03404000;2
-205483;14633-0011;KME Germany GmbH & Co.KG;Kupfer-Schmelzanlage mit Raffinerie und Gießerei;NI;49074;Osnabrück;Osnabrück;18.092;13;Verarbeitung von Nichteisenmetallen;NACE 24.44;;03404000;2
+205483;14633-0011;KME Germany GmbH & Co.KG;Kupfer-Schmelzanlage mit Raffinerie und Gießerei;NI;49074;Osnabrück;Osnabrück;18.092;13;Verarbeitung von Nichteisenmetallen;NACE 24.44;3404000;03404000;2
 1687;14310-1219;Agrarfrost GmbH & Co. KG;Kartoffelverarbeitungswerk Aldrup;NI;27793;Wildeshausen;Wildeshausen;49.600;3;Energieumwandlung 20–50 MW FWL;NACE 10.31;;03458014;1
 1849;14330-0051;Gasunie Deutschland Transport Services GmbH;Verdichterstation Wardenburg - Gasturbinenanlage;NI;26203;Wardenburg;Wardenburg;1.177;6;Antriebsmaschinen (Turbinen);NACE 35.22;;03458013;1
 345;14260-0078;Wienerberger GmbH;Vormauerziegelwerk Kirchkimmen 1;NI;27798;Hude;Hude (Oldb);10.637;17;Herstellung von Keramik;NACE 23.32;;#NV;0
@@ -1708,7 +1708,7 @@ ID;Nummer;Betreiber;Anlagenname;Bundesland;PLZ;Ort Orignal;Ort;VET 2018 [t CO2 Ä
 651;14310-0034;Mars GmbH;Dampfkesselanlage, gasbetrieben, bestehend aus 2 Kesseln (Kessel 1+2);NI;27283;Verden;Verden;10.773;3;Energieumwandlung 20–50 MW FWL;NACE 35.30;;03361012;2
 1847;14330-0049;Gasunie Deutschland Transport Services GmbH;Verdichterstation Holtum - Gasturbinenanlage;NI;27308;Kirchlinteln;Kirchlinteln;90;6;Antriebsmaschinen (Turbinen);NACE 35.22;;03361005;1
 1848;14330-0050;Gasunie Deutschland Transport Services GmbH;Verdichterstation Achim - Gasturbinenanlage;NI;28832;Achim;Achim;9.300;6;Antriebsmaschinen (Turbinen);NACE 35.22;;03158001;2
-165;14240-0049;Nordzucker AG;Feuerungsanlagen Uelzen;NI;29525;Uelzen;XXX (Doppelt);160.986;15;Herstellung von Kalk;NACE 10.81;;#NV;0
+165;14240-0049;Nordzucker AG;Feuerungsanlagen Uelzen;NI;29525;Uelzen;Uelzen;160.986;15;Herstellung von Kalk;NACE 10.81;3360025;03360025;2
 1212;14310-0656;Uniper Kraftwerke GmbH;Gasturbinenkraftwerk Itzehoe;SH;25588;Oldendorf;Oldendorf;3.625;2;Energieumwandlung ? 50 MW FWL;NACE 35.11;;03359036;3
 1754;14310-1303;BwDLZ Munster;Heizungsanlage Schulz-Lutz-Kaserne Munster-Süd;NI;29626;Munster;Munster;11.231;3;Energieumwandlung 20–50 MW FWL;NACE 84.22;;03358016;1
 1528;14310-1003;Mondelez Deutschland Snacks Production GmbH & Co. KG;Fabo KWK + Kesselhaus;NI;29683;Bad Fallingbostel;Bad Fallingbostel;26.096;3;Energieumwandlung 20–50 MW FWL;NACE 35.30;;03358008;1
@@ -1726,9 +1726,9 @@ ID;Nummer;Betreiber;Anlagenname;Bundesland;PLZ;Ort Orignal;Ort;VET 2018 [t CO2 Ä
 1784;14310-1345;Statkraft Markets GmbH;Gaskombikraftwerk Robert Frank Hilfskessel;NI;31628;Landesbergen;Landesbergen;0;3;Energieumwandlung 20–50 MW FWL;NACE 35.30;;03256017;1
 534;14280-0044;Smurfit Kappa Hoya Papier und Karton GmbH;Hoya PM 4 inkl. HKW;NI;27318;Hoya;Hoya;32.043;21;Herstellung von Papier;NACE 17.12;;03256014;1
 583;14280-0096;Smurfit Kappa Hoya Papier und Karton GmbH;Hoya PM2 inkl. Heizkraftwerk;NI;27318;Hoya;Hoya;106.588;21;Herstellung von Papier;NACE 17.12;;03256014;1
-230;14250-0046;O-I GLASSPACK GmbH & Co. KG;O-I GLASSPACK GmbH & Co. KG, Werk Holzminden;NI;37603;Holzminden;XXX (Doppelt);44.093;16;Herstellung von Glas;NACE 23.13;;#NV;0
+230;14250-0046;O-I GLASSPACK GmbH & Co. KG;O-I GLASSPACK GmbH & Co. KG, Werk Holzminden;NI;37603;Holzminden;Holzminden;44.093;16;Herstellung von Glas;NACE 23.13;3255023;03255023;3
 1776;14310-1334;TESIUM GmbH;Kesselhaus Weser;NI;37603;Holzminden;Holzminden;25.043;4;Energieumwandlung 20–50 MW FWL, andere Brennstoffe;NACE 20.42;;03255023;3
-228;14250-0044;SCHOTT AG Werk Grünenplan;Werk Grünenplan;NI;31073;Grünenplan;XXX (Doppelt);9.573;16;Herstellung von Glas;NACE 23.19;;#NV;0
+228;14250-0044;SCHOTT AG Werk Grünenplan;Werk Grünenplan;NI;31073;Grünenplan;Grünenplan;9.573;16;Herstellung von Glas;NACE 23.19;3255008;03255504;1
 193;14250-0007;Noelle + von Campe GmbH & Co. KG;Glasschmelzwanne für Hohlglasbehältnisse;NI;37691;Boffzen;Boffzen;30.840;16;Herstellung von Glas;NACE 23.13;;03255004;2
 4130;14250-0102;Noelle + von Campe GmbH & Co. KG;Glasschmelzwannen für Hohlglasbehälter Werk 2;NI;37691;Boffzen;Boffzen;35.666;16;Herstellung von Glas;NACE 23.13;;03255004;2
 568;14280-0079;Kartonfabrik Kaierde GmbH & Co. Produktions KG;Hochdruckdampfkessel mit angeschlossenem 3-Kolben-Dampfmotor zur Eigenstromerzeugung;NI;31073;Delligsen;Delligsen;7.823;21;Herstellung von Papier;NACE 17.12;;03255008;1
@@ -1755,28 +1755,28 @@ ID;Nummer;Betreiber;Anlagenname;Bundesland;PLZ;Ort Orignal;Ort;VET 2018 [t CO2 Ä
 1384;14310-0839;enercity Aktiengesellschaft;Kraftwerk Herrenhausen;NI;30419;Hannover;Hannover;24.981;2;Energieumwandlung ? 50 MW FWL;NACE 35.11;;03241001;1
 1387;14310-0843;GKH Gemeinschaftskraftwerk Hannover GmbH;GKH Gemeinschaftskraftwerk Hannover GmbH;NI;30419;Hannover;Hannover;1.630.746;2;Energieumwandlung ? 50 MW FWL;NACE 35.11;;03241001;1
 1535;14310-1011;VW Kraftwerk GmbH;Heizwerk Hannover;NI;30419;Hannover;Hannover;79;2;Energieumwandlung ? 50 MW FWL;NACE 35.30;;03241001;1
-461;14260-0209;Refratechnik Cement GmbH;Werk Göttingen;NI;37079;Göttingen;XXX (Doppelt);12.134;17;Herstellung von Keramik;NACE 23.20;;#NV;0
+461;14260-0209;Refratechnik Cement GmbH;Werk Göttingen;NI;37079;Göttingen;Göttingen;12.134;17;Herstellung von Keramik;NACE 23.20;3159016;03159016;4
 1334;14310-0788;Georg-August-Universität Göttingen, Stiftung Öffentlichen Rechts;Heizkraftwerk Universität Göttingen;NI;37075;Göttingen;Göttingen;64.857;2;Energieumwandlung ? 50 MW FWL;NACE 35.30;;03159016;4
 1639;14310-1137;Stadtwerke Göttingen AG;HKW;NI;37081;Göttingen;Göttingen;12.612;3;Energieumwandlung 20–50 MW FWL;NACE 35.30;;03159016;4
-202797;14633-0024;Novelis Deutschland GmbH;Bandbeschichtungsanlagen Paintline und Lacquer Line;NI;37075;Göttingen;XXX (Doppelt);20.984;13;Verarbeitung von Nichteisenmetallen;NACE 24.42;;#NV;0
+202797;14633-0024;Novelis Deutschland GmbH;Bandbeschichtungsanlagen Paintline und Lacquer Line;NI;37075;Göttingen;Göttingen;20.984;13;Verarbeitung von Nichteisenmetallen;NACE 24.42;3159016;03159016;4
 ;14616-0226;Otto Bock Kunststoff GmbH;Polymerisationsanlage zur halbkontinuierlich verlaufenden Blockschaumfertigung von Polyurethanschaumstoffen durch Polyaddition von Polyether- und Polyesterpolyolen mit TDI mit anschließender Konfektionierung der PUR-Blöcke;NI;37115;Duderstadt;Duderstadt;981;27;Herstellung organischer Grundchemikalien;NACE 22.29;;03159010;2
 1894;14255-0008;DBW Advanced Fiber Technologies GmbH;Anlage zum Schmelzen mineralischer Stoffe und zur Herstellung von Mineralfasern;NI;37120;Bovenden;Bovenden;8.263;18;Herstellung von Mineralfasern;NACE 23.14;;03152004;2
 384;14260-0120;Jacobi Tonwerke GmbH;Jacobi Tonwerke GmbH - Werk Bilshausen;NI;37343;Bilshausen;Bilshausen;26.206;17;Herstellung von Keramik;NACE 23.32;;03159005;2
 162;14240-0046;Nordzucker AG;Feuerungsanlagen Schladen;NI;38315;Schladen;Schladen;66.204;15;Herstellung von Kalk;NACE 10.81;;03158026;2
 1076;14310-0510;envia THERM GmbH;Spitzenstromanlage Wolfen;ST;06766;Wolfen;Wolfen;2.478;2;Energieumwandlung ? 50 MW FWL;NACE 35.11;;03158037;2
-40;14220-0003;Peiner Träger GmbH;Elektrostahlwerk - einheitliche Anlage;NI;31226;Peine;XXX (Doppelt);165.774;10;Herstellung von Roheisen und Stahl;NACE 24.10;;#NV;0
+40;14220-0003;Peiner Träger GmbH;Elektrostahlwerk - einheitliche Anlage;NI;31226;Peine;Peine;165.774;10;Herstellung von Roheisen und Stahl;NACE 24.10;3157006;03157006;2
 1435;14310-0894;Stadtwerke Peine GmbH;Heizwerk Stadtwerke Peine;NI;31224;Peine;Peine;4.620;3;Energieumwandlung 20–50 MW FWL;NACE 35.30;;03157006;2
 166;14240-0050;Nordzucker AG;Feuerungsanlagen Clauen;NI;31249;Hohenhameln;Hohenhameln;57.209;15;Herstellung von Kalk;NACE 10.81;;03157002;1
 939;14310-0353;Kraftwerk Mehrum GmbH;Kraftwerk Mehrum Block 3;NI;31249;Hohenhameln;Hohenhameln;2.319.751;2;Energieumwandlung ? 50 MW FWL;NACE 35.11;;03157002;1
 1759;14310-1312;Kraftwerk Mehrum GmbH;Kraftwerk Mehrum Hilfskessel;NI;31249;Hohenhameln;Hohenhameln;5.062;2;Energieumwandlung ? 50 MW FWL;NACE 35.11;;03157002;1
 1790;14310-1352;ContiTech Transportbandsysteme GmbH;Feuerungsanlage;NI;37154;Northeim;Northeim;27.146;3;Energieumwandlung 20–50 MW FWL;NACE 22.19;;03155011;2
-;14616-0209;LaPur GmbH;Blockweichschaumproduktionsanlage;NI;37154;Northeim;XXX (Doppelt);278;27;Herstellung organischer Grundchemikalien;NACE 22.29;;#NV;0
+;14616-0209;LaPur GmbH;Blockweichschaumproduktionsanlage;NI;37154;Northeim;Northeim;278;27;Herstellung organischer Grundchemikalien;NACE 22.29;3155011;03155011;2
 123;14240-0004;Fels-Werke GmbH;Fels KG NSO;NI;37191;Katlenburg-Lindau;Katlenburg-Lindau;52.001;15;Herstellung von Kalk;NACE 23.52;;03155007;1
 450;14260-0196;Alten Ziegelei GmbH & Co KG;Alten Ziegelei;NI;37586;Dassel;Dassel;7.536;17;Herstellung von Keramik;NACE 23.32;;03155003;1
 227;14250-0043;Auer Lighting GmbH;Anlage zum Herstellen von Glas;NI;37581;Bad Gandersheim;Bad Gandersheim;6.190;16;Herstellung von Glas;NACE 23.19;;03155001;1
 1419;14310-0878;Helmstedter Revier GmbH (HSR);Kraftwerk Buschhaus;NI;38372;Büddenstedt;Büddenstedt;127;2;Energieumwandlung ? 50 MW FWL;NACE 35.11;;03154003;1
 620;14310-0002;H.C. Starck GmbH, ab 01.08.2016 Chemitas GmbH;Dampfkesselanlage im Kesselhaus;NI;38642;Goslar;Goslar;9.412;3;Energieumwandlung 20–50 MW FWL;NACE 35.30;;03153017;3
-205608;14633-0005;Harz-Metall GmbH;Harz-Metall GmbH;NI;38642;Goslar;XXX (Doppelt);51.581;13;Verarbeitung von Nichteisenmetallen;NACE 24.43;;#NV;0
+205608;14633-0005;Harz-Metall GmbH;Harz-Metall GmbH;NI;38642;Goslar;Goslar;51.581;13;Verarbeitung von Nichteisenmetallen;NACE 24.43;3153017;03153017;3
 127;14240-0008;Fels-Werke GmbH;Fels KM NSO 1-4 / DSO 5-8;NI;38723;Seesen;Seesen;324.305;15;Herstellung von Kalk;NACE 23.52;;03153012;1
 205042;14642-0001;James Hardie Europe GmbH;Gipsfaserplattenproduktionsanlage;NI;38723;Seesen;Seesen;18.235;19;Herstellung von Gips;NACE 23.62;;03153012;1
 749;14310-0143;Albemarle Germany GmbH;Wärmekraftanlage;NI;38685;Langelsheim;Langelsheim;28.623;3;Energieumwandlung 20–50 MW FWL;NACE 20.14;;03153007;1
@@ -1869,3 +1869,7 @@ ID;Nummer;Betreiber;Anlagenname;Bundesland;PLZ;Ort Orignal;Ort;VET 2018 [t CO2 Ä
 734;14310-0123;Stadtwerke Flensburg GmbH;Reserveheizwerk Süd;SH;24939;Flensburg;Flensburg;0;2;Energieumwandlung ? 50 MW FWL;NACE 35.30;;01001000;1
 736;14310-0125;Stadtwerke Flensburg GmbH;Reserveheizwerk Engelsby;SH;24944;Flensburg;Flensburg;167;2;Energieumwandlung ? 50 MW FWL;NACE 35.30;;01001000;1
 760;14310-0154;Stadtwerke Flensburg GmbH;Heizkraftwerk Flensburg;SH;24939;Flensburg;Flensburg;601.832;2;Energieumwandlung ? 50 MW FWL;NACE 35.30;;01001000;1
+;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;
+;;;;;;;0;;;;;;;
