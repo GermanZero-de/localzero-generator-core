@@ -1,3 +1,8 @@
+"""
+Documentation:
+https://localzero-generator.readthedocs.io/de/latest/sectors/hh_ghd.html
+"""
+
 # pyright: strict
 from .. import residences2018, business2018
 from ..inputs import Inputs

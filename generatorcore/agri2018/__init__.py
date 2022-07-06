@@ -1,10 +1,6 @@
 """
-Five categories are considered: fermentation/animals, manure management,
-N20 from agricultural soils, other agriculture, factory/machines.
-Data is mapped down to the agricultural area of the respective commune.
-(Note: emissions of factory/machines are not included so far)
-Only process-related emissions are considered. The are simply multiplied
-by process-related emission factors.
+Documentation:
+https://localzero-generator.readthedocs.io/de/latest/sectors/agriculture.html
 """
 
 # pyright: strict
