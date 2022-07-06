@@ -14,7 +14,7 @@ class H18:
     d_b: Vars1 = field(default_factory=Vars1)
     d_i: Vars1 = field(default_factory=Vars1)
     d_t: Vars1 = field(default_factory=Vars1)
-    a_t: Vars1 = field(default_factory=Vars1)
+    d_a: Vars1 = field(default_factory=Vars1)
     h: Vars2 = field(default_factory=Vars2)
     p: Vars3 = field(default_factory=Vars3)
     p_gas: Vars4 = field(default_factory=Vars4)

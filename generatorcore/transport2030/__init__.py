@@ -1,3 +1,8 @@
+"""
+Documentation:
+https://localzero-generator.readthedocs.io/de/latest/sectors/traffic.html
+"""
+
 # pyright: strict
 from ..inputs import Inputs
 from ..transport2018 import T18

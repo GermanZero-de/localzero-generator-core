@@ -1,3 +1,8 @@
+"""
+Documentation:
+https://localzero-generator.readthedocs.io/de/latest/sectors/agriculture.html
+"""
+
 # pyright: strict
 from .dataclasses import Vars6
 from ..inputs import Inputs

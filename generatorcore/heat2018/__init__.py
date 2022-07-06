@@ -1,3 +1,8 @@
+"""
+Documentation:
+https://localzero-generator.readthedocs.io/de/latest/sectors/heat.html
+"""
+
 # pyright: strict
 from .. import transport2018, electricity2018
 from ..inputs import Inputs
@@ -44,15 +49,15 @@ def calc(inputs: Inputs, *, t18: transport2018.T18, e18: electricity2018.E18) ->
     )
     d_t = h18.d_t
     d_t.energy = t18.t.demand_fueloil + t18.t.demand_lpg + t18.t.demand_gas
-    a_t = h18.a_t
-    a_t.energy = (
+    d_a = h18.d_a
+    d_a.energy = (
         entries.a_fueloil_fec
         + entries.a_lpg_fec
         + entries.a_gas_fec
         + entries.a_biomass_fec
     )
     d = h18.d
-    d.energy = d_r.energy + d_b.energy + d_i.energy + d_t.energy + a_t.energy
+    d.energy = d_r.energy + d_b.energy + d_i.energy + d_t.energy + d_a.energy
     p = h18.p
     p.energy = d.energy
     p_gas = h18.p_gas
