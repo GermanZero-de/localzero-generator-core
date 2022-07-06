@@ -4,7 +4,7 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/agriculture.html
 """
 
 # pyright: strict
-from .dataclasses import Vars6
+from .dataclasses import Vars6, Vars7
 from ..inputs import Inputs
 from ..utils import div, MILLION
 from .. import agri2018, lulucf2030
@@ -157,6 +157,56 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
     a30.p_manure_oanimal = p_manure_oanimal
     a30.p_manure_deposition = p_manure_deposition
 
+    p_soil_fertilizer = Vars7.calc_soil(
+        inputs, "p_soil_fertilizer", a18, l30.g_crop.area_ha
+    )
+    p_soil_manure = Vars7.calc_soil(inputs, "p_soil_manure", a18, l30.g_crop.area_ha)
+    p_soil_sludge = Vars7.calc_soil(inputs, "p_soil_sludge", a18, l30.g_crop.area_ha)
+    p_soil_ecrop = Vars7.calc_soil(inputs, "p_soil_ecrop", a18, l30.g_crop.area_ha)
+    p_soil_grazing = Vars7.calc_soil_grazing(
+        inputs,
+        "p_soil_grazing",
+        a18,
+        l30.g_grass.area_ha,
+        p_fermen_dairycow,
+        p_fermen_nondairy,
+        p_fermen_oanimal,
+    )
+    p_soil_residue = Vars7.calc_soil_residue(
+        inputs, "p_soil_residue", a18, l30.g_crop.area_ha
+    )
+    p_soil_orgfarm = Vars7.calc_soil_residue(
+        inputs,
+        "p_soil_orgfarm",
+        a18,
+        l30.g_crop_org_low.area_ha
+        + l30.g_crop_org_high.area_ha
+        + l30.g_grass_org_low.area_ha
+        + l30.g_grass_org_high.area_ha,
+    )
+    p_soil_orgloss = Vars7.calc_soil_residue(
+        inputs,
+        "p_soil_orgloss",
+        a18,
+        l30.g_crop_org_low.area_ha + l30.g_crop_org_high.area_ha,
+    )
+    p_soil_leaching = Vars7.calc_soil(
+        inputs, "p_soil_leaching", a18, l30.g_crop.area_ha + l30.g_grass.area_ha
+    )
+    p_soil_deposition = Vars7.calc_soil(
+        inputs, "p_soil_deposition", a18, l30.g_crop.area_ha + l30.g_grass.area_ha
+    )
+    a30.p_soil_fertilizer = p_soil_fertilizer
+    a30.p_soil_manure = p_soil_manure
+    a30.p_soil_sludge = p_soil_sludge
+    a30.p_soil_ecrop = p_soil_ecrop
+    a30.p_soil_grazing = p_soil_grazing
+    a30.p_soil_residue = p_soil_residue
+    a30.p_soil_orgfarm = p_soil_orgfarm
+    a30.p_soil_orgloss = p_soil_orgloss
+    a30.p_soil_leaching = p_soil_leaching
+    a30.p_soil_deposition = p_soil_deposition
+
     # Next
 
     p_fermen.CO2e_combustion_based = 0
@@ -185,76 +235,6 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
     p_soil.CO2e_combustion_based = 0
     p_soil.CO2e_total_2021_estimated = a18.p_soil.CO2e_total * fact(
         "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
-    )
-    p_soil_fertilizer.demand_change = ass("Ass_A_P_soil_N_application_2030_change")
-    p_soil_fertilizer.area_ha = l30.g_crop.area_ha
-    p_soil_fertilizer.CO2e_combustion_based = 0
-    p_soil_fertilizer.CO2e_total_2021_estimated = (
-        a18.p_soil_fertilizer.CO2e_total * fact("Fact_M_CO2e_wo_lulucf_2021_vs_2018")
-    )
-    p_soil_manure.demand_change = ass("Ass_A_P_soil_N_application_2030_change")
-    p_soil_manure.area_ha = l30.g_crop.area_ha
-    p_soil_manure.CO2e_combustion_based = 0
-    p_soil_manure.CO2e_total_2021_estimated = a18.p_soil_manure.CO2e_total * fact(
-        "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
-    )
-    p_soil_sludge.demand_change = ass("Ass_A_P_soil_N_application_2030_change")
-    p_soil_sludge.area_ha = l30.g_crop.area_ha
-    p_soil_sludge.CO2e_combustion_based = 0
-    p_soil_sludge.CO2e_total_2021_estimated = a18.p_soil_sludge.CO2e_total * fact(
-        "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
-    )
-    p_soil_ecrop.demand_change = ass("Ass_A_P_soil_N_application_2030_change")
-    p_soil_ecrop.area_ha = l30.g_crop.area_ha
-    p_soil_ecrop.CO2e_combustion_based = 0
-    p_soil_ecrop.CO2e_total_2021_estimated = a18.p_soil_ecrop.CO2e_total * fact(
-        "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
-    )
-    p_soil_grazing.area_ha = l30.g_grass.area_ha
-    p_soil_grazing.CO2e_combustion_based = 0
-    p_soil_grazing.CO2e_total_2021_estimated = a18.p_soil_grazing.CO2e_total * fact(
-        "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
-    )
-    p_soil_residue.CO2e_production_based_per_t = (
-        a18.p_soil_residue.CO2e_production_based_per_t
-    )
-    p_soil_residue.area_ha = l30.g_crop.area_ha
-    p_soil_residue.CO2e_combustion_based = 0
-    p_soil_residue.CO2e_total_2021_estimated = a18.p_soil_residue.CO2e_total * fact(
-        "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
-    )
-    p_soil_orgfarm.CO2e_production_based_per_t = (
-        a18.p_soil_orgfarm.CO2e_production_based_per_t
-    )
-    p_soil_orgfarm.area_ha = (
-        l30.g_crop_org_low.area_ha
-        + l30.g_crop_org_high.area_ha
-        + l30.g_grass_org_low.area_ha
-        + l30.g_grass_org_high.area_ha
-    )
-    p_soil_orgfarm.CO2e_combustion_based = 0
-    p_soil_orgfarm.CO2e_total_2021_estimated = a18.p_soil_orgfarm.CO2e_total * fact(
-        "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
-    )
-    p_soil_orgloss.CO2e_production_based_per_t = (
-        a18.p_soil_orgloss.CO2e_production_based_per_t
-    )
-    p_soil_orgloss.area_ha = l30.g_crop_org_low.area_ha + l30.g_crop_org_high.area_ha
-    p_soil_orgloss.CO2e_combustion_based = 0
-    p_soil_orgloss.CO2e_total_2021_estimated = a18.p_soil_orgloss.CO2e_total * fact(
-        "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
-    )
-    p_soil_leaching.demand_change = ass("Ass_A_P_soil_N_application_2030_change")
-    p_soil_leaching.area_ha = l30.g_crop.area_ha + l30.g_grass.area_ha
-    p_soil_leaching.CO2e_combustion_based = 0
-    p_soil_leaching.CO2e_total_2021_estimated = a18.p_soil_leaching.CO2e_total * fact(
-        "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
-    )
-    p_soil_deposition.demand_change = ass("Ass_A_P_soil_N_application_2030_change")
-    p_soil_deposition.area_ha = l30.g_crop.area_ha + l30.g_grass.area_ha
-    p_soil_deposition.CO2e_combustion_based = 0
-    p_soil_deposition.CO2e_total_2021_estimated = (
-        a18.p_soil_deposition.CO2e_total * fact("Fact_M_CO2e_wo_lulucf_2021_vs_2018")
     )
     p_other.CO2e_combustion_based = 0
     p_other.CO2e_total_2021_estimated = a18.p_other.CO2e_total * fact(
@@ -420,83 +400,6 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
     )
     s_heatpump.full_load_hour = fact("Fact_B_S_full_usage_hours_buildings")
 
-    p_soil_fertilizer.CO2e_production_based_per_t = (
-        a18.p_soil_fertilizer.CO2e_production_based_per_t
-        * (1 + p_soil_fertilizer.demand_change)
-    )
-    p_soil_fertilizer.area_ha_change = -(
-        a18.p_soil_fertilizer.area_ha - p_soil_fertilizer.area_ha
-    )
-    p_soil_manure.CO2e_production_based_per_t = (
-        a18.p_soil_manure.CO2e_production_based_per_t
-        * (1 + p_soil_manure.demand_change)
-    )
-    p_soil_manure.area_ha_change = -(a18.p_soil_manure.area_ha - p_soil_manure.area_ha)
-    p_soil_sludge.CO2e_production_based_per_t = (
-        a18.p_soil_sludge.CO2e_production_based_per_t
-        * (1 + p_soil_sludge.demand_change)
-    )
-    p_soil_sludge.area_ha_change = -(a18.p_soil_sludge.area_ha - p_soil_sludge.area_ha)
-    p_soil_ecrop.CO2e_production_based_per_t = (
-        a18.p_soil_ecrop.CO2e_production_based_per_t * (1 + p_soil_ecrop.demand_change)
-    )
-    p_soil_ecrop.area_ha_change = -(a18.p_soil_ecrop.area_ha - p_soil_ecrop.area_ha)
-    p_soil_grazing.area_ha_change = -(
-        a18.p_soil_grazing.area_ha - p_soil_grazing.area_ha
-    )
-    p_soil_residue.demand_change = (
-        div(
-            p_soil_residue.CO2e_production_based_per_t,
-            a18.p_soil_residue.CO2e_production_based_per_t,
-        )
-        - 1
-    )
-    p_soil_residue.area_ha_change = -(
-        a18.p_soil_residue.area_ha - p_soil_residue.area_ha
-    )
-    p_soil_residue.CO2e_production_based = (
-        p_soil_residue.area_ha * p_soil_residue.CO2e_production_based_per_t
-    )
-    p_soil_orgfarm.demand_change = (
-        div(
-            p_soil_orgfarm.CO2e_production_based_per_t,
-            a18.p_soil_orgfarm.CO2e_production_based_per_t,
-        )
-        - 1
-    )
-    p_soil_orgfarm.area_ha_change = -(
-        a18.p_soil_orgfarm.area_ha - p_soil_orgfarm.area_ha
-    )
-    p_soil_orgfarm.CO2e_production_based = (
-        p_soil_orgfarm.area_ha * p_soil_orgfarm.CO2e_production_based_per_t
-    )
-    p_soil_orgloss.demand_change = (
-        div(
-            p_soil_orgloss.CO2e_production_based_per_t,
-            a18.p_soil_orgloss.CO2e_production_based_per_t,
-        )
-        - 1
-    )
-    p_soil_orgloss.area_ha_change = -(
-        a18.p_soil_orgloss.area_ha - p_soil_orgloss.area_ha
-    )
-    p_soil_orgloss.CO2e_production_based = (
-        p_soil_orgloss.area_ha * p_soil_orgloss.CO2e_production_based_per_t
-    )
-    p_soil_leaching.CO2e_production_based_per_t = (
-        a18.p_soil_leaching.CO2e_production_based_per_t
-        * (1 + p_soil_leaching.demand_change)
-    )
-    p_soil_leaching.area_ha_change = -(
-        a18.p_soil_leaching.area_ha - p_soil_leaching.area_ha
-    )
-    p_soil_deposition.CO2e_production_based_per_t = (
-        a18.p_soil_deposition.CO2e_production_based_per_t
-        * (1 + p_soil_deposition.demand_change)
-    )
-    p_soil_deposition.area_ha_change = -(
-        a18.p_soil_deposition.area_ha - p_soil_deposition.area_ha
-    )
     p_other_liming_calcit.prod_volume = a18.p_other_liming_calcit.prod_volume * (
         1 + p_other_liming_calcit.demand_change
     )
@@ -534,44 +437,6 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
     s_lpg.CO2e_combustion_based = s_lpg.energy * s_lpg.CO2e_combustion_based_per_MWh
     s_gas.CO2e_combustion_based = s_gas.energy * s_gas.CO2e_combustion_based_per_MWh
     s_heatpump.power_installed = div(a18.s_heatpump.energy, s_heatpump.full_load_hour)
-    p_soil_grazing.CO2e_production_based_per_t = div(
-        a18.p_soil_grazing.CO2e_production_based_per_t
-        * (
-            p_fermen_dairycow.amount
-            + p_fermen_nondairy.amount
-            + p_fermen_oanimal.amount
-        ),
-        a18.p_fermen_dairycow.amount
-        + a18.p_fermen_nondairy.amount
-        + a18.p_fermen_oanimal.amount,
-    )
-    p_soil_fertilizer.CO2e_production_based = (
-        p_soil_fertilizer.area_ha * p_soil_fertilizer.CO2e_production_based_per_t
-    )
-    p_soil_manure.CO2e_production_based = (
-        p_soil_manure.area_ha * p_soil_manure.CO2e_production_based_per_t
-    )
-    p_soil_sludge.CO2e_production_based = (
-        p_soil_sludge.area_ha * p_soil_sludge.CO2e_production_based_per_t
-    )
-    p_soil_ecrop.CO2e_production_based = (
-        p_soil_ecrop.area_ha * p_soil_ecrop.CO2e_production_based_per_t
-    )
-    p_soil_residue.CO2e_total = (
-        p_soil_residue.CO2e_production_based + p_soil_residue.CO2e_combustion_based
-    )
-    p_soil_orgfarm.CO2e_total = (
-        p_soil_orgfarm.CO2e_production_based + p_soil_orgfarm.CO2e_combustion_based
-    )
-    p_soil_orgloss.CO2e_total = (
-        p_soil_orgloss.CO2e_production_based + p_soil_orgloss.CO2e_combustion_based
-    )
-    p_soil_leaching.CO2e_production_based = (
-        p_soil_leaching.area_ha * p_soil_leaching.CO2e_production_based_per_t
-    )
-    p_soil_deposition.CO2e_production_based = (
-        p_soil_deposition.area_ha * p_soil_deposition.CO2e_production_based_per_t
-    )
     p_other_liming_calcit.CO2e_production_based = (
         p_other_liming_calcit.prod_volume
         * p_other_liming_calcit.CO2e_production_based_per_t
@@ -624,60 +489,6 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
         + p_fermen_swine.CO2e_production_based
         + p_fermen_poultry.CO2e_production_based
         + p_fermen_oanimal.CO2e_production_based
-    )
-    p_soil_grazing.demand_change = (
-        div(
-            p_soil_grazing.CO2e_production_based_per_t,
-            a18.p_soil_grazing.CO2e_production_based_per_t,
-        )
-        - 1
-    )
-    p_soil_grazing.CO2e_production_based = (
-        p_soil_grazing.area_ha * p_soil_grazing.CO2e_production_based_per_t
-    )
-    p_soil_fertilizer.CO2e_total = (
-        p_soil_fertilizer.CO2e_production_based
-        + p_soil_fertilizer.CO2e_combustion_based
-    )
-    p_soil_manure.CO2e_total = (
-        p_soil_manure.CO2e_production_based + p_soil_manure.CO2e_combustion_based
-    )
-    p_soil_sludge.CO2e_total = (
-        p_soil_sludge.CO2e_production_based + p_soil_sludge.CO2e_combustion_based
-    )
-    p_soil_ecrop.CO2e_total = (
-        p_soil_ecrop.CO2e_production_based + p_soil_ecrop.CO2e_combustion_based
-    )
-    p_soil_residue.change_CO2e_t = (
-        p_soil_residue.CO2e_total - a18.p_soil_residue.CO2e_total
-    )
-    p_soil_residue.cost_climate_saved = (
-        (p_soil_residue.CO2e_total_2021_estimated - p_soil_residue.CO2e_total)
-        * entries.m_duration_neutral
-        * fact("Fact_M_cost_per_CO2e_2020")
-    )
-    p_soil_orgfarm.change_CO2e_t = (
-        p_soil_orgfarm.CO2e_total - a18.p_soil_orgfarm.CO2e_total
-    )
-    p_soil_orgfarm.cost_climate_saved = (
-        (p_soil_orgfarm.CO2e_total_2021_estimated - p_soil_orgfarm.CO2e_total)
-        * entries.m_duration_neutral
-        * fact("Fact_M_cost_per_CO2e_2020")
-    )
-    p_soil_orgloss.change_CO2e_t = (
-        p_soil_orgloss.CO2e_total - a18.p_soil_orgloss.CO2e_total
-    )
-    p_soil_orgloss.cost_climate_saved = (
-        (p_soil_orgloss.CO2e_total_2021_estimated - p_soil_orgloss.CO2e_total)
-        * entries.m_duration_neutral
-        * fact("Fact_M_cost_per_CO2e_2020")
-    )
-    p_soil_leaching.CO2e_total = (
-        p_soil_leaching.CO2e_production_based + p_soil_leaching.CO2e_combustion_based
-    )
-    p_soil_deposition.CO2e_total = (
-        p_soil_deposition.CO2e_production_based
-        + p_soil_deposition.CO2e_combustion_based
     )
     p_other_liming_calcit.CO2e_total = (
         p_other_liming_calcit.CO2e_production_based
@@ -766,64 +577,6 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
         + p_soil_orgloss.CO2e_production_based
         + p_soil_leaching.CO2e_production_based
         + p_soil_deposition.CO2e_production_based
-    )
-    p_soil_grazing.CO2e_total = (
-        p_soil_grazing.CO2e_production_based + p_soil_grazing.CO2e_combustion_based
-    )
-    p_soil_fertilizer.change_CO2e_t = (
-        p_soil_fertilizer.CO2e_total - a18.p_soil_fertilizer.CO2e_total
-    )
-    p_soil_fertilizer.cost_climate_saved = (
-        (p_soil_fertilizer.CO2e_total_2021_estimated - p_soil_fertilizer.CO2e_total)
-        * entries.m_duration_neutral
-        * fact("Fact_M_cost_per_CO2e_2020")
-    )
-    p_soil_manure.change_CO2e_t = (
-        p_soil_manure.CO2e_total - a18.p_soil_manure.CO2e_total
-    )
-    p_soil_manure.cost_climate_saved = (
-        (p_soil_manure.CO2e_total_2021_estimated - p_soil_manure.CO2e_total)
-        * entries.m_duration_neutral
-        * fact("Fact_M_cost_per_CO2e_2020")
-    )
-    p_soil_sludge.change_CO2e_t = (
-        p_soil_sludge.CO2e_total - a18.p_soil_sludge.CO2e_total
-    )
-    p_soil_sludge.cost_climate_saved = (
-        (p_soil_sludge.CO2e_total_2021_estimated - p_soil_sludge.CO2e_total)
-        * entries.m_duration_neutral
-        * fact("Fact_M_cost_per_CO2e_2020")
-    )
-    p_soil_ecrop.change_CO2e_t = p_soil_ecrop.CO2e_total - a18.p_soil_ecrop.CO2e_total
-    p_soil_ecrop.cost_climate_saved = (
-        (p_soil_ecrop.CO2e_total_2021_estimated - p_soil_ecrop.CO2e_total)
-        * entries.m_duration_neutral
-        * fact("Fact_M_cost_per_CO2e_2020")
-    )
-    p_soil_residue.change_CO2e_pct = div(
-        p_soil_residue.change_CO2e_t, a18.p_soil_residue.CO2e_total
-    )
-    p_soil_orgfarm.change_CO2e_pct = div(
-        p_soil_orgfarm.change_CO2e_t, a18.p_soil_orgfarm.CO2e_total
-    )
-    p_soil_orgloss.change_CO2e_pct = div(
-        p_soil_orgloss.change_CO2e_t, a18.p_soil_orgloss.CO2e_total
-    )
-    p_soil_leaching.change_CO2e_t = (
-        p_soil_leaching.CO2e_total - a18.p_soil_leaching.CO2e_total
-    )
-    p_soil_leaching.cost_climate_saved = (
-        (p_soil_leaching.CO2e_total_2021_estimated - p_soil_leaching.CO2e_total)
-        * entries.m_duration_neutral
-        * fact("Fact_M_cost_per_CO2e_2020")
-    )
-    p_soil_deposition.change_CO2e_t = (
-        p_soil_deposition.CO2e_total - a18.p_soil_deposition.CO2e_total
-    )
-    p_soil_deposition.cost_climate_saved = (
-        (p_soil_deposition.CO2e_total_2021_estimated - p_soil_deposition.CO2e_total)
-        * entries.m_duration_neutral
-        * fact("Fact_M_cost_per_CO2e_2020")
     )
     p_other_liming_calcit.change_CO2e_t = (
         p_other_liming_calcit.CO2e_total - a18.p_other_liming_calcit.CO2e_total
@@ -914,32 +667,6 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
         p_manure.CO2e_production_based + p_manure.CO2e_combustion_based
     )
     p_soil.CO2e_total = p_soil.CO2e_production_based + p_soil.CO2e_combustion_based
-    p_soil_grazing.change_CO2e_t = (
-        p_soil_grazing.CO2e_total - a18.p_soil_grazing.CO2e_total
-    )
-    p_soil_grazing.cost_climate_saved = (
-        (p_soil_grazing.CO2e_total_2021_estimated - p_soil_grazing.CO2e_total)
-        * entries.m_duration_neutral
-        * fact("Fact_M_cost_per_CO2e_2020")
-    )
-    p_soil_fertilizer.change_CO2e_pct = div(
-        p_soil_fertilizer.change_CO2e_t, a18.p_soil_fertilizer.CO2e_total
-    )
-    p_soil_manure.change_CO2e_pct = div(
-        p_soil_manure.change_CO2e_t, a18.p_soil_manure.CO2e_total
-    )
-    p_soil_sludge.change_CO2e_pct = div(
-        p_soil_sludge.change_CO2e_t, a18.p_soil_sludge.CO2e_total
-    )
-    p_soil_ecrop.change_CO2e_pct = div(
-        p_soil_ecrop.change_CO2e_t, a18.p_soil_ecrop.CO2e_total
-    )
-    p_soil_leaching.change_CO2e_pct = div(
-        p_soil_leaching.change_CO2e_t, a18.p_soil_leaching.CO2e_total
-    )
-    p_soil_deposition.change_CO2e_pct = div(
-        p_soil_deposition.change_CO2e_t, a18.p_soil_deposition.CO2e_total
-    )
     p_other_liming_calcit.change_CO2e_pct = div(
         p_other_liming_calcit.change_CO2e_t, a18.p_other_liming_calcit.CO2e_total
     )
@@ -1003,9 +730,6 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
         (p_soil.CO2e_total_2021_estimated - p_soil.CO2e_total)
         * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
-    )
-    p_soil_grazing.change_CO2e_pct = div(
-        p_soil_grazing.change_CO2e_t, a18.p_soil_grazing.CO2e_total
     )
     a.CO2e_production_based = p.CO2e_production_based
     p.CO2e_total = (
