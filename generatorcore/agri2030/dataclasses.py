@@ -111,7 +111,6 @@ class Vars5:
 
 @dataclass
 class Vars6:
-    # Used by p_manure_deposition
     CO2e_combustion_based: float = None  # type: ignore
     CO2e_production_based: float = None  # type: ignore
     CO2e_production_based_per_t: float = None  # type: ignore
@@ -161,11 +160,8 @@ class Vars6:
         )
 
     @classmethod
-    def calc_manure(
-        cls, inputs: Inputs, what: str, a18: A18, fermen: "Vars6"
-    ) -> "Vars6":
+    def calc_manure(cls, inputs: Inputs, what: str, a18: A18, amount: float) -> "Vars6":
         demand_change = inputs.ass("Ass_A_P_manure_ratio_CO2e_to_amount_change")
-        amount = fermen.amount
 
         CO2e_production_based_per_t = getattr(a18, what).CO2e_production_based_per_t * (
             1 + demand_change
