@@ -128,21 +128,24 @@ class Vars6:
         cls, inputs: Inputs, what: str, ass_demand_change: str, a18: A18
     ) -> "Vars6":
         demand_change = inputs.ass(ass_demand_change)
+        amount = getattr(a18, what).amount * (1 + demand_change)
+
         CO2e_production_based_per_t = getattr(a18, what).CO2e_production_based_per_t
+        CO2e_production_based = amount * CO2e_production_based_per_t
         CO2e_combustion_based = 0
+
+        CO2e_total = CO2e_production_based + CO2e_combustion_based
+        change_CO2e_t = CO2e_total - getattr(a18, what).CO2e_total
+        change_CO2e_pct = div(change_CO2e_t, getattr(a18, what).CO2e_total)
+
         CO2e_total_2021_estimated = getattr(a18, what).CO2e_total * inputs.fact(
             "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
         )
-        amount = getattr(a18, what).amount * (1 + demand_change)
-        CO2e_production_based = amount * CO2e_production_based_per_t
-        CO2e_total = CO2e_production_based + CO2e_combustion_based
-        change_CO2e_t = CO2e_total - getattr(a18, what).CO2e_total
         cost_climate_saved = (
             (CO2e_total_2021_estimated - CO2e_total)
             * inputs.entries.m_duration_neutral
             * inputs.fact("Fact_M_cost_per_CO2e_2020")
         )
-        change_CO2e_pct = div(change_CO2e_t, getattr(a18, what).CO2e_total)
 
         return cls(
             CO2e_combustion_based=CO2e_combustion_based,
@@ -162,23 +165,26 @@ class Vars6:
         cls, inputs: Inputs, what: str, a18: A18, fermen: "Vars6"
     ) -> "Vars6":
         demand_change = inputs.ass("Ass_A_P_manure_ratio_CO2e_to_amount_change")
-        CO2e_combustion_based = 0
-        CO2e_total_2021_estimated = getattr(a18, what).CO2e_total * inputs.fact(
-            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
-        )
+        amount = fermen.amount
+
         CO2e_production_based_per_t = getattr(a18, what).CO2e_production_based_per_t * (
             1 + demand_change
         )
-        amount = fermen.amount
         CO2e_production_based = amount * CO2e_production_based_per_t
+        CO2e_combustion_based = 0
+
         CO2e_total = CO2e_production_based + CO2e_combustion_based
         change_CO2e_t = CO2e_total - getattr(a18, what).CO2e_total
+        change_CO2e_pct = div(change_CO2e_t, getattr(a18, what).CO2e_total)
+
+        CO2e_total_2021_estimated = getattr(a18, what).CO2e_total * inputs.fact(
+            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+        )
         cost_climate_saved = (
             (CO2e_total_2021_estimated - CO2e_total)
             * inputs.entries.m_duration_neutral
             * inputs.fact("Fact_M_cost_per_CO2e_2020")
         )
-        change_CO2e_pct = div(change_CO2e_t, getattr(a18, what).CO2e_total)
 
         return cls(
             CO2e_combustion_based=CO2e_combustion_based,
