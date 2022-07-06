@@ -3,12 +3,6 @@ from dataclasses import dataclass
 
 
 @dataclass
-class Vars0:
-    # Used by g, g_storage, g_planning
-    pass
-
-
-@dataclass
 class Vars1:
     # Used by d, d_r, d_b, d_i, d_t, d_a
     energy: float = None  # type: ignore
