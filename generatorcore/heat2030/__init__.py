@@ -1,3 +1,8 @@
+"""
+Documentation:
+https://localzero-generator.readthedocs.io/de/latest/sectors/heat.html
+"""
+
 # pyright: strict
 from ..electricity2030.electricity2030_core import EColVars2030
 from ..inputs import Inputs

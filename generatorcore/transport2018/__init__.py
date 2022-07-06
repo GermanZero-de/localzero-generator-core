@@ -1,3 +1,8 @@
+"""
+Documentation:
+https://localzero-generator.readthedocs.io/de/latest/sectors/traffic.html
+"""
+
 # pyright: strict
 from .air import Air
 from .road import Road

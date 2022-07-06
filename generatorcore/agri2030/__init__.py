@@ -1,6 +1,6 @@
 """
-Agriculture 2030 works similarly to the 2018 calculation script, but considers
-demand changes with respect to 2018.
+Documentation:
+https://localzero-generator.readthedocs.io/de/latest/sectors/agriculture.html
 """
 
 # pyright: strict

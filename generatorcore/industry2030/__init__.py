@@ -1,3 +1,8 @@
+"""
+Documentation:
+https://localzero-generator.readthedocs.io/de/latest/sectors/industry.html
+"""
+
 # pyright: strict
 from .. import industry2018
 from ..inputs import Inputs

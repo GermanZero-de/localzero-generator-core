@@ -1,3 +1,8 @@
+"""
+Documentation:
+https://localzero-generator.readthedocs.io/de/latest/sectors/fuel.html
+"""
+
 # pyright: strict
 from ..inputs import Inputs
 from .. import (

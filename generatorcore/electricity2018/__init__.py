@@ -1,3 +1,8 @@
+"""
+Documentation:
+https://localzero-generator.readthedocs.io/de/latest/sectors/electricity.html
+"""
+
 # pyright: strict
 from ..inputs import Inputs
 from ..utils import div, MILLION

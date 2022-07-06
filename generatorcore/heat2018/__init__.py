@@ -1,3 +1,8 @@
+"""
+Documentation:
+https://localzero-generator.readthedocs.io/de/latest/sectors/heat.html
+"""
+
 # pyright: strict
 from .. import transport2018, electricity2018
 from ..inputs import Inputs
