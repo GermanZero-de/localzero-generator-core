@@ -19,7 +19,6 @@ from .dataclasses import (
     Vars14,
     Vars15,
     Vars16,
-    Vars17,
 )
 
 
@@ -49,7 +48,6 @@ class I30:
     p_other_further: Vars14 = field(default_factory=Vars14)
     p_other_2efgh: Vars15 = field(default_factory=Vars15)
     s: Vars16 = field(default_factory=Vars16)
-    s_fossil: Vars17 = field(default_factory=Vars17)
     s_fossil_gas: Vars16 = field(default_factory=Vars16)
     s_fossil_coal: Vars16 = field(default_factory=Vars16)
     s_fossil_diesel: Vars16 = field(default_factory=Vars16)

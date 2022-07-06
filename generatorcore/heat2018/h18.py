@@ -1,14 +1,11 @@
 # pyright: strict
 from dataclasses import dataclass, field
 
-from .dataclasses import Vars0, Vars1, Vars2, Vars3, Vars4, Vars5, Vars6, Vars7, Vars8
+from .dataclasses import Vars1, Vars2, Vars3, Vars4, Vars5, Vars6, Vars7, Vars8
 
 
 @dataclass
 class H18:
-    g: Vars0 = field(default_factory=Vars0)
-    g_storage: Vars0 = field(default_factory=Vars0)
-    g_planning: Vars0 = field(default_factory=Vars0)
     d: Vars1 = field(default_factory=Vars1)
     d_r: Vars1 = field(default_factory=Vars1)
     d_b: Vars1 = field(default_factory=Vars1)
