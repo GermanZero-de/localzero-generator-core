@@ -1,5 +1,10 @@
 # pyright: strict
 from dataclasses import dataclass
+from typing import Any
+
+from ..utils import div
+from ..agri2018.a18 import A18
+from ..inputs import Inputs
 
 
 @dataclass
@@ -94,8 +99,7 @@ class Vars4:
 
 
 @dataclass
-class Vars5:
-    # Used by p_fermen, p_manure, p_soil, p_other
+class CO2eChange:
     CO2e_combustion_based: float = None  # type: ignore
     CO2e_production_based: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
@@ -104,10 +108,42 @@ class Vars5:
     change_CO2e_t: float = None  # type: ignore
     cost_climate_saved: float = None  # type: ignore
 
+    @classmethod
+    def calc(
+        cls,
+        inputs: Inputs,
+        what: str,
+        a18: A18,
+        CO2e_production_based: float,
+    ) -> "CO2eChange":
+        CO2e_combustion_based = 0
+
+        CO2e_total = CO2e_production_based + CO2e_combustion_based
+        change_CO2e_t = CO2e_total - getattr(a18, what).CO2e_total
+        change_CO2e_pct = div(change_CO2e_t, getattr(a18, what).CO2e_total)
+
+        CO2e_total_2021_estimated = getattr(a18, what).CO2e_total * inputs.fact(
+            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+        )
+        cost_climate_saved = (
+            (CO2e_total_2021_estimated - CO2e_total)
+            * inputs.entries.m_duration_neutral
+            * inputs.fact("Fact_M_cost_per_CO2e_2020")
+        )
+
+        return cls(
+            CO2e_combustion_based=CO2e_combustion_based,
+            CO2e_production_based=CO2e_production_based,
+            CO2e_total=CO2e_total,
+            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+            change_CO2e_pct=change_CO2e_pct,
+            change_CO2e_t=change_CO2e_t,
+            cost_climate_saved=cost_climate_saved,
+        )
+
 
 @dataclass
-class Vars6:
-    # Used by p_fermen_dairycow, p_fermen_nondairy, p_fermen_swine, p_fermen_poultry, p_fermen_oanimal, p_manure_dairycow, p_manure_nondairy, p_manure_swine, p_manure_poultry, p_manure_oanimal, p_manure_deposition
+class CO2eChangeFermentationOrManure(CO2eChange):
     CO2e_combustion_based: float = None  # type: ignore
     CO2e_production_based: float = None  # type: ignore
     CO2e_production_based_per_t: float = None  # type: ignore
@@ -119,10 +155,60 @@ class Vars6:
     cost_climate_saved: float = None  # type: ignore
     demand_change: float = None  # type: ignore
 
+    @classmethod
+    def calc_fermen(
+        cls, inputs: Inputs, what: str, ass_demand_change: str, a18: A18
+    ) -> "CO2eChangeFermentationOrManure":
+        demand_change = inputs.ass(ass_demand_change)
+        amount = getattr(a18, what).amount * (1 + demand_change)
+
+        CO2e_production_based_per_t = getattr(a18, what).CO2e_production_based_per_t
+        CO2e_production_based = amount * CO2e_production_based_per_t
+
+        parent = super().calc(inputs, what, a18, CO2e_production_based)
+
+        return cls(
+            CO2e_combustion_based=parent.CO2e_combustion_based,
+            CO2e_production_based=CO2e_production_based,
+            CO2e_production_based_per_t=CO2e_production_based_per_t,
+            CO2e_total=parent.CO2e_total,
+            CO2e_total_2021_estimated=parent.CO2e_total_2021_estimated,
+            amount=amount,
+            change_CO2e_pct=parent.change_CO2e_pct,
+            change_CO2e_t=parent.change_CO2e_t,
+            cost_climate_saved=parent.cost_climate_saved,
+            demand_change=demand_change,
+        )
+
+    @classmethod
+    def calc_manure(
+        cls, inputs: Inputs, what: str, a18: A18, amount: float
+    ) -> "CO2eChangeFermentationOrManure":
+        demand_change = inputs.ass("Ass_A_P_manure_ratio_CO2e_to_amount_change")
+
+        CO2e_production_based_per_t = getattr(a18, what).CO2e_production_based_per_t * (
+            1 + demand_change
+        )
+        CO2e_production_based = amount * CO2e_production_based_per_t
+
+        parent = super().calc(inputs, what, a18, CO2e_production_based)
+
+        return cls(
+            CO2e_combustion_based=parent.CO2e_combustion_based,
+            CO2e_production_based=CO2e_production_based,
+            CO2e_production_based_per_t=CO2e_production_based_per_t,
+            CO2e_total=parent.CO2e_total,
+            CO2e_total_2021_estimated=parent.CO2e_total_2021_estimated,
+            amount=amount,
+            change_CO2e_pct=parent.change_CO2e_pct,
+            change_CO2e_t=parent.change_CO2e_t,
+            cost_climate_saved=parent.cost_climate_saved,
+            demand_change=demand_change,
+        )
+
 
 @dataclass
-class Vars7:
-    # Used by p_soil_fertilizer, p_soil_manure, p_soil_sludge, p_soil_ecrop, p_soil_grazing, p_soil_residue, p_soil_orgfarm, p_soil_orgloss, p_soil_leaching, p_soil_deposition
+class CO2eChangeSoil(CO2eChange):
     CO2e_combustion_based: float = None  # type: ignore
     CO2e_production_based: float = None  # type: ignore
     CO2e_production_based_per_t: float = None  # type: ignore
@@ -135,10 +221,123 @@ class Vars7:
     cost_climate_saved: float = None  # type: ignore
     demand_change: float = None  # type: ignore
 
+    @classmethod
+    def calc_soil_grazing(
+        cls,
+        inputs: Inputs,
+        what: str,
+        a18: A18,
+        area_ha: float,
+        p_fermen_dairycow: Any,
+        p_fermen_nondairy: Any,
+        p_fermen_oanimal: Any,
+    ) -> "CO2eChangeSoil":
+
+        CO2e_production_based_per_t = div(
+            getattr(a18, what).CO2e_production_based_per_t
+            * (
+                p_fermen_dairycow.amount
+                + p_fermen_nondairy.amount
+                + p_fermen_oanimal.amount
+            ),
+            a18.p_fermen_dairycow.amount
+            + a18.p_fermen_nondairy.amount
+            + a18.p_fermen_oanimal.amount,
+        )
+
+        demand_change = (
+            div(
+                CO2e_production_based_per_t,
+                getattr(a18, what).CO2e_production_based_per_t,
+            )
+            - 1
+        )
+
+        CO2e_production_based = area_ha * CO2e_production_based_per_t
+
+        area_ha_change = -(getattr(a18, what).area_ha - area_ha)
+
+        parent = super().calc(inputs, what, a18, CO2e_production_based)
+
+        return cls(
+            CO2e_combustion_based=parent.CO2e_combustion_based,
+            CO2e_production_based=CO2e_production_based,
+            CO2e_production_based_per_t=CO2e_production_based_per_t,
+            CO2e_total=parent.CO2e_total,
+            CO2e_total_2021_estimated=parent.CO2e_total_2021_estimated,
+            area_ha=area_ha,
+            area_ha_change=area_ha_change,
+            change_CO2e_pct=parent.change_CO2e_pct,
+            change_CO2e_t=parent.change_CO2e_t,
+            cost_climate_saved=parent.cost_climate_saved,
+            demand_change=demand_change,
+        )
+
+    @classmethod
+    def calc_soil_residue(
+        cls, inputs: Inputs, what: str, a18: A18, area_ha: float
+    ) -> "CO2eChangeSoil":
+        CO2e_production_based_per_t = getattr(a18, what).CO2e_production_based_per_t
+        demand_change = (
+            div(
+                CO2e_production_based_per_t,
+                getattr(a18, what).CO2e_production_based_per_t,
+            )
+            - 1
+        )
+
+        CO2e_production_based = area_ha * CO2e_production_based_per_t
+
+        area_ha_change = -(getattr(a18, what).area_ha - area_ha)
+
+        parent = super().calc(inputs, what, a18, CO2e_production_based)
+
+        return cls(
+            CO2e_combustion_based=parent.CO2e_combustion_based,
+            CO2e_production_based=CO2e_production_based,
+            CO2e_production_based_per_t=CO2e_production_based_per_t,
+            CO2e_total=parent.CO2e_total,
+            CO2e_total_2021_estimated=parent.CO2e_total_2021_estimated,
+            area_ha=area_ha,
+            area_ha_change=area_ha_change,
+            change_CO2e_pct=parent.change_CO2e_pct,
+            change_CO2e_t=parent.change_CO2e_t,
+            cost_climate_saved=parent.cost_climate_saved,
+            demand_change=demand_change,
+        )
+
+    @classmethod
+    def calc_soil(
+        cls, inputs: Inputs, what: str, a18: A18, area_ha: float
+    ) -> "CO2eChangeSoil":
+        demand_change = inputs.ass("Ass_A_P_soil_N_application_2030_change")
+        CO2e_production_based_per_t = getattr(a18, what).CO2e_production_based_per_t * (
+            1 + demand_change
+        )
+
+        CO2e_production_based = area_ha * CO2e_production_based_per_t
+
+        area_ha_change = -(getattr(a18, what).area_ha - area_ha)
+
+        parent = super().calc(inputs, what, a18, CO2e_production_based)
+
+        return cls(
+            CO2e_combustion_based=parent.CO2e_combustion_based,
+            CO2e_production_based=CO2e_production_based,
+            CO2e_production_based_per_t=CO2e_production_based_per_t,
+            CO2e_total=parent.CO2e_total,
+            CO2e_total_2021_estimated=parent.CO2e_total_2021_estimated,
+            area_ha=area_ha,
+            area_ha_change=area_ha_change,
+            change_CO2e_pct=parent.change_CO2e_pct,
+            change_CO2e_t=parent.change_CO2e_t,
+            cost_climate_saved=parent.cost_climate_saved,
+            demand_change=demand_change,
+        )
+
 
 @dataclass
-class Vars8:
-    # Used by p_other_liming
+class CO2eChangeOtherLiming(CO2eChange):
     CO2e_combustion_based: float = None  # type: ignore
     CO2e_production_based: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
@@ -148,10 +347,32 @@ class Vars8:
     cost_climate_saved: float = None  # type: ignore
     prod_volume: float = None  # type: ignore
 
+    @classmethod
+    def calc_other_liming(
+        cls,
+        inputs: Inputs,
+        what: str,
+        a18: A18,
+        prod_volume: float,
+        CO2e_production_based: float,
+    ) -> "CO2eChangeOtherLiming":
+
+        parent = super().calc(inputs, what, a18, CO2e_production_based)
+
+        return cls(
+            CO2e_combustion_based=parent.CO2e_combustion_based,
+            CO2e_production_based=CO2e_production_based,
+            CO2e_total=parent.CO2e_total,
+            CO2e_total_2021_estimated=parent.CO2e_total_2021_estimated,
+            change_CO2e_pct=parent.change_CO2e_pct,
+            change_CO2e_t=parent.change_CO2e_t,
+            cost_climate_saved=parent.cost_climate_saved,
+            prod_volume=prod_volume,
+        )
+
 
 @dataclass
-class Vars9:
-    # Used by p_other_liming_calcit, p_other_liming_dolomite, p_other_urea, p_other_kas, p_other_ecrop
+class CO2eChangeOther(CO2eChange):
     CO2e_combustion_based: float = None  # type: ignore
     CO2e_production_based: float = None  # type: ignore
     CO2e_production_based_per_t: float = None  # type: ignore
@@ -162,6 +383,37 @@ class Vars9:
     cost_climate_saved: float = None  # type: ignore
     demand_change: float = None  # type: ignore
     prod_volume: float = None  # type: ignore
+
+    @classmethod
+    def calc_other(
+        cls,
+        inputs: Inputs,
+        what: str,
+        a18: A18,
+        ass_demand_change: str,
+        fact_production_based_per_t: str,
+    ) -> "CO2eChangeOther":
+
+        demand_change = inputs.ass(ass_demand_change)
+        prod_volume = getattr(a18, what).prod_volume * (1 + demand_change)
+
+        CO2e_production_based_per_t = inputs.fact(fact_production_based_per_t)
+        CO2e_production_based = prod_volume * CO2e_production_based_per_t
+
+        parent = super().calc(inputs, what, a18, CO2e_production_based)
+
+        return cls(
+            CO2e_combustion_based=parent.CO2e_combustion_based,
+            CO2e_production_based=CO2e_production_based,
+            CO2e_production_based_per_t=CO2e_production_based_per_t,
+            CO2e_total=parent.CO2e_total,
+            CO2e_total_2021_estimated=parent.CO2e_total_2021_estimated,
+            change_CO2e_pct=parent.change_CO2e_pct,
+            change_CO2e_t=parent.change_CO2e_t,
+            cost_climate_saved=parent.cost_climate_saved,
+            demand_change=demand_change,
+            prod_volume=prod_volume,
+        )
 
 
 @dataclass
