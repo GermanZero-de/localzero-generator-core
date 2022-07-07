@@ -4,7 +4,13 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/agriculture.html
 """
 
 # pyright: strict
-from .dataclasses import CO2eChange, CO2eChangeFermentationOrManure, CO2eChangeSoil
+from .dataclasses import (
+    CO2eChange,
+    CO2eChangeFermentationOrManure,
+    CO2eChangeSoil,
+    CO2eChangeOther,
+    CO2eChangeOtherLiming,
+)
 from ..inputs import Inputs
 from ..utils import div, MILLION
 from .. import agri2018, lulucf2030
@@ -23,12 +29,6 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
     g_consult = a30.g_consult
     g_organic = a30.g_organic
     p = a30.p
-    p_other_liming = a30.p_other_liming
-    p_other_liming_calcit = a30.p_other_liming_calcit
-    p_other_liming_dolomite = a30.p_other_liming_dolomite
-    p_other_urea = a30.p_other_urea
-    p_other_kas = a30.p_other_kas
-    p_other_ecrop = a30.p_other_ecrop
     p_operation = a30.p_operation
     p_operation_heat = a30.p_operation_heat
     p_operation_elec_elcon = a30.p_operation_elec_elcon
@@ -167,186 +167,48 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
         inputs, "p_soil_deposition", a18, l30.g_crop.area_ha + l30.g_grass.area_ha
     )
 
-    p_other_liming.CO2e_combustion_based = 0
-    p_other_liming.CO2e_total_2021_estimated = a18.p_other_liming.CO2e_total * fact(
-        "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+    p_other_liming_calcit = CO2eChangeOther.calc_other(
+        inputs,
+        "p_other_liming_calcit",
+        a18,
+        "Ass_A_P_other_liming_calcit_amount_change",
+        "Fact_A_P_other_liming_calcit_ratio_CO2e_pb_to_amount_2018",
     )
-    p_other_liming_calcit.demand_change = ass(
-        "Ass_A_P_other_liming_calcit_amount_change"
+    p_other_liming_dolomite = CO2eChangeOther.calc_other(
+        inputs,
+        "p_other_liming_dolomite",
+        a18,
+        "Ass_A_P_other_liming_dolomit_amount_change",
+        "Fact_A_P_other_liming_dolomite_ratio_CO2e_pb_to_amount_2018",
     )
-    p_other_liming_calcit.CO2e_production_based_per_t = fact(
-        "Fact_A_P_other_liming_calcit_ratio_CO2e_pb_to_amount_2018"
+    p_other_urea = CO2eChangeOther.calc_other(
+        inputs,
+        "p_other_urea",
+        a18,
+        "Ass_A_P_other_urea_amount_change",
+        "Fact_A_P_other_urea_CO2e_pb_to_amount_2018",
     )
-    p_other_liming_calcit.CO2e_combustion_based = 0
-    p_other_liming_calcit.CO2e_total_2021_estimated = (
-        a18.p_other_liming_calcit.CO2e_total
-        * fact("Fact_M_CO2e_wo_lulucf_2021_vs_2018")
+    p_other_kas = CO2eChangeOther.calc_other(
+        inputs,
+        "p_other_kas",
+        a18,
+        "Ass_A_P_other_kas_amount_change",
+        "Fact_A_P_other_kas_ratio_CO2e_pb_to_amount_2018",
     )
-    p_other_liming_dolomite.demand_change = ass(
-        "Ass_A_P_other_liming_dolomit_amount_change"
+    p_other_ecrop = CO2eChangeOther.calc_other(
+        inputs,
+        "p_other_ecrop",
+        a18,
+        "Ass_A_P_other_ecrop_amount_change",
+        "Fact_A_P_other_ecrop_ratio_CO2e_pb_to_amount_2018",
     )
-    p_other_liming_dolomite.CO2e_production_based_per_t = fact(
-        "Fact_A_P_other_liming_dolomite_ratio_CO2e_pb_to_amount_2018"
-    )
-    p_other_liming_dolomite.CO2e_combustion_based = 0
-    p_other_liming_dolomite.CO2e_total_2021_estimated = (
-        a18.p_other_liming_dolomite.CO2e_total
-        * fact("Fact_M_CO2e_wo_lulucf_2021_vs_2018")
-    )
-    p_other_urea.demand_change = ass("Ass_A_P_other_urea_amount_change")
-    p_other_urea.CO2e_production_based_per_t = fact(
-        "Fact_A_P_other_urea_CO2e_pb_to_amount_2018"
-    )
-    p_other_urea.CO2e_combustion_based = 0
-    p_other_urea.CO2e_total_2021_estimated = a18.p_other_urea.CO2e_total * fact(
-        "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
-    )
-    p_other_kas.demand_change = ass("Ass_A_P_other_kas_amount_change")
-    p_other_kas.CO2e_production_based_per_t = fact(
-        "Fact_A_P_other_kas_ratio_CO2e_pb_to_amount_2018"
-    )
-    p_other_kas.CO2e_combustion_based = 0
-    p_other_kas.CO2e_total_2021_estimated = a18.p_other_kas.CO2e_total * fact(
-        "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
-    )
-    p_other_ecrop.demand_change = ass("Ass_A_P_other_ecrop_amount_change")
-    p_other_ecrop.CO2e_production_based_per_t = fact(
-        "Fact_A_P_other_ecrop_ratio_CO2e_pb_to_amount_2018"
-    )
-    p_other_ecrop.CO2e_combustion_based = 0
-    p_other_ecrop.CO2e_total_2021_estimated = a18.p_other_ecrop.CO2e_total * fact(
-        "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
-    )
-    p_other_liming_calcit.prod_volume = a18.p_other_liming_calcit.prod_volume * (
-        1 + p_other_liming_calcit.demand_change
-    )
-    p_other_liming_dolomite.prod_volume = a18.p_other_liming_dolomite.prod_volume * (
-        1 + p_other_liming_dolomite.demand_change
-    )
-    p_other_urea.prod_volume = a18.p_other_urea.prod_volume * (
-        1 + p_other_urea.demand_change
-    )
-    p_other_kas.prod_volume = a18.p_other_kas.prod_volume * (
-        1 + p_other_kas.demand_change
-    )
-    p_other_ecrop.prod_volume = a18.p_other_ecrop.prod_volume * (
-        1 + p_other_ecrop.demand_change
-    )
-    p_other_liming_calcit.CO2e_production_based = (
-        p_other_liming_calcit.prod_volume
-        * p_other_liming_calcit.CO2e_production_based_per_t
-    )
-    p_other_liming.prod_volume = (
-        p_other_liming_calcit.prod_volume + p_other_liming_dolomite.prod_volume
-    )
-    p_other_liming_dolomite.CO2e_production_based = (
-        p_other_liming_dolomite.prod_volume
-        * p_other_liming_dolomite.CO2e_production_based_per_t
-    )
-    p_other_urea.CO2e_production_based = (
-        p_other_urea.prod_volume * p_other_urea.CO2e_production_based_per_t
-    )
-    p_other_kas.CO2e_production_based = (
-        p_other_kas.prod_volume * p_other_kas.CO2e_production_based_per_t
-    )
-    p_other_ecrop.CO2e_production_based = (
-        p_other_ecrop.prod_volume * p_other_ecrop.CO2e_production_based_per_t
-    )
-    p_other_liming_calcit.CO2e_total = (
+    p_other_liming = CO2eChangeOtherLiming.calc_other_liming(
+        inputs,
+        "p_other_liming",
+        a18,
+        p_other_liming_calcit.prod_volume + p_other_liming_dolomite.prod_volume,
         p_other_liming_calcit.CO2e_production_based
-        + p_other_liming_calcit.CO2e_combustion_based
-    )
-    p_other_liming.CO2e_production_based = (
-        p_other_liming_calcit.CO2e_production_based
-        + p_other_liming_dolomite.CO2e_production_based
-    )
-    p_other_liming_dolomite.CO2e_total = (
-        p_other_liming_dolomite.CO2e_production_based
-        + p_other_liming_dolomite.CO2e_combustion_based
-    )
-    p_other_urea.CO2e_total = (
-        p_other_urea.CO2e_production_based + p_other_urea.CO2e_combustion_based
-    )
-    p_other_kas.CO2e_total = (
-        p_other_kas.CO2e_production_based + p_other_kas.CO2e_combustion_based
-    )
-    p_other_ecrop.CO2e_total = (
-        p_other_ecrop.CO2e_production_based + p_other_ecrop.CO2e_combustion_based
-    )
-    p_other_liming_calcit.change_CO2e_t = (
-        p_other_liming_calcit.CO2e_total - a18.p_other_liming_calcit.CO2e_total
-    )
-    p_other_liming_calcit.cost_climate_saved = (
-        (
-            p_other_liming_calcit.CO2e_total_2021_estimated
-            - p_other_liming_calcit.CO2e_total
-        )
-        * entries.m_duration_neutral
-        * fact("Fact_M_cost_per_CO2e_2020")
-    )
-    p_other_liming.CO2e_total = (
-        p_other_liming.CO2e_production_based + p_other_liming.CO2e_combustion_based
-    )
-    p_other_liming_dolomite.change_CO2e_t = (
-        p_other_liming_dolomite.CO2e_total - a18.p_other_liming_dolomite.CO2e_total
-    )
-    p_other_liming_dolomite.cost_climate_saved = (
-        (
-            p_other_liming_dolomite.CO2e_total_2021_estimated
-            - p_other_liming_dolomite.CO2e_total
-        )
-        * entries.m_duration_neutral
-        * fact("Fact_M_cost_per_CO2e_2020")
-    )
-    p_other_urea.change_CO2e_t = p_other_urea.CO2e_total - a18.p_other_urea.CO2e_total
-    p_other_urea.cost_climate_saved = (
-        (p_other_urea.CO2e_total_2021_estimated - p_other_urea.CO2e_total)
-        * entries.m_duration_neutral
-        * fact("Fact_M_cost_per_CO2e_2020")
-    )
-    p_other_kas.change_CO2e_t = p_other_kas.CO2e_total - a18.p_other_kas.CO2e_total
-    p_other_kas.cost_climate_saved = (
-        (p_other_kas.CO2e_total_2021_estimated - p_other_kas.CO2e_total)
-        * entries.m_duration_neutral
-        * fact("Fact_M_cost_per_CO2e_2020")
-    )
-    p_other_ecrop.change_CO2e_t = (
-        p_other_ecrop.CO2e_total - a18.p_other_ecrop.CO2e_total
-    )
-    p_other_ecrop.cost_climate_saved = (
-        (p_other_ecrop.CO2e_total_2021_estimated - p_other_ecrop.CO2e_total)
-        * entries.m_duration_neutral
-        * fact("Fact_M_cost_per_CO2e_2020")
-    )
-    p_other_liming_calcit.change_CO2e_pct = div(
-        p_other_liming_calcit.change_CO2e_t, a18.p_other_liming_calcit.CO2e_total
-    )
-    p_other_liming.change_CO2e_t = (
-        p_other_liming.CO2e_total - a18.p_other_liming.CO2e_total
-    )
-    p_other_liming.cost_climate_saved = (
-        (p_other_liming.CO2e_total_2021_estimated - p_other_liming.CO2e_total)
-        * entries.m_duration_neutral
-        * fact("Fact_M_cost_per_CO2e_2020")
-    )
-    p_other_liming_dolomite.change_CO2e_pct = div(
-        p_other_liming_dolomite.change_CO2e_t, a18.p_other_liming_dolomite.CO2e_total
-    )
-
-    p_other_urea.change_CO2e_pct = div(
-        p_other_urea.change_CO2e_t, a18.p_other_urea.CO2e_total
-    )
-
-    p_other_kas.change_CO2e_pct = div(
-        p_other_kas.change_CO2e_t, a18.p_other_kas.CO2e_total
-    )
-
-    p_other_ecrop.change_CO2e_pct = div(
-        p_other_ecrop.change_CO2e_t, a18.p_other_ecrop.CO2e_total
-    )
-
-    p_other_liming.change_CO2e_pct = div(
-        p_other_liming.change_CO2e_t, a18.p_other_liming.CO2e_total
+        + p_other_liming_dolomite.CO2e_production_based,
     )
 
     p_fermen = CO2eChange.calc(

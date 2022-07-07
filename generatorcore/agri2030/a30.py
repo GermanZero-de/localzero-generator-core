@@ -12,8 +12,8 @@ from .dataclasses import (
     CO2eChange,
     CO2eChangeFermentationOrManure,
     CO2eChangeSoil,
-    Vars8,
-    Vars9,
+    CO2eChangeOtherLiming,
+    CO2eChangeOther,
     Vars10,
     Vars11,
     Vars12,
@@ -81,12 +81,12 @@ class A30:
     p_soil_leaching: CO2eChangeSoil = field(default_factory=CO2eChangeSoil)
     p_soil_deposition: CO2eChangeSoil = field(default_factory=CO2eChangeSoil)
     p_other: CO2eChange = field(default_factory=CO2eChange)
-    p_other_liming: Vars8 = field(default_factory=Vars8)
-    p_other_liming_calcit: Vars9 = field(default_factory=Vars9)
-    p_other_liming_dolomite: Vars9 = field(default_factory=Vars9)
-    p_other_urea: Vars9 = field(default_factory=Vars9)
-    p_other_kas: Vars9 = field(default_factory=Vars9)
-    p_other_ecrop: Vars9 = field(default_factory=Vars9)
+    p_other_liming: CO2eChangeOtherLiming = field(default_factory=CO2eChangeOtherLiming)
+    p_other_liming_calcit: CO2eChangeOther = field(default_factory=CO2eChangeOther)
+    p_other_liming_dolomite: CO2eChangeOther = field(default_factory=CO2eChangeOther)
+    p_other_urea: CO2eChangeOther = field(default_factory=CO2eChangeOther)
+    p_other_kas: CO2eChangeOther = field(default_factory=CO2eChangeOther)
+    p_other_ecrop: CO2eChangeOther = field(default_factory=CO2eChangeOther)
     p_operation: Vars10 = field(default_factory=Vars10)
     p_operation_heat: Vars11 = field(default_factory=Vars11)
     p_operation_elec_elcon: Vars12 = field(default_factory=Vars12)
