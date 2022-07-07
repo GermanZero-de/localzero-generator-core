@@ -17,7 +17,6 @@ from typing import Any
 from commands.cmd_run_parser import add_cmd_make_entries_parser, add_cmd_run_parser
 from commands.cmd_explorer_parser import add_cmd_explorer_parser
 from commands.cmd_ready_to_rock_parser import add_cmd_ready_to_rock_parser
-from commands.cmd_compare_to_excel_parser import add_cmd_compare_to_excel_parser
 from commands.cmd_data_parser import add_cmd_data_parser
 from commands.cmd_test_end_to_end_parser import add_cmd_test_end_to_end_parser
 
@@ -34,7 +33,6 @@ class Devtool:
         add_cmd_make_entries_parser(subcmd_parsers)
         add_cmd_explorer_parser(subcmd_parsers)
         add_cmd_ready_to_rock_parser(subcmd_parsers)
-        add_cmd_compare_to_excel_parser(subcmd_parsers)
         add_cmd_data_parser(subcmd_parsers)
         add_cmd_test_end_to_end_parser(subcmd_parsers)
 
