@@ -1,6 +1,9 @@
 # pyright: strict
 from typing import Any
 from devtool import Devtool
+import os
+
+filePath = "test.txt"
 
 
 def check_cmd(argv1: Any, subcmd: str, run: bool):
@@ -15,11 +18,19 @@ def test_cmd_run_with_defaults():
 
 
 def test_cmd_run_with_parameters():
+    if os.path.exists(filePath):
+        assert False, "file " + filePath + " already exists"
+
     check_cmd(
-        ["run", "-ags", "10000000", "-year", "2040", "-o", "OutputFile.txt"],
+        ["run", "-ags", "10000000", "-year", "2040", "-o", filePath],
         "run",
         True,
     )
+
+    if os.path.exists(filePath):
+        os.remove(filePath)
+    else:
+        assert False, "file " + filePath + " was not created"
 
 
 def test_cmd_make_entries_with_defaults():
@@ -27,11 +38,19 @@ def test_cmd_make_entries_with_defaults():
 
 
 def test_cmd_make_entries_with_parameters():
+    if os.path.exists(filePath):
+        assert False, "file " + filePath + " already exists"
+
     check_cmd(
-        ["make", "-ags", "10000000", "-year", "2040", "-o", "OutputFile.txt"],
+        ["make", "-ags", "10000000", "-year", "2040", "-o", filePath],
         "make",
         True,
     )
+
+    if os.path.exists(filePath):
+        os.remove(filePath)
+    else:
+        assert False, "file " + filePath + " was not created"
 
 
 def test_cmd_explorer():
