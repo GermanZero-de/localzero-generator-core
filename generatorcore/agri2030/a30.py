@@ -1,5 +1,7 @@
 # pyright: strict
+
 from dataclasses import dataclass, field
+
 
 from .dataclasses import (
     Vars0,
@@ -7,9 +9,9 @@ from .dataclasses import (
     Vars2,
     Vars3,
     Vars4,
-    Vars5,
-    Vars6,
-    Vars7,
+    CO2eChange,
+    CO2eChangeFermentationOrManure,
+    CO2eChangeSoil,
     Vars8,
     Vars9,
     Vars10,
@@ -32,31 +34,53 @@ class A30:
     g: Vars2 = field(default_factory=Vars2)
     g_consult: Vars3 = field(default_factory=Vars3)
     g_organic: Vars4 = field(default_factory=Vars4)
-    p_fermen: Vars5 = field(default_factory=Vars5)
-    p_fermen_dairycow: Vars6 = field(default_factory=Vars6)
-    p_fermen_nondairy: Vars6 = field(default_factory=Vars6)
-    p_fermen_swine: Vars6 = field(default_factory=Vars6)
-    p_fermen_poultry: Vars6 = field(default_factory=Vars6)
-    p_fermen_oanimal: Vars6 = field(default_factory=Vars6)
-    p_manure: Vars5 = field(default_factory=Vars5)
-    p_manure_dairycow: Vars6 = field(default_factory=Vars6)
-    p_manure_nondairy: Vars6 = field(default_factory=Vars6)
-    p_manure_swine: Vars6 = field(default_factory=Vars6)
-    p_manure_poultry: Vars6 = field(default_factory=Vars6)
-    p_manure_oanimal: Vars6 = field(default_factory=Vars6)
-    p_manure_deposition: Vars6 = field(default_factory=Vars6)
-    p_soil: Vars5 = field(default_factory=Vars5)
-    p_soil_fertilizer: Vars7 = field(default_factory=Vars7)
-    p_soil_manure: Vars7 = field(default_factory=Vars7)
-    p_soil_sludge: Vars7 = field(default_factory=Vars7)
-    p_soil_ecrop: Vars7 = field(default_factory=Vars7)
-    p_soil_grazing: Vars7 = field(default_factory=Vars7)
-    p_soil_residue: Vars7 = field(default_factory=Vars7)
-    p_soil_orgfarm: Vars7 = field(default_factory=Vars7)
-    p_soil_orgloss: Vars7 = field(default_factory=Vars7)
-    p_soil_leaching: Vars7 = field(default_factory=Vars7)
-    p_soil_deposition: Vars7 = field(default_factory=Vars7)
-    p_other: Vars5 = field(default_factory=Vars5)
+    p_fermen: CO2eChange = field(default_factory=CO2eChange)
+    p_fermen_dairycow: CO2eChangeFermentationOrManure = field(
+        default_factory=CO2eChangeFermentationOrManure
+    )
+    p_fermen_nondairy: CO2eChangeFermentationOrManure = field(
+        default_factory=CO2eChangeFermentationOrManure
+    )
+    p_fermen_swine: CO2eChangeFermentationOrManure = field(
+        default_factory=CO2eChangeFermentationOrManure
+    )
+    p_fermen_poultry: CO2eChangeFermentationOrManure = field(
+        default_factory=CO2eChangeFermentationOrManure
+    )
+    p_fermen_oanimal: CO2eChangeFermentationOrManure = field(
+        default_factory=CO2eChangeFermentationOrManure
+    )
+    p_manure: CO2eChange = field(default_factory=CO2eChange)
+    p_manure_dairycow: CO2eChangeFermentationOrManure = field(
+        default_factory=CO2eChangeFermentationOrManure
+    )
+    p_manure_nondairy: CO2eChangeFermentationOrManure = field(
+        default_factory=CO2eChangeFermentationOrManure
+    )
+    p_manure_swine: CO2eChangeFermentationOrManure = field(
+        default_factory=CO2eChangeFermentationOrManure
+    )
+    p_manure_poultry: CO2eChangeFermentationOrManure = field(
+        default_factory=CO2eChangeFermentationOrManure
+    )
+    p_manure_oanimal: CO2eChangeFermentationOrManure = field(
+        default_factory=CO2eChangeFermentationOrManure
+    )
+    p_manure_deposition: CO2eChangeFermentationOrManure = field(
+        default_factory=CO2eChangeFermentationOrManure
+    )
+    p_soil: CO2eChange = field(default_factory=CO2eChange)
+    p_soil_fertilizer: CO2eChangeSoil = field(default_factory=CO2eChangeSoil)
+    p_soil_manure: CO2eChangeSoil = field(default_factory=CO2eChangeSoil)
+    p_soil_sludge: CO2eChangeSoil = field(default_factory=CO2eChangeSoil)
+    p_soil_ecrop: CO2eChangeSoil = field(default_factory=CO2eChangeSoil)
+    p_soil_grazing: CO2eChangeSoil = field(default_factory=CO2eChangeSoil)
+    p_soil_residue: CO2eChangeSoil = field(default_factory=CO2eChangeSoil)
+    p_soil_orgfarm: CO2eChangeSoil = field(default_factory=CO2eChangeSoil)
+    p_soil_orgloss: CO2eChangeSoil = field(default_factory=CO2eChangeSoil)
+    p_soil_leaching: CO2eChangeSoil = field(default_factory=CO2eChangeSoil)
+    p_soil_deposition: CO2eChangeSoil = field(default_factory=CO2eChangeSoil)
+    p_other: CO2eChange = field(default_factory=CO2eChange)
     p_other_liming: Vars8 = field(default_factory=Vars8)
     p_other_liming_calcit: Vars9 = field(default_factory=Vars9)
     p_other_liming_dolomite: Vars9 = field(default_factory=Vars9)
