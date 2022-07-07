@@ -23,31 +23,6 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
     g_consult = a30.g_consult
     g_organic = a30.g_organic
     p = a30.p
-    p_fermen = a30.p_fermen
-    p_fermen_dairycow = a30.p_fermen_dairycow
-    p_fermen_nondairy = a30.p_fermen_nondairy
-    p_fermen_swine = a30.p_fermen_swine
-    p_fermen_poultry = a30.p_fermen_poultry
-    p_fermen_oanimal = a30.p_fermen_oanimal
-    p_manure = a30.p_manure
-    p_manure_dairycow = a30.p_manure_dairycow
-    p_manure_nondairy = a30.p_manure_nondairy
-    p_manure_swine = a30.p_manure_swine
-    p_manure_poultry = a30.p_manure_poultry
-    p_manure_oanimal = a30.p_manure_oanimal
-    p_manure_deposition = a30.p_manure_deposition
-    p_soil = a30.p_soil
-    p_soil_fertilizer = a30.p_soil_fertilizer
-    p_soil_manure = a30.p_soil_manure
-    p_soil_sludge = a30.p_soil_sludge
-    p_soil_ecrop = a30.p_soil_ecrop
-    p_soil_grazing = a30.p_soil_grazing
-    p_soil_residue = a30.p_soil_residue
-    p_soil_orgfarm = a30.p_soil_orgfarm
-    p_soil_orgloss = a30.p_soil_orgloss
-    p_soil_leaching = a30.p_soil_leaching
-    p_soil_deposition = a30.p_soil_deposition
-    p_other = a30.p_other
     p_other_liming = a30.p_other_liming
     p_other_liming_calcit = a30.p_other_liming_calcit
     p_other_liming_dolomite = a30.p_other_liming_dolomite
@@ -120,11 +95,6 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
     p_fermen_oanimal = CO2eChangeFermentationOrManure.calc_fermen(
         inputs, "p_fermen_oanimal", "Ass_A_P_fermen_oanimal_change", a18
     )
-    a30.p_fermen_dairycow = p_fermen_dairycow
-    a30.p_fermen_nondairy = p_fermen_nondairy
-    a30.p_fermen_swine = p_fermen_swine
-    a30.p_fermen_poultry = p_fermen_poultry
-    a30.p_fermen_oanimal = p_fermen_oanimal
 
     p_manure_dairycow = CO2eChangeFermentationOrManure.calc_manure(
         inputs, "p_manure_dairycow", a18, p_fermen_dairycow.amount
@@ -150,12 +120,6 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
         + p_fermen_swine.amount
         + p_fermen_oanimal.amount,
     )
-    a30.p_manure_dairycow = p_manure_dairycow
-    a30.p_manure_nondairy = p_manure_nondairy
-    a30.p_manure_swine = p_manure_swine
-    a30.p_manure_poultry = p_manure_poultry
-    a30.p_manure_oanimal = p_manure_oanimal
-    a30.p_manure_deposition = p_manure_deposition
 
     p_soil_fertilizer = CO2eChangeSoil.calc_soil(
         inputs, "p_soil_fertilizer", a18, l30.g_crop.area_ha
@@ -202,16 +166,6 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
     p_soil_deposition = CO2eChangeSoil.calc_soil(
         inputs, "p_soil_deposition", a18, l30.g_crop.area_ha + l30.g_grass.area_ha
     )
-    a30.p_soil_fertilizer = p_soil_fertilizer
-    a30.p_soil_manure = p_soil_manure
-    a30.p_soil_sludge = p_soil_sludge
-    a30.p_soil_ecrop = p_soil_ecrop
-    a30.p_soil_grazing = p_soil_grazing
-    a30.p_soil_residue = p_soil_residue
-    a30.p_soil_orgfarm = p_soil_orgfarm
-    a30.p_soil_orgloss = p_soil_orgloss
-    a30.p_soil_leaching = p_soil_leaching
-    a30.p_soil_deposition = p_soil_deposition
 
     p_other_liming.CO2e_combustion_based = 0
     p_other_liming.CO2e_total_2021_estimated = a18.p_other_liming.CO2e_total * fact(
@@ -440,10 +394,6 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
         + p_other_kas.CO2e_production_based
         + p_other_ecrop.CO2e_production_based,
     )
-    a30.p_fermen = p_fermen
-    a30.p_manure = p_manure
-    a30.p_soil = p_soil
-    a30.p_other = p_other
 
     # Next
 
@@ -958,4 +908,56 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
     g.cost_wage = g_consult.cost_wage + g_organic.cost_wage
     a.cost_wage = g.cost_wage + p.cost_wage + s.cost_wage
 
-    return a30
+    return A30(
+        p_fermen_dairycow=p_fermen_dairycow,
+        p_fermen_nondairy=p_fermen_nondairy,
+        p_fermen_swine=p_fermen_swine,
+        p_fermen_poultry=p_fermen_poultry,
+        p_fermen_oanimal=p_fermen_oanimal,
+        p_fermen=p_fermen,
+        p_manure_dairycow=p_manure_dairycow,
+        p_manure_nondairy=p_manure_nondairy,
+        p_manure_swine=p_manure_swine,
+        p_manure_poultry=p_manure_poultry,
+        p_manure_oanimal=p_manure_oanimal,
+        p_manure_deposition=p_manure_deposition,
+        p_manure=p_manure,
+        p_soil_fertilizer=p_soil_fertilizer,
+        p_soil_manure=p_soil_manure,
+        p_soil_sludge=p_soil_sludge,
+        p_soil_ecrop=p_soil_ecrop,
+        p_soil_residue=p_soil_residue,
+        p_soil_grazing=p_soil_grazing,
+        p_soil_orgfarm=p_soil_orgfarm,
+        p_soil_orgloss=p_soil_orgloss,
+        p_soil_leaching=p_soil_leaching,
+        p_soil_deposition=p_soil_deposition,
+        p_soil=p_soil,
+        p_other_liming_calcit=p_other_liming_calcit,
+        p_other_liming_dolomite=p_other_liming_dolomite,
+        p_other_liming=p_other_liming,
+        p_other_urea=p_other_urea,
+        p_other_ecrop=p_other_ecrop,
+        p_other_kas=p_other_kas,
+        p_other=p_other,
+        p_operation_elec_heatpump=p_operation_elec_heatpump,
+        p_operation=p_operation,
+        p_operation_elec_elcon=p_operation_elec_elcon,
+        p_operation_vehicles=p_operation_vehicles,
+        p_operation_heat=p_operation_heat,
+        p=p,
+        s_petrol=s_petrol,
+        s_diesel=s_diesel,
+        s_fueloil=s_fueloil,
+        s_lpg=s_lpg,
+        s_gas=s_gas,
+        s_biomass=s_biomass,
+        s_elec=s_elec,
+        s_heatpump=s_heatpump,
+        s_emethan=s_emethan,
+        s=s,
+        a=a,
+        g=g,
+        g_consult=g_consult,
+        g_organic=g_organic,
+    )
