@@ -32,8 +32,7 @@ class Vars0:
 
 
 @dataclass
-class Vars1:
-    # Used by p
+class CO2eChangeP:
     CO2e_production_based: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     CO2e_total_2021_estimated: float = None  # type: ignore
@@ -46,6 +45,54 @@ class Vars1:
     energy: float = None  # type: ignore
     invest: float = None  # type: ignore
     invest_pa: float = None  # type: ignore
+
+    @classmethod
+    def calc(
+        cls,
+        inputs: Inputs,
+        what: str,
+        a18: A18,
+        p_operation: Any,
+        CO2e_production_based: float,
+        CO2e_total: float,
+    ) -> "CO2eChangeP":
+
+        a18_CO2e_total = getattr(a18, what).CO2e_total
+
+        CO2e_total_2021_estimated = a18_CO2e_total * inputs.fact(
+            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+        )
+
+        change_CO2e_t = CO2e_total - a18_CO2e_total
+        cost_climate_saved = (
+            (CO2e_total_2021_estimated - CO2e_total)
+            * inputs.entries.m_duration_neutral
+            * inputs.fact("Fact_M_cost_per_CO2e_2020")
+        )
+        change_CO2e_pct = div(change_CO2e_t, a18_CO2e_total)
+        demand_emplo = p_operation.demand_emplo
+
+        invest = p_operation.invest
+        invest_pa = invest / inputs.entries.m_duration_target
+
+        demand_emplo_new = p_operation.demand_emplo_new
+        energy = p_operation.energy
+        cost_wage = p_operation.cost_wage
+
+        return cls(
+            CO2e_production_based=CO2e_production_based,
+            CO2e_total=CO2e_total,
+            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+            change_CO2e_pct=change_CO2e_pct,
+            change_CO2e_t=change_CO2e_t,
+            cost_climate_saved=cost_climate_saved,
+            cost_wage=cost_wage,
+            demand_emplo=demand_emplo,
+            demand_emplo_new=demand_emplo_new,
+            energy=energy,
+            invest=invest,
+            invest_pa=invest_pa,
+        )
 
 
 @dataclass

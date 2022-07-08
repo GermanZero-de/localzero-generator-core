@@ -5,7 +5,7 @@ from dataclasses import dataclass, field
 
 from .dataclasses import (
     Vars0,
-    Vars1,
+    CO2eChangeP,
     Vars2,
     Vars3,
     Vars4,
@@ -30,7 +30,7 @@ from .dataclasses import (
 @dataclass
 class A30:
     a: Vars0 = field(default_factory=Vars0)
-    p: Vars1 = field(default_factory=Vars1)
+    p: CO2eChangeP = field(default_factory=CO2eChangeP)
     g: Vars2 = field(default_factory=Vars2)
     g_consult: Vars3 = field(default_factory=Vars3)
     g_organic: Vars4 = field(default_factory=Vars4)

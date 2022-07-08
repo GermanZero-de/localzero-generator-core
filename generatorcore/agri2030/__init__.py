@@ -14,6 +14,7 @@ from .dataclasses import (
     CO2eChangeFuelOilGas,
     CO2eChangeFuelHeatpump,
     CO2eChangeFuelEmethan,
+    CO2eChangeP,
 )
 from ..inputs import Inputs
 from ..utils import div
@@ -32,7 +33,6 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
     g = a30.g
     g_consult = a30.g_consult
     g_organic = a30.g_organic
-    p = a30.p
     p_operation = a30.p_operation
     p_operation_heat = a30.p_operation_heat
     p_operation_elec_elcon = a30.p_operation_elec_elcon
@@ -256,10 +256,6 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
         + p_other_ecrop.CO2e_production_based,
     )
 
-    p.CO2e_total_2021_estimated = a18.p.CO2e_total * fact(
-        "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
-    )
-
     g.invest_pa_outside = 0
     g.invest_outside = 0
     a.invest_pa_outside = g.invest_pa_outside
@@ -429,6 +425,21 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
     )
     p_operation.cost_wage = p_operation_heat.cost_wage
 
+    p = CO2eChangeP.calc(
+        inputs,
+        "p",
+        a18,
+        p_operation,
+        p_fermen.CO2e_production_based
+        + p_manure.CO2e_production_based
+        + p_soil.CO2e_production_based
+        + p_other.CO2e_production_based,
+        p_fermen.CO2e_total
+        + p_manure.CO2e_total
+        + p_soil.CO2e_total
+        + p_other.CO2e_total,
+    )
+
     s_petrol = CO2eChangeFuel.calc_fuel(
         inputs, "s_petrol", a18, p_operation_vehicles.demand_epetrol
     )
@@ -463,34 +474,10 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
 
     g.invest_pa = g_consult.invest_pa + g_organic.invest_pa
 
-    p.CO2e_production_based = (
-        p_fermen.CO2e_production_based
-        + p_manure.CO2e_production_based
-        + p_soil.CO2e_production_based
-        + p_other.CO2e_production_based
-    )
-
     g.demand_emplo = g_consult.demand_emplo + g_organic.demand_emplo
 
     a.CO2e_production_based = p.CO2e_production_based
-    p.CO2e_total = (
-        p_fermen.CO2e_total
-        + p_manure.CO2e_total
-        + p_soil.CO2e_total
-        + p_other.CO2e_total
-    )
     g.demand_emplo_new = g_consult.demand_emplo_new + g_organic.demand_emplo_new
-    p.change_CO2e_t = p.CO2e_total - a18.p.CO2e_total
-    p.cost_climate_saved = (
-        (p.CO2e_total_2021_estimated - p.CO2e_total)
-        * entries.m_duration_neutral
-        * fact("Fact_M_cost_per_CO2e_2020")
-    )
-    p.change_CO2e_pct = div(p.change_CO2e_t, a18.p.CO2e_total)
-    p.demand_emplo = p_operation.demand_emplo
-
-    p.invest = p_operation.invest
-    p.invest_pa = p.invest / entries.m_duration_target
 
     s.invest = s_heatpump.invest
     s.invest_pa = s.invest / entries.m_duration_target
@@ -500,9 +487,6 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
 
     a.invest_pa_com = g.invest_pa_com
     a.invest_pa = a.invest / entries.m_duration_target
-
-    p.demand_emplo_new = p_operation.demand_emplo_new
-    p.energy = p_operation.energy
 
     a.change_energy_MWh = p_operation.change_energy_MWh
     a.change_energy_pct = p_operation.change_energy_pct
@@ -557,8 +541,6 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
 
     g.demand_emplo_com = g_consult.demand_emplo_com
     a.demand_emplo_com = g.demand_emplo_com
-
-    p.cost_wage = p_operation.cost_wage
 
     s.cost_wage = s_heatpump.cost_wage
 
