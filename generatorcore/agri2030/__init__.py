@@ -13,6 +13,7 @@ from .dataclasses import (
     CO2eChangeFuel,
     CO2eChangeFuelOilGas,
     CO2eChangeFuelHeatpump,
+    CO2eChangeFuelEmethan,
 )
 from ..inputs import Inputs
 from ..utils import div
@@ -38,7 +39,6 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
     p_operation_vehicles = a30.p_operation_vehicles
     p_operation_elec_heatpump = a30.p_operation_elec_heatpump
     s = a30.s
-    s_emethan = a30.s_emethan
 
     """ S T A R T """
     g_consult.area_ha_available = entries.a_farm_amount
@@ -447,23 +447,13 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
     s_heatpump = CO2eChangeFuelHeatpump.calc_fuel(
         inputs, "s_heatpump", a18, p_operation.demand_heatpump
     )
+    s_emethan = CO2eChangeFuelEmethan.calc_fuel(
+        inputs, a18, p_operation_heat.demand_emethan
+    )
 
     s.CO2e_production_based = 0
-    s_emethan.CO2e_combustion_based = 0
-    s_emethan.CO2e_total = s_emethan.CO2e_combustion_based
-    s_emethan.change_CO2e_t = s_emethan.CO2e_total
-    s_emethan.change_CO2e_pct = div(s_emethan.change_CO2e_t, 0)
-    s_emethan.CO2e_total_2021_estimated = 0 * fact("Fact_M_CO2e_wo_lulucf_2021_vs_2018")
-    s_emethan.cost_climate_saved = (
-        (s_emethan.CO2e_total_2021_estimated - s_emethan.CO2e_total)
-        * entries.m_duration_neutral
-        * fact("Fact_M_cost_per_CO2e_2020")
-    )
     s.CO2e_total_2021_estimated = a18.s.CO2e_total * fact(
         "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
-    )
-    s_emethan.CO2e_combustion_based_per_MWh = fact(
-        "Fact_T_S_methan_EmFa_tank_wheel_2018"
     )
 
     g.invest_com = g_consult.invest_com
@@ -514,10 +504,7 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
     p.demand_emplo_new = p_operation.demand_emplo_new
     p.energy = p_operation.energy
 
-    s_emethan.energy = p_operation_heat.demand_emethan
-    s_emethan.change_energy_MWh = s_emethan.energy
     a.change_energy_MWh = p_operation.change_energy_MWh
-    s_emethan.demand_emethan = s_emethan.energy
     a.change_energy_pct = p_operation.change_energy_pct
 
     s.energy = (

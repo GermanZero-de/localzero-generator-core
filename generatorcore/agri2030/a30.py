@@ -23,7 +23,7 @@ from .dataclasses import (
     CO2eChangeFuel,
     CO2eChangeFuelOilGas,
     CO2eChangeFuelHeatpump,
-    Vars19,
+    CO2eChangeFuelEmethan,
 )
 
 
@@ -101,4 +101,4 @@ class A30:
     s_biomass: CO2eChangeFuel = field(default_factory=CO2eChangeFuel)
     s_elec: CO2eChangeFuel = field(default_factory=CO2eChangeFuel)
     s_heatpump: CO2eChangeFuelHeatpump = field(default_factory=CO2eChangeFuelHeatpump)
-    s_emethan: Vars19 = field(default_factory=Vars19)
+    s_emethan: CO2eChangeFuelEmethan = field(default_factory=CO2eChangeFuelEmethan)

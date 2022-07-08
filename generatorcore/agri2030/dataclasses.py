@@ -117,11 +117,17 @@ class CO2eChange:
         CO2e_combustion_based: float,
         CO2e_production_based: float,
     ) -> "CO2eChange":
-        CO2e_total = CO2e_production_based + CO2e_combustion_based
-        change_CO2e_t = CO2e_total - getattr(a18, what).CO2e_total
-        change_CO2e_pct = div(change_CO2e_t, getattr(a18, what).CO2e_total)
 
-        CO2e_total_2021_estimated = getattr(a18, what).CO2e_total * inputs.fact(
+        if not what:
+            a18_CO2e_total = 0
+        else:
+            a18_CO2e_total = getattr(a18, what).CO2e_total
+
+        CO2e_total = CO2e_production_based + CO2e_combustion_based
+        change_CO2e_t = CO2e_total - a18_CO2e_total
+        change_CO2e_pct = div(change_CO2e_t, a18_CO2e_total)
+
+        CO2e_total_2021_estimated = a18_CO2e_total * inputs.fact(
             "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
         )
         cost_climate_saved = (
@@ -610,7 +616,6 @@ class CO2eChangeFuelOilGas(CO2eChange):
 
 @dataclass
 class CO2eChangeFuelHeatpump(CO2eChange):
-    # Used by s_heatpump
     CO2e_combustion_based: float = None  # type: ignore
     CO2e_combustion_based_per_MWh: float = None  # type: ignore
     CO2e_production_based: float = None  # type: ignore
@@ -706,8 +711,7 @@ class CO2eChangeFuelHeatpump(CO2eChange):
 
 
 @dataclass
-class Vars19:
-    # Used by s_emethan
+class CO2eChangeFuelEmethan(CO2eChange):
     CO2e_combustion_based: float = None  # type: ignore
     CO2e_combustion_based_per_MWh: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
@@ -718,3 +722,31 @@ class Vars19:
     cost_climate_saved: float = None  # type: ignore
     demand_emethan: float = None  # type: ignore
     energy: float = None  # type: ignore
+
+    @classmethod
+    def calc_fuel(
+        cls, inputs: Inputs, a18: A18, energy: float
+    ) -> "CO2eChangeFuelEmethan":
+        CO2e_combustion_based = 0
+        CO2e_combustion_based_per_MWh = inputs.fact(
+            "Fact_T_S_methan_EmFa_tank_wheel_2018"
+        )
+
+        change_energy_MWh = energy
+        demand_emethan = energy
+
+        parent = super().calc(inputs, "", a18, CO2e_combustion_based, 0)
+
+        return cls(
+            CO2e_combustion_based=parent.CO2e_combustion_based,
+            CO2e_production_based=parent.CO2e_production_based,
+            CO2e_combustion_based_per_MWh=CO2e_combustion_based_per_MWh,
+            CO2e_total=parent.CO2e_total,
+            CO2e_total_2021_estimated=parent.CO2e_total_2021_estimated,
+            change_CO2e_pct=parent.change_CO2e_pct,
+            change_CO2e_t=parent.change_CO2e_t,
+            change_energy_MWh=change_energy_MWh,
+            cost_climate_saved=parent.cost_climate_saved,
+            demand_emethan=demand_emethan,
+            energy=energy,
+        )
