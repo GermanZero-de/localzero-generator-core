@@ -11,9 +11,11 @@ from .dataclasses import (
     CO2eChangeOther,
     CO2eChangeOtherLiming,
     CO2eChangeFuel,
+    CO2eChangeFuelOilGas,
+    CO2eChangeFuelHeatpump,
 )
 from ..inputs import Inputs
-from ..utils import div, MILLION
+from ..utils import div
 from .. import agri2018, lulucf2030
 from .a30 import A30
 
@@ -36,9 +38,6 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
     p_operation_vehicles = a30.p_operation_vehicles
     p_operation_elec_heatpump = a30.p_operation_elec_heatpump
     s = a30.s
-    s_fueloil = a30.s_fueloil
-    s_gas = a30.s_gas
-    s_heatpump = a30.s_heatpump
     s_emethan = a30.s_emethan
 
     """ S T A R T """
@@ -430,8 +429,25 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
     )
     p_operation.cost_wage = p_operation_heat.cost_wage
 
-    s_fueloil.energy = 0
-    s_gas.energy = 0
+    s_petrol = CO2eChangeFuel.calc_fuel(
+        inputs, "s_petrol", a18, p_operation_vehicles.demand_epetrol
+    )
+    s_diesel = CO2eChangeFuel.calc_fuel(
+        inputs, "s_diesel", a18, p_operation_vehicles.demand_ediesel
+    )
+    s_lpg = CO2eChangeFuel.calc_fuel(inputs, "s_lpg", a18, 0)
+    s_biomass = CO2eChangeFuel.calc_fuel(
+        inputs, "s_biomass", a18, p_operation.demand_biomass
+    )
+    s_elec = CO2eChangeFuel.calc_fuel(
+        inputs, "s_elec", a18, p_operation.demand_electricity
+    )
+    s_fueloil = CO2eChangeFuelOilGas.calc_fuel(inputs, "s_fueloil", a18, 0)
+    s_gas = CO2eChangeFuelOilGas.calc_fuel(inputs, "s_gas", a18, 0)
+    s_heatpump = CO2eChangeFuelHeatpump.calc_fuel(
+        inputs, "s_heatpump", a18, p_operation.demand_heatpump
+    )
+
     s.CO2e_production_based = 0
     s_emethan.CO2e_combustion_based = 0
     s_emethan.CO2e_total = s_emethan.CO2e_combustion_based
@@ -446,77 +462,16 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
     s.CO2e_total_2021_estimated = a18.s.CO2e_total * fact(
         "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
     )
-    s_fueloil.area_m2 = 0
-    s_fueloil.CO2e_production_based = 0
-    s_fueloil.CO2e_combustion_based_per_MWh = (
-        a18.s_fueloil.CO2e_combustion_based_per_MWh
-    )
-    s_fueloil.CO2e_total_2021_estimated = a18.s_fueloil.CO2e_total * fact(
-        "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
-    )
-    s_gas.area_m2 = 0
-    s_gas.CO2e_production_based = 0
-    s_gas.CO2e_combustion_based_per_MWh = a18.s_gas.CO2e_combustion_based_per_MWh
-    s_gas.CO2e_total_2021_estimated = a18.s_gas.CO2e_total * fact(
-        "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
-    )
     s_emethan.CO2e_combustion_based_per_MWh = fact(
         "Fact_T_S_methan_EmFa_tank_wheel_2018"
     )
-    s_heatpump.cost_fuel_per_MWh = fact("Fact_R_S_gas_energy_cost_factor_2018")
-    s_heatpump.CO2e_production_based = 0
-    s_heatpump.CO2e_combustion_based_per_MWh = (
-        a18.s_heatpump.CO2e_combustion_based_per_MWh
-    )
-    s_heatpump.CO2e_total_2021_estimated = a18.s_heatpump.CO2e_total * fact(
-        "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
-    )
-    s_heatpump.invest_per_x = fact("Fact_R_S_heatpump_cost")
-    s_heatpump.pct_of_wage = fact("Fact_B_P_plumbing_ratio_wage_to_main_revenue_2017")
-    s_heatpump.ratio_wage_to_emplo = fact("Fact_B_P_heating_wage_per_person_per_year")
-    s_heatpump.emplo_existing = (
-        fact("Fact_B_P_install_heating_emplo_2017")
-        * entries.m_population_com_2018
-        / entries.m_population_nat
-        * ass("Ass_B_D_install_heating_emplo_pct_of_A_heatpump")
-    )
-    s_heatpump.full_load_hour = fact("Fact_B_S_full_usage_hours_buildings")
 
-    s_fueloil.change_energy_MWh = s_fueloil.energy - a18.s_fueloil.energy
-    s_fueloil.change_energy_pct = div(s_fueloil.change_energy_MWh, a18.s_fueloil.energy)
-    s_gas.change_energy_MWh = s_gas.energy - a18.s_gas.energy
-    s_gas.change_energy_pct = div(s_gas.change_energy_MWh, a18.s_gas.energy)
-    s_fueloil.CO2e_combustion_based = (
-        s_fueloil.energy * s_fueloil.CO2e_combustion_based_per_MWh
-    )
-    s_gas.CO2e_combustion_based = s_gas.energy * s_gas.CO2e_combustion_based_per_MWh
-    s_heatpump.power_installed = div(a18.s_heatpump.energy, s_heatpump.full_load_hour)
-
-    s_fueloil.CO2e_total = (
-        s_fueloil.CO2e_production_based + s_fueloil.CO2e_combustion_based
-    )
-    s_gas.CO2e_total = s_gas.CO2e_production_based + s_gas.CO2e_combustion_based
     g.invest_com = g_consult.invest_com
     g.invest = g_consult.invest + g_organic.invest
 
-    s_fueloil.change_CO2e_t = s_fueloil.CO2e_total - a18.s_fueloil.CO2e_total
-    s_fueloil.cost_climate_saved = (
-        (s_fueloil.CO2e_total_2021_estimated - s_fueloil.CO2e_total)
-        * entries.m_duration_neutral
-        * fact("Fact_M_cost_per_CO2e_2020")
-    )
-    s_gas.change_CO2e_t = s_gas.CO2e_total - a18.s_gas.CO2e_total
-    s_gas.cost_climate_saved = (
-        (s_gas.CO2e_total_2021_estimated - s_gas.CO2e_total)
-        * entries.m_duration_neutral
-        * fact("Fact_M_cost_per_CO2e_2020")
-    )
     g.invest_pa_com = g_consult.invest_pa_com
 
     g.invest_pa = g_consult.invest_pa + g_organic.invest_pa
-
-    s_fueloil.change_CO2e_pct = div(s_fueloil.change_CO2e_t, a18.s_fueloil.CO2e_total)
-    s_gas.change_CO2e_pct = div(s_gas.change_CO2e_t, a18.s_gas.CO2e_total)
 
     p.CO2e_production_based = (
         p_fermen.CO2e_production_based
@@ -534,7 +489,6 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
         + p_soil.CO2e_total
         + p_other.CO2e_total
     )
-    s_heatpump.energy = p_operation.demand_heatpump
     g.demand_emplo_new = g_consult.demand_emplo_new + g_organic.demand_emplo_new
     p.change_CO2e_t = p.CO2e_total - a18.p.CO2e_total
     p.cost_climate_saved = (
@@ -542,25 +496,8 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
         * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
-    s_heatpump.cost_fuel = 0
-    s_heatpump.cost_fuel = s_heatpump.energy * s_heatpump.cost_fuel_per_MWh / MILLION
-    s_heatpump.CO2e_combustion_based = (
-        s_heatpump.energy * s_heatpump.CO2e_combustion_based_per_MWh
-    )
-    s_heatpump.change_energy_MWh = s_heatpump.energy - a18.s_heatpump.energy
-    s_heatpump.power_to_be_installed = max(
-        div(s_heatpump.energy, s_heatpump.full_load_hour) - s_heatpump.power_installed,
-        0,
-    )
     p.change_CO2e_pct = div(p.change_CO2e_t, a18.p.CO2e_total)
     p.demand_emplo = p_operation.demand_emplo
-
-    s_heatpump.CO2e_total = (
-        s_heatpump.CO2e_production_based + s_heatpump.CO2e_combustion_based
-    )
-    s_heatpump.invest = (
-        s_heatpump.invest_per_x * s_heatpump.power_to_be_installed * 1000
-    )
 
     p.invest = p_operation.invest
     p.invest_pa = p.invest / entries.m_duration_target
@@ -577,36 +514,11 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
     p.demand_emplo_new = p_operation.demand_emplo_new
     p.energy = p_operation.energy
 
-    s_heatpump.change_CO2e_t = s_heatpump.CO2e_total - a18.s_heatpump.CO2e_total
-    s_heatpump.cost_climate_saved = (
-        (s_heatpump.CO2e_total_2021_estimated - s_heatpump.CO2e_total)
-        * entries.m_duration_neutral
-        * fact("Fact_M_cost_per_CO2e_2020")
-    )
-    s_heatpump.invest_pa = s_heatpump.invest / entries.m_duration_target
     s_emethan.energy = p_operation_heat.demand_emethan
     s_emethan.change_energy_MWh = s_emethan.energy
     a.change_energy_MWh = p_operation.change_energy_MWh
-    s_heatpump.change_CO2e_pct = div(
-        s_heatpump.change_CO2e_t, 1.0
-    )  # a18.s_heatpump.CO2e_total)
-    s_heatpump.cost_wage = s_heatpump.invest_pa * s_heatpump.pct_of_wage
     s_emethan.demand_emethan = s_emethan.energy
     a.change_energy_pct = p_operation.change_energy_pct
-
-    s_petrol = CO2eChangeFuel.calc_fuel(
-        inputs, "s_petrol", a18, p_operation_vehicles.demand_epetrol
-    )
-    s_diesel = CO2eChangeFuel.calc_fuel(
-        inputs, "s_diesel", a18, p_operation_vehicles.demand_ediesel
-    )
-    s_lpg = CO2eChangeFuel.calc_fuel(inputs, "s_lpg", a18, 0)
-    s_biomass = CO2eChangeFuel.calc_fuel(
-        inputs, "s_biomass", a18, p_operation.demand_biomass
-    )
-    s_elec = CO2eChangeFuel.calc_fuel(
-        inputs, "s_elec", a18, p_operation.demand_electricity
-    )
 
     s.energy = (
         s_petrol.energy
@@ -619,7 +531,6 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
         + s_elec.energy
         + s_heatpump.energy
     )
-    s_heatpump.demand_emplo = div(s_heatpump.cost_wage, s_heatpump.ratio_wage_to_emplo)
     s.change_energy_MWh = s.energy - a18.s.energy
     s.CO2e_combustion_based = (
         s_petrol.CO2e_combustion_based
@@ -633,9 +544,6 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
         + s_heatpump.CO2e_combustion_based
     )
     s.demand_emplo = s_heatpump.demand_emplo
-    s_heatpump.demand_emplo_new = max(
-        0, s_heatpump.demand_emplo - s_heatpump.emplo_existing
-    )
     s.change_energy_pct = div(s.change_energy_MWh, a18.s.energy)
 
     a.CO2e_combustion_based = s.CO2e_combustion_based
@@ -665,7 +573,6 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
 
     p.cost_wage = p_operation.cost_wage
 
-    s_heatpump.cost_wage = s_heatpump.invest_pa * s_heatpump.pct_of_wage
     s.cost_wage = s_heatpump.cost_wage
 
     g.cost_wage = g_consult.cost_wage + g_organic.cost_wage

@@ -21,8 +21,8 @@ from .dataclasses import (
     Vars14,
     Vars15,
     CO2eChangeFuel,
-    Vars17,
-    Vars18,
+    CO2eChangeFuelOilGas,
+    CO2eChangeFuelHeatpump,
     Vars19,
 )
 
@@ -95,10 +95,10 @@ class A30:
     s: Vars15 = field(default_factory=Vars15)
     s_petrol: CO2eChangeFuel = field(default_factory=CO2eChangeFuel)
     s_diesel: CO2eChangeFuel = field(default_factory=CO2eChangeFuel)
-    s_fueloil: Vars17 = field(default_factory=Vars17)
+    s_fueloil: CO2eChangeFuelOilGas = field(default_factory=CO2eChangeFuelOilGas)
     s_lpg: CO2eChangeFuel = field(default_factory=CO2eChangeFuel)
-    s_gas: Vars17 = field(default_factory=Vars17)
+    s_gas: CO2eChangeFuelOilGas = field(default_factory=CO2eChangeFuelOilGas)
     s_biomass: CO2eChangeFuel = field(default_factory=CO2eChangeFuel)
     s_elec: CO2eChangeFuel = field(default_factory=CO2eChangeFuel)
-    s_heatpump: Vars18 = field(default_factory=Vars18)
+    s_heatpump: CO2eChangeFuelHeatpump = field(default_factory=CO2eChangeFuelHeatpump)
     s_emethan: Vars19 = field(default_factory=Vars19)
