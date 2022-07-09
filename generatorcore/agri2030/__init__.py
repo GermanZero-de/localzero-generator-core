@@ -22,6 +22,7 @@ from .dataclasses import (
     CO2eChangePOperationHeat,
     CO2eChangePOperationElecElcon,
     CO2eChangePOperationElecHeatpump,
+    CO2eChangePOperationVehicles,
 )
 from ..inputs import Inputs
 from ..utils import div
@@ -31,13 +32,11 @@ from .a30 import A30
 
 def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
     fact = inputs.fact
-    ass = inputs.ass
     entries = inputs.entries
 
     a30 = A30()
 
     a = a30.a
-    p_operation_vehicles = a30.p_operation_vehicles
     s = a30.s
 
     p_fermen_dairycow = CO2eChangeFermentationOrManure.calc_fermen(
@@ -221,30 +220,6 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
         + p_other_ecrop.CO2e_production_based,
     )
 
-    p_operation_vehicles.demand_electricity = 0
-    p_operation_vehicles.demand_biomass = 0
-    p_operation_vehicles.demand_heatpump = 0
-    p_operation_vehicles.demand_emethan = 0
-
-    p_operation_vehicles.demand_change = ass("Ass_B_D_fec_vehicles_change")
-    p_operation_vehicles.energy = a18.p_operation_vehicles.energy * (
-        1 + p_operation_vehicles.demand_change
-    )
-    p_operation_vehicles.demand_epetrol = div(
-        p_operation_vehicles.energy * a18.s_petrol.energy,
-        a18.s_petrol.energy + a18.s_diesel.energy,
-    )
-    p_operation_vehicles.demand_ediesel = div(
-        p_operation_vehicles.energy * a18.s_diesel.energy,
-        a18.s_petrol.energy + a18.s_diesel.energy,
-    )
-    p_operation_vehicles.change_energy_MWh = (
-        p_operation_vehicles.energy - a18.p_operation_vehicles.energy
-    )
-    p_operation_vehicles.change_energy_pct = div(
-        p_operation_vehicles.change_energy_MWh, a18.p_operation_vehicles.energy
-    )
-
     p_operation_heat = CO2eChangePOperationHeat.calc(inputs, "p_operation_heat", a18)
 
     p_operation_elec_elcon = CO2eChangePOperationElecElcon.calc(
@@ -253,6 +228,10 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
 
     p_operation_elec_heatpump = CO2eChangePOperationElecHeatpump.calc(
         inputs, "p_operation_elec_heatpump", a18, p_operation_heat
+    )
+
+    p_operation_vehicles = CO2eChangePOperationVehicles.calc(
+        inputs, "p_operation_vehicles", a18
     )
 
     p_operation = CO2eChangePOperation.calc(
