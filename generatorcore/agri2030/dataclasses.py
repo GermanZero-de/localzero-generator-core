@@ -814,11 +814,27 @@ class CO2eChangePOperationElecElcon:
 
 
 @dataclass
-class Vars13:
-    # Used by p_operation_elec_heatpump
+class CO2eChangePOperationElecHeatpump:
     change_energy_MWh: float = None  # type: ignore
     demand_electricity: float = None  # type: ignore
     energy: float = None  # type: ignore
+
+    @classmethod
+    def calc(
+        cls, inputs: Inputs, what: str, a18: A18, p_operation_heat: Any
+    ) -> "CO2eChangePOperationElecHeatpump":
+
+        energy = p_operation_heat.demand_heatpump / inputs.fact(
+            "Fact_R_S_heatpump_mean_annual_performance_factor_all"
+        )
+        demand_electricity = energy
+        change_energy_MWh = energy - getattr(a18, what).energy
+
+        return cls(
+            change_energy_MWh=change_energy_MWh,
+            demand_electricity=demand_electricity,
+            energy=energy,
+        )
 
 
 @dataclass

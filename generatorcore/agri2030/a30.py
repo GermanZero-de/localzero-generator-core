@@ -17,7 +17,7 @@ from .dataclasses import (
     CO2eChangePOperation,
     CO2eChangePOperationHeat,
     CO2eChangePOperationElecElcon,
-    Vars13,
+    CO2eChangePOperationElecHeatpump,
     Vars14,
     Vars15,
     CO2eChangeFuel,
@@ -94,7 +94,9 @@ class A30:
     p_operation_elec_elcon: CO2eChangePOperationElecElcon = field(
         default_factory=CO2eChangePOperationElecElcon
     )
-    p_operation_elec_heatpump: Vars13 = field(default_factory=Vars13)
+    p_operation_elec_heatpump: CO2eChangePOperationElecHeatpump = field(
+        default_factory=CO2eChangePOperationElecHeatpump
+    )
     p_operation_vehicles: Vars14 = field(default_factory=Vars14)
     s: Vars15 = field(default_factory=Vars15)
     s_petrol: CO2eChangeFuel = field(default_factory=CO2eChangeFuel)

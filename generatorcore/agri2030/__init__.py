@@ -21,6 +21,7 @@ from .dataclasses import (
     CO2eChangePOperation,
     CO2eChangePOperationHeat,
     CO2eChangePOperationElecElcon,
+    CO2eChangePOperationElecHeatpump,
 )
 from ..inputs import Inputs
 from ..utils import div
@@ -37,7 +38,6 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
 
     a = a30.a
     p_operation_vehicles = a30.p_operation_vehicles
-    p_operation_elec_heatpump = a30.p_operation_elec_heatpump
     s = a30.s
 
     p_fermen_dairycow = CO2eChangeFermentationOrManure.calc_fermen(
@@ -247,16 +247,12 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
 
     p_operation_heat = CO2eChangePOperationHeat.calc(inputs, "p_operation_heat", a18)
 
-    p_operation_elec_heatpump.energy = p_operation_heat.demand_heatpump / fact(
-        "Fact_R_S_heatpump_mean_annual_performance_factor_all"
-    )
-    p_operation_elec_heatpump.demand_electricity = p_operation_elec_heatpump.energy
-    p_operation_elec_heatpump.change_energy_MWh = (
-        p_operation_elec_heatpump.energy - a18.p_operation_elec_heatpump.energy
-    )
-
     p_operation_elec_elcon = CO2eChangePOperationElecElcon.calc(
         inputs, "p_operation_elec_elcon", a18
+    )
+
+    p_operation_elec_heatpump = CO2eChangePOperationElecHeatpump.calc(
+        inputs, "p_operation_elec_heatpump", a18, p_operation_heat
     )
 
     p_operation = CO2eChangePOperation.calc(
