@@ -640,8 +640,7 @@ class CO2eChangePOperation:
 
 
 @dataclass
-class Vars11:
-    # Used by p_operation_heat
+class CO2eChangePOperationHeat:
     area_m2: float = None  # type: ignore
     area_m2_nonrehab: float = None  # type: ignore
     area_m2_rehab: float = None  # type: ignore
@@ -669,6 +668,103 @@ class Vars11:
     pct_rehab: float = None  # type: ignore
     rate_rehab_pa: float = None  # type: ignore
     ratio_wage_to_emplo: float = None  # type: ignore
+
+    @classmethod
+    def calc(
+        cls,
+        inputs: Inputs,
+        what: str,
+        a18: A18,
+    ) -> "CO2eChangePOperationHeat":
+        rate_rehab_pa = inputs.entries.r_rehab_rate_pa
+        pct_rehab = (
+            inputs.fact("Fact_B_P_ratio_renovated_to_not_renovated_2021")
+            + rate_rehab_pa * inputs.entries.m_duration_target
+        )
+        pct_nonrehab = 1 - pct_rehab
+
+        area_m2 = getattr(a18, what).area_m2
+        area_m2_rehab = pct_rehab * getattr(a18, what).area_m2
+        area_m2_nonrehab = pct_nonrehab * getattr(a18, what).area_m2
+
+        invest_per_x = inputs.fact("Fact_R_P_energetical_renovation_cost_business")
+        invest = (
+            area_m2_rehab
+            * (1 - inputs.fact("Fact_B_P_ratio_renovated_to_not_renovated_2021"))
+            * invest_per_x
+        )
+        invest_pa = invest / inputs.entries.m_duration_target
+
+        pct_of_wage = inputs.fact(
+            "Fact_B_P_renovations_ratio_wage_to_main_revenue_2017"
+        )
+        cost_wage = div(invest, inputs.entries.m_duration_target) * pct_of_wage
+
+        ratio_wage_to_emplo = inputs.fact(
+            "Fact_B_P_renovations_wage_per_person_per_year_2017"
+        )
+        emplo_existing = (
+            inputs.fact("Fact_B_P_renovation_emplo_2017")
+            * inputs.ass("Ass_B_D_renovation_emplo_pct_of_A")
+            * inputs.entries.m_population_com_2018
+            / inputs.entries.m_population_nat
+        )
+
+        demand_electricity = 0
+        demand_epetrol = 0
+        demand_ediesel = 0
+        demand_heat_rehab = area_m2_rehab * inputs.ass("Ass_B_D_ratio_fec_to_area_2050")
+        demand_heat_nonrehab = (
+            area_m2_nonrehab
+            * (
+                getattr(a18, what).factor_adapted_to_fec
+                - inputs.fact("Fact_B_P_ratio_renovated_to_not_renovated_2021")
+                * inputs.ass("Ass_B_D_ratio_fec_to_area_2050")
+            )
+            / (1 - inputs.fact("Fact_B_P_ratio_renovated_to_not_renovated_2021"))
+        )
+        demand_heatpump = demand_heat_rehab
+        demand_emplo = div(cost_wage, ratio_wage_to_emplo)
+        demand_emplo_new = max(0, demand_emplo - emplo_existing)
+
+        energy = demand_heat_nonrehab + demand_heat_rehab
+
+        demand_biomass = min(a18.s_biomass.energy, energy - demand_heatpump)
+        demand_emethan = energy - demand_biomass - demand_heatpump
+
+        fec_factor_averaged = div(energy, getattr(a18, what).area_m2)
+        change_energy_MWh = energy - getattr(a18, what).energy
+        change_energy_pct = div(change_energy_MWh, getattr(a18, what).energy)
+
+        return cls(
+            area_m2=area_m2,
+            area_m2_nonrehab=area_m2_nonrehab,
+            area_m2_rehab=area_m2_rehab,
+            change_energy_MWh=change_energy_MWh,
+            change_energy_pct=change_energy_pct,
+            cost_wage=cost_wage,
+            demand_biomass=demand_biomass,
+            demand_ediesel=demand_ediesel,
+            demand_electricity=demand_electricity,
+            demand_emethan=demand_emethan,
+            demand_emplo=demand_emplo,
+            demand_emplo_new=demand_emplo_new,
+            demand_epetrol=demand_epetrol,
+            demand_heat_nonrehab=demand_heat_nonrehab,
+            demand_heat_rehab=demand_heat_rehab,
+            demand_heatpump=demand_heatpump,
+            emplo_existing=emplo_existing,
+            energy=energy,
+            fec_factor_averaged=fec_factor_averaged,
+            invest=invest,
+            invest_pa=invest_pa,
+            invest_per_x=invest_per_x,
+            pct_nonrehab=pct_nonrehab,
+            pct_of_wage=pct_of_wage,
+            pct_rehab=pct_rehab,
+            rate_rehab_pa=rate_rehab_pa,
+            ratio_wage_to_emplo=ratio_wage_to_emplo,
+        )
 
 
 @dataclass

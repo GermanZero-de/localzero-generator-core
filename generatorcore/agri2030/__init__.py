@@ -19,6 +19,7 @@ from .dataclasses import (
     CO2eChangeGConsult,
     CO2eChangeGOrganic,
     CO2eChangePOperation,
+    CO2eChangePOperationHeat,
 )
 from ..inputs import Inputs
 from ..utils import div
@@ -34,7 +35,6 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
     a30 = A30()
 
     a = a30.a
-    p_operation_heat = a30.p_operation_heat
     p_operation_elec_elcon = a30.p_operation_elec_elcon
     p_operation_vehicles = a30.p_operation_vehicles
     p_operation_elec_heatpump = a30.p_operation_elec_heatpump
@@ -221,27 +221,6 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
         + p_other_ecrop.CO2e_production_based,
     )
 
-    p_operation_heat.demand_electricity = 0
-    p_operation_heat.demand_epetrol = 0
-    p_operation_heat.demand_ediesel = 0
-    p_operation_heat.area_m2 = a18.p_operation_heat.area_m2
-    p_operation_heat.rate_rehab_pa = entries.r_rehab_rate_pa
-    p_operation_heat.invest_per_x = fact(
-        "Fact_R_P_energetical_renovation_cost_business"
-    )
-    p_operation_heat.pct_of_wage = fact(
-        "Fact_B_P_renovations_ratio_wage_to_main_revenue_2017"
-    )
-    p_operation_heat.ratio_wage_to_emplo = fact(
-        "Fact_B_P_renovations_wage_per_person_per_year_2017"
-    )
-    p_operation_heat.emplo_existing = (
-        fact("Fact_B_P_renovation_emplo_2017")
-        * ass("Ass_B_D_renovation_emplo_pct_of_A")
-        * entries.m_population_com_2018
-        / entries.m_population_nat
-    )
-
     p_operation_elec_elcon.demand_biomass = 0
     p_operation_elec_elcon.demand_heatpump = 0
     p_operation_elec_elcon.demand_ediesel = 0
@@ -254,19 +233,11 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
     p_operation_vehicles.demand_emethan = 0
 
     p_operation_vehicles.demand_change = ass("Ass_B_D_fec_vehicles_change")
-    p_operation_heat.pct_rehab = (
-        fact("Fact_B_P_ratio_renovated_to_not_renovated_2021")
-        + p_operation_heat.rate_rehab_pa * entries.m_duration_target
-    )
     p_operation_elec_elcon.energy = a18.p_operation_elec_elcon.energy * (
         1 + p_operation_elec_elcon.demand_change
     )
     p_operation_vehicles.energy = a18.p_operation_vehicles.energy * (
         1 + p_operation_vehicles.demand_change
-    )
-    p_operation_heat.pct_nonrehab = 1 - p_operation_heat.pct_rehab
-    p_operation_heat.area_m2_rehab = (
-        p_operation_heat.pct_rehab * a18.p_operation_heat.area_m2
     )
     p_operation_elec_elcon.demand_electricity = p_operation_elec_elcon.energy
     p_operation_elec_elcon.change_energy_MWh = (
@@ -283,17 +254,6 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
     p_operation_vehicles.change_energy_MWh = (
         p_operation_vehicles.energy - a18.p_operation_vehicles.energy
     )
-    p_operation_heat.area_m2_nonrehab = (
-        p_operation_heat.pct_nonrehab * a18.p_operation_heat.area_m2
-    )
-    p_operation_heat.demand_heat_rehab = p_operation_heat.area_m2_rehab * ass(
-        "Ass_B_D_ratio_fec_to_area_2050"
-    )
-    p_operation_heat.invest = (
-        p_operation_heat.area_m2_rehab
-        * (1 - fact("Fact_B_P_ratio_renovated_to_not_renovated_2021"))
-        * p_operation_heat.invest_per_x
-    )
 
     p_operation_elec_elcon.change_energy_pct = div(
         p_operation_elec_elcon.change_energy_MWh, a18.p_operation_elec_elcon.energy
@@ -301,60 +261,15 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
     p_operation_vehicles.change_energy_pct = div(
         p_operation_vehicles.change_energy_MWh, a18.p_operation_vehicles.energy
     )
-    p_operation_heat.demand_heat_nonrehab = (
-        p_operation_heat.area_m2_nonrehab
-        * (
-            a18.p_operation_heat.factor_adapted_to_fec
-            - fact("Fact_B_P_ratio_renovated_to_not_renovated_2021")
-            * ass("Ass_B_D_ratio_fec_to_area_2050")
-        )
-        / (1 - fact("Fact_B_P_ratio_renovated_to_not_renovated_2021"))
-    )
-    p_operation_heat.demand_heatpump = p_operation_heat.demand_heat_rehab
-    p_operation_heat.invest_pa = p_operation_heat.invest / entries.m_duration_target
-    p_operation_heat.cost_wage = (
-        p_operation_heat.invest
-        / entries.m_duration_target
-        * p_operation_heat.pct_of_wage
-    )
 
-    p_operation_heat.energy = (
-        p_operation_heat.demand_heat_nonrehab + p_operation_heat.demand_heat_rehab
-    )
-    p_operation_heat.demand_emplo = div(
-        p_operation_heat.cost_wage, p_operation_heat.ratio_wage_to_emplo
-    )
-    p_operation_heat.fec_factor_averaged = div(
-        p_operation_heat.energy, a18.p_operation_heat.area_m2
-    )
-    p_operation_heat.change_energy_MWh = (
-        p_operation_heat.energy - a18.p_operation_heat.energy
-    )
-    p_operation_heat.demand_emplo_new = max(
-        0, p_operation_heat.demand_emplo - p_operation_heat.emplo_existing
-    )
-    p_operation_heat.change_energy_pct = div(
-        p_operation_heat.change_energy_MWh, a18.p_operation_heat.energy
-    )
-    p_operation_heat.demand_biomass = min(
-        a18.s_biomass.energy, p_operation_heat.energy - p_operation_heat.demand_heatpump
-    )
+    p_operation_heat = CO2eChangePOperationHeat.calc(inputs, "p_operation_heat", a18)
+
     p_operation_elec_heatpump.energy = p_operation_heat.demand_heatpump / fact(
         "Fact_R_S_heatpump_mean_annual_performance_factor_all"
     )
     p_operation_elec_heatpump.demand_electricity = p_operation_elec_heatpump.energy
     p_operation_elec_heatpump.change_energy_MWh = (
         p_operation_elec_heatpump.energy - a18.p_operation_elec_heatpump.energy
-    )
-    p_operation_heat.demand_emethan = (
-        p_operation_heat.energy
-        - p_operation_heat.demand_biomass
-        - p_operation_heat.demand_heatpump
-    )
-
-    p_operation_heat.cost_wage = (
-        div(p_operation_heat.invest, entries.m_duration_target)
-        * p_operation_heat.pct_of_wage
     )
 
     p_operation = CO2eChangePOperation.calc(
