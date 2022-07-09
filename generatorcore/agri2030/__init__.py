@@ -20,6 +20,7 @@ from .dataclasses import (
     CO2eChangeGOrganic,
     CO2eChangePOperation,
     CO2eChangePOperationHeat,
+    CO2eChangePOperationElecElcon,
 )
 from ..inputs import Inputs
 from ..utils import div
@@ -35,7 +36,6 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
     a30 = A30()
 
     a = a30.a
-    p_operation_elec_elcon = a30.p_operation_elec_elcon
     p_operation_vehicles = a30.p_operation_vehicles
     p_operation_elec_heatpump = a30.p_operation_elec_heatpump
     s = a30.s
@@ -221,27 +221,14 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
         + p_other_ecrop.CO2e_production_based,
     )
 
-    p_operation_elec_elcon.demand_biomass = 0
-    p_operation_elec_elcon.demand_heatpump = 0
-    p_operation_elec_elcon.demand_ediesel = 0
-    p_operation_elec_elcon.demand_emethan = 0
-    p_operation_elec_elcon.demand_change = ass("Ass_B_D_fec_elec_elcon_change")
-
     p_operation_vehicles.demand_electricity = 0
     p_operation_vehicles.demand_biomass = 0
     p_operation_vehicles.demand_heatpump = 0
     p_operation_vehicles.demand_emethan = 0
 
     p_operation_vehicles.demand_change = ass("Ass_B_D_fec_vehicles_change")
-    p_operation_elec_elcon.energy = a18.p_operation_elec_elcon.energy * (
-        1 + p_operation_elec_elcon.demand_change
-    )
     p_operation_vehicles.energy = a18.p_operation_vehicles.energy * (
         1 + p_operation_vehicles.demand_change
-    )
-    p_operation_elec_elcon.demand_electricity = p_operation_elec_elcon.energy
-    p_operation_elec_elcon.change_energy_MWh = (
-        p_operation_elec_elcon.energy - a18.p_operation_elec_elcon.energy
     )
     p_operation_vehicles.demand_epetrol = div(
         p_operation_vehicles.energy * a18.s_petrol.energy,
@@ -253,10 +240,6 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
     )
     p_operation_vehicles.change_energy_MWh = (
         p_operation_vehicles.energy - a18.p_operation_vehicles.energy
-    )
-
-    p_operation_elec_elcon.change_energy_pct = div(
-        p_operation_elec_elcon.change_energy_MWh, a18.p_operation_elec_elcon.energy
     )
     p_operation_vehicles.change_energy_pct = div(
         p_operation_vehicles.change_energy_MWh, a18.p_operation_vehicles.energy
@@ -270,6 +253,10 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
     p_operation_elec_heatpump.demand_electricity = p_operation_elec_heatpump.energy
     p_operation_elec_heatpump.change_energy_MWh = (
         p_operation_elec_heatpump.energy - a18.p_operation_elec_heatpump.energy
+    )
+
+    p_operation_elec_elcon = CO2eChangePOperationElecElcon.calc(
+        inputs, "p_operation_elec_elcon", a18
     )
 
     p_operation = CO2eChangePOperation.calc(

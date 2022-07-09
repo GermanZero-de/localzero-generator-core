@@ -768,8 +768,7 @@ class CO2eChangePOperationHeat:
 
 
 @dataclass
-class Vars12:
-    # Used by p_operation_elec_elcon
+class CO2eChangePOperationElecElcon:
     change_energy_MWh: float = None  # type: ignore
     change_energy_pct: float = None  # type: ignore
     demand_biomass: float = None  # type: ignore
@@ -779,6 +778,39 @@ class Vars12:
     demand_emethan: float = None  # type: ignore
     demand_heatpump: float = None  # type: ignore
     energy: float = None  # type: ignore
+
+    @classmethod
+    def calc(
+        cls,
+        inputs: Inputs,
+        what: str,
+        a18: A18,
+    ) -> "CO2eChangePOperationElecElcon":
+
+        demand_biomass = 0
+        demand_heatpump = 0
+        demand_ediesel = 0
+        demand_emethan = 0
+
+        demand_change = inputs.ass("Ass_B_D_fec_elec_elcon_change")
+        energy = getattr(a18, what).energy * (1 + demand_change)
+
+        demand_electricity = energy
+
+        change_energy_MWh = energy - getattr(a18, what).energy
+        change_energy_pct = div(change_energy_MWh, getattr(a18, what).energy)
+
+        return cls(
+            change_energy_MWh=change_energy_MWh,
+            change_energy_pct=change_energy_pct,
+            demand_biomass=demand_biomass,
+            demand_change=demand_change,
+            demand_ediesel=demand_ediesel,
+            demand_electricity=demand_electricity,
+            demand_emethan=demand_emethan,
+            demand_heatpump=demand_heatpump,
+            energy=energy,
+        )
 
 
 @dataclass
