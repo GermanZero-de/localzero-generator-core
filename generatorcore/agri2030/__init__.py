@@ -15,6 +15,7 @@ from .dataclasses import (
     CO2eChangeFuelHeatpump,
     CO2eChangeFuelEmethan,
     CO2eChangeP,
+    CO2eChangeG,
 )
 from ..inputs import Inputs
 from ..utils import div
@@ -30,7 +31,6 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
     a30 = A30()
 
     a = a30.a
-    g = a30.g
     g_consult = a30.g_consult
     g_organic = a30.g_organic
     p_operation = a30.p_operation
@@ -256,15 +256,6 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
         + p_other_ecrop.CO2e_production_based,
     )
 
-    g.invest_pa_outside = 0
-    g.invest_outside = 0
-    a.invest_pa_outside = g.invest_pa_outside
-    a.invest_outside = g.invest_outside
-    g.CO2e_total = 0
-    a.CO2e_total_2021_estimated = a18.a.CO2e_total * fact(
-        "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
-    )
-
     p_operation_heat.demand_electricity = 0
     p_operation_heat.demand_epetrol = 0
     p_operation_heat.demand_ediesel = 0
@@ -467,17 +458,14 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
         "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
     )
 
-    g.invest_com = g_consult.invest_com
-    g.invest = g_consult.invest + g_organic.invest
+    g = CO2eChangeG.calc(g_consult, g_organic)
 
-    g.invest_pa_com = g_consult.invest_pa_com
-
-    g.invest_pa = g_consult.invest_pa + g_organic.invest_pa
-
-    g.demand_emplo = g_consult.demand_emplo + g_organic.demand_emplo
-
+    a.invest_pa_outside = g.invest_pa_outside
+    a.invest_outside = g.invest_outside
+    a.CO2e_total_2021_estimated = a18.a.CO2e_total * fact(
+        "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+    )
     a.CO2e_production_based = p.CO2e_production_based
-    g.demand_emplo_new = g_consult.demand_emplo_new + g_organic.demand_emplo_new
 
     s.invest = s_heatpump.invest
     s.invest_pa = s.invest / entries.m_duration_target
@@ -539,12 +527,10 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
     s.change_CO2e_pct = div(s.change_CO2e_t, a18.s.CO2e_total)
     a.change_CO2e_pct = div(a.change_CO2e_t, a18.a.CO2e_total)
 
-    g.demand_emplo_com = g_consult.demand_emplo_com
     a.demand_emplo_com = g.demand_emplo_com
 
     s.cost_wage = s_heatpump.cost_wage
 
-    g.cost_wage = g_consult.cost_wage + g_organic.cost_wage
     a.cost_wage = g.cost_wage + p.cost_wage + s.cost_wage
 
     return A30(

@@ -96,8 +96,7 @@ class CO2eChangeP:
 
 
 @dataclass
-class Vars2:
-    # Used by g
+class CO2eChangeG:
     CO2e_total: float = None  # type: ignore
     cost_wage: float = None  # type: ignore
     demand_emplo: float = None  # type: ignore
@@ -109,6 +108,37 @@ class Vars2:
     invest_pa: float = None  # type: ignore
     invest_pa_com: float = None  # type: ignore
     invest_pa_outside: float = None  # type: ignore
+
+    @classmethod
+    def calc(cls, g_consult: Any, g_organic: Any) -> "CO2eChangeG":
+        CO2e_total = 0
+        cost_wage = g_consult.cost_wage + g_organic.cost_wage
+
+        demand_emplo = g_consult.demand_emplo + g_organic.demand_emplo
+        demand_emplo_new = g_consult.demand_emplo_new + g_organic.demand_emplo_new
+        demand_emplo_com = g_consult.demand_emplo_com
+
+        invest = g_consult.invest + g_organic.invest
+        invest_com = g_consult.invest_com
+        invest_outside = 0
+
+        invest_pa = g_consult.invest_pa + g_organic.invest_pa
+        invest_pa_com = g_consult.invest_pa_com
+        invest_pa_outside = 0
+
+        return cls(
+            CO2e_total=CO2e_total,
+            cost_wage=cost_wage,
+            demand_emplo=demand_emplo,
+            demand_emplo_com=demand_emplo_com,
+            demand_emplo_new=demand_emplo_new,
+            invest=invest,
+            invest_com=invest_com,
+            invest_outside=invest_outside,
+            invest_pa=invest_pa,
+            invest_pa_com=invest_pa_com,
+            invest_pa_outside=invest_pa_outside,
+        )
 
 
 @dataclass
