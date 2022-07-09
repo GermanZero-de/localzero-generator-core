@@ -18,6 +18,7 @@ from .dataclasses import (
     CO2eChangeG,
     CO2eChangeGConsult,
     CO2eChangeGOrganic,
+    CO2eChangePOperation,
 )
 from ..inputs import Inputs
 from ..utils import div
@@ -33,7 +34,6 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
     a30 = A30()
 
     a = a30.a
-    p_operation = a30.p_operation
     p_operation_heat = a30.p_operation_heat
     p_operation_elec_elcon = a30.p_operation_elec_elcon
     p_operation_vehicles = a30.p_operation_vehicles
@@ -298,8 +298,6 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
     p_operation_elec_elcon.change_energy_pct = div(
         p_operation_elec_elcon.change_energy_MWh, a18.p_operation_elec_elcon.energy
     )
-    p_operation.demand_epetrol = p_operation_vehicles.demand_epetrol
-    p_operation.demand_ediesel = p_operation_vehicles.demand_ediesel
     p_operation_vehicles.change_energy_pct = div(
         p_operation_vehicles.change_energy_MWh, a18.p_operation_vehicles.energy
     )
@@ -323,7 +321,6 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
     p_operation_heat.energy = (
         p_operation_heat.demand_heat_nonrehab + p_operation_heat.demand_heat_rehab
     )
-    p_operation.demand_heatpump = p_operation_heat.demand_heatpump
     p_operation_heat.demand_emplo = div(
         p_operation_heat.cost_wage, p_operation_heat.ratio_wage_to_emplo
     )
@@ -333,7 +330,6 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
     p_operation_heat.change_energy_MWh = (
         p_operation_heat.energy - a18.p_operation_heat.energy
     )
-    p_operation.demand_emplo = p_operation_heat.demand_emplo
     p_operation_heat.demand_emplo_new = max(
         0, p_operation_heat.demand_emplo - p_operation_heat.emplo_existing
     )
@@ -341,45 +337,35 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
         p_operation_heat.change_energy_MWh, a18.p_operation_heat.energy
     )
     p_operation_heat.demand_biomass = min(
-        a18.s_biomass.energy, p_operation_heat.energy - p_operation.demand_heatpump
+        a18.s_biomass.energy, p_operation_heat.energy - p_operation_heat.demand_heatpump
     )
-    p_operation_elec_heatpump.energy = p_operation.demand_heatpump / fact(
+    p_operation_elec_heatpump.energy = p_operation_heat.demand_heatpump / fact(
         "Fact_R_S_heatpump_mean_annual_performance_factor_all"
-    )
-    p_operation.demand_emplo_new = p_operation_heat.demand_emplo_new
-    p_operation.demand_biomass = p_operation_heat.demand_biomass
-    p_operation.energy = (
-        p_operation_heat.energy
-        + p_operation_elec_elcon.energy
-        + p_operation_elec_heatpump.energy
-        + p_operation_vehicles.energy
     )
     p_operation_elec_heatpump.demand_electricity = p_operation_elec_heatpump.energy
     p_operation_elec_heatpump.change_energy_MWh = (
         p_operation_elec_heatpump.energy - a18.p_operation_elec_heatpump.energy
     )
-    p_operation.invest = p_operation_heat.invest
-    p_operation.invest_pa = p_operation.invest / entries.m_duration_target
-    p_operation.change_energy_MWh = p_operation.energy - a18.p_operation.energy
-    p_operation.demand_electricity = (
-        p_operation_elec_elcon.demand_electricity
-        + p_operation_elec_heatpump.demand_electricity
-    )
     p_operation_heat.demand_emethan = (
         p_operation_heat.energy
-        - p_operation.demand_biomass
-        - p_operation.demand_heatpump
+        - p_operation_heat.demand_biomass
+        - p_operation_heat.demand_heatpump
     )
-    p_operation.change_energy_pct = div(
-        p_operation.change_energy_MWh, a18.p_operation.energy
-    )
-    p_operation.demand_emethan = p_operation_heat.demand_emethan
 
     p_operation_heat.cost_wage = (
         div(p_operation_heat.invest, entries.m_duration_target)
         * p_operation_heat.pct_of_wage
     )
-    p_operation.cost_wage = p_operation_heat.cost_wage
+
+    p_operation = CO2eChangePOperation.calc(
+        inputs,
+        "p_operation",
+        a18,
+        p_operation_vehicles,
+        p_operation_heat,
+        p_operation_elec_elcon,
+        p_operation_elec_heatpump,
+    )
 
     p = CO2eChangeP.calc(
         inputs,

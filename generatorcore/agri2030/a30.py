@@ -14,7 +14,7 @@ from .dataclasses import (
     CO2eChangeSoil,
     CO2eChangeOtherLiming,
     CO2eChangeOther,
-    Vars10,
+    CO2eChangePOperation,
     Vars11,
     Vars12,
     Vars13,
@@ -87,7 +87,7 @@ class A30:
     p_other_urea: CO2eChangeOther = field(default_factory=CO2eChangeOther)
     p_other_kas: CO2eChangeOther = field(default_factory=CO2eChangeOther)
     p_other_ecrop: CO2eChangeOther = field(default_factory=CO2eChangeOther)
-    p_operation: Vars10 = field(default_factory=Vars10)
+    p_operation: CO2eChangePOperation = field(default_factory=CO2eChangePOperation)
     p_operation_heat: Vars11 = field(default_factory=Vars11)
     p_operation_elec_elcon: Vars12 = field(default_factory=Vars12)
     p_operation_elec_heatpump: Vars13 = field(default_factory=Vars13)

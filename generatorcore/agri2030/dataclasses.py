@@ -568,8 +568,7 @@ class CO2eChangeOther(CO2eChange):
 
 
 @dataclass
-class Vars10:
-    # Used by p_operation
+class CO2eChangePOperation:
     change_energy_MWh: float = None  # type: ignore
     change_energy_pct: float = None  # type: ignore
     cost_wage: float = None  # type: ignore
@@ -584,6 +583,60 @@ class Vars10:
     energy: float = None  # type: ignore
     invest: float = None  # type: ignore
     invest_pa: float = None  # type: ignore
+
+    @classmethod
+    def calc(
+        cls,
+        inputs: Inputs,
+        what: str,
+        a18: A18,
+        p_operation_vehicles: Any,
+        p_operation_heat: Any,
+        p_operation_elec_elcon: Any,
+        p_operation_elec_heatpump: Any,
+    ) -> "CO2eChangePOperation":
+        demand_epetrol = p_operation_vehicles.demand_epetrol
+        demand_ediesel = p_operation_vehicles.demand_ediesel
+        demand_heatpump = p_operation_heat.demand_heatpump
+        demand_emplo = p_operation_heat.demand_emplo
+        demand_emplo_new = p_operation_heat.demand_emplo_new
+        demand_biomass = p_operation_heat.demand_biomass
+        demand_electricity = (
+            p_operation_elec_elcon.demand_electricity
+            + p_operation_elec_heatpump.demand_electricity
+        )
+        demand_emethan = p_operation_heat.demand_emethan
+
+        energy = (
+            p_operation_heat.energy
+            + p_operation_elec_elcon.energy
+            + p_operation_elec_heatpump.energy
+            + p_operation_vehicles.energy
+        )
+
+        invest = p_operation_heat.invest
+        invest_pa = invest / inputs.entries.m_duration_target
+        cost_wage = p_operation_heat.cost_wage
+
+        change_energy_MWh = energy - getattr(a18, what).energy
+        change_energy_pct = div(change_energy_MWh, getattr(a18, what).energy)
+
+        return cls(
+            change_energy_MWh=change_energy_MWh,
+            change_energy_pct=change_energy_pct,
+            cost_wage=cost_wage,
+            demand_biomass=demand_biomass,
+            demand_ediesel=demand_ediesel,
+            demand_electricity=demand_electricity,
+            demand_emethan=demand_emethan,
+            demand_emplo=demand_emplo,
+            demand_emplo_new=demand_emplo_new,
+            demand_epetrol=demand_epetrol,
+            demand_heatpump=demand_heatpump,
+            energy=energy,
+            invest=invest,
+            invest_pa=invest_pa,
+        )
 
 
 @dataclass
