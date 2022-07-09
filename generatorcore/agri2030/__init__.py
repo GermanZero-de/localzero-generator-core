@@ -16,6 +16,8 @@ from .dataclasses import (
     CO2eChangeFuelEmethan,
     CO2eChangeP,
     CO2eChangeG,
+    CO2eChangeGConsult,
+    CO2eChangeGOrganic,
 )
 from ..inputs import Inputs
 from ..utils import div
@@ -31,49 +33,12 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
     a30 = A30()
 
     a = a30.a
-    g_consult = a30.g_consult
-    g_organic = a30.g_organic
     p_operation = a30.p_operation
     p_operation_heat = a30.p_operation_heat
     p_operation_elec_elcon = a30.p_operation_elec_elcon
     p_operation_vehicles = a30.p_operation_vehicles
     p_operation_elec_heatpump = a30.p_operation_elec_heatpump
     s = a30.s
-
-    """ S T A R T """
-    g_consult.area_ha_available = entries.a_farm_amount
-    g_consult.invest_per_x = ass("Ass_A_G_consult_invest_per_farm")
-    g_consult.pct_of_wage = ass("Ass_A_G_consult_invest_pct_of_wage")
-    g_consult.ratio_wage_to_emplo = ass("Ass_A_G_consult_ratio_wage_to_emplo")
-    g_consult.invest = g_consult.area_ha_available * g_consult.invest_per_x
-    g_consult.invest_pa = g_consult.invest / entries.m_duration_target
-    g_consult.invest_com = g_consult.invest * ass(
-        "Ass_A_G_consult_invest_pct_of_public"
-    )
-    g_consult.invest_pa_com = g_consult.invest_pa * ass(
-        "Ass_A_G_consult_invest_pct_of_public"
-    )
-    g_consult.cost_wage = g_consult.invest_pa * g_consult.pct_of_wage
-    g_consult.demand_emplo = div(g_consult.cost_wage, g_consult.ratio_wage_to_emplo)
-    g_consult.demand_emplo_new = g_consult.demand_emplo
-    g_consult.demand_emplo_com = g_consult.demand_emplo_new
-
-    g_organic.area_ha_available = entries.m_area_agri_com
-    g_organic.invest_per_x = ass("Ass_A_G_area_agri_organic_ratio_invest_to_ha")
-    g_organic.pct_of_wage = fact("Fact_B_P_constr_main_revenue_pct_of_wage_2017")
-    g_organic.ratio_wage_to_emplo = fact(
-        "Fact_B_P_constr_main_ratio_wage_to_emplo_2017"
-    )
-    g_organic.power_to_be_installed_pct = ass("Ass_A_G_area_agri_pct_of_organic_2050")
-    g_organic.power_installed = entries.a_area_agri_com_pct_of_organic
-    g_organic.power_to_be_installed = g_organic.area_ha_available * (
-        g_organic.power_to_be_installed_pct - g_organic.power_installed
-    )
-    g_organic.invest = g_organic.power_to_be_installed * g_organic.invest_per_x
-    g_organic.invest_pa = g_organic.invest / entries.m_duration_target
-    g_organic.cost_wage = g_organic.invest_pa * g_organic.pct_of_wage
-    g_organic.demand_emplo = div(g_organic.cost_wage, g_organic.ratio_wage_to_emplo)
-    g_organic.demand_emplo_new = g_organic.demand_emplo
 
     p_fermen_dairycow = CO2eChangeFermentationOrManure.calc_fermen(
         inputs, "p_fermen_dairycow", "Ass_A_P_fermen_dairycow_change", a18
@@ -458,6 +423,8 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
         "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
     )
 
+    g_consult = CO2eChangeGConsult.calc(inputs)
+    g_organic = CO2eChangeGOrganic.calc(inputs)
     g = CO2eChangeG.calc(g_consult, g_organic)
 
     a.invest_pa_outside = g.invest_pa_outside

@@ -142,8 +142,7 @@ class CO2eChangeG:
 
 
 @dataclass
-class Vars3:
-    # Used by g_consult
+class CO2eChangeGConsult:
     area_ha_available: float = None  # type: ignore
     cost_wage: float = None  # type: ignore
     demand_emplo: float = None  # type: ignore
@@ -157,10 +156,42 @@ class Vars3:
     pct_of_wage: float = None  # type: ignore
     ratio_wage_to_emplo: float = None  # type: ignore
 
+    @classmethod
+    def calc(cls, inputs: Inputs) -> "CO2eChangeGConsult":
+        area_ha_available = inputs.entries.a_farm_amount
+
+        invest_per_x = inputs.ass("Ass_A_G_consult_invest_per_farm")
+        invest = area_ha_available * invest_per_x
+        invest_com = invest * inputs.ass("Ass_A_G_consult_invest_pct_of_public")
+        invest_pa = invest / inputs.entries.m_duration_target
+        invest_pa_com = invest_pa * inputs.ass("Ass_A_G_consult_invest_pct_of_public")
+
+        pct_of_wage = inputs.ass("Ass_A_G_consult_invest_pct_of_wage")
+        cost_wage = invest_pa * pct_of_wage
+
+        ratio_wage_to_emplo = inputs.ass("Ass_A_G_consult_ratio_wage_to_emplo")
+        demand_emplo = div(cost_wage, ratio_wage_to_emplo)
+        demand_emplo_new = demand_emplo
+        demand_emplo_com = demand_emplo_new
+
+        return cls(
+            area_ha_available=area_ha_available,
+            cost_wage=cost_wage,
+            demand_emplo=demand_emplo,
+            demand_emplo_com=demand_emplo_com,
+            demand_emplo_new=demand_emplo_new,
+            invest=invest,
+            invest_com=invest_com,
+            invest_pa=invest_pa,
+            invest_pa_com=invest_pa_com,
+            invest_per_x=invest_per_x,
+            pct_of_wage=pct_of_wage,
+            ratio_wage_to_emplo=ratio_wage_to_emplo,
+        )
+
 
 @dataclass
-class Vars4:
-    # Used by g_organic
+class CO2eChangeGOrganic:
     area_ha_available: float = None  # type: ignore
     cost_wage: float = None  # type: ignore
     demand_emplo: float = None  # type: ignore
@@ -173,6 +204,44 @@ class Vars4:
     power_to_be_installed: float = None  # type: ignore
     power_to_be_installed_pct: float = None  # type: ignore
     ratio_wage_to_emplo: float = None  # type: ignore
+
+    @classmethod
+    def calc(cls, inputs: Inputs) -> "CO2eChangeGOrganic":
+        area_ha_available = inputs.entries.m_area_agri_com
+
+        power_installed = inputs.entries.a_area_agri_com_pct_of_organic
+        power_to_be_installed_pct = inputs.ass("Ass_A_G_area_agri_pct_of_organic_2050")
+        power_to_be_installed = area_ha_available * (
+            power_to_be_installed_pct - power_installed
+        )
+
+        invest_per_x = inputs.ass("Ass_A_G_area_agri_organic_ratio_invest_to_ha")
+        invest = power_to_be_installed * invest_per_x
+        invest_pa = invest / inputs.entries.m_duration_target
+
+        pct_of_wage = inputs.fact("Fact_B_P_constr_main_revenue_pct_of_wage_2017")
+        cost_wage = invest_pa * pct_of_wage
+
+        ratio_wage_to_emplo = inputs.fact(
+            "Fact_B_P_constr_main_ratio_wage_to_emplo_2017"
+        )
+        demand_emplo = div(cost_wage, ratio_wage_to_emplo)
+        demand_emplo_new = demand_emplo
+
+        return cls(
+            area_ha_available=area_ha_available,
+            cost_wage=cost_wage,
+            demand_emplo=demand_emplo,
+            demand_emplo_new=demand_emplo_new,
+            invest=invest,
+            invest_pa=invest_pa,
+            invest_per_x=invest_per_x,
+            pct_of_wage=pct_of_wage,
+            power_installed=power_installed,
+            power_to_be_installed=power_to_be_installed,
+            power_to_be_installed_pct=power_to_be_installed_pct,
+            ratio_wage_to_emplo=ratio_wage_to_emplo,
+        )
 
 
 @dataclass

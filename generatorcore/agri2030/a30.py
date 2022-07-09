@@ -7,8 +7,8 @@ from .dataclasses import (
     Vars0,
     CO2eChangeP,
     CO2eChangeG,
-    Vars3,
-    Vars4,
+    CO2eChangeGConsult,
+    CO2eChangeGOrganic,
     CO2eChange,
     CO2eChangeFermentationOrManure,
     CO2eChangeSoil,
@@ -32,8 +32,8 @@ class A30:
     a: Vars0 = field(default_factory=Vars0)
     p: CO2eChangeP = field(default_factory=CO2eChangeP)
     g: CO2eChangeG = field(default_factory=CO2eChangeG)
-    g_consult: Vars3 = field(default_factory=Vars3)
-    g_organic: Vars4 = field(default_factory=Vars4)
+    g_consult: CO2eChangeGConsult = field(default_factory=CO2eChangeGConsult)
+    g_organic: CO2eChangeGOrganic = field(default_factory=CO2eChangeGOrganic)
     p_fermen: CO2eChange = field(default_factory=CO2eChange)
     p_fermen_dairycow: CO2eChangeFermentationOrManure = field(
         default_factory=CO2eChangeFermentationOrManure
