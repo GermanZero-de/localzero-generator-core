@@ -9632,6 +9632,7 @@
         "p_operation": {
             "change_energy_MWh": 17740.400235960988,
             "change_energy_pct": 1.9644233094012653,
+            "energy": 26771.24412335513,
             "cost_wage": 1388682.1576464379,
             "demand_biomass": -475.91674992468324,
             "demand_ediesel": 2601.220122776392,
@@ -9641,16 +9642,16 @@
             "demand_emplo_new": 17.90406911642971,
             "demand_epetrol": 45.23861083089376,
             "demand_heatpump": 18145.04298637602,
-            "energy": 26771.24412335513,
             "invest": 118908563.95749316,
             "invest_pa": 4246734.427053327
         },
         "p_operation_heat": {
+            "change_energy_MWh": 14027.754488151755,
+            "change_energy_pct": 3.852326940994786,
+            "energy": 17669.126236451335,
             "area_m2": 230442.50681198906,
             "area_m2_nonrehab": -62219.47683923705,
             "area_m2_rehab": 292661.9836512261,
-            "change_energy_MWh": 14027.754488151755,
-            "change_energy_pct": 3.852326940994786,
             "cost_wage": 1388682.1576464379,
             "demand_biomass": -475.91674992468324,
             "demand_ediesel": 0,
@@ -9663,7 +9664,6 @@
             "demand_heat_rehab": 18145.04298637602,
             "demand_heatpump": 18145.04298637602,
             "emplo_existing": 15.992862144682098,
-            "energy": 17669.126236451335,
             "fec_factor_averaged": 0.07667477012332204,
             "invest": 118908563.95749316,
             "invest_pa": 4246734.427053327,
@@ -9677,30 +9677,31 @@
         "p_operation_elec_elcon": {
             "change_energy_MWh": -176.0809592017539,
             "change_energy_pct": -0.1540217537263327,
+            "energy": 967.1404036364864,
             "demand_biomass": 0,
             "demand_change": -0.15402175372633276,
             "demand_ediesel": 0,
             "demand_electricity": 967.1404036364864,
             "demand_emethan": 0,
-            "demand_heatpump": 0,
-            "energy": 967.1404036364864
+            "demand_heatpump": 0
         },
         "p_operation_elec_heatpump": {
             "change_energy_MWh": 5488.518749660017,
-            "demand_electricity": 5488.518749660017,
-            "energy": 5488.518749660017
+            "change_energy_pct": null,
+            "energy": 5488.518749660017,
+            "demand_electricity": 5488.518749660017
         },
         "p_operation_vehicles": {
             "change_energy_MWh": -1599.792042649036,
             "change_energy_pct": -0.376754018296461,
+            "energy": 2646.458733607286,
             "demand_biomass": 0,
             "demand_change": -0.37675401829646094,
             "demand_ediesel": 2601.220122776392,
             "demand_electricity": 0,
             "demand_emethan": 0,
             "demand_epetrol": 45.23861083089376,
-            "demand_heatpump": 0,
-            "energy": 2646.458733607286
+            "demand_heatpump": 0
         },
         "s": {
             "CO2e_combustion_based": 696.730580204502,

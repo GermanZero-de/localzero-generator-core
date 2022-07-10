@@ -121,6 +121,25 @@ class CO2eChange:
 
 
 @dataclass
+class CO2eChangeEnergy:
+    change_energy_MWh: float = None  # type: ignore
+    change_energy_pct: float = None  # type: ignore
+    energy: float = None  # type: ignore
+
+    @classmethod
+    def calc_energy(cls, what: str, a18: A18, energy: float) -> "CO2eChangeEnergy":
+
+        change_energy_MWh = energy - getattr(a18, what).energy
+        change_energy_pct = div(change_energy_MWh, getattr(a18, what).energy)
+
+        return cls(
+            change_energy_MWh=change_energy_MWh,
+            change_energy_pct=change_energy_pct,
+            energy=energy,
+        )
+
+
+@dataclass
 class CO2eChangeFermentationOrManure(CO2eChange):
     CO2e_production_based_per_t: float = None  # type: ignore
     amount: float = None  # type: ignore
@@ -320,9 +339,7 @@ class CO2eChangeOther(CO2eChange):
 
 
 @dataclass
-class CO2eChangePOperation:
-    change_energy_MWh: float = None  # type: ignore
-    change_energy_pct: float = None  # type: ignore
+class CO2eChangePOperation(CO2eChangeEnergy):
     cost_wage: float = None  # type: ignore
     demand_biomass: float = None  # type: ignore
     demand_ediesel: float = None  # type: ignore
@@ -332,7 +349,6 @@ class CO2eChangePOperation:
     demand_emplo_new: float = None  # type: ignore
     demand_epetrol: float = None  # type: ignore
     demand_heatpump: float = None  # type: ignore
-    energy: float = None  # type: ignore
     invest: float = None  # type: ignore
     invest_pa: float = None  # type: ignore
 
@@ -370,12 +386,11 @@ class CO2eChangePOperation:
         invest_pa = invest / inputs.entries.m_duration_target
         cost_wage = p_operation_heat.cost_wage
 
-        change_energy_MWh = energy - getattr(a18, what).energy
-        change_energy_pct = div(change_energy_MWh, getattr(a18, what).energy)
+        parent = super().calc_energy(what, a18, energy)
 
         return cls(
-            change_energy_MWh=change_energy_MWh,
-            change_energy_pct=change_energy_pct,
+            change_energy_MWh=parent.change_energy_MWh,
+            change_energy_pct=parent.change_energy_pct,
             cost_wage=cost_wage,
             demand_biomass=demand_biomass,
             demand_ediesel=demand_ediesel,
@@ -385,19 +400,17 @@ class CO2eChangePOperation:
             demand_emplo_new=demand_emplo_new,
             demand_epetrol=demand_epetrol,
             demand_heatpump=demand_heatpump,
-            energy=energy,
+            energy=parent.energy,
             invest=invest,
             invest_pa=invest_pa,
         )
 
 
 @dataclass
-class CO2eChangePOperationHeat:
+class CO2eChangePOperationHeat(CO2eChangeEnergy):
     area_m2: float = None  # type: ignore
     area_m2_nonrehab: float = None  # type: ignore
     area_m2_rehab: float = None  # type: ignore
-    change_energy_MWh: float = None  # type: ignore
-    change_energy_pct: float = None  # type: ignore
     cost_wage: float = None  # type: ignore
     demand_biomass: float = None  # type: ignore
     demand_ediesel: float = None  # type: ignore
@@ -410,7 +423,6 @@ class CO2eChangePOperationHeat:
     demand_heat_rehab: float = None  # type: ignore
     demand_heatpump: float = None  # type: ignore
     emplo_existing: float = None  # type: ignore
-    energy: float = None  # type: ignore
     fec_factor_averaged: float = None  # type: ignore
     invest: float = None  # type: ignore
     invest_pa: float = None  # type: ignore
@@ -485,15 +497,15 @@ class CO2eChangePOperationHeat:
         demand_emethan = energy - demand_biomass - demand_heatpump
 
         fec_factor_averaged = div(energy, getattr(a18, what).area_m2)
-        change_energy_MWh = energy - getattr(a18, what).energy
-        change_energy_pct = div(change_energy_MWh, getattr(a18, what).energy)
+
+        parent = super().calc_energy(what, a18, energy)
 
         return cls(
             area_m2=area_m2,
             area_m2_nonrehab=area_m2_nonrehab,
             area_m2_rehab=area_m2_rehab,
-            change_energy_MWh=change_energy_MWh,
-            change_energy_pct=change_energy_pct,
+            change_energy_MWh=parent.change_energy_MWh,
+            change_energy_pct=parent.change_energy_pct,
             cost_wage=cost_wage,
             demand_biomass=demand_biomass,
             demand_ediesel=demand_ediesel,
@@ -506,7 +518,7 @@ class CO2eChangePOperationHeat:
             demand_heat_rehab=demand_heat_rehab,
             demand_heatpump=demand_heatpump,
             emplo_existing=emplo_existing,
-            energy=energy,
+            energy=parent.energy,
             fec_factor_averaged=fec_factor_averaged,
             invest=invest,
             invest_pa=invest_pa,
@@ -520,16 +532,13 @@ class CO2eChangePOperationHeat:
 
 
 @dataclass
-class CO2eChangePOperationElecElcon:
-    change_energy_MWh: float = None  # type: ignore
-    change_energy_pct: float = None  # type: ignore
+class CO2eChangePOperationElecElcon(CO2eChangeEnergy):
     demand_biomass: float = None  # type: ignore
     demand_change: float = None  # type: ignore
     demand_ediesel: float = None  # type: ignore
     demand_electricity: float = None  # type: ignore
     demand_emethan: float = None  # type: ignore
     demand_heatpump: float = None  # type: ignore
-    energy: float = None  # type: ignore
 
     @classmethod
     def calc(
@@ -549,27 +558,24 @@ class CO2eChangePOperationElecElcon:
 
         demand_electricity = energy
 
-        change_energy_MWh = energy - getattr(a18, what).energy
-        change_energy_pct = div(change_energy_MWh, getattr(a18, what).energy)
+        parent = super().calc_energy(what, a18, energy)
 
         return cls(
-            change_energy_MWh=change_energy_MWh,
-            change_energy_pct=change_energy_pct,
+            change_energy_MWh=parent.change_energy_MWh,
+            change_energy_pct=parent.change_energy_pct,
             demand_biomass=demand_biomass,
             demand_change=demand_change,
             demand_ediesel=demand_ediesel,
             demand_electricity=demand_electricity,
             demand_emethan=demand_emethan,
             demand_heatpump=demand_heatpump,
-            energy=energy,
+            energy=parent.energy,
         )
 
 
 @dataclass
-class CO2eChangePOperationElecHeatpump:
-    change_energy_MWh: float = None  # type: ignore
+class CO2eChangePOperationElecHeatpump(CO2eChangeEnergy):
     demand_electricity: float = None  # type: ignore
-    energy: float = None  # type: ignore
 
     @classmethod
     def calc(
@@ -580,19 +586,18 @@ class CO2eChangePOperationElecHeatpump:
             "Fact_R_S_heatpump_mean_annual_performance_factor_all"
         )
         demand_electricity = energy
-        change_energy_MWh = energy - getattr(a18, what).energy
+
+        parent = super().calc_energy(what, a18, energy)
 
         return cls(
-            change_energy_MWh=change_energy_MWh,
+            change_energy_MWh=parent.change_energy_MWh,
             demand_electricity=demand_electricity,
-            energy=energy,
+            energy=parent.energy,
         )
 
 
 @dataclass
-class CO2eChangePOperationVehicles:
-    change_energy_MWh: float = None  # type: ignore
-    change_energy_pct: float = None  # type: ignore
+class CO2eChangePOperationVehicles(CO2eChangeEnergy):
     demand_biomass: float = None  # type: ignore
     demand_change: float = None  # type: ignore
     demand_ediesel: float = None  # type: ignore
@@ -600,7 +605,6 @@ class CO2eChangePOperationVehicles:
     demand_emethan: float = None  # type: ignore
     demand_epetrol: float = None  # type: ignore
     demand_heatpump: float = None  # type: ignore
-    energy: float = None  # type: ignore
 
     @classmethod
     def calc(
@@ -627,12 +631,11 @@ class CO2eChangePOperationVehicles:
             a18.s_petrol.energy + a18.s_diesel.energy,
         )
 
-        change_energy_MWh = energy - getattr(a18, what).energy
-        change_energy_pct = div(change_energy_MWh, getattr(a18, what).energy)
+        parent = super().calc_energy(what, a18, energy)
 
         return cls(
-            change_energy_MWh=change_energy_MWh,
-            change_energy_pct=change_energy_pct,
+            change_energy_MWh=parent.change_energy_MWh,
+            change_energy_pct=parent.change_energy_pct,
             demand_biomass=demand_biomass,
             demand_change=demand_change,
             demand_ediesel=demand_ediesel,
@@ -640,5 +643,5 @@ class CO2eChangePOperationVehicles:
             demand_emethan=demand_emethan,
             demand_epetrol=demand_epetrol,
             demand_heatpump=demand_heatpump,
-            energy=energy,
+            energy=parent.energy,
         )
