@@ -32,11 +32,6 @@ from .a30 import A30
 
 
 def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
-    fact = inputs.fact
-    entries = inputs.entries
-
-    a30 = A30()
-
     p_fermen_dairycow = CO2eChangeFermentationOrManure.calc_fermen(
         inputs, "p_fermen_dairycow", "Ass_A_P_fermen_dairycow_change", a18
     )
