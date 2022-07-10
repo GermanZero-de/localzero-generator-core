@@ -26,7 +26,7 @@ from .energy_demand import (
 )
 from .energy_source import (
     CO2eChangeS,
-    CO2eChangeEnergy,
+    CO2eChangeEnergyPerMWh,
     CO2eChangeFuelOilGas,
     CO2eChangeFuelHeatpump,
     CO2eChangeFuelEmethan,
@@ -272,17 +272,17 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
         + p_other.CO2e_total,
     )
 
-    s_petrol = CO2eChangeEnergy.calc_energy(
+    s_petrol = CO2eChangeEnergyPerMWh.calc_energy(
         inputs, "s_petrol", a18, p_operation_vehicles.demand_epetrol
     )
-    s_diesel = CO2eChangeEnergy.calc_energy(
+    s_diesel = CO2eChangeEnergyPerMWh.calc_energy(
         inputs, "s_diesel", a18, p_operation_vehicles.demand_ediesel
     )
-    s_lpg = CO2eChangeEnergy.calc_energy(inputs, "s_lpg", a18, 0)
-    s_biomass = CO2eChangeEnergy.calc_energy(
+    s_lpg = CO2eChangeEnergyPerMWh.calc_energy(inputs, "s_lpg", a18, 0)
+    s_biomass = CO2eChangeEnergyPerMWh.calc_energy(
         inputs, "s_biomass", a18, p_operation.demand_biomass
     )
-    s_elec = CO2eChangeEnergy.calc_energy(
+    s_elec = CO2eChangeEnergyPerMWh.calc_energy(
         inputs, "s_elec", a18, p_operation.demand_electricity
     )
     s_fueloil = CO2eChangeFuelOilGas.calc_energy(inputs, "s_fueloil", a18, 0)

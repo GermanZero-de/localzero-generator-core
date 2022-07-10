@@ -9,7 +9,7 @@ from .energy_demand import CO2eChange
 
 
 @dataclass
-class CO2eChangeEnergy(CO2eChange):
+class CO2eChangeEnergyPerMWh(CO2eChange):
     CO2e_combustion_based_per_MWh: float = None  # type: ignore
     change_energy_MWh: float = None  # type: ignore
     change_energy_pct: float = None  # type: ignore
@@ -18,7 +18,7 @@ class CO2eChangeEnergy(CO2eChange):
     @classmethod
     def calc_energy(
         cls, inputs: Inputs, what: str, a18: A18, energy: float
-    ) -> "CO2eChangeEnergy":
+    ) -> "CO2eChangeEnergyPerMWh":
         CO2e_combustion_based_per_MWh = getattr(a18, what).CO2e_combustion_based_per_MWh
         CO2e_combustion_based = energy * CO2e_combustion_based_per_MWh
 
@@ -126,7 +126,7 @@ class CO2eChangeS(CO2eChange):
 
 
 @dataclass
-class CO2eChangeFuelOilGas(CO2eChangeEnergy):
+class CO2eChangeFuelOilGas(CO2eChangeEnergyPerMWh):
     area_m2: float = None  # type: ignore
 
     @classmethod
@@ -154,7 +154,7 @@ class CO2eChangeFuelOilGas(CO2eChangeEnergy):
 
 
 @dataclass
-class CO2eChangeFuelHeatpump(CO2eChangeEnergy):
+class CO2eChangeFuelHeatpump(CO2eChangeEnergyPerMWh):
     cost_fuel: float = None  # type: ignore
     cost_fuel_per_MWh: float = None  # type: ignore
     cost_wage: float = None  # type: ignore
