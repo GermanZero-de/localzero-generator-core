@@ -9754,10 +9754,10 @@
             "change_CO2e_t": -139.98110464974897,
             "cost_climate_saved": 547862.1717907839,
             "CO2e_combustion_based_per_MWh": 0.266,
-            "area_m2": 0,
             "change_energy_MWh": -526.2447543223645,
             "change_energy_pct": -1.0,
-            "energy": 0
+            "energy": 0,
+            "area_m2": 0
         },
         "s_lpg": {
             "CO2e_combustion_based": 0.0,
@@ -9781,10 +9781,10 @@
             "change_CO2e_t": -128.87552569646326,
             "cost_climate_saved": 504396.82966789586,
             "CO2e_combustion_based_per_MWh": 0.201,
-            "area_m2": 0,
             "change_energy_MWh": -641.1717696341454,
             "change_energy_pct": -1.0,
-            "energy": 0
+            "energy": 0,
+            "area_m2": 0
         },
         "s_biomass": {
             "CO2e_combustion_based": 10.692368740919013,
@@ -9822,13 +9822,14 @@
             "cost_climate_saved": 0.0,
             "CO2e_combustion_based_per_MWh": 0.0,
             "change_energy_MWh": 9572.581732970028,
+            "change_energy_pct": null,
+            "energy": 9572.581732970028,
             "cost_fuel": 0.6490210414953679,
             "cost_fuel_per_MWh": 67.8,
             "cost_wage": 182562.42726380657,
             "demand_emplo": 4.543053430386569,
             "demand_emplo_new": 0,
             "emplo_existing": 5.44542122250665,
-            "energy": 9572.581732970028,
             "full_load_hour": 1650.0,
             "invest": 7705556.994900928,
             "invest_pa": 592735.1534539175,

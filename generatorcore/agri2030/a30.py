@@ -22,7 +22,7 @@ from .energy_demand import (
 )
 from .energy_source import (
     CO2eChangeS,
-    CO2eChangeFuel,
+    CO2eChangeEnergy,
     CO2eChangeFuelOilGas,
     CO2eChangeFuelHeatpump,
     CO2eChangeFuelEmethan,
@@ -73,12 +73,12 @@ class A30:
     p_operation_elec_heatpump: CO2eChangePOperationElecHeatpump
     p_operation_vehicles: CO2eChangePOperationVehicles
     s: CO2eChangeS
-    s_petrol: CO2eChangeFuel
-    s_diesel: CO2eChangeFuel
+    s_petrol: CO2eChangeEnergy
+    s_diesel: CO2eChangeEnergy
     s_fueloil: CO2eChangeFuelOilGas
-    s_lpg: CO2eChangeFuel
+    s_lpg: CO2eChangeEnergy
     s_gas: CO2eChangeFuelOilGas
-    s_biomass: CO2eChangeFuel
-    s_elec: CO2eChangeFuel
+    s_biomass: CO2eChangeEnergy
+    s_elec: CO2eChangeEnergy
     s_heatpump: CO2eChangeFuelHeatpump
     s_emethan: CO2eChangeFuelEmethan
