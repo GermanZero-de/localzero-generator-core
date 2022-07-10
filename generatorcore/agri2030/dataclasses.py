@@ -1,5 +1,5 @@
 # pyright: strict
-from dataclasses import dataclass
+from dataclasses import dataclass, InitVar
 from typing import Any
 
 from ..utils import div
@@ -7,31 +7,38 @@ from ..agri2018.a18 import A18
 from ..inputs import Inputs
 
 
-@dataclass
+@dataclass(kw_only=True)
 class CO2eChangeA:
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_production_based: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
-    change_CO2e_pct: float = None  # type: ignore
-    change_CO2e_t: float = None  # type: ignore
-    change_energy_MWh: float = None  # type: ignore
-    change_energy_pct: float = None  # type: ignore
-    cost_climate_saved: float = None  # type: ignore
-    cost_wage: float = None  # type: ignore
-    demand_emplo: float = None  # type: ignore
-    demand_emplo_com: float = None  # type: ignore
-    demand_emplo_new: float = None  # type: ignore
-    invest: float = None  # type: ignore
-    invest_com: float = None  # type: ignore
-    invest_outside: float = None  # type: ignore
-    invest_pa: float = None  # type: ignore
-    invest_pa_com: float = None  # type: ignore
-    invest_pa_outside: float = None  # type: ignore
+    CO2e_combustion_based: float = 0
+    CO2e_production_based: float = 0
+    CO2e_total: float = 0
+    CO2e_total_2021_estimated: float = 0
+    change_CO2e_pct: float = 0
+    change_CO2e_t: float = 0
+    change_energy_MWh: float = 0
+    change_energy_pct: float = 0
+    cost_climate_saved: float = 0
+    cost_wage: float = 0
+    demand_emplo: float = 0
+    demand_emplo_com: float = 0
+    demand_emplo_new: float = 0
+    invest: float = 0
+    invest_com: float = 0
+    invest_outside: float = 0
+    invest_pa: float = 0
+    invest_pa_com: float = 0
+    invest_pa_outside: float = 0
 
-    @classmethod
-    def calc(
-        cls,
+    inputs: InitVar[Inputs]
+    what: InitVar[str]
+    a18: InitVar[A18]
+    p_operation: InitVar[Any]
+    p: InitVar[Any]
+    g: InitVar[Any]
+    s: InitVar[Any]
+
+    def __post_init__(
+        self,
         inputs: Inputs,
         what: str,
         a18: A18,
@@ -39,207 +46,152 @@ class CO2eChangeA:
         p: Any,
         g: Any,
         s: Any,
-    ) -> "CO2eChangeA":
+    ):
+        self.CO2e_production_based = p.CO2e_production_based
+        self.CO2e_combustion_based = s.CO2e_combustion_based
+        self.CO2e_total = g.CO2e_total + p.CO2e_total + s.CO2e_total
 
-        CO2e_production_based = p.CO2e_production_based
-        CO2e_combustion_based = s.CO2e_combustion_based
-        CO2e_total = g.CO2e_total + p.CO2e_total + s.CO2e_total
-
-        CO2e_total_2021_estimated = getattr(a18, what).CO2e_total * inputs.fact(
+        self.CO2e_total_2021_estimated = getattr(a18, what).CO2e_total * inputs.fact(
             "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
         )
 
-        invest_pa_outside = g.invest_pa_outside
-        invest_outside = g.invest_outside
-        invest_com = g.invest_com
-        invest = g.invest + s.invest + p.invest
-        invest_pa_com = g.invest_pa_com
-        invest_pa = invest / inputs.entries.m_duration_target
+        self.invest_pa_outside = g.invest_pa_outside
+        self.invest_outside = g.invest_outside
+        self.invest_com = g.invest_com
+        self.invest = g.invest + s.invest + p.invest
+        self.invest_pa_com = g.invest_pa_com
+        self.invest_pa = self.invest / inputs.entries.m_duration_target
 
-        change_CO2e_t = CO2e_total - getattr(a18, what).CO2e_total
-        change_CO2e_pct = div(change_CO2e_t, a18.a.CO2e_total)
-        change_energy_MWh = p_operation.change_energy_MWh
-        change_energy_pct = p_operation.change_energy_pct
+        self.change_CO2e_t = self.CO2e_total - getattr(a18, what).CO2e_total
+        self.change_CO2e_pct = div(self.change_CO2e_t, a18.a.CO2e_total)
+        self.change_energy_MWh = p_operation.change_energy_MWh
+        self.change_energy_pct = p_operation.change_energy_pct
 
-        demand_emplo = g.demand_emplo + p.demand_emplo + s.demand_emplo
-        demand_emplo_new = g.demand_emplo_new + p.demand_emplo_new + s.demand_emplo_new
-        demand_emplo_com = g.demand_emplo_com
+        self.demand_emplo = g.demand_emplo + p.demand_emplo + s.demand_emplo
+        self.demand_emplo_new = (
+            g.demand_emplo_new + p.demand_emplo_new + s.demand_emplo_new
+        )
+        self.demand_emplo_com = g.demand_emplo_com
 
-        cost_climate_saved = (
-            (CO2e_total_2021_estimated - CO2e_total)
+        self.cost_climate_saved = (
+            (self.CO2e_total_2021_estimated - self.CO2e_total)
             * inputs.entries.m_duration_neutral
             * inputs.fact("Fact_M_cost_per_CO2e_2020")
         )
 
-        cost_wage = g.cost_wage + p.cost_wage + s.cost_wage
-
-        return cls(
-            CO2e_combustion_based=CO2e_combustion_based,
-            CO2e_production_based=CO2e_production_based,
-            CO2e_total=CO2e_total,
-            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
-            change_CO2e_pct=change_CO2e_pct,
-            change_CO2e_t=change_CO2e_t,
-            change_energy_MWh=change_energy_MWh,
-            change_energy_pct=change_energy_pct,
-            cost_climate_saved=cost_climate_saved,
-            cost_wage=cost_wage,
-            demand_emplo=demand_emplo,
-            demand_emplo_com=demand_emplo_com,
-            demand_emplo_new=demand_emplo_new,
-            invest=invest,
-            invest_com=invest_com,
-            invest_outside=invest_outside,
-            invest_pa=invest_pa,
-            invest_pa_com=invest_pa_com,
-            invest_pa_outside=invest_pa_outside,
-        )
+        self.cost_wage = g.cost_wage + p.cost_wage + s.cost_wage
 
 
-@dataclass
+@dataclass(kw_only=True)
 class CO2eChangeG:
-    CO2e_total: float = None  # type: ignore
-    cost_wage: float = None  # type: ignore
-    demand_emplo: float = None  # type: ignore
-    demand_emplo_com: float = None  # type: ignore
-    demand_emplo_new: float = None  # type: ignore
-    invest: float = None  # type: ignore
-    invest_com: float = None  # type: ignore
-    invest_outside: float = None  # type: ignore
-    invest_pa: float = None  # type: ignore
-    invest_pa_com: float = None  # type: ignore
-    invest_pa_outside: float = None  # type: ignore
+    CO2e_total: float = 0
+    cost_wage: float = 0
+    demand_emplo: float = 0
+    demand_emplo_com: float = 0
+    demand_emplo_new: float = 0
+    invest: float = 0
+    invest_com: float = 0
+    invest_outside: float = 0
+    invest_pa: float = 0
+    invest_pa_com: float = 0
+    invest_pa_outside: float = 0
 
-    @classmethod
-    def calc(cls, g_consult: Any, g_organic: Any) -> "CO2eChangeG":
-        CO2e_total = 0
-        cost_wage = g_consult.cost_wage + g_organic.cost_wage
+    g_consult: InitVar[Any]
+    g_organic: InitVar[Any]
 
-        demand_emplo = g_consult.demand_emplo + g_organic.demand_emplo
-        demand_emplo_new = g_consult.demand_emplo_new + g_organic.demand_emplo_new
-        demand_emplo_com = g_consult.demand_emplo_com
+    def __post_init__(self, g_consult: Any, g_organic: Any):
+        self.CO2e_total = 0
+        self.cost_wage = g_consult.cost_wage + g_organic.cost_wage
 
-        invest = g_consult.invest + g_organic.invest
-        invest_com = g_consult.invest_com
-        invest_outside = 0
+        self.demand_emplo = g_consult.demand_emplo + g_organic.demand_emplo
+        self.demand_emplo_new = g_consult.demand_emplo_new + g_organic.demand_emplo_new
+        self.demand_emplo_com = g_consult.demand_emplo_com
 
-        invest_pa = g_consult.invest_pa + g_organic.invest_pa
-        invest_pa_com = g_consult.invest_pa_com
-        invest_pa_outside = 0
+        self.invest = g_consult.invest + g_organic.invest
+        self.invest_com = g_consult.invest_com
+        self.invest_outside = 0
 
-        return cls(
-            CO2e_total=CO2e_total,
-            cost_wage=cost_wage,
-            demand_emplo=demand_emplo,
-            demand_emplo_com=demand_emplo_com,
-            demand_emplo_new=demand_emplo_new,
-            invest=invest,
-            invest_com=invest_com,
-            invest_outside=invest_outside,
-            invest_pa=invest_pa,
-            invest_pa_com=invest_pa_com,
-            invest_pa_outside=invest_pa_outside,
-        )
+        self.invest_pa = g_consult.invest_pa + g_organic.invest_pa
+        self.invest_pa_com = g_consult.invest_pa_com
+        self.invest_pa_outside = 0
 
 
-@dataclass
+@dataclass(kw_only=True)
 class CO2eChangeGConsult:
-    area_ha_available: float = None  # type: ignore
-    cost_wage: float = None  # type: ignore
-    demand_emplo: float = None  # type: ignore
-    demand_emplo_com: float = None  # type: ignore
-    demand_emplo_new: float = None  # type: ignore
-    invest: float = None  # type: ignore
-    invest_com: float = None  # type: ignore
-    invest_pa: float = None  # type: ignore
-    invest_pa_com: float = None  # type: ignore
-    invest_per_x: float = None  # type: ignore
-    pct_of_wage: float = None  # type: ignore
-    ratio_wage_to_emplo: float = None  # type: ignore
+    area_ha_available: float = 0
+    cost_wage: float = 0
+    demand_emplo: float = 0
+    demand_emplo_com: float = 0
+    demand_emplo_new: float = 0
+    invest: float = 0
+    invest_com: float = 0
+    invest_pa: float = 0
+    invest_pa_com: float = 0
+    invest_per_x: float = 0
+    pct_of_wage: float = 0
+    ratio_wage_to_emplo: float = 0
 
-    @classmethod
-    def calc(cls, inputs: Inputs) -> "CO2eChangeGConsult":
-        area_ha_available = inputs.entries.a_farm_amount
+    inputs: InitVar[Inputs]
 
-        invest_per_x = inputs.ass("Ass_A_G_consult_invest_per_farm")
-        invest = area_ha_available * invest_per_x
-        invest_com = invest * inputs.ass("Ass_A_G_consult_invest_pct_of_public")
-        invest_pa = invest / inputs.entries.m_duration_target
-        invest_pa_com = invest_pa * inputs.ass("Ass_A_G_consult_invest_pct_of_public")
+    def __post_init__(self, inputs: Inputs):
+        self.area_ha_available = inputs.entries.a_farm_amount
 
-        pct_of_wage = inputs.ass("Ass_A_G_consult_invest_pct_of_wage")
-        cost_wage = invest_pa * pct_of_wage
-
-        ratio_wage_to_emplo = inputs.ass("Ass_A_G_consult_ratio_wage_to_emplo")
-        demand_emplo = div(cost_wage, ratio_wage_to_emplo)
-        demand_emplo_new = demand_emplo
-        demand_emplo_com = demand_emplo_new
-
-        return cls(
-            area_ha_available=area_ha_available,
-            cost_wage=cost_wage,
-            demand_emplo=demand_emplo,
-            demand_emplo_com=demand_emplo_com,
-            demand_emplo_new=demand_emplo_new,
-            invest=invest,
-            invest_com=invest_com,
-            invest_pa=invest_pa,
-            invest_pa_com=invest_pa_com,
-            invest_per_x=invest_per_x,
-            pct_of_wage=pct_of_wage,
-            ratio_wage_to_emplo=ratio_wage_to_emplo,
+        self.invest_per_x = inputs.ass("Ass_A_G_consult_invest_per_farm")
+        self.invest = self.area_ha_available * self.invest_per_x
+        self.invest_com = self.invest * inputs.ass(
+            "Ass_A_G_consult_invest_pct_of_public"
+        )
+        self.invest_pa = self.invest / inputs.entries.m_duration_target
+        self.invest_pa_com = self.invest_pa * inputs.ass(
+            "Ass_A_G_consult_invest_pct_of_public"
         )
 
+        self.pct_of_wage = inputs.ass("Ass_A_G_consult_invest_pct_of_wage")
+        self.cost_wage = self.invest_pa * self.pct_of_wage
 
-@dataclass
+        self.ratio_wage_to_emplo = inputs.ass("Ass_A_G_consult_ratio_wage_to_emplo")
+        self.demand_emplo = div(self.cost_wage, self.ratio_wage_to_emplo)
+        self.demand_emplo_new = self.demand_emplo
+        self.demand_emplo_com = self.demand_emplo_new
+
+
+@dataclass(kw_only=True)
 class CO2eChangeGOrganic:
-    area_ha_available: float = None  # type: ignore
-    cost_wage: float = None  # type: ignore
-    demand_emplo: float = None  # type: ignore
-    demand_emplo_new: float = None  # type: ignore
-    invest: float = None  # type: ignore
-    invest_pa: float = None  # type: ignore
-    invest_per_x: float = None  # type: ignore
-    pct_of_wage: float = None  # type: ignore
-    power_installed: float = None  # type: ignore
-    power_to_be_installed: float = None  # type: ignore
-    power_to_be_installed_pct: float = None  # type: ignore
-    ratio_wage_to_emplo: float = None  # type: ignore
+    area_ha_available: float = 0
+    cost_wage: float = 0
+    demand_emplo: float = 0
+    demand_emplo_new: float = 0
+    invest: float = 0
+    invest_pa: float = 0
+    invest_per_x: float = 0
+    pct_of_wage: float = 0
+    power_installed: float = 0
+    power_to_be_installed: float = 0
+    power_to_be_installed_pct: float = 0
+    ratio_wage_to_emplo: float = 0
 
-    @classmethod
-    def calc(cls, inputs: Inputs) -> "CO2eChangeGOrganic":
-        area_ha_available = inputs.entries.m_area_agri_com
+    inputs: InitVar[Inputs]
 
-        power_installed = inputs.entries.a_area_agri_com_pct_of_organic
-        power_to_be_installed_pct = inputs.ass("Ass_A_G_area_agri_pct_of_organic_2050")
-        power_to_be_installed = area_ha_available * (
-            power_to_be_installed_pct - power_installed
+    def __post_init__(self, inputs: Inputs):
+        self.area_ha_available = inputs.entries.m_area_agri_com
+
+        self.power_installed = inputs.entries.a_area_agri_com_pct_of_organic
+        self.power_to_be_installed_pct = inputs.ass(
+            "Ass_A_G_area_agri_pct_of_organic_2050"
+        )
+        self.power_to_be_installed = self.area_ha_available * (
+            self.power_to_be_installed_pct - self.power_installed
         )
 
-        invest_per_x = inputs.ass("Ass_A_G_area_agri_organic_ratio_invest_to_ha")
-        invest = power_to_be_installed * invest_per_x
-        invest_pa = invest / inputs.entries.m_duration_target
+        self.invest_per_x = inputs.ass("Ass_A_G_area_agri_organic_ratio_invest_to_ha")
+        self.invest = self.power_to_be_installed * self.invest_per_x
+        self.invest_pa = self.invest / inputs.entries.m_duration_target
 
-        pct_of_wage = inputs.fact("Fact_B_P_constr_main_revenue_pct_of_wage_2017")
-        cost_wage = invest_pa * pct_of_wage
+        self.pct_of_wage = inputs.fact("Fact_B_P_constr_main_revenue_pct_of_wage_2017")
+        self.cost_wage = self.invest_pa * self.pct_of_wage
 
-        ratio_wage_to_emplo = inputs.fact(
+        self.ratio_wage_to_emplo = inputs.fact(
             "Fact_B_P_constr_main_ratio_wage_to_emplo_2017"
         )
-        demand_emplo = div(cost_wage, ratio_wage_to_emplo)
-        demand_emplo_new = demand_emplo
-
-        return cls(
-            area_ha_available=area_ha_available,
-            cost_wage=cost_wage,
-            demand_emplo=demand_emplo,
-            demand_emplo_new=demand_emplo_new,
-            invest=invest,
-            invest_pa=invest_pa,
-            invest_per_x=invest_per_x,
-            pct_of_wage=pct_of_wage,
-            power_installed=power_installed,
-            power_to_be_installed=power_to_be_installed,
-            power_to_be_installed_pct=power_to_be_installed_pct,
-            ratio_wage_to_emplo=ratio_wage_to_emplo,
-        )
+        self.demand_emplo = div(self.cost_wage, self.ratio_wage_to_emplo)
+        self.demand_emplo_new = self.demand_emplo

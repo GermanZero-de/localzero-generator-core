@@ -294,9 +294,9 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
         inputs, a18, p_operation_heat.demand_emethan
     )
 
-    g_consult = CO2eChangeGConsult.calc(inputs)
-    g_organic = CO2eChangeGOrganic.calc(inputs)
-    g = CO2eChangeG.calc(g_consult, g_organic)
+    g_consult = CO2eChangeGConsult(inputs=inputs)
+    g_organic = CO2eChangeGOrganic(inputs=inputs)
+    g = CO2eChangeG(g_consult=g_consult, g_organic=g_organic)
 
     s = CO2eChangeS.calc_s(
         inputs,
@@ -313,7 +313,9 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
         s_heatpump,
     )
 
-    a = CO2eChangeA.calc(inputs, "a", a18, p_operation, p, g, s)
+    a = CO2eChangeA(
+        inputs=inputs, what="a", a18=a18, p_operation=p_operation, p=p, g=g, s=s
+    )
 
     return A30(
         p_fermen_dairycow=p_fermen_dairycow,
