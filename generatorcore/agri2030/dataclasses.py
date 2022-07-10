@@ -47,6 +47,7 @@ class CO2eChangeA:
         g: Any,
         s: Any,
     ):
+
         self.CO2e_production_based = p.CO2e_production_based
         self.CO2e_combustion_based = s.CO2e_combustion_based
         self.CO2e_total = g.CO2e_total + p.CO2e_total + s.CO2e_total
@@ -100,6 +101,7 @@ class CO2eChangeG:
     g_organic: InitVar[Any]
 
     def __post_init__(self, g_consult: Any, g_organic: Any):
+
         self.CO2e_total = 0
         self.cost_wage = g_consult.cost_wage + g_organic.cost_wage
 
@@ -134,6 +136,7 @@ class CO2eChangeGConsult:
     inputs: InitVar[Inputs]
 
     def __post_init__(self, inputs: Inputs):
+
         self.area_ha_available = inputs.entries.a_farm_amount
 
         self.invest_per_x = inputs.ass("Ass_A_G_consult_invest_per_farm")
@@ -173,6 +176,7 @@ class CO2eChangeGOrganic:
     inputs: InitVar[Inputs]
 
     def __post_init__(self, inputs: Inputs):
+
         self.area_ha_available = inputs.entries.m_area_agri_com
 
         self.power_installed = inputs.entries.a_area_agri_com_pct_of_organic

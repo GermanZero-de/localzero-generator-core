@@ -29,7 +29,7 @@ from .energy_source import (
 )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class A30:
     a: CO2eChangeA
     p: CO2eChangeP

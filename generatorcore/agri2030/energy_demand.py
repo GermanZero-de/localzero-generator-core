@@ -1,5 +1,5 @@
 # pyright: strict
-from dataclasses import dataclass
+from dataclasses import dataclass, InitVar
 from typing import Any
 
 from ..utils import div
@@ -7,7 +7,7 @@ from ..agri2018.a18 import A18
 from ..inputs import Inputs
 
 
-@dataclass
+@dataclass(kw_only=True)
 class CO2eChangeP:
     CO2e_production_based: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
@@ -71,56 +71,48 @@ class CO2eChangeP:
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class CO2eChange:
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_production_based: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
-    change_CO2e_pct: float = None  # type: ignore
-    change_CO2e_t: float = None  # type: ignore
-    cost_climate_saved: float = None  # type: ignore
+    CO2e_combustion_based: float
+    CO2e_production_based: float
 
-    @classmethod
-    def calc(
-        cls,
+    CO2e_total: float = 0
+    CO2e_total_2021_estimated: float = 0
+    change_CO2e_pct: float = 0
+    change_CO2e_t: float = 0
+    cost_climate_saved: float = 0
+
+    inputs: InitVar[Inputs]
+    what: InitVar[str]
+    a18: InitVar[A18]
+
+    def __post_init__(
+        self,
         inputs: Inputs,
         what: str,
         a18: A18,
-        CO2e_combustion_based: float,
-        CO2e_production_based: float,
-    ) -> "CO2eChange":
+    ):
 
         if not what:
             a18_CO2e_total = 0
         else:
             a18_CO2e_total = getattr(a18, what).CO2e_total
 
-        CO2e_total = CO2e_production_based + CO2e_combustion_based
-        change_CO2e_t = CO2e_total - a18_CO2e_total
-        change_CO2e_pct = div(change_CO2e_t, a18_CO2e_total)
+        self.CO2e_total = self.CO2e_production_based + self.CO2e_combustion_based
+        self.change_CO2e_t = self.CO2e_total - a18_CO2e_total
+        self.change_CO2e_pct = div(self.change_CO2e_t, a18_CO2e_total)
 
-        CO2e_total_2021_estimated = a18_CO2e_total * inputs.fact(
+        self.CO2e_total_2021_estimated = a18_CO2e_total * inputs.fact(
             "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
         )
-        cost_climate_saved = (
-            (CO2e_total_2021_estimated - CO2e_total)
+        self.cost_climate_saved = (
+            (self.CO2e_total_2021_estimated - self.CO2e_total)
             * inputs.entries.m_duration_neutral
             * inputs.fact("Fact_M_cost_per_CO2e_2020")
         )
 
-        return cls(
-            CO2e_combustion_based=CO2e_combustion_based,
-            CO2e_production_based=CO2e_production_based,
-            CO2e_total=CO2e_total,
-            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
-            change_CO2e_pct=change_CO2e_pct,
-            change_CO2e_t=change_CO2e_t,
-            cost_climate_saved=cost_climate_saved,
-        )
 
-
-@dataclass
+@dataclass(kw_only=True)
 class CO2eChangeEnergy:
     change_energy_MWh: float = None  # type: ignore
     change_energy_pct: float = None  # type: ignore
@@ -139,7 +131,7 @@ class CO2eChangeEnergy:
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class CO2eChangeFermentationOrManure(CO2eChange):
     CO2e_production_based_per_t: float = None  # type: ignore
     amount: float = None  # type: ignore
@@ -155,9 +147,18 @@ class CO2eChangeFermentationOrManure(CO2eChange):
         CO2e_production_based_per_t = getattr(a18, what).CO2e_production_based_per_t
         CO2e_production_based = amount * CO2e_production_based_per_t
 
-        parent = super().calc(inputs, what, a18, 0, CO2e_production_based)
+        parent = CO2eChange(
+            inputs=inputs,
+            what=what,
+            a18=a18,
+            CO2e_combustion_based=0,
+            CO2e_production_based=CO2e_production_based,
+        )
 
         return cls(
+            inputs=inputs,
+            what=what,
+            a18=a18,
             CO2e_combustion_based=parent.CO2e_combustion_based,
             CO2e_production_based=parent.CO2e_production_based,
             CO2e_production_based_per_t=CO2e_production_based_per_t,
@@ -181,9 +182,18 @@ class CO2eChangeFermentationOrManure(CO2eChange):
         )
         CO2e_production_based = amount * CO2e_production_based_per_t
 
-        parent = super().calc(inputs, what, a18, 0, CO2e_production_based)
+        parent = CO2eChange(
+            inputs=inputs,
+            what=what,
+            a18=a18,
+            CO2e_combustion_based=0,
+            CO2e_production_based=CO2e_production_based,
+        )
 
         return cls(
+            inputs=inputs,
+            what=what,
+            a18=a18,
             CO2e_combustion_based=parent.CO2e_combustion_based,
             CO2e_production_based=parent.CO2e_production_based,
             CO2e_production_based_per_t=CO2e_production_based_per_t,
@@ -197,7 +207,7 @@ class CO2eChangeFermentationOrManure(CO2eChange):
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class CO2eChangeSoil(CO2eChange):
     CO2e_production_based_per_t: float = None  # type: ignore
     area_ha: float = None  # type: ignore
@@ -226,9 +236,18 @@ class CO2eChangeSoil(CO2eChange):
 
         area_ha_change = -(getattr(a18, what).area_ha - area_ha)
 
-        parent = super().calc(inputs, what, a18, 0, CO2e_production_based)
+        parent = CO2eChange(
+            inputs=inputs,
+            what=what,
+            a18=a18,
+            CO2e_combustion_based=0,
+            CO2e_production_based=CO2e_production_based,
+        )
 
         return cls(
+            inputs=inputs,
+            what=what,
+            a18=a18,
             CO2e_combustion_based=parent.CO2e_combustion_based,
             CO2e_production_based=parent.CO2e_production_based,
             CO2e_production_based_per_t=CO2e_production_based_per_t,
@@ -255,9 +274,18 @@ class CO2eChangeSoil(CO2eChange):
 
         area_ha_change = -(getattr(a18, what).area_ha - area_ha)
 
-        parent = super().calc(inputs, what, a18, 0, CO2e_production_based)
+        parent = CO2eChange(
+            inputs=inputs,
+            what=what,
+            a18=a18,
+            CO2e_combustion_based=0,
+            CO2e_production_based=CO2e_production_based,
+        )
 
         return cls(
+            inputs=inputs,
+            what=what,
+            a18=a18,
             CO2e_combustion_based=parent.CO2e_combustion_based,
             CO2e_production_based=parent.CO2e_production_based,
             CO2e_production_based_per_t=CO2e_production_based_per_t,
@@ -272,7 +300,7 @@ class CO2eChangeSoil(CO2eChange):
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class CO2eChangeOtherLiming(CO2eChange):
     prod_volume: float = None  # type: ignore
 
@@ -286,9 +314,18 @@ class CO2eChangeOtherLiming(CO2eChange):
         CO2e_production_based: float,
     ) -> "CO2eChangeOtherLiming":
 
-        parent = super().calc(inputs, what, a18, 0, CO2e_production_based)
+        parent = CO2eChange(
+            inputs=inputs,
+            what=what,
+            a18=a18,
+            CO2e_combustion_based=0,
+            CO2e_production_based=CO2e_production_based,
+        )
 
         return cls(
+            inputs=inputs,
+            what=what,
+            a18=a18,
             CO2e_combustion_based=parent.CO2e_combustion_based,
             CO2e_production_based=parent.CO2e_production_based,
             CO2e_total=parent.CO2e_total,
@@ -300,7 +337,7 @@ class CO2eChangeOtherLiming(CO2eChange):
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class CO2eChangeOther(CO2eChange):
     CO2e_production_based_per_t: float = None  # type: ignore
     demand_change: float = None  # type: ignore
@@ -322,9 +359,18 @@ class CO2eChangeOther(CO2eChange):
         CO2e_production_based_per_t = inputs.fact(fact_production_based_per_t)
         CO2e_production_based = prod_volume * CO2e_production_based_per_t
 
-        parent = super().calc(inputs, what, a18, 0, CO2e_production_based)
+        parent = CO2eChange(
+            inputs=inputs,
+            what=what,
+            a18=a18,
+            CO2e_combustion_based=0,
+            CO2e_production_based=CO2e_production_based,
+        )
 
         return cls(
+            inputs=inputs,
+            what=what,
+            a18=a18,
             CO2e_combustion_based=parent.CO2e_combustion_based,
             CO2e_production_based=parent.CO2e_production_based,
             CO2e_production_based_per_t=CO2e_production_based_per_t,
@@ -338,7 +384,7 @@ class CO2eChangeOther(CO2eChange):
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class CO2eChangePOperation(CO2eChangeEnergy):
     cost_wage: float = None  # type: ignore
     demand_biomass: float = None  # type: ignore
@@ -406,7 +452,7 @@ class CO2eChangePOperation(CO2eChangeEnergy):
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class CO2eChangePOperationHeat(CO2eChangeEnergy):
     area_m2: float = None  # type: ignore
     area_m2_nonrehab: float = None  # type: ignore
@@ -531,7 +577,7 @@ class CO2eChangePOperationHeat(CO2eChangeEnergy):
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class CO2eChangePOperationElecElcon(CO2eChangeEnergy):
     demand_biomass: float = None  # type: ignore
     demand_change: float = None  # type: ignore
@@ -573,7 +619,7 @@ class CO2eChangePOperationElecElcon(CO2eChangeEnergy):
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class CO2eChangePOperationElecHeatpump(CO2eChangeEnergy):
     demand_electricity: float = None  # type: ignore
 
@@ -596,7 +642,7 @@ class CO2eChangePOperationElecHeatpump(CO2eChangeEnergy):
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class CO2eChangePOperationVehicles(CO2eChangeEnergy):
     demand_biomass: float = None  # type: ignore
     demand_change: float = None  # type: ignore

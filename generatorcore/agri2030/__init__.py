@@ -183,35 +183,35 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
         + p_other_liming_dolomite.CO2e_production_based,
     )
 
-    p_fermen = CO2eChange.calc(
-        inputs,
-        "p_fermen",
-        a18,
-        0,
-        p_fermen_dairycow.CO2e_production_based
+    p_fermen = CO2eChange(
+        inputs=inputs,
+        what="p_fermen",
+        a18=a18,
+        CO2e_combustion_based=0,
+        CO2e_production_based=p_fermen_dairycow.CO2e_production_based
         + p_fermen_nondairy.CO2e_production_based
         + p_fermen_swine.CO2e_production_based
         + p_fermen_poultry.CO2e_production_based
         + p_fermen_oanimal.CO2e_production_based,
     )
-    p_manure = CO2eChange.calc(
-        inputs,
-        "p_manure",
-        a18,
-        0,
-        p_manure_dairycow.CO2e_production_based
+    p_manure = CO2eChange(
+        inputs=inputs,
+        what="p_manure",
+        a18=a18,
+        CO2e_combustion_based=0,
+        CO2e_production_based=p_manure_dairycow.CO2e_production_based
         + p_manure_nondairy.CO2e_production_based
         + p_manure_swine.CO2e_production_based
         + p_manure_poultry.CO2e_production_based
         + p_manure_oanimal.CO2e_production_based
         + p_manure_deposition.CO2e_production_based,
     )
-    p_soil = CO2eChange.calc(
-        inputs,
-        "p_soil",
-        a18,
-        0,
-        p_soil_fertilizer.CO2e_production_based
+    p_soil = CO2eChange(
+        inputs=inputs,
+        what="p_soil",
+        a18=a18,
+        CO2e_combustion_based=0,
+        CO2e_production_based=p_soil_fertilizer.CO2e_production_based
         + p_soil_manure.CO2e_production_based
         + p_soil_sludge.CO2e_production_based
         + p_soil_ecrop.CO2e_production_based
@@ -222,12 +222,12 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
         + p_soil_leaching.CO2e_production_based
         + p_soil_deposition.CO2e_production_based,
     )
-    p_other = CO2eChange.calc(
-        inputs,
-        "p_other",
-        a18,
-        0,
-        p_other_liming.CO2e_production_based
+    p_other = CO2eChange(
+        inputs=inputs,
+        what="p_other",
+        a18=a18,
+        CO2e_combustion_based=0,
+        CO2e_production_based=p_other_liming.CO2e_production_based
         + p_other_urea.CO2e_production_based
         + p_other_kas.CO2e_production_based
         + p_other_ecrop.CO2e_production_based,
@@ -272,23 +272,69 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
         + p_other.CO2e_total,
     )
 
-    s_petrol = CO2eChangeEnergyPerMWh.calc_energy(
-        inputs, "s_petrol", a18, p_operation_vehicles.demand_epetrol
+    s_petrol = CO2eChangeEnergyPerMWh(
+        inputs=inputs,
+        what="s_petrol",
+        a18=a18,
+        energy=p_operation_vehicles.demand_epetrol,
+        CO2e_combustion_based=None,  # type: ignore
+        CO2e_production_based=None,  # type: ignore
     )
-    s_diesel = CO2eChangeEnergyPerMWh.calc_energy(
-        inputs, "s_diesel", a18, p_operation_vehicles.demand_ediesel
+    s_diesel = CO2eChangeEnergyPerMWh(
+        inputs=inputs,
+        what="s_diesel",
+        a18=a18,
+        energy=p_operation_vehicles.demand_ediesel,
+        CO2e_combustion_based=None,  # type: ignore
+        CO2e_production_based=None,  # type: ignore
     )
-    s_lpg = CO2eChangeEnergyPerMWh.calc_energy(inputs, "s_lpg", a18, 0)
-    s_biomass = CO2eChangeEnergyPerMWh.calc_energy(
-        inputs, "s_biomass", a18, p_operation.demand_biomass
+    s_lpg = CO2eChangeEnergyPerMWh(
+        inputs=inputs,
+        what="s_lpg",
+        a18=a18,
+        energy=0,
+        CO2e_combustion_based=None,  # type: ignore
+        CO2e_production_based=None,  # type: ignore
     )
-    s_elec = CO2eChangeEnergyPerMWh.calc_energy(
-        inputs, "s_elec", a18, p_operation.demand_electricity
+    s_biomass = CO2eChangeEnergyPerMWh(
+        inputs=inputs,
+        what="s_biomass",
+        a18=a18,
+        energy=p_operation.demand_biomass,
+        CO2e_combustion_based=None,  # type: ignore
+        CO2e_production_based=None,  # type: ignore
     )
-    s_fueloil = CO2eChangeFuelOilGas.calc_energy(inputs, "s_fueloil", a18, 0)
-    s_gas = CO2eChangeFuelOilGas.calc_energy(inputs, "s_gas", a18, 0)
-    s_heatpump = CO2eChangeFuelHeatpump.calc_energy(
-        inputs, "s_heatpump", a18, p_operation.demand_heatpump
+    s_elec = CO2eChangeEnergyPerMWh(
+        inputs=inputs,
+        what="s_elec",
+        a18=a18,
+        energy=p_operation.demand_electricity,
+        CO2e_combustion_based=None,  # type: ignore
+        CO2e_production_based=None,  # type: ignore
+    )
+    s_fueloil = CO2eChangeFuelOilGas(
+        inputs=inputs,
+        what="s_fueloil",
+        a18=a18,
+        energy=0,
+        CO2e_combustion_based=None,  # type: ignore
+        CO2e_production_based=None,  # type: ignore
+    )
+    s_gas = CO2eChangeFuelOilGas(
+        inputs=inputs,
+        what="s_gas",
+        a18=a18,
+        energy=0,
+        CO2e_combustion_based=None,  # type: ignore
+        CO2e_production_based=None,  # type: ignore
+    )
+    s_heatpump = CO2eChangeFuelHeatpump(
+        inputs=inputs,
+        what="s_heatpump",
+        a18=a18,
+        energy=p_operation.demand_heatpump,
+        CO2e_combustion_based=None,  # type: ignore
+        CO2e_production_based=None,  # type: ignore
     )
     s_emethan = CO2eChangeFuelEmethan.calc_energy(
         inputs, a18, p_operation_heat.demand_emethan
