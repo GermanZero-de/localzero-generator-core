@@ -8,8 +8,7 @@ from ..inputs import Inputs
 
 
 @dataclass
-class Vars0:
-    # Used by a
+class CO2eChangeA:
     CO2e_combustion_based: float = None  # type: ignore
     CO2e_production_based: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
@@ -29,6 +28,72 @@ class Vars0:
     invest_pa: float = None  # type: ignore
     invest_pa_com: float = None  # type: ignore
     invest_pa_outside: float = None  # type: ignore
+
+    @classmethod
+    def calc(
+        cls,
+        inputs: Inputs,
+        what: str,
+        a18: A18,
+        p_operation: Any,
+        p: Any,
+        g: Any,
+        s: Any,
+    ) -> "CO2eChangeA":
+
+        CO2e_production_based = p.CO2e_production_based
+        CO2e_combustion_based = s.CO2e_combustion_based
+        CO2e_total = g.CO2e_total + p.CO2e_total + s.CO2e_total
+
+        CO2e_total_2021_estimated = getattr(a18, what).CO2e_total * inputs.fact(
+            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+        )
+
+        invest_pa_outside = g.invest_pa_outside
+        invest_outside = g.invest_outside
+        invest_com = g.invest_com
+        invest = g.invest + s.invest + p.invest
+        invest_pa_com = g.invest_pa_com
+        invest_pa = invest / inputs.entries.m_duration_target
+
+        change_CO2e_t = CO2e_total - getattr(a18, what).CO2e_total
+        change_CO2e_pct = div(change_CO2e_t, a18.a.CO2e_total)
+        change_energy_MWh = p_operation.change_energy_MWh
+        change_energy_pct = p_operation.change_energy_pct
+
+        demand_emplo = g.demand_emplo + p.demand_emplo + s.demand_emplo
+        demand_emplo_new = g.demand_emplo_new + p.demand_emplo_new + s.demand_emplo_new
+        demand_emplo_com = g.demand_emplo_com
+
+        cost_climate_saved = (
+            (CO2e_total_2021_estimated - CO2e_total)
+            * inputs.entries.m_duration_neutral
+            * inputs.fact("Fact_M_cost_per_CO2e_2020")
+        )
+
+        cost_wage = g.cost_wage + p.cost_wage + s.cost_wage
+
+        return cls(
+            CO2e_combustion_based=CO2e_combustion_based,
+            CO2e_production_based=CO2e_production_based,
+            CO2e_total=CO2e_total,
+            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+            change_CO2e_pct=change_CO2e_pct,
+            change_CO2e_t=change_CO2e_t,
+            change_energy_MWh=change_energy_MWh,
+            change_energy_pct=change_energy_pct,
+            cost_climate_saved=cost_climate_saved,
+            cost_wage=cost_wage,
+            demand_emplo=demand_emplo,
+            demand_emplo_com=demand_emplo_com,
+            demand_emplo_new=demand_emplo_new,
+            invest=invest,
+            invest_com=invest_com,
+            invest_outside=invest_outside,
+            invest_pa=invest_pa,
+            invest_pa_com=invest_pa_com,
+            invest_pa_outside=invest_pa_outside,
+        )
 
 
 @dataclass

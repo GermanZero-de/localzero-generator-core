@@ -24,9 +24,9 @@ from .dataclasses import (
     CO2eChangePOperationElecHeatpump,
     CO2eChangePOperationVehicles,
     CO2eChangeS,
+    CO2eChangeA,
 )
 from ..inputs import Inputs
-from ..utils import div
 from .. import agri2018, lulucf2030
 from .a30 import A30
 
@@ -36,8 +36,6 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
     entries = inputs.entries
 
     a30 = A30()
-
-    a = a30.a
 
     p_fermen_dairycow = CO2eChangeFermentationOrManure.calc_fermen(
         inputs, "p_fermen_dairycow", "Ass_A_P_fermen_dairycow_change", a18
@@ -300,38 +298,7 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
         s_heatpump,
     )
 
-    a.invest_pa_outside = g.invest_pa_outside
-    a.invest_outside = g.invest_outside
-    a.CO2e_total_2021_estimated = a18.a.CO2e_total * fact(
-        "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
-    )
-    a.CO2e_production_based = p.CO2e_production_based
-
-    a.invest_com = g.invest_com
-    a.invest = g.invest + s.invest + p.invest
-
-    a.invest_pa_com = g.invest_pa_com
-    a.invest_pa = a.invest / entries.m_duration_target
-
-    a.change_energy_MWh = p_operation.change_energy_MWh
-    a.change_energy_pct = p_operation.change_energy_pct
-
-    a.CO2e_combustion_based = s.CO2e_combustion_based
-    a.demand_emplo = g.demand_emplo + p.demand_emplo + s.demand_emplo
-    a.CO2e_total = g.CO2e_total + p.CO2e_total + s.CO2e_total
-
-    a.demand_emplo_new = g.demand_emplo_new + p.demand_emplo_new + s.demand_emplo_new
-    a.change_CO2e_t = a.CO2e_total - a18.a.CO2e_total
-    a.cost_climate_saved = (
-        (a.CO2e_total_2021_estimated - a.CO2e_total)
-        * entries.m_duration_neutral
-        * fact("Fact_M_cost_per_CO2e_2020")
-    )
-    a.change_CO2e_pct = div(a.change_CO2e_t, a18.a.CO2e_total)
-
-    a.demand_emplo_com = g.demand_emplo_com
-
-    a.cost_wage = g.cost_wage + p.cost_wage + s.cost_wage
+    a = CO2eChangeA.calc(inputs, "a", a18, p_operation, p, g, s)
 
     return A30(
         p_fermen_dairycow=p_fermen_dairycow,
