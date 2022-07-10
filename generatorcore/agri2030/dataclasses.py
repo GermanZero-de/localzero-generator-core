@@ -893,8 +893,7 @@ class CO2eChangePOperationVehicles:
 
 
 @dataclass
-class Vars15:
-    # Used by s
+class CO2eChangeS:
     CO2e_combustion_based: float = None  # type: ignore
     CO2e_production_based: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
@@ -910,6 +909,90 @@ class Vars15:
     energy: float = None  # type: ignore
     invest: float = None  # type: ignore
     invest_pa: float = None  # type: ignore
+
+    @classmethod
+    def calc(
+        cls,
+        inputs: Inputs,
+        what: str,
+        a18: A18,
+        s_petrol: Any,
+        s_diesel: Any,
+        s_fueloil: Any,
+        s_lpg: Any,
+        s_gas: Any,
+        s_emethan: Any,
+        s_biomass: Any,
+        s_elec: Any,
+        s_heatpump: Any,
+    ) -> "CO2eChangeS":
+
+        CO2e_production_based = 0
+        CO2e_combustion_based = (
+            s_petrol.CO2e_combustion_based
+            + s_diesel.CO2e_combustion_based
+            + s_fueloil.CO2e_combustion_based
+            + s_lpg.CO2e_combustion_based
+            + s_gas.CO2e_combustion_based
+            + s_emethan.CO2e_combustion_based
+            + s_biomass.CO2e_combustion_based
+            + s_elec.CO2e_combustion_based
+            + s_heatpump.CO2e_combustion_based
+        )
+        CO2e_total = CO2e_production_based + CO2e_combustion_based
+
+        change_CO2e_t = CO2e_total - getattr(a18, what).CO2e_total
+        change_CO2e_pct = div(change_CO2e_t, getattr(a18, what).CO2e_total)
+
+        CO2e_total_2021_estimated = getattr(a18, what).CO2e_total * inputs.fact(
+            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+        )
+
+        invest = s_heatpump.invest
+        invest_pa = invest / inputs.entries.m_duration_target
+
+        energy = (
+            s_petrol.energy
+            + s_diesel.energy
+            + s_fueloil.energy
+            + s_lpg.energy
+            + s_gas.energy
+            + s_emethan.energy
+            + s_biomass.energy
+            + s_elec.energy
+            + s_heatpump.energy
+        )
+        change_energy_MWh = energy - getattr(a18, what).energy
+        change_energy_pct = div(change_energy_MWh, getattr(a18, what).energy)
+
+        demand_emplo = s_heatpump.demand_emplo
+        demand_emplo_new = s_heatpump.demand_emplo_new
+
+        cost_climate_saved = (
+            (CO2e_total_2021_estimated - CO2e_total)
+            * inputs.entries.m_duration_neutral
+            * inputs.fact("Fact_M_cost_per_CO2e_2020")
+        )
+
+        cost_wage = s_heatpump.cost_wage
+
+        return cls(
+            CO2e_combustion_based=CO2e_combustion_based,
+            CO2e_production_based=CO2e_production_based,
+            CO2e_total=CO2e_total,
+            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+            change_CO2e_pct=change_CO2e_pct,
+            change_CO2e_t=change_CO2e_t,
+            change_energy_MWh=change_energy_MWh,
+            change_energy_pct=change_energy_pct,
+            cost_climate_saved=cost_climate_saved,
+            cost_wage=cost_wage,
+            demand_emplo=demand_emplo,
+            demand_emplo_new=demand_emplo_new,
+            energy=energy,
+            invest=invest,
+            invest_pa=invest_pa,
+        )
 
 
 @dataclass
