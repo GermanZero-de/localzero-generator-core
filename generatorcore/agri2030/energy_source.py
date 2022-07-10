@@ -10,16 +10,9 @@ from .energy_demand import CO2eChange
 
 @dataclass
 class CO2eChangeEnergy(CO2eChange):
-    CO2e_combustion_based: float = None  # type: ignore
     CO2e_combustion_based_per_MWh: float = None  # type: ignore
-    CO2e_production_based: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
-    change_CO2e_pct: float = None  # type: ignore
-    change_CO2e_t: float = None  # type: ignore
     change_energy_MWh: float = None  # type: ignore
     change_energy_pct: float = None  # type: ignore
-    cost_climate_saved: float = None  # type: ignore
     energy: float = None  # type: ignore
 
     @classmethod
@@ -51,15 +44,8 @@ class CO2eChangeEnergy(CO2eChange):
 
 @dataclass
 class CO2eChangeS(CO2eChange):
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_production_based: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
-    change_CO2e_pct: float = None  # type: ignore
-    change_CO2e_t: float = None  # type: ignore
     change_energy_MWh: float = None  # type: ignore
     change_energy_pct: float = None  # type: ignore
-    cost_climate_saved: float = None  # type: ignore
     cost_wage: float = None  # type: ignore
     demand_emplo: float = None  # type: ignore
     demand_emplo_new: float = None  # type: ignore
@@ -141,18 +127,7 @@ class CO2eChangeS(CO2eChange):
 
 @dataclass
 class CO2eChangeFuelOilGas(CO2eChangeEnergy):
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_combustion_based_per_MWh: float = None  # type: ignore
-    CO2e_production_based: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
     area_m2: float = None  # type: ignore
-    change_CO2e_pct: float = None  # type: ignore
-    change_CO2e_t: float = None  # type: ignore
-    change_energy_MWh: float = None  # type: ignore
-    change_energy_pct: float = None  # type: ignore
-    cost_climate_saved: float = None  # type: ignore
-    energy: float = None  # type: ignore
 
     @classmethod
     def calc_energy(
@@ -180,22 +155,12 @@ class CO2eChangeFuelOilGas(CO2eChangeEnergy):
 
 @dataclass
 class CO2eChangeFuelHeatpump(CO2eChangeEnergy):
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_combustion_based_per_MWh: float = None  # type: ignore
-    CO2e_production_based: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
-    change_CO2e_pct: float = None  # type: ignore
-    change_CO2e_t: float = None  # type: ignore
-    change_energy_MWh: float = None  # type: ignore
-    cost_climate_saved: float = None  # type: ignore
     cost_fuel: float = None  # type: ignore
     cost_fuel_per_MWh: float = None  # type: ignore
     cost_wage: float = None  # type: ignore
     demand_emplo: float = None  # type: ignore
     demand_emplo_new: float = None  # type: ignore
     emplo_existing: float = None  # type: ignore
-    energy: float = None  # type: ignore
     full_load_hour: float = None  # type: ignore
     invest: float = None  # type: ignore
     invest_pa: float = None  # type: ignore
@@ -272,14 +237,8 @@ class CO2eChangeFuelHeatpump(CO2eChangeEnergy):
 
 @dataclass
 class CO2eChangeFuelEmethan(CO2eChange):
-    CO2e_combustion_based: float = None  # type: ignore
     CO2e_combustion_based_per_MWh: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
-    change_CO2e_pct: float = None  # type: ignore
-    change_CO2e_t: float = None  # type: ignore
     change_energy_MWh: float = None  # type: ignore
-    cost_climate_saved: float = None  # type: ignore
     demand_emethan: float = None  # type: ignore
     energy: float = None  # type: ignore
 

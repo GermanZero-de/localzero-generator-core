@@ -122,15 +122,8 @@ class CO2eChange:
 
 @dataclass
 class CO2eChangeFermentationOrManure(CO2eChange):
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_production_based: float = None  # type: ignore
     CO2e_production_based_per_t: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
     amount: float = None  # type: ignore
-    change_CO2e_pct: float = None  # type: ignore
-    change_CO2e_t: float = None  # type: ignore
-    cost_climate_saved: float = None  # type: ignore
     demand_change: float = None  # type: ignore
 
     @classmethod
@@ -187,16 +180,9 @@ class CO2eChangeFermentationOrManure(CO2eChange):
 
 @dataclass
 class CO2eChangeSoil(CO2eChange):
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_production_based: float = None  # type: ignore
     CO2e_production_based_per_t: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
     area_ha: float = None  # type: ignore
     area_ha_change: float = None  # type: ignore
-    change_CO2e_pct: float = None  # type: ignore
-    change_CO2e_t: float = None  # type: ignore
-    cost_climate_saved: float = None  # type: ignore
     demand_change: float = None  # type: ignore
 
     @classmethod
@@ -316,13 +302,6 @@ class CO2eChangeSoil(CO2eChange):
 
 @dataclass
 class CO2eChangeOtherLiming(CO2eChange):
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_production_based: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
-    change_CO2e_pct: float = None  # type: ignore
-    change_CO2e_t: float = None  # type: ignore
-    cost_climate_saved: float = None  # type: ignore
     prod_volume: float = None  # type: ignore
 
     @classmethod
@@ -351,14 +330,7 @@ class CO2eChangeOtherLiming(CO2eChange):
 
 @dataclass
 class CO2eChangeOther(CO2eChange):
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_production_based: float = None  # type: ignore
     CO2e_production_based_per_t: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
-    change_CO2e_pct: float = None  # type: ignore
-    change_CO2e_t: float = None  # type: ignore
-    cost_climate_saved: float = None  # type: ignore
     demand_change: float = None  # type: ignore
     prod_volume: float = None  # type: ignore
 
