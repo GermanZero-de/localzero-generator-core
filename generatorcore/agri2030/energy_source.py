@@ -9,7 +9,7 @@ from .energy_demand import CO2eChange
 
 
 @dataclass
-class CO2eChangeS:
+class CO2eChangeS(CO2eChange):
     CO2e_combustion_based: float = None  # type: ignore
     CO2e_production_based: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
@@ -27,7 +27,7 @@ class CO2eChangeS:
     invest_pa: float = None  # type: ignore
 
     @classmethod
-    def calc(
+    def calc_s(
         cls,
         inputs: Inputs,
         what: str,
@@ -43,7 +43,6 @@ class CO2eChangeS:
         s_heatpump: Any,
     ) -> "CO2eChangeS":
 
-        CO2e_production_based = 0
         CO2e_combustion_based = (
             s_petrol.CO2e_combustion_based
             + s_diesel.CO2e_combustion_based
@@ -54,14 +53,6 @@ class CO2eChangeS:
             + s_biomass.CO2e_combustion_based
             + s_elec.CO2e_combustion_based
             + s_heatpump.CO2e_combustion_based
-        )
-        CO2e_total = CO2e_production_based + CO2e_combustion_based
-
-        change_CO2e_t = CO2e_total - getattr(a18, what).CO2e_total
-        change_CO2e_pct = div(change_CO2e_t, getattr(a18, what).CO2e_total)
-
-        CO2e_total_2021_estimated = getattr(a18, what).CO2e_total * inputs.fact(
-            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
         )
 
         invest = s_heatpump.invest
@@ -84,24 +75,20 @@ class CO2eChangeS:
         demand_emplo = s_heatpump.demand_emplo
         demand_emplo_new = s_heatpump.demand_emplo_new
 
-        cost_climate_saved = (
-            (CO2e_total_2021_estimated - CO2e_total)
-            * inputs.entries.m_duration_neutral
-            * inputs.fact("Fact_M_cost_per_CO2e_2020")
-        )
-
         cost_wage = s_heatpump.cost_wage
 
+        parent = super().calc(inputs, what, a18, CO2e_combustion_based, 0)
+
         return cls(
-            CO2e_combustion_based=CO2e_combustion_based,
-            CO2e_production_based=CO2e_production_based,
-            CO2e_total=CO2e_total,
-            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
-            change_CO2e_pct=change_CO2e_pct,
-            change_CO2e_t=change_CO2e_t,
+            CO2e_combustion_based=parent.CO2e_combustion_based,
+            CO2e_production_based=parent.CO2e_production_based,
+            CO2e_total=parent.CO2e_total,
+            CO2e_total_2021_estimated=parent.CO2e_total_2021_estimated,
+            change_CO2e_pct=parent.change_CO2e_pct,
+            change_CO2e_t=parent.change_CO2e_t,
             change_energy_MWh=change_energy_MWh,
             change_energy_pct=change_energy_pct,
-            cost_climate_saved=cost_climate_saved,
+            cost_climate_saved=parent.cost_climate_saved,
             cost_wage=cost_wage,
             demand_emplo=demand_emplo,
             demand_emplo_new=demand_emplo_new,

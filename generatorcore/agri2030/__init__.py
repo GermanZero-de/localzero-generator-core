@@ -283,7 +283,7 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
     g_organic = CO2eChangeGOrganic.calc(inputs)
     g = CO2eChangeG.calc(g_consult, g_organic)
 
-    s = CO2eChangeS.calc(
+    s = CO2eChangeS.calc_s(
         inputs,
         "s",
         a18,
