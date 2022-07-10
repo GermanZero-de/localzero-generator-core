@@ -3,10 +3,12 @@ from dataclasses import dataclass
 
 from .dataclasses import (
     CO2eChangeA,
-    CO2eChangeP,
     CO2eChangeG,
     CO2eChangeGConsult,
     CO2eChangeGOrganic,
+)
+from .energy_demand import (
+    CO2eChangeP,
     CO2eChange,
     CO2eChangeFermentationOrManure,
     CO2eChangeSoil,
@@ -17,6 +19,8 @@ from .dataclasses import (
     CO2eChangePOperationElecElcon,
     CO2eChangePOperationElecHeatpump,
     CO2eChangePOperationVehicles,
+)
+from .energy_source import (
     CO2eChangeS,
     CO2eChangeFuel,
     CO2eChangeFuelOilGas,

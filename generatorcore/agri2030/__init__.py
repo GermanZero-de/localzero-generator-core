@@ -4,27 +4,32 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/agriculture.html
 """
 
 # pyright: strict
+
 from .dataclasses import (
-    CO2eChange,
-    CO2eChangeFermentationOrManure,
-    CO2eChangeSoil,
-    CO2eChangeOther,
-    CO2eChangeOtherLiming,
-    CO2eChangeFuel,
-    CO2eChangeFuelOilGas,
-    CO2eChangeFuelHeatpump,
-    CO2eChangeFuelEmethan,
-    CO2eChangeP,
+    CO2eChangeA,
     CO2eChangeG,
     CO2eChangeGConsult,
     CO2eChangeGOrganic,
+)
+from .energy_demand import (
+    CO2eChangeP,
+    CO2eChange,
+    CO2eChangeFermentationOrManure,
+    CO2eChangeSoil,
+    CO2eChangeOtherLiming,
+    CO2eChangeOther,
     CO2eChangePOperation,
     CO2eChangePOperationHeat,
     CO2eChangePOperationElecElcon,
     CO2eChangePOperationElecHeatpump,
     CO2eChangePOperationVehicles,
+)
+from .energy_source import (
     CO2eChangeS,
-    CO2eChangeA,
+    CO2eChangeFuel,
+    CO2eChangeFuelOilGas,
+    CO2eChangeFuelHeatpump,
+    CO2eChangeFuelEmethan,
 )
 from ..inputs import Inputs
 from .. import agri2018, lulucf2030
