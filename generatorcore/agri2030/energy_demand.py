@@ -186,62 +186,15 @@ class CO2eChangeSoil(CO2eChange):
     demand_change: float = None  # type: ignore
 
     @classmethod
-    def calc_soil_grazing(
+    def calc_soil_special(
         cls,
         inputs: Inputs,
         what: str,
         a18: A18,
         area_ha: float,
-        p_fermen_dairycow: Any,
-        p_fermen_nondairy: Any,
-        p_fermen_oanimal: Any,
+        CO2e_production_based_per_t: float,
     ) -> "CO2eChangeSoil":
 
-        CO2e_production_based_per_t = div(
-            getattr(a18, what).CO2e_production_based_per_t
-            * (
-                p_fermen_dairycow.amount
-                + p_fermen_nondairy.amount
-                + p_fermen_oanimal.amount
-            ),
-            a18.p_fermen_dairycow.amount
-            + a18.p_fermen_nondairy.amount
-            + a18.p_fermen_oanimal.amount,
-        )
-
-        demand_change = (
-            div(
-                CO2e_production_based_per_t,
-                getattr(a18, what).CO2e_production_based_per_t,
-            )
-            - 1
-        )
-
-        CO2e_production_based = area_ha * CO2e_production_based_per_t
-
-        area_ha_change = -(getattr(a18, what).area_ha - area_ha)
-
-        parent = super().calc(inputs, what, a18, 0, CO2e_production_based)
-
-        return cls(
-            CO2e_combustion_based=parent.CO2e_combustion_based,
-            CO2e_production_based=parent.CO2e_production_based,
-            CO2e_production_based_per_t=CO2e_production_based_per_t,
-            CO2e_total=parent.CO2e_total,
-            CO2e_total_2021_estimated=parent.CO2e_total_2021_estimated,
-            area_ha=area_ha,
-            area_ha_change=area_ha_change,
-            change_CO2e_pct=parent.change_CO2e_pct,
-            change_CO2e_t=parent.change_CO2e_t,
-            cost_climate_saved=parent.cost_climate_saved,
-            demand_change=demand_change,
-        )
-
-    @classmethod
-    def calc_soil_residue(
-        cls, inputs: Inputs, what: str, a18: A18, area_ha: float
-    ) -> "CO2eChangeSoil":
-        CO2e_production_based_per_t = getattr(a18, what).CO2e_production_based_per_t
         demand_change = (
             div(
                 CO2e_production_based_per_t,

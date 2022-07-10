@@ -32,6 +32,7 @@ from .energy_source import (
     CO2eChangeFuelEmethan,
 )
 from ..inputs import Inputs
+from ..utils import div
 from .. import agri2018, lulucf2030
 from .a30 import A30
 
@@ -90,19 +91,31 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
     p_soil_ecrop = CO2eChangeSoil.calc_soil(
         inputs, "p_soil_ecrop", a18, l30.g_crop.area_ha
     )
-    p_soil_grazing = CO2eChangeSoil.calc_soil_grazing(
+    p_soil_grazing = CO2eChangeSoil.calc_soil_special(
         inputs,
         "p_soil_grazing",
         a18,
         l30.g_grass.area_ha,
-        p_fermen_dairycow,
-        p_fermen_nondairy,
-        p_fermen_oanimal,
+        div(
+            a18.p_soil_grazing.CO2e_production_based_per_t
+            * (
+                p_fermen_dairycow.amount
+                + p_fermen_nondairy.amount
+                + p_fermen_oanimal.amount
+            ),
+            a18.p_fermen_dairycow.amount
+            + a18.p_fermen_nondairy.amount
+            + a18.p_fermen_oanimal.amount,
+        ),
     )
-    p_soil_residue = CO2eChangeSoil.calc_soil_residue(
-        inputs, "p_soil_residue", a18, l30.g_crop.area_ha
+    p_soil_residue = CO2eChangeSoil.calc_soil_special(
+        inputs,
+        "p_soil_residue",
+        a18,
+        l30.g_crop.area_ha,
+        a18.p_soil_residue.CO2e_production_based_per_t,
     )
-    p_soil_orgfarm = CO2eChangeSoil.calc_soil_residue(
+    p_soil_orgfarm = CO2eChangeSoil.calc_soil_special(
         inputs,
         "p_soil_orgfarm",
         a18,
@@ -110,12 +123,14 @@ def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
         + l30.g_crop_org_high.area_ha
         + l30.g_grass_org_low.area_ha
         + l30.g_grass_org_high.area_ha,
+        a18.p_soil_orgfarm.CO2e_production_based_per_t,
     )
-    p_soil_orgloss = CO2eChangeSoil.calc_soil_residue(
+    p_soil_orgloss = CO2eChangeSoil.calc_soil_special(
         inputs,
         "p_soil_orgloss",
         a18,
         l30.g_crop_org_low.area_ha + l30.g_crop_org_high.area_ha,
+        a18.p_soil_orgloss.CO2e_production_based_per_t,
     )
     p_soil_leaching = CO2eChangeSoil.calc_soil(
         inputs, "p_soil_leaching", a18, l30.g_crop.area_ha + l30.g_grass.area_ha
