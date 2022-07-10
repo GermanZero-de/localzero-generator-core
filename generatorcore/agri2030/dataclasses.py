@@ -1176,8 +1176,10 @@ class CO2eChangeFuelHeatpump(CO2eChange):
     def calc_fuel(
         cls, inputs: Inputs, what: str, a18: A18, energy: float
     ) -> "CO2eChangeFuelHeatpump":
-        CO2e_combustion_based_per_MWh = getattr(a18, what).CO2e_combustion_based_per_MWh
-        CO2e_combustion_based = energy * CO2e_combustion_based_per_MWh
+        CO2e_combustion_based_per_MWh = getattr(
+            a18, what
+        ).CO2e_combustion_based_per_MWh  # always 0
+        CO2e_combustion_based = energy * CO2e_combustion_based_per_MWh  # always 0
 
         change_energy_MWh = energy - getattr(a18, what).energy
 
@@ -1210,7 +1212,7 @@ class CO2eChangeFuelHeatpump(CO2eChange):
 
         # override value from parent!
         change_CO2e_pct = div(
-            parent.change_CO2e_t, 1.0
+            parent.change_CO2e_t, 1.0  # always 0
         )  # getattr(a18, what).CO2e_total)
 
         return cls(
