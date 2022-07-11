@@ -1,61 +1,9 @@
 # pyright: strict
 from dataclasses import dataclass, InitVar
-from typing import Any
 
 from ..utils import div
 from ..agri2018.a18 import A18
 from ..inputs import Inputs
-
-
-@dataclass(kw_only=True)
-class CO2eChangeP:
-    CO2e_production_based: float = 0
-    CO2e_total: float = 0
-    CO2e_total_2021_estimated: float = 0
-    change_CO2e_pct: float = 0
-    change_CO2e_t: float = 0
-    cost_climate_saved: float = 0
-    cost_wage: float = 0
-    demand_emplo: float = 0
-    demand_emplo_new: float = 0
-    energy: float = 0
-    invest: float = 0
-    invest_pa: float = 0
-
-    inputs: InitVar[Inputs]
-    what: InitVar[str]
-    a18: InitVar[A18]
-    p_operation: InitVar[Any]
-
-    def __post_init__(
-        self,
-        inputs: Inputs,
-        what: str,
-        a18: A18,
-        p_operation: Any,
-    ):
-
-        a18_CO2e_total = getattr(a18, what).CO2e_total
-
-        self.CO2e_total_2021_estimated = a18_CO2e_total * inputs.fact(
-            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
-        )
-
-        self.change_CO2e_t = self.CO2e_total - a18_CO2e_total
-        self.cost_climate_saved = (
-            (self.CO2e_total_2021_estimated - self.CO2e_total)
-            * inputs.entries.m_duration_neutral
-            * inputs.fact("Fact_M_cost_per_CO2e_2020")
-        )
-        self.change_CO2e_pct = div(self.change_CO2e_t, a18_CO2e_total)
-        self.demand_emplo = p_operation.demand_emplo
-
-        self.invest = p_operation.invest
-        self.invest_pa = self.invest / inputs.entries.m_duration_target
-
-        self.demand_emplo_new = p_operation.demand_emplo_new
-        self.energy = p_operation.energy
-        self.cost_wage = p_operation.cost_wage
 
 
 @dataclass(kw_only=True)
@@ -369,67 +317,6 @@ class CO2eChangeOther(CO2eChange):
 
 
 @dataclass(kw_only=True)
-class CO2eChangePOperation(CO2eChangeEnergy):
-    cost_wage: float = 0
-    demand_biomass: float = 0
-    demand_ediesel: float = 0
-    demand_electricity: float = 0
-    demand_emethan: float = 0
-    demand_emplo: float = 0
-    demand_emplo_new: float = 0
-    demand_epetrol: float = 0
-    demand_heatpump: float = 0
-    invest: float = 0
-    invest_pa: float = 0
-
-    inputs: InitVar[Inputs]
-    what: InitVar[str]
-    a18: InitVar[A18]
-    p_operation_vehicles: InitVar[Any]
-    p_operation_heat: InitVar[Any]
-    p_operation_elec_elcon: InitVar[Any]
-    p_operation_elec_heatpump: InitVar[Any]
-
-    def __post_init__(  # type: ignore
-        self,
-        inputs: Inputs,
-        what: str,
-        a18: A18,
-        p_operation_vehicles: Any,
-        p_operation_heat: Any,
-        p_operation_elec_elcon: Any,
-        p_operation_elec_heatpump: Any,
-    ):
-        self.demand_epetrol = p_operation_vehicles.demand_epetrol
-        self.demand_ediesel = p_operation_vehicles.demand_ediesel
-        self.demand_heatpump = p_operation_heat.demand_heatpump
-        self.demand_emplo = p_operation_heat.demand_emplo
-        self.demand_emplo_new = p_operation_heat.demand_emplo_new
-        self.demand_biomass = p_operation_heat.demand_biomass
-        self.demand_electricity = (
-            p_operation_elec_elcon.demand_electricity
-            + p_operation_elec_heatpump.demand_electricity
-        )
-        self.demand_emethan = p_operation_heat.demand_emethan
-
-        self.energy = (
-            p_operation_heat.energy
-            + p_operation_elec_elcon.energy
-            + p_operation_elec_heatpump.energy
-            + p_operation_vehicles.energy
-        )
-
-        self.invest = p_operation_heat.invest
-        self.invest_pa = self.invest / inputs.entries.m_duration_target
-        self.cost_wage = p_operation_heat.cost_wage
-
-        parent = CO2eChangeEnergy(inputs=inputs, what=what, a18=a18, energy=self.energy)
-
-        self.change_energy_MWh = parent.change_energy_MWh
-        self.change_energy_pct = parent.change_energy_pct
-
-
-@dataclass(kw_only=True)
 class CO2eChangePOperationHeat(CO2eChangeEnergy):
     area_m2: float = 0
     area_m2_nonrehab: float = 0
@@ -579,9 +466,9 @@ class CO2eChangePOperationElecHeatpump(CO2eChangeEnergy):
     inputs: InitVar[Inputs]
     what: InitVar[str]
     a18: InitVar[A18]
-    p_operation_heat: InitVar[Any]
+    p_operation_heat: InitVar[CO2eChangePOperationHeat]
 
-    def __post_init__(self, inputs: Inputs, what: str, a18: A18, p_operation_heat: Any):  # type: ignore
+    def __post_init__(self, inputs: Inputs, what: str, a18: A18, p_operation_heat: CO2eChangePOperationHeat):  # type: ignore
 
         self.energy = p_operation_heat.demand_heatpump / inputs.fact(
             "Fact_R_S_heatpump_mean_annual_performance_factor_all"
@@ -635,3 +522,115 @@ class CO2eChangePOperationVehicles(CO2eChangeEnergy):
 
         self.change_energy_MWh = parent.change_energy_MWh
         self.change_energy_pct = parent.change_energy_pct
+
+
+@dataclass(kw_only=True)
+class CO2eChangePOperation(CO2eChangeEnergy):
+    cost_wage: float = 0
+    demand_biomass: float = 0
+    demand_ediesel: float = 0
+    demand_electricity: float = 0
+    demand_emethan: float = 0
+    demand_emplo: float = 0
+    demand_emplo_new: float = 0
+    demand_epetrol: float = 0
+    demand_heatpump: float = 0
+    invest: float = 0
+    invest_pa: float = 0
+
+    inputs: InitVar[Inputs]
+    what: InitVar[str]
+    a18: InitVar[A18]
+    p_operation_vehicles: InitVar[CO2eChangePOperationVehicles]
+    p_operation_heat: InitVar[CO2eChangePOperationHeat]
+    p_operation_elec_elcon: InitVar[CO2eChangePOperationElecElcon]
+    p_operation_elec_heatpump: InitVar[CO2eChangePOperationElecHeatpump]
+
+    def __post_init__(  # type: ignore
+        self,
+        inputs: Inputs,
+        what: str,
+        a18: A18,
+        p_operation_vehicles: CO2eChangePOperationVehicles,
+        p_operation_heat: CO2eChangePOperationHeat,
+        p_operation_elec_elcon: CO2eChangePOperationElecElcon,
+        p_operation_elec_heatpump: CO2eChangePOperationElecHeatpump,
+    ):
+        self.demand_epetrol = p_operation_vehicles.demand_epetrol
+        self.demand_ediesel = p_operation_vehicles.demand_ediesel
+        self.demand_heatpump = p_operation_heat.demand_heatpump
+        self.demand_emplo = p_operation_heat.demand_emplo
+        self.demand_emplo_new = p_operation_heat.demand_emplo_new
+        self.demand_biomass = p_operation_heat.demand_biomass
+        self.demand_electricity = (
+            p_operation_elec_elcon.demand_electricity
+            + p_operation_elec_heatpump.demand_electricity
+        )
+        self.demand_emethan = p_operation_heat.demand_emethan
+
+        self.energy = (
+            p_operation_heat.energy
+            + p_operation_elec_elcon.energy
+            + p_operation_elec_heatpump.energy
+            + p_operation_vehicles.energy
+        )
+
+        self.invest = p_operation_heat.invest
+        self.invest_pa = self.invest / inputs.entries.m_duration_target
+        self.cost_wage = p_operation_heat.cost_wage
+
+        parent = CO2eChangeEnergy(inputs=inputs, what=what, a18=a18, energy=self.energy)
+
+        self.change_energy_MWh = parent.change_energy_MWh
+        self.change_energy_pct = parent.change_energy_pct
+
+
+@dataclass(kw_only=True)
+class CO2eChangeP:
+    CO2e_production_based: float = 0
+    CO2e_total: float = 0
+    CO2e_total_2021_estimated: float = 0
+    change_CO2e_pct: float = 0
+    change_CO2e_t: float = 0
+    cost_climate_saved: float = 0
+    cost_wage: float = 0
+    demand_emplo: float = 0
+    demand_emplo_new: float = 0
+    energy: float = 0
+    invest: float = 0
+    invest_pa: float = 0
+
+    inputs: InitVar[Inputs]
+    what: InitVar[str]
+    a18: InitVar[A18]
+    p_operation: InitVar[CO2eChangePOperation]
+
+    def __post_init__(
+        self,
+        inputs: Inputs,
+        what: str,
+        a18: A18,
+        p_operation: CO2eChangePOperation,
+    ):
+
+        a18_CO2e_total = getattr(a18, what).CO2e_total
+
+        self.CO2e_total_2021_estimated = a18_CO2e_total * inputs.fact(
+            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+        )
+
+        self.change_CO2e_t = self.CO2e_total - a18_CO2e_total
+        self.cost_climate_saved = (
+            (self.CO2e_total_2021_estimated - self.CO2e_total)
+            * inputs.entries.m_duration_neutral
+            * inputs.fact("Fact_M_cost_per_CO2e_2020")
+        )
+        self.change_CO2e_pct = div(self.change_CO2e_t, a18_CO2e_total)
+        self.demand_emplo = p_operation.demand_emplo
+
+        self.invest = p_operation.invest
+        self.invest_pa = self.invest / inputs.entries.m_duration_target
+
+        self.demand_emplo_new = p_operation.demand_emplo_new
+        self.energy = p_operation.energy
+        self.cost_wage = p_operation.cost_wage
