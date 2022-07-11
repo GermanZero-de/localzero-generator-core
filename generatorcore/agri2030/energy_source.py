@@ -49,18 +49,30 @@ class CO2eChangeEnergyPerMWh(CO2eChange):
 
 @dataclass(kw_only=True)
 class CO2eChangeS(CO2eChange):
-    change_energy_MWh: float = None  # type: ignore
-    change_energy_pct: float = None  # type: ignore
-    cost_wage: float = None  # type: ignore
-    demand_emplo: float = None  # type: ignore
-    demand_emplo_new: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    invest: float = None  # type: ignore
-    invest_pa: float = None  # type: ignore
+    change_energy_MWh: float = 0
+    change_energy_pct: float = 0
+    cost_wage: float = 0
+    demand_emplo: float = 0
+    demand_emplo_new: float = 0
+    energy: float = 0
+    invest: float = 0
+    invest_pa: float = 0
 
-    @classmethod
-    def calc_s(
-        cls,
+    inputs: InitVar[Inputs]
+    what: InitVar[str]
+    a18: InitVar[A18]
+    s_petrol: InitVar[Any]
+    s_diesel: InitVar[Any]
+    s_fueloil: InitVar[Any]
+    s_lpg: InitVar[Any]
+    s_gas: InitVar[Any]
+    s_emethan: InitVar[Any]
+    s_biomass: InitVar[Any]
+    s_elec: InitVar[Any]
+    s_heatpump: InitVar[Any]
+
+    def __post_init__(  # type: ignore
+        self,
         inputs: Inputs,
         what: str,
         a18: A18,
@@ -73,9 +85,9 @@ class CO2eChangeS(CO2eChange):
         s_biomass: Any,
         s_elec: Any,
         s_heatpump: Any,
-    ) -> "CO2eChangeS":
+    ):
 
-        CO2e_combustion_based = (
+        self.CO2e_combustion_based = (
             s_petrol.CO2e_combustion_based
             + s_diesel.CO2e_combustion_based
             + s_fueloil.CO2e_combustion_based
@@ -87,10 +99,10 @@ class CO2eChangeS(CO2eChange):
             + s_heatpump.CO2e_combustion_based
         )
 
-        invest = s_heatpump.invest
-        invest_pa = invest / inputs.entries.m_duration_target
+        self.invest = s_heatpump.invest
+        self.invest_pa = self.invest / inputs.entries.m_duration_target
 
-        energy = (
+        self.energy = (
             s_petrol.energy
             + s_diesel.energy
             + s_fueloil.energy
@@ -101,42 +113,29 @@ class CO2eChangeS(CO2eChange):
             + s_elec.energy
             + s_heatpump.energy
         )
-        change_energy_MWh = energy - getattr(a18, what).energy
-        change_energy_pct = div(change_energy_MWh, getattr(a18, what).energy)
+        self.change_energy_MWh = self.energy - getattr(a18, what).energy
+        self.change_energy_pct = div(self.change_energy_MWh, getattr(a18, what).energy)
 
-        demand_emplo = s_heatpump.demand_emplo
-        demand_emplo_new = s_heatpump.demand_emplo_new
+        self.demand_emplo = s_heatpump.demand_emplo
+        self.demand_emplo_new = s_heatpump.demand_emplo_new
 
-        cost_wage = s_heatpump.cost_wage
+        self.cost_wage = s_heatpump.cost_wage
 
         parent = CO2eChange(
             inputs=inputs,
             what=what,
             a18=a18,
-            CO2e_combustion_based=CO2e_combustion_based,
+            CO2e_combustion_based=self.CO2e_combustion_based,
             CO2e_production_based=0,
         )
 
-        return cls(
-            inputs=inputs,
-            what=what,
-            a18=a18,
-            CO2e_combustion_based=parent.CO2e_combustion_based,
-            CO2e_production_based=parent.CO2e_production_based,
-            CO2e_total=parent.CO2e_total,
-            CO2e_total_2021_estimated=parent.CO2e_total_2021_estimated,
-            change_CO2e_pct=parent.change_CO2e_pct,
-            change_CO2e_t=parent.change_CO2e_t,
-            change_energy_MWh=change_energy_MWh,
-            change_energy_pct=change_energy_pct,
-            cost_climate_saved=parent.cost_climate_saved,
-            cost_wage=cost_wage,
-            demand_emplo=demand_emplo,
-            demand_emplo_new=demand_emplo_new,
-            energy=energy,
-            invest=invest,
-            invest_pa=invest_pa,
-        )
+        self.CO2e_combustion_based = parent.CO2e_combustion_based
+        self.CO2e_production_based = parent.CO2e_production_based
+        self.CO2e_total = parent.CO2e_total
+        self.CO2e_total_2021_estimated = parent.CO2e_total_2021_estimated
+        self.change_CO2e_pct = parent.change_CO2e_pct
+        self.change_CO2e_t = parent.change_CO2e_t
+        self.cost_climate_saved = parent.cost_climate_saved
 
 
 @dataclass(kw_only=True)
@@ -251,44 +250,40 @@ class CO2eChangeFuelHeatpump(CO2eChangeEnergyPerMWh):
 
 @dataclass(kw_only=True)
 class CO2eChangeFuelEmethan(CO2eChange):
-    CO2e_combustion_based_per_MWh: float = None  # type: ignore
-    change_energy_MWh: float = None  # type: ignore
-    demand_emethan: float = None  # type: ignore
-    energy: float = None  # type: ignore
+    energy: float
 
-    @classmethod
-    def calc_energy(
-        cls, inputs: Inputs, a18: A18, energy: float
-    ) -> "CO2eChangeFuelEmethan":
+    CO2e_combustion_based_per_MWh: float = 0
+    change_energy_MWh: float = 0
+    demand_emethan: float = 0
+
+    inputs: InitVar[Inputs]
+    what: InitVar[str]
+    a18: InitVar[A18]
+
+    def __post_init__(self, inputs: Inputs, what: str, a18: A18):
+
+        what = ""
+
         CO2e_combustion_based = 0
-        CO2e_combustion_based_per_MWh = inputs.fact(
+        self.CO2e_combustion_based_per_MWh = inputs.fact(
             "Fact_T_S_methan_EmFa_tank_wheel_2018"
         )
 
-        change_energy_MWh = energy
-        demand_emethan = energy
+        self.change_energy_MWh = self.energy
+        self.demand_emethan = self.energy
 
         parent = CO2eChange(
             inputs=inputs,
-            what="",
+            what=what,
             a18=a18,
             CO2e_combustion_based=CO2e_combustion_based,
             CO2e_production_based=0,
         )
 
-        return cls(
-            inputs=inputs,
-            what="",
-            a18=a18,
-            CO2e_combustion_based=parent.CO2e_combustion_based,
-            CO2e_production_based=parent.CO2e_production_based,
-            CO2e_combustion_based_per_MWh=CO2e_combustion_based_per_MWh,
-            CO2e_total=parent.CO2e_total,
-            CO2e_total_2021_estimated=parent.CO2e_total_2021_estimated,
-            change_CO2e_pct=parent.change_CO2e_pct,
-            change_CO2e_t=parent.change_CO2e_t,
-            change_energy_MWh=change_energy_MWh,
-            cost_climate_saved=parent.cost_climate_saved,
-            demand_emethan=demand_emethan,
-            energy=energy,
-        )
+        self.CO2e_combustion_based = parent.CO2e_combustion_based
+        self.CO2e_production_based = parent.CO2e_production_based
+        self.CO2e_total = parent.CO2e_total
+        self.CO2e_total_2021_estimated = parent.CO2e_total_2021_estimated
+        self.change_CO2e_pct = parent.change_CO2e_pct
+        self.change_CO2e_t = parent.change_CO2e_t
+        self.cost_climate_saved = parent.cost_climate_saved
