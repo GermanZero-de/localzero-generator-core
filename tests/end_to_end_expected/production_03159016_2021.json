@@ -9206,20 +9206,6 @@
             "invest_pa_com": -251068.87372843246,
             "invest_pa_outside": 0
         },
-        "p": {
-            "CO2e_production_based": 7187.751558957441,
-            "CO2e_total": 7187.751558957441,
-            "CO2e_total_2021_estimated": 18779.484679678746,
-            "change_CO2e_pct": -0.6426957238191474,
-            "change_CO2e_t": -12928.860634397055,
-            "cost_climate_saved": 64421056.81840865,
-            "cost_wage": -3367827.59492207,
-            "demand_emplo": -82.20673093246015,
-            "demand_emplo_new": 0,
-            "energy": 7229.363167573727,
-            "invest": 10299166.956948226,
-            "invest_pa": -10299166.956948226
-        },
         "g": {
             "CO2e_total": 0,
             "cost_wage": -564985.128232411,
@@ -9260,6 +9246,20 @@
             "power_to_be_installed": 671.8788985512056,
             "power_to_be_installed_pct": 0.2,
             "ratio_wage_to_emplo": 47195.042683097665
+        },
+        "p": {
+            "CO2e_production_based": 7187.751558957441,
+            "CO2e_total": 7187.751558957441,
+            "CO2e_total_2021_estimated": 18779.484679678746,
+            "change_CO2e_pct": -0.6426957238191474,
+            "change_CO2e_t": -12928.860634397055,
+            "cost_climate_saved": 64421056.81840865,
+            "cost_wage": -3367827.59492207,
+            "demand_emplo": -82.20673093246015,
+            "demand_emplo_new": 0,
+            "energy": 7229.363167573727,
+            "invest": 10299166.956948226,
+            "invest_pa": -10299166.956948226
         },
         "p_fermen": {
             "CO2e_combustion_based": 0,

@@ -32,10 +32,12 @@ from .energy_source import (
 @dataclass(kw_only=True)
 class A30:
     a: CO2eChangeA
-    p: CO2eChangeP
+
     g: CO2eChangeG
     g_consult: CO2eChangeGConsult
     g_organic: CO2eChangeGOrganic
+
+    p: CO2eChangeP
     p_fermen: CO2eChange
     p_fermen_dairycow: CO2eChangeFermentationOrManure
     p_fermen_nondairy: CO2eChangeFermentationOrManure
@@ -72,6 +74,7 @@ class A30:
     p_operation_elec_elcon: CO2eChangePOperationElecElcon
     p_operation_elec_heatpump: CO2eChangePOperationElecHeatpump
     p_operation_vehicles: CO2eChangePOperationVehicles
+
     s: CO2eChangeS
     s_petrol: CO2eChangeEnergyPerMWh
     s_diesel: CO2eChangeEnergyPerMWh

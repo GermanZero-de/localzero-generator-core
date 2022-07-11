@@ -11,430 +11,82 @@ from .dataclasses import (
     CO2eChangeGConsult,
     CO2eChangeGOrganic,
 )
-from .energy_demand import (
-    CO2eChangeP,
-    CO2eChange,
-    CO2eChangeFermentationOrManure,
-    CO2eChangeSoil,
-    CO2eChangeOtherLiming,
-    CO2eChangeOther,
-    CO2eChangePOperation,
-    CO2eChangePOperationHeat,
-    CO2eChangePOperationElecElcon,
-    CO2eChangePOperationElecHeatpump,
-    CO2eChangePOperationVehicles,
-)
-from .energy_source import (
-    CO2eChangeS,
-    CO2eChangeEnergyPerMWh,
-    CO2eChangeFuelOilGas,
-    CO2eChangeFuelHeatpump,
-    CO2eChangeFuelEmethan,
-)
+from . import energy_demand
+from . import energy_source
+
 from ..inputs import Inputs
-from ..utils import div
-from .. import agri2018, lulucf2030
+from ..agri2018.a18 import A18
+from ..lulucf2030 import L30
 from .a30 import A30
 
 
-def calc(inputs: Inputs, *, a18: agri2018.A18, l30: lulucf2030.L30) -> A30:
-    p_fermen_dairycow = CO2eChangeFermentationOrManure.calc_fermen(
-        inputs, "p_fermen_dairycow", "Ass_A_P_fermen_dairycow_change", a18
-    )
-    p_fermen_nondairy = CO2eChangeFermentationOrManure.calc_fermen(
-        inputs, "p_fermen_nondairy", "Ass_A_P_fermen_nondairy_change", a18
-    )
-    p_fermen_swine = CO2eChangeFermentationOrManure.calc_fermen(
-        inputs, "p_fermen_swine", "Ass_A_P_fermen_swine_change", a18
-    )
-    p_fermen_poultry = CO2eChangeFermentationOrManure.calc_fermen(
-        inputs, "p_fermen_poultry", "Ass_A_P_fermen_poultry_change", a18
-    )
-    p_fermen_oanimal = CO2eChangeFermentationOrManure.calc_fermen(
-        inputs, "p_fermen_oanimal", "Ass_A_P_fermen_oanimal_change", a18
-    )
+def calc(inputs: Inputs, *, a18: A18, l30: L30) -> A30:
 
-    p_manure_dairycow = CO2eChangeFermentationOrManure.calc_manure(
-        inputs, "p_manure_dairycow", a18, p_fermen_dairycow.amount
-    )
-    p_manure_nondairy = CO2eChangeFermentationOrManure.calc_manure(
-        inputs, "p_manure_nondairy", a18, p_fermen_nondairy.amount
-    )
-    p_manure_swine = CO2eChangeFermentationOrManure.calc_manure(
-        inputs, "p_manure_swine", a18, p_fermen_swine.amount
-    )
-    p_manure_poultry = CO2eChangeFermentationOrManure.calc_manure(
-        inputs, "p_manure_poultry", a18, p_fermen_poultry.amount
-    )
-    p_manure_oanimal = CO2eChangeFermentationOrManure.calc_manure(
-        inputs, "p_manure_oanimal", a18, p_fermen_oanimal.amount
-    )
-    p_manure_deposition = CO2eChangeFermentationOrManure.calc_manure(
-        inputs,
-        "p_manure_deposition",
-        a18,
-        p_fermen_dairycow.amount
-        + p_fermen_nondairy.amount
-        + p_fermen_swine.amount
-        + p_fermen_oanimal.amount,
-    )
-
-    p_soil_fertilizer = CO2eChangeSoil.calc_soil(
-        inputs, "p_soil_fertilizer", a18, l30.g_crop.area_ha
-    )
-    p_soil_manure = CO2eChangeSoil.calc_soil(
-        inputs, "p_soil_manure", a18, l30.g_crop.area_ha
-    )
-    p_soil_sludge = CO2eChangeSoil.calc_soil(
-        inputs, "p_soil_sludge", a18, l30.g_crop.area_ha
-    )
-    p_soil_ecrop = CO2eChangeSoil.calc_soil(
-        inputs, "p_soil_ecrop", a18, l30.g_crop.area_ha
-    )
-    p_soil_grazing = CO2eChangeSoil.calc_soil_special(
-        inputs,
-        "p_soil_grazing",
-        a18,
-        l30.g_grass.area_ha,
-        div(
-            a18.p_soil_grazing.CO2e_production_based_per_t
-            * (
-                p_fermen_dairycow.amount
-                + p_fermen_nondairy.amount
-                + p_fermen_oanimal.amount
-            ),
-            a18.p_fermen_dairycow.amount
-            + a18.p_fermen_nondairy.amount
-            + a18.p_fermen_oanimal.amount,
-        ),
-    )
-    p_soil_residue = CO2eChangeSoil.calc_soil_special(
-        inputs,
-        "p_soil_residue",
-        a18,
-        l30.g_crop.area_ha,
-        a18.p_soil_residue.CO2e_production_based_per_t,
-    )
-    p_soil_orgfarm = CO2eChangeSoil.calc_soil_special(
-        inputs,
-        "p_soil_orgfarm",
-        a18,
-        l30.g_crop_org_low.area_ha
-        + l30.g_crop_org_high.area_ha
-        + l30.g_grass_org_low.area_ha
-        + l30.g_grass_org_high.area_ha,
-        a18.p_soil_orgfarm.CO2e_production_based_per_t,
-    )
-    p_soil_orgloss = CO2eChangeSoil.calc_soil_special(
-        inputs,
-        "p_soil_orgloss",
-        a18,
-        l30.g_crop_org_low.area_ha + l30.g_crop_org_high.area_ha,
-        a18.p_soil_orgloss.CO2e_production_based_per_t,
-    )
-    p_soil_leaching = CO2eChangeSoil.calc_soil(
-        inputs, "p_soil_leaching", a18, l30.g_crop.area_ha + l30.g_grass.area_ha
-    )
-    p_soil_deposition = CO2eChangeSoil.calc_soil(
-        inputs, "p_soil_deposition", a18, l30.g_crop.area_ha + l30.g_grass.area_ha
-    )
-
-    p_other_liming_calcit = CO2eChangeOther(
-        inputs=inputs,
-        what="p_other_liming_calcit",
-        a18=a18,
-        ass_demand_change="Ass_A_P_other_liming_calcit_amount_change",
-        fact_production_based_per_t="Fact_A_P_other_liming_calcit_ratio_CO2e_pb_to_amount_2018",
-        CO2e_combustion_based=None,  # type: ignore
-        CO2e_production_based=None,  # type: ignore
-    )
-    p_other_liming_dolomite = CO2eChangeOther(
-        inputs=inputs,
-        what="p_other_liming_dolomite",
-        a18=a18,
-        ass_demand_change="Ass_A_P_other_liming_dolomit_amount_change",
-        fact_production_based_per_t="Fact_A_P_other_liming_dolomite_ratio_CO2e_pb_to_amount_2018",
-        CO2e_combustion_based=None,  # type: ignore
-        CO2e_production_based=None,  # type: ignore
-    )
-    p_other_urea = CO2eChangeOther(
-        inputs=inputs,
-        what="p_other_urea",
-        a18=a18,
-        ass_demand_change="Ass_A_P_other_urea_amount_change",
-        fact_production_based_per_t="Fact_A_P_other_urea_CO2e_pb_to_amount_2018",
-        CO2e_combustion_based=None,  # type: ignore
-        CO2e_production_based=None,  # type: ignore
-    )
-    p_other_kas = CO2eChangeOther(
-        inputs=inputs,
-        what="p_other_kas",
-        a18=a18,
-        ass_demand_change="Ass_A_P_other_kas_amount_change",
-        fact_production_based_per_t="Fact_A_P_other_kas_ratio_CO2e_pb_to_amount_2018",
-        CO2e_combustion_based=None,  # type: ignore
-        CO2e_production_based=None,  # type: ignore
-    )
-    p_other_ecrop = CO2eChangeOther(
-        inputs=inputs,
-        what="p_other_ecrop",
-        a18=a18,
-        ass_demand_change="Ass_A_P_other_ecrop_amount_change",
-        fact_production_based_per_t="Fact_A_P_other_ecrop_ratio_CO2e_pb_to_amount_2018",
-        CO2e_combustion_based=None,  # type: ignore
-        CO2e_production_based=None,  # type: ignore
-    )
-    p_other_liming = CO2eChangeOtherLiming(
-        inputs=inputs,
-        what="p_other_liming",
-        a18=a18,
-        prod_volume=p_other_liming_calcit.prod_volume
-        + p_other_liming_dolomite.prod_volume,
-        CO2e_combustion_based=None,  # type: ignore
-        CO2e_production_based=p_other_liming_calcit.CO2e_production_based
-        + p_other_liming_dolomite.CO2e_production_based,
-    )
-
-    p_fermen = CO2eChange(
-        inputs=inputs,
-        what="p_fermen",
-        a18=a18,
-        CO2e_combustion_based=0,
-        CO2e_production_based=p_fermen_dairycow.CO2e_production_based
-        + p_fermen_nondairy.CO2e_production_based
-        + p_fermen_swine.CO2e_production_based
-        + p_fermen_poultry.CO2e_production_based
-        + p_fermen_oanimal.CO2e_production_based,
-    )
-    p_manure = CO2eChange(
-        inputs=inputs,
-        what="p_manure",
-        a18=a18,
-        CO2e_combustion_based=0,
-        CO2e_production_based=p_manure_dairycow.CO2e_production_based
-        + p_manure_nondairy.CO2e_production_based
-        + p_manure_swine.CO2e_production_based
-        + p_manure_poultry.CO2e_production_based
-        + p_manure_oanimal.CO2e_production_based
-        + p_manure_deposition.CO2e_production_based,
-    )
-    p_soil = CO2eChange(
-        inputs=inputs,
-        what="p_soil",
-        a18=a18,
-        CO2e_combustion_based=0,
-        CO2e_production_based=p_soil_fertilizer.CO2e_production_based
-        + p_soil_manure.CO2e_production_based
-        + p_soil_sludge.CO2e_production_based
-        + p_soil_ecrop.CO2e_production_based
-        + p_soil_grazing.CO2e_production_based
-        + p_soil_residue.CO2e_production_based
-        + p_soil_orgfarm.CO2e_production_based
-        + p_soil_orgloss.CO2e_production_based
-        + p_soil_leaching.CO2e_production_based
-        + p_soil_deposition.CO2e_production_based,
-    )
-    p_other = CO2eChange(
-        inputs=inputs,
-        what="p_other",
-        a18=a18,
-        CO2e_combustion_based=0,
-        CO2e_production_based=p_other_liming.CO2e_production_based
-        + p_other_urea.CO2e_production_based
-        + p_other_kas.CO2e_production_based
-        + p_other_ecrop.CO2e_production_based,
-    )
-
-    p_operation_heat = CO2eChangePOperationHeat(
-        inputs=inputs, what="p_operation_heat", a18=a18
-    )
-
-    p_operation_elec_elcon = CO2eChangePOperationElecElcon(
-        inputs=inputs, what="p_operation_elec_elcon", a18=a18
-    )
-
-    p_operation_elec_heatpump = CO2eChangePOperationElecHeatpump(
-        inputs=inputs,
-        what="p_operation_elec_heatpump",
-        a18=a18,
-        p_operation_heat=p_operation_heat,
-    )
-
-    p_operation_vehicles = CO2eChangePOperationVehicles(
-        inputs=inputs, what="p_operation_vehicles", a18=a18
-    )
-
-    p_operation = CO2eChangePOperation(
-        inputs=inputs,
-        what="p_operation",
-        a18=a18,
-        p_operation_vehicles=p_operation_vehicles,
-        p_operation_heat=p_operation_heat,
-        p_operation_elec_elcon=p_operation_elec_elcon,
-        p_operation_elec_heatpump=p_operation_elec_heatpump,
-    )
-
-    p = CO2eChangeP(
-        inputs=inputs,
-        what="p",
-        a18=a18,
-        p_operation=p_operation,
-        CO2e_production_based=p_fermen.CO2e_production_based
-        + p_manure.CO2e_production_based
-        + p_soil.CO2e_production_based
-        + p_other.CO2e_production_based,
-        CO2e_total=p_fermen.CO2e_total
-        + p_manure.CO2e_total
-        + p_soil.CO2e_total
-        + p_other.CO2e_total,
-    )
-
-    s_petrol = CO2eChangeEnergyPerMWh(
-        inputs=inputs,
-        what="s_petrol",
-        a18=a18,
-        energy=p_operation_vehicles.demand_epetrol,
-        CO2e_combustion_based=None,  # type: ignore
-        CO2e_production_based=None,  # type: ignore
-    )
-    s_diesel = CO2eChangeEnergyPerMWh(
-        inputs=inputs,
-        what="s_diesel",
-        a18=a18,
-        energy=p_operation_vehicles.demand_ediesel,
-        CO2e_combustion_based=None,  # type: ignore
-        CO2e_production_based=None,  # type: ignore
-    )
-    s_lpg = CO2eChangeEnergyPerMWh(
-        inputs=inputs,
-        what="s_lpg",
-        a18=a18,
-        energy=0,
-        CO2e_combustion_based=None,  # type: ignore
-        CO2e_production_based=None,  # type: ignore
-    )
-    s_biomass = CO2eChangeEnergyPerMWh(
-        inputs=inputs,
-        what="s_biomass",
-        a18=a18,
-        energy=p_operation.demand_biomass,
-        CO2e_combustion_based=None,  # type: ignore
-        CO2e_production_based=None,  # type: ignore
-    )
-    s_elec = CO2eChangeEnergyPerMWh(
-        inputs=inputs,
-        what="s_elec",
-        a18=a18,
-        energy=p_operation.demand_electricity,
-        CO2e_combustion_based=None,  # type: ignore
-        CO2e_production_based=None,  # type: ignore
-    )
-    s_fueloil = CO2eChangeFuelOilGas(
-        inputs=inputs,
-        what="s_fueloil",
-        a18=a18,
-        energy=0,
-        CO2e_combustion_based=None,  # type: ignore
-        CO2e_production_based=None,  # type: ignore
-    )
-    s_gas = CO2eChangeFuelOilGas(
-        inputs=inputs,
-        what="s_gas",
-        a18=a18,
-        energy=0,
-        CO2e_combustion_based=None,  # type: ignore
-        CO2e_production_based=None,  # type: ignore
-    )
-    s_heatpump = CO2eChangeFuelHeatpump(
-        inputs=inputs,
-        what="s_heatpump",
-        a18=a18,
-        energy=p_operation.demand_heatpump,
-        CO2e_combustion_based=None,  # type: ignore
-        CO2e_production_based=None,  # type: ignore
-    )
-    s_emethan = CO2eChangeFuelEmethan(
-        inputs=inputs,
-        what="",
-        a18=a18,
-        energy=p_operation_heat.demand_emethan,
-        CO2e_combustion_based=None,  # type: ignore
-        CO2e_production_based=None,  # type: ignore
-    )
+    production = energy_demand.calc_production(inputs, a18, l30)
+    supply = energy_source.calc_supply(inputs, a18, production)
 
     g_consult = CO2eChangeGConsult(inputs=inputs)
     g_organic = CO2eChangeGOrganic(inputs=inputs)
     g = CO2eChangeG(g_consult=g_consult, g_organic=g_organic)
 
-    s = CO2eChangeS(
-        inputs=inputs,
-        what="s",
-        a18=a18,
-        s_petrol=s_petrol,
-        s_diesel=s_diesel,
-        s_fueloil=s_fueloil,
-        s_lpg=s_lpg,
-        s_gas=s_gas,
-        s_emethan=s_emethan,
-        s_biomass=s_biomass,
-        s_elec=s_elec,
-        s_heatpump=s_heatpump,
-        CO2e_combustion_based=None,  # type: ignore
-        CO2e_production_based=None,  # type: ignore
-    )
-
     a = CO2eChangeA(
-        inputs=inputs, what="a", a18=a18, p_operation=p_operation, p=p, g=g, s=s
+        inputs=inputs,
+        what="a",
+        a18=a18,
+        p_operation=production.p_operation,
+        p=production.p,
+        g=g,
+        s=supply.s,
     )
 
     return A30(
-        p_fermen_dairycow=p_fermen_dairycow,
-        p_fermen_nondairy=p_fermen_nondairy,
-        p_fermen_swine=p_fermen_swine,
-        p_fermen_poultry=p_fermen_poultry,
-        p_fermen_oanimal=p_fermen_oanimal,
-        p_fermen=p_fermen,
-        p_manure_dairycow=p_manure_dairycow,
-        p_manure_nondairy=p_manure_nondairy,
-        p_manure_swine=p_manure_swine,
-        p_manure_poultry=p_manure_poultry,
-        p_manure_oanimal=p_manure_oanimal,
-        p_manure_deposition=p_manure_deposition,
-        p_manure=p_manure,
-        p_soil_fertilizer=p_soil_fertilizer,
-        p_soil_manure=p_soil_manure,
-        p_soil_sludge=p_soil_sludge,
-        p_soil_ecrop=p_soil_ecrop,
-        p_soil_residue=p_soil_residue,
-        p_soil_grazing=p_soil_grazing,
-        p_soil_orgfarm=p_soil_orgfarm,
-        p_soil_orgloss=p_soil_orgloss,
-        p_soil_leaching=p_soil_leaching,
-        p_soil_deposition=p_soil_deposition,
-        p_soil=p_soil,
-        p_other_liming_calcit=p_other_liming_calcit,
-        p_other_liming_dolomite=p_other_liming_dolomite,
-        p_other_liming=p_other_liming,
-        p_other_urea=p_other_urea,
-        p_other_ecrop=p_other_ecrop,
-        p_other_kas=p_other_kas,
-        p_other=p_other,
-        p_operation_elec_heatpump=p_operation_elec_heatpump,
-        p_operation=p_operation,
-        p_operation_elec_elcon=p_operation_elec_elcon,
-        p_operation_vehicles=p_operation_vehicles,
-        p_operation_heat=p_operation_heat,
-        p=p,
-        s_petrol=s_petrol,
-        s_diesel=s_diesel,
-        s_fueloil=s_fueloil,
-        s_lpg=s_lpg,
-        s_gas=s_gas,
-        s_biomass=s_biomass,
-        s_elec=s_elec,
-        s_heatpump=s_heatpump,
-        s_emethan=s_emethan,
-        s=s,
+        p_fermen_dairycow=production.p_fermen_dairycow,
+        p_fermen_nondairy=production.p_fermen_nondairy,
+        p_fermen_swine=production.p_fermen_swine,
+        p_fermen_poultry=production.p_fermen_poultry,
+        p_fermen_oanimal=production.p_fermen_oanimal,
+        p_fermen=production.p_fermen,
+        p_manure_dairycow=production.p_manure_dairycow,
+        p_manure_nondairy=production.p_manure_nondairy,
+        p_manure_swine=production.p_manure_swine,
+        p_manure_poultry=production.p_manure_poultry,
+        p_manure_oanimal=production.p_manure_oanimal,
+        p_manure_deposition=production.p_manure_deposition,
+        p_manure=production.p_manure,
+        p_soil_fertilizer=production.p_soil_fertilizer,
+        p_soil_manure=production.p_soil_manure,
+        p_soil_sludge=production.p_soil_sludge,
+        p_soil_ecrop=production.p_soil_ecrop,
+        p_soil_residue=production.p_soil_residue,
+        p_soil_grazing=production.p_soil_grazing,
+        p_soil_orgfarm=production.p_soil_orgfarm,
+        p_soil_orgloss=production.p_soil_orgloss,
+        p_soil_leaching=production.p_soil_leaching,
+        p_soil_deposition=production.p_soil_deposition,
+        p_soil=production.p_soil,
+        p_other_liming_calcit=production.p_other_liming_calcit,
+        p_other_liming_dolomite=production.p_other_liming_dolomite,
+        p_other_liming=production.p_other_liming,
+        p_other_urea=production.p_other_urea,
+        p_other_ecrop=production.p_other_ecrop,
+        p_other_kas=production.p_other_kas,
+        p_other=production.p_other,
+        p_operation_elec_heatpump=production.p_operation_elec_heatpump,
+        p_operation=production.p_operation,
+        p_operation_elec_elcon=production.p_operation_elec_elcon,
+        p_operation_vehicles=production.p_operation_vehicles,
+        p_operation_heat=production.p_operation_heat,
+        p=production.p,
+        s_petrol=supply.s_petrol,
+        s_diesel=supply.s_diesel,
+        s_fueloil=supply.s_fueloil,
+        s_lpg=supply.s_lpg,
+        s_gas=supply.s_gas,
+        s_biomass=supply.s_biomass,
+        s_elec=supply.s_elec,
+        s_heatpump=supply.s_heatpump,
+        s_emethan=supply.s_emethan,
+        s=supply.s,
         a=a,
         g=g,
         g_consult=g_consult,
