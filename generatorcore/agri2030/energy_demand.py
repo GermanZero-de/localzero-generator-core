@@ -125,6 +125,8 @@ class CO2eChangeFermentationOrManure(CO2eChange):
     def calc_fermen(
         cls, inputs: Inputs, what: str, ass_demand_change: str, a18: A18
     ) -> "CO2eChangeFermentationOrManure":
+        CO2e_combustion_based = 0
+
         demand_change = inputs.ass(ass_demand_change)
         amount = getattr(a18, what).amount * (1 + demand_change)
 
@@ -135,7 +137,7 @@ class CO2eChangeFermentationOrManure(CO2eChange):
             inputs=inputs,
             what=what,
             a18=a18,
-            CO2e_combustion_based=0,
+            CO2e_combustion_based=CO2e_combustion_based,
             CO2e_production_based=CO2e_production_based,
         )
 
@@ -143,8 +145,8 @@ class CO2eChangeFermentationOrManure(CO2eChange):
             inputs=inputs,
             what=what,
             a18=a18,
-            CO2e_combustion_based=parent.CO2e_combustion_based,
-            CO2e_production_based=parent.CO2e_production_based,
+            CO2e_combustion_based=CO2e_combustion_based,
+            CO2e_production_based=CO2e_production_based,
             CO2e_production_based_per_t=CO2e_production_based_per_t,
             CO2e_total=parent.CO2e_total,
             CO2e_total_2021_estimated=parent.CO2e_total_2021_estimated,
@@ -159,6 +161,8 @@ class CO2eChangeFermentationOrManure(CO2eChange):
     def calc_manure(
         cls, inputs: Inputs, what: str, a18: A18, amount: float
     ) -> "CO2eChangeFermentationOrManure":
+        CO2e_combustion_based = 0
+
         demand_change = inputs.ass("Ass_A_P_manure_ratio_CO2e_to_amount_change")
 
         CO2e_production_based_per_t = getattr(a18, what).CO2e_production_based_per_t * (
@@ -170,7 +174,7 @@ class CO2eChangeFermentationOrManure(CO2eChange):
             inputs=inputs,
             what=what,
             a18=a18,
-            CO2e_combustion_based=0,
+            CO2e_combustion_based=CO2e_combustion_based,
             CO2e_production_based=CO2e_production_based,
         )
 
@@ -178,8 +182,8 @@ class CO2eChangeFermentationOrManure(CO2eChange):
             inputs=inputs,
             what=what,
             a18=a18,
-            CO2e_combustion_based=parent.CO2e_combustion_based,
-            CO2e_production_based=parent.CO2e_production_based,
+            CO2e_combustion_based=CO2e_combustion_based,
+            CO2e_production_based=CO2e_production_based,
             CO2e_production_based_per_t=CO2e_production_based_per_t,
             CO2e_total=parent.CO2e_total,
             CO2e_total_2021_estimated=parent.CO2e_total_2021_estimated,
@@ -208,6 +212,8 @@ class CO2eChangeSoil(CO2eChange):
         CO2e_production_based_per_t: float,
     ) -> "CO2eChangeSoil":
 
+        CO2e_combustion_based = 0
+
         demand_change = (
             div(
                 CO2e_production_based_per_t,
@@ -224,7 +230,7 @@ class CO2eChangeSoil(CO2eChange):
             inputs=inputs,
             what=what,
             a18=a18,
-            CO2e_combustion_based=0,
+            CO2e_combustion_based=CO2e_combustion_based,
             CO2e_production_based=CO2e_production_based,
         )
 
@@ -232,8 +238,8 @@ class CO2eChangeSoil(CO2eChange):
             inputs=inputs,
             what=what,
             a18=a18,
-            CO2e_combustion_based=parent.CO2e_combustion_based,
-            CO2e_production_based=parent.CO2e_production_based,
+            CO2e_combustion_based=CO2e_combustion_based,
+            CO2e_production_based=CO2e_production_based,
             CO2e_production_based_per_t=CO2e_production_based_per_t,
             CO2e_total=parent.CO2e_total,
             CO2e_total_2021_estimated=parent.CO2e_total_2021_estimated,
@@ -249,6 +255,8 @@ class CO2eChangeSoil(CO2eChange):
     def calc_soil(
         cls, inputs: Inputs, what: str, a18: A18, area_ha: float
     ) -> "CO2eChangeSoil":
+        CO2e_combustion_based = 0
+
         demand_change = inputs.ass("Ass_A_P_soil_N_application_2030_change")
         CO2e_production_based_per_t = getattr(a18, what).CO2e_production_based_per_t * (
             1 + demand_change
@@ -262,7 +270,7 @@ class CO2eChangeSoil(CO2eChange):
             inputs=inputs,
             what=what,
             a18=a18,
-            CO2e_combustion_based=0,
+            CO2e_combustion_based=CO2e_combustion_based,
             CO2e_production_based=CO2e_production_based,
         )
 
@@ -270,8 +278,8 @@ class CO2eChangeSoil(CO2eChange):
             inputs=inputs,
             what=what,
             a18=a18,
-            CO2e_combustion_based=parent.CO2e_combustion_based,
-            CO2e_production_based=parent.CO2e_production_based,
+            CO2e_combustion_based=CO2e_combustion_based,
+            CO2e_production_based=CO2e_production_based,
             CO2e_production_based_per_t=CO2e_production_based_per_t,
             CO2e_total=parent.CO2e_total,
             CO2e_total_2021_estimated=parent.CO2e_total_2021_estimated,
@@ -299,16 +307,16 @@ class CO2eChangeOtherLiming(CO2eChange):
         a18: A18,
     ):
 
+        self.CO2e_combustion_based = 0
+
         parent = CO2eChange(
             inputs=inputs,
             what=what,
             a18=a18,
-            CO2e_combustion_based=0,
+            CO2e_combustion_based=self.CO2e_combustion_based,
             CO2e_production_based=self.CO2e_production_based,
         )
 
-        self.CO2e_combustion_based = parent.CO2e_combustion_based
-        self.CO2e_production_based = parent.CO2e_production_based
         self.CO2e_total = parent.CO2e_total
         self.CO2e_total_2021_estimated = parent.CO2e_total_2021_estimated
         self.change_CO2e_pct = parent.change_CO2e_pct
@@ -337,6 +345,8 @@ class CO2eChangeOther(CO2eChange):
         fact_production_based_per_t: str,
     ):
 
+        self.CO2e_combustion_based = 0
+
         self.demand_change = inputs.ass(ass_demand_change)
         self.prod_volume = getattr(a18, what).prod_volume * (1 + self.demand_change)
 
@@ -347,12 +357,10 @@ class CO2eChangeOther(CO2eChange):
             inputs=inputs,
             what=what,
             a18=a18,
-            CO2e_combustion_based=0,
+            CO2e_combustion_based=self.CO2e_combustion_based,
             CO2e_production_based=self.CO2e_production_based,
         )
 
-        self.CO2e_combustion_based = parent.CO2e_combustion_based
-        self.CO2e_production_based = parent.CO2e_production_based
         self.CO2e_total = parent.CO2e_total
         self.CO2e_total_2021_estimated = parent.CO2e_total_2021_estimated
         self.change_CO2e_pct = parent.change_CO2e_pct
@@ -419,7 +427,6 @@ class CO2eChangePOperation(CO2eChangeEnergy):
 
         self.change_energy_MWh = parent.change_energy_MWh
         self.change_energy_pct = parent.change_energy_pct
-        self.energy = parent.energy
 
 
 @dataclass(kw_only=True)
@@ -527,7 +534,6 @@ class CO2eChangePOperationHeat(CO2eChangeEnergy):
 
         self.change_energy_MWh = parent.change_energy_MWh
         self.change_energy_pct = parent.change_energy_pct
-        self.energy = parent.energy
 
 
 @dataclass(kw_only=True)
@@ -564,7 +570,6 @@ class CO2eChangePOperationElecElcon(CO2eChangeEnergy):
 
         self.change_energy_MWh = parent.change_energy_MWh
         self.change_energy_pct = parent.change_energy_pct
-        self.energy = parent.energy
 
 
 @dataclass(kw_only=True)
@@ -586,7 +591,6 @@ class CO2eChangePOperationElecHeatpump(CO2eChangeEnergy):
         parent = CO2eChangeEnergy(inputs=inputs, what=what, a18=a18, energy=self.energy)
 
         self.change_energy_MWh = parent.change_energy_MWh
-        self.energy = parent.energy
 
 
 @dataclass(kw_only=True)
@@ -631,4 +635,3 @@ class CO2eChangePOperationVehicles(CO2eChangeEnergy):
 
         self.change_energy_MWh = parent.change_energy_MWh
         self.change_energy_pct = parent.change_energy_pct
-        self.energy = parent.energy

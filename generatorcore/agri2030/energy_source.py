@@ -22,6 +22,7 @@ class CO2eChangeEnergyPerMWh(CO2eChange):
 
     def __post_init__(self, inputs: Inputs, what: str, a18: A18):
 
+        self.CO2e_production_based = 0
         self.CO2e_combustion_based_per_MWh = getattr(
             a18, what
         ).CO2e_combustion_based_per_MWh
@@ -35,11 +36,9 @@ class CO2eChangeEnergyPerMWh(CO2eChange):
             what=what,
             a18=a18,
             CO2e_combustion_based=self.CO2e_combustion_based,
-            CO2e_production_based=0,
+            CO2e_production_based=self.CO2e_production_based,
         )
 
-        self.CO2e_combustion_based = parent.CO2e_combustion_based
-        self.CO2e_production_based = parent.CO2e_production_based
         self.CO2e_total = parent.CO2e_total
         self.CO2e_total_2021_estimated = parent.CO2e_total_2021_estimated
         self.change_CO2e_pct = parent.change_CO2e_pct
@@ -87,6 +86,7 @@ class CO2eChangeS(CO2eChange):
         s_heatpump: Any,
     ):
 
+        self.CO2e_production_based = 0
         self.CO2e_combustion_based = (
             s_petrol.CO2e_combustion_based
             + s_diesel.CO2e_combustion_based
@@ -126,11 +126,9 @@ class CO2eChangeS(CO2eChange):
             what=what,
             a18=a18,
             CO2e_combustion_based=self.CO2e_combustion_based,
-            CO2e_production_based=0,
+            CO2e_production_based=self.CO2e_production_based,
         )
 
-        self.CO2e_combustion_based = parent.CO2e_combustion_based
-        self.CO2e_production_based = parent.CO2e_production_based
         self.CO2e_total = parent.CO2e_total
         self.CO2e_total_2021_estimated = parent.CO2e_total_2021_estimated
         self.change_CO2e_pct = parent.change_CO2e_pct
@@ -148,6 +146,8 @@ class CO2eChangeFuelOilGas(CO2eChangeEnergyPerMWh):
 
     def __post_init__(self, inputs: Inputs, what: str, a18: A18):
 
+        self.CO2e_combustion_based = 0
+        self.CO2e_production_based = 0
         self.area_m2 = 0
 
         parent = CO2eChangeEnergyPerMWh(
@@ -159,8 +159,6 @@ class CO2eChangeFuelOilGas(CO2eChangeEnergyPerMWh):
             CO2e_production_based=self.CO2e_production_based,
         )
 
-        self.CO2e_combustion_based = parent.CO2e_combustion_based
-        self.CO2e_production_based = parent.CO2e_production_based
         self.CO2e_combustion_based_per_MWh = parent.CO2e_combustion_based_per_MWh
         self.CO2e_total = parent.CO2e_total
         self.CO2e_total_2021_estimated = parent.CO2e_total_2021_estimated
@@ -193,6 +191,9 @@ class CO2eChangeFuelHeatpump(CO2eChangeEnergyPerMWh):
     a18: InitVar[A18]
 
     def __post_init__(self, inputs: Inputs, what: str, a18: A18):
+
+        self.CO2e_combustion_based = 0
+        self.CO2e_production_based = 0
 
         self.cost_fuel_per_MWh = inputs.fact("Fact_R_S_gas_energy_cost_factor_2018")
         self.cost_fuel = self.energy * self.cost_fuel_per_MWh / MILLION
@@ -234,8 +235,6 @@ class CO2eChangeFuelHeatpump(CO2eChangeEnergyPerMWh):
             CO2e_production_based=self.CO2e_production_based,
         )
 
-        self.CO2e_combustion_based = parent.CO2e_combustion_based
-        self.CO2e_production_based = parent.CO2e_production_based
         self.CO2e_combustion_based_per_MWh = parent.CO2e_combustion_based_per_MWh
         self.CO2e_total = parent.CO2e_total
         self.CO2e_total_2021_estimated = parent.CO2e_total_2021_estimated
@@ -264,7 +263,8 @@ class CO2eChangeFuelEmethan(CO2eChange):
 
         what = ""
 
-        CO2e_combustion_based = 0
+        self.CO2e_production_based = 0
+        self.CO2e_combustion_based = 0
         self.CO2e_combustion_based_per_MWh = inputs.fact(
             "Fact_T_S_methan_EmFa_tank_wheel_2018"
         )
@@ -276,12 +276,10 @@ class CO2eChangeFuelEmethan(CO2eChange):
             inputs=inputs,
             what=what,
             a18=a18,
-            CO2e_combustion_based=CO2e_combustion_based,
-            CO2e_production_based=0,
+            CO2e_combustion_based=self.CO2e_combustion_based,
+            CO2e_production_based=self.CO2e_production_based,
         )
 
-        self.CO2e_combustion_based = parent.CO2e_combustion_based
-        self.CO2e_production_based = parent.CO2e_production_based
         self.CO2e_total = parent.CO2e_total
         self.CO2e_total_2021_estimated = parent.CO2e_total_2021_estimated
         self.change_CO2e_pct = parent.change_CO2e_pct

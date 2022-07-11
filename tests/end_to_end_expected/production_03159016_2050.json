@@ -9747,7 +9747,7 @@
             "change_energy_pct": -0.37675401829646094
         },
         "s_fueloil": {
-            "CO2e_combustion_based": 0.0,
+            "CO2e_combustion_based": 0,
             "CO2e_production_based": 0,
             "CO2e_total": 0.0,
             "CO2e_total_2021_estimated": 130.67672553149288,
@@ -9774,7 +9774,7 @@
             "change_energy_pct": -1.0
         },
         "s_gas": {
-            "CO2e_combustion_based": 0.0,
+            "CO2e_combustion_based": 0,
             "CO2e_production_based": 0,
             "CO2e_total": 0.0,
             "CO2e_total_2021_estimated": 120.30932132806102,
@@ -9814,7 +9814,7 @@
             "change_energy_pct": 4.64690213386954
         },
         "s_heatpump": {
-            "CO2e_combustion_based": 0.0,
+            "CO2e_combustion_based": 0,
             "CO2e_production_based": 0,
             "CO2e_total": 0.0,
             "CO2e_total_2021_estimated": 0.0,
