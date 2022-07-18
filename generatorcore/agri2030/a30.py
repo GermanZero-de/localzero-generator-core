@@ -3,10 +3,12 @@ from dataclasses import dataclass
 
 from .dataclasses import (
     CO2eChangeA,
-    CO2eChangeP,
     CO2eChangeG,
     CO2eChangeGConsult,
     CO2eChangeGOrganic,
+)
+from .energy_demand import (
+    CO2eChangeP,
     CO2eChange,
     CO2eChangeFermentationOrManure,
     CO2eChangeSoil,
@@ -17,21 +19,25 @@ from .dataclasses import (
     CO2eChangePOperationElecElcon,
     CO2eChangePOperationElecHeatpump,
     CO2eChangePOperationVehicles,
+)
+from .energy_source import (
     CO2eChangeS,
-    CO2eChangeFuel,
+    CO2eChangeEnergyPerMWh,
     CO2eChangeFuelOilGas,
     CO2eChangeFuelHeatpump,
     CO2eChangeFuelEmethan,
 )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class A30:
     a: CO2eChangeA
-    p: CO2eChangeP
+
     g: CO2eChangeG
     g_consult: CO2eChangeGConsult
     g_organic: CO2eChangeGOrganic
+
+    p: CO2eChangeP
     p_fermen: CO2eChange
     p_fermen_dairycow: CO2eChangeFermentationOrManure
     p_fermen_nondairy: CO2eChangeFermentationOrManure
@@ -68,13 +74,14 @@ class A30:
     p_operation_elec_elcon: CO2eChangePOperationElecElcon
     p_operation_elec_heatpump: CO2eChangePOperationElecHeatpump
     p_operation_vehicles: CO2eChangePOperationVehicles
+
     s: CO2eChangeS
-    s_petrol: CO2eChangeFuel
-    s_diesel: CO2eChangeFuel
+    s_petrol: CO2eChangeEnergyPerMWh
+    s_diesel: CO2eChangeEnergyPerMWh
     s_fueloil: CO2eChangeFuelOilGas
-    s_lpg: CO2eChangeFuel
+    s_lpg: CO2eChangeEnergyPerMWh
     s_gas: CO2eChangeFuelOilGas
-    s_biomass: CO2eChangeFuel
-    s_elec: CO2eChangeFuel
+    s_biomass: CO2eChangeEnergyPerMWh
+    s_elec: CO2eChangeEnergyPerMWh
     s_heatpump: CO2eChangeFuelHeatpump
     s_emethan: CO2eChangeFuelEmethan
