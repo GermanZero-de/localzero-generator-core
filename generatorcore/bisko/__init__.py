@@ -485,69 +485,59 @@ class BiskoTransport(BiskoSector):
             eb_energy_from_same_sector=t18.s_petrol.energy,
             eb_CO2e_cb_from_same_sector=t18.s_petrol.energy
             * fact("Fact_T_S_petrol_EmFa_tank_wheel_2018"),
-            eb_CO2e_cb_from_fuels=f18.p_petrol.CO2e_combustion_based
-            * div(f18.d_t.energy, f18.d.energy),
+            eb_CO2e_cb_from_fuels=t18.s_petrol.energy * fact("Fact_F_P_petrol_ratio_CO2e_cb_to_fec_2018"),
         )
         diesel = EnergyAndEmissionsCalcIntermediate(
             eb_energy_from_same_sector=t18.s_diesel.energy,
             eb_CO2e_cb_from_same_sector=t18.s_diesel.energy
             * fact("Fact_T_S_diesel_EmFa_tank_wheel_2018"),
-            eb_CO2e_cb_from_fuels=f18.p_diesel.CO2e_combustion_based
-            * div(f18.d_t.energy + f18.d_a.energy, f18.d.energy),
+            eb_CO2e_cb_from_fuels=t18.s_diesel.energy * fact("Fact_F_P_diesel_ratio_CO2e_cb_to_fec_2018"),
         )
         jetfuel = EnergyAndEmissionsCalcIntermediate(
             eb_energy_from_same_sector=t18.s_jetfuel.energy,
             eb_CO2e_cb_from_same_sector=t18.s_jetfuel.energy
             * fact("Fact_T_S_jetfuel_EmFa_tank_wheel_2018"),
-            eb_CO2e_cb_from_fuels=f18.p_jetfuel.CO2e_combustion_based
-            * div(f18.d_t.energy, f18.d.energy),
+            eb_CO2e_cb_from_fuels=t18.s_jetfuel.energy * fact("Fact_F_P_jetfuel_ratio_CO2e_cb_to_fec_2018"),
         )
 
         bioethanol = EnergyAndEmissionsCalcIntermediate(
             eb_energy_from_same_sector=t18.s_bioethanol.energy,
             eb_CO2e_cb_from_same_sector=t18.s_bioethanol.energy
             * ass("Ass_T_S_bioethanol_EmFa_tank_wheel"),
-            eb_CO2e_cb_from_fuels=f18.p_bioethanol.CO2e_combustion_based
-            * div(f18.d_t.energy, f18.d.energy),
+            eb_CO2e_cb_from_fuels=t18.s_bioethanol.energy * fact("Fact_H_P_biomass_ratio_CO2e_pb_to_fec_2018"),
         )
         biodiesel = EnergyAndEmissionsCalcIntermediate(
             eb_energy_from_same_sector=t18.s_biodiesel.energy,
             eb_CO2e_cb_from_same_sector=t18.s_biodiesel.energy
             * ass("Ass_T_S_biodiesel_EmFa_tank_wheel"),
-            eb_CO2e_cb_from_fuels=f18.p_biodiesel.CO2e_combustion_based
-            * div(f18.d_t.energy, f18.d.energy),
+            eb_CO2e_cb_from_fuels=t18.s_biodiesel.energy * fact("Fact_H_P_biomass_ratio_CO2e_pb_to_fec_2018"),
         )
         biogas = EnergyAndEmissionsCalcIntermediate(
             eb_energy_from_same_sector=t18.s_biogas.energy,
             eb_CO2e_cb_from_same_sector=t18.s_biogas.energy
             * ass("Ass_T_S_biogas_EmFa_tank_wheel"),
-            eb_CO2e_cb_from_fuels=f18.p_biogas.CO2e_combustion_based
-            * div(f18.d_t.energy, f18.d.energy),
+            eb_CO2e_cb_from_fuels= t18.s_biogas.energy * fact("Fact_H_P_biomass_ratio_CO2e_pb_to_fec_2018"),
         )
 
         fueloil = EnergyAndEmissionsCalcIntermediate(
             eb_energy_from_same_sector=t18.s_fueloil.energy,
             eb_CO2e_cb_from_same_sector=t18.s_fueloil.energy
             * fact("Fact_T_S_fueloil_EmFa_tank_wheel_2018"),
-            eb_CO2e_cb_from_heat=h18.p_fueloil.CO2e_combustion_based
-            * div(h18.d_t.energy, h18.d.energy),
+            eb_CO2e_cb_from_heat=t18.s_fueloil.energy * fact("Fact_H_P_fueloil_ratio_CO2e_cb_to_fec_2018"),
         )
 
         lpg = EnergyAndEmissionsCalcIntermediate(
             eb_energy_from_same_sector=t18.s_lpg.energy,
             eb_CO2e_cb_from_same_sector=t18.s_lpg.energy
             * fact("Fact_T_S_lpg_EmFa_tank_wheel_2018"),
-            eb_CO2e_cb_from_heat=h18.p_lpg.CO2e_combustion_based
-            * div(h18.d_t.energy, h18.d.energy),
+            eb_CO2e_cb_from_heat=t18.s_lpg.energy * fact("Fact_H_P_lpg_ratio_CO2e_cb_to_fec_2018"),
         )
         gas = EnergyAndEmissionsCalcIntermediate(
             eb_energy_from_same_sector=t18.s_gas.energy,
             eb_CO2e_cb_from_same_sector=t18.s_gas.energy
             * fact("Fact_T_S_cng_EmFa_tank_wheel_2018"),
-            eb_CO2e_cb_from_heat=h18.p_gas.CO2e_combustion_based
-            * div(h18.d_t.energy, h18.d.energy),
-            eb_CO2e_pb_from_heat=h18.p_gas.CO2e_production_based
-            * div(h18.d_t.energy, h18.d.energy),
+            eb_CO2e_cb_from_heat=t18.s_gas.energy * fact("Fact_H_P_gas_ratio_CO2e_cb_to_fec_2018"),
+            eb_CO2e_pb_from_heat=t18.s_gas.energy * fact("Fact_H_P_gas_ratio_CO2e_pb_to_fec_2018"),
         )
         elec = EnergyAndEmissionsCalcIntermediate(
             eb_energy_from_same_sector=t18.s_elec.energy,
