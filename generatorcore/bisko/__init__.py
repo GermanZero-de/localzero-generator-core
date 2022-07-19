@@ -644,7 +644,7 @@ class BiskoIndustry(BiskoSector):
 
         heatnet = EnergyAndEmissionsCalcIntermediate(
             eb_energy_from_same_sector=i18.s_renew_heatnet.energy,
-            eb_CO2e_cb_from_heat=i18.s_renew_heatnet.energy * fact("Fact_H_P_heatnet_ratio_CO2e_cb_to_fec_2018"),
+            eb_CO2e_cb_from_heat=i18.s_renew_heatnet.energy * fact("Fact_H_P_heatnet_plant_ratio_CO2e_cb_to_fec_2018"),
         )
         biomass = EnergyAndEmissionsCalcIntermediate(
             eb_energy_from_same_sector=i18.s_renew_biomass.energy,
