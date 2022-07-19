@@ -219,8 +219,7 @@ class BiskoPrivResidences(BiskoSector, BiskoSectorWithExtraCommunalFacilities):
         petrol = EnergyAndEmissionsCalcIntermediate(
             eb_energy_from_same_sector=r18.s_petrol.energy,
             eb_CO2e_cb_from_same_sector=r18.s_petrol.CO2e_total,
-            eb_CO2e_cb_from_fuels=r18.s_petrol.energy
-            * fact("Fact_F_P_petrol_ratio_CO2e_cb_to_fec_2018"),
+            eb_CO2e_cb_from_fuels=r18.s_petrol.energy* fact("Fact_F_P_petrol_ratio_CO2e_cb_to_fec_2018"),
         )
         fueloil = EnergyAndEmissionsCalcIntermediate(
             eb_energy_from_same_sector=r18.s_fueloil.energy,
@@ -609,35 +608,31 @@ class BiskoIndustry(BiskoSector):
         f18: fuels2018.F18,
         e18: electricity2018.E18,
     ) -> "BiskoIndustry":
+
+        fact = inputs.fact
+
         # Bereitstellung
         diesel = EnergyAndEmissionsCalcIntermediate(
             eb_energy_from_same_sector=i18.s_fossil_diesel.energy,
-            eb_CO2e_cb_from_fuels=f18.p_diesel.CO2e_combustion_based
-            * div(f18.d_i.energy, f18.d.energy),
+            eb_CO2e_cb_from_fuels=i18.s_fossil_diesel.energy * fact("Fact_F_P_diesel_ratio_CO2e_cb_to_fec_2018"),
         )
         fueloil = EnergyAndEmissionsCalcIntermediate(
             eb_energy_from_same_sector=i18.s_fossil_fueloil.energy,
-            eb_CO2e_cb_from_heat=h18.p_fueloil.CO2e_combustion_based
-            * div(h18.d_i.energy, h18.d.energy),
+            eb_CO2e_cb_from_heat=i18.s_fossil_fueloil.energy * fact("Fact_H_P_fueloil_ratio_CO2e_cb_to_fec_2018"),
         )
         coal = EnergyAndEmissionsCalcIntermediate(
             eb_energy_from_same_sector=i18.s_fossil_coal.energy,
-            eb_CO2e_cb_from_heat=h18.p_coal.CO2e_combustion_based
-            * div(h18.d_i.energy, h18.d.energy),
-            eb_CO2e_pb_from_heat=h18.p_coal.CO2e_production_based
-            * div(h18.d_i.energy, h18.d.energy),
+            eb_CO2e_cb_from_heat=i18.s_fossil_coal.energy * fact("Fact_H_P_coal_ratio_CO2e_cb_to_fec_2018"),
+            eb_CO2e_pb_from_heat=i18.s_fossil_coal.energy * fact("Fact_H_P_coal_ratio_CO2e_pb_to_fec_2018"),
         )
         lpg = EnergyAndEmissionsCalcIntermediate(
             eb_energy_from_same_sector=i18.s_fossil_lpg.energy,
-            eb_CO2e_cb_from_heat=h18.p_lpg.CO2e_combustion_based
-            * div(h18.d_i.energy, h18.d.energy),
+            eb_CO2e_cb_from_heat=i18.s_fossil_lpg.energy * fact("Fact_H_P_lpg_ratio_CO2e_cb_to_fec_2018"),
         )
         gas = EnergyAndEmissionsCalcIntermediate(
             eb_energy_from_same_sector=i18.s_fossil_gas.energy,
-            eb_CO2e_cb_from_heat=h18.p_gas.CO2e_combustion_based
-            * div(h18.d_i.energy, h18.d.energy),
-            eb_CO2e_pb_from_heat=h18.p_gas.CO2e_production_based
-            * div(h18.d_i.energy, h18.d.energy),
+            eb_CO2e_cb_from_heat=i18.s_fossil_gas.energy * fact("Fact_H_P_gas_ratio_CO2e_cb_to_fec_2018"),
+            eb_CO2e_pb_from_heat=i18.s_fossil_gas.energy * fact("Fact_H_P_gas_ratio_CO2e_pb_to_fec_2018"),
         )
         other_fossil = EnergyAndEmissionsCalcIntermediate(
             eb_energy_from_same_sector=i18.s_fossil_ofossil.energy
@@ -649,23 +644,19 @@ class BiskoIndustry(BiskoSector):
 
         heatnet = EnergyAndEmissionsCalcIntermediate(
             eb_energy_from_same_sector=i18.s_renew_heatnet.energy,
-            eb_CO2e_cb_from_heat=h18.p_heatnet.CO2e_combustion_based
-            * div(h18.d_i.energy, h18.d.energy),
+            eb_CO2e_cb_from_heat=i18.s_renew_heatnet.energy * fact("Fact_H_P_heatnet_ratio_CO2e_cb_to_fec_2018"),
         )
         biomass = EnergyAndEmissionsCalcIntermediate(
             eb_energy_from_same_sector=i18.s_renew_biomass.energy,
-            eb_CO2e_pb_from_heat=h18.p_biomass.CO2e_production_based
-            * div(h18.d_i.energy, h18.d.energy),
+            eb_CO2e_pb_from_heat=i18.s_renew_biomass.energy * fact("Fact_H_P_biomass_ratio_CO2e_pb_to_fec_2018"),
         )
         solarth = EnergyAndEmissionsCalcIntermediate(
             eb_energy_from_same_sector=i18.s_renew_solarth.energy,
-            eb_CO2e_pb_from_heat=h18.p_solarth.CO2e_production_based
-            * div(h18.d_i.energy, h18.d.energy),
+            eb_CO2e_pb_from_heat=i18.s_renew_solarth.energy * fact("Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018"),
         )
         heatpump = EnergyAndEmissionsCalcIntermediate(
             eb_energy_from_same_sector=i18.s_renew_heatpump.energy,
-            eb_CO2e_pb_from_heat=h18.p_heatpump.CO2e_production_based
-            * div(h18.d_i.energy, h18.d.energy),
+            eb_CO2e_pb_from_heat=i18.s_renew_heatpump.energy * fact("Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018"),
         )
         elec = EnergyAndEmissionsCalcIntermediate(
             eb_energy_from_same_sector=i18.s_renew_elec.energy,
