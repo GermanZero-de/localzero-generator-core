@@ -119,9 +119,9 @@ def test_cmd_test_end_to_end_run_all_ags():
     )
 
 
-def test_cmd_test_end_to_end_update_expectations():
-    check_cmd(["test_end_to_end", "update_expectations"], "update_expectations", True)
+#def test_cmd_test_end_to_end_update_expectations():
+#    check_cmd(["test_end_to_end", "update_expectations"], "update_expectations", True)
 
 
-def test_cmd_test_end_to_end_create_expectations_with_defaults():
-    check_cmd(["test_end_to_end", "create_expectation"], "create_expectation", True)
+#def test_cmd_test_end_to_end_create_expectations_with_defaults():
+#    check_cmd(["test_end_to_end", "create_expectation"], "create_expectation", True)
