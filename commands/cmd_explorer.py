@@ -23,6 +23,8 @@ def cmd_explorer(args: Any):
     rd = RefData.load()
     with open("explorer/index.html", encoding="utf-8") as index_file:
         index = index_file.read()
+    with open("explorer/elm.js", encoding="utf-8") as elm_js_file:
+        elm_js = elm_js_file.read()
 
     class ExplorerHandler(BaseHTTPRequestHandler):
         def handle_index(self):
@@ -30,6 +32,12 @@ def cmd_explorer(args: Any):
             self.send_header("Content-type", "text/html")
             self.end_headers()
             self.wfile.write(index.encode())
+
+        def handle_elm_js(self):
+            self.send_response(200)
+            self.send_header("Content-type", "text/javascript")
+            self.end_headers()
+            self.wfile.write(elm_js.encode())
 
         def json_rpc(self, f: Callable[[], object]):
             error = None
@@ -111,6 +119,9 @@ def cmd_explorer(args: Any):
 
                 case ["", ""]:
                     self.handle_index()
+
+                case ["", "elm.js"]:
+                    self.handle_elm_js()
 
                 case _:
                     self.send_response(404)

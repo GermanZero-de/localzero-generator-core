@@ -1,138 +1,16 @@
-from dataclasses import dataclass, field
+"""
+Documentation:
+https://localzero-generator.readthedocs.io/de/latest/sectors/hh_ghd.html
+"""
+
+# pyright: strict
 from ..inputs import Inputs
-from ..utils import div
-
-
-@dataclass
-class Vars1:
-    # Used by r
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-
-
-@dataclass
-class Vars2:
-    # Used by p, p_elec_elcon, p_elec_heatpump, p_vehicles, p_other
-    energy: float = None  # type: ignore
-
-
-@dataclass
-class Vars3:
-    # Used by p_buildings_total, p_buildings_until_1919, p_buildings_1919_1948, p_buildings_1949_1978, p_buildings_1979_1995, p_buildings_1996_2004
-    area_m2: float = None  # type: ignore
-    area_m2_relative_heat_ratio: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    factor_adapted_to_fec: float = None  # type: ignore
-    fec_after_BMWi: float = None  # type: ignore
-    fec_factor_BMWi: float = None  # type: ignore
-    number_of_buildings: float = None  # type: ignore
-    relative_building_ratio: float = None  # type: ignore
-    relative_heat_ratio_BMWi: float = None  # type: ignore
-    relative_heat_ratio_buildings_until_2004: float = None  # type: ignore
-
-
-@dataclass
-class Vars4:
-    # Used by p_buildings_2005_2011, p_buildings_2011_today
-    area_m2: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    factor_adapted_to_fec: float = None  # type: ignore
-    fec_after_BMWi: float = None  # type: ignore
-    fec_factor_BMWi: float = None  # type: ignore
-    number_of_buildings: float = None  # type: ignore
-    relative_building_ratio: float = None  # type: ignore
-    relative_heat_ratio_BMWi: float = None  # type: ignore
-
-
-@dataclass
-class Vars5:
-    # Used by p_buildings_area_m2_com
-    area_m2: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    factor_adapted_to_fec: float = None  # type: ignore
-    pct_x: float = None  # type: ignore
-
-
-@dataclass
-class Vars6:
-    # Used by s
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    cost_fuel: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
-
-
-@dataclass
-class Vars7:
-    # Used by s_fueloil, s_lpg, s_coal, s_petrol, s_heatnet, s_solarth, s_heatpump, s_elec_heating, s_gas
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_combustion_based_per_MWh: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    cost_fuel: float = None  # type: ignore
-    cost_fuel_per_MWh: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
-
-
-@dataclass
-class Vars8:
-    # Used by s_biomass
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_combustion_based_per_MWh: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    cost_fuel: float = None  # type: ignore
-    cost_fuel_per_MWh: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    number_of_buildings: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
-
-
-@dataclass
-class Vars9:
-    # Used by s_elec
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_combustion_based_per_MWh: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
-
-
-@dataclass
-class R18:
-    r: Vars1 = field(default_factory=Vars1)
-    p: Vars2 = field(default_factory=Vars2)
-    p_buildings_total: Vars3 = field(default_factory=Vars3)
-    p_buildings_until_1919: Vars3 = field(default_factory=Vars3)
-    p_buildings_1919_1948: Vars3 = field(default_factory=Vars3)
-    p_buildings_1949_1978: Vars3 = field(default_factory=Vars3)
-    p_buildings_1979_1995: Vars3 = field(default_factory=Vars3)
-    p_buildings_1996_2004: Vars3 = field(default_factory=Vars3)
-    p_buildings_2005_2011: Vars4 = field(default_factory=Vars4)
-    p_buildings_2011_today: Vars4 = field(default_factory=Vars4)
-    p_buildings_area_m2_com: Vars5 = field(default_factory=Vars5)
-    p_elec_elcon: Vars2 = field(default_factory=Vars2)
-    p_elec_heatpump: Vars2 = field(default_factory=Vars2)
-    p_vehicles: Vars2 = field(default_factory=Vars2)
-    p_other: Vars2 = field(default_factory=Vars2)
-    s: Vars6 = field(default_factory=Vars6)
-    s_fueloil: Vars7 = field(default_factory=Vars7)
-    s_lpg: Vars7 = field(default_factory=Vars7)
-    s_biomass: Vars8 = field(default_factory=Vars8)
-    s_coal: Vars7 = field(default_factory=Vars7)
-    s_petrol: Vars7 = field(default_factory=Vars7)
-    s_heatnet: Vars7 = field(default_factory=Vars7)
-    s_solarth: Vars7 = field(default_factory=Vars7)
-    s_heatpump: Vars7 = field(default_factory=Vars7)
-    s_elec_heating: Vars7 = field(default_factory=Vars7)
-    s_gas: Vars7 = field(default_factory=Vars7)
-    s_elec: Vars9 = field(default_factory=Vars9)
+from ..utils import div, MILLION
+from .r18 import R18
 
 
 def calc(inputs: Inputs) -> R18:
-    def fact(n):
-        return inputs.fact(n)
-
+    fact = inputs.fact
     entries = inputs.entries
 
     ### P - Section ###
@@ -407,8 +285,6 @@ def calc(inputs: Inputs) -> R18:
 
     ### S - Section ###
 
-    Million = 1000000
-
     # Definitions
 
     s = r18.s
@@ -648,18 +524,18 @@ def calc(inputs: Inputs) -> R18:
     s_gas.cost_fuel_per_MWh = fact("Fact_R_S_gas_energy_cost_factor_2018")
 
     # cost_fuel
-    s_fueloil.cost_fuel = s_fueloil.energy * s_fueloil.cost_fuel_per_MWh / Million
-    s_lpg.cost_fuel = s_lpg.energy * s_lpg.cost_fuel_per_MWh / Million
-    s_biomass.cost_fuel = s_biomass.energy * s_biomass.cost_fuel_per_MWh / Million
-    s_coal.cost_fuel = s_coal.energy * s_coal.cost_fuel_per_MWh / Million
-    s_petrol.cost_fuel = s_petrol.energy * s_petrol.cost_fuel_per_MWh / Million
-    s_heatnet.cost_fuel = s_heatnet.energy * s_heatnet.cost_fuel_per_MWh / Million
-    s_solarth.cost_fuel = s_solarth.energy * s_solarth.cost_fuel_per_MWh / Million
-    s_heatpump.cost_fuel = s_heatpump.energy * s_heatpump.cost_fuel_per_MWh / Million
+    s_fueloil.cost_fuel = s_fueloil.energy * s_fueloil.cost_fuel_per_MWh / MILLION
+    s_lpg.cost_fuel = s_lpg.energy * s_lpg.cost_fuel_per_MWh / MILLION
+    s_biomass.cost_fuel = s_biomass.energy * s_biomass.cost_fuel_per_MWh / MILLION
+    s_coal.cost_fuel = s_coal.energy * s_coal.cost_fuel_per_MWh / MILLION
+    s_petrol.cost_fuel = s_petrol.energy * s_petrol.cost_fuel_per_MWh / MILLION
+    s_heatnet.cost_fuel = s_heatnet.energy * s_heatnet.cost_fuel_per_MWh / MILLION
+    s_solarth.cost_fuel = s_solarth.energy * s_solarth.cost_fuel_per_MWh / MILLION
+    s_heatpump.cost_fuel = s_heatpump.energy * s_heatpump.cost_fuel_per_MWh / MILLION
     s_elec_heating.cost_fuel = (
-        s_elec_heating.energy * s_elec_heating.cost_fuel_per_MWh / Million
+        s_elec_heating.energy * s_elec_heating.cost_fuel_per_MWh / MILLION
     )
-    s_gas.cost_fuel = s_gas.energy * s_gas.cost_fuel_per_MWh / Million
+    s_gas.cost_fuel = s_gas.energy * s_gas.cost_fuel_per_MWh / MILLION
 
     s.cost_fuel = (
         s_fueloil.cost_fuel

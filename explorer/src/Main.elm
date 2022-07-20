@@ -1,4 +1,4 @@
-module Main exposing (Model, Msg(..), init, main, subscriptions, update, view)
+port module Main exposing (Model, Msg(..), init, main, subscriptions, update, view)
 
 --import Element.Background as Background
 
@@ -9,11 +9,12 @@ import AllRuns
         )
 import Browser
 import Browser.Dom
+import Cells
 import Chart as C
 import Chart.Attributes as CA
 import Chart.Events
 import Chart.Item
-import Cmd.Extra exposing (withCmd, withNoCmd)
+import Cmd.Extra exposing (addCmd, withCmd, withNoCmd)
 import CollapseStatus exposing (CollapseStatus, allCollapsed, isCollapsed)
 import Dict exposing (Dict)
 import Diff exposing (Diff(..))
@@ -49,17 +50,21 @@ import File exposing (File)
 import File.Download as Download
 import File.Select
 import Filter
-import Html exposing (Html)
+import Html exposing (Html, p)
 import Html.Attributes
-import Html.Events
+import Html5.DragDrop as DragDrop exposing (droppable)
 import Http
-import InterestList exposing (InterestList)
-import InterestListTable exposing (InterestListTable)
 import Json.Decode as Decode
 import Json.Encode as Encode
+import KeyBindings exposing (noModifiers, shift)
+import Keyboard.Key as K
+import Lens exposing (Lens)
+import Lens.CellContent as CellContent
+import List.Extra
 import Maybe.Extra
 import Pivot exposing (Pivot)
 import Run exposing (OverrideHandling(..), Path, Run)
+import Set
 import Storage
 import Styling
     exposing
@@ -76,6 +81,7 @@ import Styling
         , modalDim
         , parseGermanNumber
         , red
+        , scrollableText
         , size16
         , size32
         , sizes
@@ -85,6 +91,12 @@ import Styling
 import Task
 import Tree exposing (Node(..), Tree)
 import Value exposing (Value(..))
+import ValueSet exposing (ValueSet)
+
+
+bind m k msg =
+    -- In this project I'm not using the ability to generate documentations for key bindings
+    KeyBindings.bind m k msg ""
 
 
 
@@ -105,7 +117,11 @@ main =
 
 
 type alias ActiveOverrideEditor =
-    { runId : RunId, name : String, value : String, asFloat : Maybe Float }
+    { runId : RunId
+    , name : String
+    , value : String
+    , asFloat : Maybe Float
+    }
 
 
 type alias ActiveSearch =
@@ -117,7 +133,7 @@ type alias ActiveSearch =
 
 {-| Position of interestlist in pivot
 -}
-type alias InterestListId =
+type alias LensId =
     Int
 
 
@@ -135,11 +151,26 @@ type alias DiffData =
     }
 
 
+type DropTarget
+    = DropOnCell LensId Cells.Pos Lens.CellContent
+    | DropInNewColumn LensId Cells.Pos
+    | DropInNewRow LensId Cells.Pos
+
+
+type DropSource
+    = DragFromRun RunId Path
+    | DragFromCell LensId Cells.Pos Lens.CellContent
+
+
+type alias DragDrop =
+    DragDrop.Model DropSource DropTarget
+
+
 type alias Model =
     { runs : AllRuns
     , collapseStatus : CollapseStatus
-    , interestLists : Pivot InterestList
-    , editingActiveInterestListLabel : Bool
+    , lenses : Pivot Lens
+    , editingActiveLensLabel : Bool
     , showModal : Maybe ModalState
     , activeOverrideEditor : Maybe ActiveOverrideEditor
     , activeSearch : Maybe ActiveSearch
@@ -147,13 +178,21 @@ type alias Model =
     , diffs : Dict DiffId DiffData
     , selectedForComparison : Maybe RunId
     , leftPaneWidth : Int
+    , dragDrop : DragDrop
     }
 
 
 type ModalState
     = PrepareCalculate (Maybe RunId) Run.Inputs Run.Overrides
     | Loading
-    | LoadFailure String
+    | ErrorMessage String String
+    | ReMap ReMapModalState
+
+
+type alias ReMapModalState =
+    { lensId : LensId
+    , mapping : Dict RunId RunId
+    }
 
 
 filterFieldId : String
@@ -167,6 +206,49 @@ encodeOverrides d =
         identity
         Encode.float
         d
+
+
+port save : Encode.Value -> Cmd msg
+
+
+port copyToClipboard : Encode.Value -> Cmd msg
+
+
+toClipboardData : Lens -> AllRuns -> Encode.Value
+toClipboardData lens allRuns =
+    let
+        valueSet =
+            ValueSet.create lens allRuns
+
+        encodeCell : Lens.CellContent -> Encode.Value
+        encodeCell content =
+            case content of
+                CellContent.ValueAt r p ->
+                    let
+                        value =
+                            Dict.get ( r, p ) valueSet.values
+                                |> Maybe.withDefault Value.Null
+                    in
+                    case value of
+                        Value.Float f ->
+                            Encode.string (String.fromFloat f)
+
+                        Value.String s ->
+                            Encode.string s
+
+                        Value.Null ->
+                            Encode.string ""
+
+                CellContent.Label s ->
+                    Encode.string s
+    in
+    case Lens.getCells lens of
+        Nothing ->
+            Encode.string "Copying classic lenses not supported yet"
+
+        Just cells ->
+            Cells.toList cells
+                |> Encode.list (Encode.list encodeCell)
 
 
 initiateCalculate : Maybe RunId -> Run.Inputs -> Run.Entries -> Run.Overrides -> Model -> ( Model, Cmd Msg )
@@ -190,29 +272,29 @@ initiateMakeEntries maybeNdx inputs overrides model =
     )
 
 
-activateInterestList : InterestListId -> Model -> Model
-activateInterestList id model =
+activateLens : LensId -> Model -> Model
+activateLens id model =
     { model
-        | interestLists = Pivot.withRollback (Pivot.goTo id) model.interestLists
+        | lenses = Pivot.withRollback (Pivot.goTo id) model.lenses
     }
 
 
-init : () -> ( Model, Cmd Msg )
-init _ =
-    ( { runs = AllRuns.empty
-      , showModal = Nothing
-      , interestLists = Pivot.singleton InterestList.empty
-      , editingActiveInterestListLabel = False
-      , collapseStatus = allCollapsed
-      , activeOverrideEditor = Nothing
-      , activeSearch = Nothing
-      , chartHovering = []
-      , diffs = Dict.empty
-      , selectedForComparison = Nothing
-      , leftPaneWidth = 600
-      }
-    , Cmd.none
-    )
+init : Decode.Value -> ( Model, Cmd Msg )
+init storage =
+    { runs = AllRuns.empty
+    , showModal = Nothing
+    , lenses = Pivot.singleton Lens.empty
+    , editingActiveLensLabel = False
+    , collapseStatus = allCollapsed
+    , activeOverrideEditor = Nothing
+    , activeSearch = Nothing
+    , chartHovering = []
+    , diffs = Dict.empty
+    , selectedForComparison = Nothing
+    , leftPaneWidth = 600
+    , dragDrop = DragDrop.init
+    }
+        |> update (LocalStorageLoaded storage)
 
 
 
@@ -220,73 +302,125 @@ init _ =
 
 
 type Msg
-    = GotGeneratorResult (Maybe RunId) Run.Inputs Run.Entries Run.Overrides (Result Http.Error (Tree Value))
+    = -- Running the generator
+      GotGeneratorResult (Maybe RunId) Run.Inputs Run.Entries Run.Overrides (Result Http.Error (Tree Value))
     | GotEntries (Maybe RunId) Run.Inputs Run.Overrides (Result Http.Error Run.Entries)
-    | AddToInterestListClicked Run.Path
-    | RemoveFromInterestListClicked InterestListId Run.Path
+      -- Override handling
     | AddOrUpdateOverrideClicked RunId String Float
     | RemoveOverrideClicked RunId String
     | OverrideEdited RunId String String
     | OverrideEditFinished
+      -- Filter
     | FilterEdited RunId String
     | FilterFinished
-    | FilterQuickAddRequested
+    | FilterQuickAddRequested RunId
+      -- Tree navigation
     | ToggleCollapseTreeClicked Explorable.Id Path
+      -- Modal dialog
     | ModalMsg ModalMsg
     | DisplayCalculateModalClicked (Maybe RunId) Run.Inputs Run.Overrides
     | CalculateModalOkClicked (Maybe RunId) Run.Inputs Run.Overrides
     | RemoveExplorableClicked Explorable.Id
-    | InterestListLabelEdited InterestListId String
-    | InterestListLabelEditFinished
-    | ToggleShowGraphClicked InterestListId
-    | DuplicateInterestListClicked InterestListId
-    | RemoveInterestListClicked InterestListId
-    | ActivateInterestListClicked InterestListId
-    | NewInterestListClicked
+    | ModalDismissed
+    | DisplayReMapModalClicked LensId
+    | ReMapModalOkClicked LensId (Dict RunId RunId)
+      -- Lens Modifications
+    | AddToLensClicked RunId Run.Path
+    | RemoveFromLensClicked LensId (List ( RunId, Run.Path ))
+    | LensLabelEdited LensId String
+    | LensLabelEditFinished
+    | DuplicateLensClicked LensId
+    | RemoveLensClicked LensId
+    | ActivateLensClicked LensId
+    | NewLensClicked
+    | NewTableClicked
+    | LensTableEditModeChanged LensId (Maybe Lens.TableEditMode)
+    | AddRowToLensTableClicked LensId Int
+    | AddColumnToLensTableClicked LensId Int
+    | CellOfLensTableEdited LensId Cells.Pos Lens.CellContent
+    | CellOfLensTableEditFinished LensId Cells.Pos Lens.CellContent
+    | MoveToCellRequested RunId Path LensId Cells.Pos
+    | SwapCellsRequested LensId Cells.Pos Lens.CellContent LensId Cells.Pos Lens.CellContent
+    | MoveIntoNewColumnRequested (Maybe ( LensId, Cells.Pos )) Lens.CellContent LensId Cells.Pos
+    | MoveIntoNewRowRequested (Maybe ( LensId, Cells.Pos )) Lens.CellContent LensId Cells.Pos
+    | MoveCellEditorRequested LensId Cells.Pos Lens.CellContent Cells.Pos Lens.CellContent
+    | DeleteRowClicked LensId Int
+    | DeleteColumnClicked LensId Int
+    | CopyToClipboardRequested LensId
+      -- Graphics
+    | ToggleShowGraphClicked LensId
+    | OnChartHover ChartHovering
+      -- Upload / Download / Storage
     | DownloadClicked
     | UploadClicked
     | FileUploaded File
     | FileContentLoaded String
-    | OnChartHover ChartHovering
+    | LocalStorageLoaded Decode.Value
+      -- Misc
     | Noop
-    | ToggleSelectForCompareClicked RunId
     | LeftPaneMoved Int
+    | DragDropMsg (DragDrop.Msg DropSource DropTarget)
+      -- Comparison
+    | ToggleSelectForCompareClicked RunId
     | DiffToleranceUpdated RunId RunId Float
 
 
 type ModalMsg
-    = CalculateModalTargetYearUpdated Int
+    = -- Modal: PrepareCalculate
+      CalculateModalTargetYearUpdated Int
     | CalculateModalAgsUpdated String
+      -- Modal: ReMap
+    | ReMapChangeMapping RunId RunId
 
 
-mapActiveInterestList : (InterestList -> InterestList) -> Model -> Model
-mapActiveInterestList f =
-    mapInterestLists (Pivot.mapC f)
+getActiveLens : Model -> Lens
+getActiveLens model =
+    Pivot.getC model.lenses
 
 
-mapInterestLists : (Pivot InterestList -> Pivot InterestList) -> Model -> Model
-mapInterestLists f m =
-    { m | interestLists = f m.interestLists }
+mapActiveLens : (Lens -> Lens) -> Model -> Model
+mapActiveLens f =
+    mapLenses (Pivot.mapC f)
 
 
-withLoadFailure : String -> Model -> ( Model, Cmd Msg )
-withLoadFailure msg model =
-    ( { model | showModal = Just (LoadFailure msg) }, Cmd.none )
+mapLenses : (Pivot Lens -> Pivot Lens) -> Model -> Model
+mapLenses f m =
+    { m | lenses = f m.lenses }
 
 
-withEditingActiveInterestListLabel : Bool -> Model -> Model
-withEditingActiveInterestListLabel b m =
-    { m | editingActiveInterestListLabel = b }
+withErrorMessage : String -> String -> Model -> ( Model, Cmd Msg )
+withErrorMessage title msg model =
+    ( { model | showModal = Just (ErrorMessage title msg) }, Cmd.none )
+
+
+withEditingActiveLensLabel : Bool -> Model -> Model
+withEditingActiveLensLabel b m =
+    { m | editingActiveLensLabel = b }
 
 
 downloadCmd : Model -> Cmd msg
 downloadCmd model =
     let
         content =
-            Storage.encode { interestLists = Pivot.toList model.interestLists }
+            Storage.encode { interestLists = Pivot.toList model.lenses }
                 |> Encode.encode 0
     in
     Download.string "explorer.json" "text/json" content
+
+
+saveCmd : Model -> Cmd msg
+saveCmd model =
+    let
+        content =
+            Storage.encode { interestLists = Pivot.toList model.lenses }
+    in
+    save content
+
+
+withSaveCmd : Model -> ( Model, Cmd Msg )
+withSaveCmd model =
+    model
+        |> withCmd (saveCmd model)
 
 
 removeRunAndDiffsThatDependOnIt : RunId -> Model -> Model
@@ -308,12 +442,43 @@ insertDiff runA runB diffData model =
     { model | diffs = Dict.insert ( runA, runB ) diffData model.diffs }
 
 
+callIf : Bool -> (a -> a) -> a -> a
+callIf p f x =
+    if p then
+        f x
+
+    else
+        x
+
+
+callIfJust : Maybe x -> (x -> a -> a) -> a -> a
+callIfJust mb fn x =
+    case mb of
+        Just a ->
+            fn a x
+
+        Nothing ->
+            x
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         Noop ->
             model
                 |> withNoCmd
+
+        AddRowToLensTableClicked id num ->
+            model
+                |> activateLens id
+                |> mapActiveLens (Lens.mapCells (Cells.addRow num))
+                |> withSaveCmd
+
+        AddColumnToLensTableClicked id num ->
+            model
+                |> activateLens id
+                |> mapActiveLens (Lens.mapCells (Cells.addColumn num))
+                |> withSaveCmd
 
         DownloadClicked ->
             model
@@ -327,24 +492,50 @@ update msg model =
             model
                 |> withCmd (Task.perform FileContentLoaded (File.toString file))
 
-        FileContentLoaded content ->
-            case Decode.decodeString Storage.decoder content of
-                Err _ ->
+        LocalStorageLoaded value ->
+            case Decode.decodeValue (Decode.nullable Storage.decoder) value of
+                Err e ->
                     model
-                        |> withLoadFailure "Failed to load file"
+                        |> withErrorMessage "Failed to load previous session"
+                            (Decode.errorToString e)
 
-                Ok storage ->
+                Ok Nothing ->
+                    -- no previous localstorage
+                    model
+                        |> withNoCmd
+
+                Ok (Just storage) ->
                     let
-                        ils =
+                        ls =
                             case Pivot.fromList storage.interestLists of
                                 Nothing ->
-                                    model.interestLists
+                                    model.lenses
 
                                 Just i ->
                                     i
                     in
-                    { model | interestLists = ils }
+                    { model | lenses = ls }
                         |> withNoCmd
+
+        FileContentLoaded content ->
+            case Decode.decodeString Storage.decoder content of
+                Err e ->
+                    model
+                        |> withErrorMessage "Failed to load file"
+                            (Decode.errorToString e)
+
+                Ok storage ->
+                    let
+                        ls =
+                            case Pivot.fromList storage.interestLists of
+                                Nothing ->
+                                    model.lenses
+
+                                Just i ->
+                                    i
+                    in
+                    { model | lenses = ls }
+                        |> withSaveCmd
 
         GotEntries maybeRunId inputs overrides (Ok entries) ->
             model
@@ -404,27 +595,28 @@ update msg model =
                         | diffs = newDiffs
                         , showModal = Nothing
                     }
-                        |> withNoCmd
+                        |> withSaveCmd
 
                 Err (Http.BadUrl s) ->
                     model
-                        |> withLoadFailure ("BAD URL: " ++ s)
+                        |> withErrorMessage "BAD URL: " s
 
                 Err Http.Timeout ->
                     model
-                        |> withLoadFailure "TIMEOUT"
+                        |> withErrorMessage "TIMEOUT" ""
 
                 Err Http.NetworkError ->
                     model
-                        |> withLoadFailure "NETWORK ERROR"
+                        |> withErrorMessage "NETWORK ERROR" ""
 
                 Err (Http.BadStatus code) ->
                     model
-                        |> withLoadFailure ("BAD STATUS CODE" ++ String.fromInt code)
+                        |> withErrorMessage ("BAD STATUS CODE" ++ String.fromInt code)
+                            ""
 
                 Err (Http.BadBody error) ->
                     model
-                        |> withLoadFailure ("Failed to decode: " ++ error)
+                        |> withErrorMessage "Failed to decode" error
 
         ToggleCollapseTreeClicked i path ->
             { model | collapseStatus = CollapseStatus.toggle i path model.collapseStatus }
@@ -434,7 +626,7 @@ update msg model =
             case id of
                 Explorable.Run runId ->
                     removeRunAndDiffsThatDependOnIt runId model
-                        |> withNoCmd
+                        |> withSaveCmd
 
                 Explorable.Diff runA runB ->
                     removeDiff runA runB model
@@ -445,6 +637,10 @@ update msg model =
                 |> Tuple.mapFirst (\md -> { model | showModal = md })
                 |> Tuple.mapSecond (Cmd.map ModalMsg)
 
+        ModalDismissed ->
+            { model | showModal = Nothing }
+                |> withNoCmd
+
         DisplayCalculateModalClicked maybeNdx inputs overrides ->
             let
                 modal =
@@ -453,9 +649,49 @@ update msg model =
             { model | showModal = Just modal }
                 |> withNoCmd
 
+        DisplayReMapModalClicked lensId ->
+            let
+                newModel =
+                    model
+                        |> activateLens lensId
+
+                lens =
+                    getActiveLens newModel
+
+                valueSet =
+                    ValueSet.create lens model.runs
+
+                mapping =
+                    valueSet.runs
+                        |> List.map (\ri -> ( ri, ri ))
+                        |> Dict.fromList
+            in
+            { model | showModal = Just (ReMap { lensId = lensId, mapping = mapping }) }
+                |> withNoCmd
+
         CalculateModalOkClicked maybeNdx inputs overrides ->
             model
                 |> initiateMakeEntries maybeNdx inputs overrides
+
+        ReMapModalOkClicked lensId mapping ->
+            { model | showModal = Nothing }
+                |> activateLens lensId
+                |> mapActiveLens
+                    (Lens.mapCells
+                        (Cells.map
+                            (\cc ->
+                                case cc of
+                                    CellContent.ValueAt ri p ->
+                                        CellContent.ValueAt
+                                            (Dict.get ri mapping |> Maybe.withDefault ri)
+                                            p
+
+                                    CellContent.Label _ ->
+                                        cc
+                            )
+                        )
+                    )
+                |> withSaveCmd
 
         AddOrUpdateOverrideClicked ndx name f ->
             { model
@@ -463,7 +699,7 @@ update msg model =
                     model.runs
                         |> AllRuns.update ndx (Run.mapOverrides (Dict.insert name f))
             }
-                |> withNoCmd
+                |> withSaveCmd
 
         FilterEdited runId pattern ->
             let
@@ -484,22 +720,11 @@ update msg model =
                                 , pattern = pattern
                                 , result = result
                                 }
-
-                activeSearchFieldChanged =
-                    case ( model.activeSearch, newActiveSearch ) of
-                        ( _, Nothing ) ->
-                            False
-
-                        ( Nothing, Just _ ) ->
-                            True
-
-                        ( Just a, Just b ) ->
-                            a.runId /= b.runId
             in
             { model | activeSearch = newActiveSearch }
                 |> withCmd (Task.attempt (\_ -> Noop) (Browser.Dom.focus filterFieldId))
 
-        FilterQuickAddRequested ->
+        FilterQuickAddRequested run ->
             case model.activeSearch of
                 Nothing ->
                     model
@@ -511,9 +736,9 @@ update msg model =
                             Tree.expand a.result
                     in
                     { model | activeSearch = Nothing }
-                        |> mapActiveInterestList
-                            (\il ->
-                                List.foldl (\p i -> InterestList.insert p i) il paths
+                        |> mapActiveLens
+                            (\lens ->
+                                List.foldl (\p i -> Lens.insert run p i) lens paths
                             )
                         |> withNoCmd
 
@@ -592,74 +817,160 @@ update msg model =
                                 |> Dict.remove name
                             )
 
-        AddToInterestListClicked path ->
+        AddToLensClicked runId path ->
             model
-                |> mapActiveInterestList (InterestList.insert path)
-                |> withNoCmd
+                |> mapActiveLens (Lens.insert runId path)
+                |> withSaveCmd
 
-        RemoveFromInterestListClicked id path ->
+        RemoveFromLensClicked lensId what ->
             model
-                |> activateInterestList id
-                |> mapActiveInterestList (InterestList.remove path)
-                |> withNoCmd
+                |> activateLens lensId
+                |> mapActiveLens (Lens.removeList what)
+                |> withSaveCmd
 
-        ToggleShowGraphClicked id ->
+        ToggleShowGraphClicked lensId ->
             model
-                |> activateInterestList id
-                |> mapActiveInterestList InterestList.toggleShowGraph
-                |> withNoCmd
+                |> activateLens lensId
+                |> mapActiveLens Lens.toggleShowGraph
+                |> withSaveCmd
 
-        NewInterestListClicked ->
+        NewLensClicked ->
             model
-                |> mapInterestLists (Pivot.appendR InterestList.empty)
-                |> withNoCmd
+                |> mapLenses (Pivot.appendGoR Lens.empty)
+                |> withSaveCmd
 
-        DuplicateInterestListClicked id ->
+        NewTableClicked ->
             model
-                |> activateInterestList id
-                |> mapInterestLists
+                |> mapLenses (Pivot.appendGoR Lens.emptyTable)
+                |> withSaveCmd
+
+        DuplicateLensClicked id ->
+            model
+                |> activateLens id
+                |> mapLenses
                     (\p ->
                         Pivot.appendGoR
                             (Pivot.getC p
-                                |> InterestList.mapLabel (\l -> l ++ " Copy")
+                                |> Lens.mapLabel (\l -> l ++ " Copy")
                             )
                             p
                     )
-                |> withNoCmd
+                |> withSaveCmd
 
-        RemoveInterestListClicked id ->
+        RemoveLensClicked id ->
             model
-                |> activateInterestList id
-                |> mapInterestLists
+                |> activateLens id
+                |> mapLenses
                     (\ils ->
                         case Pivot.removeGoR ils of
                             Nothing ->
                                 -- If List was singleton, delete becomes
                                 -- reset to empty
-                                Maybe.withDefault (Pivot.singleton InterestList.empty) (Pivot.removeGoL ils)
+                                Maybe.withDefault (Pivot.singleton Lens.empty) (Pivot.removeGoL ils)
 
                             Just without ->
                                 without
                     )
-                |> withNoCmd
+                |> withSaveCmd
 
-        ActivateInterestListClicked id ->
+        LensTableEditModeChanged id mode ->
             model
-                |> activateInterestList id
-                |> withNoCmd
+                |> activateLens id
+                |> mapActiveLens (Lens.setTableEditMode mode)
+                |> withSaveCmd
 
-        InterestListLabelEdited id newLabel ->
+        DeleteRowClicked id row ->
             model
-                |> activateInterestList id
-                |> withEditingActiveInterestListLabel True
-                |> mapActiveInterestList (InterestList.mapLabel (always newLabel))
+                |> activateLens id
+                |> mapActiveLens
+                    (Lens.mapCells
+                        (Cells.deleteRow row
+                            >> Cells.ifHasAZeroDimensionReplaceByOneCell
+                        )
+                    )
+                |> withSaveCmd
+
+        DeleteColumnClicked id column ->
+            model
+                |> activateLens id
+                |> mapActiveLens
+                    (Lens.mapCells
+                        (Cells.deleteColumn column
+                            >> Cells.ifHasAZeroDimensionReplaceByOneCell
+                        )
+                    )
+                |> withSaveCmd
+
+        MoveCellEditorRequested id currentPos currentValue nextPos nextValue ->
+            -- NOTE: This event may happen BEFORE we have saved the currently
+            -- edited cell (because loseFocus hasn't happened yet)
+            model
+                |> activateLens id
+                |> mapActiveLens (Lens.mapCells (Cells.set currentPos currentValue))
+                |> mapActiveLens
+                    (Lens.setTableEditMode (Just (Lens.Cell nextPos nextValue)))
+                |> withSaveCmd
+                |> addCmd
+                    (Task.attempt (\_ -> Noop) (Browser.Dom.focus "cell"))
+
+        CellOfLensTableEditFinished id pos value ->
+            -- NOTE: This event may happen after MoveCellEditorRequested has changed
+            -- the TableEditMode
+            model
+                |> mapActiveLens
+                    (Lens.mapTableEditMode
+                        (Maybe.map
+                            (\me ->
+                                case me of
+                                    Lens.All ->
+                                        Lens.All
+
+                                    Lens.Cell p _ ->
+                                        if p == pos then
+                                            -- Only if we haven't moved away already quit edit cell mode
+                                            Lens.All
+
+                                        else
+                                            me
+                            )
+                        )
+                    )
+                |> mapActiveLens (Lens.mapCells (Cells.set pos value))
+                |> withSaveCmd
+
+        CellOfLensTableEdited id pos value ->
+            model
+                |> activateLens id
+                |> mapActiveLens (Lens.setTableEditMode (Just (Lens.Cell pos value)))
+                |> withSaveCmd
+                |> addCmd
+                    (Task.attempt (\_ -> Noop) (Browser.Dom.focus "cell"))
+
+        CopyToClipboardRequested id ->
+            let
+                lens =
+                    getActiveLens model
+            in
+            model
+                |> withCmd (copyToClipboard (toClipboardData lens model.runs))
+
+        ActivateLensClicked id ->
+            model
+                |> activateLens id
+                |> withSaveCmd
+
+        LensLabelEdited id newLabel ->
+            model
+                |> activateLens id
+                |> withEditingActiveLensLabel True
+                |> mapActiveLens (Lens.mapLabel (always newLabel))
                 |> withCmd
                     (Task.attempt (\_ -> Noop) (Browser.Dom.focus "interestlabel"))
 
-        InterestListLabelEditFinished ->
+        LensLabelEditFinished ->
             model
-                |> withEditingActiveInterestListLabel False
-                |> withNoCmd
+                |> withEditingActiveLensLabel False
+                |> withSaveCmd
 
         OnChartHover hovering ->
             { model | chartHovering = hovering }
@@ -674,7 +985,7 @@ update msg model =
                 Just d ->
                     model
                         |> insertDiff aId bId d
-                        |> withNoCmd
+                        |> withSaveCmd
 
         ToggleSelectForCompareClicked runId ->
             case model.selectedForComparison of
@@ -706,11 +1017,112 @@ update msg model =
                             Just d ->
                                 withoutComparison
                                     |> insertDiff idA idB d
-                                    |> withNoCmd
+                                    |> withSaveCmd
 
         LeftPaneMoved w ->
             { model | leftPaneWidth = w }
                 |> withNoCmd
+
+        MoveToCellRequested runId path lensId cellPos ->
+            model
+                |> activateLens lensId
+                |> mapActiveLens (Lens.mapCells (Cells.set cellPos (CellContent.ValueAt runId path)))
+                |> withSaveCmd
+
+        MoveIntoNewRowRequested sourceCell cv1 l2 p2 ->
+            model
+                |> mapLenses
+                    (Pivot.indexAbsolute
+                        >> Pivot.mapA
+                            (\( lensId, lens ) ->
+                                lens
+                                    |> callIfJust sourceCell
+                                        (\( l1, p1 ) ->
+                                            callIf (lensId == l1)
+                                                (Lens.mapCells (Cells.set p1 (CellContent.Label "")))
+                                        )
+                                    |> callIf (lensId == l2)
+                                        (Lens.mapCells
+                                            (Cells.addRow p2.row
+                                                >> Cells.set p2 cv1
+                                            )
+                                        )
+                            )
+                    )
+                |> withSaveCmd
+
+        MoveIntoNewColumnRequested sourceCell cv1 l2 p2 ->
+            model
+                |> mapLenses
+                    (Pivot.indexAbsolute
+                        >> Pivot.mapA
+                            (\( lensId, lens ) ->
+                                lens
+                                    |> callIfJust sourceCell
+                                        (\( l1, p1 ) ->
+                                            callIf (lensId == l1)
+                                                (Lens.mapCells
+                                                    (Cells.set p1 (CellContent.Label ""))
+                                                )
+                                        )
+                                    |> callIf (lensId == l2)
+                                        (Lens.mapCells
+                                            (Cells.addColumn p2.column
+                                                >> Cells.set p2 cv1
+                                            )
+                                        )
+                            )
+                    )
+                |> withSaveCmd
+
+        SwapCellsRequested l1 p1 cv1 l2 p2 cv2 ->
+            model
+                |> mapLenses
+                    (Pivot.indexAbsolute
+                        >> Pivot.mapA
+                            (\( lensId, lens ) ->
+                                lens
+                                    |> callIf (lensId == l1)
+                                        (Lens.mapCells (Cells.set p1 cv2))
+                                    |> callIf (lensId == l2)
+                                        (Lens.mapCells (Cells.set p2 cv1))
+                            )
+                    )
+                |> withSaveCmd
+
+        DragDropMsg dragMsg ->
+            let
+                ( newDragDrop, dropEvent ) =
+                    DragDrop.update dragMsg model.dragDrop
+
+                applyDrop =
+                    case dropEvent of
+                        Nothing ->
+                            identity
+
+                        Just ( DragFromRun runId path, DropOnCell lensId pos _ ) ->
+                            Cmd.Extra.andThen (update (MoveToCellRequested runId path lensId pos))
+
+                        Just ( DragFromCell l1 p1 cv1, DropOnCell l2 p2 cv2 ) ->
+                            Cmd.Extra.andThen (update (SwapCellsRequested l1 p1 cv1 l2 p2 cv2))
+
+                        Just ( DragFromCell l1 p1 cv1, DropInNewRow l2 p2 ) ->
+                            Cmd.Extra.andThen (update (MoveIntoNewRowRequested (Just ( l1, p1 )) cv1 l2 p2))
+
+                        Just ( DragFromRun runId path, DropInNewRow l2 p2 ) ->
+                            Cmd.Extra.andThen
+                                (update (MoveIntoNewRowRequested Nothing (CellContent.ValueAt runId path) l2 p2))
+
+                        Just ( DragFromRun runId path, DropInNewColumn l2 p2 ) ->
+                            Cmd.Extra.andThen
+                                (update (MoveIntoNewColumnRequested Nothing (CellContent.ValueAt runId path) l2 p2))
+
+                        Just ( DragFromCell l1 p1 cv1, DropInNewColumn l2 p2 ) ->
+                            Cmd.Extra.andThen (update (MoveIntoNewColumnRequested (Just ( l1, p1 )) cv1 l2 p2))
+            in
+            { model | dragDrop = newDragDrop }
+                |> withCmd (DragDrop.fixFirefoxDragStartCmd dragMsg)
+                |> applyDrop
 
 
 diffRunsById : RunId -> RunId -> Float -> Model -> Maybe DiffData
@@ -752,12 +1164,30 @@ updateModal msg model =
                     Just (PrepareCalculate ndx { inputs | year = y } overrides)
                         |> withNoCmd
 
+                ReMapChangeMapping _ _ ->
+                    model
+                        |> withNoCmd
+
+        Just (ReMap reMapState) ->
+            case msg of
+                ReMapChangeMapping a b ->
+                    Just (ReMap { reMapState | mapping = Dict.insert a b reMapState.mapping })
+                        |> withNoCmd
+
+                CalculateModalAgsUpdated _ ->
+                    model
+                        |> withNoCmd
+
+                CalculateModalTargetYearUpdated _ ->
+                    model
+                        |> withNoCmd
+
         Just Loading ->
             Just Loading
                 |> withNoCmd
 
-        Just (LoadFailure f) ->
-            Just (LoadFailure f)
+        Just (ErrorMessage title m) ->
+            Just (ErrorMessage title m)
                 |> withNoCmd
 
 
@@ -774,7 +1204,7 @@ subscriptions model =
 -- VIEW
 
 
-viewChart : ChartHovering -> Dict Run.Path String -> InterestListTable -> Element Msg
+viewChart : ChartHovering -> Dict Run.Path String -> ValueSet -> Element Msg
 viewChart chartHovering shortPathLabels interestListTable =
     let
         widthChart =
@@ -802,7 +1232,7 @@ viewChart chartHovering shortPathLabels interestListTable =
                                     Nothing ->
                                         0.0
                         in
-                        C.bar get []
+                        C.bar get [ CA.color (Styling.runColorForChart runId) ]
                             |> C.named (String.fromInt runId)
                             |> C.format (\v -> formatGermanNumber v)
                     )
@@ -830,14 +1260,6 @@ viewChart chartHovering shortPathLabels interestListTable =
                 , C.yAxis []
                 , C.bars [] bars interestListTable.paths
                 , C.binLabels getLabel [ CA.moveDown 40 ]
-                , C.legendsAt .max
-                    .max
-                    [ CA.column
-                    , CA.moveRight 20
-                    , CA.alignRight
-                    , CA.spacing 5
-                    ]
-                    []
                 , C.each chartHovering
                     (\p item ->
                         [ C.tooltip item [] [] [] ]
@@ -865,33 +1287,6 @@ collapsedStatusIcon collapsed =
                 FeatherIcons.chevronDown
     in
     el iconButtonStyle (icon (size16 i))
-
-
-onKeys : List ( String, msg ) -> Element.Attribute msg
-onKeys keys =
-    let
-        keyDict =
-            Dict.fromList keys
-    in
-    Element.htmlAttribute
-        (Html.Events.on "keyup"
-            (Decode.field "key" Decode.string
-                |> Decode.andThen
-                    (\k ->
-                        case Dict.get k keyDict of
-                            Just msg ->
-                                Decode.succeed msg
-
-                            Nothing ->
-                                Decode.fail "Not the expected key"
-                    )
-            )
-        )
-
-
-onEnter : msg -> Element.Attribute msg
-onEnter k =
-    onKeys [ ( "Enter", k ) ]
 
 
 viewEntryAndOverride : Int -> String -> Run.Overrides -> Maybe ActiveOverrideEditor -> Float -> ( Element Msg, Element Msg )
@@ -944,12 +1339,15 @@ viewEntryAndOverride runId name overrides activeOverrideEditor f =
                 Just editor ->
                     let
                         textStyle =
+                            -- TODO: textStyle is a bad name for this. Restructure!
                             case editor.asFloat of
                                 Nothing ->
                                     [ Border.color red, Border.width 1 ]
 
                                 Just _ ->
-                                    [ onEnter OverrideEditFinished
+                                    [ KeyBindings.on
+                                        [ bind noModifiers K.Enter OverrideEditFinished
+                                        ]
                                     ]
 
                         textAttributes =
@@ -1067,15 +1465,15 @@ viewValue v =
 
 viewValueTree :
     RunId
-    -> InterestListId
+    -> LensId
     -> Run.Path
     -> (RunId -> Run.Path -> Bool)
-    -> InterestList
+    -> Lens
     -> Run.Overrides
     -> Maybe ActiveOverrideEditor
     -> Tree Value
     -> Element Msg
-viewValueTree runId interestListId path checkIsCollapsed interestList overrides activeOverrideEditor tree =
+viewValueTree runId lensId path checkIsCollapsed lens overrides activeOverrideEditor tree =
     let
         viewLeaf : Run.Path -> String -> Value -> List (Element Msg)
         viewLeaf pathToParent name value =
@@ -1101,12 +1499,12 @@ viewValueTree runId interestListId path checkIsCollapsed interestList overrides 
                             pathToParent ++ [ name ]
 
                         button =
-                            if InterestList.member thisPath interestList then
+                            if Lens.member runId thisPath lens then
                                 dangerousIconButton (size16 FeatherIcons.trash2)
-                                    (RemoveFromInterestListClicked interestListId thisPath)
+                                    (RemoveFromLensClicked lensId [ ( runId, thisPath ) ])
 
                             else
-                                iconButton (size16 FeatherIcons.plus) (AddToInterestListClicked thisPath)
+                                iconButton (size16 FeatherIcons.plus) (AddToLensClicked runId thisPath)
 
                         ( originalValue, maybeOverride ) =
                             -- Clicking on original value should start or revert
@@ -1120,7 +1518,13 @@ viewValueTree runId interestListId path checkIsCollapsed interestList overrides 
                                 )
                     in
                     [ button
-                    , el [ width fill ] (text name)
+                    , el
+                        ([ width fill
+                         ]
+                            ++ List.map Element.htmlAttribute
+                                (DragDrop.draggable DragDropMsg (DragFromRun runId thisPath))
+                        )
+                        (text name)
                     , originalValue
                     , maybeOverride
                     ]
@@ -1196,7 +1600,7 @@ viewComparison aId bId collapseStatus diffData =
                 { label =
                     row [ spacing sizes.medium ]
                         [ collapsedStatusIcon (isCollapsed id [] collapseStatus)
-                        , el [ Font.bold ] (text (String.fromInt aId ++ " ≈ " ++ String.fromInt bId))
+                        , row [] [ viewRunId [] aId, text " ≈ ", viewRunId [] bId ]
                         ]
                 , onPress = Just (ToggleCollapseTreeClicked id [])
                 }
@@ -1242,8 +1646,8 @@ viewComparison aId bId collapseStatus diffData =
         ]
 
 
-viewRun : RunId -> InterestListId -> InterestList -> CollapseStatus -> Maybe ActiveOverrideEditor -> Maybe ActiveSearch -> Maybe RunId -> Run -> Element Msg
-viewRun runId interestListId interestList collapseStatus activeOverrideEditor activeSearch selectedForComparison run =
+viewRun : RunId -> LensId -> Lens -> CollapseStatus -> Maybe ActiveOverrideEditor -> Maybe ActiveSearch -> Maybe RunId -> Run -> Element Msg
+viewRun runId lensId lens collapseStatus activeOverrideEditor activeSearch selectedForComparison run =
     let
         inputs =
             Run.getInputs run
@@ -1289,9 +1693,9 @@ viewRun runId interestListId interestList collapseStatus activeOverrideEditor ac
                                 [ width fill
                                 , Font.size 18
                                 , Element.htmlAttribute (Html.Attributes.id filterFieldId)
-                                , onKeys
-                                    [ ( "Escape", FilterFinished )
-                                    , ( "Enter", FilterQuickAddRequested )
+                                , KeyBindings.on
+                                    [ bind noModifiers K.Escape FilterFinished
+                                    , bind noModifiers K.Enter (FilterQuickAddRequested runId)
                                     ]
                                 ]
                                 { onChange = FilterEdited runId
@@ -1318,7 +1722,7 @@ viewRun runId interestListId interestList collapseStatus activeOverrideEditor ac
                 { label =
                     row [ width fill, spacing sizes.medium ]
                         [ collapsedStatusIcon (differentIfFilterActive.isCollapsed runId [])
-                        , el [ Font.bold ] (text (String.fromInt runId ++ ":"))
+                        , viewRunId [] runId
                         , text (inputs.ags ++ " " ++ String.fromInt inputs.year)
                         ]
                 , onPress = Just (ToggleCollapseTreeClicked (Explorable.Run runId) [])
@@ -1334,10 +1738,10 @@ viewRun runId interestListId interestList collapseStatus activeOverrideEditor ac
         , differentIfFilterActive.filterPatternField
         , viewValueTree
             runId
-            interestListId
+            lensId
             []
             differentIfFilterActive.isCollapsed
-            interestList
+            lens
             overrides
             activeOverrideEditor
             differentIfFilterActive.treeToDisplay
@@ -1378,8 +1782,8 @@ viewRunsAndComparisons model =
                     |> List.map
                         (\( resultNdx, ir ) ->
                             viewRun resultNdx
-                                (Pivot.lengthL model.interestLists)
-                                (Pivot.getC model.interestLists)
+                                (Pivot.lengthL model.lenses)
+                                (getActiveLens model)
                                 model.collapseStatus
                                 model.activeOverrideEditor
                                 model.activeSearch
@@ -1399,20 +1803,425 @@ viewRunsAndComparisons model =
         ]
 
 
-viewInterestListTableAsTable : Dict Run.Path String -> InterestListId -> InterestListTable -> Element Msg
-viewInterestListTableAsTable shortPathLabels interestListId interestListTable =
+type TableElement
+    = Data Int
+    | GapBefore Int
+
+
+tableElementFromIndex : Int -> TableElement
+tableElementFromIndex ndx =
+    let
+        element =
+            ndx // 2
+    in
+    if remainderBy 2 ndx == 0 then
+        GapBefore element
+
+    else
+        Data element
+
+
+viewValueSetAsUserDefinedTable : LensId -> DragDrop -> Lens.TableData -> ValueSet -> Element Msg
+viewValueSetAsUserDefinedTable lensId dragDrop td valueSet =
+    let
+        cells =
+            Cells.toList td.grid
+
+        ifEditing =
+            if td.editing /= Nothing then
+                identity
+
+            else
+                always []
+
+        viewCell : Lens.CellContent -> Cells.Pos -> Element Msg
+        viewCell cell pos =
+            let
+                editOnClick =
+                    ifEditing
+                        [ Events.onClick
+                            (CellOfLensTableEdited lensId pos cell)
+                        ]
+
+                dropTarget =
+                    ifEditing
+                        (List.map Element.htmlAttribute
+                            (DragDrop.droppable DragDropMsg (DropOnCell lensId pos cell))
+                        )
+
+                draggable =
+                    ifEditing
+                        (List.map Element.htmlAttribute
+                            (DragDrop.draggable DragDropMsg (DragFromCell lensId pos cell))
+                        )
+
+                highlight =
+                    ifEditing <|
+                        case DragDrop.getDropId dragDrop of
+                            Nothing ->
+                                []
+
+                            Just (DropOnCell li p _) ->
+                                if lensId == li && p == pos then
+                                    [ Background.color Styling.germanZeroYellow
+                                    , Border.glow Styling.germanZeroYellow 2
+                                    ]
+
+                                else
+                                    []
+
+                            Just (DropInNewColumn _ _) ->
+                                []
+
+                            Just (DropInNewRow _ _) ->
+                                []
+
+                cellElement attrs v =
+                    el
+                        (([ Background.color Styling.emptyCellColor
+                          , width fill
+                          , padding 3
+                          , Element.htmlAttribute <| Html.Attributes.tabindex 0
+                          ]
+                            ++ editOnClick
+                            ++ fonts.table
+                            ++ dropTarget
+                            ++ highlight
+                            ++ draggable
+                         )
+                            ++ attrs
+                        )
+                        v
+
+                displayLabel l =
+                    if l == "" then
+                        cellElement [] (text " ")
+
+                    else
+                        cellElement [ Font.bold ] (paragraph [] [ text l ])
+
+                viewPath : List String -> Element msg
+                viewPath p =
+                    paragraph [] (List.map text (List.intersperse "." p))
+
+                viewAbsolutePath ( runId, path ) =
+                    row []
+                        [ viewRunId [] runId
+                        , text " "
+                        , viewPath path
+                        ]
+
+                displayCell c =
+                    case cell of
+                        CellContent.Label l ->
+                            displayLabel l
+
+                        CellContent.ValueAt r p ->
+                            let
+                                value =
+                                    Dict.get ( r, p ) valueSet.values
+                            in
+                            if td.editing /= Nothing then
+                                -- We are in editing mode, but not editing THIS cell.
+                                -- So display the path itself
+                                cellElement []
+                                    (viewAbsolutePath ( r, p ))
+
+                            else
+                                -- We are not in editing mode at all. Display the value at the
+                                -- path
+                                case value of
+                                    Nothing ->
+                                        -- Making the compiler happy
+                                        cellElement [ Font.alignRight ] (text "INTERNAL ERROR")
+
+                                    Just (Float f) ->
+                                        cellElement [ Font.alignRight ] (text (formatGermanNumber f))
+
+                                    Just Null ->
+                                        cellElement [ Font.alignRight, Font.bold ] (text "null")
+
+                                    Just (String s) ->
+                                        cellElement
+                                            [ Font.alignRight
+                                            , Font.family [ Font.monospace ]
+                                            ]
+                                            (text s)
+            in
+            case td.editing of
+                Nothing ->
+                    displayCell cell
+
+                Just Lens.All ->
+                    displayCell cell
+
+                Just (Lens.Cell p editValue) ->
+                    if p == pos then
+                        let
+                            tabKey =
+                                case Cells.nextPos pos td.grid of
+                                    Nothing ->
+                                        []
+
+                                    Just nextPos ->
+                                        [ bind noModifiers
+                                            K.Tab
+                                            (MoveCellEditorRequested lensId
+                                                pos
+                                                editValue
+                                                nextPos
+                                                (Cells.get nextPos td.grid)
+                                            )
+                                        ]
+
+                            shiftTabKey =
+                                case Cells.prevPos pos td.grid of
+                                    Nothing ->
+                                        []
+
+                                    Just prevPos ->
+                                        [ bind shift
+                                            K.Tab
+                                            (MoveCellEditorRequested lensId
+                                                pos
+                                                editValue
+                                                prevPos
+                                                (Cells.get prevPos td.grid)
+                                            )
+                                        ]
+                        in
+                        Input.text
+                            ([ width fill
+                             , Font.bold
+                             , padding 3
+                             , Events.onLoseFocus (CellOfLensTableEditFinished lensId pos editValue)
+                             , KeyBindings.on
+                                ([ bind noModifiers K.Enter (CellOfLensTableEditFinished lensId pos editValue)
+                                 , bind noModifiers K.Escape (LensTableEditModeChanged lensId (Just Lens.All))
+                                 ]
+                                    ++ tabKey
+                                    ++ shiftTabKey
+                                )
+                             , Element.htmlAttribute <| Html.Attributes.id "cell"
+                             , Element.focused
+                                [ Border.innerGlow germanZeroYellow 1.0
+                                ]
+                             ]
+                                ++ fonts.table
+                            )
+                            { onChange = CellOfLensTableEdited lensId pos << CellContent.Label
+                            , text = CellContent.getLabel editValue |> Maybe.withDefault ""
+                            , placeholder =
+                                CellContent.getValueAt cell
+                                    |> Maybe.map (viewAbsolutePath >> Input.placeholder [])
+                            , label = Input.labelHidden "label"
+                            }
+
+                    else
+                        displayCell cell
+
+        separator isColumn pos =
+            let
+                highlight : List (Element.Attribute Msg)
+                highlight =
+                    ifEditing <|
+                        let
+                            background =
+                                Background.color germanZeroGreen
+                        in
+                        case DragDrop.getDropId dragDrop of
+                            Nothing ->
+                                [ background
+                                , Events.onClick
+                                    (if isColumn then
+                                        AddColumnToLensTableClicked lensId pos.column
+
+                                     else
+                                        AddRowToLensTableClicked lensId pos.row
+                                    )
+                                , Element.mouseOver
+                                    [ Background.color germanZeroYellow
+                                    ]
+                                ]
+
+                            Just (DropInNewRow li p) ->
+                                if lensId == li && pos == p && not isColumn then
+                                    [ Background.color germanZeroYellow, Border.glow germanZeroYellow 2 ]
+
+                                else
+                                    [ background ]
+
+                            Just (DropOnCell _ _ _) ->
+                                [ background ]
+
+                            Just (DropInNewColumn li p) ->
+                                if lensId == li && pos == p && isColumn then
+                                    [ Background.color germanZeroYellow, Border.glow germanZeroYellow 2 ]
+
+                                else
+                                    [ background ]
+
+                droppable =
+                    ifEditing <|
+                        if DragDrop.getDropId dragDrop /= Nothing then
+                            List.map Element.htmlAttribute
+                                (DragDrop.droppable DragDropMsg
+                                    (if isColumn then
+                                        DropInNewColumn lensId pos
+
+                                     else
+                                        DropInNewRow lensId pos
+                                    )
+                                )
+
+                        else
+                            []
+            in
+            el
+                ([ width
+                    (if isColumn then
+                        px sizes.tableGap
+
+                     else
+                        fill
+                    )
+                 , height
+                    (if isColumn then
+                        fill
+
+                     else
+                        px sizes.tableGap
+                    )
+                 , Border.rounded 2
+                 ]
+                    ++ highlight
+                    ++ droppable
+                )
+                Element.none
+
+        deleteRowButtonColumn =
+            { header = Element.none
+            , width = shrink
+            , view =
+                \rowNdx ->
+                    case tableElementFromIndex rowNdx of
+                        GapBefore _ ->
+                            Element.none
+
+                        Data row ->
+                            dangerousIconButton
+                                (FeatherIcons.withSize (toFloat sizes.tableFontSize) FeatherIcons.trash2)
+                                (DeleteRowClicked lensId row)
+            }
+
+        columnDefs =
+            List.Extra.initialize (Cells.columns td.grid * 2 + 1)
+                (\columnNdx ->
+                    let
+                        columnElement =
+                            tableElementFromIndex columnNdx
+                    in
+                    { header =
+                        if td.editing == Nothing then
+                            Element.none
+
+                        else
+                            case columnElement of
+                                GapBefore _ ->
+                                    Element.none
+
+                                Data column ->
+                                    el [ centerX ] <|
+                                        dangerousIconButton
+                                            (FeatherIcons.withSize (toFloat sizes.tableFontSize) FeatherIcons.trash2)
+                                            (DeleteColumnClicked lensId column)
+                    , width =
+                        case columnElement of
+                            GapBefore _ ->
+                                px sizes.tableGap
+
+                            Data _ ->
+                                shrink |> Element.minimum 60 |> Element.maximum 300
+                    , view =
+                        \rowNdx ->
+                            case ( tableElementFromIndex rowNdx, columnElement ) of
+                                ( GapBefore _, GapBefore _ ) ->
+                                    Element.none
+
+                                ( GapBefore row, Data column ) ->
+                                    separator False { row = row, column = column }
+
+                                ( Data row, GapBefore column ) ->
+                                    separator True { row = row, column = column }
+
+                                ( Data row, Data column ) ->
+                                    let
+                                        pos =
+                                            { row = row, column = column }
+                                    in
+                                    viewCell (Cells.get pos td.grid) pos
+                    }
+                )
+    in
+    Element.column []
+        [ Element.row [ spacing sizes.small, Font.size sizes.tableFontSize ]
+            [ text "Showing values of "
+            , case valueSet.runs of
+                [] ->
+                    text "nothing"
+
+                _ ->
+                    Input.button
+                        []
+                        { label =
+                            row [ spacing sizes.small ]
+                                (List.map (viewRunId []) valueSet.runs)
+                        , onPress = Just (DisplayReMapModalClicked lensId)
+                        }
+            ]
+        , Element.table
+            [ padding sizes.large
+            ]
+            { columns =
+                case td.editing of
+                    Nothing ->
+                        columnDefs
+
+                    Just _ ->
+                        deleteRowButtonColumn :: columnDefs
+            , data = List.range 0 (Cells.rows td.grid * 2)
+            }
+        ]
+
+
+viewRunId : List (Element.Attribute msg) -> RunId -> Element msg
+viewRunId attrs runId =
+    el
+        (attrs
+            ++ [ Font.bold
+               , Font.color (Styling.runColorForUI runId)
+               ]
+        )
+        (text (String.fromInt runId))
+
+
+{-| View valueset as table of values
+where the rows are indexed by path names and the columns by runs
+-}
+viewValueSetAsClassicTable : Dict Run.Path String -> LensId -> ValueSet -> Element Msg
+viewValueSetAsClassicTable shortPathLabels lensId valueSet =
     let
         dataColumns =
-            interestListTable.runs
+            valueSet.runs
                 |> List.map
                     (\runId ->
-                        { header = el [ Font.bold, Font.alignRight ] (Element.text (String.fromInt runId))
+                        { header = viewRunId [ Font.alignRight ] runId
                         , width = shrink
                         , view =
                             \path ->
                                 let
                                     value =
-                                        case Dict.get ( runId, path ) interestListTable.values of
+                                        case Dict.get ( runId, path ) valueSet.values of
                                             Just (Float f) ->
                                                 el (Font.alignRight :: fonts.explorerValues) <|
                                                     text (formatGermanNumber f)
@@ -1450,7 +2259,16 @@ viewInterestListTableAsTable shortPathLabels interestListId interestListTable =
             , width = shrink
             , view =
                 \path ->
-                    dangerousIconButton (size16 FeatherIcons.trash2) (RemoveFromInterestListClicked interestListId path)
+                    let
+                        removeMsg =
+                            valueSet.runs
+                                |> List.map
+                                    (\runId ->
+                                        ( runId, path )
+                                    )
+                                |> RemoveFromLensClicked lensId
+                    in
+                    dangerousIconButton (size16 FeatherIcons.trash2) removeMsg
             }
     in
     Element.table
@@ -1459,25 +2277,25 @@ viewInterestListTableAsTable shortPathLabels interestListId interestListTable =
         , spacing sizes.large
         , padding sizes.large
         ]
-        { data = interestListTable.paths
+        { data = valueSet.paths
         , columns = shortPathLabelColumn :: dataColumns ++ [ deleteColumn ]
         }
 
 
-viewInterestList : InterestListId -> Bool -> Bool -> InterestList -> ChartHovering -> AllRuns -> Element Msg
-viewInterestList id editingActiveInterestListLabel isActive interestList chartHovering allRuns =
+viewLens : LensId -> DragDrop -> Bool -> Bool -> Lens -> ChartHovering -> AllRuns -> Element Msg
+viewLens id dragDrop editingActiveLensLabel isActive lens chartHovering allRuns =
     let
-        interestListTable =
-            InterestListTable.create interestList allRuns
+        valueSet =
+            ValueSet.create lens allRuns
 
         showGraph =
-            InterestList.getShowGraph interestList
+            Lens.getShowGraph lens
 
         labelText =
-            InterestList.getLabel interestList
+            Lens.getLabel lens
 
         shortPathLabels =
-            InterestList.getShortPathLabels interestList
+            Lens.getShortPathLabels lens
 
         ( borderColor, borderWidth ) =
             if isActive then
@@ -1485,10 +2303,46 @@ viewInterestList id editingActiveInterestListLabel isActive interestList chartHo
 
             else
                 ( germanZeroGreen, 1 )
+
+        maybeEditTableButton =
+            case Lens.asUserDefinedTable lens of
+                Nothing ->
+                    Element.none
+
+                Just t ->
+                    if t.editing == Nothing then
+                        iconButton FeatherIcons.edit
+                            (LensTableEditModeChanged id (Just Lens.All))
+
+                    else
+                        iconButton FeatherIcons.check (LensTableEditModeChanged id Nothing)
+
+        maybeShowGraphButton =
+            case Lens.asUserDefinedTable lens of
+                Nothing ->
+                    iconButton
+                        (if showGraph then
+                            FeatherIcons.eye
+
+                         else
+                            FeatherIcons.eyeOff
+                        )
+                        (ToggleShowGraphClicked id)
+
+                Just _ ->
+                    Element.none
+
+        maybeCopyToClipboardButton =
+            case Lens.asUserDefinedTable lens of
+                Nothing ->
+                    Element.none
+
+                Just t ->
+                    iconButton FeatherIcons.clipboard (CopyToClipboardRequested id)
     in
     column
         [ width fill
-        , Events.onClick (ActivateInterestListClicked id)
+        , Events.onClick (ActivateLensClicked id)
         , Element.mouseOver [ Border.color germanZeroYellow ]
         , Border.color borderColor
         , Border.width borderWidth
@@ -1499,13 +2353,16 @@ viewInterestList id editingActiveInterestListLabel isActive interestList chartHo
             , Font.size 24
             , Element.paddingXY sizes.large sizes.medium
             ]
-            [ if editingActiveInterestListLabel && isActive then
+            [ if editingActiveLensLabel && isActive then
                 Input.text
-                    [ Events.onLoseFocus InterestListLabelEditFinished
-                    , onEnter InterestListLabelEditFinished
+                    [ Events.onLoseFocus LensLabelEditFinished
+                    , KeyBindings.on
+                        [ bind noModifiers K.Enter LensLabelEditFinished
+                        ]
                     , Element.htmlAttribute (Html.Attributes.id "interestlabel")
+                    , padding sizes.small
                     ]
-                    { onChange = InterestListLabelEdited id
+                    { onChange = LensLabelEdited id
                     , text = labelText
                     , label = Input.labelHidden "interest list"
                     , placeholder = Just (Input.placeholder [] (text "label"))
@@ -1513,7 +2370,7 @@ viewInterestList id editingActiveInterestListLabel isActive interestList chartHo
 
               else
                 el
-                    [ Events.onClick (InterestListLabelEdited id labelText)
+                    [ Events.onClick (LensLabelEdited id labelText)
                     , Font.color
                         (if labelText == "" then
                             modalDim
@@ -1533,25 +2390,25 @@ viewInterestList id editingActiveInterestListLabel isActive interestList chartHo
                     )
             , el [ width fill ] Element.none
             , buttons
-                [ iconButton
-                    (if showGraph then
-                        FeatherIcons.eye
-
-                     else
-                        FeatherIcons.eyeOff
-                    )
-                    (ToggleShowGraphClicked id)
-                , iconButton FeatherIcons.copy (DuplicateInterestListClicked id)
-                , dangerousIconButton FeatherIcons.trash2 (RemoveInterestListClicked id)
+                [ maybeEditTableButton
+                , maybeShowGraphButton
+                , maybeCopyToClipboardButton
+                , iconButton FeatherIcons.copy (DuplicateLensClicked id)
+                , dangerousIconButton FeatherIcons.trash2 (RemoveLensClicked id)
                 ]
             ]
-        , column [ width fill, spacing 40 ]
+        , column [ width fill, spacing 40, padding sizes.large ]
             [ if showGraph then
-                viewChart chartHovering shortPathLabels interestListTable
+                viewChart chartHovering shortPathLabels valueSet
 
               else
                 Element.none
-            , viewInterestListTableAsTable shortPathLabels id interestListTable
+            , case Lens.asUserDefinedTable lens of
+                Nothing ->
+                    viewValueSetAsClassicTable shortPathLabels id valueSet
+
+                Just g ->
+                    viewValueSetAsUserDefinedTable id dragDrop g valueSet
             ]
         ]
 
@@ -1577,15 +2434,21 @@ viewModel model =
                 ]
 
         interestLists =
-            Pivot.indexAbsolute model.interestLists
+            Pivot.indexAbsolute model.lenses
                 |> Pivot.toList
                 |> List.map
                     (\( pos, il ) ->
                         let
                             activePos =
-                                Pivot.lengthL model.interestLists
+                                Pivot.lengthL model.lenses
                         in
-                        viewInterestList pos model.editingActiveInterestListLabel (pos == activePos) il model.chartHovering model.runs
+                        viewLens pos
+                            model.dragDrop
+                            model.editingActiveLensLabel
+                            (pos == activePos)
+                            il
+                            model.chartHovering
+                            model.runs
                     )
     in
     column
@@ -1609,7 +2472,17 @@ viewModel model =
                 [ width fill
                 , height (minimum 0 fill)
                 , Element.inFront
-                    (floatingActionButton FeatherIcons.plus NewInterestListClicked)
+                    (row
+                        [ spacing 10
+                        , Element.alignBottom
+                        , Element.moveUp 10
+                        , Element.alignRight
+                        , padding 0
+                        ]
+                        [ floatingActionButton FeatherIcons.plus NewLensClicked
+                        , floatingActionButton FeatherIcons.grid NewTableClicked
+                        ]
+                    )
                 ]
                 (column
                     [ width fill
@@ -1643,14 +2516,22 @@ viewModalDialogBox title content =
                 , height (minimum 400 fill)
                 , padding sizes.large
                 ]
-                [ el
+                [ row
                     [ width fill
                     , Font.color white
                     , Background.color germanZeroYellow
                     , Font.size 24
                     , padding 8
                     ]
-                    (text title)
+                    [ el [ width fill ] <| text title
+                    , el
+                        [ padding 2
+                        , Background.color white
+                        , Border.rounded 5
+                        ]
+                      <|
+                        iconButton FeatherIcons.x ModalDismissed
+                    ]
                 , el
                     [ Background.color white
                     , width fill
@@ -1709,6 +2590,64 @@ viewCalculateModal maybeNdx inputs overrides =
         ]
 
 
+viewRunReMapModal : ReMapModalState -> AllRuns -> Element Msg
+viewRunReMapModal { lensId, mapping } allRuns =
+    let
+        listOfMappings =
+            Dict.toList mapping
+
+        allActualRuns =
+            allRuns
+                |> AllRuns.toList
+                |> List.map Tuple.first
+
+        allMissingRuns =
+            Dict.keys mapping
+                |> List.filter (\ri -> AllRuns.get ri allRuns == Nothing)
+
+        options =
+            (allActualRuns ++ allMissingRuns)
+                -- dedup
+                |> Set.fromList
+                |> Set.toList
+                |> List.map
+                    (\ri ->
+                        Input.option ri (viewRunId [ Element.moveDown 1 ] ri)
+                    )
+    in
+    column
+        [ width fill
+        , height fill
+        , spacing sizes.medium
+        ]
+        ((listOfMappings
+            |> List.map
+                (\( fromRunId, toRunId ) ->
+                    Input.radioRow
+                        [ spacing (2 * sizes.large) ]
+                        { onChange = ModalMsg << ReMapChangeMapping fromRunId
+                        , options = options
+                        , selected = Just toRunId
+                        , label =
+                            Input.labelLeft [ Element.paddingXY sizes.large 0 ]
+                                (row (spacing sizes.medium :: fonts.explorer)
+                                    [ viewRunId [ Element.moveDown 1 ] fromRunId
+                                    , icon
+                                        (FeatherIcons.withSize (toFloat sizes.fontSize)
+                                            FeatherIcons.arrowRight
+                                        )
+                                    ]
+                                )
+                        }
+                )
+         )
+            ++ [ iconButton
+                    (size32 FeatherIcons.check)
+                    (ReMapModalOkClicked lensId mapping)
+               ]
+        )
+
+
 view : Model -> Html Msg
 view model =
     let
@@ -1733,12 +2672,17 @@ view model =
 
                                 Loading ->
                                     ( "Loading"
-                                    , paragraph [ width fill, height fill ]
-                                        [ text "This should be done immediately. If it doesn't go away something is probably broken." ]
+                                    , scrollableText
+                                        "This should be done immediately. If it doesn't go away something is probably broken."
                                     )
 
-                                LoadFailure msg ->
-                                    ( "Loading failed", text msg )
+                                ErrorMessage t m ->
+                                    ( t, scrollableText m )
+
+                                ReMap reMapState ->
+                                    ( "Change which runs are shown"
+                                    , viewRunReMapModal reMapState model.runs
+                                    )
                     in
                     viewModalDialogBox title content
     in

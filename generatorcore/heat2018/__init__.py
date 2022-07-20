@@ -1,120 +1,13 @@
-from dataclasses import dataclass, field
+"""
+Documentation:
+https://localzero-generator.readthedocs.io/de/latest/sectors/heat.html
+"""
 
+# pyright: strict
 from .. import transport2018, electricity2018
 from ..inputs import Inputs
 from ..utils import div
-
-
-@dataclass
-class Vars0:
-    # Used by g, g_storage, g_planning
-    pass
-
-
-@dataclass
-class Vars1:
-    # Used by d, d_r, d_b, d_i, d_t, a_t
-    energy: float = None  # type: ignore
-
-
-@dataclass
-class Vars2:
-    # Used by h
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_production_based: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-
-
-@dataclass
-class Vars3:
-    # Used by p
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_combustion_based_per_MWh: float = None  # type: ignore
-    CO2e_production_based: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
-
-
-@dataclass
-class Vars4:
-    # Used by p_gas, p_opetpro, p_coal
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_combustion_based_per_MWh: float = None  # type: ignore
-    CO2e_production_based: float = None  # type: ignore
-    CO2e_production_based_per_MWh: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
-
-
-@dataclass
-class Vars5:
-    # Used by p_lpg, p_fueloil, p_heatnet_cogen, p_heatnet_plant
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_combustion_based_per_MWh: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
-
-
-@dataclass
-class Vars6:
-    # Used by p_heatnet
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
-
-
-@dataclass
-class Vars7:
-    # Used by p_heatnet_geoth, p_heatnet_lheatpump
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_production_based: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
-
-
-@dataclass
-class Vars8:
-    # Used by p_biomass, p_ofossil, p_orenew, p_solarth, p_heatpump
-    CO2e_production_based: float = None  # type: ignore
-    CO2e_production_based_per_MWh: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
-
-
-@dataclass
-class H18:
-    g: Vars0 = field(default_factory=Vars0)
-    g_storage: Vars0 = field(default_factory=Vars0)
-    g_planning: Vars0 = field(default_factory=Vars0)
-    d: Vars1 = field(default_factory=Vars1)
-    d_r: Vars1 = field(default_factory=Vars1)
-    d_b: Vars1 = field(default_factory=Vars1)
-    d_i: Vars1 = field(default_factory=Vars1)
-    d_t: Vars1 = field(default_factory=Vars1)
-    a_t: Vars1 = field(default_factory=Vars1)
-    h: Vars2 = field(default_factory=Vars2)
-    p: Vars3 = field(default_factory=Vars3)
-    p_gas: Vars4 = field(default_factory=Vars4)
-    p_lpg: Vars5 = field(default_factory=Vars5)
-    p_fueloil: Vars5 = field(default_factory=Vars5)
-    p_opetpro: Vars4 = field(default_factory=Vars4)
-    p_coal: Vars4 = field(default_factory=Vars4)
-    p_heatnet: Vars6 = field(default_factory=Vars6)
-    p_heatnet_cogen: Vars5 = field(default_factory=Vars5)
-    p_heatnet_plant: Vars5 = field(default_factory=Vars5)
-    p_heatnet_geoth: Vars7 = field(default_factory=Vars7)
-    p_heatnet_lheatpump: Vars7 = field(default_factory=Vars7)
-    p_biomass: Vars8 = field(default_factory=Vars8)
-    p_ofossil: Vars8 = field(default_factory=Vars8)
-    p_orenew: Vars8 = field(default_factory=Vars8)
-    p_solarth: Vars8 = field(default_factory=Vars8)
-    p_heatpump: Vars8 = field(default_factory=Vars8)
+from .h18 import H18
 
 
 def calc(inputs: Inputs, *, t18: transport2018.T18, e18: electricity2018.E18) -> H18:
@@ -156,15 +49,15 @@ def calc(inputs: Inputs, *, t18: transport2018.T18, e18: electricity2018.E18) ->
     )
     d_t = h18.d_t
     d_t.energy = t18.t.demand_fueloil + t18.t.demand_lpg + t18.t.demand_gas
-    a_t = h18.a_t
-    a_t.energy = (
+    d_a = h18.d_a
+    d_a.energy = (
         entries.a_fueloil_fec
         + entries.a_lpg_fec
         + entries.a_gas_fec
         + entries.a_biomass_fec
     )
     d = h18.d
-    d.energy = d_r.energy + d_b.energy + d_i.energy + d_t.energy + a_t.energy
+    d.energy = d_r.energy + d_b.energy + d_i.energy + d_t.energy + d_a.energy
     p = h18.p
     p.energy = d.energy
     p_gas = h18.p_gas

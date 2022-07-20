@@ -20,6 +20,7 @@ generated as follows:
     - The sixth, seventh, and eighth digits indicate the municipality or
       the number of the unincorporated area.
 """
+# pyright: strict
 
 
 def is_valid(ags: str) -> bool:
