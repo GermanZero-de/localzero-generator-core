@@ -620,7 +620,7 @@ def calc_production_local_biomass_stage2(
     *,
     e18: electricity2018.E18,
     p_local_biomass: electricity2030_core.EColVars2030,
-):
+) -> None:
     entries = inputs.entries
     ass = inputs.ass
     fact = inputs.fact
@@ -694,8 +694,6 @@ def calc_production_local_biomass_stage2(
     p_local_biomass.demand_emplo_new = max(
         0, p_local_biomass.demand_emplo - p_local_biomass.emplo_existing
     )
-
-    return p_local_biomass
 
 
 def calc(
