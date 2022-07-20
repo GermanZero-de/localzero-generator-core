@@ -615,6 +615,89 @@ def calc_production_local_wind_onshore(
     return p_local_wind_onshore
 
 
+def calc_production_local_biomass_stage2(
+    inputs: Inputs,
+    *,
+    e18: electricity2018.E18,
+    p_local_biomass: electricity2030_core.EColVars2030,
+):
+    entries = inputs.entries
+    ass = inputs.ass
+    fact = inputs.fact
+    Kalkulationszeitraum = entries.m_duration_target
+    KlimaneutraleJahre = entries.m_duration_neutral
+
+    p_local_biomass.cost_fuel_per_MWh = ass(
+        "Ass_E_P_local_biomass_material_costs"
+    ) / ass("Ass_E_P_local_biomass_efficiency")
+    p_local_biomass.cost_mro_per_MWh = ass("Ass_E_P_local_biomass_mro_per_MWh")
+    p_local_biomass.CO2e_combustion_based_per_MWh = fact(
+        "Fact_E_P_biomass_ratio_CO2e_cb_nonCO2_to_gep_2018"
+    ) / (1 - ass("Ass_E_P_renew_loss_brutto_to_netto"))
+    p_local_biomass.invest_per_x = ass(
+        "Ass_E_P_local_biomass_ratio_invest_to_power"
+    )  # invest
+    p_local_biomass.pct_of_wage = ass(
+        "Ass_E_P_constr_plant_invest_pct_of_wage_2017"
+    )  # cost_wage
+    p_local_biomass.ratio_wage_to_emplo = ass(
+        "Ass_E_P_constr_elec_ratio_wage_to_emplo_2017"
+    )  # demand_emplo
+    p_local_biomass.emplo_existing = (
+        fact("Fact_E_P_biomass_emplo_2018")
+        * entries.m_population_com_2018
+        / entries.m_population_nat
+    )
+    p_local_biomass.energy_installable = (
+        p_local_biomass.power_installable
+        * p_local_biomass.full_load_hour
+        * (1 - ass("Ass_E_P_renew_loss_brutto_to_netto"))
+    )
+    p_local_biomass.cost_fuel = (
+        p_local_biomass.cost_fuel_per_MWh * p_local_biomass.energy / MILLION
+    )
+    p_local_biomass.cost_mro = (
+        p_local_biomass.energy * p_local_biomass.cost_mro_per_MWh / MILLION
+    )
+    p_local_biomass.CO2e_combustion_based = (
+        p_local_biomass.energy * p_local_biomass.CO2e_combustion_based_per_MWh
+    )
+    p_local_biomass.change_energy_MWh = (
+        p_local_biomass.energy - e18.p_local_biomass.energy
+    )
+    p_local_biomass.invest = (
+        p_local_biomass.power_to_be_installed * p_local_biomass.invest_per_x
+    )
+    p_local_biomass.invest_pa = p_local_biomass.invest / Kalkulationszeitraum
+    p_local_biomass.change_cost_energy = (
+        p_local_biomass.cost_fuel - e18.p_local_biomass.cost_fuel
+    )
+    p_local_biomass.change_cost_mro = (
+        p_local_biomass.cost_mro - e18.p_local_biomass.cost_mro
+    )
+    p_local_biomass.CO2e_total = p_local_biomass.CO2e_combustion_based
+    p_local_biomass.cost_climate_saved = (
+        (
+            p_local_biomass.CO2e_total_2021_estimated
+            - p_local_biomass.CO2e_combustion_based
+        )
+        * KlimaneutraleJahre
+        * fact("Fact_M_cost_per_CO2e_2020")
+    )
+    p_local_biomass.cost_wage = (
+        p_local_biomass.invest_pa * p_local_biomass.pct_of_wage / Kalkulationszeitraum
+    )
+    p_local_biomass.change_CO2e_t = p_local_biomass.CO2e_total - 0
+    p_local_biomass.demand_emplo = div(
+        p_local_biomass.cost_wage, p_local_biomass.ratio_wage_to_emplo
+    )
+    p_local_biomass.demand_emplo_new = max(
+        0, p_local_biomass.demand_emplo - p_local_biomass.emplo_existing
+    )
+
+    return p_local_biomass
+
+
 def calc(
     inputs: Inputs,
     *,
@@ -980,69 +1063,8 @@ def calc(
     p_local_wind_onshore = calc_production_local_wind_onshore(inputs, e18=e18)
     e30.p_local_wind_onshore = p_local_wind_onshore
 
-    p_local_biomass.cost_fuel_per_MWh = ass(
-        "Ass_E_P_local_biomass_material_costs"
-    ) / ass("Ass_E_P_local_biomass_efficiency")
-    p_local_biomass.cost_mro_per_MWh = ass("Ass_E_P_local_biomass_mro_per_MWh")
-    p_local_biomass.CO2e_combustion_based_per_MWh = fact(
-        "Fact_E_P_biomass_ratio_CO2e_cb_nonCO2_to_gep_2018"
-    ) / (1 - ass("Ass_E_P_renew_loss_brutto_to_netto"))
-    p_local_biomass.invest_per_x = ass(
-        "Ass_E_P_local_biomass_ratio_invest_to_power"
-    )  # invest
-    p_local_biomass.pct_of_wage = ass(
-        "Ass_E_P_constr_plant_invest_pct_of_wage_2017"
-    )  # cost_wage
-    p_local_biomass.ratio_wage_to_emplo = ass(
-        "Ass_E_P_constr_elec_ratio_wage_to_emplo_2017"
-    )  # demand_emplo
-    p_local_biomass.emplo_existing = (
-        fact("Fact_E_P_biomass_emplo_2018")
-        * entries.m_population_com_2018
-        / entries.m_population_nat
-    )
-    p_local_biomass.energy_installable = (
-        p_local_biomass.power_installable
-        * p_local_biomass.full_load_hour
-        * (1 - ass("Ass_E_P_renew_loss_brutto_to_netto"))
-    )
-    p_local_biomass.cost_fuel = (
-        p_local_biomass.cost_fuel_per_MWh * p_local_biomass.energy / MILLION
-    )
-    p_local_biomass.cost_mro = (
-        p_local_biomass.energy * p_local_biomass.cost_mro_per_MWh / MILLION
-    )
-    p_local_biomass.CO2e_combustion_based = (
-        p_local_biomass.energy * p_local_biomass.CO2e_combustion_based_per_MWh
-    )
-    p_local_biomass.change_energy_MWh = (
-        p_local_biomass.energy - e18.p_local_biomass.energy
-    )
-    p_local_biomass.invest = (
-        p_local_biomass.power_to_be_installed * p_local_biomass.invest_per_x
-    )
-    p_local_biomass.invest_pa = p_local_biomass.invest / Kalkulationszeitraum
-    p_local_biomass.change_cost_energy = (
-        p_local_biomass.cost_fuel - e18.p_local_biomass.cost_fuel
-    )
-    p_local_biomass.change_cost_mro = (
-        p_local_biomass.cost_mro - e18.p_local_biomass.cost_mro
-    )
-    p_local_biomass.CO2e_total = p_local_biomass.CO2e_combustion_based
-    p_local_biomass.cost_climate_saved = (
-        (
-            p_local_biomass.CO2e_total_2021_estimated
-            - p_local_biomass.CO2e_combustion_based
-        )
-        * KlimaneutraleJahre
-        * fact("Fact_M_cost_per_CO2e_2020")
-    )
-    p_local_biomass.cost_wage = (
-        p_local_biomass.invest_pa * p_local_biomass.pct_of_wage / Kalkulationszeitraum
-    )
-    p_local_biomass.change_CO2e_t = p_local_biomass.CO2e_total - 0
-    p_local_biomass.demand_emplo = div(
-        p_local_biomass.cost_wage, p_local_biomass.ratio_wage_to_emplo
+    calc_production_local_biomass_stage2(
+        inputs, p_local_biomass=p_local_biomass, e18=e18
     )
 
     p_local_hydro.power_installed = entries.e_PV_power_inst_water
@@ -1447,9 +1469,6 @@ def calc(
         p_local_wind_onshore.cost_wage, p_local_wind_onshore.ratio_wage_to_emplo
     )
     p_local.change_CO2e_t = p_local_biomass.change_CO2e_t
-    p_local_biomass.demand_emplo_new = max(
-        0, p_local_biomass.demand_emplo - p_local_biomass.emplo_existing
-    )
     e.invest_pa_outside = g.invest_pa_outside + p.invest_pa_outside
     e.invest_outside = g.invest_outside + p.invest_outside
     p.invest_com = p_fossil_and_renew.invest_com + p_local.invest_com
