@@ -57,6 +57,9 @@ class Emissions(ProductionBasedEmission):
         CO2e_pb: float = sum([elem.CO2e_pb for elem in pb_emission_summands]) + sum([elem.CO2e_pb for elem in emission_summands])
         return cls(CO2e_cb=CO2e_cb, CO2e_pb=CO2e_pb)
     
+    def update_CO2e_total(self):
+        self.CO2e_total=self.CO2e_cb+ self.CO2e_pb
+    
 
 
 @dataclass(kw_only=True)
@@ -856,6 +859,8 @@ class Bisko:
 
         total.add_production_based_emission(agri_bisko.total, lulucf_bisko.total)
         total.add_combustion_based_emission(lulucf_bisko.total)
+
+        total.update_CO2e_total()
 
         communal_facilities = EnergyAndEmissions.calc_sum_energy_and_emissions(
             priv_residences_bisko.communal_facilities,
