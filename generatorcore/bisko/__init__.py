@@ -37,6 +37,10 @@ class ProductionBasedEmission:
 class Emissions(ProductionBasedEmission):
     # combustion based Emissions
     CO2e_cb: float
+    CO2e_total: float = 0
+
+    def __post_init__(self):
+        self.CO2e_total = self.CO2e_cb + self.CO2e_pb
 
     @classmethod
     def calc_sum_emissions(cls, *args: "Emissions") -> "Emissions":  # type: ignore
@@ -45,7 +49,7 @@ class Emissions(ProductionBasedEmission):
         return cls(CO2e_cb=CO2e_cb, CO2e_pb=CO2e_pb)
 
 
-@dataclass
+@dataclass(kw_only=True)
 class EnergyAndEmissions(Emissions):
     """
     This class contains the relevant data attributes for the Bisko greenhous gas (GHG)
@@ -114,7 +118,7 @@ class EnergyAndEmissionsCalcIntermediate(EnergyAndEmissions):
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Sums(EnergyAndEmissions):
     """
     This class represents a sum over instances of class EnergyAndEmissionsCalcIntermediate.
