@@ -362,6 +362,82 @@ def calc_production_local_pv_facade(
     return p_local_pv_facade
 
 
+def calc_production_local_pv_agri(
+    inputs: Inputs,
+    *,
+    e18: electricity2018.E18,
+    b18: business2018.B18,
+    r18: residences2018.R18,
+    local_pv_roof_full_load_hour: float,
+    local_pv_park_full_load_hour: float,
+):
+    entries = inputs.entries
+    ass = inputs.ass
+    Kalkulationszeitraum = entries.m_duration_target
+
+    # TODO: Change the below
+    p_local_pv_agri = electricity2030_core.EColVars2030()
+    p_local_pv_agri.power_installed = entries.e_PV_power_inst_agripv
+    p_local_pv_agri.invest_per_x = (
+        ass("Ass_E_P_local_pv_agri_ratio_invest_to_power") * 1000
+    )
+    p_local_pv_agri.pct_of_wage = ass("Ass_E_P_pv_invest_pct_of_wage")
+    p_local_pv_agri.ratio_wage_to_emplo = ass(
+        "Ass_E_P_constr_elec_ratio_wage_to_emplo_2017"
+    )
+    p_local_pv_agri.power_to_be_installed_pct = entries.e_PV_power_to_be_inst_agri
+    p_local_pv_agri.ratio_power_to_area_ha = ass("Ass_E_P_local_pv_agri_power_per_ha")
+    p_local_pv_agri.area_ha_available_pct_of_action = ass(
+        "Ass_E_P_local_pv_agri_power_installable"
+    ) / (ass("Ass_E_P_local_pv_agri_power_per_ha") * entries.m_area_agri_nat)
+    p_local_pv_agri.area_ha_available = entries.m_area_agri_com
+    p_local_pv_agri.full_load_hour = local_pv_roof_full_load_hour  # WHAT?
+    p_local_pv_agri.power_installable = (
+        p_local_pv_agri.ratio_power_to_area_ha
+        * p_local_pv_agri.area_ha_available_pct_of_action
+        * p_local_pv_agri.area_ha_available
+    )
+    p_local_pv_agri.cost_mro_per_MWh = (
+        ass("Ass_E_P_local_pv_agri_ratio_invest_to_power")
+        * ass("Ass_E_P_local_pv_agri_mro_per_year")
+        / local_pv_park_full_load_hour  # AGAIN WHAT ?
+        * 1000
+    )
+    p_local_pv_agri.power_to_be_installed = max(
+        0,
+        p_local_pv_agri.power_installable * p_local_pv_agri.power_to_be_installed_pct
+        - p_local_pv_agri.power_installed,
+    )
+    p_local_pv_agri.energy_installable = (
+        p_local_pv_agri.full_load_hour
+        * p_local_pv_agri.power_installable
+        * (1 - ass("Ass_E_P_renew_loss_brutto_to_netto"))
+    )
+    p_local_pv_agri.energy = (
+        (p_local_pv_agri.power_to_be_installed + p_local_pv_agri.power_installed)
+        * p_local_pv_agri.full_load_hour
+        * (1 - ass("Ass_E_P_renew_loss_brutto_to_netto"))
+    )
+    p_local_pv_agri.invest = (
+        p_local_pv_agri.power_to_be_installed * p_local_pv_agri.invest_per_x
+    )
+    p_local_pv_agri.cost_mro = (
+        p_local_pv_agri.energy * p_local_pv_agri.cost_mro_per_MWh / MILLION
+    )
+    p_local_pv_agri.change_energy_MWh = (
+        p_local_pv_agri.energy - e18.p_local_pv_agri.energy
+    )
+    p_local_pv_agri.invest_pa = p_local_pv_agri.invest / Kalkulationszeitraum
+    p_local_pv_agri.change_cost_mro = (
+        p_local_pv_agri.cost_mro - e18.p_local_pv_agri.cost_mro
+    )
+    p_local_pv_agri.change_energy_pct = div(
+        p_local_pv_agri.change_energy_MWh, e18.p_local_pv_agri.energy
+    )
+    p_local_pv_agri.cost_wage = p_local_pv_agri.invest_pa * p_local_pv_agri.pct_of_wage
+    return p_local_pv_agri
+
+
 def calc(
     inputs: Inputs,
     *,
@@ -424,7 +500,6 @@ def calc(
 
     p_local = e30.p_local
     p_local_pv = e30.p_local_pv
-    p_local_pv_facade = e30.p_local_pv_facade
     p_local_pv_park = e30.p_local_pv_park
     p_local_pv_agri = e30.p_local_pv_agri
     p_local_wind_onshore = e30.p_local_wind_onshore
@@ -706,6 +781,16 @@ def calc(
     )
     e30.p_local_pv_facade = p_local_pv_facade
 
+    p_local_pv_agri = calc_production_local_pv_agri(
+        inputs,
+        e18=e18,
+        b18=b18,
+        r18=r18,
+        local_pv_roof_full_load_hour=p_local_pv_roof.full_load_hour,
+        local_pv_park_full_load_hour=p_local_pv_roof.full_load_hour,
+    )
+    e30.p_local_pv_agri = p_local_pv_agri
+
     p_local_pv_park.power_installed = entries.e_PV_power_inst_park
     p_local_pv_park.invest_per_x = (
         ass("Ass_E_S_local_pv_park_ratio_invest_to_power_2030") * 1000
@@ -764,65 +849,6 @@ def calc(
         p_local_pv_park.change_energy_MWh, e18.p_local_pv_park.energy
     )
     p_local_pv_park.cost_wage = p_local_pv_park.invest_pa * p_local_pv_park.pct_of_wage
-
-    p_local_pv_agri.power_installed = entries.e_PV_power_inst_agripv
-    p_local_pv_agri.invest_per_x = (
-        ass("Ass_E_P_local_pv_agri_ratio_invest_to_power") * 1000
-    )
-    p_local_pv_agri.pct_of_wage = ass("Ass_E_P_pv_invest_pct_of_wage")
-    p_local_pv_agri.ratio_wage_to_emplo = ass(
-        "Ass_E_P_constr_elec_ratio_wage_to_emplo_2017"
-    )
-    p_local_pv_agri.power_to_be_installed_pct = entries.e_PV_power_to_be_inst_agri
-    p_local_pv_agri.ratio_power_to_area_ha = ass("Ass_E_P_local_pv_agri_power_per_ha")
-    p_local_pv_agri.area_ha_available_pct_of_action = ass(
-        "Ass_E_P_local_pv_agri_power_installable"
-    ) / (ass("Ass_E_P_local_pv_agri_power_per_ha") * entries.m_area_agri_nat)
-    p_local_pv_agri.area_ha_available = entries.m_area_agri_com
-    p_local_pv_agri.full_load_hour = p_local_pv_roof.full_load_hour
-    p_local_pv_agri.power_installable = (
-        p_local_pv_agri.ratio_power_to_area_ha
-        * p_local_pv_agri.area_ha_available_pct_of_action
-        * p_local_pv_agri.area_ha_available
-    )
-    p_local_pv_agri.cost_mro_per_MWh = (
-        ass("Ass_E_P_local_pv_agri_ratio_invest_to_power")
-        * ass("Ass_E_P_local_pv_agri_mro_per_year")
-        / p_local_pv_park.full_load_hour
-        * 1000
-    )
-    p_local_pv_agri.power_to_be_installed = max(
-        0,
-        p_local_pv_agri.power_installable * p_local_pv_agri.power_to_be_installed_pct
-        - p_local_pv_agri.power_installed,
-    )
-    p_local_pv_agri.energy_installable = (
-        p_local_pv_agri.full_load_hour
-        * p_local_pv_agri.power_installable
-        * (1 - ass("Ass_E_P_renew_loss_brutto_to_netto"))
-    )
-    p_local_pv_agri.energy = (
-        (p_local_pv_agri.power_to_be_installed + p_local_pv_agri.power_installed)
-        * p_local_pv_agri.full_load_hour
-        * (1 - ass("Ass_E_P_renew_loss_brutto_to_netto"))
-    )
-    p_local_pv_agri.invest = (
-        p_local_pv_agri.power_to_be_installed * p_local_pv_agri.invest_per_x
-    )
-    p_local_pv_agri.cost_mro = (
-        p_local_pv_agri.energy * p_local_pv_agri.cost_mro_per_MWh / MILLION
-    )
-    p_local_pv_agri.change_energy_MWh = (
-        p_local_pv_agri.energy - e18.p_local_pv_agri.energy
-    )
-    p_local_pv_agri.invest_pa = p_local_pv_agri.invest / Kalkulationszeitraum
-    p_local_pv_agri.change_cost_mro = (
-        p_local_pv_agri.cost_mro - e18.p_local_pv_agri.cost_mro
-    )
-    p_local_pv_agri.change_energy_pct = div(
-        p_local_pv_agri.change_energy_MWh, e18.p_local_pv_agri.energy
-    )
-    p_local_pv_agri.cost_wage = p_local_pv_agri.invest_pa * p_local_pv_agri.pct_of_wage
 
     p_local_wind_onshore.power_installed = entries.e_PV_power_inst_wind_on
     p_local_wind_onshore.full_load_hour = fact("Fact_E_P_wind_onshore_full_load_hours")
