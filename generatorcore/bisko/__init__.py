@@ -266,7 +266,7 @@ class BiskoPrivResidences(BiskoSector, BiskoSectorWithExtraCommunalFacilities):
         elec = EnergyAndEmissionsCalcIntermediate(
             eb_energy_from_same_sector=r18.s_elec.energy,
             eb_CO2e_cb_from_same_sector=r18.s_elec.CO2e_total,
-            eb_CO2e_cb_from_elec=e18.p.CO2e_total * div(e18.d_r.energy, e18.d.energy),
+            eb_CO2e_cb_from_elec=r18.s_elec.energy * e18.p.CO2e_combustion_based_per_MWh,
         )
 
         total = Sums.calc(
@@ -333,14 +333,14 @@ class BiskoBusiness(BiskoSector, BiskoSectorWithExtraCommunalFacilities):
             eb_energy_from_same_sector=b18.s_petrol.energy,
             eb_energy_from_agri=a18.s_petrol.energy,
             eb_CO2e_cb_from_same_sector=b18.s_petrol.CO2e_total,
-            eb_CO2e_cb_from_agri=a18.s_petrol.energy * fact("Fact_T_S_petrol_EmFa_tank_wheel_2018"),
+            eb_CO2e_cb_from_agri=a18.s_petrol.CO2e_total,
             eb_CO2e_cb_from_fuels= (b18.s_petrol.energy + a18.s_petrol.energy) * fact("Fact_F_P_petrol_ratio_CO2e_cb_to_fec_2018"),
         )
         diesel = EnergyAndEmissionsCalcIntermediate(
             eb_energy_from_same_sector=b18.s_diesel.energy,
             eb_energy_from_agri=a18.s_diesel.energy,
             eb_CO2e_cb_from_same_sector=b18.s_diesel.CO2e_total,
-            eb_CO2e_cb_from_agri=a18.s_diesel.energy * fact("Fact_T_S_diesel_EmFa_tank_wheel_2018"),
+            eb_CO2e_cb_from_agri=a18.s_diesel.CO2e_total,
             eb_CO2e_cb_from_fuels= (b18.s_diesel.energy + a18.s_diesel.energy) * fact("Fact_F_P_diesel_ratio_CO2e_cb_to_fec_2018"),
         )
         jetfuel = EnergyAndEmissionsCalcIntermediate(
@@ -352,7 +352,7 @@ class BiskoBusiness(BiskoSector, BiskoSectorWithExtraCommunalFacilities):
             eb_energy_from_same_sector=b18.s_fueloil.energy,
             eb_energy_from_agri=a18.s_fueloil.energy,
             eb_CO2e_cb_from_same_sector=b18.s_fueloil.CO2e_total,
-            eb_CO2e_cb_from_agri=a18.s_fueloil.energy * fact("Fact_T_S_fueloil_EmFa_tank_wheel_2018"),
+            eb_CO2e_cb_from_agri=a18.s_fueloil.CO2e_total,
             eb_CO2e_cb_from_heat= (b18.s_fueloil.energy + a18.s_fueloil.energy) * fact("Fact_H_P_fueloil_ratio_CO2e_cb_to_fec_2018"),
         )
         coal = EnergyAndEmissionsCalcIntermediate(
@@ -365,14 +365,14 @@ class BiskoBusiness(BiskoSector, BiskoSectorWithExtraCommunalFacilities):
             eb_energy_from_same_sector=b18.s_lpg.energy,
             eb_energy_from_agri=a18.s_lpg.energy,
             eb_CO2e_cb_from_same_sector=b18.s_lpg.CO2e_total,
-            eb_CO2e_cb_from_agri=a18.s_lpg.energy * fact("Fact_T_S_lpg_EmFa_tank_wheel_2018"),
+            eb_CO2e_cb_from_agri=a18.s_lpg.CO2e_total,
             eb_CO2e_cb_from_heat= (b18.s_lpg.energy + a18.s_lpg.energy) * fact("Fact_H_P_lpg_ratio_CO2e_cb_to_fec_2018"),
         )
         gas = EnergyAndEmissionsCalcIntermediate(
             eb_energy_from_same_sector=b18.s_gas.energy,
             eb_energy_from_agri=a18.s_gas.energy,
             eb_CO2e_cb_from_same_sector=b18.s_gas.CO2e_total,
-            eb_CO2e_cb_from_agri=a18.s_gas.energy * fact("Fact_H_P_ngas_cb_EF"),
+            eb_CO2e_cb_from_agri=a18.s_gas.CO2e_total,
             eb_CO2e_cb_from_heat=(b18.s_gas.energy + a18.s_gas.energy) * fact("Fact_H_P_gas_ratio_CO2e_cb_to_fec_2018"),
             eb_CO2e_pb_from_heat=(b18.s_gas.energy + a18.s_gas.energy) * fact("Fact_H_P_gas_ratio_CO2e_pb_to_fec_2018"),
         )
@@ -385,7 +385,7 @@ class BiskoBusiness(BiskoSector, BiskoSectorWithExtraCommunalFacilities):
             eb_energy_from_same_sector=b18.s_biomass.energy,
             eb_energy_from_agri=a18.s_biomass.energy,
             eb_CO2e_cb_from_same_sector=b18.s_biomass.CO2e_total,
-            eb_CO2e_cb_from_agri=a18.s_biomass.energy * fact("Fact_RB_S_biomass_CO2e_EF"),
+            eb_CO2e_cb_from_agri=a18.s_biomass.CO2e_total,
             eb_CO2e_pb_from_heat= (b18.s_biomass.energy + a18.s_biomass.energy) * fact("Fact_H_P_biomass_ratio_CO2e_pb_to_fec_2018"),
         )
         solarth = EnergyAndEmissionsCalcIntermediate(
@@ -403,8 +403,7 @@ class BiskoBusiness(BiskoSector, BiskoSectorWithExtraCommunalFacilities):
             eb_energy_from_agri=a18.s_elec.energy,
             eb_CO2e_cb_from_same_sector=b18.s_elec.CO2e_total,
             eb_CO2e_cb_from_agri=a18.s_elec.CO2e_total,
-            eb_CO2e_cb_from_elec=e18.p.CO2e_total
-            * div(e18.d_b.energy + e18.d_a.energy, e18.d.energy),
+            eb_CO2e_cb_from_elec=(b18.s_elec.energy + a18.s_elec.energy) * e18.p.CO2e_combustion_based_per_MWh,
         )
 
         total = Sums.calc(
@@ -542,7 +541,7 @@ class BiskoTransport(BiskoSector):
             eb_energy_from_same_sector=t18.s_elec.energy,
             eb_CO2e_cb_from_same_sector=t18.s_elec.energy
             * fact("Fact_T_S_electricity_EmFa_tank_wheel_2018"),
-            eb_CO2e_cb_from_elec=e18.p.CO2e_total * div(e18.d_t.energy, e18.d.energy),
+            eb_CO2e_cb_from_elec=t18.s_elec.energy * e18.p.CO2e_combustion_based_per_MWh,
         )
 
         total = Sums.calc(
@@ -637,9 +636,8 @@ class BiskoIndustry(BiskoSector):
         other_fossil = EnergyAndEmissionsCalcIntermediate(
             eb_energy_from_same_sector=i18.s_fossil_ofossil.energy
             + i18.s_fossil_opetpro.energy,
-            eb_CO2e_cb_from_heat=h18.p_opetpro.CO2e_combustion_based,
-            eb_CO2e_pb_from_heat=h18.p_opetpro.CO2e_production_based
-            + h18.p_ofossil.CO2e_production_based,
+            eb_CO2e_cb_from_heat=i18.s_fossil_opetpro.energy * fact("Fact_H_P_opetpro_ratio_CO2e_cb_to_fec_2018"),
+            eb_CO2e_pb_from_heat=i18.s_fossil_opetpro.energy * fact("Fact_H_P_opetpro_ratio_CO2e_pb_to_fec_2018") + i18.s_fossil_ofossil.energy * fact("Fact_H_P_ofossil_ratio_CO2e_pb_to_fec_2018"),
         )
 
         heatnet = EnergyAndEmissionsCalcIntermediate(
@@ -660,7 +658,7 @@ class BiskoIndustry(BiskoSector):
         )
         elec = EnergyAndEmissionsCalcIntermediate(
             eb_energy_from_same_sector=i18.s_renew_elec.energy,
-            eb_CO2e_cb_from_elec=e18.p.CO2e_total * div(e18.d_i.energy, e18.d.energy),
+            eb_CO2e_cb_from_elec=i18.s_renew_elec.energy * e18.p.CO2e_combustion_based_per_MWh,
         )
         # total Bereitstellung
         total_supply = Sums.calc(
@@ -769,7 +767,7 @@ class BiskoLULUCF(BiskoProductionBasedOnly):
 
     @classmethod
     def calc_bisko_lulucf(cls, l18: lulucf2018.L18) -> "BiskoLULUCF":
-        forest = ProductionBasedEmission(CO2e_pb=l18.g_forest.CO2e_total)
+        forest = ProductionBasedEmission(CO2e_pb=l18.g_forest.CO2e_production_based) #forest has cb emission because of biomass use
         crop = ProductionBasedEmission(CO2e_pb=l18.g_crop.CO2e_total)
         grass = ProductionBasedEmission(CO2e_pb=l18.g_grass.CO2e_total)
         grove = ProductionBasedEmission(CO2e_pb=l18.g_grove.CO2e_total)
