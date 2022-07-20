@@ -48,6 +48,13 @@ class Emissions(ProductionBasedEmission):
         CO2e_pb: float = sum([elem.CO2e_pb for elem in args])
         return cls(CO2e_cb=CO2e_cb, CO2e_pb=CO2e_pb)
 
+    @classmethod
+    def calc_sum_from_emissions_and_pb_emissions(cls,pb_emission_summands:list[ProductionBasedEmission],emission_summands:list["Emissions"]):
+        CO2e_cb: float = sum([elem.CO2e_cb for elem in emission_summands])
+        CO2e_pb: float = sum([elem.CO2e_pb for elem in pb_emission_summands]) + sum([elem.CO2e_pb for elem in emission_summands])
+        return cls(CO2e_cb=CO2e_cb, CO2e_pb=CO2e_pb)
+    
+
 
 @dataclass(kw_only=True)
 class EnergyAndEmissions(Emissions):
@@ -725,18 +732,10 @@ class BiskoIndustry(BiskoSector):
         )
 
 
-@dataclass
-class BiskoProductionBasedOnly:
-    """
-    This super class contains shared production based only attributes.
-    """
-
-    total: ProductionBasedEmission
-
 
 @dataclass
-class BiskoAgriculture(BiskoProductionBasedOnly):
-
+class BiskoAgriculture():
+    total : ProductionBasedEmission 
     forest: ProductionBasedEmission
     manure: ProductionBasedEmission
     soil: ProductionBasedEmission
@@ -757,9 +756,9 @@ class BiskoAgriculture(BiskoProductionBasedOnly):
 
 
 @dataclass
-class BiskoLULUCF(BiskoProductionBasedOnly):
-
-    forest: ProductionBasedEmission
+class BiskoLULUCF():
+    total: Emissions 
+    forest: Emissions
     crop: ProductionBasedEmission
     grass: ProductionBasedEmission
     grove: ProductionBasedEmission
@@ -771,7 +770,7 @@ class BiskoLULUCF(BiskoProductionBasedOnly):
 
     @classmethod
     def calc_bisko_lulucf(cls, l18: lulucf2018.L18) -> "BiskoLULUCF":
-        forest = ProductionBasedEmission(CO2e_pb=l18.g_forest.CO2e_production_based) #forest has cb emission because of biomass use
+        forest = Emissions(CO2e_pb=l18.g_forest.CO2e_production_based,CO2e_cb=l18.g_forest.CO2e_combustion_based) #forest has cb emission because of biomass use
         crop = ProductionBasedEmission(CO2e_pb=l18.g_crop.CO2e_total)
         grass = ProductionBasedEmission(CO2e_pb=l18.g_grass.CO2e_total)
         grove = ProductionBasedEmission(CO2e_pb=l18.g_grove.CO2e_total)
@@ -781,9 +780,9 @@ class BiskoLULUCF(BiskoProductionBasedOnly):
         other = ProductionBasedEmission(CO2e_pb=l18.g_other.CO2e_total)
         wood = ProductionBasedEmission(CO2e_pb=l18.g_wood.CO2e_total)
 
-        total = ProductionBasedEmission.calc_sum_pb_emission(
-            forest, crop, grass, grove, wet, water, settlement, other, wood
-        )
+        total = Emissions.calc_sum_from_emissions_and_pb_emissions(pb_emission_summands=
+            [crop, grass, grove, wet, water, settlement, other, wood],emission_summands=[forest])
+        
 
         return cls(
             forest=forest,
