@@ -781,16 +781,6 @@ def calc(
     )
     e30.p_local_pv_facade = p_local_pv_facade
 
-    p_local_pv_agri = calc_production_local_pv_agri(
-        inputs,
-        e18=e18,
-        b18=b18,
-        r18=r18,
-        local_pv_roof_full_load_hour=p_local_pv_roof.full_load_hour,
-        local_pv_park_full_load_hour=p_local_pv_roof.full_load_hour,
-    )
-    e30.p_local_pv_agri = p_local_pv_agri
-
     p_local_pv_park.power_installed = entries.e_PV_power_inst_park
     p_local_pv_park.invest_per_x = (
         ass("Ass_E_S_local_pv_park_ratio_invest_to_power_2030") * 1000
@@ -849,6 +839,16 @@ def calc(
         p_local_pv_park.change_energy_MWh, e18.p_local_pv_park.energy
     )
     p_local_pv_park.cost_wage = p_local_pv_park.invest_pa * p_local_pv_park.pct_of_wage
+
+    p_local_pv_agri = calc_production_local_pv_agri(
+        inputs,
+        e18=e18,
+        b18=b18,
+        r18=r18,
+        local_pv_roof_full_load_hour=p_local_pv_roof.full_load_hour,
+        local_pv_park_full_load_hour=p_local_pv_park.full_load_hour,
+    )
+    e30.p_local_pv_agri = p_local_pv_agri
 
     p_local_wind_onshore.power_installed = entries.e_PV_power_inst_wind_on
     p_local_wind_onshore.full_load_hour = fact("Fact_E_P_wind_onshore_full_load_hours")
