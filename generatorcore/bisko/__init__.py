@@ -32,6 +32,9 @@ class ProductionBasedEmission:
     def add_production_based_emission(self, *args: "ProductionBasedEmission"):
         self.CO2e_pb = self.CO2e_pb + sum([elem.CO2e_pb for elem in args])
 
+    def add_combustion_based_emission(self, *args: "Emissions"):
+        self.CO2e_cb = self.CO2e_cb + sum([elem.CO2e_cb for elem in args])
+
 
 @dataclass
 class Emissions(ProductionBasedEmission):
@@ -852,6 +855,7 @@ class Bisko:
         )
 
         total.add_production_based_emission(agri_bisko.total, lulucf_bisko.total)
+        total.add_combustion_based_emission(lulucf_bisko.total)
 
         communal_facilities = EnergyAndEmissions.calc_sum_energy_and_emissions(
             priv_residences_bisko.communal_facilities,
