@@ -366,8 +366,6 @@ def calc_production_local_pv_agri(
     inputs: Inputs,
     *,
     e18: electricity2018.E18,
-    b18: business2018.B18,
-    r18: residences2018.R18,
     local_pv_roof_full_load_hour: float,
     local_pv_park_full_load_hour: float,
 ):
@@ -1089,8 +1087,6 @@ def calc(
     p_local_pv_agri = calc_production_local_pv_agri(
         inputs,
         e18=e18,
-        b18=b18,
-        r18=r18,
         local_pv_roof_full_load_hour=p_local_pv_roof.full_load_hour,
         local_pv_park_full_load_hour=p_local_pv_park.full_load_hour,
     )
