@@ -884,7 +884,6 @@ def calc(
     ass = inputs.ass
     entries = inputs.entries
 
-    Kalkulationszeitraum = entries.m_duration_target
     KlimaneutraleJahre = entries.m_duration_neutral
 
     e30 = electricity2030_core.E30()
@@ -921,7 +920,6 @@ def calc(
     p_renew_pv_agri = e30.p_renew_pv_agri
     p_renew_wind_onshore = e30.p_renew_wind_onshore
     p_renew_biomass = e30.p_renew_biomass
-    p_renew_reverse = e30.p_renew_reverse
 
     p_local = e30.p_local
     p_local_pv = e30.p_local_pv
@@ -1072,8 +1070,6 @@ def calc(
 
     p_renew_reverse = calc_production_renewable_reverse(inputs, d_energy=d.energy)
 
-    p_renew_pv_roof.pct_energy = ass("Ass_E_P_renew_pv_roof_pct_of_nep_2035")
-
     p_renew_pv_facade.pct_energy = ass("Ass_E_P_renew_pv_facade_pct_of_nep_2035")
     p_renew_pv_park.pct_energy = ass("Ass_E_P_renew_pv_park_pct_of_nep_2035")
     p_renew_pv_agri.pct_energy = ass("Ass_E_P_renew_pv_agri_pct_of_nep_2035")
@@ -1130,6 +1126,14 @@ def calc(
         inputs, p_local_biomass=p_local_biomass, e18=e18
     )
 
+    p_renew_pv_roof.pct_energy = ass("Ass_E_P_renew_pv_roof_pct_of_nep_2035")
+    p_renew_pv_roof.cost_mro_per_MWh = (
+        ass("Ass_E_P_local_pv_roof_ratio_invest_to_power_2020")
+        * ass("Ass_E_P_local_pv_roof_mro_per_year")
+        / p_local_pv_roof.full_load_hour
+        * 1000
+    )
+
     p_local_hydro = calc_production_local_hydro(inputs, e18=e18)
     g_grid_offshore.invest = 0
     g_grid_offshore.invest_per_x = ass("Ass_E_G_grid_offshore_ratio_invest_to_power")
@@ -1154,12 +1158,6 @@ def calc(
         + p_renew_reverse.pct_energy
     )
     p_renew.CO2e_total_2021_estimated = p_renew_biomass.CO2e_total_2021_estimated
-    p_renew_pv_roof.cost_mro_per_MWh = (
-        ass("Ass_E_P_local_pv_roof_ratio_invest_to_power_2020")
-        * ass("Ass_E_P_local_pv_roof_mro_per_year")
-        / p_local_pv_roof.full_load_hour
-        * 1000
-    )
     p_renew_pv_facade.cost_mro_per_MWh = (
         ass("Ass_E_S_local_pv_facade_ratio_invest_to_power")
         * ass("Ass_E_P_local_pv_roof_mro_per_year")
