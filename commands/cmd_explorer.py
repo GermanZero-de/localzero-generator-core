@@ -1,3 +1,4 @@
+# pyright: strict
 ###### WORDS OF WARNING
 # This implements a simple http JSON "RPC" server for the generator
 #
