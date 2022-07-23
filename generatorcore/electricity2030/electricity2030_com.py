@@ -263,6 +263,10 @@ def calc_production_local_pv_roof(
     )
     p_local_pv_roof.cost_wage = p_local_pv_roof.invest_pa * p_local_pv_roof.pct_of_wage
     p_local_pv_roof.invest_pa_com = p_local_pv_roof.invest_com / Kalkulationszeitraum
+    p_local_pv_roof.change_CO2e_t = 0
+    p_local_pv_roof.cost_climate_saved = 0
+    p_local_pv_roof.CO2e_total = 0
+    p_local_pv_roof.change_CO2e_pct = 0
 
     return p_local_pv_roof
 
@@ -359,6 +363,10 @@ def calc_production_local_pv_facade(
     p_local_pv_facade.demand_emplo = div(
         p_local_pv_facade.cost_wage, p_local_pv_facade.ratio_wage_to_emplo
     )
+    p_local_pv_facade.change_CO2e_t = 0
+    p_local_pv_facade.cost_climate_saved = 0
+    p_local_pv_facade.CO2e_total = 0
+    p_local_pv_facade.change_CO2e_pct = 0
     return p_local_pv_facade
 
 
@@ -433,6 +441,11 @@ def calc_production_local_pv_agri(
         p_local_pv_agri.change_energy_MWh, e18.p_local_pv_agri.energy
     )
     p_local_pv_agri.cost_wage = p_local_pv_agri.invest_pa * p_local_pv_agri.pct_of_wage
+    p_local_pv_agri.change_CO2e_t = 0
+    p_local_pv_agri.CO2e_total = 0
+    p_local_pv_agri.change_CO2e_pct = 0
+    p_local_pv_agri.cost_climate_saved = 0
+    p_local_pv_agri.cost_climate_saved = 0
     return p_local_pv_agri
 
 
@@ -509,6 +522,10 @@ def calc_production_local_pv_park(
         p_local_pv_park.change_energy_MWh, e18.p_local_pv_park.energy
     )
     p_local_pv_park.cost_wage = p_local_pv_park.invest_pa * p_local_pv_park.pct_of_wage
+    p_local_pv_park.change_CO2e_t = 0
+    p_local_pv_park.CO2e_total = 0
+    p_local_pv_park.change_CO2e_pct = 0
+    p_local_pv_park.cost_climate_saved = 0
 
     return p_local_pv_park
 
@@ -610,6 +627,10 @@ def calc_production_local_wind_onshore(
     p_local_wind_onshore.cost_wage = (
         p_local_wind_onshore.invest_pa * p_local_wind_onshore.pct_of_wage
     )
+    p_local_wind_onshore.CO2e_total = 0
+    p_local_wind_onshore.change_CO2e_pct = 0
+    p_local_wind_onshore.cost_climate_saved = 0
+    p_local_wind_onshore.change_CO2e_t = 0
     return p_local_wind_onshore
 
 
@@ -1908,16 +1929,6 @@ def calc(
 
     # TODO: correct excel calculations and reimport these somehow missing variabels to python
     p_local_pv.cost_climate_saved = 0
-    p_local_pv_park.change_CO2e_t = 0
-    p_local_pv_park.cost_climate_saved = 0
-    p_local_pv_facade.change_CO2e_t = 0
-    p_local_pv_facade.cost_climate_saved = 0
-    p_local_pv_agri.change_CO2e_t = 0
-    p_local_pv_agri.cost_climate_saved = 0
-    p_local_pv_roof.change_CO2e_t = 0
-    p_local_pv_roof.cost_climate_saved = 0
-
-    p_local_wind_onshore.CO2e_total = 0
 
     p_fossil.CO2e_total = 0
 
@@ -1939,16 +1950,12 @@ def calc(
     p_renew_pv.change_CO2e_t = 0
 
     p_renew_pv_roof.change_CO2e_t = 0
-    p_renew_pv_agri.change_CO2e_t = 0
     p_renew_pv_facade.change_CO2e_t = 0
     p_renew_pv_park.change_CO2e_t = 0
 
     p_renew_geoth.change_CO2e_t = 0
 
-    p_local_pv_agri.CO2e_total = 0
-    p_local_pv_roof.CO2e_total = 0
-    p_local_pv_facade.CO2e_total = 0
-    p_local_pv_park.CO2e_total = 0
+    p_renew_pv_agri.change_CO2e_t = 0
 
     # ---copy
     p_renew_pv.change_CO2e_pct = 0
@@ -1965,11 +1972,6 @@ def calc(
 
     p_local.change_CO2e_pct = 0
     p_local_pv.change_CO2e_pct = 0
-    p_local_pv_roof.change_CO2e_pct = 0
-    p_local_pv_agri.change_CO2e_pct = 0
-    p_local_pv_facade.change_CO2e_pct = 0
-    p_local_pv_park.change_CO2e_pct = 0
-    p_local_wind_onshore.change_CO2e_pct = 0
     p_local_biomass.change_CO2e_pct = div(
         p_local_biomass.change_CO2e_t, e18.p_local_biomass.CO2e_total
     )
@@ -1988,13 +1990,7 @@ def calc(
 
     p_local.cost_climate_saved = 0
     p_local_pv.cost_climate_saved = 0
-    p_local_pv_roof.cost_climate_saved = 0
-    p_local_pv_agri.cost_climate_saved = 0
-    p_local_pv_facade.cost_climate_saved = 0
-    p_local_pv_park.cost_climate_saved = 0
-    p_local_wind_onshore.cost_climate_saved = 0
 
     p_renew_reverse.change_CO2e_pct = 0
-    p_local_wind_onshore.change_CO2e_t = 0
 
     return e30
