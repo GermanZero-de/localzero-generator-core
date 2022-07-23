@@ -885,6 +885,17 @@ def calc_production_renewable_reverse(inputs: Inputs, *, d_energy: float):
     return p_renew_reverse
 
 
+def calc_energy_demand(
+    inputs: Inputs, *, energy: float, energy_18: float, cost_fuel_per_MWh: str
+) -> electricity2030_core.EnergyDemandWithCostFuel:
+    d = electricity2030_core.EnergyDemandWithCostFuel()
+    d.energy = energy
+    d.cost_fuel_per_MWh = inputs.fact(cost_fuel_per_MWh)
+    d.change_energy_MWh = energy - energy_18
+    d.change_energy_pct = div(d.change_energy_MWh, energy_18)
+    return d
+
+
 def calc(
     inputs: Inputs,
     *,
@@ -921,7 +932,6 @@ def calc(
     d_r = e30.d_r
     d_b = e30.d_b
     d_h = e30.d_h
-    d_i = e30.d_i
     d_t = e30.d_t
     d_a = e30.d_a
     d_f_hydrogen_reconv = e30.d_f_hydrogen_reconv
@@ -961,12 +971,45 @@ def calc(
         "Fact_B_P_constr_main_ratio_wage_to_emplo_2017"
     )
 
+    d_a = calc_energy_demand(
+        inputs,
+        energy=a30.p_operation.demand_electricity,
+        energy_18=e18.d_a.energy,
+        cost_fuel_per_MWh="Fact_E_D_R_cost_fuel_per_MWh_2018",
+    )
+    d_b = calc_energy_demand(
+        inputs,
+        energy=b30.p.demand_electricity,
+        energy_18=e18.d_b.energy,
+        cost_fuel_per_MWh="Fact_E_D_B_cost_fuel_per_MWh_2018",
+    )
+    d_i = calc_energy_demand(
+        inputs,
+        energy=i30.p.demand_electricity,
+        energy_18=e18.d_i.energy,
+        cost_fuel_per_MWh="Fact_E_D_I_cost_fuel_per_MWh_2018",
+    )
+    d_r = calc_energy_demand(
+        inputs,
+        energy=r30.p.demand_electricity,
+        energy_18=e18.d_r.energy,
+        cost_fuel_per_MWh="Fact_E_D_R_cost_fuel_per_MWh_2018",
+    )
+    d_t = calc_energy_demand(
+        inputs,
+        energy=t30.t.transport.demand_electricity,
+        energy_18=e18.d_t.energy,
+        cost_fuel_per_MWh="Fact_E_D_R_cost_fuel_per_MWh_2018",
+    )
+
+    e30.d_a = d_a
+    e30.d_b = d_b
+    e30.d_i = d_i
+    e30.d_r = d_r
+    e30.d_t = d_t
+
     d_h.energy = h30.p.demand_electricity
-    d_r.energy = r30.p.demand_electricity
-    d_b.energy = b30.p.demand_electricity
-    d_i.energy = i30.p.demand_electricity
-    d_t.energy = t30.t.transport.demand_electricity
-    d_a.energy = a30.p_operation.demand_electricity
+
     d_f_wo_hydrogen.energy = (
         f30.p_petrol.demand_electricity
         + f30.p_jetfuel.demand_electricity
@@ -974,24 +1017,10 @@ def calc(
         + f30.p_emethan.demand_electricity
         + f30.p_hydrogen.demand_electricity
     )
-    d_r.cost_fuel_per_MWh = fact("Fact_E_D_R_cost_fuel_per_MWh_2018")
-    d_b.cost_fuel_per_MWh = fact("Fact_E_D_B_cost_fuel_per_MWh_2018")
-    d_i.cost_fuel_per_MWh = fact("Fact_E_D_I_cost_fuel_per_MWh_2018")
-    d_t.cost_fuel_per_MWh = fact("Fact_E_D_R_cost_fuel_per_MWh_2018")
-    d_a.cost_fuel_per_MWh = fact("Fact_E_D_R_cost_fuel_per_MWh_2018")
+
     d_h.change_energy_MWh = d_h.energy - e18.d_h.energy  #
-    d_r.change_energy_MWh = d_r.energy - e18.d_r.energy
-    d_b.change_energy_MWh = d_b.energy - e18.d_b.energy
-    d_i.change_energy_MWh = d_i.energy - e18.d_i.energy
-    d_t.change_energy_MWh = d_t.energy - e18.d_t.energy
-    d_a.change_energy_MWh = d_a.energy - e18.d_a.energy
     d_f_wo_hydrogen.change_energy_MWh = d_f_wo_hydrogen.energy - 0
     d_h.change_energy_pct = div(d_h.change_energy_MWh, e18.d_h.energy)
-    d_r.change_energy_pct = div(d_r.change_energy_MWh, e18.d_r.energy)
-    d_b.change_energy_pct = div(d_b.change_energy_MWh, e18.d_b.energy)
-    d_i.change_energy_pct = div(d_i.change_energy_MWh, e18.d_i.energy)
-    d_t.change_energy_pct = div(d_t.change_energy_MWh, e18.d_t.energy)
-    d_a.change_energy_pct = div(d_a.change_energy_MWh, e18.d_a.energy)
     d_f_hydrogen_reconv.energy = f30.p_hydrogen_reconv.demand_electricity
 
     d.energy = (
