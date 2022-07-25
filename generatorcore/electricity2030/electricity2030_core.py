@@ -34,19 +34,16 @@ class Energy:
 
 @dataclass
 class EnergyDemand(Energy):
-    cost_fuel: float = None  # type: ignore
     pct_energy: float = None  # type: ignore
     change_energy_MWh: float = None  # type: ignore
     change_energy_pct: float = None  # type: ignore
 
 
 @dataclass
-class RenewableGeothermalProduction:
+class RenewableGeothermalProduction(EnergyDemand):
     """Energy production using geothermal."""
 
-    energy: float = None  # type: ignore
     energy_installable: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
     CO2e_combustion_based_per_MWh: float = None  # type: ignore
     CO2e_combustion_based: float = None  # type: ignore
     cost_climate_saved: float = None  # type: ignore
@@ -57,8 +54,6 @@ class RenewableGeothermalProduction:
     power_to_be_installed_pct: float = None  # type: ignore
     power_to_be_installed: float = None  # type: ignore
     power_installable: float = None  # type: ignore
-    change_energy_MWh: float = None  # type: ignore
-    change_energy_pct: float = None  # type: ignore
     change_CO2e_t: float = None  # type: ignore
     change_CO2e_pct: float = None  # type: ignore
     change_cost_mro: float = None  # type: ignore
@@ -85,13 +80,10 @@ class EnergyDemandWithCostFuel(EnergyDemand):
 
 # Definition der relevanten Spaltennamen für den Sektor E
 @dataclass
-class EColVars2030:
-    energy: float = None  # type: ignore
+class EColVars2030(EnergyDemandWithCostFuel):
     pet_sites: float = None  # type: ignore
     energy_installable: float = None  # type: ignore
     cost_fuel_per_MWh: float = None  # type: ignore
-    cost_fuel: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
     mro_per_MWh: float = None  # type: ignore
     mro: float = None  # type: ignore
     CO2e_combustion_based_per_MWh: float = None  # type: ignore
@@ -114,8 +106,6 @@ class EColVars2030:
     area_ha_available_pct_of_action: float = None  # type: ignore
     ratio_power_to_area_ha: float = None  # type: ignore
     cost_mro_pa: float = None  # type: ignore
-    change_energy_MWh: float = None  # type: ignore
-    change_energy_pct: float = None  # type: ignore
     change_CO2e_t: float = None  # type: ignore
     change_CO2e_pct: float = None  # type: ignore
     change_cost_energy: float = None  # type: ignore
