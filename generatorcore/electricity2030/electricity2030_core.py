@@ -28,8 +28,12 @@ class FossilFuelsProduction:
 
 
 @dataclass
-class EnergyDemand:
+class Energy:
     energy: float = None  # type: ignore
+
+
+@dataclass
+class EnergyDemand(Energy):
     cost_fuel: float = None  # type: ignore
     pct_energy: float = None  # type: ignore
     change_energy_MWh: float = None  # type: ignore
@@ -212,7 +216,7 @@ class E30:
     p_local_biomass_gaseous: EColVars2030 = field(default_factory=EColVars2030)
     p_local_biomass_cogen: EColVars2030 = field(default_factory=EColVars2030)
     p_local_hydro: EColVars2030 = field(default_factory=EColVars2030)
-    p_local_surplus: EColVars2030 = field(default_factory=EColVars2030)
+    p_local_surplus: Energy = field(default_factory=Energy)
 
 
 def calc_biomass(inputs: Inputs) -> EColVars2030:
