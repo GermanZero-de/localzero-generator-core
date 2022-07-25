@@ -896,6 +896,11 @@ def calc_energy_demand(
     return d
 
 
+def set_pct_energy(total_energy: float, *es: electricity2030_core.EnergyDemand):
+    for e in es:
+        e.pct_energy = div(e.energy, total_energy)
+
+
 def calc(
     inputs: Inputs,
     *,
@@ -1039,14 +1044,11 @@ def calc(
 
     d.change_energy_MWh = d.energy - e18.d.energy
     d.change_energy_pct = div(d.change_energy_MWh, e18.d.energy)
-    d_h.pct_energy = div(d_h.energy, d.energy)
-    d_r.pct_energy = div(d_r.energy, d.energy)
-    d_b.pct_energy = div(d_b.energy, d.energy)
-    d_i.pct_energy = div(d_i.energy, d.energy)
-    d_t.pct_energy = div(d_t.energy, d.energy)
-    d_a.pct_energy = div(d_a.energy, d.energy)
-    d_f_wo_hydrogen.pct_energy = div(d_f_wo_hydrogen.energy, d.energy)
-    d_f_hydrogen_reconv.pct_energy = div(d_f_hydrogen_reconv.energy, d.energy)
+
+    set_pct_energy(
+        d.energy, d_h, d_r, d_b, d_i, d_t, d_a, d_f_wo_hydrogen, d_f_hydrogen_reconv
+    )
+
     d.pct_energy = (
         d_h.pct_energy
         + d_r.pct_energy
@@ -1419,13 +1421,18 @@ def calc(
     p_local_pv.change_CO2e_t = p_local_pv.CO2e_total - e18.p_local_pv.CO2e_total
 
     p_local_pv.change_energy_MWh = p_local_pv.energy - e18.p_local_pv.energy
-    p_local_pv_roof.pct_energy = div(p_local_pv_roof.energy, p_local_pv.energy)
+
+    set_pct_energy(
+        p_local_pv.energy,
+        p_local_pv_roof,
+        p_local_pv_facade,
+        p_local_pv_park,
+        p_local_pv_agri,
+    )
+
     p_local_pv_roof.pet_sites = div(p_local_pv_roof.energy, p_local_pv.energy)
-    p_local_pv_facade.pct_energy = div(p_local_pv_facade.energy, p_local_pv.energy)
     p_local_pv_facade.pet_sites = div(p_local_pv_facade.energy, p_local_pv.energy)
-    p_local_pv_park.pct_energy = div(p_local_pv_park.energy, p_local_pv.energy)
     p_local_pv_park.pet_sites = div(p_local_pv_park.energy, p_local_pv.energy)
-    p_local_pv_agri.pct_energy = div(p_local_pv_agri.energy, p_local_pv.energy)
     p_local_pv_agri.pet_sites = div(p_local_pv_agri.energy, p_local_pv.energy)
     p_local_pv.cost_mro = (
         p_local_pv_roof.cost_mro
