@@ -148,7 +148,7 @@ class E30:
     d_f_wo_hydrogen: EnergyDemand = field(default_factory=EnergyDemand)
     p: EColVars2030 = field(default_factory=EColVars2030)
     p_fossil_and_renew: EColVars2030 = field(default_factory=EColVars2030)
-    p_fossil: EColVars2030 = field(default_factory=EColVars2030)
+    p_fossil: FossilFuelsProduction = field(default_factory=FossilFuelsProduction)
     # We treat nuclear like another fossil fuel (that is a energy source we should stop
     # using). Different countries have made other decisions but for Germany this seems
     # like the only solution currently plausible to be actually implemented (because
@@ -159,17 +159,13 @@ class E30:
     p_fossil_coal_brown: FossilFuelsProduction = field(
         default_factory=FossilFuelsProduction
     )
-    p_fossil_coal_brown_cogen: EColVars2030 = field(default_factory=EColVars2030)
     p_fossil_coal_black: FossilFuelsProduction = field(
         default_factory=FossilFuelsProduction
     )
-    p_fossil_coal_black_cogen: EColVars2030 = field(default_factory=EColVars2030)
     p_fossil_gas: FossilFuelsProduction = field(default_factory=FossilFuelsProduction)
-    p_fossil_gas_cogen: EColVars2030 = field(default_factory=EColVars2030)
     p_fossil_ofossil: FossilFuelsProduction = field(
         default_factory=FossilFuelsProduction
     )
-    p_fossil_ofossil_cogen: EColVars2030 = field(default_factory=EColVars2030)
     p_renew: EColVars2030 = field(default_factory=EColVars2030)
     p_renew_pv: EColVars2030 = field(default_factory=EColVars2030)
     p_renew_pv_roof: EColVars2030 = field(default_factory=EColVars2030)
