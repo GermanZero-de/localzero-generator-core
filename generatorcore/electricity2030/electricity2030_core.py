@@ -2,6 +2,7 @@
 from dataclasses import dataclass, field
 
 from ..inputs import Inputs
+from ..utils import div
 
 
 @dataclass
@@ -25,6 +26,51 @@ class FossilFuelsProduction:
     change_cost_energy: float = None  # type: ignore
     change_cost_mro: float = None  # type: ignore
     cost_mro_per_MWh: float = None  # type: ignore
+
+    @classmethod
+    def sum(
+        cls,
+        *ffs: "FossilFuelsProduction",
+        energy_18: float,
+        CO2e_total_18: float,
+    ) -> "FossilFuelsProduction":
+        energy = 0
+        CO2e_total_2021_estimated = 0
+        cost_fuel = 0
+        cost_mro = 0
+        CO2e_combustion_based = 0
+        change_cost_energy = 0
+        change_cost_mro = 0
+        cost_climate_saved = 0
+        change_CO2e_t = 0
+
+        for ff in ffs:
+            energy += ff.energy
+            CO2e_total_2021_estimated += ff.CO2e_total_2021_estimated
+            cost_fuel += ff.cost_fuel
+            cost_mro += ff.cost_mro
+            CO2e_combustion_based += ff.CO2e_combustion_based
+            change_cost_energy += ff.change_cost_energy
+            change_cost_mro += ff.change_cost_mro
+            cost_climate_saved += ff.cost_climate_saved
+            change_CO2e_t += ff.change_CO2e_t
+
+        change_energy_MWh = energy - energy_18
+
+        return FossilFuelsProduction(
+            energy=energy,
+            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+            change_energy_MWh=change_energy_MWh,
+            change_energy_pct=div(change_energy_MWh, energy_18),
+            cost_fuel=cost_fuel,
+            cost_mro=cost_mro,
+            CO2e_combustion_based=CO2e_combustion_based,
+            change_cost_energy=change_cost_energy,
+            change_cost_mro=change_cost_mro,
+            cost_climate_saved=cost_climate_saved,
+            change_CO2e_t=change_CO2e_t,
+            change_CO2e_pct=div(change_CO2e_t, CO2e_total_18),
+        )
 
 
 @dataclass
