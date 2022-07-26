@@ -85,14 +85,12 @@ def test_cmd_data_lookup_ags():
     )
 
 
-"""
 def test_cmd_data_lookup_fact():
     check_cmd(
         ["data", "lookup", "Fact_M_CO2e_wo_lulucf_2015_vs_2018"],
         "lookup",
         True,
     )
-"""
 
 
 def test_cmd_data_lookup_assumption():
