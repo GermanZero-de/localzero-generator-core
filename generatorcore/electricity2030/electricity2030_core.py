@@ -2,6 +2,7 @@
 from dataclasses import dataclass, field
 
 from ..inputs import Inputs
+from ..utils import div
 
 
 @dataclass
@@ -25,6 +26,51 @@ class FossilFuelsProduction:
     change_cost_energy: float = None  # type: ignore
     change_cost_mro: float = None  # type: ignore
     cost_mro_per_MWh: float = None  # type: ignore
+
+    @classmethod
+    def sum(
+        cls,
+        *ffs: "FossilFuelsProduction",
+        energy_18: float,
+        CO2e_total_18: float,
+    ) -> "FossilFuelsProduction":
+        energy = 0
+        CO2e_total_2021_estimated = 0
+        cost_fuel = 0
+        cost_mro = 0
+        CO2e_combustion_based = 0
+        change_cost_energy = 0
+        change_cost_mro = 0
+        cost_climate_saved = 0
+        change_CO2e_t = 0
+
+        for ff in ffs:
+            energy += ff.energy
+            CO2e_total_2021_estimated += ff.CO2e_total_2021_estimated
+            cost_fuel += ff.cost_fuel
+            cost_mro += ff.cost_mro
+            CO2e_combustion_based += ff.CO2e_combustion_based
+            change_cost_energy += ff.change_cost_energy
+            change_cost_mro += ff.change_cost_mro
+            cost_climate_saved += ff.cost_climate_saved
+            change_CO2e_t += ff.change_CO2e_t
+
+        change_energy_MWh = energy - energy_18
+
+        return FossilFuelsProduction(
+            energy=energy,
+            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+            change_energy_MWh=change_energy_MWh,
+            change_energy_pct=div(change_energy_MWh, energy_18),
+            cost_fuel=cost_fuel,
+            cost_mro=cost_mro,
+            CO2e_combustion_based=CO2e_combustion_based,
+            change_cost_energy=change_cost_energy,
+            change_cost_mro=change_cost_mro,
+            cost_climate_saved=cost_climate_saved,
+            change_CO2e_t=change_CO2e_t,
+            change_CO2e_pct=div(change_CO2e_t, CO2e_total_18),
+        )
 
 
 @dataclass
@@ -148,7 +194,7 @@ class E30:
     d_f_wo_hydrogen: EnergyDemand = field(default_factory=EnergyDemand)
     p: EColVars2030 = field(default_factory=EColVars2030)
     p_fossil_and_renew: EColVars2030 = field(default_factory=EColVars2030)
-    p_fossil: EColVars2030 = field(default_factory=EColVars2030)
+    p_fossil: FossilFuelsProduction = field(default_factory=FossilFuelsProduction)
     # We treat nuclear like another fossil fuel (that is a energy source we should stop
     # using). Different countries have made other decisions but for Germany this seems
     # like the only solution currently plausible to be actually implemented (because
@@ -159,17 +205,13 @@ class E30:
     p_fossil_coal_brown: FossilFuelsProduction = field(
         default_factory=FossilFuelsProduction
     )
-    p_fossil_coal_brown_cogen: EColVars2030 = field(default_factory=EColVars2030)
     p_fossil_coal_black: FossilFuelsProduction = field(
         default_factory=FossilFuelsProduction
     )
-    p_fossil_coal_black_cogen: EColVars2030 = field(default_factory=EColVars2030)
     p_fossil_gas: FossilFuelsProduction = field(default_factory=FossilFuelsProduction)
-    p_fossil_gas_cogen: EColVars2030 = field(default_factory=EColVars2030)
     p_fossil_ofossil: FossilFuelsProduction = field(
         default_factory=FossilFuelsProduction
     )
-    p_fossil_ofossil_cogen: EColVars2030 = field(default_factory=EColVars2030)
     p_renew: EColVars2030 = field(default_factory=EColVars2030)
     p_renew_pv: EColVars2030 = field(default_factory=EColVars2030)
     p_renew_pv_roof: EColVars2030 = field(default_factory=EColVars2030)
@@ -180,16 +222,10 @@ class E30:
     p_renew_wind_onshore: EColVars2030 = field(default_factory=EColVars2030)
     p_renew_wind_offshore: EColVars2030 = field(default_factory=EColVars2030)
     p_renew_biomass: EColVars2030 = field(default_factory=EColVars2030)
-    p_renew_biomass_waste: EColVars2030 = field(default_factory=EColVars2030)
-    p_renew_biomass_solid: EColVars2030 = field(default_factory=EColVars2030)
-    p_renew_biomass_gaseous: EColVars2030 = field(default_factory=EColVars2030)
-    p_renew_biomass_cogen: EColVars2030 = field(default_factory=EColVars2030)
     p_renew_geoth: RenewableGeothermalProduction = field(
         default_factory=RenewableGeothermalProduction
     )
     p_renew_hydro: EColVars2030 = field(default_factory=EColVars2030)
-    p_renew_geoth_local: EColVars2030 = field(default_factory=EColVars2030)
-    p_renew_hydro_local: EColVars2030 = field(default_factory=EColVars2030)
     p_renew_reverse: EColVars2030 = field(default_factory=EColVars2030)
 
     p_local: EColVars2030 = field(default_factory=EColVars2030)
@@ -200,8 +236,6 @@ class E30:
     p_local_pv_agri: EColVars2030 = field(default_factory=EColVars2030)
     p_local_wind_onshore: EColVars2030 = field(default_factory=EColVars2030)
     p_local_biomass: EColVars2030 = field(default_factory=EColVars2030)
-    p_local_biomass_solid: EColVars2030 = field(default_factory=EColVars2030)
-    p_local_biomass_gaseous: EColVars2030 = field(default_factory=EColVars2030)
     p_local_biomass_cogen: EColVars2030 = field(default_factory=EColVars2030)
     p_local_hydro: EColVars2030 = field(default_factory=EColVars2030)
     p_local_surplus: Energy = field(default_factory=Energy)
