@@ -18,6 +18,25 @@ PROPRIETARY_DATA_SOURCES = frozenset(["traffic"])
 KeyT = TypeVar("KeyT")
 
 
+@dataclass
+class MalformedCsv(Exception):
+    dataset: str
+    row: int
+    header_columns: int
+    row_columns: int
+
+    def __init__(
+        self, *, row: int, header_columns: int, row_columns: int, dataset: str
+    ):
+        self.header_columns = header_columns
+        self.row_columns = row_columns
+        self.row = row
+        self.dataset = dataset
+
+    def __str__(self) -> str:
+        return f"Excluding the key column row {self.row} of {self.dataset} has {self.row_columns} but row 0 (header) has {self.header_columns} columns"
+
+
 class DataFrame(Generic[KeyT]):
     _rows: dict[KeyT, list[str]]  # the list does NOT contain the reference value
     header: dict[str, int]
@@ -61,6 +80,14 @@ class DataFrame(Generic[KeyT]):
                 else:
                     raw_key = r[key_column_ndx]
                     del r[key_column_ndx]
+                    # Check that number of columns matches number of columns in header
+                    if len(r) != len(header):
+                        raise MalformedCsv(
+                            header_columns=len(header),
+                            row_columns=len(r),
+                            row=row_num,
+                            dataset=what,
+                        )
                     key = key_from_raw(raw_key)
                     rows[key] = r
                     for c in set_nans_to_0_in_columns_indices:
