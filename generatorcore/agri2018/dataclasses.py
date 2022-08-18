@@ -6,7 +6,7 @@ from ..inputs import Inputs
 from ..utils import div
 
 
-@dataclass
+@dataclass(kw_only=True)
 class CO2eEmissions:
     # Used by a, p_fermen, p_manure, p_soil, p_other, p_other_liming
     CO2e_combustion_based: float
@@ -22,7 +22,7 @@ class CO2eEmissions:
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class P:
     # TODO: What is a good name for this?
     # Used by p
@@ -31,7 +31,7 @@ class P:
     energy: float
 
 
-@dataclass
+@dataclass(kw_only=True)
 class CO2eFromFermentationOrManure(CO2eEmissions):
     # Used by p_fermen_dairycow, p_fermen_nondairy, p_fermen_swine, p_fermen_poultry, p_fermen_oanimal, p_manure_dairycow, p_manure_nondairy, p_manure_swine, p_manure_poultry, p_manure_oanimal, p_manure_deposition
     CO2e_production_based_per_t: float
@@ -114,7 +114,7 @@ class CO2eFromFermentationOrManure(CO2eEmissions):
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class CO2eFromSoil(CO2eEmissions):
     # Used by p_soil_fertilizer, p_soil_manure, p_soil_sludge, p_soil_ecrop, p_soil_grazing, p_soil_residue, p_soil_orgfarm, p_soil_orgloss, p_soil_leaching, p_soil_deposition
     CO2e_production_based_per_t: float
@@ -137,7 +137,7 @@ class CO2eFromSoil(CO2eEmissions):
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class CO2eFromOther(CO2eEmissions):
     # Used by p_other_liming_dolomite, p_other_urea, p_other_ecrop, p_other_liming_calcit
     CO2e_production_based_per_t: float
@@ -167,13 +167,13 @@ class CO2eFromOther(CO2eEmissions):
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Energy:
     # Used by p_operation, p_operation_elec_heatpump
     energy: float
 
 
-@dataclass
+@dataclass(kw_only=True)
 class EnergyWithPercentage(Energy):
     # Used by p_operation_elec_elcon, p_operation_vehicles
     pct_energy: float
@@ -183,7 +183,7 @@ class EnergyWithPercentage(Energy):
         return cls(energy=energy, pct_energy=div(energy, total_energy))
 
 
-@dataclass
+@dataclass(kw_only=True)
 class OperationHeatEnergy(EnergyWithPercentage):
     # Used by p_operation_heat
     area_m2: float
@@ -208,7 +208,7 @@ class OperationHeatEnergy(EnergyWithPercentage):
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class CO2eFromEnergyUse(CO2eEmissions):
     # Used by s
     CO2e_combustion_based: float
@@ -226,7 +226,7 @@ class CO2eFromEnergyUse(CO2eEmissions):
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class CO2eFromEnergyUseDetail(CO2eFromEnergyUse):
     # TODO: Why are these called s_ ?
     # Used by s_petrol, s_diesel, s_fueloil, s_lpg, s_gas, s_biomass, s_elec, s_heatpump

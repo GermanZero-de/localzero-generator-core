@@ -15,7 +15,7 @@ from .dataclasses import (
 )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class A18:
     a: CO2eEmissions
     p: P
