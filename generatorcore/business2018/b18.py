@@ -15,7 +15,7 @@ from .dataclasses import (
 )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class B18:
     b: Vars0 = field(default_factory=Vars0)
     p: Vars2 = field(default_factory=Vars2)
