@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 from .dataclasses import Vars1, Vars2, Vars3, Vars4, Vars5, Vars6, Vars7, Vars8, Vars9
 
 
-@dataclass
+@dataclass(kw_only=True)
 class R18:
     r: Vars1 = field(default_factory=Vars1)
     p: Vars2 = field(default_factory=Vars2)
