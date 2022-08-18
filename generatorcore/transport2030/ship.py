@@ -7,7 +7,7 @@ from ..transport2018 import T18
 from .transport import Transport
 
 
-@dataclass
+@dataclass(kw_only=True)
 class ShipDomestic:
     LIFT_INTO_RESULT_DICT = ["transport"]
     transport: Transport
@@ -87,7 +87,7 @@ class ShipDomestic:
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class ShipDomesticActionInfra:
     # Used by ship_dmstc_action_infra
     CO2e_total_2021_estimated: float
@@ -145,7 +145,7 @@ class ShipDomesticActionInfra:
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class ShipInternational:
     # Used by ship_inter
     LIFT_INTO_RESULT_DICT = ["transport"]
@@ -190,7 +190,7 @@ class ShipInternational:
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Ship:
     # Used by ship
     LIFT_INTO_RESULT_DICT = ["transport"]

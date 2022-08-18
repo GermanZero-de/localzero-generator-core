@@ -203,22 +203,22 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
         other=other,
         g=g,
     )
-    s_petrol = EnergySum(t.transport.demand_epetrol)
-    s_jetfuel = EnergySum(t.transport.demand_ejetfuel)
-    s_diesel = EnergySum(t.transport.demand_ediesel)
-    s_elec = EnergySum(t.transport.demand_electricity)
-    s_hydrogen = EnergySum(t.transport.demand_hydrogen)
+    s_petrol = EnergySum(energy=t.transport.demand_epetrol)
+    s_jetfuel = EnergySum(energy=t.transport.demand_ejetfuel)
+    s_diesel = EnergySum(energy=t.transport.demand_ediesel)
+    s_elec = EnergySum(energy=t.transport.demand_electricity)
+    s_hydrogen = EnergySum(energy=t.transport.demand_hydrogen)
 
-    s_emethan = EnergySum(0)
-    s_fueloil = EnergySum(0)
-    s_lpg = EnergySum(0)
-    s_gas = EnergySum(0)
-    s_biogas = EnergySum(0)
-    s_bioethanol = EnergySum(0)
-    s_biodiesel = EnergySum(0)
+    s_emethan = EnergySum(energy=0)
+    s_fueloil = EnergySum(energy=0)
+    s_lpg = EnergySum(energy=0)
+    s_gas = EnergySum(energy=0)
+    s_biogas = EnergySum(energy=0)
+    s_bioethanol = EnergySum(energy=0)
+    s_biodiesel = EnergySum(energy=0)
 
     s = EnergySum(
-        s_petrol.energy
+        energy=s_petrol.energy
         + s_jetfuel.energy
         + s_diesel.energy
         + s_elec.energy

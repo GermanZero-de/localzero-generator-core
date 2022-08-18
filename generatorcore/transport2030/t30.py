@@ -21,7 +21,7 @@ from .transport import Transport
 from .dataclasses import EnergySum, GPlanning, G, T
 
 
-@dataclass
+@dataclass(kw_only=True)
 class T30:
     air_inter: Transport
     air_dmstc: Transport
