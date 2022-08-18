@@ -22,7 +22,7 @@ from .dataclasses import (
 )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class I30:
     g: Vars0 = field(default_factory=Vars0)
     g_consult: Vars1 = field(default_factory=Vars1)
