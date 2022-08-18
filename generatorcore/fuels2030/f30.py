@@ -12,7 +12,7 @@ from .dataclasses import (
 )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class F30:
     d: EnergyDemand
     d_r: EnergyDemand
