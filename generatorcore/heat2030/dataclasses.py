@@ -2,7 +2,7 @@
 from dataclasses import dataclass
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Vars0:
     # Used by h
     CO2e_combustion_based: float = None  # type: ignore
@@ -24,7 +24,7 @@ class Vars0:
     invest_pa_com: float = None  # type: ignore
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Vars1:
     # Used by g
     cost_wage: float = None  # type: ignore
@@ -37,7 +37,7 @@ class Vars1:
     invest_pa_com: float = None  # type: ignore
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Vars2:
     # Used by g_storage
     cost_wage: float = None  # type: ignore
@@ -55,7 +55,7 @@ class Vars2:
     ratio_wage_to_emplo: float = None  # type: ignore
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Vars3:
     # Used by g_planning
     cost_wage: float = None  # type: ignore
@@ -70,13 +70,13 @@ class Vars3:
     ratio_wage_to_emplo: float = None  # type: ignore
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Vars4:
     # Used by d, d_r, d_b, d_i, d_t, d_a
     energy: float = None  # type: ignore
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Vars5:
     # Used by p
     CO2e_combustion_based: float = None  # type: ignore
@@ -101,7 +101,7 @@ class Vars5:
     pct_energy: float = None  # type: ignore
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Vars6:
     # Used by p_gas, p_coal
     CO2e_combustion_based: float = None  # type: ignore
@@ -121,7 +121,7 @@ class Vars6:
     pct_energy: float = None  # type: ignore
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Vars7:
     # Used by p_lpg
     CO2e_combustion_based: float = None  # type: ignore
@@ -137,7 +137,7 @@ class Vars7:
     pct_energy: float = None  # type: ignore
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Vars8:
     # Used by p_fueloil
     CO2e_combustion_based: float = None  # type: ignore
@@ -155,7 +155,7 @@ class Vars8:
     pct_energy: float = None  # type: ignore
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Vars9:
     # Used by p_opetpro, p_heatnet_cogen
     CO2e_combustion_based: float = None  # type: ignore
@@ -173,7 +173,7 @@ class Vars9:
     pct_energy: float = None  # type: ignore
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Vars10:
     # Used by p_heatnet
     CO2e_combustion_based: float = None  # type: ignore
@@ -196,7 +196,7 @@ class Vars10:
     pct_energy: float = None  # type: ignore
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Vars11:
     # Used by p_heatnet_plant
     CO2e_production_based: float = None  # type: ignore
@@ -223,7 +223,7 @@ class Vars11:
     ratio_wage_to_emplo: float = None  # type: ignore
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Vars12:
     # Used by p_heatnet_lheatpump
     CO2e_production_based: float = None  # type: ignore
@@ -252,7 +252,7 @@ class Vars12:
     ratio_wage_to_emplo: float = None  # type: ignore
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Vars13:
     # Used by p_heatnet_geoth
     CO2e_production_based: float = None  # type: ignore
@@ -280,7 +280,7 @@ class Vars13:
     ratio_wage_to_emplo: float = None  # type: ignore
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Vars14:
     # Used by p_biomass
     CO2e_production_based: float = None  # type: ignore
@@ -298,7 +298,7 @@ class Vars14:
     pct_energy: float = None  # type: ignore
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Vars15:
     # Used by p_ofossil, p_orenew, p_solarth, p_heatpump
     CO2e_production_based: float = None  # type: ignore
