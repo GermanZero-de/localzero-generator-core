@@ -2,7 +2,7 @@
 from dataclasses import dataclass
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Vars0:
     # Used by b
     CO2e_combustion_based: float = None  # type: ignore
@@ -23,7 +23,7 @@ class Vars0:
     invest_pa_com: float = None  # type: ignore
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Vars1:
     # Used by g
     cost_wage: float = None  # type: ignore
@@ -36,7 +36,7 @@ class Vars1:
     invest_pa_com: float = None  # type: ignore
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Vars2:
     # Used by g_consult
     cost_wage: float = None  # type: ignore
@@ -51,7 +51,7 @@ class Vars2:
     ratio_wage_to_emplo: float = None  # type: ignore
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Vars3:
     # Used by p
     change_energy_MWh: float = None  # type: ignore
@@ -73,7 +73,7 @@ class Vars3:
     invest_pa_com: float = None  # type: ignore
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Vars4:
     # Used by p_nonresi
     area_m2: float = None  # type: ignore
@@ -104,7 +104,7 @@ class Vars4:
     ratio_wage_to_emplo: float = None  # type: ignore
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Vars5:
     # Used by p_nonresi_com
     area_m2: float = None  # type: ignore
@@ -120,7 +120,7 @@ class Vars5:
     invest_per_x: float = None  # type: ignore
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Vars6:
     # Used by p_elec_elcon
     change_energy_MWh: float = None  # type: ignore
@@ -130,7 +130,7 @@ class Vars6:
     energy: float = None  # type: ignore
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Vars7:
     # Used by p_elec_heatpump
     change_energy_MWh: float = None  # type: ignore
@@ -139,7 +139,7 @@ class Vars7:
     energy: float = None  # type: ignore
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Vars8:
     # Used by p_vehicles
     change_energy_MWh: float = None  # type: ignore
@@ -149,7 +149,7 @@ class Vars8:
     energy: float = None  # type: ignore
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Vars9:
     # Used by p_other
     change_energy_MWh: float = None  # type: ignore
@@ -159,7 +159,7 @@ class Vars9:
     energy: float = None  # type: ignore
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Vars10:
     # Used by s
     CO2e_combustion_based: float = None  # type: ignore
@@ -183,7 +183,7 @@ class Vars10:
     pct_energy: float = None  # type: ignore
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Vars11:
     # Used by s_gas
     CO2e_combustion_based: float = None  # type: ignore
@@ -203,7 +203,7 @@ class Vars11:
     pct_energy: float = None  # type: ignore
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Vars12:
     # Used by s_emethan
     CO2e_combustion_based: float = None  # type: ignore
@@ -218,7 +218,7 @@ class Vars12:
     pct_energy: float = None  # type: ignore
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Vars13:
     # Used by s_lpg, s_petrol, s_jetfuel, s_diesel, s_elec_heating, s_elec
     CO2e_combustion_based: float = None  # type: ignore
@@ -234,7 +234,7 @@ class Vars13:
     pct_energy: float = None  # type: ignore
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Vars14:
     # Used by s_fueloil, s_coal
     CO2e_combustion_based: float = None  # type: ignore
@@ -252,7 +252,7 @@ class Vars14:
     pct_energy: float = None  # type: ignore
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Vars15:
     # Used by s_biomass, s_heatnet
     CO2e_combustion_based: float = None  # type: ignore
@@ -271,7 +271,7 @@ class Vars15:
     pct_energy: float = None  # type: ignore
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Vars16:
     # Used by s_heatpump
     CO2e_combustion_based: float = None  # type: ignore
@@ -303,7 +303,7 @@ class Vars16:
     ratio_wage_to_emplo: float = None  # type: ignore
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Vars17:
     # Used by s_solarth
     CO2e_combustion_based: float = None  # type: ignore
@@ -334,7 +334,7 @@ class Vars17:
     ratio_wage_to_emplo: float = None  # type: ignore
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Vars18:
     # Used by rb
     CO2e_combustion_based: float = None  # type: ignore
