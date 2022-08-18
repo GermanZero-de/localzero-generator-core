@@ -11,7 +11,7 @@ from .electricity2030_core import (
 )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class E30:
     e: EColVars2030 = field(default_factory=EColVars2030)
     g: EColVars2030 = field(default_factory=EColVars2030)

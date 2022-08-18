@@ -5,7 +5,7 @@ from ..inputs import Inputs
 from ..utils import div
 
 
-@dataclass
+@dataclass(kw_only=True)
 class FossilFuelsProduction:
     """This describes energy produced by fossil fuels. Which we do not do in 2030, so this
     just describes the effect of shutting those energy providers down."""
@@ -73,19 +73,19 @@ class FossilFuelsProduction:
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Energy:
     energy: float = None  # type: ignore
 
 
-@dataclass
+@dataclass(kw_only=True)
 class EnergyDemand(Energy):
     pct_energy: float = None  # type: ignore
     change_energy_MWh: float = None  # type: ignore
     change_energy_pct: float = None  # type: ignore
 
 
-@dataclass
+@dataclass(kw_only=True)
 class RenewableGeothermalProduction(EnergyDemand):
     """Energy production using geothermal."""
 
@@ -118,14 +118,14 @@ class RenewableGeothermalProduction(EnergyDemand):
     full_load_hour: float = None  # type: ignore
 
 
-@dataclass
+@dataclass(kw_only=True)
 class EnergyDemandWithCostFuel(EnergyDemand):
     cost_fuel_per_MWh: float = None  # type: ignore
     cost_fuel: float = None  # type: ignore
 
 
 # Definition der relevanten Spaltennamen für den Sektor E
-@dataclass
+@dataclass(kw_only=True)
 class EColVars2030(EnergyDemandWithCostFuel):
     pet_sites: float = None  # type: ignore
     energy_installable: float = None  # type: ignore
