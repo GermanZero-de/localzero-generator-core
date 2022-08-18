@@ -4,7 +4,6 @@ from dataclasses import dataclass, InitVar
 from ..utils import div
 
 
-@dataclass(kw_only=True)
 class Transport2018(Protocol):
     energy: float
     CO2e_combustion_based: float
