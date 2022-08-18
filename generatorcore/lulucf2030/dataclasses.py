@@ -2,7 +2,7 @@
 from dataclasses import dataclass
 
 
-@dataclass
+@dataclass(kw_only=True)
 class LColVars2030:
     area_ha: float = None  # type: ignore
     CO2e_production_based_per_t: float = None  # type: ignore

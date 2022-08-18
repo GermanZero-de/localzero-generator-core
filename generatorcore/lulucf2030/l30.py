@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 from .dataclasses import LColVars2030
 
 
-@dataclass
+@dataclass(kw_only=True)
 class L30:
     l: LColVars2030 = field(default_factory=LColVars2030)
     g: LColVars2030 = field(default_factory=LColVars2030)
