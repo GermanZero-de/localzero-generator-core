@@ -24,7 +24,7 @@ from . import (
 )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class zColVars:
     energy_18: float = None  # type: ignore
     pct_energy_18: float = None  # type: ignore
@@ -61,7 +61,7 @@ class zColVars:
 
 
 # definition of variable names for sector M(ethodology) - there are no rows or columns in the excel!
-@dataclass
+@dataclass(kw_only=True)
 class M183X:
     # year_target: float = None
     # duration_target: float = None

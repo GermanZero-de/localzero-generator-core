@@ -69,7 +69,7 @@ USER_OVERRIDABLE_ENTRIES = [
 ]
 
 
-@dataclass(frozen=True)
+@dataclass(kw_only=True, frozen=True)
 class Entries:
     a_area_agri_com_pct_of_organic: float
     a_biomass_fec: float

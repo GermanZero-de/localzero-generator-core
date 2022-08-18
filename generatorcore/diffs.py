@@ -26,6 +26,7 @@ def float_matches(actual: Any, expected: Any, rel: Any):
     return False
 
 
+@dataclass(kw_only=True)
 class MissingSentinel:
     def __str__(self):
         return "nothing"
@@ -34,7 +35,7 @@ class MissingSentinel:
 MISSING_SENTINEL = MissingSentinel()
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Diff:
     path: str
     actual: object

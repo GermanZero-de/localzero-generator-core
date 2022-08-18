@@ -1,6 +1,7 @@
 # pyright: strict
 import time
 import dataclasses
+from dataclasses import dataclass
 import sys
 from generatorcore import methodology183x
 from generatorcore.electricity2030 import electricity2030_core
@@ -67,7 +68,7 @@ def dataclass_to_result_dict(v: object) -> dict[str, object]:
     return result
 
 
-@dataclasses.dataclass
+@dataclass(kw_only=True)
 class Result:
     # 2018
     r18: residences2018.R18
