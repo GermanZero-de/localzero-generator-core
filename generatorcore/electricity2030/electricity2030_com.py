@@ -1,7 +1,14 @@
 # pyright: strict
 from ..inputs import Inputs
 from ..utils import div, MILLION
-from . import electricity2030_core
+from .e30 import E30
+from .electricity2030_core import (
+    FossilFuelsProduction,
+    RenewableGeothermalProduction,
+    EColVars2030,
+    EnergyDemandWithCostFuel,
+    EnergyDemand,
+)
 from .. import (
     electricity2018,
     residences2018,
@@ -18,7 +25,7 @@ from .. import (
 
 def calc_stop_production_by_fossil_fuels(
     inputs: Inputs, *, e18_production: electricity2018.e18.FossilFuelsProduction
-) -> electricity2030_core.FossilFuelsProduction:
+) -> FossilFuelsProduction:
     """Compute what happens if we stop producing electricity from a fossil fuel."""
     fact = inputs.fact
     entries = inputs.entries
@@ -48,7 +55,7 @@ def calc_stop_production_by_fossil_fuels(
     change_CO2e_t = CO2e_total - e18_production.CO2e_total
     change_CO2e_pct = div(change_CO2e_t, e18_production.CO2e_total)
 
-    return electricity2030_core.FossilFuelsProduction(
+    return FossilFuelsProduction(
         energy=energy,
         cost_fuel_per_MWh=cost_fuel_per_MWh,
         cost_fuel=cost_fuel,
@@ -72,7 +79,7 @@ def calc_production_renewable_geothermal(
     inputs: Inputs,
     *,
     d_energy: float,
-) -> electricity2030_core.RenewableGeothermalProduction:
+) -> RenewableGeothermalProduction:
     ass = inputs.ass
     fact = inputs.fact
     entries = inputs.entries
@@ -129,7 +136,7 @@ def calc_production_renewable_geothermal(
     change_CO2e_t = 0
     change_cost_mro = 0
     pct_x = 0
-    return electricity2030_core.RenewableGeothermalProduction(
+    return RenewableGeothermalProduction(
         energy=energy,
         energy_installable=energy_installable,
         pct_energy=pct_energy,
@@ -176,7 +183,7 @@ def calc_production_local_pv_roof(
     Kalkulationszeitraum = entries.m_duration_target
 
     # TODO: Change the below
-    p_local_pv_roof = electricity2030_core.EColVars2030()
+    p_local_pv_roof = EColVars2030()
 
     p_local_pv_roof.full_load_hour = entries.e_pv_full_load_hours_sta
     p_local_pv_roof.power_installed = entries.e_PV_power_inst_roof
@@ -283,7 +290,7 @@ def calc_production_local_pv_facade(
     Kalkulationszeitraum = entries.m_duration_target
 
     # TODO: Change the below
-    p_local_pv_facade = electricity2030_core.EColVars2030()
+    p_local_pv_facade = EColVars2030()
     p_local_pv_facade.full_load_hour = ass("Ass_E_P_local_pv_facade_full_load_hours")
 
     p_local_pv_facade.power_installed = entries.e_PV_power_inst_facade
@@ -382,7 +389,7 @@ def calc_production_local_pv_agri(
     Kalkulationszeitraum = entries.m_duration_target
 
     # TODO: Change the below
-    p_local_pv_agri = electricity2030_core.EColVars2030()
+    p_local_pv_agri = EColVars2030()
     p_local_pv_agri.power_installed = entries.e_PV_power_inst_agripv
     p_local_pv_agri.invest_per_x = (
         ass("Ass_E_P_local_pv_agri_ratio_invest_to_power") * 1000
@@ -462,7 +469,7 @@ def calc_production_local_pv_park(
     Kalkulationszeitraum = entries.m_duration_target
 
     # TODO: Change the below
-    p_local_pv_park = electricity2030_core.EColVars2030()
+    p_local_pv_park = EColVars2030()
 
     p_local_pv_park.power_installed = entries.e_PV_power_inst_park
     p_local_pv_park.invest_per_x = (
@@ -541,7 +548,7 @@ def calc_production_local_wind_onshore(
     Kalkulationszeitraum = entries.m_duration_target
 
     # TODO: Change the below
-    p_local_wind_onshore = electricity2030_core.EColVars2030()
+    p_local_wind_onshore = EColVars2030()
 
     p_local_wind_onshore.power_installed = entries.e_PV_power_inst_wind_on
     p_local_wind_onshore.full_load_hour = fact("Fact_E_P_wind_onshore_full_load_hours")
@@ -638,7 +645,7 @@ def calc_production_local_biomass_stage2(
     inputs: Inputs,
     *,
     e18: electricity2018.E18,
-    p_local_biomass: electricity2030_core.EColVars2030,
+    p_local_biomass: EColVars2030,
 ) -> None:
     entries = inputs.entries
     ass = inputs.ass
@@ -725,7 +732,7 @@ def calc_production_local_hydro(
     fact = inputs.fact
 
     # TODO: Change the below
-    p_local_hydro = electricity2030_core.EColVars2030()
+    p_local_hydro = EColVars2030()
 
     p_local_hydro.power_installed = entries.e_PV_power_inst_water
     p_local_hydro.full_load_hour = fact("Fact_E_P_hydro_full_load_hours")  # energy
@@ -761,7 +768,7 @@ def calc_renew_wind_offshore(
     fact = inputs.fact
 
     Kalkulationszeitraum = entries.m_duration_target
-    p_renew_wind_offshore = electricity2030_core.EColVars2030()
+    p_renew_wind_offshore = EColVars2030()
     p_renew_wind_offshore.invest = 0
     p_renew_wind_offshore.demand_emplo = 0
     p_renew_wind_offshore.emplo_existing = 0
@@ -839,7 +846,7 @@ def calc_production_renewable_reverse(inputs: Inputs, *, d_energy: float):
     fact = inputs.fact
 
     Kalkulationszeitraum = entries.m_duration_target
-    p_renew_reverse = electricity2030_core.EColVars2030()
+    p_renew_reverse = EColVars2030()
 
     p_renew_reverse.pct_energy = ass("Ass_E_P_renew_reverse_pct_of_nep_2035")
     p_renew_reverse.CO2e_total = 0
@@ -887,8 +894,8 @@ def calc_production_renewable_reverse(inputs: Inputs, *, d_energy: float):
 
 def calc_energy_demand(
     inputs: Inputs, *, energy: float, energy_18: float, cost_fuel_per_MWh: str
-) -> electricity2030_core.EnergyDemandWithCostFuel:
-    d = electricity2030_core.EnergyDemandWithCostFuel()
+) -> EnergyDemandWithCostFuel:
+    d = EnergyDemandWithCostFuel()
     d.energy = energy
     d.cost_fuel_per_MWh = inputs.fact(cost_fuel_per_MWh)
     d.change_energy_MWh = energy - energy_18
@@ -896,7 +903,7 @@ def calc_energy_demand(
     return d
 
 
-def set_pct_energy(total_energy: float, *es: electricity2030_core.EnergyDemand):
+def set_pct_energy(total_energy: float, *es: EnergyDemand):
     for e in es:
         e.pct_energy = div(e.energy, total_energy)
 
@@ -914,16 +921,16 @@ def calc(
     i30: industry2030.I30,
     r30: residences2030.R30,
     t30: transport2030.T30,
-    p_local_biomass_cogen: electricity2030_core.EColVars2030,
-    p_local_biomass: electricity2030_core.EColVars2030,
-) -> electricity2030_core.E30:
+    p_local_biomass_cogen: EColVars2030,
+    p_local_biomass: EColVars2030,
+) -> E30:
     fact = inputs.fact
     ass = inputs.ass
     entries = inputs.entries
 
     KlimaneutraleJahre = entries.m_duration_neutral
 
-    e30 = electricity2030_core.E30()
+    e30 = E30()
 
     e30.p_local_biomass = p_local_biomass
     e30.p_local_biomass_cogen = p_local_biomass_cogen
@@ -1079,7 +1086,7 @@ def calc(
         inputs, e18_production=e18.p_fossil_ofossil
     )
 
-    p_fossil = electricity2030_core.FossilFuelsProduction.sum(
+    p_fossil = FossilFuelsProduction.sum(
         p_fossil_nuclear,
         p_fossil_coal_brown,
         p_fossil_coal_black,

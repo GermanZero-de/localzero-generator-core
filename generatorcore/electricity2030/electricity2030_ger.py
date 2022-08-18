@@ -2,6 +2,7 @@
 from ..inputs import Inputs
 from ..utils import div, MILLION
 from . import electricity2030_core
+from .e30 import E30
 from .. import (
     electricity2018,
     residences2018,
@@ -32,7 +33,7 @@ def calc(
     t30: transport2030.T30,
     p_local_biomass_cogen: electricity2030_core.EColVars2030,
     p_local_biomass: electricity2030_core.EColVars2030,
-) -> electricity2030_core.E30:
+) -> E30:
     fact = inputs.fact
     ass = inputs.ass
     entries = inputs.entries
@@ -40,7 +41,7 @@ def calc(
     Kalkulationszeitraum = entries.m_duration_target
     KlimaneutraleJahre = entries.m_duration_neutral
 
-    e30 = electricity2030_core.E30()
+    e30 = E30()
 
     e30.p_local_biomass = p_local_biomass
     e30.p_local_biomass_cogen = p_local_biomass_cogen
