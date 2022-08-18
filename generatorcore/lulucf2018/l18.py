@@ -13,7 +13,7 @@ from .dataclasses import (
 )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class L18:
     l: Vars0 = field(default_factory=Vars0)
     g: Vars1 = field(default_factory=Vars1)
