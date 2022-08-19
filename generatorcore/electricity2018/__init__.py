@@ -8,6 +8,26 @@ from ..inputs import Inputs
 from ..utils import div, MILLION
 from .. import transport2018
 from .e18 import E18
+from .dataclasses import (
+    Vars0,
+    Vars2,
+    Vars3,
+    Vars4,
+    Vars5,
+    Vars6,
+    Vars8,
+    Vars9,
+    Vars10,
+    Vars11,
+    Vars12,
+    Vars13,
+    Vars14,
+    Vars15,
+    Vars16,
+    Vars17,
+    Vars18,
+    FossilFuelsProduction,
+)
 
 
 def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
@@ -15,57 +35,55 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
     ass = inputs.ass
     entries = inputs.entries
 
-    e18 = E18()
-
     """variable abbrevations"""
-    e = e18.e
-    d = e18.d
-    d_r = e18.d_r
-    d_b = e18.d_b
-    d_i = e18.d_i
-    d_t = e18.d_t
-    d_a = e18.d_a
-    d_h = e18.d_h
-    d_f_hydrogen_reconv = e18.d_f_hydrogen_reconv
-    p = e18.p
-    p_fossil = e18.p_fossil
-    p_fossil_nuclear = e18.p_fossil_nuclear
-    p_fossil_coal_brown = e18.p_fossil_coal_brown
-    p_fossil_coal_brown_cogen = e18.p_fossil_coal_brown_cogen
-    p_fossil_coal_black = e18.p_fossil_coal_black
-    p_fossil_coal_black_cogen = e18.p_fossil_coal_black_cogen
-    p_fossil_gas = e18.p_fossil_gas
-    p_fossil_gas_cogen = e18.p_fossil_gas_cogen
-    p_fossil_ofossil = e18.p_fossil_ofossil
-    p_fossil_ofossil_cogen = e18.p_fossil_ofossil_cogen
-    p_renew = e18.p_renew
-    p_renew_geoth = e18.p_renew_geoth
-    p_renew_hydro = e18.p_renew_hydro
-    p_renew_pv = e18.p_renew_pv
-    p_renew_pv_roof = e18.p_renew_pv_roof
-    p_renew_pv_facade = e18.p_renew_pv_facade
-    p_renew_pv_park = e18.p_renew_pv_park
-    p_renew_wind = e18.p_renew_wind
-    p_renew_wind_onshore = e18.p_renew_wind_onshore
-    p_renew_wind_offshore = e18.p_renew_wind_offshore
-    p_renew_biomass = e18.p_renew_biomass
-    p_renew_biomass_waste = e18.p_renew_biomass_waste
-    p_renew_biomass_solid = e18.p_renew_biomass_solid
-    p_renew_biomass_gaseous = e18.p_renew_biomass_gaseous
-    p_renew_biomass_cogen = e18.p_renew_biomass_cogen
-    p_renew_pv_agri = e18.p_renew_pv_agri
-    p_renew_reverse = e18.p_renew_reverse
-    p_fossil_and_renew = e18.p_fossil_and_renew
-    p_local_pv_roof = e18.p_local_pv_roof
-    p_local_pv_facade = e18.p_local_pv_facade
-    p_local_pv_park = e18.p_local_pv_park
-    p_local_pv_agri = e18.p_local_pv_agri
-    p_local_pv = e18.p_local_pv
-    p_local_wind_onshore = e18.p_local_wind_onshore
-    p_local_biomass = e18.p_local_biomass
-    p_local_biomass_cogen = e18.p_local_biomass_cogen
-    p_local_hydro = e18.p_local_hydro
-    p_local = e18.p_local
+    e = Vars0()
+    d = Vars2()
+    d_r = Vars3()
+    d_b = Vars3()
+    d_i = Vars3()
+    d_t = Vars3()
+    d_a = Vars4()
+    d_h = Vars4()
+    d_f_hydrogen_reconv = Vars4()
+    p = Vars5()
+    p_fossil = Vars6()
+    p_fossil_nuclear = FossilFuelsProduction()
+    p_fossil_coal_brown = FossilFuelsProduction()
+    p_fossil_coal_brown_cogen = Vars8()
+    p_fossil_coal_black = FossilFuelsProduction()
+    p_fossil_coal_black_cogen = Vars8()
+    p_fossil_gas = FossilFuelsProduction()
+    p_fossil_gas_cogen = Vars8()
+    p_fossil_ofossil = FossilFuelsProduction()
+    p_fossil_ofossil_cogen = Vars8()
+    p_renew = Vars9()
+    p_renew_geoth = Vars11()
+    p_renew_hydro = Vars11()
+    p_renew_pv = Vars10()
+    p_renew_pv_roof = Vars11()
+    p_renew_pv_facade = Vars11()
+    p_renew_pv_park = Vars11()
+    p_renew_wind = Vars10()
+    p_renew_wind_onshore = Vars11()
+    p_renew_wind_offshore = Vars11()
+    p_renew_biomass = Vars12()
+    p_renew_biomass_waste = Vars13()
+    p_renew_biomass_solid = Vars13()
+    p_renew_biomass_gaseous = Vars13()
+    p_renew_biomass_cogen = Vars8()
+    p_renew_pv_agri = Vars11()
+    p_renew_reverse = Vars4()
+    p_fossil_and_renew = Vars13()
+    p_local_pv_roof = Vars14()
+    p_local_pv_facade = Vars14()
+    p_local_pv_park = Vars14()
+    p_local_pv_agri = Vars14()
+    p_local_pv = Vars15()
+    p_local_wind_onshore = Vars16()
+    p_local_biomass = Vars17()
+    p_local_biomass_cogen = Vars8()
+    p_local_hydro = Vars16()
+    p_local = Vars18()
 
     d_h.energy = 0
     d_f_hydrogen_reconv.energy = 0
@@ -766,4 +784,54 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
     )
     p_fossil_and_renew.CO2e_total = p_fossil.CO2e_total + p_renew.CO2e_total
     p_fossil_and_renew.pct_energy = p_fossil.pct_energy + p_renew.pct_energy
-    return e18
+
+    return E18(
+        e=e,
+        d=d,
+        d_r=d_r,
+        d_b=d_b,
+        d_i=d_i,
+        d_t=d_t,
+        d_a=d_a,
+        d_h=d_h,
+        d_f_hydrogen_reconv=d_f_hydrogen_reconv,
+        p=p,
+        p_fossil=p_fossil,
+        p_fossil_nuclear=p_fossil_nuclear,
+        p_fossil_coal_brown=p_fossil_coal_brown,
+        p_fossil_coal_brown_cogen=p_fossil_coal_brown_cogen,
+        p_fossil_coal_black=p_fossil_coal_black,
+        p_fossil_coal_black_cogen=p_fossil_coal_black_cogen,
+        p_fossil_gas=p_fossil_gas,
+        p_fossil_gas_cogen=p_fossil_gas_cogen,
+        p_fossil_ofossil=p_fossil_ofossil,
+        p_fossil_ofossil_cogen=p_fossil_ofossil_cogen,
+        p_renew=p_renew,
+        p_renew_pv=p_renew_pv,
+        p_renew_pv_roof=p_renew_pv_roof,
+        p_renew_pv_facade=p_renew_pv_facade,
+        p_renew_pv_park=p_renew_pv_park,
+        p_renew_pv_agri=p_renew_pv_agri,
+        p_renew_wind=p_renew_wind,
+        p_renew_wind_onshore=p_renew_wind_onshore,
+        p_renew_wind_offshore=p_renew_wind_offshore,
+        p_renew_biomass=p_renew_biomass,
+        p_renew_biomass_waste=p_renew_biomass_waste,
+        p_renew_biomass_solid=p_renew_biomass_solid,
+        p_renew_biomass_gaseous=p_renew_biomass_gaseous,
+        p_renew_biomass_cogen=p_renew_biomass_cogen,
+        p_renew_geoth=p_renew_geoth,
+        p_renew_hydro=p_renew_hydro,
+        p_renew_reverse=p_renew_reverse,
+        p_fossil_and_renew=p_fossil_and_renew,
+        p_local_pv_roof=p_local_pv_roof,
+        p_local_pv_facade=p_local_pv_facade,
+        p_local_pv_park=p_local_pv_park,
+        p_local_pv_agri=p_local_pv_agri,
+        p_local_pv=p_local_pv,
+        p_local_wind_onshore=p_local_wind_onshore,
+        p_local_biomass=p_local_biomass,
+        p_local_biomass_cogen=p_local_biomass_cogen,
+        p_local_hydro=p_local_hydro,
+        p_local=p_local,
+    )

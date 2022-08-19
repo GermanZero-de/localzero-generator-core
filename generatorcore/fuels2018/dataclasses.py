@@ -5,9 +5,9 @@ from dataclasses import dataclass
 @dataclass(kw_only=True)
 class F:
     # Used by f
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_production_based: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
+    CO2e_combustion_based: float
+    CO2e_production_based: float
+    CO2e_total: float
 
 
 @dataclass(kw_only=True)
@@ -43,10 +43,10 @@ class FuelProduction:
 @dataclass(kw_only=True)
 class TotalFuelProduction:
     # Used by p
-    CO2e_production_based: float = None  # type: ignore
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    energy: float = None  # type: ignore
+    CO2e_production_based: float
+    CO2e_combustion_based: float
+    CO2e_total: float
+    energy: float
 
     def __init__(self, *fuel_productions: FuelProduction):
         self.CO2e_production_based = sum(
