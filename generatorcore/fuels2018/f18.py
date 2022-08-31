@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from .dataclasses import EnergyDemand, FuelProduction, TotalFuelProduction, F
 
 
-@dataclass
+@dataclass(kw_only=True)
 class F18:
     d: EnergyDemand
     d_r: EnergyDemand

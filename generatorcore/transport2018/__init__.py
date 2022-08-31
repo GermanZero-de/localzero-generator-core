@@ -62,19 +62,19 @@ def calc(inputs: Inputs) -> T18:
     )
 
     # ----------------------------------------------------
-    s_biodiesel = EnergySum(t.demand_biodiesel)
-    s_bioethanol = EnergySum(t.demand_bioethanol)
-    s_biogas = EnergySum(t.demand_biogas)
-    s_diesel = EnergySum(t.demand_diesel)
-    s_elec = EnergySum(t.demand_electricity)
-    s_fueloil = EnergySum(ship_inter.demand_fueloil)
-    s_gas = EnergySum(t.demand_gas)
-    s_jetfuel = EnergySum(t.demand_jetfuel)
-    s_lpg = EnergySum(t.demand_lpg)
-    s_petrol = EnergySum(t.demand_petrol)
+    s_biodiesel = EnergySum(energy=t.demand_biodiesel)
+    s_bioethanol = EnergySum(energy=t.demand_bioethanol)
+    s_biogas = EnergySum(energy=t.demand_biogas)
+    s_diesel = EnergySum(energy=t.demand_diesel)
+    s_elec = EnergySum(energy=t.demand_electricity)
+    s_fueloil = EnergySum(energy=ship_inter.demand_fueloil)
+    s_gas = EnergySum(energy=t.demand_gas)
+    s_jetfuel = EnergySum(energy=t.demand_jetfuel)
+    s_lpg = EnergySum(energy=t.demand_lpg)
+    s_petrol = EnergySum(energy=t.demand_petrol)
 
     s = EnergySum(
-        s_biodiesel.energy
+        energy=s_biodiesel.energy
         + s_bioethanol.energy
         + s_biogas.energy
         + s_diesel.energy

@@ -199,8 +199,8 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18, b18: business2018.B18) -> A18:
     s = CO2eFromEnergyUse.sum(
         s_petrol, s_diesel, s_fueloil, s_lpg, s_gas, s_biomass, s_elec
     )
-    p_operation_elec_heatpump = Energy(0)
-    p_operation = Energy(total_energy)
+    p_operation_elec_heatpump = Energy(energy=0)
+    p_operation = Energy(energy=total_energy)
     p_operation_elec_elcon = EnergyWithPercentage.calc(
         energy=s_elec.energy, total_energy=p_operation.energy
     )

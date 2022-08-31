@@ -96,7 +96,7 @@ def is_repo_clean(path_to_repo: str) -> bool:
     return porcelain == ""
 
 
-@dataclass
+@dataclass(kw_only=True)
 class WorkingDirectoryStatus:
     is_clean: bool
     rev: str
@@ -108,7 +108,7 @@ class WorkingDirectoryStatus:
         return cls(is_clean=is_clean, rev=rev)
 
 
-@dataclass
+@dataclass(kw_only=True)
 class DataDirStatus:
     production: refdata.Version
     public_status: WorkingDirectoryStatus

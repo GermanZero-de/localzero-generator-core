@@ -11,7 +11,7 @@ class Transport2018(Protocol):
     transport_capacity_tkm: float
 
 
-@dataclass(frozen=True)
+@dataclass(kw_only=True, frozen=True)
 class ZeroEnergyAndCO2e:
     transport_capacity_pkm: float
     transport_capacity_tkm: float

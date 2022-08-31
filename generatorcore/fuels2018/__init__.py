@@ -24,21 +24,23 @@ def calc(inputs: Inputs, *, t18: transport2018.T18) -> F18:
     # So now we just determine the total amounts of each fuel and then multiply
     # by the "this is how much CO2e is emitted during production" factor.
 
-    d_r = EnergyDemand(entries.r_petrol_fec)
+    d_r = EnergyDemand(energy=entries.r_petrol_fec)
     d_b = EnergyDemand(
-        entries.b_petrol_fec + entries.b_jetfuel_fec + entries.b_diesel_fec
+        energy=entries.b_petrol_fec + entries.b_jetfuel_fec + entries.b_diesel_fec
     )
-    d_i = EnergyDemand(entries.i_diesel_fec)
+    d_i = EnergyDemand(energy=entries.i_diesel_fec)
     d_t = EnergyDemand(
-        t18.t.demand_petrol
+        energy=t18.t.demand_petrol
         + t18.t.demand_jetfuel
         + t18.t.demand_diesel
         + t18.t.demand_biogas
         + t18.t.demand_bioethanol
         + t18.t.demand_biodiesel
     )
-    d_a = EnergyDemand(entries.a_petrol_fec + entries.a_diesel_fec)
-    d = EnergyDemand(d_r.energy + d_b.energy + d_i.energy + d_t.energy + d_a.energy)
+    d_a = EnergyDemand(energy=entries.a_petrol_fec + entries.a_diesel_fec)
+    d = EnergyDemand(
+        energy=d_r.energy + d_b.energy + d_i.energy + d_t.energy + d_a.energy
+    )
 
     p_petrol = FuelProduction(
         energy=entries.r_petrol_fec

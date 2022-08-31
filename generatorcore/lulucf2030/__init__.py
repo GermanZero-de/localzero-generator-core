@@ -8,6 +8,7 @@ from ..inputs import Inputs
 from ..utils import div
 from .. import lulucf2018
 from .l30 import L30
+from .dataclasses import LColVars2030
 
 
 def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
@@ -22,52 +23,50 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
     ass = inputs.ass
     entries = inputs.entries
 
-    l30 = L30()
-
-    l = l30.l
-    g = l30.g
-    g_forest = l30.g_forest
-    g_forest_managed = l30.g_forest_managed
-    g_forest_natural = l30.g_forest_natural
-    g_crop = l30.g_crop
-    g_crop_org = l30.g_crop_org
-    g_crop_min_conv = l30.g_crop_min_conv
-    g_crop_min_hum = l30.g_crop_min_hum
-    g_crop_org_low = l30.g_crop_org_low
-    g_crop_org_high = l30.g_crop_org_high
-    g_grass = l30.g_grass
-    g_grass_org = l30.g_grass_org
-    g_grass_min_conv = l30.g_grass_min_conv
-    g_grass_org_low = l30.g_grass_org_low
-    g_grass_org_high = l30.g_grass_org_high
-    g_grove = l30.g_grove
-    g_grove_min = l30.g_grove_min
-    g_grove_org = l30.g_grove_org
-    g_grove_org_low = l30.g_grove_org_low
-    g_grove_org_high = l30.g_grove_org_high
-    g_wet = l30.g_wet
-    g_wet_min = l30.g_wet_min
-    g_wet_org = l30.g_wet_org
-    g_wet_org_rp = l30.g_wet_org_rp
-    g_wet_org_r = l30.g_wet_org_r
-    g_wet_org_low = l30.g_wet_org_low
-    g_wet_org_high = l30.g_wet_org_high
-    g_wet_org_low_r = l30.g_wet_org_low_r
-    g_wet_org_low_rp = l30.g_wet_org_low_rp
-    g_wet_org_high_r = l30.g_wet_org_high_r
-    g_wet_org_high_rp = l30.g_wet_org_high_rp
-    g_water = l30.g_water
-    g_water_org = l30.g_water_org
-    g_water_min = l30.g_water_min
-    g_water_org_low = l30.g_water_org_low
-    g_water_org_high = l30.g_water_org_high
-    g_settlement = l30.g_settlement
-    g_settlement_org = l30.g_settlement_org
-    g_settlement_min = l30.g_settlement_min
-    g_settlement_org_low = l30.g_settlement_org_low
-    g_settlement_org_high = l30.g_settlement_org_high
-    g_other = l30.g_other
-    g_wood = l30.g_wood
+    l = LColVars2030()
+    g = LColVars2030()
+    g_forest = LColVars2030()
+    g_forest_managed = LColVars2030()
+    g_forest_natural = LColVars2030()
+    g_crop = LColVars2030()
+    g_crop_org = LColVars2030()
+    g_crop_min_conv = LColVars2030()
+    g_crop_min_hum = LColVars2030()
+    g_crop_org_low = LColVars2030()
+    g_crop_org_high = LColVars2030()
+    g_grass = LColVars2030()
+    g_grass_org = LColVars2030()
+    g_grass_min_conv = LColVars2030()
+    g_grass_org_low = LColVars2030()
+    g_grass_org_high = LColVars2030()
+    g_grove = LColVars2030()
+    g_grove_min = LColVars2030()
+    g_grove_org = LColVars2030()
+    g_grove_org_low = LColVars2030()
+    g_grove_org_high = LColVars2030()
+    g_wet = LColVars2030()
+    g_wet_min = LColVars2030()
+    g_wet_org = LColVars2030()
+    g_wet_org_rp = LColVars2030()
+    g_wet_org_r = LColVars2030()
+    g_wet_org_low = LColVars2030()
+    g_wet_org_high = LColVars2030()
+    g_wet_org_low_r = LColVars2030()
+    g_wet_org_low_rp = LColVars2030()
+    g_wet_org_high_r = LColVars2030()
+    g_wet_org_high_rp = LColVars2030()
+    g_water = LColVars2030()
+    g_water_org = LColVars2030()
+    g_water_min = LColVars2030()
+    g_water_org_low = LColVars2030()
+    g_water_org_high = LColVars2030()
+    g_settlement = LColVars2030()
+    g_settlement_org = LColVars2030()
+    g_settlement_min = LColVars2030()
+    g_settlement_org_low = LColVars2030()
+    g_settlement_org_high = LColVars2030()
+    g_other = LColVars2030()
+    g_wood = LColVars2030()
 
     """S T A R T"""
     l.CO2e_total_2021_estimated = l18.l.CO2e_total * fact(
@@ -1417,4 +1416,54 @@ def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
 
     g_wet_org_rp.change_CO2e_pct = 0
 
-    return l30
+    pyr = LColVars2030()
+    g_planning = LColVars2030()
+
+    return L30(
+        l=l,
+        g=g,
+        g_forest=g_forest,
+        g_forest_managed=g_forest_managed,
+        g_forest_natural=g_forest_natural,
+        g_crop=g_crop,
+        g_crop_org=g_crop_org,
+        g_crop_min_conv=g_crop_min_conv,
+        g_crop_min_hum=g_crop_min_hum,
+        g_crop_org_low=g_crop_org_low,
+        g_crop_org_high=g_crop_org_high,
+        g_grass=g_grass,
+        g_grass_min_conv=g_grass_min_conv,
+        g_grass_org_low=g_grass_org_low,
+        g_grass_org_high=g_grass_org_high,
+        g_grove=g_grove,
+        g_grove_min=g_grove_min,
+        g_grove_org=g_grove_org,
+        g_grove_org_low=g_grove_org_low,
+        g_grove_org_high=g_grove_org_high,
+        g_wet=g_wet,
+        g_wet_min=g_wet_min,
+        g_wet_org_low=g_wet_org_low,
+        g_wet_org_high=g_wet_org_high,
+        g_wet_org_low_r=g_wet_org_low_r,
+        g_wet_org_low_rp=g_wet_org_low_rp,
+        g_wet_org_high_r=g_wet_org_high_r,
+        g_wet_org_high_rp=g_wet_org_high_rp,
+        pyr=pyr,
+        g_planning=g_planning,
+        g_grass_org=g_grass_org,
+        g_wet_org=g_wet_org,
+        g_wet_org_r=g_wet_org_r,
+        g_wet_org_rp=g_wet_org_rp,
+        g_water=g_water,
+        g_water_org=g_water_org,
+        g_water_min=g_water_min,
+        g_water_org_low=g_water_org_low,
+        g_water_org_high=g_water_org_high,
+        g_settlement=g_settlement,
+        g_settlement_org=g_settlement_org,
+        g_settlement_min=g_settlement_min,
+        g_settlement_org_low=g_settlement_org_low,
+        g_settlement_org_high=g_settlement_org_high,
+        g_other=g_other,
+        g_wood=g_wood,
+    )

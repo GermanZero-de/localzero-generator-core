@@ -6,53 +6,61 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/lulucf.html
 # pyright: strict
 from ..inputs import Inputs
 from .l18 import L18
+from .dataclasses import (
+    Vars0,
+    Vars1,
+    Vars3,
+    Vars4,
+    Vars5,
+    Vars6,
+    Vars7,
+    Vars8,
+)
 
 
 def calc(inputs: Inputs) -> L18:
     fact = inputs.fact
     entries = inputs.entries
 
-    l18 = L18()
-
-    g = l18.g
-    l = l18.l
-    g_forest = l18.g_forest
-    g_forest_managed = l18.g_forest_managed
-    g_forest_natural = l18.g_forest_natural
-    g_crop = l18.g_crop
-    g_crop_min_conv = l18.g_crop_min_conv
-    g_crop_org_low = l18.g_crop_org_low
-    g_crop_org_high = l18.g_crop_org_high
-    g_grass = l18.g_grass
-    g_grass_min_conv = l18.g_grass_min_conv
-    g_grass_org_low = l18.g_grass_org_low
-    g_grass_org_high = l18.g_grass_org_high
-    g_grove = l18.g_grove
-    g_grove_min = l18.g_grove_min
-    g_grove_org_low = l18.g_grove_org_low
-    g_grove_org_high = l18.g_grove_org_high
-    g_wet = l18.g_wet
-    g_wet_min = l18.g_wet_min
-    g_wet_org_low = l18.g_wet_org_low
-    g_wet_org_high = l18.g_wet_org_high
-    g_wet_org_r = l18.g_wet_org_r
-    g_water = l18.g_water
-    g_water_org = l18.g_water_org
-    g_water_min = l18.g_water_min
-    g_settlement = l18.g_settlement
-    g_settlement_org = l18.g_settlement_org
-    g_settlement_min = l18.g_settlement_min
-    g_settlement_org_low = l18.g_settlement_org_low
-    g_settlement_org_high = l18.g_settlement_org_high
-    g_other = l18.g_other
-    g_wood = l18.g_wood
-    g_crop_org = l18.g_crop_org
-    g_grass_org = l18.g_grass_org
-    g_grove_org = l18.g_grove_org
-    g_wet_org = l18.g_wet_org
-    g_water_org_low = l18.g_water_org_low
-    g_water_org_high = l18.g_water_org_high
-    pyrolysis = l18.pyrolysis
+    g = Vars1()
+    l = Vars0()
+    g_forest = Vars3()
+    g_forest_managed = Vars4()
+    g_forest_natural = Vars5()
+    g_crop = Vars6()
+    g_crop_min_conv = Vars5()
+    g_crop_org_low = Vars5()
+    g_crop_org_high = Vars5()
+    g_grass = Vars6()
+    g_grass_min_conv = Vars5()
+    g_grass_org_low = Vars5()
+    g_grass_org_high = Vars5()
+    g_grove = Vars6()
+    g_grove_min = Vars5()
+    g_grove_org_low = Vars5()
+    g_grove_org_high = Vars5()
+    g_wet = Vars6()
+    g_wet_min = Vars5()
+    g_wet_org_low = Vars5()
+    g_wet_org_high = Vars5()
+    g_wet_org_r = Vars7()
+    g_water = Vars6()
+    g_water_org = Vars6()
+    g_water_min = Vars5()
+    g_settlement = Vars6()
+    g_settlement_org = Vars6()
+    g_settlement_min = Vars5()
+    g_settlement_org_low = Vars5()
+    g_settlement_org_high = Vars5()
+    g_other = Vars8()
+    g_wood = Vars8()
+    g_crop_org = Vars6()
+    g_grass_org = Vars6()
+    g_grove_org = Vars6()
+    g_wet_org = Vars6()
+    g_water_org_low = Vars5()
+    g_water_org_high = Vars5()
+    pyrolysis = Vars7()
 
     g_forest.area_ha = entries.m_area_wood_com
 
@@ -464,6 +472,48 @@ def calc(inputs: Inputs) -> L18:
     pyrolysis.CO2e_total = 0
 
     g_wet_org_r.CO2e_total = 0
-    l18.g_crop_min_hum.CO2e_total = 0
+    g_crop_min_hum = Vars7()
+    g_crop_min_hum.CO2e_total = 0
 
-    return l18
+    return L18(
+        l=l,
+        g=g,
+        g_forest=g_forest,
+        g_forest_managed=g_forest_managed,
+        g_forest_natural=g_forest_natural,
+        g_crop=g_crop,
+        g_crop_org=g_crop_org,
+        g_crop_min_conv=g_crop_min_conv,
+        g_crop_min_hum=g_crop_min_hum,
+        g_crop_org_low=g_crop_org_low,
+        g_crop_org_high=g_crop_org_high,
+        g_grass=g_grass,
+        g_grass_min_conv=g_grass_min_conv,
+        g_grass_org=g_grass_org,
+        g_grass_org_low=g_grass_org_low,
+        g_grass_org_high=g_grass_org_high,
+        g_grove=g_grove,
+        g_grove_min=g_grove_min,
+        g_grove_org=g_grove_org,
+        g_grove_org_low=g_grove_org_low,
+        g_grove_org_high=g_grove_org_high,
+        g_wet=g_wet,
+        g_wet_min=g_wet_min,
+        g_wet_org=g_wet_org,
+        g_wet_org_r=g_wet_org_r,
+        g_wet_org_low=g_wet_org_low,
+        g_wet_org_high=g_wet_org_high,
+        g_water=g_water,
+        g_water_org=g_water_org,
+        g_water_min=g_water_min,
+        g_water_org_low=g_water_org_low,
+        g_water_org_high=g_water_org_high,
+        g_settlement=g_settlement,
+        g_settlement_org=g_settlement_org,
+        g_settlement_min=g_settlement_min,
+        g_settlement_org_low=g_settlement_org_low,
+        g_settlement_org_high=g_settlement_org_high,
+        g_other=g_other,
+        g_wood=g_wood,
+        pyrolysis=pyrolysis,
+    )

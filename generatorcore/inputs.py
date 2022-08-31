@@ -16,8 +16,10 @@ calculation (most famously electricity basically depends on everything else).
 # pyright: strict
 from . import refdata
 from .makeentries import Entries
+from dataclasses import dataclass
 
 
+@dataclass(kw_only=True)
 class Inputs:
     def __init__(
         self,

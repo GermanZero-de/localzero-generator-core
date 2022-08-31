@@ -8,6 +8,27 @@ from ..inputs import Inputs
 from ..utils import div, MILLION
 from .. import business2018, residences2018, residences2030
 from .b30 import B30
+from .dataclasses import (
+    Vars0,
+    Vars1,
+    Vars2,
+    Vars3,
+    Vars4,
+    Vars5,
+    Vars6,
+    Vars7,
+    Vars8,
+    Vars9,
+    Vars10,
+    Vars11,
+    Vars12,
+    Vars13,
+    Vars14,
+    Vars15,
+    Vars16,
+    Vars17,
+    Vars18,
+)
 
 
 # Berechnungsfunktion im Sektor GHD für 2030
@@ -24,37 +45,35 @@ def calc(
 
     Kalkulationszeitraum = entries.m_duration_target
 
-    b30 = B30()
     # Definitions production
-
-    p = b30.p
-    b = b30.b
-    g = b30.g
-    p_nonresi = b30.p_nonresi
-    p_nonresi_com = b30.p_nonresi_com
-    p_elec_elcon = b30.p_elec_elcon
-    p_elec_heatpump = b30.p_elec_heatpump
-    p_vehicles = b30.p_vehicles
-    p_other = b30.p_other
-    g_consult = b30.g_consult
+    p = Vars3()
+    b = Vars0()
+    g = Vars1()
+    p_nonresi = Vars4()
+    p_nonresi_com = Vars5()
+    p_elec_elcon = Vars6()
+    p_elec_heatpump = Vars7()
+    p_vehicles = Vars8()
+    p_other = Vars9()
+    g_consult = Vars2()
 
     # Definitions supply
-    s = b30.s
-    s_gas = b30.s_gas
-    s_emethan = b30.s_emethan
-    s_lpg = b30.s_lpg
-    s_petrol = b30.s_petrol
-    s_jetfuel = b30.s_jetfuel
-    s_diesel = b30.s_diesel
-    s_fueloil = b30.s_fueloil
-    s_biomass = b30.s_biomass
-    s_coal = b30.s_coal
-    s_heatnet = b30.s_heatnet
-    s_elec_heating = b30.s_elec_heating
-    s_heatpump = b30.s_heatpump
-    s_solarth = b30.s_solarth
-    s_elec = b30.s_elec
-    rb = b30.rb
+    s = Vars10()
+    s_gas = Vars11()
+    s_emethan = Vars12()
+    s_lpg = Vars13()
+    s_petrol = Vars13()
+    s_jetfuel = Vars13()
+    s_diesel = Vars13()
+    s_fueloil = Vars14()
+    s_biomass = Vars15()
+    s_coal = Vars14()
+    s_heatnet = Vars15()
+    s_elec_heating = Vars13()
+    s_heatpump = Vars16()
+    s_solarth = Vars17()
+    s_elec = Vars13()
+    rb = Vars18()
 
     # Calculation
     p_nonresi.rate_rehab_pa = entries.r_rehab_rate_pa
@@ -834,4 +853,31 @@ def calc(
         s_elec_heating.change_CO2e_t, b18.s_elec_heating.CO2e_total
     )
 
-    return b30
+    return B30(
+        b=b,
+        g=g,
+        g_consult=g_consult,
+        p=p,
+        p_nonresi=p_nonresi,
+        p_nonresi_com=p_nonresi_com,
+        p_elec_elcon=p_elec_elcon,
+        p_elec_heatpump=p_elec_heatpump,
+        p_vehicles=p_vehicles,
+        p_other=p_other,
+        s=s,
+        s_gas=s_gas,
+        s_emethan=s_emethan,
+        s_lpg=s_lpg,
+        s_petrol=s_petrol,
+        s_jetfuel=s_jetfuel,
+        s_diesel=s_diesel,
+        s_fueloil=s_fueloil,
+        s_biomass=s_biomass,
+        s_coal=s_coal,
+        s_heatnet=s_heatnet,
+        s_elec_heating=s_elec_heating,
+        s_heatpump=s_heatpump,
+        s_solarth=s_solarth,
+        s_elec=s_elec,
+        rb=rb,
+    )

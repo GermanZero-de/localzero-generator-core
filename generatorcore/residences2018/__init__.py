@@ -7,6 +7,7 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/hh_ghd.html
 from ..inputs import Inputs
 from ..utils import div, MILLION
 from .r18 import R18
+from .dataclasses import Vars1, Vars2, Vars3, Vars4, Vars5, Vars6, Vars7, Vars8, Vars9
 
 
 def calc(inputs: Inputs) -> R18:
@@ -14,20 +15,19 @@ def calc(inputs: Inputs) -> R18:
     entries = inputs.entries
 
     ### P - Section ###
-    r18 = R18()
-    p = r18.p
-    r = r18.r
-    p_buildings_total = r18.p_buildings_total
-    p_buildings_until_1919 = r18.p_buildings_until_1919
-    p_buildings_1919_1948 = r18.p_buildings_1919_1948
-    p_buildings_1949_1978 = r18.p_buildings_1949_1978
-    p_buildings_1979_1995 = r18.p_buildings_1979_1995
-    p_buildings_1996_2004 = r18.p_buildings_1996_2004
-    p_buildings_2005_2011 = r18.p_buildings_2005_2011
-    p_buildings_2011_today = r18.p_buildings_2011_today
-    p_buildings_area_m2_com = r18.p_buildings_area_m2_com
-    p_other = r18.p_other
-    p_vehicles = r18.p_vehicles
+    r = Vars1()
+    p = Vars2()
+    p_buildings_total = Vars3()
+    p_buildings_until_1919 = Vars3()
+    p_buildings_1919_1948 = Vars3()
+    p_buildings_1949_1978 = Vars3()
+    p_buildings_1979_1995 = Vars3()
+    p_buildings_1996_2004 = Vars3()
+    p_buildings_2005_2011 = Vars4()
+    p_buildings_2011_today = Vars4()
+    p_buildings_area_m2_com = Vars5()
+    p_vehicles = Vars2()
+    p_other = Vars2()
 
     p_buildings_until_1919.number_of_buildings = entries.r_buildings_until_1919
     p_buildings_1919_1948.number_of_buildings = entries.r_buildings_1919_1948
@@ -286,22 +286,20 @@ def calc(inputs: Inputs) -> R18:
     ### S - Section ###
 
     # Definitions
-
-    s = r18.s
-
-    s_fueloil = r18.s_fueloil
-    s_lpg = r18.s_lpg
-    s_biomass = r18.s_biomass
-    s_coal = r18.s_coal
-    s_petrol = r18.s_petrol
-    s_heatnet = r18.s_heatnet
-    s_solarth = r18.s_solarth
-    s_heatpump = r18.s_heatpump
-    s_elec_heating = r18.s_elec_heating
-    s_gas = r18.s_gas
-    s_elec = r18.s_elec
-    p_elec_elcon = r18.p_elec_elcon
-    p_elec_heatpump = r18.p_elec_heatpump
+    s = Vars6()
+    s_fueloil = Vars7()
+    s_lpg = Vars7()
+    s_biomass = Vars8()
+    s_coal = Vars7()
+    s_petrol = Vars7()
+    s_heatnet = Vars7()
+    s_solarth = Vars7()
+    s_heatpump = Vars7()
+    s_elec_heating = Vars7()
+    s_gas = Vars7()
+    s_elec = Vars9()
+    p_elec_elcon = Vars2()
+    p_elec_heatpump = Vars2()
 
     # Energy
     s_fueloil.energy = entries.r_fueloil_fec
@@ -564,4 +562,32 @@ def calc(inputs: Inputs) -> R18:
         (p_buildings_total.factor_adapted_to_fec * p_buildings_total.area_m2),
     )
 
-    return r18
+    return R18(
+        r=r,
+        p=p,
+        p_buildings_total=p_buildings_total,
+        p_buildings_until_1919=p_buildings_until_1919,
+        p_buildings_1919_1948=p_buildings_1919_1948,
+        p_buildings_1949_1978=p_buildings_1949_1978,
+        p_buildings_1979_1995=p_buildings_1979_1995,
+        p_buildings_1996_2004=p_buildings_1996_2004,
+        p_buildings_2005_2011=p_buildings_2005_2011,
+        p_buildings_2011_today=p_buildings_2011_today,
+        p_buildings_area_m2_com=p_buildings_area_m2_com,
+        p_elec_elcon=p_elec_elcon,
+        p_elec_heatpump=p_elec_heatpump,
+        p_vehicles=p_vehicles,
+        p_other=p_other,
+        s=s,
+        s_fueloil=s_fueloil,
+        s_lpg=s_lpg,
+        s_biomass=s_biomass,
+        s_coal=s_coal,
+        s_petrol=s_petrol,
+        s_heatnet=s_heatnet,
+        s_solarth=s_solarth,
+        s_heatpump=s_heatpump,
+        s_elec_heating=s_elec_heating,
+        s_gas=s_gas,
+        s_elec=s_elec,
+    )

@@ -71,7 +71,7 @@ def calc_air_international(inputs: Inputs, t18: T18) -> "Transport":
     )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Air:
     LIFT_INTO_RESULT_DICT = ["transport"]
     transport: Transport

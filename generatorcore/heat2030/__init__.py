@@ -1,5 +1,5 @@
 """
-Documentation:
+Documentation =
 https://localzero-generator.readthedocs.io/de/latest/sectors/heat.html
 """
 
@@ -9,6 +9,24 @@ from ..inputs import Inputs
 from ..utils import div, MILLION
 from .. import residences2030, business2030, heat2018, agri2030, industry2030
 from .h30 import H30
+from .dataclasses import (
+    Vars0,
+    Vars1,
+    Vars2,
+    Vars3,
+    Vars4,
+    Vars5,
+    Vars6,
+    Vars7,
+    Vars8,
+    Vars9,
+    Vars10,
+    Vars11,
+    Vars12,
+    Vars13,
+    Vars14,
+    Vars15,
+)
 
 
 def calc(
@@ -25,34 +43,32 @@ def calc(
     ass = inputs.ass
     entries = inputs.entries
 
-    h30 = H30()
-
-    h = h30.h
-    g = h30.g
-    g_storage = h30.g_storage
-    g_planning = h30.g_planning
-    d = h30.d
-    d_r = h30.d_r
-    d_b = h30.d_b
-    d_i = h30.d_i
-    d_a = h30.d_a
-    d_t = h30.d_t
-    p = h30.p
-    p_gas = h30.p_gas
-    p_lpg = h30.p_lpg
-    p_fueloil = h30.p_fueloil
-    p_opetpro = h30.p_opetpro
-    p_coal = h30.p_coal
-    p_heatnet = h30.p_heatnet
-    p_heatnet_cogen = h30.p_heatnet_cogen
-    p_heatnet_plant = h30.p_heatnet_plant
-    p_heatnet_lheatpump = h30.p_heatnet_lheatpump
-    p_heatnet_geoth = h30.p_heatnet_geoth
-    p_biomass = h30.p_biomass
-    p_ofossil = h30.p_ofossil
-    p_orenew = h30.p_orenew
-    p_solarth = h30.p_solarth
-    p_heatpump = h30.p_heatpump
+    h = Vars0()
+    g = Vars1()
+    g_storage = Vars2()
+    g_planning = Vars3()
+    d = Vars4()
+    d_r = Vars4()
+    d_b = Vars4()
+    d_i = Vars4()
+    d_a = Vars4()
+    d_t = Vars4()
+    p = Vars5()
+    p_gas = Vars6()
+    p_lpg = Vars7()
+    p_fueloil = Vars8()
+    p_opetpro = Vars9()
+    p_coal = Vars6()
+    p_heatnet = Vars10()
+    p_heatnet_cogen = Vars9()
+    p_heatnet_plant = Vars11()
+    p_heatnet_lheatpump = Vars12()
+    p_heatnet_geoth = Vars13()
+    p_biomass = Vars14()
+    p_ofossil = Vars15()
+    p_orenew = Vars15()
+    p_solarth = Vars15()
+    p_heatpump = Vars15()
 
     ###########################
     ### Demand of Heat 2018 ###
@@ -722,6 +738,34 @@ def calc(
     # TODO: Check demand_emplo_new in Heat with Hauke
     h.demand_emplo_com = g.demand_emplo_com
 
-    h30.p_fossil_change_CO2e_t = p.change_CO2e_t - p_heatnet.change_CO2e_t
+    p_fossil_change_CO2e_t = p.change_CO2e_t - p_heatnet.change_CO2e_t
 
-    return h30
+    return H30(
+        h=h,
+        g=g,
+        g_storage=g_storage,
+        g_planning=g_planning,
+        d=d,
+        d_r=d_r,
+        d_b=d_b,
+        d_i=d_i,
+        d_t=d_t,
+        d_a=d_a,
+        p=p,
+        p_gas=p_gas,
+        p_lpg=p_lpg,
+        p_fueloil=p_fueloil,
+        p_opetpro=p_opetpro,
+        p_coal=p_coal,
+        p_heatnet=p_heatnet,
+        p_heatnet_cogen=p_heatnet_cogen,
+        p_heatnet_plant=p_heatnet_plant,
+        p_heatnet_lheatpump=p_heatnet_lheatpump,
+        p_heatnet_geoth=p_heatnet_geoth,
+        p_biomass=p_biomass,
+        p_ofossil=p_ofossil,
+        p_orenew=p_orenew,
+        p_solarth=p_solarth,
+        p_heatpump=p_heatpump,
+        p_fossil_change_CO2e_t=p_fossil_change_CO2e_t,
+    )

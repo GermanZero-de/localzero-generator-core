@@ -13,7 +13,7 @@ from .other import Other, OtherCycle
 from .transport import Transport
 
 
-@dataclass
+@dataclass(kw_only=True)
 class GPlanning:
     # Used by g_planning
     cost_wage: float
@@ -70,13 +70,13 @@ class GPlanning:
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class EnergySum:
     # Used by s, s_diesel, s_emethan, s_jetfuel, s_petrol, s_fueloil, s_lpg, s_gas, s_biogas, s_bioethanol, s_biodiesel, s_elec, s_hydrogen
     energy: float
 
 
-@dataclass
+@dataclass(kw_only=True)
 class G:
     # Used by g
     cost_wage: float
@@ -89,7 +89,7 @@ class G:
     invest_pa_com: float
 
 
-@dataclass
+@dataclass(kw_only=True)
 class T:
     LIFT_INTO_RESULT_DICT = ["transport"]
     transport: Transport

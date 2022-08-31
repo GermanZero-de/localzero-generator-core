@@ -6,13 +6,13 @@ from ..utils import div
 from .. import fuels2018
 
 
-@dataclass
+@dataclass(kw_only=True)
 class EnergyDemand:
     # Used by d, d_r, d_b, d_i, d_t, d_a, d_e_hydrogen_reconv, p_hydrogen_total
     energy: float
 
 
-@dataclass
+@dataclass(kw_only=True)
 class EFuelProduction:
     """This computes the replacement of fossil fuels by corresponding E-fuels.
     (e.g. petrol -> epetrol).
@@ -107,7 +107,7 @@ class EFuelProduction:
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class FuelWithoutDirectReplacement:
     """This computes the effect on our CO2e and energy budget of us totally stopping
     to produce some fuels without a direct replacement."""
@@ -135,7 +135,7 @@ class FuelWithoutDirectReplacement:
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class NewEFuelProduction:
     """Production of new style of efuels that are not yet used (at an industrial scale)."""
 
@@ -227,7 +227,7 @@ class NewEFuelProduction:
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class TotalEFuelProduction:
     # Used by p
     CO2e_production_based: float
@@ -298,7 +298,7 @@ class TotalEFuelProduction:
         return res
 
 
-@dataclass
+@dataclass(kw_only=True)
 class F:
     # Used by f
     CO2e_production_based: float
@@ -338,7 +338,7 @@ class F:
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class EFuels:
     # Used by p_efuels
     change_CO2e_t: float

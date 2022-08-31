@@ -18,7 +18,7 @@ PROPRIETARY_DATA_SOURCES = frozenset(["traffic"])
 KeyT = TypeVar("KeyT")
 
 
-@dataclass
+@dataclass(kw_only=True)
 class MalformedCsv(Exception):
     dataset: str
     row: int
@@ -183,7 +183,7 @@ def _add_derived_rows_for_summable(df: DataFrame[str]) -> None:
     df.append_rows(values_as_strs(sums_by_sta))
 
 
-@dataclass
+@dataclass(kw_only=True)
 class LookupFailure(Exception):
     key_column: str
     key_value: object
@@ -195,13 +195,13 @@ class LookupFailure(Exception):
         self.dataset = dataset
 
 
-@dataclass
+@dataclass(kw_only=True)
 class RowNotFound(LookupFailure):
     def __init__(self, *, key_column: str, key_value: object, df: DataFrame[Any]):
         super().__init__(key_column=key_column, key_value=key_value, dataset=df.dataset)
 
 
-@dataclass
+@dataclass(kw_only=True)
 class FieldNotPopulated(LookupFailure):
     data_column: str
 
@@ -216,7 +216,7 @@ class FieldNotPopulated(LookupFailure):
         self.data_column = data_column
 
 
-@dataclass
+@dataclass(kw_only=True)
 class ExpectedIntGotFloat(LookupFailure):
     data_column: str
 
@@ -231,6 +231,7 @@ class ExpectedIntGotFloat(LookupFailure):
         self.data_column = data_column
 
 
+@dataclass(kw_only=True)
 class Row(Generic[KeyT]):
     def __init__(self, df: DataFrame[KeyT], key_value: KeyT):
         self.key_column = df.key_column
@@ -306,6 +307,7 @@ class FactOrAssumptionCompleteRow:
         )
 
 
+@dataclass(kw_only=True)
 class FactsAndAssumptions:
     def __init__(self, facts: DataFrame[str], assumptions: DataFrame[str]):
         self._facts = facts
@@ -336,7 +338,7 @@ def datadir_or_default(datadir: str | None = None) -> str:
         return os.path.abspath(datadir)
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Version:
     """This classes identifies a particular version of the reference data."""
 
@@ -351,6 +353,7 @@ class Version:
             return cls(public=d["public"], proprietary=d["proprietary"])
 
 
+@dataclass(kw_only=True)
 class RefData:
     """This class gives you a single handle around all the reference data."""
 

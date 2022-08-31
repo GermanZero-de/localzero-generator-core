@@ -8,6 +8,25 @@ from .. import industry2018
 from ..inputs import Inputs
 from ..utils import div
 from .i30 import I30
+from .dataclasses import (
+    Vars0,
+    Vars1,
+    Vars2,
+    Vars3,
+    Vars4,
+    Vars5,
+    Vars6,
+    Vars7,
+    Vars8,
+    Vars9,
+    Vars10,
+    Vars11,
+    Vars12,
+    Vars13,
+    Vars14,
+    Vars15,
+    Vars16,
+)
 
 
 def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
@@ -15,13 +34,11 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
     ass = inputs.ass
     entries = inputs.entries
 
-    i30 = I30()
-
-    i = i30.i
-    g = i30.g
+    i = Vars2()
+    g = Vars0()
 
     # p_chem_basic
-    p_chem_basic = i30.p_chem_basic
+    p_chem_basic = Vars5()
 
     p_chem_basic.demand_change = ass("Ass_I_P_chem_basic_wo_ammonia_prodvol_change")
     p_chem_basic.prod_volume = i18.p_chem_basic.prod_volume * (
@@ -79,7 +96,7 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
     )
 
     # p_chem_ammonia
-    p_chem_ammonia = i30.p_chem_ammonia
+    p_chem_ammonia = Vars6()
     p_chem_ammonia.prod_volume = i18.p_chem_ammonia.prod_volume
     p_chem_ammonia.demand_electricity = p_chem_ammonia.prod_volume * ass(
         "Ass_I_P_chem_ammonia_fec_factor_electricity_2050"
@@ -126,7 +143,7 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
     )
 
     # p chem other
-    p_chem_other = i30.p_chem_other
+    p_chem_other = Vars5()
     p_chem_other.prod_volume = i18.p_chem_other.prod_volume
     p_chem_other.demand_electricity = p_chem_other.prod_volume * ass(
         "Ass_I_P_chem_other_fec_factor_electricity_2050"
@@ -178,7 +195,7 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
     )
 
     # chem total
-    p_chem = i30.p_chem
+    p_chem = Vars8()
     p_chem.energy = p_chem_basic.energy + p_chem_ammonia.energy + p_chem_other.energy
     p_chem.prod_volume = (
         p_chem_basic.prod_volume + p_chem_ammonia.prod_volume + p_chem_other.prod_volume
@@ -228,7 +245,7 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
 
     # metal -------------------------------------------------------------------------
     # p_metal_steel_primary
-    p_metal_steel_primary = i30.p_metal_steel_primary
+    p_metal_steel_primary = Vars11()
     p_metal_steel_primary.demand_change = ass(
         "Ass_I_P_metal_steel_primary_prodvol_change_2050"
     )
@@ -318,7 +335,7 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
     )
 
     # p_metal_steel_secondary
-    p_metal_steel_secondary = i30.p_metal_steel_secondary
+    p_metal_steel_secondary = Vars6()
 
     p_metal_steel_secondary.demand_change = ass(
         "Ass_I_P_metal_steel_secondary_prodvol_change_2050"
@@ -408,7 +425,7 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
     )
 
     # metal steel
-    p_metal_steel = i30.p_metal_steel
+    p_metal_steel = Vars10()
     p_metal_steel.energy = p_metal_steel_primary.energy + p_metal_steel_secondary.energy
     p_metal_steel.prod_volume = (
         p_metal_steel_primary.prod_volume + p_metal_steel_secondary.prod_volume
@@ -455,7 +472,7 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
     )
 
     # non fe metals
-    p_metal_nonfe = i30.p_metal_nonfe
+    p_metal_nonfe = Vars7()
     p_metal_nonfe.demand_change = ass("Ass_I_P_metal_nonfe_prodvol_change")
     p_metal_nonfe.prod_volume = i18.p_metal_nonfe.prod_volume * (
         1 + p_metal_nonfe.demand_change
@@ -524,7 +541,7 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
     )
 
     # metal summary
-    p_metal = i30.p_metal
+    p_metal = Vars9()
     p_metal.energy = p_metal_steel.energy + p_metal_nonfe.energy
     p_metal.CO2e_production_based = (
         p_metal_steel.CO2e_production_based + p_metal_nonfe.CO2e_production_based
@@ -550,7 +567,7 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
     p_metal.demand_emplo = p_metal_steel.demand_emplo + p_metal_nonfe.demand_emplo
 
     # p_other_paper
-    p_other_paper = i30.p_other_paper
+    p_other_paper = Vars13()
     p_other_paper.demand_change = ass("Ass_I_P_other_paper_prodvol_change")
     p_other_paper.prod_volume = i18.p_other_paper.prod_volume * (
         1 + p_other_paper.demand_change
@@ -610,7 +627,7 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
     )
 
     # p_other_food
-    p_other_food = i30.p_other_food
+    p_other_food = Vars13()
     p_other_food.demand_change = ass("Ass_I_P_other_food_prodvol_change")
     p_other_food.prod_volume = i18.p_other_food.prod_volume * (
         1 + p_other_food.demand_change
@@ -666,7 +683,7 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
     )
 
     # p_other_futther_2030
-    p_other_further = i30.p_other_further
+    p_other_further = Vars14()
     p_other_further.prod_volume = ass("Ass_I_P_other_further_prodvol_2050")
     p_other_further.demand_change = ass("Ass_I_P_other_further_fec_change")
     p_other_further.energy = i18.p_other_further.energy * (
@@ -734,7 +751,7 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
 
     # has to be calculatet after p_other_further_2030
     # p_other_2efgh
-    p_other_2efgh = i30.p_other_2efgh
+    p_other_2efgh = Vars15()
     p_other_2efgh.CO2e_production_based_per_MWh = ass(
         "Ass_I_P_other_2efgh_ratio_of_CO2e_pb_to_fec_2050"
     )
@@ -779,7 +796,7 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
     )
 
     # sum other industries
-    p_other = i30.p_other
+    p_other = Vars12()
     p_other.energy = p_other_paper.energy + p_other_food.energy + p_other_further.energy
     p_other.prod_volume = p_other_paper.prod_volume + p_other_food.prod_volume
     p_other.CO2e_production_based = (
@@ -835,7 +852,7 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
         + p_other_2efgh.demand_emplo
     )
 
-    p_miner_cement = i30.p_miner_cement
+    p_miner_cement = Vars5()
     p_miner_cement.CO2e_production_based_per_t = ass(
         "Ass_I_P_miner_cement_ratio_CO2e_pb_to_prodvol_2050"
     )
@@ -851,7 +868,7 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
         * p_miner_cement.prod_volume
     )
 
-    p_miner_ceram = i30.p_miner_ceram
+    p_miner_ceram = Vars7()
 
     p_miner_ceram.CO2e_production_based_per_t = ass(
         "Ass_I_P_miner_ceramic_ratio_CO2e_pb_to_prodvol_2050"
@@ -867,7 +884,7 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
         p_miner_cement.prod_volume * p_miner_cement.CO2e_combustion_based_per_t
     )
 
-    g_consult = i30.g_consult
+    g_consult = Vars1()
 
     g_consult.invest_pa = (
         ass("Ass_I_G_advice_invest_pa_per_capita") * entries.m_population_com_2018
@@ -924,7 +941,7 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
         p_miner_ceram.prod_volume * p_miner_ceram.CO2e_production_based_per_t
     )
 
-    p_miner_chalk = i30.p_miner_chalk
+    p_miner_chalk = Vars5()
 
     p_miner_chalk.demand_change = ass("Ass_I_P_miner_chalk_prodvol_change")
     p_miner_chalk.prod_volume = i18.p_miner_chalk.prod_volume * (
@@ -937,7 +954,7 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
         p_miner_chalk.prod_volume * p_miner_chalk.CO2e_production_based_per_t
     )
 
-    p_miner_glas = i30.p_miner_glas
+    p_miner_glas = Vars6()
 
     p_miner_glas.demand_change = ass("Ass_I_P_miner_glass_prodvol_change")
     p_miner_glas.prod_volume = i18.p_miner_glas.prod_volume * (
@@ -950,7 +967,7 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
         p_miner_glas.prod_volume * p_miner_glas.CO2e_production_based_per_t
     )
 
-    p_miner = i30.p_miner
+    p_miner = Vars4()
 
     p_miner.CO2e_production_based = (
         p_miner_cement.CO2e_production_based
@@ -972,7 +989,7 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
         p_miner_ceram.prod_volume * p_miner_ceram.CO2e_combustion_based_per_t
     )
 
-    p = i30.p
+    p = Vars3()
 
     p.CO2e_production_based = (
         p_miner.CO2e_production_based
@@ -1483,39 +1500,72 @@ def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
     p_other.demand_emethan = p_other_further.demand_emethan
 
     i.invest_outside = p.invest_outside
-    s_renew_hydrogen = i30.s_renew_hydrogen
     p.demand_hydrogen = p_miner.demand_hydrogen + p_metal.demand_hydrogen
-    s_renew_hydrogen.energy = p.demand_hydrogen
-    s_renew_emethan = i30.s_renew_emethan
+    s_renew_hydrogen = Vars16(energy=p.demand_hydrogen)
     p.demand_emethan = (
         p_miner.demand_emethan + p_chem.demand_emethan + p_other.demand_emethan
     )
-    s_renew_emethan.energy = p.demand_emethan
-    s_renew_biomass = i30.s_renew_biomass
-    s_renew_biomass.energy = p.demand_biomass
-    s_renew_heatnet = i30.s_renew_heatnet
-    s_renew_heatnet.energy = p.demand_heatnet
-    s_renew_elec = i30.s_renew_elec
-    s_renew_elec.energy = p.demand_electricity
-    s_renew = i30.s_renew
-    s_renew.energy = (
-        s_renew_hydrogen.energy
+    s_renew_emethan = Vars16(energy=p.demand_emethan)
+    s_renew_biomass = Vars16(energy=p.demand_biomass)
+    s_renew_heatnet = Vars16(energy=p.demand_heatnet)
+    s_renew_elec = Vars16(energy=p.demand_electricity)
+    s_renew = Vars16(
+        energy=s_renew_hydrogen.energy
         + s_renew_emethan.energy
         + s_renew_biomass.energy
         + s_renew_heatnet.energy
         + s_renew_elec.energy
     )
-    s = i30.s
-    s.energy = s_renew.energy
+    s = Vars16(energy=s_renew.energy)
 
-    i30.s_fossil_diesel.energy = 0
-    i30.s_fossil_fueloil.energy = 0
-    i30.s_fossil_opetpro.energy = 0
-    i30.s_fossil_coal.energy = 0
-    i30.s_fossil_lpg.energy = 0
-    i30.s_fossil_gas.energy = 0
-    i30.s_fossil_ofossil.energy = 0
-    i30.s_renew_heatpump.energy = 0
-    i30.s_renew_solarth.energy = 0
+    s_fossil_diesel = Vars16(energy=0)
+    s_fossil_fueloil = Vars16(energy=0)
+    s_fossil_opetpro = Vars16(energy=0)
+    s_fossil_coal = Vars16(energy=0)
+    s_fossil_lpg = Vars16(energy=0)
+    s_fossil_gas = Vars16(energy=0)
+    s_fossil_ofossil = Vars16(energy=0)
+    s_renew_heatpump = Vars16(energy=0)
+    s_renew_solarth = Vars16(energy=0)
 
-    return i30
+    return I30(
+        g=g,
+        g_consult=g_consult,
+        i=i,
+        p=p,
+        p_miner=p_miner,
+        p_miner_cement=p_miner_cement,
+        p_miner_chalk=p_miner_chalk,
+        p_miner_glas=p_miner_glas,
+        p_miner_ceram=p_miner_ceram,
+        p_chem=p_chem,
+        p_chem_basic=p_chem_basic,
+        p_chem_ammonia=p_chem_ammonia,
+        p_chem_other=p_chem_other,
+        p_metal=p_metal,
+        p_metal_steel=p_metal_steel,
+        p_metal_steel_primary=p_metal_steel_primary,
+        p_metal_steel_secondary=p_metal_steel_secondary,
+        p_metal_nonfe=p_metal_nonfe,
+        p_other=p_other,
+        p_other_paper=p_other_paper,
+        p_other_food=p_other_food,
+        p_other_further=p_other_further,
+        p_other_2efgh=p_other_2efgh,
+        s=s,
+        s_fossil_gas=s_fossil_gas,
+        s_fossil_coal=s_fossil_coal,
+        s_fossil_diesel=s_fossil_diesel,
+        s_fossil_fueloil=s_fossil_fueloil,
+        s_fossil_lpg=s_fossil_lpg,
+        s_fossil_opetpro=s_fossil_opetpro,
+        s_fossil_ofossil=s_fossil_ofossil,
+        s_renew=s_renew,
+        s_renew_hydrogen=s_renew_hydrogen,
+        s_renew_emethan=s_renew_emethan,
+        s_renew_biomass=s_renew_biomass,
+        s_renew_heatnet=s_renew_heatnet,
+        s_renew_heatpump=s_renew_heatpump,
+        s_renew_solarth=s_renew_solarth,
+        s_renew_elec=s_renew_elec,
+    )

@@ -17,7 +17,7 @@ from .. import (
 )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class ProductionBasedEmission:
     # production based Emissions
     CO2e_pb: float
@@ -36,7 +36,7 @@ class ProductionBasedEmission:
         self.CO2e_cb = self.CO2e_cb + sum([elem.CO2e_cb for elem in args])
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Emissions(ProductionBasedEmission):
     # combustion based Emissions
     CO2e_cb: float
@@ -89,7 +89,7 @@ class EnergyAndEmissions(Emissions):
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class EnergyAndEmissionsCalcIntermediate(EnergyAndEmissions):
     """
     This class is a contains all relevant parameters for the conversion calculation
@@ -189,7 +189,7 @@ class Sums(EnergyAndEmissions):
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class BiskoSector:
     # shared BISKO sector variables
     total: Sums | EnergyAndEmissions
@@ -200,7 +200,7 @@ class BiskoSector:
     fueloil: EnergyAndEmissions
 
 
-@dataclass
+@dataclass(kw_only=True)
 class BiskoSectorWithExtraCommunalFacilities:
     """
     Some Bisko GHG balances also show the emissions and energy consumptions of
@@ -212,7 +212,7 @@ class BiskoSectorWithExtraCommunalFacilities:
     sector_without_communal_facilities: EnergyAndEmissions
 
 
-@dataclass
+@dataclass(kw_only=True)
 class BiskoPrivResidences(BiskoSector, BiskoSectorWithExtraCommunalFacilities):
     """
     Bisko Sector for private residences.
@@ -339,7 +339,7 @@ class BiskoPrivResidences(BiskoSector, BiskoSectorWithExtraCommunalFacilities):
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class BiskoBusiness(BiskoSector, BiskoSectorWithExtraCommunalFacilities):
     petrol: EnergyAndEmissions
     diesel: EnergyAndEmissions
@@ -501,7 +501,7 @@ class BiskoBusiness(BiskoSector, BiskoSectorWithExtraCommunalFacilities):
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class BiskoTransport(BiskoSector):
     """
     Bisko sector for transportation.
@@ -631,7 +631,7 @@ class BiskoTransport(BiskoSector):
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class BiskoIndustry(BiskoSector):
     """
     Bisko sector for industry. We are currently not able to calculate any
@@ -796,7 +796,7 @@ class BiskoIndustry(BiskoSector):
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class BiskoAgriculture:
     total: ProductionBasedEmission
     forest: ProductionBasedEmission
@@ -818,7 +818,7 @@ class BiskoAgriculture:
         return cls(forest=forest, manure=manure, soil=soil, other=other, total=total)
 
 
-@dataclass
+@dataclass(kw_only=True)
 class BiskoLULUCF:
     total: Emissions
     forest: Emissions
@@ -874,7 +874,7 @@ class BiskoLULUCF:
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Bisko:
     priv_residences: BiskoPrivResidences
     business: BiskoBusiness

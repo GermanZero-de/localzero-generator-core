@@ -40,17 +40,17 @@ def calc(
     fact = inputs.fact
     ass = inputs.ass
 
-    d_r = EnergyDemand(r30.p.demand_emethan)
-    d_b = EnergyDemand(b30.p.demand_ediesel + b30.p.demand_emethan)
-    d_i = EnergyDemand(i30.p.demand_emethan + i30.p.demand_hydrogen)
+    d_r = EnergyDemand(energy=r30.p.demand_emethan)
+    d_b = EnergyDemand(energy=b30.p.demand_ediesel + b30.p.demand_emethan)
+    d_i = EnergyDemand(energy=i30.p.demand_emethan + i30.p.demand_hydrogen)
     d_t = EnergyDemand(
-        t30.t.transport.demand_epetrol
+        energy=t30.t.transport.demand_epetrol
         + t30.t.transport.demand_ediesel
         + t30.t.transport.demand_ejetfuel
         + t30.t.transport.demand_hydrogen
     )
     d_a = EnergyDemand(
-        a30.p_operation.demand_epetrol
+        energy=a30.p_operation.demand_epetrol
         + a30.p_operation.demand_ediesel
         + a30.p_operation.demand_emethan
     )
@@ -123,9 +123,9 @@ def calc(
         full_load_hour=ass("Ass_F_P_electrolysis_full_load_hours"),
         fuel_efficiency=ass("Ass_F_P_electrolysis_efficiency"),
     )
-    d_e_hydrogen_reconv = EnergyDemand(p_hydrogen_reconv.energy)
+    d_e_hydrogen_reconv = EnergyDemand(energy=p_hydrogen_reconv.energy)
     d = EnergyDemand(
-        d_r.energy
+        energy=d_r.energy
         + d_b.energy
         + d_i.energy
         + d_t.energy
@@ -159,7 +159,9 @@ def calc(
         p_hydrogen=p_hydrogen,
         p_hydrogen_reconv=p_hydrogen_reconv,
         p_efuels=p_efuels,
-        p_hydrogen_total=EnergyDemand(p_hydrogen.energy + p_hydrogen_reconv.energy),
+        p_hydrogen_total=EnergyDemand(
+            energy=p_hydrogen.energy + p_hydrogen_reconv.energy
+        ),
         p=p,
         f=F.of_p(p),
     )

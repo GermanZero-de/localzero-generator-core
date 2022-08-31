@@ -8,6 +8,27 @@ from .. import residences2018, business2018
 from ..inputs import Inputs
 from ..utils import div, MILLION
 from .r30 import R30
+from .dataclasses import (
+    Vars0,
+    Vars1,
+    Vars2,
+    Vars3,
+    Vars4,
+    Vars5,
+    Vars6,
+    Vars7,
+    Vars8,
+    Vars9,
+    Vars10,
+    Vars11,
+    Vars12,
+    Vars13,
+    Vars14,
+    Vars15,
+    Vars16,
+    Vars17,
+    Vars18,
+)
 
 
 def calc(inputs: Inputs, *, r18: residences2018.R18, b18: business2018.B18) -> R30:
@@ -16,30 +37,28 @@ def calc(inputs: Inputs, *, r18: residences2018.R18, b18: business2018.B18) -> R
     entries = inputs.entries
 
     ### P - Section ###
-    r30 = R30()
-
-    g = r30.g
-    p = r30.p
-    r = r30.r
+    g = Vars0()
+    p = Vars2()
+    r = Vars8()
 
     Kalkulationszeitraum = entries.m_duration_target
-    g_consult = r30.g_consult
+    g_consult = Vars1()
 
-    p_buildings_total = r30.p_buildings_total
-    p_buildings_until_1919 = r30.p_buildings_until_1919
-    p_buildings_1919_1948 = r30.p_buildings_1919_1948
-    p_buildings_1949_1978 = r30.p_buildings_1949_1978
-    p_buildings_1979_1995 = r30.p_buildings_1979_1995
-    p_buildings_1996_2004 = r30.p_buildings_1996_2004
-    p_buildings_2005_2011 = r30.p_buildings_2005_2011
-    p_buildings_2011_today = r30.p_buildings_2011_today
-    p_buildings_new = r30.p_buildings_new
-    p_buildings_area_m2_com = r30.p_buildings_area_m2_com
+    p_buildings_total = Vars3()
+    p_buildings_until_1919 = Vars4()
+    p_buildings_1919_1948 = Vars4()
+    p_buildings_1949_1978 = Vars4()
+    p_buildings_1979_1995 = Vars4()
+    p_buildings_1996_2004 = Vars4()
+    p_buildings_2005_2011 = Vars5()
+    p_buildings_2011_today = Vars5()
+    p_buildings_new = Vars6()
+    p_buildings_area_m2_com = Vars7()
 
-    p_elec_elcon = r30.p_elec_elcon
-    p_elec_heatpump = r30.p_elec_heatpump
-    p_other = r30.p_other
-    p_vehicles = r30.p_vehicles
+    p_elec_elcon = Vars16()
+    p_elec_heatpump = Vars16()
+    p_other = Vars17()
+    p_vehicles = Vars18()
 
     p_buildings_total.rate_rehab_pa = entries.r_rehab_rate_pa
 
@@ -443,20 +462,19 @@ def calc(inputs: Inputs, *, r18: residences2018.R18, b18: business2018.B18) -> R
     ### S - Section ###
 
     # Definitions
-    s = r30.s
-
-    s_fueloil = r30.s_fueloil
-    s_lpg = r30.s_lpg
-    s_biomass = r30.s_biomass
-    s_coal = r30.s_coal
-    s_petrol = r30.s_petrol
-    s_heatnet = r30.s_heatnet
-    s_solarth = r30.s_solarth
-    s_heatpump = r30.s_heatpump
-    s_elec_heating = r30.s_elec_heating
-    s_gas = r30.s_gas
-    s_emethan = r30.s_emethan
-    s_elec = r30.s_elec
+    s = Vars9()
+    s_fueloil = Vars10()
+    s_lpg = Vars10()
+    s_biomass = Vars10()
+    s_coal = Vars10()
+    s_petrol = Vars10()
+    s_heatnet = Vars10()
+    s_solarth = Vars11()
+    s_heatpump = Vars12()
+    s_gas = Vars13()
+    s_elec_heating = Vars14()
+    s_emethan = Vars15()
+    s_elec = Vars14()
 
     # pct_energy
     s_fueloil.pct_energy = 0
@@ -1424,4 +1442,36 @@ def calc(inputs: Inputs, *, r18: residences2018.R18, b18: business2018.B18) -> R
         s_elec_heating.change_CO2e_t, r18.s_elec_heating.CO2e_total
     )
 
-    return r30
+    return R30(
+        g=g,
+        p=p,
+        r=r,
+        g_consult=g_consult,
+        p_buildings_total=p_buildings_total,
+        p_buildings_until_1919=p_buildings_until_1919,
+        p_buildings_1919_1948=p_buildings_1919_1948,
+        p_buildings_1949_1978=p_buildings_1949_1978,
+        p_buildings_1979_1995=p_buildings_1979_1995,
+        p_buildings_1996_2004=p_buildings_1996_2004,
+        p_buildings_2005_2011=p_buildings_2005_2011,
+        p_buildings_2011_today=p_buildings_2011_today,
+        p_buildings_new=p_buildings_new,
+        p_buildings_area_m2_com=p_buildings_area_m2_com,
+        p_elec_elcon=p_elec_elcon,
+        p_elec_heatpump=p_elec_heatpump,
+        p_other=p_other,
+        p_vehicles=p_vehicles,
+        s=s,
+        s_fueloil=s_fueloil,
+        s_lpg=s_lpg,
+        s_biomass=s_biomass,
+        s_coal=s_coal,
+        s_petrol=s_petrol,
+        s_heatnet=s_heatnet,
+        s_solarth=s_solarth,
+        s_heatpump=s_heatpump,
+        s_elec_heating=s_elec_heating,
+        s_gas=s_gas,
+        s_emethan=s_emethan,
+        s_elec=s_elec,
+    )

@@ -2,21 +2,21 @@
 from dataclasses import dataclass
 
 
-@dataclass
+@dataclass(kw_only=True)
 class F:
     # Used by f
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_production_based: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
+    CO2e_combustion_based: float
+    CO2e_production_based: float
+    CO2e_total: float
 
 
-@dataclass
+@dataclass(kw_only=True)
 class EnergyDemand:
     # Used by d, d_r, d_b, d_i, d_t, d_a
     energy: float
 
 
-@dataclass
+@dataclass(kw_only=True)
 class FuelProduction:
     # Used by p_petrol, p_jetfuel, p_diesel, p_bioethanol, p_biodiesel, p_biogas
     CO2e_production_based: float
@@ -40,13 +40,13 @@ class FuelProduction:
         self.CO2e_total = self.CO2e_production_based + self.CO2e_combustion_based
 
 
-@dataclass
+@dataclass(kw_only=True)
 class TotalFuelProduction:
     # Used by p
-    CO2e_production_based: float = None  # type: ignore
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    energy: float = None  # type: ignore
+    CO2e_production_based: float
+    CO2e_combustion_based: float
+    CO2e_total: float
+    energy: float
 
     def __init__(self, *fuel_productions: FuelProduction):
         self.CO2e_production_based = sum(
