@@ -132,25 +132,40 @@ class TracedNumber:
         return self.lift(other) / self
 
     def __gt__(self, other: Union["TracedNumber", float, int]) -> bool:
-        return self.value > self.lift(other).value
+        if isinstance(other, self.__class__):
+            return self.value > other.value
+        else:
+            return self.value > other
 
     def __lt__(self, other: Union["TracedNumber", float, int]) -> bool:
-        return self.value < self.lift(other).value
+        if isinstance(other, self.__class__):
+            return self.value < other.value
+        else:
+            return self.value < other
 
     def __le__(self, other: Union["TracedNumber", float, int]) -> bool:
-        return self.value <= self.lift(other).value
+        if isinstance(other, self.__class__):
+            return self.value <= other.value
+        else:
+            return self.value <= other
 
     def __eq__(self, other: object) -> bool:
-        if isinstance(other, (self.__class__, float, int)):
-            return self.value == self.lift(other).value
+        if isinstance(other, self.__class__):
+            return self.value == other.value
         else:
-            return False
+            return self.value == other
+
+    def __ne__(self, other: object) -> bool:
+        if isinstance(other, self.__class__):
+            return self.value != other.value
+        else:
+            return self.value != other
 
     def __str__(self) -> str:
         return f"{self.value} : {self.trace}"
 
     def __neg__(self) -> "TracedNumber":
-        return TracedNumber(self.value, trace=UnaryTrace("-", self.trace))
+        return TracedNumber(-self.value, trace=UnaryTrace("-", self.trace))
 
     def to_json(self):
         return {"value": self.value, "trace": str(self.trace)}
