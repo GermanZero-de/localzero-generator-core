@@ -2,6 +2,15 @@
 from ..inputs import Inputs
 from ..utils import div, MILLION
 from . import electricity2030_core
+from .e30 import E30
+from .electricity2030_core import (
+    EColVars2030,
+    EnergyDemand,
+    EnergyDemandWithCostFuel,
+    FossilFuelsProduction,
+    RenewableGeothermalProduction,
+    Energy,
+)
 from .. import (
     electricity2018,
     residences2018,
@@ -32,7 +41,7 @@ def calc(
     t30: transport2030.T30,
     p_local_biomass_cogen: electricity2030_core.EColVars2030,
     p_local_biomass: electricity2030_core.EColVars2030,
-) -> electricity2030_core.E30:
+) -> E30:
     fact = inputs.fact
     ass = inputs.ass
     entries = inputs.entries
@@ -40,63 +49,52 @@ def calc(
     Kalkulationszeitraum = entries.m_duration_target
     KlimaneutraleJahre = entries.m_duration_neutral
 
-    e30 = electricity2030_core.E30()
-
-    e30.p_local_biomass = p_local_biomass
-    e30.p_local_biomass_cogen = p_local_biomass_cogen
-
-    e = e30.e
-    g = e30.g
-    g_grid_offshore = e30.g_grid_offshore
-    g_grid_onshore = e30.g_grid_onshore
-    g_grid_pv = e30.g_grid_pv
-    d = e30.d
-    d_r = e30.d_r
-    d_b = e30.d_b
-    d_h = e30.d_h
-    d_i = e30.d_i
-    d_t = e30.d_t
-    d_a = e30.d_a
-    d_f_hydrogen_reconv = e30.d_f_hydrogen_reconv
-    # d_e_hydrogen = e30.d_e_hydrogen
-    d_f_wo_hydrogen = e30.d_f_wo_hydrogen
-
-    p = e30.p
-    p_fossil = e30.p_fossil
-    p_fossil_nuclear = e30.p_fossil_nuclear
-    p_fossil_coal_brown = e30.p_fossil_coal_brown
-    p_fossil_coal_black = e30.p_fossil_coal_black
-    p_fossil_gas = e30.p_fossil_gas
-    p_fossil_ofossil = e30.p_fossil_ofossil
-    p_renew = e30.p_renew
-    p_renew_wind = e30.p_renew_wind
-    p_renew_geoth = e30.p_renew_geoth
-    p_renew_hydro = e30.p_renew_hydro
-    p_renew_pv = e30.p_renew_pv
-    p_renew_pv_roof = e30.p_renew_pv_roof
-    p_renew_pv_facade = e30.p_renew_pv_facade
-    p_renew_pv_park = e30.p_renew_pv_park
-    p_renew_pv_agri = e30.p_renew_pv_agri
-    p_renew_wind_onshore = e30.p_renew_wind_onshore
-    p_renew_wind_offshore = e30.p_renew_wind_offshore
-    p_renew_biomass = e30.p_renew_biomass
-    p_renew_reverse = e30.p_renew_reverse
-
-    p_local = e30.p_local
-    p_local_pv = e30.p_local_pv
-    p_local_pv_roof = e30.p_local_pv_roof
-    p_local_pv_facade = e30.p_local_pv_facade
-    p_local_pv_park = e30.p_local_pv_park
-    p_local_pv_agri = e30.p_local_pv_agri
-    p_local_wind_onshore = e30.p_local_wind_onshore
-    p_local_biomass = e30.p_local_biomass
-    p_local_biomass_cogen = e30.p_local_biomass_cogen
-    p_local_hydro = e30.p_local_hydro
-    p_local_surplus = e30.p_local_surplus
-    p_fossil_and_renew = e30.p_fossil_and_renew
+    e = EColVars2030()
+    g = EColVars2030()
+    g_grid_offshore = EColVars2030()
+    g_grid_onshore = EColVars2030()
+    g_grid_pv = EColVars2030()
+    d = EnergyDemand()
+    d_r = EnergyDemandWithCostFuel()
+    d_b = EnergyDemandWithCostFuel()
+    d_h = EnergyDemand()
+    d_i = EnergyDemandWithCostFuel()
+    d_t = EnergyDemandWithCostFuel()
+    d_a = EnergyDemandWithCostFuel()
+    d_f_hydrogen_reconv = EnergyDemand()
+    d_f_wo_hydrogen = EnergyDemand()
+    p = EColVars2030()
+    p_fossil_and_renew = EColVars2030()
+    p_fossil = FossilFuelsProduction()
+    p_fossil_nuclear = FossilFuelsProduction()
+    p_fossil_coal_brown = FossilFuelsProduction()
+    p_fossil_coal_black = FossilFuelsProduction()
+    p_fossil_gas = FossilFuelsProduction()
+    p_fossil_ofossil = FossilFuelsProduction()
+    p_renew = EColVars2030()
+    p_renew_pv = EColVars2030()
+    p_renew_pv_roof = EColVars2030()
+    p_renew_pv_facade = EColVars2030()
+    p_renew_pv_park = EColVars2030()
+    p_renew_pv_agri = EColVars2030()
+    p_renew_wind = EColVars2030()
+    p_renew_wind_onshore = EColVars2030()
+    p_renew_wind_offshore = EColVars2030()
+    p_renew_biomass = EColVars2030()
+    p_renew_geoth = RenewableGeothermalProduction()
+    p_renew_hydro = EColVars2030()
+    p_renew_reverse = EColVars2030()
+    p_local = EColVars2030()
+    p_local_pv = EColVars2030()
+    p_local_pv_roof = EColVars2030()
+    p_local_pv_facade = EColVars2030()
+    p_local_pv_park = EColVars2030()
+    p_local_pv_agri = EColVars2030()
+    p_local_wind_onshore = EColVars2030()
+    p_local_hydro = EColVars2030()
+    p_local_surplus = Energy()
 
     """S T A R T"""
-
     g_grid_offshore.invest_outside = 0
     g_grid_offshore.invest_per_x = ass("Ass_E_G_grid_offshore_ratio_invest_to_power")
     g_grid_offshore.pct_of_wage = fact("Fact_B_P_constr_main_revenue_pct_of_wage_2017")
@@ -1921,4 +1919,51 @@ def calc(
 
     p_local_hydro.cost_climate_saved = 0
 
-    return e30
+    return E30(
+        e=e,
+        g=g,
+        g_grid_offshore=g_grid_offshore,
+        g_grid_onshore=g_grid_onshore,
+        g_grid_pv=g_grid_pv,
+        d=d,
+        d_r=d_r,
+        d_b=d_b,
+        d_h=d_h,
+        d_i=d_i,
+        d_t=d_t,
+        d_a=d_a,
+        d_f_hydrogen_reconv=d_f_hydrogen_reconv,
+        d_f_wo_hydrogen=d_f_wo_hydrogen,
+        p=p,
+        p_fossil_and_renew=p_fossil_and_renew,
+        p_fossil=p_fossil,
+        p_fossil_nuclear=p_fossil_nuclear,
+        p_fossil_coal_brown=p_fossil_coal_brown,
+        p_fossil_coal_black=p_fossil_coal_black,
+        p_fossil_gas=p_fossil_gas,
+        p_fossil_ofossil=p_fossil_ofossil,
+        p_renew=p_renew,
+        p_renew_pv=p_renew_pv,
+        p_renew_pv_roof=p_renew_pv_roof,
+        p_renew_pv_facade=p_renew_pv_facade,
+        p_renew_pv_park=p_renew_pv_park,
+        p_renew_pv_agri=p_renew_pv_agri,
+        p_renew_wind=p_renew_wind,
+        p_renew_wind_onshore=p_renew_wind_onshore,
+        p_renew_wind_offshore=p_renew_wind_offshore,
+        p_renew_biomass=p_renew_biomass,
+        p_renew_geoth=p_renew_geoth,
+        p_renew_hydro=p_renew_hydro,
+        p_renew_reverse=p_renew_reverse,
+        p_local=p_local,
+        p_local_pv=p_local_pv,
+        p_local_pv_roof=p_local_pv_roof,
+        p_local_pv_facade=p_local_pv_facade,
+        p_local_pv_park=p_local_pv_park,
+        p_local_pv_agri=p_local_pv_agri,
+        p_local_wind_onshore=p_local_wind_onshore,
+        p_local_biomass=p_local_biomass,
+        p_local_biomass_cogen=p_local_biomass_cogen,
+        p_local_hydro=p_local_hydro,
+        p_local_surplus=p_local_surplus,
+    )

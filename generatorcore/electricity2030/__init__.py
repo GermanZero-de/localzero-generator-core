@@ -5,7 +5,9 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/electricity.html
 
 # pyright: strict
 from ..inputs import Inputs
-from . import electricity2030_core, electricity2030_com, electricity2030_ger
+from .e30 import E30
+from .electricity2030_core import EColVars2030
+from . import electricity2030_ger, electricity2030_com
 from .. import (
     electricity2018,
     residences2018,
@@ -18,8 +20,6 @@ from .. import (
     residences2030,
     transport2030,
 )
-
-E30 = electricity2030_core.E30
 
 
 def calc(
@@ -35,8 +35,8 @@ def calc(
     i30: industry2030.I30,
     r30: residences2030.R30,
     t30: transport2030.T30,
-    p_local_biomass_cogen: electricity2030_core.EColVars2030,
-    p_local_biomass: electricity2030_core.EColVars2030,
+    p_local_biomass_cogen: EColVars2030,
+    p_local_biomass: EColVars2030,
 ) -> E30:
 
     """For electricity 203X unfortunately if-sides of conditional statements require a different sorting of formulas

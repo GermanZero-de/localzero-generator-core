@@ -1,7 +1,15 @@
 # pyright: strict
 from ..inputs import Inputs
 from ..utils import div, MILLION
-from . import electricity2030_core
+from .e30 import E30
+from .electricity2030_core import (
+    FossilFuelsProduction,
+    RenewableGeothermalProduction,
+    EColVars2030,
+    EnergyDemandWithCostFuel,
+    EnergyDemand,
+    Energy,
+)
 from .. import (
     electricity2018,
     residences2018,
@@ -18,7 +26,7 @@ from .. import (
 
 def calc_stop_production_by_fossil_fuels(
     inputs: Inputs, *, e18_production: electricity2018.e18.FossilFuelsProduction
-) -> electricity2030_core.FossilFuelsProduction:
+) -> FossilFuelsProduction:
     """Compute what happens if we stop producing electricity from a fossil fuel."""
     fact = inputs.fact
     entries = inputs.entries
@@ -48,7 +56,7 @@ def calc_stop_production_by_fossil_fuels(
     change_CO2e_t = CO2e_total - e18_production.CO2e_total
     change_CO2e_pct = div(change_CO2e_t, e18_production.CO2e_total)
 
-    return electricity2030_core.FossilFuelsProduction(
+    return FossilFuelsProduction(
         energy=energy,
         cost_fuel_per_MWh=cost_fuel_per_MWh,
         cost_fuel=cost_fuel,
@@ -72,7 +80,7 @@ def calc_production_renewable_geothermal(
     inputs: Inputs,
     *,
     d_energy: float,
-) -> electricity2030_core.RenewableGeothermalProduction:
+) -> RenewableGeothermalProduction:
     ass = inputs.ass
     fact = inputs.fact
     entries = inputs.entries
@@ -129,7 +137,7 @@ def calc_production_renewable_geothermal(
     change_CO2e_t = 0
     change_cost_mro = 0
     pct_x = 0
-    return electricity2030_core.RenewableGeothermalProduction(
+    return RenewableGeothermalProduction(
         energy=energy,
         energy_installable=energy_installable,
         pct_energy=pct_energy,
@@ -176,7 +184,7 @@ def calc_production_local_pv_roof(
     Kalkulationszeitraum = entries.m_duration_target
 
     # TODO: Change the below
-    p_local_pv_roof = electricity2030_core.EColVars2030()
+    p_local_pv_roof = EColVars2030()
 
     p_local_pv_roof.full_load_hour = entries.e_pv_full_load_hours_sta
     p_local_pv_roof.power_installed = entries.e_PV_power_inst_roof
@@ -283,7 +291,7 @@ def calc_production_local_pv_facade(
     Kalkulationszeitraum = entries.m_duration_target
 
     # TODO: Change the below
-    p_local_pv_facade = electricity2030_core.EColVars2030()
+    p_local_pv_facade = EColVars2030()
     p_local_pv_facade.full_load_hour = ass("Ass_E_P_local_pv_facade_full_load_hours")
 
     p_local_pv_facade.power_installed = entries.e_PV_power_inst_facade
@@ -382,7 +390,7 @@ def calc_production_local_pv_agri(
     Kalkulationszeitraum = entries.m_duration_target
 
     # TODO: Change the below
-    p_local_pv_agri = electricity2030_core.EColVars2030()
+    p_local_pv_agri = EColVars2030()
     p_local_pv_agri.power_installed = entries.e_PV_power_inst_agripv
     p_local_pv_agri.invest_per_x = (
         ass("Ass_E_P_local_pv_agri_ratio_invest_to_power") * 1000
@@ -462,7 +470,7 @@ def calc_production_local_pv_park(
     Kalkulationszeitraum = entries.m_duration_target
 
     # TODO: Change the below
-    p_local_pv_park = electricity2030_core.EColVars2030()
+    p_local_pv_park = EColVars2030()
 
     p_local_pv_park.power_installed = entries.e_PV_power_inst_park
     p_local_pv_park.invest_per_x = (
@@ -541,7 +549,7 @@ def calc_production_local_wind_onshore(
     Kalkulationszeitraum = entries.m_duration_target
 
     # TODO: Change the below
-    p_local_wind_onshore = electricity2030_core.EColVars2030()
+    p_local_wind_onshore = EColVars2030()
 
     p_local_wind_onshore.power_installed = entries.e_PV_power_inst_wind_on
     p_local_wind_onshore.full_load_hour = fact("Fact_E_P_wind_onshore_full_load_hours")
@@ -638,7 +646,7 @@ def calc_production_local_biomass_stage2(
     inputs: Inputs,
     *,
     e18: electricity2018.E18,
-    p_local_biomass: electricity2030_core.EColVars2030,
+    p_local_biomass: EColVars2030,
 ) -> None:
     entries = inputs.entries
     ass = inputs.ass
@@ -725,7 +733,7 @@ def calc_production_local_hydro(
     fact = inputs.fact
 
     # TODO: Change the below
-    p_local_hydro = electricity2030_core.EColVars2030()
+    p_local_hydro = EColVars2030()
 
     p_local_hydro.power_installed = entries.e_PV_power_inst_water
     p_local_hydro.full_load_hour = fact("Fact_E_P_hydro_full_load_hours")  # energy
@@ -761,7 +769,7 @@ def calc_renew_wind_offshore(
     fact = inputs.fact
 
     Kalkulationszeitraum = entries.m_duration_target
-    p_renew_wind_offshore = electricity2030_core.EColVars2030()
+    p_renew_wind_offshore = EColVars2030()
     p_renew_wind_offshore.invest = 0
     p_renew_wind_offshore.demand_emplo = 0
     p_renew_wind_offshore.emplo_existing = 0
@@ -839,7 +847,7 @@ def calc_production_renewable_reverse(inputs: Inputs, *, d_energy: float):
     fact = inputs.fact
 
     Kalkulationszeitraum = entries.m_duration_target
-    p_renew_reverse = electricity2030_core.EColVars2030()
+    p_renew_reverse = EColVars2030()
 
     p_renew_reverse.pct_energy = ass("Ass_E_P_renew_reverse_pct_of_nep_2035")
     p_renew_reverse.CO2e_total = 0
@@ -887,8 +895,8 @@ def calc_production_renewable_reverse(inputs: Inputs, *, d_energy: float):
 
 def calc_energy_demand(
     inputs: Inputs, *, energy: float, energy_18: float, cost_fuel_per_MWh: str
-) -> electricity2030_core.EnergyDemandWithCostFuel:
-    d = electricity2030_core.EnergyDemandWithCostFuel()
+) -> EnergyDemandWithCostFuel:
+    d = EnergyDemandWithCostFuel()
     d.energy = energy
     d.cost_fuel_per_MWh = inputs.fact(cost_fuel_per_MWh)
     d.change_energy_MWh = energy - energy_18
@@ -896,7 +904,7 @@ def calc_energy_demand(
     return d
 
 
-def set_pct_energy(total_energy: float, *es: electricity2030_core.EnergyDemand):
+def set_pct_energy(total_energy: float, *es: EnergyDemand):
     for e in es:
         e.pct_energy = div(e.energy, total_energy)
 
@@ -914,62 +922,23 @@ def calc(
     i30: industry2030.I30,
     r30: residences2030.R30,
     t30: transport2030.T30,
-    p_local_biomass_cogen: electricity2030_core.EColVars2030,
-    p_local_biomass: electricity2030_core.EColVars2030,
-) -> electricity2030_core.E30:
+    p_local_biomass_cogen: EColVars2030,
+    p_local_biomass: EColVars2030,
+) -> E30:
     fact = inputs.fact
     ass = inputs.ass
     entries = inputs.entries
 
     KlimaneutraleJahre = entries.m_duration_neutral
 
-    e30 = electricity2030_core.E30()
-
-    e30.p_local_biomass = p_local_biomass
-    e30.p_local_biomass_cogen = p_local_biomass_cogen
-
-    e = e30.e
-    g = e30.g
-    g_grid_offshore = e30.g_grid_offshore
-    g_grid_onshore = e30.g_grid_onshore
-    g_grid_pv = e30.g_grid_pv
-    d = e30.d
-    d_r = e30.d_r
-    d_b = e30.d_b
-    d_h = e30.d_h
-    d_t = e30.d_t
-    d_a = e30.d_a
-    d_f_hydrogen_reconv = e30.d_f_hydrogen_reconv
-    d_f_wo_hydrogen = e30.d_f_wo_hydrogen
-
-    p = e30.p
-    p_fossil = e30.p_fossil
-    p_fossil_gas = e30.p_fossil_gas
-    p_fossil_ofossil = e30.p_fossil_ofossil
-    p_renew = e30.p_renew
-    p_renew_wind = e30.p_renew_wind
-    p_renew_hydro = e30.p_renew_hydro
-    p_renew_pv = e30.p_renew_pv
-    p_renew_pv_roof = e30.p_renew_pv_roof
-    p_renew_pv_facade = e30.p_renew_pv_facade
-    p_renew_pv_park = e30.p_renew_pv_park
-    p_renew_pv_agri = e30.p_renew_pv_agri
-    p_renew_wind_onshore = e30.p_renew_wind_onshore
-    p_renew_biomass = e30.p_renew_biomass
-
-    p_local = e30.p_local
-    p_local_pv = e30.p_local_pv
-    p_local_wind_onshore = e30.p_local_wind_onshore
-
-    p_local_surplus = e30.p_local_surplus
-    p_fossil_and_renew = e30.p_fossil_and_renew
-
+    g_grid_onshore = EColVars2030()
     g_grid_onshore.invest_per_x = ass("Ass_E_G_grid_onshore_ratio_invest_to_power")
     g_grid_onshore.pct_of_wage = fact("Fact_B_P_constr_main_revenue_pct_of_wage_2017")
     g_grid_onshore.ratio_wage_to_emplo = fact(
         "Fact_B_P_constr_main_ratio_wage_to_emplo_2017"
     )
 
+    g_grid_pv = EColVars2030()
     g_grid_pv.invest_per_x = ass("Ass_E_G_grid_pv_ratio_invest_to_power")
     g_grid_pv.pct_of_wage = fact("Fact_B_P_constr_main_revenue_pct_of_wage_2017")
     g_grid_pv.ratio_wage_to_emplo = fact(
@@ -1007,14 +976,10 @@ def calc(
         cost_fuel_per_MWh="Fact_E_D_R_cost_fuel_per_MWh_2018",
     )
 
-    e30.d_a = d_a
-    e30.d_b = d_b
-    e30.d_i = d_i
-    e30.d_r = d_r
-    e30.d_t = d_t
-
+    d_h = EnergyDemand()
     d_h.energy = h30.p.demand_electricity
 
+    d_f_wo_hydrogen = EnergyDemand()
     d_f_wo_hydrogen.energy = (
         f30.p_petrol.demand_electricity
         + f30.p_jetfuel.demand_electricity
@@ -1023,11 +988,13 @@ def calc(
         + f30.p_hydrogen.demand_electricity
     )
 
+    d_f_hydrogen_reconv = EnergyDemand()
     d_h.change_energy_MWh = d_h.energy - e18.d_h.energy  #
     d_f_wo_hydrogen.change_energy_MWh = d_f_wo_hydrogen.energy - 0
     d_h.change_energy_pct = div(d_h.change_energy_MWh, e18.d_h.energy)
     d_f_hydrogen_reconv.energy = f30.p_hydrogen_reconv.demand_electricity
 
+    d = EnergyDemand()
     d.energy = (
         d_h.energy
         + d_r.energy
@@ -1060,6 +1027,7 @@ def calc(
         + d_f_hydrogen_reconv.pct_energy
     )
 
+    p_renew = EColVars2030()
     p_renew.invest_pa_com = 0
     p_renew.invest_com = 0
 
@@ -1079,7 +1047,7 @@ def calc(
         inputs, e18_production=e18.p_fossil_ofossil
     )
 
-    p_fossil = electricity2030_core.FossilFuelsProduction.sum(
+    p_fossil = FossilFuelsProduction.sum(
         p_fossil_nuclear,
         p_fossil_coal_brown,
         p_fossil_coal_black,
@@ -1088,12 +1056,13 @@ def calc(
         energy_18=e18.p_fossil.energy,
         CO2e_total_18=e18.p_fossil.CO2e_total,
     )
-    e30.p_fossil = p_fossil
 
     p_local_biomass.CO2e_total_2021_estimated = (
         e18.p_local_biomass.CO2e_combustion_based
         * fact("Fact_M_CO2e_wo_lulucf_2021_vs_2018")
     )
+
+    p_local_pv = EColVars2030()
     p_local_pv.CO2e_combustion_based_per_MWh = fact(
         "Fact_E_P_climate_neutral_ratio_CO2e_cb_to_fec"
     )
@@ -1126,6 +1095,8 @@ def calc(
     )
 
     p_local_hydro = calc_production_local_hydro(inputs, e18=e18)
+
+    g_grid_offshore = EColVars2030()
     g_grid_offshore.invest = 0
     g_grid_offshore.invest_per_x = ass("Ass_E_G_grid_offshore_ratio_invest_to_power")
     g_grid_offshore.pct_of_wage = fact("Fact_B_P_constr_main_revenue_pct_of_wage_2017")
@@ -1138,12 +1109,14 @@ def calc(
     g_grid_offshore.invest_pa = g_grid_offshore.invest / entries.m_duration_target
     g_grid_offshore.cost_wage = g_grid_offshore.invest_pa * g_grid_offshore.pct_of_wage
 
+    p_renew_pv = EColVars2030()
     p_renew_pv.pct_energy = ass("Ass_E_P_renew_pv_pct_of_nep_2035")
     p_renew_pv.CO2e_total = 0
     p_renew_pv.CO2e_combustion_based_per_MWh = fact(
         "Fact_E_P_climate_neutral_ratio_CO2e_cb_to_fec"
     )
 
+    p_renew_wind = EColVars2030()
     p_renew_wind.pct_energy = ass("Ass_E_P_renew_wind_onshore_pct_of_nep_2035") + ass(
         "Ass_E_P_renew_wind_offshore_pct_of_nep_2035"
     )
@@ -1152,6 +1125,7 @@ def calc(
         "Fact_E_P_climate_neutral_ratio_CO2e_cb_to_fec"
     )
 
+    p_renew_biomass = EColVars2030()
     p_renew_biomass.pct_energy = ass("Ass_E_P_renew_biomass_pct_of_nep_2035")
     p_renew_biomass.CO2e_total_2021_estimated = (
         e18.p_renew_biomass.CO2e_combustion_based
@@ -1166,6 +1140,8 @@ def calc(
     )
 
     p_renew_geoth = calc_production_renewable_geothermal(inputs, d_energy=d.energy)
+
+    p_renew_hydro = EColVars2030()
     p_renew_hydro.cost_mro_per_MWh = ass("Ass_E_P_local_hydro_mro_per_MWh")
     p_renew_hydro.CO2e_combustion_based_per_MWh = fact(
         "Fact_E_P_climate_neutral_ratio_CO2e_cb_to_fec"
@@ -1175,11 +1151,16 @@ def calc(
 
     p_renew_reverse = calc_production_renewable_reverse(inputs, d_energy=d.energy)
 
+    p_renew_pv_facade = EColVars2030()
+    p_renew_pv_park = EColVars2030()
+    p_renew_pv_agri = EColVars2030()
     p_renew_pv_facade.pct_energy = ass("Ass_E_P_renew_pv_facade_pct_of_nep_2035")
     p_renew_pv_park.pct_energy = ass("Ass_E_P_renew_pv_park_pct_of_nep_2035")
     p_renew_pv_agri.pct_energy = ass("Ass_E_P_renew_pv_agri_pct_of_nep_2035")
 
     p_renew_wind_offshore = calc_renew_wind_offshore(inputs, e18=e18, d_energy=d.energy)
+
+    p_renew_wind_onshore = EColVars2030()
     p_renew_wind_onshore.pct_energy = ass("Ass_E_P_renew_wind_onshore_pct_of_nep_2035")
     p_renew_wind_onshore.cost_mro_per_MWh = (
         ass("Ass_E_P_local_wind_onshore_ratio_invest_to_power_2020")
@@ -1188,6 +1169,7 @@ def calc(
         * 1000
     )
 
+    p_renew_pv_roof = EColVars2030()
     p_renew_pv_roof.pct_energy = ass("Ass_E_P_renew_pv_roof_pct_of_nep_2035")
     p_renew_pv_roof.cost_mro_per_MWh = (
         ass("Ass_E_P_local_pv_roof_ratio_invest_to_power_2020")
@@ -1261,9 +1243,11 @@ def calc(
         + p_renew_reverse.invest_outside
     )
 
+    p_fossil_and_renew = EColVars2030()
     p_fossil_and_renew.invest_pa_com = p_renew.invest_pa_com
     p_fossil_and_renew.invest_com = p_renew.invest_com
 
+    p_local = EColVars2030()
     p_local.CO2e_total_2021_estimated = p_local_biomass.CO2e_total_2021_estimated
     p_local_pv.power_installed = (
         p_local_pv_roof.power_installed
@@ -1287,6 +1271,8 @@ def calc(
     g_grid_offshore.demand_emplo = div(
         g_grid_offshore.cost_wage, g_grid_offshore.ratio_wage_to_emplo
     )
+
+    p = EColVars2030()
     p.CO2e_total_2021_estimated = (
         p_fossil_and_renew.CO2e_total_2021_estimated + p_local.CO2e_total_2021_estimated
     )
@@ -1314,10 +1300,14 @@ def calc(
     g_grid_onshore.power_to_be_installed = p_local_wind_onshore.power_to_be_installed
 
     g_grid_offshore.demand_emplo_new = g_grid_offshore.demand_emplo
+
+    e = EColVars2030()
     e.CO2e_total_2021_estimated = p.CO2e_total_2021_estimated
     p_fossil_and_renew.invest_pa = p_renew.invest_pa
 
     p_fossil_and_renew.demand_emplo_new = p_renew.demand_emplo_new
+
+    g = EColVars2030()
     g.invest_outside = g_grid_offshore.invest_outside
     g_grid_offshore.invest_pa_outside = (
         g_grid_offshore.invest_outside / entries.m_duration_target
@@ -1438,6 +1428,7 @@ def calc(
     p_local_wind_onshore.pct_energy = div(p_local_wind_onshore.energy, p_local.energy)
     p_local_biomass.pct_energy = div(p_local_biomass.energy, p_local.energy)
     p_local_hydro.pct_energy = div(p_local_hydro.energy, p_local.energy)
+    p_local_surplus = Energy()
     p_local_surplus.energy = p_local.energy - d.energy
 
     p_local.CO2e_combustion_based = (
@@ -1895,21 +1886,6 @@ def calc(
         # p_local_hydro.power_to_be_installed
     )
 
-    e30.p_fossil_nuclear = p_fossil_nuclear
-    e30.p_fossil_coal_brown = p_fossil_coal_brown
-    e30.p_fossil_coal_black = p_fossil_coal_black
-    e30.p_fossil_gas = p_fossil_gas
-    e30.p_fossil_ofossil = p_fossil_ofossil
-    e30.p_renew_geoth = p_renew_geoth
-    e30.p_renew_wind_offshore = p_renew_wind_offshore
-    e30.p_local_pv_roof = p_local_pv_roof
-    e30.p_local_pv_facade = p_local_pv_facade
-    e30.p_local_pv_park = p_local_pv_park
-    e30.p_local_pv_agri = p_local_pv_agri
-    e30.p_local_wind_onshore = p_local_wind_onshore
-    e30.p_local_hydro = p_local_hydro
-    e30.p_renew_reverse = p_renew_reverse
-
     # TODO: correct excel calculations and reimport these somehow missing variabels to python
     p_local_pv.cost_climate_saved = 0
 
@@ -1976,4 +1952,51 @@ def calc(
 
     p_renew_reverse.change_CO2e_pct = 0
 
-    return e30
+    return E30(
+        e=e,
+        g=g,
+        g_grid_offshore=g_grid_offshore,
+        g_grid_onshore=g_grid_onshore,
+        g_grid_pv=g_grid_pv,
+        d=d,
+        d_r=d_r,
+        d_b=d_b,
+        d_h=d_h,
+        d_i=d_i,
+        d_t=d_t,
+        d_a=d_a,
+        d_f_hydrogen_reconv=d_f_hydrogen_reconv,
+        d_f_wo_hydrogen=d_f_wo_hydrogen,
+        p=p,
+        p_fossil_and_renew=p_fossil_and_renew,
+        p_fossil=p_fossil,
+        p_fossil_nuclear=p_fossil_nuclear,
+        p_fossil_coal_brown=p_fossil_coal_brown,
+        p_fossil_coal_black=p_fossil_coal_black,
+        p_fossil_gas=p_fossil_gas,
+        p_fossil_ofossil=p_fossil_ofossil,
+        p_renew=p_renew,
+        p_renew_pv=p_renew_pv,
+        p_renew_pv_roof=p_renew_pv_roof,
+        p_renew_pv_facade=p_renew_pv_facade,
+        p_renew_pv_park=p_renew_pv_park,
+        p_renew_pv_agri=p_renew_pv_agri,
+        p_renew_wind=p_renew_wind,
+        p_renew_wind_onshore=p_renew_wind_onshore,
+        p_renew_wind_offshore=p_renew_wind_offshore,
+        p_renew_biomass=p_renew_biomass,
+        p_renew_geoth=p_renew_geoth,
+        p_renew_hydro=p_renew_hydro,
+        p_renew_reverse=p_renew_reverse,
+        p_local=p_local,
+        p_local_pv=p_local_pv,
+        p_local_pv_roof=p_local_pv_roof,
+        p_local_pv_facade=p_local_pv_facade,
+        p_local_pv_park=p_local_pv_park,
+        p_local_pv_agri=p_local_pv_agri,
+        p_local_wind_onshore=p_local_wind_onshore,
+        p_local_biomass=p_local_biomass,
+        p_local_biomass_cogen=p_local_biomass_cogen,
+        p_local_hydro=p_local_hydro,
+        p_local_surplus=p_local_surplus,
+    )
