@@ -1,9 +1,10 @@
+# pyright: strict
 from dataclasses import dataclass
 from ..inputs import Inputs
 from ..utils import div
 
 
-@dataclass
+@dataclass(kw_only=True)
 class InvestmentAction:
     """For some transport mechanism additional investments are needed."""
 
@@ -151,7 +152,7 @@ class InvestmentAction:
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class RoadInvestmentAction(InvestmentAction):
     # Used by road_action_charger
     base_unit: float

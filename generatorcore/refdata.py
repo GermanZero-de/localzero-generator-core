@@ -18,6 +18,25 @@ PROPRIETARY_DATA_SOURCES = frozenset(["traffic"])
 KeyT = TypeVar("KeyT")
 
 
+@dataclass(kw_only=True)
+class MalformedCsv(Exception):
+    dataset: str
+    row: int
+    header_columns: int
+    row_columns: int
+
+    def __init__(
+        self, *, row: int, header_columns: int, row_columns: int, dataset: str
+    ):
+        self.header_columns = header_columns
+        self.row_columns = row_columns
+        self.row = row
+        self.dataset = dataset
+
+    def __str__(self) -> str:
+        return f"Excluding the key column row {self.row} of {self.dataset} has {self.row_columns} but row 0 (header) has {self.header_columns} columns"
+
+
 class DataFrame(Generic[KeyT]):
     _rows: dict[KeyT, list[str]]  # the list does NOT contain the reference value
     header: dict[str, int]
@@ -61,6 +80,14 @@ class DataFrame(Generic[KeyT]):
                 else:
                     raw_key = r[key_column_ndx]
                     del r[key_column_ndx]
+                    # Check that number of columns matches number of columns in header
+                    if len(r) != len(header):
+                        raise MalformedCsv(
+                            header_columns=len(header),
+                            row_columns=len(r),
+                            row=row_num,
+                            dataset=what,
+                        )
                     key = key_from_raw(raw_key)
                     rows[key] = r
                     for c in set_nans_to_0_in_columns_indices:
@@ -156,7 +183,7 @@ def _add_derived_rows_for_summable(df: DataFrame[str]) -> None:
     df.append_rows(values_as_strs(sums_by_sta))
 
 
-@dataclass
+@dataclass(kw_only=True)
 class LookupFailure(Exception):
     key_column: str
     key_value: object
@@ -168,13 +195,13 @@ class LookupFailure(Exception):
         self.dataset = dataset
 
 
-@dataclass
+@dataclass(kw_only=True)
 class RowNotFound(LookupFailure):
     def __init__(self, *, key_column: str, key_value: object, df: DataFrame[Any]):
         super().__init__(key_column=key_column, key_value=key_value, dataset=df.dataset)
 
 
-@dataclass
+@dataclass(kw_only=True)
 class FieldNotPopulated(LookupFailure):
     data_column: str
 
@@ -189,7 +216,7 @@ class FieldNotPopulated(LookupFailure):
         self.data_column = data_column
 
 
-@dataclass
+@dataclass(kw_only=True)
 class ExpectedIntGotFloat(LookupFailure):
     data_column: str
 
@@ -204,6 +231,7 @@ class ExpectedIntGotFloat(LookupFailure):
         self.data_column = data_column
 
 
+@dataclass(kw_only=True)
 class Row(Generic[KeyT]):
     def __init__(self, df: DataFrame[KeyT], key_value: KeyT):
         self.key_column = df.key_column
@@ -276,15 +304,16 @@ class FactOrAssumptionCompleteRow:
         return cls(
             label=label,
             group=row.str("group"),
-            description=row.str("description"),
+            description=row.str("description").strip(),
             value=row.float("value"),
-            unit=row.str("unit"),
-            rationale=row.str("rationale"),
-            reference=row.str("reference"),
-            link=row.str("link"),
+            unit=row.str("unit").strip(),
+            rationale=row.str("rationale").strip(),
+            reference=row.str("reference").strip(),
+            link=row.str("link").strip(),
         )
 
 
+@dataclass(kw_only=True)
 class FactsAndAssumptions:
     def __init__(self, facts: DataFrame[str], assumptions: DataFrame[str]):
         self._facts = facts
@@ -315,7 +344,7 @@ def datadir_or_default(datadir: str | None = None) -> str:
         return os.path.abspath(datadir)
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Version:
     """This classes identifies a particular version of the reference data."""
 
@@ -330,6 +359,7 @@ class Version:
             return cls(public=d["public"], proprietary=d["proprietary"])
 
 
+@dataclass(kw_only=True)
 class RefData:
     """This class gives you a single handle around all the reference data."""
 

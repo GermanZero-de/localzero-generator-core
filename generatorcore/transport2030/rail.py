@@ -7,7 +7,7 @@ from .transport import Transport
 from .investmentaction import InvestmentAction
 
 
-@dataclass
+@dataclass(kw_only=True)
 class RailPeople:
     LIFT_INTO_RESULT_DICT = ["transport"]
     transport: Transport
@@ -176,7 +176,7 @@ class RailPeople:
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class RailPeopleMetroActionInfra:
     # Used by rail_ppl_metro_action_infra
     base_unit: float
@@ -230,7 +230,7 @@ class RailPeopleMetroActionInfra:
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class RailPeopleSum:
     LIFT_INTO_RESULT_DICT = ["transport"]
     transport: Transport
@@ -309,7 +309,7 @@ class RailPeopleSum:
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class RailGoods:
     LIFT_INTO_RESULT_DICT = ["transport"]
     transport: Transport
@@ -392,7 +392,7 @@ class RailGoods:
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Rail:
     LIFT_INTO_RESULT_DICT = ["transport"]
     transport: Transport

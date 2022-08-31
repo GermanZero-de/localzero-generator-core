@@ -1,3 +1,4 @@
+# pyright: strict
 from dataclasses import dataclass, field
 from .inputs import Inputs
 from .utils import div
@@ -23,7 +24,7 @@ from . import (
 )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class zColVars:
     energy_18: float = None  # type: ignore
     pct_energy_18: float = None  # type: ignore
@@ -60,7 +61,7 @@ class zColVars:
 
 
 # definition of variable names for sector M(ethodology) - there are no rows or columns in the excel!
-@dataclass
+@dataclass(kw_only=True)
 class M183X:
     # year_target: float = None
     # duration_target: float = None
@@ -177,9 +178,7 @@ def calc_budget(
 ) -> M183X:
     """Calculate the budget needed."""
 
-    def fact(n):
-        return inputs.fact(n)
-
+    fact = inputs.fact
     entries = inputs.entries
 
     ######################################
@@ -655,9 +654,7 @@ def calc_z(
 ):
     """This updates several values in m183X inplace."""
 
-    def fact(n):
-        return inputs.fact(n)
-
+    fact = inputs.fact
     entries = inputs.entries
 
     ##################################################################

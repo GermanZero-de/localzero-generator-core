@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "generatorcore"
-version = "1.0.0"
+version = "1.1.0"
 description = "LocalZero Generator core."
 authors = ["Benedikt Grundmann <benedikt.grundmann@gmail.com>","Anja Höhne","Anne Klenge","Jan Kuhlem",
           "Sebastian Lüttig","Silvan Ostheimer","Hauke Schmülling","Leon Schomburg <Leon.Schomburg.ext@germanzero.de>",
@@ -15,9 +15,9 @@ python = "^3.10"
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.5"
 pre-commit = "^2.17.0"
-black = {version = "^21.12b0", allow-prereleases = true}
+black = "^22.3.0"
 pytest-cov = "^3.0.0"
-pyright = "^0.0.13"
+pyright = "^1.1.263"
 Sphinx = "^4.4.0"
 sphinx-rtd-theme = "^1.0.0"
 

@@ -25,6 +25,9 @@ on every data file you have changed, so minor encoding differences (such as
 wether or not to put `"` around fields in a CSV) do not result in spurious
 merge conflicts later on.
 
+We also added the *dataGeneratorScripts* folder, that includes some python scripts
+which generate data files for the data repositories from various sources.
+
 Where to get the data: Public Domain
 ------------------------------------
 

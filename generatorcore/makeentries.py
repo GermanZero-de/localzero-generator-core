@@ -1,5 +1,5 @@
+# pyright: strict
 from dataclasses import dataclass
-from datetime import date
 
 from . import refdata
 from .utils import div
@@ -69,7 +69,7 @@ USER_OVERRIDABLE_ENTRIES = [
 ]
 
 
-@dataclass(frozen=True)
+@dataclass(kw_only=True, frozen=True)
 class Entries:
     a_area_agri_com_pct_of_organic: float
     a_biomass_fec: float
@@ -675,7 +675,7 @@ def make_entries(data: refdata.RefData, ags: str, year: int):
     )
 
     def compute_efactor_from_n2o(
-        what: str, area: float, data_nat_agri: refdata.Row = data_nat_agri_sta
+        what: str, area: float, data_nat_agri: refdata.Row = data_nat_agri_sta  # type: ignore
     ):
         n2o = data_nat_agri.float(what + "_n2o")
         co2e = n2o * 298.0

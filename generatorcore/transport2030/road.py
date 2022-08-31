@@ -1,5 +1,4 @@
 # pyright: strict
-
 from dataclasses import dataclass, asdict
 from ..inputs import Inputs
 from ..utils import div
@@ -9,7 +8,7 @@ from .transport import Transport
 from .investmentaction import InvestmentAction, RoadInvestmentAction
 
 
-@dataclass
+@dataclass(kw_only=True)
 class TransportInvestments:
     """For every mechanism of transport, we compute some basic investment
     costs.
@@ -22,7 +21,7 @@ class TransportInvestments:
     invest_per_x: float
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Road:
     LIFT_INTO_RESULT_DICT = ["transport"]
     transport: Transport
@@ -408,7 +407,7 @@ class Road:
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class RoadCar(Road):
     # Used by road_car
     LIFT_INTO_RESULT_DICT = ["transport", "fleet_modernisation_cost"]
@@ -431,7 +430,10 @@ class RoadCar(Road):
         invest_pa = invest / entries.m_duration_target
 
         return TransportInvestments(
-            base_unit, invest=invest, invest_pa=invest_pa, invest_per_x=invest_per_x
+            base_unit=base_unit,
+            invest=invest,
+            invest_pa=invest_pa,
+            invest_per_x=invest_per_x,
         )
 
     @classmethod
@@ -446,7 +448,7 @@ class RoadCar(Road):
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class BusInvestments(TransportInvestments):
     cost_wage: float
     demand_emplo_new: float
@@ -458,7 +460,7 @@ class BusInvestments(TransportInvestments):
     ratio_wage_to_emplo: float
 
 
-@dataclass
+@dataclass(kw_only=True)
 class RoadBus(Road, BusInvestments):
     # Used by road_bus
     @staticmethod
@@ -585,7 +587,7 @@ class RoadBus(Road, BusInvestments):
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class RoadPeople(Road):
     # Used by road_ppl
     base_unit: float
@@ -641,7 +643,7 @@ class RoadPeople(Road):
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class RoadGoodsMediumAndHeavyDuty(Road):
     # Used by road_gds_mhd
     base_unit: float
@@ -716,7 +718,7 @@ class RoadGoodsMediumAndHeavyDuty(Road):
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class RoadGoodsLightDuty(Road):
     # Used by road_gds_ldt
     base_unit: float
@@ -758,7 +760,7 @@ class RoadGoodsLightDuty(Road):
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class RoadGoods(Road):
     # Used by road_gds
     base_unit: float
@@ -804,7 +806,7 @@ class RoadGoods(Road):
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class RoadSum(Road):
     # Used by road
 

@@ -10,6 +10,7 @@
    git. And as you will have to carefully manage the state of 3 separate
    repositories (2 data + 1 code), we have written some code to help with that.
 """
+# pyright: strict
 import os.path
 import subprocess
 from dataclasses import dataclass
@@ -50,7 +51,7 @@ def clone(
     subprocess.run(["git", "clone", url, repo], check=True, cwd=datadir)
 
 
-def checkout(datadir, repo: typing.Literal["public", "proprietary"], rev: str):
+def checkout(datadir: str, repo: typing.Literal["public", "proprietary"], rev: str):
     subprocess.run(
         ["git", "checkout", rev], check=True, cwd=os.path.join(datadir, repo)
     )
@@ -95,7 +96,7 @@ def is_repo_clean(path_to_repo: str) -> bool:
     return porcelain == ""
 
 
-@dataclass
+@dataclass(kw_only=True)
 class WorkingDirectoryStatus:
     is_clean: bool
     rev: str
@@ -107,7 +108,7 @@ class WorkingDirectoryStatus:
         return cls(is_clean=is_clean, rev=rev)
 
 
-@dataclass
+@dataclass(kw_only=True)
 class DataDirStatus:
     production: refdata.Version
     public_status: WorkingDirectoryStatus

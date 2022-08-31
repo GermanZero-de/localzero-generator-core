@@ -1,5 +1,4 @@
 # pyright: strict
-
 from dataclasses import dataclass
 from ..inputs import Inputs
 from ..utils import div
@@ -9,7 +8,7 @@ from .transport import Transport, ZeroEnergyAndCO2e
 from .investmentaction import InvestmentAction
 
 
-@dataclass
+@dataclass(kw_only=True)
 class OtherFoot:
     LIFT_INTO_RESULT_DICT = ["transport"]
     transport: Transport
@@ -68,7 +67,7 @@ class OtherFoot:
         return res
 
 
-@dataclass
+@dataclass(kw_only=True)
 class OtherCycle:
     # Used by other_cycl
     LIFT_INTO_RESULT_DICT = ["transport"]
@@ -139,7 +138,7 @@ class OtherCycle:
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Other:
     # Used by other
     LIFT_INTO_RESULT_DICT = ["transport"]

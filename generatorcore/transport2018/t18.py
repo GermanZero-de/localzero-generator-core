@@ -9,7 +9,7 @@ from .transport import Transport
 from .energy_sum import EnergySum
 
 
-@dataclass
+@dataclass(kw_only=True)
 class T18:
     t: Transport
 

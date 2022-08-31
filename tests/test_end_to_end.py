@@ -1,15 +1,16 @@
 """This is a simplistic regression test framework for the generator."""
+# pyright: strict
 from dataclasses import asdict
 import json
 import os
 import pytest
-import typing
+from typing import Any, Literal
 
 from generatorcore.generator import calculate_with_default_inputs
 from generatorcore import refdatatools, diffs, makeentries
 from generatorcore.refdata import RefData
 
-PUBLIC_OR_PROP = typing.Literal["public", "proprietary"]
+PUBLIC_OR_PROP = Literal["public", "proprietary"]
 
 
 @pytest.fixture
@@ -47,7 +48,7 @@ def test_public_datadir_is_clean(datadir_status: refdatatools.DataDirStatus):
     ), "There seem to be uncommitted / untracked files in the public data repository"
 
 
-def test_proprietary_datadir_is_clean(datadir_status):
+def test_proprietary_datadir_is_clean(datadir_status: refdatatools.DataDirStatus):
     assert (
         datadir_status.proprietary_status.is_clean
     ), "There seem to be uncommitted / untracked files in the proprietary data repository"
@@ -64,28 +65,28 @@ def test_all_used_variables_are_populated():
     result = g.result_dict()
     with open(os.path.join(root, "tests", "usage.json")) as fp:
         usage = json.load(fp)
-    missing = set()
-    populated_with_none = set()
+    missing = set()  # type: ignore
+    populated_with_none = set()  # type: ignore
     for path in usage["generator"]:
         next = result
         for element in path.split("."):
             if element in next:
                 next = next[element]  # type: ignore
                 if next is None:
-                    populated_with_none.add(path)
+                    populated_with_none.add(path)  # type: ignore
                     break
             else:
-                missing.add(path)
+                missing.add(path)  # type: ignore
                 break
     assert (
-        len(missing) == 0
+        len(missing) == 0  # type: ignore
     ), f"The following variables are used by KNUD but not populated: {missing}"
     assert (
-        len(populated_with_none) == 0
+        len(populated_with_none) == 0  # type: ignore
     ), f"The following variables are used by KNUD but populated with None: {populated_with_none}"
 
 
-def end_to_end(datadir_status: refdatatools.DataDirStatus, ags, year=2035):
+def end_to_end(datadir_status: refdatatools.DataDirStatus, ags: Any, year: int = 2035):
     """This runs an end to end test. No entries are overriden, only AGS"""
     root = refdatatools.root_of_this_repo()
     fname = f"production_{ags}_{year}.json"
@@ -93,7 +94,7 @@ def end_to_end(datadir_status: refdatatools.DataDirStatus, ags, year=2035):
         expected = json.load(fp)
         g = calculate_with_default_inputs(ags=ags, year=year)
         got = g.result_dict()
-        ds = list(diffs.all(expected=expected, actual=got))
+        ds = list(diffs.all(expected=expected, actual=got))  # type: ignore
         if ds:
             # Write a diff of the json
             for d in ds:
@@ -101,7 +102,7 @@ def end_to_end(datadir_status: refdatatools.DataDirStatus, ags, year=2035):
             assert False, "End to end test failed"
 
 
-def make_entries_test(ags, year):
+def make_entries_test(ags: Any, year: int):
     refdata = RefData.load()
     root = refdatatools.root_of_this_repo()
     fname = f"entries_{ags}_{year}.json"
@@ -109,7 +110,7 @@ def make_entries_test(ags, year):
         expected = json.load(fp)
         e = makeentries.make_entries(refdata, ags, year)
         got = asdict(e)
-        ds = list(diffs.all(expected=expected, actual=got))
+        ds = list(diffs.all(expected=expected, actual=got))  # type: ignore
         if ds:
             for d in ds:
                 print(d)
@@ -121,25 +122,25 @@ def test_entries_test():
 
 
 # Default year = 2035
-def test_end_to_end_goettingen(datadir_status):
+def test_end_to_end_goettingen(datadir_status: refdatatools.DataDirStatus):
     end_to_end(datadir_status, "03159016")
 
 
 # Default year = 2035
-def test_end_to_end_germany(datadir_status):
+def test_end_to_end_germany(datadir_status: refdatatools.DataDirStatus):
     end_to_end(datadir_status, "DG000000")
 
 
 # Min year for the generator = 2021
-def test_end_to_end_goettingen_2021(datadir_status):
+def test_end_to_end_goettingen_2021(datadir_status: refdatatools.DataDirStatus):
     end_to_end(datadir_status, ags="03159016", year=2021)
 
 
 # Min year for the website = 2025
-def test_end_to_end_goettingen_2025(datadir_status):
+def test_end_to_end_goettingen_2025(datadir_status: refdatatools.DataDirStatus):
     end_to_end(datadir_status, ags="03159016", year=2025)
 
 
 # Max year for the generator and website = 2050
-def test_end_to_end_goettingen_2050(datadir_status):
+def test_end_to_end_goettingen_2050(datadir_status: refdatatools.DataDirStatus):
     end_to_end(datadir_status, ags="03159016", year=2050)

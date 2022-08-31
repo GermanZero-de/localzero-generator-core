@@ -3,10 +3,10 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Herzlich Willkommen zur Dokumentation des Generators
-====================================================
+Herzlich Willkommen zur Dokumentation des Klimavisionsgenerators
+================================================================
 
-Diese Dokumentation enthält Erklärtexte zur Berechnung der einzelnen Sektoren des LocalZero Generators.
+Diese Dokumentation enthält Erklärtexte zur Berechnung der einzelnen Sektoren des LocalZero Klimavisionsgenerators.
 
 .. toctree::
    :maxdepth: 2
