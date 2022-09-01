@@ -253,16 +253,13 @@ class Row(Generic[KeyT]):
                 data_column=attr,
                 dataset=self.dataset,
             )
-        v = float(value)
-        from . import tracednumber
-
-        return tracednumber.TracedNumber(v, f"{self.dataset}({self.key_value}).{attr}")  # type: ignore
+        return float(value)
 
     def int(self, attr: str) -> int:
         """Access an integer attribute."""
         f = self.float(attr)
         if f.is_integer():
-            if isinstance(f, float):
+            if isinstance(f, float):  # type: ignore When we monkey patch this for tracing it might actually not be a float
                 return int(f)
             else:
                 return f

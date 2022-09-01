@@ -17,9 +17,11 @@ from generatorcore.generator import calculate
 from generatorcore.refdata import RefData
 from generatorcore.makeentries import make_entries, Entries
 from http.server import HTTPServer, BaseHTTPRequestHandler
+from . import monkeypatch
 
 
 def cmd_explorer(args: Any):
+    converter = monkeypatch.maybe_enable_tracing(args)
     rd = RefData.load()
     with open("explorer/index.html", encoding="utf-8") as index_file:
         index = index_file.read()
@@ -53,7 +55,7 @@ def cmd_explorer(args: Any):
                 self.send_header("Content-type", "application/json")
                 self.send_header("Access-Control-Allow-Origin", "*")
                 self.end_headers()
-                self.wfile.write(json.dumps(response).encode())
+                self.wfile.write(json.dumps(response, default=converter).encode())
             else:
                 self.send_response(500)
                 self.send_header("Access-Control-Allow-Origin", "*")

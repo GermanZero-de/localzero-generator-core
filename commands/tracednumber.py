@@ -1,92 +1,67 @@
 # pyright: strict
 
-from dataclasses import dataclass
+# A tracednumber is a number that also stores a trace of the computation that
+# created the number.  Done by overriding all the math operations.
+# For the generator core this leads to surprisingly good traces as
+# we largely do not use for loops or ifs to decide how to do the computation.
+# Or to say it differently all we really have is just a collection of formulas
 from typing import Literal, Union, Callable
 
 
-@dataclass
-class Trace:
-    pass
+# A trace is either, one of the atoms:
+# a literal number that occurred as is in the source
+# int|float
+# or named expression
+# { name: "name", trace: <trace> }
+# or a binary operation
+# { op: "+"|"-"|"/"|"*", a: <trace>, b: <trace> }
+# or a unary operation
+# { op: "+"|"-"|"/"|"*", a: <trace>}
 
-    def level(self) -> int:
-        return 0
-
-    def as_op(self, level: int) -> str:
-        if self.level() > level:
-            return "(" + str(self) + ")"
-        else:
-            return str(self)
-
-
-@dataclass
-class NumberTrace(Trace):
-    num: float | int
-
-    def __str__(self) -> str:
-        return str(self.num)
+TRACE = Union[int, float, dict[str, Union[str, "TRACE"]]]
 
 
-@dataclass
-class NamedTrace(Trace):
-    name: str
-
-    def __str__(self) -> str:
-        return self.name
+def literal(v: int | float) -> TRACE:
+    return v
 
 
-@dataclass
-class BinOpTrace(Trace):
-    op: Literal["+", "-", "*", "/"]
-    a: Trace
-    b: Trace
-
-    def level(self) -> int:
-        if self.op == "*" or self.op == "/":
-            return 1
-        else:
-            return 2
-
-    def __str__(self) -> str:
-        return (
-            self.a.as_op(self.level())
-            + " "
-            + self.op
-            + " "
-            + self.b.as_op(self.level())
-        )
+def named(name: str, t: TRACE) -> TRACE:
+    return {"name": name, "trace": t}
 
 
-@dataclass
-class UnaryTrace(Trace):
-    op: Literal["-", "+"]
-    a: Trace
+def binary(op: Literal["+", "-", "*", "/"], a: TRACE, b: TRACE) -> TRACE:
+    return {"op": op, "a": a, "b": b}
 
-    def level(self):
-        return 0
 
-    def __str__(self) -> str:
-        return self.op + self.a.as_op(self.level())
+def unary(op: Literal["+", "-"], a: TRACE) -> TRACE:
+    return {"op": op, "a": a}
 
 
 class TracedNumber:
-    trace: Trace
+    trace: TRACE
     value: float | int
 
-    def __init__(self, v: float | int, trace: Trace | str | None = None):
-        if trace == None:
-            self.trace = NumberTrace(v)
-        elif isinstance(trace, str):
-            self.trace = NamedTrace(trace)
-        else:
-            self.trace = trace
+    def __init__(
+        self,
+        v: Union[float, int],
+        trace: TRACE,
+    ):
         self.value = v
+        self.trace = trace
 
     @classmethod
-    def lift(cls, v: Union["TracedNumber", float, int]):
+    def lift(cls, v: Union["TracedNumber", float, int]) -> "TracedNumber":
         if isinstance(v, (float, int)):
-            return cls(v)
+            return cls(v, literal(v))
         else:
             return v
+
+    @classmethod
+    def named(cls, v: Union["TracedNumber", float, int], name: str):
+        if isinstance(v, (float, int)):
+            return cls(v, named(name, literal(v)))
+        else:
+            return cls(v.value, named(name, v.trace))
 
     def binop(
         self,
@@ -94,11 +69,10 @@ class TracedNumber:
         other: Union["TracedNumber", float, int],
         f: Callable[[int | float, int | float], int | float],
     ) -> "TracedNumber":
-        if isinstance(other, (float, int)):
-            other = TracedNumber(other)
+        other = self.lift(other)
         return TracedNumber(
             f(self.value, other.value),
-            trace=BinOpTrace(op=op, a=self.trace, b=other.trace),
+            trace=binary(op=op, a=self.trace, b=other.trace),
         )
 
     def is_integer(self) -> bool:
@@ -141,7 +115,7 @@ class TracedNumber:
         if isinstance(other, self.__class__):
             return self.value < other.value
         else:
-            return self.value < other
+            return self.value < other  # type: ignore TODO: Figure out why the type checker does not like this but likes the above
 
     def __le__(self, other: Union["TracedNumber", float, int]) -> bool:
         if isinstance(other, self.__class__):
@@ -165,7 +139,7 @@ class TracedNumber:
         return f"{self.value} : {self.trace}"
 
     def __neg__(self) -> "TracedNumber":
-        return TracedNumber(-self.value, trace=UnaryTrace("-", self.trace))
+        return self.__class__(-self.value, trace=unary("-", self.trace))
 
-    def to_json(self):
-        return {"value": self.value, "trace": str(self.trace)}
+    def to_json(self) -> TRACE:
+        return {"value": self.value, "trace": self.trace}

@@ -8,6 +8,7 @@ def add_cmd_run_parser(subcmd_parsers: Any):
     cmd_run_parser.add_argument("-ags", default="03159016")
     cmd_run_parser.add_argument("-year", default=2035)
     cmd_run_parser.add_argument("-o", default=None)
+    cmd_run_parser.add_argument("-trace", action="store_true")
     cmd_run_parser.set_defaults(func=cmd_run)
 
 
@@ -16,4 +17,5 @@ def add_cmd_make_entries_parser(subcmd_parsers: Any):
     cmd_make_entries_parser.add_argument("-ags", default="03159016")
     cmd_make_entries_parser.add_argument("-year", default=2035)
     cmd_make_entries_parser.add_argument("-o", default=None)
+    cmd_make_entries_parser.add_argument("-trace", action="store_true")
     cmd_make_entries_parser.set_defaults(func=cmd_make_entries)
