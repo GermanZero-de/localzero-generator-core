@@ -153,6 +153,9 @@ class TracedNumber:
         else:
             return self.value.is_integer()
 
+    def __float__(self) -> float:
+        return float(self.value)
+
     def __add__(self, other: Union["TracedNumber", float, int]) -> "TracedNumber":
         return self.binop("+", other, lambda a, b: a + b)
 

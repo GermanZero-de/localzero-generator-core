@@ -9,8 +9,6 @@ import math
 import numbers
 from typing import Any, Iterator
 
-from . import tracednumber
-
 
 def float_matches(actual: Any, expected: Any, rel: Any):
     if math.isnan(actual) and math.isnan(expected):
@@ -73,9 +71,10 @@ def all_helper(path: str, actual: Any, expected: Any, *, rel: Any) -> Iterator[D
     elif isinstance(actual, numbers.Number) and isinstance(expected, numbers.Number):
         if not float_matches(actual=actual, expected=expected, rel=rel):
             yield Diff(path=path, actual=actual, expected=expected)
-    elif isinstance(actual, tracednumber.TracedNumber):
-        if not float_matches(actual=actual.value, expected=expected, rel=rel):
-            yield Diff(path=path, actual=actual, expected=expected)
+    elif hasattr(actual, "__float__"):  # type: ignore
+        f = float(actual)  # type: ignore
+        if not float_matches(actual=f, expected=expected, rel=rel):
+            yield Diff(path=path, actual=actual, expected=expected)  # type: ignore
     elif actual != expected:
         yield Diff(path=path, actual=actual, expected=expected)  # type: ignore
 
