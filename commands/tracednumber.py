@@ -29,7 +29,7 @@ class ValueWithTrace(TypedDict):
 
 class DataTrace(TypedDict):
     source: str
-    key: str
+    key: str | int
     attr: str
 
 
@@ -80,6 +80,14 @@ def use_trace(trace: TRACE) -> TRACE:
     match trace:
         case {"def_name": n, "trace": _}:
             return name(n)
+        case _:
+            return trace
+
+
+def unpack_def(trace: TRACE) -> TRACE:
+    match trace:
+        case {"def_name": _, "trace": t}:
+            return t
         case _:
             return trace
 
@@ -217,4 +225,4 @@ class TracedNumber:
         return self.__class__(-self.value, trace=unary("-", self.trace))
 
     def to_json(self) -> ValueWithTrace:
-        return {"value": self.value, "trace": self.trace}
+        return {"value": self.value, "trace": unpack_def(self.trace)}

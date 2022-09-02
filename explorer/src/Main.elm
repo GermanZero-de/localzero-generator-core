@@ -127,7 +127,7 @@ type alias ActiveOverrideEditor =
 type alias ActiveSearch =
     { runId : RunId
     , pattern : String
-    , result : Tree.Tree Value
+    , result : Tree.Tree Value.MaybeWithTrace
     }
 
 
@@ -146,7 +146,7 @@ type alias DiffId =
 
 
 type alias DiffData =
-    { diff : Tree (Diff Value)
+    { diff : Tree (Diff Value.MaybeWithTrace)
     , tolerance : Float -- 0 to 100.0
     }
 
@@ -179,6 +179,14 @@ type alias Model =
     , selectedForComparison : Maybe RunId
     , leftPaneWidth : Int
     , dragDrop : DragDrop
+    , displayedTrace : Maybe DisplayedTrace
+    }
+
+
+type alias DisplayedTrace =
+    { path : Path
+    , value : Value
+    , trace : Value.Trace
     }
 
 
@@ -227,6 +235,7 @@ toClipboardData lens allRuns =
                     let
                         value =
                             Dict.get ( r, p ) valueSet.values
+                                |> Maybe.map .value
                                 |> Maybe.withDefault Value.Null
                     in
                     case value of
@@ -256,7 +265,7 @@ initiateCalculate maybeNdx inputs entries overrides model =
     ( { model | showModal = Just Loading }
     , Http.post
         { url = "http://localhost:4070/calculate/" ++ inputs.ags ++ "/" ++ String.fromInt inputs.year
-        , expect = Http.expectJson (GotGeneratorResult maybeNdx inputs entries overrides) (Tree.decoder Value.decoder)
+        , expect = Http.expectJson (GotGeneratorResult maybeNdx inputs entries overrides) (Tree.decoder Value.maybeWithTraceDecoder)
         , body = Http.jsonBody (encodeOverrides overrides)
         }
     )
@@ -293,6 +302,7 @@ init storage =
     , selectedForComparison = Nothing
     , leftPaneWidth = 600
     , dragDrop = DragDrop.init
+    , displayedTrace = Nothing
     }
         |> update (LocalStorageLoaded storage)
 
@@ -303,8 +313,11 @@ init storage =
 
 type Msg
     = -- Running the generator
-      GotGeneratorResult (Maybe RunId) Run.Inputs Run.Entries Run.Overrides (Result Http.Error (Tree Value))
+      GotGeneratorResult (Maybe RunId) Run.Inputs Run.Entries Run.Overrides (Result Http.Error (Tree Value.MaybeWithTrace))
     | GotEntries (Maybe RunId) Run.Inputs Run.Overrides (Result Http.Error Run.Entries)
+      -- trace handling
+    | DisplayTrace Path Value Value.Trace
+    | CloseTrace
       -- Override handling
     | AddOrUpdateOverrideClicked RunId String Float
     | RemoveOverrideClicked RunId String
@@ -468,6 +481,14 @@ update msg model =
             model
                 |> withNoCmd
 
+        DisplayTrace path value trace ->
+            { model | displayedTrace = Just { path = path, value = value, trace = trace } }
+                |> withNoCmd
+
+        CloseTrace ->
+            { model | displayedTrace = Nothing }
+                |> withNoCmd
+
         AddRowToLensTableClicked id num ->
             model
                 |> activateLens id
@@ -541,9 +562,13 @@ update msg model =
             model
                 |> initiateCalculate maybeRunId inputs entries overrides
 
+        GotEntries _ _ _ (Err (Http.BadBody error)) ->
+            model
+                |> withErrorMessage "Failed to decode entries" error
+
         GotEntries _ _ _ (Err _) ->
             model
-                |> withNoCmd
+                |> withErrorMessage "Failed to get entries " ""
 
         GotGeneratorResult maybeRunId inputs entries overrides resultOrError ->
             case resultOrError of
@@ -1137,7 +1162,7 @@ diffRunsById idA idB tolerance model =
         ( Just runA, Just runB ) ->
             let
                 diff =
-                    Diff.diff (Value.isEqual (tolerance / 100.0))
+                    Diff.diff (Value.isValueEqual (tolerance / 100.0))
                         (Run.getTree WithOverrides runA)
                         (Run.getTree WithOverrides runB)
 
@@ -1219,7 +1244,7 @@ viewChart chartHovering shortPathLabels interestListTable =
                     (\runId ->
                         let
                             get path =
-                                case Dict.get ( runId, path ) interestListTable.values of
+                                case Dict.get ( runId, path ) interestListTable.values |> Maybe.map .value of
                                     Just (Float f) ->
                                         f
 
@@ -1471,13 +1496,13 @@ viewValueTree :
     -> Lens
     -> Run.Overrides
     -> Maybe ActiveOverrideEditor
-    -> Tree Value
+    -> Tree Value.MaybeWithTrace
     -> Element Msg
 viewValueTree runId lensId path checkIsCollapsed lens overrides activeOverrideEditor tree =
     let
-        viewLeaf : Run.Path -> String -> Value -> List (Element Msg)
-        viewLeaf pathToParent name value =
-            case value of
+        viewLeaf : Run.Path -> String -> Value.MaybeWithTrace -> List (Element Msg)
+        viewLeaf pathToParent name valueWithTrace =
+            case valueWithTrace.value of
                 Null ->
                     [ el [ width (px 16) ] Element.none
                     , el [ width fill ] (text name)
@@ -1518,6 +1543,17 @@ viewValueTree runId lensId path checkIsCollapsed lens overrides activeOverrideEd
                                 )
                     in
                     [ button
+                    , case valueWithTrace.trace of
+                        Nothing ->
+                            iconButton (size16 FeatherIcons.info) Noop
+
+                        Just t ->
+                            iconButton (size16 FeatherIcons.info)
+                                (DisplayTrace
+                                    thisPath
+                                    valueWithTrace.value
+                                    t
+                                )
                     , el
                         ([ width fill
                          ]
@@ -1543,33 +1579,33 @@ buttons l =
     row [ Element.spacingXY sizes.medium 0 ] l
 
 
-viewDiffTree : Explorable.Id -> CollapseStatus -> Tree (Diff.Diff Value) -> Element Msg
+viewDiffTree : Explorable.Id -> CollapseStatus -> Tree (Diff.Diff Value.MaybeWithTrace) -> Element Msg
 viewDiffTree id collapseStatus tree =
     let
         missingElement =
             el (Font.alignRight :: fonts.explorerValues) <|
                 text "∅"
 
-        viewLeaf : Run.Path -> String -> Diff.Diff Value -> List (Element Msg)
+        viewLeaf : Run.Path -> String -> Diff.Diff Value.MaybeWithTrace -> List (Element Msg)
         viewLeaf pathToParent name leaf =
             -- TODO: Make the diff display something useful in more cases
             case leaf of
                 LeftOnly v ->
                     [ el [ width fill ] (text name)
-                    , viewValue v
+                    , viewValue v.value
                     , missingElement
                     ]
 
                 Unequal a b ->
                     [ el [ width fill ] (text name)
-                    , viewValue a
-                    , viewValue b
+                    , viewValue a.value
+                    , viewValue b.value
                     ]
 
                 RightOnly v ->
                     [ el [ width fill ] (text name)
                     , missingElement
-                    , viewValue v
+                    , viewValue v.value
                     ]
     in
     viewTree
@@ -1935,18 +1971,20 @@ viewValueSetAsUserDefinedTable lensId dragDrop td valueSet =
                                         -- Making the compiler happy
                                         cellElement [ Font.alignRight ] (text "INTERNAL ERROR")
 
-                                    Just (Float f) ->
-                                        cellElement [ Font.alignRight ] (text (formatGermanNumber f))
+                                    Just valueAndTrace ->
+                                        case valueAndTrace.value of
+                                            Float f ->
+                                                cellElement [ Font.alignRight ] (text (formatGermanNumber f))
 
-                                    Just Null ->
-                                        cellElement [ Font.alignRight, Font.bold ] (text "null")
+                                            Null ->
+                                                cellElement [ Font.alignRight, Font.bold ] (text "null")
 
-                                    Just (String s) ->
-                                        cellElement
-                                            [ Font.alignRight
-                                            , Font.family [ Font.monospace ]
-                                            ]
-                                            (text s)
+                                            String s ->
+                                                cellElement
+                                                    [ Font.alignRight
+                                                    , Font.family [ Font.monospace ]
+                                                    ]
+                                                    (text s)
             in
             case td.editing of
                 Nothing ->
@@ -2221,7 +2259,7 @@ viewValueSetAsClassicTable shortPathLabels lensId valueSet =
                             \path ->
                                 let
                                     value =
-                                        case Dict.get ( runId, path ) valueSet.values of
+                                        case Dict.get ( runId, path ) valueSet.values |> Maybe.map .value of
                                             Just (Float f) ->
                                                 el (Font.alignRight :: fonts.explorerValues) <|
                                                     text (formatGermanNumber f)
@@ -2413,6 +2451,176 @@ viewLens id dragDrop editingActiveLensLabel isActive lens chartHovering allRuns 
         ]
 
 
+viewRunsAndInterestLists : Model -> Element Msg
+viewRunsAndInterestLists model =
+    let
+        interestLists =
+            Pivot.indexAbsolute model.lenses
+                |> Pivot.toList
+                |> List.map
+                    (\( pos, il ) ->
+                        let
+                            activePos =
+                                Pivot.lengthL model.lenses
+                        in
+                        viewLens pos
+                            model.dragDrop
+                            model.editingActiveLensLabel
+                            (pos == activePos)
+                            il
+                            model.chartHovering
+                            model.runs
+                    )
+    in
+    row
+        [ width fill
+        , height (minimum 0 fill)
+        , spacing sizes.large
+        ]
+        [ viewRunsAndComparisons model
+        , el
+            [ width (px 2)
+            , Background.color black
+            , height fill
+            ]
+            Element.none
+        , el
+            [ width fill
+            , height (minimum 0 fill)
+            , Element.inFront
+                (row
+                    [ spacing 10
+                    , Element.alignBottom
+                    , Element.moveUp 10
+                    , Element.alignRight
+                    , padding 0
+                    ]
+                    [ floatingActionButton FeatherIcons.plus NewLensClicked
+                    , floatingActionButton FeatherIcons.grid NewTableClicked
+                    ]
+                )
+            ]
+            (column
+                [ width fill
+                , height (minimum 0 fill)
+                , scrollbarY
+                , spacing sizes.medium
+                , padding sizes.medium
+                ]
+                interestLists
+            )
+        ]
+
+
+level : Value.Trace -> Int
+level tr =
+    case tr of
+        Value.LiteralTrace _ ->
+            0
+
+        Value.NameTrace _ ->
+            0
+
+        Value.DataTrace _ ->
+            0
+
+        Value.FactOrAssTrace _ ->
+            0
+
+        Value.UnaryTrace _ ->
+            1
+
+        Value.BinaryTrace { binary } ->
+            case binary of
+                Value.Times ->
+                    2
+
+                Value.Divide ->
+                    2
+
+                Value.Plus ->
+                    3
+
+                Value.Minus ->
+                    3
+
+
+viewTrace : Value.Trace -> Element Msg
+viewTrace t =
+    let
+        viewWithParens child =
+            if level t < level child then
+                row [ spacing sizes.small ] [ text "(", viewTrace child, text ")" ]
+
+            else
+                viewTrace child
+    in
+    case t of
+        Value.DataTrace { source, key, attr } ->
+            text (source ++ "[" ++ key ++ "]." ++ attr)
+
+        Value.LiteralTrace f ->
+            text (formatGermanNumber f)
+
+        Value.NameTrace { name } ->
+            text name
+
+        Value.FactOrAssTrace { fact_or_ass } ->
+            text fact_or_ass
+
+        Value.UnaryTrace { unary, a } ->
+            row [ spacing sizes.small ]
+                [ case unary of
+                    Value.UnaryMinus ->
+                        text "-"
+
+                    Value.UnaryPlus ->
+                        text "+"
+                , viewWithParens a
+                ]
+
+        Value.BinaryTrace { binary, a, b } ->
+            -- TODO: This doesn't add the parentheses correctly
+            row [ spacing sizes.small ]
+                [ viewWithParens a
+                , case binary of
+                    Value.Plus ->
+                        text "+"
+
+                    Value.Minus ->
+                        text "-"
+
+                    Value.Times ->
+                        text "*"
+
+                    Value.Divide ->
+                        text "/"
+                , viewWithParens b
+                ]
+
+
+viewDisplayedTrace : DisplayedTrace -> Element Msg
+viewDisplayedTrace { path, value, trace } =
+    column
+        [ width fill
+        , height fill
+        , padding sizes.large
+        ]
+        [ row [ width fill, padding sizes.medium, spacing sizes.small ]
+            [ row [ width fill ]
+                [ text (String.join "." path ++ ":")
+                , viewValue value
+                ]
+            , iconButton FeatherIcons.x CloseTrace
+            ]
+        , row [ padding sizes.medium, spacing sizes.small ] [ viewTrace trace ]
+        , el [ padding sizes.medium, Font.size 8 ]
+            (scrollableText
+                (Debug.toString trace)
+            )
+        ]
+
+
 viewModel : Model -> Element Msg
 viewModel model =
     let
@@ -2432,68 +2640,18 @@ viewModel model =
                     , iconButton FeatherIcons.upload UploadClicked
                     ]
                 ]
-
-        interestLists =
-            Pivot.indexAbsolute model.lenses
-                |> Pivot.toList
-                |> List.map
-                    (\( pos, il ) ->
-                        let
-                            activePos =
-                                Pivot.lengthL model.lenses
-                        in
-                        viewLens pos
-                            model.dragDrop
-                            model.editingActiveLensLabel
-                            (pos == activePos)
-                            il
-                            model.chartHovering
-                            model.runs
-                    )
     in
     column
         [ width fill
         , height (minimum 0 fill)
         ]
         [ topBar
-        , row
-            [ width fill
-            , height (minimum 0 fill)
-            , spacing sizes.large
-            ]
-            [ viewRunsAndComparisons model
-            , el
-                [ width (px 2)
-                , Background.color black
-                , height fill
-                ]
-                Element.none
-            , el
-                [ width fill
-                , height (minimum 0 fill)
-                , Element.inFront
-                    (row
-                        [ spacing 10
-                        , Element.alignBottom
-                        , Element.moveUp 10
-                        , Element.alignRight
-                        , padding 0
-                        ]
-                        [ floatingActionButton FeatherIcons.plus NewLensClicked
-                        , floatingActionButton FeatherIcons.grid NewTableClicked
-                        ]
-                    )
-                ]
-                (column
-                    [ width fill
-                    , height (minimum 0 fill)
-                    , scrollbarY
-                    , spacing sizes.medium
-                    , padding sizes.medium
-                    ]
-                    interestLists
-                )
-            ]
+        , case model.displayedTrace of
+            Nothing ->
+                viewRunsAndInterestLists model
+
+            Just dt ->
+                viewDisplayedTrace dt
         ]
 
 
@@ -2535,7 +2693,7 @@ viewModalDialogBox title content =
                 , el
                     [ Background.color white
                     , width fill
-                    , height fill
+                    , height (minimum 0 fill)
                     , padding sizes.medium
                     ]
                     content

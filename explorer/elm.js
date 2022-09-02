@@ -6264,7 +6264,10 @@ var $author$project$Run$getTree = F2(
 							} else {
 								var o = _v3.a;
 								return $author$project$Tree$Leaf(
-									$author$project$Value$Float(o));
+									{
+										trace: $elm$core$Maybe$Nothing,
+										value: $author$project$Value$Float(o)
+									});
 							}
 						}),
 					r.entries);
@@ -6392,7 +6395,10 @@ var $author$project$ValueSet$create = F2(
 					if (_v1.$ === 'Nothing') {
 						return _Utils_Tuple2(
 							_Utils_Tuple2(runId, path),
-							$author$project$Value$String(''));
+							{
+								trace: $elm$core$Maybe$Nothing,
+								value: $author$project$Value$String('')
+							});
 					} else {
 						var run = _v1.a;
 						var _v2 = A2(
@@ -6402,12 +6408,18 @@ var $author$project$ValueSet$create = F2(
 						if (_v2.$ === 'Nothing') {
 							return _Utils_Tuple2(
 								_Utils_Tuple2(runId, path),
-								$author$project$Value$String(''));
+								{
+									trace: $elm$core$Maybe$Nothing,
+									value: $author$project$Value$String('')
+								});
 						} else {
 							if (_v2.a.$ === 'Tree') {
 								return _Utils_Tuple2(
 									_Utils_Tuple2(runId, path),
-									$author$project$Value$String('TREE'));
+									{
+										trace: $elm$core$Maybe$Nothing,
+										value: $author$project$Value$String('TREE')
+									});
 							} else {
 								var v = _v2.a.a;
 								return _Utils_Tuple2(
@@ -7208,6 +7220,10 @@ var $author$project$Value$isEqual = F3(
 				}
 		}
 	});
+var $author$project$Value$isValueEqual = F3(
+	function (tolerance, a, b) {
+		return A3($author$project$Value$isEqual, tolerance, a.value, b.value);
+	});
 var $author$project$Main$diffRunsById = F4(
 	function (idA, idB, tolerance, model) {
 		var _v0 = _Utils_Tuple2(
@@ -7225,7 +7241,7 @@ var $author$project$Main$diffRunsById = F4(
 				var runB = _v0.b.a;
 				var diff = A3(
 					$author$project$Diff$diff,
-					$author$project$Value$isEqual(tolerance / 100.0),
+					$author$project$Value$isValueEqual(tolerance / 100.0),
 					A2($author$project$Run$getTree, $author$project$Run$WithOverrides, runA),
 					A2($author$project$Run$getTree, $author$project$Run$WithOverrides, runB));
 				var diffData = {diff: diff, tolerance: tolerance};
@@ -7990,16 +8006,6 @@ var $author$project$Tree$treeDecoder = function (valueDecoder) {
 var $author$project$Tree$decoder = function (valueDecoder) {
 	return $author$project$Tree$treeDecoder(valueDecoder);
 };
-var $author$project$Value$Null = {$: 'Null'};
-var $elm$json$Json$Decode$float = _Json_decodeFloat;
-var $elm$json$Json$Decode$null = _Json_decodeNull;
-var $author$project$Value$decoder = $elm$json$Json$Decode$oneOf(
-	_List_fromArray(
-		[
-			A2($elm$json$Json$Decode$map, $author$project$Value$Float, $elm$json$Json$Decode$float),
-			A2($elm$json$Json$Decode$map, $author$project$Value$String, $elm$json$Json$Decode$string),
-			$elm$json$Json$Decode$null($author$project$Value$Null)
-		]));
 var $elm$json$Json$Encode$dict = F3(
 	function (toKey, toValue, dictionary) {
 		return _Json_wrap(
@@ -8492,6 +8498,186 @@ var $elm$http$Http$jsonBody = function (value) {
 		'application/json',
 		A2($elm$json$Json$Encode$encode, 0, value));
 };
+var $author$project$Value$Null = {$: 'Null'};
+var $elm$json$Json$Decode$float = _Json_decodeFloat;
+var $elm$json$Json$Decode$null = _Json_decodeNull;
+var $author$project$Value$decoder = $elm$json$Json$Decode$oneOf(
+	_List_fromArray(
+		[
+			A2($elm$json$Json$Decode$map, $author$project$Value$Float, $elm$json$Json$Decode$float),
+			A2($elm$json$Json$Decode$map, $author$project$Value$String, $elm$json$Json$Decode$string),
+			$elm$json$Json$Decode$null($author$project$Value$Null)
+		]));
+var $author$project$Value$BinaryTrace = function (a) {
+	return {$: 'BinaryTrace', a: a};
+};
+var $author$project$Value$LiteralTrace = function (a) {
+	return {$: 'LiteralTrace', a: a};
+};
+var $author$project$Value$UnaryTrace = function (a) {
+	return {$: 'UnaryTrace', a: a};
+};
+var $author$project$Value$Divide = {$: 'Divide'};
+var $author$project$Value$Minus = {$: 'Minus'};
+var $author$project$Value$Plus = {$: 'Plus'};
+var $author$project$Value$Times = {$: 'Times'};
+var $author$project$Value$binaryOpDecoder = A2(
+	$elm$json$Json$Decode$andThen,
+	function (s) {
+		switch (s) {
+			case '+':
+				return $elm$json$Json$Decode$succeed($author$project$Value$Plus);
+			case '-':
+				return $elm$json$Json$Decode$succeed($author$project$Value$Minus);
+			case '*':
+				return $elm$json$Json$Decode$succeed($author$project$Value$Times);
+			case '/':
+				return $elm$json$Json$Decode$succeed($author$project$Value$Divide);
+			default:
+				return $elm$json$Json$Decode$fail('not a valid binary op');
+		}
+	},
+	$elm$json$Json$Decode$string);
+var $author$project$Value$DataTrace = function (a) {
+	return {$: 'DataTrace', a: a};
+};
+var $elm$json$Json$Decode$map3 = _Json_map3;
+var $author$project$Value$dataTraceDecoder = A4(
+	$elm$json$Json$Decode$map3,
+	F3(
+		function (s, k, a) {
+			return $author$project$Value$DataTrace(
+				{attr: a, key: k, source: s});
+		}),
+	A2($elm$json$Json$Decode$field, 'source', $elm$json$Json$Decode$string),
+	A2(
+		$elm$json$Json$Decode$field,
+		'key',
+		$elm$json$Json$Decode$oneOf(
+			_List_fromArray(
+				[
+					$elm$json$Json$Decode$string,
+					A2($elm$json$Json$Decode$map, $elm$core$String$fromInt, $elm$json$Json$Decode$int)
+				]))),
+	A2($elm$json$Json$Decode$field, 'attr', $elm$json$Json$Decode$string));
+var $author$project$Value$FactOrAssTrace = function (a) {
+	return {$: 'FactOrAssTrace', a: a};
+};
+var $author$project$Value$factOrAssTraceDecoder = A2(
+	$elm$json$Json$Decode$map,
+	function (s) {
+		return $author$project$Value$FactOrAssTrace(
+			{fact_or_ass: s});
+	},
+	A2($elm$json$Json$Decode$field, 'fact_or_ass', $elm$json$Json$Decode$string));
+var $author$project$Value$NameTrace = function (a) {
+	return {$: 'NameTrace', a: a};
+};
+var $author$project$Value$nameTraceDecoder = A2(
+	$elm$json$Json$Decode$map,
+	function (s) {
+		return $author$project$Value$NameTrace(
+			{name: s});
+	},
+	A2($elm$json$Json$Decode$field, 'name', $elm$json$Json$Decode$string));
+var $author$project$Value$UnaryMinus = {$: 'UnaryMinus'};
+var $author$project$Value$UnaryPlus = {$: 'UnaryPlus'};
+var $author$project$Value$unaryOpDecoder = A2(
+	$elm$json$Json$Decode$andThen,
+	function (s) {
+		switch (s) {
+			case '+':
+				return $elm$json$Json$Decode$succeed($author$project$Value$UnaryPlus);
+			case '-':
+				return $elm$json$Json$Decode$succeed($author$project$Value$UnaryMinus);
+			default:
+				return $elm$json$Json$Decode$fail('not a valid unary op');
+		}
+	},
+	$elm$json$Json$Decode$string);
+function $author$project$Value$cyclic$binaryTraceDecoder() {
+	return A4(
+		$elm$json$Json$Decode$map3,
+		F3(
+			function (o, a, b) {
+				return $author$project$Value$BinaryTrace(
+					{a: a, b: b, binary: o});
+			}),
+		A2($elm$json$Json$Decode$field, 'binary', $author$project$Value$binaryOpDecoder),
+		A2(
+			$elm$json$Json$Decode$field,
+			'a',
+			$author$project$Value$cyclic$traceDecoder()),
+		A2(
+			$elm$json$Json$Decode$field,
+			'b',
+			$author$project$Value$cyclic$traceDecoder()));
+}
+function $author$project$Value$cyclic$unaryTraceDecoder() {
+	return A3(
+		$elm$json$Json$Decode$map2,
+		F2(
+			function (o, a) {
+				return $author$project$Value$UnaryTrace(
+					{a: a, unary: o});
+			}),
+		A2($elm$json$Json$Decode$field, 'unary', $author$project$Value$unaryOpDecoder),
+		A2(
+			$elm$json$Json$Decode$field,
+			'a',
+			$author$project$Value$cyclic$traceDecoder()));
+}
+function $author$project$Value$cyclic$traceDecoder() {
+	return $elm$json$Json$Decode$lazy(
+		function (_v0) {
+			return $elm$json$Json$Decode$oneOf(
+				_List_fromArray(
+					[
+						A2($elm$json$Json$Decode$map, $author$project$Value$LiteralTrace, $elm$json$Json$Decode$float),
+						$author$project$Value$dataTraceDecoder,
+						$author$project$Value$factOrAssTraceDecoder,
+						$author$project$Value$cyclic$binaryTraceDecoder(),
+						$author$project$Value$nameTraceDecoder,
+						$author$project$Value$cyclic$unaryTraceDecoder()
+					]));
+		});
+}
+try {
+	var $author$project$Value$binaryTraceDecoder = $author$project$Value$cyclic$binaryTraceDecoder();
+	$author$project$Value$cyclic$binaryTraceDecoder = function () {
+		return $author$project$Value$binaryTraceDecoder;
+	};
+	var $author$project$Value$unaryTraceDecoder = $author$project$Value$cyclic$unaryTraceDecoder();
+	$author$project$Value$cyclic$unaryTraceDecoder = function () {
+		return $author$project$Value$unaryTraceDecoder;
+	};
+	var $author$project$Value$traceDecoder = $author$project$Value$cyclic$traceDecoder();
+	$author$project$Value$cyclic$traceDecoder = function () {
+		return $author$project$Value$traceDecoder;
+	};
+} catch ($) {
+	throw 'Some top-level definitions from `Value` are causing infinite recursion:\n\n  ┌─────┐\n  │    binaryTraceDecoder\n  │     ↓\n  │    unaryTraceDecoder\n  │     ↓\n  │    traceDecoder\n  └─────┘\n\nThese errors are very tricky, so read https://elm-lang.org/0.19.1/bad-recursion to learn how to fix it!';}
+var $author$project$Value$maybeWithTraceDecoder = $elm$json$Json$Decode$oneOf(
+	_List_fromArray(
+		[
+			A2(
+			$elm$json$Json$Decode$map,
+			function (v) {
+				return {trace: $elm$core$Maybe$Nothing, value: v};
+			},
+			$author$project$Value$decoder),
+			A3(
+			$elm$json$Json$Decode$map2,
+			F2(
+				function (v, t) {
+					return {
+						trace: $elm$core$Maybe$Just(t),
+						value: v
+					};
+				}),
+			A2($elm$json$Json$Decode$field, 'value', $author$project$Value$decoder),
+			A2($elm$json$Json$Decode$field, 'trace', $author$project$Value$traceDecoder))
+		]));
 var $elm$http$Http$Request = function (a) {
 	return {$: 'Request', a: a};
 };
@@ -8661,7 +8847,7 @@ var $author$project$Main$initiateCalculate = F5(
 					expect: A2(
 						$elm$http$Http$expectJson,
 						A4($author$project$Main$GotGeneratorResult, maybeNdx, inputs, entries, overrides),
-						$author$project$Tree$decoder($author$project$Value$decoder)),
+						$author$project$Tree$decoder($author$project$Value$maybeWithTraceDecoder)),
 					url: 'http://localhost:4070/calculate/' + (inputs.ags + ('/' + $elm$core$String$fromInt(inputs.year)))
 				}));
 	});
@@ -8669,7 +8855,7 @@ var $author$project$Main$GotEntries = F4(
 	function (a, b, c, d) {
 		return {$: 'GotEntries', a: a, b: b, c: c, d: d};
 	});
-var $author$project$Run$entriesDecoder = $elm$json$Json$Decode$dict($author$project$Value$decoder);
+var $author$project$Run$entriesDecoder = $elm$json$Json$Decode$dict($author$project$Value$maybeWithTraceDecoder);
 var $elm$http$Http$emptyBody = _Http_emptyBody;
 var $elm$http$Http$get = function (r) {
 	return $elm$http$Http$request(
@@ -9205,9 +9391,14 @@ var $author$project$Main$toClipboardData = F2(
 					$elm$core$Maybe$withDefault,
 					$author$project$Value$Null,
 					A2(
-						$elm$core$Dict$get,
-						_Utils_Tuple2(r, p),
-						valueSet.values));
+						$elm$core$Maybe$map,
+						function ($) {
+							return $.value;
+						},
+						A2(
+							$elm$core$Dict$get,
+							_Utils_Tuple2(r, p),
+							valueSet.values)));
 				switch (value.$) {
 					case 'Float':
 						var f = value.a;
@@ -9546,6 +9737,22 @@ var $author$project$Main$update = F2(
 		switch (msg.$) {
 			case 'Noop':
 				return $Janiczek$cmd_extra$Cmd$Extra$withNoCmd(model);
+			case 'DisplayTrace':
+				var path = msg.a;
+				var value = msg.b;
+				var trace = msg.c;
+				return $Janiczek$cmd_extra$Cmd$Extra$withNoCmd(
+					_Utils_update(
+						model,
+						{
+							displayedTrace: $elm$core$Maybe$Just(
+								{path: path, trace: trace, value: value})
+						}));
+			case 'CloseTrace':
+				return $Janiczek$cmd_extra$Cmd$Extra$withNoCmd(
+					_Utils_update(
+						model,
+						{displayedTrace: $elm$core$Maybe$Nothing}));
 			case 'AddRowToLensTableClicked':
 				var id = msg.a;
 				var num = msg.b;
@@ -9655,7 +9862,12 @@ var $author$project$Main$update = F2(
 					var entries = msg.d.a;
 					return A5($author$project$Main$initiateCalculate, maybeRunId, inputs, entries, overrides, model);
 				} else {
-					return $Janiczek$cmd_extra$Cmd$Extra$withNoCmd(model);
+					if (msg.d.a.$ === 'BadBody') {
+						var error = msg.d.a.a;
+						return A3($author$project$Main$withErrorMessage, 'Failed to decode entries', error, model);
+					} else {
+						return A3($author$project$Main$withErrorMessage, 'Failed to get entries ', '', model);
+					}
 				}
 			case 'GotGeneratorResult':
 				var maybeRunId = msg.a;
@@ -10513,6 +10725,7 @@ var $author$project$Main$init = function (storage) {
 			chartHovering: _List_Nil,
 			collapseStatus: $author$project$CollapseStatus$allCollapsed,
 			diffs: $elm$core$Dict$empty,
+			displayedTrace: $elm$core$Maybe$Nothing,
 			dragDrop: $author$project$Html5$DragDrop$init,
 			editingActiveLensLabel: false,
 			leftPaneWidth: 600,
@@ -18368,7 +18581,8 @@ var $author$project$Main$viewModalDialogBox = F2(
 										[
 											$mdgriffith$elm_ui$Element$Background$color($author$project$Styling$white),
 											$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
-											$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
+											$mdgriffith$elm_ui$Element$height(
+											A2($mdgriffith$elm_ui$Element$minimum, 0, $mdgriffith$elm_ui$Element$fill)),
 											$mdgriffith$elm_ui$Element$padding($author$project$Styling$sizes.medium)
 										]),
 									content)
@@ -18379,13 +18593,7 @@ var $author$project$Main$viewModalDialogBox = F2(
 				]));
 	});
 var $author$project$Main$DownloadClicked = {$: 'DownloadClicked'};
-var $author$project$Main$NewLensClicked = {$: 'NewLensClicked'};
-var $author$project$Main$NewTableClicked = {$: 'NewTableClicked'};
 var $author$project$Main$UploadClicked = {$: 'UploadClicked'};
-var $mdgriffith$elm_ui$Internal$Model$Bottom = {$: 'Bottom'};
-var $mdgriffith$elm_ui$Element$alignBottom = $mdgriffith$elm_ui$Internal$Model$AlignY($mdgriffith$elm_ui$Internal$Model$Bottom);
-var $mdgriffith$elm_ui$Internal$Model$Right = {$: 'Right'};
-var $mdgriffith$elm_ui$Element$alignRight = $mdgriffith$elm_ui$Internal$Model$AlignX($mdgriffith$elm_ui$Internal$Model$Right);
 var $author$project$Styling$black = A3($mdgriffith$elm_ui$Element$rgb255, 0, 0, 0);
 var $author$project$Main$buttons = function (l) {
 	return A2(
@@ -18428,6 +18636,655 @@ var $feathericons$elm_feather$FeatherIcons$download = A2(
 				]),
 			_List_Nil)
 		]));
+var $mdgriffith$elm_ui$Element$Font$family = function (families) {
+	return A2(
+		$mdgriffith$elm_ui$Internal$Model$StyleClass,
+		$mdgriffith$elm_ui$Internal$Flag$fontFamily,
+		A2(
+			$mdgriffith$elm_ui$Internal$Model$FontFamily,
+			A3($elm$core$List$foldl, $mdgriffith$elm_ui$Internal$Model$renderFontClassName, 'ff-', families),
+			families));
+};
+var $mdgriffith$elm_ui$Internal$Model$Monospace = {$: 'Monospace'};
+var $mdgriffith$elm_ui$Element$Font$monospace = $mdgriffith$elm_ui$Internal$Model$Monospace;
+var $author$project$Styling$fonts = {
+	explorer: _List_fromArray(
+		[
+			$mdgriffith$elm_ui$Element$Font$size($author$project$Styling$sizes.fontSize)
+		]),
+	explorerItems: _List_fromArray(
+		[
+			$mdgriffith$elm_ui$Element$Font$size(16)
+		]),
+	explorerNodeSize: _List_fromArray(
+		[
+			$mdgriffith$elm_ui$Element$Font$size(16)
+		]),
+	explorerValues: _List_fromArray(
+		[
+			$mdgriffith$elm_ui$Element$Font$size(16),
+			$mdgriffith$elm_ui$Element$Font$family(
+			_List_fromArray(
+				[$mdgriffith$elm_ui$Element$Font$monospace]))
+		]),
+	smallTextButton: _List_fromArray(
+		[
+			$mdgriffith$elm_ui$Element$Font$size(12)
+		]),
+	table: _List_fromArray(
+		[
+			$mdgriffith$elm_ui$Element$Font$size($author$project$Styling$sizes.tableFontSize)
+		])
+};
+var $feathericons$elm_feather$FeatherIcons$upload = A2(
+	$feathericons$elm_feather$FeatherIcons$makeBuilder,
+	'upload',
+	_List_fromArray(
+		[
+			A2(
+			$elm$svg$Svg$path,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$d('M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4')
+				]),
+			_List_Nil),
+			A2(
+			$elm$svg$Svg$polyline,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$points('17 8 12 3 7 8')
+				]),
+			_List_Nil),
+			A2(
+			$elm$svg$Svg$line,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$x1('12'),
+					$elm$svg$Svg$Attributes$y1('3'),
+					$elm$svg$Svg$Attributes$x2('12'),
+					$elm$svg$Svg$Attributes$y2('15')
+				]),
+			_List_Nil)
+		]));
+var $author$project$Main$CloseTrace = {$: 'CloseTrace'};
+var $elm$core$Debug$toString = _Debug_toString;
+var $coinop_logan$elm_format_number$Parser$FormattedNumber = F5(
+	function (original, integers, decimals, prefix, suffix) {
+		return {decimals: decimals, integers: integers, original: original, prefix: prefix, suffix: suffix};
+	});
+var $coinop_logan$elm_format_number$Parser$Negative = {$: 'Negative'};
+var $coinop_logan$elm_format_number$Parser$Positive = {$: 'Positive'};
+var $coinop_logan$elm_format_number$Parser$Zero = {$: 'Zero'};
+var $elm$core$List$singleton = function (value) {
+	return _List_fromArray(
+		[value]);
+};
+var $coinop_logan$elm_format_number$Parser$classify = function (formatted) {
+	var onlyZeros = A2(
+		$elm$core$String$all,
+		function (_char) {
+			return _Utils_eq(
+				_char,
+				_Utils_chr('0'));
+		},
+		$elm$core$String$concat(
+			A2(
+				$elm$core$List$append,
+				formatted.integers,
+				$elm$core$List$singleton(formatted.decimals))));
+	return onlyZeros ? $coinop_logan$elm_format_number$Parser$Zero : ((formatted.original < 0) ? $coinop_logan$elm_format_number$Parser$Negative : $coinop_logan$elm_format_number$Parser$Positive);
+};
+var $elm$core$String$filter = _String_filter;
+var $elm$core$String$foldr = _String_foldr;
+var $elm$core$String$toList = function (string) {
+	return A3($elm$core$String$foldr, $elm$core$List$cons, _List_Nil, string);
+};
+var $myrho$elm_round$Round$addSign = F2(
+	function (signed, str) {
+		var isNotZero = A2(
+			$elm$core$List$any,
+			function (c) {
+				return (!_Utils_eq(
+					c,
+					_Utils_chr('0'))) && (!_Utils_eq(
+					c,
+					_Utils_chr('.')));
+			},
+			$elm$core$String$toList(str));
+		return _Utils_ap(
+			(signed && isNotZero) ? '-' : '',
+			str);
+	});
+var $elm$core$String$cons = _String_cons;
+var $elm$core$Char$fromCode = _Char_fromCode;
+var $myrho$elm_round$Round$increaseNum = function (_v0) {
+	var head = _v0.a;
+	var tail = _v0.b;
+	if (_Utils_eq(
+		head,
+		_Utils_chr('9'))) {
+		var _v1 = $elm$core$String$uncons(tail);
+		if (_v1.$ === 'Nothing') {
+			return '01';
+		} else {
+			var headtail = _v1.a;
+			return A2(
+				$elm$core$String$cons,
+				_Utils_chr('0'),
+				$myrho$elm_round$Round$increaseNum(headtail));
+		}
+	} else {
+		var c = $elm$core$Char$toCode(head);
+		return ((c >= 48) && (c < 57)) ? A2(
+			$elm$core$String$cons,
+			$elm$core$Char$fromCode(c + 1),
+			tail) : '0';
+	}
+};
+var $elm$core$Basics$isInfinite = _Basics_isInfinite;
+var $elm$core$String$fromChar = function (_char) {
+	return A2($elm$core$String$cons, _char, '');
+};
+var $elm$core$Bitwise$shiftRightBy = _Bitwise_shiftRightBy;
+var $elm$core$String$repeatHelp = F3(
+	function (n, chunk, result) {
+		return (n <= 0) ? result : A3(
+			$elm$core$String$repeatHelp,
+			n >> 1,
+			_Utils_ap(chunk, chunk),
+			(!(n & 1)) ? result : _Utils_ap(result, chunk));
+	});
+var $elm$core$String$repeat = F2(
+	function (n, chunk) {
+		return A3($elm$core$String$repeatHelp, n, chunk, '');
+	});
+var $elm$core$String$padRight = F3(
+	function (n, _char, string) {
+		return _Utils_ap(
+			string,
+			A2(
+				$elm$core$String$repeat,
+				n - $elm$core$String$length(string),
+				$elm$core$String$fromChar(_char)));
+	});
+var $elm$core$String$reverse = _String_reverse;
+var $myrho$elm_round$Round$splitComma = function (str) {
+	var _v0 = A2($elm$core$String$split, '.', str);
+	if (_v0.b) {
+		if (_v0.b.b) {
+			var before = _v0.a;
+			var _v1 = _v0.b;
+			var after = _v1.a;
+			return _Utils_Tuple2(before, after);
+		} else {
+			var before = _v0.a;
+			return _Utils_Tuple2(before, '0');
+		}
+	} else {
+		return _Utils_Tuple2('0', '0');
+	}
+};
+var $myrho$elm_round$Round$toDecimal = function (fl) {
+	var _v0 = A2(
+		$elm$core$String$split,
+		'e',
+		$elm$core$String$fromFloat(
+			$elm$core$Basics$abs(fl)));
+	if (_v0.b) {
+		if (_v0.b.b) {
+			var num = _v0.a;
+			var _v1 = _v0.b;
+			var exp = _v1.a;
+			var e = A2(
+				$elm$core$Maybe$withDefault,
+				0,
+				$elm$core$String$toInt(
+					A2($elm$core$String$startsWith, '+', exp) ? A2($elm$core$String$dropLeft, 1, exp) : exp));
+			var _v2 = $myrho$elm_round$Round$splitComma(num);
+			var before = _v2.a;
+			var after = _v2.b;
+			var total = _Utils_ap(before, after);
+			var zeroed = (e < 0) ? A2(
+				$elm$core$Maybe$withDefault,
+				'0',
+				A2(
+					$elm$core$Maybe$map,
+					function (_v3) {
+						var a = _v3.a;
+						var b = _v3.b;
+						return a + ('.' + b);
+					},
+					A2(
+						$elm$core$Maybe$map,
+						$elm$core$Tuple$mapFirst($elm$core$String$fromChar),
+						$elm$core$String$uncons(
+							_Utils_ap(
+								A2(
+									$elm$core$String$repeat,
+									$elm$core$Basics$abs(e),
+									'0'),
+								total))))) : A3(
+				$elm$core$String$padRight,
+				e + 1,
+				_Utils_chr('0'),
+				total);
+			return _Utils_ap(
+				(fl < 0) ? '-' : '',
+				zeroed);
+		} else {
+			var num = _v0.a;
+			return _Utils_ap(
+				(fl < 0) ? '-' : '',
+				num);
+		}
+	} else {
+		return '';
+	}
+};
+var $myrho$elm_round$Round$roundFun = F3(
+	function (functor, s, fl) {
+		if ($elm$core$Basics$isInfinite(fl) || $elm$core$Basics$isNaN(fl)) {
+			return $elm$core$String$fromFloat(fl);
+		} else {
+			var signed = fl < 0;
+			var _v0 = $myrho$elm_round$Round$splitComma(
+				$myrho$elm_round$Round$toDecimal(
+					$elm$core$Basics$abs(fl)));
+			var before = _v0.a;
+			var after = _v0.b;
+			var r = $elm$core$String$length(before) + s;
+			var normalized = _Utils_ap(
+				A2($elm$core$String$repeat, (-r) + 1, '0'),
+				A3(
+					$elm$core$String$padRight,
+					r,
+					_Utils_chr('0'),
+					_Utils_ap(before, after)));
+			var totalLen = $elm$core$String$length(normalized);
+			var roundDigitIndex = A2($elm$core$Basics$max, 1, r);
+			var increase = A2(
+				functor,
+				signed,
+				A3($elm$core$String$slice, roundDigitIndex, totalLen, normalized));
+			var remains = A3($elm$core$String$slice, 0, roundDigitIndex, normalized);
+			var num = increase ? $elm$core$String$reverse(
+				A2(
+					$elm$core$Maybe$withDefault,
+					'1',
+					A2(
+						$elm$core$Maybe$map,
+						$myrho$elm_round$Round$increaseNum,
+						$elm$core$String$uncons(
+							$elm$core$String$reverse(remains))))) : remains;
+			var numLen = $elm$core$String$length(num);
+			var numZeroed = (num === '0') ? num : ((s <= 0) ? _Utils_ap(
+				num,
+				A2(
+					$elm$core$String$repeat,
+					$elm$core$Basics$abs(s),
+					'0')) : ((_Utils_cmp(
+				s,
+				$elm$core$String$length(after)) < 0) ? (A3($elm$core$String$slice, 0, numLen - s, num) + ('.' + A3($elm$core$String$slice, numLen - s, numLen, num))) : _Utils_ap(
+				before + '.',
+				A3(
+					$elm$core$String$padRight,
+					s,
+					_Utils_chr('0'),
+					after))));
+			return A2($myrho$elm_round$Round$addSign, signed, numZeroed);
+		}
+	});
+var $myrho$elm_round$Round$round = $myrho$elm_round$Round$roundFun(
+	F2(
+		function (signed, str) {
+			var _v0 = $elm$core$String$uncons(str);
+			if (_v0.$ === 'Nothing') {
+				return false;
+			} else {
+				if ('5' === _v0.a.a.valueOf()) {
+					if (_v0.a.b === '') {
+						var _v1 = _v0.a;
+						return !signed;
+					} else {
+						var _v2 = _v0.a;
+						return true;
+					}
+				} else {
+					var _v3 = _v0.a;
+					var _int = _v3.a;
+					return function (i) {
+						return ((i > 53) && signed) || ((i >= 53) && (!signed));
+					}(
+						$elm$core$Char$toCode(_int));
+				}
+			}
+		}));
+var $elm$core$String$dropRight = F2(
+	function (n, string) {
+		return (n < 1) ? string : A3($elm$core$String$slice, 0, -n, string);
+	});
+var $elm$core$String$right = F2(
+	function (n, string) {
+		return (n < 1) ? '' : A3(
+			$elm$core$String$slice,
+			-n,
+			$elm$core$String$length(string),
+			string);
+	});
+var $coinop_logan$elm_format_number$Parser$splitThousands = function (integers) {
+	var reversedSplitThousands = function (value) {
+		return ($elm$core$String$length(value) > 3) ? A2(
+			$elm$core$List$cons,
+			A2($elm$core$String$right, 3, value),
+			reversedSplitThousands(
+				A2($elm$core$String$dropRight, 3, value))) : _List_fromArray(
+			[value]);
+	};
+	return $elm$core$List$reverse(
+		reversedSplitThousands(integers));
+};
+var $coinop_logan$elm_format_number$Parser$parse = F2(
+	function (locale, original) {
+		var parts = A2(
+			$elm$core$String$split,
+			'.',
+			A2($myrho$elm_round$Round$round, locale.decimals, original));
+		var integers = $coinop_logan$elm_format_number$Parser$splitThousands(
+			A2(
+				$elm$core$String$filter,
+				$elm$core$Char$isDigit,
+				A2(
+					$elm$core$Maybe$withDefault,
+					'0',
+					$elm$core$List$head(parts))));
+		var decimals = A2(
+			$elm$core$Maybe$withDefault,
+			'',
+			$elm$core$List$head(
+				A2($elm$core$List$drop, 1, parts)));
+		var partial = A5($coinop_logan$elm_format_number$Parser$FormattedNumber, original, integers, decimals, '', '');
+		var _v0 = $coinop_logan$elm_format_number$Parser$classify(partial);
+		switch (_v0.$) {
+			case 'Negative':
+				return _Utils_update(
+					partial,
+					{prefix: locale.negativePrefix, suffix: locale.negativeSuffix});
+			case 'Positive':
+				return _Utils_update(
+					partial,
+					{prefix: locale.positivePrefix, suffix: locale.positiveSuffix});
+			default:
+				return partial;
+		}
+	});
+var $coinop_logan$elm_format_number$Stringfy$formatDecimals = F2(
+	function (locale, decimals) {
+		return (decimals === '') ? '' : _Utils_ap(locale.decimalSeparator, decimals);
+	});
+var $coinop_logan$elm_format_number$Stringfy$removeZeros = function (decimals) {
+	return (A2($elm$core$String$right, 1, decimals) !== '0') ? decimals : $coinop_logan$elm_format_number$Stringfy$removeZeros(
+		A2($elm$core$String$dropRight, 1, decimals));
+};
+var $coinop_logan$elm_format_number$Stringfy$humanizeDecimals = F3(
+	function (locale, strategy, decimals) {
+		if ((decimals === '') || _Utils_eq(
+			A2($elm$core$String$repeat, locale.decimals, '0'),
+			decimals)) {
+			return '';
+		} else {
+			if (strategy.$ === 'KeepZeros') {
+				return _Utils_ap(locale.decimalSeparator, decimals);
+			} else {
+				return A2(
+					$coinop_logan$elm_format_number$Stringfy$formatDecimals,
+					locale,
+					$coinop_logan$elm_format_number$Stringfy$removeZeros(decimals));
+			}
+		}
+	});
+var $coinop_logan$elm_format_number$Stringfy$stringfy = F3(
+	function (locale, strategy, formatted) {
+		var stringfyDecimals = function () {
+			if (strategy.$ === 'Just') {
+				var strategy_ = strategy.a;
+				return A2($coinop_logan$elm_format_number$Stringfy$humanizeDecimals, locale, strategy_);
+			} else {
+				return $coinop_logan$elm_format_number$Stringfy$formatDecimals(locale);
+			}
+		}();
+		var integers = A2($elm$core$String$join, locale.thousandSeparator, formatted.integers);
+		var decimals = stringfyDecimals(formatted.decimals);
+		return $elm$core$String$concat(
+			_List_fromArray(
+				[formatted.prefix, integers, decimals, formatted.suffix]));
+	});
+var $coinop_logan$elm_format_number$FormatNumber$format = F2(
+	function (locale, number_) {
+		return A3(
+			$coinop_logan$elm_format_number$Stringfy$stringfy,
+			locale,
+			$elm$core$Maybe$Nothing,
+			A2($coinop_logan$elm_format_number$Parser$parse, locale, number_));
+	});
+var $coinop_logan$elm_format_number$FormatNumber$Locales$Locale = F7(
+	function (decimals, thousandSeparator, decimalSeparator, negativePrefix, negativeSuffix, positivePrefix, positiveSuffix) {
+		return {decimalSeparator: decimalSeparator, decimals: decimals, negativePrefix: negativePrefix, negativeSuffix: negativeSuffix, positivePrefix: positivePrefix, positiveSuffix: positiveSuffix, thousandSeparator: thousandSeparator};
+	});
+var $coinop_logan$elm_format_number$FormatNumber$Locales$spanishLocale = A7($coinop_logan$elm_format_number$FormatNumber$Locales$Locale, 3, '.', ',', '−', '', '', '');
+var $author$project$Styling$germanLocale = _Utils_update(
+	$coinop_logan$elm_format_number$FormatNumber$Locales$spanishLocale,
+	{decimals: 2});
+var $author$project$Styling$formatGermanNumber = function (f) {
+	return A2($coinop_logan$elm_format_number$FormatNumber$format, $author$project$Styling$germanLocale, f);
+};
+var $author$project$Main$level = function (tr) {
+	switch (tr.$) {
+		case 'LiteralTrace':
+			return 0;
+		case 'NameTrace':
+			return 0;
+		case 'DataTrace':
+			return 0;
+		case 'FactOrAssTrace':
+			return 0;
+		case 'UnaryTrace':
+			return 1;
+		default:
+			var binary = tr.a.binary;
+			switch (binary.$) {
+				case 'Times':
+					return 2;
+				case 'Divide':
+					return 2;
+				case 'Plus':
+					return 3;
+				default:
+					return 3;
+			}
+	}
+};
+var $author$project$Main$viewTrace = function (t) {
+	var viewWithParens = function (child) {
+		return (_Utils_cmp(
+			$author$project$Main$level(t),
+			$author$project$Main$level(child)) < 0) ? A2(
+			$mdgriffith$elm_ui$Element$row,
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$spacing($author$project$Styling$sizes.small)
+				]),
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$text('('),
+					$author$project$Main$viewTrace(child),
+					$mdgriffith$elm_ui$Element$text(')')
+				])) : $author$project$Main$viewTrace(child);
+	};
+	switch (t.$) {
+		case 'DataTrace':
+			var source = t.a.source;
+			var key = t.a.key;
+			var attr = t.a.attr;
+			return $mdgriffith$elm_ui$Element$text(source + ('[' + (key + ('].' + attr))));
+		case 'LiteralTrace':
+			var f = t.a;
+			return $mdgriffith$elm_ui$Element$text(
+				$author$project$Styling$formatGermanNumber(f));
+		case 'NameTrace':
+			var name = t.a.name;
+			return $mdgriffith$elm_ui$Element$text(name);
+		case 'FactOrAssTrace':
+			var fact_or_ass = t.a.fact_or_ass;
+			return $mdgriffith$elm_ui$Element$text(fact_or_ass);
+		case 'UnaryTrace':
+			var unary = t.a.unary;
+			var a = t.a.a;
+			return A2(
+				$mdgriffith$elm_ui$Element$row,
+				_List_fromArray(
+					[
+						$mdgriffith$elm_ui$Element$spacing($author$project$Styling$sizes.small)
+					]),
+				_List_fromArray(
+					[
+						function () {
+						if (unary.$ === 'UnaryMinus') {
+							return $mdgriffith$elm_ui$Element$text('-');
+						} else {
+							return $mdgriffith$elm_ui$Element$text('+');
+						}
+					}(),
+						viewWithParens(a)
+					]));
+		default:
+			var binary = t.a.binary;
+			var a = t.a.a;
+			var b = t.a.b;
+			return A2(
+				$mdgriffith$elm_ui$Element$row,
+				_List_fromArray(
+					[
+						$mdgriffith$elm_ui$Element$spacing($author$project$Styling$sizes.small)
+					]),
+				_List_fromArray(
+					[
+						viewWithParens(a),
+						function () {
+						switch (binary.$) {
+							case 'Plus':
+								return $mdgriffith$elm_ui$Element$text('+');
+							case 'Minus':
+								return $mdgriffith$elm_ui$Element$text('-');
+							case 'Times':
+								return $mdgriffith$elm_ui$Element$text('*');
+							default:
+								return $mdgriffith$elm_ui$Element$text('/');
+						}
+					}(),
+						viewWithParens(b)
+					]));
+	}
+};
+var $mdgriffith$elm_ui$Internal$Flag$fontWeight = $mdgriffith$elm_ui$Internal$Flag$flag(13);
+var $mdgriffith$elm_ui$Element$Font$bold = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$fontWeight, $mdgriffith$elm_ui$Internal$Style$classes.bold);
+var $author$project$Main$nullValueElement = A2(
+	$mdgriffith$elm_ui$Element$el,
+	A2(
+		$elm$core$List$cons,
+		$mdgriffith$elm_ui$Element$Font$alignRight,
+		A2($elm$core$List$cons, $mdgriffith$elm_ui$Element$Font$bold, $author$project$Styling$fonts.explorerValues)),
+	$mdgriffith$elm_ui$Element$text('null'));
+var $author$project$Main$viewFloatValue = function (f) {
+	return A2(
+		$mdgriffith$elm_ui$Element$el,
+		A2($elm$core$List$cons, $mdgriffith$elm_ui$Element$Font$alignRight, $author$project$Styling$fonts.explorerValues),
+		$mdgriffith$elm_ui$Element$text(
+			$author$project$Styling$formatGermanNumber(f)));
+};
+var $author$project$Main$viewStringValue = function (s) {
+	return A2(
+		$mdgriffith$elm_ui$Element$el,
+		A2($elm$core$List$cons, $mdgriffith$elm_ui$Element$Font$alignRight, $author$project$Styling$fonts.explorerValues),
+		$mdgriffith$elm_ui$Element$text(s));
+};
+var $author$project$Main$viewValue = function (v) {
+	switch (v.$) {
+		case 'Null':
+			return $author$project$Main$nullValueElement;
+		case 'String':
+			var s = v.a;
+			return $author$project$Main$viewStringValue(s);
+		default:
+			var f = v.a;
+			return $author$project$Main$viewFloatValue(f);
+	}
+};
+var $author$project$Main$viewDisplayedTrace = function (_v0) {
+	var path = _v0.path;
+	var value = _v0.value;
+	var trace = _v0.trace;
+	return A2(
+		$mdgriffith$elm_ui$Element$column,
+		_List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+				$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
+				$mdgriffith$elm_ui$Element$padding($author$project$Styling$sizes.large)
+			]),
+		_List_fromArray(
+			[
+				A2(
+				$mdgriffith$elm_ui$Element$row,
+				_List_fromArray(
+					[
+						$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+						$mdgriffith$elm_ui$Element$padding($author$project$Styling$sizes.medium),
+						$mdgriffith$elm_ui$Element$spacing($author$project$Styling$sizes.small)
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$mdgriffith$elm_ui$Element$row,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
+							]),
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$text(
+								A2($elm$core$String$join, '.', path) + ':'),
+								$author$project$Main$viewValue(value)
+							])),
+						A2($author$project$Styling$iconButton, $feathericons$elm_feather$FeatherIcons$x, $author$project$Main$CloseTrace)
+					])),
+				A2(
+				$mdgriffith$elm_ui$Element$row,
+				_List_fromArray(
+					[
+						$mdgriffith$elm_ui$Element$padding($author$project$Styling$sizes.medium),
+						$mdgriffith$elm_ui$Element$spacing($author$project$Styling$sizes.small)
+					]),
+				_List_fromArray(
+					[
+						$author$project$Main$viewTrace(trace)
+					])),
+				A2(
+				$mdgriffith$elm_ui$Element$el,
+				_List_fromArray(
+					[
+						$mdgriffith$elm_ui$Element$padding($author$project$Styling$sizes.medium),
+						$mdgriffith$elm_ui$Element$Font$size(8)
+					]),
+				$author$project$Styling$scrollableText(
+					$elm$core$Debug$toString(trace)))
+			]));
+};
+var $author$project$Main$NewLensClicked = {$: 'NewLensClicked'};
+var $author$project$Main$NewTableClicked = {$: 'NewTableClicked'};
+var $mdgriffith$elm_ui$Internal$Model$Bottom = {$: 'Bottom'};
+var $mdgriffith$elm_ui$Element$alignBottom = $mdgriffith$elm_ui$Internal$Model$AlignY($mdgriffith$elm_ui$Internal$Model$Bottom);
+var $mdgriffith$elm_ui$Internal$Model$Right = {$: 'Right'};
+var $mdgriffith$elm_ui$Element$alignRight = $mdgriffith$elm_ui$Internal$Model$AlignX($mdgriffith$elm_ui$Internal$Model$Right);
 var $mdgriffith$elm_ui$Internal$Model$MoveX = function (a) {
 	return {$: 'MoveX', a: a};
 };
@@ -18501,46 +19358,6 @@ var $author$project$Styling$floatingActionButton = F2(
 			A2($feathericons$elm_feather$FeatherIcons$withSize, iconSize, i),
 			onPress);
 	});
-var $mdgriffith$elm_ui$Element$Font$family = function (families) {
-	return A2(
-		$mdgriffith$elm_ui$Internal$Model$StyleClass,
-		$mdgriffith$elm_ui$Internal$Flag$fontFamily,
-		A2(
-			$mdgriffith$elm_ui$Internal$Model$FontFamily,
-			A3($elm$core$List$foldl, $mdgriffith$elm_ui$Internal$Model$renderFontClassName, 'ff-', families),
-			families));
-};
-var $mdgriffith$elm_ui$Internal$Model$Monospace = {$: 'Monospace'};
-var $mdgriffith$elm_ui$Element$Font$monospace = $mdgriffith$elm_ui$Internal$Model$Monospace;
-var $author$project$Styling$fonts = {
-	explorer: _List_fromArray(
-		[
-			$mdgriffith$elm_ui$Element$Font$size($author$project$Styling$sizes.fontSize)
-		]),
-	explorerItems: _List_fromArray(
-		[
-			$mdgriffith$elm_ui$Element$Font$size(16)
-		]),
-	explorerNodeSize: _List_fromArray(
-		[
-			$mdgriffith$elm_ui$Element$Font$size(16)
-		]),
-	explorerValues: _List_fromArray(
-		[
-			$mdgriffith$elm_ui$Element$Font$size(16),
-			$mdgriffith$elm_ui$Element$Font$family(
-			_List_fromArray(
-				[$mdgriffith$elm_ui$Element$Font$monospace]))
-		]),
-	smallTextButton: _List_fromArray(
-		[
-			$mdgriffith$elm_ui$Element$Font$size(12)
-		]),
-	table: _List_fromArray(
-		[
-			$mdgriffith$elm_ui$Element$Font$size($author$project$Styling$sizes.tableFontSize)
-		])
-};
 var $elm$svg$Svg$rect = $elm$svg$Svg$trustedNode('rect');
 var $elm$svg$Svg$Attributes$x = _VirtualDom_attribute('x');
 var $elm$svg$Svg$Attributes$y = _VirtualDom_attribute('y');
@@ -18614,36 +19431,6 @@ var $feathericons$elm_feather$FeatherIcons$plus = A2(
 					$elm$svg$Svg$Attributes$y1('12'),
 					$elm$svg$Svg$Attributes$x2('19'),
 					$elm$svg$Svg$Attributes$y2('12')
-				]),
-			_List_Nil)
-		]));
-var $feathericons$elm_feather$FeatherIcons$upload = A2(
-	$feathericons$elm_feather$FeatherIcons$makeBuilder,
-	'upload',
-	_List_fromArray(
-		[
-			A2(
-			$elm$svg$Svg$path,
-			_List_fromArray(
-				[
-					$elm$svg$Svg$Attributes$d('M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4')
-				]),
-			_List_Nil),
-			A2(
-			$elm$svg$Svg$polyline,
-			_List_fromArray(
-				[
-					$elm$svg$Svg$Attributes$points('17 8 12 3 7 8')
-				]),
-			_List_Nil),
-			A2(
-			$elm$svg$Svg$line,
-			_List_fromArray(
-				[
-					$elm$svg$Svg$Attributes$x1('12'),
-					$elm$svg$Svg$Attributes$y1('3'),
-					$elm$svg$Svg$Attributes$x2('12'),
-					$elm$svg$Svg$Attributes$y2('15')
 				]),
 			_List_Nil)
 		]));
@@ -21277,7 +22064,6 @@ var $terezka$elm_charts$Internal$Svg$Event = F2(
 		return {handler: handler, name: name};
 	});
 var $elm$svg$Svg$clipPath = $elm$svg$Svg$trustedNode('clipPath');
-var $elm$json$Json$Decode$map3 = _Json_map3;
 var $debois$elm_dom$DOM$offsetHeight = A2($elm$json$Json$Decode$field, 'offsetHeight', $elm$json$Json$Decode$float);
 var $debois$elm_dom$DOM$offsetWidth = A2($elm$json$Json$Decode$field, 'offsetWidth', $elm$json$Json$Decode$float);
 var $elm$json$Json$Decode$map4 = _Json_map4;
@@ -23019,375 +23805,6 @@ var $terezka$elm_charts$Chart$format = function (func) {
 				return 'N/A';
 			}
 		});
-};
-var $coinop_logan$elm_format_number$Parser$FormattedNumber = F5(
-	function (original, integers, decimals, prefix, suffix) {
-		return {decimals: decimals, integers: integers, original: original, prefix: prefix, suffix: suffix};
-	});
-var $coinop_logan$elm_format_number$Parser$Negative = {$: 'Negative'};
-var $coinop_logan$elm_format_number$Parser$Positive = {$: 'Positive'};
-var $coinop_logan$elm_format_number$Parser$Zero = {$: 'Zero'};
-var $elm$core$List$singleton = function (value) {
-	return _List_fromArray(
-		[value]);
-};
-var $coinop_logan$elm_format_number$Parser$classify = function (formatted) {
-	var onlyZeros = A2(
-		$elm$core$String$all,
-		function (_char) {
-			return _Utils_eq(
-				_char,
-				_Utils_chr('0'));
-		},
-		$elm$core$String$concat(
-			A2(
-				$elm$core$List$append,
-				formatted.integers,
-				$elm$core$List$singleton(formatted.decimals))));
-	return onlyZeros ? $coinop_logan$elm_format_number$Parser$Zero : ((formatted.original < 0) ? $coinop_logan$elm_format_number$Parser$Negative : $coinop_logan$elm_format_number$Parser$Positive);
-};
-var $elm$core$String$filter = _String_filter;
-var $elm$core$String$foldr = _String_foldr;
-var $elm$core$String$toList = function (string) {
-	return A3($elm$core$String$foldr, $elm$core$List$cons, _List_Nil, string);
-};
-var $myrho$elm_round$Round$addSign = F2(
-	function (signed, str) {
-		var isNotZero = A2(
-			$elm$core$List$any,
-			function (c) {
-				return (!_Utils_eq(
-					c,
-					_Utils_chr('0'))) && (!_Utils_eq(
-					c,
-					_Utils_chr('.')));
-			},
-			$elm$core$String$toList(str));
-		return _Utils_ap(
-			(signed && isNotZero) ? '-' : '',
-			str);
-	});
-var $elm$core$String$cons = _String_cons;
-var $elm$core$Char$fromCode = _Char_fromCode;
-var $myrho$elm_round$Round$increaseNum = function (_v0) {
-	var head = _v0.a;
-	var tail = _v0.b;
-	if (_Utils_eq(
-		head,
-		_Utils_chr('9'))) {
-		var _v1 = $elm$core$String$uncons(tail);
-		if (_v1.$ === 'Nothing') {
-			return '01';
-		} else {
-			var headtail = _v1.a;
-			return A2(
-				$elm$core$String$cons,
-				_Utils_chr('0'),
-				$myrho$elm_round$Round$increaseNum(headtail));
-		}
-	} else {
-		var c = $elm$core$Char$toCode(head);
-		return ((c >= 48) && (c < 57)) ? A2(
-			$elm$core$String$cons,
-			$elm$core$Char$fromCode(c + 1),
-			tail) : '0';
-	}
-};
-var $elm$core$Basics$isInfinite = _Basics_isInfinite;
-var $elm$core$String$fromChar = function (_char) {
-	return A2($elm$core$String$cons, _char, '');
-};
-var $elm$core$Bitwise$shiftRightBy = _Bitwise_shiftRightBy;
-var $elm$core$String$repeatHelp = F3(
-	function (n, chunk, result) {
-		return (n <= 0) ? result : A3(
-			$elm$core$String$repeatHelp,
-			n >> 1,
-			_Utils_ap(chunk, chunk),
-			(!(n & 1)) ? result : _Utils_ap(result, chunk));
-	});
-var $elm$core$String$repeat = F2(
-	function (n, chunk) {
-		return A3($elm$core$String$repeatHelp, n, chunk, '');
-	});
-var $elm$core$String$padRight = F3(
-	function (n, _char, string) {
-		return _Utils_ap(
-			string,
-			A2(
-				$elm$core$String$repeat,
-				n - $elm$core$String$length(string),
-				$elm$core$String$fromChar(_char)));
-	});
-var $elm$core$String$reverse = _String_reverse;
-var $myrho$elm_round$Round$splitComma = function (str) {
-	var _v0 = A2($elm$core$String$split, '.', str);
-	if (_v0.b) {
-		if (_v0.b.b) {
-			var before = _v0.a;
-			var _v1 = _v0.b;
-			var after = _v1.a;
-			return _Utils_Tuple2(before, after);
-		} else {
-			var before = _v0.a;
-			return _Utils_Tuple2(before, '0');
-		}
-	} else {
-		return _Utils_Tuple2('0', '0');
-	}
-};
-var $myrho$elm_round$Round$toDecimal = function (fl) {
-	var _v0 = A2(
-		$elm$core$String$split,
-		'e',
-		$elm$core$String$fromFloat(
-			$elm$core$Basics$abs(fl)));
-	if (_v0.b) {
-		if (_v0.b.b) {
-			var num = _v0.a;
-			var _v1 = _v0.b;
-			var exp = _v1.a;
-			var e = A2(
-				$elm$core$Maybe$withDefault,
-				0,
-				$elm$core$String$toInt(
-					A2($elm$core$String$startsWith, '+', exp) ? A2($elm$core$String$dropLeft, 1, exp) : exp));
-			var _v2 = $myrho$elm_round$Round$splitComma(num);
-			var before = _v2.a;
-			var after = _v2.b;
-			var total = _Utils_ap(before, after);
-			var zeroed = (e < 0) ? A2(
-				$elm$core$Maybe$withDefault,
-				'0',
-				A2(
-					$elm$core$Maybe$map,
-					function (_v3) {
-						var a = _v3.a;
-						var b = _v3.b;
-						return a + ('.' + b);
-					},
-					A2(
-						$elm$core$Maybe$map,
-						$elm$core$Tuple$mapFirst($elm$core$String$fromChar),
-						$elm$core$String$uncons(
-							_Utils_ap(
-								A2(
-									$elm$core$String$repeat,
-									$elm$core$Basics$abs(e),
-									'0'),
-								total))))) : A3(
-				$elm$core$String$padRight,
-				e + 1,
-				_Utils_chr('0'),
-				total);
-			return _Utils_ap(
-				(fl < 0) ? '-' : '',
-				zeroed);
-		} else {
-			var num = _v0.a;
-			return _Utils_ap(
-				(fl < 0) ? '-' : '',
-				num);
-		}
-	} else {
-		return '';
-	}
-};
-var $myrho$elm_round$Round$roundFun = F3(
-	function (functor, s, fl) {
-		if ($elm$core$Basics$isInfinite(fl) || $elm$core$Basics$isNaN(fl)) {
-			return $elm$core$String$fromFloat(fl);
-		} else {
-			var signed = fl < 0;
-			var _v0 = $myrho$elm_round$Round$splitComma(
-				$myrho$elm_round$Round$toDecimal(
-					$elm$core$Basics$abs(fl)));
-			var before = _v0.a;
-			var after = _v0.b;
-			var r = $elm$core$String$length(before) + s;
-			var normalized = _Utils_ap(
-				A2($elm$core$String$repeat, (-r) + 1, '0'),
-				A3(
-					$elm$core$String$padRight,
-					r,
-					_Utils_chr('0'),
-					_Utils_ap(before, after)));
-			var totalLen = $elm$core$String$length(normalized);
-			var roundDigitIndex = A2($elm$core$Basics$max, 1, r);
-			var increase = A2(
-				functor,
-				signed,
-				A3($elm$core$String$slice, roundDigitIndex, totalLen, normalized));
-			var remains = A3($elm$core$String$slice, 0, roundDigitIndex, normalized);
-			var num = increase ? $elm$core$String$reverse(
-				A2(
-					$elm$core$Maybe$withDefault,
-					'1',
-					A2(
-						$elm$core$Maybe$map,
-						$myrho$elm_round$Round$increaseNum,
-						$elm$core$String$uncons(
-							$elm$core$String$reverse(remains))))) : remains;
-			var numLen = $elm$core$String$length(num);
-			var numZeroed = (num === '0') ? num : ((s <= 0) ? _Utils_ap(
-				num,
-				A2(
-					$elm$core$String$repeat,
-					$elm$core$Basics$abs(s),
-					'0')) : ((_Utils_cmp(
-				s,
-				$elm$core$String$length(after)) < 0) ? (A3($elm$core$String$slice, 0, numLen - s, num) + ('.' + A3($elm$core$String$slice, numLen - s, numLen, num))) : _Utils_ap(
-				before + '.',
-				A3(
-					$elm$core$String$padRight,
-					s,
-					_Utils_chr('0'),
-					after))));
-			return A2($myrho$elm_round$Round$addSign, signed, numZeroed);
-		}
-	});
-var $myrho$elm_round$Round$round = $myrho$elm_round$Round$roundFun(
-	F2(
-		function (signed, str) {
-			var _v0 = $elm$core$String$uncons(str);
-			if (_v0.$ === 'Nothing') {
-				return false;
-			} else {
-				if ('5' === _v0.a.a.valueOf()) {
-					if (_v0.a.b === '') {
-						var _v1 = _v0.a;
-						return !signed;
-					} else {
-						var _v2 = _v0.a;
-						return true;
-					}
-				} else {
-					var _v3 = _v0.a;
-					var _int = _v3.a;
-					return function (i) {
-						return ((i > 53) && signed) || ((i >= 53) && (!signed));
-					}(
-						$elm$core$Char$toCode(_int));
-				}
-			}
-		}));
-var $elm$core$String$dropRight = F2(
-	function (n, string) {
-		return (n < 1) ? string : A3($elm$core$String$slice, 0, -n, string);
-	});
-var $elm$core$String$right = F2(
-	function (n, string) {
-		return (n < 1) ? '' : A3(
-			$elm$core$String$slice,
-			-n,
-			$elm$core$String$length(string),
-			string);
-	});
-var $coinop_logan$elm_format_number$Parser$splitThousands = function (integers) {
-	var reversedSplitThousands = function (value) {
-		return ($elm$core$String$length(value) > 3) ? A2(
-			$elm$core$List$cons,
-			A2($elm$core$String$right, 3, value),
-			reversedSplitThousands(
-				A2($elm$core$String$dropRight, 3, value))) : _List_fromArray(
-			[value]);
-	};
-	return $elm$core$List$reverse(
-		reversedSplitThousands(integers));
-};
-var $coinop_logan$elm_format_number$Parser$parse = F2(
-	function (locale, original) {
-		var parts = A2(
-			$elm$core$String$split,
-			'.',
-			A2($myrho$elm_round$Round$round, locale.decimals, original));
-		var integers = $coinop_logan$elm_format_number$Parser$splitThousands(
-			A2(
-				$elm$core$String$filter,
-				$elm$core$Char$isDigit,
-				A2(
-					$elm$core$Maybe$withDefault,
-					'0',
-					$elm$core$List$head(parts))));
-		var decimals = A2(
-			$elm$core$Maybe$withDefault,
-			'',
-			$elm$core$List$head(
-				A2($elm$core$List$drop, 1, parts)));
-		var partial = A5($coinop_logan$elm_format_number$Parser$FormattedNumber, original, integers, decimals, '', '');
-		var _v0 = $coinop_logan$elm_format_number$Parser$classify(partial);
-		switch (_v0.$) {
-			case 'Negative':
-				return _Utils_update(
-					partial,
-					{prefix: locale.negativePrefix, suffix: locale.negativeSuffix});
-			case 'Positive':
-				return _Utils_update(
-					partial,
-					{prefix: locale.positivePrefix, suffix: locale.positiveSuffix});
-			default:
-				return partial;
-		}
-	});
-var $coinop_logan$elm_format_number$Stringfy$formatDecimals = F2(
-	function (locale, decimals) {
-		return (decimals === '') ? '' : _Utils_ap(locale.decimalSeparator, decimals);
-	});
-var $coinop_logan$elm_format_number$Stringfy$removeZeros = function (decimals) {
-	return (A2($elm$core$String$right, 1, decimals) !== '0') ? decimals : $coinop_logan$elm_format_number$Stringfy$removeZeros(
-		A2($elm$core$String$dropRight, 1, decimals));
-};
-var $coinop_logan$elm_format_number$Stringfy$humanizeDecimals = F3(
-	function (locale, strategy, decimals) {
-		if ((decimals === '') || _Utils_eq(
-			A2($elm$core$String$repeat, locale.decimals, '0'),
-			decimals)) {
-			return '';
-		} else {
-			if (strategy.$ === 'KeepZeros') {
-				return _Utils_ap(locale.decimalSeparator, decimals);
-			} else {
-				return A2(
-					$coinop_logan$elm_format_number$Stringfy$formatDecimals,
-					locale,
-					$coinop_logan$elm_format_number$Stringfy$removeZeros(decimals));
-			}
-		}
-	});
-var $coinop_logan$elm_format_number$Stringfy$stringfy = F3(
-	function (locale, strategy, formatted) {
-		var stringfyDecimals = function () {
-			if (strategy.$ === 'Just') {
-				var strategy_ = strategy.a;
-				return A2($coinop_logan$elm_format_number$Stringfy$humanizeDecimals, locale, strategy_);
-			} else {
-				return $coinop_logan$elm_format_number$Stringfy$formatDecimals(locale);
-			}
-		}();
-		var integers = A2($elm$core$String$join, locale.thousandSeparator, formatted.integers);
-		var decimals = stringfyDecimals(formatted.decimals);
-		return $elm$core$String$concat(
-			_List_fromArray(
-				[formatted.prefix, integers, decimals, formatted.suffix]));
-	});
-var $coinop_logan$elm_format_number$FormatNumber$format = F2(
-	function (locale, number_) {
-		return A3(
-			$coinop_logan$elm_format_number$Stringfy$stringfy,
-			locale,
-			$elm$core$Maybe$Nothing,
-			A2($coinop_logan$elm_format_number$Parser$parse, locale, number_));
-	});
-var $coinop_logan$elm_format_number$FormatNumber$Locales$Locale = F7(
-	function (decimals, thousandSeparator, decimalSeparator, negativePrefix, negativeSuffix, positivePrefix, positiveSuffix) {
-		return {decimalSeparator: decimalSeparator, decimals: decimals, negativePrefix: negativePrefix, negativeSuffix: negativeSuffix, positivePrefix: positivePrefix, positiveSuffix: positiveSuffix, thousandSeparator: thousandSeparator};
-	});
-var $coinop_logan$elm_format_number$FormatNumber$Locales$spanishLocale = A7($coinop_logan$elm_format_number$FormatNumber$Locales$Locale, 3, '.', ',', '−', '', '', '');
-var $author$project$Styling$germanLocale = _Utils_update(
-	$coinop_logan$elm_format_number$FormatNumber$Locales$spanishLocale,
-	{decimals: 2});
-var $author$project$Styling$formatGermanNumber = function (f) {
-	return A2($coinop_logan$elm_format_number$FormatNumber$format, $author$project$Styling$germanLocale, f);
 };
 var $terezka$elm_charts$Internal$Events$Decoder = function (a) {
 	return {$: 'Decoder', a: a};
@@ -26645,9 +27062,14 @@ var $author$project$Main$viewChart = F3(
 			function (runId) {
 				var get = function (path) {
 					var _v0 = A2(
-						$elm$core$Dict$get,
-						_Utils_Tuple2(runId, path),
-						interestListTable.values);
+						$elm$core$Maybe$map,
+						function ($) {
+							return $.value;
+						},
+						A2(
+							$elm$core$Dict$get,
+							_Utils_Tuple2(runId, path),
+							interestListTable.values));
 					if (_v0.$ === 'Just') {
 						switch (_v0.a.$) {
 							case 'Float':
@@ -26738,8 +27160,6 @@ var $author$project$Main$RemoveFromLensClicked = F2(
 	function (a, b) {
 		return {$: 'RemoveFromLensClicked', a: a, b: b};
 	});
-var $mdgriffith$elm_ui$Internal$Flag$fontWeight = $mdgriffith$elm_ui$Internal$Flag$flag(13);
-var $mdgriffith$elm_ui$Element$Font$bold = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$fontWeight, $mdgriffith$elm_ui$Internal$Style$classes.bold);
 var $author$project$Styling$size16 = $feathericons$elm_feather$FeatherIcons$withSize(16);
 var $mdgriffith$elm_ui$Element$InternalColumn = function (a) {
 	return {$: 'InternalColumn', a: a};
@@ -27011,9 +27431,14 @@ var $author$project$Main$viewValueSetAsClassicTable = F3(
 					view: function (path) {
 						var value = function () {
 							var _v0 = A2(
-								$elm$core$Dict$get,
-								_Utils_Tuple2(runId, path),
-								valueSet.values);
+								$elm$core$Maybe$map,
+								function ($) {
+									return $.value;
+								},
+								A2(
+									$elm$core$Dict$get,
+									_Utils_Tuple2(runId, path),
+									valueSet.values));
 							if (_v0.$ === 'Just') {
 								switch (_v0.a.$) {
 									case 'Float':
@@ -27553,9 +27978,11 @@ var $author$project$Main$viewValueSetAsUserDefinedTable = F4(
 										[$mdgriffith$elm_ui$Element$Font$alignRight]),
 									$mdgriffith$elm_ui$Element$text('INTERNAL ERROR'));
 							} else {
-								switch (value.a.$) {
+								var valueAndTrace = value.a;
+								var _v13 = valueAndTrace.value;
+								switch (_v13.$) {
 									case 'Float':
-										var f = value.a.a;
+										var f = _v13.a;
 										return A2(
 											cellElement,
 											_List_fromArray(
@@ -27563,14 +27990,13 @@ var $author$project$Main$viewValueSetAsUserDefinedTable = F4(
 											$mdgriffith$elm_ui$Element$text(
 												$author$project$Styling$formatGermanNumber(f)));
 									case 'Null':
-										var _v13 = value.a;
 										return A2(
 											cellElement,
 											_List_fromArray(
 												[$mdgriffith$elm_ui$Element$Font$alignRight, $mdgriffith$elm_ui$Element$Font$bold]),
 											$mdgriffith$elm_ui$Element$text('null'));
 									default:
-										var s = value.a.a;
+										var s = _v13.a;
 										return A2(
 											cellElement,
 											_List_fromArray(
@@ -28187,38 +28613,6 @@ var $author$project$Main$viewTree = F3(
 				},
 				$elm$core$Dict$toList(tree)));
 	});
-var $author$project$Main$nullValueElement = A2(
-	$mdgriffith$elm_ui$Element$el,
-	A2(
-		$elm$core$List$cons,
-		$mdgriffith$elm_ui$Element$Font$alignRight,
-		A2($elm$core$List$cons, $mdgriffith$elm_ui$Element$Font$bold, $author$project$Styling$fonts.explorerValues)),
-	$mdgriffith$elm_ui$Element$text('null'));
-var $author$project$Main$viewFloatValue = function (f) {
-	return A2(
-		$mdgriffith$elm_ui$Element$el,
-		A2($elm$core$List$cons, $mdgriffith$elm_ui$Element$Font$alignRight, $author$project$Styling$fonts.explorerValues),
-		$mdgriffith$elm_ui$Element$text(
-			$author$project$Styling$formatGermanNumber(f)));
-};
-var $author$project$Main$viewStringValue = function (s) {
-	return A2(
-		$mdgriffith$elm_ui$Element$el,
-		A2($elm$core$List$cons, $mdgriffith$elm_ui$Element$Font$alignRight, $author$project$Styling$fonts.explorerValues),
-		$mdgriffith$elm_ui$Element$text(s));
-};
-var $author$project$Main$viewValue = function (v) {
-	switch (v.$) {
-		case 'Null':
-			return $author$project$Main$nullValueElement;
-		case 'String':
-			var s = v.a;
-			return $author$project$Main$viewStringValue(s);
-		default:
-			var f = v.a;
-			return $author$project$Main$viewFloatValue(f);
-	}
-};
 var $author$project$Main$viewDiffTree = F3(
 	function (id, collapseStatus, tree) {
 		var missingElement = A2(
@@ -28239,7 +28633,7 @@ var $author$project$Main$viewDiffTree = F3(
 										$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
 									]),
 								$mdgriffith$elm_ui$Element$text(name)),
-								$author$project$Main$viewValue(v),
+								$author$project$Main$viewValue(v.value),
 								missingElement
 							]);
 					case 'Unequal':
@@ -28254,8 +28648,8 @@ var $author$project$Main$viewDiffTree = F3(
 										$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
 									]),
 								$mdgriffith$elm_ui$Element$text(name)),
-								$author$project$Main$viewValue(a),
-								$author$project$Main$viewValue(b)
+								$author$project$Main$viewValue(a.value),
+								$author$project$Main$viewValue(b.value)
 							]);
 					default:
 						var v = leaf.a;
@@ -28269,7 +28663,7 @@ var $author$project$Main$viewDiffTree = F3(
 									]),
 								$mdgriffith$elm_ui$Element$text(name)),
 								missingElement,
-								$author$project$Main$viewValue(v)
+								$author$project$Main$viewValue(v.value)
 							]);
 				}
 			});
@@ -28456,10 +28850,49 @@ var $author$project$Main$AddToLensClicked = F2(
 	function (a, b) {
 		return {$: 'AddToLensClicked', a: a, b: b};
 	});
+var $author$project$Main$DisplayTrace = F3(
+	function (a, b, c) {
+		return {$: 'DisplayTrace', a: a, b: b, c: c};
+	});
 var $author$project$Main$DragFromRun = F2(
 	function (a, b) {
 		return {$: 'DragFromRun', a: a, b: b};
 	});
+var $feathericons$elm_feather$FeatherIcons$info = A2(
+	$feathericons$elm_feather$FeatherIcons$makeBuilder,
+	'info',
+	_List_fromArray(
+		[
+			A2(
+			$elm$svg$Svg$circle,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$cx('12'),
+					$elm$svg$Svg$Attributes$cy('12'),
+					$elm$svg$Svg$Attributes$r('10')
+				]),
+			_List_Nil),
+			A2(
+			$elm$svg$Svg$line,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$x1('12'),
+					$elm$svg$Svg$Attributes$y1('16'),
+					$elm$svg$Svg$Attributes$x2('12'),
+					$elm$svg$Svg$Attributes$y2('12')
+				]),
+			_List_Nil),
+			A2(
+			$elm$svg$Svg$line,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$x1('12'),
+					$elm$svg$Svg$Attributes$y1('8'),
+					$elm$svg$Svg$Attributes$x2('12.01'),
+					$elm$svg$Svg$Attributes$y2('8')
+				]),
+			_List_Nil)
+		]));
 var $author$project$Lens$member = F3(
 	function (ri, p, _v0) {
 		var l = _v0.a;
@@ -28625,8 +29058,9 @@ var $author$project$Main$viewEntryAndOverride = F5(
 var $author$project$Main$viewValueTree = F8(
 	function (runId, lensId, path, checkIsCollapsed, lens, overrides, activeOverrideEditor, tree) {
 		var viewLeaf = F3(
-			function (pathToParent, name, value) {
-				switch (value.$) {
+			function (pathToParent, name, valueWithTrace) {
+				var _v0 = valueWithTrace.value;
+				switch (_v0.$) {
 					case 'Null':
 						return _List_fromArray(
 							[
@@ -28648,7 +29082,7 @@ var $author$project$Main$viewValueTree = F8(
 								$author$project$Main$nullValueElement
 							]);
 					case 'String':
-						var s = value.a;
+						var s = _v0.a;
 						return _List_fromArray(
 							[
 								A2(
@@ -28669,7 +29103,7 @@ var $author$project$Main$viewValueTree = F8(
 								$author$project$Main$viewStringValue(s)
 							]);
 					default:
-						var f = value.a;
+						var f = _v0.a;
 						var thisPath = _Utils_ap(
 							pathToParent,
 							_List_fromArray(
@@ -28699,6 +29133,21 @@ var $author$project$Main$viewValueTree = F8(
 						return _List_fromArray(
 							[
 								button,
+								function () {
+								var _v2 = valueWithTrace.trace;
+								if (_v2.$ === 'Nothing') {
+									return A2(
+										$author$project$Styling$iconButton,
+										$author$project$Styling$size16($feathericons$elm_feather$FeatherIcons$info),
+										$author$project$Main$Noop);
+								} else {
+									var t = _v2.a;
+									return A2(
+										$author$project$Styling$iconButton,
+										$author$project$Styling$size16($feathericons$elm_feather$FeatherIcons$info),
+										A3($author$project$Main$DisplayTrace, thisPath, valueWithTrace.value, t));
+								}
+							}(),
 								A2(
 								$mdgriffith$elm_ui$Element$el,
 								_Utils_ap(
@@ -28974,6 +29423,85 @@ var $author$project$Main$viewRunsAndComparisons = function (model) {
 							$elm$core$Dict$toList(model.diffs)))))
 			]));
 };
+var $author$project$Main$viewRunsAndInterestLists = function (model) {
+	var interestLists = A2(
+		$elm$core$List$map,
+		function (_v0) {
+			var pos = _v0.a;
+			var il = _v0.b;
+			var activePos = $yotamDvir$elm_pivot$Pivot$lengthL(model.lenses);
+			return A7(
+				$author$project$Main$viewLens,
+				pos,
+				model.dragDrop,
+				model.editingActiveLensLabel,
+				_Utils_eq(pos, activePos),
+				il,
+				model.chartHovering,
+				model.runs);
+		},
+		$yotamDvir$elm_pivot$Pivot$toList(
+			$yotamDvir$elm_pivot$Pivot$indexAbsolute(model.lenses)));
+	return A2(
+		$mdgriffith$elm_ui$Element$row,
+		_List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+				$mdgriffith$elm_ui$Element$height(
+				A2($mdgriffith$elm_ui$Element$minimum, 0, $mdgriffith$elm_ui$Element$fill)),
+				$mdgriffith$elm_ui$Element$spacing($author$project$Styling$sizes.large)
+			]),
+		_List_fromArray(
+			[
+				$author$project$Main$viewRunsAndComparisons(model),
+				A2(
+				$mdgriffith$elm_ui$Element$el,
+				_List_fromArray(
+					[
+						$mdgriffith$elm_ui$Element$width(
+						$mdgriffith$elm_ui$Element$px(2)),
+						$mdgriffith$elm_ui$Element$Background$color($author$project$Styling$black),
+						$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill)
+					]),
+				$mdgriffith$elm_ui$Element$none),
+				A2(
+				$mdgriffith$elm_ui$Element$el,
+				_List_fromArray(
+					[
+						$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+						$mdgriffith$elm_ui$Element$height(
+						A2($mdgriffith$elm_ui$Element$minimum, 0, $mdgriffith$elm_ui$Element$fill)),
+						$mdgriffith$elm_ui$Element$inFront(
+						A2(
+							$mdgriffith$elm_ui$Element$row,
+							_List_fromArray(
+								[
+									$mdgriffith$elm_ui$Element$spacing(10),
+									$mdgriffith$elm_ui$Element$alignBottom,
+									$mdgriffith$elm_ui$Element$moveUp(10),
+									$mdgriffith$elm_ui$Element$alignRight,
+									$mdgriffith$elm_ui$Element$padding(0)
+								]),
+							_List_fromArray(
+								[
+									A2($author$project$Styling$floatingActionButton, $feathericons$elm_feather$FeatherIcons$plus, $author$project$Main$NewLensClicked),
+									A2($author$project$Styling$floatingActionButton, $feathericons$elm_feather$FeatherIcons$grid, $author$project$Main$NewTableClicked)
+								])))
+					]),
+				A2(
+					$mdgriffith$elm_ui$Element$column,
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+							$mdgriffith$elm_ui$Element$height(
+							A2($mdgriffith$elm_ui$Element$minimum, 0, $mdgriffith$elm_ui$Element$fill)),
+							$mdgriffith$elm_ui$Element$scrollbarY,
+							$mdgriffith$elm_ui$Element$spacing($author$project$Styling$sizes.medium),
+							$mdgriffith$elm_ui$Element$padding($author$project$Styling$sizes.medium)
+						]),
+					interestLists))
+			]));
+};
 var $mdgriffith$elm_ui$Element$Border$widthXY = F2(
 	function (x, y) {
 		return A2(
@@ -29033,24 +29561,6 @@ var $author$project$Main$viewModel = function (model) {
 						A2($author$project$Styling$iconButton, $feathericons$elm_feather$FeatherIcons$upload, $author$project$Main$UploadClicked)
 					]))
 			]));
-	var interestLists = A2(
-		$elm$core$List$map,
-		function (_v0) {
-			var pos = _v0.a;
-			var il = _v0.b;
-			var activePos = $yotamDvir$elm_pivot$Pivot$lengthL(model.lenses);
-			return A7(
-				$author$project$Main$viewLens,
-				pos,
-				model.dragDrop,
-				model.editingActiveLensLabel,
-				_Utils_eq(pos, activePos),
-				il,
-				model.chartHovering,
-				model.runs);
-		},
-		$yotamDvir$elm_pivot$Pivot$toList(
-			$yotamDvir$elm_pivot$Pivot$indexAbsolute(model.lenses)));
 	return A2(
 		$mdgriffith$elm_ui$Element$column,
 		_List_fromArray(
@@ -29062,65 +29572,15 @@ var $author$project$Main$viewModel = function (model) {
 		_List_fromArray(
 			[
 				topBar,
-				A2(
-				$mdgriffith$elm_ui$Element$row,
-				_List_fromArray(
-					[
-						$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
-						$mdgriffith$elm_ui$Element$height(
-						A2($mdgriffith$elm_ui$Element$minimum, 0, $mdgriffith$elm_ui$Element$fill)),
-						$mdgriffith$elm_ui$Element$spacing($author$project$Styling$sizes.large)
-					]),
-				_List_fromArray(
-					[
-						$author$project$Main$viewRunsAndComparisons(model),
-						A2(
-						$mdgriffith$elm_ui$Element$el,
-						_List_fromArray(
-							[
-								$mdgriffith$elm_ui$Element$width(
-								$mdgriffith$elm_ui$Element$px(2)),
-								$mdgriffith$elm_ui$Element$Background$color($author$project$Styling$black),
-								$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill)
-							]),
-						$mdgriffith$elm_ui$Element$none),
-						A2(
-						$mdgriffith$elm_ui$Element$el,
-						_List_fromArray(
-							[
-								$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
-								$mdgriffith$elm_ui$Element$height(
-								A2($mdgriffith$elm_ui$Element$minimum, 0, $mdgriffith$elm_ui$Element$fill)),
-								$mdgriffith$elm_ui$Element$inFront(
-								A2(
-									$mdgriffith$elm_ui$Element$row,
-									_List_fromArray(
-										[
-											$mdgriffith$elm_ui$Element$spacing(10),
-											$mdgriffith$elm_ui$Element$alignBottom,
-											$mdgriffith$elm_ui$Element$moveUp(10),
-											$mdgriffith$elm_ui$Element$alignRight,
-											$mdgriffith$elm_ui$Element$padding(0)
-										]),
-									_List_fromArray(
-										[
-											A2($author$project$Styling$floatingActionButton, $feathericons$elm_feather$FeatherIcons$plus, $author$project$Main$NewLensClicked),
-											A2($author$project$Styling$floatingActionButton, $feathericons$elm_feather$FeatherIcons$grid, $author$project$Main$NewTableClicked)
-										])))
-							]),
-						A2(
-							$mdgriffith$elm_ui$Element$column,
-							_List_fromArray(
-								[
-									$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
-									$mdgriffith$elm_ui$Element$height(
-									A2($mdgriffith$elm_ui$Element$minimum, 0, $mdgriffith$elm_ui$Element$fill)),
-									$mdgriffith$elm_ui$Element$scrollbarY,
-									$mdgriffith$elm_ui$Element$spacing($author$project$Styling$sizes.medium),
-									$mdgriffith$elm_ui$Element$padding($author$project$Styling$sizes.medium)
-								]),
-							interestLists))
-					]))
+				function () {
+				var _v0 = model.displayedTrace;
+				if (_v0.$ === 'Nothing') {
+					return $author$project$Main$viewRunsAndInterestLists(model);
+				} else {
+					var dt = _v0.a;
+					return $author$project$Main$viewDisplayedTrace(dt);
+				}
+			}()
 			]));
 };
 var $author$project$Main$ReMapChangeMapping = F2(
