@@ -5,36 +5,95 @@
 # For the generator core this leads to surprisingly good traces as
 # we largely do not use for loops or ifs to decide how to do the computation.
 # Or to say it differently all we really have is just a collection of formulas
-from typing import Literal, Union, Callable
+from typing import Literal, Union, Callable, TypedDict
 
 
-# A trace is either, one of the atoms:
-# a literal number that occurred as is in the source
-# int|float
-# or named expression
-# { name: "name", trace: <trace> }
-# or a binary operation
-# { op: "+"|"-"|"/"|"*", a: <trace>, b: <trace> }
-# or a unary operation
-# { op: "+"|"-"|"/"|"*", a: <trace>}
+# Traces will be returned as values that python's json module
+# can immediately convert.
+TRACE = Union[
+    int,
+    float,
+    "DataTrace",
+    "FactOrAss",
+    "NameTrace",
+    "DefTrace",
+    "BinaryTrace",
+    "UnaryTrace",
+]
 
-TRACE = Union[int, float, dict[str, Union[str, "TRACE"]]]
+
+class ValueWithTrace(TypedDict):
+    value: float | int
+    trace: TRACE
+
+
+class DataTrace(TypedDict):
+    source: str
+    key: str
+    attr: str
+
+
+class FactOrAss(TypedDict):
+    fact_or_ass: str
+
+
+class NameTrace(TypedDict):
+    name: str
+
+
+class DefTrace(TypedDict):
+    def_name: str
+    trace: TRACE
+
+
+class BinaryTrace(TypedDict):
+    binary: Literal["+", "-", "*", "/"]
+    a: TRACE
+    b: TRACE
+
+
+class UnaryTrace(TypedDict):
+    unary: Literal["+", "-"]
+    a: TRACE
 
 
 def literal(v: int | float) -> TRACE:
     return v
 
 
-def named(name: str, t: TRACE) -> TRACE:
-    return {"name": name, "trace": t}
+def data(source: str, key: str, attr: str) -> TRACE:
+    return {"source": source, "key": key, "attr": attr}
+
+
+def fact_or_ass(n: str) -> TRACE:
+    return {"fact_or_ass": n}
+
+
+def name(n: str) -> TRACE:
+    return {"name": n}
+
+
+def use_trace(trace: TRACE) -> TRACE:
+    """Everywhere a trace is used we want to convert definitions into names.
+    So that in the end only the toplevel assignments are definitions.
+    """
+    match trace:
+        case {"def_name": n, "trace": _}:
+            return name(n)
+        case _:
+            return trace
+
+
+def def_name(n: str, trace: TRACE) -> TRACE:
+    return {"def_name": n, "trace": use_trace(trace)}
 
 
 def binary(op: Literal["+", "-", "*", "/"], a: TRACE, b: TRACE) -> TRACE:
-    return {"op": op, "a": a, "b": b}
+    return {"binary": op, "a": use_trace(a), "b": use_trace(b)}
 
 
 def unary(op: Literal["+", "-"], a: TRACE) -> TRACE:
-    return {"op": op, "a": a}
+    return {"unary": op, "a": use_trace(a)}
 
 
 class TracedNumber:
@@ -57,11 +116,24 @@ class TracedNumber:
             return v
 
     @classmethod
-    def named(cls, v: Union["TracedNumber", float, int], name: str):
+    def data(
+        cls, v: Union["TracedNumber", float, int], source: str, key: str, attr: str
+    ):
         if isinstance(v, (float, int)):
-            return cls(v, named(name, literal(v)))
+            return cls(v, data(source, key, attr))
         else:
-            return cls(v.value, named(name, v.trace))
+            return cls(v.value, data(source, key, attr))
+
+    @classmethod
+    def fact_or_ass(cls, n: str, v: float | int):
+        return cls(v, fact_or_ass(n))
+
+    @classmethod
+    def def_name(cls, n: str, v: Union["TracedNumber", float, int]):
+        if isinstance(v, (float, int)):
+            return cls(v, def_name(n, literal(v)))
+        else:
+            return cls(v.value, def_name(n, v.trace))
 
     def binop(
         self,
@@ -141,5 +213,5 @@ class TracedNumber:
     def __neg__(self) -> "TracedNumber":
         return self.__class__(-self.value, trace=unary("-", self.trace))
 
-    def to_json(self) -> TRACE:
+    def to_json(self) -> ValueWithTrace:
         return {"value": self.value, "trace": self.trace}

@@ -31,15 +31,13 @@ def enable_tracing() -> Callable[[Any], Any]:
     # First patch the lookup of inputs
     original_float = Row.float  # type: ignore
 
-    def traced_float(self: Row[float], attr: str):
+    def traced_float(self: Row[str], attr: str):
         v = original_float(self, attr)
         # make facts and assumptions prettier
         if self.dataset in ["facts", "ass"] and attr == "value":
-            return tracednumber.TracedNumber.named(v, str(self.key_value))
+            return tracednumber.TracedNumber.fact_or_ass(str(self.key_value), v)
         else:
-            return tracednumber.TracedNumber.named(
-                v, f"{self.dataset}[{self.key_value}].{attr}"
-            )
+            return tracednumber.TracedNumber.data(v, self.dataset, self.key_value, attr)
 
     Row.float = traced_float  # type: ignore
 
@@ -48,7 +46,7 @@ def enable_tracing() -> Callable[[Any], Any]:
         def traced_getattribute(self: Any, name: str):
             value = object.__getattribute__(self, name)
             if isinstance(value, (float, int, tracednumber.TracedNumber)):
-                return tracednumber.TracedNumber.named(value, f"{path}.{name}")
+                return tracednumber.TracedNumber.def_name(f"{path}.{name}", value)
             else:
                 return value
 
