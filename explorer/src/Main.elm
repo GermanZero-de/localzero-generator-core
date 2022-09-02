@@ -179,12 +179,13 @@ type alias Model =
     , selectedForComparison : Maybe RunId
     , leftPaneWidth : Int
     , dragDrop : DragDrop
-    , displayedTrace : Maybe DisplayedTrace
+    , displayedTrace : List DisplayedTrace
     }
 
 
 type alias DisplayedTrace =
-    { path : Path
+    { runId : AllRuns.RunId
+    , path : Path
     , value : Value
     , trace : Value.Trace
     }
@@ -265,7 +266,9 @@ initiateCalculate maybeNdx inputs entries overrides model =
     ( { model | showModal = Just Loading }
     , Http.post
         { url = "http://localhost:4070/calculate/" ++ inputs.ags ++ "/" ++ String.fromInt inputs.year
-        , expect = Http.expectJson (GotGeneratorResult maybeNdx inputs entries overrides) (Tree.decoder Value.maybeWithTraceDecoder)
+        , expect =
+            Http.expectJson (GotGeneratorResult maybeNdx inputs entries overrides)
+                (Tree.decoder (Value.maybeWithTraceDecoder "result"))
         , body = Http.jsonBody (encodeOverrides overrides)
         }
     )
@@ -302,7 +305,7 @@ init storage =
     , selectedForComparison = Nothing
     , leftPaneWidth = 600
     , dragDrop = DragDrop.init
-    , displayedTrace = Nothing
+    , displayedTrace = []
     }
         |> update (LocalStorageLoaded storage)
 
@@ -316,7 +319,7 @@ type Msg
       GotGeneratorResult (Maybe RunId) Run.Inputs Run.Entries Run.Overrides (Result Http.Error (Tree Value.MaybeWithTrace))
     | GotEntries (Maybe RunId) Run.Inputs Run.Overrides (Result Http.Error Run.Entries)
       -- trace handling
-    | DisplayTrace Path Value Value.Trace
+    | DisplayTrace RunId Path Value Value.Trace
     | CloseTrace
       -- Override handling
     | AddOrUpdateOverrideClicked RunId String Float
@@ -481,12 +484,12 @@ update msg model =
             model
                 |> withNoCmd
 
-        DisplayTrace path value trace ->
-            { model | displayedTrace = Just { path = path, value = value, trace = trace } }
+        DisplayTrace runId path value trace ->
+            { model | displayedTrace = { runId = runId, path = path, value = value, trace = trace } :: model.displayedTrace }
                 |> withNoCmd
 
         CloseTrace ->
-            { model | displayedTrace = Nothing }
+            { model | displayedTrace = List.tail model.displayedTrace |> Maybe.withDefault [] }
                 |> withNoCmd
 
         AddRowToLensTableClicked id num ->
@@ -1550,6 +1553,7 @@ viewValueTree runId lensId path checkIsCollapsed lens overrides activeOverrideEd
                         Just t ->
                             iconButton (size16 FeatherIcons.info)
                                 (DisplayTrace
+                                    runId
                                     thisPath
                                     valueWithTrace.value
                                     t
@@ -2545,15 +2549,15 @@ level tr =
                     3
 
 
-viewTrace : Value.Trace -> Element Msg
-viewTrace t =
+viewTrace : RunId -> AllRuns -> Value.Trace -> Element Msg
+viewTrace runId allRuns t =
     let
         viewWithParens child =
             if level t < level child then
-                row [ spacing sizes.small ] [ text "(", viewTrace child, text ")" ]
+                row [ spacing sizes.small ] [ text "(", viewTrace runId allRuns child, text ")" ]
 
             else
-                viewTrace child
+                viewTrace runId allRuns child
     in
     case t of
         Value.DataTrace { source, key, attr } ->
@@ -2563,7 +2567,24 @@ viewTrace t =
             text (formatGermanNumber f)
 
         Value.NameTrace { name } ->
-            text name
+            let
+                path =
+                    String.split "." name
+            in
+            case AllRuns.getValue Run.WithOverrides runId path allRuns of
+                Just leaf ->
+                    case leaf.trace of
+                        Nothing ->
+                            text name
+
+                        Just nestedTrace ->
+                            Input.button []
+                                { onPress = Just (DisplayTrace runId path leaf.value nestedTrace)
+                                , label = text name
+                                }
+
+                Nothing ->
+                    text name
 
         Value.FactOrAssTrace { fact_or_ass } ->
             text fact_or_ass
@@ -2599,21 +2620,25 @@ viewTrace t =
                 ]
 
 
-viewDisplayedTrace : DisplayedTrace -> Element Msg
-viewDisplayedTrace { path, value, trace } =
+viewDisplayedTrace : AllRuns -> List Path -> DisplayedTrace -> Element Msg
+viewDisplayedTrace allRuns breadcrumbs { runId, path, value, trace } =
     column
         [ width fill
         , height fill
         , padding sizes.large
         ]
-        [ row [ width fill, padding sizes.medium, spacing sizes.small ]
+        [ row [ width fill, padding sizes.medium, spacing sizes.small, Font.size 12 ]
+            (List.intersperse (icon (FeatherIcons.withSize 12 <| FeatherIcons.chevronRight)) <|
+                List.map (text << String.join ".") breadcrumbs
+            )
+        , row [ width fill, padding sizes.medium, spacing sizes.small ]
             [ row [ width fill ]
                 [ text (String.join "." path ++ ":")
                 , viewValue value
                 ]
             , iconButton FeatherIcons.x CloseTrace
             ]
-        , row [ padding sizes.medium, spacing sizes.small ] [ viewTrace trace ]
+        , row [ padding sizes.medium, spacing sizes.small ] [ viewTrace runId allRuns trace ]
         , el [ padding sizes.medium, Font.size 8 ]
             (scrollableText
                 (Debug.toString trace)
@@ -2647,11 +2672,11 @@ viewModel model =
         ]
         [ topBar
         , case model.displayedTrace of
-            Nothing ->
+            [] ->
                 viewRunsAndInterestLists model
 
-            Just dt ->
-                viewDisplayedTrace dt
+            dt :: dts ->
+                viewDisplayedTrace model.runs (List.map .path dts) dt
         ]
 
 

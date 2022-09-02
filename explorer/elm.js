@@ -8573,13 +8573,15 @@ var $author$project$Value$factOrAssTraceDecoder = A2(
 var $author$project$Value$NameTrace = function (a) {
 	return {$: 'NameTrace', a: a};
 };
-var $author$project$Value$nameTraceDecoder = A2(
-	$elm$json$Json$Decode$map,
-	function (s) {
-		return $author$project$Value$NameTrace(
-			{name: s});
-	},
-	A2($elm$json$Json$Decode$field, 'name', $elm$json$Json$Decode$string));
+var $author$project$Value$nameTraceDecoder = function (namePrefix) {
+	return A2(
+		$elm$json$Json$Decode$map,
+		function (s) {
+			return $author$project$Value$NameTrace(
+				{name: namePrefix + ('.' + s)});
+		},
+		A2($elm$json$Json$Decode$field, 'name', $elm$json$Json$Decode$string));
+};
 var $author$project$Value$UnaryMinus = {$: 'UnaryMinus'};
 var $author$project$Value$UnaryPlus = {$: 'UnaryPlus'};
 var $author$project$Value$unaryOpDecoder = A2(
@@ -8595,7 +8597,7 @@ var $author$project$Value$unaryOpDecoder = A2(
 		}
 	},
 	$elm$json$Json$Decode$string);
-function $author$project$Value$cyclic$binaryTraceDecoder() {
+var $author$project$Value$binaryTraceDecoder = function (namePrefix) {
 	return A4(
 		$elm$json$Json$Decode$map3,
 		F3(
@@ -8607,13 +8609,28 @@ function $author$project$Value$cyclic$binaryTraceDecoder() {
 		A2(
 			$elm$json$Json$Decode$field,
 			'a',
-			$author$project$Value$cyclic$traceDecoder()),
+			$author$project$Value$traceDecoder(namePrefix)),
 		A2(
 			$elm$json$Json$Decode$field,
 			'b',
-			$author$project$Value$cyclic$traceDecoder()));
-}
-function $author$project$Value$cyclic$unaryTraceDecoder() {
+			$author$project$Value$traceDecoder(namePrefix)));
+};
+var $author$project$Value$traceDecoder = function (namePrefix) {
+	return $elm$json$Json$Decode$lazy(
+		function (_v0) {
+			return $elm$json$Json$Decode$oneOf(
+				_List_fromArray(
+					[
+						A2($elm$json$Json$Decode$map, $author$project$Value$LiteralTrace, $elm$json$Json$Decode$float),
+						$author$project$Value$dataTraceDecoder,
+						$author$project$Value$factOrAssTraceDecoder,
+						$author$project$Value$binaryTraceDecoder(namePrefix),
+						$author$project$Value$nameTraceDecoder(namePrefix),
+						$author$project$Value$unaryTraceDecoder(namePrefix)
+					]));
+		});
+};
+var $author$project$Value$unaryTraceDecoder = function (namePrefix) {
 	return A3(
 		$elm$json$Json$Decode$map2,
 		F2(
@@ -8625,59 +8642,34 @@ function $author$project$Value$cyclic$unaryTraceDecoder() {
 		A2(
 			$elm$json$Json$Decode$field,
 			'a',
-			$author$project$Value$cyclic$traceDecoder()));
-}
-function $author$project$Value$cyclic$traceDecoder() {
-	return $elm$json$Json$Decode$lazy(
-		function (_v0) {
-			return $elm$json$Json$Decode$oneOf(
-				_List_fromArray(
-					[
-						A2($elm$json$Json$Decode$map, $author$project$Value$LiteralTrace, $elm$json$Json$Decode$float),
-						$author$project$Value$dataTraceDecoder,
-						$author$project$Value$factOrAssTraceDecoder,
-						$author$project$Value$cyclic$binaryTraceDecoder(),
-						$author$project$Value$nameTraceDecoder,
-						$author$project$Value$cyclic$unaryTraceDecoder()
-					]));
-		});
-}
-try {
-	var $author$project$Value$binaryTraceDecoder = $author$project$Value$cyclic$binaryTraceDecoder();
-	$author$project$Value$cyclic$binaryTraceDecoder = function () {
-		return $author$project$Value$binaryTraceDecoder;
-	};
-	var $author$project$Value$unaryTraceDecoder = $author$project$Value$cyclic$unaryTraceDecoder();
-	$author$project$Value$cyclic$unaryTraceDecoder = function () {
-		return $author$project$Value$unaryTraceDecoder;
-	};
-	var $author$project$Value$traceDecoder = $author$project$Value$cyclic$traceDecoder();
-	$author$project$Value$cyclic$traceDecoder = function () {
-		return $author$project$Value$traceDecoder;
-	};
-} catch ($) {
-	throw 'Some top-level definitions from `Value` are causing infinite recursion:\n\n  ┌─────┐\n  │    binaryTraceDecoder\n  │     ↓\n  │    unaryTraceDecoder\n  │     ↓\n  │    traceDecoder\n  └─────┘\n\nThese errors are very tricky, so read https://elm-lang.org/0.19.1/bad-recursion to learn how to fix it!';}
-var $author$project$Value$maybeWithTraceDecoder = $elm$json$Json$Decode$oneOf(
-	_List_fromArray(
-		[
-			A2(
-			$elm$json$Json$Decode$map,
-			function (v) {
-				return {trace: $elm$core$Maybe$Nothing, value: v};
-			},
-			$author$project$Value$decoder),
-			A3(
-			$elm$json$Json$Decode$map2,
-			F2(
-				function (v, t) {
-					return {
-						trace: $elm$core$Maybe$Just(t),
-						value: v
-					};
-				}),
-			A2($elm$json$Json$Decode$field, 'value', $author$project$Value$decoder),
-			A2($elm$json$Json$Decode$field, 'trace', $author$project$Value$traceDecoder))
-		]));
+			$author$project$Value$traceDecoder(namePrefix)));
+};
+var $author$project$Value$maybeWithTraceDecoder = function (namePrefix) {
+	return $elm$json$Json$Decode$oneOf(
+		_List_fromArray(
+			[
+				A2(
+				$elm$json$Json$Decode$map,
+				function (v) {
+					return {trace: $elm$core$Maybe$Nothing, value: v};
+				},
+				$author$project$Value$decoder),
+				A3(
+				$elm$json$Json$Decode$map2,
+				F2(
+					function (v, t) {
+						return {
+							trace: $elm$core$Maybe$Just(t),
+							value: v
+						};
+					}),
+				A2($elm$json$Json$Decode$field, 'value', $author$project$Value$decoder),
+				A2(
+					$elm$json$Json$Decode$field,
+					'trace',
+					$author$project$Value$traceDecoder(namePrefix)))
+			]));
+};
 var $elm$http$Http$Request = function (a) {
 	return {$: 'Request', a: a};
 };
@@ -8847,7 +8839,8 @@ var $author$project$Main$initiateCalculate = F5(
 					expect: A2(
 						$elm$http$Http$expectJson,
 						A4($author$project$Main$GotGeneratorResult, maybeNdx, inputs, entries, overrides),
-						$author$project$Tree$decoder($author$project$Value$maybeWithTraceDecoder)),
+						$author$project$Tree$decoder(
+							$author$project$Value$maybeWithTraceDecoder('result'))),
 					url: 'http://localhost:4070/calculate/' + (inputs.ags + ('/' + $elm$core$String$fromInt(inputs.year)))
 				}));
 	});
@@ -8855,7 +8848,8 @@ var $author$project$Main$GotEntries = F4(
 	function (a, b, c, d) {
 		return {$: 'GotEntries', a: a, b: b, c: c, d: d};
 	});
-var $author$project$Run$entriesDecoder = $elm$json$Json$Decode$dict($author$project$Value$maybeWithTraceDecoder);
+var $author$project$Run$entriesDecoder = $elm$json$Json$Decode$dict(
+	$author$project$Value$maybeWithTraceDecoder('entries'));
 var $elm$http$Http$emptyBody = _Http_emptyBody;
 var $elm$http$Http$get = function (r) {
 	return $elm$http$Http$request(
@@ -9363,6 +9357,15 @@ var $author$project$Lens$setTableEditMode = function (mode) {
 				{editing: mode});
 		});
 };
+var $elm$core$List$tail = function (list) {
+	if (list.b) {
+		var x = list.a;
+		var xs = list.b;
+		return $elm$core$Maybe$Just(xs);
+	} else {
+		return $elm$core$Maybe$Nothing;
+	}
+};
 var $elm$core$String$fromFloat = _String_fromNumber;
 var $author$project$Lens$getCells = function (_v0) {
 	var l = _v0.a;
@@ -9738,21 +9741,29 @@ var $author$project$Main$update = F2(
 			case 'Noop':
 				return $Janiczek$cmd_extra$Cmd$Extra$withNoCmd(model);
 			case 'DisplayTrace':
-				var path = msg.a;
-				var value = msg.b;
-				var trace = msg.c;
+				var runId = msg.a;
+				var path = msg.b;
+				var value = msg.c;
+				var trace = msg.d;
 				return $Janiczek$cmd_extra$Cmd$Extra$withNoCmd(
 					_Utils_update(
 						model,
 						{
-							displayedTrace: $elm$core$Maybe$Just(
-								{path: path, trace: trace, value: value})
+							displayedTrace: A2(
+								$elm$core$List$cons,
+								{path: path, runId: runId, trace: trace, value: value},
+								model.displayedTrace)
 						}));
 			case 'CloseTrace':
 				return $Janiczek$cmd_extra$Cmd$Extra$withNoCmd(
 					_Utils_update(
 						model,
-						{displayedTrace: $elm$core$Maybe$Nothing}));
+						{
+							displayedTrace: A2(
+								$elm$core$Maybe$withDefault,
+								_List_Nil,
+								$elm$core$List$tail(model.displayedTrace))
+						}));
 			case 'AddRowToLensTableClicked':
 				var id = msg.a;
 				var num = msg.b;
@@ -10725,7 +10736,7 @@ var $author$project$Main$init = function (storage) {
 			chartHovering: _List_Nil,
 			collapseStatus: $author$project$CollapseStatus$allCollapsed,
 			diffs: $elm$core$Dict$empty,
-			displayedTrace: $elm$core$Maybe$Nothing,
+			displayedTrace: _List_Nil,
 			dragDrop: $author$project$Html5$DragDrop$init,
 			editingActiveLensLabel: false,
 			leftPaneWidth: 600,
@@ -18707,7 +18718,42 @@ var $feathericons$elm_feather$FeatherIcons$upload = A2(
 			_List_Nil)
 		]));
 var $author$project$Main$CloseTrace = {$: 'CloseTrace'};
+var $feathericons$elm_feather$FeatherIcons$chevronRight = A2(
+	$feathericons$elm_feather$FeatherIcons$makeBuilder,
+	'chevron-right',
+	_List_fromArray(
+		[
+			A2(
+			$elm$svg$Svg$polyline,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$points('9 18 15 12 9 6')
+				]),
+			_List_Nil)
+		]));
+var $elm$core$List$intersperse = F2(
+	function (sep, xs) {
+		if (!xs.b) {
+			return _List_Nil;
+		} else {
+			var hd = xs.a;
+			var tl = xs.b;
+			var step = F2(
+				function (x, rest) {
+					return A2(
+						$elm$core$List$cons,
+						sep,
+						A2($elm$core$List$cons, x, rest));
+				});
+			var spersed = A3($elm$core$List$foldr, step, _List_Nil, tl);
+			return A2($elm$core$List$cons, hd, spersed);
+		}
+	});
 var $elm$core$Debug$toString = _Debug_toString;
+var $author$project$Main$DisplayTrace = F4(
+	function (a, b, c, d) {
+		return {$: 'DisplayTrace', a: a, b: b, c: c, d: d};
+	});
 var $coinop_logan$elm_format_number$Parser$FormattedNumber = F5(
 	function (original, integers, decimals, prefix, suffix) {
 		return {decimals: decimals, integers: integers, original: original, prefix: prefix, suffix: suffix};
@@ -19077,6 +19123,29 @@ var $author$project$Styling$germanLocale = _Utils_update(
 var $author$project$Styling$formatGermanNumber = function (f) {
 	return A2($coinop_logan$elm_format_number$FormatNumber$format, $author$project$Styling$germanLocale, f);
 };
+var $author$project$AllRuns$getValue = F4(
+	function (handling, ndx, path, _v0) {
+		var a = _v0.a;
+		return A2(
+			$elm$core$Maybe$andThen,
+			function (r) {
+				return A2(
+					$elm$core$Maybe$andThen,
+					function (node) {
+						if (node.$ === 'Tree') {
+							return $elm$core$Maybe$Nothing;
+						} else {
+							var n = node.a;
+							return $elm$core$Maybe$Just(n);
+						}
+					},
+					A2(
+						$author$project$Tree$get,
+						path,
+						A2($author$project$Run$getTree, handling, r)));
+			},
+			A2($elm$core$Dict$get, ndx, a.runs));
+	});
 var $author$project$Main$level = function (tr) {
 	switch (tr.$) {
 		case 'LiteralTrace':
@@ -19103,43 +19172,12 @@ var $author$project$Main$level = function (tr) {
 			}
 	}
 };
-var $author$project$Main$viewTrace = function (t) {
-	var viewWithParens = function (child) {
-		return (_Utils_cmp(
-			$author$project$Main$level(t),
-			$author$project$Main$level(child)) < 0) ? A2(
-			$mdgriffith$elm_ui$Element$row,
-			_List_fromArray(
-				[
-					$mdgriffith$elm_ui$Element$spacing($author$project$Styling$sizes.small)
-				]),
-			_List_fromArray(
-				[
-					$mdgriffith$elm_ui$Element$text('('),
-					$author$project$Main$viewTrace(child),
-					$mdgriffith$elm_ui$Element$text(')')
-				])) : $author$project$Main$viewTrace(child);
-	};
-	switch (t.$) {
-		case 'DataTrace':
-			var source = t.a.source;
-			var key = t.a.key;
-			var attr = t.a.attr;
-			return $mdgriffith$elm_ui$Element$text(source + ('[' + (key + ('].' + attr))));
-		case 'LiteralTrace':
-			var f = t.a;
-			return $mdgriffith$elm_ui$Element$text(
-				$author$project$Styling$formatGermanNumber(f));
-		case 'NameTrace':
-			var name = t.a.name;
-			return $mdgriffith$elm_ui$Element$text(name);
-		case 'FactOrAssTrace':
-			var fact_or_ass = t.a.fact_or_ass;
-			return $mdgriffith$elm_ui$Element$text(fact_or_ass);
-		case 'UnaryTrace':
-			var unary = t.a.unary;
-			var a = t.a.a;
-			return A2(
+var $author$project$Main$viewTrace = F3(
+	function (runId, allRuns, t) {
+		var viewWithParens = function (child) {
+			return (_Utils_cmp(
+				$author$project$Main$level(t),
+				$author$project$Main$level(child)) < 0) ? A2(
 				$mdgriffith$elm_ui$Element$row,
 				_List_fromArray(
 					[
@@ -19147,44 +19185,96 @@ var $author$project$Main$viewTrace = function (t) {
 					]),
 				_List_fromArray(
 					[
-						function () {
-						if (unary.$ === 'UnaryMinus') {
-							return $mdgriffith$elm_ui$Element$text('-');
-						} else {
-							return $mdgriffith$elm_ui$Element$text('+');
-						}
-					}(),
-						viewWithParens(a)
-					]));
-		default:
-			var binary = t.a.binary;
-			var a = t.a.a;
-			var b = t.a.b;
-			return A2(
-				$mdgriffith$elm_ui$Element$row,
-				_List_fromArray(
-					[
-						$mdgriffith$elm_ui$Element$spacing($author$project$Styling$sizes.small)
-					]),
-				_List_fromArray(
-					[
-						viewWithParens(a),
-						function () {
-						switch (binary.$) {
-							case 'Plus':
-								return $mdgriffith$elm_ui$Element$text('+');
-							case 'Minus':
+						$mdgriffith$elm_ui$Element$text('('),
+						A3($author$project$Main$viewTrace, runId, allRuns, child),
+						$mdgriffith$elm_ui$Element$text(')')
+					])) : A3($author$project$Main$viewTrace, runId, allRuns, child);
+		};
+		switch (t.$) {
+			case 'DataTrace':
+				var source = t.a.source;
+				var key = t.a.key;
+				var attr = t.a.attr;
+				return $mdgriffith$elm_ui$Element$text(source + ('[' + (key + ('].' + attr))));
+			case 'LiteralTrace':
+				var f = t.a;
+				return $mdgriffith$elm_ui$Element$text(
+					$author$project$Styling$formatGermanNumber(f));
+			case 'NameTrace':
+				var name = t.a.name;
+				var path = A2($elm$core$String$split, '.', name);
+				var _v1 = A4($author$project$AllRuns$getValue, $author$project$Run$WithOverrides, runId, path, allRuns);
+				if (_v1.$ === 'Just') {
+					var leaf = _v1.a;
+					var _v2 = leaf.trace;
+					if (_v2.$ === 'Nothing') {
+						return $mdgriffith$elm_ui$Element$text(name);
+					} else {
+						var nestedTrace = _v2.a;
+						return A2(
+							$mdgriffith$elm_ui$Element$Input$button,
+							_List_Nil,
+							{
+								label: $mdgriffith$elm_ui$Element$text(name),
+								onPress: $elm$core$Maybe$Just(
+									A4($author$project$Main$DisplayTrace, runId, path, leaf.value, nestedTrace))
+							});
+					}
+				} else {
+					return $mdgriffith$elm_ui$Element$text(name);
+				}
+			case 'FactOrAssTrace':
+				var fact_or_ass = t.a.fact_or_ass;
+				return $mdgriffith$elm_ui$Element$text(fact_or_ass);
+			case 'UnaryTrace':
+				var unary = t.a.unary;
+				var a = t.a.a;
+				return A2(
+					$mdgriffith$elm_ui$Element$row,
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$spacing($author$project$Styling$sizes.small)
+						]),
+					_List_fromArray(
+						[
+							function () {
+							if (unary.$ === 'UnaryMinus') {
 								return $mdgriffith$elm_ui$Element$text('-');
-							case 'Times':
-								return $mdgriffith$elm_ui$Element$text('*');
-							default:
-								return $mdgriffith$elm_ui$Element$text('/');
-						}
-					}(),
-						viewWithParens(b)
-					]));
-	}
-};
+							} else {
+								return $mdgriffith$elm_ui$Element$text('+');
+							}
+						}(),
+							viewWithParens(a)
+						]));
+			default:
+				var binary = t.a.binary;
+				var a = t.a.a;
+				var b = t.a.b;
+				return A2(
+					$mdgriffith$elm_ui$Element$row,
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$spacing($author$project$Styling$sizes.small)
+						]),
+					_List_fromArray(
+						[
+							viewWithParens(a),
+							function () {
+							switch (binary.$) {
+								case 'Plus':
+									return $mdgriffith$elm_ui$Element$text('+');
+								case 'Minus':
+									return $mdgriffith$elm_ui$Element$text('-');
+								case 'Times':
+									return $mdgriffith$elm_ui$Element$text('*');
+								default:
+									return $mdgriffith$elm_ui$Element$text('/');
+							}
+						}(),
+							viewWithParens(b)
+						]));
+		}
+	});
 var $mdgriffith$elm_ui$Internal$Flag$fontWeight = $mdgriffith$elm_ui$Internal$Flag$flag(13);
 var $mdgriffith$elm_ui$Element$Font$bold = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$fontWeight, $mdgriffith$elm_ui$Internal$Style$classes.bold);
 var $author$project$Main$nullValueElement = A2(
@@ -19219,66 +19309,88 @@ var $author$project$Main$viewValue = function (v) {
 			return $author$project$Main$viewFloatValue(f);
 	}
 };
-var $author$project$Main$viewDisplayedTrace = function (_v0) {
-	var path = _v0.path;
-	var value = _v0.value;
-	var trace = _v0.trace;
-	return A2(
-		$mdgriffith$elm_ui$Element$column,
-		_List_fromArray(
-			[
-				$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
-				$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
-				$mdgriffith$elm_ui$Element$padding($author$project$Styling$sizes.large)
-			]),
-		_List_fromArray(
-			[
-				A2(
-				$mdgriffith$elm_ui$Element$row,
-				_List_fromArray(
-					[
-						$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
-						$mdgriffith$elm_ui$Element$padding($author$project$Styling$sizes.medium),
-						$mdgriffith$elm_ui$Element$spacing($author$project$Styling$sizes.small)
-					]),
-				_List_fromArray(
-					[
+var $author$project$Main$viewDisplayedTrace = F3(
+	function (allRuns, breadcrumbs, _v0) {
+		var runId = _v0.runId;
+		var path = _v0.path;
+		var value = _v0.value;
+		var trace = _v0.trace;
+		return A2(
+			$mdgriffith$elm_ui$Element$column,
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+					$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
+					$mdgriffith$elm_ui$Element$padding($author$project$Styling$sizes.large)
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$mdgriffith$elm_ui$Element$row,
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+							$mdgriffith$elm_ui$Element$padding($author$project$Styling$sizes.medium),
+							$mdgriffith$elm_ui$Element$spacing($author$project$Styling$sizes.small),
+							$mdgriffith$elm_ui$Element$Font$size(12)
+						]),
+					A2(
+						$elm$core$List$intersperse,
+						$author$project$Styling$icon(
+							A2($feathericons$elm_feather$FeatherIcons$withSize, 12, $feathericons$elm_feather$FeatherIcons$chevronRight)),
 						A2(
-						$mdgriffith$elm_ui$Element$row,
-						_List_fromArray(
-							[
-								$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
-							]),
-						_List_fromArray(
-							[
-								$mdgriffith$elm_ui$Element$text(
-								A2($elm$core$String$join, '.', path) + ':'),
-								$author$project$Main$viewValue(value)
-							])),
-						A2($author$project$Styling$iconButton, $feathericons$elm_feather$FeatherIcons$x, $author$project$Main$CloseTrace)
-					])),
-				A2(
-				$mdgriffith$elm_ui$Element$row,
-				_List_fromArray(
-					[
-						$mdgriffith$elm_ui$Element$padding($author$project$Styling$sizes.medium),
-						$mdgriffith$elm_ui$Element$spacing($author$project$Styling$sizes.small)
-					]),
-				_List_fromArray(
-					[
-						$author$project$Main$viewTrace(trace)
-					])),
-				A2(
-				$mdgriffith$elm_ui$Element$el,
-				_List_fromArray(
-					[
-						$mdgriffith$elm_ui$Element$padding($author$project$Styling$sizes.medium),
-						$mdgriffith$elm_ui$Element$Font$size(8)
-					]),
-				$author$project$Styling$scrollableText(
-					$elm$core$Debug$toString(trace)))
-			]));
-};
+							$elm$core$List$map,
+							A2(
+								$elm$core$Basics$composeL,
+								$mdgriffith$elm_ui$Element$text,
+								$elm$core$String$join('.')),
+							breadcrumbs))),
+					A2(
+					$mdgriffith$elm_ui$Element$row,
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+							$mdgriffith$elm_ui$Element$padding($author$project$Styling$sizes.medium),
+							$mdgriffith$elm_ui$Element$spacing($author$project$Styling$sizes.small)
+						]),
+					_List_fromArray(
+						[
+							A2(
+							$mdgriffith$elm_ui$Element$row,
+							_List_fromArray(
+								[
+									$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
+								]),
+							_List_fromArray(
+								[
+									$mdgriffith$elm_ui$Element$text(
+									A2($elm$core$String$join, '.', path) + ':'),
+									$author$project$Main$viewValue(value)
+								])),
+							A2($author$project$Styling$iconButton, $feathericons$elm_feather$FeatherIcons$x, $author$project$Main$CloseTrace)
+						])),
+					A2(
+					$mdgriffith$elm_ui$Element$row,
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$padding($author$project$Styling$sizes.medium),
+							$mdgriffith$elm_ui$Element$spacing($author$project$Styling$sizes.small)
+						]),
+					_List_fromArray(
+						[
+							A3($author$project$Main$viewTrace, runId, allRuns, trace)
+						])),
+					A2(
+					$mdgriffith$elm_ui$Element$el,
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$padding($author$project$Styling$sizes.medium),
+							$mdgriffith$elm_ui$Element$Font$size(8)
+						]),
+					$author$project$Styling$scrollableText(
+						$elm$core$Debug$toString(trace)))
+				]));
+	});
 var $author$project$Main$NewLensClicked = {$: 'NewLensClicked'};
 var $author$project$Main$NewTableClicked = {$: 'NewTableClicked'};
 var $mdgriffith$elm_ui$Internal$Model$Bottom = {$: 'Bottom'};
@@ -27706,24 +27818,6 @@ var $mdgriffith$elm_ui$Element$Border$innerGlow = F2(
 				size: size
 			});
 	});
-var $elm$core$List$intersperse = F2(
-	function (sep, xs) {
-		if (!xs.b) {
-			return _List_Nil;
-		} else {
-			var hd = xs.a;
-			var tl = xs.b;
-			var step = F2(
-				function (x, rest) {
-					return A2(
-						$elm$core$List$cons,
-						sep,
-						A2($elm$core$List$cons, x, rest));
-				});
-			var spersed = A3($elm$core$List$foldr, step, _List_Nil, tl);
-			return A2($elm$core$List$cons, hd, spersed);
-		}
-	});
 var $mdgriffith$elm_ui$Internal$Model$Max = F2(
 	function (a, b) {
 		return {$: 'Max', a: a, b: b};
@@ -28477,19 +28571,6 @@ var $feathericons$elm_feather$FeatherIcons$chevronDown = A2(
 				]),
 			_List_Nil)
 		]));
-var $feathericons$elm_feather$FeatherIcons$chevronRight = A2(
-	$feathericons$elm_feather$FeatherIcons$makeBuilder,
-	'chevron-right',
-	_List_fromArray(
-		[
-			A2(
-			$elm$svg$Svg$polyline,
-			_List_fromArray(
-				[
-					$elm$svg$Svg$Attributes$points('9 18 15 12 9 6')
-				]),
-			_List_Nil)
-		]));
 var $author$project$Main$collapsedStatusIcon = function (collapsed) {
 	var i = collapsed ? $feathericons$elm_feather$FeatherIcons$chevronRight : $feathericons$elm_feather$FeatherIcons$chevronDown;
 	return A2(
@@ -28850,10 +28931,6 @@ var $author$project$Main$AddToLensClicked = F2(
 	function (a, b) {
 		return {$: 'AddToLensClicked', a: a, b: b};
 	});
-var $author$project$Main$DisplayTrace = F3(
-	function (a, b, c) {
-		return {$: 'DisplayTrace', a: a, b: b, c: c};
-	});
 var $author$project$Main$DragFromRun = F2(
 	function (a, b) {
 		return {$: 'DragFromRun', a: a, b: b};
@@ -29145,7 +29222,7 @@ var $author$project$Main$viewValueTree = F8(
 									return A2(
 										$author$project$Styling$iconButton,
 										$author$project$Styling$size16($feathericons$elm_feather$FeatherIcons$info),
-										A3($author$project$Main$DisplayTrace, thisPath, valueWithTrace.value, t));
+										A4($author$project$Main$DisplayTrace, runId, thisPath, valueWithTrace.value, t));
 								}
 							}(),
 								A2(
@@ -29574,11 +29651,21 @@ var $author$project$Main$viewModel = function (model) {
 				topBar,
 				function () {
 				var _v0 = model.displayedTrace;
-				if (_v0.$ === 'Nothing') {
+				if (!_v0.b) {
 					return $author$project$Main$viewRunsAndInterestLists(model);
 				} else {
 					var dt = _v0.a;
-					return $author$project$Main$viewDisplayedTrace(dt);
+					var dts = _v0.b;
+					return A3(
+						$author$project$Main$viewDisplayedTrace,
+						model.runs,
+						A2(
+							$elm$core$List$map,
+							function ($) {
+								return $.path;
+							},
+							dts),
+						dt);
 				}
 			}()
 			]));

@@ -1,9 +1,9 @@
 module Value exposing
-    ( MaybeWithTrace
+    ( BinaryOp(..)
+    , MaybeWithTrace
     , Trace(..)
-    , Value(..)
-    , BinaryOp(..)
     , UnaryOp(..)
+    , Value(..)
     , decoder
     , defaultTolerance
     , isEqual
@@ -46,17 +46,17 @@ type UnaryOp
     | UnaryPlus
 
 
-traceDecoder : Decode.Decoder Trace
-traceDecoder =
+traceDecoder : String -> Decode.Decoder Trace
+traceDecoder namePrefix =
     Decode.lazy
         (\() ->
             Decode.oneOf
                 [ Decode.float |> Decode.map LiteralTrace
                 , dataTraceDecoder
                 , factOrAssTraceDecoder
-                , binaryTraceDecoder
-                , nameTraceDecoder
-                , unaryTraceDecoder
+                , binaryTraceDecoder namePrefix
+                , nameTraceDecoder namePrefix
+                , unaryTraceDecoder namePrefix
                 ]
         )
 
@@ -75,25 +75,25 @@ factOrAssTraceDecoder =
         |> Decode.map (\s -> FactOrAssTrace { fact_or_ass = s })
 
 
-nameTraceDecoder : Decode.Decoder Trace
-nameTraceDecoder =
+nameTraceDecoder : String -> Decode.Decoder Trace
+nameTraceDecoder namePrefix =
     Decode.field "name" Decode.string
-        |> Decode.map (\s -> NameTrace { name = s })
+        |> Decode.map (\s -> NameTrace { name = namePrefix ++ "." ++ s })
 
 
-binaryTraceDecoder : Decode.Decoder Trace
-binaryTraceDecoder =
+binaryTraceDecoder : String -> Decode.Decoder Trace
+binaryTraceDecoder namePrefix =
     Decode.map3 (\o a b -> BinaryTrace { binary = o, a = a, b = b })
         (Decode.field "binary" binaryOpDecoder)
-        (Decode.field "a" traceDecoder)
-        (Decode.field "b" traceDecoder)
+        (Decode.field "a" <| traceDecoder namePrefix)
+        (Decode.field "b" <| traceDecoder namePrefix)
 
 
-unaryTraceDecoder : Decode.Decoder Trace
-unaryTraceDecoder =
+unaryTraceDecoder : String -> Decode.Decoder Trace
+unaryTraceDecoder namePrefix =
     Decode.map2 (\o a -> UnaryTrace { unary = o, a = a })
         (Decode.field "unary" unaryOpDecoder)
-        (Decode.field "a" traceDecoder)
+        (Decode.field "a" <| traceDecoder namePrefix)
 
 
 unaryOpDecoder : Decode.Decoder UnaryOp
@@ -206,12 +206,12 @@ decoder =
         ]
 
 
-maybeWithTraceDecoder : Decode.Decoder MaybeWithTrace
-maybeWithTraceDecoder =
+maybeWithTraceDecoder : String -> Decode.Decoder MaybeWithTrace
+maybeWithTraceDecoder namePrefix =
     Decode.oneOf
         [ decoder
             |> Decode.map (\v -> { value = v, trace = Nothing })
         , Decode.map2 (\v t -> { value = v, trace = Just t })
             (Decode.field "value" decoder)
-            (Decode.field "trace" traceDecoder)
+            (Decode.field "trace" <| traceDecoder namePrefix)
         ]

@@ -112,4 +112,4 @@ getTree h (Run r) =
 
 entriesDecoder : Decode.Decoder Entries
 entriesDecoder =
-    Decode.dict Value.maybeWithTraceDecoder
+    Decode.dict (Value.maybeWithTraceDecoder "entries")
