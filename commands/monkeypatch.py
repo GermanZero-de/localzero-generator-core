@@ -58,12 +58,14 @@ def enable_tracing() -> Callable[[Any], Any]:
 
         return traced_getattribute
 
-    for fld1 in fields(Result):
-        if is_dataclass(fld1.type):
-            for fld2 in fields(fld1.type):
-                if is_dataclass(fld2.type):
-                    fld2.type.__getattribute__ = make_traced_getattribute(
-                        ".".join([fld1.name, fld2.name])
-                    )
+    def add_tracing(path: list[str], t: type):
+        for fld in fields(t):
+            if is_dataclass(fld.type):
+                add_tracing(path + [fld.name], fld.type)
+                fld.type.__getattribute__ = make_traced_getattribute(
+                    ".".join(path + [fld.name])
+                )
+
+    add_tracing([], Result)
 
     return tracednumber.TracedNumber.to_json
