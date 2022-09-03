@@ -2559,11 +2559,13 @@ viewTraceAsBlocks zoomLevel runId allRuns t =
         Value.DataTrace { source, key, attr, value } ->
             column [ spacing sizes.small ]
                 [ viewValue (Float value)
-                , text (source ++ "[" ++ key ++ "]." ++ attr)
+                , nameText (source ++ "[" ++ key ++ "]." ++ attr)
                 ]
 
         Value.LiteralTrace f ->
-            viewValue (Float f)
+            column [ height fill ]
+                [ viewValue (Float f)
+                ]
 
         Value.NameTrace { name } ->
             let

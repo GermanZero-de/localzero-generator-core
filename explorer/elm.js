@@ -19235,12 +19235,21 @@ var $author$project$Main$viewTraceAsBlocks = F4(
 						[
 							$author$project$Main$viewValue(
 							$author$project$Value$Float(value)),
-							$mdgriffith$elm_ui$Element$text(source + ('[' + (key + ('].' + attr))))
+							nameText(source + ('[' + (key + ('].' + attr))))
 						]));
 			case 'LiteralTrace':
 				var f = t.a;
-				return $author$project$Main$viewValue(
-					$author$project$Value$Float(f));
+				return A2(
+					$mdgriffith$elm_ui$Element$column,
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill)
+						]),
+					_List_fromArray(
+						[
+							$author$project$Main$viewValue(
+							$author$project$Value$Float(f))
+						]));
 			case 'NameTrace':
 				var name = t.a.name;
 				var path = A2($elm$core$String$split, '.', name);
