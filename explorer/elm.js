@@ -8541,13 +8541,13 @@ var $author$project$Value$binaryOpDecoder = A2(
 var $author$project$Value$DataTrace = function (a) {
 	return {$: 'DataTrace', a: a};
 };
-var $elm$json$Json$Decode$map3 = _Json_map3;
-var $author$project$Value$dataTraceDecoder = A4(
-	$elm$json$Json$Decode$map3,
-	F3(
-		function (s, k, a) {
+var $elm$json$Json$Decode$map4 = _Json_map4;
+var $author$project$Value$dataTraceDecoder = A5(
+	$elm$json$Json$Decode$map4,
+	F4(
+		function (s, k, a, v) {
 			return $author$project$Value$DataTrace(
-				{attr: a, key: k, source: s});
+				{attr: a, key: k, source: s, value: v});
 		}),
 	A2($elm$json$Json$Decode$field, 'source', $elm$json$Json$Decode$string),
 	A2(
@@ -8559,17 +8559,21 @@ var $author$project$Value$dataTraceDecoder = A4(
 					$elm$json$Json$Decode$string,
 					A2($elm$json$Json$Decode$map, $elm$core$String$fromInt, $elm$json$Json$Decode$int)
 				]))),
-	A2($elm$json$Json$Decode$field, 'attr', $elm$json$Json$Decode$string));
+	A2($elm$json$Json$Decode$field, 'attr', $elm$json$Json$Decode$string),
+	A2($elm$json$Json$Decode$field, 'value', $elm$json$Json$Decode$float));
 var $author$project$Value$FactOrAssTrace = function (a) {
 	return {$: 'FactOrAssTrace', a: a};
 };
-var $author$project$Value$factOrAssTraceDecoder = A2(
-	$elm$json$Json$Decode$map,
-	function (s) {
-		return $author$project$Value$FactOrAssTrace(
-			{fact_or_ass: s});
-	},
-	A2($elm$json$Json$Decode$field, 'fact_or_ass', $elm$json$Json$Decode$string));
+var $author$project$Value$factOrAssTraceDecoder = A3(
+	$elm$json$Json$Decode$map2,
+	F2(
+		function (s, v) {
+			return $author$project$Value$FactOrAssTrace(
+				{fact_or_ass: s, value: v});
+		}),
+	A2($elm$json$Json$Decode$field, 'fact_or_ass', $elm$json$Json$Decode$string),
+	A2($elm$json$Json$Decode$field, 'value', $elm$json$Json$Decode$float));
+var $elm$json$Json$Decode$map3 = _Json_map3;
 var $author$project$Value$NameTrace = function (a) {
 	return {$: 'NameTrace', a: a};
 };
@@ -9357,15 +9361,6 @@ var $author$project$Lens$setTableEditMode = function (mode) {
 				{editing: mode});
 		});
 };
-var $elm$core$List$tail = function (list) {
-	if (list.b) {
-		var x = list.a;
-		var xs = list.b;
-		return $elm$core$Maybe$Just(xs);
-	} else {
-		return $elm$core$Maybe$Nothing;
-	}
-};
 var $elm$core$String$fromFloat = _String_fromNumber;
 var $author$project$Lens$getCells = function (_v0) {
 	var l = _v0.a;
@@ -9755,14 +9750,12 @@ var $author$project$Main$update = F2(
 								model.displayedTrace)
 						}));
 			case 'CloseTrace':
+				var n = msg.a;
 				return $Janiczek$cmd_extra$Cmd$Extra$withNoCmd(
 					_Utils_update(
 						model,
 						{
-							displayedTrace: A2(
-								$elm$core$Maybe$withDefault,
-								_List_Nil,
-								$elm$core$List$tail(model.displayedTrace))
+							displayedTrace: A2($elm$core$List$drop, n, model.displayedTrace)
 						}));
 			case 'AddRowToLensTableClicked':
 				var id = msg.a;
@@ -18717,7 +18710,9 @@ var $feathericons$elm_feather$FeatherIcons$upload = A2(
 				]),
 			_List_Nil)
 		]));
-var $author$project$Main$CloseTrace = {$: 'CloseTrace'};
+var $author$project$Main$CloseTrace = function (a) {
+	return {$: 'CloseTrace', a: a};
+};
 var $feathericons$elm_feather$FeatherIcons$chevronRight = A2(
 	$feathericons$elm_feather$FeatherIcons$makeBuilder,
 	'chevron-right',
@@ -18754,6 +18749,71 @@ var $author$project$Main$DisplayTrace = F4(
 	function (a, b, c, d) {
 		return {$: 'DisplayTrace', a: a, b: b, c: c, d: d};
 	});
+var $author$project$Value$binaryTraceToList = function (_v0) {
+	var binary = _v0.binary;
+	var a = _v0.a;
+	var b = _v0.b;
+	var helper = F2(
+		function (leftChild, acc) {
+			helper:
+			while (true) {
+				if (leftChild.$ === 'BinaryTrace') {
+					var bNested = leftChild.a;
+					if (_Utils_eq(bNested.binary, binary)) {
+						var $temp$leftChild = bNested.a,
+							$temp$acc = A2($elm$core$List$cons, bNested.b, acc);
+						leftChild = $temp$leftChild;
+						acc = $temp$acc;
+						continue helper;
+					} else {
+						return A2($elm$core$List$cons, leftChild, acc);
+					}
+				} else {
+					return A2($elm$core$List$cons, leftChild, acc);
+				}
+			}
+		});
+	return A2(
+		helper,
+		a,
+		_List_fromArray(
+			[b]));
+};
+var $mdgriffith$elm_ui$Element$Font$center = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$fontAlignment, $mdgriffith$elm_ui$Internal$Style$classes.textCenter);
+var $author$project$AllRuns$getValue = F4(
+	function (handling, ndx, path, _v0) {
+		var a = _v0.a;
+		return A2(
+			$elm$core$Maybe$andThen,
+			function (r) {
+				return A2(
+					$elm$core$Maybe$andThen,
+					function (node) {
+						if (node.$ === 'Tree') {
+							return $elm$core$Maybe$Nothing;
+						} else {
+							var n = node.a;
+							return $elm$core$Maybe$Just(n);
+						}
+					},
+					A2(
+						$author$project$Tree$get,
+						path,
+						A2($author$project$Run$getTree, handling, r)));
+			},
+			A2($elm$core$Dict$get, ndx, a.runs));
+	});
+var $mdgriffith$elm_ui$Internal$Flag$borderStyle = $mdgriffith$elm_ui$Internal$Flag$flag(11);
+var $mdgriffith$elm_ui$Element$Border$solid = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$borderStyle, $mdgriffith$elm_ui$Internal$Style$classes.borderSolid);
+var $mdgriffith$elm_ui$Internal$Flag$fontWeight = $mdgriffith$elm_ui$Internal$Flag$flag(13);
+var $mdgriffith$elm_ui$Element$Font$bold = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$fontWeight, $mdgriffith$elm_ui$Internal$Style$classes.bold);
+var $author$project$Main$nullValueElement = A2(
+	$mdgriffith$elm_ui$Element$el,
+	A2(
+		$elm$core$List$cons,
+		$mdgriffith$elm_ui$Element$Font$alignRight,
+		A2($elm$core$List$cons, $mdgriffith$elm_ui$Element$Font$bold, $author$project$Styling$fonts.explorerValues)),
+	$mdgriffith$elm_ui$Element$text('null'));
 var $coinop_logan$elm_format_number$Parser$FormattedNumber = F5(
 	function (original, integers, decimals, prefix, suffix) {
 		return {decimals: decimals, integers: integers, original: original, prefix: prefix, suffix: suffix};
@@ -19123,167 +19183,6 @@ var $author$project$Styling$germanLocale = _Utils_update(
 var $author$project$Styling$formatGermanNumber = function (f) {
 	return A2($coinop_logan$elm_format_number$FormatNumber$format, $author$project$Styling$germanLocale, f);
 };
-var $author$project$AllRuns$getValue = F4(
-	function (handling, ndx, path, _v0) {
-		var a = _v0.a;
-		return A2(
-			$elm$core$Maybe$andThen,
-			function (r) {
-				return A2(
-					$elm$core$Maybe$andThen,
-					function (node) {
-						if (node.$ === 'Tree') {
-							return $elm$core$Maybe$Nothing;
-						} else {
-							var n = node.a;
-							return $elm$core$Maybe$Just(n);
-						}
-					},
-					A2(
-						$author$project$Tree$get,
-						path,
-						A2($author$project$Run$getTree, handling, r)));
-			},
-			A2($elm$core$Dict$get, ndx, a.runs));
-	});
-var $author$project$Main$level = function (tr) {
-	switch (tr.$) {
-		case 'LiteralTrace':
-			return 0;
-		case 'NameTrace':
-			return 0;
-		case 'DataTrace':
-			return 0;
-		case 'FactOrAssTrace':
-			return 0;
-		case 'UnaryTrace':
-			return 1;
-		default:
-			var binary = tr.a.binary;
-			switch (binary.$) {
-				case 'Times':
-					return 2;
-				case 'Divide':
-					return 2;
-				case 'Plus':
-					return 3;
-				default:
-					return 3;
-			}
-	}
-};
-var $author$project$Main$viewTrace = F3(
-	function (runId, allRuns, t) {
-		var viewWithParens = function (child) {
-			return (_Utils_cmp(
-				$author$project$Main$level(t),
-				$author$project$Main$level(child)) < 0) ? A2(
-				$mdgriffith$elm_ui$Element$row,
-				_List_fromArray(
-					[
-						$mdgriffith$elm_ui$Element$spacing($author$project$Styling$sizes.small)
-					]),
-				_List_fromArray(
-					[
-						$mdgriffith$elm_ui$Element$text('('),
-						A3($author$project$Main$viewTrace, runId, allRuns, child),
-						$mdgriffith$elm_ui$Element$text(')')
-					])) : A3($author$project$Main$viewTrace, runId, allRuns, child);
-		};
-		switch (t.$) {
-			case 'DataTrace':
-				var source = t.a.source;
-				var key = t.a.key;
-				var attr = t.a.attr;
-				return $mdgriffith$elm_ui$Element$text(source + ('[' + (key + ('].' + attr))));
-			case 'LiteralTrace':
-				var f = t.a;
-				return $mdgriffith$elm_ui$Element$text(
-					$author$project$Styling$formatGermanNumber(f));
-			case 'NameTrace':
-				var name = t.a.name;
-				var path = A2($elm$core$String$split, '.', name);
-				var _v1 = A4($author$project$AllRuns$getValue, $author$project$Run$WithOverrides, runId, path, allRuns);
-				if (_v1.$ === 'Just') {
-					var leaf = _v1.a;
-					var _v2 = leaf.trace;
-					if (_v2.$ === 'Nothing') {
-						return $mdgriffith$elm_ui$Element$text(name);
-					} else {
-						var nestedTrace = _v2.a;
-						return A2(
-							$mdgriffith$elm_ui$Element$Input$button,
-							_List_Nil,
-							{
-								label: $mdgriffith$elm_ui$Element$text(name),
-								onPress: $elm$core$Maybe$Just(
-									A4($author$project$Main$DisplayTrace, runId, path, leaf.value, nestedTrace))
-							});
-					}
-				} else {
-					return $mdgriffith$elm_ui$Element$text(name);
-				}
-			case 'FactOrAssTrace':
-				var fact_or_ass = t.a.fact_or_ass;
-				return $mdgriffith$elm_ui$Element$text(fact_or_ass);
-			case 'UnaryTrace':
-				var unary = t.a.unary;
-				var a = t.a.a;
-				return A2(
-					$mdgriffith$elm_ui$Element$row,
-					_List_fromArray(
-						[
-							$mdgriffith$elm_ui$Element$spacing($author$project$Styling$sizes.small)
-						]),
-					_List_fromArray(
-						[
-							function () {
-							if (unary.$ === 'UnaryMinus') {
-								return $mdgriffith$elm_ui$Element$text('-');
-							} else {
-								return $mdgriffith$elm_ui$Element$text('+');
-							}
-						}(),
-							viewWithParens(a)
-						]));
-			default:
-				var binary = t.a.binary;
-				var a = t.a.a;
-				var b = t.a.b;
-				return A2(
-					$mdgriffith$elm_ui$Element$row,
-					_List_fromArray(
-						[
-							$mdgriffith$elm_ui$Element$spacing($author$project$Styling$sizes.small)
-						]),
-					_List_fromArray(
-						[
-							viewWithParens(a),
-							function () {
-							switch (binary.$) {
-								case 'Plus':
-									return $mdgriffith$elm_ui$Element$text('+');
-								case 'Minus':
-									return $mdgriffith$elm_ui$Element$text('-');
-								case 'Times':
-									return $mdgriffith$elm_ui$Element$text('*');
-								default:
-									return $mdgriffith$elm_ui$Element$text('/');
-							}
-						}(),
-							viewWithParens(b)
-						]));
-		}
-	});
-var $mdgriffith$elm_ui$Internal$Flag$fontWeight = $mdgriffith$elm_ui$Internal$Flag$flag(13);
-var $mdgriffith$elm_ui$Element$Font$bold = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$fontWeight, $mdgriffith$elm_ui$Internal$Style$classes.bold);
-var $author$project$Main$nullValueElement = A2(
-	$mdgriffith$elm_ui$Element$el,
-	A2(
-		$elm$core$List$cons,
-		$mdgriffith$elm_ui$Element$Font$alignRight,
-		A2($elm$core$List$cons, $mdgriffith$elm_ui$Element$Font$bold, $author$project$Styling$fonts.explorerValues)),
-	$mdgriffith$elm_ui$Element$text('null'));
 var $author$project$Main$viewFloatValue = function (f) {
 	return A2(
 		$mdgriffith$elm_ui$Element$el,
@@ -19309,12 +19208,194 @@ var $author$project$Main$viewValue = function (v) {
 			return $author$project$Main$viewFloatValue(f);
 	}
 };
+var $author$project$Main$viewTraceAsBlocks = F4(
+	function (zoomLevel, runId, allRuns, t) {
+		var nameText = function (s) {
+			return A2(
+				$mdgriffith$elm_ui$Element$el,
+				_List_fromArray(
+					[
+						$mdgriffith$elm_ui$Element$Font$size($author$project$Styling$sizes.tableFontSize)
+					]),
+				$mdgriffith$elm_ui$Element$text(s));
+		};
+		switch (t.$) {
+			case 'DataTrace':
+				var source = t.a.source;
+				var key = t.a.key;
+				var attr = t.a.attr;
+				var value = t.a.value;
+				return A2(
+					$mdgriffith$elm_ui$Element$column,
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$spacing($author$project$Styling$sizes.small)
+						]),
+					_List_fromArray(
+						[
+							$author$project$Main$viewValue(
+							$author$project$Value$Float(value)),
+							$mdgriffith$elm_ui$Element$text(source + ('[' + (key + ('].' + attr))))
+						]));
+			case 'LiteralTrace':
+				var f = t.a;
+				return $author$project$Main$viewValue(
+					$author$project$Value$Float(f));
+			case 'NameTrace':
+				var name = t.a.name;
+				var path = A2($elm$core$String$split, '.', name);
+				var shorterPath = A2(
+					$elm$core$String$join,
+					'.',
+					function () {
+						if (path.b && (path.a === 'result')) {
+							var rest = path.b;
+							return rest;
+						} else {
+							return path;
+						}
+					}());
+				var nameElement = nameText(shorterPath);
+				var _v1 = A4($author$project$AllRuns$getValue, $author$project$Run$WithOverrides, runId, path, allRuns);
+				if (_v1.$ === 'Just') {
+					var leaf = _v1.a;
+					var _v2 = leaf.trace;
+					if (_v2.$ === 'Nothing') {
+						return nameElement;
+					} else {
+						var nestedTrace = _v2.a;
+						return A2(
+							$mdgriffith$elm_ui$Element$column,
+							_List_fromArray(
+								[
+									$mdgriffith$elm_ui$Element$spacing($author$project$Styling$sizes.small)
+								]),
+							_List_fromArray(
+								[
+									$author$project$Main$viewValue(leaf.value),
+									A2(
+									$mdgriffith$elm_ui$Element$Input$button,
+									_List_Nil,
+									{
+										label: nameElement,
+										onPress: $elm$core$Maybe$Just(
+											A4($author$project$Main$DisplayTrace, runId, path, leaf.value, nestedTrace))
+									})
+								]));
+					}
+				} else {
+					return nameElement;
+				}
+			case 'FactOrAssTrace':
+				var fact_or_ass = t.a.fact_or_ass;
+				var value = t.a.value;
+				return A2(
+					$mdgriffith$elm_ui$Element$column,
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$spacing($author$project$Styling$sizes.small)
+						]),
+					_List_fromArray(
+						[
+							$author$project$Main$viewValue(
+							$author$project$Value$Float(value)),
+							nameText(fact_or_ass)
+						]));
+			case 'UnaryTrace':
+				var unary = t.a.unary;
+				var a = t.a.a;
+				return A2(
+					$mdgriffith$elm_ui$Element$column,
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$spacing($author$project$Styling$sizes.small),
+							$mdgriffith$elm_ui$Element$padding($author$project$Styling$sizes.medium),
+							$mdgriffith$elm_ui$Element$Border$solid,
+							$mdgriffith$elm_ui$Element$Border$width(1),
+							$mdgriffith$elm_ui$Element$Border$color($author$project$Styling$black)
+						]),
+					_List_fromArray(
+						[
+							A2(
+							$mdgriffith$elm_ui$Element$el,
+							_List_fromArray(
+								[
+									$mdgriffith$elm_ui$Element$Font$center,
+									$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
+								]),
+							function () {
+								if (unary.$ === 'UnaryMinus') {
+									return $mdgriffith$elm_ui$Element$text('-');
+								} else {
+									return $mdgriffith$elm_ui$Element$text('+');
+								}
+							}()),
+							A4($author$project$Main$viewTraceAsBlocks, zoomLevel - 1, runId, allRuns, a)
+						]));
+			default:
+				var bTrace = t.a;
+				return A2(
+					$mdgriffith$elm_ui$Element$column,
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$spacing($author$project$Styling$sizes.small),
+							$mdgriffith$elm_ui$Element$padding($author$project$Styling$sizes.medium),
+							$mdgriffith$elm_ui$Element$Border$solid,
+							$mdgriffith$elm_ui$Element$Border$width(1),
+							$mdgriffith$elm_ui$Element$Border$color($author$project$Styling$black)
+						]),
+					_List_fromArray(
+						[
+							A2(
+							$mdgriffith$elm_ui$Element$el,
+							_List_fromArray(
+								[
+									$mdgriffith$elm_ui$Element$Font$center,
+									$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
+								]),
+							function () {
+								var _v5 = bTrace.binary;
+								switch (_v5.$) {
+									case 'Plus':
+										return $mdgriffith$elm_ui$Element$text('+');
+									case 'Minus':
+										return $mdgriffith$elm_ui$Element$text('-');
+									case 'Times':
+										return $mdgriffith$elm_ui$Element$text('*');
+									default:
+										return $mdgriffith$elm_ui$Element$text('/');
+								}
+							}()),
+							A2(
+							$mdgriffith$elm_ui$Element$row,
+							_List_fromArray(
+								[
+									$mdgriffith$elm_ui$Element$spacing($author$project$Styling$sizes.medium),
+									$mdgriffith$elm_ui$Element$padding($author$project$Styling$sizes.small)
+								]),
+							A2(
+								$elm$core$List$map,
+								A3($author$project$Main$viewTraceAsBlocks, zoomLevel - 1, runId, allRuns),
+								$author$project$Value$binaryTraceToList(bTrace)))
+						]));
+		}
+	});
 var $author$project$Main$viewDisplayedTrace = F3(
 	function (allRuns, breadcrumbs, _v0) {
 		var runId = _v0.runId;
 		var path = _v0.path;
 		var value = _v0.value;
 		var trace = _v0.trace;
+		var breadcrumbsWithCloseActions = $elm$core$List$reverse(
+			A2(
+				$elm$core$List$indexedMap,
+				F2(
+					function (n, b) {
+						return _Utils_Tuple2(
+							b,
+							$author$project$Main$CloseTrace(n + 1));
+					}),
+				$elm$core$List$reverse(breadcrumbs)));
 		return A2(
 			$mdgriffith$elm_ui$Element$column,
 			_List_fromArray(
@@ -19340,11 +19421,19 @@ var $author$project$Main$viewDisplayedTrace = F3(
 							A2($feathericons$elm_feather$FeatherIcons$withSize, 12, $feathericons$elm_feather$FeatherIcons$chevronRight)),
 						A2(
 							$elm$core$List$map,
-							A2(
-								$elm$core$Basics$composeL,
-								$mdgriffith$elm_ui$Element$text,
-								$elm$core$String$join('.')),
-							breadcrumbs))),
+							function (_v1) {
+								var b = _v1.a;
+								var a = _v1.b;
+								return A2(
+									$mdgriffith$elm_ui$Element$Input$button,
+									_List_Nil,
+									{
+										label: $mdgriffith$elm_ui$Element$text(
+											A2($elm$core$String$join, '.', b)),
+										onPress: $elm$core$Maybe$Just(a)
+									});
+							},
+							breadcrumbsWithCloseActions))),
 					A2(
 					$mdgriffith$elm_ui$Element$row,
 					_List_fromArray(
@@ -19367,25 +19456,18 @@ var $author$project$Main$viewDisplayedTrace = F3(
 									A2($elm$core$String$join, '.', path) + ':'),
 									$author$project$Main$viewValue(value)
 								])),
-							A2($author$project$Styling$iconButton, $feathericons$elm_feather$FeatherIcons$x, $author$project$Main$CloseTrace)
+							A2(
+							$author$project$Styling$iconButton,
+							$feathericons$elm_feather$FeatherIcons$x,
+							$author$project$Main$CloseTrace(1))
 						])),
-					A2(
-					$mdgriffith$elm_ui$Element$row,
-					_List_fromArray(
-						[
-							$mdgriffith$elm_ui$Element$padding($author$project$Styling$sizes.medium),
-							$mdgriffith$elm_ui$Element$spacing($author$project$Styling$sizes.small)
-						]),
-					_List_fromArray(
-						[
-							A3($author$project$Main$viewTrace, runId, allRuns, trace)
-						])),
+					A4($author$project$Main$viewTraceAsBlocks, 0, runId, allRuns, trace),
 					A2(
 					$mdgriffith$elm_ui$Element$el,
 					_List_fromArray(
 						[
-							$mdgriffith$elm_ui$Element$padding($author$project$Styling$sizes.medium),
-							$mdgriffith$elm_ui$Element$Font$size(8)
+							$mdgriffith$elm_ui$Element$Font$color($author$project$Styling$modalDim),
+							$mdgriffith$elm_ui$Element$Font$size(12)
 						]),
 					$author$project$Styling$scrollableText(
 						$elm$core$Debug$toString(trace)))
@@ -22178,7 +22260,6 @@ var $terezka$elm_charts$Internal$Svg$Event = F2(
 var $elm$svg$Svg$clipPath = $elm$svg$Svg$trustedNode('clipPath');
 var $debois$elm_dom$DOM$offsetHeight = A2($elm$json$Json$Decode$field, 'offsetHeight', $elm$json$Json$Decode$float);
 var $debois$elm_dom$DOM$offsetWidth = A2($elm$json$Json$Decode$field, 'offsetWidth', $elm$json$Json$Decode$float);
-var $elm$json$Json$Decode$map4 = _Json_map4;
 var $debois$elm_dom$DOM$offsetLeft = A2($elm$json$Json$Decode$field, 'offsetLeft', $elm$json$Json$Decode$float);
 var $debois$elm_dom$DOM$offsetParent = F2(
 	function (x, decoder) {
@@ -28557,7 +28638,6 @@ var $author$project$Main$ToggleCollapseTreeClicked = F2(
 	function (a, b) {
 		return {$: 'ToggleCollapseTreeClicked', a: a, b: b};
 	});
-var $mdgriffith$elm_ui$Element$Font$center = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$fontAlignment, $mdgriffith$elm_ui$Internal$Style$classes.textCenter);
 var $feathericons$elm_feather$FeatherIcons$chevronDown = A2(
 	$feathericons$elm_feather$FeatherIcons$makeBuilder,
 	'chevron-down',

@@ -4,6 +4,7 @@ module Value exposing
     , Trace(..)
     , UnaryOp(..)
     , Value(..)
+    , binaryTraceToList
     , decoder
     , defaultTolerance
     , isEqual
@@ -44,6 +45,24 @@ type BinaryOp
 type UnaryOp
     = UnaryMinus
     | UnaryPlus
+
+
+binaryTraceToList : { binary : BinaryOp, a : Trace, b : Trace } -> List Trace
+binaryTraceToList { binary, a, b } =
+    let
+        helper leftChild acc =
+            case leftChild of
+                BinaryTrace bNested ->
+                    if bNested.binary == binary then
+                        helper bNested.a (bNested.b :: acc)
+
+                    else
+                        leftChild :: acc
+
+                _ ->
+                    leftChild :: acc
+    in
+    helper a [ b ]
 
 
 traceDecoder : String -> Decode.Decoder Trace

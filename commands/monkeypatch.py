@@ -28,6 +28,12 @@ def enable_tracing() -> Callable[[Any], Any]:
 
     from . import tracednumber
 
+    def traced_max(*args, **kwargs):
+        return tracednumber.TracedNumber.max(__builtins__.max(*args, **kwargs), *args)
+
+    global max
+    max = traced_max
+
     # First patch the lookup of inputs
     original_float = Row.float  # type: ignore
 

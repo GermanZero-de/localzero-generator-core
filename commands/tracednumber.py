@@ -5,7 +5,7 @@
 # For the generator core this leads to surprisingly good traces as
 # we largely do not use for loops or ifs to decide how to do the computation.
 # Or to say it differently all we really have is just a collection of formulas
-from typing import Literal, Union, Callable, TypedDict
+from typing import Literal, Union, Callable, TypedDict, Sequence
 
 
 # Traces will be returned as values that python's json module
@@ -13,6 +13,7 @@ from typing import Literal, Union, Callable, TypedDict
 TRACE = Union[
     int,
     float,
+    "MaxTrace",
     "DataTrace",
     "FactOrAss",
     "NameTrace",
@@ -20,6 +21,10 @@ TRACE = Union[
     "BinaryTrace",
     "UnaryTrace",
 ]
+
+
+class MaxTrace(TypedDict):
+    max: list[TRACE]
 
 
 class ValueWithTrace(TypedDict):
@@ -61,6 +66,10 @@ class UnaryTrace(TypedDict):
 
 def literal(v: int | float) -> TRACE:
     return v
+
+
+def max_trace(ts: list[TRACE]) -> TRACE:
+    return {"max": ts}
 
 
 def data(source: str, key: str, attr: str, value: float | int) -> TRACE:
@@ -124,6 +133,12 @@ class TracedNumber:
             return cls(v, literal(v))
         else:
             return v
+
+    @classmethod
+    def max(
+        cls, v: Union[float, int], values: Sequence[Union["TracedNumber", float, int]]
+    ) -> "TracedNumber":
+        return cls(v, max_trace([cls.lift(t).trace for t in values]))
 
     @classmethod
     def data(

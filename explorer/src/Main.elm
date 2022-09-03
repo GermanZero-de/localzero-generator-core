@@ -90,7 +90,7 @@ import Styling
         )
 import Task
 import Tree exposing (Node(..), Tree)
-import Value exposing (Value(..))
+import Value exposing (Value(..), binaryTraceToList)
 import ValueSet exposing (ValueSet)
 
 
@@ -489,7 +489,7 @@ update msg model =
                 |> withNoCmd
 
         CloseTrace n ->
-            { model | displayedTrace = List.take n model.displayedTrace }
+            { model | displayedTrace = List.drop n model.displayedTrace }
                 |> withNoCmd
 
         AddRowToLensTableClicked id num ->
@@ -2549,6 +2549,112 @@ level tr =
                     3
 
 
+viewTraceAsBlocks : Int -> RunId -> AllRuns -> Value.Trace -> Element Msg
+viewTraceAsBlocks zoomLevel runId allRuns t =
+    let
+        nameText s =
+            el [ Font.size Styling.sizes.tableFontSize ] <| text s
+    in
+    case t of
+        Value.DataTrace { source, key, attr, value } ->
+            column [ spacing sizes.small ]
+                [ viewValue (Float value)
+                , text (source ++ "[" ++ key ++ "]." ++ attr)
+                ]
+
+        Value.LiteralTrace f ->
+            viewValue (Float f)
+
+        Value.NameTrace { name } ->
+            let
+                path =
+                    String.split "." name
+
+                shorterPath =
+                    String.join "."
+                        -- We truncate result in the display
+                        (case path of
+                            "result" :: rest ->
+                                rest
+
+                            _ ->
+                                path
+                        )
+
+                nameElement =
+                    nameText shorterPath
+            in
+            case AllRuns.getValue Run.WithOverrides runId path allRuns of
+                Just leaf ->
+                    case leaf.trace of
+                        Nothing ->
+                            nameElement
+
+                        Just nestedTrace ->
+                            column [ spacing sizes.small ]
+                                [ viewValue leaf.value
+                                , Input.button []
+                                    { onPress = Just (DisplayTrace runId path leaf.value nestedTrace)
+                                    , label = nameElement
+                                    }
+                                ]
+
+                Nothing ->
+                    nameElement
+
+        Value.FactOrAssTrace { fact_or_ass, value } ->
+            column [ spacing sizes.small ]
+                [ viewValue (Float value)
+                , nameText fact_or_ass
+                ]
+
+        Value.UnaryTrace { unary, a } ->
+            column
+                [ spacing sizes.small
+                , padding sizes.medium
+                , Border.solid
+                , Border.width 1
+                , Border.color black
+                ]
+                [ el [ Font.center, width fill ] <|
+                    case unary of
+                        Value.UnaryMinus ->
+                            text "-"
+
+                        Value.UnaryPlus ->
+                            text "+"
+                , viewTraceAsBlocks (zoomLevel - 1) runId allRuns a
+                ]
+
+        Value.BinaryTrace bTrace ->
+            column
+                [ spacing sizes.small
+                , padding sizes.medium
+                , Border.solid
+                , Border.width 1
+                , Border.color black
+                ]
+                [ el [ Font.center, width fill ] <|
+                    case bTrace.binary of
+                        Value.Plus ->
+                            text "+"
+
+                        Value.Minus ->
+                            text "-"
+
+                        Value.Times ->
+                            text "*"
+
+                        Value.Divide ->
+                            text "/"
+                , row [ spacing sizes.medium, padding sizes.small ]
+                    (List.map
+                        (viewTraceAsBlocks (zoomLevel - 1) runId allRuns)
+                        (Value.binaryTraceToList bTrace)
+                    )
+                ]
+
+
 viewTrace : RunId -> AllRuns -> Value.Trace -> Element Msg
 viewTrace runId allRuns t =
     let
@@ -2573,24 +2679,35 @@ viewTrace runId allRuns t =
             let
                 path =
                     String.split "." name
+
+                shorterPath =
+                    String.join "."
+                        -- We truncate result in the display
+                        (case path of
+                            "result" :: rest ->
+                                rest
+
+                            _ ->
+                                path
+                        )
             in
             case AllRuns.getValue Run.WithOverrides runId path allRuns of
                 Just leaf ->
                     case leaf.trace of
                         Nothing ->
-                            text name
+                            text shorterPath
 
                         Just nestedTrace ->
                             column [ spacing sizes.small ]
                                 [ Input.button []
                                     { onPress = Just (DisplayTrace runId path leaf.value nestedTrace)
-                                    , label = text name
+                                    , label = text shorterPath
                                     }
                                 , viewValue leaf.value
                                 ]
 
                 Nothing ->
-                    text name
+                    text shorterPath
 
         Value.FactOrAssTrace { fact_or_ass, value } ->
             column [ spacing sizes.small ]
@@ -2610,7 +2727,6 @@ viewTrace runId allRuns t =
                 ]
 
         Value.BinaryTrace { binary, a, b } ->
-            -- TODO: This doesn't add the parentheses correctly
             row [ spacing sizes.small ]
                 [ viewWithParens a
                 , case binary of
@@ -2658,7 +2774,13 @@ viewDisplayedTrace allRuns breadcrumbs { runId, path, value, trace } =
                 ]
             , iconButton FeatherIcons.x (CloseTrace 1)
             ]
-        , row [ padding sizes.medium, spacing sizes.small ] [ viewTrace runId allRuns trace ]
+
+        -- , row [ padding sizes.medium, spacing sizes.small ] [ viewTrace runId allRuns trace ]
+        , viewTraceAsBlocks 0 runId allRuns trace
+        , el [ Font.color Styling.modalDim, Font.size 12 ]
+            (scrollableText
+                (Debug.toString trace)
+            )
         ]
 
 
