@@ -1,7 +1,7 @@
 from dataclasses import fields, is_dataclass
 from typing import Any, Callable
 from generatorcore.generator import Result
-from generatorcore.refdata import FactsAndAssumptions, Row
+from generatorcore.refdata import Row
 
 
 def identity(x: Any):
@@ -34,7 +34,7 @@ def enable_tracing() -> Callable[[Any], Any]:
     def traced_float(self: Row[str], attr: str):
         v = original_float(self, attr)
         # make facts and assumptions prettier
-        if self.dataset in ["facts", "ass"] and attr == "value":
+        if self.dataset in ["facts", "assumptions"] and attr == "value":
             return tracednumber.TracedNumber.fact_or_ass(str(self.key_value), v)
         else:
             return tracednumber.TracedNumber.data(v, self.dataset, self.key_value, attr)
