@@ -180,6 +180,7 @@ type alias Model =
     , leftPaneWidth : Int
     , dragDrop : DragDrop
     , displayedTrace : List DisplayedTrace
+    , traceZoomLevel : Int
     }
 
 
@@ -306,6 +307,7 @@ init storage =
     , leftPaneWidth = 600
     , dragDrop = DragDrop.init
     , displayedTrace = []
+    , traceZoomLevel = 0
     }
         |> update (LocalStorageLoaded storage)
 
@@ -321,6 +323,7 @@ type Msg
       -- trace handling
     | DisplayTrace RunId Path Value Value.Trace
     | CloseTrace Int -- Number of steps to pop
+    | SetTraceZoomLevel Int
       -- Override handling
     | AddOrUpdateOverrideClicked RunId String Float
     | RemoveOverrideClicked RunId String
@@ -484,6 +487,11 @@ update msg model =
             model
                 |> withNoCmd
 
+        SetTraceZoomLevel zl ->
+            { model | traceZoomLevel = zl }
+                |> withNoCmd
+
+        -- |> withNoCmd
         DisplayTrace runId path value trace ->
             { model | displayedTrace = { runId = runId, path = path, value = value, trace = trace } :: model.displayedTrace }
                 |> withNoCmd
@@ -2593,13 +2601,20 @@ viewTraceAsBlocks zoomLevel runId allRuns t =
                             nameElement
 
                         Just nestedTrace ->
-                            column [ spacing sizes.small ]
-                                [ viewValue leaf.value
-                                , Input.button []
-                                    { onPress = Just (DisplayTrace runId path leaf.value nestedTrace)
-                                    , label = nameElement
-                                    }
-                                ]
+                            if zoomLevel > 0 then
+                                column [ spacing sizes.small ]
+                                    [ viewTraceAsBlocks (zoomLevel - 1) runId allRuns nestedTrace
+                                    , nameElement
+                                    ]
+
+                            else
+                                column [ spacing sizes.small ]
+                                    [ viewValue leaf.value
+                                    , Input.button []
+                                        { onPress = Just (DisplayTrace runId path leaf.value nestedTrace)
+                                        , label = nameElement
+                                        }
+                                    ]
 
                 Nothing ->
                     nameElement
@@ -2747,8 +2762,8 @@ viewTrace runId allRuns t =
                 ]
 
 
-viewDisplayedTrace : AllRuns -> List Path -> DisplayedTrace -> Element Msg
-viewDisplayedTrace allRuns breadcrumbs { runId, path, value, trace } =
+viewDisplayedTrace : Int -> AllRuns -> List Path -> DisplayedTrace -> Element Msg
+viewDisplayedTrace zoomLevel allRuns breadcrumbs { runId, path, value, trace } =
     let
         breadcrumbsWithCloseActions =
             breadcrumbs
@@ -2761,24 +2776,26 @@ viewDisplayedTrace allRuns breadcrumbs { runId, path, value, trace } =
         , height fill
         , padding sizes.large
         ]
-        [ row [ width fill, padding sizes.medium, spacing sizes.small, Font.size 12 ]
-            (List.intersperse (icon (FeatherIcons.withSize 12 <| FeatherIcons.chevronRight)) <|
-                List.map
-                    (\( b, a ) ->
-                        Input.button [] { onPress = Just a, label = text (String.join "." b) }
-                    )
-                    breadcrumbsWithCloseActions
-            )
-        , row [ width fill, padding sizes.medium, spacing sizes.small ]
-            [ row [ width fill ]
-                [ text (String.join "." path ++ ":")
-                , viewValue value
-                ]
+        [ row [ width fill, padding sizes.medium, spacing sizes.small ]
+            [ row [ width fill, padding sizes.medium, spacing sizes.small, Font.size 12 ]
+                (List.intersperse (icon (FeatherIcons.withSize 12 <| FeatherIcons.chevronRight)) <|
+                    List.map
+                        (\( b, a ) ->
+                            Input.button [] { onPress = Just a, label = text (String.join "." b) }
+                        )
+                        breadcrumbsWithCloseActions
+                )
+            , iconButton FeatherIcons.zoomOut (SetTraceZoomLevel (zoomLevel - 1))
+            , iconButton FeatherIcons.zoomIn (SetTraceZoomLevel (zoomLevel + 1))
             , iconButton FeatherIcons.x (CloseTrace 1)
+            ]
+        , row [ width fill ]
+            [ text (String.join "." path ++ ":")
+            , viewValue value
             ]
 
         -- , row [ padding sizes.medium, spacing sizes.small ] [ viewTrace runId allRuns trace ]
-        , viewTraceAsBlocks 0 runId allRuns trace
+        , viewTraceAsBlocks zoomLevel runId allRuns trace
         , el [ Font.color Styling.modalDim, Font.size 12 ]
             (scrollableText
                 (Debug.toString trace)
@@ -2816,7 +2833,7 @@ viewModel model =
                 viewRunsAndInterestLists model
 
             dt :: dts ->
-                viewDisplayedTrace model.runs (List.map .path dts) dt
+                viewDisplayedTrace model.traceZoomLevel model.runs (List.map .path dts) dt
         ]
 
 

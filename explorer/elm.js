@@ -9735,6 +9735,12 @@ var $author$project$Main$update = F2(
 		switch (msg.$) {
 			case 'Noop':
 				return $Janiczek$cmd_extra$Cmd$Extra$withNoCmd(model);
+			case 'SetTraceZoomLevel':
+				var zl = msg.a;
+				return $Janiczek$cmd_extra$Cmd$Extra$withNoCmd(
+					_Utils_update(
+						model,
+						{traceZoomLevel: zl}));
 			case 'DisplayTrace':
 				var runId = msg.a;
 				var path = msg.b;
@@ -10736,7 +10742,8 @@ var $author$project$Main$init = function (storage) {
 			lenses: $yotamDvir$elm_pivot$Pivot$singleton($author$project$Lens$empty),
 			runs: $author$project$AllRuns$empty,
 			selectedForComparison: $elm$core$Maybe$Nothing,
-			showModal: $elm$core$Maybe$Nothing
+			showModal: $elm$core$Maybe$Nothing,
+			traceZoomLevel: 0
 		});
 };
 var $elm$core$Platform$Sub$batch = _Platform_batch;
@@ -18713,6 +18720,9 @@ var $feathericons$elm_feather$FeatherIcons$upload = A2(
 var $author$project$Main$CloseTrace = function (a) {
 	return {$: 'CloseTrace', a: a};
 };
+var $author$project$Main$SetTraceZoomLevel = function (a) {
+	return {$: 'SetTraceZoomLevel', a: a};
+};
 var $feathericons$elm_feather$FeatherIcons$chevronRight = A2(
 	$feathericons$elm_feather$FeatherIcons$makeBuilder,
 	'chevron-right',
@@ -19273,7 +19283,17 @@ var $author$project$Main$viewTraceAsBlocks = F4(
 						return nameElement;
 					} else {
 						var nestedTrace = _v2.a;
-						return A2(
+						return (zoomLevel > 0) ? A2(
+							$mdgriffith$elm_ui$Element$column,
+							_List_fromArray(
+								[
+									$mdgriffith$elm_ui$Element$spacing($author$project$Styling$sizes.small)
+								]),
+							_List_fromArray(
+								[
+									A4($author$project$Main$viewTraceAsBlocks, zoomLevel - 1, runId, allRuns, nestedTrace),
+									nameElement
+								])) : A2(
 							$mdgriffith$elm_ui$Element$column,
 							_List_fromArray(
 								[
@@ -19389,8 +19409,92 @@ var $author$project$Main$viewTraceAsBlocks = F4(
 						]));
 		}
 	});
-var $author$project$Main$viewDisplayedTrace = F3(
-	function (allRuns, breadcrumbs, _v0) {
+var $elm$svg$Svg$circle = $elm$svg$Svg$trustedNode('circle');
+var $elm$svg$Svg$Attributes$cx = _VirtualDom_attribute('cx');
+var $elm$svg$Svg$Attributes$cy = _VirtualDom_attribute('cy');
+var $elm$svg$Svg$Attributes$r = _VirtualDom_attribute('r');
+var $feathericons$elm_feather$FeatherIcons$zoomIn = A2(
+	$feathericons$elm_feather$FeatherIcons$makeBuilder,
+	'zoom-in',
+	_List_fromArray(
+		[
+			A2(
+			$elm$svg$Svg$circle,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$cx('11'),
+					$elm$svg$Svg$Attributes$cy('11'),
+					$elm$svg$Svg$Attributes$r('8')
+				]),
+			_List_Nil),
+			A2(
+			$elm$svg$Svg$line,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$x1('21'),
+					$elm$svg$Svg$Attributes$y1('21'),
+					$elm$svg$Svg$Attributes$x2('16.65'),
+					$elm$svg$Svg$Attributes$y2('16.65')
+				]),
+			_List_Nil),
+			A2(
+			$elm$svg$Svg$line,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$x1('11'),
+					$elm$svg$Svg$Attributes$y1('8'),
+					$elm$svg$Svg$Attributes$x2('11'),
+					$elm$svg$Svg$Attributes$y2('14')
+				]),
+			_List_Nil),
+			A2(
+			$elm$svg$Svg$line,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$x1('8'),
+					$elm$svg$Svg$Attributes$y1('11'),
+					$elm$svg$Svg$Attributes$x2('14'),
+					$elm$svg$Svg$Attributes$y2('11')
+				]),
+			_List_Nil)
+		]));
+var $feathericons$elm_feather$FeatherIcons$zoomOut = A2(
+	$feathericons$elm_feather$FeatherIcons$makeBuilder,
+	'zoom-out',
+	_List_fromArray(
+		[
+			A2(
+			$elm$svg$Svg$circle,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$cx('11'),
+					$elm$svg$Svg$Attributes$cy('11'),
+					$elm$svg$Svg$Attributes$r('8')
+				]),
+			_List_Nil),
+			A2(
+			$elm$svg$Svg$line,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$x1('21'),
+					$elm$svg$Svg$Attributes$y1('21'),
+					$elm$svg$Svg$Attributes$x2('16.65'),
+					$elm$svg$Svg$Attributes$y2('16.65')
+				]),
+			_List_Nil),
+			A2(
+			$elm$svg$Svg$line,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$x1('8'),
+					$elm$svg$Svg$Attributes$y1('11'),
+					$elm$svg$Svg$Attributes$x2('14'),
+					$elm$svg$Svg$Attributes$y2('11')
+				]),
+			_List_Nil)
+		]));
+var $author$project$Main$viewDisplayedTrace = F4(
+	function (zoomLevel, allRuns, breadcrumbs, _v0) {
 		var runId = _v0.runId;
 		var path = _v0.path;
 		var value = _v0.value;
@@ -19421,34 +19525,6 @@ var $author$project$Main$viewDisplayedTrace = F3(
 						[
 							$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
 							$mdgriffith$elm_ui$Element$padding($author$project$Styling$sizes.medium),
-							$mdgriffith$elm_ui$Element$spacing($author$project$Styling$sizes.small),
-							$mdgriffith$elm_ui$Element$Font$size(12)
-						]),
-					A2(
-						$elm$core$List$intersperse,
-						$author$project$Styling$icon(
-							A2($feathericons$elm_feather$FeatherIcons$withSize, 12, $feathericons$elm_feather$FeatherIcons$chevronRight)),
-						A2(
-							$elm$core$List$map,
-							function (_v1) {
-								var b = _v1.a;
-								var a = _v1.b;
-								return A2(
-									$mdgriffith$elm_ui$Element$Input$button,
-									_List_Nil,
-									{
-										label: $mdgriffith$elm_ui$Element$text(
-											A2($elm$core$String$join, '.', b)),
-										onPress: $elm$core$Maybe$Just(a)
-									});
-							},
-							breadcrumbsWithCloseActions))),
-					A2(
-					$mdgriffith$elm_ui$Element$row,
-					_List_fromArray(
-						[
-							$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
-							$mdgriffith$elm_ui$Element$padding($author$project$Styling$sizes.medium),
 							$mdgriffith$elm_ui$Element$spacing($author$project$Styling$sizes.small)
 						]),
 					_List_fromArray(
@@ -19457,20 +19533,56 @@ var $author$project$Main$viewDisplayedTrace = F3(
 							$mdgriffith$elm_ui$Element$row,
 							_List_fromArray(
 								[
-									$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
+									$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+									$mdgriffith$elm_ui$Element$padding($author$project$Styling$sizes.medium),
+									$mdgriffith$elm_ui$Element$spacing($author$project$Styling$sizes.small),
+									$mdgriffith$elm_ui$Element$Font$size(12)
 								]),
-							_List_fromArray(
-								[
-									$mdgriffith$elm_ui$Element$text(
-									A2($elm$core$String$join, '.', path) + ':'),
-									$author$project$Main$viewValue(value)
-								])),
+							A2(
+								$elm$core$List$intersperse,
+								$author$project$Styling$icon(
+									A2($feathericons$elm_feather$FeatherIcons$withSize, 12, $feathericons$elm_feather$FeatherIcons$chevronRight)),
+								A2(
+									$elm$core$List$map,
+									function (_v1) {
+										var b = _v1.a;
+										var a = _v1.b;
+										return A2(
+											$mdgriffith$elm_ui$Element$Input$button,
+											_List_Nil,
+											{
+												label: $mdgriffith$elm_ui$Element$text(
+													A2($elm$core$String$join, '.', b)),
+												onPress: $elm$core$Maybe$Just(a)
+											});
+									},
+									breadcrumbsWithCloseActions))),
+							A2(
+							$author$project$Styling$iconButton,
+							$feathericons$elm_feather$FeatherIcons$zoomOut,
+							$author$project$Main$SetTraceZoomLevel(zoomLevel - 1)),
+							A2(
+							$author$project$Styling$iconButton,
+							$feathericons$elm_feather$FeatherIcons$zoomIn,
+							$author$project$Main$SetTraceZoomLevel(zoomLevel + 1)),
 							A2(
 							$author$project$Styling$iconButton,
 							$feathericons$elm_feather$FeatherIcons$x,
 							$author$project$Main$CloseTrace(1))
 						])),
-					A4($author$project$Main$viewTraceAsBlocks, 0, runId, allRuns, trace),
+					A2(
+					$mdgriffith$elm_ui$Element$row,
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
+						]),
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$text(
+							A2($elm$core$String$join, '.', path) + ':'),
+							$author$project$Main$viewValue(value)
+						])),
+					A4($author$project$Main$viewTraceAsBlocks, zoomLevel, runId, allRuns, trace),
 					A2(
 					$mdgriffith$elm_ui$Element$el,
 					_List_fromArray(
@@ -19772,10 +19884,6 @@ var $feathericons$elm_feather$FeatherIcons$edit = A2(
 				]),
 			_List_Nil)
 		]));
-var $elm$svg$Svg$circle = $elm$svg$Svg$trustedNode('circle');
-var $elm$svg$Svg$Attributes$cx = _VirtualDom_attribute('cx');
-var $elm$svg$Svg$Attributes$cy = _VirtualDom_attribute('cy');
-var $elm$svg$Svg$Attributes$r = _VirtualDom_attribute('r');
 var $feathericons$elm_feather$FeatherIcons$eye = A2(
 	$feathericons$elm_feather$FeatherIcons$makeBuilder,
 	'eye',
@@ -29745,8 +29853,9 @@ var $author$project$Main$viewModel = function (model) {
 				} else {
 					var dt = _v0.a;
 					var dts = _v0.b;
-					return A3(
+					return A4(
 						$author$project$Main$viewDisplayedTrace,
+						model.traceZoomLevel,
 						model.runs,
 						A2(
 							$elm$core$List$map,
