@@ -320,7 +320,7 @@ type Msg
     | GotEntries (Maybe RunId) Run.Inputs Run.Overrides (Result Http.Error Run.Entries)
       -- trace handling
     | DisplayTrace RunId Path Value Value.Trace
-    | CloseTrace
+    | CloseTrace Int -- Number of steps to pop
       -- Override handling
     | AddOrUpdateOverrideClicked RunId String Float
     | RemoveOverrideClicked RunId String
@@ -488,8 +488,8 @@ update msg model =
             { model | displayedTrace = { runId = runId, path = path, value = value, trace = trace } :: model.displayedTrace }
                 |> withNoCmd
 
-        CloseTrace ->
-            { model | displayedTrace = List.tail model.displayedTrace |> Maybe.withDefault [] }
+        CloseTrace n ->
+            { model | displayedTrace = List.take n model.displayedTrace }
                 |> withNoCmd
 
         AddRowToLensTableClicked id num ->
@@ -2560,11 +2560,14 @@ viewTrace runId allRuns t =
                 viewTrace runId allRuns child
     in
     case t of
-        Value.DataTrace { source, key, attr } ->
-            text (source ++ "[" ++ key ++ "]." ++ attr)
+        Value.DataTrace { source, key, attr, value } ->
+            column [ spacing sizes.small ]
+                [ text (source ++ "[" ++ key ++ "]." ++ attr)
+                , viewValue (Float value)
+                ]
 
         Value.LiteralTrace f ->
-            text (formatGermanNumber f)
+            viewValue (Float f)
 
         Value.NameTrace { name } ->
             let
@@ -2578,16 +2581,22 @@ viewTrace runId allRuns t =
                             text name
 
                         Just nestedTrace ->
-                            Input.button []
-                                { onPress = Just (DisplayTrace runId path leaf.value nestedTrace)
-                                , label = text name
-                                }
+                            column [ spacing sizes.small ]
+                                [ Input.button []
+                                    { onPress = Just (DisplayTrace runId path leaf.value nestedTrace)
+                                    , label = text name
+                                    }
+                                , viewValue leaf.value
+                                ]
 
                 Nothing ->
                     text name
 
-        Value.FactOrAssTrace { fact_or_ass } ->
-            text fact_or_ass
+        Value.FactOrAssTrace { fact_or_ass, value } ->
+            column [ spacing sizes.small ]
+                [ text fact_or_ass
+                , viewValue (Float value)
+                ]
 
         Value.UnaryTrace { unary, a } ->
             row [ spacing sizes.small ]
@@ -2622,6 +2631,13 @@ viewTrace runId allRuns t =
 
 viewDisplayedTrace : AllRuns -> List Path -> DisplayedTrace -> Element Msg
 viewDisplayedTrace allRuns breadcrumbs { runId, path, value, trace } =
+    let
+        breadcrumbsWithCloseActions =
+            breadcrumbs
+                |> List.reverse
+                |> List.indexedMap (\n b -> ( b, CloseTrace (n + 1) ))
+                |> List.reverse
+    in
     column
         [ width fill
         , height fill
@@ -2629,20 +2645,20 @@ viewDisplayedTrace allRuns breadcrumbs { runId, path, value, trace } =
         ]
         [ row [ width fill, padding sizes.medium, spacing sizes.small, Font.size 12 ]
             (List.intersperse (icon (FeatherIcons.withSize 12 <| FeatherIcons.chevronRight)) <|
-                List.map (text << String.join ".") breadcrumbs
+                List.map
+                    (\( b, a ) ->
+                        Input.button [] { onPress = Just a, label = text (String.join "." b) }
+                    )
+                    breadcrumbsWithCloseActions
             )
         , row [ width fill, padding sizes.medium, spacing sizes.small ]
             [ row [ width fill ]
                 [ text (String.join "." path ++ ":")
                 , viewValue value
                 ]
-            , iconButton FeatherIcons.x CloseTrace
+            , iconButton FeatherIcons.x (CloseTrace 1)
             ]
         , row [ padding sizes.medium, spacing sizes.small ] [ viewTrace runId allRuns trace ]
-        , el [ padding sizes.medium, Font.size 8 ]
-            (scrollableText
-                (Debug.toString trace)
-            )
         ]
 
 

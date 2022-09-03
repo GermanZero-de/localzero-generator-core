@@ -31,10 +31,12 @@ class DataTrace(TypedDict):
     source: str
     key: str | int
     attr: str
+    value: float | int
 
 
 class FactOrAss(TypedDict):
     fact_or_ass: str
+    value: float | int
 
 
 class NameTrace(TypedDict):
@@ -61,12 +63,12 @@ def literal(v: int | float) -> TRACE:
     return v
 
 
-def data(source: str, key: str, attr: str) -> TRACE:
-    return {"source": source, "key": key, "attr": attr}
+def data(source: str, key: str, attr: str, value: float | int) -> TRACE:
+    return {"source": source, "key": key, "attr": attr, "value": value}
 
 
-def fact_or_ass(n: str) -> TRACE:
-    return {"fact_or_ass": n}
+def fact_or_ass(n: str, value: float | int) -> TRACE:
+    return {"fact_or_ass": n, "value": value}
 
 
 def name(n: str) -> TRACE:
@@ -128,13 +130,13 @@ class TracedNumber:
         cls, v: Union["TracedNumber", float, int], source: str, key: str, attr: str
     ):
         if isinstance(v, (float, int)):
-            return cls(v, data(source, key, attr))
+            return cls(v, data(source, key, attr, v))
         else:
-            return cls(v.value, data(source, key, attr))
+            return cls(v.value, data(source, key, attr, v.value))
 
     @classmethod
     def fact_or_ass(cls, n: str, v: float | int):
-        return cls(v, fact_or_ass(n))
+        return cls(v, fact_or_ass(n, v))
 
     @classmethod
     def def_name(cls, n: str, v: Union["TracedNumber", float, int]):
