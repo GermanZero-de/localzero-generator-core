@@ -30,7 +30,7 @@ type Trace
     = DataTrace { source : String, key : String, attr : String, value : Float }
     | FactOrAssTrace { fact_or_ass : String, value : Float }
     | NameTrace { name : String }
-    | BinaryTrace { binary : BinaryOp, a : Trace, b : Trace }
+    | BinaryTrace { value : Float, binary : BinaryOp, a : Trace, b : Trace }
     | UnaryTrace { unary : UnaryOp, a : Trace }
     | LiteralTrace Float
 
@@ -47,7 +47,7 @@ type UnaryOp
     | UnaryPlus
 
 
-binaryTraceToList : { binary : BinaryOp, a : Trace, b : Trace } -> List Trace
+binaryTraceToList : { binary : BinaryOp, a : Trace, b : Trace, value : Float } -> List Trace
 binaryTraceToList { binary, a, b } =
     let
         helper leftChild acc =
@@ -104,10 +104,11 @@ nameTraceDecoder namePrefix =
 
 binaryTraceDecoder : String -> Decode.Decoder Trace
 binaryTraceDecoder namePrefix =
-    Decode.map3 (\o a b -> BinaryTrace { binary = o, a = a, b = b })
+    Decode.map4 (\o a b v -> BinaryTrace { value = v, binary = o, a = a, b = b })
         (Decode.field "binary" binaryOpDecoder)
         (Decode.field "a" <| traceDecoder namePrefix)
         (Decode.field "b" <| traceDecoder namePrefix)
+        (Decode.field "value" Decode.float)
 
 
 unaryTraceDecoder : String -> Decode.Decoder Trace

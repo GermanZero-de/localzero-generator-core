@@ -2565,13 +2565,25 @@ viewTraceAsBlocks zoomLevel runId allRuns t =
     in
     case t of
         Value.DataTrace { source, key, attr, value } ->
-            column [ spacing sizes.small ]
-                [ viewValue (Float value)
-                , nameText (source ++ "[" ++ key ++ "]." ++ attr)
+            column
+                [ spacing sizes.small
+                , padding sizes.medium
+                , Border.solid
+                , Border.width 1
+                , Border.color Styling.modalDim
+                ]
+                [ nameText (source ++ "[" ++ key ++ "]." ++ attr)
+                , viewValue (Float value)
                 ]
 
         Value.LiteralTrace f ->
-            column [ height fill ]
+            column
+                [ height fill
+                , padding sizes.medium
+                , Border.solid
+                , Border.width 1
+                , Border.color Styling.modalDim
+                ]
                 [ viewValue (Float f)
                 ]
 
@@ -2602,36 +2614,55 @@ viewTraceAsBlocks zoomLevel runId allRuns t =
 
                         Just nestedTrace ->
                             if zoomLevel > 0 then
-                                column [ spacing sizes.small ]
-                                    [ viewTraceAsBlocks (zoomLevel - 1) runId allRuns nestedTrace
-                                    , nameElement
+                                column
+                                    [ spacing sizes.small
+                                    , padding sizes.medium
+                                    , Border.solid
+                                    , Border.width 1
+                                    , Border.color Styling.modalDim
+                                    ]
+                                    [ nameElement
+                                    , viewValue leaf.value
+                                    , viewTraceAsBlocks (zoomLevel - 1) runId allRuns nestedTrace
                                     ]
 
                             else
-                                column [ spacing sizes.small ]
-                                    [ viewValue leaf.value
-                                    , Input.button []
+                                column
+                                    [ spacing sizes.small
+                                    , padding sizes.medium
+                                    , Border.solid
+                                    , Border.width 1
+                                    , Border.color Styling.modalDim
+                                    ]
+                                    [ Input.button []
                                         { onPress = Just (DisplayTrace runId path leaf.value nestedTrace)
                                         , label = nameElement
                                         }
+                                    , viewValue leaf.value
                                     ]
 
                 Nothing ->
                     nameElement
 
         Value.FactOrAssTrace { fact_or_ass, value } ->
-            column [ spacing sizes.small ]
-                [ viewValue (Float value)
-                , nameText fact_or_ass
-                ]
-
-        Value.UnaryTrace { unary, a } ->
             column
                 [ spacing sizes.small
                 , padding sizes.medium
                 , Border.solid
                 , Border.width 1
-                , Border.color black
+                , Border.color Styling.modalDim
+                ]
+                [ nameText fact_or_ass
+                , viewValue (Float value)
+                ]
+
+        Value.UnaryTrace { unary, a } ->
+            row
+                [ spacing sizes.small
+                , padding sizes.medium
+                , Border.solid
+                , Border.width 1
+                , Border.color Styling.modalDim
                 ]
                 [ el [ Font.center, width fill ] <|
                     case unary of
@@ -2640,35 +2671,53 @@ viewTraceAsBlocks zoomLevel runId allRuns t =
 
                         Value.UnaryPlus ->
                             text "+"
-                , viewTraceAsBlocks (zoomLevel - 1) runId allRuns a
+                , viewTraceAsBlocks zoomLevel runId allRuns a
                 ]
 
         Value.BinaryTrace bTrace ->
+            let
+                ( op, bgColor ) =
+                    case bTrace.binary of
+                        Value.Plus ->
+                            ( "+"
+                            , Element.rgb255 194 255 153
+                              -- mint green
+                            )
+
+                        Value.Minus ->
+                            ( "-"
+                            , Element.rgb255 255 153 153
+                              -- salmon pink
+                            )
+
+                        Value.Times ->
+                            ( "*"
+                            , Element.rgb255 153 252 255
+                              -- electric blue
+                            )
+
+                        Value.Divide ->
+                            ( "/"
+                            , Element.rgb255 255 236 173
+                              -- medium champagne
+                            )
+            in
             column
                 [ spacing sizes.small
                 , padding sizes.medium
                 , Border.solid
                 , Border.width 1
-                , Border.color black
+                , Border.color bgColor
                 ]
-                [ el [ Font.center, width fill ] <|
-                    case bTrace.binary of
-                        Value.Plus ->
-                            text "+"
-
-                        Value.Minus ->
-                            text "-"
-
-                        Value.Times ->
-                            text "*"
-
-                        Value.Divide ->
-                            text "/"
-                , row [ spacing sizes.medium, padding sizes.small ]
-                    (List.map
-                        (viewTraceAsBlocks (zoomLevel - 1) runId allRuns)
-                        (Value.binaryTraceToList bTrace)
-                    )
+                [ viewValue (Float bTrace.value)
+                , row []
+                    [ el [ Font.center, width fill ] <| text op
+                    , column [ spacing sizes.medium, padding sizes.small ]
+                        (List.map
+                            (viewTraceAsBlocks zoomLevel runId allRuns)
+                            (Value.binaryTraceToList bTrace)
+                        )
+                    ]
                 ]
 
 

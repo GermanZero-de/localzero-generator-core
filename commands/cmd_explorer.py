@@ -21,7 +21,7 @@ from . import monkeypatch
 
 
 def cmd_explorer(args: Any):
-    converter = monkeypatch.maybe_enable_tracing(args)
+    finalize_traces_if_enabled = monkeypatch.maybe_enable_tracing(args)
     rd = RefData.load()
     with open("explorer/index.html", encoding="utf-8") as index_file:
         index = index_file.read()
@@ -55,7 +55,7 @@ def cmd_explorer(args: Any):
                 self.send_header("Content-type", "application/json")
                 self.send_header("Access-Control-Allow-Origin", "*")
                 self.end_headers()
-                self.wfile.write(json.dumps(response, default=converter).encode())
+                self.wfile.write(json.dumps(response).encode())
             else:
                 self.send_response(500)
                 self.send_header("Access-Control-Allow-Origin", "*")
@@ -65,7 +65,9 @@ def cmd_explorer(args: Any):
 
         def handle_make_entries(self, ags: str, year: int):
             return self.json_rpc(
-                lambda: dataclasses.asdict(make_entries(rd, ags, year))
+                lambda: finalize_traces_if_enabled(
+                    dataclasses.asdict(make_entries(rd, ags, year))
+                )
             )
 
         def handle_calculate(
@@ -79,7 +81,7 @@ def cmd_explorer(args: Any):
                     facts_and_assumptions=rd.facts_and_assumptions(), entries=entries
                 )
                 g = calculate(inputs)
-                return g.result_dict()
+                return finalize_traces_if_enabled(g.result_dict())
 
             return self.json_rpc(calc)
 

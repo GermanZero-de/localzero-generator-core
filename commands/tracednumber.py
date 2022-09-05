@@ -5,7 +5,7 @@
 # For the generator core this leads to surprisingly good traces as
 # we largely do not use for loops or ifs to decide how to do the computation.
 # Or to say it differently all we really have is just a collection of formulas
-from typing import Literal, Union, Callable, TypedDict, Sequence
+from typing import Literal, Union, Callable, TypedDict
 
 
 # Traces will be returned as values that python's json module
@@ -13,7 +13,6 @@ from typing import Literal, Union, Callable, TypedDict, Sequence
 TRACE = Union[
     int,
     float,
-    "MaxTrace",
     "DataTrace",
     "FactOrAss",
     "NameTrace",
@@ -21,10 +20,6 @@ TRACE = Union[
     "BinaryTrace",
     "UnaryTrace",
 ]
-
-
-class MaxTrace(TypedDict):
-    max: list[TRACE]
 
 
 class ValueWithTrace(TypedDict):
@@ -49,7 +44,7 @@ class NameTrace(TypedDict):
 
 
 class DefTrace(TypedDict):
-    def_name: str
+    def_name: NameTrace
     trace: TRACE
 
 
@@ -57,6 +52,7 @@ class BinaryTrace(TypedDict):
     binary: Literal["+", "-", "*", "/"]
     a: TRACE
     b: TRACE
+    value: float | int
 
 
 class UnaryTrace(TypedDict):
@@ -68,10 +64,6 @@ def literal(v: int | float) -> TRACE:
     return v
 
 
-def max_trace(ts: list[TRACE]) -> TRACE:
-    return {"max": ts}
-
-
 def data(source: str, key: str, attr: str, value: float | int) -> TRACE:
     return {"source": source, "key": key, "attr": attr, "value": value}
 
@@ -80,39 +72,45 @@ def fact_or_ass(n: str, value: float | int) -> TRACE:
     return {"fact_or_ass": n, "value": value}
 
 
-def name(n: str) -> TRACE:
-    return {"name": n}
-
-
-def use_trace(trace: TRACE) -> TRACE:
-    """Everywhere a trace is used we want to convert definitions into names.
-    So that in the end only the toplevel assignments are definitions.
-    """
+def _replace_name_defs_by_names(trace: TRACE) -> TRACE:
     match trace:
-        case {"def_name": n, "trace": _}:
-            return name(n)
+        case {"binary": op, "a": a, "b": b, "value": v}:
+            return {
+                "binary": op,
+                "a": _replace_name_defs_by_names(a),
+                "b": _replace_name_defs_by_names(b),
+                "value": v,
+            }
+        case {"unary": op, "a": a}:
+            return {"unary": op, "a": _replace_name_defs_by_names(a)}
+        case int() | float():
+            return trace
+        case {"def_name": ({"name": n} as name), "trace": t}:
+            # Names we could not resolve we replace by their expression
+            if n.startswith("?"):
+                return _replace_name_defs_by_names(t)
+            else:
+                return name
+        case {"source": _, "key": _, "attr": _, "value": _}:
+            return trace
+        case {"fact_or_ass": _, "value": _}:
+            return trace
         case _:
             return trace
 
 
-def unpack_def(trace: TRACE) -> TRACE:
-    match trace:
-        case {"def_name": _, "trace": t}:
-            return t
-        case _:
-            return trace
+def def_name(n: str, trace: TRACE) -> DefTrace:
+    return {"def_name": {"name": n}, "trace": trace}
 
 
-def def_name(n: str, trace: TRACE) -> TRACE:
-    return {"def_name": n, "trace": use_trace(trace)}
-
-
-def binary(op: Literal["+", "-", "*", "/"], a: TRACE, b: TRACE) -> TRACE:
-    return {"binary": op, "a": use_trace(a), "b": use_trace(b)}
+def binary(
+    value: float | int, op: Literal["+", "-", "*", "/"], a: TRACE, b: TRACE
+) -> TRACE:
+    return {"binary": op, "a": a, "b": b, "value": value}
 
 
 def unary(op: Literal["+", "-"], a: TRACE) -> TRACE:
-    return {"unary": op, "a": use_trace(a)}
+    return {"unary": op, "a": a}
 
 
 class TracedNumber:
@@ -129,36 +127,23 @@ class TracedNumber:
 
     @classmethod
     def lift(cls, v: Union["TracedNumber", float, int]) -> "TracedNumber":
-        if isinstance(v, (float, int)):
-            return cls(v, literal(v))
-        else:
+        if isinstance(v, TracedNumber):
             return v
-
-    @classmethod
-    def max(
-        cls, v: Union[float, int], values: Sequence[Union["TracedNumber", float, int]]
-    ) -> "TracedNumber":
-        return cls(v, max_trace([cls.lift(t).trace for t in values]))
+        else:
+            return cls(v, literal(v))
 
     @classmethod
     def data(
         cls, v: Union["TracedNumber", float, int], source: str, key: str, attr: str
     ):
-        if isinstance(v, (float, int)):
-            return cls(v, data(source, key, attr, v))
-        else:
+        if isinstance(v, TracedNumber):
             return cls(v.value, data(source, key, attr, v.value))
+        else:
+            return cls(v, data(source, key, attr, v))
 
     @classmethod
     def fact_or_ass(cls, n: str, v: float | int):
         return cls(v, fact_or_ass(n, v))
-
-    @classmethod
-    def def_name(cls, n: str, v: Union["TracedNumber", float, int]):
-        if isinstance(v, (float, int)):
-            return cls(v, def_name(n, literal(v)))
-        else:
-            return cls(v.value, def_name(n, v.trace))
 
     def binop(
         self,
@@ -167,9 +152,10 @@ class TracedNumber:
         f: Callable[[int | float, int | float], int | float],
     ) -> "TracedNumber":
         other = self.lift(other)
+        value = f(self.value, other.value)
         return TracedNumber(
-            f(self.value, other.value),
-            trace=binary(op=op, a=self.trace, b=other.trace),
+            value,
+            trace=binary(value=value, op=op, a=self.trace, b=other.trace),
         )
 
     def is_integer(self) -> bool:
@@ -241,5 +227,81 @@ class TracedNumber:
     def __neg__(self) -> "TracedNumber":
         return self.__class__(-self.value, trace=unary("-", self.trace))
 
-    def to_json(self) -> ValueWithTrace:
-        return {"value": self.value, "trace": unpack_def(self.trace)}
+
+RESULT_DICTIONARY = dict[
+    str, Union[int, None, float, TracedNumber, "RESULT_DICTIONARY"]
+]
+
+JSON_RESULT_DICTIONARY = dict[
+    str, Union[int, float, None, TracedNumber, ValueWithTrace, "JSON_RESULT_DICTIONARY"]
+]
+
+
+def set_names(r: RESULT_DICTIONARY, path: list[str] = []) -> None:
+    """For all name definitions at the toplevel of a tracednumber, set their name to
+    the path to that traced number in the tree.  Unless the name is already set.
+    This is done by side effect and relies on sharing for the proper effect.
+    """
+
+    def helper(
+        path: list[str],
+        node: Union[int, float, None, "TracedNumber", "RESULT_DICTIONARY"],
+    ) -> None:
+        match node:
+            case TracedNumber():
+                match node.trace:
+                    case {"def_name": ({"name": str(n)} as name), "trace": _}:
+                        if n.startswith("?"):
+                            name["name"] = ".".join(path)
+                    case _:
+                        pass
+            case int() | float() | None:
+                pass
+            case dict():
+                return set_names(node, path)
+
+    for k, v in r.items():
+        helper(path + [k], v)
+
+
+def finalize_traces_in_result(r: RESULT_DICTIONARY, path: list[str] = []) -> None:
+    """Finalize the traces.  This does several things:
+    1. We set the names in name definitions for things reachable by following the result tree. (e.g. r18.r.CO2e_combustion_based)
+    2. We replace all traced numbers by a TracedValue
+    3. We replace the toplevel name definitions by their trace
+    4. We replace all other name definitions by either
+        4.1 their name if the name was resolved in 1
+        4.2 the trace if it wasn't (this can for example happen for intermediate result dictionaries like
+            the sum of several Transport).
+    """
+    set_names(r)
+
+    def replace_definitions(r: JSON_RESULT_DICTIONARY, path: list[str] = []) -> None:
+        for k, v in r.items():
+            match v:
+                case TracedNumber() as tn:
+                    match tn.trace:
+                        case {"def_name": _, "trace": t}:
+                            r[k] = {
+                                "value": tn.value,
+                                "trace": _replace_name_defs_by_names(t),
+                            }
+
+                        case _:
+                            r[k] = {
+                                "value": tn.value,
+                                "trace": _replace_name_defs_by_names(tn.trace),
+                            }
+                    assert not isinstance(r[k], TracedNumber)
+                case int() | float() | None:
+                    pass
+                case {"value": _, "trace": _}:
+                    pass
+                case dict():
+                    replace_definitions(v, path + [k])
+                case _:
+
+                    # Already replaced
+                    pass
+
+    replace_definitions(r)  # type: ignore (We are converting RESULT_DICTIONARY into JSON_RESULT_DICTIONARY in place here)

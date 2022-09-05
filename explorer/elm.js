@@ -8573,7 +8573,6 @@ var $author$project$Value$factOrAssTraceDecoder = A3(
 		}),
 	A2($elm$json$Json$Decode$field, 'fact_or_ass', $elm$json$Json$Decode$string),
 	A2($elm$json$Json$Decode$field, 'value', $elm$json$Json$Decode$float));
-var $elm$json$Json$Decode$map3 = _Json_map3;
 var $author$project$Value$NameTrace = function (a) {
 	return {$: 'NameTrace', a: a};
 };
@@ -8602,12 +8601,12 @@ var $author$project$Value$unaryOpDecoder = A2(
 	},
 	$elm$json$Json$Decode$string);
 var $author$project$Value$binaryTraceDecoder = function (namePrefix) {
-	return A4(
-		$elm$json$Json$Decode$map3,
-		F3(
-			function (o, a, b) {
+	return A5(
+		$elm$json$Json$Decode$map4,
+		F4(
+			function (o, a, b, v) {
 				return $author$project$Value$BinaryTrace(
-					{a: a, b: b, binary: o});
+					{a: a, b: b, binary: o, value: v});
 			}),
 		A2($elm$json$Json$Decode$field, 'binary', $author$project$Value$binaryOpDecoder),
 		A2(
@@ -8617,7 +8616,8 @@ var $author$project$Value$binaryTraceDecoder = function (namePrefix) {
 		A2(
 			$elm$json$Json$Decode$field,
 			'b',
-			$author$project$Value$traceDecoder(namePrefix)));
+			$author$project$Value$traceDecoder(namePrefix)),
+		A2($elm$json$Json$Decode$field, 'value', $elm$json$Json$Decode$float));
 };
 var $author$project$Value$traceDecoder = function (namePrefix) {
 	return $elm$json$Json$Decode$lazy(
@@ -19239,13 +19239,17 @@ var $author$project$Main$viewTraceAsBlocks = F4(
 					$mdgriffith$elm_ui$Element$column,
 					_List_fromArray(
 						[
-							$mdgriffith$elm_ui$Element$spacing($author$project$Styling$sizes.small)
+							$mdgriffith$elm_ui$Element$spacing($author$project$Styling$sizes.small),
+							$mdgriffith$elm_ui$Element$padding($author$project$Styling$sizes.medium),
+							$mdgriffith$elm_ui$Element$Border$solid,
+							$mdgriffith$elm_ui$Element$Border$width(1),
+							$mdgriffith$elm_ui$Element$Border$color($author$project$Styling$modalDim)
 						]),
 					_List_fromArray(
 						[
+							nameText(source + ('[' + (key + ('].' + attr)))),
 							$author$project$Main$viewValue(
-							$author$project$Value$Float(value)),
-							nameText(source + ('[' + (key + ('].' + attr))))
+							$author$project$Value$Float(value))
 						]));
 			case 'LiteralTrace':
 				var f = t.a;
@@ -19253,7 +19257,11 @@ var $author$project$Main$viewTraceAsBlocks = F4(
 					$mdgriffith$elm_ui$Element$column,
 					_List_fromArray(
 						[
-							$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill)
+							$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
+							$mdgriffith$elm_ui$Element$padding($author$project$Styling$sizes.medium),
+							$mdgriffith$elm_ui$Element$Border$solid,
+							$mdgriffith$elm_ui$Element$Border$width(1),
+							$mdgriffith$elm_ui$Element$Border$color($author$project$Styling$modalDim)
 						]),
 					_List_fromArray(
 						[
@@ -19287,21 +19295,29 @@ var $author$project$Main$viewTraceAsBlocks = F4(
 							$mdgriffith$elm_ui$Element$column,
 							_List_fromArray(
 								[
-									$mdgriffith$elm_ui$Element$spacing($author$project$Styling$sizes.small)
+									$mdgriffith$elm_ui$Element$spacing($author$project$Styling$sizes.small),
+									$mdgriffith$elm_ui$Element$padding($author$project$Styling$sizes.medium),
+									$mdgriffith$elm_ui$Element$Border$solid,
+									$mdgriffith$elm_ui$Element$Border$width(1),
+									$mdgriffith$elm_ui$Element$Border$color($author$project$Styling$modalDim)
 								]),
 							_List_fromArray(
 								[
-									A4($author$project$Main$viewTraceAsBlocks, zoomLevel - 1, runId, allRuns, nestedTrace),
-									nameElement
+									nameElement,
+									$author$project$Main$viewValue(leaf.value),
+									A4($author$project$Main$viewTraceAsBlocks, zoomLevel - 1, runId, allRuns, nestedTrace)
 								])) : A2(
 							$mdgriffith$elm_ui$Element$column,
 							_List_fromArray(
 								[
-									$mdgriffith$elm_ui$Element$spacing($author$project$Styling$sizes.small)
+									$mdgriffith$elm_ui$Element$spacing($author$project$Styling$sizes.small),
+									$mdgriffith$elm_ui$Element$padding($author$project$Styling$sizes.medium),
+									$mdgriffith$elm_ui$Element$Border$solid,
+									$mdgriffith$elm_ui$Element$Border$width(1),
+									$mdgriffith$elm_ui$Element$Border$color($author$project$Styling$modalDim)
 								]),
 							_List_fromArray(
 								[
-									$author$project$Main$viewValue(leaf.value),
 									A2(
 									$mdgriffith$elm_ui$Element$Input$button,
 									_List_Nil,
@@ -19309,7 +19325,8 @@ var $author$project$Main$viewTraceAsBlocks = F4(
 										label: nameElement,
 										onPress: $elm$core$Maybe$Just(
 											A4($author$project$Main$DisplayTrace, runId, path, leaf.value, nestedTrace))
-									})
+									}),
+									$author$project$Main$viewValue(leaf.value)
 								]));
 					}
 				} else {
@@ -19322,26 +19339,30 @@ var $author$project$Main$viewTraceAsBlocks = F4(
 					$mdgriffith$elm_ui$Element$column,
 					_List_fromArray(
 						[
-							$mdgriffith$elm_ui$Element$spacing($author$project$Styling$sizes.small)
+							$mdgriffith$elm_ui$Element$spacing($author$project$Styling$sizes.small),
+							$mdgriffith$elm_ui$Element$padding($author$project$Styling$sizes.medium),
+							$mdgriffith$elm_ui$Element$Border$solid,
+							$mdgriffith$elm_ui$Element$Border$width(1),
+							$mdgriffith$elm_ui$Element$Border$color($author$project$Styling$modalDim)
 						]),
 					_List_fromArray(
 						[
+							nameText(fact_or_ass),
 							$author$project$Main$viewValue(
-							$author$project$Value$Float(value)),
-							nameText(fact_or_ass)
+							$author$project$Value$Float(value))
 						]));
 			case 'UnaryTrace':
 				var unary = t.a.unary;
 				var a = t.a.a;
 				return A2(
-					$mdgriffith$elm_ui$Element$column,
+					$mdgriffith$elm_ui$Element$row,
 					_List_fromArray(
 						[
 							$mdgriffith$elm_ui$Element$spacing($author$project$Styling$sizes.small),
 							$mdgriffith$elm_ui$Element$padding($author$project$Styling$sizes.medium),
 							$mdgriffith$elm_ui$Element$Border$solid,
 							$mdgriffith$elm_ui$Element$Border$width(1),
-							$mdgriffith$elm_ui$Element$Border$color($author$project$Styling$black)
+							$mdgriffith$elm_ui$Element$Border$color($author$project$Styling$modalDim)
 						]),
 					_List_fromArray(
 						[
@@ -19359,10 +19380,33 @@ var $author$project$Main$viewTraceAsBlocks = F4(
 									return $mdgriffith$elm_ui$Element$text('+');
 								}
 							}()),
-							A4($author$project$Main$viewTraceAsBlocks, zoomLevel - 1, runId, allRuns, a)
+							A4($author$project$Main$viewTraceAsBlocks, zoomLevel, runId, allRuns, a)
 						]));
 			default:
 				var bTrace = t.a;
+				var _v5 = function () {
+					var _v6 = bTrace.binary;
+					switch (_v6.$) {
+						case 'Plus':
+							return _Utils_Tuple2(
+								'+',
+								A3($mdgriffith$elm_ui$Element$rgb255, 194, 255, 153));
+						case 'Minus':
+							return _Utils_Tuple2(
+								'-',
+								A3($mdgriffith$elm_ui$Element$rgb255, 255, 153, 153));
+						case 'Times':
+							return _Utils_Tuple2(
+								'*',
+								A3($mdgriffith$elm_ui$Element$rgb255, 153, 252, 255));
+						default:
+							return _Utils_Tuple2(
+								'/',
+								A3($mdgriffith$elm_ui$Element$rgb255, 255, 236, 173));
+					}
+				}();
+				var op = _v5.a;
+				var bgColor = _v5.b;
 				return A2(
 					$mdgriffith$elm_ui$Element$column,
 					_List_fromArray(
@@ -19371,41 +19415,37 @@ var $author$project$Main$viewTraceAsBlocks = F4(
 							$mdgriffith$elm_ui$Element$padding($author$project$Styling$sizes.medium),
 							$mdgriffith$elm_ui$Element$Border$solid,
 							$mdgriffith$elm_ui$Element$Border$width(1),
-							$mdgriffith$elm_ui$Element$Border$color($author$project$Styling$black)
+							$mdgriffith$elm_ui$Element$Border$color(bgColor)
 						]),
 					_List_fromArray(
 						[
-							A2(
-							$mdgriffith$elm_ui$Element$el,
-							_List_fromArray(
-								[
-									$mdgriffith$elm_ui$Element$Font$center,
-									$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
-								]),
-							function () {
-								var _v5 = bTrace.binary;
-								switch (_v5.$) {
-									case 'Plus':
-										return $mdgriffith$elm_ui$Element$text('+');
-									case 'Minus':
-										return $mdgriffith$elm_ui$Element$text('-');
-									case 'Times':
-										return $mdgriffith$elm_ui$Element$text('*');
-									default:
-										return $mdgriffith$elm_ui$Element$text('/');
-								}
-							}()),
+							$author$project$Main$viewValue(
+							$author$project$Value$Float(bTrace.value)),
 							A2(
 							$mdgriffith$elm_ui$Element$row,
+							_List_Nil,
 							_List_fromArray(
 								[
-									$mdgriffith$elm_ui$Element$spacing($author$project$Styling$sizes.medium),
-									$mdgriffith$elm_ui$Element$padding($author$project$Styling$sizes.small)
-								]),
-							A2(
-								$elm$core$List$map,
-								A3($author$project$Main$viewTraceAsBlocks, zoomLevel - 1, runId, allRuns),
-								$author$project$Value$binaryTraceToList(bTrace)))
+									A2(
+									$mdgriffith$elm_ui$Element$el,
+									_List_fromArray(
+										[
+											$mdgriffith$elm_ui$Element$Font$center,
+											$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
+										]),
+									$mdgriffith$elm_ui$Element$text(op)),
+									A2(
+									$mdgriffith$elm_ui$Element$column,
+									_List_fromArray(
+										[
+											$mdgriffith$elm_ui$Element$spacing($author$project$Styling$sizes.medium),
+											$mdgriffith$elm_ui$Element$padding($author$project$Styling$sizes.small)
+										]),
+									A2(
+										$elm$core$List$map,
+										A3($author$project$Main$viewTraceAsBlocks, zoomLevel, runId, allRuns),
+										$author$project$Value$binaryTraceToList(bTrace)))
+								]))
 						]));
 		}
 	});
@@ -22375,6 +22415,7 @@ var $terezka$elm_charts$Internal$Svg$Event = F2(
 		return {handler: handler, name: name};
 	});
 var $elm$svg$Svg$clipPath = $elm$svg$Svg$trustedNode('clipPath');
+var $elm$json$Json$Decode$map3 = _Json_map3;
 var $debois$elm_dom$DOM$offsetHeight = A2($elm$json$Json$Decode$field, 'offsetHeight', $elm$json$Json$Decode$float);
 var $debois$elm_dom$DOM$offsetWidth = A2($elm$json$Json$Decode$field, 'offsetWidth', $elm$json$Json$Decode$float);
 var $debois$elm_dom$DOM$offsetLeft = A2($elm$json$Json$Decode$field, 'offsetLeft', $elm$json$Json$Decode$float);
