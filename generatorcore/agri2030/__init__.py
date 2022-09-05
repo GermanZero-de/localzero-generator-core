@@ -5,29 +5,22 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/agriculture.html
 
 # pyright: strict
 
-from .dataclasses import (
-    CO2eChangeA,
-    CO2eChangeG,
-    CO2eChangeGConsult,
-    CO2eChangeGOrganic,
-)
-from . import energy_demand
-from . import energy_source
-
 from ..inputs import Inputs
 from ..agri2018.a18 import A18
-from ..lulucf2030 import L30
+from ..lulucf2030.l30 import L30
+
+from .co2eChangeA import CO2eChangeA
 from .a30 import A30
+from . import energy_demand
+from . import energy_source
+from . import energy_general
 
 
-def calc(inputs: Inputs, *, a18: A18, l30: L30) -> A30:
+def calc(inputs: Inputs, a18: A18, l30: L30) -> A30:
 
     production = energy_demand.calc_production(inputs, a18, l30)
     supply = energy_source.calc_supply(inputs, a18, production)
-
-    g_consult = CO2eChangeGConsult(inputs=inputs)
-    g_organic = CO2eChangeGOrganic(inputs=inputs)
-    g = CO2eChangeG(g_consult=g_consult, g_organic=g_organic)
+    general = energy_general.calc_general(inputs=inputs)
 
     a = CO2eChangeA(
         inputs=inputs,
@@ -35,7 +28,7 @@ def calc(inputs: Inputs, *, a18: A18, l30: L30) -> A30:
         a18=a18,
         p_operation=production.p_operation,
         p=production.p,
-        g=g,
+        g=general.g,
         s=supply.s,
     )
 
@@ -88,7 +81,7 @@ def calc(inputs: Inputs, *, a18: A18, l30: L30) -> A30:
         s_emethan=supply.s_emethan,
         s=supply.s,
         a=a,
-        g=g,
-        g_consult=g_consult,
-        g_organic=g_organic,
+        g=general.g,
+        g_consult=general.g_consult,
+        g_organic=general.g_organic,
     )
