@@ -10,26 +10,6 @@ from generatorcore.generator import calculate_with_default_inputs
 from generatorcore import refdatatools, diffs, makeentries
 from generatorcore.refdata import RefData
 
-from commands import monkeypatch, tracednumber
-
-_converter = monkeypatch.enable_tracing()
-
-
-def converter(e: Any):
-    c = _converter(e)
-
-    def helper(x: Any):
-        match x:
-            case {"value": v, "trace": _}:
-                return v
-            case dict():
-                return {k: helper(v) for k, v in x.items()}
-            case _:
-                return x
-
-    return helper(c)
-
-
 PUBLIC_OR_PROP = Literal["public", "proprietary"]
 
 
@@ -113,7 +93,7 @@ def end_to_end(datadir_status: refdatatools.DataDirStatus, ags: Any, year: int =
     with open(os.path.join(root, "tests", "end_to_end_expected", fname)) as fp:
         expected = json.load(fp)
         g = calculate_with_default_inputs(ags=ags, year=year)
-        got = converter(g.result_dict())
+        got = g.result_dict()
         ds = list(diffs.all(expected=expected, actual=got))  # type: ignore
         if ds:
             # Write a diff of the json
