@@ -180,7 +180,6 @@ type alias Model =
     , leftPaneWidth : Int
     , dragDrop : DragDrop
     , displayedTrace : List DisplayedTrace
-    , traceZoomLevel : Int
     }
 
 
@@ -308,7 +307,6 @@ init storage =
     , leftPaneWidth = 600
     , dragDrop = DragDrop.init
     , displayedTrace = []
-    , traceZoomLevel = 1
     }
         |> update (LocalStorageLoaded storage)
 
@@ -2755,8 +2753,8 @@ viewTraceAsBlocks expanded runId allRuns t =
                 ]
 
 
-viewDisplayedTrace : Int -> AllRuns -> List Path -> DisplayedTrace -> Element Msg
-viewDisplayedTrace zoomLevel allRuns breadcrumbs { runId, path, expanded, value, trace } =
+viewDisplayedTrace : AllRuns -> List Path -> DisplayedTrace -> Element Msg
+viewDisplayedTrace allRuns breadcrumbs { runId, path, expanded, value, trace } =
     let
         breadcrumbsWithCloseActions =
             breadcrumbs
@@ -2814,7 +2812,7 @@ viewModel model =
                 viewRunsAndInterestLists model
 
             dt :: dts ->
-                viewDisplayedTrace model.traceZoomLevel model.runs (List.map .path dts) dt
+                viewDisplayedTrace model.runs (List.map .path dts) dt
         ]
 
 
