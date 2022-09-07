@@ -64,7 +64,7 @@ import List.Extra
 import Maybe.Extra
 import Pivot exposing (Pivot)
 import Run exposing (OverrideHandling(..), Path, Run)
-import Set
+import Set exposing (Set)
 import Storage
 import Styling
     exposing
@@ -189,6 +189,7 @@ type alias DisplayedTrace =
     , path : Path
     , value : Value
     , trace : Value.Trace
+    , expanded : Set Path
     }
 
 
@@ -307,7 +308,7 @@ init storage =
     , leftPaneWidth = 600
     , dragDrop = DragDrop.init
     , displayedTrace = []
-    , traceZoomLevel = 0
+    , traceZoomLevel = 1
     }
         |> update (LocalStorageLoaded storage)
 
@@ -323,7 +324,8 @@ type Msg
       -- trace handling
     | DisplayTrace RunId Path Value Value.Trace
     | CloseTrace Int -- Number of steps to pop
-    | SetTraceZoomLevel Int
+    | ExpandInTrace Path
+    | CollapseInTrace Path
       -- Override handling
     | AddOrUpdateOverrideClicked RunId String Float
     | RemoveOverrideClicked RunId String
@@ -480,6 +482,21 @@ callIfJust mb fn x =
             x
 
 
+mapHead : (a -> a) -> List a -> List a
+mapHead fn l =
+    case l of
+        [] ->
+            []
+
+        x :: xs ->
+            fn x :: xs
+
+
+mapExpanded : (Set Path -> Set Path) -> DisplayedTrace -> DisplayedTrace
+mapExpanded fn dt =
+    { dt | expanded = fn dt.expanded }
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
@@ -487,13 +504,17 @@ update msg model =
             model
                 |> withNoCmd
 
-        SetTraceZoomLevel zl ->
-            { model | traceZoomLevel = zl }
-                |> withNoCmd
-
         -- |> withNoCmd
         DisplayTrace runId path value trace ->
-            { model | displayedTrace = { runId = runId, path = path, value = value, trace = trace } :: model.displayedTrace }
+            { model | displayedTrace = { runId = runId, path = path, value = value, trace = trace, expanded = Set.empty } :: model.displayedTrace }
+                |> withNoCmd
+
+        ExpandInTrace path ->
+            { model | displayedTrace = mapHead (mapExpanded (Set.insert path)) model.displayedTrace }
+                |> withNoCmd
+
+        CollapseInTrace path ->
+            { model | displayedTrace = mapHead (mapExpanded (Set.remove path)) model.displayedTrace }
                 |> withNoCmd
 
         CloseTrace n ->
@@ -2557,8 +2578,8 @@ level tr =
                     3
 
 
-viewTraceAsBlocks : Int -> RunId -> AllRuns -> Value.Trace -> Element Msg
-viewTraceAsBlocks zoomLevel runId allRuns t =
+viewTraceAsBlocks : Set Path -> RunId -> AllRuns -> Value.Trace -> Element Msg
+viewTraceAsBlocks expanded runId allRuns t =
     let
         nameText s =
             el [ Font.size Styling.sizes.tableFontSize ] <| text s
@@ -2613,7 +2634,7 @@ viewTraceAsBlocks zoomLevel runId allRuns t =
                             nameElement
 
                         Just nestedTrace ->
-                            if zoomLevel > 0 then
+                            if Set.member path expanded then
                                 column
                                     [ spacing sizes.small
                                     , padding sizes.medium
@@ -2621,9 +2642,17 @@ viewTraceAsBlocks zoomLevel runId allRuns t =
                                     , Border.width 1
                                     , Border.color Styling.modalDim
                                     ]
-                                    [ nameElement
-                                    , viewValue leaf.value
-                                    , viewTraceAsBlocks (zoomLevel - 1) runId allRuns nestedTrace
+                                    [ row [ spacing sizes.small ]
+                                        [ el [ Element.alignTop ] <| iconButton FeatherIcons.chevronDown (CollapseInTrace path)
+                                        , column [ spacing sizes.small ]
+                                            [ Input.button []
+                                                { onPress = Just (DisplayTrace runId path leaf.value nestedTrace)
+                                                , label = nameElement
+                                                }
+                                            , viewValue leaf.value
+                                            , viewTraceAsBlocks expanded runId allRuns nestedTrace
+                                            ]
+                                        ]
                                     ]
 
                             else
@@ -2634,11 +2663,16 @@ viewTraceAsBlocks zoomLevel runId allRuns t =
                                     , Border.width 1
                                     , Border.color Styling.modalDim
                                     ]
-                                    [ Input.button []
-                                        { onPress = Just (DisplayTrace runId path leaf.value nestedTrace)
-                                        , label = nameElement
-                                        }
-                                    , viewValue leaf.value
+                                    [ row [ spacing sizes.small ]
+                                        [ el [ Element.alignTop ] <| iconButton FeatherIcons.chevronRight (ExpandInTrace path)
+                                        , column [ spacing sizes.small ]
+                                            [ Input.button []
+                                                { onPress = Just (DisplayTrace runId path leaf.value nestedTrace)
+                                                , label = nameElement
+                                                }
+                                            , viewValue leaf.value
+                                            ]
+                                        ]
                                     ]
 
                 Nothing ->
@@ -2671,7 +2705,7 @@ viewTraceAsBlocks zoomLevel runId allRuns t =
 
                         Value.UnaryPlus ->
                             text "+"
-                , viewTraceAsBlocks zoomLevel runId allRuns a
+                , viewTraceAsBlocks expanded runId allRuns a
                 ]
 
         Value.BinaryTrace bTrace ->
@@ -2714,105 +2748,15 @@ viewTraceAsBlocks zoomLevel runId allRuns t =
                     [ el [ Font.center, width fill ] <| text op
                     , column [ spacing sizes.medium, padding sizes.small ]
                         (List.map
-                            (viewTraceAsBlocks zoomLevel runId allRuns)
+                            (viewTraceAsBlocks expanded runId allRuns)
                             (Value.binaryTraceToList bTrace)
                         )
                     ]
                 ]
 
 
-viewTrace : RunId -> AllRuns -> Value.Trace -> Element Msg
-viewTrace runId allRuns t =
-    let
-        viewWithParens child =
-            if level t < level child then
-                row [ spacing sizes.small ] [ text "(", viewTrace runId allRuns child, text ")" ]
-
-            else
-                viewTrace runId allRuns child
-    in
-    case t of
-        Value.DataTrace { source, key, attr, value } ->
-            column [ spacing sizes.small ]
-                [ text (source ++ "[" ++ key ++ "]." ++ attr)
-                , viewValue (Float value)
-                ]
-
-        Value.LiteralTrace f ->
-            viewValue (Float f)
-
-        Value.NameTrace { name } ->
-            let
-                path =
-                    String.split "." name
-
-                shorterPath =
-                    String.join "."
-                        -- We truncate result in the display
-                        (case path of
-                            "result" :: rest ->
-                                rest
-
-                            _ ->
-                                path
-                        )
-            in
-            case AllRuns.getValue Run.WithOverrides runId path allRuns of
-                Just leaf ->
-                    case leaf.trace of
-                        Nothing ->
-                            text shorterPath
-
-                        Just nestedTrace ->
-                            column [ spacing sizes.small ]
-                                [ Input.button []
-                                    { onPress = Just (DisplayTrace runId path leaf.value nestedTrace)
-                                    , label = text shorterPath
-                                    }
-                                , viewValue leaf.value
-                                ]
-
-                Nothing ->
-                    text shorterPath
-
-        Value.FactOrAssTrace { fact_or_ass, value } ->
-            column [ spacing sizes.small ]
-                [ text fact_or_ass
-                , viewValue (Float value)
-                ]
-
-        Value.UnaryTrace { unary, a } ->
-            row [ spacing sizes.small ]
-                [ case unary of
-                    Value.UnaryMinus ->
-                        text "-"
-
-                    Value.UnaryPlus ->
-                        text "+"
-                , viewWithParens a
-                ]
-
-        Value.BinaryTrace { binary, a, b } ->
-            row [ spacing sizes.small ]
-                [ viewWithParens a
-                , case binary of
-                    Value.Plus ->
-                        text "+"
-
-                    Value.Minus ->
-                        text "-"
-
-                    Value.Times ->
-                        text "*"
-
-                    Value.Divide ->
-                        text "/"
-                , viewWithParens b
-                ]
-
-
 viewDisplayedTrace : Int -> AllRuns -> List Path -> DisplayedTrace -> Element Msg
-viewDisplayedTrace zoomLevel allRuns breadcrumbs { runId, path, value, trace } =
+viewDisplayedTrace zoomLevel allRuns breadcrumbs { runId, path, expanded, value, trace } =
     let
         breadcrumbsWithCloseActions =
             breadcrumbs
@@ -2834,21 +2778,9 @@ viewDisplayedTrace zoomLevel allRuns breadcrumbs { runId, path, value, trace } =
                         )
                         breadcrumbsWithCloseActions
                 )
-            , iconButton FeatherIcons.zoomOut (SetTraceZoomLevel (zoomLevel - 1))
-            , iconButton FeatherIcons.zoomIn (SetTraceZoomLevel (zoomLevel + 1))
-            , iconButton FeatherIcons.x (CloseTrace 1)
+            , iconButton FeatherIcons.x (CloseTrace (List.length breadcrumbs + 1))
             ]
-        , row [ width fill ]
-            [ text (String.join "." path ++ ":")
-            , viewValue value
-            ]
-
-        -- , row [ padding sizes.medium, spacing sizes.small ] [ viewTrace runId allRuns trace ]
-        , viewTraceAsBlocks zoomLevel runId allRuns trace
-        , el [ Font.color Styling.modalDim, Font.size 12 ]
-            (scrollableText
-                (Debug.toString trace)
-            )
+        , viewTraceAsBlocks (Set.insert path expanded) runId allRuns (Value.NameTrace { name = String.join "." path })
         ]
 
 
