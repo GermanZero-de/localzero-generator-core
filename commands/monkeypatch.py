@@ -44,28 +44,25 @@ def enable_tracing() -> Callable[[Any], Any]:
     # Now make sure that whenever a value stored in a component of the final
     # result type is used, the trace contains a def_name and that the same
     # def_name is used when the same component is used multiple times.
-    def make_traced_getattribute():
-        def traced_getattribute(self: Any, name: str):
-            value = object.__getattribute__(self, name)
-            if isinstance(value, (float, int, tracednumber.TracedNumber)):
-                traced_value = tracednumber.TracedNumber.lift(value)
-                if not hasattr(self, "__name_defs"):
-                    self.__name_defs = {}
-                if name not in self.__name_defs:
-                    name_def = tracednumber.def_name("?." + name, traced_value.trace)
-                    self.__name_defs[name] = name_def
+    def traced_getattribute(self: Any, name: str):
+        value = object.__getattribute__(self, name)
+        if isinstance(value, (float, int, tracednumber.TracedNumber)):
+            traced_value = tracednumber.TracedNumber.lift(value)
+            if not hasattr(self, "__name_defs"):
+                self.__name_defs = {}
+            if name not in self.__name_defs:
+                name_def = tracednumber.def_name("?." + name, traced_value.trace)
+                self.__name_defs[name] = name_def
 
-                return tracednumber.TracedNumber(
-                    traced_value.value, trace=self.__name_defs[name]
-                )
-            else:
-                return value
-
-        return traced_getattribute
+            return tracednumber.TracedNumber(
+                traced_value.value, trace=self.__name_defs[name]
+            )
+        else:
+            return value
 
     def prepare_tracing_of_fields(t: type):
         if is_dataclass(t):
-            t.__getattribute__ = make_traced_getattribute()
+            setattr(t, "__getattribute__", traced_getattribute)
             for fld in fields(t):
                 prepare_tracing_of_fields(fld.type)
 
