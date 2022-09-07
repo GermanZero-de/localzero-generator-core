@@ -2584,7 +2584,7 @@ viewTraceAsBlocks expanded runId allRuns t =
     in
     case t of
         Value.DataTrace { source, key, attr, value } ->
-            column
+            row
                 [ spacing sizes.small
                 , padding sizes.medium
                 , Border.solid
@@ -2597,7 +2597,7 @@ viewTraceAsBlocks expanded runId allRuns t =
                 ]
 
         Value.LiteralTrace f ->
-            column
+            el
                 [ height fill
                 , padding sizes.medium
                 , Border.solid
@@ -2605,8 +2605,7 @@ viewTraceAsBlocks expanded runId allRuns t =
                 , Border.color Styling.modalDim
                 , width fill
                 ]
-                [ el [ Element.alignRight ] <| viewValue (Float f)
-                ]
+                (el [ Element.alignRight ] <| viewValue (Float f))
 
         Value.NameTrace { name } ->
             let
@@ -2646,11 +2645,13 @@ viewTraceAsBlocks expanded runId allRuns t =
                                     [ row [ spacing sizes.small, width fill ]
                                         [ el [ Element.alignTop ] <| iconButton FeatherIcons.chevronDown (CollapseInTrace path)
                                         , column [ spacing sizes.small, width fill ]
-                                            [ Input.button []
-                                                { onPress = Just (DisplayTrace runId path leaf.value nestedTrace)
-                                                , label = nameElement
-                                                }
-                                            , el [ Element.alignRight ] <| viewValue leaf.value
+                                            [ row [ width fill, spacing sizes.small ]
+                                                [ Input.button []
+                                                    { onPress = Just (DisplayTrace runId path leaf.value nestedTrace)
+                                                    , label = nameElement
+                                                    }
+                                                , el [ Element.alignRight ] <| viewValue leaf.value
+                                                ]
                                             , viewTraceAsBlocks expanded runId allRuns nestedTrace
                                             ]
                                         ]
@@ -2668,11 +2669,13 @@ viewTraceAsBlocks expanded runId allRuns t =
                                     [ row [ spacing sizes.small, width fill ]
                                         [ el [ Element.alignTop ] <| iconButton FeatherIcons.chevronRight (ExpandInTrace path)
                                         , column [ spacing sizes.small, width fill ]
-                                            [ Input.button []
-                                                { onPress = Just (DisplayTrace runId path leaf.value nestedTrace)
-                                                , label = nameElement
-                                                }
-                                            , el [ Element.alignRight ] <| viewValue leaf.value
+                                            [ row [ width fill, spacing sizes.small ]
+                                                [ Input.button []
+                                                    { onPress = Just (DisplayTrace runId path leaf.value nestedTrace)
+                                                    , label = nameElement
+                                                    }
+                                                , el [ Element.alignRight ] <| viewValue leaf.value
+                                                ]
                                             ]
                                         ]
                                     ]
@@ -2681,7 +2684,7 @@ viewTraceAsBlocks expanded runId allRuns t =
                     nameElement
 
         Value.FactOrAssTrace { fact_or_ass, value } ->
-            column
+            row
                 [ spacing sizes.small
                 , padding sizes.medium
                 , Border.solid
