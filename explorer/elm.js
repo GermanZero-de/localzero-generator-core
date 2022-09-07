@@ -18734,6 +18734,8 @@ var $author$project$Main$DisplayTrace = F4(
 var $author$project$Main$ExpandInTrace = function (a) {
 	return {$: 4, a: a};
 };
+var $mdgriffith$elm_ui$Internal$Model$Right = 2;
+var $mdgriffith$elm_ui$Element$alignRight = $mdgriffith$elm_ui$Internal$Model$AlignX(2);
 var $mdgriffith$elm_ui$Internal$Model$Top = 0;
 var $mdgriffith$elm_ui$Element$alignTop = $mdgriffith$elm_ui$Internal$Model$AlignY(0);
 var $author$project$Value$binaryTraceToList = function (_v0) {
@@ -19217,13 +19219,18 @@ var $author$project$Main$viewTraceAsBlocks = F4(
 							$mdgriffith$elm_ui$Element$padding($author$project$Styling$sizes.e),
 							$mdgriffith$elm_ui$Element$Border$solid,
 							$mdgriffith$elm_ui$Element$Border$width(1),
-							$mdgriffith$elm_ui$Element$Border$color($author$project$Styling$modalDim)
+							$mdgriffith$elm_ui$Element$Border$color($author$project$Styling$modalDim),
+							$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
 						]),
 					_List_fromArray(
 						[
 							nameText(source + ('[' + (key + ('].' + attr)))),
+							A2(
+							$mdgriffith$elm_ui$Element$el,
+							_List_fromArray(
+								[$mdgriffith$elm_ui$Element$alignRight]),
 							$author$project$Main$viewValue(
-							$author$project$Value$Float(value))
+								$author$project$Value$Float(value)))
 						]));
 			case 5:
 				var f = t.a;
@@ -19235,12 +19242,17 @@ var $author$project$Main$viewTraceAsBlocks = F4(
 							$mdgriffith$elm_ui$Element$padding($author$project$Styling$sizes.e),
 							$mdgriffith$elm_ui$Element$Border$solid,
 							$mdgriffith$elm_ui$Element$Border$width(1),
-							$mdgriffith$elm_ui$Element$Border$color($author$project$Styling$modalDim)
+							$mdgriffith$elm_ui$Element$Border$color($author$project$Styling$modalDim),
+							$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
 						]),
 					_List_fromArray(
 						[
+							A2(
+							$mdgriffith$elm_ui$Element$el,
+							_List_fromArray(
+								[$mdgriffith$elm_ui$Element$alignRight]),
 							$author$project$Main$viewValue(
-							$author$project$Value$Float(f))
+								$author$project$Value$Float(f)))
 						]));
 			case 2:
 				var name = t.a.av;
@@ -19273,7 +19285,8 @@ var $author$project$Main$viewTraceAsBlocks = F4(
 									$mdgriffith$elm_ui$Element$padding($author$project$Styling$sizes.e),
 									$mdgriffith$elm_ui$Element$Border$solid,
 									$mdgriffith$elm_ui$Element$Border$width(1),
-									$mdgriffith$elm_ui$Element$Border$color($author$project$Styling$modalDim)
+									$mdgriffith$elm_ui$Element$Border$color($author$project$Styling$modalDim),
+									$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
 								]),
 							_List_fromArray(
 								[
@@ -19281,7 +19294,8 @@ var $author$project$Main$viewTraceAsBlocks = F4(
 									$mdgriffith$elm_ui$Element$row,
 									_List_fromArray(
 										[
-											$mdgriffith$elm_ui$Element$spacing($author$project$Styling$sizes.s)
+											$mdgriffith$elm_ui$Element$spacing($author$project$Styling$sizes.s),
+											$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
 										]),
 									_List_fromArray(
 										[
@@ -19297,7 +19311,8 @@ var $author$project$Main$viewTraceAsBlocks = F4(
 											$mdgriffith$elm_ui$Element$column,
 											_List_fromArray(
 												[
-													$mdgriffith$elm_ui$Element$spacing($author$project$Styling$sizes.s)
+													$mdgriffith$elm_ui$Element$spacing($author$project$Styling$sizes.s),
+													$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
 												]),
 											_List_fromArray(
 												[
@@ -19309,7 +19324,11 @@ var $author$project$Main$viewTraceAsBlocks = F4(
 														ap: $elm$core$Maybe$Just(
 															A4($author$project$Main$DisplayTrace, runId, path, leaf.f, nestedTrace))
 													}),
-													$author$project$Main$viewValue(leaf.f),
+													A2(
+													$mdgriffith$elm_ui$Element$el,
+													_List_fromArray(
+														[$mdgriffith$elm_ui$Element$alignRight]),
+													$author$project$Main$viewValue(leaf.f)),
 													A4($author$project$Main$viewTraceAsBlocks, expanded, runId, allRuns, nestedTrace)
 												]))
 										]))
@@ -19321,7 +19340,8 @@ var $author$project$Main$viewTraceAsBlocks = F4(
 									$mdgriffith$elm_ui$Element$padding($author$project$Styling$sizes.e),
 									$mdgriffith$elm_ui$Element$Border$solid,
 									$mdgriffith$elm_ui$Element$Border$width(1),
-									$mdgriffith$elm_ui$Element$Border$color($author$project$Styling$modalDim)
+									$mdgriffith$elm_ui$Element$Border$color($author$project$Styling$modalDim),
+									$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
 								]),
 							_List_fromArray(
 								[
@@ -19329,7 +19349,8 @@ var $author$project$Main$viewTraceAsBlocks = F4(
 									$mdgriffith$elm_ui$Element$row,
 									_List_fromArray(
 										[
-											$mdgriffith$elm_ui$Element$spacing($author$project$Styling$sizes.s)
+											$mdgriffith$elm_ui$Element$spacing($author$project$Styling$sizes.s),
+											$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
 										]),
 									_List_fromArray(
 										[
@@ -19345,7 +19366,8 @@ var $author$project$Main$viewTraceAsBlocks = F4(
 											$mdgriffith$elm_ui$Element$column,
 											_List_fromArray(
 												[
-													$mdgriffith$elm_ui$Element$spacing($author$project$Styling$sizes.s)
+													$mdgriffith$elm_ui$Element$spacing($author$project$Styling$sizes.s),
+													$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
 												]),
 											_List_fromArray(
 												[
@@ -19357,7 +19379,11 @@ var $author$project$Main$viewTraceAsBlocks = F4(
 														ap: $elm$core$Maybe$Just(
 															A4($author$project$Main$DisplayTrace, runId, path, leaf.f, nestedTrace))
 													}),
-													$author$project$Main$viewValue(leaf.f)
+													A2(
+													$mdgriffith$elm_ui$Element$el,
+													_List_fromArray(
+														[$mdgriffith$elm_ui$Element$alignRight]),
+													$author$project$Main$viewValue(leaf.f))
 												]))
 										]))
 								]));
@@ -19376,13 +19402,18 @@ var $author$project$Main$viewTraceAsBlocks = F4(
 							$mdgriffith$elm_ui$Element$padding($author$project$Styling$sizes.e),
 							$mdgriffith$elm_ui$Element$Border$solid,
 							$mdgriffith$elm_ui$Element$Border$width(1),
-							$mdgriffith$elm_ui$Element$Border$color($author$project$Styling$modalDim)
+							$mdgriffith$elm_ui$Element$Border$color($author$project$Styling$modalDim),
+							$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
 						]),
 					_List_fromArray(
 						[
 							nameText(fact_or_ass),
+							A2(
+							$mdgriffith$elm_ui$Element$el,
+							_List_fromArray(
+								[$mdgriffith$elm_ui$Element$alignRight]),
 							$author$project$Main$viewValue(
-							$author$project$Value$Float(value))
+								$author$project$Value$Float(value)))
 						]));
 			case 4:
 				var unary = t.a.ha;
@@ -19395,7 +19426,8 @@ var $author$project$Main$viewTraceAsBlocks = F4(
 							$mdgriffith$elm_ui$Element$padding($author$project$Styling$sizes.e),
 							$mdgriffith$elm_ui$Element$Border$solid,
 							$mdgriffith$elm_ui$Element$Border$width(1),
-							$mdgriffith$elm_ui$Element$Border$color($author$project$Styling$modalDim)
+							$mdgriffith$elm_ui$Element$Border$color($author$project$Styling$modalDim),
+							$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
 						]),
 					_List_fromArray(
 						[
@@ -19448,15 +19480,23 @@ var $author$project$Main$viewTraceAsBlocks = F4(
 							$mdgriffith$elm_ui$Element$padding($author$project$Styling$sizes.e),
 							$mdgriffith$elm_ui$Element$Border$solid,
 							$mdgriffith$elm_ui$Element$Border$width(1),
-							$mdgriffith$elm_ui$Element$Border$color(bgColor)
+							$mdgriffith$elm_ui$Element$Border$color(bgColor),
+							$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
 						]),
 					_List_fromArray(
 						[
+							A2(
+							$mdgriffith$elm_ui$Element$el,
+							_List_fromArray(
+								[$mdgriffith$elm_ui$Element$alignRight]),
 							$author$project$Main$viewValue(
-							$author$project$Value$Float(bTrace.f)),
+								$author$project$Value$Float(bTrace.f))),
 							A2(
 							$mdgriffith$elm_ui$Element$row,
-							_List_Nil,
+							_List_fromArray(
+								[
+									$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
+								]),
 							_List_fromArray(
 								[
 									A2(
@@ -19553,23 +19593,24 @@ var $author$project$Main$viewDisplayedTrace = F3(
 							$author$project$Main$CloseTrace(
 								$elm$core$List$length(breadcrumbs) + 1))
 						])),
+					A2(
+					$mdgriffith$elm_ui$Element$el,
+					_List_Nil,
 					A4(
-					$author$project$Main$viewTraceAsBlocks,
-					A2($elm$core$Set$insert, path, expanded),
-					runId,
-					allRuns,
-					$author$project$Value$NameTrace(
-						{
-							av: A2($elm$core$String$join, '.', path)
-						}))
+						$author$project$Main$viewTraceAsBlocks,
+						A2($elm$core$Set$insert, path, expanded),
+						runId,
+						allRuns,
+						$author$project$Value$NameTrace(
+							{
+								av: A2($elm$core$String$join, '.', path)
+							})))
 				]));
 	});
 var $author$project$Main$NewLensClicked = {$: 28};
 var $author$project$Main$NewTableClicked = {$: 29};
 var $mdgriffith$elm_ui$Internal$Model$Bottom = 2;
 var $mdgriffith$elm_ui$Element$alignBottom = $mdgriffith$elm_ui$Internal$Model$AlignY(2);
-var $mdgriffith$elm_ui$Internal$Model$Right = 2;
-var $mdgriffith$elm_ui$Element$alignRight = $mdgriffith$elm_ui$Internal$Model$AlignX(2);
 var $mdgriffith$elm_ui$Internal$Model$MoveX = function (a) {
 	return {$: 0, a: a};
 };

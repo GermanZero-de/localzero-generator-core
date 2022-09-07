@@ -2590,9 +2590,10 @@ viewTraceAsBlocks expanded runId allRuns t =
                 , Border.solid
                 , Border.width 1
                 , Border.color Styling.modalDim
+                , width fill
                 ]
                 [ nameText (source ++ "[" ++ key ++ "]." ++ attr)
-                , viewValue (Float value)
+                , el [ Element.alignRight ] <| viewValue (Float value)
                 ]
 
         Value.LiteralTrace f ->
@@ -2602,8 +2603,9 @@ viewTraceAsBlocks expanded runId allRuns t =
                 , Border.solid
                 , Border.width 1
                 , Border.color Styling.modalDim
+                , width fill
                 ]
-                [ viewValue (Float f)
+                [ el [ Element.alignRight ] <| viewValue (Float f)
                 ]
 
         Value.NameTrace { name } ->
@@ -2639,15 +2641,16 @@ viewTraceAsBlocks expanded runId allRuns t =
                                     , Border.solid
                                     , Border.width 1
                                     , Border.color Styling.modalDim
+                                    , width fill
                                     ]
-                                    [ row [ spacing sizes.small ]
+                                    [ row [ spacing sizes.small, width fill ]
                                         [ el [ Element.alignTop ] <| iconButton FeatherIcons.chevronDown (CollapseInTrace path)
-                                        , column [ spacing sizes.small ]
+                                        , column [ spacing sizes.small, width fill ]
                                             [ Input.button []
                                                 { onPress = Just (DisplayTrace runId path leaf.value nestedTrace)
                                                 , label = nameElement
                                                 }
-                                            , viewValue leaf.value
+                                            , el [ Element.alignRight ] <| viewValue leaf.value
                                             , viewTraceAsBlocks expanded runId allRuns nestedTrace
                                             ]
                                         ]
@@ -2660,15 +2663,16 @@ viewTraceAsBlocks expanded runId allRuns t =
                                     , Border.solid
                                     , Border.width 1
                                     , Border.color Styling.modalDim
+                                    , width fill
                                     ]
-                                    [ row [ spacing sizes.small ]
+                                    [ row [ spacing sizes.small, width fill ]
                                         [ el [ Element.alignTop ] <| iconButton FeatherIcons.chevronRight (ExpandInTrace path)
-                                        , column [ spacing sizes.small ]
+                                        , column [ spacing sizes.small, width fill ]
                                             [ Input.button []
                                                 { onPress = Just (DisplayTrace runId path leaf.value nestedTrace)
                                                 , label = nameElement
                                                 }
-                                            , viewValue leaf.value
+                                            , el [ Element.alignRight ] <| viewValue leaf.value
                                             ]
                                         ]
                                     ]
@@ -2683,9 +2687,10 @@ viewTraceAsBlocks expanded runId allRuns t =
                 , Border.solid
                 , Border.width 1
                 , Border.color Styling.modalDim
+                , width fill
                 ]
                 [ nameText fact_or_ass
-                , viewValue (Float value)
+                , el [ Element.alignRight ] <| viewValue (Float value)
                 ]
 
         Value.UnaryTrace { unary, a } ->
@@ -2695,6 +2700,7 @@ viewTraceAsBlocks expanded runId allRuns t =
                 , Border.solid
                 , Border.width 1
                 , Border.color Styling.modalDim
+                , width fill
                 ]
                 [ el [ Font.center, width fill ] <|
                     case unary of
@@ -2740,9 +2746,10 @@ viewTraceAsBlocks expanded runId allRuns t =
                 , Border.solid
                 , Border.width 1
                 , Border.color bgColor
+                , width fill
                 ]
-                [ viewValue (Float bTrace.value)
-                , row []
+                [ el [ Element.alignRight ] <| viewValue (Float bTrace.value)
+                , row [ width fill ]
                     [ el [ Font.center, width fill ] <| text op
                     , column [ spacing sizes.medium, padding sizes.small ]
                         (List.map
@@ -2778,7 +2785,8 @@ viewDisplayedTrace allRuns breadcrumbs { runId, path, expanded, value, trace } =
                 )
             , iconButton FeatherIcons.x (CloseTrace (List.length breadcrumbs + 1))
             ]
-        , viewTraceAsBlocks (Set.insert path expanded) runId allRuns (Value.NameTrace { name = String.join "." path })
+        , el [] <|
+            viewTraceAsBlocks (Set.insert path expanded) runId allRuns (Value.NameTrace { name = String.join "." path })
         ]
 
 
