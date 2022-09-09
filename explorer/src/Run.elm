@@ -19,7 +19,7 @@ module Run exposing
 import Dict exposing (Dict)
 import Json.Decode as Decode
 import Tree exposing (Tree)
-import Value exposing (Value)
+import Value
 
 
 {-| A Path to a value inside a run.
@@ -33,12 +33,12 @@ type alias Overrides =
 
 
 type alias Entries =
-    Dict String Value
+    Dict String Value.MaybeWithTrace
 
 
 type Run
     = Run
-        { result : Tree Value
+        { result : Tree Value.MaybeWithTrace
         , entries : Entries
         , overrides : Overrides
         , inputs : Inputs
@@ -53,7 +53,7 @@ create :
     { inputs : Inputs
     , entries : Entries
     , overrides : Overrides
-    , result : Tree Value
+    , result : Tree Value.MaybeWithTrace
     }
     -> Run
 create { inputs, entries, result, overrides } =
@@ -85,7 +85,7 @@ type OverrideHandling
     | WithoutOverrides
 
 
-getTree : OverrideHandling -> Run -> Tree Value
+getTree : OverrideHandling -> Run -> Tree Value.MaybeWithTrace
 getTree h (Run r) =
     let
         entries =
@@ -101,7 +101,7 @@ getTree h (Run r) =
                                     Tree.Leaf v
 
                                 Just o ->
-                                    Tree.Leaf (Value.Float o)
+                                    Tree.Leaf { value = Value.Float o, trace = Nothing }
                         )
                         r.entries
     in
@@ -112,4 +112,4 @@ getTree h (Run r) =
 
 entriesDecoder : Decode.Decoder Entries
 entriesDecoder =
-    Decode.dict Value.decoder
+    Decode.dict (Value.maybeWithTraceDecoder "entries")

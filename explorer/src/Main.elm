@@ -64,7 +64,7 @@ import List.Extra
 import Maybe.Extra
 import Pivot exposing (Pivot)
 import Run exposing (OverrideHandling(..), Path, Run)
-import Set
+import Set exposing (Set)
 import Storage
 import Styling
     exposing
@@ -90,7 +90,7 @@ import Styling
         )
 import Task
 import Tree exposing (Node(..), Tree)
-import Value exposing (Value(..))
+import Value exposing (Value(..), binaryTraceToList)
 import ValueSet exposing (ValueSet)
 
 
@@ -127,7 +127,7 @@ type alias ActiveOverrideEditor =
 type alias ActiveSearch =
     { runId : RunId
     , pattern : String
-    , result : Tree.Tree Value
+    , result : Tree.Tree Value.MaybeWithTrace
     }
 
 
@@ -146,7 +146,7 @@ type alias DiffId =
 
 
 type alias DiffData =
-    { diff : Tree (Diff Value)
+    { diff : Tree (Diff Value.MaybeWithTrace)
     , tolerance : Float -- 0 to 100.0
     }
 
@@ -179,6 +179,16 @@ type alias Model =
     , selectedForComparison : Maybe RunId
     , leftPaneWidth : Int
     , dragDrop : DragDrop
+    , displayedTrace : List DisplayedTrace
+    }
+
+
+type alias DisplayedTrace =
+    { runId : AllRuns.RunId
+    , path : Path
+    , value : Value
+    , trace : Value.Trace
+    , expanded : Set Path
     }
 
 
@@ -227,6 +237,7 @@ toClipboardData lens allRuns =
                     let
                         value =
                             Dict.get ( r, p ) valueSet.values
+                                |> Maybe.map .value
                                 |> Maybe.withDefault Value.Null
                     in
                     case value of
@@ -256,7 +267,9 @@ initiateCalculate maybeNdx inputs entries overrides model =
     ( { model | showModal = Just Loading }
     , Http.post
         { url = "http://localhost:4070/calculate/" ++ inputs.ags ++ "/" ++ String.fromInt inputs.year
-        , expect = Http.expectJson (GotGeneratorResult maybeNdx inputs entries overrides) (Tree.decoder Value.decoder)
+        , expect =
+            Http.expectJson (GotGeneratorResult maybeNdx inputs entries overrides)
+                (Tree.decoder (Value.maybeWithTraceDecoder "result"))
         , body = Http.jsonBody (encodeOverrides overrides)
         }
     )
@@ -293,6 +306,7 @@ init storage =
     , selectedForComparison = Nothing
     , leftPaneWidth = 600
     , dragDrop = DragDrop.init
+    , displayedTrace = []
     }
         |> update (LocalStorageLoaded storage)
 
@@ -303,8 +317,13 @@ init storage =
 
 type Msg
     = -- Running the generator
-      GotGeneratorResult (Maybe RunId) Run.Inputs Run.Entries Run.Overrides (Result Http.Error (Tree Value))
+      GotGeneratorResult (Maybe RunId) Run.Inputs Run.Entries Run.Overrides (Result Http.Error (Tree Value.MaybeWithTrace))
     | GotEntries (Maybe RunId) Run.Inputs Run.Overrides (Result Http.Error Run.Entries)
+      -- trace handling
+    | DisplayTrace RunId Path Value Value.Trace
+    | CloseTrace Int -- Number of steps to pop
+    | ExpandInTrace Path
+    | CollapseInTrace Path
       -- Override handling
     | AddOrUpdateOverrideClicked RunId String Float
     | RemoveOverrideClicked RunId String
@@ -461,11 +480,43 @@ callIfJust mb fn x =
             x
 
 
+mapHead : (a -> a) -> List a -> List a
+mapHead fn l =
+    case l of
+        [] ->
+            []
+
+        x :: xs ->
+            fn x :: xs
+
+
+mapExpanded : (Set Path -> Set Path) -> DisplayedTrace -> DisplayedTrace
+mapExpanded fn dt =
+    { dt | expanded = fn dt.expanded }
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         Noop ->
             model
+                |> withNoCmd
+
+        -- |> withNoCmd
+        DisplayTrace runId path value trace ->
+            { model | displayedTrace = { runId = runId, path = path, value = value, trace = trace, expanded = Set.empty } :: model.displayedTrace }
+                |> withNoCmd
+
+        ExpandInTrace path ->
+            { model | displayedTrace = mapHead (mapExpanded (Set.insert path)) model.displayedTrace }
+                |> withNoCmd
+
+        CollapseInTrace path ->
+            { model | displayedTrace = mapHead (mapExpanded (Set.remove path)) model.displayedTrace }
+                |> withNoCmd
+
+        CloseTrace n ->
+            { model | displayedTrace = List.drop n model.displayedTrace }
                 |> withNoCmd
 
         AddRowToLensTableClicked id num ->
@@ -541,9 +592,13 @@ update msg model =
             model
                 |> initiateCalculate maybeRunId inputs entries overrides
 
+        GotEntries _ _ _ (Err (Http.BadBody error)) ->
+            model
+                |> withErrorMessage "Failed to decode entries" error
+
         GotEntries _ _ _ (Err _) ->
             model
-                |> withNoCmd
+                |> withErrorMessage "Failed to get entries " ""
 
         GotGeneratorResult maybeRunId inputs entries overrides resultOrError ->
             case resultOrError of
@@ -1137,7 +1192,7 @@ diffRunsById idA idB tolerance model =
         ( Just runA, Just runB ) ->
             let
                 diff =
-                    Diff.diff (Value.isEqual (tolerance / 100.0))
+                    Diff.diff (Value.isValueEqual (tolerance / 100.0))
                         (Run.getTree WithOverrides runA)
                         (Run.getTree WithOverrides runB)
 
@@ -1219,7 +1274,7 @@ viewChart chartHovering shortPathLabels interestListTable =
                     (\runId ->
                         let
                             get path =
-                                case Dict.get ( runId, path ) interestListTable.values of
+                                case Dict.get ( runId, path ) interestListTable.values |> Maybe.map .value of
                                     Just (Float f) ->
                                         f
 
@@ -1471,13 +1526,13 @@ viewValueTree :
     -> Lens
     -> Run.Overrides
     -> Maybe ActiveOverrideEditor
-    -> Tree Value
+    -> Tree Value.MaybeWithTrace
     -> Element Msg
 viewValueTree runId lensId path checkIsCollapsed lens overrides activeOverrideEditor tree =
     let
-        viewLeaf : Run.Path -> String -> Value -> List (Element Msg)
-        viewLeaf pathToParent name value =
-            case value of
+        viewLeaf : Run.Path -> String -> Value.MaybeWithTrace -> List (Element Msg)
+        viewLeaf pathToParent name valueWithTrace =
+            case valueWithTrace.value of
                 Null ->
                     [ el [ width (px 16) ] Element.none
                     , el [ width fill ] (text name)
@@ -1518,6 +1573,18 @@ viewValueTree runId lensId path checkIsCollapsed lens overrides activeOverrideEd
                                 )
                     in
                     [ button
+                    , case valueWithTrace.trace of
+                        Nothing ->
+                            iconButton (size16 FeatherIcons.info) Noop
+
+                        Just t ->
+                            iconButton (size16 FeatherIcons.info)
+                                (DisplayTrace
+                                    runId
+                                    thisPath
+                                    valueWithTrace.value
+                                    t
+                                )
                     , el
                         ([ width fill
                          ]
@@ -1543,33 +1610,33 @@ buttons l =
     row [ Element.spacingXY sizes.medium 0 ] l
 
 
-viewDiffTree : Explorable.Id -> CollapseStatus -> Tree (Diff.Diff Value) -> Element Msg
+viewDiffTree : Explorable.Id -> CollapseStatus -> Tree (Diff.Diff Value.MaybeWithTrace) -> Element Msg
 viewDiffTree id collapseStatus tree =
     let
         missingElement =
             el (Font.alignRight :: fonts.explorerValues) <|
                 text "∅"
 
-        viewLeaf : Run.Path -> String -> Diff.Diff Value -> List (Element Msg)
+        viewLeaf : Run.Path -> String -> Diff.Diff Value.MaybeWithTrace -> List (Element Msg)
         viewLeaf pathToParent name leaf =
             -- TODO: Make the diff display something useful in more cases
             case leaf of
                 LeftOnly v ->
                     [ el [ width fill ] (text name)
-                    , viewValue v
+                    , viewValue v.value
                     , missingElement
                     ]
 
                 Unequal a b ->
                     [ el [ width fill ] (text name)
-                    , viewValue a
-                    , viewValue b
+                    , viewValue a.value
+                    , viewValue b.value
                     ]
 
                 RightOnly v ->
                     [ el [ width fill ] (text name)
                     , missingElement
-                    , viewValue v
+                    , viewValue v.value
                     ]
     in
     viewTree
@@ -1935,18 +2002,20 @@ viewValueSetAsUserDefinedTable lensId dragDrop td valueSet =
                                         -- Making the compiler happy
                                         cellElement [ Font.alignRight ] (text "INTERNAL ERROR")
 
-                                    Just (Float f) ->
-                                        cellElement [ Font.alignRight ] (text (formatGermanNumber f))
+                                    Just valueAndTrace ->
+                                        case valueAndTrace.value of
+                                            Float f ->
+                                                cellElement [ Font.alignRight ] (text (formatGermanNumber f))
 
-                                    Just Null ->
-                                        cellElement [ Font.alignRight, Font.bold ] (text "null")
+                                            Null ->
+                                                cellElement [ Font.alignRight, Font.bold ] (text "null")
 
-                                    Just (String s) ->
-                                        cellElement
-                                            [ Font.alignRight
-                                            , Font.family [ Font.monospace ]
-                                            ]
-                                            (text s)
+                                            String s ->
+                                                cellElement
+                                                    [ Font.alignRight
+                                                    , Font.family [ Font.monospace ]
+                                                    ]
+                                                    (text s)
             in
             case td.editing of
                 Nothing ->
@@ -2221,7 +2290,7 @@ viewValueSetAsClassicTable shortPathLabels lensId valueSet =
                             \path ->
                                 let
                                     value =
-                                        case Dict.get ( runId, path ) valueSet.values of
+                                        case Dict.get ( runId, path ) valueSet.values |> Maybe.map .value of
                                             Just (Float f) ->
                                                 el (Font.alignRight :: fonts.explorerValues) <|
                                                     text (formatGermanNumber f)
@@ -2413,6 +2482,317 @@ viewLens id dragDrop editingActiveLensLabel isActive lens chartHovering allRuns 
         ]
 
 
+viewRunsAndInterestLists : Model -> Element Msg
+viewRunsAndInterestLists model =
+    let
+        interestLists =
+            Pivot.indexAbsolute model.lenses
+                |> Pivot.toList
+                |> List.map
+                    (\( pos, il ) ->
+                        let
+                            activePos =
+                                Pivot.lengthL model.lenses
+                        in
+                        viewLens pos
+                            model.dragDrop
+                            model.editingActiveLensLabel
+                            (pos == activePos)
+                            il
+                            model.chartHovering
+                            model.runs
+                    )
+    in
+    row
+        [ width fill
+        , height (minimum 0 fill)
+        , spacing sizes.large
+        ]
+        [ viewRunsAndComparisons model
+        , el
+            [ width (px 2)
+            , Background.color black
+            , height fill
+            ]
+            Element.none
+        , el
+            [ width fill
+            , height (minimum 0 fill)
+            , Element.inFront
+                (row
+                    [ spacing 10
+                    , Element.alignBottom
+                    , Element.moveUp 10
+                    , Element.alignRight
+                    , padding 0
+                    ]
+                    [ floatingActionButton FeatherIcons.plus NewLensClicked
+                    , floatingActionButton FeatherIcons.grid NewTableClicked
+                    ]
+                )
+            ]
+            (column
+                [ width fill
+                , height (minimum 0 fill)
+                , scrollbarY
+                , spacing sizes.medium
+                , padding sizes.medium
+                ]
+                interestLists
+            )
+        ]
+
+
+level : Value.Trace -> Int
+level tr =
+    case tr of
+        Value.LiteralTrace _ ->
+            0
+
+        Value.NameTrace _ ->
+            0
+
+        Value.DataTrace _ ->
+            0
+
+        Value.FactOrAssTrace _ ->
+            0
+
+        Value.UnaryTrace _ ->
+            1
+
+        Value.BinaryTrace { binary } ->
+            case binary of
+                Value.Times ->
+                    2
+
+                Value.Divide ->
+                    2
+
+                Value.Plus ->
+                    3
+
+                Value.Minus ->
+                    3
+
+
+viewTraceAsBlocks : Set Path -> RunId -> AllRuns -> Value.Trace -> Element Msg
+viewTraceAsBlocks expanded runId allRuns t =
+    let
+        nameText s =
+            el [ Font.size Styling.sizes.tableFontSize ] <| text s
+    in
+    case t of
+        Value.DataTrace { source, key, attr, value } ->
+            row
+                [ spacing sizes.small
+                , padding sizes.medium
+                , Border.solid
+                , Border.width 1
+                , Border.color Styling.modalDim
+                , width fill
+                ]
+                [ nameText (source ++ "[" ++ key ++ "]." ++ attr)
+                , el [ Element.alignRight ] <| viewValue (Float value)
+                ]
+
+        Value.LiteralTrace f ->
+            el
+                [ height fill
+                , padding sizes.medium
+                , Border.solid
+                , Border.width 1
+                , Border.color Styling.modalDim
+                , width fill
+                ]
+                (el [ Element.alignRight ] <| viewValue (Float f))
+
+        Value.NameTrace { name } ->
+            let
+                path =
+                    String.split "." name
+
+                shorterPath =
+                    String.join "."
+                        -- We truncate result in the display
+                        (case path of
+                            "result" :: rest ->
+                                rest
+
+                            _ ->
+                                path
+                        )
+
+                nameElement =
+                    nameText shorterPath
+            in
+            case AllRuns.getValue Run.WithOverrides runId path allRuns of
+                Just leaf ->
+                    case leaf.trace of
+                        Nothing ->
+                            nameElement
+
+                        Just nestedTrace ->
+                            if Set.member path expanded then
+                                column
+                                    [ spacing sizes.small
+                                    , padding sizes.medium
+                                    , Border.solid
+                                    , Border.width 1
+                                    , Border.color Styling.modalDim
+                                    , width fill
+                                    ]
+                                    [ row [ spacing sizes.small, width fill ]
+                                        [ el [ Element.alignTop ] <| iconButton FeatherIcons.chevronDown (CollapseInTrace path)
+                                        , column [ spacing sizes.small, width fill ]
+                                            [ row [ width fill, spacing sizes.small ]
+                                                [ Input.button []
+                                                    { onPress = Just (DisplayTrace runId path leaf.value nestedTrace)
+                                                    , label = nameElement
+                                                    }
+                                                , el [ Element.alignRight ] <| viewValue leaf.value
+                                                ]
+                                            , viewTraceAsBlocks expanded runId allRuns nestedTrace
+                                            ]
+                                        ]
+                                    ]
+
+                            else
+                                column
+                                    [ spacing sizes.small
+                                    , padding sizes.medium
+                                    , Border.solid
+                                    , Border.width 1
+                                    , Border.color Styling.modalDim
+                                    , width fill
+                                    ]
+                                    [ row [ spacing sizes.small, width fill ]
+                                        [ el [ Element.alignTop ] <| iconButton FeatherIcons.chevronRight (ExpandInTrace path)
+                                        , column [ spacing sizes.small, width fill ]
+                                            [ row [ width fill, spacing sizes.small ]
+                                                [ Input.button []
+                                                    { onPress = Just (DisplayTrace runId path leaf.value nestedTrace)
+                                                    , label = nameElement
+                                                    }
+                                                , el [ Element.alignRight ] <| viewValue leaf.value
+                                                ]
+                                            ]
+                                        ]
+                                    ]
+
+                Nothing ->
+                    nameElement
+
+        Value.FactOrAssTrace { fact_or_ass, value } ->
+            row
+                [ spacing sizes.small
+                , padding sizes.medium
+                , Border.solid
+                , Border.width 1
+                , Border.color Styling.modalDim
+                , width fill
+                ]
+                [ nameText fact_or_ass
+                , el [ Element.alignRight ] <| viewValue (Float value)
+                ]
+
+        Value.UnaryTrace { unary, a } ->
+            row
+                [ spacing sizes.small
+                , padding sizes.medium
+                , Border.solid
+                , Border.width 1
+                , Border.color Styling.modalDim
+                , width fill
+                ]
+                [ el [ Font.center, width fill ] <|
+                    case unary of
+                        Value.UnaryMinus ->
+                            text "-"
+
+                        Value.UnaryPlus ->
+                            text "+"
+                , viewTraceAsBlocks expanded runId allRuns a
+                ]
+
+        Value.BinaryTrace bTrace ->
+            let
+                ( op, bgColor ) =
+                    case bTrace.binary of
+                        Value.Plus ->
+                            ( "+"
+                            , Element.rgb255 194 255 153
+                              -- mint green
+                            )
+
+                        Value.Minus ->
+                            ( "-"
+                            , Element.rgb255 255 153 153
+                              -- salmon pink
+                            )
+
+                        Value.Times ->
+                            ( "*"
+                            , Element.rgb255 153 252 255
+                              -- electric blue
+                            )
+
+                        Value.Divide ->
+                            ( "/"
+                            , Element.rgb255 255 236 173
+                              -- medium champagne
+                            )
+            in
+            column
+                [ spacing sizes.small
+                , padding sizes.medium
+                , Border.solid
+                , Border.width 1
+                , Border.color bgColor
+                , width fill
+                ]
+                [ el [ Element.alignRight ] <| viewValue (Float bTrace.value)
+                , row [ width fill ]
+                    [ el [ Font.center, width fill ] <| text op
+                    , column [ spacing sizes.medium, padding sizes.small ]
+                        (List.map
+                            (viewTraceAsBlocks expanded runId allRuns)
+                            (Value.binaryTraceToList bTrace)
+                        )
+                    ]
+                ]
+
+
+viewDisplayedTrace : AllRuns -> List Path -> DisplayedTrace -> Element Msg
+viewDisplayedTrace allRuns breadcrumbs { runId, path, expanded, value, trace } =
+    let
+        breadcrumbsWithCloseActions =
+            breadcrumbs
+                |> List.reverse
+                |> List.indexedMap (\n b -> ( b, CloseTrace (n + 1) ))
+                |> List.reverse
+    in
+    column
+        [ width fill
+        , height fill
+        , padding sizes.large
+        ]
+        [ row [ width fill, padding sizes.medium, spacing sizes.small ]
+            [ row [ width fill, padding sizes.medium, spacing sizes.small, Font.size 12 ]
+                (List.intersperse (icon (FeatherIcons.withSize 12 <| FeatherIcons.chevronRight)) <|
+                    List.map
+                        (\( b, a ) ->
+                            Input.button [] { onPress = Just a, label = text (String.join "." b) }
+                        )
+                        breadcrumbsWithCloseActions
+                )
+            , iconButton FeatherIcons.x (CloseTrace (List.length breadcrumbs + 1))
+            ]
+        , el [] <|
+            viewTraceAsBlocks (Set.insert path expanded) runId allRuns (Value.NameTrace { name = String.join "." path })
+        ]
+
+
 viewModel : Model -> Element Msg
 viewModel model =
     let
@@ -2432,68 +2812,18 @@ viewModel model =
                     , iconButton FeatherIcons.upload UploadClicked
                     ]
                 ]
-
-        interestLists =
-            Pivot.indexAbsolute model.lenses
-                |> Pivot.toList
-                |> List.map
-                    (\( pos, il ) ->
-                        let
-                            activePos =
-                                Pivot.lengthL model.lenses
-                        in
-                        viewLens pos
-                            model.dragDrop
-                            model.editingActiveLensLabel
-                            (pos == activePos)
-                            il
-                            model.chartHovering
-                            model.runs
-                    )
     in
     column
         [ width fill
         , height (minimum 0 fill)
         ]
         [ topBar
-        , row
-            [ width fill
-            , height (minimum 0 fill)
-            , spacing sizes.large
-            ]
-            [ viewRunsAndComparisons model
-            , el
-                [ width (px 2)
-                , Background.color black
-                , height fill
-                ]
-                Element.none
-            , el
-                [ width fill
-                , height (minimum 0 fill)
-                , Element.inFront
-                    (row
-                        [ spacing 10
-                        , Element.alignBottom
-                        , Element.moveUp 10
-                        , Element.alignRight
-                        , padding 0
-                        ]
-                        [ floatingActionButton FeatherIcons.plus NewLensClicked
-                        , floatingActionButton FeatherIcons.grid NewTableClicked
-                        ]
-                    )
-                ]
-                (column
-                    [ width fill
-                    , height (minimum 0 fill)
-                    , scrollbarY
-                    , spacing sizes.medium
-                    , padding sizes.medium
-                    ]
-                    interestLists
-                )
-            ]
+        , case model.displayedTrace of
+            [] ->
+                viewRunsAndInterestLists model
+
+            dt :: dts ->
+                viewDisplayedTrace model.runs (List.map .path dts) dt
         ]
 
 
@@ -2535,7 +2865,7 @@ viewModalDialogBox title content =
                 , el
                     [ Background.color white
                     , width fill
-                    , height fill
+                    , height (minimum 0 fill)
                     , padding sizes.medium
                     ]
                     content

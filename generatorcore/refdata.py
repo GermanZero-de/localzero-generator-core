@@ -259,7 +259,10 @@ class Row(Generic[KeyT]):
         """Access an integer attribute."""
         f = self.float(attr)
         if f.is_integer():
-            return int(f)
+            if isinstance(f, float):  # type: ignore When we monkey patch this for tracing it might actually not be a float
+                return int(f)
+            else:
+                return f
         else:
             raise ExpectedIntGotFloat(
                 key_column=self.key_column,

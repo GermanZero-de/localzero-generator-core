@@ -87,7 +87,7 @@ size (AllRuns a) =
     Dict.size a.runs
 
 
-getValue : Run.OverrideHandling -> RunId -> Path -> AllRuns -> Maybe Value
+getValue : Run.OverrideHandling -> RunId -> Path -> AllRuns -> Maybe Value.MaybeWithTrace
 getValue handling ndx path (AllRuns a) =
     Dict.get ndx a.runs
         |> Maybe.andThen

@@ -34,7 +34,6 @@ from . import industry2030
 from .lulucf2030 import lulucf2030_pyr
 
 from .bisko import Bisko
-from generatorcore import bisko
 
 
 def _convert_item(v: object) -> object:
@@ -93,7 +92,7 @@ class Result:
     a30: agri2030.A30
 
     m183X: methodology183x.M183X
-    bisko: bisko.Bisko
+    bisko: Bisko
 
     def result_dict(self):
         return dataclass_to_result_dict(self)

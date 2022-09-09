@@ -15,7 +15,7 @@ import Value exposing (Value(..))
 type alias ValueSet =
     { paths : List Run.Path
     , runs : List RunId
-    , values : Dict ( RunId, Run.Path ) Value
+    , values : Dict ( RunId, Run.Path ) Value.MaybeWithTrace
     }
 
 
@@ -49,7 +49,7 @@ create lens allRuns =
                         case AllRuns.get runId allRuns of
                             Nothing ->
                                 -- TODO: Represent missing run
-                                ( ( runId, path ), String "" )
+                                ( ( runId, path ), { value = String "", trace = Nothing } )
 
                             Just run ->
                                 case
@@ -57,10 +57,10 @@ create lens allRuns =
                                         |> Tree.get path
                                 of
                                     Nothing ->
-                                        ( ( runId, path ), String "" )
+                                        ( ( runId, path ), { value = String "", trace = Nothing } )
 
                                     Just (Tree.Tree _) ->
-                                        ( ( runId, path ), String "TREE" )
+                                        ( ( runId, path ), { value = String "TREE", trace = Nothing} )
 
                                     Just (Tree.Leaf v) ->
                                         ( ( runId, path ), v )
