@@ -1,6 +1,6 @@
 # pyright: strict
 
-from dataclasses import dataclass
+from dataclasses import InitVar, dataclass
 
 from ..utils import div
 
@@ -12,8 +12,8 @@ class Energy:
 
 @dataclass(kw_only=True)
 class EnergyWithPercentage(Energy):
-    pct_energy: float
+    pct_energy: float = 0
+    total_energy: InitVar[float]
 
-    @classmethod
-    def calc(cls, energy: float, total_energy: float) -> "EnergyWithPercentage":
-        return cls(energy=energy, pct_energy=div(energy, total_energy))
+    def __post_init__(self, total_energy: float):
+        self.pct_energy = div(self.energy, total_energy)

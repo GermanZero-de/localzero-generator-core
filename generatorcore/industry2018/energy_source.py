@@ -3,28 +3,26 @@
 from dataclasses import dataclass
 
 from ..inputs import Inputs
-from ..commonDataclasses.energy import Energy
-
-from .supply_classes import EnergySource
+from ..commonDataclasses.energy import Energy, EnergyWithPercentage
 
 
 @dataclass(kw_only=True)
 class EnergySupply:
-    s: EnergySource
+    s: EnergyWithPercentage
     s_fossil: Energy
-    s_fossil_gas: EnergySource
-    s_fossil_coal: EnergySource
-    s_fossil_diesel: EnergySource
-    s_fossil_fueloil: EnergySource
-    s_fossil_lpg: EnergySource
-    s_fossil_opetpro: EnergySource
-    s_fossil_ofossil: EnergySource
+    s_fossil_gas: EnergyWithPercentage
+    s_fossil_coal: EnergyWithPercentage
+    s_fossil_diesel: EnergyWithPercentage
+    s_fossil_fueloil: EnergyWithPercentage
+    s_fossil_lpg: EnergyWithPercentage
+    s_fossil_opetpro: EnergyWithPercentage
+    s_fossil_ofossil: EnergyWithPercentage
     s_renew: Energy
-    s_renew_biomass: EnergySource
-    s_renew_heatnet: EnergySource
-    s_renew_heatpump: EnergySource
-    s_renew_solarth: EnergySource
-    s_renew_elec: EnergySource
+    s_renew_biomass: EnergyWithPercentage
+    s_renew_heatnet: EnergyWithPercentage
+    s_renew_heatpump: EnergyWithPercentage
+    s_renew_solarth: EnergyWithPercentage
+    s_renew_elec: EnergyWithPercentage
 
 
 def calc_supply(inputs: Inputs) -> EnergySupply:
@@ -33,25 +31,25 @@ def calc_supply(inputs: Inputs) -> EnergySupply:
 
     total_energy_supply = entries.i_energy_total
 
-    s_fossil_gas = EnergySource(
+    s_fossil_gas = EnergyWithPercentage(
         energy=entries.i_gas_fec, total_energy=total_energy_supply
     )
-    s_fossil_coal = EnergySource(
+    s_fossil_coal = EnergyWithPercentage(
         energy=entries.i_coal_fec, total_energy=total_energy_supply
     )
-    s_fossil_diesel = EnergySource(
+    s_fossil_diesel = EnergyWithPercentage(
         energy=entries.i_diesel_fec, total_energy=total_energy_supply
     )
-    s_fossil_fueloil = EnergySource(
+    s_fossil_fueloil = EnergyWithPercentage(
         energy=entries.i_fueloil_fec, total_energy=total_energy_supply
     )
-    s_fossil_lpg = EnergySource(
+    s_fossil_lpg = EnergyWithPercentage(
         energy=entries.i_lpg_fec, total_energy=total_energy_supply
     )
-    s_fossil_opetpro = EnergySource(
+    s_fossil_opetpro = EnergyWithPercentage(
         energy=entries.i_opetpro_fec, total_energy=total_energy_supply
     )
-    s_fossil_ofossil = EnergySource(
+    s_fossil_ofossil = EnergyWithPercentage(
         energy=entries.i_ofossil_fec, total_energy=total_energy_supply
     )
 
@@ -65,21 +63,21 @@ def calc_supply(inputs: Inputs) -> EnergySupply:
         + s_fossil_ofossil.energy
     )
 
-    s_renew_biomass = EnergySource(
+    s_renew_biomass = EnergyWithPercentage(
         energy=entries.i_biomass_fec, total_energy=total_energy_supply
     )
-    s_renew_heatnet = EnergySource(
+    s_renew_heatnet = EnergyWithPercentage(
         energy=entries.i_heatnet_fec, total_energy=total_energy_supply
     )
-    s_renew_heatpump = EnergySource(
+    s_renew_heatpump = EnergyWithPercentage(
         energy=entries.i_orenew_fec * fact("Fact_R_S_ratio_heatpump_to_orenew_2018"),
         total_energy=total_energy_supply,
     )
-    s_renew_solarth = EnergySource(
+    s_renew_solarth = EnergyWithPercentage(
         energy=entries.i_orenew_fec * fact("Fact_R_S_ratio_solarth_to_orenew_2018"),
         total_energy=total_energy_supply,
     )
-    s_renew_elec = EnergySource(
+    s_renew_elec = EnergyWithPercentage(
         energy=entries.i_elec_fec, total_energy=total_energy_supply
     )
 
@@ -91,7 +89,9 @@ def calc_supply(inputs: Inputs) -> EnergySupply:
         + s_renew_elec.energy
     )
 
-    s = EnergySource(energy=entries.i_energy_total, total_energy=entries.i_energy_total)
+    s = EnergyWithPercentage(
+        energy=entries.i_energy_total, total_energy=entries.i_energy_total
+    )
 
     return EnergySupply(
         s=s,

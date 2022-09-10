@@ -200,10 +200,10 @@ def calc_production(
 
     p_operation_elec_heatpump = Energy(energy=0)
     p_operation = Energy(energy=total_energy)
-    p_operation_elec_elcon = EnergyWithPercentage.calc(
+    p_operation_elec_elcon = EnergyWithPercentage(
         energy=s_elec_energy, total_energy=p_operation.energy
     )
-    p_operation_vehicles = EnergyWithPercentage.calc(
+    p_operation_vehicles = EnergyWithPercentage(
         energy=s_petrol_energy + s_diesel_energy, total_energy=p_operation.energy
     )
     p_operation_heat = OperationHeatEnergy.calc(

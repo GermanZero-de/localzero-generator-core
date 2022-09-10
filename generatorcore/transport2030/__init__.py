@@ -229,7 +229,6 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
         + s_emethan.energy
     )
 
-    # --- Populate result ---
     return T30(
         air_dmstc=air_dmstc,
         air_inter=air_inter,
