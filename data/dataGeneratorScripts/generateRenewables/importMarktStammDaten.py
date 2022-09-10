@@ -1,10 +1,9 @@
 from collections import defaultdict
-import csv
-from functools import reduce
 from itertools import groupby
+from disjoint_set import DisjointSet
+import csv
 import json
 import sqlite3
-from disjoint_set import DisjointSet
 
 # Diese AGS werden ignoriert, weil wir zurzeit für gemeindefreie Gebiete keine Daten aufbereiten.
 IGNORE = {
