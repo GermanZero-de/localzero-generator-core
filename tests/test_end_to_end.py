@@ -1,13 +1,15 @@
 """This is a simplistic regression test framework for the generator."""
+
 # pyright: strict
+
 from dataclasses import asdict
+from typing import Any, Literal
 import json
 import os
 import pytest
-from typing import Any, Literal
 
-from generatorcore.generator import calculate_with_default_inputs
 from generatorcore import refdatatools, diffs, makeentries
+from generatorcore.generator import calculate_with_default_inputs
 from generatorcore.refdata import RefData
 
 PUBLIC_OR_PROP = Literal["public", "proprietary"]
