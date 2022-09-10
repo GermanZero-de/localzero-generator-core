@@ -6,6 +6,7 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/traffic.html
 # pyright: strict
 
 from ..inputs import Inputs
+from ..commonDataclasses.energy import Energy
 
 from .air import Air
 from .road import Road
@@ -13,7 +14,6 @@ from .rail import Rail
 from .ship import Ship
 from .other import Other
 from .transport import Transport
-from .energy_sum import EnergySum
 from .t18 import T18
 
 
@@ -64,18 +64,18 @@ def calc(inputs: Inputs) -> T18:
     )
 
     # ----------------------------------------------------
-    s_biodiesel = EnergySum(energy=t.demand_biodiesel)
-    s_bioethanol = EnergySum(energy=t.demand_bioethanol)
-    s_biogas = EnergySum(energy=t.demand_biogas)
-    s_diesel = EnergySum(energy=t.demand_diesel)
-    s_elec = EnergySum(energy=t.demand_electricity)
-    s_fueloil = EnergySum(energy=ship_inter.demand_fueloil)
-    s_gas = EnergySum(energy=t.demand_gas)
-    s_jetfuel = EnergySum(energy=t.demand_jetfuel)
-    s_lpg = EnergySum(energy=t.demand_lpg)
-    s_petrol = EnergySum(energy=t.demand_petrol)
+    s_biodiesel = Energy(energy=t.demand_biodiesel)
+    s_bioethanol = Energy(energy=t.demand_bioethanol)
+    s_biogas = Energy(energy=t.demand_biogas)
+    s_diesel = Energy(energy=t.demand_diesel)
+    s_elec = Energy(energy=t.demand_electricity)
+    s_fueloil = Energy(energy=ship_inter.demand_fueloil)
+    s_gas = Energy(energy=t.demand_gas)
+    s_jetfuel = Energy(energy=t.demand_jetfuel)
+    s_lpg = Energy(energy=t.demand_lpg)
+    s_petrol = Energy(energy=t.demand_petrol)
 
-    s = EnergySum(
+    s = Energy(
         energy=s_biodiesel.energy
         + s_bioethanol.energy
         + s_biogas.energy

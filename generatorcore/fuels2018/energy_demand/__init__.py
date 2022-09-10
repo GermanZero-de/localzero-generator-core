@@ -4,8 +4,7 @@ from dataclasses import dataclass
 
 from ...inputs import Inputs
 from ...transport2018.t18 import T18
-
-from .energyDemand import EnergyDemand
+from ...commonDataclasses.energy import Energy as EnergyDemand
 
 
 @dataclass(kw_only=True)

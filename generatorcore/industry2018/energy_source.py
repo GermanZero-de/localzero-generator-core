@@ -3,14 +3,15 @@
 from dataclasses import dataclass
 
 from ..inputs import Inputs
+from ..commonDataclasses.energy import Energy
 
-from .supply_classes import EnergySum, EnergySource
+from .supply_classes import EnergySource
 
 
 @dataclass(kw_only=True)
 class EnergySupply:
     s: EnergySource
-    s_fossil: EnergySum
+    s_fossil: Energy
     s_fossil_gas: EnergySource
     s_fossil_coal: EnergySource
     s_fossil_diesel: EnergySource
@@ -18,7 +19,7 @@ class EnergySupply:
     s_fossil_lpg: EnergySource
     s_fossil_opetpro: EnergySource
     s_fossil_ofossil: EnergySource
-    s_renew: EnergySum
+    s_renew: Energy
     s_renew_biomass: EnergySource
     s_renew_heatnet: EnergySource
     s_renew_heatpump: EnergySource
@@ -54,7 +55,7 @@ def calc_supply(inputs: Inputs) -> EnergySupply:
         energy=entries.i_ofossil_fec, total_energy=total_energy_supply
     )
 
-    s_fossil = EnergySum(
+    s_fossil = Energy(
         energy=s_fossil_gas.energy
         + s_fossil_coal.energy
         + s_fossil_diesel.energy
@@ -82,7 +83,7 @@ def calc_supply(inputs: Inputs) -> EnergySupply:
         energy=entries.i_elec_fec, total_energy=total_energy_supply
     )
 
-    s_renew = EnergySum(
+    s_renew = Energy(
         energy=s_renew_biomass.energy
         + s_renew_heatnet.energy
         + s_renew_heatpump.energy

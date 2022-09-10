@@ -7,6 +7,7 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/traffic.html
 
 from ..inputs import Inputs
 from ..transport2018.t18 import T18
+from ..commonDataclasses.energy import Energy
 
 from .investmentaction import InvestmentAction
 from .air import calc_air_domestic, calc_air_international, Air
@@ -25,7 +26,7 @@ from .rail import Rail, RailGoods, RailPeople, RailPeopleMetroActionInfra, RailP
 from .ship import Ship, ShipDomestic, ShipInternational, ShipDomesticActionInfra
 from .other import Other, OtherCycle, OtherFoot
 from .t30 import T30
-from .dataclasses import EnergySum, GPlanning, G, T
+from .dataclasses import GPlanning, G, T
 
 
 def calc(inputs: Inputs, *, t18: T18) -> T30:
@@ -205,21 +206,21 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
         other=other,
         g=g,
     )
-    s_petrol = EnergySum(energy=t.transport.demand_epetrol)
-    s_jetfuel = EnergySum(energy=t.transport.demand_ejetfuel)
-    s_diesel = EnergySum(energy=t.transport.demand_ediesel)
-    s_elec = EnergySum(energy=t.transport.demand_electricity)
-    s_hydrogen = EnergySum(energy=t.transport.demand_hydrogen)
+    s_petrol = Energy(energy=t.transport.demand_epetrol)
+    s_jetfuel = Energy(energy=t.transport.demand_ejetfuel)
+    s_diesel = Energy(energy=t.transport.demand_ediesel)
+    s_elec = Energy(energy=t.transport.demand_electricity)
+    s_hydrogen = Energy(energy=t.transport.demand_hydrogen)
 
-    s_emethan = EnergySum(energy=0)
-    s_fueloil = EnergySum(energy=0)
-    s_lpg = EnergySum(energy=0)
-    s_gas = EnergySum(energy=0)
-    s_biogas = EnergySum(energy=0)
-    s_bioethanol = EnergySum(energy=0)
-    s_biodiesel = EnergySum(energy=0)
+    s_emethan = Energy(energy=0)
+    s_fueloil = Energy(energy=0)
+    s_lpg = Energy(energy=0)
+    s_gas = Energy(energy=0)
+    s_biogas = Energy(energy=0)
+    s_bioethanol = Energy(energy=0)
+    s_biodiesel = Energy(energy=0)
 
-    s = EnergySum(
+    s = Energy(
         energy=s_petrol.energy
         + s_jetfuel.energy
         + s_diesel.energy

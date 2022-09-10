@@ -5,12 +5,11 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/fuel.html
 
 # pyright: strict
 
-# from generatorcore.agri2018 import energy_demand
 from ..inputs import Inputs
 from ..transport2018.t18 import T18
+from ..commonDataclasses.co2eEmissions import CO2eEmissions
 
 from .f18 import F18
-from .f import F
 
 from . import energy_demand
 from . import energy_production
@@ -30,7 +29,7 @@ def calc(inputs: Inputs, *, t18: T18) -> F18:
     demand = energy_demand.calc_demand(inputs, t18)
     production = energy_production.calc_production(inputs, t18)
 
-    f = F(
+    f = CO2eEmissions(
         CO2e_combustion_based=production.total.CO2e_combustion_based,
         CO2e_production_based=production.total.CO2e_production_based,
         CO2e_total=production.total.CO2e_total,

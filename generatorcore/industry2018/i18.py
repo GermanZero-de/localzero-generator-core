@@ -2,7 +2,9 @@
 
 from dataclasses import dataclass
 
-from .supply_classes import EnergySum, EnergySource
+from ..commonDataclasses.energy import Energy
+
+from .supply_classes import EnergySource
 from .production_branches import (
     ExtraEmission,
     ProductionSubBranch,
@@ -43,7 +45,7 @@ class I18:
     p_other_2efgh: ExtraEmission
 
     s: EnergySource
-    s_fossil: EnergySum
+    s_fossil: Energy
     s_fossil_gas: EnergySource
     s_fossil_coal: EnergySource
     s_fossil_diesel: EnergySource
@@ -51,7 +53,7 @@ class I18:
     s_fossil_lpg: EnergySource
     s_fossil_opetpro: EnergySource
     s_fossil_ofossil: EnergySource
-    s_renew: EnergySum
+    s_renew: Energy
     s_renew_biomass: EnergySource
     s_renew_heatnet: EnergySource
     s_renew_heatpump: EnergySource

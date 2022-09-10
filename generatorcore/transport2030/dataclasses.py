@@ -73,12 +73,6 @@ class GPlanning:
 
 
 @dataclass(kw_only=True)
-class EnergySum:
-    # Used by s, s_diesel, s_emethan, s_jetfuel, s_petrol, s_fueloil, s_lpg, s_gas, s_biogas, s_bioethanol, s_biodiesel, s_elec, s_hydrogen
-    energy: float
-
-
-@dataclass(kw_only=True)
 class G:
     # Used by g
     cost_wage: float

@@ -6,11 +6,6 @@ from ..utils import div
 
 
 @dataclass(kw_only=True)
-class EnergySum:
-    energy: float
-
-
-@dataclass(kw_only=True)
 class EnergySource:
     energy: float
     pct_energy: float = 0

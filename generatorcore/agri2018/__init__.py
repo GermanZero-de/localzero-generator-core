@@ -8,8 +8,8 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/agriculture.html
 from ..inputs import Inputs
 from ..lulucf2018.l18 import L18
 from ..business2018.b18 import B18
+from ..commonDataclasses.co2eEmissions import CO2eEmissions
 
-from .co2eEmissions import CO2eEmissions
 from .a18 import A18
 from . import energy_demand
 from . import energy_source

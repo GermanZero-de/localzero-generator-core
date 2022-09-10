@@ -2,14 +2,16 @@
 
 from dataclasses import dataclass
 
-from ...utils import div
+from ..utils import div
 
-from .energy import Energy
+
+@dataclass(kw_only=True)
+class Energy:
+    energy: float
 
 
 @dataclass(kw_only=True)
 class EnergyWithPercentage(Energy):
-    # Used by p_operation_elec_elcon, p_operation_vehicles
     pct_energy: float
 
     @classmethod

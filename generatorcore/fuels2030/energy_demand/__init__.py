@@ -7,7 +7,7 @@ from ...business2030.b30 import B30
 from ...industry2030.i30 import I30
 from ...residences2030.r30 import R30
 from ...transport2030.t30 import T30
-from ...fuels2018.energy_demand.energyDemand import EnergyDemand
+from ...commonDataclasses.energy import Energy as EnergyDemand
 
 from ..energy_production.newEFuelProduction import NewEFuelProduction
 
