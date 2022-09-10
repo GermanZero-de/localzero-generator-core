@@ -1,4 +1,5 @@
 # pyright: strict
+
 from dataclasses import dataclass
 
 from .electricity2030_core import (
