@@ -2,15 +2,14 @@
 
 from dataclasses import dataclass
 
-from .dataclasses import (
-    EnergyDemand,
-    EFuelProduction,
-    FuelWithoutDirectReplacement,
-    NewEFuelProduction,
-    EFuels,
-    F,
-    TotalEFuelProduction,
-)
+from ..fuels2018.energy_demand.energyDemand import EnergyDemand
+
+from .energy_production.eFuelProduction import EFuelProduction
+from .energy_production.fuelWithoutDirectReplacement import FuelWithoutDirectReplacement
+from .energy_production.newEFuelProduction import NewEFuelProduction
+from .energy_production.eFuels import EFuels
+from .energy_production.totalEFuelProduction import TotalEFuelProduction
+from .f import F
 
 
 @dataclass(kw_only=True)
