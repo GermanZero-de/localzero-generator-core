@@ -4,14 +4,17 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/heat.html
 """
 
 # pyright: strict
-from .. import transport2018, electricity2018
+
 from ..inputs import Inputs
 from ..utils import div
+from ..transport2018.t18 import T18
+from ..electricity2018.e18 import E18
+
 from .h18 import H18
 from .dataclasses import Vars1, Vars2, Vars3, Vars4, Vars5, Vars6, Vars7, Vars8
 
 
-def calc(inputs: Inputs, *, t18: transport2018.T18, e18: electricity2018.E18) -> H18:
+def calc(inputs: Inputs, *, t18: T18, e18: E18) -> H18:
     fact = inputs.fact
     entries = inputs.entries
 

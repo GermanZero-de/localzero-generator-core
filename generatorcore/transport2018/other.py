@@ -1,7 +1,9 @@
 # pyright: strict
+
 from dataclasses import dataclass
-from ..utils import element_wise_plus
+
 from ..inputs import Inputs
+from ..utils import element_wise_plus
 
 
 @dataclass

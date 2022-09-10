@@ -4,7 +4,9 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/lulucf.html
 """
 
 # pyright: strict
+
 from ..inputs import Inputs
+
 from .l18 import L18
 from .dataclasses import (
     Vars0,

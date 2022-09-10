@@ -1,7 +1,9 @@
 # pyright: strict
+
 from dataclasses import dataclass
+
 from ..inputs import Inputs
-from generatorcore.utils import div
+from ..utils import div
 
 
 @dataclass(kw_only=True)

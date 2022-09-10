@@ -1,6 +1,7 @@
 # pyright: strict
-import subprocess
+
 from typing import Any
+import subprocess
 
 
 def cmd_ready_to_rock(args: Any) -> None:

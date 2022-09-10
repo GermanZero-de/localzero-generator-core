@@ -1,5 +1,7 @@
 # pyright: strict
+
 from typing import Any
+
 from commands.cmd_data import (
     cmd_data_normalize,
     cmd_data_checkout,

@@ -1,11 +1,12 @@
 # pyright: strict
+
+from dataclasses import asdict
+from typing import Callable, Literal, TextIO, Any
 import csv
 import sys
 import os.path
 import json
-from typing import Callable, Literal, TextIO
-from dataclasses import asdict
-from typing import Any
+
 from generatorcore import ags, refdatatools, refdata, makeentries
 
 

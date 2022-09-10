@@ -1,5 +1,7 @@
 # pyright: strict
+
 from dataclasses import dataclass
+
 from .air import Air
 from .road import Road
 from .rail import Rail

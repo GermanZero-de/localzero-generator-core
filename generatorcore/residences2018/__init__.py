@@ -4,8 +4,10 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/hh_ghd.html
 """
 
 # pyright: strict
+
 from ..inputs import Inputs
 from ..utils import div, MILLION
+
 from .r18 import R18
 from .dataclasses import Vars1, Vars2, Vars3, Vars4, Vars5, Vars6, Vars7, Vars8, Vars9
 

@@ -1,15 +1,16 @@
 #!/usr/bin/env python
+
 """
 This is the script that was used to convert the excel spreadsheets data sheets into csv files.
 
 There is no need to keep this code up to date. The file is checked into the repository, primarily
 as documentation of how the data was initially populated.
 """
+
 import sys
 import pandas as pd
 import os
 import datetime
-from dataclasses import dataclass
 
 
 def do_not_keep_upper(s: str) -> bool:

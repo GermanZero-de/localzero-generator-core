@@ -4,6 +4,9 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/traffic.html
 """
 
 # pyright: strict
+
+from ..inputs import Inputs
+
 from .air import Air
 from .road import Road
 from .rail import Rail
@@ -12,7 +15,6 @@ from .other import Other
 from .transport import Transport
 from .energy_sum import EnergySum
 from .t18 import T18
-from ..inputs import Inputs
 
 
 def calc(inputs: Inputs) -> T18:

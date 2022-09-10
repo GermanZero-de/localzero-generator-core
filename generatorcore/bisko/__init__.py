@@ -1,20 +1,18 @@
 # pyright: strict
+
 from dataclasses import dataclass
 
-from generatorcore.inputs import Inputs
-
+from ..inputs import Inputs
 from ..utils import div
-from .. import (
-    agri2018,
-    electricity2018,
-    business2018,
-    fuels2018,
-    heat2018,
-    industry2018,
-    lulucf2018,
-    residences2018,
-    transport2018,
-)
+from ..agri2018.a18 import A18
+from ..electricity2018.e18 import E18
+from ..business2018.b18 import B18
+from ..fuels2018.f18 import F18
+from ..heat2018.h18 import H18
+from ..industry2018.i18 import I18
+from ..lulucf2018.l18 import L18
+from ..residences2018.r18 import R18
+from ..transport2018.t18 import T18
 
 
 @dataclass(kw_only=True)
@@ -229,10 +227,10 @@ class BiskoPrivResidences(BiskoSector, BiskoSectorWithExtraCommunalFacilities):
     def calc_priv_residences_bisko(
         cls,
         inputs: Inputs,
-        r18: residences2018.R18,
-        h18: heat2018.H18,
-        f18: fuels2018.F18,
-        e18: electricity2018.E18,
+        r18: R18,
+        h18: H18,
+        f18: F18,
+        e18: E18,
     ) -> "BiskoPrivResidences":
 
         fact = inputs.fact
@@ -354,11 +352,9 @@ class BiskoBusiness(BiskoSector, BiskoSectorWithExtraCommunalFacilities):
     def calc_business_bisko(
         cls,
         inputs: Inputs,
-        b18: business2018.B18,
-        h18: heat2018.H18,
-        f18: fuels2018.F18,
-        e18: electricity2018.E18,
-        a18: agri2018.A18,
+        b18: B18,
+        e18: E18,
+        a18: A18,
     ) -> "BiskoBusiness":
 
         fact = inputs.fact
@@ -518,10 +514,8 @@ class BiskoTransport(BiskoSector):
     def calc_transport_bisko(
         cls,
         inputs: Inputs,
-        t18: transport2018.T18,
-        h18: heat2018.H18,
-        f18: fuels2018.F18,
-        e18: electricity2018.E18,
+        t18: T18,
+        e18: E18,
     ) -> "BiskoTransport":
 
         fact = inputs.fact
@@ -661,10 +655,8 @@ class BiskoIndustry(BiskoSector):
     def calc_industry_bisko(
         cls,
         inputs: Inputs,
-        i18: industry2018.I18,
-        h18: heat2018.H18,
-        f18: fuels2018.F18,
-        e18: electricity2018.E18,
+        i18: I18,
+        e18: E18,
     ) -> "BiskoIndustry":
 
         fact = inputs.fact
@@ -805,7 +797,7 @@ class BiskoAgriculture:
     other: ProductionBasedEmission
 
     @classmethod
-    def calc_bisko_agri(cls, a18: agri2018.A18) -> "BiskoAgriculture":
+    def calc_bisko_agri(cls, a18: A18) -> "BiskoAgriculture":
         forest = ProductionBasedEmission(CO2e_pb=a18.p_fermen.CO2e_production_based)
         manure = ProductionBasedEmission(CO2e_pb=a18.p_manure.CO2e_production_based)
         soil = ProductionBasedEmission(CO2e_pb=a18.p_soil.CO2e_production_based)
@@ -832,7 +824,7 @@ class BiskoLULUCF:
     wood: ProductionBasedEmission
 
     @classmethod
-    def calc_bisko_lulucf(cls, l18: lulucf2018.L18) -> "BiskoLULUCF":
+    def calc_bisko_lulucf(cls, l18: L18) -> "BiskoLULUCF":
         forest = Emissions(
             CO2e_pb=l18.g_forest.CO2e_production_based,
             CO2e_cb=l18.g_forest.CO2e_combustion_based,
@@ -894,28 +886,28 @@ class Bisko:
         cls,
         inputs: Inputs,
         *,
-        a18: agri2018.A18,
-        b18: business2018.B18,
-        e18: electricity2018.E18,
-        f18: fuels2018.F18,
-        h18: heat2018.H18,
-        i18: industry2018.I18,
-        l18: lulucf2018.L18,
-        r18: residences2018.R18,
-        t18: transport2018.T18,
+        a18: A18,
+        b18: B18,
+        e18: E18,
+        f18: F18,
+        h18: H18,
+        i18: I18,
+        l18: L18,
+        r18: R18,
+        t18: T18,
     ) -> "Bisko":
 
         priv_residences_bisko = BiskoPrivResidences.calc_priv_residences_bisko(
             inputs=inputs, r18=r18, h18=h18, f18=f18, e18=e18
         )
         business_bisko = BiskoBusiness.calc_business_bisko(
-            inputs=inputs, b18=b18, h18=h18, f18=f18, e18=e18, a18=a18
+            inputs=inputs, b18=b18, e18=e18, a18=a18
         )
         transport_bisko = BiskoTransport.calc_transport_bisko(
-            inputs=inputs, t18=t18, h18=h18, f18=f18, e18=e18
+            inputs=inputs, t18=t18, e18=e18
         )
         industry_bisko = BiskoIndustry.calc_industry_bisko(
-            inputs=inputs, i18=i18, h18=h18, f18=f18, e18=e18
+            inputs=inputs, i18=i18, e18=e18
         )
         agri_bisko = BiskoAgriculture.calc_bisko_agri(a18=a18)
         lulucf_bisko = BiskoLULUCF.calc_bisko_lulucf(l18=l18)

@@ -2,8 +2,9 @@
 
 """
 # pyright: strict
-import typing
-import dataclasses
+
+from dataclasses import fields
+from typing import TypeVar
 
 MILLION = 1000000
 
@@ -17,11 +18,9 @@ def div(a: float, b: float) -> float:
     return 0.0 if b == 0.0 else a / b
 
 
-T = typing.TypeVar("T")
+T = TypeVar("T")
 
 
 def element_wise_plus(a: T, b: T) -> T:
     """Element wise addition for a dataclasses"""
-    return type(a)(
-        *(getattr(a, f.name) + getattr(b, f.name) for f in dataclasses.fields(a))
-    )
+    return type(a)(*(getattr(a, f.name) + getattr(b, f.name) for f in fields(a)))

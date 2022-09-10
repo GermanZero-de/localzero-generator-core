@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+
 """
 This is a simple wrapper around the generator to
 
@@ -9,10 +10,12 @@ This is a simple wrapper around the generator to
       scripts and packages / modules shall not be mixed rule.
       See https://mail.python.org/pipermail/python-3000/2007-April/006793.html
 """
+
 # pyright: strict
+
+from typing import Any
 import argparse
 import sys
-from typing import Any
 
 from commands.cmd_run_parser import add_cmd_make_entries_parser, add_cmd_run_parser
 from commands.cmd_explorer_parser import add_cmd_explorer_parser

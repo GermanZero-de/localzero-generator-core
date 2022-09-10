@@ -2,11 +2,12 @@
 Documentation:
 https://localzero-generator.readthedocs.io/de/latest/sectors/electricity.html
 """
-
 # pyright: strict
+
 from ..inputs import Inputs
 from ..utils import div, MILLION
-from .. import transport2018
+from ..transport2018.t18 import T18
+
 from .e18 import E18
 from .dataclasses import (
     Vars0,
@@ -30,7 +31,7 @@ from .dataclasses import (
 )
 
 
-def calc(inputs: Inputs, *, t18: transport2018.T18) -> E18:
+def calc(inputs: Inputs, *, t18: T18) -> E18:
     fact = inputs.fact
     ass = inputs.ass
     entries = inputs.entries

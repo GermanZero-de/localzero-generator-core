@@ -4,9 +4,11 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/hh_ghd.html
 """
 
 # pyright: strict
+
 from ..inputs import Inputs
 from ..utils import div, MILLION
-from .. import residences2018
+from ..residences2018.r18 import R18
+
 from .b18 import B18
 from .dataclasses import (
     Vars0,
@@ -23,7 +25,7 @@ from .dataclasses import (
 
 
 # Berechnungsfunktion im Sektor GHD für 2018
-def calc(inputs: Inputs, *, r18: residences2018.R18) -> B18:
+def calc(inputs: Inputs, *, r18: R18) -> B18:
     fact = inputs.fact
     ass = inputs.ass
     entries = inputs.entries

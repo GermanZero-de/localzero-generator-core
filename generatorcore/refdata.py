@@ -2,11 +2,12 @@
 
 """
 # pyright: strict
-import csv
+
 from dataclasses import dataclass
-import os
-import json
 from typing import Any, Generic, TypeVar, Callable, Iterable
+from os import path, getcwd
+import csv
+import json
 
 # TODO: Write small wrappers classes for each data source so that we can document
 # the columns and get better type checking from pylance.
@@ -55,7 +56,7 @@ class DataFrame(Generic[KeyT]):
     ) -> "DataFrame[KeyT]":
         repo = "proprietary" if what in PROPRIETARY_DATA_SOURCES else "public"
         with open(
-            os.path.join(datadir, repo, what, filename + ".csv"),
+            path.join(datadir, repo, what, filename + ".csv"),
             "r",
             encoding="utf-8",
             newline="",
@@ -336,9 +337,9 @@ class FactsAndAssumptions:
 def datadir_or_default(datadir: str | None = None) -> str:
     """Return the normalized absolute path to the data directory."""
     if datadir is None:
-        return os.path.normpath(os.path.join(os.getcwd(), "data"))
+        return path.normpath(path.join(getcwd(), "data"))
     else:
-        return os.path.abspath(datadir)
+        return path.abspath(datadir)
 
 
 @dataclass(kw_only=True)
@@ -350,7 +351,7 @@ class Version:
 
     @classmethod
     def load(cls, name: str, datadir: str | None = None) -> "Version":
-        fname = os.path.join(datadir_or_default(datadir), name + ".json")
+        fname = path.join(datadir_or_default(datadir), name + ".json")
         with open(fname) as fp:
             d = json.load(fp)
             return cls(public=d["public"], proprietary=d["proprietary"])

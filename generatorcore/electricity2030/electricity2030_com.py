@@ -1,6 +1,19 @@
 # pyright: strict
+
 from ..inputs import Inputs
 from ..utils import div, MILLION
+from ..electricity2018.e18 import E18
+from ..residences2018.r18 import R18
+from ..business2018.b18 import B18
+from ..agri2030.a30 import A30
+from ..business2030.b30 import B30
+from ..fuels2030.f30 import F30
+from ..heat2030.h30 import H30
+from ..industry2030.i30 import I30
+from ..residences2030.r30 import R30
+from ..transport2030.t30 import T30
+from .. import electricity2018
+
 from .e30 import E30
 from .electricity2030_core import (
     FossilFuelsProduction,
@@ -10,22 +23,10 @@ from .electricity2030_core import (
     EnergyDemand,
     Energy,
 )
-from .. import (
-    electricity2018,
-    residences2018,
-    business2018,
-    agri2030,
-    business2030,
-    fuels2030,
-    heat2030,
-    industry2030,
-    residences2030,
-    transport2030,
-)
 
 
 def calc_stop_production_by_fossil_fuels(
-    inputs: Inputs, *, e18_production: electricity2018.e18.FossilFuelsProduction
+    inputs: Inputs, *, e18_production: electricity2018.dataclasses.FossilFuelsProduction
 ) -> FossilFuelsProduction:
     """Compute what happens if we stop producing electricity from a fossil fuel."""
     fact = inputs.fact
@@ -175,9 +176,9 @@ def calc_production_renewable_geothermal(
 def calc_production_local_pv_roof(
     inputs: Inputs,
     *,
-    e18: electricity2018.E18,
-    b18: business2018.B18,
-    r18: residences2018.R18,
+    e18: E18,
+    b18: B18,
+    r18: R18,
 ):
     entries = inputs.entries
     ass = inputs.ass
@@ -282,9 +283,9 @@ def calc_production_local_pv_roof(
 def calc_production_local_pv_facade(
     inputs: Inputs,
     *,
-    e18: electricity2018.E18,
-    b18: business2018.B18,
-    r18: residences2018.R18,
+    e18: E18,
+    b18: B18,
+    r18: R18,
 ):
     entries = inputs.entries
     ass = inputs.ass
@@ -381,7 +382,7 @@ def calc_production_local_pv_facade(
 def calc_production_local_pv_agri(
     inputs: Inputs,
     *,
-    e18: electricity2018.E18,
+    e18: E18,
     local_pv_roof_full_load_hour: float,
     local_pv_park_full_load_hour: float,
 ):
@@ -460,9 +461,7 @@ def calc_production_local_pv_agri(
 def calc_production_local_pv_park(
     inputs: Inputs,
     *,
-    e18: electricity2018.E18,
-    b18: business2018.B18,
-    r18: residences2018.R18,
+    e18: E18,
     local_pv_roof_full_load_hour: float,
 ):
     entries = inputs.entries
@@ -541,7 +540,7 @@ def calc_production_local_pv_park(
 def calc_production_local_wind_onshore(
     inputs: Inputs,
     *,
-    e18: electricity2018.E18,
+    e18: E18,
 ):
     entries = inputs.entries
     ass = inputs.ass
@@ -645,7 +644,7 @@ def calc_production_local_wind_onshore(
 def calc_production_local_biomass_stage2(
     inputs: Inputs,
     *,
-    e18: electricity2018.E18,
+    e18: E18,
     p_local_biomass: EColVars2030,
 ) -> None:
     entries = inputs.entries
@@ -726,7 +725,7 @@ def calc_production_local_biomass_stage2(
 def calc_production_local_hydro(
     inputs: Inputs,
     *,
-    e18: electricity2018.E18,
+    e18: E18,
 ):
     entries = inputs.entries
     ass = inputs.ass
@@ -761,9 +760,7 @@ def calc_production_local_hydro(
     return p_local_hydro
 
 
-def calc_renew_wind_offshore(
-    inputs: Inputs, *, e18: electricity2018.E18, d_energy: float
-):
+def calc_renew_wind_offshore(inputs: Inputs, *, d_energy: float):
     entries = inputs.entries
     ass = inputs.ass
     fact = inputs.fact
@@ -912,16 +909,16 @@ def set_pct_energy(total_energy: float, *es: EnergyDemand):
 def calc(
     inputs: Inputs,
     *,
-    e18: electricity2018.E18,
-    r18: residences2018.R18,
-    b18: business2018.B18,
-    a30: agri2030.A30,
-    b30: business2030.B30,
-    f30: fuels2030.F30,
-    h30: heat2030.H30,
-    i30: industry2030.I30,
-    r30: residences2030.R30,
-    t30: transport2030.T30,
+    e18: E18,
+    r18: R18,
+    b18: B18,
+    a30: A30,
+    b30: B30,
+    f30: F30,
+    h30: H30,
+    i30: I30,
+    r30: R30,
+    t30: T30,
     p_local_biomass_cogen: EColVars2030,
     p_local_biomass: EColVars2030,
 ) -> E30:
@@ -1079,8 +1076,6 @@ def calc(
     p_local_pv_park = calc_production_local_pv_park(
         inputs,
         e18=e18,
-        b18=b18,
-        r18=r18,
         local_pv_roof_full_load_hour=p_local_pv_roof.full_load_hour,
     )
     p_local_pv_agri = calc_production_local_pv_agri(
@@ -1158,7 +1153,7 @@ def calc(
     p_renew_pv_park.pct_energy = ass("Ass_E_P_renew_pv_park_pct_of_nep_2035")
     p_renew_pv_agri.pct_energy = ass("Ass_E_P_renew_pv_agri_pct_of_nep_2035")
 
-    p_renew_wind_offshore = calc_renew_wind_offshore(inputs, e18=e18, d_energy=d.energy)
+    p_renew_wind_offshore = calc_renew_wind_offshore(inputs, d_energy=d.energy)
 
     p_renew_wind_onshore = EColVars2030()
     p_renew_wind_onshore.pct_energy = ass("Ass_E_P_renew_wind_onshore_pct_of_nep_2035")

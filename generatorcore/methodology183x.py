@@ -1,27 +1,29 @@
 # pyright: strict
+
 from dataclasses import dataclass, field
+
 from .inputs import Inputs
 from .utils import div
-from . import (
-    agri2018,
-    electricity2018,
-    business2018,
-    fuels2018,
-    heat2018,
-    industry2018,
-    lulucf2018,
-    residences2018,
-    transport2018,
-    agri2030,
-    business2030,
-    electricity2030,
-    fuels2030,
-    heat2030,
-    industry2030,
-    lulucf2030,
-    residences2030,
-    transport2030,
-)
+
+from .electricity2018.e18 import E18
+from .business2018.b18 import B18
+from .industry2018.i18 import I18
+from .transport2018.t18 import T18
+from .residences2018.r18 import R18
+from .agri2018.a18 import A18
+from .heat2018.h18 import H18
+from .lulucf2018.l18 import L18
+from .fuels2018.f18 import F18
+
+from .electricity2030.e30 import E30
+from .business2030.b30 import B30
+from .industry2030.i30 import I30
+from .transport2030.t30 import T30
+from .residences2030.r30 import R30
+from .agri2030.a30 import A30
+from .heat2030.h30 import H30
+from .lulucf2030.l30 import L30
+from .fuels2030.f30 import F30
 
 
 @dataclass(kw_only=True)
@@ -166,15 +168,15 @@ class M183X:
 def calc_budget(
     inputs: Inputs,
     *,
-    a18: agri2018.A18,
-    b18: business2018.B18,
-    e18: electricity2018.E18,
-    f18: fuels2018.F18,
-    h18: heat2018.H18,
-    i18: industry2018.I18,
-    l18: lulucf2018.L18,
-    r18: residences2018.R18,
-    t18: transport2018.T18,
+    a18: A18,
+    b18: B18,
+    e18: E18,
+    f18: F18,
+    h18: H18,
+    i18: I18,
+    l18: L18,
+    r18: R18,
+    t18: T18,
 ) -> M183X:
     """Calculate the budget needed."""
 
@@ -633,24 +635,24 @@ def calc_z(
     inputs: Inputs,
     *,
     m183X: M183X,
-    a18: agri2018.A18,
-    b18: business2018.B18,
-    e18: electricity2018.E18,
-    f18: fuels2018.F18,
-    h18: heat2018.H18,
-    i18: industry2018.I18,
-    l18: lulucf2018.L18,
-    r18: residences2018.R18,
-    t18: transport2018.T18,
-    a30: agri2030.A30,
-    b30: business2030.B30,
-    e30: electricity2030.E30,
-    f30: fuels2030.F30,
-    h30: heat2030.H30,
-    i30: industry2030.I30,
-    l30: lulucf2030.L30,
-    r30: residences2030.R30,
-    t30: transport2030.T30,
+    a18: A18,
+    b18: B18,
+    e18: E18,
+    f18: F18,
+    h18: H18,
+    i18: I18,
+    l18: L18,
+    r18: R18,
+    t18: T18,
+    a30: A30,
+    b30: B30,
+    e30: E30,
+    f30: F30,
+    h30: H30,
+    i30: I30,
+    l30: L30,
+    r30: R30,
+    t30: T30,
 ):
     """This updates several values in m183X inplace."""
 

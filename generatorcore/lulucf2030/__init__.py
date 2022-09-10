@@ -4,14 +4,16 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/lulucf.html
 """
 
 # pyright: strict
+
 from ..inputs import Inputs
 from ..utils import div
-from .. import lulucf2018
+from ..lulucf2018.l18 import L18
+
 from .l30 import L30
 from .dataclasses import LColVars2030
 
 
-def calc(inputs: Inputs, *, l18: lulucf2018.L18) -> L30:
+def calc(inputs: Inputs, *, l18: L18) -> L30:
     """Calculates lulucf. Note that this calculation consists of two steps, because we need to
     compute most of lulucf early for other sectors calculations, but can only finish the
     lulucf calculations when those sectors are done.

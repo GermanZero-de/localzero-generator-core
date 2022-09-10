@@ -1,7 +1,9 @@
 # pyright: strict
+
 from dataclasses import dataclass
 
 from ..inputs import Inputs
+
 from .production_branches import (
     ExtraEmission,
     ProductionSubBranch,

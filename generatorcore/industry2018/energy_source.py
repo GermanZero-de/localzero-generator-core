@@ -1,6 +1,9 @@
 # pyright: strict
+
 from dataclasses import dataclass
+
 from ..inputs import Inputs
+
 from .supply_classes import EnergySum, EnergySource
 
 

@@ -10,11 +10,13 @@
    git. And as you will have to carefully manage the state of 3 separate
    repositories (2 data + 1 code), we have written some code to help with that.
 """
+
 # pyright: strict
-import os.path
-import subprocess
+
 from dataclasses import dataclass
-import typing
+from typing import Literal
+from os import path
+import subprocess
 
 from . import refdata
 
@@ -23,7 +25,7 @@ MAIN_REPOS = {
     "proprietary": "github.com/GermanZero-de/localzero-data-proprietary",
 }
 
-PUBLIC_OR_PROPRIETARY = typing.Literal["public", "proprietary"]
+PUBLIC_OR_PROPRIETARY = Literal["public", "proprietary"]
 
 
 def pull(datadir: str, repo: PUBLIC_OR_PROPRIETARY, pa_token: str | None = None):
@@ -33,7 +35,7 @@ def pull(datadir: str, repo: PUBLIC_OR_PROPRIETARY, pa_token: str | None = None)
         url = "https://" + MAIN_REPOS[repo]
 
     subprocess.run(
-        ["git", "pull", "--ff-only", url], check=True, cwd=os.path.join(datadir, repo)
+        ["git", "pull", "--ff-only", url], check=True, cwd=path.join(datadir, repo)
     )
 
 
@@ -51,10 +53,8 @@ def clone(
     subprocess.run(["git", "clone", url, repo], check=True, cwd=datadir)
 
 
-def checkout(datadir: str, repo: typing.Literal["public", "proprietary"], rev: str):
-    subprocess.run(
-        ["git", "checkout", rev], check=True, cwd=os.path.join(datadir, repo)
-    )
+def checkout(datadir: str, repo: Literal["public", "proprietary"], rev: str):
+    subprocess.run(["git", "checkout", rev], check=True, cwd=path.join(datadir, repo))
 
 
 def get_git_hash(path_to_repo: str) -> str:
@@ -81,7 +81,7 @@ def datadir() -> str:
     the data or proprietary repo.
     Given that it will return absolute path to the data directory.
     """
-    return os.path.normpath(os.path.join(root_of_this_repo(), "data"))
+    return path.normpath(path.join(root_of_this_repo(), "data"))
 
 
 def is_repo_clean(path_to_repo: str) -> bool:
@@ -118,10 +118,10 @@ class DataDirStatus:
     def get(cls, datadir: str) -> "DataDirStatus":
         production = refdata.Version.load("production", datadir)
         public_status = WorkingDirectoryStatus.get(
-            path_to_repo=os.path.join(datadir, "public")
+            path_to_repo=path.join(datadir, "public")
         )
         proprietary_status = WorkingDirectoryStatus.get(
-            path_to_repo=os.path.join(datadir, "proprietary")
+            path_to_repo=path.join(datadir, "proprietary")
         )
         return DataDirStatus(
             production=production,

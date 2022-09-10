@@ -1,6 +1,8 @@
 # pyright: strict
+
 from dataclasses import InitVar, dataclass
-from generatorcore.utils import div
+
+from ..utils import div
 
 
 @dataclass(kw_only=True)

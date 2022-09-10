@@ -1,8 +1,11 @@
 # pyright: strict
+
 from dataclasses import dataclass
-from ..utils import element_wise_plus
-from . import co2e
+
 from ..inputs import Inputs
+from ..utils import element_wise_plus
+
+from . import co2e
 
 
 @dataclass

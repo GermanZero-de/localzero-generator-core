@@ -7,6 +7,7 @@
    time trying to figure out a bug in the generator when it is actually in the loading
    of the reference data module.
 """
+
 import pytest
 
 from generatorcore.refdata import RefData

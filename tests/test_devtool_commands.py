@@ -1,7 +1,9 @@
 # pyright: strict
+
 from typing import Any
-from devtool import Devtool
 import os
+
+from devtool import Devtool
 
 filePath = "test.txt"
 
