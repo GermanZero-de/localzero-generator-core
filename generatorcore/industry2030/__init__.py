@@ -4,9 +4,11 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/industry.html
 """
 
 # pyright: strict
-from .. import industry2018
+
 from ..inputs import Inputs
 from ..utils import div
+from ..industry2018.i18 import I18
+
 from .i30 import I30
 from .dataclasses import (
     Vars0,
@@ -29,7 +31,7 @@ from .dataclasses import (
 )
 
 
-def calc(inputs: Inputs, *, i18: industry2018.I18) -> I30:
+def calc(inputs: Inputs, *, i18: I18) -> I30:
     fact = inputs.fact
     ass = inputs.ass
     entries = inputs.entries
