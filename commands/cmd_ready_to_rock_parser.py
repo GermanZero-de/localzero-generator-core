@@ -1,5 +1,7 @@
 # pyright: strict
+
 from typing import Any
+
 from commands.cmd_ready_to_rock import cmd_ready_to_rock
 
 

@@ -1,8 +1,10 @@
 # pyright: strict
+
 from dataclasses import asdict
 from typing import Any
 import json
 import sys
+
 from generatorcore.generator import calculate_with_default_inputs
 from generatorcore.refdata import RefData
 from generatorcore.makeentries import make_entries
