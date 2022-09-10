@@ -1,33 +1,32 @@
 # pyright: strict
+
 from ..inputs import Inputs
 from ..utils import div
-from .. import (
-    lulucf2018,
-    lulucf2030,
-    agri2030,
-    business2030,
-    electricity2030,
-    fuels2030,
-    heat2030,
-    industry2030,
-    residences2030,
-    transport2030,
-)
+from ..lulucf2018.l18 import L18
+from ..lulucf2030.l30 import L30
+from ..agri2030.a30 import A30
+from ..business2030.b30 import B30
+from ..electricity2030.e30 import E30
+from ..fuels2030.f30 import F30
+from ..heat2030.h30 import H30
+from ..industry2030.i30 import I30
+from ..residences2030.r30 import R30
+from ..transport2030.t30 import T30
 
 
 def calc(
     inputs: Inputs,
     *,
-    l18: lulucf2018.L18,
-    l30: lulucf2030.L30,
-    a30: agri2030.A30,
-    b30: business2030.B30,
-    e30: electricity2030.E30,
-    f30: fuels2030.F30,
-    h30: heat2030.H30,
-    i30: industry2030.I30,
-    r30: residences2030.R30,
-    t30: transport2030.T30,
+    l18: L18,
+    l30: L30,
+    a30: A30,
+    b30: B30,
+    e30: E30,
+    f30: F30,
+    h30: H30,
+    i30: I30,
+    r30: R30,
+    t30: T30,
 ) -> None:
     """This updates the l and pyr sections in l30 inplace."""
 
