@@ -1,8 +1,9 @@
 # pyright: strict
+
 from dataclasses import dataclass
 
-from .dataclasses import (
-    CO2eEmissions,
+from .co2eEmissions import CO2eEmissions
+from .energy_demand import (
     P,
     CO2eFromFermentationOrManure,
     CO2eFromSoil,
@@ -10,9 +11,8 @@ from .dataclasses import (
     Energy,
     EnergyWithPercentage,
     OperationHeatEnergy,
-    CO2eFromEnergyUse,
-    CO2eFromEnergyUseDetail,
 )
+from .energy_source import CO2eFromEnergyUse, CO2eFromEnergyUseDetail
 
 
 @dataclass(kw_only=True)
