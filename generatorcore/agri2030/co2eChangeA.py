@@ -6,10 +6,9 @@ from ..inputs import Inputs
 from ..utils import div
 from ..agri2018.a18 import A18
 
-from .energy_demand.co2eChangePOperation import CO2eChangePOperation
-from .energy_demand.co2eChangeP import CO2eChangeP
-from .energy_source.co2eChangeS import CO2eChangeS
-from .energy_general.co2eChangeG import CO2eChangeG
+from .energy_demand import CO2eChangePOperation, CO2eChangeP
+from .energy_source import CO2eChangeS
+from .energy_general import CO2eChangeG
 
 
 @dataclass(kw_only=True)

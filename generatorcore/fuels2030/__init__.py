@@ -17,9 +17,7 @@ from ..transport2030.t30 import T30
 from .f30 import F30
 from .f import F
 from .energy_demand import EnergyDemand
-
-from . import energy_demand
-from . import energy_production
+from . import energy_demand, energy_production
 
 
 def calc(

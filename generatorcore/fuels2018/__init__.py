@@ -7,12 +7,9 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/fuel.html
 
 from ..inputs import Inputs
 from ..transport2018.t18 import T18
-from ..commonDataclasses.co2eEmissions import CO2eEmissions
 
-from .f18 import F18
-
-from . import energy_demand
-from . import energy_production
+from .f18 import F18, CO2eEmissions
+from . import energy_demand, energy_production
 
 
 def calc(inputs: Inputs, *, t18: T18) -> F18:

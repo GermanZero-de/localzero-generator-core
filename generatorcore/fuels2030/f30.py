@@ -3,11 +3,13 @@
 from dataclasses import dataclass
 
 from .energy_demand import EnergyDemand
-from .energy_production.eFuelProduction import EFuelProduction
-from .energy_production.fuelWithoutDirectReplacement import FuelWithoutDirectReplacement
-from .energy_production.newEFuelProduction import NewEFuelProduction
-from .energy_production.eFuels import EFuels
-from .energy_production.totalEFuelProduction import TotalEFuelProduction
+from .energy_production import (
+    EFuelProduction,
+    FuelWithoutDirectReplacement,
+    NewEFuelProduction,
+    EFuels,
+    TotalEFuelProduction,
+)
 from .f import F
 
 

@@ -11,9 +11,7 @@ from ..lulucf2030.l30 import L30
 
 from .co2eChangeA import CO2eChangeA
 from .a30 import A30
-from . import energy_demand
-from . import energy_source
-from . import energy_general
+from . import energy_demand, energy_source, energy_general
 
 
 def calc(inputs: Inputs, a18: A18, l30: L30) -> A30:
