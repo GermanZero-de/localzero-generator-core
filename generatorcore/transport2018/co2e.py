@@ -1,4 +1,5 @@
 # pyright: strict
+
 from ..inputs import Inputs
 
 

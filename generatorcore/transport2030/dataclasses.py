@@ -1,9 +1,11 @@
 # pyright: strict
+
 from dataclasses import dataclass
 
-from ..utils import div
 from ..inputs import Inputs
-from ..transport2018 import T18
+from ..utils import div
+from ..transport2018.t18 import T18
+
 from .investmentaction import InvestmentAction
 from .air import Air
 from .road import RoadSum

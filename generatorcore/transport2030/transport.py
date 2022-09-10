@@ -1,6 +1,8 @@
 # pyright: strict
-from typing import Callable, Protocol
+
 from dataclasses import dataclass, InitVar
+from typing import Callable, Protocol
+
 from ..utils import div
 
 

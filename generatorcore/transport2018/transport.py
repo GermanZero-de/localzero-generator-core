@@ -1,6 +1,9 @@
 # pyright: strict
+
 from dataclasses import dataclass
+
 from ..utils import element_wise_plus
+
 from .air import Air
 from .road import Road
 from .rail import Rail

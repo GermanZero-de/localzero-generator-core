@@ -1,4 +1,5 @@
 # pyright: strict
+
 from dataclasses import dataclass, asdict
 
 from .investmentaction import InvestmentAction
