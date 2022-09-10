@@ -141,7 +141,7 @@ def calc(
         fuels_without_repl=[p_biogas, p_biodiesel, p_bioethanol],
     )
 
-    f30 = F30(
+    return F30(
         d=d,
         d_r=d_r,
         d_b=d_b,
@@ -165,5 +165,3 @@ def calc(
         p=p,
         f=F.of_p(p),
     )
-
-    return f30

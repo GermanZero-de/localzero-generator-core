@@ -5,7 +5,6 @@ from dataclasses import dataclass
 
 @dataclass(kw_only=True)
 class F:
-    # Used by f
     CO2e_combustion_based: float
     CO2e_production_based: float
     CO2e_total: float
@@ -13,13 +12,11 @@ class F:
 
 @dataclass(kw_only=True)
 class EnergyDemand:
-    # Used by d, d_r, d_b, d_i, d_t, d_a
     energy: float
 
 
 @dataclass(kw_only=True)
 class FuelProduction:
-    # Used by p_petrol, p_jetfuel, p_diesel, p_bioethanol, p_biodiesel, p_biogas
     CO2e_production_based: float
     CO2e_production_based_per_MWh: float
     CO2e_combustion_based: float
@@ -43,7 +40,6 @@ class FuelProduction:
 
 @dataclass(kw_only=True)
 class TotalFuelProduction:
-    # Used by p
     CO2e_production_based: float
     CO2e_combustion_based: float
     CO2e_total: float

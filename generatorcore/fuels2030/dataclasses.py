@@ -10,7 +10,6 @@ from ..fuels2018.dataclasses import FuelProduction
 
 @dataclass(kw_only=True)
 class EnergyDemand:
-    # Used by d, d_r, d_b, d_i, d_t, d_a, d_e_hydrogen_reconv, p_hydrogen_total
     energy: float
 
 
@@ -20,7 +19,6 @@ class EFuelProduction:
     (e.g. petrol -> epetrol).
     """
 
-    # Used by p_petrol, p_jetfuel, p_diesel
     CO2e_production_based: float
     CO2e_production_based_per_MWh: float
     CO2e_total: float
@@ -114,7 +112,6 @@ class FuelWithoutDirectReplacement:
     """This computes the effect on our CO2e and energy budget of us totally stopping
     to produce some fuels without a direct replacement."""
 
-    # Used by p_bioethanol, p_biodiesel, p_biogas
     CO2e_total_2021_estimated: float
     change_CO2e_t: float
     change_energy_MWh: float
@@ -141,7 +138,6 @@ class FuelWithoutDirectReplacement:
 class NewEFuelProduction:
     """Production of new style of efuels that are not yet used (at an industrial scale)."""
 
-    # Used by p_emethan, p_hydrogen, p_hydrogen_reconv
     CO2e_production_based: float
     CO2e_production_based_per_MWh: float
     CO2e_total: float
@@ -231,7 +227,6 @@ class NewEFuelProduction:
 
 @dataclass(kw_only=True)
 class TotalEFuelProduction:
-    # Used by p
     CO2e_production_based: float
     CO2e_total: float
     CO2e_total_2021_estimated: float
@@ -302,7 +297,6 @@ class TotalEFuelProduction:
 
 @dataclass(kw_only=True)
 class F:
-    # Used by f
     CO2e_production_based: float
     CO2e_total: float
     CO2e_total_2021_estimated: float
@@ -342,7 +336,6 @@ class F:
 
 @dataclass(kw_only=True)
 class EFuels:
-    # Used by p_efuels
     change_CO2e_t: float
     energy: float
 
