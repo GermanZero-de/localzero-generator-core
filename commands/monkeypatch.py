@@ -1,5 +1,6 @@
 from dataclasses import fields, is_dataclass
 from typing import Any, Callable
+
 from generatorcore.generator import Result
 from generatorcore.refdata import Row
 

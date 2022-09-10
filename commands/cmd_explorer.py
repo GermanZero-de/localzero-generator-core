@@ -1,4 +1,5 @@
 # pyright: strict
+
 ###### WORDS OF WARNING
 # This implements a simple http JSON "RPC" server for the generator
 #
@@ -9,14 +10,17 @@
 # More specifically this is not intented to be the RPC server that we will
 # offer to the outside world. This is just a quick-dirty test bed for RPCs
 # + the thing needed to provide the UI.
-import json
-import dataclasses
+
+from dataclasses import asdict
 from typing import Callable, Any
+from http.server import HTTPServer, BaseHTTPRequestHandler
+import json
+
 from generatorcore.inputs import Inputs
 from generatorcore.generator import calculate
 from generatorcore.refdata import RefData
 from generatorcore.makeentries import make_entries, Entries
-from http.server import HTTPServer, BaseHTTPRequestHandler
+
 from . import monkeypatch
 
 
@@ -65,16 +69,14 @@ def cmd_explorer(args: Any):
 
         def handle_make_entries(self, ags: str, year: int):
             return self.json_rpc(
-                lambda: finalize_traces_if_enabled(
-                    dataclasses.asdict(make_entries(rd, ags, year))
-                )
+                lambda: finalize_traces_if_enabled(asdict(make_entries(rd, ags, year)))
             )
 
         def handle_calculate(
             self, ags: str, year: int, request: dict[str, float | str | int] = {}
         ):
             def calc():
-                defaults = dataclasses.asdict(make_entries(rd, ags, year))
+                defaults = asdict(make_entries(rd, ags, year))
                 defaults.update(request)
                 entries = Entries(**defaults)
                 inputs = Inputs(
