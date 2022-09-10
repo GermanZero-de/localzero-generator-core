@@ -1,4 +1,5 @@
 # pyright: strict
+
 from dataclasses import dataclass
 
 from .dataclasses import EnergyDemand, FuelProduction, TotalFuelProduction, F

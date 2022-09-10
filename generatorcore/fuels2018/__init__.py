@@ -5,13 +5,14 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/fuel.html
 
 # pyright: strict
 
-from .. import transport2018
 from ..inputs import Inputs
+from ..transport2018.t18 import T18
+
 from .f18 import F18
 from .dataclasses import EnergyDemand, FuelProduction, TotalFuelProduction, F
 
 
-def calc(inputs: Inputs, *, t18: transport2018.T18) -> F18:
+def calc(inputs: Inputs, *, t18: T18) -> F18:
     """This computes the CO2e that is created by the production of fuels.
     NOTE: This does not compute the CO2e caused by burning fuels, those are in
     those sectors that make use of the fuels (transport, heat, ...).
