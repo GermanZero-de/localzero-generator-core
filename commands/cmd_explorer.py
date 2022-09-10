@@ -1,4 +1,4 @@
-# pyright: strict
+# pyright: strict reportMissingTypeStubs=true
 ###### WORDS OF WARNING
 # This implements a simple http JSON "RPC" server for the generator
 #
