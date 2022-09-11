@@ -3,14 +3,13 @@ import time
 import dataclasses
 from dataclasses import dataclass
 import sys
-from generatorcore import methodology183x
-from generatorcore.electricity2030 import electricity2030_core
 
 from .refdata import RefData
 from .inputs import Inputs
 from .makeentries import make_entries
 
 # hier Sektoren Files importieren:
+from . import methodology183x
 from . import electricity2018
 from . import business2018
 from . import industry2018
@@ -26,6 +25,7 @@ from . import business2030
 from . import heat2030
 from . import fuels2030
 from . import transport2030
+from .electricity2030 import electricity2030_core
 from . import electricity2030
 from . import heat2030
 from . import agri2030

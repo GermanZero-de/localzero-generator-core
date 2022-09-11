@@ -1,7 +1,7 @@
 # pyright: strict
 from dataclasses import dataclass
 
-from generatorcore.inputs import Inputs
+from ..inputs import Inputs
 
 from ..utils import div
 from .. import (

@@ -1,7 +1,7 @@
 # pyright: strict
 from dataclasses import asdict
-from generatorcore.refdata import RefData
-from generatorcore.makeentries import make_entries, USER_OVERRIDABLE_ENTRIES
+
+from lzcv.generator import RefData, make_entries, USER_OVERRIDABLE_ENTRIES
 
 
 def test_user_overridable_entries():

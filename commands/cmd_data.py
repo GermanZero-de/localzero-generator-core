@@ -6,7 +6,7 @@ import json
 from typing import Callable, Literal, TextIO
 from dataclasses import asdict
 from typing import Any
-from generatorcore import ags, refdatatools, refdata, makeentries
+from lzcv.generator import ags, refdatatools, refdata, makeentries
 
 
 def cmd_data_normalize(args: Any):

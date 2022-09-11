@@ -9,7 +9,7 @@
 """
 import pytest
 
-from generatorcore.refdata import RefData
+from lzcv.generator import RefData
 
 FEDERAL_STATES = ["%02i000000" % i for i in range(1, 17)]
 
