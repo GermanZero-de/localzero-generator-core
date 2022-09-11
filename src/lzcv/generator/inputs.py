@@ -13,17 +13,20 @@ above.  We call that triple the `Inputs`.
 Note: Of course some of the calculation use results from previous steps of the
 calculation (most famously electricity basically depends on everything else).
 """
+
 # pyright: strict
-from . import refdata
-from .makeentries import Entries
+
 from dataclasses import dataclass
+
+from .makeentries import Entries
+from .refdata import FactsAndAssumptions
 
 
 @dataclass(kw_only=True)
 class Inputs:
     def __init__(
         self,
-        facts_and_assumptions: refdata.FactsAndAssumptions,
+        facts_and_assumptions: FactsAndAssumptions,
         entries: Entries,
     ):
         self._facts_and_assumptions = facts_and_assumptions

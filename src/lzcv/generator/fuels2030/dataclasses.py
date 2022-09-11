@@ -1,9 +1,11 @@
 # pyright: strict
+
 from dataclasses import dataclass
 
 from ..inputs import Inputs
 from ..utils import div
-from .. import fuels2018
+from ..fuels2018.f18 import F18
+from ..fuels2018.dataclasses import FuelProduction
 
 
 @dataclass(kw_only=True)
@@ -47,7 +49,7 @@ class EFuelProduction:
         energy: float,
         inputs: Inputs,
         CO2e_emission_factor: float,
-        production_2018: fuels2018.FuelProduction,
+        production_2018: FuelProduction,
     ) -> "EFuelProduction":
         fact = inputs.fact
         ass = inputs.ass
@@ -251,7 +253,7 @@ class TotalEFuelProduction:
     @classmethod
     def calc(
         cls,
-        f18: fuels2018.F18,
+        f18: F18,
         new_efuels: list[NewEFuelProduction],
         efuels: list[EFuelProduction],
         fuels_without_repl: list[FuelWithoutDirectReplacement],

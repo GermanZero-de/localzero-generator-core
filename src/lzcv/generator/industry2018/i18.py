@@ -1,5 +1,7 @@
 # pyright: strict
+
 from dataclasses import dataclass
+
 from .supply_classes import EnergySum, EnergySource
 from .production_branches import (
     ExtraEmission,

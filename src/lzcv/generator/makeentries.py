@@ -1,8 +1,9 @@
 # pyright: strict
+
 from dataclasses import dataclass
 
-from . import refdata
 from .utils import div
+from .refdata import RefData, Row
 
 # FIXME: This block should die
 
@@ -237,7 +238,7 @@ class Entries:
     ags: str
 
 
-def make_entries(data: refdata.RefData, ags: str, year: int):
+def make_entries(data: RefData, ags: str, year: int) -> Entries:
     # ags identifies the community (Kommune)
     ags_dis = ags[:5]  # This identifies the administrative district (Landkreis)
     ags_sta = ags[:2]  # This identifies the federal state (Bundesland)
@@ -675,7 +676,7 @@ def make_entries(data: refdata.RefData, ags: str, year: int):
     )
 
     def compute_efactor_from_n2o(
-        what: str, area: float, data_nat_agri: refdata.Row = data_nat_agri_sta  # type: ignore
+        what: str, area: float, data_nat_agri: Row = data_nat_agri_sta  # type: ignore
     ):
         n2o = data_nat_agri.float(what + "_n2o")
         co2e = n2o * 298.0

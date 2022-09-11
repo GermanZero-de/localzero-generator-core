@@ -1,13 +1,14 @@
 # pyright: strict
-import dataclasses
-from typing import Any
+
+from dataclasses import asdict
+from typing import Iterator, Any
 import json
 import sys
 import os
 import os.path
 import re
+
 from lzcv.generator import calculate_with_default_inputs, make_entries, RefData
-from typing import Iterator
 
 test_dir = os.path.join("tests", "end_to_end_expected")
 
@@ -30,7 +31,7 @@ def update_expectation(ags: str, year: int, file_path: str):
 def update_entries(ags: str, year: int, file_path: str):
     rd = RefData.load()
     entries = make_entries(rd, ags=ags, year=year)
-    json_to_output_file(dataclasses.asdict(entries), file_path)
+    json_to_output_file(asdict(entries), file_path)
 
 
 def expectation_files(pattern: str) -> Iterator[tuple[str, str, int]]:

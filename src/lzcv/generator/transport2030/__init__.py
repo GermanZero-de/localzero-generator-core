@@ -4,8 +4,10 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/traffic.html
 """
 
 # pyright: strict
+
 from ..inputs import Inputs
-from ..transport2018 import T18
+from ..transport2018.t18 import T18
+
 from .investmentaction import InvestmentAction
 from .air import calc_air_domestic, calc_air_international, Air
 from .road import (

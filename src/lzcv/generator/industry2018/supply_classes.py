@@ -1,4 +1,5 @@
 # pyright: strict
+
 from dataclasses import InitVar, dataclass
 
 from ..utils import div

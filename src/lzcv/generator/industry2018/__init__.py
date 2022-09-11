@@ -4,7 +4,9 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/industry.html
 """
 
 # pyright: strict
+
 from ..inputs import Inputs
+
 from .i18 import I18
 from . import energy_demand, energy_source
 

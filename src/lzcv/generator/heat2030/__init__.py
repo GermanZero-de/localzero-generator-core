@@ -4,10 +4,16 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/heat.html
 """
 
 # pyright: strict
-from ..electricity2030.electricity2030_core import EColVars2030
+
 from ..inputs import Inputs
 from ..utils import div, MILLION
-from .. import residences2030, business2030, heat2018, agri2030, industry2030
+from ..heat2018.h18 import H18
+from ..residences2030.r30 import R30
+from ..business2030.b30 import B30
+from ..agri2030.a30 import A30
+from ..industry2030.i30 import I30
+from ..electricity2030.electricity2030_core import EColVars2030
+
 from .h30 import H30
 from .dataclasses import (
     Vars0,
@@ -32,11 +38,11 @@ from .dataclasses import (
 def calc(
     inputs: Inputs,
     *,
-    h18: heat2018.H18,
-    r30: residences2030.R30,
-    b30: business2030.B30,
-    a30: agri2030.A30,
-    i30: industry2030.I30,
+    h18: H18,
+    r30: R30,
+    b30: B30,
+    a30: A30,
+    i30: I30,
     p_local_biomass_cogen: EColVars2030,
 ) -> H30:
     fact = inputs.fact

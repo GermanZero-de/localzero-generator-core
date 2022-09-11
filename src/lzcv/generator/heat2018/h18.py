@@ -1,4 +1,5 @@
 # pyright: strict
+
 from dataclasses import dataclass
 
 from .dataclasses import Vars1, Vars2, Vars3, Vars4, Vars5, Vars6, Vars7, Vars8

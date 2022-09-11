@@ -1,8 +1,8 @@
 # pyright: strict
+
 from dataclasses import dataclass
 
-from .dataclasses import (
-    CO2eChangeA,
+from .energy_general import (
     CO2eChangeG,
     CO2eChangeGConsult,
     CO2eChangeGOrganic,
@@ -27,6 +27,7 @@ from .energy_source import (
     CO2eChangeFuelHeatpump,
     CO2eChangeFuelEmethan,
 )
+from .co2eChangeA import CO2eChangeA
 
 
 @dataclass(kw_only=True)

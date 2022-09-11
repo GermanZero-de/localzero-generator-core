@@ -1,9 +1,12 @@
 # pyright: strict
+
 from dataclasses import dataclass
-from ..utils import element_wise_plus, MILLION
-from . import co2e
+from typing import Literal
+
 from ..inputs import Inputs
-import typing
+from ..utils import element_wise_plus, MILLION
+
+from . import co2e
 
 
 @dataclass
@@ -93,9 +96,7 @@ class Road:
         )
 
     @classmethod
-    def calc_car(
-        cls, inputs: Inputs, subsection: typing.Literal["it_ot", "ab"]
-    ) -> "Road":
+    def calc_car(cls, inputs: Inputs, subsection: Literal["it_ot", "ab"]) -> "Road":
         fact = inputs.fact
 
         return cls.calc_road(
@@ -189,7 +190,7 @@ class Road:
 
     @classmethod
     def calc_goods_light_duty(
-        cls, inputs: Inputs, section: typing.Literal["it_ot", "ab"]
+        cls, inputs: Inputs, section: Literal["it_ot", "ab"]
     ) -> "Road":
         fact = inputs.fact
 

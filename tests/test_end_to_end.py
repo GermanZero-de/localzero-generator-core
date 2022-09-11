@@ -1,17 +1,19 @@
 """This is a simplistic regression test framework for the generator."""
+
 # pyright: strict
+
 from dataclasses import asdict
+from typing import Any, Literal
 import json
 import os
 import pytest
-from typing import Any, Literal
 
 from lzcv.generator import (
-    calculate_with_default_inputs,
-    make_entries,
     refdatatools,
-    RefData,
     diffs,
+    make_entries,
+    calculate_with_default_inputs,
+    RefData,
 )
 
 PUBLIC_OR_PROP = Literal["public", "proprietary"]

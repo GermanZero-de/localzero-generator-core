@@ -1,5 +1,7 @@
 # pyright: strict
+
 from typing import Any
+
 from commands.cmd_test_end_to_end import (
     cmd_test_end_to_end_update_expectations,
     cmd_test_end_to_end_create_expectation,
