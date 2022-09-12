@@ -5,8 +5,7 @@ from dataclasses import dataclass
 from ...inputs import Inputs
 from ...utils import div
 from ...business2018.b18 import B18
-
-from .energyWithPercentage import EnergyWithPercentage
+from ...common.energy import EnergyWithPercentage
 
 
 @dataclass(kw_only=True)
@@ -25,10 +24,10 @@ class OperationHeatEnergy(EnergyWithPercentage):
             / (1 - inputs.fact("Fact_A_P_energy_buildings_ratio_A_to_B"))
         )
         factor_adapted_to_fec = div(energy, area_m2)
-        pct_energy = div(energy, total_energy)
+
         return cls(
             energy=energy,
-            pct_energy=pct_energy,
+            total_energy=total_energy,
             factor_adapted_to_fec=factor_adapted_to_fec,
             area_m2=area_m2,
         )

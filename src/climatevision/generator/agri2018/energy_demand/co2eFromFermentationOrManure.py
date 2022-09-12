@@ -4,7 +4,7 @@ from dataclasses import dataclass
 
 from ...inputs import Inputs
 
-from ..co2eEmissions import CO2eEmissions
+from ...common.co2eEmissions import CO2eEmissions
 
 
 @dataclass(kw_only=True)

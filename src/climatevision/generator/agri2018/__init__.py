@@ -9,10 +9,9 @@ from ..inputs import Inputs
 from ..lulucf2018.l18 import L18
 from ..business2018.b18 import B18
 
-from .co2eEmissions import CO2eEmissions
 from .a18 import A18
-from . import energy_demand
-from . import energy_source
+from .energy_demand import CO2eEmissions
+from . import energy_demand, energy_source
 
 
 def calc(inputs: Inputs, l18: L18, b18: B18) -> A18:

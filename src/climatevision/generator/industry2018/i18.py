@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass
 
-from .supply_classes import EnergySum, EnergySource
+from .energy_source import Energy, EnergyWithPercentage
 from .production_branches import (
     ExtraEmission,
     ProductionSubBranch,
@@ -42,18 +42,18 @@ class I18:
     p_other_further: ProductionSubBranchCO2viaFEC
     p_other_2efgh: ExtraEmission
 
-    s: EnergySource
-    s_fossil: EnergySum
-    s_fossil_gas: EnergySource
-    s_fossil_coal: EnergySource
-    s_fossil_diesel: EnergySource
-    s_fossil_fueloil: EnergySource
-    s_fossil_lpg: EnergySource
-    s_fossil_opetpro: EnergySource
-    s_fossil_ofossil: EnergySource
-    s_renew: EnergySum
-    s_renew_biomass: EnergySource
-    s_renew_heatnet: EnergySource
-    s_renew_heatpump: EnergySource
-    s_renew_solarth: EnergySource
-    s_renew_elec: EnergySource
+    s: EnergyWithPercentage
+    s_fossil: Energy
+    s_fossil_gas: EnergyWithPercentage
+    s_fossil_coal: EnergyWithPercentage
+    s_fossil_diesel: EnergyWithPercentage
+    s_fossil_fueloil: EnergyWithPercentage
+    s_fossil_lpg: EnergyWithPercentage
+    s_fossil_opetpro: EnergyWithPercentage
+    s_fossil_ofossil: EnergyWithPercentage
+    s_renew: Energy
+    s_renew_biomass: EnergyWithPercentage
+    s_renew_heatnet: EnergyWithPercentage
+    s_renew_heatpump: EnergyWithPercentage
+    s_renew_solarth: EnergyWithPercentage
+    s_renew_elec: EnergyWithPercentage

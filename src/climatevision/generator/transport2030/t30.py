@@ -2,6 +2,8 @@
 
 from dataclasses import dataclass, asdict
 
+from ..common.energy import Energy
+
 from .investmentaction import InvestmentAction
 from .air import Air
 from .road import (
@@ -19,7 +21,7 @@ from .rail import Rail, RailGoods, RailPeople, RailPeopleMetroActionInfra, RailP
 from .ship import Ship, ShipDomestic, ShipInternational, ShipDomesticActionInfra
 from .other import Other, OtherCycle, OtherFoot
 from .transport import Transport
-from .dataclasses import EnergySum, GPlanning, G, T
+from .dataclasses import GPlanning, G, T
 
 
 @dataclass(kw_only=True)
@@ -52,19 +54,19 @@ class T30:
     other_cycl: OtherCycle
     other_cycl_action_infra: InvestmentAction
     g_planning: GPlanning
-    s: EnergySum
-    s_diesel: EnergySum
-    s_emethan: EnergySum
-    s_jetfuel: EnergySum
-    s_petrol: EnergySum
-    s_fueloil: EnergySum
-    s_lpg: EnergySum
-    s_gas: EnergySum
-    s_biogas: EnergySum
-    s_bioethanol: EnergySum
-    s_biodiesel: EnergySum
-    s_elec: EnergySum
-    s_hydrogen: EnergySum
+    s: Energy
+    s_diesel: Energy
+    s_emethan: Energy
+    s_jetfuel: Energy
+    s_petrol: Energy
+    s_fueloil: Energy
+    s_lpg: Energy
+    s_gas: Energy
+    s_biogas: Energy
+    s_bioethanol: Energy
+    s_biodiesel: Energy
+    s_elec: Energy
+    s_hydrogen: Energy
     g: G
     t: T
     air: Air

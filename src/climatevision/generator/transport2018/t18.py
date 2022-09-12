@@ -2,13 +2,14 @@
 
 from dataclasses import dataclass
 
+from ..common.energy import Energy
+
 from .air import Air
 from .road import Road
 from .rail import Rail
 from .ship import Ship
 from .other import Other
 from .transport import Transport
-from .energy_sum import EnergySum
 
 
 @dataclass(kw_only=True)
@@ -47,14 +48,14 @@ class T18:
     other_cycl: Other
     other: Other
 
-    s: EnergySum
-    s_petrol: EnergySum
-    s_jetfuel: EnergySum
-    s_diesel: EnergySum
-    s_fueloil: EnergySum
-    s_lpg: EnergySum
-    s_gas: EnergySum
-    s_biogas: EnergySum
-    s_bioethanol: EnergySum
-    s_biodiesel: EnergySum
-    s_elec: EnergySum
+    s: Energy
+    s_petrol: Energy
+    s_jetfuel: Energy
+    s_diesel: Energy
+    s_fueloil: Energy
+    s_lpg: Energy
+    s_gas: Energy
+    s_biogas: Energy
+    s_bioethanol: Energy
+    s_biodiesel: Energy
+    s_elec: Energy

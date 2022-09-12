@@ -5,15 +5,13 @@ from dataclasses import dataclass
 from ...inputs import Inputs
 from ...lulucf2018.l18 import L18
 from ...business2018.b18 import B18
-
-from ..co2eEmissions import CO2eEmissions
+from ...common.energy import Energy, EnergyWithPercentage
+from ...common.co2eEmissions import CO2eEmissions
 
 from .p import P
 from .co2eFromFermentationOrManure import CO2eFromFermentationOrManure
 from .co2eFromSoil import CO2eFromSoil
 from .co2eFromOther import CO2eFromOther
-from .energy import Energy
-from .energyWithPercentage import EnergyWithPercentage
 from .operationHeatEnergy import OperationHeatEnergy
 
 
@@ -202,10 +200,10 @@ def calc_production(
 
     p_operation_elec_heatpump = Energy(energy=0)
     p_operation = Energy(energy=total_energy)
-    p_operation_elec_elcon = EnergyWithPercentage.calc(
+    p_operation_elec_elcon = EnergyWithPercentage(
         energy=s_elec_energy, total_energy=p_operation.energy
     )
-    p_operation_vehicles = EnergyWithPercentage.calc(
+    p_operation_vehicles = EnergyWithPercentage(
         energy=s_petrol_energy + s_diesel_energy, total_energy=p_operation.energy
     )
     p_operation_heat = OperationHeatEnergy.calc(
