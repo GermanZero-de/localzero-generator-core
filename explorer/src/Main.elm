@@ -50,12 +50,14 @@ import File exposing (File)
 import File.Download as Download
 import File.Select
 import Filter
+import GeneratorRpc
 import Html exposing (Html, p)
 import Html.Attributes
 import Html5.DragDrop as DragDrop exposing (droppable)
 import Http
 import Json.Decode as Decode
 import Json.Encode as Encode
+import JsonRpc
 import KeyBindings exposing (noModifiers, shift)
 import Keyboard.Key as K
 import Lens exposing (Lens)
@@ -90,7 +92,7 @@ import Styling
         )
 import Task
 import Tree exposing (Node(..), Tree)
-import Value exposing (Value(..), binaryTraceToList)
+import Value exposing (Value(..))
 import ValueSet exposing (ValueSet)
 
 
@@ -210,14 +212,6 @@ filterFieldId =
     "filter"
 
 
-encodeOverrides : Run.Overrides -> Encode.Value
-encodeOverrides d =
-    Encode.dict
-        identity
-        Encode.float
-        d
-
-
 port save : Encode.Value -> Cmd msg
 
 
@@ -265,12 +259,10 @@ toClipboardData lens allRuns =
 initiateCalculate : Maybe RunId -> Run.Inputs -> Run.Entries -> Run.Overrides -> Model -> ( Model, Cmd Msg )
 initiateCalculate maybeNdx inputs entries overrides model =
     ( { model | showModal = Just Loading }
-    , Http.post
-        { url = "http://localhost:4070/calculate/" ++ inputs.ags ++ "/" ++ String.fromInt inputs.year
-        , expect =
-            Http.expectJson (GotGeneratorResult maybeNdx inputs entries overrides)
-                (Tree.decoder (Value.maybeWithTraceDecoder "result"))
-        , body = Http.jsonBody (encodeOverrides overrides)
+    , GeneratorRpc.calculate
+        { inputs = inputs
+        , overrides = overrides
+        , toMsg = GotGeneratorResult maybeNdx inputs entries overrides
         }
     )
 
@@ -278,10 +270,7 @@ initiateCalculate maybeNdx inputs entries overrides model =
 initiateMakeEntries : Maybe RunId -> Run.Inputs -> Run.Overrides -> Model -> ( Model, Cmd Msg )
 initiateMakeEntries maybeNdx inputs overrides model =
     ( { model | showModal = Just Loading }
-    , Http.get
-        { url = "http://localhost:4070/make-entries/" ++ inputs.ags ++ "/" ++ String.fromInt inputs.year
-        , expect = Http.expectJson (GotEntries maybeNdx inputs overrides) Run.entriesDecoder
-        }
+    , GeneratorRpc.makeEntries { inputs = inputs, toMsg = GotEntries maybeNdx inputs overrides }
     )
 
 
@@ -317,8 +306,8 @@ init storage =
 
 type Msg
     = -- Running the generator
-      GotGeneratorResult (Maybe RunId) Run.Inputs Run.Entries Run.Overrides (Result Http.Error (Tree Value.MaybeWithTrace))
-    | GotEntries (Maybe RunId) Run.Inputs Run.Overrides (Result Http.Error Run.Entries)
+      GotGeneratorResult (Maybe RunId) Run.Inputs Run.Entries Run.Overrides (JsonRpc.RpcData (Tree Value.MaybeWithTrace))
+    | GotEntries (Maybe RunId) Run.Inputs Run.Overrides (JsonRpc.RpcData Run.Entries)
       -- trace handling
     | DisplayTrace RunId Path Value Value.Trace
     | CloseTrace Int -- Number of steps to pop
@@ -588,21 +577,35 @@ update msg model =
                     { model | lenses = ls }
                         |> withSaveCmd
 
-        GotEntries maybeRunId inputs overrides (Ok entries) ->
-            model
-                |> initiateCalculate maybeRunId inputs entries overrides
+        GotEntries maybeRunId inputs overrides response ->
+            case JsonRpc.flat response of
+                JsonRpc.RpcResult e ->
+                    model
+                        |> initiateCalculate maybeRunId inputs e overrides
 
-        GotEntries _ _ _ (Err (Http.BadBody error)) ->
-            model
-                |> withErrorMessage "Failed to decode entries" error
+                JsonRpc.RpcErr _ ->
+                    model
+                        |> withErrorMessage "Failed to call make-entries rpc"
+                            "rpc failed"
 
-        GotEntries _ _ _ (Err _) ->
-            model
-                |> withErrorMessage "Failed to get entries " ""
+                JsonRpc.HttpErr _ ->
+                    model
+                        |> withErrorMessage "Failed to call make-entries rpc"
+                            "HTTP failed"
 
-        GotGeneratorResult maybeRunId inputs entries overrides resultOrError ->
-            case resultOrError of
-                Ok result ->
+        GotGeneratorResult maybeRunId inputs entries overrides response ->
+            case JsonRpc.flat response of
+                JsonRpc.RpcErr _ ->
+                    model
+                        |> withErrorMessage "Failed to call calculate rpc"
+                            "rpc failed"
+
+                JsonRpc.HttpErr _ ->
+                    model
+                        |> withErrorMessage "Failed to call calculate rpc"
+                            "HTTP failed"
+
+                JsonRpc.RpcResult result ->
                     let
                         run =
                             Run.create
@@ -651,27 +654,6 @@ update msg model =
                         , showModal = Nothing
                     }
                         |> withSaveCmd
-
-                Err (Http.BadUrl s) ->
-                    model
-                        |> withErrorMessage "BAD URL: " s
-
-                Err Http.Timeout ->
-                    model
-                        |> withErrorMessage "TIMEOUT" ""
-
-                Err Http.NetworkError ->
-                    model
-                        |> withErrorMessage "NETWORK ERROR" ""
-
-                Err (Http.BadStatus code) ->
-                    model
-                        |> withErrorMessage ("BAD STATUS CODE" ++ String.fromInt code)
-                            ""
-
-                Err (Http.BadBody error) ->
-                    model
-                        |> withErrorMessage "Failed to decode" error
 
         ToggleCollapseTreeClicked i path ->
             { model | collapseStatus = CollapseStatus.toggle i path model.collapseStatus }
