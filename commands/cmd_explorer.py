@@ -74,7 +74,6 @@ def cmd_explorer(args: Any):
             self.end_headers()
             self.wfile.write(elm_js.encode())
 
-
         def do_POST(self):
             match self.path.split("/"):
                 case ["", "api", "v0"]:
