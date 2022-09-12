@@ -7,7 +7,7 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/traffic.html
 
 from ..inputs import Inputs
 from ..transport2018.t18 import T18
-from ..commonDataclasses.energy import Energy
+from ..common.energy import Energy
 
 from .investmentaction import InvestmentAction
 from .air import calc_air_domestic, calc_air_international, Air

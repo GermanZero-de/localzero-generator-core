@@ -6,7 +6,7 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/traffic.html
 # pyright: strict
 
 from ..inputs import Inputs
-from ..commonDataclasses.energy import Energy
+from ..common.energy import Energy
 
 from .air import Air
 from .road import Road

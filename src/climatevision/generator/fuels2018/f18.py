@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass
 
-from ..commonDataclasses.co2eEmissions import CO2eEmissions
+from ..common.co2eEmissions import CO2eEmissions
 
 from .energy_demand import EnergyDemand
 from .energy_production import FuelProduction, TotalFuelProduction

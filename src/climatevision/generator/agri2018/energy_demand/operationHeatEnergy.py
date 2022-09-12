@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from ...inputs import Inputs
 from ...utils import div
 from ...business2018.b18 import B18
-from ...commonDataclasses.energy import EnergyWithPercentage
+from ...common.energy import EnergyWithPercentage
 
 
 @dataclass(kw_only=True)

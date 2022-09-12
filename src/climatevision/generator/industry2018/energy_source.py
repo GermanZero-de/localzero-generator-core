@@ -3,7 +3,7 @@
 from dataclasses import dataclass
 
 from ..inputs import Inputs
-from ..commonDataclasses.energy import Energy, EnergyWithPercentage
+from ..common.energy import Energy, EnergyWithPercentage
 
 
 @dataclass(kw_only=True)

@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass
 
-from ..commonDataclasses.energy import Energy
+from ..common.energy import Energy
 
 from .air import Air
 from .road import Road

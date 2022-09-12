@@ -5,8 +5,8 @@ from dataclasses import dataclass
 from ...inputs import Inputs
 from ...lulucf2018.l18 import L18
 from ...business2018.b18 import B18
-from ...commonDataclasses.energy import Energy, EnergyWithPercentage
-from ...commonDataclasses.co2eEmissions import CO2eEmissions
+from ...common.energy import Energy, EnergyWithPercentage
+from ...common.co2eEmissions import CO2eEmissions
 
 from .p import P
 from .co2eFromFermentationOrManure import CO2eFromFermentationOrManure

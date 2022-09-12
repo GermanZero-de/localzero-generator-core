@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass, asdict
 
-from ..commonDataclasses.energy import Energy
+from ..common.energy import Energy
 
 from .investmentaction import InvestmentAction
 from .air import Air
