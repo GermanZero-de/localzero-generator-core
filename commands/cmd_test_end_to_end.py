@@ -8,9 +8,7 @@ import os
 import os.path
 import re
 
-from generatorcore.generator import calculate_with_default_inputs
-from generatorcore import refdata
-from generatorcore.makeentries import make_entries
+from climatevision.generator import calculate_with_default_inputs, make_entries, RefData
 
 test_dir = os.path.join("tests", "end_to_end_expected")
 
@@ -31,7 +29,7 @@ def update_expectation(ags: str, year: int, file_path: str):
 
 
 def update_entries(ags: str, year: int, file_path: str):
-    rd = refdata.RefData.load()
+    rd = RefData.load()
     entries = make_entries(rd, ags=ags, year=year)
     json_to_output_file(asdict(entries), file_path)
 
@@ -64,7 +62,7 @@ def cmd_test_end_to_end_create_expectation(args: Any):
 
 
 def cmd_test_end_to_end_run_all_ags(args: Any):
-    data = refdata.RefData.load()
+    data = RefData.load()
     good = 0
     errors = 0
     with open("test_errors.txt", "w") as error_file:

@@ -8,9 +8,13 @@ import json
 import os
 import pytest
 
-from generatorcore import refdatatools, diffs, makeentries
-from generatorcore.generator import calculate_with_default_inputs
-from generatorcore.refdata import RefData
+from climatevision.generator import (
+    refdatatools,
+    diffs,
+    make_entries,
+    calculate_with_default_inputs,
+    RefData,
+)
 
 PUBLIC_OR_PROP = Literal["public", "proprietary"]
 
@@ -110,7 +114,7 @@ def make_entries_test(ags: Any, year: int):
     fname = f"entries_{ags}_{year}.json"
     with open(os.path.join(root, "tests", "end_to_end_expected", fname)) as fp:
         expected = json.load(fp)
-        e = makeentries.make_entries(refdata, ags, year)
+        e = make_entries(refdata, ags, year)
         got = asdict(e)
         ds = list(diffs.all(expected=expected, actual=got))  # type: ignore
         if ds:

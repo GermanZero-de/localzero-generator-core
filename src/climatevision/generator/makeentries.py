@@ -238,7 +238,7 @@ class Entries:
     ags: str
 
 
-def make_entries(data: RefData, ags: str, year: int):
+def make_entries(data: RefData, ags: str, year: int) -> Entries:
     # ags identifies the community (Kommune)
     ags_dis = ags[:5]  # This identifies the administrative district (Landkreis)
     ags_sta = ags[:2]  # This identifies the federal state (Bundesland)

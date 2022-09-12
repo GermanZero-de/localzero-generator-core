@@ -1,4 +1,4 @@
-# pyright: strict
+# pyright: strict reportMissingTypeStubs=true
 ###### WORDS OF WARNING
 # This implements a simple http JSON "RPC" server for the generator
 #
@@ -11,9 +11,9 @@
 # + the thing needed to provide the UI.
 import dataclasses
 from typing import Callable, Any
-from generatorcore import generator, makeentries
-from generatorcore.inputs import Inputs
-from generatorcore.refdata import RefData
+from climatevision import generator
+from climatevision.generator import Inputs, RefData
+
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from . import monkeypatch
 import jsonrpcserver
@@ -30,16 +30,16 @@ class CoreGeneratorRpcs:
     def make_entries(self, ags: str, year: int) -> jsonrpcserver.Result:
         return jsonrpcserver.Success(
             self.finalize_traces_if_enabled(
-                dataclasses.asdict(makeentries.make_entries(self.rd, ags, year))
+                dataclasses.asdict(generator.make_entries(self.rd, ags, year))
             )
         )
 
     def calculate(
         self, ags: str, year: int, overrides: dict[str, int | float | str]
     ) -> jsonrpcserver.Result:
-        defaults = dataclasses.asdict(makeentries.make_entries(self.rd, ags, year))
+        defaults = dataclasses.asdict(generator.make_entries(self.rd, ags, year))
         defaults.update(overrides)
-        entries = makeentries.Entries(**defaults)
+        entries = generator.Entries(**defaults)
         inputs = Inputs(
             facts_and_assumptions=self.rd.facts_and_assumptions(), entries=entries
         )

@@ -1,12 +1,13 @@
 [tool.poetry]
-name = "generatorcore"
+name = "climatevision"
 version = "1.1.0"
-description = "LocalZero Generator core."
+description = "LocalZero Climate Vision -- Calculation and basic infrastructure."
 authors = ["Benedikt Grundmann <benedikt.grundmann@gmail.com>","Anja Höhne","Anne Klenge","Jan Kuhlem",
           "Sebastian Lüttig","Silvan Ostheimer","Hauke Schmülling","Leon Schomburg <Leon.Schomburg.ext@germanzero.de>",
           "Manfred Schüssler","Anne Schwob", "Eckhard Weißhaar","Jeniffer Wessel"]
-include = [
-  "generatorcore/py.typed"
+
+packages = [
+  { include = "climatevision", from="src" }
 ]
 
 [tool.poetry.dependencies]
@@ -22,8 +23,11 @@ pyright = "^1.1.263"
 Sphinx = "^4.4.0"
 sphinx-rtd-theme = "^1.0.0"
 
+[tool.poetry.group.dev.dependencies]
+black = {version = "^22.8.0", allow-prereleases = true}
+
 [tool.pyright]
-include = ["generatorcore", "commands", "tests"]
+include = ["src", "commands", "tests"]
 typeCheckingMode = "basic"
 pythonVersion = "3.10"
 
