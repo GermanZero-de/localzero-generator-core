@@ -8,7 +8,7 @@ import os
 import os.path
 import re
 
-from lzcv.generator import calculate_with_default_inputs, make_entries, RefData
+from climatevision.generator import calculate_with_default_inputs, make_entries, RefData
 
 test_dir = os.path.join("tests", "end_to_end_expected")
 

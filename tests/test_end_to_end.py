@@ -8,7 +8,7 @@ import json
 import os
 import pytest
 
-from lzcv.generator import (
+from climatevision.generator import (
     refdatatools,
     diffs,
     make_entries,

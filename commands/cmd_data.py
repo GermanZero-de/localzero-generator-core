@@ -7,7 +7,7 @@ import sys
 import os.path
 import json
 
-from lzcv.generator import ags, refdatatools, refdata, makeentries
+from climatevision.generator import ags, refdatatools, refdata, makeentries
 
 
 def cmd_data_normalize(args: Any):

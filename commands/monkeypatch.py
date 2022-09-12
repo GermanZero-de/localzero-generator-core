@@ -1,7 +1,7 @@
 from dataclasses import fields, is_dataclass
 from typing import Any, Callable
-from lzcv.generator import Result
-from lzcv.generator.refdata import Row
+from climatevision.generator import Result
+from climatevision.generator.refdata import Row
 
 
 def identity(x: Any):

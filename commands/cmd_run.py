@@ -5,7 +5,7 @@ from typing import Any
 import json
 import sys
 
-from lzcv.generator import calculate_with_default_inputs, RefData, make_entries
+from climatevision.generator import calculate_with_default_inputs, RefData, make_entries
 from . import monkeypatch
 
 

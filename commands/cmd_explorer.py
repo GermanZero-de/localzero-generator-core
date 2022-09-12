@@ -11,8 +11,8 @@
 # + the thing needed to provide the UI.
 import dataclasses
 from typing import Callable, Any
-from lzcv import generator
-from lzcv.generator import Inputs, RefData
+from climatevision import generator
+from climatevision.generator import Inputs, RefData
 
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from . import monkeypatch
