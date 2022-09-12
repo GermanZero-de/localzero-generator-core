@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "localzeroclimatevision"
+name = "climatevision"
 version = "1.1.0"
 description = "LocalZero Climate Vision -- Calculation and basic infrastructure."
 authors = ["Benedikt Grundmann <benedikt.grundmann@gmail.com>","Anja Höhne","Anne Klenge","Jan Kuhlem",
@@ -7,7 +7,7 @@ authors = ["Benedikt Grundmann <benedikt.grundmann@gmail.com>","Anja Höhne","An
           "Manfred Schüssler","Anne Schwob", "Eckhard Weißhaar","Jeniffer Wessel"]
 
 packages = [
-  { include = "lzcv", from="src" }
+  { include = "climatevision", from="src" }
 ]
 
 [tool.poetry.dependencies]
