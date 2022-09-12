@@ -1,5 +1,6 @@
 from dataclasses import fields, is_dataclass
 from typing import Any, Callable
+
 from climatevision.generator import Result
 from climatevision.generator.refdata import Row
 

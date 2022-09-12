@@ -9,14 +9,16 @@
 # More specifically this is not intented to be the RPC server that we will
 # offer to the outside world. This is just a quick-dirty test bed for RPCs
 # + the thing needed to provide the UI.
+
 import dataclasses
 from typing import Callable, Any
+from http.server import HTTPServer, BaseHTTPRequestHandler
+import jsonrpcserver
+
 from climatevision import generator
 from climatevision.generator import Inputs, RefData
 
-from http.server import HTTPServer, BaseHTTPRequestHandler
 from . import monkeypatch
-import jsonrpcserver
 
 
 class CoreGeneratorRpcs:
