@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "lzcv"
+name = "localzeroclimatevision"
 version = "1.1.0"
 description = "LocalZero Climate Vision -- Calculation and basic infrastructure."
 authors = ["Benedikt Grundmann <benedikt.grundmann@gmail.com>","Anja Höhne","Anne Klenge","Jan Kuhlem",
