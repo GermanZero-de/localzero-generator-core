@@ -6,6 +6,7 @@ module Run exposing
     , Path
     , Run
     , create
+    , encodeOverrides
     , entriesDecoder
     , getInputs
     , getOverrides
@@ -18,6 +19,7 @@ module Run exposing
 
 import Dict exposing (Dict)
 import Json.Decode as Decode
+import Json.Encode as Encode
 import Tree exposing (Tree)
 import Value
 
@@ -113,3 +115,11 @@ getTree h (Run r) =
 entriesDecoder : Decode.Decoder Entries
 entriesDecoder =
     Decode.dict (Value.maybeWithTraceDecoder "entries")
+
+
+encodeOverrides : Overrides -> Encode.Value
+encodeOverrides d =
+    Encode.dict
+        identity
+        Encode.float
+        d
