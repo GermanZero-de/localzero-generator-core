@@ -1,8 +1,8 @@
 from dataclasses import fields, is_dataclass
 from typing import Any, Callable
 
-from climatevision.generator import Result
-from climatevision.generator.refdata import Row
+from ..generator import Result
+from ..generator.refdata import Row
 
 
 def identity(x: Any):
@@ -11,7 +11,7 @@ def identity(x: Any):
 
 def maybe_enable_tracing(args: Any) -> Callable[[Any], Any]:
     """Enable tracing if trace was given on the commandline.  Should be called before any computation is done!
-    Makes the generatorcore use tracednumber to do all calculations.
+    Makes the generatorcore use tracing.number to do all calculations.
     Call the returned function on the result of Result.result_dict or asdict(entries) to
     finalize the traces for output to JSON.  The returned function is a no-op if tracing
     wasn't enabled.
@@ -27,7 +27,7 @@ def enable_tracing() -> Callable[[Any], Any]:
     # the somewhat hacky tracing code to be part of the normal production
     # calculations.  It's only supposed to be a quick tool for developers
     # the generator core -- who hopefully understand the tools limitations.
-    from . import tracednumber
+    from . import number
 
     # First patch the lookup of inputs
     original_float = Row.float  # type: ignore
@@ -36,9 +36,9 @@ def enable_tracing() -> Callable[[Any], Any]:
         v = original_float(self, attr)
         # make facts and assumptions prettier
         if self.dataset in ["facts", "assumptions"] and attr == "value":
-            return tracednumber.TracedNumber.fact_or_ass(str(self.key_value), v)
+            return number.TracedNumber.fact_or_ass(str(self.key_value), v)
         else:
-            return tracednumber.TracedNumber.data(v, self.dataset, self.key_value, attr)
+            return number.TracedNumber.data(v, self.dataset, self.key_value, attr)
 
     Row.float = traced_float  # type: ignore
 
@@ -47,17 +47,15 @@ def enable_tracing() -> Callable[[Any], Any]:
     # def_name is used when the same component is used multiple times.
     def traced_getattribute(self: Any, name: str):
         value = object.__getattribute__(self, name)
-        if isinstance(value, (float, int, tracednumber.TracedNumber)):
-            traced_value = tracednumber.TracedNumber.lift(value)
+        if isinstance(value, (float, int, number.TracedNumber)):
+            traced_value = number.TracedNumber.lift(value)
             if not hasattr(self, "__name_defs"):
                 self.__name_defs = {}
             if name not in self.__name_defs:
-                name_def = tracednumber.def_name("?." + name, traced_value.trace)
+                name_def = number.def_name("?." + name, traced_value.trace)
                 self.__name_defs[name] = name_def
 
-            return tracednumber.TracedNumber(
-                traced_value.value, trace=self.__name_defs[name]
-            )
+            return number.TracedNumber(traced_value.value, trace=self.__name_defs[name])
         else:
             return value
 
@@ -70,7 +68,7 @@ def enable_tracing() -> Callable[[Any], Any]:
     prepare_tracing_of_fields(Result)
 
     def convert(x):
-        tracednumber.finalize_traces_in_result(x)
+        number.finalize_traces_in_result(x)
         return x
 
     return convert

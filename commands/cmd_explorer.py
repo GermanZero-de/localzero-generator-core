@@ -17,8 +17,7 @@ import jsonrpcserver
 
 from climatevision import generator
 from climatevision.generator import Inputs, RefData
-
-from . import monkeypatch
+from climatevision import tracing
 
 
 class CoreGeneratorRpcs:
@@ -53,7 +52,7 @@ class CoreGeneratorRpcs:
 
 
 def cmd_explorer(args: Any):
-    finalize_traces_if_enabled = monkeypatch.maybe_enable_tracing(args)
+    finalize_traces_if_enabled = tracing.maybe_enable(args)
     rd = RefData.load()
     core_rpcs = CoreGeneratorRpcs(rd, finalize_traces_if_enabled)
     with open("explorer/index.html", encoding="utf-8") as index_file:
