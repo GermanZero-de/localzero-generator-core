@@ -1,4 +1,4 @@
-# pyright: strict reportMissingTypeStubs=true
+# pyright: strict
 ###### WORDS OF WARNING
 # This implements a simple http JSON "RPC" server for the generator
 #
@@ -10,51 +10,19 @@
 # offer to the outside world. This is just a quick-dirty test bed for RPCs
 # + the thing needed to provide the UI.
 
-import dataclasses
-from typing import Callable, Any
+from typing import Any
 from http.server import HTTPServer, BaseHTTPRequestHandler
 import jsonrpcserver
 
-from climatevision import generator
-from climatevision.generator import Inputs, RefData
+from climatevision.generator import RefData
 from climatevision import tracing
-
-
-class CoreGeneratorRpcs:
-    rd: RefData
-    finalize_traces_if_enabled: Callable[[Any], Any]
-
-    def __init__(self, rd: RefData, finalize_traces_if_enabled: Callable[[Any], Any]):
-        self.rd = rd
-        self.finalize_traces_if_enabled = finalize_traces_if_enabled
-
-    def make_entries(self, ags: str, year: int) -> jsonrpcserver.Result:
-        return jsonrpcserver.Success(
-            self.finalize_traces_if_enabled(
-                dataclasses.asdict(generator.make_entries(self.rd, ags, year))
-            )
-        )
-
-    def calculate(
-        self, ags: str, year: int, overrides: dict[str, int | float | str]
-    ) -> jsonrpcserver.Result:
-        defaults = dataclasses.asdict(generator.make_entries(self.rd, ags, year))
-        defaults.update(overrides)
-        entries = generator.Entries(**defaults)
-        inputs = Inputs(
-            facts_and_assumptions=self.rd.facts_and_assumptions(), entries=entries
-        )
-        g = generator.calculate(inputs)
-        return jsonrpcserver.Success(self.finalize_traces_if_enabled(g.result_dict()))
-
-    def methods(self) -> dict[str, Callable[[Any], jsonrpcserver.Result]]:
-        return {"make-entries": self.make_entries, "calculate": self.calculate}  # type: ignore
+from climatevision.server import GeneratorRpcs
 
 
 def cmd_explorer(args: Any):
     finalize_traces_if_enabled = tracing.maybe_enable(args)
     rd = RefData.load()
-    core_rpcs = CoreGeneratorRpcs(rd, finalize_traces_if_enabled)
+    generator_rpcs = GeneratorRpcs(rd, finalize_traces_if_enabled)
     with open("explorer/index.html", encoding="utf-8") as index_file:
         index = index_file.read()
     with open("explorer/elm.js", encoding="utf-8") as elm_js_file:
@@ -82,7 +50,8 @@ def cmd_explorer(args: Any):
                         return
                     request = self.rfile.read(content_len).decode()
                     response = jsonrpcserver.dispatch(
-                        request, methods=core_rpcs.methods()
+                        request,
+                        methods=generator_rpcs.methods(),  # type: ignore TODO: Figure out a better way to deal with this
                     )
                     self.send_response(200)
                     self.send_header("Content-type", "application/json")
