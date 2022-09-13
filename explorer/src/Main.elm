@@ -2943,7 +2943,23 @@ viewCalculateModal maybeNdx state overrides =
                 (state.filteredAgs
                     |> List.map
                         (\a ->
-                            row [ width fill, spacing sizes.medium ]
+                            row
+                                ([ width fill
+                                 , spacing sizes.medium
+                                 , Events.onClick (ModalMsg <| EnterInputsAgsFilterUpdated a.ags)
+                                 ]
+                                    ++ (case state.filteredAgs of
+                                            [ _ ] ->
+                                                [ Border.rounded 4
+                                                , Background.color Styling.germanZeroYellow
+                                                , Font.color Styling.white
+                                                , padding sizes.small
+                                                ]
+
+                                            _ ->
+                                                []
+                                       )
+                                )
                                 [ text a.ags
                                 , text a.desc
                                 ]
