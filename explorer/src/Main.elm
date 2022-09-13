@@ -2933,38 +2933,42 @@ viewCalculateModal maybeNdx state overrides =
             , padding sizes.medium
             ]
           <|
-            column
-                [ width fill
-                , height fill
-                , padding sizes.medium
-                , spacing sizes.medium
-                , scrollbarY
-                ]
-                (state.filteredAgs
-                    |> List.map
-                        (\a ->
-                            row
-                                ([ width fill
-                                 , spacing sizes.medium
-                                 , Events.onClick (ModalMsg <| EnterInputsAgsFilterUpdated a.ags)
-                                 ]
-                                    ++ (case state.filteredAgs of
-                                            [ _ ] ->
-                                                [ Border.rounded 4
-                                                , Background.color Styling.germanZeroYellow
-                                                , Font.color Styling.white
-                                                , padding sizes.small
-                                                ]
+            if List.length state.filteredAgs > 2000 then
+                text "Enter a AGS (e.g. 08416041) or City name (e.g. Tübingen)"
 
-                                            _ ->
-                                                []
-                                       )
-                                )
-                                [ text a.ags
-                                , text a.desc
-                                ]
-                        )
-                )
+            else
+                column
+                    [ width fill
+                    , height fill
+                    , padding sizes.medium
+                    , spacing sizes.medium
+                    , scrollbarY
+                    ]
+                    (state.filteredAgs
+                        |> List.map
+                            (\a ->
+                                row
+                                    ([ width fill
+                                     , spacing sizes.medium
+                                     , Events.onClick (ModalMsg <| EnterInputsAgsFilterUpdated a.ags)
+                                     ]
+                                        ++ (case state.filteredAgs of
+                                                [ _ ] ->
+                                                    [ Border.rounded 4
+                                                    , Background.color Styling.germanZeroYellow
+                                                    , Font.color Styling.white
+                                                    , padding sizes.small
+                                                    ]
+
+                                                _ ->
+                                                    []
+                                           )
+                                    )
+                                    [ text a.ags
+                                    , text a.desc
+                                    ]
+                            )
+                    )
         , Input.slider
             [ height (px 20)
             , Element.behindContent

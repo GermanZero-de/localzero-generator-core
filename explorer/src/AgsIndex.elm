@@ -33,7 +33,11 @@ init agsDataList =
                     let
                         agsRecord =
                             { normal = agsData
-                            , lower = { ags = agsData.ags, short = String.toLower agsData.short, desc = String.toLower agsData.desc }
+                            , lower =
+                                { ags = agsData.ags
+                                , short = String.toLower agsData.short
+                                , desc = String.toLower agsData.desc
+                                }
                             }
                     in
                     acc
@@ -42,10 +46,11 @@ init agsDataList =
                 )
                 Dict.empty
                 agsDataList
+                |> Dict.map (\_ l -> List.sortBy (.lower >> .desc) l)
     in
     AgsIndex
         { byFirstChar = byFirstChar
-        , all = agsDataList
+        , all = agsDataList |> List.sortBy .desc
         }
 
 
