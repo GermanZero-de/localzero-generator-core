@@ -16,6 +16,22 @@ class GeneratorRpcs:
         self.rd = rd
         self.finalize_traces_if_enabled = finalize_traces_if_enabled
 
+    def list_ags(self) -> jsonrpcserver.Result:
+        def guess_short_name_from_description(d: str) -> str:
+            return d.split(",", maxsplit=1)[0].split("(", maxsplit=1)[0]
+
+        # TODO: Add Federal State
+        all_ags = self.rd.ags_master()
+        result = [
+            {
+                "ags": ags,
+                "desc": description,
+                "short": guess_short_name_from_description(description),
+            }
+            for (ags, description) in all_ags.items()
+        ]
+        return jsonrpcserver.Success(result)
+
     def make_entries(self, ags: str, year: int) -> jsonrpcserver.Result:
         return jsonrpcserver.Success(
             self.finalize_traces_if_enabled(
@@ -36,4 +52,8 @@ class GeneratorRpcs:
         return jsonrpcserver.Success(self.finalize_traces_if_enabled(g.result_dict()))
 
     def methods(self) -> jsonrpcserver.methods.Methods:
-        return {"make-entries": self.make_entries, "calculate": self.calculate}
+        return {
+            "make-entries": self.make_entries,
+            "list-ags": self.list_ags,
+            "calculate": self.calculate,
+        }
