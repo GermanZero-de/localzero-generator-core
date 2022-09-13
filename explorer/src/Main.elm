@@ -2,6 +2,7 @@ port module Main exposing (Model, Msg(..), init, main, subscriptions, update, vi
 
 --import Element.Background as Background
 
+import AgsIndex exposing (AgsIndex)
 import AllRuns
     exposing
         ( AllRuns
@@ -182,6 +183,7 @@ type alias Model =
     , leftPaneWidth : Int
     , dragDrop : DragDrop
     , displayedTrace : List DisplayedTrace
+    , agsIndex : AgsIndex
     }
 
 
@@ -194,11 +196,26 @@ type alias DisplayedTrace =
     }
 
 
+type alias EnterInputsDialogState =
+    { agsFilter : String
+    , year : Int
+    , filteredAgs : List GeneratorRpc.AgsData
+    }
+
+
 type ModalState
-    = PrepareCalculate (Maybe RunId) Run.Inputs Run.Overrides
+    = EnterInputs (Maybe RunId) EnterInputsDialogState Run.Overrides
     | Loading
     | ErrorMessage String String
     | ReMap ReMapModalState
+
+
+enterInputsInit : Int -> String -> AgsIndex -> EnterInputsDialogState
+enterInputsInit year agsFilter agsIndex =
+    { agsFilter = agsFilter
+    , year = year
+    , filteredAgs = AgsIndex.lookup agsFilter agsIndex
+    }
 
 
 type alias ReMapModalState =
@@ -274,6 +291,13 @@ initiateMakeEntries maybeNdx inputs overrides model =
     )
 
 
+initiateListAgs : Model -> ( Model, Cmd Msg )
+initiateListAgs model =
+    ( { model | showModal = Just Loading }
+    , GeneratorRpc.listAgs { toMsg = GotListAgs }
+    )
+
+
 activateLens : LensId -> Model -> Model
 activateLens id model =
     { model
@@ -296,6 +320,7 @@ init storage =
     , leftPaneWidth = 600
     , dragDrop = DragDrop.init
     , displayedTrace = []
+    , agsIndex = AgsIndex.init []
     }
         |> update (LocalStorageLoaded storage)
 
@@ -308,6 +333,7 @@ type Msg
     = -- Running the generator
       GotGeneratorResult (Maybe RunId) Run.Inputs Run.Entries Run.Overrides (JsonRpc.RpcData (Tree Value.MaybeWithTrace))
     | GotEntries (Maybe RunId) Run.Inputs Run.Overrides (JsonRpc.RpcData Run.Entries)
+    | GotListAgs (JsonRpc.RpcData (List GeneratorRpc.AgsData))
       -- trace handling
     | DisplayTrace RunId Path Value Value.Trace
     | CloseTrace Int -- Number of steps to pop
@@ -326,7 +352,7 @@ type Msg
     | ToggleCollapseTreeClicked Explorable.Id Path
       -- Modal dialog
     | ModalMsg ModalMsg
-    | DisplayCalculateModalClicked (Maybe RunId) Run.Inputs Run.Overrides
+    | DisplayCalculateModalClicked (Maybe RunId) { agsFilter : String, year : Int } Run.Overrides
     | CalculateModalOkClicked (Maybe RunId) Run.Inputs Run.Overrides
     | RemoveExplorableClicked Explorable.Id
     | ModalDismissed
@@ -375,8 +401,8 @@ type Msg
 
 type ModalMsg
     = -- Modal: PrepareCalculate
-      CalculateModalTargetYearUpdated Int
-    | CalculateModalAgsUpdated String
+      EnterInputsTargetYearUpdated Int
+    | EnterInputsAgsFilterUpdated String
       -- Modal: ReMap
     | ReMapChangeMapping RunId RunId
 
@@ -542,7 +568,7 @@ update msg model =
                 Ok Nothing ->
                     -- no previous localstorage
                     model
-                        |> withNoCmd
+                        |> initiateListAgs
 
                 Ok (Just storage) ->
                     let
@@ -555,7 +581,7 @@ update msg model =
                                     i
                     in
                     { model | lenses = ls }
-                        |> withNoCmd
+                        |> initiateListAgs
 
         FileContentLoaded content ->
             case Decode.decodeString Storage.decoder content of
@@ -576,6 +602,25 @@ update msg model =
                     in
                     { model | lenses = ls }
                         |> withSaveCmd
+
+        GotListAgs response ->
+            case JsonRpc.flat response of
+                JsonRpc.RpcResult ad ->
+                    { model
+                        | showModal = Nothing
+                        , agsIndex = AgsIndex.init ad
+                    }
+                        |> withNoCmd
+
+                JsonRpc.RpcErr _ ->
+                    model
+                        |> withErrorMessage "Failed to call list-ags rpc"
+                            "rpc failed"
+
+                JsonRpc.HttpErr _ ->
+                    model
+                        |> withErrorMessage "Failed to call list-ags rpc"
+                            "HTTP failed"
 
         GotEntries maybeRunId inputs overrides response ->
             case JsonRpc.flat response of
@@ -670,7 +715,7 @@ update msg model =
                         |> withNoCmd
 
         ModalMsg modalMsg ->
-            updateModal modalMsg model.showModal
+            updateModal modalMsg model.showModal model.agsIndex
                 |> Tuple.mapFirst (\md -> { model | showModal = md })
                 |> Tuple.mapSecond (Cmd.map ModalMsg)
 
@@ -678,10 +723,10 @@ update msg model =
             { model | showModal = Nothing }
                 |> withNoCmd
 
-        DisplayCalculateModalClicked maybeNdx inputs overrides ->
+        DisplayCalculateModalClicked maybeNdx { agsFilter, year } overrides ->
             let
                 modal =
-                    PrepareCalculate maybeNdx inputs overrides
+                    EnterInputs maybeNdx (enterInputsInit year agsFilter model.agsIndex) overrides
             in
             { model | showModal = Just modal }
                 |> withNoCmd
@@ -1184,21 +1229,25 @@ diffRunsById idA idB tolerance model =
             Just diffData
 
 
-updateModal : ModalMsg -> Maybe ModalState -> ( Maybe ModalState, Cmd ModalMsg )
-updateModal msg model =
+updateModal : ModalMsg -> Maybe ModalState -> AgsIndex -> ( Maybe ModalState, Cmd ModalMsg )
+updateModal msg model agsIndex =
     case model of
         Nothing ->
             Nothing
                 |> withNoCmd
 
-        Just (PrepareCalculate ndx inputs overrides) ->
+        Just (EnterInputs ndx state overrides) ->
             case msg of
-                CalculateModalAgsUpdated a ->
-                    Just (PrepareCalculate ndx { inputs | ags = a } overrides)
+                EnterInputsAgsFilterUpdated f ->
+                    Just
+                        (EnterInputs ndx
+                            (enterInputsInit state.year f agsIndex)
+                            overrides
+                        )
                         |> withNoCmd
 
-                CalculateModalTargetYearUpdated y ->
-                    Just (PrepareCalculate ndx { inputs | year = y } overrides)
+                EnterInputsTargetYearUpdated y ->
+                    Just (EnterInputs ndx { state | year = y } overrides)
                         |> withNoCmd
 
                 ReMapChangeMapping _ _ ->
@@ -1211,11 +1260,11 @@ updateModal msg model =
                     Just (ReMap { reMapState | mapping = Dict.insert a b reMapState.mapping })
                         |> withNoCmd
 
-                CalculateModalAgsUpdated _ ->
+                EnterInputsAgsFilterUpdated _ ->
                     model
                         |> withNoCmd
 
-                CalculateModalTargetYearUpdated _ ->
+                EnterInputsTargetYearUpdated _ ->
                     model
                         |> withNoCmd
 
@@ -1779,8 +1828,8 @@ viewRun runId lensId lens collapseStatus activeOverrideEditor activeSearch selec
             , buttons
                 [ differentIfFilterActive.filterButton
                 , selectForComparisonButton
-                , iconButton FeatherIcons.edit (DisplayCalculateModalClicked (Just runId) inputs overrides)
-                , iconButton FeatherIcons.copy (DisplayCalculateModalClicked Nothing inputs overrides)
+                , iconButton FeatherIcons.edit (DisplayCalculateModalClicked (Just runId) { agsFilter = inputs.ags, year = inputs.year } overrides)
+                , iconButton FeatherIcons.copy (DisplayCalculateModalClicked Nothing { agsFilter = inputs.ags, year = inputs.year } overrides)
                 , dangerousIconButton FeatherIcons.trash2 (RemoveExplorableClicked (Explorable.Run runId))
                 ]
             ]
@@ -1797,9 +1846,9 @@ viewRun runId lensId lens collapseStatus activeOverrideEditor activeSearch selec
         ]
 
 
-defaultInputs : Run.Inputs
+defaultInputs : { agsFilter : String, year : Int }
 defaultInputs =
-    { ags = ""
+    { agsFilter = ""
     , year = 2035
     }
 
@@ -2858,8 +2907,8 @@ viewModalDialogBox title content =
         ]
 
 
-viewCalculateModal : Maybe Int -> Run.Inputs -> Run.Overrides -> Element Msg
-viewCalculateModal maybeNdx inputs overrides =
+viewCalculateModal : Maybe Int -> EnterInputsDialogState -> Run.Overrides -> Element Msg
+viewCalculateModal maybeNdx state overrides =
     let
         labelStyle =
             [ Font.alignRight, width (minimum 100 shrink) ]
@@ -2871,10 +2920,35 @@ viewCalculateModal maybeNdx inputs overrides =
         ]
         [ Input.text []
             { label = Input.labelLeft labelStyle (text "AGS")
-            , text = inputs.ags
-            , onChange = ModalMsg << CalculateModalAgsUpdated
+            , text = state.agsFilter
+            , onChange = ModalMsg << EnterInputsAgsFilterUpdated
             , placeholder = Nothing
             }
+        , el
+            [ width fill
+            , height (minimum 0 fill)
+            , Border.solid
+            , Border.width 1
+            , Border.color black
+            , padding sizes.medium
+            ]
+          <|
+            column
+                [ width fill
+                , height fill
+                , padding sizes.medium
+                , spacing sizes.medium
+                , scrollbarY
+                ]
+                (state.filteredAgs
+                    |> List.map
+                        (\a ->
+                            row [ width fill, spacing sizes.medium ]
+                                [ text a.ags
+                                , text a.desc
+                                ]
+                        )
+                )
         , Input.slider
             [ height (px 20)
             , Element.behindContent
@@ -2888,17 +2962,20 @@ viewCalculateModal maybeNdx inputs overrides =
                     Element.none
                 )
             ]
-            { label = Input.labelLeft labelStyle (text (String.fromInt inputs.year))
+            { label = Input.labelLeft labelStyle (text (String.fromInt state.year))
             , min = 2025
             , max = 2050
             , step = Just 1.0
-            , onChange = ModalMsg << CalculateModalTargetYearUpdated << round
-            , value = toFloat inputs.year
+            , onChange = ModalMsg << EnterInputsTargetYearUpdated << round
+            , value = toFloat state.year
             , thumb = Input.defaultThumb
             }
-        , iconButton
-            (size32 FeatherIcons.check)
-            (CalculateModalOkClicked maybeNdx inputs overrides)
+        , case state.filteredAgs of
+            [ exactlyOne ] ->
+                iconButton (size32 FeatherIcons.check) (CalculateModalOkClicked maybeNdx { year = state.year, ags = exactlyOne.ags } overrides)
+
+            _ ->
+                text "Enter a valid AGS first!"
         ]
 
 
@@ -2972,14 +3049,14 @@ view model =
                     let
                         ( title, content ) =
                             case modalState of
-                                PrepareCalculate maybeNdx inputs overrides ->
+                                EnterInputs maybeNdx state overrides ->
                                     ( case maybeNdx of
                                         Nothing ->
                                             "Add new generator run"
 
                                         Just ndx ->
                                             "Change generator run " ++ String.fromInt ndx
-                                    , viewCalculateModal maybeNdx inputs overrides
+                                    , viewCalculateModal maybeNdx state overrides
                                     )
 
                                 Loading ->
