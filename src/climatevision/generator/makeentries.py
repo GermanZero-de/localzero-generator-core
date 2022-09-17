@@ -11,64 +11,6 @@ from .refdata import RefData, Row
 # ags = 'DG000000'
 # test_year = 2035
 
-# This is the list of entries we expect the user to be able to
-# override on the website before we e.g. generate the report.
-# DO NOT MAKE CHANGES TO THIS LIST WITHOUT MAKING SURE THAT
-# THE NECESSARY CHANGES TO THE WEB FORM (in site-templates)
-# ARE DONE AND THE ROLLOUT OF BOTH CHANGES IS COORDINATED.
-USER_OVERRIDABLE_ENTRIES = [
-    "m_population_com_2018",
-    "m_population_com_203X",
-    "r_buildings_2011_today",
-    "r_coal_fec",
-    "r_petrol_fec",
-    "r_fueloil_fec",
-    "r_lpg_fec",
-    "r_gas_fec",
-    "r_biomass_fec",
-    "r_orenew_fec",
-    "r_elec_fec",
-    "r_heatnet_fec",
-    "b_coal_fec",
-    "b_petrol_fec",
-    "b_jetfuel_fec",
-    "b_diesel_fec",
-    "b_fueloil_fec",
-    "b_lpg_fec",
-    "b_gas_fec",
-    "b_biomass_fec",
-    "b_orenew_fec",
-    "b_elec_fec",
-    "b_heatnet_fec",
-    "i_coal_fec",
-    "i_diesel_fec",
-    "i_fueloil_fec",
-    "i_lpg_fec",
-    "i_gas_fec",
-    "i_opetpro_fec",
-    "i_biomass_fec",
-    "i_orenew_fec",
-    "i_ofossil_fec",
-    "i_elec_fec",
-    "i_heatnet_fec",
-    "i_fec_pct_of_miner",
-    "i_fec_pct_of_chem",
-    "i_fec_pct_of_metal",
-    "i_fec_pct_of_other",
-    "a_petrol_fec",
-    "a_diesel_fec",
-    "a_fueloil_fec",
-    "a_lpg_fec",
-    "a_gas_fec",
-    "a_biomass_fec",
-    "a_elec_fec",
-    "a_fermen_dairycow_amount",
-    "a_fermen_nondairy_amount",
-    "a_fermen_pig_amount",
-    "a_fermen_poultry_amount",
-    "a_fermen_oanimal_amount",
-]
-
 
 @dataclass(kw_only=True, frozen=True)
 class Entries:
