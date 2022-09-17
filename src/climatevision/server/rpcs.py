@@ -4,15 +4,17 @@ from typing import Callable, Any
 
 import jsonrpcserver
 
-from climatevision import generator
-from climatevision.generator import Inputs, RefData
+from .. import generator
+from . import overridables
 
 
 class GeneratorRpcs:
-    rd: RefData
+    rd: generator.RefData
     finalize_traces_if_enabled: Callable[[Any], Any]
 
-    def __init__(self, rd: RefData, finalize_traces_if_enabled: Callable[[Any], Any]):
+    def __init__(
+        self, rd: generator.RefData, finalize_traces_if_enabled: Callable[[Any], Any]
+    ):
         self.rd = rd
         self.finalize_traces_if_enabled = finalize_traces_if_enabled
 
@@ -45,15 +47,19 @@ class GeneratorRpcs:
         defaults = dataclasses.asdict(generator.make_entries(self.rd, ags, year))
         defaults.update(overrides)
         entries = generator.Entries(**defaults)
-        inputs = Inputs(
+        inputs = generator.Inputs(
             facts_and_assumptions=self.rd.facts_and_assumptions(), entries=entries
         )
         g = generator.calculate(inputs)
         return jsonrpcserver.Success(self.finalize_traces_if_enabled(g.result_dict()))
 
+    def get_overridables(self, ags: str, year: int) -> jsonrpcserver.Result:
+        return jsonrpcserver.Success(overridables.populate_defaults(self.rd, ags, year))
+
     def methods(self) -> jsonrpcserver.methods.Methods:
         return {
             "make-entries": self.make_entries,
+            "get-overridables": self.get_overridables,
             "list-ags": self.list_ags,
             "calculate": self.calculate,
         }
