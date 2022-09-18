@@ -32,7 +32,7 @@ class OverridableSectionWithDefaults(TypedDict):
     elements: list[OverridableWithDefault | Info]
 
 
-overrideables: list[OverridableSection] = [
+_sections: list[OverridableSection] = [
     {
         "section": r"Basisdaten von '${CITYDESC}'",
         "elements": [
@@ -329,12 +329,27 @@ overrideables: list[OverridableSection] = [
 ]
 
 
-def populate_defaults(
+def overridables_only() -> list[Overridable]:
+    """Only the overridables without section data / infos or defaults."""
+    res: list[Overridable] = []
+    for s in _sections:
+        for entry in s["elements"]:
+            if "info_title" in entry:
+                pass
+            else:
+                res.append(entry)
+
+    return res
+
+
+def sections_with_defaults(
     data: generator.RefData, ags: str, year: int
 ) -> list[OverridableSectionWithDefaults]:
+    """Complete overridable data including section data and info blocks, with defaults
+    populated."""
     entries = generator.make_entries(data, ags, year)
     res: list[OverridableSectionWithDefaults] = []
-    for os in overrideables:
+    for os in _sections:
         populated_section: OverridableSectionWithDefaults = {
             "section": os["section"],
             "elements": [],

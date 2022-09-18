@@ -54,7 +54,9 @@ class GeneratorRpcs:
         return jsonrpcserver.Success(self.finalize_traces_if_enabled(g.result_dict()))
 
     def get_overridables(self, ags: str, year: int) -> jsonrpcserver.Result:
-        return jsonrpcserver.Success(overridables.populate_defaults(self.rd, ags, year))
+        return jsonrpcserver.Success(
+            overridables.sections_with_defaults(self.rd, ags, year)
+        )
 
     def methods(self) -> jsonrpcserver.methods.Methods:
         return {
