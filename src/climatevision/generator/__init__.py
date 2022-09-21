@@ -4,7 +4,7 @@
 #   from climatevision.generator import calculate_with_default_inputs
 from . import ags
 from .refdata import RefData
-from .makeentries import make_entries, Entries, USER_OVERRIDABLE_ENTRIES
+from .makeentries import make_entries, Entries
 from .inputs import Inputs
 from .generator import calculate, calculate_with_default_inputs, Result
 
@@ -13,7 +13,6 @@ __all__ = [
     "RefData",
     "make_entries",
     "Entries",
-    "USER_OVERRIDABLE_ENTRIES",
     "Inputs",
     "calculate",
     "calculate_with_default_inputs",

@@ -103,14 +103,6 @@ def test_cmd_data_lookup_assumption():
     )
 
 
-def test_cmd_data_entries_user_overrides_generate_defaults():
-    check_cmd(
-        ["data", "entries-user-overrides-generate-defaults"],
-        "entries-user-overrides-generate-defaults",
-        False,  # You shouldn't run this function here. It will need too much time.
-    )
-
-
 def test_cmd_test_end_to_end_run_all_ags():
     check_cmd(
         ["test_end_to_end", "run_all_ags"],

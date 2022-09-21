@@ -5,7 +5,6 @@ from typing import Any
 from commands.cmd_data import (
     cmd_data_normalize,
     cmd_data_checkout,
-    cmd_data_entries_user_overrides_generate_defaults,
     cmd_data_lookup,
     cmd_data_is_production,
 )
@@ -48,11 +47,3 @@ def add_cmd_data_parser(subcmd_parsers: Any):
         "-no-fixes", action="store_false", dest="fix_missing_entries"
     )
     cmd_data_lookup_parser.set_defaults(func=cmd_data_lookup)
-
-    cmd_data_entries_user_overrides_generate_defaults_parser = subcmd_data.add_parser(
-        "entries-user-overrides-generate-defaults",
-        help="Generate a file of default values for user overridable entries as used by the website.",
-    )
-    cmd_data_entries_user_overrides_generate_defaults_parser.set_defaults(
-        func=cmd_data_entries_user_overrides_generate_defaults
-    )
