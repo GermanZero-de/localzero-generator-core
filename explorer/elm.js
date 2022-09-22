@@ -9114,7 +9114,10 @@ var $author$project$GeneratorRpc$calculate = function (_v0) {
 					$elm$json$Json$Encode$int(inputs.eB)),
 					_Utils_Tuple2(
 					'overrides',
-					$author$project$Run$encodeOverrides(overrides))
+					$author$project$Run$encodeOverrides(overrides)),
+					_Utils_Tuple2(
+					'trace',
+					$elm$json$Json$Encode$bool(true))
 				]),
 			c_: $elm$core$Maybe$Nothing,
 			c0: $author$project$GeneratorRpc$apiUrl
@@ -9189,7 +9192,10 @@ var $author$project$GeneratorRpc$makeEntries = function (_v0) {
 					$elm$json$Json$Encode$string(inputs.by)),
 					_Utils_Tuple2(
 					'year',
-					$elm$json$Json$Encode$int(inputs.eB))
+					$elm$json$Json$Encode$int(inputs.eB)),
+					_Utils_Tuple2(
+					'trace',
+					$elm$json$Json$Encode$bool(true))
 				]),
 			c_: $elm$core$Maybe$Nothing,
 			c0: $author$project$GeneratorRpc$apiUrl

@@ -6,7 +6,7 @@ import json
 import sys
 
 from climatevision.generator import calculate_with_default_inputs, RefData, make_entries
-from climatevision import tracing
+from climatevision.tracing import with_tracing
 
 
 def json_to_output(json_object: Any, args: Any):
@@ -19,14 +19,18 @@ def json_to_output(json_object: Any, args: Any):
 
 
 def cmd_run(args: Any):
-    finalize_traces_if_enabled = tracing.maybe_enable(args)
-    g = calculate_with_default_inputs(ags=args.ags, year=int(args.year))
-    d = finalize_traces_if_enabled(g.result_dict())
+    d = with_tracing(
+        enabled=args.trace,
+        f=lambda: calculate_with_default_inputs(
+            ags=args.ags, year=int(args.year)
+        ).result_dict(),
+    )
     json_to_output(d, args)
 
 
 def cmd_make_entries(args: Any):
-    finalize_traces_if_enabled = tracing.maybe_enable(args)
     rd = RefData.load()
-    e = make_entries(rd, args.ags, int(args.year))
-    json_to_output(finalize_traces_if_enabled(asdict(e)), args)
+    e = with_tracing(
+        enabled=args.trace, f=lambda: asdict(make_entries(rd, args.ags, int(args.year)))
+    )
+    json_to_output(e, args)

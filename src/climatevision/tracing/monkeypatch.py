@@ -1,5 +1,5 @@
 from dataclasses import fields, is_dataclass
-from typing import Any, Callable
+from typing import Any, Callable, TypeVar
 
 from ..generator import Result
 from ..generator.refdata import Row
@@ -9,6 +9,27 @@ original_row_float = Row.float
 
 def identity(x: Any):
     return x
+
+
+T = TypeVar("T")
+
+
+def with_tracing_enabled(f: Callable[[], T]) -> T:
+    """Enable tracing and run f.  f should return a json ready object, that is
+    the return value of Result.result_dict, or asdict(entries)
+    """
+    patch_result = enable_tracing()
+    try:
+        return patch_result(f())
+    finally:
+        disable_tracing()
+
+
+def with_tracing(enabled: bool, f: Callable[[], T]) -> T:
+    if enabled:
+        return with_tracing_enabled(f)
+    else:
+        return f()
 
 
 def maybe_enable_tracing(args: Any) -> Callable[[Any], Any]:
