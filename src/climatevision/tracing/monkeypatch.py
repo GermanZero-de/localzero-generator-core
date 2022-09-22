@@ -4,6 +4,8 @@ from typing import Any, Callable
 from ..generator import Result
 from ..generator.refdata import Row
 
+original_row_float = Row.float
+
 
 def identity(x: Any):
     return x
@@ -22,6 +24,28 @@ def maybe_enable_tracing(args: Any) -> Callable[[Any], Any]:
         return identity
 
 
+def recursively_patch_getattribute_on_dataclasses(
+    t: type, new_getattribute: Callable[[object, str], object] | None
+) -> None:
+    tracing_enabled_marker = "_has_tracing_enabled"
+    if is_dataclass(t):
+        if new_getattribute is not None:
+            setattr(t, tracing_enabled_marker, True)
+            setattr(t, "__getattribute__", new_getattribute)
+        else:
+            if getattr(t, tracing_enabled_marker, False):
+                setattr(t, tracing_enabled_marker, False)
+                delattr(t, "__getattribute__")
+
+        for fld in fields(t):
+            recursively_patch_getattribute_on_dataclasses(fld.type, new_getattribute)
+
+
+def disable_tracing() -> None:
+    recursively_patch_getattribute_on_dataclasses(Result, None)
+    Row.float = original_row_float
+
+
 def enable_tracing() -> Callable[[Any], Any]:
     # We do this monkey-patching dance here, because we do not want
     # the somewhat hacky tracing code to be part of the normal production
@@ -29,18 +53,15 @@ def enable_tracing() -> Callable[[Any], Any]:
     # the generator core -- who hopefully understand the tools limitations.
     from . import number
 
-    # First patch the lookup of inputs
-    original_float = Row.float  # type: ignore
-
     def traced_float(self: Row[str], attr: str):
-        v = original_float(self, attr)
+        v = original_row_float(self, attr)
         # make facts and assumptions prettier
         if self.dataset in ["facts", "assumptions"] and attr == "value":
             return number.TracedNumber.fact_or_ass(str(self.key_value), v)
         else:
             return number.TracedNumber.data(v, self.dataset, self.key_value, attr)
 
-    Row.float = traced_float  # type: ignore
+    Row.float = traced_float  # type: ignore (pyright does not know that tracednumber can be used instead of float)
 
     # Now make sure that whenever a value stored in a component of the final
     # result type is used, the trace contains a def_name and that the same
@@ -59,13 +80,7 @@ def enable_tracing() -> Callable[[Any], Any]:
         else:
             return value
 
-    def prepare_tracing_of_fields(t: type):
-        if is_dataclass(t):
-            setattr(t, "__getattribute__", traced_getattribute)
-            for fld in fields(t):
-                prepare_tracing_of_fields(fld.type)
-
-    prepare_tracing_of_fields(Result)
+    recursively_patch_getattribute_on_dataclasses(Result, traced_getattribute)
 
     def convert(x):
         number.finalize_traces_in_result(x)
