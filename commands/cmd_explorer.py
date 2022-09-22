@@ -15,14 +15,12 @@ from http.server import HTTPServer, BaseHTTPRequestHandler
 import jsonrpcserver
 
 from climatevision.generator import RefData
-from climatevision import tracing
 from climatevision.server import GeneratorRpcs
 
 
 def cmd_explorer(args: Any):
-    finalize_traces_if_enabled = tracing.maybe_enable(args)
     rd = RefData.load()
-    generator_rpcs = GeneratorRpcs(rd, finalize_traces_if_enabled)
+    generator_rpcs = GeneratorRpcs(rd)
     with open("explorer/index.html", encoding="utf-8") as index_file:
         index = index_file.read()
     with open("explorer/elm.js", encoding="utf-8") as elm_js_file:

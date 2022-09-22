@@ -47,6 +47,7 @@ makeEntries { inputs, toMsg } =
         , params =
             [ ( "ags", Encode.string inputs.ags )
             , ( "year", Encode.int inputs.year )
+            , ( "trace", Encode.bool True )
             ]
         }
         Run.entriesDecoder
@@ -63,6 +64,7 @@ calculate { inputs, overrides, toMsg } =
             [ ( "ags", Encode.string inputs.ags )
             , ( "year", Encode.int inputs.year )
             , ( "overrides", Run.encodeOverrides overrides )
+            , ( "trace", Encode.bool True )
             ]
         }
         (Tree.decoder (Value.maybeWithTraceDecoder "result"))

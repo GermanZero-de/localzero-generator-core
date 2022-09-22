@@ -1,6 +1,6 @@
 from climatevision.tracing.number import TracedNumber
 from climatevision.generator import calculate_with_default_inputs
-import climatevision.tracing.monkeypatch
+from climatevision.tracing import with_tracing
 
 
 def test_literal():
@@ -100,25 +100,26 @@ def test_enable_disable_tracing():
         + "}"
     )
 
-    finish_traces = climatevision.tracing.monkeypatch.enable_tracing()
-    r = calculate_with_default_inputs("08416041", 2035)
-    result = finish_traces(r.result_dict())
+    result = with_tracing(
+        enabled=True,
+        f=lambda: calculate_with_default_inputs("08416041", 2035).result_dict(),
+    )
     assert (
-        str(result["a30"]["g"]["cost_wage"])
+        str(result["a30"]["g"]["cost_wage"])  # type: ignore
         == "{'value': " + expected_value + ", 'trace': " + expected_trace + "}"
     )
 
-    climatevision.tracing.monkeypatch.disable_tracing()
-    r = calculate_with_default_inputs("08416041", 2035)
-    result = r.result_dict()
+    result = with_tracing(
+        enabled=False,
+        f=lambda: calculate_with_default_inputs("08416041", 2035).result_dict(),
+    )
     assert str(result["a30"]["g"]["cost_wage"]) == expected_value  # type: ignore
 
-    finish_traces = climatevision.tracing.monkeypatch.enable_tracing()
-    r = calculate_with_default_inputs("08416041", 2035)
-    result = finish_traces(r.result_dict())
+    result = with_tracing(
+        enabled=True,
+        f=lambda: calculate_with_default_inputs("08416041", 2035).result_dict(),
+    )
     assert (
-        str(result["a30"]["g"]["cost_wage"])
+        str(result["a30"]["g"]["cost_wage"])  # type: ignore
         == "{'value': " + expected_value + ", 'trace': " + expected_trace + "}"
     )
-
-    climatevision.tracing.monkeypatch.disable_tracing()
