@@ -8451,7 +8451,7 @@ var $author$project$Main$GotGeneratorResult = F5(
 		return {$: 0, a: a, b: b, c: c, d: d, e: e};
 	});
 var $author$project$Main$Loading = {$: 1};
-var $author$project$GeneratorRpc$apiUrl = 'http://localhost:4070/api/v0';
+var $author$project$GeneratorRpc$apiUrl = '/localzero/api/v0/';
 var $liwenjun$elm_jsonrpc$JsonRpc$InnerError = function (a) {
 	return {$: 1, a: a};
 };

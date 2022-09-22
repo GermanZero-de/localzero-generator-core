@@ -43,7 +43,7 @@ def cmd_explorer(args: Any):
 
         def do_POST(self):
             match self.path.split("/"):
-                case ["", "api", "v0"]:
+                case ["", "localzero", "api", "v0", ""]:
                     content_len = int(self.headers["Content-Length"])
                     if content_len < 0 or content_len > 1024 * 1024 * 5:
                         self.send_response(400)
@@ -58,7 +58,8 @@ def cmd_explorer(args: Any):
                     self.send_header("Access-Control-Allow-Origin", "*")
                     self.end_headers()
                     self.wfile.write(response.encode())
-                case _:
+                case path:
+                    print(path)
                     self.send_response(404)
                     self.end_headers()
 

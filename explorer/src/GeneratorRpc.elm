@@ -14,7 +14,7 @@ type alias AgsData =
 
 apiUrl : String
 apiUrl =
-    "http://localhost:4070/api/v0"
+    "/localzero/api/v0/"
 
 
 agsDataDecoder : Decode.Decoder AgsData
