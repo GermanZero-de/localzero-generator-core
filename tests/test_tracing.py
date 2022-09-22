@@ -1,4 +1,6 @@
 from climatevision.tracing.number import TracedNumber
+from climatevision.generator import calculate_with_default_inputs
+import climatevision.tracing.monkeypatch
 
 
 def test_literal():
@@ -82,3 +84,41 @@ def test_comparisons():
     assert 1 == TracedNumber.lift(1)
     assert 1 < TracedNumber.lift(2)  # type: ignore
     assert TracedNumber.lift(1) < 2  # type: ignore
+
+
+def test_enable_disable_tracing():
+    """Here we do not care about the value computed nor do we care about the exact trace.
+    What we do want is that the value stays the same across each run and that the trace
+    can be disabled and enabled as expected."""
+
+    # We check ENABLE -> DISABLE -> ENABLE to make sure that there are no
+    # leftovers that only break on multiple runs
+    expected_value = "55229.174057478296"
+    expected_trace = (
+        "{'binary': '+', 'a': {'name': 'a30.g_consult.cost_wage'}, 'b': {'name': 'a30.g_organic.cost_wage'}, 'value': "
+        + expected_value
+        + "}"
+    )
+
+    finish_traces = climatevision.tracing.monkeypatch.enable_tracing()
+    r = calculate_with_default_inputs("08416041", 2035)
+    result = finish_traces(r.result_dict())
+    assert (
+        str(result["a30"]["g"]["cost_wage"])
+        == "{'value': " + expected_value + ", 'trace': " + expected_trace + "}"
+    )
+
+    climatevision.tracing.monkeypatch.disable_tracing()
+    r = calculate_with_default_inputs("08416041", 2035)
+    result = r.result_dict()
+    assert str(result["a30"]["g"]["cost_wage"]) == expected_value  # type: ignore
+
+    finish_traces = climatevision.tracing.monkeypatch.enable_tracing()
+    r = calculate_with_default_inputs("08416041", 2035)
+    result = finish_traces(r.result_dict())
+    assert (
+        str(result["a30"]["g"]["cost_wage"])
+        == "{'value': " + expected_value + ", 'trace': " + expected_trace + "}"
+    )
+
+    climatevision.tracing.monkeypatch.disable_tracing()
