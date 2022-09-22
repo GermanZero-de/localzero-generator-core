@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "climatevision"
-version = "1.3.0"
+version = "1.5.1"
 description = "LocalZero Climate Vision -- Calculation and basic infrastructure."
 authors = ["Benedikt Grundmann <benedikt.grundmann@gmail.com>","Anja Höhne","Anne Klenge","Jan Kuhlem",
           "Sebastian Lüttig","Silvan Ostheimer","Hauke Schmülling","Leon Schomburg <Leon.Schomburg.ext@germanzero.de>",
