@@ -11,58 +11,18 @@ from ..transport2018.t18 import T18
 from ..electricity2018.e18 import E18
 
 from .h18 import H18
-from .dataclasses import Vars1, Vars2, Vars3, Vars4, Vars5, Vars6, Vars7, Vars8
+from .dataclasses import Vars2, Vars3, Vars4, Vars5, Vars6, Vars7, Vars8
+from . import energy_demand
 
 
 def calc(inputs: Inputs, *, t18: T18, e18: E18) -> H18:
     fact = inputs.fact
     entries = inputs.entries
 
-    d_r = Vars1()
-    d_r.energy = (
-        entries.r_coal_fec
-        + entries.r_fueloil_fec
-        + entries.r_lpg_fec
-        + entries.r_gas_fec
-        + entries.r_biomass_fec
-        + entries.r_orenew_fec
-        + entries.r_heatnet_fec
-    )
-    d_b = Vars1()
-    d_b.energy = (
-        entries.b_coal_fec
-        + entries.b_fueloil_fec
-        + entries.b_lpg_fec
-        + entries.b_gas_fec
-        + entries.b_biomass_fec
-        + entries.b_orenew_fec
-        + entries.b_heatnet_fec
-    )
-    d_i = Vars1()
-    d_i.energy = (
-        entries.i_coal_fec
-        + entries.i_fueloil_fec
-        + entries.i_lpg_fec
-        + entries.i_opetpro_fec
-        + entries.i_gas_fec
-        + entries.i_biomass_fec
-        + entries.i_orenew_fec
-        + entries.i_ofossil_fec
-        + entries.i_heatnet_fec
-    )
-    d_t = Vars1()
-    d_t.energy = t18.t.demand_fueloil + t18.t.demand_lpg + t18.t.demand_gas
-    d_a = Vars1()
-    d_a.energy = (
-        entries.a_fueloil_fec
-        + entries.a_lpg_fec
-        + entries.a_gas_fec
-        + entries.a_biomass_fec
-    )
-    d = Vars1()
-    d.energy = d_r.energy + d_b.energy + d_i.energy + d_t.energy + d_a.energy
+    demand = energy_demand.calc_demand(inputs, t18)
+
     p = Vars3()
-    p.energy = d.energy
+    p.energy = demand.total.energy
     p_gas = Vars4()
     p_gas.energy = (
         entries.r_gas_fec
@@ -303,12 +263,12 @@ def calc(inputs: Inputs, *, t18: T18, e18: E18) -> H18:
     h.CO2e_production_based = p.CO2e_production_based
 
     return H18(
-        d=d,
-        d_r=d_r,
-        d_b=d_b,
-        d_i=d_i,
-        d_t=d_t,
-        d_a=d_a,
+        d=demand.total,
+        d_r=demand.residences,
+        d_b=demand.business,
+        d_i=demand.industry,
+        d_t=demand.transport,
+        d_a=demand.agri,
         h=h,
         p=p,
         p_gas=p_gas,
