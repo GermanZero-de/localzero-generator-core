@@ -2,8 +2,10 @@
 
 from dataclasses import dataclass
 
+from ..common.co2eEmissions import CO2eEmissions
+
 from .energy_demand import EnergyDemand
-from .dataclasses import Vars2, Vars3, Vars4, Vars5, Vars6, Vars7, Vars8
+from .dataclasses import Vars3, Vars4, Vars5, Vars6, Vars7, Vars8
 
 
 @dataclass(kw_only=True)
@@ -14,7 +16,9 @@ class H18:
     d_i: EnergyDemand
     d_t: EnergyDemand
     d_a: EnergyDemand
-    h: Vars2
+
+    h: CO2eEmissions
+
     p: Vars3
     p_gas: Vars4
     p_lpg: Vars5

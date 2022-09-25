@@ -10,8 +10,8 @@ from ..utils import div
 from ..transport2018.t18 import T18
 from ..electricity2018.e18 import E18
 
-from .h18 import H18
-from .dataclasses import Vars2, Vars3, Vars4, Vars5, Vars6, Vars7, Vars8
+from .h18 import H18, CO2eEmissions
+from .dataclasses import Vars3, Vars4, Vars5, Vars6, Vars7, Vars8
 from . import energy_demand
 
 
@@ -257,10 +257,12 @@ def calc(inputs: Inputs, *, t18: T18, e18: E18) -> H18:
         + p_ofossil.pct_energy
         + p_orenew.pct_energy
     )
-    h = Vars2()
-    h.CO2e_combustion_based = p.CO2e_combustion_based
-    h.CO2e_total = p.CO2e_total
-    h.CO2e_production_based = p.CO2e_production_based
+
+    h = CO2eEmissions(
+        CO2e_combustion_based=p.CO2e_combustion_based,
+        CO2e_production_based=p.CO2e_production_based,
+        CO2e_total=p.CO2e_total,
+    )
 
     return H18(
         d=demand.total,

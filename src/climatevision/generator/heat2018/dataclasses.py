@@ -4,14 +4,6 @@ from dataclasses import dataclass
 
 
 @dataclass(kw_only=True)
-class Vars2:
-    # Used by h
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_production_based: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-
-
-@dataclass(kw_only=True)
 class Vars3:
     # Used by p
     CO2e_combustion_based: float = None  # type: ignore
