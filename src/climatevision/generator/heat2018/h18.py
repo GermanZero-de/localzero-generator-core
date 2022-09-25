@@ -2,18 +2,18 @@
 
 from dataclasses import dataclass
 
+from .energy_demand import EnergyDemand
 from .dataclasses import Vars2, Vars3, Vars4, Vars5, Vars6, Vars7, Vars8
-from .energy_demand import Vars1
 
 
 @dataclass(kw_only=True)
 class H18:
-    d: Vars1
-    d_r: Vars1
-    d_b: Vars1
-    d_i: Vars1
-    d_t: Vars1
-    d_a: Vars1
+    d: EnergyDemand
+    d_r: EnergyDemand
+    d_b: EnergyDemand
+    d_i: EnergyDemand
+    d_t: EnergyDemand
+    d_a: EnergyDemand
     h: Vars2
     p: Vars3
     p_gas: Vars4
