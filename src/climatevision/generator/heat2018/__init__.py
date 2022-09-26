@@ -11,7 +11,7 @@ from ..transport2018.t18 import T18
 from ..electricity2018.e18 import E18
 
 from .h18 import H18, CO2eEmissions
-from .dataclasses import Vars3, Vars5, Vars6, Vars7, Vars8
+from .dataclasses import Vars3, Vars5, Vars6, Vars8
 from . import energy_demand, energy_production
 
 
@@ -24,7 +24,14 @@ def calc(inputs: Inputs, *, t18: T18, e18: E18) -> H18:
     p = Vars3()
     p.energy = demand.total.energy
 
-    production = energy_production.calc_production(inputs, t18, p.energy)
+    p_heatnet = Vars6()
+    p_heatnet.energy = (
+        entries.r_heatnet_fec + entries.b_heatnet_fec + entries.i_heatnet_fec
+    )
+
+    production = energy_production.calc_production(
+        inputs, t18, p.energy, p_heatnet.energy
+    )
 
     p_lpg = Vars5()
     p_lpg.energy = (
@@ -55,10 +62,6 @@ def calc(inputs: Inputs, *, t18: T18, e18: E18) -> H18:
     )
     p_fueloil.CO2e_total = p_fueloil.CO2e_combustion_based
 
-    p_heatnet = Vars6()
-    p_heatnet.energy = (
-        entries.r_heatnet_fec + entries.b_heatnet_fec + entries.i_heatnet_fec
-    )
     p_heatnet.pct_energy = div(p_heatnet.energy, p.energy)
     p_heatnet_cogen = Vars5()
     if (
@@ -100,23 +103,7 @@ def calc(inputs: Inputs, *, t18: T18, e18: E18) -> H18:
         p_heatnet_cogen.CO2e_combustion_based + p_heatnet_plant.CO2e_combustion_based
     )
     p_heatnet.CO2e_total = p_heatnet.CO2e_combustion_based
-    p_heatnet_geoth = Vars7()
-    p_heatnet_geoth.pct_energy = 0
-    p_heatnet_geoth.energy = p_heatnet_geoth.pct_energy * p_heatnet.energy
-    p_heatnet_geoth.CO2e_combustion_based = 0
-    p_heatnet_geoth.CO2e_production_based = 0
-    p_heatnet_geoth.CO2e_total = (
-        p_heatnet_geoth.CO2e_production_based + p_heatnet_geoth.CO2e_combustion_based
-    )
-    p_heatnet_lheatpump = Vars7()
-    p_heatnet_lheatpump.pct_energy = 0
-    p_heatnet_lheatpump.CO2e_production_based = 0
-    p_heatnet_lheatpump.CO2e_combustion_based = 0
-    p_heatnet_lheatpump.energy = p_heatnet_lheatpump.pct_energy * p_heatnet.energy
-    p_heatnet_lheatpump.CO2e_total = (
-        p_heatnet_lheatpump.CO2e_production_based
-        + p_heatnet_lheatpump.CO2e_combustion_based
-    )
+
     p_biomass = Vars8()
     p_biomass.energy = (
         entries.r_biomass_fec
@@ -241,8 +228,8 @@ def calc(inputs: Inputs, *, t18: T18, e18: E18) -> H18:
         p_heatnet=p_heatnet,
         p_heatnet_cogen=p_heatnet_cogen,
         p_heatnet_plant=p_heatnet_plant,
-        p_heatnet_geoth=p_heatnet_geoth,
-        p_heatnet_lheatpump=p_heatnet_lheatpump,
+        p_heatnet_geoth=production.heatnet_geoth,
+        p_heatnet_lheatpump=production.heatnet_lheatpump,
         p_biomass=p_biomass,
         p_ofossil=p_ofossil,
         p_orenew=p_orenew,

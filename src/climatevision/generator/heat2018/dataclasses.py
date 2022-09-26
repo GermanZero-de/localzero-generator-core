@@ -66,12 +66,23 @@ class Vars6:
 
 @dataclass(kw_only=True)
 class Vars7:
-    # Used by p_heatnet_geoth, p_heatnet_lheatpump
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_production_based: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
+    CO2e_combustion_based: float
+    CO2e_production_based: float
+    CO2e_total: float
+    energy: float
+    pct_energy: float
+
+    def __init__(
+        self,
+        p_heatnet_energy: float,
+    ):
+        self.pct_energy = 0  # TODO: Check, why everything is 0
+        self.energy = self.pct_energy * p_heatnet_energy
+
+        self.CO2e_combustion_based = 0
+        self.CO2e_production_based = 0
+
+        self.CO2e_total = self.CO2e_production_based + self.CO2e_combustion_based
 
 
 @dataclass(kw_only=True)
