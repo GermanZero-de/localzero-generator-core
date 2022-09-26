@@ -11,7 +11,11 @@ from ..transport2018.t18 import T18
 from ..electricity2018.e18 import E18
 
 from .h18 import H18, CO2eEmissions
-from .dataclasses import Vars3, Vars5, Vars6, Vars8
+from .dataclasses import (
+    Vars3,
+    Vars5,
+    Vars6,
+)
 from . import energy_demand, energy_production
 
 
@@ -104,74 +108,15 @@ def calc(inputs: Inputs, *, t18: T18, e18: E18) -> H18:
     )
     p_heatnet.CO2e_total = p_heatnet.CO2e_combustion_based
 
-    p_biomass = Vars8()
-    p_biomass.energy = (
-        entries.r_biomass_fec
-        + entries.b_biomass_fec
-        + entries.i_biomass_fec
-        + entries.a_biomass_fec
-    )
-    p_biomass.pct_energy = div(p_biomass.energy, p.energy)
-    p_biomass.CO2e_production_based_per_MWh = fact(
-        "Fact_H_P_biomass_ratio_CO2e_pb_to_fec_2018"
-    )
-    p_biomass.CO2e_production_based = (
-        p_biomass.energy * p_biomass.CO2e_production_based_per_MWh
-    )
-    p_biomass.CO2e_total = p_biomass.CO2e_production_based
-    p_ofossil = Vars8()
     "p_coal.energy = (\n        entry ('In_I_ofossil_fec')\n\n        #result: 21.019.444 MWh\n    )"
-    p_ofossil.energy = entries.i_ofossil_fec
-    p_ofossil.pct_energy = div(p_ofossil.energy, p.energy)
-    p_ofossil.CO2e_production_based_per_MWh = fact(
-        "Fact_H_P_ofossil_ratio_CO2e_pb_to_fec_2018"
-    )
-    p_ofossil.CO2e_production_based = (
-        p_ofossil.energy * p_ofossil.CO2e_production_based_per_MWh
-    )
-    p_ofossil.CO2e_total = p_ofossil.CO2e_production_based
-
-    p_orenew = Vars8()
-    p_orenew.energy = entries.r_orenew_fec + entries.b_orenew_fec + entries.i_orenew_fec
-    p_orenew.pct_energy = div(p_orenew.energy, p.energy)
-
-    p_solarth = Vars8()
-    p_solarth.pct_energy = fact("Fact_R_S_ratio_solarth_to_orenew_2018")
-    p_solarth.energy = p_orenew.energy * p_solarth.pct_energy
-
-    p_heatpump = Vars8()
-    p_heatpump.pct_energy = fact("Fact_R_S_ratio_heatpump_to_orenew_2018")
-    p_heatpump.energy = p_orenew.energy * p_heatpump.pct_energy
-
-    p_solarth.CO2e_production_based_per_MWh = fact(
-        "Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018"
-    )
-    p_solarth.CO2e_production_based = (
-        p_solarth.energy * p_solarth.CO2e_production_based_per_MWh
-    )
-    p_solarth.CO2e_total = p_solarth.CO2e_production_based
-
-    p_heatpump.CO2e_production_based_per_MWh = fact(
-        "Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018"
-    )
-    p_heatpump.CO2e_production_based = (
-        p_heatpump.energy * p_heatpump.CO2e_production_based_per_MWh
-    )
-    p_heatpump.CO2e_total = p_heatpump.CO2e_production_based
-
-    p_orenew.CO2e_production_based = (
-        p_solarth.CO2e_production_based + p_heatpump.CO2e_production_based
-    )
-    p_orenew.CO2e_total = p_orenew.CO2e_production_based
-    p_orenew.CO2e_production_based_per_MWh = 0
 
     p.CO2e_production_based = (
         production.gas.CO2e_production_based
         + production.opetpro.CO2e_production_based
         + production.coal.CO2e_production_based
-        + p_biomass.CO2e_production_based
-        + p_ofossil.CO2e_production_based
-        + p_orenew.CO2e_production_based
+        + production.biomass.CO2e_production_based
+        + production.ofossil.CO2e_production_based
+        + production.orenew.CO2e_production_based
     )
     p.CO2e_combustion_based = (
         production.gas.CO2e_combustion_based
@@ -189,9 +134,9 @@ def calc(inputs: Inputs, *, t18: T18, e18: E18) -> H18:
         + production.opetpro.CO2e_total
         + production.coal.CO2e_total
         + p_heatnet.CO2e_total
-        + p_biomass.CO2e_total
-        + p_ofossil.CO2e_total
-        + p_orenew.CO2e_total
+        + production.biomass.CO2e_total
+        + production.ofossil.CO2e_total
+        + production.orenew.CO2e_total
     )
     p.pct_energy = (
         production.gas.pct_energy
@@ -200,9 +145,9 @@ def calc(inputs: Inputs, *, t18: T18, e18: E18) -> H18:
         + production.opetpro.pct_energy
         + production.coal.pct_energy
         + p_heatnet.pct_energy
-        + p_biomass.pct_energy
-        + p_ofossil.pct_energy
-        + p_orenew.pct_energy
+        + production.biomass.pct_energy
+        + production.ofossil.pct_energy
+        + production.orenew.pct_energy
     )
 
     h = CO2eEmissions(
@@ -230,9 +175,9 @@ def calc(inputs: Inputs, *, t18: T18, e18: E18) -> H18:
         p_heatnet_plant=p_heatnet_plant,
         p_heatnet_geoth=production.heatnet_geoth,
         p_heatnet_lheatpump=production.heatnet_lheatpump,
-        p_biomass=p_biomass,
-        p_ofossil=p_ofossil,
-        p_orenew=p_orenew,
-        p_solarth=p_solarth,
-        p_heatpump=p_heatpump,
+        p_biomass=production.biomass,
+        p_ofossil=production.ofossil,
+        p_orenew=production.orenew,
+        p_solarth=production.solarth,
+        p_heatpump=production.heatpump,
     )

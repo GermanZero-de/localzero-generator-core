@@ -5,7 +5,16 @@ from dataclasses import dataclass
 from ..common.co2eEmissions import CO2eEmissions
 
 from .energy_demand import EnergyDemand
-from .dataclasses import Vars3, Vars4, Vars5, Vars6, Vars7, Vars8
+from .dataclasses import (
+    Vars3,
+    Vars4,
+    Vars5,
+    Vars6,
+    Vars7,
+    Vars8FromEnergy,
+    Vars8FromEnergySum,
+    Vars8FromEnergyPct,
+)
 
 
 @dataclass(kw_only=True)
@@ -30,8 +39,8 @@ class H18:
     p_heatnet_plant: Vars5
     p_heatnet_geoth: Vars7
     p_heatnet_lheatpump: Vars7
-    p_biomass: Vars8
-    p_ofossil: Vars8
-    p_orenew: Vars8
-    p_solarth: Vars8
-    p_heatpump: Vars8
+    p_biomass: Vars8FromEnergy
+    p_ofossil: Vars8FromEnergy
+    p_orenew: Vars8FromEnergySum
+    p_solarth: Vars8FromEnergyPct
+    p_heatpump: Vars8FromEnergyPct
