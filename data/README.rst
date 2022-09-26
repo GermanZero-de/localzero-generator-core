@@ -31,7 +31,7 @@ which generate data files for the data repositories from various sources.
 Where to get the data: Public Domain
 ------------------------------------
 
-*tl;dr* Run `python devtool.py checkout` if you are a member of the localzero team.
+*tl;dr* Run `python devtool.py data checkout` if you are a member of the localzero team.
 
 The majority of the relevant data was curated by German Zero from various sources that
 are in the public domain. You can checkout a copy of that data from the repository

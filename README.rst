@@ -26,7 +26,7 @@ Setup
 - Install Poetry from https://python-poetry.org/docs/
     - **On Windows:** run this inside a power shell:
 
-      :code:`(Invoke-WebRequest -Uri https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py -UseBasicParsing).Content | python`
+      :code:`(Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | python`
 
 - Configure Git
 	- Token:
