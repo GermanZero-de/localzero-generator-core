@@ -29,7 +29,7 @@ class Production:
 
 
 def calc_production(
-    inputs: Inputs, t18: T18, p_energy: float, p_heatnet_energy: float
+    inputs: Inputs, t18: T18, demand_total_energy: float, p_heatnet_energy: float
 ) -> Production:
 
     entries = inputs.entries
@@ -41,14 +41,14 @@ def calc_production(
         + entries.i_gas_fec
         + entries.a_gas_fec
         + t18.t.demand_gas,
-        p_energy=p_energy,
+        demand_total_energy=demand_total_energy,
         CO2e_production_based_per_MWh=fact("Fact_H_P_gas_ratio_CO2e_pb_to_fec_2018"),
         CO2e_combustion_based_per_MWh=fact("Fact_H_P_gas_ratio_CO2e_cb_to_fec_2018"),
     )
 
     opetpro = Vars4(
         energy=entries.i_opetpro_fec,
-        p_energy=p_energy,
+        demand_total_energy=demand_total_energy,
         CO2e_production_based_per_MWh=fact(
             "Fact_H_P_opetpro_ratio_CO2e_pb_to_fec_2018"
         ),
@@ -59,7 +59,7 @@ def calc_production(
 
     coal = Vars4(
         energy=entries.r_coal_fec + entries.b_coal_fec + entries.i_coal_fec,
-        p_energy=p_energy,
+        demand_total_energy=demand_total_energy,
         CO2e_production_based_per_MWh=fact("Fact_H_P_coal_ratio_CO2e_pb_to_fec_2018"),
         CO2e_combustion_based_per_MWh=fact("Fact_H_P_coal_ratio_CO2e_cb_to_fec_2018"),
     )
@@ -73,7 +73,7 @@ def calc_production(
         + entries.b_biomass_fec
         + entries.i_biomass_fec
         + entries.a_biomass_fec,
-        p_energy=p_energy,
+        demand_total_energy=demand_total_energy,
         CO2e_production_based_per_MWh=fact(
             "Fact_H_P_biomass_ratio_CO2e_pb_to_fec_2018"
         ),
@@ -81,7 +81,7 @@ def calc_production(
 
     ofossil = Vars8FromEnergy(
         energy=entries.i_ofossil_fec,
-        p_energy=p_energy,
+        demand_total_energy=demand_total_energy,
         CO2e_production_based_per_MWh=fact(
             "Fact_H_P_ofossil_ratio_CO2e_pb_to_fec_2018"
         ),
@@ -103,7 +103,7 @@ def calc_production(
 
     orenew = Vars8FromEnergySum(
         energy=orenew_energy,
-        p_energy=p_energy,
+        demand_total_energy=demand_total_energy,
         CO2e_production_based_per_MWh=0,
         CO2e_production_based=solarth.CO2e_production_based
         + heatpump.CO2e_production_based,

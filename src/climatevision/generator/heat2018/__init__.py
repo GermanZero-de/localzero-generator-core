@@ -25,16 +25,13 @@ def calc(inputs: Inputs, *, t18: T18, e18: E18) -> H18:
 
     demand = energy_demand.calc_demand(inputs, t18)
 
-    p = Vars3()
-    p.energy = demand.total.energy
-
     p_heatnet = Vars6()
     p_heatnet.energy = (
         entries.r_heatnet_fec + entries.b_heatnet_fec + entries.i_heatnet_fec
     )
 
     production = energy_production.calc_production(
-        inputs, t18, p.energy, p_heatnet.energy
+        inputs, t18, demand.total.energy, p_heatnet.energy
     )
 
     p_lpg = Vars5()
@@ -45,7 +42,7 @@ def calc(inputs: Inputs, *, t18: T18, e18: E18) -> H18:
         + entries.a_lpg_fec
         + t18.s_lpg.energy
     )
-    p_lpg.pct_energy = div(p_lpg.energy, p.energy)
+    p_lpg.pct_energy = div(p_lpg.energy, demand.total.energy)
     p_lpg.CO2e_combustion_based_per_MWh = fact("Fact_H_P_lpg_ratio_CO2e_cb_to_fec_2018")
     p_lpg.CO2e_combustion_based = p_lpg.energy * p_lpg.CO2e_combustion_based_per_MWh
     p_lpg.CO2e_total = p_lpg.CO2e_combustion_based
@@ -57,7 +54,7 @@ def calc(inputs: Inputs, *, t18: T18, e18: E18) -> H18:
         + entries.a_fueloil_fec
         + t18.s_fueloil.energy
     )
-    p_fueloil.pct_energy = div(p_fueloil.energy, p.energy)
+    p_fueloil.pct_energy = div(p_fueloil.energy, demand.total.energy)
     p_fueloil.CO2e_combustion_based_per_MWh = fact(
         "Fact_H_P_fueloil_ratio_CO2e_cb_to_fec_2018"
     )
@@ -66,7 +63,7 @@ def calc(inputs: Inputs, *, t18: T18, e18: E18) -> H18:
     )
     p_fueloil.CO2e_total = p_fueloil.CO2e_combustion_based
 
-    p_heatnet.pct_energy = div(p_heatnet.energy, p.energy)
+    p_heatnet.pct_energy = div(p_heatnet.energy, demand.total.energy)
     p_heatnet_cogen = Vars5()
     if (
         e18.p_fossil_coal_brown_cogen.energy
@@ -108,8 +105,8 @@ def calc(inputs: Inputs, *, t18: T18, e18: E18) -> H18:
     )
     p_heatnet.CO2e_total = p_heatnet.CO2e_combustion_based
 
-    "p_coal.energy = (\n        entry ('In_I_ofossil_fec')\n\n        #result: 21.019.444 MWh\n    )"
-
+    p = Vars3()
+    p.energy = demand.total.energy
     p.CO2e_production_based = (
         production.gas.CO2e_production_based
         + production.opetpro.CO2e_production_based
