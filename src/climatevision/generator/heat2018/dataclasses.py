@@ -70,11 +70,22 @@ class Vars5:
 
 @dataclass(kw_only=True)
 class Vars6:
-    # Used by p_heatnet
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
+    CO2e_combustion_based: float
+    CO2e_total: float
+    energy: float
+    pct_energy: float
+
+    def __init__(
+        self,
+        energy: float,
+        total_energy: float,
+        CO2e_combustion_based: float,
+    ):
+        self.energy = energy
+        self.pct_energy = div(energy, total_energy)
+
+        self.CO2e_combustion_based = CO2e_combustion_based
+        self.CO2e_total = CO2e_combustion_based
 
 
 @dataclass(kw_only=True)

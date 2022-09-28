@@ -9,6 +9,7 @@ from ...electricity2018.e18 import E18
 from ..dataclasses import (
     Vars4,
     Vars5,
+    Vars6,
     Vars7,
     Vars8FromEnergy,
     Vars8FromEnergySum,
@@ -23,6 +24,7 @@ class Production:
     fueloil: Vars5
     opetpro: Vars4
     coal: Vars4
+    heatnet: Vars6
     heatnet_cogen: Vars5
     heatnet_plant: Vars5
     heatnet_geoth: Vars7
@@ -134,6 +136,13 @@ def calc_production(
 
     heatnet_lheatpump = Vars7(total_energy=p_heatnet_energy)
 
+    heatnet = Vars6(
+        energy=p_heatnet_energy,
+        total_energy=demand_total_energy,
+        CO2e_combustion_based=heatnet_cogen.CO2e_combustion_based
+        + heatnet_plant.CO2e_combustion_based,
+    )
+
     biomass = Vars8FromEnergy(
         energy=entries.r_biomass_fec
         + entries.b_biomass_fec
@@ -181,6 +190,7 @@ def calc_production(
         fueloil=fueloil,
         opetpro=opetpro,
         coal=coal,
+        heatnet=heatnet,
         heatnet_cogen=heatnet_cogen,
         heatnet_plant=heatnet_plant,
         heatnet_geoth=heatnet_geoth,

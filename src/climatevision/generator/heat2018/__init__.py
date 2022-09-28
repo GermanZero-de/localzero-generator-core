@@ -13,7 +13,6 @@ from ..electricity2018.e18 import E18
 from .h18 import H18, CO2eEmissions
 from .dataclasses import (
     Vars3,
-    Vars6,
 )
 from . import energy_demand, energy_production
 
@@ -31,15 +30,6 @@ def calc(inputs: Inputs, *, t18: T18, e18: E18) -> H18:
         inputs, t18, e18, demand.total.energy, p_heatnet_energy
     )
 
-    p_heatnet = Vars6()
-    p_heatnet.energy = p_heatnet_energy
-    p_heatnet.pct_energy = div(p_heatnet.energy, demand.total.energy)
-    p_heatnet.CO2e_combustion_based = (
-        production.heatnet_cogen.CO2e_combustion_based
-        + production.heatnet_plant.CO2e_combustion_based
-    )
-    p_heatnet.CO2e_total = p_heatnet.CO2e_combustion_based
-
     p = Vars3()
     p.energy = demand.total.energy
     p.CO2e_production_based = (
@@ -56,7 +46,7 @@ def calc(inputs: Inputs, *, t18: T18, e18: E18) -> H18:
         + production.fueloil.CO2e_combustion_based
         + production.opetpro.CO2e_combustion_based
         + production.coal.CO2e_combustion_based
-        + p_heatnet.CO2e_combustion_based
+        + production.heatnet.CO2e_combustion_based
     )
     p.CO2e_combustion_based_per_MWh = div(p.CO2e_combustion_based, p.energy)
     p.CO2e_total = (
@@ -65,7 +55,7 @@ def calc(inputs: Inputs, *, t18: T18, e18: E18) -> H18:
         + production.fueloil.CO2e_total
         + production.opetpro.CO2e_total
         + production.coal.CO2e_total
-        + p_heatnet.CO2e_total
+        + production.heatnet.CO2e_total
         + production.biomass.CO2e_total
         + production.ofossil.CO2e_total
         + production.orenew.CO2e_total
@@ -76,7 +66,7 @@ def calc(inputs: Inputs, *, t18: T18, e18: E18) -> H18:
         + production.fueloil.pct_energy
         + production.opetpro.pct_energy
         + production.coal.pct_energy
-        + p_heatnet.pct_energy
+        + production.heatnet.pct_energy
         + production.biomass.pct_energy
         + production.ofossil.pct_energy
         + production.orenew.pct_energy
@@ -102,7 +92,7 @@ def calc(inputs: Inputs, *, t18: T18, e18: E18) -> H18:
         p_fueloil=production.fueloil,
         p_opetpro=production.opetpro,
         p_coal=production.coal,
-        p_heatnet=p_heatnet,
+        p_heatnet=production.heatnet,
         p_heatnet_cogen=production.heatnet_cogen,
         p_heatnet_plant=production.heatnet_plant,
         p_heatnet_geoth=production.heatnet_geoth,
