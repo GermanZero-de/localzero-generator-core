@@ -51,7 +51,7 @@ def calc_production(
         + entries.i_gas_fec
         + entries.a_gas_fec
         + t18.t.demand_gas,
-        demand_total_energy=demand_total_energy,
+        total_energy=demand_total_energy,
         CO2e_production_based_per_MWh=fact("Fact_H_P_gas_ratio_CO2e_pb_to_fec_2018"),
         CO2e_combustion_based_per_MWh=fact("Fact_H_P_gas_ratio_CO2e_cb_to_fec_2018"),
     )
@@ -80,7 +80,7 @@ def calc_production(
 
     opetpro = Vars4(
         energy=entries.i_opetpro_fec,
-        demand_total_energy=demand_total_energy,
+        total_energy=demand_total_energy,
         CO2e_production_based_per_MWh=fact(
             "Fact_H_P_opetpro_ratio_CO2e_pb_to_fec_2018"
         ),
@@ -91,7 +91,7 @@ def calc_production(
 
     coal = Vars4(
         energy=entries.r_coal_fec + entries.b_coal_fec + entries.i_coal_fec,
-        demand_total_energy=demand_total_energy,
+        total_energy=demand_total_energy,
         CO2e_production_based_per_MWh=fact("Fact_H_P_coal_ratio_CO2e_pb_to_fec_2018"),
         CO2e_combustion_based_per_MWh=fact("Fact_H_P_coal_ratio_CO2e_cb_to_fec_2018"),
     )
@@ -130,16 +130,16 @@ def calc_production(
         ),
     )
 
-    heatnet_geoth = Vars7(p_heatnet_energy=p_heatnet_energy)
+    heatnet_geoth = Vars7(total_energy=p_heatnet_energy)
 
-    heatnet_lheatpump = Vars7(p_heatnet_energy=p_heatnet_energy)
+    heatnet_lheatpump = Vars7(total_energy=p_heatnet_energy)
 
     biomass = Vars8FromEnergy(
         energy=entries.r_biomass_fec
         + entries.b_biomass_fec
         + entries.i_biomass_fec
         + entries.a_biomass_fec,
-        demand_total_energy=demand_total_energy,
+        total_energy=demand_total_energy,
         CO2e_production_based_per_MWh=fact(
             "Fact_H_P_biomass_ratio_CO2e_pb_to_fec_2018"
         ),
@@ -147,7 +147,7 @@ def calc_production(
 
     ofossil = Vars8FromEnergy(
         energy=entries.i_ofossil_fec,
-        demand_total_energy=demand_total_energy,
+        total_energy=demand_total_energy,
         CO2e_production_based_per_MWh=fact(
             "Fact_H_P_ofossil_ratio_CO2e_pb_to_fec_2018"
         ),
@@ -157,19 +157,19 @@ def calc_production(
 
     solarth = Vars8FromEnergyPct(
         pct_energy=fact("Fact_R_S_ratio_solarth_to_orenew_2018"),
-        p_orenew_energy=orenew_energy,
+        total_energy=orenew_energy,
         CO2e_production_based_per_MWh=fact("Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018"),
     )
 
     heatpump = Vars8FromEnergyPct(
         pct_energy=fact("Fact_R_S_ratio_heatpump_to_orenew_2018"),
-        p_orenew_energy=orenew_energy,
+        total_energy=orenew_energy,
         CO2e_production_based_per_MWh=fact("Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018"),
     )
 
     orenew = Vars8FromEnergySum(
         energy=orenew_energy,
-        demand_total_energy=demand_total_energy,
+        total_energy=demand_total_energy,
         CO2e_production_based_per_MWh=0,
         CO2e_production_based=solarth.CO2e_production_based
         + heatpump.CO2e_production_based,

@@ -29,12 +29,12 @@ class Vars4:
     def __init__(
         self,
         energy: float,
-        demand_total_energy: float,
+        total_energy: float,
         CO2e_production_based_per_MWh: float,
         CO2e_combustion_based_per_MWh: float,
     ):
         self.energy = energy
-        self.pct_energy = div(energy, demand_total_energy)
+        self.pct_energy = div(energy, total_energy)
 
         self.CO2e_production_based_per_MWh = CO2e_production_based_per_MWh
         self.CO2e_combustion_based_per_MWh = CO2e_combustion_based_per_MWh
@@ -87,10 +87,10 @@ class Vars7:
 
     def __init__(
         self,
-        p_heatnet_energy: float,
+        total_energy: float,
     ):
         self.pct_energy = 0  # TODO: Check, why everything is 0
-        self.energy = self.pct_energy * p_heatnet_energy
+        self.energy = self.pct_energy * total_energy
 
         self.CO2e_combustion_based = 0
         self.CO2e_production_based = 0
@@ -109,11 +109,11 @@ class Vars8FromEnergy:
     def __init__(
         self,
         energy: float,
-        demand_total_energy: float,
+        total_energy: float,
         CO2e_production_based_per_MWh: float,
     ):
         self.energy = energy
-        self.pct_energy = div(energy, demand_total_energy)
+        self.pct_energy = div(energy, total_energy)
 
         self.CO2e_production_based_per_MWh = CO2e_production_based_per_MWh
         self.CO2e_production_based = energy * CO2e_production_based_per_MWh
@@ -132,12 +132,12 @@ class Vars8FromEnergySum:
     def __init__(
         self,
         energy: float,
-        demand_total_energy: float,
+        total_energy: float,
         CO2e_production_based_per_MWh: float,
         CO2e_production_based: float,
     ):
         self.energy = energy
-        self.pct_energy = div(energy, demand_total_energy)
+        self.pct_energy = div(energy, total_energy)
 
         self.CO2e_production_based_per_MWh = CO2e_production_based_per_MWh
         self.CO2e_production_based = CO2e_production_based
@@ -155,11 +155,11 @@ class Vars8FromEnergyPct:
     def __init__(
         self,
         pct_energy: float,
-        p_orenew_energy: float,
+        total_energy: float,
         CO2e_production_based_per_MWh: float,
     ):
         self.pct_energy = pct_energy
-        self.energy = p_orenew_energy * pct_energy
+        self.energy = total_energy * pct_energy
 
         self.CO2e_production_based_per_MWh = CO2e_production_based_per_MWh
         self.CO2e_production_based = self.energy * self.CO2e_production_based_per_MWh
