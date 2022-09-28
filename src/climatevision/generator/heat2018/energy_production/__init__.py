@@ -10,7 +10,6 @@ from ..dataclasses import (
     Vars4,
     Vars6,
     Vars7,
-    Vars8FromEnergy,
     Vars8FromEnergySum,
     Vars8FromEnergyPct,
 )
@@ -28,8 +27,8 @@ class Production:
     heatnet_plant: Vars4
     heatnet_geoth: Vars7
     heatnet_lheatpump: Vars7
-    biomass: Vars8FromEnergy
-    ofossil: Vars8FromEnergy
+    biomass: Vars4
+    ofossil: Vars4
     orenew: Vars8FromEnergySum
     solarth: Vars8FromEnergyPct
     heatpump: Vars8FromEnergyPct
@@ -142,7 +141,7 @@ def calc_production(
         + heatnet_plant.CO2e_combustion_based,
     )
 
-    biomass = Vars8FromEnergy(
+    biomass = Vars4(
         energy=entries.r_biomass_fec
         + entries.b_biomass_fec
         + entries.i_biomass_fec
@@ -153,7 +152,7 @@ def calc_production(
         ),
     )
 
-    ofossil = Vars8FromEnergy(
+    ofossil = Vars4(
         energy=entries.i_ofossil_fec,
         total_energy=demand_total_energy,
         CO2e_production_based_per_MWh=fact(

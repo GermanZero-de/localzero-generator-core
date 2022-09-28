@@ -1878,6 +1878,8 @@
             "pct_energy": 0
         },
         "p_biomass": {
+            "CO2e_combustion_based": 0.0,
+            "CO2e_combustion_based_per_MWh": 0,
             "CO2e_production_based": 0.0,
             "CO2e_production_based_per_MWh": 0.0,
             "CO2e_total": 0.0,
@@ -1885,6 +1887,8 @@
             "pct_energy": 0.10520616980818005
         },
         "p_ofossil": {
+            "CO2e_combustion_based": 0.0,
+            "CO2e_combustion_based_per_MWh": 0,
             "CO2e_production_based": 0.0,
             "CO2e_production_based_per_MWh": 0.0,
             "CO2e_total": 0.0,
