@@ -5,8 +5,10 @@ from dataclasses import dataclass
 from ...inputs import Inputs
 from ...transport2018.t18 import T18
 from ...electricity2018.e18 import E18
+from ...utils import div
 
 from ..dataclasses import (
+    Vars3,
     Vars4,
     Vars6,
     Vars7,
@@ -17,6 +19,7 @@ from ..dataclasses import (
 
 @dataclass(kw_only=True)
 class Production:
+    total: Vars3
     gas: Vars4
     lpg: Vars4
     fueloil: Vars4
@@ -182,7 +185,50 @@ def calc_production(
         + heatpump.CO2e_production_based,
     )
 
+    total = Vars3()
+    total.energy = demand_total_energy
+    total.CO2e_production_based = (
+        gas.CO2e_production_based
+        + opetpro.CO2e_production_based
+        + coal.CO2e_production_based
+        + biomass.CO2e_production_based
+        + ofossil.CO2e_production_based
+        + orenew.CO2e_production_based
+    )
+    total.CO2e_combustion_based = (
+        gas.CO2e_combustion_based
+        + lpg.CO2e_combustion_based
+        + fueloil.CO2e_combustion_based
+        + opetpro.CO2e_combustion_based
+        + coal.CO2e_combustion_based
+        + heatnet.CO2e_combustion_based
+    )
+    total.CO2e_combustion_based_per_MWh = div(total.CO2e_combustion_based, total.energy)
+    total.CO2e_total = (
+        gas.CO2e_total
+        + lpg.CO2e_total
+        + fueloil.CO2e_total
+        + opetpro.CO2e_total
+        + coal.CO2e_total
+        + heatnet.CO2e_total
+        + biomass.CO2e_total
+        + ofossil.CO2e_total
+        + orenew.CO2e_total
+    )
+    total.pct_energy = (
+        gas.pct_energy
+        + lpg.pct_energy
+        + fueloil.pct_energy
+        + opetpro.pct_energy
+        + coal.pct_energy
+        + heatnet.pct_energy
+        + biomass.pct_energy
+        + ofossil.pct_energy
+        + orenew.pct_energy
+    )
+
     return Production(
+        total=total,
         gas=gas,
         lpg=lpg,
         fueloil=fueloil,
