@@ -8,7 +8,6 @@ from ...electricity2018.e18 import E18
 
 from ..dataclasses import (
     Vars4,
-    Vars5,
     Vars6,
     Vars7,
     Vars8FromEnergy,
@@ -20,13 +19,13 @@ from ..dataclasses import (
 @dataclass(kw_only=True)
 class Production:
     gas: Vars4
-    lpg: Vars5
-    fueloil: Vars5
+    lpg: Vars4
+    fueloil: Vars4
     opetpro: Vars4
     coal: Vars4
     heatnet: Vars6
-    heatnet_cogen: Vars5
-    heatnet_plant: Vars5
+    heatnet_cogen: Vars4
+    heatnet_plant: Vars4
     heatnet_geoth: Vars7
     heatnet_lheatpump: Vars7
     biomass: Vars8FromEnergy
@@ -58,7 +57,7 @@ def calc_production(
         CO2e_combustion_based_per_MWh=fact("Fact_H_P_gas_ratio_CO2e_cb_to_fec_2018"),
     )
 
-    lpg = Vars5(
+    lpg = Vars4(
         energy=entries.r_lpg_fec
         + entries.b_lpg_fec
         + entries.i_lpg_fec
@@ -68,7 +67,7 @@ def calc_production(
         CO2e_combustion_based_per_MWh=fact("Fact_H_P_lpg_ratio_CO2e_cb_to_fec_2018"),
     )
 
-    fueloil = Vars5(
+    fueloil = Vars4(
         energy=entries.r_fueloil_fec
         + entries.b_fueloil_fec
         + entries.i_fueloil_fec
@@ -116,7 +115,7 @@ def calc_production(
     else:
         heatnet_cogen_energy = p_heatnet_energy
 
-    heatnet_cogen = Vars5(
+    heatnet_cogen = Vars4(
         energy=heatnet_cogen_energy,
         total_energy=p_heatnet_energy,
         CO2e_combustion_based_per_MWh=fact(
@@ -124,7 +123,7 @@ def calc_production(
         ),
     )
 
-    heatnet_plant = Vars5(
+    heatnet_plant = Vars4(
         energy=p_heatnet_energy - heatnet_cogen.energy,
         total_energy=p_heatnet_energy,
         CO2e_combustion_based_per_MWh=fact(

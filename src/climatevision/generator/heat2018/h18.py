@@ -8,7 +8,6 @@ from .energy_demand import EnergyDemand
 from .dataclasses import (
     Vars3,
     Vars4,
-    Vars5,
     Vars6,
     Vars7,
     Vars8FromEnergy,
@@ -30,13 +29,13 @@ class H18:
 
     p: Vars3
     p_gas: Vars4
-    p_lpg: Vars5
-    p_fueloil: Vars5
+    p_lpg: Vars4
+    p_fueloil: Vars4
     p_opetpro: Vars4
     p_coal: Vars4
     p_heatnet: Vars6
-    p_heatnet_cogen: Vars5
-    p_heatnet_plant: Vars5
+    p_heatnet_cogen: Vars4
+    p_heatnet_plant: Vars4
     p_heatnet_geoth: Vars7
     p_heatnet_lheatpump: Vars7
     p_biomass: Vars8FromEnergy
