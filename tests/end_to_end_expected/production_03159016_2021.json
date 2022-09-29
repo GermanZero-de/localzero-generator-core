@@ -1865,17 +1865,21 @@
         },
         "p_heatnet_geoth": {
             "CO2e_combustion_based": 0,
+            "CO2e_combustion_based_per_MWh": 0,
             "CO2e_production_based": 0,
+            "CO2e_production_based_per_MWh": 0,
             "CO2e_total": 0,
-            "energy": 0.0,
-            "pct_energy": 0
+            "energy": 0,
+            "pct_energy": 0.0
         },
         "p_heatnet_lheatpump": {
             "CO2e_combustion_based": 0,
+            "CO2e_combustion_based_per_MWh": 0,
             "CO2e_production_based": 0,
+            "CO2e_production_based_per_MWh": 0,
             "CO2e_total": 0,
-            "energy": 0.0,
-            "pct_energy": 0
+            "energy": 0,
+            "pct_energy": 0.0
         },
         "p_biomass": {
             "CO2e_combustion_based": 0.0,

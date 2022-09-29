@@ -66,27 +66,6 @@ class Vars6:
 
 
 @dataclass(kw_only=True)
-class Vars7:
-    CO2e_combustion_based: float
-    CO2e_production_based: float
-    CO2e_total: float
-    energy: float
-    pct_energy: float
-
-    def __init__(
-        self,
-        total_energy: float,
-    ):
-        self.pct_energy = 0  # TODO: Check, why everything is 0
-        self.energy = self.pct_energy * total_energy
-
-        self.CO2e_combustion_based = 0
-        self.CO2e_production_based = 0
-
-        self.CO2e_total = self.CO2e_production_based + self.CO2e_combustion_based
-
-
-@dataclass(kw_only=True)
 class Vars8FromEnergySum:
     CO2e_production_based: float
     CO2e_production_based_per_MWh: float

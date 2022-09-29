@@ -11,7 +11,6 @@ from ..dataclasses import (
     Vars3,
     Vars4,
     Vars6,
-    Vars7,
     Vars8FromEnergySum,
     Vars8FromEnergyPct,
 )
@@ -28,8 +27,8 @@ class Production:
     heatnet: Vars6
     heatnet_cogen: Vars4
     heatnet_plant: Vars4
-    heatnet_geoth: Vars7
-    heatnet_lheatpump: Vars7
+    heatnet_geoth: Vars4
+    heatnet_lheatpump: Vars4
     biomass: Vars4
     ofossil: Vars4
     orenew: Vars8FromEnergySum
@@ -133,9 +132,10 @@ def calc_production(
         ),
     )
 
-    heatnet_geoth = Vars7(total_energy=p_heatnet_energy)
-
-    heatnet_lheatpump = Vars7(total_energy=p_heatnet_energy)
+    # TODO: Check, why heatnet_geoth is completely 0
+    heatnet_geoth = Vars4(energy=0, total_energy=p_heatnet_energy)
+    # TODO: Check, why heatnet_lheatpump is completely 0
+    heatnet_lheatpump = Vars4(energy=0, total_energy=p_heatnet_energy)
 
     heatnet = Vars6(
         energy=p_heatnet_energy,

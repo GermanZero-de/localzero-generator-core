@@ -9,7 +9,6 @@ from .dataclasses import (
     Vars3,
     Vars4,
     Vars6,
-    Vars7,
     Vars8FromEnergySum,
     Vars8FromEnergyPct,
 )
@@ -35,8 +34,8 @@ class H18:
     p_heatnet: Vars6
     p_heatnet_cogen: Vars4
     p_heatnet_plant: Vars4
-    p_heatnet_geoth: Vars7
-    p_heatnet_lheatpump: Vars7
+    p_heatnet_geoth: Vars4
+    p_heatnet_lheatpump: Vars4
     p_biomass: Vars4
     p_ofossil: Vars4
     p_orenew: Vars8FromEnergySum
