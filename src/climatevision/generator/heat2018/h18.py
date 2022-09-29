@@ -6,8 +6,8 @@ from ..common.co2eEmissions import CO2eEmissions
 
 from .energy_demand import EnergyDemand
 from .energy_production import (
-    Vars3,
-    Vars4,
+    TotalHeatProduction,
+    HeatProduction,
     Vars6,
     Vars8FromEnergySum,
     Vars8FromEnergyPct,
@@ -25,19 +25,19 @@ class H18:
 
     h: CO2eEmissions
 
-    p: Vars3
-    p_gas: Vars4
-    p_lpg: Vars4
-    p_fueloil: Vars4
-    p_opetpro: Vars4
-    p_coal: Vars4
+    p: TotalHeatProduction
+    p_gas: HeatProduction
+    p_lpg: HeatProduction
+    p_fueloil: HeatProduction
+    p_opetpro: HeatProduction
+    p_coal: HeatProduction
     p_heatnet: Vars6
-    p_heatnet_cogen: Vars4
-    p_heatnet_plant: Vars4
-    p_heatnet_geoth: Vars4
-    p_heatnet_lheatpump: Vars4
-    p_biomass: Vars4
-    p_ofossil: Vars4
+    p_heatnet_cogen: HeatProduction
+    p_heatnet_plant: HeatProduction
+    p_heatnet_geoth: HeatProduction
+    p_heatnet_lheatpump: HeatProduction
+    p_biomass: HeatProduction
+    p_ofossil: HeatProduction
     p_orenew: Vars8FromEnergySum
     p_solarth: Vars8FromEnergyPct
     p_heatpump: Vars8FromEnergyPct

@@ -7,8 +7,8 @@ from ...transport2018.t18 import T18
 from ...electricity2018.e18 import E18
 
 from .dataclasses import (
-    Vars3,
-    Vars4,
+    TotalHeatProduction,
+    HeatProduction,
     Vars6,
     Vars8FromEnergySum,
     Vars8FromEnergyPct,
@@ -17,19 +17,19 @@ from .dataclasses import (
 
 @dataclass(kw_only=True)
 class Production:
-    total: Vars3
-    gas: Vars4
-    lpg: Vars4
-    fueloil: Vars4
-    opetpro: Vars4
-    coal: Vars4
+    total: TotalHeatProduction
+    gas: HeatProduction
+    lpg: HeatProduction
+    fueloil: HeatProduction
+    opetpro: HeatProduction
+    coal: HeatProduction
     heatnet: Vars6
-    heatnet_cogen: Vars4
-    heatnet_plant: Vars4
-    heatnet_geoth: Vars4
-    heatnet_lheatpump: Vars4
-    biomass: Vars4
-    ofossil: Vars4
+    heatnet_cogen: HeatProduction
+    heatnet_plant: HeatProduction
+    heatnet_geoth: HeatProduction
+    heatnet_lheatpump: HeatProduction
+    biomass: HeatProduction
+    ofossil: HeatProduction
     orenew: Vars8FromEnergySum
     solarth: Vars8FromEnergyPct
     heatpump: Vars8FromEnergyPct
@@ -46,7 +46,7 @@ def calc_production(
     entries = inputs.entries
     fact = inputs.fact
 
-    gas = Vars4(
+    gas = HeatProduction(
         energy=entries.r_gas_fec
         + entries.b_gas_fec
         + entries.i_gas_fec
@@ -57,7 +57,7 @@ def calc_production(
         CO2e_combustion_based_per_MWh=fact("Fact_H_P_gas_ratio_CO2e_cb_to_fec_2018"),
     )
 
-    lpg = Vars4(
+    lpg = HeatProduction(
         energy=entries.r_lpg_fec
         + entries.b_lpg_fec
         + entries.i_lpg_fec
@@ -67,7 +67,7 @@ def calc_production(
         CO2e_combustion_based_per_MWh=fact("Fact_H_P_lpg_ratio_CO2e_cb_to_fec_2018"),
     )
 
-    fueloil = Vars4(
+    fueloil = HeatProduction(
         energy=entries.r_fueloil_fec
         + entries.b_fueloil_fec
         + entries.i_fueloil_fec
@@ -79,7 +79,7 @@ def calc_production(
         ),
     )
 
-    opetpro = Vars4(
+    opetpro = HeatProduction(
         energy=entries.i_opetpro_fec,
         total_energy=demand_total_energy,
         CO2e_production_based_per_MWh=fact(
@@ -90,7 +90,7 @@ def calc_production(
         ),
     )
 
-    coal = Vars4(
+    coal = HeatProduction(
         energy=entries.r_coal_fec + entries.b_coal_fec + entries.i_coal_fec,
         total_energy=demand_total_energy,
         CO2e_production_based_per_MWh=fact("Fact_H_P_coal_ratio_CO2e_pb_to_fec_2018"),
@@ -115,7 +115,7 @@ def calc_production(
     else:
         heatnet_cogen_energy = p_heatnet_energy
 
-    heatnet_cogen = Vars4(
+    heatnet_cogen = HeatProduction(
         energy=heatnet_cogen_energy,
         total_energy=p_heatnet_energy,
         CO2e_combustion_based_per_MWh=fact(
@@ -123,7 +123,7 @@ def calc_production(
         ),
     )
 
-    heatnet_plant = Vars4(
+    heatnet_plant = HeatProduction(
         energy=p_heatnet_energy - heatnet_cogen.energy,
         total_energy=p_heatnet_energy,
         CO2e_combustion_based_per_MWh=fact(
@@ -132,9 +132,9 @@ def calc_production(
     )
 
     # TODO: Check, why heatnet_geoth is completely 0
-    heatnet_geoth = Vars4(energy=0, total_energy=p_heatnet_energy)
+    heatnet_geoth = HeatProduction(energy=0, total_energy=p_heatnet_energy)
     # TODO: Check, why heatnet_lheatpump is completely 0
-    heatnet_lheatpump = Vars4(energy=0, total_energy=p_heatnet_energy)
+    heatnet_lheatpump = HeatProduction(energy=0, total_energy=p_heatnet_energy)
 
     heatnet = Vars6(
         energy=p_heatnet_energy,
@@ -143,7 +143,7 @@ def calc_production(
         + heatnet_plant.CO2e_combustion_based,
     )
 
-    biomass = Vars4(
+    biomass = HeatProduction(
         energy=entries.r_biomass_fec
         + entries.b_biomass_fec
         + entries.i_biomass_fec
@@ -154,7 +154,7 @@ def calc_production(
         ),
     )
 
-    ofossil = Vars4(
+    ofossil = HeatProduction(
         energy=entries.i_ofossil_fec,
         total_energy=demand_total_energy,
         CO2e_production_based_per_MWh=fact(
@@ -184,7 +184,7 @@ def calc_production(
         + heatpump.CO2e_production_based,
     )
 
-    total = Vars3(
+    total = TotalHeatProduction(
         demand_total_energy,
         gas,
         lpg,

@@ -7,9 +7,9 @@ from ...utils import div
 
 
 @dataclass(kw_only=True)
-class Vars3:
+class TotalHeatProduction:
     CO2e_combustion_based: float
-    CO2e_combustion_based_per_MWh: float = None  # type: ignore
+    CO2e_combustion_based_per_MWh: float
     CO2e_production_based: float
     CO2e_total: float
     energy: float
@@ -32,7 +32,7 @@ class Vars3:
 
 
 @dataclass(kw_only=True)
-class Vars4:
+class HeatProduction:
     CO2e_combustion_based: float
     CO2e_combustion_based_per_MWh: float
     CO2e_production_based: float
