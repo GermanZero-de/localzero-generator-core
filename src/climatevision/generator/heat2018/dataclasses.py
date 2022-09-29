@@ -1,19 +1,34 @@
 # pyright: strict
 
 from dataclasses import dataclass
+from typing import Any
 
 from ..utils import div
 
 
 @dataclass(kw_only=True)
 class Vars3:
-    # Used by p
-    CO2e_combustion_based: float = None  # type: ignore
+    CO2e_combustion_based: float
     CO2e_combustion_based_per_MWh: float = None  # type: ignore
-    CO2e_production_based: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
+    CO2e_production_based: float
+    CO2e_total: float
+    energy: float
+    pct_energy: float
+
+    def __init__(self, energy: float, *childs: Any):
+        self.energy = energy
+        self.pct_energy = sum(child.pct_energy for child in childs)
+
+        self.CO2e_production_based = sum(
+            child.CO2e_production_based for child in childs
+        )
+        self.CO2e_combustion_based = sum(
+            child.CO2e_combustion_based for child in childs
+        )
+
+        self.CO2e_total = self.CO2e_production_based + self.CO2e_combustion_based
+
+        self.CO2e_combustion_based_per_MWh = div(self.CO2e_combustion_based, energy)
 
 
 @dataclass(kw_only=True)
@@ -47,6 +62,7 @@ class Vars4:
 
 @dataclass(kw_only=True)
 class Vars6:
+    CO2e_production_based: float = 0
     CO2e_combustion_based: float
     CO2e_total: float
     energy: float
@@ -69,6 +85,7 @@ class Vars6:
 class Vars8FromEnergySum:
     CO2e_production_based: float
     CO2e_production_based_per_MWh: float
+    CO2e_combustion_based: float = 0
     CO2e_total: float
     energy: float
     pct_energy: float

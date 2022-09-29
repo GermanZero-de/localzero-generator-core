@@ -1784,13 +1784,13 @@
         "h": {
             "CO2e_combustion_based": 56288.31309988664,
             "CO2e_production_based": 9078.65258675212,
-            "CO2e_total": 65366.96568663877
+            "CO2e_total": 65366.96568663876
         },
         "p": {
             "CO2e_combustion_based": 56288.31309988664,
             "CO2e_combustion_based_per_MWh": 0.03673549756518273,
             "CO2e_production_based": 9078.65258675212,
-            "CO2e_total": 65366.96568663877,
+            "CO2e_total": 65366.96568663876,
             "energy": 1532259.4446967754,
             "pct_energy": 0.9999999999999999
         },
@@ -1840,6 +1840,7 @@
             "pct_energy": 0.05909338575098167
         },
         "p_heatnet": {
+            "CO2e_production_based": 0,
             "CO2e_combustion_based": 38254.323291266155,
             "CO2e_total": 38254.323291266155,
             "energy": 140085.09986418963,
@@ -1902,6 +1903,7 @@
         "p_orenew": {
             "CO2e_production_based": 0.0,
             "CO2e_production_based_per_MWh": 0,
+            "CO2e_combustion_based": 0,
             "CO2e_total": 0.0,
             "energy": 39206.97317071569,
             "pct_energy": 0.025587685758056793
@@ -6519,12 +6521,12 @@
             "CO2e_combustion_based": 678.5800952985924,
             "CO2e_production_based": 0.0,
             "CO2e_total": 678.5800952985924,
-            "CO2e_total_2021_estimated": 61022.10048443652,
+            "CO2e_total_2021_estimated": 61022.100484436516,
             "change_CO2e_pct": -0.989618913954923,
-            "change_CO2e_t": -64688.38559134017,
+            "change_CO2e_t": -64688.385591340164,
             "change_energy_MWh": -1173835.0678113236,
             "change_energy_pct": -0.7660811436823078,
-            "cost_climate_saved": 311825141.61087024,
+            "cost_climate_saved": 311825141.6108702,
             "cost_wage": 4209142.687790336,
             "demand_emplo": 87.71673735184896,
             "demand_emplo_com": 1.070095982142857,
@@ -6593,12 +6595,12 @@
             "CO2e_combustion_based": 678.5800952985924,
             "CO2e_production_based": 0.0,
             "CO2e_total": 678.5800952985924,
-            "CO2e_total_2021_estimated": 61022.10048443652,
+            "CO2e_total_2021_estimated": 61022.100484436516,
             "change_CO2e_pct": -0.989618913954923,
-            "change_CO2e_t": -64688.38559134017,
+            "change_CO2e_t": -64688.385591340164,
             "change_energy_MWh": -1173835.0678113236,
             "change_energy_pct": -0.7660811436823078,
-            "cost_climate_saved": 311825141.61087024,
+            "cost_climate_saved": 311825141.6108702,
             "cost_fuel": 9.035892706215778,
             "cost_wage": 3923617.0738595948,
             "demand_electricity": 20789.218677382698,
@@ -6865,7 +6867,7 @@
             "energy": 52633.178931320246,
             "pct_energy": 0.5867826031738108
         },
-        "p_fossil_change_CO2e_t": -27112.64239537261
+        "p_fossil_change_CO2e_t": -27112.642395372604
     },
     "l30": {
         "l": {
@@ -9028,7 +9030,7 @@
         "CO2e_w_lulucf_203X": 0.0,
         "change_CO2e_t": -900307.8610842447,
         "change_CO2e_pct": -1.0,
-        "cost_climate_saved": 4344315008.075429,
+        "cost_climate_saved": 4344315008.075428,
         "z": {
             "energy_18": 2883287.091023166,
             "pct_energy_18": null,
@@ -9167,7 +9169,7 @@
             "CO2e_production_based_18": null,
             "CO2e_combustion_based_18": null,
             "CO2e_total_18": null,
-            "pct_CO2e_total_18": 0.0726051259931431,
+            "pct_CO2e_total_18": 0.07260512599314309,
             "energy_30": null,
             "pct_energy_30": 0.10101199073428575,
             "CO2e_production_based_30": null,
@@ -9191,7 +9193,7 @@
             "demand_emplo_new": null,
             "demand_emplo_com": null,
             "invest_pct": 0.012360011665581707,
-            "cost_climate_saved_pct": 0.07179773993260985,
+            "cost_climate_saved_pct": 0.07179773993260984,
             "demand_emplo_new_pct": 0.01883831314526265
         },
         "f": {

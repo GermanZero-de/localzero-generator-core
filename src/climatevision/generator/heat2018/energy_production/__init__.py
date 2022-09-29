@@ -185,46 +185,17 @@ def calc_production(
         + heatpump.CO2e_production_based,
     )
 
-    total = Vars3()
-    total.energy = demand_total_energy
-    total.CO2e_production_based = (
-        gas.CO2e_production_based
-        + opetpro.CO2e_production_based
-        + coal.CO2e_production_based
-        + biomass.CO2e_production_based
-        + ofossil.CO2e_production_based
-        + orenew.CO2e_production_based
-    )
-    total.CO2e_combustion_based = (
-        gas.CO2e_combustion_based
-        + lpg.CO2e_combustion_based
-        + fueloil.CO2e_combustion_based
-        + opetpro.CO2e_combustion_based
-        + coal.CO2e_combustion_based
-        + heatnet.CO2e_combustion_based
-    )
-    total.CO2e_combustion_based_per_MWh = div(total.CO2e_combustion_based, total.energy)
-    total.CO2e_total = (
-        gas.CO2e_total
-        + lpg.CO2e_total
-        + fueloil.CO2e_total
-        + opetpro.CO2e_total
-        + coal.CO2e_total
-        + heatnet.CO2e_total
-        + biomass.CO2e_total
-        + ofossil.CO2e_total
-        + orenew.CO2e_total
-    )
-    total.pct_energy = (
-        gas.pct_energy
-        + lpg.pct_energy
-        + fueloil.pct_energy
-        + opetpro.pct_energy
-        + coal.pct_energy
-        + heatnet.pct_energy
-        + biomass.pct_energy
-        + ofossil.pct_energy
-        + orenew.pct_energy
+    total = Vars3(
+        demand_total_energy,
+        gas,
+        lpg,
+        fueloil,
+        opetpro,
+        coal,
+        heatnet,
+        biomass,
+        ofossil,
+        orenew,
     )
 
     return Production(
