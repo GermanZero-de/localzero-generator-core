@@ -9,7 +9,6 @@ from .energy_production import (
     HeatProduction,
     Vars6,
     Vars8FromEnergySum,
-    Vars8FromEnergyPct,
 )
 
 
@@ -38,5 +37,5 @@ class H18:
     p_biomass: HeatProduction
     p_ofossil: HeatProduction
     p_orenew: Vars8FromEnergySum
-    p_solarth: Vars8FromEnergyPct
-    p_heatpump: Vars8FromEnergyPct
+    p_solarth: HeatProduction
+    p_heatpump: HeatProduction

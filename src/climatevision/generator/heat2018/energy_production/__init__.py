@@ -10,7 +10,6 @@ from .dataclasses import (
     HeatProduction,
     Vars6,
     Vars8FromEnergySum,
-    Vars8FromEnergyPct,
 )
 
 
@@ -30,8 +29,8 @@ class Production:
     biomass: HeatProduction
     ofossil: HeatProduction
     orenew: Vars8FromEnergySum
-    solarth: Vars8FromEnergyPct
-    heatpump: Vars8FromEnergyPct
+    solarth: HeatProduction
+    heatpump: HeatProduction
 
 
 def calc_production(
@@ -163,13 +162,13 @@ def calc_production(
 
     orenew_energy = entries.r_orenew_fec + entries.b_orenew_fec + entries.i_orenew_fec
 
-    solarth = Vars8FromEnergyPct(
+    solarth = HeatProduction.calcFromPct(
         pct_energy=fact("Fact_R_S_ratio_solarth_to_orenew_2018"),
         total_energy=orenew_energy,
         CO2e_production_based_per_MWh=fact("Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018"),
     )
 
-    heatpump = Vars8FromEnergyPct(
+    heatpump = HeatProduction.calcFromPct(
         pct_energy=fact("Fact_R_S_ratio_heatpump_to_orenew_2018"),
         total_energy=orenew_energy,
         CO2e_production_based_per_MWh=fact("Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018"),

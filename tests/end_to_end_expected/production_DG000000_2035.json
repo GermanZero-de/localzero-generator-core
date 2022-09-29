@@ -1910,6 +1910,8 @@
             "pct_energy": 0.019148282799135868
         },
         "p_solarth": {
+            "CO2e_combustion_based": 0.0,
+            "CO2e_combustion_based_per_MWh": 0,
             "CO2e_production_based": 0.0,
             "CO2e_production_based_per_MWh": 0.0,
             "CO2e_total": 0.0,
@@ -1917,6 +1919,8 @@
             "pct_energy": 0.40422957546425387
         },
         "p_heatpump": {
+            "CO2e_combustion_based": 0.0,
+            "CO2e_combustion_based_per_MWh": 0,
             "CO2e_production_based": 0.0,
             "CO2e_production_based_per_MWh": 0.0,
             "CO2e_total": 0.0,
