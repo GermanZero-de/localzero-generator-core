@@ -7,7 +7,6 @@ from ...transport2018.t18 import T18
 from ...electricity2018.e18 import E18
 
 from .dataclasses import (
-    TotalHeatProduction,
     HeatProduction,
     Vars6,
     Vars8FromEnergySum,
@@ -17,7 +16,7 @@ from .dataclasses import (
 
 @dataclass(kw_only=True)
 class Production:
-    total: TotalHeatProduction
+    total: HeatProduction
     gas: HeatProduction
     lpg: HeatProduction
     fueloil: HeatProduction
@@ -46,7 +45,7 @@ def calc_production(
     entries = inputs.entries
     fact = inputs.fact
 
-    gas = HeatProduction(
+    gas = HeatProduction.calc(
         energy=entries.r_gas_fec
         + entries.b_gas_fec
         + entries.i_gas_fec
@@ -57,7 +56,7 @@ def calc_production(
         CO2e_combustion_based_per_MWh=fact("Fact_H_P_gas_ratio_CO2e_cb_to_fec_2018"),
     )
 
-    lpg = HeatProduction(
+    lpg = HeatProduction.calc(
         energy=entries.r_lpg_fec
         + entries.b_lpg_fec
         + entries.i_lpg_fec
@@ -67,7 +66,7 @@ def calc_production(
         CO2e_combustion_based_per_MWh=fact("Fact_H_P_lpg_ratio_CO2e_cb_to_fec_2018"),
     )
 
-    fueloil = HeatProduction(
+    fueloil = HeatProduction.calc(
         energy=entries.r_fueloil_fec
         + entries.b_fueloil_fec
         + entries.i_fueloil_fec
@@ -79,7 +78,7 @@ def calc_production(
         ),
     )
 
-    opetpro = HeatProduction(
+    opetpro = HeatProduction.calc(
         energy=entries.i_opetpro_fec,
         total_energy=demand_total_energy,
         CO2e_production_based_per_MWh=fact(
@@ -90,7 +89,7 @@ def calc_production(
         ),
     )
 
-    coal = HeatProduction(
+    coal = HeatProduction.calc(
         energy=entries.r_coal_fec + entries.b_coal_fec + entries.i_coal_fec,
         total_energy=demand_total_energy,
         CO2e_production_based_per_MWh=fact("Fact_H_P_coal_ratio_CO2e_pb_to_fec_2018"),
@@ -115,7 +114,7 @@ def calc_production(
     else:
         heatnet_cogen_energy = p_heatnet_energy
 
-    heatnet_cogen = HeatProduction(
+    heatnet_cogen = HeatProduction.calc(
         energy=heatnet_cogen_energy,
         total_energy=p_heatnet_energy,
         CO2e_combustion_based_per_MWh=fact(
@@ -123,7 +122,7 @@ def calc_production(
         ),
     )
 
-    heatnet_plant = HeatProduction(
+    heatnet_plant = HeatProduction.calc(
         energy=p_heatnet_energy - heatnet_cogen.energy,
         total_energy=p_heatnet_energy,
         CO2e_combustion_based_per_MWh=fact(
@@ -132,9 +131,9 @@ def calc_production(
     )
 
     # TODO: Check, why heatnet_geoth is completely 0
-    heatnet_geoth = HeatProduction(energy=0, total_energy=p_heatnet_energy)
+    heatnet_geoth = HeatProduction.calc(energy=0, total_energy=p_heatnet_energy)
     # TODO: Check, why heatnet_lheatpump is completely 0
-    heatnet_lheatpump = HeatProduction(energy=0, total_energy=p_heatnet_energy)
+    heatnet_lheatpump = HeatProduction.calc(energy=0, total_energy=p_heatnet_energy)
 
     heatnet = Vars6(
         energy=p_heatnet_energy,
@@ -143,7 +142,7 @@ def calc_production(
         + heatnet_plant.CO2e_combustion_based,
     )
 
-    biomass = HeatProduction(
+    biomass = HeatProduction.calc(
         energy=entries.r_biomass_fec
         + entries.b_biomass_fec
         + entries.i_biomass_fec
@@ -154,7 +153,7 @@ def calc_production(
         ),
     )
 
-    ofossil = HeatProduction(
+    ofossil = HeatProduction.calc(
         energy=entries.i_ofossil_fec,
         total_energy=demand_total_energy,
         CO2e_production_based_per_MWh=fact(
@@ -184,7 +183,7 @@ def calc_production(
         + heatpump.CO2e_production_based,
     )
 
-    total = TotalHeatProduction(
+    total = HeatProduction.calcSum(
         demand_total_energy,
         gas,
         lpg,

@@ -1790,6 +1790,7 @@
             "CO2e_combustion_based": 49524008.633951336,
             "CO2e_combustion_based_per_MWh": 0.04058681775244121,
             "CO2e_production_based": 8522639.866653107,
+            "CO2e_production_based_per_MWh": 0.006984629083527016,
             "CO2e_total": 58046648.50060444,
             "energy": 1220199349.8485742,
             "pct_energy": 0.9999999999999997
