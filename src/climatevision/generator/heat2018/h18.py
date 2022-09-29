@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from ..common.co2eEmissions import CO2eEmissions
 
 from .energy_demand import EnergyDemand
-from .dataclasses import (
+from .energy_production import (
     Vars3,
     Vars4,
     Vars6,

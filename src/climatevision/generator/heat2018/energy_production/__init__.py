@@ -5,9 +5,8 @@ from dataclasses import dataclass
 from ...inputs import Inputs
 from ...transport2018.t18 import T18
 from ...electricity2018.e18 import E18
-from ...utils import div
 
-from ..dataclasses import (
+from .dataclasses import (
     Vars3,
     Vars4,
     Vars6,
