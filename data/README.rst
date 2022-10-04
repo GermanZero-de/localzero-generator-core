@@ -25,10 +25,13 @@ on every data file you have changed, so minor encoding differences (such as
 wether or not to put `"` around fields in a CSV) do not result in spurious
 merge conflicts later on.
 
+We also added the *dataGeneratorScripts* folder, that includes some python scripts
+which generate data files for the data repositories from various sources.
+
 Where to get the data: Public Domain
 ------------------------------------
 
-*tl;dr* Run `python devtool.py checkout` if you are a member of the localzero team.
+*tl;dr* Run `python devtool.py data checkout` if you are a member of the localzero team.
 
 The majority of the relevant data was curated by German Zero from various sources that
 are in the public domain. You can checkout a copy of that data from the repository

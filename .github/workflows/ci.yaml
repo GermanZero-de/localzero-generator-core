@@ -64,4 +64,4 @@ jobs:
       - name: Run pytest coverage
         run: |
           source $VENV
-          poetry run pytest --cov=generatorcore tests/ --cov-fail-under=${{ env.COVERAGE_REQ }}
+          poetry run pytest --cov=src/climatevision/ tests/ --cov-fail-under=${{ env.COVERAGE_REQ }}

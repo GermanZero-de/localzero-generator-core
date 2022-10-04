@@ -1,3 +1,4 @@
+# pyright: strict
 ###### WORDS OF WARNING
 # This implements a simple http JSON "RPC" server for the generator
 #
@@ -8,19 +9,22 @@
 # More specifically this is not intented to be the RPC server that we will
 # offer to the outside world. This is just a quick-dirty test bed for RPCs
 # + the thing needed to provide the UI.
-import sys
-import json
-from generatorcore.inputs import Inputs
-from generatorcore.generator import calculate
-from generatorcore.refdata import RefData
-from generatorcore.makeentries import make_entries
+
+from typing import Any
 from http.server import HTTPServer, BaseHTTPRequestHandler
+import jsonrpcserver
+
+from climatevision.generator import RefData
+from climatevision.server import GeneratorRpcs
 
 
-def cmd_explorer(args):
+def cmd_explorer(args: Any):
     rd = RefData.load()
-    with open("explorer/index.html") as index_file:
+    generator_rpcs = GeneratorRpcs(rd)
+    with open("explorer/index.html", encoding="utf-8") as index_file:
         index = index_file.read()
+    with open("explorer/elm.js", encoding="utf-8") as elm_js_file:
+        elm_js = elm_js_file.read()
 
     class ExplorerHandler(BaseHTTPRequestHandler):
         def handle_index(self):
@@ -29,42 +33,56 @@ def cmd_explorer(args):
             self.end_headers()
             self.wfile.write(index.encode())
 
-        def handle_calculate(self, ags, year):
-            error = None
-            response = ""
-            try:
-                e = make_entries(rd, ags, year)
-                inputs = Inputs(
-                    facts_and_assumptions=rd.facts_and_assumptions(), entries=e
-                )
-                g = calculate(inputs)
-                response = json.dumps(g.result_dict())
-            except Exception as e:
-                error = e
+        def handle_elm_js(self):
+            self.send_response(200)
+            self.send_header("Content-type", "text/javascript")
+            self.end_headers()
+            self.wfile.write(elm_js.encode())
 
-            if error is None:
-                self.send_response(200)
-                self.send_header("Content-type", "application/json")
-                self.end_headers()
-                self.wfile.write(response.encode())
-            else:
-                self.send_response(500)
-                print(error)
+        def do_POST(self):
+            match self.path.split("/"):
+                case ["", "localzero", "api", "v0", ""]:
+                    content_len = int(self.headers["Content-Length"])
+                    if content_len < 0 or content_len > 1024 * 1024 * 5:
+                        self.send_response(400)
+                        return
+                    request = self.rfile.read(content_len).decode()
+                    response = jsonrpcserver.dispatch(
+                        request,
+                        methods=generator_rpcs.methods(),  # type: ignore TODO: Figure out a better way to deal with this
+                    )
+                    self.send_response(200)
+                    self.send_header("Content-type", "application/json")
+                    self.send_header("Access-Control-Allow-Origin", "*")
+                    self.end_headers()
+                    self.wfile.write(response.encode())
+                case path:
+                    print(path)
+                    self.send_response(404)
+                    self.end_headers()
+
+        def do_OPTIONS(self):
+            print("OPTIONS", self.command)
+            print(self.path.split("/"))
+            self.send_response(204)
+            self.send_header("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
+            self.send_header("Access-Control-Allow-Headers", "Content-Type")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
 
         def do_GET(self):
             print(self.command)
             print(self.path.split("/"))
             match self.path.split("/"):
-                case ["", "calculate", ags, year]:
-                    self.handle_calculate(ags, int(year))
-
                 case ["", ""]:
                     self.handle_index()
 
-                case other:
+                case ["", "elm.js"]:
+                    self.handle_elm_js()
+
+                case _:
                     self.send_response(404)
                     self.end_headers()
-                    return
 
     httpd = HTTPServer(("", 4070), ExplorerHandler)
     print("Ready to go. Explore at http://localhost:4070")

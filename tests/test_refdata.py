@@ -7,9 +7,10 @@
    time trying to figure out a bug in the generator when it is actually in the loading
    of the reference data module.
 """
+
 import pytest
 
-from generatorcore.refdata import RefData
+from climatevision.generator import RefData
 
 FEDERAL_STATES = ["%02i000000" % i for i in range(1, 17)]
 
