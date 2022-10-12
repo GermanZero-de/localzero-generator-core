@@ -168,5 +168,4 @@ cython_debug/
 localzero-generator-core.code-workspace
 
 # temporary ignore for development of industry per region
-explorative_notebooks/export_anlagen_with_ags.csv
 explorative_notebooks/industry_ags_match_full_export.csv
