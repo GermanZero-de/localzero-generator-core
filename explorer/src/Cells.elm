@@ -23,7 +23,6 @@ module Cells exposing
     )
 
 import Array exposing (Array)
-import Html exposing (a)
 import Json.Decode as Decode
 import Json.Encode as Encode
 import List.Extra
