@@ -17,7 +17,7 @@ module AllRuns exposing
 import Dict exposing (Dict)
 import Run exposing (Path, Run)
 import Tree
-import Value exposing (Value)
+import Value
 
 
 type alias RunId =

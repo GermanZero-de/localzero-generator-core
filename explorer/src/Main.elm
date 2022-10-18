@@ -184,6 +184,7 @@ type alias Model =
     , dragDrop : DragDrop
     , displayedTrace : List DisplayedTrace
     , agsIndex : AgsIndex
+    , showingSidebar : Bool
     }
 
 
@@ -306,6 +307,7 @@ init storage =
     , dragDrop = DragDrop.init
     , displayedTrace = []
     , agsIndex = AgsIndex.init []
+    , showingSidebar = True
     }
         |> update (LocalStorageLoaded storage)
 
@@ -382,6 +384,7 @@ type Msg
       -- Comparison
     | ToggleSelectForCompareClicked RunId
     | DiffToleranceUpdated RunId RunId Float
+    | ToggleSidebar
 
 
 type ModalMsg
@@ -497,6 +500,10 @@ update msg model =
     case msg of
         Noop ->
             model
+                |> withNoCmd
+
+        ToggleSidebar ->
+            { model | showingSidebar = not model.showingSidebar }
                 |> withNoCmd
 
         -- |> withNoCmd
@@ -1892,9 +1899,6 @@ tableElementFromIndex ndx =
 viewValueSetAsUserDefinedTable : LensId -> DragDrop -> Lens.TableData -> ValueSet -> Element Msg
 viewValueSetAsUserDefinedTable lensId dragDrop td valueSet =
     let
-        cells =
-            Cells.toList td.grid
-
         ifEditing =
             if td.editing /= Nothing then
                 identity
@@ -1979,7 +1983,7 @@ viewValueSetAsUserDefinedTable lensId dragDrop td valueSet =
                         , viewPath path
                         ]
 
-                displayCell c =
+                displayCell =
                     case cell of
                         CellContent.Label l ->
                             displayLabel l
@@ -2016,14 +2020,21 @@ viewValueSetAsUserDefinedTable lensId dragDrop td valueSet =
                                                     [ Font.alignRight
                                                     , Font.family [ Font.monospace ]
                                                     ]
-                                                    (text s)
+                                                    (text
+                                                        (if s == "" then
+                                                            " "
+
+                                                         else
+                                                            s
+                                                        )
+                                                    )
             in
             case td.editing of
                 Nothing ->
-                    displayCell cell
+                    displayCell
 
                 Just Lens.All ->
-                    displayCell cell
+                    displayCell
 
                 Just (Lens.Cell p editValue) ->
                     if p == pos then
@@ -2088,7 +2099,7 @@ viewValueSetAsUserDefinedTable lensId dragDrop td valueSet =
                             }
 
                     else
-                        displayCell cell
+                        displayCell
 
         separator isColumn pos =
             let
@@ -2503,78 +2514,54 @@ viewRunsAndInterestLists model =
                             model.chartHovering
                             model.runs
                     )
+
+        sidebar =
+            if model.showingSidebar then
+                [ viewRunsAndComparisons model
+                , el
+                    [ width (px 2)
+                    , Background.color black
+                    , height fill
+                    ]
+                    Element.none
+                ]
+
+            else
+                []
     in
     row
         [ width fill
         , height (minimum 0 fill)
         , spacing sizes.large
         ]
-        [ viewRunsAndComparisons model
-        , el
-            [ width (px 2)
-            , Background.color black
-            , height fill
-            ]
-            Element.none
-        , el
-            [ width fill
-            , height (minimum 0 fill)
-            , Element.inFront
-                (row
-                    [ spacing 10
-                    , Element.alignBottom
-                    , Element.moveUp 10
-                    , Element.alignRight
-                    , padding 0
+        (sidebar
+            ++ [ el
+                    [ width fill
+                    , height (minimum 0 fill)
+                    , Element.inFront
+                        (row
+                            [ spacing 10
+                            , Element.alignBottom
+                            , Element.moveUp 10
+                            , Element.alignRight
+                            , padding 0
+                            ]
+                            [ floatingActionButton FeatherIcons.plus NewLensClicked
+                            , floatingActionButton FeatherIcons.grid NewTableClicked
+                            ]
+                        )
                     ]
-                    [ floatingActionButton FeatherIcons.plus NewLensClicked
-                    , floatingActionButton FeatherIcons.grid NewTableClicked
-                    ]
-                )
-            ]
-            (column
-                [ width fill
-                , height (minimum 0 fill)
-                , scrollbarY
-                , spacing sizes.medium
-                , padding sizes.medium
-                ]
-                interestLists
-            )
-        ]
-
-
-level : Value.Trace -> Int
-level tr =
-    case tr of
-        Value.LiteralTrace _ ->
-            0
-
-        Value.NameTrace _ ->
-            0
-
-        Value.DataTrace _ ->
-            0
-
-        Value.FactOrAssTrace _ ->
-            0
-
-        Value.UnaryTrace _ ->
-            1
-
-        Value.BinaryTrace { binary } ->
-            case binary of
-                Value.Times ->
-                    2
-
-                Value.Divide ->
-                    2
-
-                Value.Plus ->
-                    3
-
-                Value.Minus ->
-                    3
+                    (column
+                        [ width fill
+                        , height (minimum 0 fill)
+                        , scrollbarY
+                        , spacing sizes.medium
+                        , padding sizes.medium
+                        ]
+                        interestLists
+                    )
+               ]
+        )
 
 
 viewTraceAsBlocks : Set Path -> RunId -> AllRuns -> Value.Trace -> Element Msg
@@ -2809,7 +2796,15 @@ viewModel model =
                 [ text "LocalZero Explorer"
                 , el [ width fill ] Element.none
                 , buttons
-                    [ iconButton FeatherIcons.download DownloadClicked
+                    [ (if model.showingSidebar then
+                        dangerousIconButton
+
+                       else
+                        iconButton
+                      )
+                        FeatherIcons.sidebar
+                        ToggleSidebar
+                    , iconButton FeatherIcons.download DownloadClicked
                     , iconButton FeatherIcons.upload UploadClicked
                     ]
                 ]

@@ -44,11 +44,6 @@ matchHelper pattern text =
                     p == t && matchHelper ps ts
 
 
-isSpecial : Char -> Bool
-isSpecial c =
-    c == '?' || c == '*'
-
-
 match : String -> String -> Bool
 match pattern text =
     let
