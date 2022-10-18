@@ -34,7 +34,7 @@ init agsDataList =
                         agsRecord =
                             { normal = agsData
                             , lower =
-                                { ags = agsData.ags
+                                { ags = String.toLower agsData.ags
                                 , short = String.toLower agsData.short
                                 , desc = String.toLower agsData.desc
                                 }
@@ -42,7 +42,17 @@ init agsDataList =
                     in
                     acc
                         |> add .ags agsRecord
-                        |> add .desc agsRecord
+                        |> (\acc2 ->
+                                -- DG000000 is the only ags whose first letter is equal
+                                -- to the first letter of it's desc (Deutschland)
+                                -- so don't add it a second time to the list.
+                                if agsRecord.normal.ags == "DG000000" then
+                                    acc2
+
+                                else
+                                    acc2
+                                        |> add .desc agsRecord
+                           )
                 )
                 Dict.empty
                 agsDataList
@@ -73,7 +83,7 @@ lookup filter (AgsIndex { byFirstChar, all }) =
                     candidates
                         |> List.filterMap
                             (\a ->
-                                if String.startsWith lFilter a.normal.ags || String.startsWith lFilter a.lower.desc then
+                                if String.startsWith lFilter a.lower.ags || String.startsWith lFilter a.lower.desc then
                                     Just a.normal
 
                                 else
