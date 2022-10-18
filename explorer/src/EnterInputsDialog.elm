@@ -105,7 +105,7 @@ view updateStateMsg okClickedMsg state =
                                                     []
                                            )
                                     )
-                                    [ text a.ags
+                                    [ el [ Font.family [ Font.monospace ] ] (text a.ags)
                                     , text a.desc
                                     ]
                             )
