@@ -22,6 +22,7 @@ from commands.cmd_explorer_parser import add_cmd_explorer_parser
 from commands.cmd_ready_to_rock_parser import add_cmd_ready_to_rock_parser
 from commands.cmd_data_parser import add_cmd_data_parser
 from commands.cmd_test_end_to_end_parser import add_cmd_test_end_to_end_parser
+from commands.cmd_indicators_parser import add_cmd_indicators_parser
 
 
 class Devtool:
@@ -38,6 +39,7 @@ class Devtool:
         add_cmd_ready_to_rock_parser(subcmd_parsers)
         add_cmd_data_parser(subcmd_parsers)
         add_cmd_test_end_to_end_parser(subcmd_parsers)
+        add_cmd_indicators_parser(subcmd_parsers)
 
         return self.parser.parse_args(args)
 
