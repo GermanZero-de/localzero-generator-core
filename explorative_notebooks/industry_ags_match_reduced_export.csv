@@ -1,6 +1,5 @@
 Ort Original,VET2018_t,i_category,AGS
 "Dillingen, Saar",407136,metal_steel_primary,10044111
-Mülheim an der Ruhr,53935,other_further,05117000
 Bad Münstereifel,18639,other_further,05366004
 Sehnde,654419,miner_cement,03241016
 Oberharz am Brocken,179402,miner_chalk,15085228
@@ -10,11 +9,11 @@ Oberharz am Brocken,97226,miner_chalk,15085228
 Saal a.d.Donau,296114,miner_chalk,09273166
 Oberharz am Brocken,48840,miner_chalk,15085228
 Halle (Westf.),9506,miner_chalk,05754012
-Wanzleben,107887,other_further,15083531
+Wanzleben,107887,other_food,15083531
 Oberharz am Brocken,197078,miner_chalk,15085228
 Meißner,49916,miner_chalk,06636008
-Kalkar,45114,other_further,05154024
-Mühlberg/Elbe,72412,other_further,12062341
+Kalkar,45114,other_food,05154024
+Mühlberg/Elbe,72412,other_food,12062341
 Oberharz am Brocken,108815,miner_chalk,15085228
 Köln,157478,miner_glas,05315000
 Lauscha,87322,miner_glas,16072011
@@ -23,7 +22,6 @@ Steinbach a.Wald,78773,miner_glas,09476175
 Osterweddingen,145985,miner_glas,15083490
 Osterweddingen,125921,miner_glas,15083490
 Tettau - Kleintettau,5529,miner_glas,09476179
-Neuburg a. d. Donau,76769,miner_glas,09185149
 "Fürstenzell, Markt",22588,miner_ceram,09275122
 Puttenhausen,23759,miner_ceram,09178122
 Vatersdorf,18471,miner_ceram,09274121
@@ -70,7 +68,7 @@ Lutherstadt Wittenberg,49946,chem_ammonia,15091375
 Nidda - Oberschmitten,13801,other_paper,06440016
 Wasserburg am Inn,86807,other_food,09187182
 Mützel,10824,other_food,15086040
-Werder/Havel,19661,other_further,12069656
+Werder/Havel,19661,other_food,12069656
 Meschede - Grevenstein,10726,other_food,12069656
 Biberach an der Riss,27902,chem_other,08426021
 Addrup-Essen,41923,other_food,03453006
@@ -83,9 +81,7 @@ Leutkirch-Adrazhofen,52852,other_food,08436055
 Krefeld-Uerdingen,8747,other_further,05114000
 Gmund am Tegernsee,9654,other_paper,09182116
 Biberach an der Riss,27638,chem_other,08426021
-Bergen-Hohne,13831,other_further,03351004
 Rostock,6479,other_further,13003000
-Herrenberg-Haslach,3332,miner_glas,08115021
 Wachau OT Leppersdorf,127694,other_food,14625600
 Wiefelstede-Dringenburg,20583,other_food,03451008
 Lutherstadt Wittenberg,30145,chem_ammonia,15091375
@@ -109,7 +105,6 @@ Caaschwitz,69603,miner_chalk,16076012
 Rosenthal am Rennsteig,53521,other_paper,16075004
 Burg,6,other_paper,15086015
 Jena,17782,miner_glas,16053000
-Eisenberg,40512,metal_nonfe,07333019
 Unterwellenborn,43091,metal_steel_secondary,16073111
 Unterwellenborn,62159,metal_steel_secondary,16073111
 Rudolstadt,0,other_paper,16073076
@@ -126,6 +121,7 @@ Böhlen,10051,chem_basic,14729040
 Böhlen,96753,chem_basic,14729040
 Böhlen,0,chem_basic,14729040
 Böhlen,22813,miner_chalk,14729040
+Arnstadt,7178,other_further,16070004
 Schleusingen,46413,miner_glas,16069043
 Schmalkalden,4939,other_paper,16066063
 Schmalkalden,3340,other_paper,16066063
@@ -133,18 +129,18 @@ Schmalkalden,10318,other_paper,16066063
 Großengottern,25672,miner_ceram,16064018
 Unterbreizbach,16622,chem_ammonia,16063078
 Unterbreizbach,117530,chem_ammonia,16063078
+Creuzburg,17,other_further,16063013
 Bleicherode,42403,chem_ammonia,16062002
 Nordhausen,5052,miner_ceram,16062041
 Teistungen,2863,miner_ceram,16061114
 Deuna,1010775,miner_cement,16061022
 Berlin,6542,other_further,11000000
 Berlin,7304,other_food,11000000
-Berlin,10184,other_further,11000000
-Berlin,20620,other_further,11000000
+Berlin,20620,other_food,11000000
 Berlin,41353,chem_other,11000000
 Berlin,6332,other_further,11000000
 Magdeburg,939,other_further,15003000
-Halle,36834,other_further,05754012
+Halle,36834,other_food,05754012
 Witten,30561,metal_steel_secondary,05954036
 Witten,27194,metal_steel_secondary,05954036
 Witten,27048,chem_basic,05954036
@@ -159,7 +155,7 @@ Arneburg,79841,other_paper,15090010
 Arneburg,22159,other_paper,15090010
 Staßfurt,130244,chem_basic,15089310
 Nienburg,87867,miner_glas,03256022
-Könnern,109999,other_further,15089195
+Könnern,109999,other_food,15089195
 Barby,128976,other_food,15089026
 Spergau,14516,other_paper,15088205
 Schkopau,39084,chem_basic,15088330
@@ -184,7 +180,7 @@ Stolberg,11568,metal_nonfe,05334032
 Stolberg,53599,metal_nonfe,05334032
 Hettstedt,9430,metal_nonfe,15087220
 Ilsenburg,88727,metal_steel_secondary,15085190
-Zeitz,283017,other_further,15084590
+Zeitz,283017,other_food,15084590
 Zeitz,437605,chem_basic,15084590
 Karsdorf,903374,miner_cement,15084250
 Elsteraue,85998,chem_basic,15084130
@@ -198,10 +194,9 @@ Worms,80084,chem_basic,07319000
 Wefensleben,30076,miner_ceram,15083535
 Oschersleben,4091,other_food,15083415
 Haldensleben,124544,miner_glas,15083270
-Flechtingen,64080,miner_glas,15083230
 Emden,20774,other_further,03402000
 Zörbig,31183,chem_basic,15082440
-Lage,45700,other_further,05766040
+Lage,45700,other_food,05766040
 Gardelegen,35942,miner_glas,15081135
 Torgau,111514,miner_glas,14730310
 Rackwitz,19125,metal_nonfe,14730250
@@ -218,11 +213,11 @@ Freital,15879,metal_steel_secondary,14628110
 Freital,16742,metal_steel_secondary,14628110
 Freital,20722,miner_ceram,14628110
 Freital,13,other_paper,14628110
-Zeithain,30835,other_further,14627360
 Riesa,43307,metal_steel_secondary,14627230
 Riesa,28126,other_further,14627230
 Nünchritz,67426,chem_basic,14627190
 Meißen,8365,miner_ceram,14627140
+Lampertswalde,30339,other_further,14627110
 Gröditz,11907,metal_steel_secondary,14627050
 Gröditz,47158,other_further,14627050
 Gröditz,10864,other_further,14627050
@@ -236,7 +231,6 @@ Bernsdorf,14174,miner_glas,14625030
 Dresden,11875,miner_glas,14612000
 Zwickau,20488,miner_ceram,14524330
 Zwickau,40103,other_further,14524330
-St. Egidien,101348,miner_glas,14524280
 Weißenborn/Erzgeb.,0,other_paper,14522590
 Weißenborn/Erzgeb.,87645,other_paper,14522590
 Penig,26882,miner_ceram,14522460
@@ -257,7 +251,10 @@ Hagen,23687,metal_steel_secondary,05914000
 Hagen,104810,other_further,05914000
 Hagen,26106,miner_ceram,05914000
 Hagen,103300,other_paper,05914000
-Anklam,82789,other_further,13075005
+Rubenow,22584,other_further,13075120
+Anklam,82789,other_food,13075005
+Wismar,25704,other_further,13074087
+Wismar,1144,other_further,13074087
 Wismar,4579,chem_basic,13074087
 Neuburg,72946,miner_glas,09185149
 Marl,142146,chem_other,05562024
@@ -277,24 +274,30 @@ Marl,3451,chem_basic,05562024
 Altenkirchen,4329,other_paper,07336004
 Poppendorf,163475,chem_ammonia,13072081
 Malchin,8453,other_food,13071092
+Langenhagen,6374,other_further,03241010
 Schwedt,51629,other_paper,12073532
 Schwedt,0,other_paper,12073532
+Ludwigsfelde,2157,other_further,12072240
+Ludwigsfelde,1174,other_further,12072240
+Ludwigsfelde,1979,other_further,12072240
 Ludwigsfelde,3618,other_further,12072240
 Blankenfelde-Mahlow,19019,other_further,12072017
+Baruth/Mark,2815,other_further,12072014
 Tschernitz,38803,miner_glas,12071392
 Spremberg,1714,other_paper,12071372
-Spremberg,1641,other_further,12071372
 Spremberg,34345,miner_chalk,12071372
 Peitz,21025,miner_chalk,12071304
 Guben,0,chem_basic,12071160
 Drebkau,47509,miner_glas,12071057
 Kyritz,16674,other_food,12068264
+Heiligengrabe,89902,other_further,12068181
 Eisenhüttenstadt,1446767,metal_steel_primary,12067120
 Eisenhüttenstadt,47793,metal_steel_primary,12067120
 Eisenhüttenstadt,125250,metal_steel_primary,12067120
 Eisenhüttenstadt,24831,metal_steel_primary,12067120
 Eisenhüttenstadt,153036,miner_chalk,12067120
 Eisenhüttenstadt,9,other_paper,12067120
+Beeskow,16287,other_further,12067036
 Vetschau,27097,miner_ceram,12066320
 Tettau,46679,miner_glas,09476179
 Calau,15753,miner_ceram,12066052
@@ -314,12 +317,12 @@ Homburg,49999,other_further,10045114
 Bous,23385,metal_steel_secondary,10044122
 Dillingen,4683105,metal_steel_primary,10044111
 Dillingen,253457,metal_steel_primary,10044111
-Dillingen,68804,other_further,10044111
 Dillingen,8176,other_further,10044111
 Dillingen,147462,metal_steel_primary,10044111
 Dillingen,875915,metal_steel_primary,10044111
 Dillingen,48081,metal_nonfe,10044111
 Merzig,25275,miner_ceram,10042113
+Losheim am See,2094,other_further,10042112
 Völklingen,277265,metal_steel_primary,10041519
 Völklingen,6087,metal_steel_primary,10041519
 Völklingen,164456,metal_steel_primary,10041519
@@ -328,15 +331,12 @@ Völklingen,59383,other_further,10041519
 Völklingen,58862,metal_steel_primary,10041519
 Völklingen,336,other_further,10041519
 Völklingen,23641,metal_steel_primary,10041519
-Saarbrücken,39441,metal_nonfe,10041100
-Saarbrücken,72500,metal_nonfe,10041100
+Heusweiler,10066,other_further,10041513
 Saarbrücken,9456,other_further,10041100
 Lauben,26317,other_food,09778163
 Buchen,8496,miner_ceram,08225014
-Rain,79651,other_further,09278177
-Münster,26277,other_further,05515000
+Rain,79651,other_food,09278177
 Münster,12939,chem_other,05515000
-Münster,15338,miner_glas,05515000
 Harburg,645496,miner_cement,09779155
 Harburg,167821,miner_chalk,09779155
 Ehingen,39334,other_paper,08425033
@@ -345,7 +345,6 @@ Donauwörth,4860,other_further,09779131
 Ettringen,97965,other_paper,09778137
 Ettringen,0,other_paper,09778137
 Babenhausen,43276,miner_ceram,09778115
-Amberg,28621,metal_nonfe,09371000
 Amberg,12072,miner_glas,09371000
 Halblech,8022,other_paper,09777173
 Günzach,721,other_paper,09777138
@@ -361,12 +360,11 @@ Gersthofen,9448,miner_ceram,09772147
 Augsburg,10175,miner_glas,09761000
 Augsburg,5408,miner_glas,09761000
 Augsburg,67406,other_paper,09761000
-Augsburg,1535,other_further,09761000
 Augsburg,667,other_further,09761000
 Augsburg,17173,other_further,09761000
 Aichach,22337,miner_ceram,09771113
 Kaufbeuren,27850,other_paper,09762000
-Ochsenfurt,144993,other_further,09679170
+Ochsenfurt,144993,other_food,09679170
 Lohr,60223,miner_glas,09677155
 Triefenstein,728759,miner_cement,09677154
 Karlstadt,613356,miner_cement,09677148
@@ -374,10 +372,7 @@ Wörth,25,other_paper,07334501
 Wörth,17885,other_further,07334501
 Wörth,25899,other_further,07334501
 Miltenberg,18754,other_paper,09676139
-Amorbach,25442,miner_glas,09676112
-Amorbach,26309,miner_glas,09676112
 Schwarzach,11674,miner_ceram,09278187
-Kitzingen,49101,metal_nonfe,09675141
 Iphofen,59694,miner_chalk,09675139
 Eltmann,22040,other_paper,09674133
 Unsleben,16880,miner_ceram,09673175
@@ -389,19 +384,19 @@ Solnhofen,291754,miner_cement,09577168
 Heidenheim,537952,miner_cement,08135000
 Neuhof,23744,chem_ammonia,06631018
 Neuhof,24088,chem_ammonia,06631018
+Markt Bibart,2489,other_further,09575144
 Nürnberg,49967,other_further,09564000
 Nürnberg,15720,other_further,09564000
-Nürnberg,335,other_further,09564000
 Nürnberg,1455,other_further,09564000
 Langenzenn,9789,miner_ceram,09573120
 Langenzenn,18384,miner_ceram,09573120
 Steinsfeld,25856,miner_chalk,09571205
 Ansbach,20891,miner_ceram,09561000
 Wunsiedel,18965,miner_glas,09479169
+Wunsiedel,4295,other_further,09479169
 Schirnding,6753,miner_ceram,09479147
 Kasendorf,3504,miner_chalk,09477124
 Kasendorf,50220,miner_chalk,09477124
-Hallerndorf,59284,miner_glas,09474133
 Stade,357,chem_basic,03359038
 Stade,3953,chem_basic,03359038
 Stade,398536,metal_nonfe,03359038
@@ -419,12 +414,11 @@ Sünching,16927,other_food,09375201
 Regensburg,166483,miner_chalk,09362000
 Regensburg,19919,other_further,09362000
 Weiherhammer,212286,miner_glas,09374166
+Neumarkt,22551,other_further,09183129
 Lauterhofen,50915,miner_chalk,09373140
 Rötz,17296,miner_ceram,09372154
 Vilseck,14846,miner_ceram,09371156
-Sulzbach-Rosenberg,14088,other_further,09371151
 Sulzbach-Rosenberg,28871,other_further,09371151
-Hirschau,22099,other_further,09371127
 Weiden i.d.OPf.,14849,miner_glas,09363000
 Marklkofen,9286,miner_ceram,09279126
 Marklkofen,5000,miner_ceram,09279126
@@ -453,9 +447,7 @@ Siegen,15774,other_further,05970040
 Siegen,58681,metal_steel_secondary,05970040
 Painten,21852,miner_chalk,09273159
 Kelheim,139462,chem_other,09273137
-Grafenau,3058,miner_glas,09272120
-Grafenau,40052,miner_glas,09272120
-Plattling,125572,other_further,09271146
+Plattling,125572,other_food,09271146
 Plattling,16053,other_paper,09271146
 Plattling,44599,other_paper,09271146
 Plattling,254104,other_paper,09271146
@@ -463,7 +455,6 @@ Schongau,949,other_paper,09190148
 Polling,13522,other_food,09372174
 Penzberg,15156,chem_other,09190141
 Oberhausen,180060,chem_basic,05119000
-Oberhausen,6777,miner_glas,05119000
 Oberhausen,220,other_further,05119000
 Oberhausen,761,other_further,05119000
 Oberhausen,54155,chem_basic,05119000
@@ -486,7 +477,6 @@ Baar-Ebenhausen,3040,other_paper,09186113
 Schrobenhausen,80196,other_paper,09185158
 Bergheim,227956,chem_basic,05362008
 Pullach,21927,chem_basic,09184139
-Garching,28737,other_further,09184119
 Oberbergkirchen,5403,miner_ceram,09183132
 Wolfersdorf,7034,miner_ceram,09178156
 Isen,19895,miner_ceram,09177123
@@ -509,6 +499,7 @@ Burghausen,39,chem_basic,09171112
 Burghausen,11,chem_basic,09171112
 Ingolstadt,41312,other_further,09161000
 Ingolstadt,36397,other_further,09161000
+Leutkirch im Allgäu,7384,other_further,08436055
 Bad Wurzach,109977,miner_glas,08436010
 Friedrichshafen,11945,other_further,08435016
 Friedrichshafen,2188,other_further,08435016
@@ -523,11 +514,9 @@ Dotternhausen,500359,miner_cement,08417016
 Dotternhausen,207622,miner_cement,08417016
 Reutlingen,2243,other_further,08415061
 Bonn,33393,miner_glas,05314000
-Bonn,20767,other_further,05314000
 Rheinfelden,81455,chem_basic,08336069
 Efringen-Kirchen,179910,miner_chalk,08336014
-Singen,111960,metal_nonfe,08335075
-Singen,4076,other_further,08335075
+Singen,4076,other_food,08335075
 Singen,37212,metal_nonfe,08335075
 Singen,1976,metal_nonfe,08335075
 Offenburg,19565,other_further,08317096
@@ -537,9 +526,9 @@ Kehl,112515,metal_steel_secondary,08317057
 Kehl,66856,metal_steel_secondary,08317057
 Kehl,27448,other_paper,08317057
 Kappelrodeck,19003,other_paper,08317056
+Ettenheim,469,other_further,08317026
 Titisee-Neustadt,33666,other_paper,08315113
 Merdingen,43294,miner_chalk,08315072
-Freiburg,70374,other_further,08311000
 Freiburg,12788,chem_basic,08311000
 Freiburg,4453,chem_basic,08311000
 Baiersbronn,30158,other_paper,08237004
@@ -548,9 +537,7 @@ Leimen,530483,miner_cement,08226041
 Ladenburg,47007,miner_glas,08226038
 Ladenburg,17320,chem_basic,08226038
 Eberbach,32619,chem_other,08226013
-Brühl,107412,metal_nonfe,05362012
-Obrigheim,142764,other_further,07332041
-Mannheim,35167,metal_nonfe,08222000
+Obrigheim,142764,other_food,07332041
 Mannheim,43528,miner_glas,08222000
 Mannheim,49433,other_paper,08222000
 Mannheim,105846,other_paper,08222000
@@ -565,19 +552,20 @@ Gernsbach,69176,other_paper,08216017
 Gernsbach,68387,other_paper,08216017
 Gernsbach,62385,other_paper,08216017
 Gaggenau,25036,other_further,08216015
+Bischweier,0,other_further,08216006
 Bietigheim,3657,other_further,08216005
 Walzbachtal,489071,miner_cement,08215089
 Karlsruhe,100542,other_paper,08215000
 Aalen,135876,other_paper,08136088
 Aalen,52325,other_paper,08136088
 Steinheim,14548,miner_ceram,05762032
+Steinheim,12470,other_further,05762032
 Wertheim,1473,miner_glas,08128131
 Rosengarten,4516,other_paper,08127100
 Roigheim,3162,other_paper,08125084
-Offenau,76837,other_further,08125079
+Offenau,76837,other_food,08125079
 Neckarsulm,1298,other_further,08125065
 Möckmühl,6642,other_paper,08125063
-Bad Friedrichshall,24296,other_further,08125005
 Bönnigheim,7920,miner_ceram,08118010
 Lenningen,2471,other_paper,08116079
 Deizisau,18611,metal_nonfe,08116014
@@ -660,6 +648,7 @@ Pronsfeld,26910,other_food,07232295
 Minden,0,other_paper,05770024
 Minden,11319,chem_other,05770024
 Bitburg,18213,other_food,07232018
+Morbach,1075,other_further,07231502
 Unna,22445,metal_steel_secondary,05978036
 Wirges,72154,miner_glas,07143081
 Staudt,12300,miner_ceram,07143073
@@ -686,40 +675,37 @@ Koblenz,24239,metal_nonfe,07111000
 Witzenhausen,9565,other_paper,06636016
 Witzenhausen,0,other_paper,06636016
 Witzenhausen,11172,other_paper,06636016
-Wabern,42092,other_further,06634025
+Wabern,42092,other_food,06634025
 Fulda,176651,other_paper,06631009
 Kassel,16309,other_further,06611000
 Großenlüder,135031,miner_cement,06631011
 Großenlüder,70520,miner_chalk,06631011
-Stadtallendorf,221079,metal_nonfe,06534018
-Breidenbach,48767,metal_nonfe,06534005
 Runkel,289205,miner_chalk,06533013
 Wetzlar,40506,metal_steel_secondary,06532023
 Wetzlar,20675,metal_steel_secondary,06532023
-Wetzlar,27324,metal_nonfe,06532023
 Wetzlar,28785,metal_steel_secondary,06532023
 Wetzlar,50015,metal_steel_secondary,06532023
 Dillenburg,27083,metal_steel_secondary,06532006
 Dillenburg,3796,miner_glas,06532006
 Staufenberg,15554,miner_ceram,06531017
-Lollar,26050,metal_nonfe,06531013
 Hainburg,9091,miner_ceram,06438004
 Hanau,23326,other_further,06435014
 Weiterstadt,12348,other_further,06432023
 Mühltal,18,other_paper,06432014
 Lampertheim,36137,chem_basic,06431013
 Wiesbaden,200858,miner_cement,06414000
+Frankfurt am Main,1308,other_further,06412000
 Frankfurt am Main,508,chem_basic,06412000
 Frankfurt am Main,28540,chem_basic,06412000
 Frankfurt am Main,135,chem_basic,06412000
 Frankfurt am Main,30172,chem_basic,06412000
 Schwerte,9957,metal_steel_secondary,05978028
-Schwerte,51976,metal_nonfe,05978028
 Lünen,55423,miner_glas,05978024
 Lünen,166918,metal_nonfe,05978024
 Bergkamen,37475,chem_other,05978004
 Warstein,147823,miner_chalk,05974044
 Warstein,13319,other_food,05974044
+Lippstadt,15770,other_further,05974028
 Geseke,671875,miner_cement,05974020
 Geseke,248797,miner_cement,05974020
 Erwitte,547640,miner_cement,05974016
@@ -738,10 +724,11 @@ Menden,838146,miner_chalk,05962040
 Menden,0,other_paper,05962040
 Meinerzhagen,12531,metal_nonfe,05962036
 Sundern,2994,other_paper,05958044
-Meschede,35829,metal_nonfe,05958032
 Marsberg,21442,miner_glas,05958024
 Brilon,69237,miner_chalk,05958012
+Brilon,24789,other_further,05958012
 Arnsberg,193574,other_paper,05958004
+Arnsberg,467,other_further,05958004
 Arnsberg,58241,chem_basic,05958004
 Schwelm,2626,other_paper,05954024
 Hattingen,3471,metal_steel_secondary,05954016
@@ -758,17 +745,16 @@ Bochum,18386,metal_steel_secondary,05911000
 Bochum,178763,metal_steel_secondary,05911000
 Bochum,19354,miner_ceram,05911000
 Bochum,8989,metal_steel_secondary,05911000
-Paderborn,27680,other_further,05774032
 Paderborn,260421,miner_cement,05774032
 Paderborn,9499,other_food,05774032
 Paderborn,10550,other_food,05774032
-Rahden,27275,metal_nonfe,05770040
 Rahden,9989,miner_ceram,05770040
 Hüllhorst,6300,miner_ceram,05770016
 Kalletal,18330,miner_ceram,05766036
-Warburg,34096,other_further,05762036
+Warburg,34096,other_food,05762036
 Brake,16513,other_food,03461002
 Löhne,3544,miner_ceram,05758024
+Rheda-Wiedenbrück,5690,other_further,05754028
 Bielefeld,11126,other_paper,05711000
 Ennigerloh,492589,miner_cement,05570020
 Beckum,512958,miner_cement,05570008
@@ -779,17 +765,15 @@ Lengerich,341770,miner_cement,05566040
 Lengerich,682301,miner_cement,05566040
 Ibbenbüren,51613,other_food,05566028
 Hörstel,6302,miner_ceram,05566016
-Haltern am See,18289,other_further,05562016
 Gladbeck,149033,miner_glas,05562014
 Gladbeck,96639,miner_glas,05562014
-Gladbeck,82387,miner_glas,05562014
 Gladbeck,6705,chem_basic,05562014
 Castrop-Rauxel,136773,chem_basic,05562004
 Nottuln,17751,miner_ceram,05558032
-Billerbeck,20091,other_further,05558008
+Billerbeck,20091,other_food,05558008
 Vreden,33062,other_paper,05554068
 Stadtlohn,3635,miner_ceram,05554056
-Reken,13389,other_further,05554044
+Reken,13389,other_food,05554044
 Gelsenkirchen,29085,metal_steel_secondary,05513000
 Gelsenkirchen,40355,other_paper,05513000
 Gelsenkirchen,10916,miner_glas,05513000
@@ -802,10 +786,9 @@ Niederkassel,32188,chem_basic,05382044
 Königswinter,11790,miner_ceram,05382024
 Bergisch Gladbach,45491,miner_glas,05378004
 Bergisch Gladbach,125111,other_paper,05378004
-Wegberg,8302,miner_glas,05370040
 Heinsberg,34464,chem_other,05370016
 Zülpich,220194,other_paper,05366044
-Euskirchen,88667,other_further,05366016
+Euskirchen,88667,other_food,05366016
 Euskirchen,9329,other_paper,05366016
 Wesseling,384601,chem_basic,05362040
 Wesseling,732685,chem_basic,05362040
@@ -834,7 +817,7 @@ Hürth,90,chem_basic,05362028
 Frechen,5229,miner_ceram,05362024
 Kreuzau,117341,other_paper,05358028
 Kreuzau,91564,other_paper,05358028
-Jülich,180683,other_further,05358024
+Jülich,180683,other_food,05358024
 Düren,17239,miner_glas,05358008
 Düren,7453,other_paper,05358008
 Düren,12518,other_paper,05358008
@@ -855,7 +838,6 @@ Köln,46134,chem_basic,05315000
 Köln,3131,chem_basic,05315000
 Köln,267783,chem_basic,05315000
 Köln,774581,chem_basic,05315000
-Köln,2872,other_further,05315000
 Köln,16946,other_further,05315000
 Köln,28628,chem_other,05315000
 Köln,24985,chem_basic,05315000
@@ -889,7 +871,6 @@ Moers,81279,chem_basic,05170024
 Moers,0,chem_basic,05170024
 Moers,159662,chem_basic,05170024
 Moers,8689,chem_basic,05170024
-Dinslaken,46157,other_further,05170008
 Brüggen,6401,miner_ceram,05166004
 Brüggen,13244,miner_ceram,05166004
 Neuss,35467,other_paper,05162024
@@ -900,7 +881,6 @@ Neuss,37513,metal_nonfe,05162024
 Neuss,270056,metal_nonfe,05162024
 Neuss,40191,metal_nonfe,05162024
 Grevenbroich,17212,metal_nonfe,05162008
-Grevenbroich,58781,miner_glas,05162008
 Grevenbroich,17816,metal_nonfe,05162008
 Grevenbroich,6720,metal_nonfe,05162008
 Grevenbroich,20445,metal_nonfe,05162008
@@ -910,8 +890,6 @@ Dormagen,38106,chem_basic,05162004
 Dormagen,5579,chem_basic,05162004
 Dormagen,0,chem_basic,05162004
 Wülfrath,1941442,miner_chalk,05158036
-Wülfrath,20177,other_further,05158036
-Mettmann,98610,metal_nonfe,05158024
 Erkrath,23380,other_further,05158004
 Issum,3690,other_food,05154020
 Emmerich,12854,miner_ceram,05154008
@@ -927,8 +905,8 @@ Krefeld,507,metal_steel_secondary,05114000
 Krefeld,25758,metal_steel_secondary,05114000
 Krefeld,44261,metal_steel_secondary,05114000
 Krefeld,66582,chem_basic,05114000
-Krefeld,133752,other_further,05114000
-Krefeld,47684,other_further,05114000
+Krefeld,133752,other_food,05114000
+Krefeld,47684,other_food,05114000
 Krefeld,22156,other_food,05114000
 Krefeld,46318,chem_basic,05114000
 Krefeld,40491,chem_basic,05114000
@@ -960,10 +938,6 @@ Duisburg,58719,chem_basic,05112000
 Duisburg,51127,chem_basic,05112000
 Duisburg,9320,chem_basic,05112000
 Duisburg,44513,metal_nonfe,05112000
-Düsseldorf,18134,other_further,05111000
-Düsseldorf,15014,other_further,05111000
-Düsseldorf,12760,other_further,05111000
-Düsseldorf,49796,other_further,05111000
 Düsseldorf,97050,miner_glas,05111000
 Düsseldorf,6320,other_paper,05111000
 Düsseldorf,364000,chem_other,05111000
@@ -1012,17 +986,15 @@ Uelsen,7841,miner_ceram,03456023
 Emlichheim,6708,other_food,03456002
 Zetel,6868,miner_ceram,03455027
 Varel,277893,other_paper,03455026
-Salzbergen,39702,other_further,03454045
+Meppen,20488,other_further,03454035
 Haren,15373,other_further,03454018
 Dörpen,247307,other_paper,03454008
 Löningen,17637,other_food,03453011
-Friesoythe,24977,other_further,03453007
 Cloppenburg,65342,other_food,03453004
 Edewecht,44337,other_food,03451004
 Bad Zwischenahn,40652,miner_ceram,03451002
 Wilhelmshaven,153194,chem_basic,03405000
-Uelzen,160986,other_further,03360025
-Munster,11231,other_further,03358016
+Uelzen,160986,other_food,03360025
 Zeven,65844,other_food,03357057
 Dahlenburg,60968,other_food,03355013
 Lachendorf,3535,other_paper,03351016
@@ -1039,7 +1011,7 @@ Grünenplan,9573,miner_glas,03255008
 Boffzen,30840,miner_glas,03255004
 Boffzen,35666,miner_glas,03255004
 Delligsen,7823,other_paper,03255008
-Nordstemmen,134041,other_further,03254026
+Nordstemmen,134041,other_food,03254026
 Alfeld (Leine),4130,other_paper,03254002
 Alfeld (Leine),23314,other_paper,03254002
 Alfeld (Leine),83986,other_paper,03254002
@@ -1058,9 +1030,9 @@ Göttingen,20984,metal_nonfe,03159016
 Duderstadt,981,other_further,03159010
 Bovenden,8263,miner_glas,03159007
 Bilshausen,26206,miner_ceram,03159005
-Schladen,66204,other_further,03158039
+Schladen,66204,other_food,03158039
 Peine,165774,metal_steel_secondary,03157006
-Hohenhameln,57209,other_further,03157002
+Hohenhameln,57209,other_food,03157002
 Northeim,27146,other_further,03155011
 Northeim,278,other_further,03155011
 Katlenburg-Lindau,52001,miner_chalk,03155007
@@ -1086,10 +1058,12 @@ Hamburg,273096,metal_steel_secondary,02000000
 Hamburg,44761,metal_steel_secondary,02000000
 Hamburg,10809,other_further,02000000
 Hamburg,19554,chem_other,02000000
+Hamburg,21684,other_further,02000000
 Hamburg,28598,other_food,02000000
 Hamburg,214374,other_food,02000000
 Hamburg,42880,other_further,02000000
 Hamburg,13347,other_food,02000000
+Hamburg,4453,other_further,02000000
 Hamburg,20958,other_food,02000000
 Hamburg,55215,chem_basic,02000000
 Hamburg,252301,metal_nonfe,02000000
@@ -1108,6 +1082,6 @@ Brunsbüttel,29090,chem_basic,01051011
 Brunsbüttel,57241,chem_basic,01051011
 Brunsbüttel,109033,chem_basic,01051011
 Brunsbüttel,182738,chem_basic,01051011
-Lübeck,6995,other_further,01003000
+Lübeck,6995,other_food,01003000
 Kiel,0,other_further,01002000
 Flensburg,33761,other_paper,01001000
