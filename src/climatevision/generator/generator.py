@@ -87,6 +87,21 @@ def dataclass_to_result_dict(v: object) -> dict[str, object]:
         result.update(v)
     return result
 
+@dataclass(kw_only=True)
+class Indicators:
+    pv_pa: int = 0
+    wpp_pa: int = 0
+    ren_houses_pa: int = 0  
+    elec_veh_pa: int = 0
+
+    def result_dict(self):
+        return dataclass_to_result_dict(self)
+    
+    def calculate_indicators(self):
+        self.pv_pa = 0 # Anzahl PV pro Jahr = (Einsparung C02 pro Jahr[g/a])/(Einsparungspotenzial[g/kWh]*Produktion[kWh/a])
+        self.wpp_pa = 0 
+        self.ren_houses_pa = 0
+        self.elec_veh_pa = 0
 
 @dataclass(kw_only=True)
 class Result:
@@ -313,3 +328,15 @@ def calculate_with_default_inputs(ags: str, year: int) -> Result:
         facts_and_assumptions=refdata.facts_and_assumptions(), entries=entries
     )
     return calculate(inputs)
+
+def calculate_indicators_with_default_inputs(ags: str, year: int) -> Indicators:
+    """Calculate without the ability to override entries."""
+    refdata = RefData.load()
+    entries = make_entries(refdata, ags=ags, year=year)
+    inputs = Inputs(
+        facts_and_assumptions=refdata.facts_and_assumptions(), entries=entries
+    )
+    calculate(inputs)
+    ind = Indicators()
+    return ind
+

@@ -6,7 +6,9 @@ from commands.cmd_indicators import cmd_indicators
 
 
 def add_cmd_indicators_parser(subcmd_parsers: Any):
-    cmd_run_parser = subcmd_parsers.add_parser("indicators", help="Run the generator and publish indicators")
+    cmd_run_parser = subcmd_parsers.add_parser(
+        "indicators", help="Run the generator and publish indicators"
+    )
     cmd_run_parser.add_argument("-ags", default="03159016")
     cmd_run_parser.add_argument("-year", default=2035)
     cmd_run_parser.add_argument("-o", default=None)
