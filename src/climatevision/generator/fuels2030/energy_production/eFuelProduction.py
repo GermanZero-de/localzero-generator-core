@@ -4,7 +4,7 @@ from dataclasses import dataclass
 
 from ...inputs import Inputs
 from ...utils import div
-from ...fuels2018.energy_production import FuelProduction
+from ...fuels2018.energy_production import EnergyWithCO2ePerMWh
 
 
 @dataclass(kw_only=True)
@@ -41,7 +41,7 @@ class EFuelProduction:
         energy: float,
         inputs: Inputs,
         CO2e_emission_factor: float,
-        production_2018: FuelProduction,
+        production_2018: EnergyWithCO2ePerMWh,
     ) -> "EFuelProduction":
         fact = inputs.fact
         ass = inputs.ass
