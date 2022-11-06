@@ -14,18 +14,14 @@ class EnergyWithCO2ePerMWh:
     CO2e_production_based_per_MWh: float
     CO2e_total: float
     energy: float
-    pct_energy: float
 
     @classmethod
     def calcFromEnergyAndCO2eBasedPerMWh(
         cls,
         energy: float,
-        total_energy: float,
         CO2e_production_based_per_MWh: float = 0,
         CO2e_combustion_based_per_MWh: float = 0,
     ) -> "EnergyWithCO2ePerMWh":
-        pct_energy = div(energy, total_energy)
-
         CO2e_production_based = energy * CO2e_production_based_per_MWh
         CO2e_combustion_based = energy * CO2e_combustion_based_per_MWh
 
@@ -33,7 +29,6 @@ class EnergyWithCO2ePerMWh:
 
         return cls(
             energy=energy,
-            pct_energy=pct_energy,
             CO2e_combustion_based=CO2e_combustion_based,
             CO2e_combustion_based_per_MWh=CO2e_combustion_based_per_MWh,
             CO2e_production_based=CO2e_production_based,
@@ -45,12 +40,9 @@ class EnergyWithCO2ePerMWh:
     def calcFromEnergyAndCO2e(
         cls,
         energy: float,
-        total_energy: float,
         CO2e_production_based: float = 0,
         CO2e_combustion_based: float = 0,
     ) -> "EnergyWithCO2ePerMWh":
-        pct_energy = div(energy, total_energy)
-
         CO2e_production_based_per_MWh = div(CO2e_production_based, energy)
         CO2e_combustion_based_per_MWh = div(CO2e_combustion_based, energy)
 
@@ -58,7 +50,6 @@ class EnergyWithCO2ePerMWh:
 
         return cls(
             energy=energy,
-            pct_energy=pct_energy,
             CO2e_combustion_based=CO2e_combustion_based,
             CO2e_combustion_based_per_MWh=CO2e_combustion_based_per_MWh,
             CO2e_production_based=CO2e_production_based,
@@ -83,7 +74,6 @@ class EnergyWithCO2ePerMWh:
 
         return cls(
             energy=energy,
-            pct_energy=pct_energy,
             CO2e_combustion_based=CO2e_combustion_based,
             CO2e_combustion_based_per_MWh=CO2e_combustion_based_per_MWh,
             CO2e_production_based=CO2e_production_based,
@@ -93,8 +83,6 @@ class EnergyWithCO2ePerMWh:
 
     @classmethod
     def calcSum(cls, energy: float, *childs: Any) -> "EnergyWithCO2ePerMWh":
-        pct_energy = sum(child.pct_energy for child in childs)
-
         CO2e_combustion_based = sum(child.CO2e_combustion_based for child in childs)
         CO2e_production_based = sum(child.CO2e_production_based for child in childs)
 
@@ -105,7 +93,6 @@ class EnergyWithCO2ePerMWh:
 
         return cls(
             energy=energy,
-            pct_energy=pct_energy,
             CO2e_combustion_based=CO2e_combustion_based,
             CO2e_combustion_based_per_MWh=CO2e_combustion_based_per_MWh,
             CO2e_production_based=CO2e_production_based,

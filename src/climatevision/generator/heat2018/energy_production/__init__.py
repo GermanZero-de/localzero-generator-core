@@ -46,7 +46,6 @@ def calc_production(
         + entries.i_gas_fec
         + entries.a_gas_fec
         + t18.t.demand_gas,
-        total_energy=demand_total_energy,
         CO2e_production_based_per_MWh=fact("Fact_H_P_gas_ratio_CO2e_pb_to_fec_2018"),
         CO2e_combustion_based_per_MWh=fact("Fact_H_P_gas_ratio_CO2e_cb_to_fec_2018"),
     )
@@ -57,7 +56,6 @@ def calc_production(
         + entries.i_lpg_fec
         + entries.a_lpg_fec
         + t18.s_lpg.energy,
-        total_energy=demand_total_energy,
         CO2e_combustion_based_per_MWh=fact("Fact_H_P_lpg_ratio_CO2e_cb_to_fec_2018"),
     )
 
@@ -67,7 +65,6 @@ def calc_production(
         + entries.i_fueloil_fec
         + entries.a_fueloil_fec
         + t18.s_fueloil.energy,
-        total_energy=demand_total_energy,
         CO2e_combustion_based_per_MWh=fact(
             "Fact_H_P_fueloil_ratio_CO2e_cb_to_fec_2018"
         ),
@@ -75,7 +72,6 @@ def calc_production(
 
     opetpro = EnergyWithCO2ePerMWh.calcFromEnergyAndCO2eBasedPerMWh(
         energy=entries.i_opetpro_fec,
-        total_energy=demand_total_energy,
         CO2e_production_based_per_MWh=fact(
             "Fact_H_P_opetpro_ratio_CO2e_pb_to_fec_2018"
         ),
@@ -86,7 +82,6 @@ def calc_production(
 
     coal = EnergyWithCO2ePerMWh.calcFromEnergyAndCO2eBasedPerMWh(
         energy=entries.r_coal_fec + entries.b_coal_fec + entries.i_coal_fec,
-        total_energy=demand_total_energy,
         CO2e_production_based_per_MWh=fact("Fact_H_P_coal_ratio_CO2e_pb_to_fec_2018"),
         CO2e_combustion_based_per_MWh=fact("Fact_H_P_coal_ratio_CO2e_cb_to_fec_2018"),
     )
@@ -111,7 +106,6 @@ def calc_production(
 
     heatnet_cogen = EnergyWithCO2ePerMWh.calcFromEnergyAndCO2eBasedPerMWh(
         energy=heatnet_cogen_energy,
-        total_energy=p_heatnet_energy,
         CO2e_combustion_based_per_MWh=fact(
             "Fact_H_P_heatnet_cogen_ratio_CO2e_cb_to_fec_2018"
         ),
@@ -119,24 +113,18 @@ def calc_production(
 
     heatnet_plant = EnergyWithCO2ePerMWh.calcFromEnergyAndCO2eBasedPerMWh(
         energy=p_heatnet_energy - heatnet_cogen.energy,
-        total_energy=p_heatnet_energy,
         CO2e_combustion_based_per_MWh=fact(
             "Fact_H_P_heatnet_plant_ratio_CO2e_cb_to_fec_2018"
         ),
     )
 
     # TODO: Check, why heatnet_geoth is completely 0
-    heatnet_geoth = EnergyWithCO2ePerMWh.calcFromEnergyAndCO2eBasedPerMWh(
-        energy=0, total_energy=p_heatnet_energy
-    )
+    heatnet_geoth = EnergyWithCO2ePerMWh.calcFromEnergyAndCO2eBasedPerMWh(energy=0)
     # TODO: Check, why heatnet_lheatpump is completely 0
-    heatnet_lheatpump = EnergyWithCO2ePerMWh.calcFromEnergyAndCO2eBasedPerMWh(
-        energy=0, total_energy=p_heatnet_energy
-    )
+    heatnet_lheatpump = EnergyWithCO2ePerMWh.calcFromEnergyAndCO2eBasedPerMWh(energy=0)
 
     heatnet = EnergyWithCO2ePerMWh.calcFromEnergyAndCO2e(
         energy=p_heatnet_energy,
-        total_energy=demand_total_energy,
         CO2e_combustion_based=heatnet_cogen.CO2e_combustion_based
         + heatnet_plant.CO2e_combustion_based,
     )
@@ -146,7 +134,6 @@ def calc_production(
         + entries.b_biomass_fec
         + entries.i_biomass_fec
         + entries.a_biomass_fec,
-        total_energy=demand_total_energy,
         CO2e_production_based_per_MWh=fact(
             "Fact_H_P_biomass_ratio_CO2e_pb_to_fec_2018"
         ),
@@ -154,7 +141,6 @@ def calc_production(
 
     ofossil = EnergyWithCO2ePerMWh.calcFromEnergyAndCO2eBasedPerMWh(
         energy=entries.i_ofossil_fec,
-        total_energy=demand_total_energy,
         CO2e_production_based_per_MWh=fact(
             "Fact_H_P_ofossil_ratio_CO2e_pb_to_fec_2018"
         ),
@@ -176,7 +162,6 @@ def calc_production(
 
     orenew = EnergyWithCO2ePerMWh.calcFromEnergyAndCO2e(
         energy=orenew_energy,
-        total_energy=demand_total_energy,
         CO2e_production_based=solarth.CO2e_production_based
         + heatpump.CO2e_production_based,
     )
