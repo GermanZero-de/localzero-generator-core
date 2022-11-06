@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from ..common.co2eEmissions import CO2eEmissions
 
 from .energy_demand import EnergyDemand
-from .energy_production import EnergyWithCO2ePerMWh, TotalFuelProduction
+from .energy_production import EnergyWithCO2ePerMWh
 
 
 @dataclass(kw_only=True)
@@ -23,6 +23,6 @@ class F18:
     p_bioethanol: EnergyWithCO2ePerMWh
     p_biodiesel: EnergyWithCO2ePerMWh
     p_biogas: EnergyWithCO2ePerMWh
-    p: TotalFuelProduction
+    p: EnergyWithCO2ePerMWh
 
     f: CO2eEmissions

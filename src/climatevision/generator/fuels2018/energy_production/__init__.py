@@ -6,8 +6,6 @@ from ...inputs import Inputs
 from ...transport2018.t18 import T18
 from ...common.energyWithCO2ePerMWh import EnergyWithCO2ePerMWh
 
-from .fuelProduction import TotalFuelProduction
-
 
 @dataclass(kw_only=True)
 class Production:
@@ -18,7 +16,7 @@ class Production:
     biodiesel: EnergyWithCO2ePerMWh
     biogas: EnergyWithCO2ePerMWh
 
-    total: TotalFuelProduction
+    total: EnergyWithCO2ePerMWh
 
 
 def calc_production(inputs: Inputs, t18: T18) -> Production:
@@ -65,7 +63,7 @@ def calc_production(inputs: Inputs, t18: T18) -> Production:
         ),
     )
 
-    total = TotalFuelProduction(
+    total = EnergyWithCO2ePerMWh.calcSum(
         petrol,
         jetfuel,
         diesel,
