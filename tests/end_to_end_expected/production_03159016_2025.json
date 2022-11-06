@@ -1904,9 +1904,10 @@
             "pct_energy": 0.00936422298186195
         },
         "p_orenew": {
-            "CO2e_production_based": 0.0,
-            "CO2e_production_based_per_MWh": 0,
             "CO2e_combustion_based": 0,
+            "CO2e_combustion_based_per_MWh": 0.0,
+            "CO2e_production_based": 0.0,
+            "CO2e_production_based_per_MWh": 0.0,
             "CO2e_total": 0.0,
             "energy": 39206.97317071569,
             "pct_energy": 0.025587685758056793

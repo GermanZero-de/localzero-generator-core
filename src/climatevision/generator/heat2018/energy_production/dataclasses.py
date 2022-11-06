@@ -112,27 +112,3 @@ class HeatProduction:
             CO2e_production_based_per_MWh=CO2e_production_based_per_MWh,
             CO2e_total=CO2e_total,
         )
-
-
-@dataclass(kw_only=True)
-class Vars8FromEnergySum:
-    CO2e_production_based: float
-    CO2e_production_based_per_MWh: float
-    CO2e_combustion_based: float = 0
-    CO2e_total: float
-    energy: float
-    pct_energy: float
-
-    def __init__(
-        self,
-        energy: float,
-        total_energy: float,
-        CO2e_production_based_per_MWh: float,
-        CO2e_production_based: float,
-    ):
-        self.energy = energy
-        self.pct_energy = div(energy, total_energy)
-
-        self.CO2e_production_based_per_MWh = CO2e_production_based_per_MWh
-        self.CO2e_production_based = CO2e_production_based
-        self.CO2e_total = self.CO2e_production_based

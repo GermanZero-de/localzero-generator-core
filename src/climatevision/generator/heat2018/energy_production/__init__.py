@@ -6,10 +6,7 @@ from ...inputs import Inputs
 from ...transport2018.t18 import T18
 from ...electricity2018.e18 import E18
 
-from .dataclasses import (
-    HeatProduction,
-    Vars8FromEnergySum,
-)
+from .dataclasses import HeatProduction
 
 
 @dataclass(kw_only=True)
@@ -27,7 +24,7 @@ class Production:
     heatnet_lheatpump: HeatProduction
     biomass: HeatProduction
     ofossil: HeatProduction
-    orenew: Vars8FromEnergySum
+    orenew: HeatProduction
     solarth: HeatProduction
     heatpump: HeatProduction
 
@@ -177,10 +174,9 @@ def calc_production(
         CO2e_production_based_per_MWh=fact("Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018"),
     )
 
-    orenew = Vars8FromEnergySum(
+    orenew = HeatProduction.calcFromEnergyAndCO2e(
         energy=orenew_energy,
         total_energy=demand_total_energy,
-        CO2e_production_based_per_MWh=0,
         CO2e_production_based=solarth.CO2e_production_based
         + heatpump.CO2e_production_based,
     )
