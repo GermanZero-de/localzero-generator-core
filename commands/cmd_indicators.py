@@ -18,5 +18,10 @@ def json_to_output(json_object: Any, args: Any):
 
 def cmd_indicators(args: Any):
     ind = calculate_indicators_with_default_inputs(ags=args.ags, year=int(args.year)
-        ).result_dict()
-    print(ind)
+        )
+    print("")
+    print("Um den Bedarf an Elektrizität lokal zu decken, müssen:")
+    print("- " + str(ind.pv_pa) + " PV-Module auf die Dächer geschraubt werden oder")
+    print("- " + str(ind.wpp_pa) + " mit einer Leistung von 3,2 MW gebaut werden")
+
+

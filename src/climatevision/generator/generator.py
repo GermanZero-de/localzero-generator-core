@@ -88,22 +88,6 @@ def dataclass_to_result_dict(v: object) -> dict[str, object]:
     return result
 
 @dataclass(kw_only=True)
-class Indicators:
-    pv_pa: int = 0
-    wpp_pa: int = 0
-    ren_houses_pa: int = 0  
-    elec_veh_pa: int = 0
-
-    def result_dict(self):
-        return dataclass_to_result_dict(self)
-    
-    def calculate_indicators(self):
-        self.pv_pa = 0 # Anzahl PV pro Jahr = (Einsparung C02 pro Jahr[g/a])/(Einsparungspotenzial[g/kWh]*Produktion[kWh/a])
-        self.wpp_pa = 0 
-        self.ren_houses_pa = 0
-        self.elec_veh_pa = 0
-
-@dataclass(kw_only=True)
 class Result:
     # 2018
     r18: R18
@@ -133,6 +117,23 @@ class Result:
     def result_dict(self):
         return dataclass_to_result_dict(self)
 
+@dataclass(kw_only=True)
+class Indicators: 
+    pv_pa: float = 0 # pv panels per year to build
+    wpp_pa: float = 0 # wind power plants per year to build
+    hp_pa: float = 0 # heat pumps to build per year
+    ren_houses_pa: float = 0  # houses to renovate per year
+    elec_veh_pa: float = 0 # electrical vehicles per year to build 
+
+    def result_dict(self):
+        return dataclass_to_result_dict(self)
+    
+    def calculate_indicators(self, input:Inputs, cr:Result):
+        self.pv_pa =  ((cr.e18.e.CO2e_total-cr.e30.e.CO2e_total)* 1e6)/((input.entries.m_year_target-input.entries.m_year_today) * (850-40) * (1000/4)) # Anzahl PV pro Jahr = (Einsparung C02 pro Jahr[g/a])/(Einsparungspotenzial[g/kWh]*Produktion[kWh/a])
+        self.wpp_pa = ((cr.e18.e.CO2e_total-cr.e30.e.CO2e_total)* 1e6)/((input.entries.m_year_target-input.entries.m_year_today) * (850-25) * (1700 * 3.2 * 1e3))  
+        self.hp_pa = 0
+        self.ren_houses_pa = 0
+        self.elec_veh_pa = 0
 
 def calculate(inputs: Inputs) -> Result:
     """This is the entry point to the actual calculation."""
@@ -336,7 +337,8 @@ def calculate_indicators_with_default_inputs(ags: str, year: int) -> Indicators:
     inputs = Inputs(
         facts_and_assumptions=refdata.facts_and_assumptions(), entries=entries
     )
-    calculate(inputs)
     ind = Indicators()
+    ind.calculate_indicators(inputs, calculate(inputs))
+    
     return ind
 
