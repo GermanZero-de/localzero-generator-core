@@ -17,7 +17,7 @@ class HeatProduction:
     pct_energy: float
 
     @classmethod
-    def calc(
+    def calcFromEnergyAndCO2eBasedPerMWh(
         cls,
         energy: float,
         total_energy: float,
@@ -42,7 +42,32 @@ class HeatProduction:
         )
 
     @classmethod
-    def calcFromPct(
+    def calcFromEnergyAndCO2e(
+        cls,
+        energy: float,
+        total_energy: float,
+        CO2e_production_based: float = 0,
+        CO2e_combustion_based: float = 0,
+    ) -> "HeatProduction":
+        pct_energy = div(energy, total_energy)
+
+        CO2e_production_based_per_MWh = div(CO2e_production_based, energy)
+        CO2e_combustion_based_per_MWh = div(CO2e_combustion_based, energy)
+
+        CO2e_total = CO2e_production_based + CO2e_combustion_based
+
+        return cls(
+            energy=energy,
+            pct_energy=pct_energy,
+            CO2e_combustion_based=CO2e_combustion_based,
+            CO2e_combustion_based_per_MWh=CO2e_combustion_based_per_MWh,
+            CO2e_production_based=CO2e_production_based,
+            CO2e_production_based_per_MWh=CO2e_production_based_per_MWh,
+            CO2e_total=CO2e_total,
+        )
+
+    @classmethod
+    def calcFromPctEnergyAndCO2eBasedPerMWh(
         cls,
         pct_energy: float,
         total_energy: float,
@@ -87,27 +112,6 @@ class HeatProduction:
             CO2e_production_based_per_MWh=CO2e_production_based_per_MWh,
             CO2e_total=CO2e_total,
         )
-
-
-@dataclass(kw_only=True)
-class Vars6:
-    CO2e_production_based: float = 0
-    CO2e_combustion_based: float
-    CO2e_total: float
-    energy: float
-    pct_energy: float
-
-    def __init__(
-        self,
-        energy: float,
-        total_energy: float,
-        CO2e_combustion_based: float,
-    ):
-        self.energy = energy
-        self.pct_energy = div(energy, total_energy)
-
-        self.CO2e_combustion_based = CO2e_combustion_based
-        self.CO2e_total = CO2e_combustion_based
 
 
 @dataclass(kw_only=True)

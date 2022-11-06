@@ -1841,8 +1841,10 @@
             "pct_energy": 0.10152735381024827
         },
         "p_heatnet": {
-            "CO2e_production_based": 0,
             "CO2e_combustion_based": 29837792.08036053,
+            "CO2e_combustion_based_per_MWh": 0.2725597029423876,
+            "CO2e_production_based": 0,
+            "CO2e_production_based_per_MWh": 0.0,
             "CO2e_total": 29837792.08036053,
             "energy": 109472500.0,
             "pct_energy": 0.08971689750005642
