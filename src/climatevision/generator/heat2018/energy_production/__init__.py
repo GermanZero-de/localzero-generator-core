@@ -6,7 +6,7 @@ from ...inputs import Inputs
 from ...transport2018.t18 import T18
 from ...electricity2018.e18 import E18
 
-from ...common.dataclasses import EnergyWithCO2ePerMWh
+from ...common.energyWithCO2ePerMWh import EnergyWithCO2ePerMWh
 
 
 @dataclass(kw_only=True)
