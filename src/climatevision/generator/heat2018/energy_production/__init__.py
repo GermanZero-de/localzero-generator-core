@@ -33,7 +33,6 @@ def calc_production(
     inputs: Inputs,
     t18: T18,
     e18: E18,
-    demand_total_energy: float,
     p_heatnet_energy: float,
 ) -> Production:
 
@@ -167,7 +166,6 @@ def calc_production(
     )
 
     total = EnergyWithCO2ePerMWh.calcSum(
-        demand_total_energy,
         gas,
         lpg,
         fueloil,

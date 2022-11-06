@@ -8,6 +8,7 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/heat.html
 from ..inputs import Inputs
 from ..transport2018.t18 import T18
 from ..electricity2018.e18 import E18
+from climatevision.generator import diffs
 
 from .h18 import H18, CO2eEmissions
 from . import energy_demand, energy_production
@@ -22,8 +23,10 @@ def calc(inputs: Inputs, *, t18: T18, e18: E18) -> H18:
         entries.r_heatnet_fec + entries.b_heatnet_fec + entries.i_heatnet_fec
     )
 
-    production = energy_production.calc_production(
-        inputs, t18, e18, demand.total.energy, p_heatnet_energy
+    production = energy_production.calc_production(inputs, t18, e18, p_heatnet_energy)
+
+    assert diffs.float_matches(
+        actual=demand.total.energy, expected=production.total.energy, rel=1e-9
     )
 
     h = CO2eEmissions(
