@@ -7,7 +7,7 @@ from ..utils import div
 
 
 @dataclass(kw_only=True)
-class HeatProduction:
+class EnergyWithCO2ePerMWh:
     CO2e_combustion_based: float
     CO2e_combustion_based_per_MWh: float
     CO2e_production_based: float
@@ -23,7 +23,7 @@ class HeatProduction:
         total_energy: float,
         CO2e_production_based_per_MWh: float = 0,
         CO2e_combustion_based_per_MWh: float = 0,
-    ) -> "HeatProduction":
+    ) -> "EnergyWithCO2ePerMWh":
         pct_energy = div(energy, total_energy)
 
         CO2e_production_based = energy * CO2e_production_based_per_MWh
@@ -48,7 +48,7 @@ class HeatProduction:
         total_energy: float,
         CO2e_production_based: float = 0,
         CO2e_combustion_based: float = 0,
-    ) -> "HeatProduction":
+    ) -> "EnergyWithCO2ePerMWh":
         pct_energy = div(energy, total_energy)
 
         CO2e_production_based_per_MWh = div(CO2e_production_based, energy)
@@ -73,7 +73,7 @@ class HeatProduction:
         total_energy: float,
         CO2e_production_based_per_MWh: float = 0,
         CO2e_combustion_based_per_MWh: float = 0,
-    ) -> "HeatProduction":
+    ) -> "EnergyWithCO2ePerMWh":
         energy = total_energy * pct_energy
 
         CO2e_production_based = energy * CO2e_production_based_per_MWh
@@ -92,7 +92,7 @@ class HeatProduction:
         )
 
     @classmethod
-    def calcSum(cls, energy: float, *childs: Any) -> "HeatProduction":
+    def calcSum(cls, energy: float, *childs: Any) -> "EnergyWithCO2ePerMWh":
         pct_energy = sum(child.pct_energy for child in childs)
 
         CO2e_combustion_based = sum(child.CO2e_combustion_based for child in childs)
