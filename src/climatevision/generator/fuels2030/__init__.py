@@ -39,6 +39,8 @@ def calc(
         a30, b30, i30, r30, t30, production.hydrogen_reconv
     )
 
+    f = F.of_p(production.total)
+
     return F30(
         d=demand.total,
         d_r=demand.residences,
@@ -61,5 +63,5 @@ def calc(
             energy=production.hydrogen.energy + production.hydrogen_reconv.energy
         ),
         p=production.total,
-        f=F.of_p(production.total),
+        f=f,
     )

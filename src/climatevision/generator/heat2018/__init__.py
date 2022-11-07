@@ -14,15 +14,9 @@ from . import energy_demand, energy_production
 
 
 def calc(inputs: Inputs, *, t18: T18, e18: E18) -> H18:
-    entries = inputs.entries
 
     demand = energy_demand.calc_demand(inputs, t18)
-
-    p_heatnet_energy = (
-        entries.r_heatnet_fec + entries.b_heatnet_fec + entries.i_heatnet_fec
-    )
-
-    production = energy_production.calc_production(inputs, t18, e18, p_heatnet_energy)
+    production = energy_production.calc_production(inputs, t18, e18)
 
     h = CO2eEmissions(
         CO2e_combustion_based=production.total.CO2e_combustion_based,
