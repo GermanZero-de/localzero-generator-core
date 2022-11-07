@@ -17,7 +17,6 @@ from .transport import Transport
 
 @dataclass(kw_only=True)
 class GPlanning:
-    # Used by g_planning
     cost_wage: float
     demand_emplo: float
     demand_emplo_com: float
@@ -74,7 +73,6 @@ class GPlanning:
 
 @dataclass(kw_only=True)
 class G:
-    # Used by g
     cost_wage: float
     demand_emplo: float
     demand_emplo_com: float

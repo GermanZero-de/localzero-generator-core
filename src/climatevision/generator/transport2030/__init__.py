@@ -7,7 +7,7 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/traffic.html
 
 from ..inputs import Inputs
 from ..transport2018.t18 import T18
-from . import energy_source
+from . import energy_source, energy_general
 
 from .investmentaction import InvestmentAction
 from .air import calc_air_domestic, calc_air_international, Air
@@ -26,7 +26,7 @@ from .rail import Rail, RailGoods, RailPeople, RailPeopleMetroActionInfra, RailP
 from .ship import Ship, ShipDomestic, ShipInternational, ShipDomesticActionInfra
 from .other import Other, OtherCycle, OtherFoot
 from .t30 import T30
-from .dataclasses import GPlanning, G, T
+from .dataclasses import T
 
 
 def calc(inputs: Inputs, *, t18: T18) -> T30:
@@ -175,27 +175,16 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
         other_foot_action_infra=other_foot_action_infra,
     )
 
-    # --- Planning and other aggregates ---
-    g_planning = GPlanning.calc(
+    general = energy_general.calc_general(
         inputs,
-        road_bus_action_infra=road_bus_action_infra,
-        road_gds_mhd_action_wire=road_gds_mhd_action_wire,
-        road_action_charger=road_action_charger,
-        rail_ppl_metro_action_infra=rail_ppl_metro_action_infra,
-        rail_action_invest_infra=rail_action_invest_infra,
-        other_cycl=other_cycl,
+        road_bus_action_infra,
+        road_gds_mhd_action_wire,
+        road_action_charger,
+        rail_ppl_metro_action_infra,
+        rail_action_invest_infra,
+        other_cycl,
     )
-    # TODO: This Seems to be a pointless rename?
-    g = G(
-        invest_com=g_planning.invest_com,
-        invest_pa_com=g_planning.invest_pa_com,
-        demand_emplo=g_planning.demand_emplo,
-        cost_wage=g_planning.cost_wage,
-        invest_pa=g_planning.invest_pa,
-        invest=g_planning.invest,
-        demand_emplo_new=g_planning.demand_emplo_new,
-        demand_emplo_com=g_planning.demand_emplo_new,
-    )
+
     t = T.calc(
         t18=t18,
         required_domestic_transport_capacity_pkm=required_domestic_transport_capacity_pkm,
@@ -204,7 +193,7 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
         road=road,
         ship=ship,
         other=other,
-        g=g,
+        g=general.g,
     )
 
     supply = energy_source.calc_supply(t)
@@ -246,8 +235,8 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
         other_foot=other_foot,
         other_foot_action_infra=other_foot_action_infra,
         other=other,
-        g_planning=g_planning,
-        g=g,
+        g_planning=general.g_planning,
+        g=general.g,
         t=t,
         s_petrol=supply.s_petrol,
         s_jetfuel=supply.s_jetfuel,
