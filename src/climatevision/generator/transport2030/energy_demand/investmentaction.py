@@ -2,8 +2,8 @@
 
 from dataclasses import dataclass
 
-from ..inputs import Inputs
-from ..utils import div
+from ...inputs import Inputs
+from ...utils import div
 
 
 @dataclass(kw_only=True)

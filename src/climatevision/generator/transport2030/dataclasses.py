@@ -6,12 +6,16 @@ from ..inputs import Inputs
 from ..utils import div
 from ..transport2018.t18 import T18
 
-from .investmentaction import InvestmentAction
-from .air import Air
-from .road import RoadSum
-from .rail import Rail, RailPeopleMetroActionInfra
-from .ship import Ship
-from .other import Other, OtherCycle
+from .energy_demand import (
+    InvestmentAction,
+    Air,
+    RoadSum,
+    Rail,
+    RailPeopleMetroActionInfra,
+    Ship,
+    Other,
+    OtherCycle,
+)
 from .transport import Transport
 
 

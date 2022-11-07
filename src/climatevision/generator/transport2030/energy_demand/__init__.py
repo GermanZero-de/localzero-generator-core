@@ -5,8 +5,8 @@ from dataclasses import dataclass
 from ...inputs import Inputs
 from ...transport2018.t18 import T18
 
-from ..air import calc_air_domestic, calc_air_international, Air
-from ..road import (
+from .air import calc_air_domestic, calc_air_international, Air
+from .road import (
     Road,
     RoadBus,
     RoadCar,
@@ -17,16 +17,16 @@ from ..road import (
     RoadSum,
     RoadInvestmentAction,
 )
-from ..rail import (
+from .rail import (
     Rail,
     RailGoods,
     RailPeople,
     RailPeopleMetroActionInfra,
     RailPeopleSum,
 )
-from ..ship import Ship, ShipDomestic, ShipInternational, ShipDomesticActionInfra
-from ..other import Other, OtherCycle, OtherFoot
-from ..investmentaction import InvestmentAction, RoadInvestmentAction
+from .ship import Ship, ShipDomestic, ShipInternational, ShipDomesticActionInfra
+from .other import Other, OtherCycle, OtherFoot
+from .investmentaction import InvestmentAction, RoadInvestmentAction
 from ..transport import Transport
 
 

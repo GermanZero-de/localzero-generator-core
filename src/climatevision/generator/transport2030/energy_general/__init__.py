@@ -4,9 +4,12 @@ from dataclasses import dataclass
 
 from ...inputs import Inputs
 
-from ..investmentaction import InvestmentAction, RoadInvestmentAction
-from ..rail import RailPeopleMetroActionInfra
-from ..other import OtherCycle
+from ..energy_demand import (
+    InvestmentAction,
+    RoadInvestmentAction,
+    RailPeopleMetroActionInfra,
+    OtherCycle,
+)
 from ..dataclasses import GPlanning, G
 
 
