@@ -3,7 +3,7 @@
 from dataclasses import dataclass
 
 from .energy_source import Energy, EnergyWithPercentage
-from .production_branches import (
+from .energy_demand import (
     ExtraEmission,
     ProductionSubBranch,
     ProductionSubBranchCO2viaFEC,

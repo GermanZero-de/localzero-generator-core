@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass
 
-from ..inputs import Inputs
+from ...inputs import Inputs
 
 from .production_branches import (
     ExtraEmission,
