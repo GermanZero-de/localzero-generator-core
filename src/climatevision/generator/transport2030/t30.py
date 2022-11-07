@@ -29,8 +29,8 @@ from .energy_demand import (
     OtherCycle,
     OtherFoot,
 )
+from .energy_general import GPlanning, G
 from .transport import Transport
-from .dataclasses import GPlanning, G
 from .t import T
 
 

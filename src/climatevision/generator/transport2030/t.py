@@ -12,7 +12,7 @@ from .energy_demand import (
     Other,
 )
 from .transport import Transport
-from .dataclasses import G
+from .energy_general import G
 
 
 @dataclass(kw_only=True)

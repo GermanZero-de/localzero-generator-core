@@ -2,10 +2,10 @@
 
 from dataclasses import dataclass
 
-from ..inputs import Inputs
-from ..utils import div
+from ...inputs import Inputs
+from ...utils import div
 
-from .energy_demand import (
+from ..energy_demand import (
     InvestmentAction,
     RailPeopleMetroActionInfra,
     OtherCycle,

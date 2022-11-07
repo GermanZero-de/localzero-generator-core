@@ -10,7 +10,7 @@ from ..energy_demand import (
     RailPeopleMetroActionInfra,
     OtherCycle,
 )
-from ..dataclasses import GPlanning, G
+from .g import GPlanning, G
 
 
 @dataclass(kw_only=True)
