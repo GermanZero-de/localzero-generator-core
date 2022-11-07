@@ -4,11 +4,11 @@ from dataclasses import dataclass
 
 from ...inputs import Inputs
 
-from ..air import Air
-from ..road import Road
-from ..rail import Rail
-from ..ship import Ship
-from ..other import Other
+from .air import Air
+from .road import Road
+from .rail import Rail
+from .ship import Ship
+from .other import Other
 
 
 @dataclass(kw_only=True)

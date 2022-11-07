@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from ...common.energy import Energy
 
 from ..transport import Transport
-from ..ship import Ship
+from ..energy_demand import Ship
 
 
 @dataclass(kw_only=True)

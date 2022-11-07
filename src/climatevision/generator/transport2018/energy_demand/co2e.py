@@ -1,6 +1,6 @@
 # pyright: strict
 
-from ..inputs import Inputs
+from ...inputs import Inputs
 
 
 def from_demands(

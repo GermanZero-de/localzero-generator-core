@@ -2,15 +2,14 @@
 
 from dataclasses import dataclass
 
-from ..inputs import Inputs
-from ..utils import element_wise_plus, MILLION
+from ...inputs import Inputs
+from ...utils import element_wise_plus, MILLION
 
 from . import co2e
 
 
 @dataclass
 class Rail:
-    # Used by rail_gds, rail_ppl_metro, rail_ppl_distance, rail_ppl, rail
     CO2e_combustion_based: float
     CO2e_total: float
     demand_biodiesel: float

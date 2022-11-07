@@ -2,13 +2,12 @@
 
 from dataclasses import dataclass
 
-from ..inputs import Inputs
-from ..utils import element_wise_plus
+from ...inputs import Inputs
+from ...utils import element_wise_plus
 
 
 @dataclass
 class Other:
-    # Used by other_foot, other_cycl
     CO2e_combustion_based: float
     CO2e_total: float
     transport_capacity_pkm: float

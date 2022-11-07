@@ -4,11 +4,7 @@ from dataclasses import dataclass
 
 from ..common.energy import Energy
 
-from .air import Air
-from .road import Road
-from .rail import Rail
-from .ship import Ship
-from .other import Other
+from .energy_demand import Air, Road, Rail, Ship, Other
 from .transport import Transport
 
 

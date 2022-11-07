@@ -2,8 +2,8 @@
 
 from dataclasses import dataclass
 
-from ..inputs import Inputs
-from ..utils import element_wise_plus
+from ...inputs import Inputs
+from ...utils import element_wise_plus
 
 from . import co2e
 
