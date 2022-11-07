@@ -7,7 +7,7 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/traffic.html
 
 from ..inputs import Inputs
 from ..transport2018.t18 import T18
-from ..common.energy import Energy
+from . import energy_source
 
 from .investmentaction import InvestmentAction
 from .air import calc_air_domestic, calc_air_international, Air
@@ -206,28 +206,8 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
         other=other,
         g=g,
     )
-    s_petrol = Energy(energy=t.transport.demand_epetrol)
-    s_jetfuel = Energy(energy=t.transport.demand_ejetfuel)
-    s_diesel = Energy(energy=t.transport.demand_ediesel)
-    s_elec = Energy(energy=t.transport.demand_electricity)
-    s_hydrogen = Energy(energy=t.transport.demand_hydrogen)
 
-    s_emethan = Energy(energy=0)
-    s_fueloil = Energy(energy=0)
-    s_lpg = Energy(energy=0)
-    s_gas = Energy(energy=0)
-    s_biogas = Energy(energy=0)
-    s_bioethanol = Energy(energy=0)
-    s_biodiesel = Energy(energy=0)
-
-    s = Energy(
-        energy=s_petrol.energy
-        + s_jetfuel.energy
-        + s_diesel.energy
-        + s_elec.energy
-        + s_hydrogen.energy
-        + s_emethan.energy
-    )
+    supply = energy_source.calc_supply(t)
 
     return T30(
         air_dmstc=air_dmstc,
@@ -269,17 +249,17 @@ def calc(inputs: Inputs, *, t18: T18) -> T30:
         g_planning=g_planning,
         g=g,
         t=t,
-        s_petrol=s_petrol,
-        s_jetfuel=s_jetfuel,
-        s_diesel=s_diesel,
-        s_elec=s_elec,
-        s_hydrogen=s_hydrogen,
-        s_emethan=s_emethan,
-        s=s,
-        s_fueloil=s_fueloil,
-        s_lpg=s_lpg,
-        s_gas=s_gas,
-        s_biogas=s_biogas,
-        s_bioethanol=s_bioethanol,
-        s_biodiesel=s_biodiesel,
+        s_petrol=supply.s_petrol,
+        s_jetfuel=supply.s_jetfuel,
+        s_diesel=supply.s_diesel,
+        s_elec=supply.s_elec,
+        s_hydrogen=supply.s_hydrogen,
+        s_emethan=supply.s_emethan,
+        s=supply.s,
+        s_fueloil=supply.s_fueloil,
+        s_lpg=supply.s_lpg,
+        s_gas=supply.s_gas,
+        s_biogas=supply.s_biogas,
+        s_bioethanol=supply.s_bioethanol,
+        s_biodiesel=supply.s_biodiesel,
     )

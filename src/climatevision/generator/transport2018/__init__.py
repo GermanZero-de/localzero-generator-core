@@ -24,7 +24,6 @@ def calc(inputs: Inputs) -> T18:
         + Transport.lift_other(production.other)
     )
 
-    # ----------------------------------------------------
     supply = energy_source.calc_supply(t, production.ship_inter)
 
     return T18(

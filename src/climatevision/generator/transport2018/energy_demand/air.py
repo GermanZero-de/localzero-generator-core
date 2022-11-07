@@ -10,7 +10,6 @@ from . import co2e
 
 @dataclass
 class Air:
-    # Used by air_dmstc, air, air_inter
     CO2e_combustion_based: float
     CO2e_total: float
     demand_jetfuel: float
