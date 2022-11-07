@@ -13,14 +13,6 @@ class Transport2018(Protocol):
     transport_capacity_tkm: float
 
 
-@dataclass(kw_only=True, frozen=True)
-class ZeroEnergyAndCO2e:
-    transport_capacity_pkm: float
-    transport_capacity_tkm: float
-    energy: float = 0
-    CO2e_combustion_based: float = 0
-
-
 @dataclass(kw_only=True)
 class Transport:
     """Every form of transports is modelled at least in terms of the below."""

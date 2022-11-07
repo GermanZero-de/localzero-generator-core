@@ -6,9 +6,17 @@ from ...inputs import Inputs
 from ...utils import div
 from ...transport2018.t18 import T18
 
-from ..transport import Transport, ZeroEnergyAndCO2e
+from ..transport import Transport
 
 from .investmentaction import InvestmentAction
+
+
+@dataclass(kw_only=True, frozen=True)
+class ZeroEnergyAndCO2e:
+    transport_capacity_pkm: float
+    transport_capacity_tkm: float
+    energy: float = 0
+    CO2e_combustion_based: float = 0
 
 
 @dataclass(kw_only=True)
