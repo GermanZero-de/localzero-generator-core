@@ -3,7 +3,7 @@
 from dataclasses import dataclass, InitVar
 from typing import Callable, Protocol
 
-from ..utils import div
+from ...utils import div
 
 
 class Transport2018(Protocol):

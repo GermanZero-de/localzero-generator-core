@@ -27,7 +27,7 @@ from .rail import (
 from .ship import Ship, ShipDomestic, ShipInternational, ShipDomesticActionInfra
 from .other import Other, OtherCycle, OtherFoot
 from .investmentaction import InvestmentAction, RoadInvestmentAction
-from ..transport import Transport
+from .transport import Transport
 
 
 @dataclass(kw_only=True)

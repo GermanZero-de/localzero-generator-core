@@ -6,8 +6,7 @@ from ...inputs import Inputs
 from ...utils import div
 from ...transport2018.t18 import T18
 
-from ..transport import Transport
-
+from .transport import Transport
 from .investmentaction import InvestmentAction, RoadInvestmentAction
 
 

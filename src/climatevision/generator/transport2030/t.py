@@ -10,8 +10,8 @@ from .energy_demand import (
     Rail,
     Ship,
     Other,
+    Transport,
 )
-from .transport import Transport
 from .energy_general import G
 
 
