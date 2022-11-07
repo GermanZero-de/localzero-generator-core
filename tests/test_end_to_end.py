@@ -107,6 +107,13 @@ def end_to_end(datadir_status: refdatatools.DataDirStatus, ags: Any, year: int =
                 print(d)
             assert False, "End to end test failed"
 
+        assert diffs.float_matches(
+            actual=g.f18.d.energy, expected=g.f18.p.energy, rel=1e-9
+        ), f"f18 energy demand {g.f18.d.energy} is not equal to energy production {g.f18.p.energy}"
+        assert diffs.float_matches(
+            actual=g.h18.d.energy, expected=g.h18.p.energy, rel=1e-9
+        ), f"h18 energy demand {g.h18.d.energy} is not equal to energy production {g.h18.p.energy}"
+
 
 def make_entries_test(ags: Any, year: int):
     refdata = RefData.load()
