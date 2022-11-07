@@ -4,7 +4,7 @@ from dataclasses import dataclass
 
 from ...common.energy import Energy
 
-from ..dataclasses import T
+from ..t import T
 
 
 @dataclass(kw_only=True)

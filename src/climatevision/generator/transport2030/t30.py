@@ -30,7 +30,8 @@ from .energy_demand import (
     OtherFoot,
 )
 from .transport import Transport
-from .dataclasses import GPlanning, G, T
+from .dataclasses import GPlanning, G
+from .t import T
 
 
 @dataclass(kw_only=True)

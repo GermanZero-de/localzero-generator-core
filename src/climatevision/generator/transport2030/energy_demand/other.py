@@ -15,7 +15,7 @@ from .investmentaction import InvestmentAction
 class OtherFoot:
     LIFT_INTO_RESULT_DICT = ["transport"]
     transport: Transport
-    # Used by other_foot
+
     invest: float
     invest_com: float
     invest_pa: float
@@ -72,7 +72,6 @@ class OtherFoot:
 
 @dataclass(kw_only=True)
 class OtherCycle:
-    # Used by other_cycl
     LIFT_INTO_RESULT_DICT = ["transport"]
     transport: Transport
 
@@ -143,7 +142,6 @@ class OtherCycle:
 
 @dataclass(kw_only=True)
 class Other:
-    # Used by other
     LIFT_INTO_RESULT_DICT = ["transport"]
     transport: Transport
 

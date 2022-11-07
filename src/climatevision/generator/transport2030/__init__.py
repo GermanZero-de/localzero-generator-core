@@ -10,7 +10,7 @@ from ..transport2018.t18 import T18
 from . import energy_demand, energy_source, energy_general
 
 from .t30 import T30
-from .dataclasses import T
+from .t import T
 
 
 def calc(inputs: Inputs, *, t18: T18) -> T30:

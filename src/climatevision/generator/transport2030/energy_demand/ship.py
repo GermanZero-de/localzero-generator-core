@@ -13,7 +13,7 @@ from ..transport import Transport
 class ShipDomestic:
     LIFT_INTO_RESULT_DICT = ["transport"]
     transport: Transport
-    # Used by ship_dmstc
+
     base_unit: float
     cost_wage: float
     demand_emplo_new: float
@@ -91,7 +91,6 @@ class ShipDomestic:
 
 @dataclass(kw_only=True)
 class ShipDomesticActionInfra:
-    # Used by ship_dmstc_action_infra
     CO2e_total_2021_estimated: float
     cost_climate_saved: float
     cost_wage: float
@@ -149,7 +148,6 @@ class ShipDomesticActionInfra:
 
 @dataclass(kw_only=True)
 class ShipInternational:
-    # Used by ship_inter
     LIFT_INTO_RESULT_DICT = ["transport"]
     transport: Transport
 
@@ -194,7 +192,6 @@ class ShipInternational:
 
 @dataclass(kw_only=True)
 class Ship:
-    # Used by ship
     LIFT_INTO_RESULT_DICT = ["transport"]
     transport: Transport
 

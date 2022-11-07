@@ -78,7 +78,7 @@ def calc_air_international(inputs: Inputs, t18: T18) -> "Transport":
 class Air:
     LIFT_INTO_RESULT_DICT = ["transport"]
     transport: Transport
-    # Used by air
+
     demand_emplo: float
     demand_emplo_new: float
     invest: float
