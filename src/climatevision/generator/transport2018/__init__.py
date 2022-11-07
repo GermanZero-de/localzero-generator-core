@@ -6,7 +6,6 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/traffic.html
 # pyright: strict
 
 from ..inputs import Inputs
-from ..common.energy import Energy
 
 from .air import Air
 from .road import Road
@@ -15,6 +14,7 @@ from .ship import Ship
 from .other import Other
 from .transport import Transport
 from .t18 import T18
+from . import energy_source
 
 
 def calc(inputs: Inputs) -> T18:
@@ -64,29 +64,8 @@ def calc(inputs: Inputs) -> T18:
     )
 
     # ----------------------------------------------------
-    s_biodiesel = Energy(energy=t.demand_biodiesel)
-    s_bioethanol = Energy(energy=t.demand_bioethanol)
-    s_biogas = Energy(energy=t.demand_biogas)
-    s_diesel = Energy(energy=t.demand_diesel)
-    s_elec = Energy(energy=t.demand_electricity)
-    s_fueloil = Energy(energy=ship_inter.demand_fueloil)
-    s_gas = Energy(energy=t.demand_gas)
-    s_jetfuel = Energy(energy=t.demand_jetfuel)
-    s_lpg = Energy(energy=t.demand_lpg)
-    s_petrol = Energy(energy=t.demand_petrol)
+    supply = energy_source.calc_supply(t, ship_inter)
 
-    s = Energy(
-        energy=s_biodiesel.energy
-        + s_bioethanol.energy
-        + s_biogas.energy
-        + s_diesel.energy
-        + s_elec.energy
-        + s_fueloil.energy
-        + s_gas.energy
-        + s_jetfuel.energy
-        + s_lpg.energy
-        + s_petrol.energy
-    )
     return T18(
         air_dmstc=air_dmstc,
         air_inter=air_inter,
@@ -116,15 +95,15 @@ def calc(inputs: Inputs) -> T18:
         other_cycl=other_cycl,
         other=other,
         t=t,
-        s_biodiesel=s_biodiesel,
-        s_bioethanol=s_bioethanol,
-        s_biogas=s_biogas,
-        s_diesel=s_diesel,
-        s_elec=s_elec,
-        s_fueloil=s_fueloil,
-        s_gas=s_gas,
-        s_jetfuel=s_jetfuel,
-        s_lpg=s_lpg,
-        s_petrol=s_petrol,
-        s=s,
+        s_biodiesel=supply.s_biodiesel,
+        s_bioethanol=supply.s_bioethanol,
+        s_biogas=supply.s_biogas,
+        s_diesel=supply.s_diesel,
+        s_elec=supply.s_elec,
+        s_fueloil=supply.s_fueloil,
+        s_gas=supply.s_gas,
+        s_jetfuel=supply.s_jetfuel,
+        s_lpg=supply.s_lpg,
+        s_petrol=supply.s_petrol,
+        s=supply.s,
     )
