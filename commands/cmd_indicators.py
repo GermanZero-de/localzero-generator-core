@@ -59,3 +59,4 @@ def cmd_indicators(args: Any):
     )
     json_to_output(d, args)
     
+    
