@@ -56,6 +56,7 @@ from . import industry2030
 
 from . import methodology183x
 
+
 def _convert_item(v: object) -> object:
     if is_dataclass(v) and not isinstance(v, type):
         return dataclass_to_result_dict(v)
@@ -86,6 +87,7 @@ def dataclass_to_result_dict(v: object) -> dict[str, object]:
         result.update(v)
     return result
 
+
 @dataclass(kw_only=True)
 class Result:
     # 2018
@@ -115,6 +117,7 @@ class Result:
 
     def result_dict(self):
         return dataclass_to_result_dict(self)
+
 
 def calculate(inputs: Inputs) -> Result:
     """This is the entry point to the actual calculation."""
