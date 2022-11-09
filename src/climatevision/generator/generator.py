@@ -56,7 +56,6 @@ from . import industry2030
 
 from . import methodology183x
 
-
 def _convert_item(v: object) -> object:
     if is_dataclass(v) and not isinstance(v, type):
         return dataclass_to_result_dict(v)
@@ -116,24 +115,6 @@ class Result:
 
     def result_dict(self):
         return dataclass_to_result_dict(self)
-
-@dataclass(kw_only=True)
-class Indicators: 
-    pv_pa: float = 0 # pv panels per year to build
-    wpp_pa: float = 0 # wind power plants per year to build
-    hp_pa: float = 0 # heat pumps to build per year
-    ren_houses_pa: float = 0  # houses to renovate per year
-    elec_veh_pa: float = 0 # electrical vehicles per year to build 
-
-    def result_dict(self):
-        return dataclass_to_result_dict(self)
-    
-    def calculate_indicators(self, input:Inputs, cr:Result):
-        self.pv_pa =  ((cr.e18.e.CO2e_total-cr.e30.e.CO2e_total)* 1e6)/((input.entries.m_year_target-input.entries.m_year_today) * (850-40) * (1000/4)) # Anzahl PV pro Jahr = (Einsparung C02 pro Jahr[g/a])/(Einsparungspotenzial[g/kWh]*Produktion[kWh/a])
-        self.wpp_pa = ((cr.e18.e.CO2e_total-cr.e30.e.CO2e_total)* 1e6)/((input.entries.m_year_target-input.entries.m_year_today) * (850-25) * (1700 * 3.2 * 1e3))  
-        self.hp_pa = 0
-        self.ren_houses_pa = 0
-        self.elec_veh_pa = 0
 
 def calculate(inputs: Inputs) -> Result:
     """This is the entry point to the actual calculation."""
@@ -329,16 +310,3 @@ def calculate_with_default_inputs(ags: str, year: int) -> Result:
         facts_and_assumptions=refdata.facts_and_assumptions(), entries=entries
     )
     return calculate(inputs)
-
-def calculate_indicators_with_default_inputs(ags: str, year: int) -> Indicators:
-    """Calculate without the ability to override entries."""
-    refdata = RefData.load()
-    entries = make_entries(refdata, ags=ags, year=year)
-    inputs = Inputs(
-        facts_and_assumptions=refdata.facts_and_assumptions(), entries=entries
-    )
-    ind = Indicators()
-    ind.calculate_indicators(inputs, calculate(inputs))
-    
-    return ind
-
