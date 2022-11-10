@@ -20,7 +20,6 @@ from .dataclasses import (
     Vars1,
     Vars2,
     Vars3,
-    Vars4,
     Vars5,
     Vars6,
     Vars7,
@@ -33,6 +32,7 @@ from .dataclasses import (
     Vars14,
     Vars15,
 )
+from . import energy_demand
 
 
 def calc(
@@ -53,12 +53,6 @@ def calc(
     g = Vars1()
     g_storage = Vars2()
     g_planning = Vars3()
-    d = Vars4()
-    d_r = Vars4()
-    d_b = Vars4()
-    d_i = Vars4()
-    d_a = Vars4()
-    d_t = Vars4()
     p = Vars5()
     p_gas = Vars6()
     p_lpg = Vars7()
@@ -76,9 +70,7 @@ def calc(
     p_solarth = Vars15()
     p_heatpump = Vars15()
 
-    ###########################
-    ### Demand of Heat 2018 ###
-    ###########################
+    demand = energy_demand.calc_demand(r30, b30, i30, a30)
 
     p_gas.CO2e_production_based_per_MWh = h18.p_gas.CO2e_production_based_per_MWh
     p_gas.CO2e_combustion_based_per_MWh = h18.p_gas.CO2e_combustion_based_per_MWh
@@ -154,22 +146,7 @@ def calc(
     g_planning.demand_emplo_new = g_planning.demand_emplo
     g.demand_emplo = g_storage.demand_emplo + g_planning.demand_emplo
     g.demand_emplo_new = g_storage.demand_emplo_new + g_planning.demand_emplo_new
-    d_r.energy = (
-        r30.s_biomass.energy
-        + r30.s_heatnet.energy
-        + r30.s_solarth.energy
-        + r30.s_heatpump.energy
-    )
-    d_b.energy = (
-        b30.s_biomass.energy
-        + b30.s_heatnet.energy
-        + b30.s_heatpump.energy
-        + b30.s_solarth.energy
-    )
-    d_i.energy = i30.s_renew_biomass.energy + i30.s_renew_heatnet.energy
-    d_a.energy = a30.s_biomass.energy + a30.s_heatpump.energy
-    d_t.energy = 0.0
-    d.energy = d_r.energy + d_b.energy + d_i.energy + d_a.energy
+
     p_heatnet_lheatpump.pct_energy = ass("Ass_H_P_heatnet_fraction_lheatpump_2050")
     p_fueloil.energy = r30.s_fueloil.energy + b30.s_fueloil.energy
     p_opetpro.energy = 0
@@ -751,12 +728,12 @@ def calc(
         g=g,
         g_storage=g_storage,
         g_planning=g_planning,
-        d=d,
-        d_r=d_r,
-        d_b=d_b,
-        d_i=d_i,
-        d_t=d_t,
-        d_a=d_a,
+        d=demand.total,
+        d_r=demand.residences,
+        d_b=demand.business,
+        d_i=demand.industry,
+        d_t=demand.transport,
+        d_a=demand.agri,
         p=p,
         p_gas=p_gas,
         p_lpg=p_lpg,
