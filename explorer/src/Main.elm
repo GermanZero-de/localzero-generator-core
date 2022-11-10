@@ -66,6 +66,7 @@ import Lens.CellContent as CellContent
 import List.Extra
 import Maybe.Extra
 import Pivot exposing (Pivot)
+import Process
 import Run exposing (OverrideHandling(..), Path, Run)
 import Set exposing (Set)
 import Storage
@@ -185,6 +186,7 @@ type alias Model =
     , displayedTrace : List DisplayedTrace
     , agsIndex : AgsIndex
     , showingSidebar : Bool
+    , temporaryHighlight : Maybe Run.Path
     }
 
 
@@ -219,6 +221,9 @@ port save : Encode.Value -> Cmd msg
 
 
 port copyToClipboard : Encode.Value -> Cmd msg
+
+
+port scrollIntoView : String -> Cmd msg
 
 
 toClipboardData : Lens -> AllRuns -> Encode.Value
@@ -308,6 +313,7 @@ init storage =
     , displayedTrace = []
     , agsIndex = AgsIndex.init []
     , showingSidebar = True
+    , temporaryHighlight = Nothing
     }
         |> update (LocalStorageLoaded storage)
 
@@ -337,6 +343,8 @@ type Msg
     | FilterQuickAddRequested RunId
       -- Tree navigation
     | ToggleCollapseTreeClicked Explorable.Id Path
+    | Highlight RunId Path
+    | HighlightRemove
       -- Modal dialog
     | ModalMsg ModalMsg
     | DisplayCalculateModalClicked (Maybe RunId) { agsFilter : String, year : Int } Run.Overrides
@@ -385,6 +393,7 @@ type Msg
     | ToggleSelectForCompareClicked RunId
     | DiffToleranceUpdated RunId RunId Float
     | ToggleSidebar
+    | ScrollIntoView String
 
 
 type ModalMsg
@@ -502,6 +511,28 @@ update msg model =
             model
                 |> withNoCmd
 
+        Highlight r p ->
+            { model
+                | collapseStatus =
+                    CollapseStatus.expandUntil (Explorable.Run r) p model.collapseStatus
+                , temporaryHighlight = Just p
+            }
+                |> withCmd
+                    (Cmd.batch
+                        [ Task.perform (always (ScrollIntoView (treeItemId (Explorable.Run r) p))) (Process.sleep 50)
+                        , Task.perform (always HighlightRemove) (Process.sleep 3000.0)
+                        ]
+                    )
+
+        ScrollIntoView id ->
+            model
+                |> withCmd (scrollIntoView id)
+
+        HighlightRemove ->
+            { model | temporaryHighlight = Nothing }
+                |> withNoCmd
+
+        -- |> withCmd (Task.attempt HighlightGetElement (Browser.Dom.getElement ()
         ToggleSidebar ->
             { model | showingSidebar = not model.showingSidebar }
                 |> withNoCmd
@@ -1443,6 +1474,8 @@ viewTree :
     { isCollapsed : Run.Path -> Bool
     , collapsedToggledMsg : Run.Path -> msg
     , viewLeaf : Run.Path -> String -> leaf -> List (Element msg)
+    , itemId : Run.Path -> String
+    , temporaryHighlight : Maybe Run.Path
     }
     -> Run.Path
     -> Tree leaf
@@ -1456,13 +1489,26 @@ viewTree cfg path tree =
             |> List.map
                 (\( name, val ) ->
                     let
-                        itemRow content =
-                            row
-                                ([ spacing sizes.large, width fill ] ++ treeElementStyle)
-                                content
-
                         childPath =
                             path ++ [ name ]
+
+                        maybeHighlight =
+                            if Just childPath == cfg.temporaryHighlight then
+                                [ Border.glow Styling.highlightColor 1.0 ]
+
+                            else
+                                []
+
+                        itemRow content =
+                            row
+                                ([ spacing sizes.large
+                                 , width fill
+                                 , Element.htmlAttribute (Html.Attributes.id (cfg.itemId childPath))
+                                 ]
+                                    ++ maybeHighlight
+                                    ++ treeElementStyle
+                                )
+                                content
 
                         element =
                             case val of
@@ -1526,17 +1572,28 @@ viewValue v =
             viewFloatValue f
 
 
+runsAndComparisonsViewPortId : String
+runsAndComparisonsViewPortId =
+    "runs-and-comparisons"
+
+
+treeItemId : Explorable.Id -> Run.Path -> String
+treeItemId runId path =
+    String.fromInt (Explorable.toComparable runId) ++ "_" ++ String.join "-" path
+
+
 viewValueTree :
     RunId
     -> LensId
     -> Run.Path
+    -> Maybe Run.Path
     -> (RunId -> Run.Path -> Bool)
     -> Lens
     -> Run.Overrides
     -> Maybe ActiveOverrideEditor
     -> Tree Value.MaybeWithTrace
     -> Element Msg
-viewValueTree runId lensId path checkIsCollapsed lens overrides activeOverrideEditor tree =
+viewValueTree runId lensId path temporaryHighlight checkIsCollapsed lens overrides activeOverrideEditor tree =
     let
         viewLeaf : Run.Path -> String -> Value.MaybeWithTrace -> List (Element Msg)
         viewLeaf pathToParent name valueWithTrace =
@@ -1594,9 +1651,8 @@ viewValueTree runId lensId path checkIsCollapsed lens overrides activeOverrideEd
                                     t
                                 )
                     , el
-                        ([ width fill
-                         ]
-                            ++ List.map Element.htmlAttribute
+                        (width fill
+                            :: List.map Element.htmlAttribute
                                 (DragDrop.draggable DragDropMsg (DragFromRun runId thisPath))
                         )
                         (text name)
@@ -1608,6 +1664,8 @@ viewValueTree runId lensId path checkIsCollapsed lens overrides activeOverrideEd
         { isCollapsed = checkIsCollapsed runId
         , collapsedToggledMsg = ToggleCollapseTreeClicked (Explorable.Run runId)
         , viewLeaf = viewLeaf
+        , itemId = treeItemId (Explorable.Run runId)
+        , temporaryHighlight = temporaryHighlight
         }
         path
         tree
@@ -1618,8 +1676,8 @@ buttons l =
     row [ Element.spacingXY sizes.medium 0 ] l
 
 
-viewDiffTree : Explorable.Id -> CollapseStatus -> Tree (Diff.Diff Value.MaybeWithTrace) -> Element Msg
-viewDiffTree id collapseStatus tree =
+viewDiffTree : Explorable.Id -> Maybe Run.Path -> CollapseStatus -> Tree (Diff.Diff Value.MaybeWithTrace) -> Element Msg
+viewDiffTree id temporaryHighlight collapseStatus tree =
     let
         missingElement =
             el (Font.alignRight :: fonts.explorerValues) <|
@@ -1651,13 +1709,15 @@ viewDiffTree id collapseStatus tree =
         { isCollapsed = \p -> isCollapsed id p collapseStatus
         , collapsedToggledMsg = ToggleCollapseTreeClicked id
         , viewLeaf = viewLeaf
+        , itemId = treeItemId id
+        , temporaryHighlight = temporaryHighlight
         }
         []
         tree
 
 
-viewComparison : RunId -> RunId -> CollapseStatus -> DiffData -> Element Msg
-viewComparison aId bId collapseStatus diffData =
+viewComparison : RunId -> RunId -> Maybe Run.Path -> CollapseStatus -> DiffData -> Element Msg
+viewComparison aId bId temporaryHighlight collapseStatus diffData =
     let
         id =
             Explorable.Diff aId bId
@@ -1716,13 +1776,14 @@ viewComparison aId bId collapseStatus diffData =
         --, differentIfFilterActive.filterPatternField
         , viewDiffTree
             id
+            temporaryHighlight
             collapseStatus
             diffData.diff
         ]
 
 
-viewRun : RunId -> LensId -> Lens -> CollapseStatus -> Maybe ActiveOverrideEditor -> Maybe ActiveSearch -> Maybe RunId -> Run -> Element Msg
-viewRun runId lensId lens collapseStatus activeOverrideEditor activeSearch selectedForComparison run =
+viewRun : RunId -> LensId -> Maybe Path -> Lens -> CollapseStatus -> Maybe ActiveOverrideEditor -> Maybe ActiveSearch -> Maybe RunId -> Run -> Element Msg
+viewRun runId lensId temporaryHighlight lens collapseStatus activeOverrideEditor activeSearch selectedForComparison run =
     let
         inputs =
             Run.getInputs run
@@ -1815,6 +1876,7 @@ viewRun runId lensId lens collapseStatus activeOverrideEditor activeSearch selec
             runId
             lensId
             []
+            temporaryHighlight
             differentIfFilterActive.isCollapsed
             lens
             overrides
@@ -1847,6 +1909,7 @@ viewRunsAndComparisons model =
             [ scrollbarY
             , width fill
             , height fill
+            , Element.htmlAttribute (Html.Attributes.id runsAndComparisonsViewPortId)
             ]
             (column
                 [ spacing sizes.large
@@ -1858,6 +1921,7 @@ viewRunsAndComparisons model =
                         (\( resultNdx, ir ) ->
                             viewRun resultNdx
                                 (Pivot.lengthL model.lenses)
+                                model.temporaryHighlight
                                 (getActiveLens model)
                                 model.collapseStatus
                                 model.activeOverrideEditor
@@ -1870,7 +1934,7 @@ viewRunsAndComparisons model =
                             |> Dict.toList
                             |> List.map
                                 (\( ( a, b ), diffData ) ->
-                                    viewComparison a b model.collapseStatus diffData
+                                    viewComparison a b model.temporaryHighlight model.collapseStatus diffData
                                 )
                        )
                 )
@@ -1909,7 +1973,7 @@ viewValueSetAsUserDefinedTable lensId dragDrop td valueSet =
         viewCell : Lens.CellContent -> Cells.Pos -> Element Msg
         viewCell cell pos =
             let
-                editOnClick =
+                onClick =
                     ifEditing
                         [ Events.onClick
                             (CellOfLensTableEdited lensId pos cell)
@@ -1955,7 +2019,7 @@ viewValueSetAsUserDefinedTable lensId dragDrop td valueSet =
                           , padding 3
                           , Element.htmlAttribute <| Html.Attributes.tabindex 0
                           ]
-                            ++ editOnClick
+                            ++ onClick
                             ++ fonts.table
                             ++ dropTarget
                             ++ highlight
@@ -2008,16 +2072,21 @@ viewValueSetAsUserDefinedTable lensId dragDrop td valueSet =
                                         cellElement [ Font.alignRight ] (text "INTERNAL ERROR")
 
                                     Just valueAndTrace ->
+                                        let
+                                            onValueClick =
+                                                Events.onClick (Highlight r p)
+                                        in
                                         case valueAndTrace.value of
                                             Float f ->
-                                                cellElement [ Font.alignRight ] (text (formatGermanNumber f))
+                                                cellElement [ onValueClick, Font.alignRight ] (text (formatGermanNumber f))
 
                                             Null ->
-                                                cellElement [ Font.alignRight, Font.bold ] (text "null")
+                                                cellElement [ onValueClick, Font.alignRight, Font.bold ] (text "null")
 
                                             String s ->
                                                 cellElement
-                                                    [ Font.alignRight
+                                                    [ onValueClick
+                                                    , Font.alignRight
                                                     , Font.family [ Font.monospace ]
                                                     ]
                                                     (text

@@ -7,6 +7,7 @@ module Styling exposing
     , formatGermanNumber
     , germanZeroGreen
     , germanZeroYellow
+    , highlightColor
     , icon
     , iconButton
     , iconButtonStyle
@@ -111,6 +112,11 @@ modalDim =
 shadowColor : Element.Color
 shadowColor =
     Element.rgba255 100 100 100 0.6
+
+
+highlightColor : Element.Color
+highlightColor =
+    germanZeroYellow
 
 
 emptyCellColor : Element.Color

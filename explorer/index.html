@@ -47,11 +47,18 @@
     localStorage.setItem('storage', JSON.stringify(storage));
   }
 
+  function scrollIntoView(id) {
+    const w = document.getElementById(id);
+    console.log("scrollIntoView", w, id)
+    w.scrollIntoView();
+  }
+
   function setupEverything() {
     const app = Elm.Main.init({node: document.getElementById('app'), flags: JSON.parse(localStorage.getItem('storage'))});
     app.ports.dragstart.subscribe(firefoxDragDropFix);
     app.ports.save.subscribe(saveToStorage);
     app.ports.copyToClipboard.subscribe(copyToClipboard);
+	  app.ports.scrollIntoView.subscribe(scrollIntoView);
   }
 
   setupEverything();
