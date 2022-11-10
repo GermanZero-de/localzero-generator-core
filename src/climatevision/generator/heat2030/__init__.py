@@ -17,9 +17,6 @@ from ..electricity2030.electricity2030_core import EColVars2030
 from .h30 import H30
 from .dataclasses import (
     Vars0,
-    Vars1,
-    Vars2,
-    Vars3,
     Vars5,
     Vars6,
     Vars7,
@@ -32,7 +29,7 @@ from .dataclasses import (
     Vars14,
     Vars15,
 )
-from . import energy_demand
+from . import energy_demand, energy_general
 
 
 def calc(
@@ -49,10 +46,6 @@ def calc(
     ass = inputs.ass
     entries = inputs.entries
 
-    h = Vars0()
-    g = Vars1()
-    g_storage = Vars2()
-    g_planning = Vars3()
     p = Vars5()
     p_gas = Vars6()
     p_lpg = Vars7()
@@ -76,32 +69,24 @@ def calc(
     p_gas.CO2e_combustion_based_per_MWh = h18.p_gas.CO2e_combustion_based_per_MWh
     p_gas.energy = r30.s_gas.energy + b30.s_gas.energy
     p_gas.CO2e_production_based = p_gas.energy * p_gas.CO2e_production_based_per_MWh
-    p_lpg.energy = r30.s_lpg.energy + b30.s_lpg.energy
     p_gas.CO2e_combustion_based = p_gas.CO2e_combustion_based_per_MWh * p_gas.energy
     p_gas.CO2e_total = p_gas.CO2e_production_based + p_gas.CO2e_combustion_based
+
+    p_lpg.energy = r30.s_lpg.energy + b30.s_lpg.energy
+    p_lpg.CO2e_combustion_based_per_MWh = h18.p_lpg.CO2e_combustion_based_per_MWh
+
     p.CO2e_total_2021_estimated = h18.p.CO2e_total * fact(
         "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
     )
-    p_lpg.CO2e_combustion_based_per_MWh = h18.p_lpg.CO2e_combustion_based_per_MWh
-    g_storage.invest_per_x = fact("Fact_H_P_storage_specific_cost")
 
-    g_planning.invest = (
-        fact("Fact_H_P_planning_cost_basis")
-        + fact("Fact_H_P_planning_cost_per_capita") * entries.m_population_com_2018
-    )
-    g_planning.invest_pa = g_planning.invest / entries.m_duration_target
     p_heatnet.energy = (
         r30.s_heatnet.energy + b30.s_heatnet.energy + i30.s_renew_heatnet.energy
     )
-    g_storage.energy = p_heatnet.energy
-    g_storage.pct_energy = fact("Fact_H_P_storage_specific_volume")
-    g_storage.power_to_be_installed = g_storage.energy * g_storage.pct_energy
-    p_heatnet_plant.invest_per_x = fact("Fact_H_P_heatnet_solarth_park_invest_203X")
-    g_storage.invest = g_storage.invest_per_x * g_storage.power_to_be_installed
-    p_heatnet_lheatpump.invest_per_x = fact("Fact_H_P_heatnet_lheatpump_invest_203X")
-    g_storage.invest_com = g_storage.invest
 
+    p_heatnet_plant.invest_per_x = fact("Fact_H_P_heatnet_solarth_park_invest_203X")
     p_heatnet_plant.pct_energy = ass("Ass_H_P_heatnet_fraction_solarth_2050")
+
+    p_heatnet_lheatpump.invest_per_x = fact("Fact_H_P_heatnet_lheatpump_invest_203X")
 
     p_heatnet_cogen.energy = (
         p_local_biomass_cogen.energy
@@ -113,41 +98,14 @@ def calc(
         if (p_heatnet_cogen.energy < p_heatnet.energy)
         else 0
     )
-    g_planning.invest_com = g_planning.invest
-
-    g_storage.invest_pa = g_storage.invest / entries.m_duration_target
-    g_planning.invest_pa_com = g_planning.invest_pa
-
-    g_storage.invest_pa_com = g_storage.invest_pa
-
-    g_storage.pct_of_wage = fact("Fact_B_P_constr_main_revenue_pct_of_wage_2017")
-    g.invest_com = g_storage.invest_com + g_planning.invest_com
-    g_storage.ratio_wage_to_emplo = fact(
-        "Fact_B_P_constr_main_ratio_wage_to_emplo_2017"
-    )
-    g_planning.cost_wage = g_planning.invest / fact("Fact_H_P_planning_duration")
-    g_storage.cost_wage = g_storage.pct_of_wage * g_storage.invest_pa
-    g_planning.ratio_wage_to_emplo = ass("Ass_T_C_yearly_costs_per_planer")
-    g_storage.demand_emplo = div(g_storage.cost_wage, g_storage.ratio_wage_to_emplo)
-    g_planning.demand_emplo = div(g_planning.cost_wage, g_planning.ratio_wage_to_emplo)
-    g.invest_pa_com = g_storage.invest_pa_com + g_planning.invest_pa_com
-    g_storage.demand_emplo_new = g_storage.demand_emplo
-
-    g.invest_pa = g_storage.invest_pa + g_planning.invest_pa
     p_heatnet_plant.area_ha_available = p_heatnet_plant.energy / fact(
         "Fact_H_P_heatnet_solarth_park_yield_2025"
     )
-    g.invest = g_storage.invest + g_planning.invest
     p_heatnet_plant.invest = (
         p_heatnet_plant.invest_per_x * p_heatnet_plant.area_ha_available
     )
-    g_planning.pct_of_wage = ass("Ass_H_G_planning_cost_pct_of_wage")
-    g.cost_wage = g_storage.cost_wage + g_planning.cost_wage
-    g_planning.demand_emplo_new = g_planning.demand_emplo
-    g.demand_emplo = g_storage.demand_emplo + g_planning.demand_emplo
-    g.demand_emplo_new = g_storage.demand_emplo_new + g_planning.demand_emplo_new
-
     p_heatnet_lheatpump.pct_energy = ass("Ass_H_P_heatnet_fraction_lheatpump_2050")
+
     p_fueloil.energy = r30.s_fueloil.energy + b30.s_fueloil.energy
     p_opetpro.energy = 0
     p_gas.cost_fuel_per_MWh = ass("Ass_R_S_gas_energy_cost_factor_2035")
@@ -170,7 +128,6 @@ def calc(
     p_fueloil.CO2e_combustion_based = (
         p_fueloil.CO2e_combustion_based_per_MWh * p_fueloil.energy
     )
-    h.CO2e_total_2021_estimated = p.CO2e_total_2021_estimated
 
     p_fueloil.CO2e_total = p_fueloil.CO2e_combustion_based
 
@@ -385,7 +342,6 @@ def calc(
         + p_coal.CO2e_combustion_based
         + p_heatnet.CO2e_combustion_based
     )
-    h.CO2e_combustion_based = p.CO2e_combustion_based
 
     p_orenew.CO2e_total = p_orenew.CO2e_production_based + 0
     p_heatnet_cogen.change_energy_MWh = (
@@ -572,21 +528,12 @@ def calc(
         * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
-    h.invest_pa = g.invest_pa + p.invest_pa
     p_heatnet_geoth.invest_pa_com = p_heatnet_geoth.invest_pa
 
-    h.invest_pa_com = g.invest_pa_com + p.invest_pa_com
     p_heatnet_geoth.invest_com = p_heatnet_geoth.invest
 
     p.cost_wage = p_heatnet.cost_wage
 
-    h.cost_wage = g.cost_wage + p.cost_wage
-
-    h.demand_emplo = g.demand_emplo + p.demand_emplo
-
-    h.demand_emplo_new = g.demand_emplo_new + p.demand_emplo_new
-    h.invest_com = g.invest_com + p.invest_com
-    h.invest = g.invest + p.invest
     p.change_energy_pct = div(p.change_energy_MWh, h18.p.energy)
     p_fueloil.pct_energy = div(p_fueloil.energy, p.energy)
     p_ofossil.pct_energy = div(p_ofossil.energy, p.energy)
@@ -615,11 +562,6 @@ def calc(
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     p_orenew.pct_energy = div(p_orenew.energy, p.energy)
-    h.CO2e_total = p.CO2e_total
-
-    h.cost_climate_saved = p.cost_climate_saved
-
-    h.change_CO2e_t = p.change_CO2e_t
 
     p_ofossil.change_energy_MWh = p_ofossil.energy - h18.p_ofossil.energy
     p_ofossil.change_energy_pct = div(p_ofossil.change_energy_MWh, h18.p_ofossil.energy)
@@ -634,7 +576,6 @@ def calc(
         * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
-    h.change_energy_pct = p.change_energy_pct
     p_gas.pct_energy = div(p_gas.energy, p.energy)
     p.CO2e_production_based = (
         p_gas.CO2e_production_based
@@ -645,9 +586,6 @@ def calc(
         + p_ofossil.CO2e_production_based
         + p_orenew.CO2e_production_based
     )
-    h.CO2e_production_based = p.CO2e_production_based
-
-    h.change_CO2e_pct = p.change_CO2e_pct
     p_orenew.change_energy_MWh = p_orenew.energy - h18.p_orenew.energy
     p_orenew.change_energy_pct = div(p_orenew.change_energy_MWh, h18.p_orenew.energy)
     p_orenew.change_CO2e_t = p_orenew.CO2e_total - h18.p_orenew.CO2e_total
@@ -690,7 +628,6 @@ def calc(
         * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
-    h.change_energy_MWh = p.change_energy_MWh
 
     p_heatpump.pct_energy = div(p_heatpump.energy, p_orenew.energy)
     p_heatpump.CO2e_production_based_per_MWh = fact(
@@ -715,19 +652,38 @@ def calc(
         * fact("Fact_M_cost_per_CO2e_2020")
     )
 
-    g_planning.demand_emplo_com = g_planning.demand_emplo_new
-    g.demand_emplo_com = g_planning.demand_emplo_com
+    general = energy_general.calc_general(
+        inputs=inputs, p_heatnet_energy=p_heatnet.energy
+    )
+
+    h = Vars0()
+    h.CO2e_total_2021_estimated = p.CO2e_total_2021_estimated
+    h.CO2e_combustion_based = p.CO2e_combustion_based
+    h.invest_pa = general.g.invest_pa + p.invest_pa
+    h.invest_pa_com = general.g.invest_pa_com + p.invest_pa_com
+    h.cost_wage = general.g.cost_wage + p.cost_wage
+    h.demand_emplo = general.g.demand_emplo + p.demand_emplo
+    h.demand_emplo_new = general.g.demand_emplo_new + p.demand_emplo_new
+    h.invest_com = general.g.invest_com + p.invest_com
+    h.invest = general.g.invest + p.invest
+    h.CO2e_total = p.CO2e_total
+    h.cost_climate_saved = p.cost_climate_saved
+    h.change_CO2e_t = p.change_CO2e_t
+    h.change_energy_pct = p.change_energy_pct
+    h.CO2e_production_based = p.CO2e_production_based
+    h.change_CO2e_pct = p.change_CO2e_pct
+    h.change_energy_MWh = p.change_energy_MWh
 
     # TODO: Check demand_emplo_new in Heat with Hauke
-    h.demand_emplo_com = g.demand_emplo_com
+    h.demand_emplo_com = general.g.demand_emplo_com
 
     p_fossil_change_CO2e_t = p.change_CO2e_t - p_heatnet.change_CO2e_t
 
     return H30(
         h=h,
-        g=g,
-        g_storage=g_storage,
-        g_planning=g_planning,
+        g=general.g,
+        g_storage=general.g_storage,
+        g_planning=general.g_planning,
         d=demand.total,
         d_r=demand.residences,
         d_b=demand.business,
