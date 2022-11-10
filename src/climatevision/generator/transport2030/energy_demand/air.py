@@ -2,9 +2,9 @@
 
 from dataclasses import dataclass
 
-from ..inputs import Inputs
-from ..utils import div
-from ..transport2018.t18 import T18
+from ...inputs import Inputs
+from ...utils import div
+from ...transport2018.t18 import T18
 
 from .transport import Transport
 
@@ -78,7 +78,7 @@ def calc_air_international(inputs: Inputs, t18: T18) -> "Transport":
 class Air:
     LIFT_INTO_RESULT_DICT = ["transport"]
     transport: Transport
-    # Used by air
+
     demand_emplo: float
     demand_emplo_new: float
     invest: float

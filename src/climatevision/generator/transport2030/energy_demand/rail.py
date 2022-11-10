@@ -2,9 +2,9 @@
 
 from dataclasses import dataclass
 
-from ..inputs import Inputs
-from ..utils import div
-from ..transport2018.t18 import T18
+from ...inputs import Inputs
+from ...utils import div
+from ...transport2018.t18 import T18
 
 from .transport import Transport
 from .investmentaction import InvestmentAction
@@ -14,7 +14,7 @@ from .investmentaction import InvestmentAction
 class RailPeople:
     LIFT_INTO_RESULT_DICT = ["transport"]
     transport: Transport
-    # Used by rail_ppl_distance and rail_ppl_metro
+
     base_unit: float
     cost_wage: float
     demand_emplo_new: float
@@ -181,7 +181,6 @@ class RailPeople:
 
 @dataclass(kw_only=True)
 class RailPeopleMetroActionInfra:
-    # Used by rail_ppl_metro_action_infra
     base_unit: float
     cost_wage: float
     demand_emplo: float
@@ -237,7 +236,7 @@ class RailPeopleMetroActionInfra:
 class RailPeopleSum:
     LIFT_INTO_RESULT_DICT = ["transport"]
     transport: Transport
-    # Used by rail_ppl
+
     base_unit: float
     cost_wage: float
     demand_emplo_new: float
@@ -316,7 +315,7 @@ class RailPeopleSum:
 class RailGoods:
     LIFT_INTO_RESULT_DICT = ["transport"]
     transport: Transport
-    # Used by rail_gds
+
     base_unit: float
     cost_wage: float
     demand_emplo: float
@@ -399,7 +398,7 @@ class RailGoods:
 class Rail:
     LIFT_INTO_RESULT_DICT = ["transport"]
     transport: Transport
-    # Used by rail
+
     base_unit: float
     cost_wage: float
     demand_emplo_new: float

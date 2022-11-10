@@ -2,19 +2,27 @@
 
 from dataclasses import dataclass
 
-from ..inputs import Inputs
-from ..utils import div
-from ..transport2018.t18 import T18
+from ...inputs import Inputs
+from ...utils import div
+from ...transport2018.t18 import T18
 
-from .transport import Transport, ZeroEnergyAndCO2e
+from .transport import Transport
 from .investmentaction import InvestmentAction
+
+
+@dataclass(kw_only=True, frozen=True)
+class ZeroEnergyAndCO2e:
+    transport_capacity_pkm: float
+    transport_capacity_tkm: float
+    energy: float = 0
+    CO2e_combustion_based: float = 0
 
 
 @dataclass(kw_only=True)
 class OtherFoot:
     LIFT_INTO_RESULT_DICT = ["transport"]
     transport: Transport
-    # Used by other_foot
+
     invest: float
     invest_com: float
     invest_pa: float
@@ -71,7 +79,6 @@ class OtherFoot:
 
 @dataclass(kw_only=True)
 class OtherCycle:
-    # Used by other_cycl
     LIFT_INTO_RESULT_DICT = ["transport"]
     transport: Transport
 
@@ -142,7 +149,6 @@ class OtherCycle:
 
 @dataclass(kw_only=True)
 class Other:
-    # Used by other
     LIFT_INTO_RESULT_DICT = ["transport"]
     transport: Transport
 

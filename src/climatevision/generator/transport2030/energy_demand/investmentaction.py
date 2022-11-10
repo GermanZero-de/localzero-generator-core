@@ -2,15 +2,14 @@
 
 from dataclasses import dataclass
 
-from ..inputs import Inputs
-from ..utils import div
+from ...inputs import Inputs
+from ...utils import div
 
 
 @dataclass(kw_only=True)
 class InvestmentAction:
     """For some transport mechanism additional investments are needed."""
 
-    # Used by road_gds_mhd_action_wire, other_foot_action_infra, other_cycl_action_infra, rail_action_invest_infra, rail_action_invest_station, road_bus_action_infra
     cost_wage: float
     demand_emplo: float
     demand_emplo_new: float
@@ -156,7 +155,6 @@ class InvestmentAction:
 
 @dataclass(kw_only=True)
 class RoadInvestmentAction(InvestmentAction):
-    # Used by road_action_charger
     base_unit: float
 
     @classmethod

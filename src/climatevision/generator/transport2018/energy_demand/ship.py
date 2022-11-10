@@ -2,15 +2,14 @@
 
 from dataclasses import dataclass
 
-from ..inputs import Inputs
-from ..utils import element_wise_plus
+from ...inputs import Inputs
+from ...utils import element_wise_plus
 
 from . import co2e
 
 
 @dataclass
 class Ship:
-    # Used by ship_dmstc, ship_inter, ship
     CO2e_combustion_based: float
     CO2e_total: float
     demand_diesel: float

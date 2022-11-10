@@ -4,9 +4,9 @@ from dataclasses import dataclass, asdict
 
 from ..common.energy import Energy
 
-from .investmentaction import InvestmentAction
-from .air import Air
-from .road import (
+from .energy_demand import (
+    InvestmentAction,
+    Air,
     Road,
     RoadBus,
     RoadCar,
@@ -16,12 +16,22 @@ from .road import (
     RoadPeople,
     RoadSum,
     RoadInvestmentAction,
+    Rail,
+    RailGoods,
+    RailPeople,
+    RailPeopleMetroActionInfra,
+    RailPeopleSum,
+    Ship,
+    ShipDomestic,
+    ShipInternational,
+    ShipDomesticActionInfra,
+    Other,
+    OtherCycle,
+    OtherFoot,
+    Transport,
 )
-from .rail import Rail, RailGoods, RailPeople, RailPeopleMetroActionInfra, RailPeopleSum
-from .ship import Ship, ShipDomestic, ShipInternational, ShipDomesticActionInfra
-from .other import Other, OtherCycle, OtherFoot
-from .transport import Transport
-from .dataclasses import GPlanning, G, T
+from .energy_general import GPlanning, G
+from .t import T
 
 
 @dataclass(kw_only=True)

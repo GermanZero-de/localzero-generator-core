@@ -3,8 +3,8 @@
 from dataclasses import dataclass
 from typing import Literal
 
-from ..inputs import Inputs
-from ..utils import element_wise_plus, MILLION
+from ...inputs import Inputs
+from ...utils import element_wise_plus, MILLION
 
 from . import co2e
 

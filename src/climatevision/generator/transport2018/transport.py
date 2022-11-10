@@ -4,16 +4,11 @@ from dataclasses import dataclass
 
 from ..utils import element_wise_plus
 
-from .air import Air
-from .road import Road
-from .rail import Rail
-from .ship import Ship
-from .other import Other
+from .energy_demand import Air, Road, Rail, Ship, Other
 
 
 @dataclass
 class Transport:
-    # Used by t
     CO2e_combustion_based: float
     CO2e_total: float
     demand_biodiesel: float = 0
