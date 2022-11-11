@@ -7,7 +7,6 @@ from .dataclasses import (
     Vars1,
     Vars2,
     Vars3,
-    Vars4,
     Vars5,
     Vars6,
     Vars7,
@@ -20,6 +19,7 @@ from .dataclasses import (
     Vars14,
     Vars15,
 )
+from .energy_demand import EnergyDemand
 
 
 @dataclass(kw_only=True)
@@ -28,12 +28,12 @@ class H30:
     g: Vars1
     g_storage: Vars2
     g_planning: Vars3
-    d: Vars4
-    d_r: Vars4
-    d_b: Vars4
-    d_i: Vars4
-    d_t: Vars4
-    d_a: Vars4
+    d: EnergyDemand
+    d_r: EnergyDemand
+    d_b: EnergyDemand
+    d_i: EnergyDemand
+    d_t: EnergyDemand
+    d_a: EnergyDemand
     p: Vars5
     p_gas: Vars6
     p_lpg: Vars7

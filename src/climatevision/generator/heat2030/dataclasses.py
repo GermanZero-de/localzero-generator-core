@@ -72,12 +72,6 @@ class Vars3:
 
 
 @dataclass(kw_only=True)
-class Vars4:
-    # Used by d, d_r, d_b, d_i, d_t, d_a
-    energy: float = None  # type: ignore
-
-
-@dataclass(kw_only=True)
 class Vars5:
     # Used by p
     CO2e_combustion_based: float = None  # type: ignore
