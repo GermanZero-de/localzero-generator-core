@@ -49,7 +49,7 @@ def calc_general(
         invest_pa=g_planning.invest_pa,
         invest=g_planning.invest,
         demand_emplo_new=g_planning.demand_emplo_new,
-        demand_emplo_com=g_planning.demand_emplo_new,
+        demand_emplo_com=g_planning.demand_emplo_com,
     )
 
     return General(g=g, g_planning=g_planning)
