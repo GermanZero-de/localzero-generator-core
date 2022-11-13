@@ -8,14 +8,14 @@ from ...utils import div
 
 @dataclass(kw_only=True)
 class G:
-    cost_wage: float = None  # type: ignore
-    demand_emplo: float = None  # type: ignore
-    demand_emplo_com: float = None  # type: ignore
-    demand_emplo_new: float = None  # type: ignore
-    invest: float = None  # type: ignore
-    invest_com: float = None  # type: ignore
-    invest_pa: float = None  # type: ignore
-    invest_pa_com: float = None  # type: ignore
+    cost_wage: float
+    demand_emplo: float
+    demand_emplo_com: float
+    demand_emplo_new: float
+    invest: float
+    invest_com: float
+    invest_pa: float
+    invest_pa_com: float
 
 
 @dataclass(kw_only=True)
