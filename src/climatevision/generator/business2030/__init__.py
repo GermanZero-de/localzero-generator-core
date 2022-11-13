@@ -10,11 +10,11 @@ from ..utils import div, MILLION
 from ..business2018.b18 import B18
 from ..residences2018.r18 import R18
 from ..residences2030.r30 import R30
+from ..common.g import G
 
 from .b30 import B30
 from .dataclasses import (
     Vars0,
-    Vars1,
     Vars2,
     Vars3,
     Vars4,
@@ -52,7 +52,6 @@ def calc(
     # Definitions production
     p = Vars3()
     b = Vars0()
-    g = Vars1()
     p_nonresi = Vars4()
     p_nonresi_com = Vars5()
     p_elec_elcon = Vars6()
@@ -674,12 +673,7 @@ def calc(
     s.change_CO2e_pct = div(s.change_CO2e_t, b18.s.CO2e_combustion_based)
     b.CO2e_total_2021_estimated = s.CO2e_total_2021_estimated
     b.cost_climate_saved = s.cost_climate_saved
-    g.invest_pa = g_consult.invest_pa
     g_consult.invest_pa_com = g_consult.invest_com / entries.m_duration_target
-    g.invest = g_consult.invest
-    g.invest_com = g_consult.invest_com
-    g.cost_wage = g_consult.cost_wage
-    g.demand_emplo = g_consult.demand_emplo
     g_consult.emplo_existing = (
         fact("Fact_R_G_energy_consulting_total_personel")
         * ass("Ass_B_D_energy_consulting_emplo_pct_of_B")
@@ -695,11 +689,9 @@ def calc(
     p_nonresi.demand_emplo_new = max(
         0, p_nonresi.demand_emplo - p_nonresi.emplo_existing
     )
-    g.invest_pa_com = g_consult.invest_pa_com
     g_consult.demand_emplo_new = max(
         0, g_consult.demand_emplo - g_consult.emplo_existing
     )
-    g.demand_emplo_new = g_consult.demand_emplo_new
     p.demand_heatnet = s_heatnet.energy
     p.demand_biomass = s_biomass.energy
     p.demand_solarth = s_solarth.energy
@@ -710,7 +702,6 @@ def calc(
     p.change_energy_pct = div(p.change_energy_MWh, b18.p.energy)
     s.invest_pa = s_heatpump.invest_pa + s_solarth.invest_pa
     s.invest_pa_com = s_heatpump.invest_pa_com + s_solarth.invest_pa_com
-    b.invest = g.invest + p.invest + s.invest
     p.invest_com = p_nonresi.invest_com
     s.cost_wage = s_heatpump.cost_wage + s_solarth.cost_wage
     s.demand_emplo = s_heatpump.demand_emplo + s_solarth.demand_emplo
@@ -718,7 +709,6 @@ def calc(
         0, s_heatpump.demand_emplo - s_heatpump.emplo_existing
     )
     p.invest_pa_com = p_nonresi.invest_pa_com
-    b.invest_com = g.invest_com + p.invest_com + s.invest_com
     p.demand_emplo_new = p_nonresi.demand_emplo_new
     p_nonresi_com.invest = (
         p_nonresi_com.area_m2_rehab
@@ -743,11 +733,6 @@ def calc(
     p_vehicles.change_energy_pct = div(
         p_vehicles.change_energy_MWh, b18.p_vehicles.energy
     )
-    b.change_CO2e_pct = s.change_CO2e_pct
-    b.invest_pa = g.invest_pa + p.invest_pa + s.invest_pa
-    b.invest_pa_com = g.invest_pa_com + p.invest_pa_com + s.invest_pa_com
-    b.cost_wage = g.cost_wage + p.cost_wage + s.cost_wage
-    b.demand_emplo = g.demand_emplo + p.demand_emplo + s.demand_emplo
     s_solarth.emplo_existing = (
         fact("Fact_B_P_install_heating_emplo_2017")
         * entries.m_population_com_2018
@@ -795,7 +780,6 @@ def calc(
     )
     s_solarth.CO2e_total = s_solarth.CO2e_combustion_based
     s.demand_emplo_new = s_heatpump.demand_emplo_new + s_solarth.demand_emplo_new
-    b.demand_emplo_new = g.demand_emplo_new + p.demand_emplo_new + s.demand_emplo_new
     s_elec.CO2e_combustion_based_per_MWh = b18.s_elec.CO2e_combustion_based_per_MWh
     s_elec.CO2e_combustion_based = s_elec.energy * s_elec.CO2e_combustion_based_per_MWh
     s_elec.CO2e_total = s_elec.CO2e_combustion_based
@@ -830,6 +814,30 @@ def calc(
         * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
+
+    g_consult.demand_emplo_com = g_consult.demand_emplo_new
+
+    g = G(
+        invest_com=g_consult.invest_com,
+        invest_pa_com=g_consult.invest_pa_com,
+        demand_emplo=g_consult.demand_emplo,
+        cost_wage=g_consult.cost_wage,
+        invest_pa=g_consult.invest_pa,
+        invest=g_consult.invest,
+        demand_emplo_new=g_consult.demand_emplo_new,
+        demand_emplo_com=g_consult.demand_emplo_com,
+    )
+
+    b.invest = g.invest + p.invest + s.invest
+    b.invest_com = g.invest_com + p.invest_com + s.invest_com
+    b.change_CO2e_pct = s.change_CO2e_pct
+    b.invest_pa = g.invest_pa + p.invest_pa + s.invest_pa
+    b.invest_pa_com = g.invest_pa_com + p.invest_pa_com + s.invest_pa_com
+    b.cost_wage = g.cost_wage + p.cost_wage + s.cost_wage
+    b.demand_emplo = g.demand_emplo + p.demand_emplo + s.demand_emplo
+    b.demand_emplo_new = g.demand_emplo_new + p.demand_emplo_new + s.demand_emplo_new
+    b.demand_emplo_com = g.demand_emplo_com
+
     rb.invest_pa = r30.r.invest_pa + b.invest_pa
     rb.invest_pa_com = r30.r.invest_pa_com + b.invest_pa_com
     rb.invest = r30.r.invest + b.invest
@@ -837,11 +845,6 @@ def calc(
     rb.cost_wage = r30.r.cost_wage + b.cost_wage
     rb.demand_emplo = r30.r.demand_emplo + b.demand_emplo
     rb.demand_emplo_new = r30.r.demand_emplo_new + b.demand_emplo_new
-
-    g_consult.demand_emplo_com = g_consult.demand_emplo_new
-    g.demand_emplo_com = g.demand_emplo_new
-    b.demand_emplo_com = g.demand_emplo_com
-
     rb.demand_emplo_com = b.demand_emplo_com + r30.r.demand_emplo_com
 
     s_emethan.change_CO2e_pct = div(
