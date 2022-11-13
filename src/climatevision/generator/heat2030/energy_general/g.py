@@ -4,8 +4,7 @@ from dataclasses import dataclass
 
 
 @dataclass(kw_only=True)
-class Vars1:
-    # Used by g
+class G:
     cost_wage: float = None  # type: ignore
     demand_emplo: float = None  # type: ignore
     demand_emplo_com: float = None  # type: ignore
@@ -17,8 +16,7 @@ class Vars1:
 
 
 @dataclass(kw_only=True)
-class Vars2:
-    # Used by g_storage
+class GStorage:
     cost_wage: float = None  # type: ignore
     demand_emplo: float = None  # type: ignore
     demand_emplo_new: float = None  # type: ignore
@@ -35,8 +33,7 @@ class Vars2:
 
 
 @dataclass(kw_only=True)
-class Vars3:
-    # Used by g_planning
+class GPlanning:
     cost_wage: float = None  # type: ignore
     demand_emplo: float = None  # type: ignore
     demand_emplo_com: float = None  # type: ignore

@@ -5,14 +5,14 @@ from dataclasses import dataclass
 from ...inputs import Inputs
 from ...utils import div
 
-from ..dataclasses import Vars1, Vars2, Vars3
+from .g import G, GStorage, GPlanning
 
 
 @dataclass(kw_only=True)
 class General:
-    g: Vars1
-    g_storage: Vars2
-    g_planning: Vars3
+    g: G
+    g_storage: GStorage
+    g_planning: GPlanning
 
 
 def calc_general(inputs: Inputs, p_heatnet_energy: float) -> General:
@@ -21,7 +21,7 @@ def calc_general(inputs: Inputs, p_heatnet_energy: float) -> General:
     ass = inputs.ass
     entries = inputs.entries
 
-    g_planning = Vars3()
+    g_planning = GPlanning()
     g_planning.invest = (
         fact("Fact_H_P_planning_cost_basis")
         + fact("Fact_H_P_planning_cost_per_capita") * entries.m_population_com_2018
@@ -39,7 +39,7 @@ def calc_general(inputs: Inputs, p_heatnet_energy: float) -> General:
     g_planning.demand_emplo_new = g_planning.demand_emplo
     g_planning.demand_emplo_com = g_planning.demand_emplo_new
 
-    g_storage = Vars2()
+    g_storage = GStorage()
     g_storage.energy = p_heatnet_energy
     g_storage.pct_energy = fact("Fact_H_P_storage_specific_volume")
 
@@ -60,7 +60,7 @@ def calc_general(inputs: Inputs, p_heatnet_energy: float) -> General:
     g_storage.demand_emplo = div(g_storage.cost_wage, g_storage.ratio_wage_to_emplo)
     g_storage.demand_emplo_new = g_storage.demand_emplo
 
-    g = Vars1()
+    g = G()
     g.invest_com = g_storage.invest_com + g_planning.invest_com
     g.invest_pa_com = g_storage.invest_pa_com + g_planning.invest_pa_com
     g.invest_pa = g_storage.invest_pa + g_planning.invest_pa
