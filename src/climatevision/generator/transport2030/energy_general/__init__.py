@@ -3,6 +3,7 @@
 from dataclasses import dataclass
 
 from ...inputs import Inputs
+from ...common.g import G
 
 from ..energy_demand import (
     InvestmentAction,
@@ -10,7 +11,7 @@ from ..energy_demand import (
     RailPeopleMetroActionInfra,
     OtherCycle,
 )
-from .g import GPlanning, G
+from .g import GPlanning
 
 
 @dataclass(kw_only=True)
