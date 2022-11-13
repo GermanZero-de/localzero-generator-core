@@ -1,7 +1,6 @@
 # pyright: strict
 
 from dataclasses import dataclass
-from typing import Any
 
 from ..utils import div
 
@@ -82,7 +81,7 @@ class EnergyWithCO2ePerMWh:
         )
 
     @classmethod
-    def calcSum(cls, *childs: Any) -> "EnergyWithCO2ePerMWh":
+    def calcSum(cls, *childs: "EnergyWithCO2ePerMWh") -> "EnergyWithCO2ePerMWh":
         energy = sum(child.energy for child in childs)
 
         CO2e_combustion_based = sum(child.CO2e_combustion_based for child in childs)
