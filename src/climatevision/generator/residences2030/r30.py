@@ -2,8 +2,9 @@
 
 from dataclasses import dataclass
 
+from ..common.g import G
+
 from .dataclasses import (
-    Vars0,
     Vars1,
     Vars2,
     Vars3,
@@ -27,7 +28,7 @@ from .dataclasses import (
 
 @dataclass(kw_only=True)
 class R30:
-    g: Vars0
+    g: G
     g_consult: Vars1
     p: Vars2
     p_buildings_total: Vars3
