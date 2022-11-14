@@ -4,9 +4,6 @@ from dataclasses import dataclass
 
 from .dataclasses import (
     Vars0,
-    Vars1,
-    Vars2,
-    Vars3,
     Vars5,
     Vars6,
     Vars7,
@@ -20,14 +17,15 @@ from .dataclasses import (
     Vars15,
 )
 from .energy_demand import EnergyDemand
+from .energy_general import G, GStorage, GPlanning
 
 
 @dataclass(kw_only=True)
 class H30:
     h: Vars0
-    g: Vars1
-    g_storage: Vars2
-    g_planning: Vars3
+    g: G
+    g_storage: GStorage
+    g_planning: GPlanning
     d: EnergyDemand
     d_r: EnergyDemand
     d_b: EnergyDemand

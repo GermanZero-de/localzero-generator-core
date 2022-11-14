@@ -8,10 +8,10 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/industry.html
 from ..inputs import Inputs
 from ..utils import div
 from ..industry2018.i18 import I18
+from ..common.g import G
 
 from .i30 import I30
 from .dataclasses import (
-    Vars0,
     Vars1,
     Vars2,
     Vars3,
@@ -37,7 +37,6 @@ def calc(inputs: Inputs, *, i18: I18) -> I30:
     entries = inputs.entries
 
     i = Vars2()
-    g = Vars0()
 
     # p_chem_basic
     p_chem_basic = Vars5()
@@ -903,20 +902,24 @@ def calc(inputs: Inputs, *, i18: I18) -> I30:
 
     g_consult.demand_emplo_new = g_consult.demand_emplo - g_consult.emplo_existing
     g_consult.demand_emplo_com = g_consult.demand_emplo_new
-    g.demand_emplo_com = g_consult.demand_emplo_com
+
+    g = G(
+        invest_com=g_consult.invest_com,
+        invest_pa_com=g_consult.invest_pa_com,
+        demand_emplo=g_consult.demand_emplo,
+        cost_wage=g_consult.cost_wage,
+        invest_pa=g_consult.invest_pa,
+        invest=g_consult.invest,
+        demand_emplo_new=g_consult.demand_emplo_new,
+        demand_emplo_com=g_consult.demand_emplo_com,
+    )
+
     i.demand_emplo_com = g.demand_emplo_com
 
-    g.invest_pa = g_consult.invest_pa
-    g.invest_pa_com = g_consult.invest_pa
     p_miner_cement.invest_per_x = ass(
         "Ass_I_P_miner_cement_kirchdorf_ratio_invest_to_prodvol_2020"
     )
-    g.invest = g_consult.invest_pa * entries.m_duration_target
-    g.invest_com = g_consult.invest
     p_miner_cement.invest = p_miner_cement.prod_volume * p_miner_cement.invest_per_x
-    g.cost_wage = g_consult.invest_pa * ass("Ass_I_G_advice_invest_pct_of_wage")
-    g.demand_emplo = div(g_consult.cost_wage, g_consult.ratio_wage_to_emplo)
-    g.demand_emplo_new = g_consult.demand_emplo - g_consult.emplo_existing
 
     p_miner_cement.invest_outside = p_miner_cement.invest
 

@@ -9,10 +9,10 @@ from ..inputs import Inputs
 from ..utils import div, MILLION
 from ..residences2018.r18 import R18
 from ..business2018.b18 import B18
+from ..common.g import G
 
 from .r30 import R30
 from .dataclasses import (
-    Vars0,
     Vars1,
     Vars2,
     Vars3,
@@ -40,7 +40,6 @@ def calc(inputs: Inputs, *, r18: R18, b18: B18) -> R30:
     entries = inputs.entries
 
     ### P - Section ###
-    g = Vars0()
     p = Vars2()
     r = Vars8()
 
@@ -1046,7 +1045,6 @@ def calc(inputs: Inputs, *, r18: R18, b18: B18) -> R30:
     ) + entries.r_buildings_ge_3_apts * fact(
         "Fact_R_G_energy_consulting_cost_appt_building_ge_3_flats"
     )
-    g.invest = g_consult.invest
 
     s.invest = s_solarth.invest + s_heatpump.invest
 
@@ -1159,14 +1157,20 @@ def calc(inputs: Inputs, *, r18: R18, b18: B18) -> R30:
     s_gas.change_cost_energy = s_gas.cost_fuel - r18.s_gas.cost_fuel
     p_buildings_total.invest_pa = p_buildings_total.invest / Kalkulationszeitraum
 
-    g.invest_pa = g_consult.invest_pa
+    g_consult.demand_emplo_com = g_consult.demand_emplo_new
     g_consult.invest_pa_com = g_consult.invest_pa
-    g.invest_pa_com = g_consult.invest_pa_com
-    g.invest_com = g_consult.invest_com
-    g.cost_wage = g_consult.cost_wage
-    g.demand_emplo = g_consult.demand_emplo
-    g.demand_emplo_new = g_consult.demand_emplo_new
-    g.invest_pa_com = g_consult.invest_pa_com
+
+    g = G(
+        invest_com=g_consult.invest_com,
+        invest_pa_com=g_consult.invest_pa_com,
+        demand_emplo=g_consult.demand_emplo,
+        cost_wage=g_consult.cost_wage,
+        invest_pa=g_consult.invest_pa,
+        invest=g_consult.invest,
+        demand_emplo_new=g_consult.demand_emplo_new,
+        demand_emplo_com=g_consult.demand_emplo_com,
+    )
+
     p.demand_heatnet = s_heatnet.energy
     p.demand_biomass = s_biomass.energy
     p.demand_solarth = s_solarth.energy
@@ -1409,8 +1413,6 @@ def calc(inputs: Inputs, *, r18: R18, b18: B18) -> R30:
     r.demand_emplo = g.demand_emplo + p.demand_emplo + s.demand_emplo
     r.demand_emplo_new = g.demand_emplo_new + p.demand_emplo_new + s.demand_emplo_new
 
-    g_consult.demand_emplo_com = g_consult.demand_emplo_new
-    g.demand_emplo_com = g.demand_emplo_new
     r.demand_emplo_com = g.demand_emplo_com
 
     p_buildings_area_m2_com.invest_pa = (
