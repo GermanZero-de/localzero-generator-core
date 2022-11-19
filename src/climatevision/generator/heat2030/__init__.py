@@ -50,7 +50,6 @@ def calc(
     p_lpg = Vars7()
     p_fueloil = Vars8()
     p_opetpro = Vars9()
-    p_coal = Vars6()
     p_heatnet = Vars10()
     p_heatnet_cogen = Vars9()
     p_heatnet_plant = Vars11()
@@ -64,48 +63,8 @@ def calc(
 
     demand = energy_demand.calc_demand(r30, b30, i30, a30)
 
-    p_gas = Vars6()
-    p_gas.CO2e_production_based_per_MWh = h18.p_gas.CO2e_production_based_per_MWh
-    p_gas.CO2e_combustion_based_per_MWh = h18.p_gas.CO2e_combustion_based_per_MWh
-    p_gas.energy = r30.s_gas.energy + b30.s_gas.energy
-    p_gas.CO2e_production_based = p_gas.energy * p_gas.CO2e_production_based_per_MWh
-    p_gas.CO2e_combustion_based = p_gas.CO2e_combustion_based_per_MWh * p_gas.energy
-    p_gas.CO2e_total = p_gas.CO2e_production_based + p_gas.CO2e_combustion_based
-    p_gas.cost_fuel_per_MWh = ass("Ass_R_S_gas_energy_cost_factor_2035")
-    p_gas.cost_fuel = p_gas.energy * p_gas.cost_fuel_per_MWh / MILLION
-    p_gas.change_energy_MWh = p_gas.energy - h18.p_gas.energy
-    p_gas.change_energy_pct = div(p_gas.change_energy_MWh, h18.p_gas.energy)
-    p_gas.change_CO2e_t = p_gas.CO2e_total - h18.p_gas.CO2e_total
-    p_gas.change_CO2e_pct = div(p_gas.change_CO2e_t, h18.p_gas.CO2e_total)
-    p_gas.CO2e_total_2021_estimated = h18.p_gas.CO2e_total * fact(
-        "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
-    )
-    p_gas.cost_climate_saved = (
-        (p_gas.CO2e_total_2021_estimated - p_gas.CO2e_total)
-        * entries.m_duration_neutral
-        * fact("Fact_M_cost_per_CO2e_2020")
-    )
-
-    p_coal.energy = r30.s_coal.energy + b30.s_coal.energy
-    p_coal.CO2e_production_based_per_MWh = h18.p_coal.CO2e_production_based_per_MWh
-    p_coal.CO2e_production_based = p_coal.energy * p_coal.CO2e_production_based_per_MWh
-    p_coal.CO2e_combustion_based_per_MWh = h18.p_coal.CO2e_combustion_based_per_MWh
-    p_coal.CO2e_combustion_based = p_coal.CO2e_combustion_based_per_MWh * p_coal.energy
-    p_coal.cost_fuel_per_MWh = ass("Ass_R_S_coal_energy_cost_factor_2035")
-    p_coal.CO2e_total = p_coal.CO2e_production_based + p_coal.CO2e_combustion_based
-    p_coal.cost_fuel = p_coal.energy * p_coal.cost_fuel_per_MWh / MILLION
-    p_coal.change_energy_MWh = p_coal.energy - h18.p_coal.energy
-    p_coal.change_energy_pct = div(p_coal.change_energy_MWh, h18.p_coal.energy)
-    p_coal.change_CO2e_t = p_coal.CO2e_total - h18.p_coal.CO2e_total
-    p_coal.change_CO2e_pct = div(p_coal.change_CO2e_t, h18.p_coal.CO2e_total)
-    p_coal.CO2e_total_2021_estimated = h18.p_coal.CO2e_total * fact(
-        "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
-    )
-    p_coal.cost_climate_saved = (
-        (p_coal.CO2e_total_2021_estimated - p_coal.CO2e_total)
-        * entries.m_duration_neutral
-        * fact("Fact_M_cost_per_CO2e_2020")
-    )
+    p_gas = Vars6.calc(inputs, "gas", h18, r30, b30)
+    p_coal = Vars6.calc(inputs, "coal", h18, r30, b30)
 
     p_lpg.energy = r30.s_lpg.energy + b30.s_lpg.energy
     p_lpg.CO2e_combustion_based_per_MWh = h18.p_lpg.CO2e_combustion_based_per_MWh
