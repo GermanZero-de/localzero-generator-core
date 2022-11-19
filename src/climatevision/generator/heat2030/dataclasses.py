@@ -7,6 +7,7 @@ from ..utils import div, MILLION
 from ..heat2018.h18 import H18
 from ..residences2030.r30 import R30
 from ..business2030.b30 import B30
+from ..common.energyWithCO2ePerMWh import EnergyWithCO2ePerMWh
 
 
 @dataclass(kw_only=True)
@@ -56,13 +57,8 @@ class Vars5:
 
 
 @dataclass(kw_only=True)
-class Vars6:
+class Vars6(EnergyWithCO2ePerMWh):
     # Used by p_gas, p_coal
-    CO2e_combustion_based: float
-    CO2e_combustion_based_per_MWh: float
-    CO2e_production_based: float
-    CO2e_production_based_per_MWh: float
-    CO2e_total: float
     CO2e_total_2021_estimated: float
     change_CO2e_pct: float
     change_CO2e_t: float
@@ -71,7 +67,6 @@ class Vars6:
     cost_climate_saved: float
     cost_fuel: float
     cost_fuel_per_MWh: float
-    energy: float
 
     @classmethod
     def calc(cls, inputs: Inputs, what: str, h18: H18, r30: R30, b30: B30) -> "Vars6":
