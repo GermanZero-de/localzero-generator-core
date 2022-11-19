@@ -6,7 +6,7 @@ from ..common.g import G
 
 from .dataclasses import (
     Vars0,
-    Vars2,
+    GConsult,
     Vars3,
     Vars4,
     Vars5,
@@ -30,7 +30,7 @@ from .dataclasses import (
 class B30:
     b: Vars0
     g: G
-    g_consult: Vars2
+    g_consult: GConsult
     p: Vars3
     p_nonresi: Vars4
     p_nonresi_com: Vars5

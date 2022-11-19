@@ -15,7 +15,7 @@ from ..common.g import G
 from .b30 import B30
 from .dataclasses import (
     Vars0,
-    Vars2,
+    GConsult,
     Vars3,
     Vars4,
     Vars5,
@@ -58,7 +58,6 @@ def calc(
     p_elec_heatpump = Vars7()
     p_vehicles = Vars8()
     p_other = Vars9()
-    g_consult = Vars2()
 
     # Definitions supply
     s = Vars10()
@@ -611,15 +610,6 @@ def calc(
         * ass("Ass_B_D_install_heating_emplo_pct_of_B_heatpump")
     )
 
-    g_consult.ratio_wage_to_emplo = fact("Fact_R_G_energy_consulting_cost_personel")
-    g_consult.invest = (
-        fact("Fact_R_G_energy_consulting_cost_appt_building_ge_3_flats")
-        * b18.p_nonresi.number_of_buildings
-    )
-    g_consult.invest_pa = g_consult.invest / Kalkulationszeitraum
-    g_consult.cost_wage = g_consult.invest_pa
-    g_consult.demand_emplo = div(g_consult.cost_wage, g_consult.ratio_wage_to_emplo)
-    g_consult.invest_com = g_consult.invest
     p_nonresi.change_energy_pct = div(p_nonresi.change_energy_MWh, b18.p_nonresi.energy)
     p_nonresi_com.change_energy_pct = div(
         p_nonresi_com.change_energy_MWh, b18.p_nonresi_com.energy
@@ -673,13 +663,6 @@ def calc(
     s.change_CO2e_pct = div(s.change_CO2e_t, b18.s.CO2e_combustion_based)
     b.CO2e_total_2021_estimated = s.CO2e_total_2021_estimated
     b.cost_climate_saved = s.cost_climate_saved
-    g_consult.invest_pa_com = g_consult.invest_com / entries.m_duration_target
-    g_consult.emplo_existing = (
-        fact("Fact_R_G_energy_consulting_total_personel")
-        * ass("Ass_B_D_energy_consulting_emplo_pct_of_B")
-        * entries.m_population_com_2018
-        / entries.m_population_nat
-    )
     p.invest_pa = p_nonresi.invest_pa
     p_nonresi.invest_pa_com = p_nonresi_com.invest_pa_com
     p.invest = p_nonresi.invest
@@ -688,9 +671,6 @@ def calc(
     p.demand_emplo = p_nonresi.demand_emplo
     p_nonresi.demand_emplo_new = max(
         0, p_nonresi.demand_emplo - p_nonresi.emplo_existing
-    )
-    g_consult.demand_emplo_new = max(
-        0, g_consult.demand_emplo - g_consult.emplo_existing
     )
     p.demand_heatnet = s_heatnet.energy
     p.demand_biomass = s_biomass.energy
@@ -815,18 +795,9 @@ def calc(
         * fact("Fact_M_cost_per_CO2e_2020")
     )
 
-    g_consult.demand_emplo_com = g_consult.demand_emplo_new
+    g_consult = GConsult.calc(inputs, b18)
 
-    g = G(
-        invest_com=g_consult.invest_com,
-        invest_pa_com=g_consult.invest_pa_com,
-        demand_emplo=g_consult.demand_emplo,
-        cost_wage=g_consult.cost_wage,
-        invest_pa=g_consult.invest_pa,
-        invest=g_consult.invest,
-        demand_emplo_new=g_consult.demand_emplo_new,
-        demand_emplo_com=g_consult.demand_emplo_com,
-    )
+    g = G.sum(g_consult)
 
     b.invest = g.invest + p.invest + s.invest
     b.invest_com = g.invest_com + p.invest_com + s.invest_com
