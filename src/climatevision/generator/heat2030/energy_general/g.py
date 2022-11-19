@@ -4,18 +4,12 @@ from dataclasses import dataclass
 
 from ...inputs import Inputs
 from ...utils import div
+from ...common.g import G
 
 
 @dataclass(kw_only=True)
-class GStorage:
-    cost_wage: float
-    demand_emplo: float
-    demand_emplo_new: float
+class GStorage(G):
     energy: float
-    invest: float
-    invest_com: float
-    invest_pa: float
-    invest_pa_com: float
     invest_per_x: float
     pct_energy: float
     pct_of_wage: float
@@ -48,6 +42,7 @@ class GStorage:
         return cls(
             cost_wage=cost_wage,
             demand_emplo=demand_emplo,
+            demand_emplo_com=0,
             demand_emplo_new=demand_emplo_new,
             energy=energy,
             invest=invest,
@@ -63,15 +58,7 @@ class GStorage:
 
 
 @dataclass(kw_only=True)
-class GPlanning:
-    cost_wage: float
-    demand_emplo: float
-    demand_emplo_com: float
-    demand_emplo_new: float
-    invest: float
-    invest_com: float
-    invest_pa: float
-    invest_pa_com: float
+class GPlanning(G):
     pct_of_wage: float
     ratio_wage_to_emplo: float
 
