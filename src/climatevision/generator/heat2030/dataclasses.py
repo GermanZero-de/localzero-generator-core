@@ -47,7 +47,6 @@ class Vars5:
     invest_com: float = None  # type: ignore
     invest_pa: float = None  # type: ignore
     invest_pa_com: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
 
 
 @dataclass(kw_only=True)
@@ -67,7 +66,6 @@ class Vars6:
     cost_fuel: float = None  # type: ignore
     cost_fuel_per_MWh: float = None  # type: ignore
     energy: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
 
 
 @dataclass(kw_only=True)
@@ -83,7 +81,6 @@ class Vars7:
     change_energy_pct: float = None  # type: ignore
     cost_climate_saved: float = None  # type: ignore
     energy: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
 
 
 @dataclass(kw_only=True)
@@ -101,7 +98,6 @@ class Vars8:
     cost_fuel: float = None  # type: ignore
     cost_fuel_per_MWh: float = None  # type: ignore
     energy: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
 
 
 @dataclass(kw_only=True)
@@ -119,7 +115,6 @@ class Vars9:
     change_energy_pct: float = None  # type: ignore
     cost_climate_saved: float = None  # type: ignore
     energy: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
 
 
 @dataclass(kw_only=True)
@@ -142,7 +137,6 @@ class Vars10:
     invest_com: float = None  # type: ignore
     invest_pa: float = None  # type: ignore
     invest_pa_com: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
 
 
 @dataclass(kw_only=True)
@@ -244,7 +238,6 @@ class Vars14:
     cost_fuel: float = None  # type: ignore
     cost_fuel_per_MWh: float = None  # type: ignore
     energy: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
 
 
 @dataclass(kw_only=True)
@@ -260,4 +253,3 @@ class Vars15:
     change_energy_pct: float = None  # type: ignore
     cost_climate_saved: float = None  # type: ignore
     energy: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
