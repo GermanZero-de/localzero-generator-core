@@ -68,7 +68,40 @@ class GConsult(G):
         )
 
     @classmethod
-    def calc_from_invest_calc_with_invest_com(
+    def calc_from_invest_calc_planning(
+        cls, inputs: Inputs, invest: float
+    ) -> "GConsult":
+        entries = inputs.entries
+        ass = inputs.ass
+        fact = inputs.fact
+
+        invest_pa = invest / entries.m_duration_target
+
+        invest_com = invest
+        invest_pa_com = invest_pa
+
+        cost_wage = invest / fact("Fact_H_P_planning_duration")
+
+        ratio_wage_to_emplo = ass("Ass_T_C_yearly_costs_per_planer")
+        demand_emplo = div(cost_wage, ratio_wage_to_emplo)
+
+        demand_emplo_new = demand_emplo
+        demand_emplo_com = demand_emplo_new
+
+        return cls(
+            cost_wage=cost_wage,
+            demand_emplo=demand_emplo,
+            demand_emplo_com=demand_emplo_com,
+            demand_emplo_new=demand_emplo_new,
+            invest=invest,
+            invest_com=invest_com,
+            invest_pa=invest_pa,
+            invest_pa_com=invest_pa_com,
+            ratio_wage_to_emplo=ratio_wage_to_emplo,
+        )
+
+    @classmethod
+    def calc_from_invest_calc_planning_with_invest_com(
         cls, inputs: Inputs, invest: float
     ) -> "GConsult":
         ass = inputs.ass
@@ -116,46 +149,6 @@ class GConsult(G):
 
         demand_emplo = div(cost_wage, ratio_wage_to_emplo)
 
-        demand_emplo_new = demand_emplo
-        demand_emplo_com = demand_emplo_new
-
-        return cls(
-            cost_wage=cost_wage,
-            demand_emplo=demand_emplo,
-            demand_emplo_com=demand_emplo_com,
-            demand_emplo_new=demand_emplo_new,
-            invest=invest,
-            invest_com=invest_com,
-            invest_pa=invest_pa,
-            invest_pa_com=invest_pa_com,
-            ratio_wage_to_emplo=ratio_wage_to_emplo,
-        )
-
-
-@dataclass(kw_only=True)
-class GPlanning(G):
-    ratio_wage_to_emplo: float
-
-    @classmethod
-    def calc(cls, inputs: Inputs) -> "GPlanning":
-        entries = inputs.entries
-        ass = inputs.ass
-        fact = inputs.fact
-
-        invest = (
-            fact("Fact_H_P_planning_cost_basis")
-            + fact("Fact_H_P_planning_cost_per_capita") * entries.m_population_com_2018
-        )
-        invest_pa = invest / entries.m_duration_target
-
-        invest_com = invest
-        invest_pa_com = invest_pa
-
-        # pct_of_wage = ass("Ass_H_G_planning_cost_pct_of_wage")
-        cost_wage = invest / fact("Fact_H_P_planning_duration")
-
-        ratio_wage_to_emplo = ass("Ass_T_C_yearly_costs_per_planer")
-        demand_emplo = div(cost_wage, ratio_wage_to_emplo)
         demand_emplo_new = demand_emplo
         demand_emplo_com = demand_emplo_new
 

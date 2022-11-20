@@ -40,7 +40,9 @@ def calc_general(
         + other_cycl.invest
     )
 
-    g_planning = GPlanning.calc_from_invest_calc_with_invest_com(inputs, invest)
+    g_planning = GPlanning.calc_from_invest_calc_planning_with_invest_com(
+        inputs, invest
+    )
 
     # TODO: This Seems to be a pointless rename?
     g = G.sum(g_planning)
