@@ -2,20 +2,54 @@
 
 from dataclasses import dataclass
 
+from ..inputs import Inputs
+from ..utils import div
+from ..common.g import G
+
 
 @dataclass(kw_only=True)
-class Vars1:
-    # Used by g_consult
-    cost_wage: float = None  # type: ignore
-    demand_emplo: float = None  # type: ignore
-    demand_emplo_com: float = None  # type: ignore
-    demand_emplo_new: float = None  # type: ignore
-    emplo_existing: float = None  # type: ignore
-    invest: float = None  # type: ignore
-    invest_com: float = None  # type: ignore
-    invest_pa: float = None  # type: ignore
-    invest_pa_com: float = None  # type: ignore
-    ratio_wage_to_emplo: float = None  # type: ignore
+class GConsult(G):
+    emplo_existing: float
+    ratio_wage_to_emplo: float
+
+    @classmethod
+    def calc(cls, inputs: Inputs) -> "GConsult":
+        fact = inputs.fact
+        ass = inputs.ass
+        entries = inputs.entries
+
+        invest = entries.r_buildings_le_2_apts * fact(
+            "Fact_R_G_energy_consulting_cost_detached_house"
+        ) + entries.r_buildings_ge_3_apts * fact(
+            "Fact_R_G_energy_consulting_cost_appt_building_ge_3_flats"
+        )
+        cost_wage = invest / entries.m_duration_target
+        ratio_wage_to_emplo = fact("Fact_R_G_energy_consulting_cost_personel")
+        demand_emplo = div(cost_wage, ratio_wage_to_emplo)
+        emplo_existing = (
+            fact("Fact_R_G_energy_consulting_total_personel")
+            * ass("Ass_B_D_energy_consulting_emplo_pct_of_R")
+            * entries.m_population_com_2018
+            / entries.m_population_nat
+        )
+        demand_emplo_new = max(0, demand_emplo - emplo_existing)
+        invest_com = invest
+        invest_pa = invest / entries.m_duration_target
+        demand_emplo_com = demand_emplo_new
+        invest_pa_com = invest_pa
+
+        return cls(
+            cost_wage=cost_wage,
+            demand_emplo=demand_emplo,
+            demand_emplo_com=demand_emplo_com,
+            demand_emplo_new=demand_emplo_new,
+            invest=invest,
+            invest_com=invest_com,
+            invest_pa=invest_pa,
+            invest_pa_com=invest_pa_com,
+            emplo_existing=emplo_existing,
+            ratio_wage_to_emplo=ratio_wage_to_emplo,
+        )
 
 
 @dataclass(kw_only=True)
