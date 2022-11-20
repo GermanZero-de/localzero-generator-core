@@ -10,7 +10,6 @@ from ..common.g import G
 @dataclass(kw_only=True)
 class GConsult(G):
     emplo_existing: float
-    pct_of_wage: float
     ratio_wage_to_emplo: float
 
     @classmethod
@@ -46,7 +45,6 @@ class GConsult(G):
             invest_pa=invest_pa,
             invest_pa_com=invest_pa_com,
             emplo_existing=emplo_existing,
-            pct_of_wage=pct_of_wage,
             ratio_wage_to_emplo=ratio_wage_to_emplo,
         )
 
