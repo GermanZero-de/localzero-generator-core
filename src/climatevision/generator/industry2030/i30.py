@@ -2,8 +2,6 @@
 
 from dataclasses import dataclass
 
-from ..common.g import G, GConsult
-
 from .dataclasses import (
     Vars2,
     Vars3,
@@ -21,6 +19,7 @@ from .dataclasses import (
     Vars15,
     Vars16,
 )
+from .energy_general import G, GConsult
 
 
 @dataclass(kw_only=True)
