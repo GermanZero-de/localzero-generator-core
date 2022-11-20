@@ -9,7 +9,6 @@ from ..inputs import Inputs
 from ..utils import div, MILLION
 from ..residences2018.r18 import R18
 from ..business2018.b18 import B18
-from ..common.g import G, GConsult
 
 from .r30 import R30
 from .dataclasses import (
@@ -31,6 +30,7 @@ from .dataclasses import (
     Vars17,
     Vars18,
 )
+from . import energy_general
 
 
 def calc(inputs: Inputs, *, r18: R18, b18: B18) -> R30:
@@ -1134,9 +1134,7 @@ def calc(inputs: Inputs, *, r18: R18, b18: B18) -> R30:
     s_gas.change_cost_energy = s_gas.cost_fuel - r18.s_gas.cost_fuel
     p_buildings_total.invest_pa = p_buildings_total.invest / Kalkulationszeitraum
 
-    g_consult = GConsult.calc_for_residences2030(inputs)
-
-    g = G.sum(g_consult)
+    general = energy_general.calc_general(inputs=inputs)
 
     p.demand_heatnet = s_heatnet.energy
     p.demand_biomass = s_biomass.energy
@@ -1369,18 +1367,20 @@ def calc(inputs: Inputs, *, r18: R18, b18: B18) -> R30:
     r.change_CO2e_pct = s.change_CO2e_pct
     r.CO2e_total_2021_estimated = s.CO2e_total_2021_estimated
     r.cost_climate_saved = s.cost_climate_saved
-    r.invest_pa = g.invest_pa + p.invest_pa + s.invest_pa
+    r.invest_pa = general.g.invest_pa + p.invest_pa + s.invest_pa
 
-    r.invest_pa_com = g.invest_pa_com + p.invest_pa_com + s.invest_pa_com
+    r.invest_pa_com = general.g.invest_pa_com + p.invest_pa_com + s.invest_pa_com
 
-    r.invest = g.invest + p.invest + s.invest
-    r.invest_com = g.invest_com + p.invest_com + s.invest_com
+    r.invest = general.g.invest + p.invest + s.invest
+    r.invest_com = general.g.invest_com + p.invest_com + s.invest_com
 
-    r.cost_wage = g.cost_wage + p.cost_wage + s.cost_wage
-    r.demand_emplo = g.demand_emplo + p.demand_emplo + s.demand_emplo
-    r.demand_emplo_new = g.demand_emplo_new + p.demand_emplo_new + s.demand_emplo_new
+    r.cost_wage = general.g.cost_wage + p.cost_wage + s.cost_wage
+    r.demand_emplo = general.g.demand_emplo + p.demand_emplo + s.demand_emplo
+    r.demand_emplo_new = (
+        general.g.demand_emplo_new + p.demand_emplo_new + s.demand_emplo_new
+    )
 
-    r.demand_emplo_com = g.demand_emplo_com
+    r.demand_emplo_com = general.g.demand_emplo_com
 
     p_buildings_area_m2_com.invest_pa = (
         p_buildings_area_m2_com.invest / entries.m_duration_target
@@ -1415,10 +1415,10 @@ def calc(inputs: Inputs, *, r18: R18, b18: B18) -> R30:
     )
 
     return R30(
-        g=g,
+        g=general.g,
         p=p,
         r=r,
-        g_consult=g_consult,
+        g_consult=general.g_consult,
         p_buildings_total=p_buildings_total,
         p_buildings_until_1919=p_buildings_until_1919,
         p_buildings_1919_1948=p_buildings_1919_1948,
