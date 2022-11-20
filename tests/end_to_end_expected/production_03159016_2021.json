@@ -2192,7 +2192,6 @@
             "invest_com": 14889662.5,
             "invest_pa": -14889662.5,
             "invest_pa_com": -14889662.5,
-            "emplo_existing": 14.665010887299065,
             "ratio_wage_to_emplo": 73800.0
         },
         "p": {
@@ -2709,7 +2708,6 @@
             "invest_com": 4334565.948607583,
             "invest_pa": -4334565.948607583,
             "invest_pa_com": -4334565.948607583,
-            "emplo_existing": 3.373132885516513,
             "ratio_wage_to_emplo": 73800.0
         },
         "p": {
@@ -3086,7 +3084,6 @@
             "invest_com": -1010136.0512776724,
             "invest_pa": 1010136.0512776724,
             "invest_pa_com": 1010136.0512776724,
-            "emplo_existing": 0,
             "ratio_wage_to_emplo": 112000.0
         },
         "i": {

@@ -33,7 +33,6 @@ class G:
 
 @dataclass(kw_only=True)
 class GConsult(G):
-    emplo_existing: float
     ratio_wage_to_emplo: float
 
     @classmethod
@@ -65,7 +64,6 @@ class GConsult(G):
             invest_com=invest_com,
             invest_pa=invest_pa,
             invest_pa_com=invest_pa_com,
-            emplo_existing=emplo_existing,
             ratio_wage_to_emplo=ratio_wage_to_emplo,
         )
 
@@ -100,6 +98,5 @@ class GConsult(G):
             invest_com=invest_com,
             invest_pa=invest_pa,
             invest_pa_com=invest_pa_com,
-            emplo_existing=emplo_existing,
             ratio_wage_to_emplo=ratio_wage_to_emplo,
         )
