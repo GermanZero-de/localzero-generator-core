@@ -9,11 +9,6 @@ from ...common.g import G
 
 @dataclass(kw_only=True)
 class GStorage(G):
-    energy: float
-    invest_per_x: float
-    pct_energy: float
-    pct_of_wage: float
-    power_to_be_installed: float
     ratio_wage_to_emplo: float
 
     @classmethod
@@ -44,14 +39,9 @@ class GStorage(G):
             demand_emplo=demand_emplo,
             demand_emplo_com=0,
             demand_emplo_new=demand_emplo_new,
-            energy=energy,
             invest=invest,
             invest_com=invest_com,
             invest_pa=invest_pa,
             invest_pa_com=invest_pa_com,
-            invest_per_x=invest_per_x,
-            pct_energy=pct_energy,
-            pct_of_wage=pct_of_wage,
-            power_to_be_installed=power_to_be_installed,
             ratio_wage_to_emplo=ratio_wage_to_emplo,
         )

@@ -6545,11 +6545,6 @@
             "invest_com": 1275569166.6666665,
             "invest_pa": 98120705.12820512,
             "invest_pa_com": 98120705.12820512,
-            "energy": 77307222.22222222,
-            "invest_per_x": 550.0,
-            "pct_energy": 0.03,
-            "pct_of_wage": 0.255,
-            "power_to_be_installed": 2319216.6666666665,
             "ratio_wage_to_emplo": 47195.042683097665
         },
         "g_planning": {
