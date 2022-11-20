@@ -9,11 +9,10 @@ from ..inputs import Inputs
 from ..utils import div, MILLION
 from ..residences2018.r18 import R18
 from ..business2018.b18 import B18
-from ..common.g import G
+from ..common.g import G, GConsult
 
 from .r30 import R30
 from .dataclasses import (
-    GConsult,
     Vars2,
     Vars3,
     Vars4,
@@ -1135,7 +1134,7 @@ def calc(inputs: Inputs, *, r18: R18, b18: B18) -> R30:
     s_gas.change_cost_energy = s_gas.cost_fuel - r18.s_gas.cost_fuel
     p_buildings_total.invest_pa = p_buildings_total.invest / Kalkulationszeitraum
 
-    g_consult = GConsult.calc(inputs)
+    g_consult = GConsult.calc_for_residences2030(inputs)
 
     g = G.sum(g_consult)
 

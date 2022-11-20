@@ -2,52 +2,6 @@
 
 from dataclasses import dataclass
 
-from ..inputs import Inputs
-from ..utils import div
-from ..common.g import G
-
-
-@dataclass(kw_only=True)
-class GConsult(G):
-    emplo_existing: float
-    ratio_wage_to_emplo: float
-
-    @classmethod
-    def calc(cls, inputs: Inputs) -> "GConsult":
-        ass = inputs.ass
-        entries = inputs.entries
-
-        invest_pa = (
-            ass("Ass_I_G_advice_invest_pa_per_capita") * entries.m_population_com_2018
-        )
-        invest_pa_com = invest_pa
-        invest = invest_pa * entries.m_duration_target
-        invest_com = invest
-
-        pct_of_wage = ass("Ass_I_G_advice_invest_pct_of_wage")
-        cost_wage = invest_pa * pct_of_wage
-        ratio_wage_to_emplo = ass("Ass_T_C_yearly_costs_per_planer")
-
-        demand_emplo = div(cost_wage, ratio_wage_to_emplo)
-
-        emplo_existing = 0
-
-        demand_emplo_new = demand_emplo - emplo_existing
-        demand_emplo_com = demand_emplo_new
-
-        return cls(
-            cost_wage=cost_wage,
-            demand_emplo=demand_emplo,
-            demand_emplo_com=demand_emplo_com,
-            demand_emplo_new=demand_emplo_new,
-            invest=invest,
-            invest_com=invest_com,
-            invest_pa=invest_pa,
-            invest_pa_com=invest_pa_com,
-            emplo_existing=emplo_existing,
-            ratio_wage_to_emplo=ratio_wage_to_emplo,
-        )
-
 
 @dataclass(kw_only=True)
 class Vars2:

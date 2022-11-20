@@ -2,10 +2,9 @@
 
 from dataclasses import dataclass
 
-from ..common.g import G
+from ..common.g import G, GConsult
 
 from .dataclasses import (
-    GConsult,
     Vars2,
     Vars3,
     Vars4,

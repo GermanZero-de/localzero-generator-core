@@ -8,11 +8,10 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/industry.html
 from ..inputs import Inputs
 from ..utils import div
 from ..industry2018.i18 import I18
-from ..common.g import G
+from ..common.g import G, GConsult
 
 from .i30 import I30
 from .dataclasses import (
-    GConsult,
     Vars2,
     Vars3,
     Vars4,
@@ -885,7 +884,7 @@ def calc(inputs: Inputs, *, i18: I18) -> I30:
         p_miner_cement.prod_volume * p_miner_cement.CO2e_combustion_based_per_t
     )
 
-    g_consult = GConsult.calc(inputs)
+    g_consult = GConsult.calc_for_industry2030(inputs)
 
     g = G.sum(g_consult)
 

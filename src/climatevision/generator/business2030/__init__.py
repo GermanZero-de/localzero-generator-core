@@ -10,12 +10,11 @@ from ..utils import div, MILLION
 from ..business2018.b18 import B18
 from ..residences2018.r18 import R18
 from ..residences2030.r30 import R30
-from ..common.g import G
+from ..common.g import G, GConsult
 
 from .b30 import B30
 from .dataclasses import (
     Vars0,
-    GConsult,
     Vars3,
     Vars4,
     Vars5,
@@ -795,7 +794,7 @@ def calc(
         * fact("Fact_M_cost_per_CO2e_2020")
     )
 
-    g_consult = GConsult.calc(inputs, b18)
+    g_consult = GConsult.calc_for_business2030(inputs, b18)
 
     g = G.sum(g_consult)
 
