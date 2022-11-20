@@ -134,7 +134,6 @@ class GConsult(G):
 
 @dataclass(kw_only=True)
 class GPlanning(G):
-    pct_of_wage: float
     ratio_wage_to_emplo: float
 
     @classmethod
@@ -152,7 +151,7 @@ class GPlanning(G):
         invest_com = invest
         invest_pa_com = invest_pa
 
-        pct_of_wage = ass("Ass_H_G_planning_cost_pct_of_wage")
+        # pct_of_wage = ass("Ass_H_G_planning_cost_pct_of_wage")
         cost_wage = invest / fact("Fact_H_P_planning_duration")
 
         ratio_wage_to_emplo = ass("Ass_T_C_yearly_costs_per_planer")
@@ -169,6 +168,5 @@ class GPlanning(G):
             invest_com=invest_com,
             invest_pa=invest_pa,
             invest_pa_com=invest_pa_com,
-            pct_of_wage=pct_of_wage,
             ratio_wage_to_emplo=ratio_wage_to_emplo,
         )
