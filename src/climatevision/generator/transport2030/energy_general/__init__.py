@@ -3,7 +3,7 @@
 from dataclasses import dataclass
 
 from ...inputs import Inputs
-from ...common.g import G
+from ...common.g import G, GPlanning
 
 from ..energy_demand import (
     InvestmentAction,
@@ -11,7 +11,6 @@ from ..energy_demand import (
     RailPeopleMetroActionInfra,
     OtherCycle,
 )
-from .g import GPlanning
 
 
 @dataclass(kw_only=True)
@@ -30,26 +29,20 @@ def calc_general(
     other_cycl: OtherCycle,
 ) -> General:
 
-    # --- Planning and other aggregates ---
-    g_planning = GPlanning.calc(
-        inputs,
-        road_bus_action_infra=road_bus_action_infra,
-        road_gds_mhd_action_wire=road_gds_mhd_action_wire,
-        road_action_charger=road_action_charger,
-        rail_ppl_metro_action_infra=rail_ppl_metro_action_infra,
-        rail_action_invest_infra=rail_action_invest_infra,
-        other_cycl=other_cycl,
+    ass = inputs.ass
+
+    invest = ass("Ass_T_C_planer_cost_per_invest_cost") * (
+        road_bus_action_infra.invest
+        + road_gds_mhd_action_wire.invest
+        + road_action_charger.invest
+        + rail_ppl_metro_action_infra.invest
+        + rail_action_invest_infra.invest
+        + other_cycl.invest
     )
+
+    g_planning = GPlanning.calc(inputs, invest)
+
     # TODO: This Seems to be a pointless rename?
-    g = G(
-        invest_com=g_planning.invest_com,
-        invest_pa_com=g_planning.invest_pa_com,
-        demand_emplo=g_planning.demand_emplo,
-        cost_wage=g_planning.cost_wage,
-        invest_pa=g_planning.invest_pa,
-        invest=g_planning.invest,
-        demand_emplo_new=g_planning.demand_emplo_new,
-        demand_emplo_com=g_planning.demand_emplo_com,
-    )
+    g = G.sum(g_planning)
 
     return General(g=g, g_planning=g_planning)
