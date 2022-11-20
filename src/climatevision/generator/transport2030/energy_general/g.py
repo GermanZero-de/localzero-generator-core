@@ -4,6 +4,7 @@ from dataclasses import dataclass
 
 from ...inputs import Inputs
 from ...utils import div
+from ...common.g import G
 
 from ..energy_demand import (
     InvestmentAction,
@@ -13,15 +14,7 @@ from ..energy_demand import (
 
 
 @dataclass(kw_only=True)
-class GPlanning:
-    cost_wage: float
-    demand_emplo: float
-    demand_emplo_com: float
-    demand_emplo_new: float
-    invest: float
-    invest_com: float
-    invest_pa: float
-    invest_pa_com: float
+class GPlanning(G):
     ratio_wage_to_emplo: float
 
     @classmethod
