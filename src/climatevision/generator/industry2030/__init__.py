@@ -12,7 +12,7 @@ from ..common.g import G
 
 from .i30 import I30
 from .dataclasses import (
-    Vars1,
+    GConsult,
     Vars2,
     Vars3,
     Vars4,
@@ -885,34 +885,9 @@ def calc(inputs: Inputs, *, i18: I18) -> I30:
         p_miner_cement.prod_volume * p_miner_cement.CO2e_combustion_based_per_t
     )
 
-    g_consult = Vars1()
+    g_consult = GConsult.calc(inputs)
 
-    g_consult.invest_pa = (
-        ass("Ass_I_G_advice_invest_pa_per_capita") * entries.m_population_com_2018
-    )
-    g_consult.invest_pa_com = g_consult.invest_pa
-    g_consult.invest = g_consult.invest_pa * entries.m_duration_target
-    g_consult.invest_com = g_consult.invest
-    g_consult.pct_of_wage = ass("Ass_I_G_advice_invest_pct_of_wage")
-    g_consult.cost_wage = g_consult.invest_pa * g_consult.pct_of_wage
-    g_consult.ratio_wage_to_emplo = ass("Ass_T_C_yearly_costs_per_planer")
-    g_consult.demand_emplo = div(g_consult.cost_wage, g_consult.ratio_wage_to_emplo)
-
-    g_consult.emplo_existing = 0
-
-    g_consult.demand_emplo_new = g_consult.demand_emplo - g_consult.emplo_existing
-    g_consult.demand_emplo_com = g_consult.demand_emplo_new
-
-    g = G(
-        invest_com=g_consult.invest_com,
-        invest_pa_com=g_consult.invest_pa_com,
-        demand_emplo=g_consult.demand_emplo,
-        cost_wage=g_consult.cost_wage,
-        invest_pa=g_consult.invest_pa,
-        invest=g_consult.invest,
-        demand_emplo_new=g_consult.demand_emplo_new,
-        demand_emplo_com=g_consult.demand_emplo_com,
-    )
+    g = G.sum(g_consult)
 
     i.demand_emplo_com = g.demand_emplo_com
 

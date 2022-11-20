@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from ..common.g import G
 
 from .dataclasses import (
-    Vars1,
+    GConsult,
     Vars2,
     Vars3,
     Vars4,
@@ -27,7 +27,7 @@ from .dataclasses import (
 @dataclass(kw_only=True)
 class I30:
     g: G
-    g_consult: Vars1
+    g_consult: GConsult
     i: Vars2
     p: Vars3
     p_miner: Vars4
