@@ -164,13 +164,8 @@ class GConsult(G):
             ratio_wage_to_emplo=ratio_wage_to_emplo,
         )
 
-
-@dataclass(kw_only=True)
-class GStorage(G):
-    ratio_wage_to_emplo: float
-
     @classmethod
-    def calc(cls, inputs: Inputs, energy: float) -> "GStorage":
+    def calc_storage(cls, inputs: Inputs, energy: float) -> "GConsult":
         entries = inputs.entries
         fact = inputs.fact
 

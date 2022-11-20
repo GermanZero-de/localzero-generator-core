@@ -3,7 +3,7 @@
 from dataclasses import dataclass
 
 from ...inputs import Inputs
-from ...common.g import G, GConsult as GPlanning, GStorage
+from ...common.g import G, GConsult as GPlanning, GConsult as GStorage
 
 
 @dataclass(kw_only=True)
@@ -24,7 +24,7 @@ def calc_general(inputs: Inputs, p_heatnet_energy: float) -> General:
     )
 
     g_planning = GPlanning.calc_from_invest_calc_planning(inputs=inputs, invest=invest)
-    g_storage = GStorage.calc(inputs=inputs, energy=p_heatnet_energy)
+    g_storage = GStorage.calc_storage(inputs=inputs, energy=p_heatnet_energy)
 
     g = G.sum(g_planning, g_storage)
 
