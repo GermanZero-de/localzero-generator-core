@@ -3,9 +3,9 @@
 from dataclasses import dataclass
 
 from ...inputs import Inputs
-from ...common.g import G
+from ...common.g import G, GPlanning
 
-from .g import GStorage, GPlanning
+from .g_storage import GStorage
 
 
 @dataclass(kw_only=True)
