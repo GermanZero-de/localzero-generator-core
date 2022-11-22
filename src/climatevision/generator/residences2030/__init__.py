@@ -9,11 +9,9 @@ from ..inputs import Inputs
 from ..utils import div, MILLION
 from ..residences2018.r18 import R18
 from ..business2018.b18 import B18
-from ..common.g import G
 
 from .r30 import R30
 from .dataclasses import (
-    Vars1,
     Vars2,
     Vars3,
     Vars4,
@@ -32,6 +30,7 @@ from .dataclasses import (
     Vars17,
     Vars18,
 )
+from . import energy_general
 
 
 def calc(inputs: Inputs, *, r18: R18, b18: B18) -> R30:
@@ -44,7 +43,6 @@ def calc(inputs: Inputs, *, r18: R18, b18: B18) -> R30:
     r = Vars8()
 
     Kalkulationszeitraum = entries.m_duration_target
-    g_consult = Vars1()
 
     p_buildings_total = Vars3()
     p_buildings_until_1919 = Vars4()
@@ -1040,11 +1038,6 @@ def calc(inputs: Inputs, *, r18: R18, b18: B18) -> R30:
         + p_buildings_1996_2004.invest
     )  # SUM(p_buildings_until_1919.invest:p_buildings_1996_2004.invest)
     p_buildings_total.cost_mro = 0
-    g_consult.invest = entries.r_buildings_le_2_apts * fact(
-        "Fact_R_G_energy_consulting_cost_detached_house"
-    ) + entries.r_buildings_ge_3_apts * fact(
-        "Fact_R_G_energy_consulting_cost_appt_building_ge_3_flats"
-    )
 
     s.invest = s_solarth.invest + s_heatpump.invest
 
@@ -1063,14 +1056,11 @@ def calc(inputs: Inputs, *, r18: R18, b18: B18) -> R30:
         p_buildings_total.invest / Kalkulationszeitraum * p_buildings_total.pct_of_wage
     )
 
-    g_consult.cost_wage = g_consult.invest / Kalkulationszeitraum
-
     s_solarth.ratio_wage_to_emplo = fact("Fact_B_P_heating_wage_per_person_per_year")
     s_heatpump.ratio_wage_to_emplo = fact("Fact_B_P_heating_wage_per_person_per_year")
     p_buildings_total.ratio_wage_to_emplo = fact(
         "Fact_B_P_renovations_wage_per_person_per_year_2017"
     )
-    g_consult.ratio_wage_to_emplo = fact("Fact_R_G_energy_consulting_cost_personel")
 
     s_solarth.demand_emplo = div(s_solarth.cost_wage, s_solarth.ratio_wage_to_emplo)
     s_heatpump.demand_emplo = div(s_heatpump.cost_wage, s_heatpump.ratio_wage_to_emplo)
@@ -1078,7 +1068,6 @@ def calc(inputs: Inputs, *, r18: R18, b18: B18) -> R30:
     p_buildings_total.demand_emplo = div(
         p_buildings_total.cost_wage, p_buildings_total.ratio_wage_to_emplo
     )
-    g_consult.demand_emplo = div(g_consult.cost_wage, g_consult.ratio_wage_to_emplo)
     s_solarth.emplo_existing = (
         fact("Fact_B_P_install_heating_emplo_2017")
         * entries.m_population_com_2018
@@ -1100,16 +1089,6 @@ def calc(inputs: Inputs, *, r18: R18, b18: B18) -> R30:
     )
     p_buildings_total.demand_emplo_new = max(
         0, p_buildings_total.demand_emplo - p_buildings_total.emplo_existing
-    )
-
-    g_consult.emplo_existing = (
-        fact("Fact_R_G_energy_consulting_total_personel")
-        * ass("Ass_B_D_energy_consulting_emplo_pct_of_R")
-        * entries.m_population_com_2018
-        / entries.m_population_nat
-    )
-    g_consult.demand_emplo_new = max(
-        0, g_consult.demand_emplo - g_consult.emplo_existing
     )
     s_solarth.demand_emplo_new = max(
         0, s_solarth.demand_emplo - s_solarth.emplo_existing
@@ -1136,7 +1115,6 @@ def calc(inputs: Inputs, *, r18: R18, b18: B18) -> R30:
     )
     p_buildings_total.invest_com = p_buildings_area_m2_com.invest_com
 
-    g_consult.invest_com = g_consult.invest
     s_solarth.invest_com = s_solarth.invest * entries.r_pct_of_area_m2_com
     s_heatpump.invest_com = s_heatpump.invest * entries.r_pct_of_area_m2_com
     s.invest_com = s_solarth.invest_com + s_heatpump.invest_com
@@ -1147,7 +1125,6 @@ def calc(inputs: Inputs, *, r18: R18, b18: B18) -> R30:
     s_solarth.invest_pa_com = s_solarth.invest_com / Kalkulationszeitraum
     s_heatpump.invest_pa_com = s_heatpump.invest_com / Kalkulationszeitraum
 
-    g_consult.invest_pa = g_consult.invest / Kalkulationszeitraum
     s_gas.pct_energy = div(s_gas.energy, s.energy)
     s_gas.cost_fuel_per_MWh = ass("Ass_R_S_gas_energy_cost_factor_2035")
     s_gas.cost_fuel = s_gas.energy * s_gas.cost_fuel_per_MWh / MILLION
@@ -1157,19 +1134,7 @@ def calc(inputs: Inputs, *, r18: R18, b18: B18) -> R30:
     s_gas.change_cost_energy = s_gas.cost_fuel - r18.s_gas.cost_fuel
     p_buildings_total.invest_pa = p_buildings_total.invest / Kalkulationszeitraum
 
-    g_consult.demand_emplo_com = g_consult.demand_emplo_new
-    g_consult.invest_pa_com = g_consult.invest_pa
-
-    g = G(
-        invest_com=g_consult.invest_com,
-        invest_pa_com=g_consult.invest_pa_com,
-        demand_emplo=g_consult.demand_emplo,
-        cost_wage=g_consult.cost_wage,
-        invest_pa=g_consult.invest_pa,
-        invest=g_consult.invest,
-        demand_emplo_new=g_consult.demand_emplo_new,
-        demand_emplo_com=g_consult.demand_emplo_com,
-    )
+    general = energy_general.calc_general(inputs=inputs)
 
     p.demand_heatnet = s_heatnet.energy
     p.demand_biomass = s_biomass.energy
@@ -1402,18 +1367,20 @@ def calc(inputs: Inputs, *, r18: R18, b18: B18) -> R30:
     r.change_CO2e_pct = s.change_CO2e_pct
     r.CO2e_total_2021_estimated = s.CO2e_total_2021_estimated
     r.cost_climate_saved = s.cost_climate_saved
-    r.invest_pa = g.invest_pa + p.invest_pa + s.invest_pa
+    r.invest_pa = general.g.invest_pa + p.invest_pa + s.invest_pa
 
-    r.invest_pa_com = g.invest_pa_com + p.invest_pa_com + s.invest_pa_com
+    r.invest_pa_com = general.g.invest_pa_com + p.invest_pa_com + s.invest_pa_com
 
-    r.invest = g.invest + p.invest + s.invest
-    r.invest_com = g.invest_com + p.invest_com + s.invest_com
+    r.invest = general.g.invest + p.invest + s.invest
+    r.invest_com = general.g.invest_com + p.invest_com + s.invest_com
 
-    r.cost_wage = g.cost_wage + p.cost_wage + s.cost_wage
-    r.demand_emplo = g.demand_emplo + p.demand_emplo + s.demand_emplo
-    r.demand_emplo_new = g.demand_emplo_new + p.demand_emplo_new + s.demand_emplo_new
+    r.cost_wage = general.g.cost_wage + p.cost_wage + s.cost_wage
+    r.demand_emplo = general.g.demand_emplo + p.demand_emplo + s.demand_emplo
+    r.demand_emplo_new = (
+        general.g.demand_emplo_new + p.demand_emplo_new + s.demand_emplo_new
+    )
 
-    r.demand_emplo_com = g.demand_emplo_com
+    r.demand_emplo_com = general.g.demand_emplo_com
 
     p_buildings_area_m2_com.invest_pa = (
         p_buildings_area_m2_com.invest / entries.m_duration_target
@@ -1448,10 +1415,10 @@ def calc(inputs: Inputs, *, r18: R18, b18: B18) -> R30:
     )
 
     return R30(
-        g=g,
+        g=general.g,
         p=p,
         r=r,
-        g_consult=g_consult,
+        g_consult=general.g_consult,
         p_buildings_total=p_buildings_total,
         p_buildings_until_1919=p_buildings_until_1919,
         p_buildings_1919_1948=p_buildings_1919_1948,

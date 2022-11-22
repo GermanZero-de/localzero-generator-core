@@ -3,9 +3,7 @@
 from dataclasses import dataclass
 
 from ...inputs import Inputs
-from ...common.g import G
-
-from .g import GStorage, GPlanning
+from ...common.g import G, GConsult as GPlanning, GConsult as GStorage
 
 
 @dataclass(kw_only=True)
@@ -17,18 +15,17 @@ class General:
 
 def calc_general(inputs: Inputs, p_heatnet_energy: float) -> General:
 
-    g_planning = GPlanning.calc(inputs=inputs)
-    g_storage = GStorage.calc(inputs=inputs, p_heatnet_energy=p_heatnet_energy)
+    fact = inputs.fact
+    entries = inputs.entries
 
-    g = G(
-        invest_com=g_storage.invest_com + g_planning.invest_com,
-        invest_pa_com=g_storage.invest_pa_com + g_planning.invest_pa_com,
-        invest_pa=g_storage.invest_pa + g_planning.invest_pa,
-        invest=g_storage.invest + g_planning.invest,
-        cost_wage=g_storage.cost_wage + g_planning.cost_wage,
-        demand_emplo=g_storage.demand_emplo + g_planning.demand_emplo,
-        demand_emplo_new=g_storage.demand_emplo_new + g_planning.demand_emplo_new,
-        demand_emplo_com=g_planning.demand_emplo_com,
+    invest = (
+        fact("Fact_H_P_planning_cost_basis")
+        + fact("Fact_H_P_planning_cost_per_capita") * entries.m_population_com_2018
     )
+
+    g_planning = GPlanning.calc_from_invest_calc_planning(inputs=inputs, invest=invest)
+    g_storage = GStorage.calc_storage(inputs=inputs, energy=p_heatnet_energy)
+
+    g = G.sum(g_planning, g_storage)
 
     return General(g=g, g_planning=g_planning, g_storage=g_storage)

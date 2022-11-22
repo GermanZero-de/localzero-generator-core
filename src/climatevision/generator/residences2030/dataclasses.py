@@ -4,21 +4,6 @@ from dataclasses import dataclass
 
 
 @dataclass(kw_only=True)
-class Vars1:
-    # Used by g_consult
-    cost_wage: float = None  # type: ignore
-    demand_emplo: float = None  # type: ignore
-    demand_emplo_com: float = None  # type: ignore
-    demand_emplo_new: float = None  # type: ignore
-    emplo_existing: float = None  # type: ignore
-    invest: float = None  # type: ignore
-    invest_com: float = None  # type: ignore
-    invest_pa: float = None  # type: ignore
-    invest_pa_com: float = None  # type: ignore
-    ratio_wage_to_emplo: float = None  # type: ignore
-
-
-@dataclass(kw_only=True)
 class Vars2:
     # Used by p
     change_energy_MWh: float = None  # type: ignore

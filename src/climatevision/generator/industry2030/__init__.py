@@ -8,11 +8,9 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/industry.html
 from ..inputs import Inputs
 from ..utils import div
 from ..industry2018.i18 import I18
-from ..common.g import G
 
 from .i30 import I30
 from .dataclasses import (
-    Vars1,
     Vars2,
     Vars3,
     Vars4,
@@ -29,6 +27,7 @@ from .dataclasses import (
     Vars15,
     Vars16,
 )
+from . import energy_general
 
 
 def calc(inputs: Inputs, *, i18: I18) -> I30:
@@ -885,36 +884,9 @@ def calc(inputs: Inputs, *, i18: I18) -> I30:
         p_miner_cement.prod_volume * p_miner_cement.CO2e_combustion_based_per_t
     )
 
-    g_consult = Vars1()
+    general = energy_general.calc_general(inputs=inputs)
 
-    g_consult.invest_pa = (
-        ass("Ass_I_G_advice_invest_pa_per_capita") * entries.m_population_com_2018
-    )
-    g_consult.invest_pa_com = g_consult.invest_pa
-    g_consult.invest = g_consult.invest_pa * entries.m_duration_target
-    g_consult.invest_com = g_consult.invest
-    g_consult.pct_of_wage = ass("Ass_I_G_advice_invest_pct_of_wage")
-    g_consult.cost_wage = g_consult.invest_pa * g_consult.pct_of_wage
-    g_consult.ratio_wage_to_emplo = ass("Ass_T_C_yearly_costs_per_planer")
-    g_consult.demand_emplo = div(g_consult.cost_wage, g_consult.ratio_wage_to_emplo)
-
-    g_consult.emplo_existing = 0
-
-    g_consult.demand_emplo_new = g_consult.demand_emplo - g_consult.emplo_existing
-    g_consult.demand_emplo_com = g_consult.demand_emplo_new
-
-    g = G(
-        invest_com=g_consult.invest_com,
-        invest_pa_com=g_consult.invest_pa_com,
-        demand_emplo=g_consult.demand_emplo,
-        cost_wage=g_consult.cost_wage,
-        invest_pa=g_consult.invest_pa,
-        invest=g_consult.invest,
-        demand_emplo_new=g_consult.demand_emplo_new,
-        demand_emplo_com=g_consult.demand_emplo_com,
-    )
-
-    i.demand_emplo_com = g.demand_emplo_com
+    i.demand_emplo_com = general.g.demand_emplo_com
 
     p_miner_cement.invest_per_x = ass(
         "Ass_I_P_miner_cement_kirchdorf_ratio_invest_to_prodvol_2020"
@@ -923,9 +895,9 @@ def calc(inputs: Inputs, *, i18: I18) -> I30:
 
     p_miner_cement.invest_outside = p_miner_cement.invest
 
-    i.invest_pa_com = g.invest_pa_com
+    i.invest_pa_com = general.g.invest_pa_com
     p_miner_ceram.invest_per_x = ass("Ass_I_P_miner_ceramic_ratio_invest_to_prodvol")
-    i.invest_com = g.invest_com
+    i.invest_com = general.g.invest_com
     p_miner_cement.pct_of_wage = fact("Fact_I_P_constr_civil_revenue_pct_of_wage_2018")
     p_miner_cement.invest_pa = p_miner_cement.invest / entries.m_duration_target
     p_miner_cement.cost_wage = p_miner_cement.invest_pa * p_miner_cement.pct_of_wage
@@ -1381,7 +1353,7 @@ def calc(inputs: Inputs, *, i18: I18) -> I30:
     p_metal.invest_pa_outside = (
         p_metal_steel.invest_pa_outside + p_metal_nonfe.invest_pa_outside
     )
-    i.invest = g.invest + p.invest
+    i.invest = general.g.invest + p.invest
     p_metal.invest_outside = p_metal_steel.invest_outside + p_metal_nonfe.invest_outside
     p_miner.cost_wage = (
         p_miner_cement.cost_wage
@@ -1393,8 +1365,8 @@ def calc(inputs: Inputs, *, i18: I18) -> I30:
         p_metal_steel_primary.cost_wage + p_metal_steel_secondary.cost_wage
     )
     p.demand_emplo_new = max(0, p.demand_emplo - p.emplo_existing)
-    i.demand_emplo = g.demand_emplo + p.demand_emplo
-    i.demand_emplo_new = g.demand_emplo_new + p.demand_emplo_new
+    i.demand_emplo = general.g.demand_emplo + p.demand_emplo
+    i.demand_emplo_new = general.g.demand_emplo_new + p.demand_emplo_new
     p_metal_steel.demand_electricity = (
         p_metal_steel_primary.demand_electricity
         + p_metal_steel_secondary.demand_electricity
@@ -1481,7 +1453,7 @@ def calc(inputs: Inputs, *, i18: I18) -> I30:
     p_other_further.demand_emethan = p_other_further.energy * ass(
         "Ass_I_P_other_further_fec_pct_of_gas_2050"
     )
-    i.invest_pa = g.invest_pa + p.invest_pa
+    i.invest_pa = general.g.invest_pa + p.invest_pa
     i.invest_pa_outside = p.invest_pa_outside
     p.invest_outside = (
         p_miner.invest_outside
@@ -1489,7 +1461,7 @@ def calc(inputs: Inputs, *, i18: I18) -> I30:
         + p_metal.invest_outside
         + p_other.invest_outside
     )
-    i.cost_wage = g.cost_wage + p.cost_wage
+    i.cost_wage = general.g.cost_wage + p.cost_wage
     p_other_paper.CO2e_production_based_per_t = fact(
         "Fact_I_P_other_paper_ratio_CO2e_pb_to_prodvol"
     )
@@ -1534,8 +1506,8 @@ def calc(inputs: Inputs, *, i18: I18) -> I30:
     s_renew_solarth = Vars16(energy=0)
 
     return I30(
-        g=g,
-        g_consult=g_consult,
+        g=general.g,
+        g_consult=general.g_consult,
         i=i,
         p=p,
         p_miner=p_miner,
