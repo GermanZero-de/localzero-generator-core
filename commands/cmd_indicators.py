@@ -10,17 +10,36 @@ from climatevision.tracing import with_tracing
 from climatevision.generator.generator import dataclass_to_result_dict
 
 @dataclass(kw_only=True)
+class References:
+    # reference modules for calculation
+    def __init__(self):
+        self.pv_panel: float = 10 # 8-12 kWp per standardized family home https://solar-ratgeber.ch/photovoltaik/rendite-ertrag/# 
+        self.wind_power_plants: float = 3.2 # 3.2 MW reference wind power plant (Source: 2013_Umweltbundesamt_PotenzialWindenergieAnLand, P.15)
+        self.large_heatpumps: float = 50 # 50 MW standardized large heat pump
+        self.heat_pumps: float = 12 # 12 kW standardized heat pump
+        self.renovated_houses: float = 0
+        self.electricles_vehicles: float = 0
+
+    def change_refs(self):
+        return 0
+
+@dataclass(kw_only=True)
 class Indicators: 
-    pv_pa: float = 0 # pv panels per year to build
-    wpp_pa: float = 0 # wind power plants per year to build
-    hp_pa: float = 0 # heat pumps to build per year
-    ren_houses_pa: float = 0  # houses to renovate per year
-    elec_veh_pa: float = 0 # electrical vehicles per year to build 
+    
+    def __init__(self):
+        self.refs = References() # sector electricity:  reference modules 
+        self.pv_panels_peryear: float = 0 # sector electricity: pv panels to build per year 
+        self.wind_power_plants_peryear: float = 0 # sector electricity:  wind power plants to build per year 
+        self.heat_power_plants_area: float = 0 # sector heat: area with heat power plants to build per year 
+        self.large_heatpumps_peryear: float = 0 # sector heat: large heat power plants to build per year 
+        self.heat_pumps_peryear: float = 0 #  sector residences: heat pumps per year to build 
+        self.renovated_houses_peryear: float = 0  # sector residences: houses to renovate per year
+        self.electricle_vehicles_peryear: float = 0 # sector transport: electrical vehicles to build per year 
 
     def result_dict(self):
         return dataclass_to_result_dict(self)
     
-    def calculate_indicators(self, input:Inputs, cr:Result):
+    def calculate_indicators(self, inputs:Inputs, cr:Result):
         """
         This function allows to calculate several indicators to enhance the comprehensibility 
         of the by the generator calculated data. All calculation are assumptions based on diverse 
@@ -29,12 +48,26 @@ class Indicators:
         photovoltaic (pv_pa) and wind power plants (wpp_pa) for electricity, heatpumps (hp_pa) and 
         renovated houses (ren_houses_pa) for heating, elec_veh_pa for transport.
         """
-        # Amount PV per year = (Savings C02 per year [g/a]) / (saving potential [g/kWh] * production of unit [kWh/a])
-        self.pv_pa =  ((cr.e18.e.CO2e_total-cr.e30.e.CO2e_total)* 1e6)/((input.entries.m_year_target-input.entries.m_year_today) * (850-40) * (1000/4)) # assumption: 1000 kWh/a per 4 modules
-        self.wpp_pa = ((cr.e18.e.CO2e_total-cr.e30.e.CO2e_total)* 1e6)/((input.entries.m_year_target-input.entries.m_year_today) * (850-25) * (1700 * 3.2 * 1e3)) # assumption: 1700 full-load hours per year and 3,2 MW reference wind power plant
-        self.hp_pa = 0
-        self.ren_houses_pa = 0
-        self.elec_veh_pa = 0
+        # ass = inputs.ass
+        # fact = inputs.fact
+
+        # Amount per year = (Savings C02 per year [g/a]) / (saving potential [g/kWh] * production of unit [kWh/a])
+        # self.pv_panels_peryear =  ((cr.e18.e.CO2e_total-cr.e30.e.CO2e_total)* 1e6)/((inputs.entries.m_year_target-inputs.entries.m_year_today) * (850-40) * (1000/4)) # assumption: 1000 kWh/a per 4 modules
+        # self.wind_power_plants_peryear = ((cr.e18.e.CO2e_total-cr.e30.e.CO2e_total)* 1e6)/((inputs.entries.m_year_target-inputs.entries.m_year_today) * (850-25) * (1700 * 3.2 * 1e3)) # assumption: 1700 full-load hours per year and 3,2 MW reference wind power plant
+        # Amount per year = LocalToBeInstalledPower / (Reference * years) 
+        # electricity
+        self.pv_panels_peryear = cr.e30.p_local.power_to_be_installed / (self.refs.pv_panel*(inputs.entries.m_year_target-inputs.entries.m_year_today))
+        self.wind_power_plants_peryear = cr.e30.p_local_wind_onshore.power_to_be_installed / (self.refs.wind_power_plants*(inputs.entries.m_year_target-inputs.entries.m_year_today))
+        # heating
+        self.heat_power_plants_area = cr.h30.p_heatnet_plant.area_ha_available / (inputs.entries.m_year_target-inputs.entries.m_year_today)
+        self.large_heatpumps_peryear = cr.h30.p_heatnet_lheatpump.power_to_be_installed / ((self.refs.large_heatpumps)*(inputs.entries.m_year_target-inputs.entries.m_year_today))
+        # residences
+        self.heat_pumps_peryear = 0
+        self.renovated_houses_peryear = 0 #(cr.h30.d_r.energy - cr.h18.d_r.energy) 
+        # transport
+        self.electricle_vehicles_peryear = 0 
+        # industry, business, agriculture, fuels, lulucf
+        # tbd
         return self
 
 def json_to_output(json_object: Any, args: Any):
