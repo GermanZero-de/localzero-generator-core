@@ -14,11 +14,9 @@ class References:
     # reference modules for calculation
     def __init__(self):
         self.pv_panel: float = 10 # 8-12 kWp per standardized family home https://solar-ratgeber.ch/photovoltaik/rendite-ertrag/# 
-        self.wind_power_plants: float = 3.2 # 3.2 MW reference wind power plant (Source: 2013_Umweltbundesamt_PotenzialWindenergieAnLand, P.15)
-        self.large_heatpumps: float = 50 # 50 MW standardized large heat pump
-        self.heat_pumps: float = 12 # 12 kW standardized heat pump
-        self.renovated_houses: float = 0
-        self.electricles_vehicles: float = 0
+        self.wind_power_plant: float = 3.2 # 3.2 MW reference wind power plant (Source: 2013_Umweltbundesamt_PotenzialWindenergieAnLand, P.15)
+        self.large_heatpump: float = 50 # 50 MW standardized large heat pump
+        self.heatpump: float = 12 # 12 kW standardized heat pump
 
     def change_refs(self):
         return 0
@@ -26,15 +24,14 @@ class References:
 @dataclass(kw_only=True)
 class Indicators: 
     
-    def __init__(self):
-        self.refs = References() # sector electricity:  reference modules 
-        self.pv_panels_peryear: float = 0 # sector electricity: pv panels to build per year 
-        self.wind_power_plants_peryear: float = 0 # sector electricity:  wind power plants to build per year 
-        self.heat_power_plants_area: float = 0 # sector heat: area with heat power plants to build per year 
-        self.large_heatpumps_peryear: float = 0 # sector heat: large heat power plants to build per year 
-        self.heat_pumps_peryear: float = 0 #  sector residences: heat pumps per year to build 
-        self.renovated_houses_peryear: float = 0  # sector residences: houses to renovate per year
-        self.electricle_vehicles_peryear: float = 0 # sector transport: electrical vehicles to build per year 
+    refs = References() # sector electricity:  reference modules 
+    pv_panels_peryear: float = 0 # sector electricity: pv panels to build per year 
+    wind_power_plants_peryear: float = 0 # sector electricity:  wind power plants to build per year 
+    heat_power_plants_area: float = 0 # sector heat: area with heat power plants to build per year 
+    large_heatpumps_peryear: float = 0 # sector heat: large heat power plants to build per year 
+    heatpumps_peryear: float = 0 #  sector residences: heat pumps per year to build 
+    renovated_houses_peryear: float = 0  # sector residences: houses to renovate per year
+    electric_bus_peryear: float = 0 # sector transport: electrical vehicles to build per year 
 
     def result_dict(self):
         return dataclass_to_result_dict(self)
@@ -57,15 +54,15 @@ class Indicators:
         # Amount per year = LocalToBeInstalledPower / (Reference * years) 
         # electricity
         self.pv_panels_peryear = cr.e30.p_local.power_to_be_installed / (self.refs.pv_panel*(inputs.entries.m_year_target-inputs.entries.m_year_today))
-        self.wind_power_plants_peryear = cr.e30.p_local_wind_onshore.power_to_be_installed / (self.refs.wind_power_plants*(inputs.entries.m_year_target-inputs.entries.m_year_today))
+        self.wind_power_plants_peryear = cr.e30.p_local_wind_onshore.power_to_be_installed / (self.refs.wind_power_plant*(inputs.entries.m_year_target-inputs.entries.m_year_today))
         # heating
         self.heat_power_plants_area = cr.h30.p_heatnet_plant.area_ha_available / (inputs.entries.m_year_target-inputs.entries.m_year_today)
-        self.large_heatpumps_peryear = cr.h30.p_heatnet_lheatpump.power_to_be_installed / ((self.refs.large_heatpumps)*(inputs.entries.m_year_target-inputs.entries.m_year_today))
+        self.large_heatpumps_peryear = cr.h30.p_heatnet_lheatpump.power_to_be_installed / ((self.refs.large_heatpump)*(inputs.entries.m_year_target-inputs.entries.m_year_today))
         # residences
-        self.heat_pumps_peryear = 0
-        self.renovated_houses_peryear = 0 #(cr.h30.d_r.energy - cr.h18.d_r.energy) 
+        self.heatpumps_peryear = cr.r30.s_heatpump.power_to_be_installed / ((self.refs.heatpump)*(inputs.entries.m_year_target-inputs.entries.m_year_today))
+        self.renovated_houses_peryear = cr.r18.p_buildings_total.number_of_buildings * inputs.entries.r_rehab_rate_pa
         # transport
-        self.electricle_vehicles_peryear = 0 
+        self.electric_bus_peryear = cr.t30.road_bus.invest_pa / cr.t30.road_bus.base_unit
         # industry, business, agriculture, fuels, lulucf
         # tbd
         return self
@@ -85,7 +82,7 @@ def cmd_indicators(args: Any):
     ind = Indicators()
     ind = ind.calculate_indicators(inputs, calculate_with_default_inputs(ags=args.ags, year=int(args.year)))
     # ind.calculate_indicators(inputs, calculate_with_default_inputs(ags=args.ags, year=int(args.year)))
-    print("")
+    print("What can be done to safe the climate?")
     d = with_tracing(
             enabled=args.trace,
             f=lambda: ind.result_dict()
