@@ -13,9 +13,9 @@ from climatevision.generator.generator import dataclass_to_result_dict
 class References:
     # reference modules for calculation
     def __init__(self):
-        self.pv_panel: float = 10 # 8-12 kWp per standardized family home https://solar-ratgeber.ch/photovoltaik/rendite-ertrag/# 
+        self.pv_panel: float = 0.010 # 8-12 kWp = 0.08 MWp .. per standardized family home https://solar-ratgeber.ch/photovoltaik/rendite-ertrag/# 
         self.wind_power_plant: float = 3.2 # 3.2 MW reference wind power plant (Source: 2013_Umweltbundesamt_PotenzialWindenergieAnLand, P.15)
-        self.large_heatpump: float = 50 # 50 MW standardized large heat pump
+        self.large_heatpump: float = 20 # 20 MW standardized large heat pump
         self.heatpump: float = 12 # 12 kW standardized heat pump
 
     def change_refs(self):
