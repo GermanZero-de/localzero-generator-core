@@ -16,7 +16,7 @@ class References:
         self.pv_panel: float = 0.010 # 8-12 kWp = 0.08 MWp .. per standardized family home https://solar-ratgeber.ch/photovoltaik/rendite-ertrag/# 
         self.wind_power_plant: float = 3.2 # 3.2 MW reference wind power plant (Source: 2013_Umweltbundesamt_PotenzialWindenergieAnLand, P.15)
         self.large_heatpump: float = 20 # 20 MW standardized large heat pump
-        self.heatpump: float = 12 # 12 kW standardized heat pump
+        self.heatpump: float = 0.012 # 12 kW standardized heat pump
 
     def change_refs(self):
         return 0
@@ -62,7 +62,7 @@ class Indicators:
         self.heatpumps_peryear = cr.r30.s_heatpump.power_to_be_installed / ((self.refs.heatpump)*(inputs.entries.m_year_target-inputs.entries.m_year_today))
         self.renovated_houses_peryear = cr.r18.p_buildings_total.number_of_buildings * inputs.entries.r_rehab_rate_pa
         # transport
-        self.electric_bus_peryear = cr.t30.road_bus.invest_pa / cr.t30.road_bus.base_unit
+        self.electric_bus_peryear = cr.t30.road_bus.invest_pa_com / cr.t30.road_bus.invest_per_x
         # industry, business, agriculture, fuels, lulucf
         # tbd
         return self
