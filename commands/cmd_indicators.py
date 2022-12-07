@@ -31,7 +31,8 @@ class Indicators:
     large_heatpumps_peryear: float = 0 # sector heat: large heat power plants to build per year 
     heatpumps_peryear: float = 0 #  sector residences: heat pumps per year to build 
     renovated_houses_peryear: float = 0  # sector residences: houses to renovate per year
-    electric_bus_peryear: float = 0 # sector transport: electrical vehicles to build per year 
+    electric_bus_peryear: float = 0 # sector transport: electrical bus to build per year
+    electric_car_peryear: float = 0 # sector transport: electrical cars to build per year 
 
     def result_dict(self):
         return dataclass_to_result_dict(self)
@@ -63,6 +64,7 @@ class Indicators:
         self.renovated_houses_peryear = cr.r18.p_buildings_total.number_of_buildings * inputs.entries.r_rehab_rate_pa
         # transport
         self.electric_bus_peryear = cr.t30.road_bus.invest_pa_com / cr.t30.road_bus.invest_per_x
+        self.electric_car_peryear = cr.t30.road_car.fleet_modernisation_cost.invest_pa / cr.t30.road_car.fleet_modernisation_cost.invest_per_x
         # industry, business, agriculture, fuels, lulucf
         # tbd
         return self
