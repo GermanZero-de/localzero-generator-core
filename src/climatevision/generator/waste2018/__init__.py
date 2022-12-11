@@ -5,7 +5,7 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/agriculture.html
 
 # pyright: strict
 
-from dataclasses import KW_ONLY, dataclass
+from dataclasses import dataclass
 from ..inputs import Inputs
 
 
@@ -13,12 +13,13 @@ from ..inputs import Inputs
 class WasteBranch:
     energy: float
     prod_volume: float
+    demand_electricity: float
     CO2e_production_based: float
     CO2e_production_based_per_t: float
     CO2e_total: float
 
     @classmethod
-    def calc(cls, inputs : Inputs, use_prod_vol: bool, CO2e_pb_per_t: float, prod_vol_per_cap : float = 0, energy: float = 0):
+    def calc(cls, inputs : Inputs, use_prod_vol: bool,CO2e_pb_per_t: float, prod_vol_per_cap : float = 0, energy: float = 0):
         entries = inputs.entries
         prod_vol = entries.m_population_com_2018 * prod_vol_per_cap
         if use_prod_vol:
@@ -27,10 +28,11 @@ class WasteBranch:
             CO2e_pb = CO2e_pb_per_t * entries.m_population_com_2018
 
         CO2e_total = CO2e_pb
-
+        demand_electricity = energy
         return cls(
         energy=energy,
         prod_volume = prod_vol,
+        demand_electricity = demand_electricity,
         CO2e_production_based_per_t = CO2e_pb_per_t,
         CO2e_production_based = CO2e_pb,
         CO2e_total = CO2e_total,
@@ -98,6 +100,7 @@ class EnergySupply:
 
 @dataclass(kw_only=True)
 class W18:
+    w: EnergyProduction
     p: EnergyProduction
     p_landfilling: WasteBranch
     p_organic_treatment: WasteBranch
