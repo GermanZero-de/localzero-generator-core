@@ -117,15 +117,17 @@ class W18:
         entries = inputs.entries
         fact = inputs.fact
 
-        s_elec = EnergySupplyDetail.calc(entries.w_elec_fec,CO2e_cb_per_MWh=0)
+        s_elec = EnergySupplyDetail.calc(energy=entries.w_elec_fec,CO2e_cb_per_MWh=0)
         s = EnergySupply.calc(s_elec)
 
         p_landfilling = WasteBranch.calc(inputs=inputs,energy=0,use_prod_vol=False,CO2e_pb_per_t=fact.W_P_landfilling_CO2e_pb_2018_per_capita)
         p_organic_treatment = WasteBranch.calc(inputs=inputs,energy=0,use_prod_vol=True,prod_vol_per_cap=fact.W_P_organic_treatment_prodvol_2018_per_capita,CO2e_pb_per_t=fact.W_P_organic_treatment_CO2e_pb_2018_per_prodvol)
-        p_wastewater = WasteBranch.calc(inputs=inputs,energy=0,use_prod_vol=True,prod_vol_per_cap=fact.W_P_organic_treatment_prodvol_2018_per_capita,CO2e_pb_per_t=fact.W_P_organic_treatment_CO2e_pb_2018_per_prodvol)
+        p_wastewater = WasteBranch.calc(inputs=inputs,energy=entries.EEV_18K_AW_Strom,use_prod_vol=True,prod_vol_per_cap=fact.W_P_organic_treatment_prodvol_2018_per_capita,CO2e_pb_per_t=fact.W_P_organic_treatment_CO2e_pb_2018_per_prodvol)
         
-        p = EnergyProduction.calc(p_landfilling,p_organic_treatment,p_waste_water)
+        p = EnergyProduction.calc(p_landfilling,p_organic_treatment,p_wastewater)
+        w=p
         return cls(
+            w=w,
             p = p,
             p_landfilling = p_landfilling,
             p_organic_treatment = p_organic_treatment,
