@@ -29,7 +29,7 @@ from .dataclasses import (
     Vars14,
     Vars15,
 )
-from . import energy_demand, energy_general
+from . import energy_demand, energy_general, energy_production
 
 
 def calc(
@@ -61,11 +61,7 @@ def calc(
     p_heatpump = Vars15()
 
     demand = energy_demand.calc_demand(r30, b30, i30, a30)
-
-    p_gas = Vars6.calc(inputs, "gas", h18, r30, b30)
-    p_coal = Vars6.calc(inputs, "coal", h18, r30, b30)
-
-    p_lpg = Vars7.calc(inputs, "lpg", h18, r30, b30)
+    production = energy_production.calc_production(inputs, h18, r30, b30)
 
     p.CO2e_total_2021_estimated = h18.p.CO2e_total * fact(
         "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
@@ -160,11 +156,11 @@ def calc(
     p_ofossil.energy = 0
 
     p.energy = (
-        p_gas.energy
-        + p_lpg.energy
+        production.gas.energy
+        + production.lpg.energy
         + p_fueloil.energy
         + p_opetpro.energy
-        + p_coal.energy
+        + production.coal.energy
         + p_heatnet.energy
         + p_biomass.energy
         + p_ofossil.energy
@@ -273,11 +269,11 @@ def calc(
         p_heatnet_plant.energy * p_heatnet_plant.CO2e_production_based_per_MWh
     )
     p.CO2e_combustion_based = (
-        p_gas.CO2e_combustion_based
-        + p_lpg.CO2e_combustion_based
+        production.gas.CO2e_combustion_based
+        + production.lpg.CO2e_combustion_based
         + p_fueloil.CO2e_combustion_based
         + p_opetpro.CO2e_combustion_based
-        + p_coal.CO2e_combustion_based
+        + production.coal.CO2e_combustion_based
         + p_heatnet.CO2e_combustion_based
     )
 
@@ -431,11 +427,11 @@ def calc(
         p_heatnet_geoth.energy * p_heatnet_geoth.CO2e_production_based_per_MWh
     )
     p.CO2e_total = (
-        p_gas.CO2e_total
-        + p_lpg.CO2e_total
+        production.gas.CO2e_total
+        + production.lpg.CO2e_total
         + p_fueloil.CO2e_total
         + p_opetpro.CO2e_total
-        + p_coal.CO2e_total
+        + production.coal.CO2e_total
         + p_heatnet.CO2e_total
         + p_biomass.CO2e_total
         + p_ofossil.CO2e_total
@@ -475,7 +471,10 @@ def calc(
     p.change_energy_pct = div(p.change_energy_MWh, h18.p.energy)
     p_biomass.cost_fuel = p_biomass.energy * p_biomass.cost_fuel_per_MWh / MILLION
     p.cost_fuel = (
-        p_gas.cost_fuel + p_fueloil.cost_fuel + p_coal.cost_fuel + p_biomass.cost_fuel
+        production.gas.cost_fuel
+        + p_fueloil.cost_fuel
+        + production.coal.cost_fuel
+        + p_biomass.cost_fuel
     )
     p.cost_climate_saved = (
         (p.CO2e_total_2021_estimated - p.CO2e_total)
@@ -512,9 +511,9 @@ def calc(
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     p.CO2e_production_based = (
-        p_gas.CO2e_production_based
+        production.gas.CO2e_production_based
         + p_opetpro.CO2e_production_based
-        + p_coal.CO2e_production_based
+        + production.coal.CO2e_production_based
         + p_heatnet.CO2e_production_based
         + p_biomass.CO2e_production_based
         + p_ofossil.CO2e_production_based
@@ -612,11 +611,11 @@ def calc(
         d_t=demand.transport,
         d_a=demand.agri,
         p=p,
-        p_gas=p_gas,
-        p_lpg=p_lpg,
+        p_gas=production.gas,
+        p_lpg=production.lpg,
         p_fueloil=p_fueloil,
         p_opetpro=p_opetpro,
-        p_coal=p_coal,
+        p_coal=production.coal,
         p_heatnet=p_heatnet,
         p_heatnet_cogen=p_heatnet_cogen,
         p_heatnet_plant=p_heatnet_plant,
