@@ -52,7 +52,7 @@ def calc_production(
 
     fact = inputs.fact
 
-    gas = Vars6.calc(
+    gas = Vars6.calc_2(
         inputs=inputs,
         what="gas",
         h18=h18,
@@ -61,7 +61,7 @@ def calc_production(
         CO2e_production_based_per_MWh=h18.p_gas.CO2e_production_based_per_MWh,
         CO2e_combustion_based_per_MWh=h18.p_gas.CO2e_combustion_based_per_MWh,
     )
-    coal = Vars6.calc(
+    coal = Vars6.calc_2(
         inputs=inputs,
         what="coal",
         h18=h18,
@@ -70,7 +70,7 @@ def calc_production(
         CO2e_production_based_per_MWh=h18.p_coal.CO2e_production_based_per_MWh,
         CO2e_combustion_based_per_MWh=h18.p_coal.CO2e_combustion_based_per_MWh,
     )
-    fueloil = Vars6.calc(
+    fueloil = Vars6.calc_2(
         inputs=inputs,
         what="fueloil",
         h18=h18,
