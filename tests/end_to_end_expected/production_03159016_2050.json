@@ -6630,7 +6630,10 @@
         "p_fueloil": {
             "CO2e_combustion_based": 0.0,
             "CO2e_combustion_based_per_MWh": 0.019177633441213964,
+            "CO2e_production_based": 0.0,
+            "CO2e_production_based_per_MWh": 0,
             "CO2e_total": 0.0,
+            "energy": 0.0,
             "CO2e_total_2021_estimated": 4846.598072336761,
             "change_CO2e_pct": -1.0,
             "change_CO2e_t": -5191.683134082991,
@@ -6638,8 +6641,7 @@
             "change_energy_pct": -1.0,
             "cost_climate_saved": 13231212.737479357,
             "cost_fuel": 0.0,
-            "cost_fuel_per_MWh": 86.7,
-            "energy": 0.0
+            "cost_fuel_per_MWh": 86.7
         },
         "p_opetpro": {
             "CO2e_combustion_based": 0.0,
