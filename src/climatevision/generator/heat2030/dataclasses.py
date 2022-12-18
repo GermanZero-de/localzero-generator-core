@@ -5,8 +5,6 @@ from dataclasses import dataclass, InitVar
 from ..inputs import Inputs
 from ..utils import div, MILLION
 from ..heat2018.h18 import H18
-from ..residences2030.r30 import R30
-from ..business2030.b30 import B30
 from ..common.energyWithCO2ePerMWh import EnergyWithCO2ePerMWh
 
 
@@ -117,25 +115,7 @@ class Vars6(Vars9):
     ):
         ass = inputs.ass
 
-        parent = Vars9(
-            inputs=inputs,
-            what=what,
-            h18=h18,
-            energy=self.energy,
-            CO2e_production_based_per_MWh=self.CO2e_production_based_per_MWh,
-            CO2e_combustion_based_per_MWh=self.CO2e_combustion_based_per_MWh,
-        )
-
-        self.energy = parent.energy
-        self.CO2e_production_based = parent.CO2e_production_based
-        self.CO2e_combustion_based = parent.CO2e_combustion_based
-        self.CO2e_total = parent.CO2e_total
-        self.change_energy_MWh = parent.change_energy_MWh
-        self.change_energy_pct = parent.change_energy_pct
-        self.change_CO2e_t = parent.change_CO2e_t
-        self.change_CO2e_pct = parent.change_CO2e_pct
-        self.CO2e_total_2021_estimated = parent.CO2e_total_2021_estimated
-        self.cost_climate_saved = parent.cost_climate_saved
+        super().__post_init__(inputs=inputs, what=what, h18=h18)
 
         self.cost_fuel_per_MWh = ass("Ass_R_S_" + what + "_energy_cost_factor_2035")
         self.cost_fuel = self.energy * self.cost_fuel_per_MWh / MILLION
