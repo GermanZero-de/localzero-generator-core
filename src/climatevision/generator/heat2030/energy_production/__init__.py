@@ -10,7 +10,6 @@ from ...business2030.b30 import B30
 from ..dataclasses import (
     # Vars5,
     Vars6,
-    Vars7,
     # Vars8,
     Vars9,
     # Vars10,
@@ -26,7 +25,7 @@ from ..dataclasses import (
 class Production:
     # total: Vars5
     gas: Vars6
-    lpg: Vars7
+    lpg: Vars9
     # fueloil: Vars8
     opetpro: Vars9
     coal: Vars6
@@ -53,10 +52,33 @@ def calc_production(
 
     fact = inputs.fact
 
-    gas = Vars6.calc(inputs, "gas", h18, r30, b30)
-    coal = Vars6.calc(inputs, "coal", h18, r30, b30)
+    gas = Vars6.calc(
+        inputs=inputs,
+        what="gas",
+        h18=h18,
+        r30=r30,
+        b30=b30,
+        CO2e_production_based_per_MWh=h18.p_gas.CO2e_production_based_per_MWh,
+        CO2e_combustion_based_per_MWh=h18.p_gas.CO2e_combustion_based_per_MWh,
+    )
+    coal = Vars6.calc(
+        inputs=inputs,
+        what="coal",
+        h18=h18,
+        r30=r30,
+        b30=b30,
+        CO2e_production_based_per_MWh=h18.p_coal.CO2e_production_based_per_MWh,
+        CO2e_combustion_based_per_MWh=h18.p_coal.CO2e_combustion_based_per_MWh,
+    )
 
-    lpg = Vars7.calc(inputs, "lpg", h18, r30, b30)
+    lpg = Vars9.calc(
+        inputs=inputs,
+        what="lpg",
+        h18=h18,
+        energy=r30.s_lpg.energy + b30.s_lpg.energy,
+        CO2e_combustion_based_per_MWh=h18.p_lpg.CO2e_combustion_based_per_MWh,
+        CO2e_production_based_per_MWh=0,
+    )
 
     opetpro = Vars9.calc(
         inputs=inputs,

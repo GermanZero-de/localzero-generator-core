@@ -6616,14 +6616,16 @@
         "p_lpg": {
             "CO2e_combustion_based": 0.0,
             "CO2e_combustion_based_per_MWh": 0.0284197603758379,
+            "CO2e_production_based": 0.0,
+            "CO2e_production_based_per_MWh": 0,
             "CO2e_total": 0.0,
+            "energy": 0.0,
             "CO2e_total_2021_estimated": 581218.6508248068,
             "change_CO2e_pct": -1.0,
             "change_CO2e_t": -622602.2916826581,
             "change_energy_MWh": -21907373.019653827,
             "change_energy_pct": -1.0,
-            "cost_climate_saved": 2436759193.5830026,
-            "energy": 0.0
+            "cost_climate_saved": 2436759193.5830026
         },
         "p_fueloil": {
             "CO2e_combustion_based": 0.0,
@@ -6645,13 +6647,13 @@
             "CO2e_production_based": 0.0,
             "CO2e_production_based_per_MWh": 0.057360378792307244,
             "CO2e_total": 0.0,
+            "energy": 0,
             "CO2e_total_2021_estimated": 4913982.727816391,
             "change_CO2e_pct": -1.0,
             "change_CO2e_t": -5263865.678236258,
             "change_energy_MWh": -14255833.333333334,
             "change_energy_pct": -1.0,
-            "cost_climate_saved": 20601872586.37022,
-            "energy": 0
+            "cost_climate_saved": 20601872586.37022
         },
         "p_coal": {
             "CO2e_combustion_based": 0.0,
@@ -6694,13 +6696,13 @@
             "CO2e_production_based": 0.0,
             "CO2e_production_based_per_MWh": 0.0,
             "CO2e_total": 703843.0333335714,
+            "energy": 15797210.389055256,
             "CO2e_total_2021_estimated": 20947718.87098641,
             "change_CO2e_pct": -0.9686333667101252,
             "change_CO2e_t": -21735384.882171508,
             "change_energy_MWh": -66889108.16407494,
             "change_energy_pct": -0.8089501302575862,
-            "cost_climate_saved": 84872449449.35953,
-            "energy": 15797210.389055256
+            "cost_climate_saved": 84872449449.35953
         },
         "p_heatnet_plant": {
             "CO2e_production_based": 0.0,
