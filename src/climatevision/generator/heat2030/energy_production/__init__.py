@@ -10,7 +10,6 @@ from ...business2030.b30 import B30
 from ..dataclasses import (
     # Vars5,
     Vars6,
-    Vars8,
     Vars9,
     # Vars10,
     # Vars11,
@@ -26,7 +25,7 @@ class Production:
     # total: Vars5
     gas: Vars6
     lpg: Vars9
-    fueloil: Vars8
+    fueloil: Vars6
     opetpro: Vars9
     coal: Vars6
     # heatnet: Vars10
@@ -70,8 +69,7 @@ def calc_production(
         CO2e_production_based_per_MWh=h18.p_coal.CO2e_production_based_per_MWh,
         CO2e_combustion_based_per_MWh=h18.p_coal.CO2e_combustion_based_per_MWh,
     )
-
-    fueloil = Vars8.calc(
+    fueloil = Vars6.calc(
         inputs=inputs,
         what="fueloil",
         h18=h18,

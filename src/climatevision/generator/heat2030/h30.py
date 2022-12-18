@@ -6,7 +6,6 @@ from .dataclasses import (
     Vars0,
     Vars5,
     Vars6,
-    Vars8,
     Vars9,
     Vars10,
     Vars11,
@@ -34,7 +33,7 @@ class H30:
     p: Vars5
     p_gas: Vars6
     p_lpg: Vars9
-    p_fueloil: Vars8
+    p_fueloil: Vars6
     p_opetpro: Vars9
     p_coal: Vars6
     p_heatnet: Vars10
