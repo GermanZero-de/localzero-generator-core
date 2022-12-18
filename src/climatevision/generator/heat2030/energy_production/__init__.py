@@ -116,7 +116,7 @@ def calc_production(
         ),
     )
 
-    ofossil = Vars9.calc_with_0_energy(
+    ofossil = Vars9.calc(
         inputs=inputs,
         what="ofossil",
         h18=h18,
@@ -126,7 +126,7 @@ def calc_production(
         ),
         CO2e_combustion_based_per_MWh=0,
     )
-    solarth = Vars9.calc_with_0_energy(
+    solarth = Vars9.calc(
         inputs=inputs,
         what="solarth",
         h18=h18,
@@ -134,7 +134,7 @@ def calc_production(
         CO2e_production_based_per_MWh=fact("Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018"),
         CO2e_combustion_based_per_MWh=0,
     )
-    heatpump = Vars9.calc_with_0_energy(
+    heatpump = Vars9.calc(
         inputs=inputs,
         what="heatpump",
         h18=h18,
@@ -142,7 +142,7 @@ def calc_production(
         CO2e_production_based_per_MWh=fact("Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018"),
         CO2e_combustion_based_per_MWh=0,
     )
-    orenew = Vars9.calc_with_0_energy(
+    orenew = Vars9.calc(
         inputs=inputs,
         what="orenew",
         h18=h18,
