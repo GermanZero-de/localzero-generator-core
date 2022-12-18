@@ -23,7 +23,6 @@ from .dataclasses import (
     Vars12,
     Vars13,
     Vars14,
-    Vars15,
 )
 from . import energy_demand, energy_general, energy_production
 
@@ -48,10 +47,6 @@ def calc(
     p_heatnet_lheatpump = Vars12()
     p_heatnet_geoth = Vars13()
     p_biomass = Vars14()
-    p_ofossil = Vars15()
-    p_orenew = Vars15()
-    p_solarth = Vars15()
-    p_heatpump = Vars15()
 
     demand = energy_demand.calc_demand(r30, b30, i30, a30)
 
@@ -60,7 +55,7 @@ def calc(
     )
 
     production = energy_production.calc_production(
-        inputs, h18, r30, b30, p_local_biomass_cogen.energy, p_heatnet.energy
+        inputs, h18, r30, b30, a30, p_local_biomass_cogen.energy, p_heatnet.energy
     )
 
     p.CO2e_total_2021_estimated = h18.p.CO2e_total * fact(
@@ -114,12 +109,6 @@ def calc(
     p_heatnet_lheatpump.invest = (
         p_heatnet_lheatpump.invest_per_x * p_heatnet_lheatpump.power_to_be_installed
     )
-    p_solarth.energy = r30.s_solarth.energy + b30.s_solarth.energy
-    p_heatpump.energy = (
-        r30.s_heatpump.energy + b30.s_heatpump.energy + a30.s_heatpump.energy
-    )
-    p_orenew.energy = p_solarth.energy + p_heatpump.energy
-    p_ofossil.energy = 0
 
     p.energy = (
         production.gas.energy
@@ -129,8 +118,8 @@ def calc(
         + production.coal.energy
         + p_heatnet.energy
         + p_biomass.energy
-        + p_ofossil.energy
-        + p_orenew.energy
+        + production.ofossil.energy
+        + production.orenew.energy
     )
     p_heatnet.CO2e_total = production.heatnet_cogen.CO2e_total
 
@@ -144,18 +133,9 @@ def calc(
     )
     p_biomass.CO2e_production_based = 0 * p_biomass.CO2e_production_based_per_MWh
     p_biomass.CO2e_total = p_biomass.CO2e_production_based
-    p_ofossil.CO2e_production_based_per_MWh = fact(
-        "Fact_H_P_ofossil_ratio_CO2e_pb_to_fec_2018"
-    )
-    p_ofossil.CO2e_production_based = 0 * p_ofossil.CO2e_production_based_per_MWh
-
-    p_ofossil.CO2e_total = p_ofossil.CO2e_production_based
 
     p_heatnet.CO2e_combustion_based = production.heatnet_cogen.CO2e_combustion_based
 
-    p_orenew.CO2e_production_based_per_MWh = fact(
-        "Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018"
-    )
     p_heatnet.change_energy_MWh = p_heatnet.energy - h18.p_heatnet.energy
     p_heatnet.change_energy_pct = div(p_heatnet.change_energy_MWh, h18.p_heatnet.energy)
     p_heatnet.change_CO2e_t = p_heatnet.CO2e_total - h18.p_heatnet.CO2e_total
@@ -188,7 +168,6 @@ def calc(
     p_heatnet_lheatpump.cost_wage = (
         p_heatnet_lheatpump.pct_of_wage * p_heatnet_lheatpump.invest_pa
     )
-    p_orenew.CO2e_production_based = 0 * p_orenew.CO2e_production_based_per_MWh
     p_heatnet_plant.CO2e_production_based_per_MWh = fact(
         "Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018"
     )
@@ -204,7 +183,6 @@ def calc(
         + p_heatnet.CO2e_combustion_based
     )
 
-    p_orenew.CO2e_total = p_orenew.CO2e_production_based + 0
     p_heatnet_plant.ratio_wage_to_emplo = fact(
         "Fact_B_P_constr_main_ratio_wage_to_emplo_2017"
     )
@@ -341,8 +319,8 @@ def calc(
         + production.coal.CO2e_total
         + p_heatnet.CO2e_total
         + p_biomass.CO2e_total
-        + p_ofossil.CO2e_total
-        + p_orenew.CO2e_total
+        + production.ofossil.CO2e_total
+        + production.orenew.CO2e_total
     )
     p_heatnet.CO2e_production_based = (
         production.heatnet_cogen.CO2e_production_based
@@ -404,79 +382,14 @@ def calc(
         * fact("Fact_M_cost_per_CO2e_2020")
     )
 
-    p_ofossil.change_energy_MWh = p_ofossil.energy - h18.p_ofossil.energy
-    p_ofossil.change_energy_pct = div(p_ofossil.change_energy_MWh, h18.p_ofossil.energy)
-    p_ofossil.change_CO2e_t = p_ofossil.CO2e_total - h18.p_ofossil.CO2e_total
-
-    p_ofossil.change_CO2e_pct = 0
-    p_ofossil.CO2e_total_2021_estimated = h18.p_ofossil.CO2e_total * fact(
-        "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
-    )
-    p_ofossil.cost_climate_saved = (
-        (p_ofossil.CO2e_total_2021_estimated - p_ofossil.CO2e_total)
-        * entries.m_duration_neutral
-        * fact("Fact_M_cost_per_CO2e_2020")
-    )
     p.CO2e_production_based = (
         production.gas.CO2e_production_based
         + production.opetpro.CO2e_production_based
         + production.coal.CO2e_production_based
         + p_heatnet.CO2e_production_based
         + p_biomass.CO2e_production_based
-        + p_ofossil.CO2e_production_based
-        + p_orenew.CO2e_production_based
-    )
-    p_orenew.change_energy_MWh = p_orenew.energy - h18.p_orenew.energy
-    p_orenew.change_energy_pct = div(p_orenew.change_energy_MWh, h18.p_orenew.energy)
-    p_orenew.change_CO2e_t = p_orenew.CO2e_total - h18.p_orenew.CO2e_total
-    p_orenew.change_CO2e_pct = 0
-
-    p_orenew.CO2e_total_2021_estimated = h18.p_orenew.CO2e_total * fact(
-        "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
-    )
-    p_orenew.cost_climate_saved = (
-        (p_orenew.CO2e_total_2021_estimated - p_orenew.CO2e_total)
-        * entries.m_duration_neutral
-        * fact("Fact_M_cost_per_CO2e_2020")
-    )
-    p_solarth.CO2e_production_based_per_MWh = fact(
-        "Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018"
-    )
-    p_solarth.CO2e_production_based = 0 * p_solarth.CO2e_production_based_per_MWh
-    p_solarth.CO2e_total = p_solarth.CO2e_production_based
-    p_solarth.change_energy_MWh = p_solarth.energy - h18.p_solarth.energy
-    p_solarth.change_energy_pct = div(p_solarth.change_energy_MWh, h18.p_solarth.energy)
-    p_solarth.change_CO2e_t = p_solarth.CO2e_total - h18.p_solarth.CO2e_total
-    p_solarth.change_CO2e_pct = 0
-    p_solarth.CO2e_total_2021_estimated = h18.p_solarth.CO2e_total * fact(
-        "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
-    )
-    p_solarth.cost_climate_saved = (
-        (p_solarth.CO2e_total_2021_estimated - p_solarth.CO2e_total)
-        * entries.m_duration_neutral
-        * fact("Fact_M_cost_per_CO2e_2020")
-    )
-
-    p_heatpump.CO2e_production_based_per_MWh = fact(
-        "Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018"
-    )
-    p_heatpump.CO2e_production_based = 0 * p_heatpump.CO2e_production_based_per_MWh
-    p_heatpump.CO2e_total = p_heatpump.CO2e_production_based
-
-    p_heatpump.change_energy_MWh = p_heatpump.energy - h18.p_heatpump.energy
-    p_heatpump.change_energy_pct = div(
-        p_heatpump.change_energy_MWh, h18.p_heatpump.energy
-    )
-    p_heatpump.change_CO2e_t = p_heatpump.CO2e_total - h18.p_heatpump.CO2e_total
-    p_heatpump.change_CO2e_pct = 0
-
-    p_heatpump.CO2e_total_2021_estimated = h18.p_heatpump.CO2e_total * fact(
-        "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
-    )
-    p_heatpump.cost_climate_saved = (
-        (p_heatpump.CO2e_total_2021_estimated - p_heatpump.CO2e_total)
-        * entries.m_duration_neutral
-        * fact("Fact_M_cost_per_CO2e_2020")
+        + production.ofossil.CO2e_production_based
+        + production.orenew.CO2e_production_based
     )
 
     general = energy_general.calc_general(
@@ -529,9 +442,9 @@ def calc(
         p_heatnet_lheatpump=p_heatnet_lheatpump,
         p_heatnet_geoth=p_heatnet_geoth,
         p_biomass=p_biomass,
-        p_ofossil=p_ofossil,
-        p_orenew=p_orenew,
-        p_solarth=p_solarth,
-        p_heatpump=p_heatpump,
+        p_ofossil=production.ofossil,
+        p_orenew=production.orenew,
+        p_solarth=production.solarth,
+        p_heatpump=production.heatpump,
         p_fossil_change_CO2e_t=p_fossil_change_CO2e_t,
     )

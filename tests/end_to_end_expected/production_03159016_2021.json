@@ -6796,52 +6796,60 @@
             "energy": 150880.2365109591
         },
         "p_ofossil": {
+            "CO2e_combustion_based": 0,
+            "CO2e_combustion_based_per_MWh": 0,
             "CO2e_production_based": 0.0,
             "CO2e_production_based_per_MWh": 0.0,
             "CO2e_total": 0.0,
+            "energy": 0,
             "CO2e_total_2021_estimated": 0.0,
             "change_CO2e_pct": 0,
             "change_CO2e_t": 0.0,
             "change_energy_MWh": -14348.419106204574,
             "change_energy_pct": -1.0,
-            "cost_climate_saved": 0.0,
-            "energy": 0
+            "cost_climate_saved": 0.0
         },
         "p_orenew": {
+            "CO2e_combustion_based": 0.0,
+            "CO2e_combustion_based_per_MWh": 0,
             "CO2e_production_based": 0.0,
             "CO2e_production_based_per_MWh": 0.0,
             "CO2e_total": 0.0,
+            "energy": 43454.357875578986,
             "CO2e_total_2021_estimated": 0.0,
             "change_CO2e_pct": 0,
             "change_CO2e_t": 0.0,
             "change_energy_MWh": 4247.384704863296,
             "change_energy_pct": 0.10833237971136561,
-            "cost_climate_saved": 0.0,
-            "energy": 43454.357875578986
+            "cost_climate_saved": 0.0
         },
         "p_solarth": {
+            "CO2e_combustion_based": 0.0,
+            "CO2e_combustion_based_per_MWh": 0,
             "CO2e_production_based": 0.0,
             "CO2e_production_based_per_MWh": 0.0,
             "CO2e_total": 0.0,
+            "energy": 37064.74095695869,
             "CO2e_total_2021_estimated": 0.0,
             "change_CO2e_pct": 0,
             "change_CO2e_t": 0.0,
             "change_energy_MWh": 21216.122836921895,
             "change_energy_pct": 1.3386733579061492,
-            "cost_climate_saved": 0.0,
-            "energy": 37064.74095695869
+            "cost_climate_saved": 0.0
         },
         "p_heatpump": {
+            "CO2e_combustion_based": 0.0,
+            "CO2e_combustion_based_per_MWh": 0,
             "CO2e_production_based": 0.0,
             "CO2e_production_based_per_MWh": 0.0,
             "CO2e_total": 0.0,
+            "energy": 6389.616918620295,
             "CO2e_total_2021_estimated": 0.0,
             "change_CO2e_pct": 0,
             "change_CO2e_t": 0.0,
             "change_energy_MWh": -16968.7381320586,
             "change_energy_pct": -0.7264526160015456,
-            "cost_climate_saved": 0.0,
-            "energy": 6389.616918620295
+            "cost_climate_saved": 0.0
         },
         "p_fossil_change_CO2e_t": -27112.642395372604
     },
