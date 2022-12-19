@@ -113,11 +113,16 @@ class Vars6(Vars9):
         what: str,
         h18: H18,
     ):
+        fact = inputs.fact
         ass = inputs.ass
 
         super().__post_init__(inputs=inputs, what=what, h18=h18)
 
-        self.cost_fuel_per_MWh = ass("Ass_R_S_" + what + "_energy_cost_factor_2035")
+        if what == "biomass":
+            self.cost_fuel_per_MWh = fact("Fact_R_S_wood_energy_cost_factor_2018")
+        else:
+            self.cost_fuel_per_MWh = ass("Ass_R_S_" + what + "_energy_cost_factor_2035")
+
         self.cost_fuel = self.energy * self.cost_fuel_per_MWh / MILLION
 
 
@@ -221,19 +226,3 @@ class Vars13:
     pct_of_wage: float = None  # type: ignore
     power_to_be_installed: float = None  # type: ignore
     ratio_wage_to_emplo: float = None  # type: ignore
-
-
-@dataclass(kw_only=True)
-class Vars14:
-    CO2e_production_based: float = None  # type: ignore
-    CO2e_production_based_per_MWh: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
-    change_CO2e_pct: float = None  # type: ignore
-    change_CO2e_t: float = None  # type: ignore
-    change_energy_MWh: float = None  # type: ignore
-    change_energy_pct: float = None  # type: ignore
-    cost_climate_saved: float = None  # type: ignore
-    cost_fuel: float = None  # type: ignore
-    cost_fuel_per_MWh: float = None  # type: ignore
-    energy: float = None  # type: ignore

@@ -11,7 +11,6 @@ from .dataclasses import (
     Vars11,
     Vars12,
     Vars13,
-    Vars14,
 )
 from .energy_demand import EnergyDemand
 from .energy_general import G, GStorage, GPlanning
@@ -40,7 +39,7 @@ class H30:
     p_heatnet_plant: Vars11
     p_heatnet_lheatpump: Vars12
     p_heatnet_geoth: Vars13
-    p_biomass: Vars14
+    p_biomass: Vars6
     p_ofossil: Vars9
     p_orenew: Vars9
     p_solarth: Vars9

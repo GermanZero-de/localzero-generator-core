@@ -7,6 +7,7 @@ from ...heat2018.h18 import H18
 from ...residences2030.r30 import R30
 from ...business2030.b30 import B30
 from ...agri2030.a30 import A30
+from ...industry2030.i30 import I30
 
 from ..dataclasses import (
     # Vars5,
@@ -16,7 +17,6 @@ from ..dataclasses import (
     # Vars11,
     # Vars12,
     # Vars13,
-    # Vars14,
 )
 
 
@@ -33,7 +33,7 @@ class Production:
     # heatnet_plant: Vars11
     # heatnet_lheatpump: Vars12
     # heatnet_geoth: Vars13
-    # biomass: Vars14
+    biomass: Vars6
     ofossil: Vars9
     orenew: Vars9
     solarth: Vars9
@@ -46,6 +46,7 @@ def calc_production(
     r30: R30,
     b30: B30,
     a30: A30,
+    i30: I30,
     p_local_biomass_cogen_energy: float,
     p_heatnet_energy: float,
 ) -> Production:
@@ -75,6 +76,20 @@ def calc_production(
         energy=r30.s_fueloil.energy + b30.s_fueloil.energy,
         CO2e_production_based_per_MWh=0,
         CO2e_combustion_based_per_MWh=h18.p_fueloil.CO2e_combustion_based_per_MWh,
+    )
+
+    biomass = Vars6(
+        inputs=inputs,
+        what="biomass",
+        h18=h18,
+        energy=r30.s_biomass.energy
+        + b30.s_biomass.energy
+        + i30.s_renew_biomass.energy
+        + a30.s_biomass.energy,
+        CO2e_production_based_per_MWh=fact(
+            "Fact_H_P_biomass_ratio_CO2e_pb_to_fec_2018"
+        ),
+        CO2e_combustion_based_per_MWh=0,
     )
 
     lpg = Vars9(
@@ -160,7 +175,7 @@ def calc_production(
         # heatnet_plant=heatnet_plant,
         # heatnet_geoth=heatnet_geoth,
         # heatnet_lheatpump=heatnet_lheatpump,
-        # biomass=biomass,
+        biomass=biomass,
         ofossil=ofossil,
         orenew=orenew,
         solarth=solarth,
