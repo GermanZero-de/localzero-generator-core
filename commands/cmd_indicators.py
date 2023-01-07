@@ -28,7 +28,7 @@ class Indicators:
     pv_panels_peryear: float = 0 # sector electricity: pv panels to build per year 
     wind_power_plants_peryear: float = 0 # sector electricity:  wind power plants to build per year 
     heat_power_plants_area: float = 0 # sector heat: area with heat power plants to build per year 
-    large_heatpumps_peryear: float = 0 # sector heat: large heat power plants to build per year 
+    large_heatpumps: float = 0 # sector heat: large heat power plants to build
     heatpumps_peryear: float = 0 #  sector residences: heat pumps per year to build 
     renovated_houses_peryear: float = 0  # sector residences: houses to renovate per year
     electric_bus_peryear: float = 0 # sector transport: electrical bus to build per year
@@ -54,13 +54,14 @@ class Indicators:
         # self.wind_power_plants_peryear = ((cr.e18.e.CO2e_total-cr.e30.e.CO2e_total)* 1e6)/((inputs.entries.m_year_target-inputs.entries.m_year_today) * (850-25) * (1700 * 3.2 * 1e3)) # assumption: 1700 full-load hours per year and 3,2 MW reference wind power plant
         # Amount per year = LocalToBeInstalledPower / (Reference * years) 
         # electricity
-        self.pv_panels_peryear = cr.e30.p_local.power_to_be_installed / (self.refs.pv_panel*(inputs.entries.m_year_target-inputs.entries.m_year_today))
-        self.wind_power_plants_peryear = cr.e30.p_local_wind_onshore.power_to_be_installed / (self.refs.wind_power_plant*(inputs.entries.m_year_target-inputs.entries.m_year_today))
+        duration = inputs.entries.m_year_target - inputs.entries.m_year_today
+        self.pv_panels_peryear = cr.e30.p_local.power_to_be_installed / (self.refs.pv_panel*duration)
+        self.wind_power_plants_peryear = cr.e30.p_local_wind_onshore.power_to_be_installed / (self.refs.wind_power_plant*duration)
         # heating
-        self.heat_power_plants_area = cr.h30.p_heatnet_plant.area_ha_available / (inputs.entries.m_year_target-inputs.entries.m_year_today)
-        self.large_heatpumps_peryear = cr.h30.p_heatnet_lheatpump.power_to_be_installed / ((self.refs.large_heatpump)*(inputs.entries.m_year_target-inputs.entries.m_year_today))
+        self.heat_power_plants_area = cr.h30.p_heatnet_plant.area_ha_available
+        self.large_heatpumps = cr.h30.p_heatnet_lheatpump.power_to_be_installed / (self.refs.large_heatpump)
         # residences
-        self.heatpumps_peryear = cr.r30.s_heatpump.power_to_be_installed / ((self.refs.heatpump)*(inputs.entries.m_year_target-inputs.entries.m_year_today))
+        self.heatpumps_peryear = cr.r30.s_heatpump.power_to_be_installed / ((self.refs.heatpump)*duration)
         self.renovated_houses_peryear = cr.r18.p_buildings_total.number_of_buildings * inputs.entries.r_rehab_rate_pa
         # transport
         self.electric_bus_peryear = cr.t30.road_bus.invest_pa_com / cr.t30.road_bus.invest_per_x
