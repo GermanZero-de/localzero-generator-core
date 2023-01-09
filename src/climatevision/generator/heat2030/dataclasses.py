@@ -1,18 +1,15 @@
 # pyright: strict
 
-from dataclasses import dataclass
+from dataclasses import dataclass, InitVar
 
 from ..inputs import Inputs
 from ..utils import div, MILLION
 from ..heat2018.h18 import H18
-from ..residences2030.r30 import R30
-from ..business2030.b30 import B30
 from ..common.energyWithCO2ePerMWh import EnergyWithCO2ePerMWh
 
 
 @dataclass(kw_only=True)
 class Vars0:
-    # Used by h
     CO2e_combustion_based: float = None  # type: ignore
     CO2e_production_based: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
@@ -34,7 +31,6 @@ class Vars0:
 
 @dataclass(kw_only=True)
 class Vars5:
-    # Used by p
     CO2e_combustion_based: float = None  # type: ignore
     CO2e_production_based: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
@@ -57,170 +53,81 @@ class Vars5:
 
 
 @dataclass(kw_only=True)
-class Vars6(EnergyWithCO2ePerMWh):
-    # Used by p_gas, p_coal
-    CO2e_total_2021_estimated: float
-    change_CO2e_pct: float
-    change_CO2e_t: float
-    change_energy_MWh: float
-    change_energy_pct: float
-    cost_climate_saved: float
-    cost_fuel: float
-    cost_fuel_per_MWh: float
+class Vars9(EnergyWithCO2ePerMWh):
+    CO2e_total_2021_estimated: float = 0
+    change_CO2e_pct: float = 0
+    change_CO2e_t: float = 0
+    change_energy_MWh: float = 0
+    change_energy_pct: float = 0
+    cost_climate_saved: float = 0
 
-    @classmethod
-    def calc(cls, inputs: Inputs, what: str, h18: H18, r30: R30, b30: B30) -> "Vars6":
+    inputs: InitVar[Inputs]
+    what: InitVar[str]
+    h18: InitVar[H18]
+
+    def __post_init__(
+        self,
+        inputs: Inputs,
+        what: str,
+        h18: H18,
+    ):
+        fact = inputs.fact
+        entries = inputs.entries
+
+        h18_p_what = getattr(h18, "p_" + what)
+
+        self.CO2e_production_based = self.energy * self.CO2e_production_based_per_MWh
+        self.CO2e_combustion_based = self.energy * self.CO2e_combustion_based_per_MWh
+
+        self.CO2e_total = self.CO2e_production_based + self.CO2e_combustion_based
+
+        self.change_energy_MWh = self.energy - h18_p_what.energy
+        self.change_energy_pct = div(self.change_energy_MWh, h18_p_what.energy)
+
+        self.change_CO2e_t = self.CO2e_total - h18_p_what.CO2e_total
+        self.change_CO2e_pct = div(self.change_CO2e_t, h18_p_what.CO2e_total)
+
+        self.CO2e_total_2021_estimated = h18_p_what.CO2e_total * fact(
+            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+        )
+
+        self.cost_climate_saved = (
+            (self.CO2e_total_2021_estimated - self.CO2e_total)
+            * entries.m_duration_neutral
+            * fact("Fact_M_cost_per_CO2e_2020")
+        )
+
+
+@dataclass(kw_only=True)
+class Vars6(Vars9):
+    cost_fuel: float = 0
+    cost_fuel_per_MWh: float = 0
+
+    inputs: InitVar[Inputs]
+    what: InitVar[str]
+    h18: InitVar[H18]
+
+    def __post_init__(
+        self,
+        inputs: Inputs,
+        what: str,
+        h18: H18,
+    ):
         fact = inputs.fact
         ass = inputs.ass
-        entries = inputs.entries
 
-        h18_p_what = getattr(h18, "p_" + what)
-        r30_s_what = getattr(r30, "s_" + what)
-        b30_s_what = getattr(b30, "s_" + what)
+        super().__post_init__(inputs=inputs, what=what, h18=h18)
 
-        CO2e_production_based_per_MWh = h18_p_what.CO2e_production_based_per_MWh
-        CO2e_combustion_based_per_MWh = h18_p_what.CO2e_combustion_based_per_MWh
+        if what == "biomass":
+            self.cost_fuel_per_MWh = fact("Fact_R_S_wood_energy_cost_factor_2018")
+        else:
+            self.cost_fuel_per_MWh = ass("Ass_R_S_" + what + "_energy_cost_factor_2035")
 
-        energy = r30_s_what.energy + b30_s_what.energy
-
-        CO2e_production_based = energy * CO2e_production_based_per_MWh
-        CO2e_combustion_based = energy * CO2e_combustion_based_per_MWh
-
-        CO2e_total = CO2e_production_based + CO2e_combustion_based
-
-        cost_fuel_per_MWh = ass("Ass_R_S_" + what + "_energy_cost_factor_2035")
-        cost_fuel = energy * cost_fuel_per_MWh / MILLION
-
-        change_energy_MWh = energy - h18_p_what.energy
-        change_energy_pct = div(change_energy_MWh, h18_p_what.energy)
-
-        change_CO2e_t = CO2e_total - h18_p_what.CO2e_total
-        change_CO2e_pct = div(change_CO2e_t, h18_p_what.CO2e_total)
-
-        CO2e_total_2021_estimated = h18_p_what.CO2e_total * fact(
-            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
-        )
-        cost_climate_saved = (
-            (CO2e_total_2021_estimated - CO2e_total)
-            * entries.m_duration_neutral
-            * fact("Fact_M_cost_per_CO2e_2020")
-        )
-
-        return cls(
-            CO2e_combustion_based=CO2e_combustion_based,
-            CO2e_combustion_based_per_MWh=CO2e_combustion_based_per_MWh,
-            CO2e_production_based=CO2e_production_based,
-            CO2e_production_based_per_MWh=CO2e_production_based_per_MWh,
-            CO2e_total=CO2e_total,
-            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
-            change_CO2e_pct=change_CO2e_pct,
-            change_CO2e_t=change_CO2e_t,
-            change_energy_MWh=change_energy_MWh,
-            change_energy_pct=change_energy_pct,
-            cost_climate_saved=cost_climate_saved,
-            cost_fuel=cost_fuel,
-            cost_fuel_per_MWh=cost_fuel_per_MWh,
-            energy=energy,
-        )
-
-
-@dataclass(kw_only=True)
-class Vars7:
-    # Used by p_lpg
-    CO2e_combustion_based: float
-    CO2e_combustion_based_per_MWh: float
-    CO2e_total: float
-    CO2e_total_2021_estimated: float
-    change_CO2e_pct: float
-    change_CO2e_t: float
-    change_energy_MWh: float
-    change_energy_pct: float
-    cost_climate_saved: float
-    energy: float
-
-    @classmethod
-    def calc(cls, inputs: Inputs, what: str, h18: H18, r30: R30, b30: B30) -> "Vars7":
-        fact = inputs.fact
-        entries = inputs.entries
-
-        h18_p_what = getattr(h18, "p_" + what)
-        r30_s_what = getattr(r30, "s_" + what)
-        b30_s_what = getattr(b30, "s_" + what)
-
-        CO2e_combustion_based_per_MWh = h18_p_what.CO2e_combustion_based_per_MWh
-
-        energy = r30_s_what.energy + b30_s_what.energy
-
-        CO2e_combustion_based = energy * CO2e_combustion_based_per_MWh
-
-        CO2e_total = CO2e_combustion_based
-
-        change_energy_MWh = energy - h18_p_what.energy
-        change_energy_pct = div(change_energy_MWh, h18_p_what.energy)
-
-        change_CO2e_t = CO2e_total - h18_p_what.CO2e_total
-        change_CO2e_pct = div(change_CO2e_t, h18_p_what.CO2e_total)
-
-        CO2e_total_2021_estimated = h18_p_what.CO2e_total * fact(
-            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
-        )
-        cost_climate_saved = (
-            (CO2e_total_2021_estimated - CO2e_total)
-            * entries.m_duration_neutral
-            * fact("Fact_M_cost_per_CO2e_2020")
-        )
-
-        return cls(
-            CO2e_combustion_based=CO2e_combustion_based,
-            CO2e_combustion_based_per_MWh=CO2e_combustion_based_per_MWh,
-            CO2e_total=CO2e_total,
-            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
-            change_CO2e_pct=change_CO2e_pct,
-            change_CO2e_t=change_CO2e_t,
-            change_energy_MWh=change_energy_MWh,
-            change_energy_pct=change_energy_pct,
-            cost_climate_saved=cost_climate_saved,
-            energy=energy,
-        )
-
-
-@dataclass(kw_only=True)
-class Vars8:
-    # Used by p_fueloil
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_combustion_based_per_MWh: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
-    change_CO2e_pct: float = None  # type: ignore
-    change_CO2e_t: float = None  # type: ignore
-    change_energy_MWh: float = None  # type: ignore
-    change_energy_pct: float = None  # type: ignore
-    cost_climate_saved: float = None  # type: ignore
-    cost_fuel: float = None  # type: ignore
-    cost_fuel_per_MWh: float = None  # type: ignore
-    energy: float = None  # type: ignore
-
-
-@dataclass(kw_only=True)
-class Vars9:
-    # Used by p_opetpro, p_heatnet_cogen
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_combustion_based_per_MWh: float = None  # type: ignore
-    CO2e_production_based: float = None  # type: ignore
-    CO2e_production_based_per_MWh: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
-    change_CO2e_pct: float = None  # type: ignore
-    change_CO2e_t: float = None  # type: ignore
-    change_energy_MWh: float = None  # type: ignore
-    change_energy_pct: float = None  # type: ignore
-    cost_climate_saved: float = None  # type: ignore
-    energy: float = None  # type: ignore
+        self.cost_fuel = self.energy * self.cost_fuel_per_MWh / MILLION
 
 
 @dataclass(kw_only=True)
 class Vars10:
-    # Used by p_heatnet
     CO2e_combustion_based: float = None  # type: ignore
     CO2e_production_based: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
@@ -242,7 +149,6 @@ class Vars10:
 
 @dataclass(kw_only=True)
 class Vars11:
-    # Used by p_heatnet_plant
     CO2e_production_based: float = None  # type: ignore
     CO2e_production_based_per_MWh: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
@@ -269,7 +175,6 @@ class Vars11:
 
 @dataclass(kw_only=True)
 class Vars12:
-    # Used by p_heatnet_lheatpump
     CO2e_production_based: float = None  # type: ignore
     CO2e_production_based_per_MWh: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
@@ -298,7 +203,6 @@ class Vars12:
 
 @dataclass(kw_only=True)
 class Vars13:
-    # Used by p_heatnet_geoth
     CO2e_production_based: float = None  # type: ignore
     CO2e_production_based_per_MWh: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
@@ -322,35 +226,3 @@ class Vars13:
     pct_of_wage: float = None  # type: ignore
     power_to_be_installed: float = None  # type: ignore
     ratio_wage_to_emplo: float = None  # type: ignore
-
-
-@dataclass(kw_only=True)
-class Vars14:
-    # Used by p_biomass
-    CO2e_production_based: float = None  # type: ignore
-    CO2e_production_based_per_MWh: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
-    change_CO2e_pct: float = None  # type: ignore
-    change_CO2e_t: float = None  # type: ignore
-    change_energy_MWh: float = None  # type: ignore
-    change_energy_pct: float = None  # type: ignore
-    cost_climate_saved: float = None  # type: ignore
-    cost_fuel: float = None  # type: ignore
-    cost_fuel_per_MWh: float = None  # type: ignore
-    energy: float = None  # type: ignore
-
-
-@dataclass(kw_only=True)
-class Vars15:
-    # Used by p_ofossil, p_orenew, p_solarth, p_heatpump
-    CO2e_production_based: float = None  # type: ignore
-    CO2e_production_based_per_MWh: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
-    change_CO2e_pct: float = None  # type: ignore
-    change_CO2e_t: float = None  # type: ignore
-    change_energy_MWh: float = None  # type: ignore
-    change_energy_pct: float = None  # type: ignore
-    cost_climate_saved: float = None  # type: ignore
-    energy: float = None  # type: ignore

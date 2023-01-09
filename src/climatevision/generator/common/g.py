@@ -44,8 +44,8 @@ class GConsult(G):
 
         invest_pa = invest / entries.m_duration_target
 
-        invest_com = invest
-        invest_pa_com = invest_pa
+        invest_commune = invest
+        invest_pa_commune = invest_pa
 
         cost_wage = invest_pa
 
@@ -53,17 +53,17 @@ class GConsult(G):
         demand_emplo = div(cost_wage, ratio_wage_to_emplo)
 
         demand_emplo_new = max(0, demand_emplo - emplo_existing)
-        demand_emplo_com = demand_emplo_new
+        demand_emplo_commune = demand_emplo_new
 
         return cls(
             cost_wage=cost_wage,
             demand_emplo=demand_emplo,
-            demand_emplo_com=demand_emplo_com,
+            demand_emplo_com=demand_emplo_commune,
             demand_emplo_new=demand_emplo_new,
             invest=invest,
-            invest_com=invest_com,
+            invest_com=invest_commune,
             invest_pa=invest_pa,
-            invest_pa_com=invest_pa_com,
+            invest_pa_com=invest_pa_commune,
             ratio_wage_to_emplo=ratio_wage_to_emplo,
         )
 
@@ -77,8 +77,8 @@ class GConsult(G):
 
         invest_pa = invest / entries.m_duration_target
 
-        invest_com = invest
-        invest_pa_com = invest_pa
+        invest_commune = invest
+        invest_pa_commune = invest_pa
 
         cost_wage = invest / fact("Fact_H_P_planning_duration")
 
@@ -86,22 +86,22 @@ class GConsult(G):
         demand_emplo = div(cost_wage, ratio_wage_to_emplo)
 
         demand_emplo_new = demand_emplo
-        demand_emplo_com = demand_emplo_new
+        demand_emplo_commune = demand_emplo_new
 
         return cls(
             cost_wage=cost_wage,
             demand_emplo=demand_emplo,
-            demand_emplo_com=demand_emplo_com,
+            demand_emplo_com=demand_emplo_commune,
             demand_emplo_new=demand_emplo_new,
             invest=invest,
-            invest_com=invest_com,
+            invest_com=invest_commune,
             invest_pa=invest_pa,
-            invest_pa_com=invest_pa_com,
+            invest_pa_com=invest_pa_commune,
             ratio_wage_to_emplo=ratio_wage_to_emplo,
         )
 
     @classmethod
-    def calc_from_invest_calc_planning_with_invest_com(
+    def calc_from_invest_calc_planning_with_invest_commune(
         cls, inputs: Inputs, invest: float
     ) -> "GConsult":
         ass = inputs.ass
@@ -109,8 +109,8 @@ class GConsult(G):
 
         invest_pa = invest / entries.m_duration_target
 
-        invest_com = invest * ass("Ass_T_C_ratio_public_sector_100")
-        invest_pa_com = invest_com / entries.m_duration_target
+        invest_commune = invest * ass("Ass_T_C_ratio_public_sector_100")
+        invest_pa_commune = invest_commune / entries.m_duration_target
 
         cost_wage = invest_pa
 
@@ -118,17 +118,17 @@ class GConsult(G):
         demand_emplo = div(cost_wage, ratio_wage_to_emplo)
 
         demand_emplo_new = demand_emplo
-        demand_emplo_com = demand_emplo_new
+        demand_emplo_commune = demand_emplo_new
 
         return cls(
             cost_wage=cost_wage,
             demand_emplo=demand_emplo,
-            demand_emplo_com=demand_emplo_com,
+            demand_emplo_com=demand_emplo_commune,
             demand_emplo_new=demand_emplo_new,
             invest=invest,
-            invest_com=invest_com,
+            invest_com=invest_commune,
             invest_pa=invest_pa,
-            invest_pa_com=invest_pa_com,
+            invest_pa_com=invest_pa_commune,
             ratio_wage_to_emplo=ratio_wage_to_emplo,
         )
 
@@ -141,8 +141,8 @@ class GConsult(G):
 
         invest = invest_pa * entries.m_duration_target
 
-        invest_pa_com = invest_pa
-        invest_com = invest
+        invest_pa_commune = invest_pa
+        invest_commune = invest
 
         pct_of_wage = ass("Ass_I_G_advice_invest_pct_of_wage")
         cost_wage = invest_pa * pct_of_wage
@@ -150,17 +150,17 @@ class GConsult(G):
         demand_emplo = div(cost_wage, ratio_wage_to_emplo)
 
         demand_emplo_new = demand_emplo
-        demand_emplo_com = demand_emplo_new
+        demand_emplo_commune = demand_emplo_new
 
         return cls(
             cost_wage=cost_wage,
             demand_emplo=demand_emplo,
-            demand_emplo_com=demand_emplo_com,
+            demand_emplo_com=demand_emplo_commune,
             demand_emplo_new=demand_emplo_new,
             invest=invest,
-            invest_com=invest_com,
+            invest_com=invest_commune,
             invest_pa=invest_pa,
-            invest_pa_com=invest_pa_com,
+            invest_pa_com=invest_pa_commune,
             ratio_wage_to_emplo=ratio_wage_to_emplo,
         )
 
@@ -176,8 +176,8 @@ class GConsult(G):
         invest = invest_per_x * power_to_be_installed
         invest_pa = invest / entries.m_duration_target
 
-        invest_com = invest
-        invest_pa_com = invest_pa
+        invest_commune = invest
+        invest_pa_commune = invest_pa
 
         pct_of_wage = fact("Fact_B_P_constr_main_revenue_pct_of_wage_2017")
         cost_wage = pct_of_wage * invest_pa
@@ -186,14 +186,16 @@ class GConsult(G):
         demand_emplo = div(cost_wage, ratio_wage_to_emplo)
         demand_emplo_new = demand_emplo
 
+        demand_emplo_commune = 0
+
         return cls(
             cost_wage=cost_wage,
             demand_emplo=demand_emplo,
-            demand_emplo_com=0,
+            demand_emplo_com=demand_emplo_commune,
             demand_emplo_new=demand_emplo_new,
             invest=invest,
-            invest_com=invest_com,
+            invest_com=invest_commune,
             invest_pa=invest_pa,
-            invest_pa_com=invest_pa_com,
+            invest_pa_com=invest_pa_commune,
             ratio_wage_to_emplo=ratio_wage_to_emplo,
         )

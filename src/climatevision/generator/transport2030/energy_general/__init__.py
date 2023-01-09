@@ -40,7 +40,7 @@ def calc_general(
         + other_cycl.invest
     )
 
-    g_planning = GPlanning.calc_from_invest_calc_planning_with_invest_com(
+    g_planning = GPlanning.calc_from_invest_calc_planning_with_invest_commune(
         inputs, invest
     )
 

@@ -7,11 +7,11 @@ from ..utils import div
 
 @dataclass(kw_only=True)
 class EnergyWithCO2ePerMWh:
-    CO2e_combustion_based: float
+    CO2e_combustion_based: float = 0
     CO2e_combustion_based_per_MWh: float
-    CO2e_production_based: float
+    CO2e_production_based: float = 0
     CO2e_production_based_per_MWh: float
-    CO2e_total: float
+    CO2e_total: float = 0
     energy: float
 
     @classmethod

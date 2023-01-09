@@ -26,10 +26,10 @@ def cmd_data_normalize(args: Any):
         dups = []
         current = []
         for r in rows:
-            if len(current) > 0 and r[0] == current[0][0]:
-                current.append(r)
+            if len(current) > 0 and r[0] == current[0][0]:  # type: ignore
+                current.append(r)  # type: ignore
             else:
-                if len(current) > 1:
+                if len(current) > 1:  # type: ignore
                     dups.append(current)  # type: ignore
                 current = [r]
         return dups  # type: ignore
