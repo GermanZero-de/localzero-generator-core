@@ -30,7 +30,7 @@ class Production:
     coal: Vars6
     heatnet: Vars10
     heatnet_cogen: Vars9
-    # heatnet_plant: Vars11
+    heatnet_plant: Vars11
     # heatnet_lheatpump: Vars12
     # heatnet_geoth: Vars13
     biomass: Vars6
@@ -49,7 +49,6 @@ def calc_production(
     i30: I30,
     heatnet_cogen_energy: float,
     p_heatnet_energy: float,
-    p_heatnet_plant: Vars11,
     p_heatnet_lheatpump: Vars12,
     p_heatnet_geoth: Vars13,
 ) -> Production:
@@ -126,12 +125,20 @@ def calc_production(
         ),
     )
 
+    heatnet_plant = Vars11(
+        inputs=inputs,
+        what="heatnet_plant",
+        h18=h18,
+        p_heatnet_energy=p_heatnet_energy,
+        heatnet_cogen_energy=heatnet_cogen_energy,
+    )
+
     heatnet = Vars10(
         inputs=inputs,
         what="heatnet",
         h18=h18,
         heatnet_cogen=heatnet_cogen,
-        p_heatnet_plant=p_heatnet_plant,
+        p_heatnet_plant=heatnet_plant,
         p_heatnet_lheatpump=p_heatnet_lheatpump,
         p_heatnet_geoth=p_heatnet_geoth,
         energy=p_heatnet_energy,
@@ -181,7 +188,7 @@ def calc_production(
         coal=coal,
         heatnet=heatnet,
         heatnet_cogen=heatnet_cogen,
-        # heatnet_plant=heatnet_plant,
+        heatnet_plant=heatnet_plant,
         # heatnet_geoth=heatnet_geoth,
         # heatnet_lheatpump=heatnet_lheatpump,
         biomass=biomass,

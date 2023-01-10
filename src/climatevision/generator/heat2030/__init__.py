@@ -18,7 +18,6 @@ from .h30 import H30
 from .dataclasses import (
     Vars0,
     Vars5,
-    Vars11,
     Vars12,
     Vars13,
 )
@@ -40,7 +39,6 @@ def calc(
     entries = inputs.entries
 
     p = Vars5()
-    p_heatnet_plant = Vars11()
     p_heatnet_lheatpump = Vars12()
     p_heatnet_geoth = Vars13()
 
@@ -54,59 +52,6 @@ def calc(
         if (p_local_biomass_cogen.energy < p_heatnet_energy)
         else p_heatnet_energy
     )
-
-    p_heatnet_plant.invest_per_x = fact("Fact_H_P_heatnet_solarth_park_invest_203X")
-    p_heatnet_plant.pct_energy = ass("Ass_H_P_heatnet_fraction_solarth_2050")
-    p_heatnet_plant.energy = (
-        (p_heatnet_energy - heatnet_cogen_energy) * p_heatnet_plant.pct_energy
-        if (heatnet_cogen_energy < p_heatnet_energy)
-        else 0
-    )
-    p_heatnet_plant.area_ha_available = p_heatnet_plant.energy / fact(
-        "Fact_H_P_heatnet_solarth_park_yield_2025"
-    )
-    p_heatnet_plant.invest = (
-        p_heatnet_plant.invest_per_x * p_heatnet_plant.area_ha_available
-    )
-    p_heatnet_plant.invest_pa = p_heatnet_plant.invest / entries.m_duration_target
-    p_heatnet_plant.pct_of_wage = fact("Fact_B_P_constr_main_revenue_pct_of_wage_2017")
-    p_heatnet_plant.cost_wage = p_heatnet_plant.pct_of_wage * p_heatnet_plant.invest_pa
-    p_heatnet_plant.CO2e_production_based_per_MWh = fact(
-        "Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018"
-    )
-    p_heatnet_plant.CO2e_production_based = (
-        p_heatnet_plant.energy * p_heatnet_plant.CO2e_production_based_per_MWh
-    )
-    p_heatnet_plant.ratio_wage_to_emplo = fact(
-        "Fact_B_P_constr_main_ratio_wage_to_emplo_2017"
-    )
-    p_heatnet_plant.demand_emplo = div(
-        p_heatnet_plant.cost_wage, p_heatnet_plant.ratio_wage_to_emplo
-    )
-    p_heatnet_plant.CO2e_total = p_heatnet_plant.CO2e_production_based
-    p_heatnet_plant.change_energy_MWh = (
-        p_heatnet_plant.energy - h18.p_heatnet_plant.energy
-    )
-    p_heatnet_plant.change_energy_pct = div(
-        p_heatnet_plant.change_energy_MWh, h18.p_heatnet_plant.energy
-    )
-    p_heatnet_plant.change_CO2e_t = (
-        p_heatnet_plant.CO2e_total - h18.p_heatnet_plant.CO2e_total
-    )
-    p_heatnet_plant.change_CO2e_pct = div(
-        p_heatnet_plant.change_CO2e_t, h18.p_heatnet_plant.CO2e_total
-    )
-    p_heatnet_plant.CO2e_total_2021_estimated = h18.p_heatnet_plant.CO2e_total * fact(
-        "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
-    )
-    p_heatnet_plant.cost_climate_saved = (
-        (p_heatnet_plant.CO2e_total_2021_estimated - p_heatnet_plant.CO2e_total)
-        * entries.m_duration_neutral
-        * fact("Fact_M_cost_per_CO2e_2020")
-    )
-    p_heatnet_plant.invest_pa_com = p_heatnet_plant.invest_pa
-    p_heatnet_plant.invest_com = p_heatnet_plant.invest
-    p_heatnet_plant.demand_emplo_new = p_heatnet_plant.demand_emplo
 
     p_heatnet_lheatpump.invest_per_x = fact("Fact_H_P_heatnet_lheatpump_invest_203X")
     p_heatnet_lheatpump.pct_energy = ass("Ass_H_P_heatnet_fraction_lheatpump_2050")
@@ -231,7 +176,6 @@ def calc(
         i30,
         heatnet_cogen_energy,
         p_heatnet_energy,
-        p_heatnet_plant,
         p_heatnet_lheatpump,
         p_heatnet_geoth,
     )
@@ -348,7 +292,7 @@ def calc(
         p_coal=production.coal,
         p_heatnet=production.heatnet,
         p_heatnet_cogen=production.heatnet_cogen,
-        p_heatnet_plant=p_heatnet_plant,
+        p_heatnet_plant=production.heatnet_plant,
         p_heatnet_lheatpump=p_heatnet_lheatpump,
         p_heatnet_geoth=p_heatnet_geoth,
         p_biomass=production.biomass,
