@@ -175,13 +175,7 @@ class Vars11(Vars9):
 
 
 @dataclass(kw_only=True)
-class Vars12(EnergyWithCO2ePerMWh):
-    CO2e_total_2021_estimated: float = 0
-    change_CO2e_pct: float = 0
-    change_CO2e_t: float = 0
-    change_energy_MWh: float = 0
-    change_energy_pct: float = 0
-    cost_climate_saved: float = 0
+class Vars12(Vars9):
     cost_wage: float = 0
     demand_electricity: float = 0
     demand_emplo: float = 0
@@ -210,12 +204,10 @@ class Vars12(EnergyWithCO2ePerMWh):
         fact = inputs.fact
         entries = inputs.entries
 
-        h18_p_what = getattr(h18, "p_" + what)
+        super().__post_init__(inputs=inputs, what=what, h18=h18)
 
-        self.CO2e_production_based = self.energy * self.CO2e_production_based_per_MWh
-        self.CO2e_combustion_based = self.energy * self.CO2e_combustion_based_per_MWh
-
-        self.CO2e_total = self.CO2e_production_based + self.CO2e_combustion_based
+        self.change_energy_pct = 0
+        self.change_CO2e_pct = 0
 
         self.invest_per_x = fact("Fact_H_P_heatnet_lheatpump_invest_203X")
         self.full_load_hour = fact("Fact_H_P_heatnet_lheatpump_full_load_hours")
@@ -229,20 +221,6 @@ class Vars12(EnergyWithCO2ePerMWh):
         self.demand_emplo_new = self.demand_emplo
         self.demand_electricity = self.energy / fact("Fact_H_P_heatnet_lheatpump_apf")
 
-        self.change_energy_MWh = self.energy - h18_p_what.energy
-        self.change_energy_pct = 0
-
-        self.change_CO2e_t = self.CO2e_total - h18_p_what.CO2e_total
-        self.change_CO2e_pct = 0
-
-        self.CO2e_total_2021_estimated = h18_p_what.CO2e_total * fact(
-            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
-        )
-        self.cost_climate_saved = (
-            (self.CO2e_total_2021_estimated - self.CO2e_total)
-            * entries.m_duration_neutral
-            * fact("Fact_M_cost_per_CO2e_2020")
-        )
         self.invest_pa_com = self.invest_pa
         self.invest_com = self.invest
 
