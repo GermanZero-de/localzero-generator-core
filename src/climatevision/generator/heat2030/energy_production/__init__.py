@@ -31,7 +31,7 @@ class Production:
     heatnet: Vars10
     heatnet_cogen: Vars9
     heatnet_plant: Vars11
-    # heatnet_lheatpump: Vars12
+    heatnet_lheatpump: Vars12
     # heatnet_geoth: Vars13
     biomass: Vars6
     ofossil: Vars9
@@ -49,7 +49,6 @@ def calc_production(
     i30: I30,
     heatnet_cogen_energy: float,
     p_heatnet_energy: float,
-    p_heatnet_lheatpump: Vars12,
     p_heatnet_geoth: Vars13,
 ) -> Production:
 
@@ -126,19 +125,32 @@ def calc_production(
         ),
     )
 
-    pct_energy = ass("Ass_H_P_heatnet_fraction_solarth_2050")
+    heatnet_plant_pct_energy = ass("Ass_H_P_heatnet_fraction_solarth_2050")
     heatnet_plant = Vars11(
         inputs=inputs,
         what="heatnet_plant",
         h18=h18,
         energy=(
-            (p_heatnet_energy - heatnet_cogen_energy) * pct_energy
+            (p_heatnet_energy - heatnet_cogen_energy) * heatnet_plant_pct_energy
             if (heatnet_cogen_energy < p_heatnet_energy)
             else 0
         ),
         CO2e_production_based_per_MWh=fact("Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018"),
         CO2e_combustion_based_per_MWh=0,
-        pct_energy=pct_energy,
+        pct_energy=heatnet_plant_pct_energy,
+    )
+
+    heatnet_lheatpump_pct_energy = ass("Ass_H_P_heatnet_fraction_lheatpump_2050")
+    heatnet_lheatpump = Vars12(
+        inputs=inputs,
+        what="heatnet_lheatpump",
+        h18=h18,
+        energy=(
+            (p_heatnet_energy - heatnet_cogen_energy) * heatnet_lheatpump_pct_energy
+            if (heatnet_cogen_energy < p_heatnet_energy)
+            else 0
+        ),
+        pct_energy=heatnet_lheatpump_pct_energy,
     )
 
     heatnet = Vars10(
@@ -147,7 +159,7 @@ def calc_production(
         h18=h18,
         heatnet_cogen=heatnet_cogen,
         p_heatnet_plant=heatnet_plant,
-        p_heatnet_lheatpump=p_heatnet_lheatpump,
+        p_heatnet_lheatpump=heatnet_lheatpump,
         p_heatnet_geoth=p_heatnet_geoth,
         energy=p_heatnet_energy,
     )
@@ -198,7 +210,7 @@ def calc_production(
         heatnet_cogen=heatnet_cogen,
         heatnet_plant=heatnet_plant,
         # heatnet_geoth=heatnet_geoth,
-        # heatnet_lheatpump=heatnet_lheatpump,
+        heatnet_lheatpump=heatnet_lheatpump,
         biomass=biomass,
         ofossil=ofossil,
         orenew=orenew,
