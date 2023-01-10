@@ -175,10 +175,7 @@ class Vars11(Vars9):
 
 
 @dataclass(kw_only=True)
-class Vars12:
-    CO2e_production_based: float = 0
-    CO2e_production_based_per_MWh: float = 0
-    CO2e_total: float = 0
+class Vars12(EnergyWithCO2ePerMWh):
     CO2e_total_2021_estimated: float = 0
     change_CO2e_pct: float = 0
     change_CO2e_t: float = 0
@@ -189,7 +186,6 @@ class Vars12:
     demand_electricity: float = 0
     demand_emplo: float = 0
     demand_emplo_new: float = 0
-    energy: float
     full_load_hour: float = 0
     invest: float = 0
     invest_com: float = 0
@@ -216,6 +212,11 @@ class Vars12:
 
         h18_p_what = getattr(h18, "p_" + what)
 
+        self.CO2e_production_based = self.energy * self.CO2e_production_based_per_MWh
+        self.CO2e_combustion_based = self.energy * self.CO2e_combustion_based_per_MWh
+
+        self.CO2e_total = self.CO2e_production_based + self.CO2e_combustion_based
+
         self.invest_per_x = fact("Fact_H_P_heatnet_lheatpump_invest_203X")
         self.full_load_hour = fact("Fact_H_P_heatnet_lheatpump_full_load_hours")
         self.pct_of_wage = fact("Fact_B_P_constr_main_revenue_pct_of_wage_2017")
@@ -223,15 +224,10 @@ class Vars12:
         self.invest = self.invest_per_x * self.power_to_be_installed
         self.invest_pa = self.invest / entries.m_duration_target
         self.cost_wage = self.pct_of_wage * self.invest_pa
-        self.CO2e_production_based_per_MWh = fact(
-            "Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018"
-        )
         self.ratio_wage_to_emplo = fact("Fact_B_P_constr_main_ratio_wage_to_emplo_2017")
         self.demand_emplo = div(self.cost_wage, self.ratio_wage_to_emplo)
         self.demand_emplo_new = self.demand_emplo
-        self.CO2e_production_based = self.energy * self.CO2e_production_based_per_MWh
         self.demand_electricity = self.energy / fact("Fact_H_P_heatnet_lheatpump_apf")
-        self.CO2e_total = self.CO2e_production_based
 
         self.change_energy_MWh = self.energy - h18_p_what.energy
         self.change_energy_pct = 0

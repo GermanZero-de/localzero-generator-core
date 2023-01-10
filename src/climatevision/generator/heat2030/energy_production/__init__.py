@@ -150,6 +150,8 @@ def calc_production(
             if (heatnet_cogen_energy < p_heatnet_energy)
             else 0
         ),
+        CO2e_production_based_per_MWh=fact("Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018"),
+        CO2e_combustion_based_per_MWh=0,
         pct_energy=heatnet_lheatpump_pct_energy,
     )
 
