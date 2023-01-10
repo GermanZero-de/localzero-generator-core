@@ -6707,9 +6707,12 @@
             "cost_climate_saved": 93536367.07312977
         },
         "p_heatnet_plant": {
+            "CO2e_combustion_based": 0.0,
+            "CO2e_combustion_based_per_MWh": 0,
             "CO2e_production_based": 0.0,
             "CO2e_production_based_per_MWh": 0.0,
             "CO2e_total": 0.0,
+            "energy": 10678.09868429202,
             "CO2e_total_2021_estimated": 12722.619797881753,
             "area_ha_available": 2.5124938080687103,
             "change_CO2e_pct": -1.0,
@@ -6720,7 +6723,6 @@
             "cost_wage": 111239.9731066905,
             "demand_emplo": 2.3570266448033057,
             "demand_emplo_new": 2.3570266448033057,
-            "energy": 10678.09868429202,
             "invest": 5671057.452497946,
             "invest_com": 5671057.452497946,
             "invest_pa": 436235.1886536882,
