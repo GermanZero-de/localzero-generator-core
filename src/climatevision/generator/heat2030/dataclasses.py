@@ -206,9 +206,6 @@ class Vars12(Vars9):
 
         super().__post_init__(inputs=inputs, what=what, h18=h18)
 
-        self.change_energy_pct = 0
-        self.change_CO2e_pct = 0
-
         self.invest_per_x = fact("Fact_H_P_heatnet_lheatpump_invest_203X")
         self.full_load_hour = fact("Fact_H_P_heatnet_lheatpump_full_load_hours")
         self.pct_of_wage = fact("Fact_B_P_constr_main_revenue_pct_of_wage_2017")
