@@ -127,8 +127,7 @@ class Vars6(Vars9):
 
 
 @dataclass(kw_only=True)
-class Vars11(Vars9):
-    area_ha_available: float = 0
+class VarsInvest:
     cost_wage: float = 0
     demand_emplo: float = 0
     demand_emplo_new: float = 0
@@ -136,6 +135,11 @@ class Vars11(Vars9):
     invest_com: float = 0
     invest_pa: float = 0
     invest_pa_com: float = 0
+
+
+@dataclass(kw_only=True)
+class Vars11(Vars9, VarsInvest):
+    area_ha_available: float = 0
     invest_per_x: float = 0
     pct_energy: float
     pct_of_wage: float = 0
@@ -175,16 +179,9 @@ class Vars11(Vars9):
 
 
 @dataclass(kw_only=True)
-class Vars12(Vars9):
-    cost_wage: float = 0
+class Vars12(Vars9, VarsInvest):
     demand_electricity: float = 0
-    demand_emplo: float = 0
-    demand_emplo_new: float = 0
     full_load_hour: float = 0
-    invest: float = 0
-    invest_com: float = 0
-    invest_pa: float = 0
-    invest_pa_com: float = 0
     invest_per_x: float = 0
     pct_energy: float
     pct_of_wage: float = 0
@@ -250,7 +247,7 @@ class Vars13:
 
 
 @dataclass(kw_only=True)
-class Vars10:
+class Vars10(VarsInvest):
     CO2e_combustion_based: float = 0
     CO2e_production_based: float = 0
     CO2e_total: float = 0
@@ -260,14 +257,7 @@ class Vars10:
     change_energy_MWh: float = 0
     change_energy_pct: float = 0
     cost_climate_saved: float = 0
-    cost_wage: float = 0
-    demand_emplo: float = 0
-    demand_emplo_new: float = 0
     energy: float
-    invest: float = 0
-    invest_com: float = 0
-    invest_pa: float = 0
-    invest_pa_com: float = 0
 
     inputs: InitVar[Inputs]
     what: InitVar[str]
