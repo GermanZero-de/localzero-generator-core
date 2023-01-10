@@ -127,27 +127,6 @@ class Vars6(Vars9):
 
 
 @dataclass(kw_only=True)
-class Vars10:
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_production_based: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
-    change_CO2e_pct: float = None  # type: ignore
-    change_CO2e_t: float = None  # type: ignore
-    change_energy_MWh: float = None  # type: ignore
-    change_energy_pct: float = None  # type: ignore
-    cost_climate_saved: float = None  # type: ignore
-    cost_wage: float = None  # type: ignore
-    demand_emplo: float = None  # type: ignore
-    demand_emplo_new: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    invest: float = None  # type: ignore
-    invest_com: float = None  # type: ignore
-    invest_pa: float = None  # type: ignore
-    invest_pa_com: float = None  # type: ignore
-
-
-@dataclass(kw_only=True)
 class Vars11:
     CO2e_production_based: float = None  # type: ignore
     CO2e_production_based_per_MWh: float = None  # type: ignore
@@ -226,3 +205,98 @@ class Vars13:
     pct_of_wage: float = None  # type: ignore
     power_to_be_installed: float = None  # type: ignore
     ratio_wage_to_emplo: float = None  # type: ignore
+
+
+@dataclass(kw_only=True)
+class Vars10:
+    CO2e_combustion_based: float = 0
+    CO2e_production_based: float = 0
+    CO2e_total: float = 0
+    CO2e_total_2021_estimated: float = 0
+    change_CO2e_pct: float = 0
+    change_CO2e_t: float = 0
+    change_energy_MWh: float = 0
+    change_energy_pct: float = 0
+    cost_climate_saved: float = 0
+    cost_wage: float = 0
+    demand_emplo: float = 0
+    demand_emplo_new: float = 0
+    energy: float
+    invest: float = 0
+    invest_com: float = 0
+    invest_pa: float = 0
+    invest_pa_com: float = 0
+
+    inputs: InitVar[Inputs]
+    what: InitVar[str]
+    h18: InitVar[H18]
+    heatnet_cogen: InitVar[Vars9]
+    p_heatnet_plant: InitVar[Vars11]
+    p_heatnet_lheatpump: InitVar[Vars12]
+    p_heatnet_geoth: InitVar[Vars13]
+
+    def __post_init__(
+        self,
+        inputs: Inputs,
+        what: str,
+        h18: H18,
+        heatnet_cogen: Vars9,
+        p_heatnet_plant: Vars11,
+        p_heatnet_lheatpump: Vars12,
+        p_heatnet_geoth: Vars13,
+    ):
+        fact = inputs.fact
+        entries = inputs.entries
+
+        h18_p_what = getattr(h18, "p_" + what)
+
+        self.CO2e_total = heatnet_cogen.CO2e_total
+
+        self.CO2e_combustion_based = heatnet_cogen.CO2e_combustion_based
+
+        self.change_energy_MWh = self.energy - h18_p_what.energy
+        self.change_energy_pct = div(self.change_energy_MWh, h18_p_what.energy)
+
+        self.change_CO2e_t = self.CO2e_total - h18_p_what.CO2e_total
+        self.change_CO2e_pct = div(self.change_CO2e_t, h18_p_what.CO2e_total)
+
+        self.CO2e_total_2021_estimated = h18_p_what.CO2e_total * fact(
+            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+        )
+        self.cost_climate_saved = (
+            (self.CO2e_total_2021_estimated - self.CO2e_total)
+            * entries.m_duration_neutral
+            * fact("Fact_M_cost_per_CO2e_2020")
+        )
+
+        self.invest = (
+            p_heatnet_plant.invest + p_heatnet_lheatpump.invest + p_heatnet_geoth.invest
+        )
+        self.invest_pa = (
+            p_heatnet_plant.invest_pa
+            + p_heatnet_lheatpump.invest_pa
+            + p_heatnet_geoth.invest_pa
+        )
+        self.invest_pa_com = self.invest_pa
+        self.demand_emplo = (
+            p_heatnet_plant.demand_emplo
+            + p_heatnet_lheatpump.demand_emplo
+            + p_heatnet_geoth.demand_emplo
+        )
+        self.invest_com = self.invest
+        self.cost_wage = (
+            p_heatnet_plant.cost_wage
+            + p_heatnet_lheatpump.cost_wage
+            + p_heatnet_geoth.cost_wage
+        )
+        self.demand_emplo_new = (
+            p_heatnet_plant.demand_emplo_new
+            + p_heatnet_lheatpump.demand_emplo_new
+            + p_heatnet_geoth.demand_emplo_new
+        )
+        self.CO2e_production_based = (
+            heatnet_cogen.CO2e_production_based
+            + p_heatnet_plant.CO2e_production_based
+            + p_heatnet_lheatpump.CO2e_production_based
+            + p_heatnet_geoth.CO2e_production_based
+        )

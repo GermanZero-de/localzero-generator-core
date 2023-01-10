@@ -13,10 +13,10 @@ from ..dataclasses import (
     # Vars5,
     Vars6,
     Vars9,
-    # Vars10,
-    # Vars11,
-    # Vars12,
-    # Vars13,
+    Vars10,
+    Vars11,
+    Vars12,
+    Vars13,
 )
 
 
@@ -28,7 +28,7 @@ class Production:
     fueloil: Vars6
     opetpro: Vars9
     coal: Vars6
-    # heatnet: Vars10
+    heatnet: Vars10
     heatnet_cogen: Vars9
     # heatnet_plant: Vars11
     # heatnet_lheatpump: Vars12
@@ -47,8 +47,11 @@ def calc_production(
     b30: B30,
     a30: A30,
     i30: I30,
-    p_local_biomass_cogen_energy: float,
+    heatnet_cogen_energy: float,
     p_heatnet_energy: float,
+    p_heatnet_plant: Vars11,
+    p_heatnet_lheatpump: Vars12,
+    p_heatnet_geoth: Vars13,
 ) -> Production:
 
     fact = inputs.fact
@@ -110,11 +113,6 @@ def calc_production(
         CO2e_combustion_based_per_MWh=h18.p_opetpro.CO2e_combustion_based_per_MWh,
     )
 
-    heatnet_cogen_energy = (
-        p_local_biomass_cogen_energy
-        if (p_local_biomass_cogen_energy < p_heatnet_energy)
-        else p_heatnet_energy
-    )
     heatnet_cogen = Vars9(
         inputs=inputs,
         what="heatnet_cogen",
@@ -126,6 +124,17 @@ def calc_production(
         CO2e_combustion_based_per_MWh=fact(
             "Fact_H_P_heatnet_biomass_ratio_CO2e_cb_to_fec_2018"
         ),
+    )
+
+    heatnet = Vars10(
+        inputs=inputs,
+        what="heatnet",
+        h18=h18,
+        heatnet_cogen=heatnet_cogen,
+        p_heatnet_plant=p_heatnet_plant,
+        p_heatnet_lheatpump=p_heatnet_lheatpump,
+        p_heatnet_geoth=p_heatnet_geoth,
+        energy=p_heatnet_energy,
     )
 
     ofossil = Vars9(
@@ -170,7 +179,7 @@ def calc_production(
         fueloil=fueloil,
         opetpro=opetpro,
         coal=coal,
-        # heatnet=heatnet,
+        heatnet=heatnet,
         heatnet_cogen=heatnet_cogen,
         # heatnet_plant=heatnet_plant,
         # heatnet_geoth=heatnet_geoth,
