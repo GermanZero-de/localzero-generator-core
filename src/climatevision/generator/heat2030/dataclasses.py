@@ -127,14 +127,8 @@ class Vars6(Vars9):
 
 
 @dataclass(kw_only=True)
-class Vars11(EnergyWithCO2ePerMWh):
-    CO2e_total_2021_estimated: float = 0
+class Vars11(Vars9):
     area_ha_available: float = 0
-    change_CO2e_pct: float = 0
-    change_CO2e_t: float = 0
-    change_energy_MWh: float = 0
-    change_energy_pct: float = 0
-    cost_climate_saved: float = 0
     cost_wage: float = 0
     demand_emplo: float = 0
     demand_emplo_new: float = 0
@@ -160,12 +154,7 @@ class Vars11(EnergyWithCO2ePerMWh):
         fact = inputs.fact
         entries = inputs.entries
 
-        h18_p_what = getattr(h18, "p_" + what)
-
-        self.CO2e_production_based = self.energy * self.CO2e_production_based_per_MWh
-        self.CO2e_combustion_based = self.energy * self.CO2e_combustion_based_per_MWh
-
-        self.CO2e_total = self.CO2e_production_based + self.CO2e_combustion_based
+        super().__post_init__(inputs=inputs, what=what, h18=h18)
 
         self.invest_per_x = fact("Fact_H_P_heatnet_solarth_park_invest_203X")
         self.area_ha_available = self.energy / fact(
@@ -173,22 +162,13 @@ class Vars11(EnergyWithCO2ePerMWh):
         )
         self.invest = self.invest_per_x * self.area_ha_available
         self.invest_pa = self.invest / entries.m_duration_target
+
         self.pct_of_wage = fact("Fact_B_P_constr_main_revenue_pct_of_wage_2017")
         self.cost_wage = self.pct_of_wage * self.invest_pa
+
         self.ratio_wage_to_emplo = fact("Fact_B_P_constr_main_ratio_wage_to_emplo_2017")
         self.demand_emplo = div(self.cost_wage, self.ratio_wage_to_emplo)
-        self.change_energy_MWh = self.energy - h18_p_what.energy
-        self.change_energy_pct = div(self.change_energy_MWh, h18_p_what.energy)
-        self.change_CO2e_t = self.CO2e_total - h18_p_what.CO2e_total
-        self.change_CO2e_pct = div(self.change_CO2e_t, h18_p_what.CO2e_total)
-        self.CO2e_total_2021_estimated = h18_p_what.CO2e_total * fact(
-            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
-        )
-        self.cost_climate_saved = (
-            (self.CO2e_total_2021_estimated - self.CO2e_total)
-            * entries.m_duration_neutral
-            * fact("Fact_M_cost_per_CO2e_2020")
-        )
+
         self.invest_pa_com = self.invest_pa
         self.invest_com = self.invest
         self.demand_emplo_new = self.demand_emplo
