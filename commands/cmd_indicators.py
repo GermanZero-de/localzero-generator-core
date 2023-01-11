@@ -3,6 +3,7 @@
 from typing import Any
 import json
 import sys
+import os
 from dataclasses import dataclass
 
 from climatevision.generator import calculate_with_default_inputs, make_entries, RefData, Result, Inputs
@@ -28,9 +29,9 @@ class Indicators:
     refs = References() # sector electricity:  reference modules 
     pv_panels_peryear: float = 0 # sector electricity: pv panels to build per year 
     wind_power_plants_peryear: float = 0 # sector electricity:  wind power plants to build per year 
-    heat_power_plants_area: float = 0 # sector heat: area with heat power plants to build per year 
+    heatnet_power_plants_area_ha: float = 0 # sector heat: area with heat power plants to build per year 
     large_heatpumps: float = 0 # sector heat: large heat power plants to build
-    biomass_plants: float = 0 # sector heat: biomass plants
+    # biomass_plants: float = 0 # sector heat: biomass plants
     heatpumps_peryear_residence: float = 0 #  sector residences: heat pumps to build per year 
     renovated_houses_peryear: float = 0  # sector residences: houses to renovate per year
     electric_bus_peryear: float = 0 # sector transport: electrical bus to build per year
@@ -60,10 +61,9 @@ class Indicators:
         self.pv_panels_peryear = cr.e30.p_local.power_to_be_installed / (self.refs.pv_panel*inputs.entries.m_duration_neutral)
         self.wind_power_plants_peryear = cr.e30.p_local_wind_onshore.power_to_be_installed / (self.refs.wind_power_plant*inputs.entries.m_duration_neutral)
         # heating
-        self.heat_power_plants_area = cr.h30.p_heatnet_plant.area_ha_available
+        self.heatnet_power_plants_area_ha = cr.h30.p_heatnet_plant.area_ha_available
         self.large_heatpumps = cr.h30.p_heatnet_lheatpump.power_to_be_installed / (self.refs.large_heatpump)
-        self.biomass_plants = 0
-        # residences + business
+        # residences
         self.heatpumps_peryear_residence = cr.r30.s_heatpump.power_to_be_installed / ((self.refs.heatpump)*inputs.entries.m_duration_neutral)
         self.renovated_houses_peryear = cr.r18.p_buildings_total.number_of_buildings * inputs.entries.r_rehab_rate_pa
         # transport
@@ -73,9 +73,29 @@ class Indicators:
         self.heatpumps_peryear_business = cr.b30.s_heatpump.power_to_be_installed / ((self.refs.heatpump)*inputs.entries.m_duration_neutral)
         # agriculture
         # -> reduction of animals per year
-        # industry, fuels, lulucf
+        # industry
+        # -> change x production to carbon neutrality
+        # fuels
+        # -> Change to efuels
+        # lulucf
+        # plants x trees, ha moor
+
         # tbd
         return self
+
+    def output_to_txt(self, inputs:Inputs):
+        out_path = os.environ["temp"] # delete afterwards as probably only working for windows
+        out_file = open(out_path + "/indicators_output_" + inputs.entries.ags + "_" + str(inputs.entries.m_year_target) + ".txt", "w")
+        txt= """Um die Transition zu einer klimaneutralen Kommune bis zum Jahre {} zu bewerkstelligen, können unter anderem folgende Maßnahmen ergriffen werden:\n 
+        • Zur Stromversorgungen werden pro Jahr {:.0f} Solaranlagen mit einer Leistung von {:.0f} kWp sowie {:.2f} Windräder à {} MW gebaut.\n
+        • Die Wärmeversorgung wird durch ein solarthermisches Kraftwerk mit {:.2f} Hektar und {:.2f} Großwärmepumpen à {} MW gewährleistet.\n
+        • Die Renovierungen von {:.0f} Wohngebäuden sowie der Bau von {:.0f} Wärmepumpen à {} kW in Wohnhäusern wird vorangetrieben.\n
+        • Im Transportwesen werden die Verbrennermotoren jährlich durch {:.0f} elektrische Busse sowie {:.0f} elektrische Autos ersetzt.\n
+        • Die fossile Wärmeversorgung in Geschäftsgebäuden wird pro Jahr durch {:.0f} Wärmepumpen erneuert."""
+        print(txt.format(inputs.entries.m_year_target,self.pv_panels_peryear, self.refs.pv_panel*1000, self.wind_power_plants_peryear, self.refs.wind_power_plant,
+                        self.heatnet_power_plants_area_ha, self.large_heatpumps, self.refs.large_heatpump, self.renovated_houses_peryear, self.heatpumps_peryear_residence,
+                        self.refs.heatpump*1000, self.electric_bus_peryear, self.electric_car_peryear, self.heatpumps_peryear_business), file=out_file)
+        out_file.close
 
 def json_to_output(json_object: Any, args: Any):
     """Write json_object to stdout or a file depending on args"""
@@ -98,5 +118,6 @@ def cmd_indicators(args: Any):
             f=lambda: ind.result_dict()
     )
     json_to_output(d, args)
+    ind.output_to_txt(inputs)
     
     
