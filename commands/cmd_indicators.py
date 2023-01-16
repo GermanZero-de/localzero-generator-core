@@ -87,9 +87,9 @@ class Indicators:
         out_path = os.environ["temp"] # delete afterwards as probably only working for windows
         out_file = open(out_path + "/indicators_output_" + inputs.entries.ags + "_" + str(inputs.entries.m_year_target) + ".txt", "w")
         txt= """Um die Transition zu einer klimaneutralen Kommune bis zum Jahre {} zu bewerkstelligen, können unter anderem folgende Maßnahmen ergriffen werden:\n 
-        • Zur Stromversorgungen werden pro Jahr {:.0f} Solaranlagen mit einer Leistung von {:.0f} kWp sowie {:.2f} Windräder à {} MW gebaut.\n
+        • Zur Stromversorgung werden pro Jahr {:.0f} Photovoltaikanlagen mit einer Leistung von {:.0f} kWp sowie {:.2f} Windräder à {} MW gebaut.\n
         • Die Wärmeversorgung wird durch ein solarthermisches Kraftwerk mit {:.2f} Hektar und {:.2f} Großwärmepumpen à {} MW gewährleistet.\n
-        • Die Renovierungen von {:.0f} Wohngebäuden sowie der Bau von {:.0f} Wärmepumpen à {} kW in Wohnhäusern wird vorangetrieben.\n
+        • Die Renovierungen von jährlich {:.0f} Wohngebäuden sowie der Bau von {:.0f} Wärmepumpen à {} kW in Wohnhäusern wird vorangetrieben.\n
         • Im Transportwesen werden die Verbrennermotoren jährlich durch {:.0f} elektrische Busse sowie {:.0f} elektrische Autos ersetzt.\n
         • Die fossile Wärmeversorgung in Geschäftsgebäuden wird pro Jahr durch {:.0f} Wärmepumpen erneuert."""
         print(txt.format(inputs.entries.m_year_target,self.pv_panels_peryear, self.refs.pv_panel*1000, self.wind_power_plants_peryear, self.refs.wind_power_plant,
