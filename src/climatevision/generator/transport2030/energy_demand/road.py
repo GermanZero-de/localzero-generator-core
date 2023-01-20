@@ -537,14 +537,12 @@ class RoadBus(Road, BusInvestments):
         entries = inputs.entries
         fact = inputs.fact
 
-        transport_capacity_pkm = div(
-            total_transport_capacity_pkm * t18.road_bus.transport_capacity_pkm,
-            (
-                t18.road_bus.transport_capacity_pkm
-                + t18.rail_ppl_distance.transport_capacity_pkm
-                + t18.rail_ppl_metro.transport_capacity_pkm
-            ),
-        ) * (
+        t18_public_transport_capacity_pkm = (
+            t18.road_bus.transport_capacity_pkm
+            + t18.rail_ppl_distance.transport_capacity_pkm
+            + t18.rail_ppl_metro.transport_capacity_pkm
+        )
+        public_transport_ppl_frac_2050 = (
             ass("Ass_T_D_trnsprt_ppl_city_pt_frac_2050")
             if entries.t_rt3 == "city"
             else ass("Ass_T_D_trnsprt_ppl_smcty_pt_frac_2050")
@@ -553,6 +551,22 @@ class RoadBus(Road, BusInvestments):
             if entries.t_rt3 == "rural"
             else ass("Ass_T_D_trnsprt_ppl_nat_pt_frac_2050")
         )
+
+        import math
+
+        if not math.isclose(t18_public_transport_capacity_pkm, 0):
+            transport_capacity_pkm = (
+                div(
+                    total_transport_capacity_pkm * t18.road_bus.transport_capacity_pkm,
+                    t18_public_transport_capacity_pkm,
+                )
+                * public_transport_ppl_frac_2050
+            )
+        else:
+            transport_capacity_pkm = (
+                total_transport_capacity_pkm * public_transport_ppl_frac_2050
+            )
+
         mileage = transport_capacity_pkm / ass("Ass_T_D_lf_ppl_Bus_2050")
         demand_electricity = (
             mileage
