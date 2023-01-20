@@ -7,4 +7,5 @@ poetry install --dev --no-root
 
 # Git pre-commit
 poetry run pre-commit install
+
 echo "All done"
