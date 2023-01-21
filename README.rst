@@ -20,13 +20,13 @@ More information on the methodology can be found in our documentation on readthe
 Setup
 =========================
 - Install Python
-    - Version 3.10.
+    - version 3.10.
 - Install Git
 		- ensure that git is in your PATH variable (needed for devtool.py data checkout later)
 - Install Poetry from https://python-poetry.org/docs/
-    - **On Windows:** run this inside a power shell:
-
-      :code:`(Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | python`
+    - on Windows:
+        - | run inside a power shell:
+          | :code:`pip install poetry`
 
 - Configure Git
 	- Token:
@@ -40,7 +40,10 @@ Setup
 
 - Install poetry and pre-commit
 	- :code:`install-environment.sh`
-	- **On Windows:** install Node.js (necessary for pyright)
+    - on Windows:
+        - install Node.js (necessary for pyright)
+        - | run inside a power shell (with admin privileges):
+          | :code:`Set-ExecutionPolicy RemoteSigned`
 
 - Get the required Data Repos
     - Clone https://github.com/GermanZero-de/localzero-data-public into ./data/public
