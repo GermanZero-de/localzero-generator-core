@@ -77,22 +77,6 @@ class Entries:
     e_PV_power_to_be_inst_roof: float
     e_pv_full_load_hours_sta: float
     h_solartherm_to_be_inst: float
-    i_biomass_fec: float
-    i_coal_fec: float
-    i_diesel_fec: float
-    i_elec_fec: float
-    i_energy_total: float
-    i_fec_pct_of_chem: float
-    i_fec_pct_of_metal: float
-    i_fec_pct_of_miner: float
-    i_fec_pct_of_other: float
-    i_fueloil_fec: float
-    i_gas_fec: float
-    i_heatnet_fec: float
-    i_lpg_fec: float
-    i_ofossil_fec: float
-    i_opetpro_fec: float
-    i_orenew_fec: float
     m_AGS_com: str
     m_AGS_dis: str
     m_AGS_sta: str
@@ -460,73 +444,6 @@ def make_entries(data: RefData, ags: str, year: int) -> Entries:
         / data.fact("Fact_R_P_flats_w_heatnet_2011")
     )
 
-    i_coal_fec = (
-        data.fact("Fact_I_S_coal_fec_2018") * m_area_industry_com / m_area_industry_nat
-    )
-    i_diesel_fec = (
-        data.fact("Fact_I_S_diesel_fec_2018")
-        * m_area_industry_com
-        / m_area_industry_nat
-    )
-    i_fueloil_fec = (
-        data.fact("Fact_I_S_fueloil_fec_2018")
-        * m_area_industry_com
-        / m_area_industry_nat
-    )
-    i_lpg_fec = (
-        data.fact("Fact_I_S_lpg_fec_2018") * m_area_industry_com / m_area_industry_nat
-    )
-    i_gas_fec = (
-        data.fact("Fact_I_S_gas_fec_2018") * m_area_industry_com / m_area_industry_nat
-    )
-    i_opetpro_fec = (
-        data.fact("Fact_I_S_opetpro_fec_2018")
-        * m_area_industry_com
-        / m_area_industry_nat
-    )
-    i_biomass_fec = (
-        data.fact("Fact_I_S_biomass_fec_2018")
-        * m_area_industry_com
-        / m_area_industry_nat
-    )
-    i_orenew_fec = (
-        data.fact("Fact_I_S_orenew_fec_2018")
-        * m_area_industry_com
-        / m_area_industry_nat
-    )
-    i_ofossil_fec = (
-        data.fact("Fact_I_S_ofossil_fec_2018")
-        * m_area_industry_com
-        / m_area_industry_nat
-    )
-    i_elec_fec = (
-        data.fact("Fact_I_S_elec_fec_2018") * m_area_industry_com / m_area_industry_nat
-    )
-    i_heatnet_fec = (
-        data.fact("Fact_I_S_heatnet_fec_2018")
-        * m_area_industry_com
-        / m_area_industry_nat
-    )
-
-    i_energy_total = (
-        i_coal_fec
-        + i_diesel_fec
-        + i_fueloil_fec
-        + i_lpg_fec
-        + i_gas_fec
-        + i_opetpro_fec
-        + i_biomass_fec
-        + i_orenew_fec
-        + i_ofossil_fec
-        + i_elec_fec
-        + i_heatnet_fec
-    )
-
-    i_fec_pct_of_miner = data.fact("Fact_I_P_miner_ratio_fec_to_industry_2018")
-    i_fec_pct_of_chem = data.fact("Fact_I_S_chem_fec_ratio_to_industrie_2018")
-    i_fec_pct_of_metal = data.fact("Fact_I_P_fec_pct_of_metal_2018")
-    i_fec_pct_of_other = data.fact("Fact_I_P_other_ratio_fec_to_industry_2018")
-
     data_traffic_com = data.traffic(ags)
     t_ec_rail_ppl_elec = data_traffic_com.float("rail_ppl_elec")
     t_ec_rail_ppl_diesel = data_traffic_com.float("rail_ppl_diesel")
@@ -764,22 +681,6 @@ def make_entries(data: RefData, ags: str, year: int) -> Entries:
         e_PV_power_to_be_inst_roof=e_PV_power_to_be_inst_roof,
         e_pv_full_load_hours_sta=e_pv_full_load_hours_sta,
         h_solartherm_to_be_inst=h_solartherm_to_be_inst,
-        i_biomass_fec=i_biomass_fec,
-        i_coal_fec=i_coal_fec,
-        i_diesel_fec=i_diesel_fec,
-        i_elec_fec=i_elec_fec,
-        i_energy_total=i_energy_total,
-        i_fec_pct_of_chem=i_fec_pct_of_chem,
-        i_fec_pct_of_metal=i_fec_pct_of_metal,
-        i_fec_pct_of_miner=i_fec_pct_of_miner,
-        i_fec_pct_of_other=i_fec_pct_of_other,
-        i_fueloil_fec=i_fueloil_fec,
-        i_gas_fec=i_gas_fec,
-        i_heatnet_fec=i_heatnet_fec,
-        i_lpg_fec=i_lpg_fec,
-        i_ofossil_fec=i_ofossil_fec,
-        i_opetpro_fec=i_opetpro_fec,
-        i_orenew_fec=i_orenew_fec,
         m_AGS_com=m_AGS_com,
         m_AGS_dis=m_AGS_dis,
         m_AGS_sta=m_AGS_sta,
