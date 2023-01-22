@@ -77,6 +77,19 @@ class Entries:
     e_PV_power_to_be_inst_roof: float
     e_pv_full_load_hours_sta: float
     h_solartherm_to_be_inst: float
+    i_dehst_miner_cement: float
+    i_dehst_miner_chalk: float
+    i_dehst_miner_glas: float
+    i_dehst_miner_ceram: float
+    i_dehst_chem_basic: float
+    i_dehst_chem_ammonia: float
+    i_dehst_chem_other: float
+    i_dehst_metal_steel_primary: float
+    i_dehst_metal_steel_secondary: float
+    i_dehst_metal_nonfe: float
+    i_dehst_other_paper: float
+    i_dehst_other_food: float
+    i_dehst_other_further: float
     m_AGS_com: str
     m_AGS_dis: str
     m_AGS_sta: str
@@ -444,6 +457,21 @@ def make_entries(data: RefData, ags: str, year: int) -> Entries:
         / data.fact("Fact_R_P_flats_w_heatnet_2011")
     )
 
+    data_industry = data.industry_dehst(ags)
+    i_dehst_miner_cement = data_industry.float("miner_cement")
+    i_dehst_miner_chalk = data_industry.float("miner_chalk")
+    i_dehst_miner_glas = data_industry.float("miner_glas")
+    i_dehst_miner_ceram = data_industry.float("miner_ceram")
+    i_dehst_chem_basic = data_industry.float("chem_basic")
+    i_dehst_chem_ammonia = data_industry.float("chem_ammonia")
+    i_dehst_chem_other = data_industry.float("chem_other")
+    i_dehst_metal_steel_primary = data_industry.float("metal_steel_primary")
+    i_dehst_metal_steel_secondary = data_industry.float("metal_steel_secondary")
+    i_dehst_metal_nonfe = data_industry.float("metal_nonfe")
+    i_dehst_other_paper = data_industry.float("other_paper")
+    i_dehst_other_food = data_industry.float("other_food")
+    i_dehst_other_further = data_industry.float("other_further")
+
     data_traffic_com = data.traffic(ags)
     t_ec_rail_ppl_elec = data_traffic_com.float("rail_ppl_elec")
     t_ec_rail_ppl_diesel = data_traffic_com.float("rail_ppl_diesel")
@@ -681,6 +709,19 @@ def make_entries(data: RefData, ags: str, year: int) -> Entries:
         e_PV_power_to_be_inst_roof=e_PV_power_to_be_inst_roof,
         e_pv_full_load_hours_sta=e_pv_full_load_hours_sta,
         h_solartherm_to_be_inst=h_solartherm_to_be_inst,
+        i_dehst_miner_cement=i_dehst_miner_cement,
+        i_dehst_miner_chalk=i_dehst_miner_chalk,
+        i_dehst_miner_glas=i_dehst_miner_glas,
+        i_dehst_miner_ceram=i_dehst_miner_ceram,
+        i_dehst_chem_basic=i_dehst_chem_basic,
+        i_dehst_chem_ammonia=i_dehst_chem_ammonia,
+        i_dehst_chem_other=i_dehst_chem_other,
+        i_dehst_metal_steel_primary=i_dehst_metal_steel_primary,
+        i_dehst_metal_steel_secondary=i_dehst_metal_steel_secondary,
+        i_dehst_metal_nonfe=i_dehst_metal_nonfe,
+        i_dehst_other_paper=i_dehst_other_paper,
+        i_dehst_other_food=i_dehst_other_food,
+        i_dehst_other_further=i_dehst_other_further,
         m_AGS_com=m_AGS_com,
         m_AGS_dis=m_AGS_dis,
         m_AGS_sta=m_AGS_sta,
