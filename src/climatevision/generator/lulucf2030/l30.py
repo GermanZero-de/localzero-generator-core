@@ -45,7 +45,6 @@ class L30:
     g_settlement_org_high: LColVars2030
     g_other: LColVars2030
     g_wood: LColVars2030
-    pyr: LColVars2030
     g_planning: LColVars2030
     g_grass_org: LColVars2030
     g_wet_org: LColVars2030

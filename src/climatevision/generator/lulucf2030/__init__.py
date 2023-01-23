@@ -1418,8 +1418,27 @@ def calc(inputs: Inputs, *, l18: L18) -> L30:
 
     g_wet_org_rp.change_CO2e_pct = 0
 
-    pyr = LColVars2030()
     g_planning = LColVars2030()
+
+    l.CO2e_total = g.CO2e_total
+    l.CO2e_production_based = g.CO2e_production_based
+    l.CO2e_combustion_based = g.CO2e_combustion_based
+    l.change_CO2e_t = l.CO2e_total - l18.l.CO2e_total
+    l.change_CO2e_pct = div(l.change_CO2e_t, l18.l.CO2e_total)
+    l.CO2e_total_2021_estimated = l18.l.CO2e_total * fact(
+        "Fact_M_CO2e_lulucf_2021_vs_2018"
+    )
+
+    l.cost_climate_saved = (
+        (l.CO2e_total_2021_estimated - l.CO2e_total)
+        * entries.m_duration_neutral
+        * fact("Fact_M_cost_per_CO2e_2020")
+    )
+    l.invest_pa = g.invest_pa
+    l.invest = g.invest
+    l.cost_wage = g.cost_wage
+    l.demand_emplo = g.demand_emplo 
+    l.demand_emplo_new = g.demand_emplo_new
 
     return L30(
         l=l,
@@ -1450,7 +1469,6 @@ def calc(inputs: Inputs, *, l18: L18) -> L30:
         g_wet_org_low_rp=g_wet_org_low_rp,
         g_wet_org_high_r=g_wet_org_high_r,
         g_wet_org_high_rp=g_wet_org_high_rp,
-        pyr=pyr,
         g_planning=g_planning,
         g_grass_org=g_grass_org,
         g_wet_org=g_wet_org,
