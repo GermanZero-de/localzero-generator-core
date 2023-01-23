@@ -34,6 +34,7 @@ class E18:
     d_t: Vars3
     d_a: Vars4
     d_h: Vars4
+    d_w: Vars4
     d_f_hydrogen_reconv: Vars4
     p: Vars5
     p_fossil: Vars6

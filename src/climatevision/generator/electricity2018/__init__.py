@@ -45,6 +45,7 @@ def calc(inputs: Inputs, *, t18: T18) -> E18:
     d_t = Vars3()
     d_a = Vars4()
     d_h = Vars4()
+    d_w = Vars4()
     d_f_hydrogen_reconv = Vars4()
     p = Vars5()
     p_fossil = Vars6()
@@ -101,7 +102,8 @@ def calc(inputs: Inputs, *, t18: T18) -> E18:
     d_t.cost_fuel_per_MWh = fact("Fact_E_D_R_cost_fuel_per_MWh_2018")
     d_t.cost_fuel = d_t.energy * d_t.cost_fuel_per_MWh / 1000000
     d_a.energy = entries.a_elec_fec
-    d.energy = d_r.energy + d_b.energy + d_i.energy + d_t.energy + d_a.energy
+    d_w.energy = entries.w_elec_fec
+    d.energy = d_r.energy + d_b.energy + d_i.energy + d_t.energy + d_a.energy + d_w.energy
     d.cost_fuel = d_r.cost_fuel + d_b.cost_fuel + d_i.cost_fuel + d_t.cost_fuel
     p.energy = d.energy
 
@@ -795,6 +797,7 @@ def calc(inputs: Inputs, *, t18: T18) -> E18:
         d_t=d_t,
         d_a=d_a,
         d_h=d_h,
+        d_w=d_w,
         d_f_hydrogen_reconv=d_f_hydrogen_reconv,
         p=p,
         p_fossil=p_fossil,

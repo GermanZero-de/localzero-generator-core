@@ -26,6 +26,7 @@ class E30:
     d_i: EnergyDemandWithCostFuel
     d_t: EnergyDemandWithCostFuel
     d_a: EnergyDemandWithCostFuel
+    d_w: EnergyDemand
     d_f_hydrogen_reconv: EnergyDemand
     d_f_wo_hydrogen: EnergyDemand
     p: EColVars2030

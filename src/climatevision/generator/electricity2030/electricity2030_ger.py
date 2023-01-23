@@ -12,6 +12,7 @@ from ..heat2030.h30 import H30
 from ..industry2030.i30 import I30
 from ..residences2030.r30 import R30
 from ..transport2030.t30 import T30
+from ..waste2030 import WasteLines
 
 from .e30 import E30
 from .electricity2030_core import (
@@ -38,6 +39,7 @@ def calc(
     i30: I30,
     r30: R30,
     t30: T30,
+    wastelines: WasteLines,
     p_local_biomass_cogen: EColVars2030,
     p_local_biomass: EColVars2030,
 ) -> E30:
@@ -60,6 +62,7 @@ def calc(
     d_i = EnergyDemandWithCostFuel()
     d_t = EnergyDemandWithCostFuel()
     d_a = EnergyDemandWithCostFuel()
+    d_w = EnergyDemand()
     d_f_hydrogen_reconv = EnergyDemand()
     d_f_wo_hydrogen = EnergyDemand()
     p = EColVars2030()
@@ -116,6 +119,7 @@ def calc(
     d_i.energy = i30.p.demand_electricity
     d_t.energy = t30.t.transport.demand_electricity
     d_a.energy = a30.p_operation.demand_electricity
+    d_w.energy = wastelines.s_elec.energy
     d_f_wo_hydrogen.energy = (
         f30.p_petrol.demand_electricity
         + f30.p_jetfuel.demand_electricity
@@ -484,6 +488,7 @@ def calc(
         + d_i.energy
         + d_t.energy
         + d_a.energy
+        + d_w.energy
         + d_f_wo_hydrogen.energy
         + d_f_hydrogen_reconv.energy
     )  #
@@ -1931,6 +1936,7 @@ def calc(
         d_i=d_i,
         d_t=d_t,
         d_a=d_a,
+        d_w=d_w,
         d_f_hydrogen_reconv=d_f_hydrogen_reconv,
         d_f_wo_hydrogen=d_f_wo_hydrogen,
         p=p,

@@ -183,26 +183,6 @@ class wastewater:
             demand_electricity= demand_electricity,
         )
 
-@dataclass(kw_only=True)
-class WasteLines:
-    p_landfilling: landfilling
-    p_organic_treatment: organic_treatment
-    p_wastewater: wastewater
-
-    @classmethod
-    def calc_waste_lines(cls,inputs: Inputs, w18:W18):
-
-        p_landfilling = landfilling.calc(inputs=inputs,w18=w18)
-        p_organic_treatment = organic_treatment.calc(inputs=inputs,w18=w18)
-        p_wastewater = wastewater.calc(inputs=inputs,w18=w18)
-        
-
-        return cls(
-            p_landfilling = p_landfilling,
-            p_organic_treatment = p_organic_treatment,
-            p_wastewater =p_wastewater,
-        )
-
 
 @dataclass(kw_only=True)
 class EnergySupplyDetail:
@@ -242,6 +222,32 @@ class EnergySupplyDetail:
             change_CO2e_pct=change_CO2e_pct,
             CO2e_total_2021_estimated=CO2e_total_2021_estimated,
             cost_climate_saved=cost_climate_saved,
+        )
+
+@dataclass(kw_only=True)
+class WasteLines:
+    p_landfilling: landfilling
+    p_organic_treatment: organic_treatment
+    p_wastewater: wastewater
+
+    s_elec: EnergySupplyDetail
+
+    @classmethod
+    def calc_waste_lines(cls,inputs: Inputs, w18:W18):
+
+        p_landfilling = landfilling.calc(inputs=inputs,w18=w18)
+        p_organic_treatment = organic_treatment.calc(inputs=inputs,w18=w18)
+        p_wastewater = wastewater.calc(inputs=inputs,w18=w18)
+
+        electricity_demand = p_wastewater.demand_electricity
+
+        s_elec = EnergySupplyDetail.calc(inputs=inputs,w18=w18, energy=electricity_demand, CO2e_cb_per_MWh=0)
+
+        return cls(
+            p_landfilling = p_landfilling,
+            p_organic_treatment = p_organic_treatment,
+            p_wastewater =p_wastewater,
+            s_elec = s_elec,
         )
 
 @dataclass(kw_only=True)
@@ -470,17 +476,15 @@ class W30:
     @classmethod
     def calc(cls,inputs: Inputs,w18:W18,wastelines: WasteLines, pyrolysis: Pyrolysis) :
 
-        entries = inputs.entries
-
-        s_elec = EnergySupplyDetail.calc(inputs=inputs,w18=w18, energy=entries.w_elec_fec, CO2e_cb_per_MWh=0)
-        s = EnergySupply.calc(w18=w18,energy_supplies=[s_elec])
+        
+        s = EnergySupply.calc(w18=w18,energy_supplies=[wastelines.s_elec])
         p = EnergyProduction.calc(w18=w18,landfilling=wastelines.p_landfilling,organic_treatment=wastelines.p_organic_treatment,wastewater=wastelines.p_wastewater,pyr=pyrolysis)
 
         w = p
 
         return cls(
         s=s,
-        s_elec=s_elec,
+        s_elec=wastelines.s_elec,
         p=p,
         p_landfilling=wastelines.p_landfilling,
         p_organic_treatment=wastelines.p_organic_treatment,

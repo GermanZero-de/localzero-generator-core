@@ -220,6 +220,7 @@ def calculate(inputs: Inputs) -> Result:
         i30=i30,
         r30=r30,
         t30=t30,
+        wastelines=wastelines,
         p_local_biomass_cogen=p_local_biomass_cogen,
         p_local_biomass=p_local_biomass,
     )

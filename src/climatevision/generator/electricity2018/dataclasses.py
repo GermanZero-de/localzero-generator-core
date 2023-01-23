@@ -28,7 +28,7 @@ class Vars3:
 
 @dataclass(kw_only=True)
 class Vars4:
-    # Used by d_a, d_h, d_f_hydrogen_reconv, p_renew_reverse
+    # Used by d_a, d_h, d_w ,  d_f_hydrogen_reconv, p_renew_reverse
     energy: float = None  # type: ignore
 
 
