@@ -109,11 +109,11 @@ def preprocess_dehst_data(ags_file_path, dehst_file_path, export_path):
         decimal=",",
         thousands=".",
         converters={
-            "Bundesland": str,
-            "AGS_manual": str,
-            "VET 2018 [t CO2 Äq]": int,
-            "ID": int,
-        },
+            "Bundesland": "str",
+            "AGS_manual": "str",
+            "VET 2018 [t CO2 Äq]": "int",
+            "ID": "int",
+        },  # type: ignore
     )
 
     df_anlagen.rename(
