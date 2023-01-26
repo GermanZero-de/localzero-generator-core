@@ -17,6 +17,7 @@ from .production_branches import (
 class I18:
     i: ProductionSum
     p: ProductionSum
+    p_germany: ProductionSum
 
     p_miner: ProductionBranch
     p_miner_cement: ProductionSubBranch

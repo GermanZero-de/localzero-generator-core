@@ -12,9 +12,7 @@ from . import energy_demand, energy_source
 
 # for mineral industry the energy_use_factor still needs to be added to facts
 def calc(inputs: Inputs, inputs_germany: Inputs) -> I18:
-    production_germany = energy_demand.calc_production_by_energy(
-        inputs_germany
-    )  # add to I18 ProductionSum
+    production_germany = energy_demand.calc_production_by_energy(inputs_germany)
 
     production = energy_demand.calc_production_by_co2e(
         inputs, inputs_germany, production_germany
@@ -26,6 +24,7 @@ def calc(inputs: Inputs, inputs_germany: Inputs) -> I18:
     return I18(
         i=i,
         p=production.p,
+        p_germany=production_germany.p,
         p_miner=production.p_miner,
         p_miner_cement=production.p_miner_cement,
         p_miner_chalk=production.p_miner_chalk,
