@@ -23,7 +23,55 @@ class ProductionSubBranch:
     CO2e_total: float
 
     @classmethod
-    def calc_production_sub_branch(
+    def calc_production_sub_branch_by_co2e(
+        cls,
+        inputs: Inputs,
+        sub_branch: str,
+        branch: str,
+        co2e_sub_branch: float,
+    ) -> "ProductionSubBranch":
+
+        fact = inputs.fact
+
+        CO2e_total = co2e_sub_branch
+        # calculate production volume from CO2e (with CO2e cb as this factor is > 0 for all industries)
+        CO2e_combustion_based_per_t = fact(
+            "Fact_I_P_" + branch + "_" + sub_branch + "_ratio_CO2e_cb_to_prodvol"
+        )
+        CO2e_production_based_per_t = fact(
+            "Fact_I_P_" + branch + "_" + sub_branch + "_ratio_CO2e_pb_to_prodvol"
+        )
+        ratio_co2e_combustion_to_production_based = CO2e_combustion_based_per_t / (
+            CO2e_combustion_based_per_t + CO2e_production_based_per_t
+        )
+        CO2e_combustion_based = CO2e_total * ratio_co2e_combustion_to_production_based
+        CO2e_production_based = CO2e_total * (
+            1 - ratio_co2e_combustion_to_production_based
+        )
+        production_volume = CO2e_combustion_based / CO2e_combustion_based_per_t
+
+        energy_use_factor = fact(
+            "Fact_I_P_" + branch + "_" + sub_branch + "_ratio_prodvol_to_fec"
+        )
+
+        pct_energy = fact("Fact_I_P_" + branch + "_fec_pct_of_" + sub_branch)
+
+        energy = production_volume / energy_use_factor
+
+        return cls(
+            energy=energy,
+            pct_energy=pct_energy,  # to be consistend with energy based calculation, factor not needed
+            prod_volume=production_volume,
+            energy_use_factor=energy_use_factor,
+            CO2e_combustion_based=CO2e_combustion_based,
+            CO2e_combustion_based_per_t=CO2e_combustion_based_per_t,
+            CO2e_production_based=CO2e_production_based,
+            CO2e_production_based_per_t=CO2e_production_based_per_t,
+            CO2e_total=CO2e_total,
+        )
+
+    @classmethod
+    def calc_production_sub_branch_by_energy(
         cls,
         inputs: Inputs,
         sub_branch: str,
