@@ -217,25 +217,41 @@ def calc_production_by_co2e(
         production_germany_sub_branch=production_germany.p_other_food,
     )
 
-    co2e_other_further_corrected = (
-        entries.i_dehst_other_further
-        * production_germany.p_other_further.CO2e_total
-        / inputs_germany.entries.i_dehst_other_further
+    # use old logic for calculation by area and energy for other_further and 2efgh
+    fact = inputs.fact
+    i_energy_total = (
+        (
+            fact("Fact_I_S_coal_fec_2018")
+            + fact("Fact_I_S_diesel_fec_2018")
+            + fact("Fact_I_S_fueloil_fec_2018")
+            + fact("Fact_I_S_lpg_fec_2018")
+            + fact("Fact_I_S_gas_fec_2018")
+            + fact("Fact_I_S_opetpro_fec_2018")
+            + fact("Fact_I_S_biomass_fec_2018")
+            + fact("Fact_I_S_orenew_fec_2018")
+            + fact("Fact_I_S_ofossil_fec_2018")
+            + fact("Fact_I_S_elec_fec_2018")
+            + fact("Fact_I_S_heatnet_fec_2018")
+        )
+        * inputs.entries.m_area_industry_com
+        / inputs.entries.m_area_industry_nat
     )
-    p_other_further = ProductionSubBranchCO2viaFEC.calc_production_sub_branch_by_co2e(
+    energy_consumption_industry = i_energy_total
+    i_fec_pct_of_other = fact("Fact_I_P_other_ratio_fec_to_industry_2018")
+    energy_consumption_other = energy_consumption_industry * i_fec_pct_of_other
+    p_other_further = ProductionSubBranchCO2viaFEC.calc_production_sub_branch(
         inputs=inputs,
         branch="other",
         sub_branch="further",
-        co2e_sub_branch=co2e_other_further_corrected,
-        production_germany_sub_branch=production_germany.p_other_further,
+        energy_consumption_branch=energy_consumption_other,
     )
-
     p_other_2efgh = ExtraEmission.calc_extra_emission(
         inputs=inputs,
         branch="other",
         sub_branch="2efgh",
         energy_consumption=p_other_further.energy,
     )
+
     p_other = ProductionBranch.calc_production_sum(
         sub_branch_list=[p_other_paper, p_other_food],
         sub_branch_via_FEC_list=[p_other_further],
