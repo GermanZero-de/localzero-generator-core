@@ -6,7 +6,7 @@
 Herzlich Willkommen zur Dokumentation des Klimavisionsgenerators
 ================================================================
 
-Diese Dokumentation enthält Erklärtexte zur Berechnung der einzelnen Sektoren des LocalZero Klimavisionsgenerators.
+Diese Dokumentation enthält Erklärtexte zur Berechnung der einzelnen Sektoren in der Online-Software Klimavision.
 
 .. toctree::
    :maxdepth: 2

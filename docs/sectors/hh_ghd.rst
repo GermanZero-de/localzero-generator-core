@@ -3,7 +3,7 @@
 | **Autor: Manfred Schüssler, Hauke Schmülling**
 | **Stand: 25.02.22**
 
-Dieses Dokument gibt einen Überblick über die wesentlichen Prinzipien, die den Berechnungen für Haushalte und GHD in LocalZero zugrunde liegen. Das Vorgehen ist in beiden Sektoren ähnlich: Ausgehend vom Gebäudebestand 2018 werden zunächst die energetisch schlechtesten Gebäude saniert und deren Heizung durch Wärmepumpen oder Solarthermie ersetzt. Vereinfacht wird dieses Vorgehen auch in Betriebe und Maschinen (BuM) im Sektor Landwirtschaft angewandt, deren Gebäude aus den Nichtwohngebäuden von GHD exkludiert wurden.
+Dieses Dokument gibt einen Überblick über die wesentlichen Prinzipien, die den Berechnungen für Haushalte und GHD in der Klimavision zugrunde liegen. Das Vorgehen ist in beiden Sektoren ähnlich: Ausgehend vom Gebäudebestand 2018 werden zunächst die energetisch schlechtesten Gebäude saniert und deren Heizung durch Wärmepumpen oder Solarthermie ersetzt. Vereinfacht wird dieses Vorgehen auch in Betriebe und Maschinen (BuM) im Sektor Landwirtschaft angewandt, deren Gebäude aus den Nichtwohngebäuden von GHD exkludiert wurden.
 
 5.1 Eingabedaten
 ----------------

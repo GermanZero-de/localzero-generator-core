@@ -6,7 +6,7 @@ Einflussbilanz: Eine neue Methodik zur kommunalen und deutschlandweiten Bilanzie
 
 
 | Ausgangslage und Problematik:
-| LocalZero soll überschlägige THG-Bilanzen für Kommunen, Landkreise und Bundesländer aufstellen, abgeleitet von der nationalen THG-Bilanz und anderen nationalen Daten, die mit kommunalen Daten gekreuzt werden. Dabei unterscheidet sich der bisherige Quasi-Standard für kommunale THG-Bilanzierung – BISKO: Bilanzierungs-Systematik Kommunal – erheblich von der nationalen Vorgehensweise und umfasst nicht alle relevanten Lebensbereiche.
+| Die Online-Software Klimavision soll überschlägige THG-Bilanzen für Kommunen, Landkreise und Bundesländer aufstellen, abgeleitet von der nationalen THG-Bilanz und anderen nationalen Daten, die mit kommunalen Daten gekreuzt werden. Dabei unterscheidet sich der bisherige Quasi-Standard für kommunale THG-Bilanzierung – BISKO: Bilanzierungs-Systematik Kommunal – erheblich von der nationalen Vorgehensweise und umfasst nicht alle relevanten Lebensbereiche.
 
 Das Umweltbundesamt selbst stellte 2020 fest:
 „Lediglich überregionale Bilanzierungsmethoden auf Landes- und Bundesebene sind, da sie zumeist einen Quellenansatz verfolgen und eher (inter)nationalen Zielvorgaben entsprechen, nur teilweise mit dem BISKO-Standard konform.“
@@ -54,7 +54,7 @@ https://www.ifeu.de/fileadmin/uploads/BISKO_Methodenpapier_kurz_ifeu_Nov19.pdf
 
 | **Notwendigkeit eines neuen Bilanzierungsprinzips:**
 
-| GermanZero möchte mit LocalZero ein Instrument zur Verfügung stellen, mit dem man überschlägig ermitteln kann, was alles in einer Kommune getan werden kann und muss, um klimaneutral zu werden. D.h. es geht zum einen darum, was die Verbraucher:innen tun können, wie es die BISKO-Methodik vorsieht, also Gebäude sanieren, mehr ÖPNV nutzen oder Strom einsparen. Zum anderen soll aber auch aufgezeigt werden, was auf der Erzeugungsseite verändert werden kann, sprich den fehlenden EE-Anteil im Bundesstrommix kommunal erzeugen oder die Wärmeversorger dekarbonisieren.
+| GermanZero möchte mit der Online-Software Klimavision ein Instrument zur Verfügung stellen, mit dem man überschlägig ermitteln kann, was alles in einer Kommune getan werden kann und muss, um klimaneutral zu werden. D.h. es geht zum einen darum, was die Verbraucher:innen tun können, wie es die BISKO-Methodik vorsieht, also Gebäude sanieren, mehr ÖPNV nutzen oder Strom einsparen. Zum anderen soll aber auch aufgezeigt werden, was auf der Erzeugungsseite verändert werden kann, sprich den fehlenden EE-Anteil im Bundesstrommix kommunal erzeugen oder die Wärmeversorger dekarbonisieren.
 | Auch bei prozessbedingten Emissionen sollen Maßnahmen zur Reduktion stattfinden, also weniger Rinder halten oder Stahl per Wasserstoff-Direktreduktion herstellen.
 | Summa summarum: Es sollen alle Punkte, wo jemand in der Kommune Einfluss auf die THG-Bilanz üben kann, ausgenutzt werden. Daher muss eine Erweiterung der von BISKO genutzten Sektoren erfolgen und ausgehend von den nationalen THG-Bilanzen eine Differenzierung nach Quellen- oder Verursacherbilanz. Diesen Bedingungen wird die neu entwickelte Einflussbilanz gerecht.
 
@@ -67,10 +67,10 @@ Erweiterung und Differenzierung von BISKO durch die Einflussbilanz:
 | **Nebenbedingungen**
 
 **BISKO-Kompatibilität:**
-Da LocalZero einen niedrigschwelligen Einstieg in die professionelle kommunale Bilanzierung bieten will, sollte eine Übertragbarkeit zum BISKO-Standard möglich sein. Diese Überprüfung ist derzeit noch nicht erfolgt (Stand Februar 2022), wird aber noch durch Vergleich mit BISKO-Bilanzen geschehen.
+Da die Online-Software Klimavision einen niedrigschwelligen Einstieg in die professionelle kommunale Bilanzierung bieten will, sollte eine Übertragbarkeit zum BISKO-Standard möglich sein. Diese Überprüfung ist derzeit noch nicht erfolgt (Stand Februar 2022), wird aber noch durch Vergleich mit BISKO-Bilanzen geschehen.
 
 **Gesamtrechnung stimmt:**
-Wenn als „Kommune“ Deutschland (DG000000) ausgewählt wird, soll die angegebene THG-Bilanz mit der des NIR übereinstimmen und die Energiebilanz kompatibel zur AG Energiebilanzen sein. Ausnahme: Abweichungen entstehen, wenn diese Werte aktuell nicht berücksichtigt oder nur nachrichtlich ausgewiesen werden. Dies sind internationaler Flug- und Schiffsverkehr sowie Emissionen aus der Verbrennung von fester Biomasse. Außerdem weicht die Verkehrsdatengrundlage des ifeu von der AG Energiebilanzen ab. Insgesamt sind die Daten von LocalZero jeweils etwas höher beim EEV (3%), bei den cb Emissionen (5%) und den pb Emissionen (4%).
+Wenn als „Kommune“ Deutschland (DG000000) ausgewählt wird, soll die angegebene THG-Bilanz mit der des NIR übereinstimmen und die Energiebilanz kompatibel zur AG Energiebilanzen sein. Ausnahme: Abweichungen entstehen, wenn diese Werte aktuell nicht berücksichtigt oder nur nachrichtlich ausgewiesen werden. Dies sind internationaler Flug- und Schiffsverkehr sowie Emissionen aus der Verbrennung von fester Biomasse. Außerdem weicht die Verkehrsdatengrundlage des ifeu von der AG Energiebilanzen ab. Insgesamt sind die Daten in der Klimavision jeweils etwas höher beim EEV (3%), bei den cb Emissionen (5%) und den pb Emissionen (4%).
 
 Methodik Einflussbilanz
 -----------------------

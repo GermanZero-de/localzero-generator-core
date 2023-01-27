@@ -1,15 +1,15 @@
-LocalZero: Prinzipien und Annahmen
+Die Klimavision: Prinzipien und Annahmen
 ==================================
 | **Autor:innen: Manfred Schüssler, Hauke Schmülling**
 | **Stand: 22.02.22**
 
-Dieses Dokument gibt einen Überblick über die wesentlichen Prinzipien, die den Berechnungen in LocalZero zugrunde liegen. Die wichtigsten erzeugten Zahlen sind in der Klimavision von GermanZero zusammengestellt.
+Dieses Dokument gibt einen Überblick über die wesentlichen Prinzipien, die den Berechnungen in der Klimavision zugrunde liegen. Die wichtigsten erzeugten Zahlen sind in der Klimavision von GermanZero zusammengestellt.
 
 
 1. Bilanzierungsgrundlagen
 --------------------------
 
-Das Basisjahr ist 2018, da die Daten für Folgejahre noch teilweise unvollständig sind (Projektstart von LocalZero war im Januar 2021). Für 2018 und das Zieljahr der Klimaneutralität werden die THG-Emissionen nach der neu entwickelten Einflussbilanz ermittelt. Je nach Sektor erfolgt dies aus dem Endenergieverbrauch (EEV), den Produktionsmengen, den Tierzahlen oder dem Verkehrsaufkommen. Referenz für die THG ist der Nationale Inventarbericht von 2020, für die EEV die Bilanz 2018 der AG Energiebilanzen, für die Produktionsmengen die Branchensteckbriefe des BMWi, für die Tierzahlen der Thünen-Report 77 und für das Verkehrsaufkommen gemeindefein abgeleitete Verkehrsdaten, die im April 2021 durch das ifeu für das Projekt LocalZero zur Verfügung gestellt wurden.
+Das Basisjahr ist 2018, da die Daten für Folgejahre noch teilweise unvollständig sind (Projektstart der Klimavision war im Januar 2021). Für 2018 und das Zieljahr der Klimaneutralität werden die THG-Emissionen nach der neu entwickelten Einflussbilanz ermittelt. Je nach Sektor erfolgt dies aus dem Endenergieverbrauch (EEV), den Produktionsmengen, den Tierzahlen oder dem Verkehrsaufkommen. Referenz für die THG ist der Nationale Inventarbericht von 2020, für die EEV die Bilanz 2018 der AG Energiebilanzen, für die Produktionsmengen die Branchensteckbriefe des BMWi, für die Tierzahlen der Thünen-Report 77 und für das Verkehrsaufkommen gemeindefein abgeleitete Verkehrsdaten, die im April 2021 durch das ifeu für das Projekt Klimavision zur Verfügung gestellt wurden.
 
 
 2. Von Bundeswerten auf Bundesländer, Landkreise und Kommunen

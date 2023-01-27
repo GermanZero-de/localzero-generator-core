@@ -4,11 +4,11 @@
 | **Stand: 25.02.22**
 
 
-Dieses Dokument gibt einen Überblick über die wesentlichen Prinzipien, die den Berechnungen für Verkehr in LocalZero zugrunde liegen. Im Gegensatz zu den anderen Sektoren gibt es hier kommunenfeine Primärdaten der Verkehrsleistung, die vom ifeu für das Projekt LocalZero zur Verfügung gestellt worden sind. Darauf basierend findet die EEV- und THG-Bilanzierung getrennt nach Verkehrsträgern statt. Die verwendeten Emissionsfaktoren der Endenergieträger sind aber identisch mit den anderen Sektoren.
+Dieses Dokument gibt einen Überblick über die wesentlichen Prinzipien, die den Berechnungen für Verkehr in der Klimavision zugrunde liegen. Im Gegensatz zu den anderen Sektoren gibt es hier kommunenfeine Primärdaten der Verkehrsleistung, die vom ifeu für das Projekt Klimavision zur Verfügung gestellt worden sind. Darauf basierend findet die EEV- und THG-Bilanzierung getrennt nach Verkehrsträgern statt. Die verwendeten Emissionsfaktoren der Endenergieträger sind aber identisch mit den anderen Sektoren.
 
 7.1 Eingabedaten
 ----------------
-Berechnungen in LocalZero für den Bereich Verkehr basieren auf kommunenfeinen Daten, die vom ifeu für das Projekt LocalZero bereitgestellt wurden. Daher ist hier keine individuelle Anpassung der Eingabe nötig und möglich.
+Berechnungen in der Klimavision für den Bereich Verkehr basieren auf kommunenfeinen Daten, die vom ifeu für das Projekt Klimavision bereitgestellt wurden. Daher ist hier keine individuelle Anpassung der Eingabe nötig und möglich.
 
 7.2 Bilanzierung 2018
 ---------------------
@@ -31,7 +31,7 @@ Die Berechnung des kommunalen Endenergieverbrauches (=EEV) für den Straßenverk
 
 Für die Ermittlung der Fahrleistung von Straßen-, Stadt- und U-Bahn (SSU) im ÖPNV wird - wie beim Linienbusnahverkehr – auf kreisfeine Daten des statistischen Bundesamtes zurückgegriffen (Destatis 2020).
 
-Für den Eisenbahnverkehr für Güter und Personen bilden gemeindefeine Endenergieverbrauchsdaten des ifeu die Grundlage für weitere Berechnungen. Hier kommt es zu bekannten aber ungeklärten Abweichungen zu den von der AG Energiebilanzen (AGEB) ausgegebenen Werten, welche regelmäßig unter denen des ifeu und des TREMOD-Berichtes (UBA 2020 S. 74) liegen. LocalZero bedient sich in diesem Fall der höheren Werte, um das Risiko zu gering eingeschätzter Verbrauchsdaten zu minimieren.
+Für den Eisenbahnverkehr für Güter und Personen bilden gemeindefeine Endenergieverbrauchsdaten des ifeu die Grundlage für weitere Berechnungen. Hier kommt es zu bekannten aber ungeklärten Abweichungen zu den von der AG Energiebilanzen (AGEB) ausgegebenen Werten, welche regelmäßig unter denen des ifeu und des TREMOD-Berichtes (UBA 2020 S. 74) liegen. Die Online-Software Klimavision bedient sich in diesem Fall der höheren Werte, um das Risiko zu gering eingeschätzter Verbrauchsdaten zu minimieren.
 
 Auf Basis der gesamten in Deutschland erbrachten Beförderungs- bzw. Transportleistungen im Schienenverkehr in Deutschland aus UBA (2020a) wird das Verhältnis von EEV zur Verkehrsleistung bestimmt. Aus diesem Faktor wird die Verkehrsleistung in Personenkilometern bzw. Tonnenkilometern in der jeweiligen Kommune bestimmt.
 
@@ -41,7 +41,7 @@ Die  Beförderungs- und Transportleistung im Luftverkehr entspricht den Daten na
 
 Grundlage für den EEV ist der bundesweite EEV nach den AG Energiebilanzen von Kerosin und Flugbenzin in MWh. Dieser umfasst alle in Deutschland betankten Flugzeuge und bildet den nationalen und internationalen Luftverkehr für Güter und Personen ab.
 
-Flughäfen erfüllen in der Regel überregionale Funktionen bei der Bereitstellung von Verkehrsinfrastruktur. Daher wird der mit einem Flughafen verbundene EEV nicht allein der Kommune zugerechnet auf dessen Gebiet sich ein Flughafen befindet. Stattdessen wird der EEV einer Kommune im Luftverkehr anhand der Einwohner der Kommune im Verhältnis zur gesamten Einwohnerzahl in Deutschland pauschal berechnet. Die Berechnungen in LocalZero weichen hier daher von der Einflussbilanz ab. Diese Zuordnung über die Endverbraucher – und damit tatsächlichen Nutzer – wird meist als „gerechter“ erachtet. Wesentliche regulatorische Maßnahmen zur THG-Reduktion sind in dem Bereich zudem auf nationaler oder gar internationaler Ebene umzusetzen. Für eine mögliche zukünftige Anpassung an die Einflussbilanz müssten Verkehrsaufkommen und Kerosinbedarf aller deutschen Flughäfen spezifisch ermittelt und den jeweiligen Kommunen zugewiesen werden.
+Flughäfen erfüllen in der Regel überregionale Funktionen bei der Bereitstellung von Verkehrsinfrastruktur. Daher wird der mit einem Flughafen verbundene EEV nicht allein der Kommune zugerechnet auf dessen Gebiet sich ein Flughafen befindet. Stattdessen wird der EEV einer Kommune im Luftverkehr anhand der Einwohner der Kommune im Verhältnis zur gesamten Einwohnerzahl in Deutschland pauschal berechnet. Die Berechnungen in der Klimavision weichen hier daher von der Einflussbilanz ab. Diese Zuordnung über die Endverbraucher – und damit tatsächlichen Nutzer – wird meist als „gerechter“ erachtet. Wesentliche regulatorische Maßnahmen zur THG-Reduktion sind in dem Bereich zudem auf nationaler oder gar internationaler Ebene umzusetzen. Für eine mögliche zukünftige Anpassung an die Einflussbilanz müssten Verkehrsaufkommen und Kerosinbedarf aller deutschen Flughäfen spezifisch ermittelt und den jeweiligen Kommunen zugewiesen werden.
 
 | **Schifffahrt**
 
@@ -60,7 +60,7 @@ Grundlage für die Ermittlung der Verkehrsleistung im Fuß- und Radverkehr ist d
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Die Berechnung der THG-Emissionen erfolgt im Sektor Verkehr “Tank-to-Wheel" - also für während der Fahrzeugnutzung durch Verbrennung freigesetzte Emissionen. Der berechnete EEV je nach Verkehrsträger wird mit den direkten spezifischen CO2-Emissionsfaktoren (t/MWh) für alle verwendeten Kraftstoffe multipliziert. Datenbasis für die Emissionsfaktoren sowie die Anteile der Kraftstoffarten bildet die UBA Publikation „Aktualisierung TREMOD für die Berichterstattung 2020“ (UBA 2020a).
 
-Die “Well-to-Tank“ THG-Emissionen (Vorkettenemissionen, die bei der Herstellung der Kraftstoffe anfallen) werden im Bereich Kraftstoffe von LocalZero bilanziert.
+Die “Well-to-Tank“ THG-Emissionen (Vorkettenemissionen, die bei der Herstellung der Kraftstoffe anfallen) werden im Bereich Kraftstoffe in der Klimavision bilanziert.
 
 
 7.4 Bilanz Zieljahr
@@ -68,7 +68,7 @@ Die “Well-to-Tank“ THG-Emissionen (Vorkettenemissionen, die bei der Herstell
 
 Das Zieljahr stellt die Erreichung der Klimaneutralität dar. Verschiedene Veröffentlichungen bzw. Szenarien beschreiben mögliche Pfade zur THG-Reduktion durch Vermeidung und Verlagerung von Verkehr sowie durch Verbesserung der genutzten Technologien.
 
-Als Leitszenario für LocalZero wird das GreenSupreme Szenario aus der RESCUE-Studie des UBA (2019) gewählt.  Es stellt ein ambitioniertes Klimaschutzszenario, insbesondere auch in Bezug auf die Vermeidung von Verkehr dar. Weitere Orientierungspunkte gibt zudem die von AGORA in Auftrag gegebene und von Prognos, Öko-Institut und Wuppertal-Institut durchgeführte Studie “Klimaneutrales Deutschland - In drei Schritten zu null Treibhausgasen bis 2050” sowie die Aktualisierung dieser Studie „Klimaneutrales Deutschland 2045“.
+Als Leitszenario für die Klimavision wird das GreenSupreme Szenario aus der RESCUE-Studie des UBA (2019) gewählt.  Es stellt ein ambitioniertes Klimaschutzszenario, insbesondere auch in Bezug auf die Vermeidung von Verkehr dar. Weitere Orientierungspunkte gibt zudem die von AGORA in Auftrag gegebene und von Prognos, Öko-Institut und Wuppertal-Institut durchgeführte Studie “Klimaneutrales Deutschland - In drei Schritten zu null Treibhausgasen bis 2050” sowie die Aktualisierung dieser Studie „Klimaneutrales Deutschland 2045“.
 
 7.2.1 Nachfrage und Bereitstellung
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -132,10 +132,10 @@ Es existiert eine Reihe an Quellen und Studien, welche vielerlei Maßnahmen zur 
 
 Die von jeder Kommune individuell zu ergreifenden Maßnahmen hängen von der jeweiligen Ausgangslage - also bereits erfolgter Umbau zu einem klimafreundlichen Verkehrssystem - und den vorliegenden Rahmenbedingungen hinsichtlich der existierenden bzw. erforderlichen Verkehrsinfrastruktur ab.
 
-Dennoch will LocalZero Kommunen zumindest grobe Richtwerte zu Maßnahmenfeldern, damit verbundenen Investitionserfordernissen sowie daraus entstehenden Beschäftigungseffekten geben.
+Dennoch will die Klimavision den Kommunen zumindest grobe Richtwerte zu Maßnahmenfeldern, damit verbundenen Investitionserfordernissen sowie daraus entstehenden Beschäftigungseffekten geben.
 
 Als Leitstudie wurde hierzu die Studie Gesamtwirtschaftliche Wirkungen durch die
-Transformation zu nachhaltiger Mobilität von “M-FIVE” und  Fraunhofer ISI genutzt, da das hier beschriebene MM35 Szenario dem GreenSupreme Szenario des UBA hinsichtlich zukünftigem Modalsplit und Fahrleistungen sehr ähnlich ist. Die Studie ist zudem eine der wenigen, welche nachvollziehbare Aussagen zu erforderlichen Investitionen und möglichen Beschäftigungseffekten für den Personenverkehr trifft. Die Studienergebnisse werden daher auch für LocalZero übernommen.
+Transformation zu nachhaltiger Mobilität von “M-FIVE” und  Fraunhofer ISI genutzt, da das hier beschriebene MM35 Szenario dem GreenSupreme Szenario des UBA hinsichtlich zukünftigem Modalsplit und Fahrleistungen sehr ähnlich ist. Die Studie ist zudem eine der wenigen, welche nachvollziehbare Aussagen zu erforderlichen Investitionen und möglichen Beschäftigungseffekten für den Personenverkehr trifft. Die Studienergebnisse werden daher auch für die Klimavision übernommen.
 
 Um den Güterverkehr ebenfalls zu adressieren, werden zusätzlich Angaben zu Mehrinvestitionen aus der BCG Studie "Klimapfade für Deutschland” herangezogen.
 
@@ -169,7 +169,7 @@ Der Anteil der Investitionen, die aus öffentlicher Hand stammen sollten, sind g
 
 Der jährliche Investitionsbedarf ergibt sich aus der Gesamtsumme und den verbleibenden Jahren bis zum Zieljahr.
 
-Um zudem Hinweise auf kommunale Beschäftigungseffekte zu geben, dient ebenfalls die M-FIVE Studie als Grundlage. Die dort beschriebenen bundesweiten Beschäftigungseffekte für die Segmente „Landverkehr“ und „Ausbau der Verkehrsinfrastruktur“ reflektieren im Wesentlichen auch den Verkehrsbereich in LocalZero. Die zusätzlich erforderlichen Stellen laut M-FIVE in diesen Bereichen werden über die Einwohnerzahl überschlägig auf die Kommunen umgelegt.
+Um zudem Hinweise auf kommunale Beschäftigungseffekte zu geben, dient ebenfalls die M-FIVE Studie als Grundlage. Die dort beschriebenen bundesweiten Beschäftigungseffekte für die Segmente „Landverkehr“ und „Ausbau der Verkehrsinfrastruktur“ reflektieren im Wesentlichen auch den Verkehrsbereich in der Klimavision. Die zusätzlich erforderlichen Stellen laut M-FIVE in diesen Bereichen werden über die Einwohnerzahl überschlägig auf die Kommunen umgelegt.
 
 Zudem wird ein Näherungswert für die benötigten Beschäftigten in der Verkehrsplanung angegeben. Als Eckdaten dienen hier ein Anteil von 5% an Planungskosten der Investitionssumme bei Infrastrukturmaßnahmen sowie Personaldurchschnittskosten von 112.000 EUR pro Jahr basierend auf öffentlichen Tarifverträgen.
 
@@ -189,7 +189,7 @@ Quellen
 
 | Ifeu (2019): BISKO Bilanzierungs-Systematik Kommunal, Empfehlungen zur Methodik der kommunalen Treibhausgasbilanzierung  für den Energie- und Verkehrssektor in Deutschland. Verfügbar unter: https://www.ifeu.de/fileadmin/uploads/BISKO_Methodenpapier_kurz_ifeu_Nov19.pdf [26.08.2021].
 
-| ifeu (2021):  Gemeindefein abgeleitete Verkehrsdaten zur kommunalen THG-Bilanzierung für den Bereich Verkehr. Im April 2021 durch das ifeu für das Projekt “LocalZero” zur Verfügung gestellt.
+| ifeu (2021):  Gemeindefein abgeleitete Verkehrsdaten zur kommunalen THG-Bilanzierung für den Bereich Verkehr. Im April 2021 durch das ifeu für das Projekt “Klimavision” zur Verfügung gestellt.
 
 | Nationale Leitstelle Ladeinfrastruktur (2020): Ladeinfrastruktur nach
 | 2025/2030: Szenarien für den Markthochlauf. Verfügbar unter https://www.now-gmbh.de/wp-content/uploads/2020/11/Studie_Ladeinfrastruktur-nach-2025-2.pdf [22.08.2021].
