@@ -3,7 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Herzlich Willkommen zur Dokumentation des Klimavisionsgenerators
+Herzlich Willkommen zur Dokumentation der Online-Software Klimavision
 ================================================================
 
 Diese Dokumentation enthält Erklärtexte zur Berechnung der einzelnen Sektoren in der Online-Software Klimavision.
