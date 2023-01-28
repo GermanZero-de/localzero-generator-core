@@ -11,7 +11,7 @@ from ...industry2030.i30 import I30
 from ...electricity2030.electricity2030_core import EColVars2030
 
 from ..dataclasses import (
-    # Vars5,
+    Vars5,
     Vars6,
     Vars9,
     Vars10,
@@ -23,7 +23,7 @@ from ..dataclasses import (
 
 @dataclass(kw_only=True)
 class Production:
-    # total: Vars5
+    total: Vars5
     gas: Vars6
     lpg: Vars9
     fueloil: Vars6
@@ -222,8 +222,24 @@ def calc_production(
         CO2e_combustion_based_per_MWh=0,
     )
 
+    total = Vars5(
+        inputs=inputs,
+        what="",
+        h18=h18,
+        gas=gas,
+        lpg=lpg,
+        fueloil=fueloil,
+        opetpro=opetpro,
+        coal=coal,
+        heatnet=heatnet,
+        heatnet_lheatpump=heatnet_lheatpump,
+        biomass=biomass,
+        ofossil=ofossil,
+        orenew=orenew,
+    )
+
     return Production(
-        # total=total,
+        total=total,
         gas=gas,
         lpg=lpg,
         fueloil=fueloil,

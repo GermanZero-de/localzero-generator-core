@@ -62,16 +62,6 @@ class Vars0(VarsInvest, VarsChange):
 
 
 @dataclass(kw_only=True)
-class Vars5(VarsInvest, VarsChange):
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_production_based: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    cost_fuel: float = None  # type: ignore
-    demand_electricity: float = None  # type: ignore
-    energy: float = None  # type: ignore
-
-
-@dataclass(kw_only=True)
 class Vars9(EnergyWithCO2ePerMWh, VarsChange):
     inputs: InitVar[Inputs]
     what: InitVar[str]
@@ -343,4 +333,112 @@ class Vars10(Energy, VarsInvest, VarsChange):
             heatnet_plant.demand_emplo_new
             + heatnet_lheatpump.demand_emplo_new
             + heatnet_geoth.demand_emplo_new
+        )
+
+
+@dataclass(kw_only=True)
+class Vars5(VarsInvest, VarsChange):
+    CO2e_combustion_based: float = None  # type: ignore
+    CO2e_production_based: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    cost_fuel: float = None  # type: ignore
+    demand_electricity: float = None  # type: ignore
+    energy: float = None  # type: ignore
+
+    inputs: InitVar[Inputs]
+    what: InitVar[str]
+    h18: InitVar[H18]
+    gas: InitVar[Vars6]
+    lpg: InitVar[Vars9]
+    fueloil: InitVar[Vars6]
+    opetpro: InitVar[Vars9]
+    coal: InitVar[Vars6]
+    heatnet: InitVar[Vars10]
+    heatnet_lheatpump: InitVar[Vars12]
+    biomass: InitVar[Vars6]
+    ofossil: InitVar[Vars9]
+    orenew: InitVar[Vars9]
+
+    def __post_init__(
+        self,
+        inputs: Inputs,
+        what: str,
+        h18: H18,
+        gas: Vars6,
+        lpg: Vars9,
+        fueloil: Vars6,
+        opetpro: Vars9,
+        coal: Vars6,
+        heatnet: Vars10,
+        heatnet_lheatpump: Vars12,
+        biomass: Vars6,
+        ofossil: Vars9,
+        orenew: Vars9,
+    ):
+        fact = inputs.fact
+        entries = inputs.entries
+
+        h18_p_what = getattr(h18, "p" + what)
+
+        self.demand_electricity = heatnet_lheatpump.demand_electricity
+        self.CO2e_total_2021_estimated = h18_p_what.CO2e_total * fact(
+            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+        )
+        self.energy = (
+            gas.energy
+            + lpg.energy
+            + fueloil.energy
+            + opetpro.energy
+            + coal.energy
+            + heatnet.energy
+            + biomass.energy
+            + ofossil.energy
+            + orenew.energy
+        )
+        self.change_energy_MWh = self.energy - h18_p_what.energy
+        self.CO2e_combustion_based = (
+            gas.CO2e_combustion_based
+            + lpg.CO2e_combustion_based
+            + fueloil.CO2e_combustion_based
+            + opetpro.CO2e_combustion_based
+            + coal.CO2e_combustion_based
+            + heatnet.CO2e_combustion_based
+        )
+        self.invest = heatnet.invest
+        self.demand_emplo = heatnet.demand_emplo
+        self.demand_emplo_new = heatnet.demand_emplo_new
+        self.invest_pa_com = heatnet.invest_pa_com
+        self.invest_pa = heatnet.invest_pa
+        self.invest_com = heatnet.invest_com
+        self.CO2e_total = (
+            gas.CO2e_total
+            + lpg.CO2e_total
+            + fueloil.CO2e_total
+            + opetpro.CO2e_total
+            + coal.CO2e_total
+            + heatnet.CO2e_total
+            + biomass.CO2e_total
+            + ofossil.CO2e_total
+            + orenew.CO2e_total
+        )
+        self.cost_wage = heatnet.cost_wage
+        self.change_energy_pct = div(self.change_energy_MWh, h18_p_what.energy)
+        self.cost_fuel = (
+            gas.cost_fuel + fueloil.cost_fuel + coal.cost_fuel + biomass.cost_fuel
+        )
+        self.cost_climate_saved = (
+            (self.CO2e_total_2021_estimated - self.CO2e_total)
+            * entries.m_duration_neutral
+            * fact("Fact_M_cost_per_CO2e_2020")
+        )
+        self.change_CO2e_t = self.CO2e_total - h18_p_what.CO2e_total
+        self.change_CO2e_pct = div(self.change_CO2e_t, h18_p_what.CO2e_total)
+        self.CO2e_production_based = (
+            gas.CO2e_production_based
+            + opetpro.CO2e_production_based
+            + coal.CO2e_production_based
+            + heatnet.CO2e_production_based
+            + biomass.CO2e_production_based
+            + ofossil.CO2e_production_based
+            + orenew.CO2e_production_based
         )
