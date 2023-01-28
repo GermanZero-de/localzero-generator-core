@@ -8,6 +8,7 @@ from ..heat2018.h18 import H18
 from ..common.g import G
 from ..common.energy import Energy
 from ..common.energyWithCO2ePerMWh import EnergyWithCO2ePerMWh
+from ..common.co2eEmissions import CO2eEmissions
 
 
 @dataclass(kw_only=True)
@@ -250,11 +251,7 @@ class Vars13(Energy, VarsInvest, VarsChange, VarsWage):
 
 
 @dataclass(kw_only=True)
-class Vars10(Energy, VarsInvest, VarsChange):
-    CO2e_combustion_based: float = 0
-    CO2e_production_based: float = 0
-    CO2e_total: float = 0
-
+class Vars10(CO2eEmissions, Energy, VarsInvest, VarsChange):
     inputs: InitVar[Inputs]
     what: InitVar[str]
     h18: InitVar[H18]
@@ -330,10 +327,7 @@ class Vars10(Energy, VarsInvest, VarsChange):
 
 
 @dataclass(kw_only=True)
-class Vars5(VarsInvest, VarsChange):
-    CO2e_combustion_based: float = 0
-    CO2e_production_based: float = 0
-    CO2e_total: float = 0
+class Vars5(CO2eEmissions, VarsInvest, VarsChange):
     cost_fuel: float = 0
     demand_electricity: float = 0
     energy: float = 0
@@ -438,10 +432,7 @@ class Vars5(VarsInvest, VarsChange):
 
 
 @dataclass(kw_only=True)
-class H(VarsInvest, VarsChange):
-    CO2e_combustion_based: float
-    CO2e_production_based: float
-    CO2e_total: float
+class H(CO2eEmissions, VarsInvest, VarsChange):
     demand_emplo_com: float
 
     @classmethod
