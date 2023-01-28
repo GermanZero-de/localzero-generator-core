@@ -8,6 +8,7 @@ from ...residences2030.r30 import R30
 from ...business2030.b30 import B30
 from ...agri2030.a30 import A30
 from ...industry2030.i30 import I30
+from ...electricity2030.electricity2030_core import EColVars2030
 
 from ..dataclasses import (
     # Vars5,
@@ -47,8 +48,7 @@ def calc_production(
     b30: B30,
     a30: A30,
     i30: I30,
-    heatnet_cogen_energy: float,
-    p_heatnet_energy: float,
+    p_local_biomass_cogen: EColVars2030,
 ) -> Production:
 
     fact = inputs.fact
@@ -109,6 +109,16 @@ def calc_production(
         energy=0,
         CO2e_production_based_per_MWh=h18.p_opetpro.CO2e_production_based_per_MWh,
         CO2e_combustion_based_per_MWh=h18.p_opetpro.CO2e_combustion_based_per_MWh,
+    )
+
+    p_heatnet_energy = (
+        r30.s_heatnet.energy + b30.s_heatnet.energy + i30.s_renew_heatnet.energy
+    )
+
+    heatnet_cogen_energy = (
+        p_local_biomass_cogen.energy
+        if (p_local_biomass_cogen.energy < p_heatnet_energy)
+        else p_heatnet_energy
     )
 
     heatnet_cogen = Vars9(

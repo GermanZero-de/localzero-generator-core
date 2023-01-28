@@ -39,15 +39,6 @@ def calc(
 
     demand = energy_demand.calc_demand(r30, b30, i30, a30)
 
-    p_heatnet_energy = (
-        r30.s_heatnet.energy + b30.s_heatnet.energy + i30.s_renew_heatnet.energy
-    )
-    heatnet_cogen_energy = (
-        p_local_biomass_cogen.energy
-        if (p_local_biomass_cogen.energy < p_heatnet_energy)
-        else p_heatnet_energy
-    )
-
     production = energy_production.calc_production(
         inputs,
         h18,
@@ -55,8 +46,7 @@ def calc(
         b30,
         a30,
         i30,
-        heatnet_cogen_energy,
-        p_heatnet_energy,
+        p_local_biomass_cogen,
     )
 
     p.demand_electricity = production.heatnet_lheatpump.demand_electricity
@@ -69,7 +59,7 @@ def calc(
         + production.fueloil.energy
         + production.opetpro.energy
         + production.coal.energy
-        + p_heatnet_energy
+        + production.heatnet.energy
         + production.biomass.energy
         + production.ofossil.energy
         + production.orenew.energy
