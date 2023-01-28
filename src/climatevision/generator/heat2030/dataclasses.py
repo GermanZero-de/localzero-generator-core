@@ -20,37 +20,7 @@ class VarsInvest:
 
 
 @dataclass(kw_only=True)
-class Vars0(VarsInvest):
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_production_based: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
-    change_CO2e_pct: float = None  # type: ignore
-    change_CO2e_t: float = None  # type: ignore
-    change_energy_MWh: float = None  # type: ignore
-    change_energy_pct: float = None  # type: ignore
-    cost_climate_saved: float = None  # type: ignore
-    demand_emplo_com: float = None  # type: ignore
-
-
-@dataclass(kw_only=True)
-class Vars5(VarsInvest):
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_production_based: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
-    change_CO2e_pct: float = None  # type: ignore
-    change_CO2e_t: float = None  # type: ignore
-    change_energy_MWh: float = None  # type: ignore
-    change_energy_pct: float = None  # type: ignore
-    cost_climate_saved: float = None  # type: ignore
-    cost_fuel: float = None  # type: ignore
-    demand_electricity: float = None  # type: ignore
-    energy: float = None  # type: ignore
-
-
-@dataclass(kw_only=True)
-class Vars9(EnergyWithCO2ePerMWh):
+class VarsChange:
     CO2e_total_2021_estimated: float = 0
     change_CO2e_pct: float = 0
     change_CO2e_t: float = 0
@@ -58,6 +28,27 @@ class Vars9(EnergyWithCO2ePerMWh):
     change_energy_pct: float = 0
     cost_climate_saved: float = 0
 
+
+@dataclass(kw_only=True)
+class Vars0(VarsInvest, VarsChange):
+    CO2e_combustion_based: float = None  # type: ignore
+    CO2e_production_based: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    demand_emplo_com: float = None  # type: ignore
+
+
+@dataclass(kw_only=True)
+class Vars5(VarsInvest, VarsChange):
+    CO2e_combustion_based: float = None  # type: ignore
+    CO2e_production_based: float = None  # type: ignore
+    CO2e_total: float = None  # type: ignore
+    cost_fuel: float = None  # type: ignore
+    demand_electricity: float = None  # type: ignore
+    energy: float = None  # type: ignore
+
+
+@dataclass(kw_only=True)
+class Vars9(EnergyWithCO2ePerMWh, VarsChange):
     inputs: InitVar[Inputs]
     what: InitVar[str]
     h18: InitVar[H18]
@@ -206,16 +197,10 @@ class Vars12(Vars9, VarsInvest):
 
 
 @dataclass(kw_only=True)
-class Vars13(VarsInvest):
+class Vars13(VarsInvest, VarsChange):
     CO2e_production_based: float = None  # type: ignore
     CO2e_production_based_per_MWh: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
-    change_CO2e_pct: float = None  # type: ignore
-    change_CO2e_t: float = None  # type: ignore
-    change_energy_MWh: float = None  # type: ignore
-    change_energy_pct: float = None  # type: ignore
-    cost_climate_saved: float = None  # type: ignore
     energy: float = None  # type: ignore
     full_load_hour: float = None  # type: ignore
     invest_per_x: float = None  # type: ignore
@@ -226,16 +211,10 @@ class Vars13(VarsInvest):
 
 
 @dataclass(kw_only=True)
-class Vars10(VarsInvest):
+class Vars10(VarsInvest, VarsChange):
     CO2e_combustion_based: float = 0
     CO2e_production_based: float = 0
     CO2e_total: float = 0
-    CO2e_total_2021_estimated: float = 0
-    change_CO2e_pct: float = 0
-    change_CO2e_t: float = 0
-    change_energy_MWh: float = 0
-    change_energy_pct: float = 0
-    cost_climate_saved: float = 0
     energy: float
 
     inputs: InitVar[Inputs]
