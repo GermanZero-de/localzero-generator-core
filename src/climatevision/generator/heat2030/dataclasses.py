@@ -209,7 +209,7 @@ class Vars13(VarsInvest, VarsChange, VarsWage):
     inputs: InitVar[Inputs]
     what: InitVar[str]
     h18: InitVar[H18]
-    p_heatnet_energy: InitVar[float]
+    heatnet_energy: InitVar[float]
     heatnet_cogen_energy: InitVar[float]
 
     def __post_init__(
@@ -217,7 +217,7 @@ class Vars13(VarsInvest, VarsChange, VarsWage):
         inputs: Inputs,
         what: str,
         h18: H18,
-        p_heatnet_energy: float,
+        heatnet_energy: float,
         heatnet_cogen_energy: float,
     ):
         fact = inputs.fact
@@ -228,8 +228,8 @@ class Vars13(VarsInvest, VarsChange, VarsWage):
 
         self.pct_energy = ass("Ass_H_P_heatnet_fraction_geoth_2050")
         self.energy = (
-            (p_heatnet_energy - heatnet_cogen_energy) * self.pct_energy
-            if (heatnet_cogen_energy < p_heatnet_energy)
+            (heatnet_energy - heatnet_cogen_energy) * self.pct_energy
+            if (heatnet_cogen_energy < heatnet_energy)
             else 0
         )
         self.full_load_hour = fact("Fact_H_P_heatnet_geoth_full_load_hours")
@@ -273,9 +273,9 @@ class Vars10(Energy, VarsInvest, VarsChange):
     what: InitVar[str]
     h18: InitVar[H18]
     heatnet_cogen: InitVar[Vars9]
-    p_heatnet_plant: InitVar[Vars11]
-    p_heatnet_lheatpump: InitVar[Vars12]
-    p_heatnet_geoth: InitVar[Vars13]
+    heatnet_plant: InitVar[Vars11]
+    heatnet_lheatpump: InitVar[Vars12]
+    heatnet_geoth: InitVar[Vars13]
 
     def __post_init__(
         self,
@@ -283,9 +283,9 @@ class Vars10(Energy, VarsInvest, VarsChange):
         what: str,
         h18: H18,
         heatnet_cogen: Vars9,
-        p_heatnet_plant: Vars11,
-        p_heatnet_lheatpump: Vars12,
-        p_heatnet_geoth: Vars13,
+        heatnet_plant: Vars11,
+        heatnet_lheatpump: Vars12,
+        heatnet_geoth: Vars13,
     ):
         fact = inputs.fact
         entries = inputs.entries
@@ -295,9 +295,9 @@ class Vars10(Energy, VarsInvest, VarsChange):
         self.CO2e_combustion_based = heatnet_cogen.CO2e_combustion_based
         self.CO2e_production_based = (
             heatnet_cogen.CO2e_production_based
-            + p_heatnet_plant.CO2e_production_based
-            + p_heatnet_lheatpump.CO2e_production_based
-            + p_heatnet_geoth.CO2e_production_based
+            + heatnet_plant.CO2e_production_based
+            + heatnet_lheatpump.CO2e_production_based
+            + heatnet_geoth.CO2e_production_based
         )
         self.CO2e_total = heatnet_cogen.CO2e_total
 
@@ -317,27 +317,27 @@ class Vars10(Energy, VarsInvest, VarsChange):
         )
 
         self.invest = (
-            p_heatnet_plant.invest + p_heatnet_lheatpump.invest + p_heatnet_geoth.invest
+            heatnet_plant.invest + heatnet_lheatpump.invest + heatnet_geoth.invest
         )
         self.invest_pa = (
-            p_heatnet_plant.invest_pa
-            + p_heatnet_lheatpump.invest_pa
-            + p_heatnet_geoth.invest_pa
+            heatnet_plant.invest_pa
+            + heatnet_lheatpump.invest_pa
+            + heatnet_geoth.invest_pa
         )
         self.invest_pa_com = self.invest_pa
         self.demand_emplo = (
-            p_heatnet_plant.demand_emplo
-            + p_heatnet_lheatpump.demand_emplo
-            + p_heatnet_geoth.demand_emplo
+            heatnet_plant.demand_emplo
+            + heatnet_lheatpump.demand_emplo
+            + heatnet_geoth.demand_emplo
         )
         self.invest_com = self.invest
         self.cost_wage = (
-            p_heatnet_plant.cost_wage
-            + p_heatnet_lheatpump.cost_wage
-            + p_heatnet_geoth.cost_wage
+            heatnet_plant.cost_wage
+            + heatnet_lheatpump.cost_wage
+            + heatnet_geoth.cost_wage
         )
         self.demand_emplo_new = (
-            p_heatnet_plant.demand_emplo_new
-            + p_heatnet_lheatpump.demand_emplo_new
-            + p_heatnet_geoth.demand_emplo_new
+            heatnet_plant.demand_emplo_new
+            + heatnet_lheatpump.demand_emplo_new
+            + heatnet_geoth.demand_emplo_new
         )

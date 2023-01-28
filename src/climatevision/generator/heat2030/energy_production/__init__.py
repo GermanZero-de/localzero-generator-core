@@ -111,14 +111,14 @@ def calc_production(
         CO2e_combustion_based_per_MWh=h18.p_opetpro.CO2e_combustion_based_per_MWh,
     )
 
-    p_heatnet_energy = (
+    heatnet_energy = (
         r30.s_heatnet.energy + b30.s_heatnet.energy + i30.s_renew_heatnet.energy
     )
 
     heatnet_cogen_energy = (
         p_local_biomass_cogen.energy
-        if (p_local_biomass_cogen.energy < p_heatnet_energy)
-        else p_heatnet_energy
+        if (p_local_biomass_cogen.energy < heatnet_energy)
+        else heatnet_energy
     )
 
     heatnet_cogen = Vars9(
@@ -140,8 +140,8 @@ def calc_production(
         what="heatnet_plant",
         h18=h18,
         energy=(
-            (p_heatnet_energy - heatnet_cogen_energy) * heatnet_plant_pct_energy
-            if (heatnet_cogen_energy < p_heatnet_energy)
+            (heatnet_energy - heatnet_cogen_energy) * heatnet_plant_pct_energy
+            if (heatnet_cogen_energy < heatnet_energy)
             else 0
         ),
         CO2e_production_based_per_MWh=fact("Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018"),
@@ -155,8 +155,8 @@ def calc_production(
         what="heatnet_lheatpump",
         h18=h18,
         energy=(
-            (p_heatnet_energy - heatnet_cogen_energy) * heatnet_lheatpump_pct_energy
-            if (heatnet_cogen_energy < p_heatnet_energy)
+            (heatnet_energy - heatnet_cogen_energy) * heatnet_lheatpump_pct_energy
+            if (heatnet_cogen_energy < heatnet_energy)
             else 0
         ),
         CO2e_production_based_per_MWh=fact("Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018"),
@@ -169,7 +169,7 @@ def calc_production(
         what="heatnet_geoth",
         h18=h18,
         heatnet_cogen_energy=heatnet_cogen_energy,
-        p_heatnet_energy=p_heatnet_energy,
+        heatnet_energy=heatnet_energy,
     )
 
     heatnet = Vars10(
@@ -177,10 +177,10 @@ def calc_production(
         what="heatnet",
         h18=h18,
         heatnet_cogen=heatnet_cogen,
-        p_heatnet_plant=heatnet_plant,
-        p_heatnet_lheatpump=heatnet_lheatpump,
-        p_heatnet_geoth=heatnet_geoth,
-        energy=p_heatnet_energy,
+        heatnet_plant=heatnet_plant,
+        heatnet_lheatpump=heatnet_lheatpump,
+        heatnet_geoth=heatnet_geoth,
+        energy=heatnet_energy,
     )
 
     ofossil = Vars9(
