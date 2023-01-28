@@ -168,8 +168,12 @@ def calc_production(
         inputs=inputs,
         what="heatnet_geoth",
         h18=h18,
-        heatnet_cogen_energy=heatnet_cogen_energy,
-        heatnet_energy=heatnet_energy,
+        energy=(
+            (heatnet_energy - heatnet_cogen_energy)
+            * ass("Ass_H_P_heatnet_fraction_geoth_2050")
+            if (heatnet_cogen_energy < heatnet_energy)
+            else 0
+        ),
     )
 
     heatnet = Vars10(
