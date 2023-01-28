@@ -49,6 +49,7 @@ class VarsWage:
     ):
         fact = inputs.fact
 
+        self.pct_of_wage = fact("Fact_B_P_constr_main_revenue_pct_of_wage_2017")
         self.ratio_wage_to_emplo = fact("Fact_B_P_constr_main_ratio_wage_to_emplo_2017")
 
 
@@ -164,7 +165,6 @@ class Vars11(Vars9, VarsInvest, VarsWage):
         self.invest = self.invest_per_x * self.area_ha_available
         self.invest_pa = self.invest / entries.m_duration_target
 
-        self.pct_of_wage = fact("Fact_B_P_constr_main_revenue_pct_of_wage_2017")
         self.cost_wage = self.pct_of_wage * self.invest_pa
 
         self.demand_emplo = div(self.cost_wage, self.ratio_wage_to_emplo)
@@ -198,7 +198,6 @@ class Vars12(Vars9, VarsInvest, VarsWage):
 
         self.invest_per_x = fact("Fact_H_P_heatnet_lheatpump_invest_203X")
         self.full_load_hour = fact("Fact_H_P_heatnet_lheatpump_full_load_hours")
-        self.pct_of_wage = fact("Fact_B_P_constr_main_revenue_pct_of_wage_2017")
         self.power_to_be_installed = div(self.energy, self.full_load_hour)
         self.invest = self.invest_per_x * self.power_to_be_installed
         self.invest_pa = self.invest / entries.m_duration_target
@@ -245,7 +244,6 @@ class Vars13(Energy, VarsInvest, VarsChange, VarsWage):
         self.CO2e_production_based_per_MWh = fact(
             "Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018"
         )
-        self.pct_of_wage = fact("Fact_B_P_constr_main_revenue_pct_of_wage_2017")
         self.invest_pa = self.invest / entries.m_duration_target
         self.cost_wage = self.pct_of_wage * self.invest_pa
         self.demand_emplo = div(self.cost_wage, self.ratio_wage_to_emplo)
