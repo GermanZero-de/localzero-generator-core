@@ -34,7 +34,7 @@ class VarsChange:
 
 @dataclass(kw_only=True)
 class VarsWage:
-    pct_energy: float = 0
+    pct_energy: float
     invest_per_x: float = 0
     pct_of_wage: float = 0
     ratio_wage_to_emplo: float = 0
@@ -210,13 +210,11 @@ class Vars13(Vars9, VarsInvest, VarsWage):
         h18: H18,
     ):
         fact = inputs.fact
-        ass = inputs.ass
         entries = inputs.entries
 
         Vars9.__post_init__(self, inputs=inputs, what=what, h18=h18)
         VarsWage.__post_init__(self, inputs=inputs, what=what, h18=h18)
 
-        self.pct_energy = ass("Ass_H_P_heatnet_fraction_geoth_2050")
         self.full_load_hour = fact("Fact_H_P_heatnet_geoth_full_load_hours")
         self.power_to_be_installed = div(self.energy, self.full_load_hour)
         self.invest_per_x = fact("Fact_H_P_heatnet_geoth_invest_203X")

@@ -164,18 +164,19 @@ def calc_production(
         pct_energy=heatnet_lheatpump_pct_energy,
     )
 
+    heatnet_geoth_pct_energy = ass("Ass_H_P_heatnet_fraction_geoth_2050")
     heatnet_geoth = Vars13(
         inputs=inputs,
         what="heatnet_geoth",
         h18=h18,
         energy=(
-            (heatnet_energy - heatnet_cogen_energy)
-            * ass("Ass_H_P_heatnet_fraction_geoth_2050")
+            (heatnet_energy - heatnet_cogen_energy) * heatnet_geoth_pct_energy
             if (heatnet_cogen_energy < heatnet_energy)
             else 0
         ),
         CO2e_production_based_per_MWh=fact("Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018"),
         CO2e_combustion_based_per_MWh=0,
+        pct_energy=heatnet_geoth_pct_energy,
     )
 
     heatnet = Vars10(
