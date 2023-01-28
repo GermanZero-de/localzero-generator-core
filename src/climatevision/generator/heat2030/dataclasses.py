@@ -221,9 +221,6 @@ class Vars13(Vars9, VarsInvest, VarsWage):
         self.demand_emplo = div(self.cost_wage, self.ratio_wage_to_emplo)
         self.demand_emplo_new = self.demand_emplo
 
-        self.change_energy_pct = 0
-        self.change_CO2e_pct = 0
-
         self.invest_pa_com = self.invest_pa
         self.invest_com = self.invest
 
