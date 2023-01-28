@@ -5,6 +5,7 @@ from dataclasses import dataclass, InitVar
 from ..inputs import Inputs
 from ..utils import div, MILLION
 from ..heat2018.h18 import H18
+from ..common.g import G
 from ..common.energy import Energy
 from ..common.energyWithCO2ePerMWh import EnergyWithCO2ePerMWh
 
@@ -51,14 +52,6 @@ class VarsWage:
 
         self.pct_of_wage = fact("Fact_B_P_constr_main_revenue_pct_of_wage_2017")
         self.ratio_wage_to_emplo = fact("Fact_B_P_constr_main_ratio_wage_to_emplo_2017")
-
-
-@dataclass(kw_only=True)
-class Vars0(VarsInvest, VarsChange):
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_production_based: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    demand_emplo_com: float = None  # type: ignore
 
 
 @dataclass(kw_only=True)
@@ -441,4 +434,34 @@ class Vars5(VarsInvest, VarsChange):
             + biomass.CO2e_production_based
             + ofossil.CO2e_production_based
             + orenew.CO2e_production_based
+        )
+
+
+@dataclass(kw_only=True)
+class Vars0(VarsInvest, VarsChange):
+    CO2e_combustion_based: float
+    CO2e_production_based: float
+    CO2e_total: float
+    demand_emplo_com: float
+
+    @classmethod
+    def of_p_and_g(cls, p: Vars5, g: G) -> "Vars0":
+        return cls(
+            CO2e_total_2021_estimated=p.CO2e_total_2021_estimated,
+            CO2e_combustion_based=p.CO2e_combustion_based,
+            invest_pa=g.invest_pa + p.invest_pa,
+            invest_pa_com=g.invest_pa_com + p.invest_pa_com,
+            CO2e_total=p.CO2e_total,
+            change_energy_MWh=p.change_energy_MWh,
+            change_CO2e_t=p.change_CO2e_t,
+            cost_climate_saved=p.cost_climate_saved,
+            cost_wage=g.cost_wage + p.cost_wage,
+            change_energy_pct=p.change_energy_pct,
+            change_CO2e_pct=p.change_CO2e_pct,
+            invest=g.invest + p.invest,
+            demand_emplo=g.demand_emplo + p.demand_emplo,
+            demand_emplo_new=g.demand_emplo_new + p.demand_emplo_new,
+            invest_com=g.invest_com + p.invest_com,
+            CO2e_production_based=p.CO2e_production_based,
+            demand_emplo_com=g.demand_emplo_com,  # TODO: Check demand_emplo_new in Heat with Hauke
         )

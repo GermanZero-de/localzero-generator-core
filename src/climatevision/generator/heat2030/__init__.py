@@ -47,26 +47,7 @@ def calc(
         inputs=inputs, p_heatnet_energy=production.heatnet.energy
     )
 
-    h = Vars0()
-    h.CO2e_total_2021_estimated = production.total.CO2e_total_2021_estimated
-    h.CO2e_combustion_based = production.total.CO2e_combustion_based
-    h.invest_pa = general.g.invest_pa + production.total.invest_pa
-    h.invest_pa_com = general.g.invest_pa_com + production.total.invest_pa_com
-    h.cost_wage = general.g.cost_wage + production.total.cost_wage
-    h.demand_emplo = general.g.demand_emplo + production.total.demand_emplo
-    h.demand_emplo_new = general.g.demand_emplo_new + production.total.demand_emplo_new
-    h.invest_com = general.g.invest_com + production.total.invest_com
-    h.invest = general.g.invest + production.total.invest
-    h.CO2e_total = production.total.CO2e_total
-    h.cost_climate_saved = production.total.cost_climate_saved
-    h.change_CO2e_t = production.total.change_CO2e_t
-    h.change_energy_pct = production.total.change_energy_pct
-    h.CO2e_production_based = production.total.CO2e_production_based
-    h.change_CO2e_pct = production.total.change_CO2e_pct
-    h.change_energy_MWh = production.total.change_energy_MWh
-
-    # TODO: Check demand_emplo_new in Heat with Hauke
-    h.demand_emplo_com = general.g.demand_emplo_com
+    h = Vars0.of_p_and_g(production.total, general.g)
 
     p_fossil_change_CO2e_t = (
         production.total.change_CO2e_t - production.heatnet.change_CO2e_t
