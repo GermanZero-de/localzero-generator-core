@@ -331,12 +331,12 @@ class Vars10(Energy, VarsInvest, VarsChange):
 
 @dataclass(kw_only=True)
 class Vars5(VarsInvest, VarsChange):
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_production_based: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    cost_fuel: float = None  # type: ignore
-    demand_electricity: float = None  # type: ignore
-    energy: float = None  # type: ignore
+    CO2e_combustion_based: float = 0
+    CO2e_production_based: float = 0
+    CO2e_total: float = 0
+    cost_fuel: float = 0
+    demand_electricity: float = 0
+    energy: float = 0
 
     inputs: InitVar[Inputs]
     what: InitVar[str]
