@@ -15,7 +15,7 @@ from ..electricity2030.electricity2030_core import EColVars2030
 
 from .h30 import H30
 from .dataclasses import (
-    Vars0,
+    H,
 )
 from . import energy_demand, energy_general, energy_production
 
@@ -47,7 +47,7 @@ def calc(
         inputs=inputs, p_heatnet_energy=production.heatnet.energy
     )
 
-    h = Vars0.of_p_and_g(production.total, general.g)
+    h = H.of_p_and_g(production.total, general.g)
 
     p_fossil_change_CO2e_t = (
         production.total.change_CO2e_t - production.heatnet.change_CO2e_t

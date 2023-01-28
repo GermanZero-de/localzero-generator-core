@@ -438,14 +438,14 @@ class Vars5(VarsInvest, VarsChange):
 
 
 @dataclass(kw_only=True)
-class Vars0(VarsInvest, VarsChange):
+class H(VarsInvest, VarsChange):
     CO2e_combustion_based: float
     CO2e_production_based: float
     CO2e_total: float
     demand_emplo_com: float
 
     @classmethod
-    def of_p_and_g(cls, p: Vars5, g: G) -> "Vars0":
+    def of_p_and_g(cls, p: Vars5, g: G) -> "H":
         return cls(
             CO2e_total_2021_estimated=p.CO2e_total_2021_estimated,
             CO2e_combustion_based=p.CO2e_combustion_based,
