@@ -147,6 +147,7 @@ def calc_production(
         CO2e_production_based_per_MWh=fact("Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018"),
         CO2e_combustion_based_per_MWh=0,
         pct_energy=heatnet_plant_pct_energy,
+        invest_per_x=fact("Fact_H_P_heatnet_solarth_park_invest_203X"),
     )
 
     heatnet_lheatpump_pct_energy = ass("Ass_H_P_heatnet_fraction_lheatpump_2050")
@@ -162,6 +163,7 @@ def calc_production(
         CO2e_production_based_per_MWh=fact("Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018"),
         CO2e_combustion_based_per_MWh=0,
         pct_energy=heatnet_lheatpump_pct_energy,
+        invest_per_x=fact("Fact_H_P_heatnet_lheatpump_invest_203X"),
     )
 
     heatnet_geoth_pct_energy = ass("Ass_H_P_heatnet_fraction_geoth_2050")
@@ -177,6 +179,7 @@ def calc_production(
         CO2e_production_based_per_MWh=fact("Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018"),
         CO2e_combustion_based_per_MWh=0,
         pct_energy=heatnet_geoth_pct_energy,
+        invest_per_x=fact("Fact_H_P_heatnet_geoth_invest_203X"),
     )
 
     heatnet = Vars10(

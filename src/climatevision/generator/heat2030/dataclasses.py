@@ -35,7 +35,7 @@ class VarsChange:
 @dataclass(kw_only=True)
 class VarsWage:
     pct_energy: float
-    invest_per_x: float = 0
+    invest_per_x: float
     pct_of_wage: float = 0
     ratio_wage_to_emplo: float = 0
 
@@ -142,7 +142,6 @@ class Vars11(Vars9, VarsInvest, VarsWage):
         Vars9.__post_init__(self, inputs=inputs, what=what, h18=h18)
         VarsWage.__post_init__(self, inputs=inputs, what=what, h18=h18)
 
-        self.invest_per_x = fact("Fact_H_P_heatnet_solarth_park_invest_203X")
         self.area_ha_available = self.energy / fact(
             "Fact_H_P_heatnet_solarth_park_yield_2025"
         )
@@ -180,7 +179,6 @@ class Vars12(Vars9, VarsInvest, VarsWage):
         Vars9.__post_init__(self, inputs=inputs, what=what, h18=h18)
         VarsWage.__post_init__(self, inputs=inputs, what=what, h18=h18)
 
-        self.invest_per_x = fact("Fact_H_P_heatnet_lheatpump_invest_203X")
         self.full_load_hour = fact("Fact_H_P_heatnet_lheatpump_full_load_hours")
         self.power_to_be_installed = div(self.energy, self.full_load_hour)
         self.invest = self.invest_per_x * self.power_to_be_installed
@@ -217,7 +215,6 @@ class Vars13(Vars9, VarsInvest, VarsWage):
 
         self.full_load_hour = fact("Fact_H_P_heatnet_geoth_full_load_hours")
         self.power_to_be_installed = div(self.energy, self.full_load_hour)
-        self.invest_per_x = fact("Fact_H_P_heatnet_geoth_invest_203X")
         self.invest = self.invest_per_x * self.power_to_be_installed
         self.invest_pa = self.invest / entries.m_duration_target
         self.cost_wage = self.pct_of_wage * self.invest_pa
