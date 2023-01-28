@@ -158,7 +158,39 @@ class Vars11(Vars9, VarsInvest, VarsWage):
 
 
 @dataclass(kw_only=True)
-class Vars12(Vars9, VarsInvest, VarsWage):
+class Vars13(Vars9, VarsInvest, VarsWage):
+    full_load_hour: float
+    power_to_be_installed: float = 0
+
+    inputs: InitVar[Inputs]
+    what: InitVar[str]
+    h18: InitVar[H18]
+
+    def __post_init__(
+        self,
+        inputs: Inputs,
+        what: str,
+        h18: H18,
+    ):
+        entries = inputs.entries
+
+        Vars9.__post_init__(self, inputs=inputs, what=what, h18=h18)
+        VarsWage.__post_init__(self, inputs=inputs, what=what, h18=h18)
+
+        self.power_to_be_installed = div(self.energy, self.full_load_hour)
+        self.invest = self.invest_per_x * self.power_to_be_installed
+        self.invest_pa = self.invest / entries.m_duration_target
+
+        self.cost_wage = self.pct_of_wage * self.invest_pa
+        self.demand_emplo = div(self.cost_wage, self.ratio_wage_to_emplo)
+        self.demand_emplo_new = self.demand_emplo
+
+        self.invest_pa_com = self.invest_pa
+        self.invest_com = self.invest
+
+
+@dataclass(kw_only=True)
+class Vars12(Vars13):
     demand_electricity: float = 0
     full_load_hour: float = 0
     power_to_be_installed: float = 0
@@ -174,55 +206,10 @@ class Vars12(Vars9, VarsInvest, VarsWage):
         h18: H18,
     ):
         fact = inputs.fact
-        entries = inputs.entries
 
-        Vars9.__post_init__(self, inputs=inputs, what=what, h18=h18)
-        VarsWage.__post_init__(self, inputs=inputs, what=what, h18=h18)
+        Vars13.__post_init__(self, inputs=inputs, what=what, h18=h18)
 
-        self.full_load_hour = fact("Fact_H_P_heatnet_lheatpump_full_load_hours")
-        self.power_to_be_installed = div(self.energy, self.full_load_hour)
-        self.invest = self.invest_per_x * self.power_to_be_installed
-        self.invest_pa = self.invest / entries.m_duration_target
-        self.cost_wage = self.pct_of_wage * self.invest_pa
-        self.demand_emplo = div(self.cost_wage, self.ratio_wage_to_emplo)
-        self.demand_emplo_new = self.demand_emplo
         self.demand_electricity = self.energy / fact("Fact_H_P_heatnet_lheatpump_apf")
-
-        self.invest_pa_com = self.invest_pa
-        self.invest_com = self.invest
-
-
-@dataclass(kw_only=True)
-class Vars13(Vars9, VarsInvest, VarsWage):
-    full_load_hour: float = 0
-    power_to_be_installed: float = 0
-
-    inputs: InitVar[Inputs]
-    what: InitVar[str]
-    h18: InitVar[H18]
-
-    def __post_init__(
-        self,
-        inputs: Inputs,
-        what: str,
-        h18: H18,
-    ):
-        fact = inputs.fact
-        entries = inputs.entries
-
-        Vars9.__post_init__(self, inputs=inputs, what=what, h18=h18)
-        VarsWage.__post_init__(self, inputs=inputs, what=what, h18=h18)
-
-        self.full_load_hour = fact("Fact_H_P_heatnet_geoth_full_load_hours")
-        self.power_to_be_installed = div(self.energy, self.full_load_hour)
-        self.invest = self.invest_per_x * self.power_to_be_installed
-        self.invest_pa = self.invest / entries.m_duration_target
-        self.cost_wage = self.pct_of_wage * self.invest_pa
-        self.demand_emplo = div(self.cost_wage, self.ratio_wage_to_emplo)
-        self.demand_emplo_new = self.demand_emplo
-
-        self.invest_pa_com = self.invest_pa
-        self.invest_com = self.invest
 
 
 @dataclass(kw_only=True)

@@ -164,6 +164,7 @@ def calc_production(
         CO2e_combustion_based_per_MWh=0,
         pct_energy=heatnet_lheatpump_pct_energy,
         invest_per_x=fact("Fact_H_P_heatnet_lheatpump_invest_203X"),
+        full_load_hour=fact("Fact_H_P_heatnet_lheatpump_full_load_hours"),
     )
 
     heatnet_geoth_pct_energy = ass("Ass_H_P_heatnet_fraction_geoth_2050")
@@ -180,6 +181,7 @@ def calc_production(
         CO2e_combustion_based_per_MWh=0,
         pct_energy=heatnet_geoth_pct_energy,
         invest_per_x=fact("Fact_H_P_heatnet_geoth_invest_203X"),
+        full_load_hour=fact("Fact_H_P_heatnet_geoth_full_load_hours"),
     )
 
     heatnet = Vars10(
