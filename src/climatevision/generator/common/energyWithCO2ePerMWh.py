@@ -4,15 +4,16 @@ from dataclasses import dataclass
 
 from ..utils import div
 
+from .energy import Energy
+
 
 @dataclass(kw_only=True)
-class EnergyWithCO2ePerMWh:
+class EnergyWithCO2ePerMWh(Energy):
     CO2e_combustion_based: float = 0
     CO2e_combustion_based_per_MWh: float
     CO2e_production_based: float = 0
     CO2e_production_based_per_MWh: float
     CO2e_total: float = 0
-    energy: float
 
     @classmethod
     def calcFromEnergyAndCO2eBasedPerMWh(

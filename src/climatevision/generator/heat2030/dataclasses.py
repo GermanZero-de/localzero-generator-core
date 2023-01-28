@@ -5,6 +5,7 @@ from dataclasses import dataclass, InitVar
 from ..inputs import Inputs
 from ..utils import div, MILLION
 from ..heat2018.h18 import H18
+from ..common.energy import Energy
 from ..common.energyWithCO2ePerMWh import EnergyWithCO2ePerMWh
 
 
@@ -211,11 +212,10 @@ class Vars13(VarsInvest, VarsChange):
 
 
 @dataclass(kw_only=True)
-class Vars10(VarsInvest, VarsChange):
+class Vars10(Energy, VarsInvest, VarsChange):
     CO2e_combustion_based: float = 0
     CO2e_production_based: float = 0
     CO2e_total: float = 0
-    energy: float
 
     inputs: InitVar[Inputs]
     what: InitVar[str]
