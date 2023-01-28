@@ -199,12 +199,68 @@ class Vars12(Vars9, VarsInvest, VarsWage):
 
 @dataclass(kw_only=True)
 class Vars13(VarsInvest, VarsChange, VarsWage):
-    CO2e_production_based: float = None  # type: ignore
-    CO2e_production_based_per_MWh: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    full_load_hour: float = None  # type: ignore
-    power_to_be_installed: float = None  # type: ignore
+    CO2e_production_based: float = 0
+    CO2e_production_based_per_MWh: float = 0
+    CO2e_total: float = 0
+    energy: float = 0
+    full_load_hour: float = 0
+    power_to_be_installed: float = 0
+
+    inputs: InitVar[Inputs]
+    what: InitVar[str]
+    h18: InitVar[H18]
+    p_heatnet_energy: InitVar[float]
+    heatnet_cogen_energy: InitVar[float]
+
+    def __post_init__(
+        self,
+        inputs: Inputs,
+        what: str,
+        h18: H18,
+        p_heatnet_energy: float,
+        heatnet_cogen_energy: float,
+    ):
+        fact = inputs.fact
+        ass = inputs.ass
+        entries = inputs.entries
+
+        h18_p_what = getattr(h18, "p_" + what)
+
+        self.pct_energy = ass("Ass_H_P_heatnet_fraction_geoth_2050")
+        self.energy = (
+            (p_heatnet_energy - heatnet_cogen_energy) * self.pct_energy
+            if (heatnet_cogen_energy < p_heatnet_energy)
+            else 0
+        )
+        self.full_load_hour = fact("Fact_H_P_heatnet_geoth_full_load_hours")
+        self.power_to_be_installed = div(self.energy, self.full_load_hour)
+        self.invest_per_x = fact("Fact_H_P_heatnet_geoth_invest_203X")
+        self.invest = self.invest_per_x * self.power_to_be_installed
+        self.CO2e_production_based_per_MWh = fact(
+            "Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018"
+        )
+        self.pct_of_wage = fact("Fact_B_P_constr_main_revenue_pct_of_wage_2017")
+        self.invest_pa = self.invest / entries.m_duration_target
+        self.cost_wage = self.pct_of_wage * self.invest_pa
+        self.ratio_wage_to_emplo = fact("Fact_B_P_constr_main_ratio_wage_to_emplo_2017")
+        self.demand_emplo = div(self.cost_wage, self.ratio_wage_to_emplo)
+        self.demand_emplo_new = self.demand_emplo
+        self.CO2e_production_based = self.energy * self.CO2e_production_based_per_MWh
+        self.CO2e_total = self.CO2e_production_based
+        self.change_energy_MWh = self.energy - h18_p_what.energy
+        self.change_energy_pct = 0
+        self.change_CO2e_t = self.CO2e_total - h18_p_what.CO2e_total
+        self.change_CO2e_pct = 0
+        self.CO2e_total_2021_estimated = h18_p_what.CO2e_total * fact(
+            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+        )
+        self.cost_climate_saved = (
+            (self.CO2e_total_2021_estimated - self.CO2e_total)
+            * entries.m_duration_neutral
+            * fact("Fact_M_cost_per_CO2e_2020")
+        )
+        self.invest_pa_com = self.invest_pa
+        self.invest_com = self.invest
 
 
 @dataclass(kw_only=True)
