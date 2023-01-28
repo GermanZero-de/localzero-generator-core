@@ -240,9 +240,14 @@ class Vars10(VarsInvest, VarsChange):
 
         h18_p_what = getattr(h18, "p_" + what)
 
-        self.CO2e_total = heatnet_cogen.CO2e_total
-
         self.CO2e_combustion_based = heatnet_cogen.CO2e_combustion_based
+        self.CO2e_production_based = (
+            heatnet_cogen.CO2e_production_based
+            + p_heatnet_plant.CO2e_production_based
+            + p_heatnet_lheatpump.CO2e_production_based
+            + p_heatnet_geoth.CO2e_production_based
+        )
+        self.CO2e_total = heatnet_cogen.CO2e_total
 
         self.change_energy_MWh = self.energy - h18_p_what.energy
         self.change_energy_pct = div(self.change_energy_MWh, h18_p_what.energy)
@@ -283,10 +288,4 @@ class Vars10(VarsInvest, VarsChange):
             p_heatnet_plant.demand_emplo_new
             + p_heatnet_lheatpump.demand_emplo_new
             + p_heatnet_geoth.demand_emplo_new
-        )
-        self.CO2e_production_based = (
-            heatnet_cogen.CO2e_production_based
-            + p_heatnet_plant.CO2e_production_based
-            + p_heatnet_lheatpump.CO2e_production_based
-            + p_heatnet_geoth.CO2e_production_based
         )
