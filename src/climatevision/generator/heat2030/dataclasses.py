@@ -31,6 +31,14 @@ class VarsChange:
 
 
 @dataclass(kw_only=True)
+class VarsWage:
+    pct_energy: float = 0
+    invest_per_x: float = 0
+    pct_of_wage: float = 0
+    ratio_wage_to_emplo: float = 0
+
+
+@dataclass(kw_only=True)
 class Vars0(VarsInvest, VarsChange):
     CO2e_combustion_based: float = None  # type: ignore
     CO2e_production_based: float = None  # type: ignore
@@ -116,12 +124,8 @@ class Vars6(Vars9):
 
 
 @dataclass(kw_only=True)
-class Vars11(Vars9, VarsInvest):
+class Vars11(Vars9, VarsInvest, VarsWage):
     area_ha_available: float = 0
-    invest_per_x: float = 0
-    pct_energy: float
-    pct_of_wage: float = 0
-    ratio_wage_to_emplo: float = 0
 
     inputs: InitVar[Inputs]
     what: InitVar[str]
@@ -157,14 +161,10 @@ class Vars11(Vars9, VarsInvest):
 
 
 @dataclass(kw_only=True)
-class Vars12(Vars9, VarsInvest):
+class Vars12(Vars9, VarsInvest, VarsWage):
     demand_electricity: float = 0
     full_load_hour: float = 0
-    invest_per_x: float = 0
-    pct_energy: float
-    pct_of_wage: float = 0
     power_to_be_installed: float = 0
-    ratio_wage_to_emplo: float = 0
 
     inputs: InitVar[Inputs]
     what: InitVar[str]
@@ -198,17 +198,13 @@ class Vars12(Vars9, VarsInvest):
 
 
 @dataclass(kw_only=True)
-class Vars13(VarsInvest, VarsChange):
+class Vars13(VarsInvest, VarsChange, VarsWage):
     CO2e_production_based: float = None  # type: ignore
     CO2e_production_based_per_MWh: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     energy: float = None  # type: ignore
     full_load_hour: float = None  # type: ignore
-    invest_per_x: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
-    pct_of_wage: float = None  # type: ignore
     power_to_be_installed: float = None  # type: ignore
-    ratio_wage_to_emplo: float = None  # type: ignore
 
 
 @dataclass(kw_only=True)
