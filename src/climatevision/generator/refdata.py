@@ -22,20 +22,31 @@ KeyT = TypeVar("KeyT")
 @dataclass(kw_only=True)
 class MalformedCsv(Exception):
     dataset: str
-    row: int
+    row_key: str
+    logical_row_number: int
     header_columns: int
     row_columns: int
+    data: list[str]
 
     def __init__(
-        self, *, row: int, header_columns: int, row_columns: int, dataset: str
+        self,
+        *,
+        row_key: str,
+        logical_row_number: int,
+        header_columns: int,
+        row_columns: int,
+        dataset: str,
+        data: list[str],
     ):
         self.header_columns = header_columns
+        self.row_key = row_key
         self.row_columns = row_columns
-        self.row = row
+        self.logical_row_number = logical_row_number
         self.dataset = dataset
+        self.data = data
 
     def __str__(self) -> str:
-        return f"Excluding the key column row {self.row} of {self.dataset} has {self.row_columns} but row 0 (header) has {self.header_columns} columns"
+        return f"Bad data: header row has {self.header_columns} cells, data row has {self.row_columns}\nkey: {self.row_key}\ndata: {self.data}\nlogical row number: {self.logical_row_number}\nWARNING LOGICAL ROW NUMBER MIGHT NOT BE EQUAL TO ACTUAL ROW\n This happens when newlines are in quoted cell data (e.g. assumptions)"
 
 
 class DataFrame(Generic[KeyT]):
@@ -66,8 +77,8 @@ class DataFrame(Generic[KeyT]):
             rows = {}
             set_nans_to_0_in_columns_indices = []
             key_column_ndx = 0  # in the original row without the key removed
-            for row_num, r in enumerate(reader):
-                if row_num == 0:
+            for logical_row_number, r in enumerate(reader):
+                if logical_row_number == 0:
                     header = {k: ndx for ndx, k in enumerate(r)}
                     key_column_ndx = header[key_column]
                     header = {
@@ -86,8 +97,10 @@ class DataFrame(Generic[KeyT]):
                         raise MalformedCsv(
                             header_columns=len(header),
                             row_columns=len(r),
-                            row=row_num,
+                            logical_row_number=logical_row_number,
+                            row_key=raw_key,
                             dataset=what,
+                            data=r,
                         )
                     key = key_from_raw(raw_key)
                     rows[key] = r
