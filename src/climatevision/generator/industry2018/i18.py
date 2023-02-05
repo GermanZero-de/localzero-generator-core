@@ -2,7 +2,12 @@
 
 from dataclasses import dataclass
 
-from .energy_source import Energy, EnergyWithPercentage
+from .energy_branches import (
+    EnergySourceSubBranch,
+    EnergySourceBranch,
+    EnergySourceSubSum,
+    EnergySourceSum,
+)
 from .production_branches import (
     ExtraEmission,
     ProductionSubBranch,
@@ -43,18 +48,26 @@ class I18:
     p_other_further: ProductionSubBranchCO2viaFEC
     p_other_2efgh: ExtraEmission
 
-    s: EnergyWithPercentage
-    s_fossil: Energy
-    s_fossil_gas: EnergyWithPercentage
-    s_fossil_coal: EnergyWithPercentage
-    s_fossil_diesel: EnergyWithPercentage
-    s_fossil_fueloil: EnergyWithPercentage
-    s_fossil_lpg: EnergyWithPercentage
-    s_fossil_opetpro: EnergyWithPercentage
-    s_fossil_ofossil: EnergyWithPercentage
-    s_renew: Energy
-    s_renew_biomass: EnergyWithPercentage
-    s_renew_heatnet: EnergyWithPercentage
-    s_renew_heatpump: EnergyWithPercentage
-    s_renew_solarth: EnergyWithPercentage
-    s_renew_elec: EnergyWithPercentage
+    s: EnergySourceSum
+
+    s_miner: EnergySourceBranch
+    s_miner_cement: EnergySourceSubBranch
+    s_miner_chalk: EnergySourceSubBranch
+    s_miner_glas: EnergySourceSubBranch
+    s_miner_ceram: EnergySourceSubBranch
+
+    s_chem: EnergySourceBranch
+    s_chem_basic: EnergySourceSubBranch
+    s_chem_ammonia: EnergySourceSubBranch
+    s_chem_other: EnergySourceSubBranch
+
+    s_metal: EnergySourceBranch
+    s_metal_steel: EnergySourceSubSum
+    s_metal_steel_primary: EnergySourceSubBranch
+    s_metal_steel_secondary: EnergySourceSubBranch
+    s_metal_nonfe: EnergySourceSubBranch
+
+    s_other: EnergySourceBranch
+    s_other_paper: EnergySourceSubBranch
+    s_other_food: EnergySourceSubBranch
+    s_other_further: EnergySourceSubBranch
