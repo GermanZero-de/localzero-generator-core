@@ -5,9 +5,9 @@ from dataclasses import dataclass
 from ...utils import div
 from ...fuels2018.f18 import F18
 
-from .eFuelProduction import EFuelProduction
-from .newEFuelProduction import NewEFuelProduction
-from .fuelWithoutDirectReplacement import FuelWithoutDirectReplacement
+from .efuel_production import EFuelProduction
+from .new_efuel_production import NewEFuelProduction
+from .fuel_without_direct_replacement import FuelWithoutDirectReplacement
 
 
 @dataclass(kw_only=True)

@@ -13,11 +13,11 @@ from ...transport2030.t30 import T30
 
 from ..energy_demand import EnergyDemand
 
-from .eFuelProduction import EFuelProduction
-from .fuelWithoutDirectReplacement import FuelWithoutDirectReplacement
-from .newEFuelProduction import NewEFuelProduction
-from .eFuels import EFuels
-from .totalEFuelProduction import TotalEFuelProduction
+from .efuel_production import EFuelProduction
+from .fuel_without_direct_replacement import FuelWithoutDirectReplacement
+from .new_efuel_production import NewEFuelProduction
+from .efuel import EFuels
+from .total_efuel_production import TotalEFuelProduction
 
 
 @dataclass(kw_only=True)

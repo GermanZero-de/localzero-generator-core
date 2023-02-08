@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass
 
-from .eFuelProduction import EFuelProduction
+from .efuel_production import EFuelProduction
 
 
 @dataclass(kw_only=True)
