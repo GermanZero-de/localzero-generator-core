@@ -110,7 +110,7 @@ class DataFrame(Generic[KeyT]):
 
         res = cls()
         res._rows = rows
-        if header is not None:
+        if header is not {}:
             res.header = header
         else:
             assert False, "Loading DataFrame failed. File was empty"
