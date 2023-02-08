@@ -61,10 +61,10 @@ class CO2eFromFermentationOrManure(CO2Emission):
     def calc_deposition(
         cls,
         inputs: Inputs,
-        p_fermen_dairycow: "CO2eFromFermentationOrManure",
-        p_fermen_nondairy: "CO2eFromFermentationOrManure",
-        p_fermen_swine: "CO2eFromFermentationOrManure",
-        p_fermen_oanimal: "CO2eFromFermentationOrManure",
+        fermen_dairycow: "CO2eFromFermentationOrManure",
+        fermen_nondairy: "CO2eFromFermentationOrManure",
+        fermen_swine: "CO2eFromFermentationOrManure",
+        fermen_oanimal: "CO2eFromFermentationOrManure",
     ) -> "CO2eFromFermentationOrManure":
         """This computes the deposition of reactive nitrogen of animals (excluding poultry)"""
 
@@ -73,10 +73,10 @@ class CO2eFromFermentationOrManure(CO2Emission):
             inputs.entries.a_manure_deposition_ratio_CO2e_to_amount
         )
         amount = (
-            p_fermen_dairycow.amount
-            + p_fermen_nondairy.amount
-            + p_fermen_swine.amount
-            + p_fermen_oanimal.amount
+            fermen_dairycow.amount
+            + fermen_nondairy.amount
+            + fermen_swine.amount
+            + fermen_oanimal.amount
         )
         CO2e_production_based = amount * CO2e_production_based_per_t
         CO2e_total = CO2e_production_based + CO2e_combustion_based
