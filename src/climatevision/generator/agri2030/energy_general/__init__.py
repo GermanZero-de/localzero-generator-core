@@ -4,9 +4,9 @@ from dataclasses import dataclass
 
 from ...inputs import Inputs
 
-from .co2eChangeG import CO2eChangeG
-from .co2eChangeGConsult import CO2eChangeGConsult
-from .co2eChangeGOrganic import CO2eChangeGOrganic
+from .co2e_change_g import CO2eChangeG
+from .co2e_change_g_consult import CO2eChangeGConsult
+from .co2e_change_g_organic import CO2eChangeGOrganic
 
 
 @dataclass(kw_only=True)
