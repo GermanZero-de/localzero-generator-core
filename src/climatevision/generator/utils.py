@@ -4,7 +4,7 @@
 # pyright: strict
 
 from dataclasses import fields
-from typing import TypeVar
+from typing import TypeVar, Any
 
 MILLION = 1000000
 
@@ -18,7 +18,7 @@ def div(a: float, b: float) -> float:
     return 0.0 if b == 0.0 else a / b
 
 
-T = TypeVar("T")
+T = TypeVar("T", bound=Any)
 
 
 def element_wise_plus(a: T, b: T) -> T:

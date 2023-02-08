@@ -1,6 +1,7 @@
 # pyright: strict
 
 from dataclasses import dataclass, fields, is_dataclass
+from typing import Any
 from time import time
 from sys import stderr
 
@@ -64,7 +65,7 @@ def _convert_item(v: object) -> object:
         return v
 
 
-def dataclass_to_result_dict(v: object) -> dict[str, object]:
+def dataclass_to_result_dict(v: Any) -> dict[str, Any]:
     """This does basically the same as asdict from dataclasses does.
 
     The most important difference is that classes can contain a list
@@ -73,7 +74,7 @@ def dataclass_to_result_dict(v: object) -> dict[str, object]:
     """
     result = {f.name: _convert_item(getattr(v, f.name)) for f in fields(v)}
     names_to_lift: list[str] = getattr(v, "LIFT_INTO_RESULT_DICT", [])
-    values_to_lift: list[dict[str, object]] = []
+    values_to_lift: list[dict[str, Any]] = []
     for name in names_to_lift:
         v = result[name]
         if isinstance(v, dict):
