@@ -71,9 +71,7 @@ def calc_supply(inputs: Inputs, total_energy: float) -> EnergySupply:
         total_energy=total_energy,
         CO2e_combustion_based_per_MWh=inputs.fact("Fact_RB_S_elec_ratio_CO2e_to_fec"),
     )
-    total = CO2eFromEnergyUse.sum(
-        petrol, diesel, fueloil, lpg, gas, biomass, elec
-    )
+    total = CO2eFromEnergyUse.sum(petrol, diesel, fueloil, lpg, gas, biomass, elec)
 
     return EnergySupply(
         petrol=petrol,

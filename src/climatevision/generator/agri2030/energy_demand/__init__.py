@@ -128,11 +128,7 @@ def calc_production(inputs: Inputs, a18: A18, l30: L30) -> Production:
         l30.g_grass.area_ha,
         div(
             a18.p_soil_grazing.CO2e_production_based_per_t
-            * (
-                fermen_dairycow.amount
-                + fermen_nondairy.amount
-                + fermen_oanimal.amount
-            ),
+            * (fermen_dairycow.amount + fermen_nondairy.amount + fermen_oanimal.amount),
             a18.p_fermen_dairycow.amount
             + a18.p_fermen_nondairy.amount
             + a18.p_fermen_oanimal.amount,
@@ -218,8 +214,7 @@ def calc_production(inputs: Inputs, a18: A18, l30: L30) -> Production:
         inputs=inputs,
         what="p_other_liming",
         a18=a18,
-        prod_volume=other_liming_calcit.prod_volume
-        + other_liming_dolomite.prod_volume,
+        prod_volume=other_liming_calcit.prod_volume + other_liming_dolomite.prod_volume,
         CO2e_combustion_based=None,  # type: ignore
         CO2e_production_based=other_liming_calcit.CO2e_production_based
         + other_liming_dolomite.CO2e_production_based,

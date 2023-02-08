@@ -194,9 +194,7 @@ def calc_production(
     other_ecrop = CO2eFromOther.calc(inputs, "ecrop")
     other_kas = CO2eFromOther.calc(inputs, "kas")
 
-    other = CO2Emission.sum(
-        other_liming, other_urea, other_kas, other_ecrop
-    )
+    other = CO2Emission.sum(other_liming, other_urea, other_kas, other_ecrop)
 
     operation_elec_heatpump = Energy(energy=0)
     operation = Energy(energy=total_energy)
@@ -221,10 +219,7 @@ def calc_production(
             + other.CO2e_production_based
         ),
         CO2e_total=(
-            fermen.CO2e_total
-            + manure.CO2e_total
-            + soil.CO2e_total
-            + other.CO2e_total
+            fermen.CO2e_total + manure.CO2e_total + soil.CO2e_total + other.CO2e_total
         ),
         energy=operation.energy,
     )
