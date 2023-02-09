@@ -164,9 +164,7 @@ def calc_production(inputs: Inputs) -> Production:
         extra_emission_list=[other_2efgh],
     )
 
-    total = ProductionSum.calc_production_sum(
-        branch_list=[miner, chem, metal, other]
-    )
+    total = ProductionSum.calc_production_sum(branch_list=[miner, chem, metal, other])
 
     return Production(
         total=total,
