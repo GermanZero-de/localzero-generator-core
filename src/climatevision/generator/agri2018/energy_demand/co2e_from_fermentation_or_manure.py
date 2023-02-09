@@ -4,11 +4,11 @@ from dataclasses import dataclass
 
 from ...inputs import Inputs
 
-from ...common.co2eEmissions import CO2eEmissions
+from ...common.co2_emission import CO2Emission
 
 
 @dataclass(kw_only=True)
-class CO2eFromFermentationOrManure(CO2eEmissions):
+class CO2eFromFermentationOrManure(CO2Emission):
     # Used by p_fermen_dairycow, p_fermen_nondairy, p_fermen_swine, p_fermen_poultry, p_fermen_oanimal, p_manure_dairycow, p_manure_nondairy, p_manure_swine, p_manure_poultry, p_manure_oanimal, p_manure_deposition
     CO2e_production_based_per_t: float
     amount: float
@@ -61,10 +61,10 @@ class CO2eFromFermentationOrManure(CO2eEmissions):
     def calc_deposition(
         cls,
         inputs: Inputs,
-        p_fermen_dairycow: "CO2eFromFermentationOrManure",
-        p_fermen_nondairy: "CO2eFromFermentationOrManure",
-        p_fermen_swine: "CO2eFromFermentationOrManure",
-        p_fermen_oanimal: "CO2eFromFermentationOrManure",
+        fermen_dairycow: "CO2eFromFermentationOrManure",
+        fermen_nondairy: "CO2eFromFermentationOrManure",
+        fermen_swine: "CO2eFromFermentationOrManure",
+        fermen_oanimal: "CO2eFromFermentationOrManure",
     ) -> "CO2eFromFermentationOrManure":
         """This computes the deposition of reactive nitrogen of animals (excluding poultry)"""
 
@@ -73,10 +73,10 @@ class CO2eFromFermentationOrManure(CO2eEmissions):
             inputs.entries.a_manure_deposition_ratio_CO2e_to_amount
         )
         amount = (
-            p_fermen_dairycow.amount
-            + p_fermen_nondairy.amount
-            + p_fermen_swine.amount
-            + p_fermen_oanimal.amount
+            fermen_dairycow.amount
+            + fermen_nondairy.amount
+            + fermen_swine.amount
+            + fermen_oanimal.amount
         )
         CO2e_production_based = amount * CO2e_production_based_per_t
         CO2e_total = CO2e_production_based + CO2e_combustion_based

@@ -4,7 +4,7 @@ from dataclasses import dataclass
 
 from ...utils import div
 
-from .co2eFromEnergyUse import CO2eFromEnergyUse
+from .co2e_from_energy_use import CO2eFromEnergyUse
 
 
 @dataclass(kw_only=True)

@@ -4,11 +4,11 @@ from dataclasses import dataclass
 
 from ...inputs import Inputs
 
-from ...common.co2eEmissions import CO2eEmissions
+from ...common.co2_emission import CO2Emission
 
 
 @dataclass(kw_only=True)
-class CO2eFromOther(CO2eEmissions):
+class CO2eFromOther(CO2Emission):
     # Used by p_other_liming_dolomite, p_other_urea, p_other_ecrop, p_other_liming_calcit
     CO2e_production_based_per_t: float
     prod_volume: float

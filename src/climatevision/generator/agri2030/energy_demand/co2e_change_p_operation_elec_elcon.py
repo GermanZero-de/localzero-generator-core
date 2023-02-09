@@ -5,7 +5,7 @@ from dataclasses import dataclass, InitVar
 from ...inputs import Inputs
 from ...agri2018.a18 import A18
 
-from .co2eChangeEnergy import CO2eChangeEnergy
+from .co2e_change_energy import CO2eChangeEnergy
 
 
 @dataclass(kw_only=True)

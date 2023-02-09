@@ -6,7 +6,7 @@ from ...inputs import Inputs
 from ...utils import div
 from ...agri2018.a18 import A18
 
-from .co2eChange import CO2eChange
+from .co2e_change import CO2eChange
 
 
 @dataclass(kw_only=True)

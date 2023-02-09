@@ -2,8 +2,8 @@
 
 from dataclasses import dataclass, InitVar
 
-from .co2eChangeGConsult import CO2eChangeGConsult
-from .co2eChangeGOrganic import CO2eChangeGOrganic
+from .co2e_change_g_consult import CO2eChangeGConsult
+from .co2e_change_g_organic import CO2eChangeGOrganic
 
 
 @dataclass(kw_only=True)

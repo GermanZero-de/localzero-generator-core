@@ -27,7 +27,7 @@ from .energy_source import (
     CO2eChangeFuelHeatpump,
     CO2eChangeFuelEmethan,
 )
-from .co2eChangeA import CO2eChangeA
+from .co2e_change_a import CO2eChangeA
 
 
 @dataclass(kw_only=True)

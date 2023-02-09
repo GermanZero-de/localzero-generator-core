@@ -6,7 +6,7 @@ from ...inputs import Inputs
 from ...utils import div
 from ...agri2018.a18 import A18
 
-from .co2eChangePOperation import CO2eChangePOperation
+from .co2e_change_p_operation import CO2eChangePOperation
 
 
 @dataclass(kw_only=True)
@@ -27,14 +27,14 @@ class CO2eChangeP:
     inputs: InitVar[Inputs]
     what: InitVar[str]
     a18: InitVar[A18]
-    p_operation: InitVar[CO2eChangePOperation]
+    operation: InitVar[CO2eChangePOperation]
 
     def __post_init__(
         self,
         inputs: Inputs,
         what: str,
         a18: A18,
-        p_operation: CO2eChangePOperation,
+        operation: CO2eChangePOperation,
     ):
 
         a18_CO2e_total = getattr(a18, what).CO2e_total
@@ -50,11 +50,11 @@ class CO2eChangeP:
             * inputs.fact("Fact_M_cost_per_CO2e_2020")
         )
         self.change_CO2e_pct = div(self.change_CO2e_t, a18_CO2e_total)
-        self.demand_emplo = p_operation.demand_emplo
+        self.demand_emplo = operation.demand_emplo
 
-        self.invest = p_operation.invest
+        self.invest = operation.invest
         self.invest_pa = self.invest / inputs.entries.m_duration_target
 
-        self.demand_emplo_new = p_operation.demand_emplo_new
-        self.energy = p_operation.energy
-        self.cost_wage = p_operation.cost_wage
+        self.demand_emplo_new = operation.demand_emplo_new
+        self.energy = operation.energy
+        self.cost_wage = operation.cost_wage
