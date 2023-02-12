@@ -22,14 +22,7 @@ class VarsChange:
 
 
 @dataclass(kw_only=True)
-class VarsChange2(Energy, CO2Emission):
-    CO2e_total_2021_estimated: float = 0
-    change_CO2e_pct: float = 0
-    change_CO2e_t: float = 0
-    change_energy_MWh: float = 0
-    change_energy_pct: float = 0
-    cost_climate_saved: float = 0
-
+class VarsChange2(Energy, CO2Emission, VarsChange):
     inputs: InitVar[Inputs]
     what: InitVar[str]
     h18: InitVar[H18]
@@ -85,16 +78,9 @@ class VarsInvest:
 
 
 @dataclass(kw_only=True)
-class VarsInvest2:
+class VarsInvest2(VarsInvest):
     pct_of_wage: float = 0
     ratio_wage_to_emplo: float = 0
-    cost_wage: float = 0
-    demand_emplo: float = 0
-    demand_emplo_new: float = 0
-    invest: float = 0
-    invest_com: float = 0
-    invest_pa: float = 0
-    invest_pa_com: float = 0
 
     inputs: InitVar[Inputs]
     what: InitVar[str]
