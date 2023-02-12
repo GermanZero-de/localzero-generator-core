@@ -3,6 +3,7 @@
 from dataclasses import dataclass
 
 from ...inputs import Inputs
+from ...utils import div
 from ...heat2018.h18 import H18
 from ...residences2030.r30 import R30
 from ...business2030.b30 import B30
@@ -135,53 +136,78 @@ def calc_production(
     )
 
     heatnet_plant_pct_energy = ass("Ass_H_P_heatnet_fraction_solarth_2050")
+    heatnet_plant_energy = (
+        (heatnet_energy - heatnet_cogen_energy) * heatnet_plant_pct_energy
+        if (heatnet_cogen_energy < heatnet_energy)
+        else 0
+    )
+    heatnet_plant_area_ha_available = heatnet_plant_energy / fact(
+        "Fact_H_P_heatnet_solarth_park_yield_2025"
+    )
+    heatnet_plant_invest_per_x = fact("Fact_H_P_heatnet_solarth_park_invest_203X")
     heatnet_plant = Vars11(
         inputs=inputs,
         what="heatnet_plant",
         h18=h18,
-        energy=(
-            (heatnet_energy - heatnet_cogen_energy) * heatnet_plant_pct_energy
-            if (heatnet_cogen_energy < heatnet_energy)
-            else 0
-        ),
+        energy=heatnet_plant_energy,
         CO2e_production_based_per_MWh=fact("Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018"),
         CO2e_combustion_based_per_MWh=0,
         pct_energy=heatnet_plant_pct_energy,
-        invest_per_x=fact("Fact_H_P_heatnet_solarth_park_invest_203X"),
+        area_ha_available=heatnet_plant_area_ha_available,
+        invest_per_x=heatnet_plant_invest_per_x,
+        invest=heatnet_plant_invest_per_x * heatnet_plant_area_ha_available,
     )
 
     heatnet_lheatpump_pct_energy = ass("Ass_H_P_heatnet_fraction_lheatpump_2050")
+    heatnet_lheatpump_energy = (
+        (heatnet_energy - heatnet_cogen_energy) * heatnet_lheatpump_pct_energy
+        if (heatnet_cogen_energy < heatnet_energy)
+        else 0
+    )
+    heatnet_lheatpump_full_load_hour = fact(
+        "Fact_H_P_heatnet_lheatpump_full_load_hours"
+    )
+    heatnet_lheatpump_power_to_be_installed = div(
+        heatnet_lheatpump_energy, heatnet_lheatpump_full_load_hour
+    )
+    heatnet_lheatpump_invest_per_x = fact("Fact_H_P_heatnet_lheatpump_invest_203X")
     heatnet_lheatpump = Vars12(
         inputs=inputs,
         what="heatnet_lheatpump",
         h18=h18,
-        energy=(
-            (heatnet_energy - heatnet_cogen_energy) * heatnet_lheatpump_pct_energy
-            if (heatnet_cogen_energy < heatnet_energy)
-            else 0
-        ),
+        energy=heatnet_lheatpump_energy,
         CO2e_production_based_per_MWh=fact("Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018"),
         CO2e_combustion_based_per_MWh=0,
         pct_energy=heatnet_lheatpump_pct_energy,
-        invest_per_x=fact("Fact_H_P_heatnet_lheatpump_invest_203X"),
-        full_load_hour=fact("Fact_H_P_heatnet_lheatpump_full_load_hours"),
+        full_load_hour=heatnet_lheatpump_full_load_hour,
+        power_to_be_installed=heatnet_lheatpump_power_to_be_installed,
+        invest_per_x=heatnet_lheatpump_invest_per_x,
+        invest=heatnet_lheatpump_invest_per_x * heatnet_lheatpump_power_to_be_installed,
     )
 
     heatnet_geoth_pct_energy = ass("Ass_H_P_heatnet_fraction_geoth_2050")
+    heatnet_geoth_energy = (
+        (heatnet_energy - heatnet_cogen_energy) * heatnet_geoth_pct_energy
+        if (heatnet_cogen_energy < heatnet_energy)
+        else 0
+    )
+    heatnet_geoth_full_load_hour = fact("Fact_H_P_heatnet_geoth_full_load_hours")
+    heatnet_geoth_power_to_be_installed = div(
+        heatnet_geoth_energy, heatnet_geoth_full_load_hour
+    )
+    heatnet_geoth_invest_per_x = fact("Fact_H_P_heatnet_geoth_invest_203X")
     heatnet_geoth = Vars13(
         inputs=inputs,
         what="heatnet_geoth",
         h18=h18,
-        energy=(
-            (heatnet_energy - heatnet_cogen_energy) * heatnet_geoth_pct_energy
-            if (heatnet_cogen_energy < heatnet_energy)
-            else 0
-        ),
+        energy=heatnet_geoth_energy,
         CO2e_production_based_per_MWh=fact("Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018"),
         CO2e_combustion_based_per_MWh=0,
         pct_energy=heatnet_geoth_pct_energy,
-        invest_per_x=fact("Fact_H_P_heatnet_geoth_invest_203X"),
-        full_load_hour=fact("Fact_H_P_heatnet_geoth_full_load_hours"),
+        full_load_hour=heatnet_geoth_full_load_hour,
+        power_to_be_installed=heatnet_geoth_power_to_be_installed,
+        invest_per_x=heatnet_geoth_invest_per_x,
+        invest=heatnet_geoth_invest_per_x * heatnet_geoth_power_to_be_installed,
     )
 
     heatnet = Vars10(

@@ -56,6 +56,41 @@ class VarsWage:
 
 
 @dataclass(kw_only=True)
+class VarsInvest2(VarsWage):
+    cost_wage: float = 0
+    demand_emplo: float = 0
+    demand_emplo_new: float = 0
+    invest: float
+    invest_com: float = 0
+    invest_pa: float = 0
+    invest_pa_com: float = 0
+
+    inputs: InitVar[Inputs]
+    what: InitVar[str]
+    h18: InitVar[H18]
+
+    def __post_init__(
+        self,
+        inputs: Inputs,
+        what: str,
+        h18: H18,
+    ):
+        entries = inputs.entries
+
+        VarsWage.__post_init__(self, inputs=inputs, what=what, h18=h18)
+
+        self.invest_com = self.invest
+
+        self.invest_pa = self.invest / entries.m_duration_target
+        self.invest_pa_com = self.invest_pa
+
+        self.cost_wage = self.pct_of_wage * self.invest_pa
+
+        self.demand_emplo = div(self.cost_wage, self.ratio_wage_to_emplo)
+        self.demand_emplo_new = self.demand_emplo
+
+
+@dataclass(kw_only=True)
 class Vars9(EnergyWithCO2ePerMWh, VarsChange):
     inputs: InitVar[Inputs]
     what: InitVar[str]
@@ -123,7 +158,7 @@ class Vars6(Vars9):
 
 
 @dataclass(kw_only=True)
-class Vars11(Vars9, VarsInvest, VarsWage):
+class Vars11(Vars9, VarsInvest2):
     area_ha_available: float = 0
 
     inputs: InitVar[Inputs]
@@ -136,31 +171,14 @@ class Vars11(Vars9, VarsInvest, VarsWage):
         what: str,
         h18: H18,
     ):
-        fact = inputs.fact
-        entries = inputs.entries
-
         Vars9.__post_init__(self, inputs=inputs, what=what, h18=h18)
-        VarsWage.__post_init__(self, inputs=inputs, what=what, h18=h18)
-
-        self.area_ha_available = self.energy / fact(
-            "Fact_H_P_heatnet_solarth_park_yield_2025"
-        )
-        self.invest = self.invest_per_x * self.area_ha_available
-        self.invest_pa = self.invest / entries.m_duration_target
-
-        self.cost_wage = self.pct_of_wage * self.invest_pa
-
-        self.demand_emplo = div(self.cost_wage, self.ratio_wage_to_emplo)
-
-        self.invest_pa_com = self.invest_pa
-        self.invest_com = self.invest
-        self.demand_emplo_new = self.demand_emplo
+        VarsInvest2.__post_init__(self, inputs=inputs, what=what, h18=h18)
 
 
 @dataclass(kw_only=True)
-class Vars13(Vars9, VarsInvest, VarsWage):
+class Vars13(Vars9, VarsInvest2):
     full_load_hour: float
-    power_to_be_installed: float = 0
+    power_to_be_installed: float
 
     inputs: InitVar[Inputs]
     what: InitVar[str]
@@ -172,28 +190,13 @@ class Vars13(Vars9, VarsInvest, VarsWage):
         what: str,
         h18: H18,
     ):
-        entries = inputs.entries
-
         Vars9.__post_init__(self, inputs=inputs, what=what, h18=h18)
-        VarsWage.__post_init__(self, inputs=inputs, what=what, h18=h18)
-
-        self.power_to_be_installed = div(self.energy, self.full_load_hour)
-        self.invest = self.invest_per_x * self.power_to_be_installed
-        self.invest_pa = self.invest / entries.m_duration_target
-
-        self.cost_wage = self.pct_of_wage * self.invest_pa
-        self.demand_emplo = div(self.cost_wage, self.ratio_wage_to_emplo)
-        self.demand_emplo_new = self.demand_emplo
-
-        self.invest_pa_com = self.invest_pa
-        self.invest_com = self.invest
+        VarsInvest2.__post_init__(self, inputs=inputs, what=what, h18=h18)
 
 
 @dataclass(kw_only=True)
 class Vars12(Vars13):
     demand_electricity: float = 0
-    full_load_hour: float = 0
-    power_to_be_installed: float = 0
 
     inputs: InitVar[Inputs]
     what: InitVar[str]
