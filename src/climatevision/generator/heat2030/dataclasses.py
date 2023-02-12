@@ -88,7 +88,7 @@ class VarsInvest2:
     cost_wage: float = 0
     demand_emplo: float = 0
     demand_emplo_new: float = 0
-    invest: float
+    invest: float = 0
     invest_com: float = 0
     invest_pa: float = 0
     invest_pa_com: float = 0
@@ -180,14 +180,22 @@ class Vars11(Vars9, VarsInvest2, VarsWage):
         what: str,
         h18: H18,
     ):
+        fact = inputs.fact
+
         Vars9.__post_init__(self, inputs=inputs, what=what, h18=h18)
+
+        self.area_ha_available = self.energy / fact(
+            "Fact_H_P_heatnet_solarth_park_yield_2025"
+        )
+        self.invest = self.invest_per_x * self.area_ha_available
+
         VarsInvest2.__post_init__(self, inputs=inputs, what=what, h18=h18)
 
 
 @dataclass(kw_only=True)
 class Vars13(Vars9, VarsInvest2, VarsWage):
     full_load_hour: float
-    power_to_be_installed: float
+    power_to_be_installed: float = 0
 
     inputs: InitVar[Inputs]
     what: InitVar[str]
@@ -200,6 +208,10 @@ class Vars13(Vars9, VarsInvest2, VarsWage):
         h18: H18,
     ):
         Vars9.__post_init__(self, inputs=inputs, what=what, h18=h18)
+
+        self.power_to_be_installed = div(self.energy, self.full_load_hour)
+        self.invest = self.invest_per_x * self.power_to_be_installed
+
         VarsInvest2.__post_init__(self, inputs=inputs, what=what, h18=h18)
 
 
