@@ -12,17 +12,6 @@ from ..common.co2_emission import CO2Emission
 
 
 @dataclass(kw_only=True)
-class VarsInvest:
-    cost_wage: float = 0
-    demand_emplo: float = 0
-    demand_emplo_new: float = 0
-    invest: float = 0
-    invest_com: float = 0
-    invest_pa: float = 0
-    invest_pa_com: float = 0
-
-
-@dataclass(kw_only=True)
 class VarsChange:
     CO2e_total_2021_estimated: float = 0
     change_CO2e_pct: float = 0
@@ -82,6 +71,17 @@ class VarsChange2(Energy, CO2Emission):
 class VarsWage:
     pct_energy: float
     invest_per_x: float
+
+
+@dataclass(kw_only=True)
+class VarsInvest:
+    cost_wage: float = 0
+    demand_emplo: float = 0
+    demand_emplo_new: float = 0
+    invest: float = 0
+    invest_com: float = 0
+    invest_pa: float = 0
+    invest_pa_com: float = 0
 
 
 @dataclass(kw_only=True)
