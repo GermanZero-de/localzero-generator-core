@@ -238,16 +238,39 @@ def calc_production(
         inputs=inputs,
         what="",
         h18=h18,
-        gas=gas,
-        lpg=lpg,
-        fueloil=fueloil,
-        opetpro=opetpro,
-        coal=coal,
+        energy=(
+            gas.energy
+            + lpg.energy
+            + fueloil.energy
+            + opetpro.energy
+            + coal.energy
+            + heatnet.energy
+            + biomass.energy
+            + ofossil.energy
+            + orenew.energy
+        ),
+        CO2e_combustion_based=(
+            gas.CO2e_combustion_based
+            + lpg.CO2e_combustion_based
+            + fueloil.CO2e_combustion_based
+            + opetpro.CO2e_combustion_based
+            + coal.CO2e_combustion_based
+            + heatnet.CO2e_combustion_based
+        ),
+        CO2e_production_based=(
+            gas.CO2e_production_based
+            + opetpro.CO2e_production_based
+            + coal.CO2e_production_based
+            + heatnet.CO2e_production_based
+            + biomass.CO2e_production_based
+            + ofossil.CO2e_production_based
+            + orenew.CO2e_production_based
+        ),
+        cost_fuel=(
+            gas.cost_fuel + fueloil.cost_fuel + coal.cost_fuel + biomass.cost_fuel
+        ),
+        demand_electricity=heatnet_lheatpump.demand_electricity,
         heatnet=heatnet,
-        heatnet_lheatpump=heatnet_lheatpump,
-        biomass=biomass,
-        ofossil=ofossil,
-        orenew=orenew,
     )
 
     return Production(

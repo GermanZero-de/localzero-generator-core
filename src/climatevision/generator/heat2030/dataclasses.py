@@ -259,67 +259,19 @@ class Vars10(VarsInvest2, VarsChange2):
 class Vars5(VarsInvest, VarsChange2):
     cost_fuel: float = 0
     demand_electricity: float = 0
-    energy: float = 0
 
     inputs: InitVar[Inputs]
     what: InitVar[str]
     h18: InitVar[H18]
-    gas: InitVar[Vars6]
-    lpg: InitVar[Vars9]
-    fueloil: InitVar[Vars6]
-    opetpro: InitVar[Vars9]
-    coal: InitVar[Vars6]
     heatnet: InitVar[Vars10]
-    heatnet_lheatpump: InitVar[Vars12]
-    biomass: InitVar[Vars6]
-    ofossil: InitVar[Vars9]
-    orenew: InitVar[Vars9]
 
     def __post_init__(  # type: ignore
         self,
         inputs: Inputs,
         what: str,
         h18: H18,
-        gas: Vars6,
-        lpg: Vars9,
-        fueloil: Vars6,
-        opetpro: Vars9,
-        coal: Vars6,
         heatnet: Vars10,
-        heatnet_lheatpump: Vars12,
-        biomass: Vars6,
-        ofossil: Vars9,
-        orenew: Vars9,
     ):
-        self.demand_electricity = heatnet_lheatpump.demand_electricity
-        self.energy = (
-            gas.energy
-            + lpg.energy
-            + fueloil.energy
-            + opetpro.energy
-            + coal.energy
-            + heatnet.energy
-            + biomass.energy
-            + ofossil.energy
-            + orenew.energy
-        )
-        self.CO2e_combustion_based = (
-            gas.CO2e_combustion_based
-            + lpg.CO2e_combustion_based
-            + fueloil.CO2e_combustion_based
-            + opetpro.CO2e_combustion_based
-            + coal.CO2e_combustion_based
-            + heatnet.CO2e_combustion_based
-        )
-        self.CO2e_production_based = (
-            gas.CO2e_production_based
-            + opetpro.CO2e_production_based
-            + coal.CO2e_production_based
-            + heatnet.CO2e_production_based
-            + biomass.CO2e_production_based
-            + ofossil.CO2e_production_based
-            + orenew.CO2e_production_based
-        )
         self.invest = heatnet.invest
         self.demand_emplo = heatnet.demand_emplo
         self.demand_emplo_new = heatnet.demand_emplo_new
@@ -327,9 +279,6 @@ class Vars5(VarsInvest, VarsChange2):
         self.invest_pa = heatnet.invest_pa
         self.invest_com = heatnet.invest_com
         self.cost_wage = heatnet.cost_wage
-        self.cost_fuel = (
-            gas.cost_fuel + fueloil.cost_fuel + coal.cost_fuel + biomass.cost_fuel
-        )
 
         VarsChange2.__post_init__(self, inputs=inputs, what=what, h18=h18)
 
