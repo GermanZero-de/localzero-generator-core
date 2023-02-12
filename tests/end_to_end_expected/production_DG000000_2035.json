@@ -2176,22 +2176,22 @@
         "g": {
             "cost_wage": 1006164012.5,
             "demand_emplo": 13633.65870596206,
-            "demand_emplo_com": 3471.1587059620597,
-            "demand_emplo_new": 3471.1587059620597,
-            "invest": 13080132162.5,
-            "invest_com": 13080132162.5,
-            "invest_pa": 1006164012.5,
-            "invest_pa_com": 1006164012.5
-        },
-        "g_consult": {
-            "cost_wage": 1006164012.5,
-            "demand_emplo": 13633.65870596206,
-            "demand_emplo_com": 3471.1587059620597,
             "demand_emplo_new": 3471.1587059620597,
             "invest": 13080132162.5,
             "invest_com": 13080132162.5,
             "invest_pa": 1006164012.5,
             "invest_pa_com": 1006164012.5,
+            "demand_emplo_com": 3471.1587059620597
+        },
+        "g_consult": {
+            "cost_wage": 1006164012.5,
+            "demand_emplo": 13633.65870596206,
+            "demand_emplo_new": 3471.1587059620597,
+            "invest": 13080132162.5,
+            "invest_com": 13080132162.5,
+            "invest_pa": 1006164012.5,
+            "invest_pa_com": 1006164012.5,
+            "demand_emplo_com": 3471.1587059620597,
             "ratio_wage_to_emplo": 73800.0
         },
         "p": {
@@ -2692,22 +2692,22 @@
         "g": {
             "cost_wage": 231057692.30769232,
             "demand_emplo": 3130.863039399625,
-            "demand_emplo_com": 793.363039399625,
-            "demand_emplo_new": 793.363039399625,
-            "invest": 3003750000.0,
-            "invest_com": 3003750000.0,
-            "invest_pa": 231057692.30769232,
-            "invest_pa_com": 231057692.30769232
-        },
-        "g_consult": {
-            "cost_wage": 231057692.30769232,
-            "demand_emplo": 3130.863039399625,
-            "demand_emplo_com": 793.363039399625,
             "demand_emplo_new": 793.363039399625,
             "invest": 3003750000.0,
             "invest_com": 3003750000.0,
             "invest_pa": 231057692.30769232,
             "invest_pa_com": 231057692.30769232,
+            "demand_emplo_com": 793.363039399625
+        },
+        "g_consult": {
+            "cost_wage": 231057692.30769232,
+            "demand_emplo": 3130.863039399625,
+            "demand_emplo_new": 793.363039399625,
+            "invest": 3003750000.0,
+            "invest_com": 3003750000.0,
+            "invest_pa": 231057692.30769232,
+            "invest_pa_com": 231057692.30769232,
+            "demand_emplo_com": 793.363039399625,
             "ratio_wage_to_emplo": 73800.0
         },
         "p": {
@@ -3068,22 +3068,22 @@
         "g": {
             "cost_wage": 70000000.0,
             "demand_emplo": 625.0,
-            "demand_emplo_com": 625.0,
-            "demand_emplo_new": 625.0,
-            "invest": 9100000000.0,
-            "invest_com": 9100000000.0,
-            "invest_pa": 700000000.0,
-            "invest_pa_com": 700000000.0
-        },
-        "g_consult": {
-            "cost_wage": 70000000.0,
-            "demand_emplo": 625.0,
-            "demand_emplo_com": 625.0,
             "demand_emplo_new": 625.0,
             "invest": 9100000000.0,
             "invest_com": 9100000000.0,
             "invest_pa": 700000000.0,
             "invest_pa_com": 700000000.0,
+            "demand_emplo_com": 625.0
+        },
+        "g_consult": {
+            "cost_wage": 70000000.0,
+            "demand_emplo": 625.0,
+            "demand_emplo_new": 625.0,
+            "invest": 9100000000.0,
+            "invest_com": 9100000000.0,
+            "invest_pa": 700000000.0,
+            "invest_pa_com": 700000000.0,
+            "demand_emplo_com": 625.0,
             "ratio_wage_to_emplo": 112000.0
         },
         "i": {
@@ -4300,12 +4300,12 @@
         "g_planning": {
             "cost_wage": 1417086106.5316653,
             "demand_emplo": 12652.554522604154,
-            "demand_emplo_com": 12652.554522604154,
             "demand_emplo_new": 12652.554522604154,
             "invest": 18422119384.911648,
             "invest_com": 18422119384.911648,
             "invest_pa": 1417086106.5316653,
             "invest_pa_com": 1417086106.5316653,
+            "demand_emplo_com": 12652.554522604154,
             "ratio_wage_to_emplo": 112000.0
         },
         "s": {
@@ -4350,12 +4350,12 @@
         "g": {
             "cost_wage": 1417086106.5316653,
             "demand_emplo": 12652.554522604154,
-            "demand_emplo_com": 12652.554522604154,
             "demand_emplo_new": 12652.554522604154,
             "invest": 18422119384.911648,
             "invest_com": 18422119384.911648,
             "invest_pa": 1417086106.5316653,
-            "invest_pa_com": 1417086106.5316653
+            "invest_pa_com": 1417086106.5316653,
+            "demand_emplo_com": 12652.554522604154
         },
         "t": {
             "cost_wage": 16588486146.618896,
@@ -6529,33 +6529,33 @@
         "g": {
             "cost_wage": 87315189.5576923,
             "demand_emplo": 1086.3570354369067,
-            "demand_emplo_com": 556.2000870535715,
             "demand_emplo_new": 1086.3570354369067,
             "invest": 1337863576.4166665,
             "invest_com": 1337863576.4166665,
             "invest_pa": 102912582.80128205,
-            "invest_pa_com": 102912582.80128205
+            "invest_pa_com": 102912582.80128205,
+            "demand_emplo_com": 556.2000870535715
         },
         "g_storage": {
             "cost_wage": 25020779.807692308,
             "demand_emplo": 530.1569483833351,
-            "demand_emplo_com": 0,
             "demand_emplo_new": 530.1569483833351,
             "invest": 1275569166.6666665,
             "invest_com": 1275569166.6666665,
             "invest_pa": 98120705.12820512,
             "invest_pa_com": 98120705.12820512,
+            "demand_emplo_com": 0,
             "ratio_wage_to_emplo": 47195.042683097665
         },
         "g_planning": {
             "cost_wage": 62294409.75,
             "demand_emplo": 556.2000870535715,
-            "demand_emplo_com": 556.2000870535715,
             "demand_emplo_new": 556.2000870535715,
             "invest": 62294409.75,
             "invest_com": 62294409.75,
             "invest_pa": 4791877.673076923,
             "invest_pa_com": 4791877.673076923,
+            "demand_emplo_com": 556.2000870535715,
             "ratio_wage_to_emplo": 112000.0
         },
         "d": {
