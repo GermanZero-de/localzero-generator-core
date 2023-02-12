@@ -33,6 +33,49 @@ class VarsChange:
 
 
 @dataclass(kw_only=True)
+class VarsChange2(Energy, CO2Emission):
+    CO2e_total_2021_estimated: float = 0
+    change_CO2e_pct: float = 0
+    change_CO2e_t: float = 0
+    change_energy_MWh: float = 0
+    change_energy_pct: float = 0
+    cost_climate_saved: float = 0
+
+    inputs: InitVar[Inputs]
+    what: InitVar[str]
+    h18: InitVar[H18]
+
+    def __post_init__(
+        self,
+        inputs: Inputs,
+        what: str,
+        h18: H18,
+    ):
+        fact = inputs.fact
+        entries = inputs.entries
+
+        h18_p_what = getattr(h18, "p_" + what)
+
+        self.CO2e_total = self.CO2e_production_based + self.CO2e_combustion_based
+
+        self.change_energy_MWh = self.energy - h18_p_what.energy
+        self.change_energy_pct = div(self.change_energy_MWh, h18_p_what.energy)
+
+        self.change_CO2e_t = self.CO2e_total - h18_p_what.CO2e_total
+        self.change_CO2e_pct = div(self.change_CO2e_t, h18_p_what.CO2e_total)
+
+        self.CO2e_total_2021_estimated = h18_p_what.CO2e_total * fact(
+            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+        )
+
+        self.cost_climate_saved = (
+            (self.CO2e_total_2021_estimated - self.CO2e_total)
+            * entries.m_duration_neutral
+            * fact("Fact_M_cost_per_CO2e_2020")
+        )
+
+
+@dataclass(kw_only=True)
 class VarsWage:
     pct_energy: float
     invest_per_x: float
@@ -78,7 +121,7 @@ class VarsInvest2:
 
 
 @dataclass(kw_only=True)
-class Vars9(EnergyWithCO2ePerMWh, VarsChange):
+class Vars9(EnergyWithCO2ePerMWh, VarsChange2):
     inputs: InitVar[Inputs]
     what: InitVar[str]
     h18: InitVar[H18]
@@ -89,31 +132,10 @@ class Vars9(EnergyWithCO2ePerMWh, VarsChange):
         what: str,
         h18: H18,
     ):
-        fact = inputs.fact
-        entries = inputs.entries
-
-        h18_p_what = getattr(h18, "p_" + what)
-
         self.CO2e_production_based = self.energy * self.CO2e_production_based_per_MWh
         self.CO2e_combustion_based = self.energy * self.CO2e_combustion_based_per_MWh
 
-        self.CO2e_total = self.CO2e_production_based + self.CO2e_combustion_based
-
-        self.change_energy_MWh = self.energy - h18_p_what.energy
-        self.change_energy_pct = div(self.change_energy_MWh, h18_p_what.energy)
-
-        self.change_CO2e_t = self.CO2e_total - h18_p_what.CO2e_total
-        self.change_CO2e_pct = div(self.change_CO2e_t, h18_p_what.CO2e_total)
-
-        self.CO2e_total_2021_estimated = h18_p_what.CO2e_total * fact(
-            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
-        )
-
-        self.cost_climate_saved = (
-            (self.CO2e_total_2021_estimated - self.CO2e_total)
-            * entries.m_duration_neutral
-            * fact("Fact_M_cost_per_CO2e_2020")
-        )
+        VarsChange2.__post_init__(self, inputs=inputs, what=what, h18=h18)
 
 
 @dataclass(kw_only=True)
@@ -203,54 +225,18 @@ class Vars12(Vars13):
 
 
 @dataclass(kw_only=True)
-class Vars10(CO2Emission, Energy, VarsInvest2, VarsChange):
+class Vars10(VarsInvest2, VarsChange2):
     inputs: InitVar[Inputs]
     what: InitVar[str]
     h18: InitVar[H18]
-    heatnet_cogen: InitVar[Vars9]
-    heatnet_plant: InitVar[Vars11]
-    heatnet_lheatpump: InitVar[Vars12]
-    heatnet_geoth: InitVar[Vars13]
 
-    def __post_init__(  # type: ignore
+    def __post_init__(
         self,
         inputs: Inputs,
         what: str,
         h18: H18,
-        heatnet_cogen: Vars9,
-        heatnet_plant: Vars11,
-        heatnet_lheatpump: Vars12,
-        heatnet_geoth: Vars13,
     ):
-        fact = inputs.fact
-        entries = inputs.entries
-
-        h18_p_what = getattr(h18, "p_" + what)
-
-        self.CO2e_combustion_based = heatnet_cogen.CO2e_combustion_based
-        self.CO2e_production_based = (
-            heatnet_cogen.CO2e_production_based
-            + heatnet_plant.CO2e_production_based
-            + heatnet_lheatpump.CO2e_production_based
-            + heatnet_geoth.CO2e_production_based
-        )
-        self.CO2e_total = heatnet_cogen.CO2e_total
-
-        self.change_energy_MWh = self.energy - h18_p_what.energy
-        self.change_energy_pct = div(self.change_energy_MWh, h18_p_what.energy)
-
-        self.change_CO2e_t = self.CO2e_total - h18_p_what.CO2e_total
-        self.change_CO2e_pct = div(self.change_CO2e_t, h18_p_what.CO2e_total)
-
-        self.CO2e_total_2021_estimated = h18_p_what.CO2e_total * fact(
-            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
-        )
-        self.cost_climate_saved = (
-            (self.CO2e_total_2021_estimated - self.CO2e_total)
-            * entries.m_duration_neutral
-            * fact("Fact_M_cost_per_CO2e_2020")
-        )
-
+        VarsChange2.__post_init__(self, inputs=inputs, what=what, h18=h18)
         VarsInvest2.__post_init__(self, inputs=inputs, what=what, h18=h18)
 
 

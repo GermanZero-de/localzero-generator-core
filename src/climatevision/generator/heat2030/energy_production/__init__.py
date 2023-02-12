@@ -218,11 +218,14 @@ def calc_production(
         what="heatnet",
         h18=h18,
         energy=heatnet_energy,
+        CO2e_combustion_based=heatnet_cogen.CO2e_combustion_based,
+        CO2e_production_based=(
+            heatnet_cogen.CO2e_production_based
+            + heatnet_plant.CO2e_production_based
+            + heatnet_lheatpump.CO2e_production_based
+            + heatnet_geoth.CO2e_production_based
+        ),
         invest=heatnet_invest,
-        heatnet_cogen=heatnet_cogen,
-        heatnet_plant=heatnet_plant,
-        heatnet_lheatpump=heatnet_lheatpump,
-        heatnet_geoth=heatnet_geoth,
     )
 
     ofossil = Vars9(
