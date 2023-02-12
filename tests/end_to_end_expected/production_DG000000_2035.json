@@ -6577,6 +6577,10 @@
             "energy": 12893266.756638348
         },
         "p": {
+            "CO2e_combustion_based": 703843.0333335714,
+            "CO2e_production_based": 0.0,
+            "CO2e_total": 703843.0333335714,
+            "energy": 321762448.5902012,
             "CO2e_total_2021_estimated": 54188356.15789757,
             "change_CO2e_pct": -0.9878745276167625,
             "change_CO2e_t": -57342805.46727087,
@@ -6590,12 +6594,8 @@
             "invest_com": 27593474571.116783,
             "invest_pa": 2122574967.0089834,
             "invest_pa_com": 2122574967.0089834,
-            "CO2e_combustion_based": 703843.0333335714,
-            "CO2e_production_based": 0.0,
-            "CO2e_total": 703843.0333335714,
             "cost_fuel": 5727.519226409199,
-            "demand_electricity": 12427302.440830193,
-            "energy": 321762448.5902012
+            "demand_electricity": 12427302.440830193
         },
         "p_gas": {
             "CO2e_combustion_based": 0.0,
