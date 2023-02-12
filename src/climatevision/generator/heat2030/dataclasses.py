@@ -54,7 +54,10 @@ class VarsChange2(Energy, CO2Emission):
         fact = inputs.fact
         entries = inputs.entries
 
-        h18_p_what = getattr(h18, "p_" + what)
+        if what == "":
+            h18_p_what = getattr(h18, "p" + what)
+        else:
+            h18_p_what = getattr(h18, "p_" + what)
 
         self.CO2e_total = self.CO2e_production_based + self.CO2e_combustion_based
 
@@ -253,7 +256,7 @@ class Vars10(VarsInvest2, VarsChange2):
 
 
 @dataclass(kw_only=True)
-class Vars5(CO2Emission, VarsInvest, VarsChange):
+class Vars5(VarsInvest, VarsChange2):
     cost_fuel: float = 0
     demand_electricity: float = 0
     energy: float = 0
@@ -272,7 +275,7 @@ class Vars5(CO2Emission, VarsInvest, VarsChange):
     ofossil: InitVar[Vars9]
     orenew: InitVar[Vars9]
 
-    def __post_init__(
+    def __post_init__(  # type: ignore
         self,
         inputs: Inputs,
         what: str,
@@ -288,15 +291,7 @@ class Vars5(CO2Emission, VarsInvest, VarsChange):
         ofossil: Vars9,
         orenew: Vars9,
     ):
-        fact = inputs.fact
-        entries = inputs.entries
-
-        h18_p_what = getattr(h18, "p" + what)
-
         self.demand_electricity = heatnet_lheatpump.demand_electricity
-        self.CO2e_total_2021_estimated = h18_p_what.CO2e_total * fact(
-            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
-        )
         self.energy = (
             gas.energy
             + lpg.energy
@@ -308,7 +303,6 @@ class Vars5(CO2Emission, VarsInvest, VarsChange):
             + ofossil.energy
             + orenew.energy
         )
-        self.change_energy_MWh = self.energy - h18_p_what.energy
         self.CO2e_combustion_based = (
             gas.CO2e_combustion_based
             + lpg.CO2e_combustion_based
@@ -317,35 +311,6 @@ class Vars5(CO2Emission, VarsInvest, VarsChange):
             + coal.CO2e_combustion_based
             + heatnet.CO2e_combustion_based
         )
-        self.invest = heatnet.invest
-        self.demand_emplo = heatnet.demand_emplo
-        self.demand_emplo_new = heatnet.demand_emplo_new
-        self.invest_pa_com = heatnet.invest_pa_com
-        self.invest_pa = heatnet.invest_pa
-        self.invest_com = heatnet.invest_com
-        self.CO2e_total = (
-            gas.CO2e_total
-            + lpg.CO2e_total
-            + fueloil.CO2e_total
-            + opetpro.CO2e_total
-            + coal.CO2e_total
-            + heatnet.CO2e_total
-            + biomass.CO2e_total
-            + ofossil.CO2e_total
-            + orenew.CO2e_total
-        )
-        self.cost_wage = heatnet.cost_wage
-        self.change_energy_pct = div(self.change_energy_MWh, h18_p_what.energy)
-        self.cost_fuel = (
-            gas.cost_fuel + fueloil.cost_fuel + coal.cost_fuel + biomass.cost_fuel
-        )
-        self.cost_climate_saved = (
-            (self.CO2e_total_2021_estimated - self.CO2e_total)
-            * entries.m_duration_neutral
-            * fact("Fact_M_cost_per_CO2e_2020")
-        )
-        self.change_CO2e_t = self.CO2e_total - h18_p_what.CO2e_total
-        self.change_CO2e_pct = div(self.change_CO2e_t, h18_p_what.CO2e_total)
         self.CO2e_production_based = (
             gas.CO2e_production_based
             + opetpro.CO2e_production_based
@@ -355,6 +320,18 @@ class Vars5(CO2Emission, VarsInvest, VarsChange):
             + ofossil.CO2e_production_based
             + orenew.CO2e_production_based
         )
+        self.invest = heatnet.invest
+        self.demand_emplo = heatnet.demand_emplo
+        self.demand_emplo_new = heatnet.demand_emplo_new
+        self.invest_pa_com = heatnet.invest_pa_com
+        self.invest_pa = heatnet.invest_pa
+        self.invest_com = heatnet.invest_com
+        self.cost_wage = heatnet.cost_wage
+        self.cost_fuel = (
+            gas.cost_fuel + fueloil.cost_fuel + coal.cost_fuel + biomass.cost_fuel
+        )
+
+        VarsChange2.__post_init__(self, inputs=inputs, what=what, h18=h18)
 
 
 @dataclass(kw_only=True)

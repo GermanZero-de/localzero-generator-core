@@ -3,7 +3,6 @@
 from dataclasses import dataclass
 
 from ...inputs import Inputs
-from ...utils import div
 from ...heat2018.h18 import H18
 from ...residences2030.r30 import R30
 from ...business2030.b30 import B30
