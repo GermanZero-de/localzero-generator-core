@@ -5,7 +5,6 @@ from dataclasses import dataclass, InitVar
 from ..inputs import Inputs
 from ..utils import div, MILLION
 from ..heat2018.h18 import H18
-from ..common.g import G
 from ..common.energy import Energy
 from ..common.energy_with_co2e_per_mwh import EnergyWithCO2ePerMWh
 from ..common.co2_emission import CO2Emission
@@ -257,30 +256,3 @@ class TotalHeatProduction(HeatnetProduction):
         h18: H18,
     ):
         HeatnetProduction.__post_init__(self, inputs=inputs, what=what, h18=h18)
-
-
-@dataclass(kw_only=True)
-class H(CO2Emission, VarsInvest, VarsChange):
-    demand_emplo_com: float
-
-    @classmethod
-    def of_p_and_g(cls, p: TotalHeatProduction, g: G) -> "H":
-        return cls(
-            CO2e_total_2021_estimated=p.CO2e_total_2021_estimated,
-            CO2e_combustion_based=p.CO2e_combustion_based,
-            invest_pa=g.invest_pa + p.invest_pa,
-            invest_pa_com=g.invest_pa_com + p.invest_pa_com,
-            CO2e_total=p.CO2e_total,
-            change_energy_MWh=p.change_energy_MWh,
-            change_CO2e_t=p.change_CO2e_t,
-            cost_climate_saved=p.cost_climate_saved,
-            cost_wage=g.cost_wage + p.cost_wage,
-            change_energy_pct=p.change_energy_pct,
-            change_CO2e_pct=p.change_CO2e_pct,
-            invest=g.invest + p.invest,
-            demand_emplo=g.demand_emplo + p.demand_emplo,
-            demand_emplo_new=g.demand_emplo_new + p.demand_emplo_new,
-            invest_com=g.invest_com + p.invest_com,
-            CO2e_production_based=p.CO2e_production_based,
-            demand_emplo_com=g.demand_emplo_com,  # TODO: Check demand_emplo_new in Heat with Hauke
-        )

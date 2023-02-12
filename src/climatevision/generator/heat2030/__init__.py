@@ -14,9 +14,7 @@ from ..industry2030.i30 import I30
 from ..electricity2030.electricity2030_core import EColVars2030
 
 from .h30 import H30
-from .dataclasses import (
-    H,
-)
+from .h import H
 from . import energy_demand, energy_general, energy_production
 
 

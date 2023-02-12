@@ -3,7 +3,6 @@
 from dataclasses import dataclass
 
 from .dataclasses import (
-    H,
     TotalHeatProduction,
     HeatProductionWithCostFuel,
     HeatProduction,
@@ -12,6 +11,7 @@ from .dataclasses import (
     HeatnetLheatpumpProduction,
     HeatnetGeothProduction,
 )
+from .h import H
 from .energy_demand import EnergyDemand
 from .energy_general import G, GStorage, GPlanning
 
