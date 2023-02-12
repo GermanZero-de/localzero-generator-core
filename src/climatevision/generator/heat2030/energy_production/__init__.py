@@ -210,15 +210,19 @@ def calc_production(
         invest=heatnet_geoth_invest_per_x * heatnet_geoth_power_to_be_installed,
     )
 
+    heatnet_invest = (
+        heatnet_plant.invest + heatnet_lheatpump.invest + heatnet_geoth.invest
+    )
     heatnet = Vars10(
         inputs=inputs,
         what="heatnet",
         h18=h18,
+        energy=heatnet_energy,
+        invest=heatnet_invest,
         heatnet_cogen=heatnet_cogen,
         heatnet_plant=heatnet_plant,
         heatnet_lheatpump=heatnet_lheatpump,
         heatnet_geoth=heatnet_geoth,
-        energy=heatnet_energy,
     )
 
     ofossil = Vars9(

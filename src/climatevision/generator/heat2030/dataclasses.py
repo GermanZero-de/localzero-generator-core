@@ -36,27 +36,12 @@ class VarsChange:
 class VarsWage:
     pct_energy: float
     invest_per_x: float
-    pct_of_wage: float = 0
-    ratio_wage_to_emplo: float = 0
-
-    inputs: InitVar[Inputs]
-    what: InitVar[str]
-    h18: InitVar[H18]
-
-    def __post_init__(
-        self,
-        inputs: Inputs,
-        what: str,
-        h18: H18,
-    ):
-        fact = inputs.fact
-
-        self.pct_of_wage = fact("Fact_B_P_constr_main_revenue_pct_of_wage_2017")
-        self.ratio_wage_to_emplo = fact("Fact_B_P_constr_main_ratio_wage_to_emplo_2017")
 
 
 @dataclass(kw_only=True)
-class VarsInvest2(VarsWage):
+class VarsInvest2:
+    pct_of_wage: float = 0
+    ratio_wage_to_emplo: float = 0
     cost_wage: float = 0
     demand_emplo: float = 0
     demand_emplo_new: float = 0
@@ -76,8 +61,10 @@ class VarsInvest2(VarsWage):
         h18: H18,
     ):
         entries = inputs.entries
+        fact = inputs.fact
 
-        VarsWage.__post_init__(self, inputs=inputs, what=what, h18=h18)
+        self.pct_of_wage = fact("Fact_B_P_constr_main_revenue_pct_of_wage_2017")
+        self.ratio_wage_to_emplo = fact("Fact_B_P_constr_main_ratio_wage_to_emplo_2017")
 
         self.invest_com = self.invest
 
@@ -158,7 +145,7 @@ class Vars6(Vars9):
 
 
 @dataclass(kw_only=True)
-class Vars11(Vars9, VarsInvest2):
+class Vars11(Vars9, VarsInvest2, VarsWage):
     area_ha_available: float = 0
 
     inputs: InitVar[Inputs]
@@ -176,7 +163,7 @@ class Vars11(Vars9, VarsInvest2):
 
 
 @dataclass(kw_only=True)
-class Vars13(Vars9, VarsInvest2):
+class Vars13(Vars9, VarsInvest2, VarsWage):
     full_load_hour: float
     power_to_be_installed: float
 
@@ -216,7 +203,7 @@ class Vars12(Vars13):
 
 
 @dataclass(kw_only=True)
-class Vars10(CO2Emission, Energy, VarsInvest, VarsChange):
+class Vars10(CO2Emission, Energy, VarsInvest2, VarsChange):
     inputs: InitVar[Inputs]
     what: InitVar[str]
     h18: InitVar[H18]
@@ -225,7 +212,7 @@ class Vars10(CO2Emission, Energy, VarsInvest, VarsChange):
     heatnet_lheatpump: InitVar[Vars12]
     heatnet_geoth: InitVar[Vars13]
 
-    def __post_init__(
+    def __post_init__(  # type: ignore
         self,
         inputs: Inputs,
         what: str,
@@ -264,31 +251,7 @@ class Vars10(CO2Emission, Energy, VarsInvest, VarsChange):
             * fact("Fact_M_cost_per_CO2e_2020")
         )
 
-        self.invest = (
-            heatnet_plant.invest + heatnet_lheatpump.invest + heatnet_geoth.invest
-        )
-        self.invest_pa = (
-            heatnet_plant.invest_pa
-            + heatnet_lheatpump.invest_pa
-            + heatnet_geoth.invest_pa
-        )
-        self.invest_pa_com = self.invest_pa
-        self.demand_emplo = (
-            heatnet_plant.demand_emplo
-            + heatnet_lheatpump.demand_emplo
-            + heatnet_geoth.demand_emplo
-        )
-        self.invest_com = self.invest
-        self.cost_wage = (
-            heatnet_plant.cost_wage
-            + heatnet_lheatpump.cost_wage
-            + heatnet_geoth.cost_wage
-        )
-        self.demand_emplo_new = (
-            heatnet_plant.demand_emplo_new
-            + heatnet_lheatpump.demand_emplo_new
-            + heatnet_geoth.demand_emplo_new
-        )
+        VarsInvest2.__post_init__(self, inputs=inputs, what=what, h18=h18)
 
 
 @dataclass(kw_only=True)
