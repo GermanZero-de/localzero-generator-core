@@ -6587,6 +6587,8 @@
             "change_energy_MWh": -1058931.2246313137,
             "change_energy_pct": -0.6910913346276484,
             "cost_climate_saved": 252990209.23146072,
+            "pct_of_wage": 0.255,
+            "ratio_wage_to_emplo": 47195.042683097665,
             "cost_wage": 905450.0939675987,
             "demand_emplo": 19.185279692349443,
             "demand_emplo_new": 19.185279692349443,

@@ -266,11 +266,11 @@ def calc_production(
             + ofossil.CO2e_production_based
             + orenew.CO2e_production_based
         ),
+        invest=heatnet.invest,
         cost_fuel=(
             gas.cost_fuel + fueloil.cost_fuel + coal.cost_fuel + biomass.cost_fuel
         ),
         demand_electricity=heatnet_lheatpump.demand_electricity,
-        heatnet=heatnet,
     )
 
     return Production(

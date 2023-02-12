@@ -256,31 +256,22 @@ class Vars10(VarsInvest2, VarsChange2):
 
 
 @dataclass(kw_only=True)
-class Vars5(VarsInvest, VarsChange2):
+class Vars5(VarsInvest2, VarsChange2):
     cost_fuel: float = 0
     demand_electricity: float = 0
 
     inputs: InitVar[Inputs]
     what: InitVar[str]
     h18: InitVar[H18]
-    heatnet: InitVar[Vars10]
 
-    def __post_init__(  # type: ignore
+    def __post_init__(
         self,
         inputs: Inputs,
         what: str,
         h18: H18,
-        heatnet: Vars10,
     ):
-        self.invest = heatnet.invest
-        self.demand_emplo = heatnet.demand_emplo
-        self.demand_emplo_new = heatnet.demand_emplo_new
-        self.invest_pa_com = heatnet.invest_pa_com
-        self.invest_pa = heatnet.invest_pa
-        self.invest_com = heatnet.invest_com
-        self.cost_wage = heatnet.cost_wage
-
         VarsChange2.__post_init__(self, inputs=inputs, what=what, h18=h18)
+        VarsInvest2.__post_init__(self, inputs=inputs, what=what, h18=h18)
 
 
 @dataclass(kw_only=True)
