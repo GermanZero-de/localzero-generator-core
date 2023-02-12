@@ -7,11 +7,11 @@ from ..common.co2_emission import CO2Emission
 from ..common.invest import Invest
 
 from .energy_production import TotalHeatProduction
-from .energy_production.dataclasses import VarsChange
+from .energy_production.dataclasses import CO2eChange
 
 
 @dataclass(kw_only=True)
-class H(CO2Emission, Invest, VarsChange):
+class H(CO2Emission, Invest, CO2eChange):
     demand_emplo_com: float
 
     @classmethod
