@@ -4,9 +4,10 @@ from dataclasses import dataclass
 
 from ..common.g import G
 from ..common.co2_emission import CO2Emission
+from ..common.invest import Invest
 
 from .energy_production import TotalHeatProduction
-from .energy_production.dataclasses import Invest, VarsChange
+from .energy_production.dataclasses import VarsChange
 
 
 @dataclass(kw_only=True)
