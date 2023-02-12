@@ -256,7 +256,7 @@ class Vars10(VarsInvest2, VarsChange2):
 
 
 @dataclass(kw_only=True)
-class Vars5(VarsInvest2, VarsChange2):
+class Vars5(Vars10):
     cost_fuel: float = 0
     demand_electricity: float = 0
 
@@ -270,8 +270,7 @@ class Vars5(VarsInvest2, VarsChange2):
         what: str,
         h18: H18,
     ):
-        VarsChange2.__post_init__(self, inputs=inputs, what=what, h18=h18)
-        VarsInvest2.__post_init__(self, inputs=inputs, what=what, h18=h18)
+        Vars10.__post_init__(self, inputs=inputs, what=what, h18=h18)
 
 
 @dataclass(kw_only=True)
