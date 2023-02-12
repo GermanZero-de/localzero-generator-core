@@ -8,6 +8,7 @@ from ...heat2018.h18 import H18
 from ...common.energy import Energy
 from ...common.energy_with_co2e_per_mwh import EnergyWithCO2ePerMWh
 from ...common.co2_emission import CO2Emission
+from ...common.invest import Invest
 
 
 @dataclass(kw_only=True)
@@ -66,18 +67,7 @@ class VarsWage:
 
 
 @dataclass(kw_only=True)
-class VarsInvest:
-    cost_wage: float = 0
-    demand_emplo: float = 0
-    demand_emplo_new: float = 0
-    invest: float = 0
-    invest_com: float = 0
-    invest_pa: float = 0
-    invest_pa_com: float = 0
-
-
-@dataclass(kw_only=True)
-class VarsInvest2(VarsInvest):
+class InvestHeatProduction(Invest):
     pct_of_wage: float = 0
     ratio_wage_to_emplo: float = 0
 
@@ -155,7 +145,7 @@ class HeatProductionWithCostFuel(HeatProduction):
 
 
 @dataclass(kw_only=True)
-class HeatnetPlantProduction(HeatProduction, VarsInvest2, VarsWage):
+class HeatnetPlantProduction(HeatProduction, InvestHeatProduction, VarsWage):
     area_ha_available: float = 0
 
     inputs: InitVar[Inputs]
@@ -177,11 +167,11 @@ class HeatnetPlantProduction(HeatProduction, VarsInvest2, VarsWage):
         )
         self.invest = self.invest_per_x * self.area_ha_available
 
-        VarsInvest2.__post_init__(self, inputs=inputs, what=what, h18=h18)
+        InvestHeatProduction.__post_init__(self, inputs=inputs, what=what, h18=h18)
 
 
 @dataclass(kw_only=True)
-class HeatnetGeothProduction(HeatProduction, VarsInvest2, VarsWage):
+class HeatnetGeothProduction(HeatProduction, InvestHeatProduction, VarsWage):
     full_load_hour: float
     power_to_be_installed: float = 0
 
@@ -200,7 +190,7 @@ class HeatnetGeothProduction(HeatProduction, VarsInvest2, VarsWage):
         self.power_to_be_installed = div(self.energy, self.full_load_hour)
         self.invest = self.invest_per_x * self.power_to_be_installed
 
-        VarsInvest2.__post_init__(self, inputs=inputs, what=what, h18=h18)
+        InvestHeatProduction.__post_init__(self, inputs=inputs, what=what, h18=h18)
 
 
 @dataclass(kw_only=True)
@@ -225,7 +215,7 @@ class HeatnetLheatpumpProduction(HeatnetGeothProduction):
 
 
 @dataclass(kw_only=True)
-class HeatnetProduction(VarsInvest2, VarsChange2):
+class HeatnetProduction(InvestHeatProduction, VarsChange2):
     inputs: InitVar[Inputs]
     what: InitVar[str]
     h18: InitVar[H18]
@@ -237,7 +227,7 @@ class HeatnetProduction(VarsInvest2, VarsChange2):
         h18: H18,
     ):
         VarsChange2.__post_init__(self, inputs=inputs, what=what, h18=h18)
-        VarsInvest2.__post_init__(self, inputs=inputs, what=what, h18=h18)
+        InvestHeatProduction.__post_init__(self, inputs=inputs, what=what, h18=h18)
 
 
 @dataclass(kw_only=True)
