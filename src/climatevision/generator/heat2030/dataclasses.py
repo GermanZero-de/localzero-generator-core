@@ -110,7 +110,7 @@ class VarsInvest2(VarsInvest):
 
 
 @dataclass(kw_only=True)
-class Vars9(EnergyWithCO2ePerMWh, VarsChange2):
+class HeatProduction(EnergyWithCO2ePerMWh, VarsChange2):
     inputs: InitVar[Inputs]
     what: InitVar[str]
     h18: InitVar[H18]
@@ -128,7 +128,7 @@ class Vars9(EnergyWithCO2ePerMWh, VarsChange2):
 
 
 @dataclass(kw_only=True)
-class Vars6(Vars9):
+class HeatProductionWithCostFuel(HeatProduction):
     cost_fuel: float = 0
     cost_fuel_per_MWh: float = 0
 
@@ -145,7 +145,7 @@ class Vars6(Vars9):
         fact = inputs.fact
         ass = inputs.ass
 
-        Vars9.__post_init__(self, inputs=inputs, what=what, h18=h18)
+        HeatProduction.__post_init__(self, inputs=inputs, what=what, h18=h18)
 
         if what == "biomass":
             self.cost_fuel_per_MWh = fact("Fact_R_S_wood_energy_cost_factor_2018")
@@ -156,7 +156,7 @@ class Vars6(Vars9):
 
 
 @dataclass(kw_only=True)
-class Vars11(Vars9, VarsInvest2, VarsWage):
+class HeatnetPlantProduction(HeatProduction, VarsInvest2, VarsWage):
     area_ha_available: float = 0
 
     inputs: InitVar[Inputs]
@@ -171,7 +171,7 @@ class Vars11(Vars9, VarsInvest2, VarsWage):
     ):
         fact = inputs.fact
 
-        Vars9.__post_init__(self, inputs=inputs, what=what, h18=h18)
+        HeatProduction.__post_init__(self, inputs=inputs, what=what, h18=h18)
 
         self.area_ha_available = self.energy / fact(
             "Fact_H_P_heatnet_solarth_park_yield_2025"
@@ -182,7 +182,7 @@ class Vars11(Vars9, VarsInvest2, VarsWage):
 
 
 @dataclass(kw_only=True)
-class Vars13(Vars9, VarsInvest2, VarsWage):
+class HeatnetGeothProduction(HeatProduction, VarsInvest2, VarsWage):
     full_load_hour: float
     power_to_be_installed: float = 0
 
@@ -196,7 +196,7 @@ class Vars13(Vars9, VarsInvest2, VarsWage):
         what: str,
         h18: H18,
     ):
-        Vars9.__post_init__(self, inputs=inputs, what=what, h18=h18)
+        HeatProduction.__post_init__(self, inputs=inputs, what=what, h18=h18)
 
         self.power_to_be_installed = div(self.energy, self.full_load_hour)
         self.invest = self.invest_per_x * self.power_to_be_installed
@@ -205,7 +205,7 @@ class Vars13(Vars9, VarsInvest2, VarsWage):
 
 
 @dataclass(kw_only=True)
-class Vars12(Vars13):
+class HeatnetLheatpumpProduction(HeatnetGeothProduction):
     demand_electricity: float = 0
 
     inputs: InitVar[Inputs]
@@ -220,13 +220,13 @@ class Vars12(Vars13):
     ):
         fact = inputs.fact
 
-        Vars13.__post_init__(self, inputs=inputs, what=what, h18=h18)
+        HeatnetGeothProduction.__post_init__(self, inputs=inputs, what=what, h18=h18)
 
         self.demand_electricity = self.energy / fact("Fact_H_P_heatnet_lheatpump_apf")
 
 
 @dataclass(kw_only=True)
-class Vars10(VarsInvest2, VarsChange2):
+class HeatnetProduction(VarsInvest2, VarsChange2):
     inputs: InitVar[Inputs]
     what: InitVar[str]
     h18: InitVar[H18]
@@ -242,7 +242,7 @@ class Vars10(VarsInvest2, VarsChange2):
 
 
 @dataclass(kw_only=True)
-class Vars5(Vars10):
+class TotalHeatProduction(HeatnetProduction):
     cost_fuel: float = 0
     demand_electricity: float = 0
 
@@ -256,7 +256,7 @@ class Vars5(Vars10):
         what: str,
         h18: H18,
     ):
-        Vars10.__post_init__(self, inputs=inputs, what=what, h18=h18)
+        HeatnetProduction.__post_init__(self, inputs=inputs, what=what, h18=h18)
 
 
 @dataclass(kw_only=True)
@@ -264,7 +264,7 @@ class H(CO2Emission, VarsInvest, VarsChange):
     demand_emplo_com: float
 
     @classmethod
-    def of_p_and_g(cls, p: Vars5, g: G) -> "H":
+    def of_p_and_g(cls, p: TotalHeatProduction, g: G) -> "H":
         return cls(
             CO2e_total_2021_estimated=p.CO2e_total_2021_estimated,
             CO2e_combustion_based=p.CO2e_combustion_based,
