@@ -2,12 +2,12 @@
 
 from dataclasses import dataclass, InitVar
 
-from ..inputs import Inputs
-from ..utils import div, MILLION
-from ..heat2018.h18 import H18
-from ..common.energy import Energy
-from ..common.energy_with_co2e_per_mwh import EnergyWithCO2ePerMWh
-from ..common.co2_emission import CO2Emission
+from ...inputs import Inputs
+from ...utils import div, MILLION
+from ...heat2018.h18 import H18
+from ...common.energy import Energy
+from ...common.energy_with_co2e_per_mwh import EnergyWithCO2ePerMWh
+from ...common.co2_emission import CO2Emission
 
 
 @dataclass(kw_only=True)

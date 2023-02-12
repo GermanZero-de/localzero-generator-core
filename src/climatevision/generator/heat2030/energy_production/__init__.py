@@ -10,7 +10,7 @@ from ...agri2030.a30 import A30
 from ...industry2030.i30 import I30
 from ...electricity2030.electricity2030_core import EColVars2030
 
-from ..dataclasses import (
+from .dataclasses import (
     TotalHeatProduction,
     HeatProductionWithCostFuel,
     HeatProduction,

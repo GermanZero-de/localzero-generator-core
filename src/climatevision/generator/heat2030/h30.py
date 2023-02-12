@@ -2,7 +2,9 @@
 
 from dataclasses import dataclass
 
-from .dataclasses import (
+from .energy_demand import EnergyDemand
+from .energy_general import G, GStorage, GPlanning
+from .energy_production.dataclasses import (
     TotalHeatProduction,
     HeatProductionWithCostFuel,
     HeatProduction,
@@ -12,8 +14,6 @@ from .dataclasses import (
     HeatnetGeothProduction,
 )
 from .h import H
-from .energy_demand import EnergyDemand
-from .energy_general import G, GStorage, GPlanning
 
 
 @dataclass(kw_only=True)
