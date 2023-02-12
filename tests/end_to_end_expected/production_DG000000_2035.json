@@ -6756,9 +6756,9 @@
             "energy": 35107129.3953453,
             "CO2e_combustion_based_per_MWh": 0,
             "CO2e_production_based_per_MWh": 0.0,
-            "demand_electricity": 12427302.440830193,
             "full_load_hour": 4380.0,
-            "power_to_be_installed": 8015.326345969247
+            "power_to_be_installed": 8015.326345969247,
+            "demand_electricity": 12427302.440830193
         },
         "p_heatnet_geoth": {
             "pct_energy": 0.3254716981132076,
