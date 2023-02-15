@@ -28,7 +28,15 @@ class EnergySourceSubBranch:
         cls, inputs: Inputs, sub_branch: str, branch: str, energy_type: str
     ) -> float:
         fact = inputs.fact
-        fact_name = "Fact_I_P_" + branch + "_" + sub_branch + "_fec_pct_of_coal_2018"
+        fact_name = (
+            "Fact_I_S_"
+            + branch
+            + "_"
+            + sub_branch
+            + "_fec_pct_of_"
+            + energy_type
+            + "_2018"
+        )
         # add 0% facts in table -> remove try block
 
         fec_pct = fact(fact_name)
@@ -45,8 +53,6 @@ class EnergySourceSubBranch:
     ) -> "EnergySourceSubBranch":
 
         branch_energy_supply = energy_demand
-
-        # add calculation with new facts here:
 
         fec_pct_gas = cls._get_energy_pct_fact(
             inputs=inputs, sub_branch=sub_branch, branch=branch, energy_type="gas"
