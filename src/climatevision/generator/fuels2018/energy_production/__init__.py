@@ -4,6 +4,7 @@ from dataclasses import dataclass
 
 from ...inputs import Inputs
 from ...transport2018.t18 import T18
+from ...industry2018.i18 import I18
 
 from .fuelProduction import FuelProduction, TotalFuelProduction
 
@@ -20,7 +21,7 @@ class Production:
     total: TotalFuelProduction
 
 
-def calc_production(inputs: Inputs, t18: T18) -> Production:
+def calc_production(inputs: Inputs, t18: T18, i18: I18) -> Production:
 
     entries = inputs.entries
     fact = inputs.fact
@@ -41,7 +42,7 @@ def calc_production(inputs: Inputs, t18: T18) -> Production:
     diesel = FuelProduction(
         energy=(
             entries.b_diesel_fec
-            + entries.i_diesel_fec
+            + i18.s_fossil_diesel.energy
             + t18.t.demand_diesel
             + entries.a_diesel_fec
         ),

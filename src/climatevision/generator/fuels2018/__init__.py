@@ -7,12 +7,13 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/fuel.html
 
 from ..inputs import Inputs
 from ..transport2018.t18 import T18
+from ..industry2018.i18 import I18
 
 from .f18 import F18, CO2eEmissions
 from . import energy_demand, energy_production
 
 
-def calc(inputs: Inputs, *, t18: T18) -> F18:
+def calc(inputs: Inputs, *, t18: T18, i18: I18) -> F18:
     """This computes the CO2e that is created by the production of fuels.
     NOTE: This does not compute the CO2e caused by burning fuels, those are in
     those sectors that make use of the fuels (transport, heat, ...).
@@ -23,8 +24,8 @@ def calc(inputs: Inputs, *, t18: T18) -> F18:
     # So now we just determine the total amounts of each fuel and then multiply
     # by the "this is how much CO2e is emitted during production" factor.
 
-    demand = energy_demand.calc_demand(inputs, t18)
-    production = energy_production.calc_production(inputs, t18)
+    demand = energy_demand.calc_demand(inputs, t18, i18)
+    production = energy_production.calc_production(inputs, t18, i18)
 
     f = CO2eEmissions(
         CO2e_combustion_based=production.total.CO2e_combustion_based,

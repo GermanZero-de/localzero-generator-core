@@ -136,7 +136,7 @@ def calculate(inputs: Inputs, inputs_germany: Inputs) -> Result:
     t18 = transport2018.calc(inputs)
 
     print("Fuels2018_calc", file=stderr)
-    f18 = fuels2018.calc(inputs, t18=t18)
+    f18 = fuels2018.calc(inputs, t18=t18, i18=i18)
 
     print("Lulucf2018_calc", file=stderr)
     l18 = lulucf2018.calc(inputs)
@@ -145,10 +145,10 @@ def calculate(inputs: Inputs, inputs_germany: Inputs) -> Result:
     a18 = agri2018.calc(inputs, l18=l18, b18=b18)
 
     print("Electricity2018_calc", file=stderr)
-    e18 = electricity2018.calc(inputs, t18=t18)
+    e18 = electricity2018.calc(inputs, t18=t18, i18=i18)
 
     print("Heat2018_calc", file=stderr)
-    h18 = heat2018.calc(inputs, t18=t18, e18=e18)
+    h18 = heat2018.calc(inputs, t18=t18, e18=e18, i18=i18)
 
     end_t = time()
     print(
