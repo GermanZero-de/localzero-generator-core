@@ -71,7 +71,7 @@ def calc_supply(inputs: Inputs, production: Production) -> EnergySource:
     s_chem_ammonia = EnergySourceSubBranch.calc_energy_source_sub_branch(
         inputs=inputs,
         energy_demand=production.p_chem_ammonia.energy,
-        sub_branch="ammonia",
+        sub_branch="basic", # assumtion same as chem basic (TODO Find specific factors for ammonia production)
         branch="chem",
     )
     s_chem_other = EnergySourceSubBranch.calc_energy_source_sub_branch(
