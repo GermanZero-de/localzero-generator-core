@@ -101,10 +101,6 @@ class EnergySourceSubBranch:
             inputs=inputs, sub_branch=sub_branch, branch=branch, energy_type="heatnet"
         )
         s_renew_heatnet = Energy(energy=branch_energy_supply * fec_pct_heatnet)
-        fec_pct_heatpump = cls._get_energy_pct_fact(
-            inputs=inputs, sub_branch=sub_branch, branch=branch, energy_type="heatpump"
-        )
-        s_renew_heatpump = Energy(energy=branch_energy_supply * fec_pct_heatpump)
         fec_pct_elec = cls._get_energy_pct_fact(
             inputs=inputs, sub_branch=sub_branch, branch=branch, energy_type="elec"
         )
@@ -117,7 +113,7 @@ class EnergySourceSubBranch:
         s_renew = Energy(
             energy=s_renew_biomass.energy
             + s_renew_heatnet.energy
-            + s_renew_heatpump.energy
+            + s_renew_biomass.energy
             + s_renew_orenew.energy
             + s_renew_elec.energy
         )
