@@ -3,6 +3,7 @@
 from dataclasses import dataclass, InitVar
 
 from ...inputs import Inputs
+from ...common.invest import Invest
 from ...agri2018.a18 import A18
 
 from .co2e_change_energy import CO2eChangeEnergy
@@ -13,18 +14,13 @@ from .co2e_change_p_operation_elec_heatpump import CO2eChangePOperationElecHeatp
 
 
 @dataclass(kw_only=True)
-class CO2eChangePOperation(CO2eChangeEnergy):
-    cost_wage: float = 0
+class CO2eChangePOperation(CO2eChangeEnergy, Invest):
     demand_biomass: float = 0
     demand_ediesel: float = 0
     demand_electricity: float = 0
     demand_emethan: float = 0
-    demand_emplo: float = 0
-    demand_emplo_new: float = 0
     demand_epetrol: float = 0
     demand_heatpump: float = 0
-    invest: float = 0
-    invest_pa: float = 0
 
     inputs: InitVar[Inputs]
     what: InitVar[str]
