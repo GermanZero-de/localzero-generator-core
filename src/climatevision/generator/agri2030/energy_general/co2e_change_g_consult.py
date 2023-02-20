@@ -4,11 +4,11 @@ from dataclasses import dataclass, InitVar
 
 from ...inputs import Inputs
 from ...utils import div
-from ...common.invest import InvestCom
+from ...common.invest import InvestCommune
 
 
 @dataclass(kw_only=True)
-class CO2eChangeGConsult(InvestCom):
+class CO2eChangeGConsult(InvestCommune):
     area_ha_available: float = 0
     demand_emplo_com: float = 0
     invest_per_x: float = 0

@@ -4,7 +4,7 @@ from dataclasses import dataclass, InitVar
 
 from ..inputs import Inputs
 from ..utils import div
-from ..common.invest import InvestCom
+from ..common.invest import InvestCommune
 from ..agri2018.a18 import A18
 
 from .energy_demand import CO2eChangePOperation, CO2eChangeP
@@ -13,7 +13,7 @@ from .energy_general import CO2eChangeG
 
 
 @dataclass(kw_only=True)
-class CO2eChangeA(InvestCom):
+class CO2eChangeA(InvestCommune):
     CO2e_combustion_based: float = 0
     CO2e_production_based: float = 0
     CO2e_total: float = 0

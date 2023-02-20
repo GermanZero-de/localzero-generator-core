@@ -13,6 +13,6 @@ class Invest:
 
 
 @dataclass(kw_only=True)
-class InvestCom(Invest):
+class InvestCommune(Invest):
     invest_com: float = 0
     invest_pa_com: float = 0

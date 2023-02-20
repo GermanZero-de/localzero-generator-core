@@ -2,14 +2,14 @@
 
 from dataclasses import dataclass, InitVar
 
-from ...common.invest import InvestCom
+from ...common.invest import InvestCommune
 
 from .co2e_change_g_consult import CO2eChangeGConsult
 from .co2e_change_g_organic import CO2eChangeGOrganic
 
 
 @dataclass(kw_only=True)
-class CO2eChangeG(InvestCom):
+class CO2eChangeG(InvestCommune):
     CO2e_total: float = 0
     demand_emplo_com: float = 0
     invest_outside: float = 0
