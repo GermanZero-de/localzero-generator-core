@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass
 
-from ..common.co2_emission import CO2Emission
+from ..common.co2_emission import CO2eEmission
 
 from .energy_demand import EnergyDemand
 from .energy_production import EnergyWithCO2ePerMWh
@@ -17,7 +17,7 @@ class H18:
     d_t: EnergyDemand
     d_a: EnergyDemand
 
-    h: CO2Emission
+    h: CO2eEmission
 
     p: EnergyWithCO2ePerMWh
     p_gas: EnergyWithCO2ePerMWh

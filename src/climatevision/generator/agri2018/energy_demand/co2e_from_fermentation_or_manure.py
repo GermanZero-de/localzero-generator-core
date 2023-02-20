@@ -4,11 +4,11 @@ from dataclasses import dataclass
 
 from ...inputs import Inputs
 
-from ...common.co2_emission import CO2Emission
+from ...common.co2_emission import CO2eEmission
 
 
 @dataclass(kw_only=True)
-class CO2eFromFermentationOrManure(CO2Emission):
+class CO2eFromFermentationOrManure(CO2eEmission):
     # Used by p_fermen_dairycow, p_fermen_nondairy, p_fermen_swine, p_fermen_poultry, p_fermen_oanimal, p_manure_dairycow, p_manure_nondairy, p_manure_swine, p_manure_poultry, p_manure_oanimal, p_manure_deposition
     CO2e_production_based_per_t: float
     amount: float

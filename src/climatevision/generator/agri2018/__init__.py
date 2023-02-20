@@ -10,7 +10,7 @@ from ..lulucf2018.l18 import L18
 from ..business2018.b18 import B18
 
 from .a18 import A18
-from .energy_demand import CO2Emission
+from .energy_demand import CO2eEmission
 from . import energy_demand, energy_source
 
 
@@ -43,7 +43,7 @@ def calc(inputs: Inputs, l18: L18, b18: B18) -> A18:
         supply.biomass.energy,
     )
 
-    a = CO2Emission(
+    a = CO2eEmission(
         CO2e_total=production.total.CO2e_total + supply.total.CO2e_total,
         CO2e_production_based=production.total.CO2e_production_based,
         CO2e_combustion_based=supply.total.CO2e_combustion_based,
