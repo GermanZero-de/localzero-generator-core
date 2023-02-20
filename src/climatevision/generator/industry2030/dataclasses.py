@@ -2,9 +2,11 @@
 
 from dataclasses import dataclass
 
+from ..common.invest import Invest, InvestCommune
+
 
 @dataclass(kw_only=True)
-class Vars2:
+class Vars2(InvestCommune):
     # Used by i
     CO2e_combustion_based: float = None  # type: ignore
     CO2e_production_based: float = None  # type: ignore
@@ -15,20 +17,13 @@ class Vars2:
     change_energy_MWh: float = None  # type: ignore
     change_energy_pct: float = None  # type: ignore
     cost_climate_saved: float = None  # type: ignore
-    cost_wage: float = None  # type: ignore
-    demand_emplo: float = None  # type: ignore
     demand_emplo_com: float = None  # type: ignore
-    demand_emplo_new: float = None  # type: ignore
-    invest: float = None  # type: ignore
-    invest_com: float = None  # type: ignore
     invest_outside: float = None  # type: ignore
-    invest_pa: float = None  # type: ignore
-    invest_pa_com: float = None  # type: ignore
     invest_pa_outside: float = None  # type: ignore
 
 
 @dataclass(kw_only=True)
-class Vars3:
+class Vars3(Invest):
     # Used by p
     CO2e_combustion_based: float = None  # type: ignore
     CO2e_production_based: float = None  # type: ignore
@@ -39,19 +34,14 @@ class Vars3:
     change_energy_MWh: float = None  # type: ignore
     change_energy_pct: float = None  # type: ignore
     cost_climate_saved: float = None  # type: ignore
-    cost_wage: float = None  # type: ignore
     demand_biomass: float = None  # type: ignore
     demand_electricity: float = None  # type: ignore
     demand_emethan: float = None  # type: ignore
-    demand_emplo: float = None  # type: ignore
-    demand_emplo_new: float = None  # type: ignore
     demand_heatnet: float = None  # type: ignore
     demand_hydrogen: float = None  # type: ignore
     emplo_existing: float = None  # type: ignore
     energy: float = None  # type: ignore
-    invest: float = None  # type: ignore
     invest_outside: float = None  # type: ignore
-    invest_pa: float = None  # type: ignore
     invest_pa_outside: float = None  # type: ignore
     prod_volume: float = None  # type: ignore
 
