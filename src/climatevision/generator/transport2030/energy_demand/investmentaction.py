@@ -4,19 +4,13 @@ from dataclasses import dataclass
 
 from ...inputs import Inputs
 from ...utils import div
+from ...common.invest import InvestCommune
 
 
 @dataclass(kw_only=True)
-class InvestmentAction:
+class InvestmentAction(InvestCommune):
     """For some transport mechanism additional investments are needed."""
 
-    cost_wage: float
-    demand_emplo: float
-    demand_emplo_new: float
-    invest: float
-    invest_com: float
-    invest_pa: float
-    invest_pa_com: float
     invest_per_x: float
     pct_of_wage: float
     ratio_wage_to_emplo: float

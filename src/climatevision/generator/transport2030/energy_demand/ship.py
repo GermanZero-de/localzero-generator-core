@@ -4,24 +4,20 @@ from dataclasses import dataclass
 
 from ...inputs import Inputs
 from ...utils import div
+from ...common.invest import Invest, InvestCommune
 from ...transport2018.t18 import T18
 
 from .transport import Transport
 
 
 @dataclass(kw_only=True)
-class ShipDomestic:
+class ShipDomestic(Invest):
     LIFT_INTO_RESULT_DICT = ["transport"]
     transport: Transport
 
     base_unit: float
-    cost_wage: float
-    demand_emplo_new: float
-    demand_emplo: float
     emplo_existing: float
-    invest_pa: float
     invest_per_x: float
-    invest: float
     pct_of_wage: float
     ratio_wage_to_emplo: float
 
@@ -90,17 +86,10 @@ class ShipDomestic:
 
 
 @dataclass(kw_only=True)
-class ShipDomesticActionInfra:
+class ShipDomesticActionInfra(InvestCommune):
     CO2e_total_2021_estimated: float
     cost_climate_saved: float
-    cost_wage: float
     demand_ediesel: float
-    demand_emplo: float
-    demand_emplo_new: float
-    invest: float
-    invest_com: float
-    invest_pa: float
-    invest_pa_com: float
     pct_of_wage: float
     ratio_wage_to_emplo: float
 
@@ -191,19 +180,12 @@ class ShipInternational:
 
 
 @dataclass(kw_only=True)
-class Ship:
+class Ship(InvestCommune):
     LIFT_INTO_RESULT_DICT = ["transport"]
     transport: Transport
 
-    demand_emplo_new: float
-    demand_emplo: float
     base_unit: float
-    cost_wage: float
     emplo_existing: float
-    invest: float
-    invest_com: float
-    invest_pa: float
-    invest_pa_com: float
 
     @classmethod
     def calc(
