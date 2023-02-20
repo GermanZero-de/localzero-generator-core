@@ -8,7 +8,7 @@ from ...heat2018.h18 import H18
 from ...common.energy import Energy
 from ...common.energy_with_co2e_per_mwh import EnergyWithCO2ePerMWh
 from ...common.co2_emission import CO2Emission
-from ...common.invest import Invest
+from ...common.invest import InvestCom
 
 
 @dataclass(kw_only=True)
@@ -67,7 +67,7 @@ class InvestPerX:
 
 
 @dataclass(kw_only=True)
-class InvestHeatProduction(Invest):
+class InvestHeatProduction(InvestCom):
     pct_of_wage: float = 0
     ratio_wage_to_emplo: float = 0
 

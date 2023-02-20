@@ -5,11 +5,11 @@ from dataclasses import dataclass
 from ..inputs import Inputs
 from ..utils import div
 
-from .invest import Invest
+from .invest import InvestCom
 
 
 @dataclass(kw_only=True)
-class G(Invest):
+class G(InvestCom):
     demand_emplo_com: float
 
     @classmethod
