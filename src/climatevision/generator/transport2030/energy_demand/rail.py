@@ -4,6 +4,7 @@ from dataclasses import dataclass
 
 from ...inputs import Inputs
 from ...utils import div
+from ...common.invest import Invest, InvestCommune
 from ...transport2018.t18 import T18
 
 from .transport import Transport
@@ -11,18 +12,13 @@ from .investmentaction import InvestmentAction
 
 
 @dataclass(kw_only=True)
-class RailPeople:
+class RailPeople(Invest):
     LIFT_INTO_RESULT_DICT = ["transport"]
     transport: Transport
 
     base_unit: float
-    cost_wage: float
-    demand_emplo_new: float
-    demand_emplo: float
     emplo_existing: float
-    invest_pa: float
     invest_per_x: float
-    invest: float
     mileage: float
     pct_of_wage: float
     ratio_wage_to_emplo: float
@@ -180,16 +176,9 @@ class RailPeople:
 
 
 @dataclass(kw_only=True)
-class RailPeopleMetroActionInfra:
+class RailPeopleMetroActionInfra(InvestCommune):
     base_unit: float
-    cost_wage: float
-    demand_emplo: float
-    demand_emplo_new: float
     emplo_existing: float
-    invest: float
-    invest_com: float
-    invest_pa: float
-    invest_pa_com: float
     invest_per_x: float
     pct_of_wage: float
     ratio_wage_to_emplo: float
@@ -233,19 +222,12 @@ class RailPeopleMetroActionInfra:
 
 
 @dataclass(kw_only=True)
-class RailPeopleSum:
+class RailPeopleSum(InvestCommune):
     LIFT_INTO_RESULT_DICT = ["transport"]
     transport: Transport
 
     base_unit: float
-    cost_wage: float
-    demand_emplo_new: float
-    demand_emplo: float
     emplo_existing: float
-    invest_com: float
-    invest_pa_com: float
-    invest_pa: float
-    invest: float
     mileage: float
 
     @classmethod
@@ -312,17 +294,12 @@ class RailPeopleSum:
 
 
 @dataclass(kw_only=True)
-class RailGoods:
+class RailGoods(Invest):
     LIFT_INTO_RESULT_DICT = ["transport"]
     transport: Transport
 
     base_unit: float
-    cost_wage: float
-    demand_emplo: float
-    demand_emplo_new: float
     emplo_existing: float
-    invest: float
-    invest_pa: float
     invest_per_x: float
     pct_of_wage: float
     mileage: float
@@ -395,18 +372,11 @@ class RailGoods:
 
 
 @dataclass(kw_only=True)
-class Rail:
+class Rail(InvestCommune):
     LIFT_INTO_RESULT_DICT = ["transport"]
     transport: Transport
 
     base_unit: float
-    cost_wage: float
-    demand_emplo_new: float
-    demand_emplo: float
-    invest_com: float
-    invest_pa_com: float
-    invest_pa: float
-    invest: float
     mileage: float
 
     @classmethod

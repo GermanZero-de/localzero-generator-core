@@ -4,6 +4,7 @@ from dataclasses import dataclass, asdict
 
 from ...inputs import Inputs
 from ...utils import div
+from ...common.invest import InvestCommune
 from ...transport2018.t18 import T18
 
 from .transport import Transport
@@ -602,15 +603,8 @@ class RoadBus(Road, BusInvestments):
 
 
 @dataclass(kw_only=True)
-class RoadPeople(Road):
+class RoadPeople(Road, InvestCommune):
     base_unit: float
-    cost_wage: float
-    demand_emplo_new: float
-    demand_emplo: float
-    invest_com: float
-    invest_pa_com: float
-    invest_pa: float
-    invest: float
 
     @classmethod
     def calc(
@@ -772,16 +766,8 @@ class RoadGoodsLightDuty(Road):
 
 
 @dataclass(kw_only=True)
-class RoadGoods(Road):
+class RoadGoods(Road, InvestCommune):
     base_unit: float
-    demand_emplo_new: float
-    demand_emplo: float
-    invest_com: float
-    invest_pa_com: float
-    invest_pa: float
-    invest: float
-
-    cost_wage: float
 
     @classmethod
     def calc(
@@ -817,15 +803,7 @@ class RoadGoods(Road):
 
 
 @dataclass(kw_only=True)
-class RoadSum(Road):
-    demand_emplo_new: float
-    demand_emplo: float
-    cost_wage: float
-    invest_com: float
-    invest_pa_com: float
-    invest_pa: float
-    invest: float
-
+class RoadSum(Road, InvestCommune):
     @classmethod
     def calc(
         cls,
