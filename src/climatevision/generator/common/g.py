@@ -5,17 +5,12 @@ from dataclasses import dataclass
 from ..inputs import Inputs
 from ..utils import div
 
+from .invest import Invest
+
 
 @dataclass(kw_only=True)
-class G:
-    cost_wage: float
-    demand_emplo: float
+class G(Invest):
     demand_emplo_com: float
-    demand_emplo_new: float
-    invest: float
-    invest_com: float
-    invest_pa: float
-    invest_pa_com: float
 
     @classmethod
     def sum(cls, *gs: "G") -> "G":
