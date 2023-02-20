@@ -3,7 +3,7 @@
 from dataclasses import dataclass
 
 from ..common.g import G
-from ..common.co2_emission import CO2eEmission
+from ..common.co2_equivalent_emission import CO2eEmission
 from ..common.invest import InvestCommune
 
 from .energy_production import TotalHeatProduction

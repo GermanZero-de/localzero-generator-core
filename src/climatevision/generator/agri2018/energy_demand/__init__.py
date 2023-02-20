@@ -6,7 +6,7 @@ from ...inputs import Inputs
 from ...lulucf2018.l18 import L18
 from ...business2018.b18 import B18
 from ...common.energy import Energy, EnergyWithPercentage
-from ...common.co2_emission import CO2eEmission
+from ...common.co2_equivalent_emission import CO2eEmission
 
 from .p import P
 from .co2e_from_fermentation_or_manure import CO2eFromFermentationOrManure

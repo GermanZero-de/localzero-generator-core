@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from ..utils import div
 
 from .energy import Energy
-from .co2_emission import CO2eEmission
+from .co2_equivalent_emission import CO2eEmission
 
 
 @dataclass(kw_only=True)

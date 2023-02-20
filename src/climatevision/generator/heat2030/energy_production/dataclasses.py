@@ -7,7 +7,7 @@ from ...utils import div, MILLION
 from ...heat2018.h18 import H18
 from ...common.energy import Energy
 from ...common.energy_with_co2e_per_mwh import EnergyWithCO2ePerMWh
-from ...common.co2_emission import CO2eEmission
+from ...common.co2_equivalent_emission import CO2eEmission
 from ...common.invest import InvestCommune
 
 
