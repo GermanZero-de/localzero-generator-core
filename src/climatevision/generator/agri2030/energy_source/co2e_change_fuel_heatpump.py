@@ -3,22 +3,18 @@ from dataclasses import dataclass, InitVar
 
 from ...inputs import Inputs
 from ...utils import div, MILLION
+from ...common.invest import Invest
 from ...agri2018.a18 import A18
 
 from .co2e_change_energy_per_mwh import CO2eChangeEnergyPerMWh
 
 
 @dataclass(kw_only=True)
-class CO2eChangeFuelHeatpump(CO2eChangeEnergyPerMWh):
+class CO2eChangeFuelHeatpump(CO2eChangeEnergyPerMWh, Invest):
     cost_fuel: float = 0
     cost_fuel_per_MWh: float = 0
-    cost_wage: float = 0
-    demand_emplo: float = 0
-    demand_emplo_new: float = 0
     emplo_existing: float = 0
     full_load_hour: float = 0
-    invest: float = 0
-    invest_pa: float = 0
     invest_per_x: float = 0
     pct_of_wage: float = 0
     power_installed: float = 0

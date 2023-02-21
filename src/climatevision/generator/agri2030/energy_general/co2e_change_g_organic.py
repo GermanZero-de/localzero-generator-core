@@ -4,16 +4,12 @@ from dataclasses import dataclass, InitVar
 
 from ...inputs import Inputs
 from ...utils import div
+from ...common.invest import Invest
 
 
 @dataclass(kw_only=True)
-class CO2eChangeGOrganic:
+class CO2eChangeGOrganic(Invest):
     area_ha_available: float = 0
-    cost_wage: float = 0
-    demand_emplo: float = 0
-    demand_emplo_new: float = 0
-    invest: float = 0
-    invest_pa: float = 0
     invest_per_x: float = 0
     pct_of_wage: float = 0
     power_installed: float = 0

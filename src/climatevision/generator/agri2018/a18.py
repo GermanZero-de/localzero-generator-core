@@ -10,29 +10,29 @@ from .energy_demand import (
     Energy,
     EnergyWithPercentage,
     OperationHeatEnergy,
-    CO2Emission,
+    CO2eEmission,
 )
 from .energy_source import CO2eFromEnergyUse, CO2eFromEnergyUseDetail
 
 
 @dataclass(kw_only=True)
 class A18:
-    a: CO2Emission
+    a: CO2eEmission
     p: P
-    p_fermen: CO2Emission
+    p_fermen: CO2eEmission
     p_fermen_dairycow: CO2eFromFermentationOrManure
     p_fermen_nondairy: CO2eFromFermentationOrManure
     p_fermen_swine: CO2eFromFermentationOrManure
     p_fermen_poultry: CO2eFromFermentationOrManure
     p_fermen_oanimal: CO2eFromFermentationOrManure
-    p_manure: CO2Emission
+    p_manure: CO2eEmission
     p_manure_dairycow: CO2eFromFermentationOrManure
     p_manure_nondairy: CO2eFromFermentationOrManure
     p_manure_swine: CO2eFromFermentationOrManure
     p_manure_poultry: CO2eFromFermentationOrManure
     p_manure_oanimal: CO2eFromFermentationOrManure
     p_manure_deposition: CO2eFromFermentationOrManure
-    p_soil: CO2Emission
+    p_soil: CO2eEmission
     p_soil_fertilizer: CO2eFromSoil
     p_soil_manure: CO2eFromSoil
     p_soil_sludge: CO2eFromSoil
@@ -43,11 +43,11 @@ class A18:
     p_soil_orgloss: CO2eFromSoil
     p_soil_leaching: CO2eFromSoil
     p_soil_deposition: CO2eFromSoil
-    p_other: CO2Emission
+    p_other: CO2eEmission
     p_other_liming_dolomite: CO2eFromOther
     p_other_urea: CO2eFromOther
     p_other_ecrop: CO2eFromOther
-    p_other_liming: CO2Emission
+    p_other_liming: CO2eEmission
     p_other_liming_calcit: CO2eFromOther
     p_other_kas: CO2eFromOther
     p_operation: Energy

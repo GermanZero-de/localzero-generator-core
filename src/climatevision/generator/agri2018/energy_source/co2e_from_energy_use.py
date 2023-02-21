@@ -2,11 +2,11 @@
 
 from dataclasses import dataclass
 
-from ...common.co2_emission import CO2Emission
+from ...common.co2_equivalent_emission import CO2eEmission
 
 
 @dataclass(kw_only=True)
-class CO2eFromEnergyUse(CO2Emission):
+class CO2eFromEnergyUse(CO2eEmission):
     # Used by s
     CO2e_combustion_based: float
     CO2e_production_based: float

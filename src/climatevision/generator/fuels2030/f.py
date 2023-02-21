@@ -2,11 +2,13 @@
 
 from dataclasses import dataclass
 
+from ..common.invest import Invest
+
 from .energy_production import TotalEFuelProduction
 
 
 @dataclass(kw_only=True)
-class F:
+class F(Invest):
     CO2e_production_based: float
     CO2e_total: float
     CO2e_total_2021_estimated: float
@@ -15,12 +17,7 @@ class F:
     change_energy_MWh: float
     change_energy_pct: float
     cost_climate_saved: float
-    cost_wage: float
-    demand_emplo: float
-    demand_emplo_new: float
-    invest: float
     invest_outside: float
-    invest_pa: float
     invest_pa_outside: float
 
     @classmethod

@@ -4,6 +4,7 @@ from dataclasses import dataclass
 
 from ...inputs import Inputs
 from ...utils import div
+from ...common.invest import InvestCommune
 from ...transport2018.t18 import T18
 
 from .transport import Transport
@@ -148,18 +149,11 @@ class OtherCycle:
 
 
 @dataclass(kw_only=True)
-class Other:
+class Other(InvestCommune):
     LIFT_INTO_RESULT_DICT = ["transport"]
     transport: Transport
 
     base_unit: float
-    cost_wage: float
-    demand_emplo: float
-    demand_emplo_new: float
-    invest: float
-    invest_com: float
-    invest_pa: float
-    invest_pa_com: float
 
     @classmethod
     def calc(

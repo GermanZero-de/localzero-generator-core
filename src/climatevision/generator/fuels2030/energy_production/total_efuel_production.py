@@ -3,6 +3,7 @@
 from dataclasses import dataclass
 
 from ...utils import div
+from ...common.invest import Invest
 from ...fuels2018.f18 import F18
 
 from .efuel_production import EFuelProduction
@@ -11,7 +12,7 @@ from .fuel_without_direct_replacement import FuelWithoutDirectReplacement
 
 
 @dataclass(kw_only=True)
-class TotalEFuelProduction:
+class TotalEFuelProduction(Invest):
     CO2e_production_based: float
     CO2e_total: float
     CO2e_total_2021_estimated: float
@@ -20,14 +21,9 @@ class TotalEFuelProduction:
     change_energy_MWh: float
     change_energy_pct: float
     cost_climate_saved: float
-    cost_wage: float
     demand_electricity: float
-    demand_emplo: float
-    demand_emplo_new: float
     energy: float
-    invest: float
     invest_outside: float
-    invest_pa: float
     invest_pa_outside: float
 
     @classmethod

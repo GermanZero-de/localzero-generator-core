@@ -7,8 +7,8 @@ from ...utils import div, MILLION
 from ...heat2018.h18 import H18
 from ...common.energy import Energy
 from ...common.energy_with_co2e_per_mwh import EnergyWithCO2ePerMWh
-from ...common.co2_emission import CO2Emission
-from ...common.invest import Invest
+from ...common.co2_equivalent_emission import CO2eEmission
+from ...common.invest import InvestCommune
 
 
 @dataclass(kw_only=True)
@@ -22,7 +22,7 @@ class CO2eChange:
 
 
 @dataclass(kw_only=True)
-class CO2eChangeHeatProduction(Energy, CO2Emission, CO2eChange):
+class CO2eChangeHeatProduction(Energy, CO2eEmission, CO2eChange):
     inputs: InitVar[Inputs]
     what: InitVar[str]
     h18: InitVar[H18]
@@ -67,7 +67,7 @@ class InvestPerX:
 
 
 @dataclass(kw_only=True)
-class InvestHeatProduction(Invest):
+class InvestHeatProduction(InvestCommune):
     pct_of_wage: float = 0
     ratio_wage_to_emplo: float = 0
 

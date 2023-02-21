@@ -6,7 +6,7 @@ from ...inputs import Inputs
 from ...lulucf2018.l18 import L18
 from ...business2018.b18 import B18
 from ...common.energy import Energy, EnergyWithPercentage
-from ...common.co2_emission import CO2Emission
+from ...common.co2_equivalent_emission import CO2eEmission
 
 from .p import P
 from .co2e_from_fermentation_or_manure import CO2eFromFermentationOrManure
@@ -20,14 +20,14 @@ class Production:
 
     total: P
 
-    fermen: CO2Emission
+    fermen: CO2eEmission
     fermen_dairycow: CO2eFromFermentationOrManure
     fermen_nondairy: CO2eFromFermentationOrManure
     fermen_swine: CO2eFromFermentationOrManure
     fermen_poultry: CO2eFromFermentationOrManure
     fermen_oanimal: CO2eFromFermentationOrManure
 
-    manure: CO2Emission
+    manure: CO2eEmission
     manure_dairycow: CO2eFromFermentationOrManure
     manure_nondairy: CO2eFromFermentationOrManure
     manure_swine: CO2eFromFermentationOrManure
@@ -35,7 +35,7 @@ class Production:
     manure_oanimal: CO2eFromFermentationOrManure
     manure_deposition: CO2eFromFermentationOrManure
 
-    soil: CO2Emission
+    soil: CO2eEmission
     soil_fertilizer: CO2eFromSoil
     soil_manure: CO2eFromSoil
     soil_sludge: CO2eFromSoil
@@ -47,11 +47,11 @@ class Production:
     soil_leaching: CO2eFromSoil
     soil_deposition: CO2eFromSoil
 
-    other: CO2Emission
+    other: CO2eEmission
     other_liming_dolomite: CO2eFromOther
     other_urea: CO2eFromOther
     other_ecrop: CO2eFromOther
-    other_liming: CO2Emission
+    other_liming: CO2eEmission
     other_liming_calcit: CO2eFromOther
     other_kas: CO2eFromOther
 
@@ -87,7 +87,7 @@ def calc_production(
     fermen_poultry = CO2eFromFermentationOrManure.calc_fermen(inputs, "poultry")
     fermen_oanimal = CO2eFromFermentationOrManure.calc_fermen(inputs, "oanimal")
 
-    fermen = CO2Emission.sum(
+    fermen = CO2eEmission.sum(
         fermen_dairycow,
         fermen_nondairy,
         fermen_swine,
@@ -118,7 +118,7 @@ def calc_production(
         fermen_swine=fermen_swine,
         fermen_oanimal=fermen_oanimal,
     )
-    manure = CO2Emission.sum(
+    manure = CO2eEmission.sum(
         manure_dairycow,
         manure_nondairy,
         manure_swine,
@@ -172,7 +172,7 @@ def calc_production(
         entries.a_soil_deposition_ratio_CO2e_to_ha,
         area_ha=l18.g_crop.area_ha + l18.g_grass.area_ha,
     )
-    soil = CO2Emission.sum(
+    soil = CO2eEmission.sum(
         soil_fertilizer,
         soil_manure,
         soil_sludge,
@@ -188,13 +188,13 @@ def calc_production(
     # Other
     other_liming_calcit = CO2eFromOther.calc(inputs, "liming_calcit")
     other_liming_dolomite = CO2eFromOther.calc(inputs, "liming_dolomite")
-    other_liming = CO2Emission.sum(other_liming_calcit, other_liming_dolomite)
+    other_liming = CO2eEmission.sum(other_liming_calcit, other_liming_dolomite)
 
     other_urea = CO2eFromOther.calc(inputs, "urea", ratio_suffix="")
     other_ecrop = CO2eFromOther.calc(inputs, "ecrop")
     other_kas = CO2eFromOther.calc(inputs, "kas")
 
-    other = CO2Emission.sum(other_liming, other_urea, other_kas, other_ecrop)
+    other = CO2eEmission.sum(other_liming, other_urea, other_kas, other_ecrop)
 
     operation_elec_heatpump = Energy(energy=0)
     operation = Energy(energy=total_energy)

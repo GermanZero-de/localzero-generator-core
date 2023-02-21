@@ -4,11 +4,12 @@ from dataclasses import dataclass
 
 from ...inputs import Inputs
 from ...utils import div
+from ...common.invest import Invest
 from ...fuels2018.energy_production import EnergyWithCO2ePerMWh
 
 
 @dataclass(kw_only=True)
-class EFuelProduction:
+class EFuelProduction(Invest):
     """This computes the replacement of fossil fuels by corresponding E-fuels.
     (e.g. petrol -> epetrol).
     """
@@ -22,14 +23,9 @@ class EFuelProduction:
     change_energy_MWh: float
     change_energy_pct: float
     cost_climate_saved: float
-    cost_wage: float
     demand_electricity: float
-    demand_emplo: float
-    demand_emplo_new: float
     energy: float
     full_load_hour: float
-    invest: float
-    invest_pa: float
     invest_per_x: float
     pct_of_wage: float
     power_to_be_installed: float

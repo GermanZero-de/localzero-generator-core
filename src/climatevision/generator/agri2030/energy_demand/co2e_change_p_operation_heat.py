@@ -4,31 +4,27 @@ from dataclasses import dataclass, InitVar
 
 from ...inputs import Inputs
 from ...utils import div
+from ...common.invest import Invest
 from ...agri2018.a18 import A18
 
 from .co2e_change_energy import CO2eChangeEnergy
 
 
 @dataclass(kw_only=True)
-class CO2eChangePOperationHeat(CO2eChangeEnergy):
+class CO2eChangePOperationHeat(CO2eChangeEnergy, Invest):
     area_m2: float = 0
     area_m2_nonrehab: float = 0
     area_m2_rehab: float = 0
-    cost_wage: float = 0
     demand_biomass: float = 0
     demand_ediesel: float = 0
     demand_electricity: float = 0
     demand_emethan: float = 0
-    demand_emplo: float = 0
-    demand_emplo_new: float = 0
     demand_epetrol: float = 0
     demand_heat_nonrehab: float = 0
     demand_heat_rehab: float = 0
     demand_heatpump: float = 0
     emplo_existing: float = 0
     fec_factor_averaged: float = 0
-    invest: float = 0
-    invest_pa: float = 0
     invest_per_x: float = 0
     pct_nonrehab: float = 0
     pct_of_wage: float = 0

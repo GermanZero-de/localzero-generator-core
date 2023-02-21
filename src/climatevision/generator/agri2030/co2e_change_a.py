@@ -4,6 +4,7 @@ from dataclasses import dataclass, InitVar
 
 from ..inputs import Inputs
 from ..utils import div
+from ..common.invest import InvestCommune
 from ..agri2018.a18 import A18
 
 from .energy_demand import CO2eChangePOperation, CO2eChangeP
@@ -12,7 +13,7 @@ from .energy_general import CO2eChangeG
 
 
 @dataclass(kw_only=True)
-class CO2eChangeA:
+class CO2eChangeA(InvestCommune):
     CO2e_combustion_based: float = 0
     CO2e_production_based: float = 0
     CO2e_total: float = 0
@@ -22,15 +23,8 @@ class CO2eChangeA:
     change_energy_MWh: float = 0
     change_energy_pct: float = 0
     cost_climate_saved: float = 0
-    cost_wage: float = 0
-    demand_emplo: float = 0
     demand_emplo_com: float = 0
-    demand_emplo_new: float = 0
-    invest: float = 0
-    invest_com: float = 0
     invest_outside: float = 0
-    invest_pa: float = 0
-    invest_pa_com: float = 0
     invest_pa_outside: float = 0
 
     inputs: InitVar[Inputs]
