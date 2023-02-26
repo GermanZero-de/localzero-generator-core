@@ -24,6 +24,9 @@ Setup
 - Install Git
 		- ensure that git is in your PATH variable (needed for devtool.py data checkout later)
 - Install Poetry from https://python-poetry.org/docs/
+    - on Linux:
+        - | :code:`curl -sSL https://install.python-poetry.org | python -`
+          | Note: On some systems, python may still refer to Python 2 instead of Python 3. In these case you have to use `python3` instead of `python`
     - on Windows:
         - | run inside a power shell:
           | :code:`pip install poetry`
@@ -35,19 +38,26 @@ Setup
 		- save your token
 		- On Windows Token add the token Windows Anmeldeinformationen (similar tools exist on linux and mac)
 			- Generische Anmeldeinformationen hinzufügen (Adresse: git:https://github.com, Benutzername: Git Nutzername, Passwort: Token)
-    - get this Git Repo (if you haven't done so already)
+- Get this Git Repo (if you haven't done so already)
 	- :code:`git clone https://github.com/GermanZero-de/localzero-generator-core`
+	- navigate to the repo base folder: :code:`cd localzero-generator-core`
 
 - Install poetry and pre-commit
-	- :code:`install-environment.sh`
+    - on Linux:
+        - :code:`sh install-environment.sh`
     - on Windows:
         - install Node.js (necessary for pyright)
         - | run inside a power shell (with admin privileges):
           | :code:`Set-ExecutionPolicy RemoteSigned`
 
-- Get the required Data Repos
+- Get the required data repositories
     - Clone https://github.com/GermanZero-de/localzero-data-public into ./data/public
     - Clone https://github.com/GermanZero-de/localzero-data-proprietary into ./data/proprietary
+    - It is important to clone the whole repository including the .git folder
+	- If you are on a Linux system and the above repositories are located in the same folder as this repo you can use these commands to pupulate/update the data repos:
+		- :code:`rm -rf data/public data/proprietary`
+		- :code:`rsync -av ../localzero-data-proprietary/ data/proprietary`
+		- :code:`rsync -av ../localzero-data-public/ data/public`
 
       **ISSUE:** You might not have access to the proprietary repository. We are providing a REST API Service soon.
 
@@ -127,5 +137,3 @@ of the tool in your feature description like this:
 	Don't commit to branch...................................................Passed
 	black....................................................................Passed
 	You are ready to rock and save the climate at 4985f650030c4ba94387b87da53c055772a342f8, but don't forget to copy paste the above into your pull request
-
-
