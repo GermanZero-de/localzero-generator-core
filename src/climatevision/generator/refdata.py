@@ -287,6 +287,28 @@ class Row(Generic[KeyT]):
 
 
 @dataclass(kw_only=True)
+class OptRow(Generic[KeyT]):
+    def __init__(self, df: DataFrame[KeyT], key_value: KeyT):
+        try:
+            self.row = Row(df, key_value)
+        except RowNotFound:
+            self.row = None
+
+    def float_or_zero(self, attr: str) -> float:
+        """Access a float attribute."""
+        if self.row is None:
+            return 0.0
+        else:
+            return self.row.float(attr)
+
+    def __str__(self):
+        if self.row is None:
+            return "No entry"
+        else:
+            return self.row.__str__()
+
+
+@dataclass(kw_only=True)
 class FactOrAssumptionCompleteRow:
     label: str
     group: str
@@ -528,7 +550,7 @@ class RefData:
 
     def industry_dehst(self, ags: str):
         """TODO Function to read CO2e for each ags from DEHST Table."""
-        return Row(self._industry_dehst, ags)
+        return OptRow(self._industry_dehst, ags)
 
     @classmethod
     def load(
