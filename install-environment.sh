@@ -3,7 +3,7 @@
 set -e
 
 # Poetry
-poetry install --dev --no-root
+poetry install
 
 # Git pre-commit
 poetry run pre-commit install
