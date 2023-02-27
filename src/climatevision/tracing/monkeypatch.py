@@ -7,7 +7,7 @@ from ..generator.refdata import Row
 original_row_float = Row.float
 
 
-def identity(x: Any):
+def identity(x: object):
     return x
 
 
@@ -32,7 +32,7 @@ def with_tracing(enabled: bool, f: Callable[[], T]) -> T:
         return f()
 
 
-def maybe_enable_tracing(args: Any) -> Callable[[Any], Any]:
+def maybe_enable_tracing(args: Any) -> Callable[[object], object]:
     """Enable tracing if trace was given on the commandline.  Should be called before any computation is done!
     Makes the generatorcore use tracing.number to do all calculations.
     Call the returned function on the result of Result.result_dict or asdict(entries) to
@@ -67,7 +67,7 @@ def disable_tracing() -> None:
     Row.float = original_row_float
 
 
-def enable_tracing() -> Callable[[Any], Any]:
+def enable_tracing() -> Callable[[object], Any]:
     # We do this monkey-patching dance here, because we do not want
     # the somewhat hacky tracing code to be part of the normal production
     # calculations.  It's only supposed to be a quick tool for developers
