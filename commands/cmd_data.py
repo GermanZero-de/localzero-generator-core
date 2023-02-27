@@ -67,11 +67,11 @@ def faint(s, end=None, file: TextIO = sys.stdout):  # type: ignore
     print(f"\033[2m{s}\033[0m", end=end, file=file)  # type: ignore
 
 
-def lookup_by_ags(ags: Any, *, fix_missing_entries: bool):
+def lookup_by_ags(ags: str, *, fix_missing_entries: bool):
     ags_dis = ags[:5] + "000"  # This identifies the administrative district (Landkreis)
     ags_sta = ags[:2] + "000000"  # This identifies the federal state (Bundesland)
 
-    def print_lookup(name: Any, lookup_fn: Any, key: Any):
+    def print_lookup(name: str, lookup_fn: Any, key: str):
         bold(name)
         try:
             record: object = lookup_fn(key)

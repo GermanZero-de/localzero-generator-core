@@ -1,6 +1,5 @@
 # pyright: strict
 
-from typing import Any
 import os
 
 from devtool import Devtool
@@ -8,7 +7,7 @@ from devtool import Devtool
 filePath = "test.txt"
 
 
-def check_cmd(argv1: Any, subcmd: str, run: bool):
+def check_cmd(argv1: object, subcmd: str, run: bool):
     args = Devtool().parse_args(argv1)
     assert args.subcmd is subcmd
     if run:

@@ -1,6 +1,6 @@
 # pyright: strict reportMissingTypeStubs=true
 import dataclasses
-from typing import Callable, Any
+from typing import Callable
 
 import jsonrpcserver
 
@@ -18,7 +18,7 @@ class GeneratorRpcs:
     def __init__(self, rd: generator.RefData):
         self.rd = rd
 
-    def wrap_result(self, f: Callable[[], Any]) -> jsonrpcserver.Result:
+    def wrap_result(self, f: Callable[[], object]) -> jsonrpcserver.Result:
         try:
             result = jsonrpcserver.Success(f())
         except Exception as e:

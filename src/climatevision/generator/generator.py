@@ -1,7 +1,6 @@
 # pyright: strict
 
 from dataclasses import dataclass, fields, is_dataclass
-from typing import Any
 from time import time
 from sys import stderr
 
@@ -75,7 +74,7 @@ def dataclass_to_result_dict(v: object) -> dict[str, object]:
     fields_of_v = fields(v)  # type: ignore There isn't a good way to tell pyright that v must be a dataclass instance as of 3.10
     result = {f.name: _convert_item(getattr(v, f.name)) for f in fields_of_v}
     names_to_lift: list[str] = getattr(v, "LIFT_INTO_RESULT_DICT", [])
-    values_to_lift: list[dict[str, Any]] = []
+    values_to_lift: list[dict[str, object]] = []
     for name in names_to_lift:
         v = result[name]
         if isinstance(v, dict):
