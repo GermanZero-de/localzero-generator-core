@@ -15,7 +15,7 @@ test_dir = os.path.join("tests", "end_to_end_expected")
 
 def json_to_output_file(json_object: Any, file_path: str):
     """Write json_object to a file"""
-    if file_path is not None:
+    if file_path != "":
         with open(file_path, mode="w") as fp:
             json.dump(json_object, indent=4, fp=fp)
         print("Wrote " + file_path)
