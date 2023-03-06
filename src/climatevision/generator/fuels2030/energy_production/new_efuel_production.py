@@ -4,21 +4,18 @@ from dataclasses import dataclass
 
 from ...inputs import Inputs
 from ...utils import div
+from ...common.co2e_change import CO2eChange
 from ...common.invest import Invest
 
 
 @dataclass(kw_only=True)
-class NewEFuelProduction(Invest):
+class NewEFuelProduction(CO2eChange, Invest):
     """Production of new style of efuels that are not yet used (at an industrial scale)."""
 
     CO2e_production_based: float
     CO2e_production_based_per_MWh: float
     CO2e_total: float
-    CO2e_total_2021_estimated: float
-    change_CO2e_pct: float
-    change_CO2e_t: float
     change_energy_MWh: float
-    cost_climate_saved: float
     demand_electricity: float
     energy: float
     full_load_hour: float

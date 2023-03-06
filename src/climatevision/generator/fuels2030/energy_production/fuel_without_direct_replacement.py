@@ -2,16 +2,16 @@
 
 from dataclasses import dataclass
 
+from ...common.co2e_change import CO2eChangeEnergy
+
 
 @dataclass(kw_only=True)
-class FuelWithoutDirectReplacement:
+class FuelWithoutDirectReplacement(CO2eChangeEnergy):
     """This computes the effect on our CO2e and energy budget of us totally stopping
     to produce some fuels without a direct replacement."""
 
     CO2e_total_2021_estimated: float
     change_CO2e_t: float
-    change_energy_MWh: float
-    change_energy_pct: float
     cost_climate_saved: float
 
     @classmethod

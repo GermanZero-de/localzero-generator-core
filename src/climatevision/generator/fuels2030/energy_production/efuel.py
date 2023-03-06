@@ -2,13 +2,14 @@
 
 from dataclasses import dataclass
 
+from ...common.energy import Energy
+
 from .efuel_production import EFuelProduction
 
 
 @dataclass(kw_only=True)
-class EFuels:
+class EFuels(Energy):
     change_CO2e_t: float
-    energy: float
 
     @classmethod
     def calc(cls, *efuels: EFuelProduction) -> "EFuels":
