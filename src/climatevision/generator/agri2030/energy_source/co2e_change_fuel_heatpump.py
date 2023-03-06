@@ -61,22 +61,9 @@ class CO2eChangeFuelHeatpump(CO2eChangeEnergyPerMWh, Invest):
 
         self.demand_emplo_new = max(0, self.demand_emplo - self.emplo_existing)
 
-        parent = CO2eChangeEnergyPerMWh(
-            inputs=inputs,
-            what=what,
-            a18=a18,
-            energy=self.energy,
-            CO2e_combustion_based=self.CO2e_combustion_based,
-            CO2e_production_based=self.CO2e_production_based,
-        )
+        CO2eChangeEnergyPerMWh.__post_init__(self, inputs=inputs, what=what, a18=a18)
 
-        self.CO2e_combustion_based_per_MWh = parent.CO2e_combustion_based_per_MWh
-        self.CO2e_total = parent.CO2e_total
-        self.CO2e_total_2021_estimated = parent.CO2e_total_2021_estimated
-        self.cost_climate_saved = parent.cost_climate_saved
-        self.change_energy_MWh = parent.change_energy_MWh
-
-        # override value from parent!
+        # override value from CO2eChangeEnergyPerMWh!
         self.change_CO2e_pct = div(
-            parent.change_CO2e_t, 1.0  # always 0
+            self.change_CO2e_t, 1.0  # always 0
         )  # getattr(a18, what).CO2e_total)

@@ -38,9 +38,4 @@ class CO2eChangePOperationElecElcon(CO2eChangeEnergyAgri):
 
         self.demand_electricity = self.energy
 
-        parent = CO2eChangeEnergyAgri(
-            inputs=inputs, what=what, a18=a18, energy=self.energy
-        )
-
-        self.change_energy_MWh = parent.change_energy_MWh
-        self.change_energy_pct = parent.change_energy_pct
+        CO2eChangeEnergyAgri.__post_init__(self, inputs=inputs, what=what, a18=a18)

@@ -25,16 +25,4 @@ class CO2eChangeOtherLiming(CO2eChangeAgri):
 
         self.CO2e_combustion_based = 0
 
-        parent = CO2eChangeAgri(
-            inputs=inputs,
-            what=what,
-            a18=a18,
-            CO2e_combustion_based=self.CO2e_combustion_based,
-            CO2e_production_based=self.CO2e_production_based,
-        )
-
-        self.CO2e_total = parent.CO2e_total
-        self.CO2e_total_2021_estimated = parent.CO2e_total_2021_estimated
-        self.change_CO2e_pct = parent.change_CO2e_pct
-        self.change_CO2e_t = parent.change_CO2e_t
-        self.cost_climate_saved = parent.cost_climate_saved
+        CO2eChangeAgri.__post_init__(self, inputs=inputs, what=what, a18=a18)
