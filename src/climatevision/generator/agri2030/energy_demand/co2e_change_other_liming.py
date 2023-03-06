@@ -5,11 +5,11 @@ from dataclasses import dataclass, InitVar
 from ...inputs import Inputs
 from ...agri2018.a18 import A18
 
-from .co2e_change import CO2eChange
+from .co2e_change_agri import CO2eChangeAgri
 
 
 @dataclass(kw_only=True)
-class CO2eChangeOtherLiming(CO2eChange):
+class CO2eChangeOtherLiming(CO2eChangeAgri):
     prod_volume: float
 
     inputs: InitVar[Inputs]
@@ -25,7 +25,7 @@ class CO2eChangeOtherLiming(CO2eChange):
 
         self.CO2e_combustion_based = 0
 
-        parent = CO2eChange(
+        parent = CO2eChangeAgri(
             inputs=inputs,
             what=what,
             a18=a18,

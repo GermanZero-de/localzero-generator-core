@@ -5,11 +5,11 @@ from dataclasses import dataclass, InitVar
 from ...inputs import Inputs
 from ...agri2018.a18 import A18
 
-from .co2e_change import CO2eChange
+from .co2e_change_agri import CO2eChangeAgri
 
 
 @dataclass(kw_only=True)
-class CO2eChangeOther(CO2eChange):
+class CO2eChangeOther(CO2eChangeAgri):
     CO2e_production_based_per_t: float = 0
     demand_change: float = 0
     prod_volume: float = 0
@@ -37,7 +37,7 @@ class CO2eChangeOther(CO2eChange):
         self.CO2e_production_based_per_t = inputs.fact(fact_production_based_per_t)
         self.CO2e_production_based = self.prod_volume * self.CO2e_production_based_per_t
 
-        parent = CO2eChange(
+        parent = CO2eChangeAgri(
             inputs=inputs,
             what=what,
             a18=a18,

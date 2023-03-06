@@ -6,7 +6,7 @@ from ...utils import div
 from ...common.invest import Invest
 from ...agri2018.a18 import A18
 
-from ..energy_demand import CO2eChange
+from ..energy_demand import CO2eChangeAgri
 
 from .co2e_change_energy_per_mwh import CO2eChangeEnergyPerMWh
 from .co2e_change_fuel_oil_gas import CO2eChangeFuelOilGas
@@ -15,7 +15,7 @@ from .co2e_change_fuel_heatpump import CO2eChangeFuelHeatpump
 
 
 @dataclass(kw_only=True)
-class CO2eChangeS(CO2eChange, Invest):
+class CO2eChangeS(CO2eChangeAgri, Invest):
     change_energy_MWh: float = 0
     change_energy_pct: float = 0
     energy: float = 0
@@ -84,7 +84,7 @@ class CO2eChangeS(CO2eChange, Invest):
 
         self.cost_wage = heatpump.cost_wage
 
-        parent = CO2eChange(
+        parent = CO2eChangeAgri(
             inputs=inputs,
             what=what,
             a18=a18,

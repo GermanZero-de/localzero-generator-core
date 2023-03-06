@@ -5,11 +5,11 @@ from dataclasses import dataclass
 from ...inputs import Inputs
 from ...agri2018.a18 import A18
 
-from .co2e_change import CO2eChange
+from .co2e_change_agri import CO2eChangeAgri
 
 
 @dataclass(kw_only=True)
-class CO2eChangeFermentationOrManure(CO2eChange):
+class CO2eChangeFermentationOrManure(CO2eChangeAgri):
     CO2e_production_based_per_t: float = 0
     amount: float = 0
     demand_change: float = 0
@@ -26,7 +26,7 @@ class CO2eChangeFermentationOrManure(CO2eChange):
         CO2e_production_based_per_t = getattr(a18, what).CO2e_production_based_per_t
         CO2e_production_based = amount * CO2e_production_based_per_t
 
-        parent = CO2eChange(
+        parent = CO2eChangeAgri(
             inputs=inputs,
             what=what,
             a18=a18,
@@ -63,7 +63,7 @@ class CO2eChangeFermentationOrManure(CO2eChange):
         )
         CO2e_production_based = amount * CO2e_production_based_per_t
 
-        parent = CO2eChange(
+        parent = CO2eChangeAgri(
             inputs=inputs,
             what=what,
             a18=a18,

@@ -7,7 +7,7 @@ from ...utils import div
 from ...agri2018.a18 import A18
 from ...lulucf2030.l30 import L30
 
-from .co2e_change import CO2eChange
+from .co2e_change_agri import CO2eChangeAgri
 from .co2e_change_p import CO2eChangeP
 from .co2e_change_fermentation_or_manure import CO2eChangeFermentationOrManure
 from .co2e_change_soil import CO2eChangeSoil
@@ -25,14 +25,14 @@ class Production:
 
     total: CO2eChangeP
 
-    fermen: CO2eChange
+    fermen: CO2eChangeAgri
     fermen_dairycow: CO2eChangeFermentationOrManure
     fermen_nondairy: CO2eChangeFermentationOrManure
     fermen_swine: CO2eChangeFermentationOrManure
     fermen_poultry: CO2eChangeFermentationOrManure
     fermen_oanimal: CO2eChangeFermentationOrManure
 
-    manure: CO2eChange
+    manure: CO2eChangeAgri
     manure_dairycow: CO2eChangeFermentationOrManure
     manure_nondairy: CO2eChangeFermentationOrManure
     manure_swine: CO2eChangeFermentationOrManure
@@ -40,7 +40,7 @@ class Production:
     manure_oanimal: CO2eChangeFermentationOrManure
     manure_deposition: CO2eChangeFermentationOrManure
 
-    soil: CO2eChange
+    soil: CO2eChangeAgri
     soil_fertilizer: CO2eChangeSoil
     soil_manure: CO2eChangeSoil
     soil_sludge: CO2eChangeSoil
@@ -52,7 +52,7 @@ class Production:
     soil_leaching: CO2eChangeSoil
     soil_deposition: CO2eChangeSoil
 
-    other: CO2eChange
+    other: CO2eChangeAgri
     other_liming: CO2eChangeOtherLiming
     other_liming_calcit: CO2eChangeOther
     other_liming_dolomite: CO2eChangeOther
@@ -220,7 +220,7 @@ def calc_production(inputs: Inputs, a18: A18, l30: L30) -> Production:
         + other_liming_dolomite.CO2e_production_based,
     )
 
-    fermen = CO2eChange(
+    fermen = CO2eChangeAgri(
         inputs=inputs,
         what="p_fermen",
         a18=a18,
@@ -231,7 +231,7 @@ def calc_production(inputs: Inputs, a18: A18, l30: L30) -> Production:
         + fermen_poultry.CO2e_production_based
         + fermen_oanimal.CO2e_production_based,
     )
-    manure = CO2eChange(
+    manure = CO2eChangeAgri(
         inputs=inputs,
         what="p_manure",
         a18=a18,
@@ -243,7 +243,7 @@ def calc_production(inputs: Inputs, a18: A18, l30: L30) -> Production:
         + manure_oanimal.CO2e_production_based
         + manure_deposition.CO2e_production_based,
     )
-    soil = CO2eChange(
+    soil = CO2eChangeAgri(
         inputs=inputs,
         what="p_soil",
         a18=a18,
@@ -259,7 +259,7 @@ def calc_production(inputs: Inputs, a18: A18, l30: L30) -> Production:
         + soil_leaching.CO2e_production_based
         + soil_deposition.CO2e_production_based,
     )
-    other = CO2eChange(
+    other = CO2eChangeAgri(
         inputs=inputs,
         what="p_other",
         a18=a18,

@@ -5,11 +5,11 @@ from ...inputs import Inputs
 from ...utils import div
 from ...agri2018.a18 import A18
 
-from ..energy_demand import CO2eChange
+from ..energy_demand import CO2eChangeAgri
 
 
 @dataclass(kw_only=True)
-class CO2eChangeEnergyPerMWh(CO2eChange):
+class CO2eChangeEnergyPerMWh(CO2eChangeAgri):
     energy: float
 
     CO2e_combustion_based_per_MWh: float = 0
@@ -31,7 +31,7 @@ class CO2eChangeEnergyPerMWh(CO2eChange):
         self.change_energy_MWh = self.energy - getattr(a18, what).energy
         self.change_energy_pct = div(self.change_energy_MWh, getattr(a18, what).energy)
 
-        parent = CO2eChange(
+        parent = CO2eChangeAgri(
             inputs=inputs,
             what=what,
             a18=a18,

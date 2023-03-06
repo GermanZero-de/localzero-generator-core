@@ -4,11 +4,11 @@ from dataclasses import dataclass, InitVar
 from ...inputs import Inputs
 from ...agri2018.a18 import A18
 
-from ..energy_demand import CO2eChange
+from ..energy_demand import CO2eChangeAgri
 
 
 @dataclass(kw_only=True)
-class CO2eChangeFuelEmethan(CO2eChange):
+class CO2eChangeFuelEmethan(CO2eChangeAgri):
     energy: float
 
     CO2e_combustion_based_per_MWh: float = 0
@@ -32,7 +32,7 @@ class CO2eChangeFuelEmethan(CO2eChange):
         self.change_energy_MWh = self.energy
         self.demand_emethan = self.energy
 
-        parent = CO2eChange(
+        parent = CO2eChangeAgri(
             inputs=inputs,
             what=what,
             a18=a18,
