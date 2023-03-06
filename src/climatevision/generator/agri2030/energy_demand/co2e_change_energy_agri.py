@@ -8,7 +8,7 @@ from ...agri2018.a18 import A18
 
 
 @dataclass(kw_only=True)
-class CO2eChangeEnergy:
+class CO2eChangeEnergyAgri:
     change_energy_MWh: float = 0
     change_energy_pct: float = 0
     energy: float = 0
