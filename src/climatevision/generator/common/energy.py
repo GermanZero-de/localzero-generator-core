@@ -7,7 +7,7 @@ from ..utils import div
 
 @dataclass(kw_only=True)
 class Energy:
-    energy: float
+    energy: float = 0
 
 
 @dataclass(kw_only=True)
