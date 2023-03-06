@@ -8,21 +8,12 @@ from ...heat2018.h18 import H18
 from ...common.energy import Energy
 from ...common.energy_with_co2e_per_mwh import EnergyWithCO2ePerMWh
 from ...common.co2_equivalent_emission import CO2eEmission
+from ...common.co2e_change import CO2eChange, CO2eChangeEnergy
 from ...common.invest import InvestCommune
 
 
 @dataclass(kw_only=True)
-class CO2eChange:
-    CO2e_total_2021_estimated: float = 0
-    change_CO2e_pct: float = 0
-    change_CO2e_t: float = 0
-    change_energy_MWh: float = 0
-    change_energy_pct: float = 0
-    cost_climate_saved: float = 0
-
-
-@dataclass(kw_only=True)
-class CO2eChangeHeatProduction(Energy, CO2eEmission, CO2eChange):
+class CO2eChangeHeatProduction(Energy, CO2eEmission, CO2eChange, CO2eChangeEnergy):
     inputs: InitVar[Inputs]
     what: InitVar[str]
     h18: InitVar[H18]
