@@ -4,15 +4,13 @@ from dataclasses import dataclass, InitVar
 
 from ...inputs import Inputs
 from ...utils import div
+from ...common.energy import Energy
+from ...common.co2e_change import CO2eChangeEnergy
 from ...agri2018.a18 import A18
 
 
 @dataclass(kw_only=True)
-class CO2eChangeEnergy:
-    change_energy_MWh: float = 0
-    change_energy_pct: float = 0
-    energy: float = 0
-
+class CO2eChangeEnergyAgri(Energy, CO2eChangeEnergy):
     inputs: InitVar[Inputs]
     what: InitVar[str]
     a18: InitVar[A18]

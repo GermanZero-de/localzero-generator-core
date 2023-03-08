@@ -7,11 +7,11 @@ from ...utils import div
 from ...common.invest import Invest
 from ...agri2018.a18 import A18
 
-from .co2e_change_energy import CO2eChangeEnergy
+from .co2e_change_energy_agri import CO2eChangeEnergyAgri
 
 
 @dataclass(kw_only=True)
-class CO2eChangePOperationHeat(CO2eChangeEnergy, Invest):
+class CO2eChangePOperationHeat(CO2eChangeEnergyAgri, Invest):
     area_m2: float = 0
     area_m2_nonrehab: float = 0
     area_m2_rehab: float = 0
@@ -106,7 +106,4 @@ class CO2eChangePOperationHeat(CO2eChangeEnergy, Invest):
 
         self.fec_factor_averaged = div(self.energy, getattr(a18, what).area_m2)
 
-        parent = CO2eChangeEnergy(inputs=inputs, what=what, a18=a18, energy=self.energy)
-
-        self.change_energy_MWh = parent.change_energy_MWh
-        self.change_energy_pct = parent.change_energy_pct
+        CO2eChangeEnergyAgri.__post_init__(self, inputs=inputs, what=what, a18=a18)

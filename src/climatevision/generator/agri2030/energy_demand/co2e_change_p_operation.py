@@ -6,7 +6,7 @@ from ...inputs import Inputs
 from ...common.invest import Invest
 from ...agri2018.a18 import A18
 
-from .co2e_change_energy import CO2eChangeEnergy
+from .co2e_change_energy_agri import CO2eChangeEnergyAgri
 from .co2e_change_p_operation_vehicles import CO2eChangePOperationVehicles
 from .co2e_change_p_operation_heat import CO2eChangePOperationHeat
 from .co2e_change_p_operation_elec_elcon import CO2eChangePOperationElecElcon
@@ -14,7 +14,7 @@ from .co2e_change_p_operation_elec_heatpump import CO2eChangePOperationElecHeatp
 
 
 @dataclass(kw_only=True)
-class CO2eChangePOperation(CO2eChangeEnergy, Invest):
+class CO2eChangePOperation(CO2eChangeEnergyAgri, Invest):
     demand_biomass: float = 0
     demand_ediesel: float = 0
     demand_electricity: float = 0
@@ -63,7 +63,4 @@ class CO2eChangePOperation(CO2eChangeEnergy, Invest):
         self.invest_pa = self.invest / inputs.entries.m_duration_target
         self.cost_wage = operation_heat.cost_wage
 
-        parent = CO2eChangeEnergy(inputs=inputs, what=what, a18=a18, energy=self.energy)
-
-        self.change_energy_MWh = parent.change_energy_MWh
-        self.change_energy_pct = parent.change_energy_pct
+        CO2eChangeEnergyAgri.__post_init__(self, inputs=inputs, what=what, a18=a18)

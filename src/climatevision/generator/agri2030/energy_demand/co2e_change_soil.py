@@ -6,11 +6,11 @@ from ...inputs import Inputs
 from ...utils import div
 from ...agri2018.a18 import A18
 
-from .co2e_change import CO2eChange
+from .co2e_change_agri import CO2eChangeAgri
 
 
 @dataclass(kw_only=True)
-class CO2eChangeSoil(CO2eChange):
+class CO2eChangeSoil(CO2eChangeAgri):
     CO2e_production_based_per_t: float = 0
     area_ha: float = 0
     area_ha_change: float = 0
@@ -40,7 +40,7 @@ class CO2eChangeSoil(CO2eChange):
 
         area_ha_change = -(getattr(a18, what).area_ha - area_ha)
 
-        parent = CO2eChange(
+        parent = CO2eChangeAgri(
             inputs=inputs,
             what=what,
             a18=a18,
@@ -80,7 +80,7 @@ class CO2eChangeSoil(CO2eChange):
 
         area_ha_change = -(getattr(a18, what).area_ha - area_ha)
 
-        parent = CO2eChange(
+        parent = CO2eChangeAgri(
             inputs=inputs,
             what=what,
             a18=a18,

@@ -9,7 +9,7 @@ from .energy_general import (
 )
 from .energy_demand import (
     CO2eChangeP,
-    CO2eChange,
+    CO2eChangeAgri,
     CO2eChangeFermentationOrManure,
     CO2eChangeSoil,
     CO2eChangeOtherLiming,
@@ -39,20 +39,20 @@ class A30:
     g_organic: CO2eChangeGOrganic
 
     p: CO2eChangeP
-    p_fermen: CO2eChange
+    p_fermen: CO2eChangeAgri
     p_fermen_dairycow: CO2eChangeFermentationOrManure
     p_fermen_nondairy: CO2eChangeFermentationOrManure
     p_fermen_swine: CO2eChangeFermentationOrManure
     p_fermen_poultry: CO2eChangeFermentationOrManure
     p_fermen_oanimal: CO2eChangeFermentationOrManure
-    p_manure: CO2eChange
+    p_manure: CO2eChangeAgri
     p_manure_dairycow: CO2eChangeFermentationOrManure
     p_manure_nondairy: CO2eChangeFermentationOrManure
     p_manure_swine: CO2eChangeFermentationOrManure
     p_manure_poultry: CO2eChangeFermentationOrManure
     p_manure_oanimal: CO2eChangeFermentationOrManure
     p_manure_deposition: CO2eChangeFermentationOrManure
-    p_soil: CO2eChange
+    p_soil: CO2eChangeAgri
     p_soil_fertilizer: CO2eChangeSoil
     p_soil_manure: CO2eChangeSoil
     p_soil_sludge: CO2eChangeSoil
@@ -63,7 +63,7 @@ class A30:
     p_soil_orgloss: CO2eChangeSoil
     p_soil_leaching: CO2eChangeSoil
     p_soil_deposition: CO2eChangeSoil
-    p_other: CO2eChange
+    p_other: CO2eChangeAgri
     p_other_liming: CO2eChangeOtherLiming
     p_other_liming_calcit: CO2eChangeOther
     p_other_liming_dolomite: CO2eChangeOther

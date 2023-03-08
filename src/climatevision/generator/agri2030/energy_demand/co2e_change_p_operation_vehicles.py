@@ -6,11 +6,11 @@ from ...inputs import Inputs
 from ...utils import div
 from ...agri2018.a18 import A18
 
-from .co2e_change_energy import CO2eChangeEnergy
+from .co2e_change_energy_agri import CO2eChangeEnergyAgri
 
 
 @dataclass(kw_only=True)
-class CO2eChangePOperationVehicles(CO2eChangeEnergy):
+class CO2eChangePOperationVehicles(CO2eChangeEnergyAgri):
     demand_biomass: float = 0
     demand_change: float = 0
     demand_ediesel: float = 0
@@ -47,7 +47,4 @@ class CO2eChangePOperationVehicles(CO2eChangeEnergy):
             a18.s_petrol.energy + a18.s_diesel.energy,
         )
 
-        parent = CO2eChangeEnergy(inputs=inputs, what=what, a18=a18, energy=self.energy)
-
-        self.change_energy_MWh = parent.change_energy_MWh
-        self.change_energy_pct = parent.change_energy_pct
+        CO2eChangeEnergyAgri.__post_init__(self, inputs=inputs, what=what, a18=a18)

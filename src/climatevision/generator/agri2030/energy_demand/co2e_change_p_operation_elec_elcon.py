@@ -5,11 +5,11 @@ from dataclasses import dataclass, InitVar
 from ...inputs import Inputs
 from ...agri2018.a18 import A18
 
-from .co2e_change_energy import CO2eChangeEnergy
+from .co2e_change_energy_agri import CO2eChangeEnergyAgri
 
 
 @dataclass(kw_only=True)
-class CO2eChangePOperationElecElcon(CO2eChangeEnergy):
+class CO2eChangePOperationElecElcon(CO2eChangeEnergyAgri):
     demand_biomass: float = 0
     demand_change: float = 0
     demand_ediesel: float = 0
@@ -38,7 +38,4 @@ class CO2eChangePOperationElecElcon(CO2eChangeEnergy):
 
         self.demand_electricity = self.energy
 
-        parent = CO2eChangeEnergy(inputs=inputs, what=what, a18=a18, energy=self.energy)
-
-        self.change_energy_MWh = parent.change_energy_MWh
-        self.change_energy_pct = parent.change_energy_pct
+        CO2eChangeEnergyAgri.__post_init__(self, inputs=inputs, what=what, a18=a18)
