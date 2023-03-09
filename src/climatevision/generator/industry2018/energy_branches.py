@@ -275,7 +275,7 @@ class EnergySourceSum:
             s_renew_heatnet += branch.s_renew_heatnet.energy
             s_renew_elec += branch.s_renew_elec.energy
             s_renew_orenew += branch.s_renew_orenew.energy
-        print(s_renew_elec, "#################")
+
         s = EnergyWithPercentage(energy=s, total_energy=energy_sum)
         s_fossil = Energy(energy=s_fossil)
         s_fossil_gas = EnergyWithPercentage(
