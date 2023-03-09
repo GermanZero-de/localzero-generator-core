@@ -43,7 +43,17 @@ def calc_demand(inputs: Inputs, t18: T18, i18: I18) -> Demand:
         + entries.b_heatnet_fec
     )
 
-    industry = EnergyDemand(energy=i18.s.energy)
+    industry = EnergyDemand(
+        energy=i18.s_fossil_coal.energy
+        + i18.s_fossil_fueloil.energy
+        + i18.s_fossil_lpg.energy
+        + i18.s_fossil_opetpro.energy
+        + i18.s_fossil_gas.energy
+        + i18.s_renew_biomass.energy
+        + i18.s_renew_orenew.energy
+        + i18.s_fossil_ofossil.energy
+        + i18.s_renew_heatnet.energy
+    )
 
     transport = EnergyDemand(
         energy=t18.t.demand_fueloil + t18.t.demand_lpg + t18.t.demand_gas
