@@ -2,6 +2,7 @@
 
 from dataclasses import dataclass
 
+from ..common.invest import InvestCommune
 from ..transport2018.t18 import T18
 
 from .energy_demand import (
@@ -16,18 +17,11 @@ from .energy_general import G
 
 
 @dataclass(kw_only=True)
-class T:
+class T(InvestCommune):
     LIFT_INTO_RESULT_DICT = ["transport"]
     transport: Transport
 
-    cost_wage: float
-    demand_emplo: float
     demand_emplo_com: float
-    demand_emplo_new: float
-    invest: float
-    invest_com: float
-    invest_pa: float
-    invest_pa_com: float
 
     @classmethod
     def calc(

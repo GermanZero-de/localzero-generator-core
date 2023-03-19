@@ -72,7 +72,8 @@ def dataclass_to_result_dict(v: object) -> dict[str, object]:
     called LIFT_INTO_RESULT_DICT and will list all values contained
     in that dictionary into the resulting dictionary.
     """
-    result = {f.name: _convert_item(getattr(v, f.name)) for f in fields(v)}
+    fields_of_v = fields(v)  # type: ignore There isn't a good way to tell pyright that v must be a dataclass instance as of 3.10
+    result = {f.name: _convert_item(getattr(v, f.name)) for f in fields_of_v}
     names_to_lift: list[str] = getattr(v, "LIFT_INTO_RESULT_DICT", [])
     values_to_lift: list[dict[str, object]] = []
     for name in names_to_lift:

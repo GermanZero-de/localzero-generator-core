@@ -4,7 +4,7 @@
 # pyright: strict
 
 from dataclasses import dataclass
-from typing import Any, Generic, TypeVar, Callable, Iterable
+from typing import Generic, TypeVar, Callable, Iterable
 from os import path, getcwd
 import csv
 import json
@@ -110,7 +110,7 @@ class DataFrame(Generic[KeyT]):
 
         res = cls()
         res._rows = rows
-        if header is not None:
+        if header is not {}:
             res.header = header
         else:
             assert False, "Loading DataFrame failed. File was empty"
@@ -210,8 +210,8 @@ class LookupFailure(Exception):
 
 
 @dataclass(kw_only=True)
-class RowNotFound(LookupFailure):
-    def __init__(self, *, key_column: str, key_value: object, df: DataFrame[Any]):
+class RowNotFound(Generic[KeyT], LookupFailure):
+    def __init__(self, *, key_column: str, key_value: object, df: DataFrame[KeyT]):
         super().__init__(key_column=key_column, key_value=key_value, dataset=df.dataset)
 
 

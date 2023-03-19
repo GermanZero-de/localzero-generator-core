@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass
 
-from ..common.co2eEmissions import CO2eEmissions
+from ..common.co2_equivalent_emission import CO2eEmission
 
 from .energy_demand import EnergyDemand
 from .energy_production import EnergyWithCO2ePerMWh
@@ -25,4 +25,4 @@ class F18:
     p_biogas: EnergyWithCO2ePerMWh
     p: EnergyWithCO2ePerMWh
 
-    f: CO2eEmissions
+    f: CO2eEmission

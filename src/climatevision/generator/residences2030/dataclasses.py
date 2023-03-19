@@ -2,30 +2,25 @@
 
 from dataclasses import dataclass
 
+from ..common.invest import InvestCommune
+
 
 @dataclass(kw_only=True)
-class Vars2:
+class Vars2(InvestCommune):
     # Used by p
     change_energy_MWh: float = None  # type: ignore
     change_energy_pct: float = None  # type: ignore
-    cost_wage: float = None  # type: ignore
     demand_biomass: float = None  # type: ignore
     demand_electricity: float = None  # type: ignore
     demand_emethan: float = None  # type: ignore
-    demand_emplo: float = None  # type: ignore
-    demand_emplo_new: float = None  # type: ignore
     demand_heatnet: float = None  # type: ignore
     demand_heatpump: float = None  # type: ignore
     demand_solarth: float = None  # type: ignore
     energy: float = None  # type: ignore
-    invest: float = None  # type: ignore
-    invest_com: float = None  # type: ignore
-    invest_pa: float = None  # type: ignore
-    invest_pa_com: float = None  # type: ignore
 
 
 @dataclass(kw_only=True)
-class Vars3:
+class Vars3(InvestCommune):
     # Used by p_buildings_total
     area_m2: float = None  # type: ignore
     area_m2_nonrehab: float = None  # type: ignore
@@ -33,19 +28,12 @@ class Vars3:
     change_energy_MWh: float = None  # type: ignore
     change_energy_pct: float = None  # type: ignore
     cost_mro: float = None  # type: ignore
-    cost_wage: float = None  # type: ignore
     demand_electricity: float = None  # type: ignore
-    demand_emplo: float = None  # type: ignore
-    demand_emplo_new: float = None  # type: ignore
     demand_heat_nonrehab: float = None  # type: ignore
     demand_heat_rehab: float = None  # type: ignore
     emplo_existing: float = None  # type: ignore
     energy: float = None  # type: ignore
     fec_factor_averaged: float = None  # type: ignore
-    invest: float = None  # type: ignore
-    invest_com: float = None  # type: ignore
-    invest_pa: float = None  # type: ignore
-    invest_pa_com: float = None  # type: ignore
     number_of_buildings_rehab: float = None  # type: ignore
     pct_nonrehab: float = None  # type: ignore
     pct_of_wage: float = None  # type: ignore
@@ -120,7 +108,7 @@ class Vars7:
 
 
 @dataclass(kw_only=True)
-class Vars8:
+class Vars8(InvestCommune):
     # Used by r
     CO2e_combustion_based: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
@@ -130,18 +118,11 @@ class Vars8:
     change_energy_MWh: float = None  # type: ignore
     change_energy_pct: float = None  # type: ignore
     cost_climate_saved: float = None  # type: ignore
-    cost_wage: float = None  # type: ignore
-    demand_emplo: float = None  # type: ignore
     demand_emplo_com: float = None  # type: ignore
-    demand_emplo_new: float = None  # type: ignore
-    invest: float = None  # type: ignore
-    invest_com: float = None  # type: ignore
-    invest_pa: float = None  # type: ignore
-    invest_pa_com: float = None  # type: ignore
 
 
 @dataclass(kw_only=True)
-class Vars9:
+class Vars9(InvestCommune):
     # Used by s
     CO2e_combustion_based: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
@@ -153,17 +134,10 @@ class Vars9:
     change_energy_pct: float = None  # type: ignore
     cost_climate_saved: float = None  # type: ignore
     cost_fuel: float = None  # type: ignore
-    cost_wage: float = None  # type: ignore
-    demand_emplo: float = None  # type: ignore
-    demand_emplo_new: float = None  # type: ignore
     demand_heat_nonrehab: float = None  # type: ignore
     demand_heat_rehab: float = None  # type: ignore
     emplo_existing: float = None  # type: ignore
     energy: float = None  # type: ignore
-    invest: float = None  # type: ignore
-    invest_com: float = None  # type: ignore
-    invest_pa: float = None  # type: ignore
-    invest_pa_com: float = None  # type: ignore
     pct_energy: float = None  # type: ignore
 
 
@@ -188,7 +162,7 @@ class Vars10:
 
 
 @dataclass(kw_only=True)
-class Vars11:
+class Vars11(InvestCommune):
     # Used by s_solarth
     CO2e_combustion_based: float = None  # type: ignore
     CO2e_combustion_based_per_MWh: float = None  # type: ignore
@@ -205,16 +179,9 @@ class Vars11:
     cost_climate_saved: float = None  # type: ignore
     cost_fuel: float = None  # type: ignore
     cost_fuel_per_MWh: float = None  # type: ignore
-    cost_wage: float = None  # type: ignore
-    demand_emplo: float = None  # type: ignore
-    demand_emplo_new: float = None  # type: ignore
     emplo_existing: float = None  # type: ignore
     energy: float = None  # type: ignore
     energy_installable: float = None  # type: ignore
-    invest: float = None  # type: ignore
-    invest_com: float = None  # type: ignore
-    invest_pa: float = None  # type: ignore
-    invest_pa_com: float = None  # type: ignore
     invest_per_x: float = None  # type: ignore
     pct_energy: float = None  # type: ignore
     pct_of_wage: float = None  # type: ignore
@@ -223,7 +190,7 @@ class Vars11:
 
 
 @dataclass(kw_only=True)
-class Vars12:
+class Vars12(InvestCommune):
     # Used by s_heatpump
     CO2e_combustion_based: float = None  # type: ignore
     CO2e_combustion_based_per_MWh: float = None  # type: ignore
@@ -238,16 +205,9 @@ class Vars12:
     cost_climate_saved: float = None  # type: ignore
     cost_fuel: float = None  # type: ignore
     cost_fuel_per_MWh: float = None  # type: ignore
-    cost_wage: float = None  # type: ignore
-    demand_emplo: float = None  # type: ignore
-    demand_emplo_new: float = None  # type: ignore
     emplo_existing: float = None  # type: ignore
     energy: float = None  # type: ignore
     full_load_hour: float = None  # type: ignore
-    invest: float = None  # type: ignore
-    invest_com: float = None  # type: ignore
-    invest_pa: float = None  # type: ignore
-    invest_pa_com: float = None  # type: ignore
     invest_per_x: float = None  # type: ignore
     pct_energy: float = None  # type: ignore
     pct_of_wage: float = None  # type: ignore
