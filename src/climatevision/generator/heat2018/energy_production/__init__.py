@@ -41,7 +41,7 @@ def calc_production(
     fact = inputs.fact
 
     p_heatnet_energy = (
-        entries.r_heatnet_fec + entries.b_heatnet_fec + entries.i_heatnet_fec
+        entries.r_heatnet_fec + entries.b_heatnet_fec + i18.s_renew_heatnet.energy
     )
 
     gas = EnergyWithCO2ePerMWh.calc_from_energy_and_CO2e_per_MWh(
