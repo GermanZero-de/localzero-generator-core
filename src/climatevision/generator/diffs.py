@@ -71,10 +71,11 @@ def all_helper(path: str, actual: Any, expected: Any, *, rel: float) -> Iterator
     elif isinstance(actual, Number) and isinstance(expected, Number):
         if not float_matches(actual=actual, expected=expected, rel=rel):
             yield Diff(path=path, actual=actual, expected=expected)
-    elif hasattr(actual, "__float__"):  # type: ignore
+    elif hasattr(actual, "__float__") and hasattr(expected, "__float__"):  # type: ignore
         f = float(actual)  # type: ignore
-        if not float_matches(actual=f, expected=expected, rel=rel):
-            yield Diff(path=path, actual=actual, expected=expected)  # type: ignore
+        e = float(expected)  # type: ignore
+        if not float_matches(actual=f, expected=e, rel=rel):
+            yield Diff(path=path, actual=f, expected=e)  # type: ignore
     elif actual != expected:
         yield Diff(path=path, actual=actual, expected=expected)  # type: ignore
 
