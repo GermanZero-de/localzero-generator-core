@@ -27,33 +27,50 @@ class landfilling:
     CO2e_production_based: float
     CO2e_total: float
     CO2e_total_2021_estimated: float
-    change_CO2e_pct: float 
-    change_CO2e_t: float 
-    cost_climate_saved: float 
-
+    change_CO2e_pct: float
+    change_CO2e_t: float
+    cost_climate_saved: float
 
     @classmethod
-    def calc(cls, inputs : Inputs, w18: W18):
+    def calc(cls, inputs: Inputs, w18: W18):
         entries = inputs.entries
         fact = inputs.fact
         ass = inputs.ass
 
-        CO2e_pb = (ass("Ass_W_P_landfilling_socket")+ ass("Ass_W_P_landfilling_CO2e_pb_2005") * math.exp(-(entries.m_year_target-2005)/ass("Ass_W_P_landfilling_methane_decay"))) * entries.m_population_com_2018/entries.m_population_nat
+        CO2e_pb = (
+            (
+                ass("Ass_W_P_landfilling_socket")
+                + ass("Ass_W_P_landfilling_CO2e_pb_2005")
+                * math.exp(
+                    -(entries.m_year_target - 2005)
+                    / ass("Ass_W_P_landfilling_methane_decay")
+                )
+            )
+            * entries.m_population_com_2018
+            / entries.m_population_nat
+        )
         CO2e_total = CO2e_pb
         change_CO2e_t = w18.p_landfilling.CO2e_total - CO2e_total
-        change_CO2e_pct = change_CO2e_t/ w18.p_landfilling.CO2e_total
+        change_CO2e_pct = change_CO2e_t / w18.p_landfilling.CO2e_total
 
-        CO2e_total_2021_estimated = w18.p_landfilling.CO2e_total * fact("Fact_M_CO2e_wo_lulucf_2021_vs_2018")
-        cost_climate_saved = (CO2e_total_2021_estimated - CO2e_total)* entries.m_duration_neutral * fact("Fact_M_cost_per_CO2e_2020") 
+        CO2e_total_2021_estimated = w18.p_landfilling.CO2e_total * fact(
+            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+        )
+        cost_climate_saved = (
+            (CO2e_total_2021_estimated - CO2e_total)
+            * entries.m_duration_neutral
+            * fact("Fact_M_cost_per_CO2e_2020")
+        )
 
         return cls(
-        CO2e_production_based = CO2e_pb,
-        CO2e_total= CO2e_total,
-        CO2e_total_2021_estimated=CO2e_total_2021_estimated,
-        change_CO2e_pct = change_CO2e_pct,
-        change_CO2e_t = change_CO2e_t, 
-        cost_climate_saved = cost_climate_saved,
+            CO2e_production_based=CO2e_pb,
+            CO2e_total=CO2e_total,
+            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+            change_CO2e_pct=change_CO2e_pct,
+            change_CO2e_t=change_CO2e_t,
+            cost_climate_saved=cost_climate_saved,
         )
+
 
 @dataclass(kw_only=True)
 class organic_treatment:
@@ -62,8 +79,8 @@ class organic_treatment:
     CO2e_production_based: float
     CO2e_total: float
     CO2e_total_2021_estimated: float
-    change_CO2e_pct: float 
-    change_CO2e_t: float 
+    change_CO2e_pct: float
+    change_CO2e_t: float
     cost_climate_saved: float
     invest_per_x: float
     ratio_wage_to_emplo: float
@@ -76,59 +93,68 @@ class organic_treatment:
     demand_emplo: float
     demand_emplo_new: float
 
-
-
     @classmethod
-    def calc(cls, inputs : Inputs, w18: W18):
+    def calc(cls, inputs: Inputs, w18: W18):
         entries = inputs.entries
         fact = inputs.fact
         ass = inputs.ass
 
-        prod_volume = entries.m_population_com_203X * ass("Ass_W_P_organic_treatment_prodvol_2050_per_capita")
+        prod_volume = entries.m_population_com_203X * ass(
+            "Ass_W_P_organic_treatment_prodvol_2050_per_capita"
+        )
         CO2e_pb_per_t = ass("Ass_W_P_organic_treatment_CO2e_pb_2050_per_prodvol")
         CO2e_pb = prod_volume * CO2e_pb_per_t
         CO2e_total = CO2e_pb
         change_CO2e_t = w18.p_organic_treatment.CO2e_total - CO2e_total
-        change_CO2e_pct = change_CO2e_t/ w18.p_organic_treatment.CO2e_total
+        change_CO2e_pct = change_CO2e_t / w18.p_organic_treatment.CO2e_total
 
-        CO2e_total_2021_estimated = w18.p_organic_treatment.CO2e_total * fact("Fact_M_CO2e_wo_lulucf_2021_vs_2018")
-        cost_climate_saved = (CO2e_total_2021_estimated - CO2e_total)* entries.m_duration_neutral * fact("Fact_M_cost_per_CO2e_2020") 
+        CO2e_total_2021_estimated = w18.p_organic_treatment.CO2e_total * fact(
+            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+        )
+        cost_climate_saved = (
+            (CO2e_total_2021_estimated - CO2e_total)
+            * entries.m_duration_neutral
+            * fact("Fact_M_cost_per_CO2e_2020")
+        )
 
-        invest_per_x = ass("Ass_W_P_organic_treatment_fermentation_stage_invest_per_prodvol")
+        invest_per_x = ass(
+            "Ass_W_P_organic_treatment_fermentation_stage_invest_per_prodvol"
+        )
         ratio_wage_to_emplo = fact("Fact_I_P_constr_civil_ratio_wage_to_emplo_2018")
         pct_of_wage = fact("Fact_I_P_constr_civil_revenue_pct_of_wage_2018")
         invest = prod_volume * invest_per_x
         invest_com = invest
         invest_pa = invest / entries.m_duration_target
-        invest_pa_com = invest_pa	
+        invest_pa_com = invest_pa
         cost_wage = invest_pa * pct_of_wage
         demand_emplo = cost_wage / ratio_wage_to_emplo
         demand_emplo_new = demand_emplo
 
         return cls(
             prod_volume=prod_volume,
-            CO2e_pb_per_t = CO2e_pb_per_t,
-            CO2e_production_based = CO2e_pb,
-            CO2e_total= CO2e_total,
+            CO2e_pb_per_t=CO2e_pb_per_t,
+            CO2e_production_based=CO2e_pb,
+            CO2e_total=CO2e_total,
             CO2e_total_2021_estimated=CO2e_total_2021_estimated,
-            change_CO2e_pct = change_CO2e_pct,
-            change_CO2e_t = change_CO2e_t, 
-            cost_climate_saved = cost_climate_saved,
-            invest_per_x = invest_per_x,
-            ratio_wage_to_emplo = ratio_wage_to_emplo, 
-            pct_of_wage = pct_of_wage,
-            invest = invest,
-            invest_com = invest_com,
-            invest_pa = invest_pa,
-            invest_pa_com = invest_pa_com,
-            cost_wage = cost_wage,
-            demand_emplo = demand_emplo,
-            demand_emplo_new = demand_emplo_new,
+            change_CO2e_pct=change_CO2e_pct,
+            change_CO2e_t=change_CO2e_t,
+            cost_climate_saved=cost_climate_saved,
+            invest_per_x=invest_per_x,
+            ratio_wage_to_emplo=ratio_wage_to_emplo,
+            pct_of_wage=pct_of_wage,
+            invest=invest,
+            invest_com=invest_com,
+            invest_pa=invest_pa,
+            invest_pa_com=invest_pa_com,
+            cost_wage=cost_wage,
+            demand_emplo=demand_emplo,
+            demand_emplo_new=demand_emplo_new,
         )
+
 
 @dataclass(kw_only=True)
 class wastewater:
-    energy:float
+    energy: float
     prod_volume: float
     CO2e_pb_per_t: float
     CO2e_production_based: float
@@ -136,22 +162,21 @@ class wastewater:
     change_energy_MWh: float
     change_energy_pct: float
     CO2e_total_2021_estimated: float
-    change_CO2e_pct: float 
-    change_CO2e_t: float 
+    change_CO2e_pct: float
+    change_CO2e_t: float
     cost_climate_saved: float
     demand_electricity: float
 
-
-
     @classmethod
-    def calc(cls, inputs : Inputs, w18: W18):
+    def calc(cls, inputs: Inputs, w18: W18):
         entries = inputs.entries
         fact = inputs.fact
         ass = inputs.ass
 
-        
-        prod_volume = entries.m_population_com_203X * ass("Ass_W_P_wastewater_prodvol_2050_per_capita")
-        energy =  w18.p_wastewater.energy * (prod_volume / w18.p_wastewater.prod_volume)
+        prod_volume = entries.m_population_com_203X * ass(
+            "Ass_W_P_wastewater_prodvol_2050_per_capita"
+        )
+        energy = w18.p_wastewater.energy * (prod_volume / w18.p_wastewater.prod_volume)
 
         CO2e_pb_per_t = ass("Ass_W_P_wastewater_CO2e_pb_2050_per_prodvol")
         CO2e_pb = prod_volume * CO2e_pb_per_t
@@ -163,24 +188,32 @@ class wastewater:
         change_CO2e_t = w18.p_organic_treatment.CO2e_total - CO2e_total
         change_CO2e_pct = div(change_CO2e_t, w18.p_organic_treatment.CO2e_total)
 
-        CO2e_total_2021_estimated = w18.p_organic_treatment.CO2e_total * fact("Fact_M_CO2e_wo_lulucf_2021_vs_2018")
-        cost_climate_saved = (CO2e_total_2021_estimated - CO2e_total)* entries.m_duration_neutral * fact("Fact_M_cost_per_CO2e_2020") 
+        CO2e_total_2021_estimated = w18.p_organic_treatment.CO2e_total * fact(
+            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+        )
+        cost_climate_saved = (
+            (CO2e_total_2021_estimated - CO2e_total)
+            * entries.m_duration_neutral
+            * fact("Fact_M_cost_per_CO2e_2020")
+        )
 
-        demand_electricity = w18.p_wastewater.demand_electricity * div(prod_volume , w18.p_wastewater.prod_volume)
+        demand_electricity = w18.p_wastewater.demand_electricity * div(
+            prod_volume, w18.p_wastewater.prod_volume
+        )
 
         return cls(
             prod_volume=prod_volume,
             energy=energy,
-            CO2e_pb_per_t = CO2e_pb_per_t,
-            CO2e_production_based = CO2e_pb,
-            CO2e_total= CO2e_total,
-            change_energy_MWh = change_energy_MWh,
-            change_energy_pct = change_energy_pct,
-            CO2e_total_2021_estimated = CO2e_total_2021_estimated,
-            change_CO2e_pct = change_CO2e_pct,
-            change_CO2e_t = change_CO2e_t, 
-            cost_climate_saved = cost_climate_saved,
-            demand_electricity= demand_electricity,
+            CO2e_pb_per_t=CO2e_pb_per_t,
+            CO2e_production_based=CO2e_pb,
+            CO2e_total=CO2e_total,
+            change_energy_MWh=change_energy_MWh,
+            change_energy_pct=change_energy_pct,
+            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+            change_CO2e_pct=change_CO2e_pct,
+            change_CO2e_t=change_CO2e_t,
+            cost_climate_saved=cost_climate_saved,
+            demand_electricity=demand_electricity,
         )
 
 
@@ -190,32 +223,38 @@ class EnergySupplyDetail:
     CO2e_combustion_based: float
     CO2e_cb_per_MWh: float
     CO2e_total: float
-    change_energy_MWh : float
-    change_energy_pct : float
-    change_CO2e_t : float
-    change_CO2e_pct : float
-    CO2e_total_2021_estimated : float
-    cost_climate_saved : float
-    
+    change_energy_MWh: float
+    change_energy_pct: float
+    change_CO2e_t: float
+    change_CO2e_pct: float
+    CO2e_total_2021_estimated: float
+    cost_climate_saved: float
+
     @classmethod
-    def calc(cls, inputs:Inputs, energy: float, CO2e_cb_per_MWh: float, w18:W18):
-        fact= inputs.fact
+    def calc(cls, inputs: Inputs, energy: float, CO2e_cb_per_MWh: float, w18: W18):
+        fact = inputs.fact
         entries = inputs.entries
 
         CO2e_cb = CO2e_cb_per_MWh * energy
         CO2e_total = CO2e_cb
         change_energy_MWh = energy - w18.s_elec.energy
-        change_energy_pct = div(change_energy_MWh,w18.s_elec.energy)
+        change_energy_pct = div(change_energy_MWh, w18.s_elec.energy)
         change_CO2e_t = CO2e_total - w18.s_elec.CO2e_total
-        change_CO2e_pct = div(change_CO2e_t,w18.s_elec.CO2e_total)
-        CO2e_total_2021_estimated = w18.s_elec.CO2e_total * fact("Fact_M_CO2e_wo_lulucf_2021_vs_2018")
-        cost_climate_saved = (CO2e_total_2021_estimated - CO2e_total)* entries.m_duration_neutral * fact("Fact_M_cost_per_CO2e_2020") 
+        change_CO2e_pct = div(change_CO2e_t, w18.s_elec.CO2e_total)
+        CO2e_total_2021_estimated = w18.s_elec.CO2e_total * fact(
+            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+        )
+        cost_climate_saved = (
+            (CO2e_total_2021_estimated - CO2e_total)
+            * entries.m_duration_neutral
+            * fact("Fact_M_cost_per_CO2e_2020")
+        )
 
         return cls(
-            energy = energy,
-            CO2e_cb_per_MWh = CO2e_cb_per_MWh,
-            CO2e_combustion_based = CO2e_cb,
-            CO2e_total = CO2e_total,
+            energy=energy,
+            CO2e_cb_per_MWh=CO2e_cb_per_MWh,
+            CO2e_combustion_based=CO2e_cb,
+            CO2e_total=CO2e_total,
             change_energy_MWh=change_energy_MWh,
             change_energy_pct=change_energy_pct,
             change_CO2e_t=change_CO2e_t,
@@ -223,6 +262,7 @@ class EnergySupplyDetail:
             CO2e_total_2021_estimated=CO2e_total_2021_estimated,
             cost_climate_saved=cost_climate_saved,
         )
+
 
 @dataclass(kw_only=True)
 class WasteLines:
@@ -233,53 +273,62 @@ class WasteLines:
     s_elec: EnergySupplyDetail
 
     @classmethod
-    def calc_waste_lines(cls,inputs: Inputs, w18:W18):
+    def calc_waste_lines(cls, inputs: Inputs, w18: W18):
 
-        p_landfilling = landfilling.calc(inputs=inputs,w18=w18)
-        p_organic_treatment = organic_treatment.calc(inputs=inputs,w18=w18)
-        p_wastewater = wastewater.calc(inputs=inputs,w18=w18)
+        p_landfilling = landfilling.calc(inputs=inputs, w18=w18)
+        p_organic_treatment = organic_treatment.calc(inputs=inputs, w18=w18)
+        p_wastewater = wastewater.calc(inputs=inputs, w18=w18)
 
         electricity_demand = p_wastewater.demand_electricity
 
-        s_elec = EnergySupplyDetail.calc(inputs=inputs,w18=w18, energy=electricity_demand, CO2e_cb_per_MWh=0)
+        s_elec = EnergySupplyDetail.calc(
+            inputs=inputs, w18=w18, energy=electricity_demand, CO2e_cb_per_MWh=0
+        )
 
         return cls(
-            p_landfilling = p_landfilling,
-            p_organic_treatment = p_organic_treatment,
-            p_wastewater =p_wastewater,
-            s_elec = s_elec,
+            p_landfilling=p_landfilling,
+            p_organic_treatment=p_organic_treatment,
+            p_wastewater=p_wastewater,
+            s_elec=s_elec,
         )
+
 
 @dataclass(kw_only=True)
 class EnergySupply:
     energy: float
     CO2e_combustion_based: float
     CO2e_total: float
-    change_energy_MWh : float
-    change_energy_pct : float
-    change_CO2e_t : float
-    change_CO2e_pct : float
-    CO2e_total_2021_estimated : float
-    cost_climate_saved : float
-    
+    change_energy_MWh: float
+    change_energy_pct: float
+    change_CO2e_t: float
+    change_CO2e_pct: float
+    CO2e_total_2021_estimated: float
+    cost_climate_saved: float
+
     @classmethod
-    def calc(cls, w18:W18, energy_supplies: list[EnergySupplyDetail]):
-        
+    def calc(cls, w18: W18, energy_supplies: list[EnergySupplyDetail]):
+
         energy = sum([supply.energy for supply in energy_supplies])
         CO2e_cb = sum([supply.CO2e_combustion_based for supply in energy_supplies])
         CO2e_total = sum([supply.CO2e_total for supply in energy_supplies])
 
-        change_energy_MWh = sum([supply.change_energy_MWh for supply in energy_supplies])
-        change_energy_pct = div(change_energy_MWh,w18.s.energy)
+        change_energy_MWh = sum(
+            [supply.change_energy_MWh for supply in energy_supplies]
+        )
+        change_energy_pct = div(change_energy_MWh, w18.s.energy)
         change_CO2e_t = sum([supply.change_CO2e_t for supply in energy_supplies])
-        change_CO2e_pct = div(change_CO2e_t,w18.s.CO2e_total)
-        CO2e_total_2021_estimated = sum([supply.CO2e_total_2021_estimated for supply in energy_supplies])
-        cost_climate_saved = sum([supply.cost_climate_saved for supply in energy_supplies])
+        change_CO2e_pct = div(change_CO2e_t, w18.s.CO2e_total)
+        CO2e_total_2021_estimated = sum(
+            [supply.CO2e_total_2021_estimated for supply in energy_supplies]
+        )
+        cost_climate_saved = sum(
+            [supply.cost_climate_saved for supply in energy_supplies]
+        )
 
         return cls(
-            energy = energy,
-            CO2e_combustion_based = CO2e_cb,
-            CO2e_total = CO2e_total,
+            energy=energy,
+            CO2e_combustion_based=CO2e_cb,
+            CO2e_total=CO2e_total,
             change_energy_MWh=change_energy_MWh,
             change_energy_pct=change_energy_pct,
             change_CO2e_t=change_CO2e_t,
@@ -287,6 +336,7 @@ class EnergySupply:
             CO2e_total_2021_estimated=CO2e_total_2021_estimated,
             cost_climate_saved=cost_climate_saved,
         )
+
 
 @dataclass(kw_only=True)
 class Pyrolysis:
@@ -301,7 +351,7 @@ class Pyrolysis:
     cost_climate_saved: float = None  # type: ignore
     invest: float = None  # type: ignore
     invest_pa: float = None  # type: ignore
-    invest_per_CO2e: float = None # type: ignore
+    invest_per_CO2e: float = None  # type: ignore
     pct_of_wage: float = None  # type: ignore
     cost_wage: float = None  # type: ignore
     ratio_wage_to_emplo: float = None  # type: ignore
@@ -309,9 +359,9 @@ class Pyrolysis:
     demand_emplo_new: float = None  # type: ignore
     invest_per_x: float = None  # type: ignore
 
-
     @classmethod
-    def calc(cls,
+    def calc(
+        cls,
         inputs: Inputs,
         *,
         l30: L30,
@@ -324,7 +374,7 @@ class Pyrolysis:
         r30: R30,
         t30: T30,
         wastelines: WasteLines,
-        ):
+    ):
         """This updates the l and pyr sections in l30 inplace."""
 
         fact = inputs.fact
@@ -374,28 +424,28 @@ class Pyrolysis:
         demand_emplo = div(cost_wage, ratio_wage_to_emplo)
         demand_emplo_new = demand_emplo
 
-        invest_per_CO2e = div(invest , CO2e_total)
+        invest_per_CO2e = div(invest, CO2e_total)
 
         return cls(
-            prod_volume= prod_volume,
-            CO2e_production_based= CO2e_production_based,
-            CO2e_production_based_per_t= CO2e_production_based_per_t,
-            CO2e_total= CO2e_total,
-            change_CO2e_t= change_CO2e_t,
-            change_CO2e_pct= change_CO2e_pct,
-            CO2e_total_2021_estimated= CO2e_total_2021_estimated,
+            prod_volume=prod_volume,
+            CO2e_production_based=CO2e_production_based,
+            CO2e_production_based_per_t=CO2e_production_based_per_t,
+            CO2e_total=CO2e_total,
+            change_CO2e_t=change_CO2e_t,
+            change_CO2e_pct=change_CO2e_pct,
+            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
             cost_climate_saved=cost_climate_saved,
-            invest= invest,
-            invest_pa= invest_pa,
-            invest_per_CO2e = invest_per_CO2e,
-            pct_of_wage= pct_of_wage,
-            cost_wage= cost_wage,
-            ratio_wage_to_emplo= ratio_wage_to_emplo,
-            demand_emplo= demand_emplo,
-            demand_emplo_new= demand_emplo_new,
-            invest_per_x= invest_per_x,
+            invest=invest,
+            invest_pa=invest_pa,
+            invest_per_CO2e=invest_per_CO2e,
+            pct_of_wage=pct_of_wage,
+            cost_wage=cost_wage,
+            ratio_wage_to_emplo=ratio_wage_to_emplo,
+            demand_emplo=demand_emplo,
+            demand_emplo_new=demand_emplo_new,
+            invest_per_x=invest_per_x,
         )
- 
+
 
 @dataclass(kw_only=True)
 class EnergyProduction:
@@ -403,33 +453,66 @@ class EnergyProduction:
     prod_volume: float
     CO2e_production_based: float
     CO2e_total: float
-    change_energy_MWh :float 
-    change_energy_pct :float 
-    change_CO2e_t :float 
-    change_CO2_pct :float 
-    CO2e_total_2021_estimated :float 
-    cost_climate_saved :float 
-    invest_pa :float 
-    invest_pa_com :float 
-    invest :float 
-    invest_com :float 
-    cost_wage :float 
-    demand_emplo :float 
-    demand_emplo_new :float
+    change_energy_MWh: float
+    change_energy_pct: float
+    change_CO2e_t: float
+    change_CO2_pct: float
+    CO2e_total_2021_estimated: float
+    cost_climate_saved: float
+    invest_pa: float
+    invest_pa_com: float
+    invest: float
+    invest_com: float
+    cost_wage: float
+    demand_emplo: float
+    demand_emplo_new: float
 
     @classmethod
-    def calc(cls, w18: W18, landfilling:landfilling, organic_treatment:organic_treatment, wastewater:wastewater, pyr: Pyrolysis):
+    def calc(
+        cls,
+        w18: W18,
+        landfilling: landfilling,
+        organic_treatment: organic_treatment,
+        wastewater: wastewater,
+        pyr: Pyrolysis,
+    ):
 
         energy = wastewater.energy
-        prod_vol = organic_treatment.prod_volume + wastewater.prod_volume + pyr.prod_volume
-        CO2e_pb = landfilling.CO2e_production_based + organic_treatment.CO2e_production_based + wastewater.CO2e_production_based + pyr.CO2e_production_based
-        CO2e_total = landfilling.CO2e_total + organic_treatment.CO2e_total + wastewater.CO2e_total + pyr.CO2e_total
+        prod_vol = (
+            organic_treatment.prod_volume + wastewater.prod_volume + pyr.prod_volume
+        )
+        CO2e_pb = (
+            landfilling.CO2e_production_based
+            + organic_treatment.CO2e_production_based
+            + wastewater.CO2e_production_based
+            + pyr.CO2e_production_based
+        )
+        CO2e_total = (
+            landfilling.CO2e_total
+            + organic_treatment.CO2e_total
+            + wastewater.CO2e_total
+            + pyr.CO2e_total
+        )
         change_energy_MWh = wastewater.change_energy_MWh
         change_energy_pct = change_energy_MWh / w18.p.energy
-        change_CO2e_t = landfilling.change_CO2e_t + organic_treatment.change_CO2e_t + wastewater.change_CO2e_t + pyr.change_CO2e_t
+        change_CO2e_t = (
+            landfilling.change_CO2e_t
+            + organic_treatment.change_CO2e_t
+            + wastewater.change_CO2e_t
+            + pyr.change_CO2e_t
+        )
         change_CO2_pct = change_CO2e_t / w18.p.CO2e_total
-        CO2e_total_2021_estimated = landfilling.CO2e_total_2021_estimated + organic_treatment.CO2e_total_2021_estimated  + wastewater.CO2e_total_2021_estimated 
-        cost_climate_saved = landfilling.cost_climate_saved + organic_treatment.cost_climate_saved  + wastewater.cost_climate_saved + pyr.cost_climate_saved
+        CO2e_total_2021_estimated = (
+            landfilling.CO2e_total_2021_estimated
+            + organic_treatment.CO2e_total_2021_estimated
+            + wastewater.CO2e_total_2021_estimated
+        )
+        cost_climate_saved = (
+            landfilling.cost_climate_saved
+            + organic_treatment.cost_climate_saved
+            + wastewater.cost_climate_saved
+            + pyr.cost_climate_saved
+        )
         invest_pa = organic_treatment.invest_pa + pyr.invest_pa
         invest_pa_com = organic_treatment.invest_pa_com
         invest = organic_treatment.invest + pyr.invest
@@ -440,23 +523,24 @@ class EnergyProduction:
 
         return cls(
             energy=energy,
-            prod_volume = prod_vol,
-            CO2e_production_based = CO2e_pb,
-            CO2e_total = CO2e_total,
-            change_energy_MWh = change_energy_MWh,
-            change_energy_pct = change_energy_pct,
-            change_CO2e_t = change_CO2e_t,
-            change_CO2_pct = change_CO2_pct,
-            CO2e_total_2021_estimated = CO2e_total_2021_estimated,
-            cost_climate_saved = cost_climate_saved,
-            invest_pa = invest_pa ,
-            invest_pa_com = invest_pa_com,
-            invest = invest,
-            invest_com = invest_com,
-            cost_wage = cost_wage,
-            demand_emplo = demand_emplo,
-            demand_emplo_new = demand_emplo_new,
+            prod_volume=prod_vol,
+            CO2e_production_based=CO2e_pb,
+            CO2e_total=CO2e_total,
+            change_energy_MWh=change_energy_MWh,
+            change_energy_pct=change_energy_pct,
+            change_CO2e_t=change_CO2e_t,
+            change_CO2_pct=change_CO2_pct,
+            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+            cost_climate_saved=cost_climate_saved,
+            invest_pa=invest_pa,
+            invest_pa_com=invest_pa_com,
+            invest=invest,
+            invest_com=invest_com,
+            cost_wage=cost_wage,
+            demand_emplo=demand_emplo,
+            demand_emplo_new=demand_emplo_new,
         )
+
 
 @dataclass(kw_only=True)
 class W30:
@@ -464,32 +548,37 @@ class W30:
     p_organic_treatment: organic_treatment
     p_wastewater: wastewater
 
-    pyrolisis : Pyrolysis 
+    pyrolysis: Pyrolysis
 
     w: EnergyProduction
     p: EnergyProduction
-
 
     s: EnergySupply
     s_elec: EnergySupplyDetail
 
     @classmethod
-    def calc(cls,inputs: Inputs,w18:W18,wastelines: WasteLines, pyrolysis: Pyrolysis) :
+    def calc(
+        cls, inputs: Inputs, w18: W18, wastelines: WasteLines, pyrolysis: Pyrolysis
+    ):
 
-        
-        s = EnergySupply.calc(w18=w18,energy_supplies=[wastelines.s_elec])
-        p = EnergyProduction.calc(w18=w18,landfilling=wastelines.p_landfilling,organic_treatment=wastelines.p_organic_treatment,wastewater=wastelines.p_wastewater,pyr=pyrolysis)
+        s = EnergySupply.calc(w18=w18, energy_supplies=[wastelines.s_elec])
+        p = EnergyProduction.calc(
+            w18=w18,
+            landfilling=wastelines.p_landfilling,
+            organic_treatment=wastelines.p_organic_treatment,
+            wastewater=wastelines.p_wastewater,
+            pyr=pyrolysis,
+        )
 
         w = p
 
         return cls(
-        s=s,
-        s_elec=wastelines.s_elec,
-        p=p,
-        p_landfilling=wastelines.p_landfilling,
-        p_organic_treatment=wastelines.p_organic_treatment,
-        p_wastewater=wastelines.p_wastewater,
-        pyrolisis=pyrolysis,
-        w=w,
+            s=s,
+            s_elec=wastelines.s_elec,
+            p=p,
+            p_landfilling=wastelines.p_landfilling,
+            p_organic_treatment=wastelines.p_organic_treatment,
+            p_wastewater=wastelines.p_wastewater,
+            pyrolysis=pyrolysis,
+            w=w,
         )
-    
