@@ -3,7 +3,7 @@
 # pyright: strict
 
 from dataclasses import asdict
-from typing import Any, Literal
+from typing import Literal
 import json
 import os
 import pytest
@@ -92,7 +92,7 @@ def test_all_used_variables_are_populated():
     ), f"The following variables are used by KNUD but populated with None: {populated_with_none}"
 
 
-def end_to_end(datadir_status: refdatatools.DataDirStatus, ags: Any, year: int = 2035):
+def end_to_end(ags: str, year: int = 2035):
     """This runs an end to end test. No entries are overriden, only AGS"""
     root = refdatatools.root_of_this_repo()
     fname = f"production_{ags}_{year}.json"
@@ -107,8 +107,15 @@ def end_to_end(datadir_status: refdatatools.DataDirStatus, ags: Any, year: int =
                 print(d)
             assert False, "End to end test failed"
 
+        assert diffs.float_matches(
+            actual=g.f18.d.energy, expected=g.f18.p.energy, rel=1e-9
+        ), f"f18 energy demand {g.f18.d.energy} is not equal to energy production {g.f18.p.energy}"
+        assert diffs.float_matches(
+            actual=g.h18.d.energy, expected=g.h18.p.energy, rel=1e-9
+        ), f"h18 energy demand {g.h18.d.energy} is not equal to energy production {g.h18.p.energy}"
 
-def make_entries_test(ags: Any, year: int):
+
+def make_entries_test(ags: str, year: int):
     refdata = RefData.load()
     root = refdatatools.root_of_this_repo()
     fname = f"entries_{ags}_{year}.json"
@@ -128,25 +135,25 @@ def test_entries_test():
 
 
 # Default year = 2035
-def test_end_to_end_goettingen(datadir_status: refdatatools.DataDirStatus):
-    end_to_end(datadir_status, "03159016")
+def test_end_to_end_goettingen():
+    end_to_end("03159016")
 
 
 # Default year = 2035
-def test_end_to_end_germany(datadir_status: refdatatools.DataDirStatus):
-    end_to_end(datadir_status, "DG000000")
+def test_end_to_end_germany():
+    end_to_end("DG000000")
 
 
 # Min year for the generator = 2021
-def test_end_to_end_goettingen_2021(datadir_status: refdatatools.DataDirStatus):
-    end_to_end(datadir_status, ags="03159016", year=2021)
+def test_end_to_end_goettingen_2021():
+    end_to_end(ags="03159016", year=2021)
 
 
 # Min year for the website = 2025
-def test_end_to_end_goettingen_2025(datadir_status: refdatatools.DataDirStatus):
-    end_to_end(datadir_status, ags="03159016", year=2025)
+def test_end_to_end_goettingen_2025():
+    end_to_end(ags="03159016", year=2025)
 
 
 # Max year for the generator and website = 2050
-def test_end_to_end_goettingen_2050(datadir_status: refdatatools.DataDirStatus):
-    end_to_end(datadir_status, ags="03159016", year=2050)
+def test_end_to_end_goettingen_2050():
+    end_to_end(ags="03159016", year=2050)

@@ -37,7 +37,6 @@ import Json.Decode as Decode
 import Json.Encode as Encode
 import Lens.CellContent as CellContent
 import List.Extra
-import Maybe.Extra
 import Run exposing (Path)
 import Set exposing (Set)
 
@@ -365,6 +364,7 @@ findInCells fn cells =
     findInCellsHelper 0 0 fn cells
 
 
+findInCellsHelper : Int -> Int -> ({ row : Int, column : Int } -> a -> Maybe b) -> Cells.Cells a -> Maybe b
 findInCellsHelper row column fn g =
     if row >= Cells.rows g then
         Nothing

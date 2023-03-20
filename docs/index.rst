@@ -23,6 +23,7 @@ Diese Dokumentation enthält Erklärtexte zur Berechnung der einzelnen Sektoren 
    sectors/traffic
    sectors/agriculture
    sectors/lulucf
+   sectors/faq
 
 
 

@@ -12,7 +12,7 @@ from math import isnan, fabs
 from numbers import Number
 
 
-def float_matches(actual: Any, expected: Any, rel: Any):
+def float_matches(actual: Any, expected: Any, rel: float):
     if isnan(actual) and isnan(expected):
         return True
     elif isnan(actual):
@@ -47,7 +47,7 @@ class Diff:
         return f"at {self.path} expected {self.expected} got {self.actual}"
 
 
-def all_helper(path: str, actual: Any, expected: Any, *, rel: Any) -> Iterator[Diff]:
+def all_helper(path: str, actual: Any, expected: Any, *, rel: float) -> Iterator[Diff]:
     if isinstance(actual, Mapping) and isinstance(expected, Mapping):
         keys1: Any = frozenset(actual.keys())  # type: ignore
         keys2: Any = frozenset(expected.keys())  # type: ignore
@@ -80,5 +80,5 @@ def all_helper(path: str, actual: Any, expected: Any, *, rel: Any) -> Iterator[D
         yield Diff(path=path, actual=actual, expected=expected)  # type: ignore
 
 
-def all(*, actual, expected, rel=1e-9):  # type: ignore
+def all(*, actual: Any, expected: Any, rel: float = 1e-9):
     return all_helper("", actual, expected, rel=rel)

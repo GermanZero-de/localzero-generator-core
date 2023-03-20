@@ -6,125 +6,64 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/traffic.html
 # pyright: strict
 
 from ..inputs import Inputs
-from ..common.energy import Energy
 
-from .air import Air
-from .road import Road
-from .rail import Rail
-from .ship import Ship
-from .other import Other
 from .transport import Transport
 from .t18 import T18
+from . import energy_demand, energy_source
 
 
 def calc(inputs: Inputs) -> T18:
-    # TODO: Fix the it at confusion
 
-    # --- Air ---
-    air_dmstc = Air.calc_domestic(inputs)
-    air_inter = Air.calc_international(inputs)
-    air = air_dmstc + air_inter
-    # --- Road ---
-    road_car_it_ot = Road.calc_car(inputs, "it_ot")
-    road_car_ab = Road.calc_car(inputs, "ab")
-    road_car = road_car_it_ot + road_car_ab
-    road_bus = Road.calc_bus(inputs)
-    road_ppl = road_car + road_bus
-    road_gds_mhd_it_ot = Road.calc_goods_medium_and_heavy_duty_it_ot(
-        inputs, road_bus_mileage=road_bus.mileage
-    )
-    road_gds_mhd_ab = Road.calc_goods_medium_and_heavy_duty_ab(inputs)
-    road_gds_mhd = road_gds_mhd_ab + road_gds_mhd_it_ot
-    road_gds_ldt_it_ot = Road.calc_goods_light_duty(inputs, "it_ot")
-    road_gds_ldt_ab = Road.calc_goods_light_duty(inputs, "ab")
-    road_gds_ldt = road_gds_ldt_it_ot + road_gds_ldt_ab
-    road_gds = road_gds_ldt + road_gds_mhd
-    road = road_gds + road_ppl
-    # --- Rail ---
-    rail_ppl_metro = Rail.calc_rail_people_metro(inputs)
-    rail_ppl_distance = Rail.calc_people_distance(inputs)
-    rail_ppl = rail_ppl_metro + rail_ppl_distance
-    rail_gds = Rail.calc_goods(inputs)
-    rail = rail_ppl + rail_gds
-    # --- Ship ---
-    ship_dmstc = Ship.calc_ship_domestic(inputs)
-    ship_inter = Ship.calc_ship_international(inputs)
-    ship = ship_dmstc + ship_inter
-    # --- Other ---
-    other_foot = Other.calc_foot(inputs)
-    other_cycl = Other.calc_cycle(inputs)
-    other = other_foot + other_cycl
+    production = energy_demand.calc_production(inputs)
 
     t = (
-        Transport.lift_air(air)
-        + Transport.lift_road(road)
-        + Transport.lift_ship(ship)
-        + Transport.lift_rail(rail)
-        + Transport.lift_other(other)
+        Transport.lift_air(production.air)
+        + Transport.lift_road(production.road)
+        + Transport.lift_ship(production.ship)
+        + Transport.lift_rail(production.rail)
+        + Transport.lift_other(production.other)
     )
 
-    # ----------------------------------------------------
-    s_biodiesel = Energy(energy=t.demand_biodiesel)
-    s_bioethanol = Energy(energy=t.demand_bioethanol)
-    s_biogas = Energy(energy=t.demand_biogas)
-    s_diesel = Energy(energy=t.demand_diesel)
-    s_elec = Energy(energy=t.demand_electricity)
-    s_fueloil = Energy(energy=ship_inter.demand_fueloil)
-    s_gas = Energy(energy=t.demand_gas)
-    s_jetfuel = Energy(energy=t.demand_jetfuel)
-    s_lpg = Energy(energy=t.demand_lpg)
-    s_petrol = Energy(energy=t.demand_petrol)
+    supply = energy_source.calc_supply(t, production.ship_inter)
 
-    s = Energy(
-        energy=s_biodiesel.energy
-        + s_bioethanol.energy
-        + s_biogas.energy
-        + s_diesel.energy
-        + s_elec.energy
-        + s_fueloil.energy
-        + s_gas.energy
-        + s_jetfuel.energy
-        + s_lpg.energy
-        + s_petrol.energy
-    )
     return T18(
-        air_dmstc=air_dmstc,
-        air_inter=air_inter,
-        air=air,
-        road_car_it_ot=road_car_it_ot,
-        road_car_ab=road_car_ab,
-        road_car=road_car,
-        road_bus=road_bus,
-        road_ppl=road_ppl,
-        road_gds_mhd_it_ot=road_gds_mhd_it_ot,
-        road_gds_mhd_ab=road_gds_mhd_ab,
-        road_gds_mhd=road_gds_mhd,
-        road_gds_ldt_it_ot=road_gds_ldt_it_ot,
-        road_gds_ldt_ab=road_gds_ldt_ab,
-        road_gds_ldt=road_gds_ldt,
-        road_gds=road_gds,
-        road=road,
-        rail_ppl_distance=rail_ppl_distance,
-        rail_ppl_metro=rail_ppl_metro,
-        rail_ppl=rail_ppl,
-        rail_gds=rail_gds,
-        rail=rail,
-        ship_dmstc=ship_dmstc,
-        ship_inter=ship_inter,
-        ship=ship,
-        other_foot=other_foot,
-        other_cycl=other_cycl,
-        other=other,
+        air_dmstc=production.air_dmstc,
+        air_inter=production.air_inter,
+        air=production.air,
+        road_car_it_ot=production.road_car_it_ot,
+        road_car_ab=production.road_car_ab,
+        road_car=production.road_car,
+        road_bus=production.road_bus,
+        road_ppl=production.road_ppl,
+        road_gds_mhd_it_ot=production.road_gds_mhd_it_ot,
+        road_gds_mhd_ab=production.road_gds_mhd_ab,
+        road_gds_mhd=production.road_gds_mhd,
+        road_gds_ldt_it_ot=production.road_gds_ldt_it_ot,
+        road_gds_ldt_ab=production.road_gds_ldt_ab,
+        road_gds_ldt=production.road_gds_ldt,
+        road_gds=production.road_gds,
+        road=production.road,
+        rail_ppl_distance=production.rail_ppl_distance,
+        rail_ppl_metro=production.rail_ppl_metro,
+        rail_ppl=production.rail_ppl,
+        rail_gds=production.rail_gds,
+        rail=production.rail,
+        ship_dmstc=production.ship_dmstc,
+        ship_inter=production.ship_inter,
+        ship=production.ship,
+        other_foot=production.other_foot,
+        other_cycl=production.other_cycl,
+        other=production.other,
         t=t,
-        s_biodiesel=s_biodiesel,
-        s_bioethanol=s_bioethanol,
-        s_biogas=s_biogas,
-        s_diesel=s_diesel,
-        s_elec=s_elec,
-        s_fueloil=s_fueloil,
-        s_gas=s_gas,
-        s_jetfuel=s_jetfuel,
-        s_lpg=s_lpg,
-        s_petrol=s_petrol,
-        s=s,
+        s_biodiesel=supply.biodiesel,
+        s_bioethanol=supply.bioethanol,
+        s_biogas=supply.biogas,
+        s_diesel=supply.diesel,
+        s_elec=supply.elec,
+        s_fueloil=supply.fueloil,
+        s_gas=supply.gas,
+        s_jetfuel=supply.jetfuel,
+        s_lpg=supply.lpg,
+        s_petrol=supply.petrol,
+        s=supply.total,
     )

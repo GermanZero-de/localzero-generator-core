@@ -1,6 +1,6 @@
 # pyright: strict reportMissingTypeStubs=true
 import dataclasses
-from typing import Callable, Any
+from typing import Callable
 
 import jsonrpcserver
 
@@ -9,11 +9,21 @@ from ..tracing import with_tracing
 from . import overridables
 
 
+RPC_FAILED_ERROR_CODE = 42
+
+
 class GeneratorRpcs:
     rd: generator.RefData
 
     def __init__(self, rd: generator.RefData):
         self.rd = rd
+
+    def wrap_result(self, f: Callable[[], object]) -> jsonrpcserver.Result:
+        try:
+            result = jsonrpcserver.Success(f())
+        except Exception as e:
+            result = jsonrpcserver.Error(RPC_FAILED_ERROR_CODE, str(e))
+        return result
 
     def do_list_ags(self):
         def guess_short_name_from_description(d: str) -> str:
@@ -31,11 +41,11 @@ class GeneratorRpcs:
         ]
 
     def list_ags(self) -> jsonrpcserver.Result:
-        return jsonrpcserver.Success(self.do_list_ags())
+        return self.wrap_result(self.do_list_ags)
 
     def make_entries(self, ags: str, year: int, trace: bool) -> jsonrpcserver.Result:
-        return jsonrpcserver.Success(
-            with_tracing(
+        return self.wrap_result(
+            lambda: with_tracing(
                 enabled=trace,
                 f=lambda: dataclasses.asdict(
                     generator.make_entries(self.rd, ags, year)
@@ -68,12 +78,11 @@ class GeneratorRpcs:
             g = generator.calculate(inputs, inputs_germany)
             return g.result_dict()
 
-        result = with_tracing(enabled=trace, f=calculate)
-        return jsonrpcserver.Success(result)
+        return self.wrap_result(lambda: with_tracing(enabled=trace, f=calculate))
 
     def get_overridables(self, ags: str, year: int) -> jsonrpcserver.Result:
-        return jsonrpcserver.Success(
-            overridables.sections_with_defaults(self.rd, ags, year)
+        return self.wrap_result(
+            lambda: overridables.sections_with_defaults(self.rd, ags, year)
         )
 
     def methods(self) -> jsonrpcserver.methods.Methods:

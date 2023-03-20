@@ -14,8 +14,6 @@ from ..residences2030.r30 import R30
 from .b30 import B30
 from .dataclasses import (
     Vars0,
-    Vars1,
-    Vars2,
     Vars3,
     Vars4,
     Vars5,
@@ -33,6 +31,7 @@ from .dataclasses import (
     Vars17,
     Vars18,
 )
+from . import energy_general
 
 
 # Berechnungsfunktion im Sektor GHD für 2030
@@ -52,14 +51,12 @@ def calc(
     # Definitions production
     p = Vars3()
     b = Vars0()
-    g = Vars1()
     p_nonresi = Vars4()
     p_nonresi_com = Vars5()
     p_elec_elcon = Vars6()
     p_elec_heatpump = Vars7()
     p_vehicles = Vars8()
     p_other = Vars9()
-    g_consult = Vars2()
 
     # Definitions supply
     s = Vars10()
@@ -612,15 +609,6 @@ def calc(
         * ass("Ass_B_D_install_heating_emplo_pct_of_B_heatpump")
     )
 
-    g_consult.ratio_wage_to_emplo = fact("Fact_R_G_energy_consulting_cost_personel")
-    g_consult.invest = (
-        fact("Fact_R_G_energy_consulting_cost_appt_building_ge_3_flats")
-        * b18.p_nonresi.number_of_buildings
-    )
-    g_consult.invest_pa = g_consult.invest / Kalkulationszeitraum
-    g_consult.cost_wage = g_consult.invest_pa
-    g_consult.demand_emplo = div(g_consult.cost_wage, g_consult.ratio_wage_to_emplo)
-    g_consult.invest_com = g_consult.invest
     p_nonresi.change_energy_pct = div(p_nonresi.change_energy_MWh, b18.p_nonresi.energy)
     p_nonresi_com.change_energy_pct = div(
         p_nonresi_com.change_energy_MWh, b18.p_nonresi_com.energy
@@ -674,18 +662,6 @@ def calc(
     s.change_CO2e_pct = div(s.change_CO2e_t, b18.s.CO2e_combustion_based)
     b.CO2e_total_2021_estimated = s.CO2e_total_2021_estimated
     b.cost_climate_saved = s.cost_climate_saved
-    g.invest_pa = g_consult.invest_pa
-    g_consult.invest_pa_com = g_consult.invest_com / entries.m_duration_target
-    g.invest = g_consult.invest
-    g.invest_com = g_consult.invest_com
-    g.cost_wage = g_consult.cost_wage
-    g.demand_emplo = g_consult.demand_emplo
-    g_consult.emplo_existing = (
-        fact("Fact_R_G_energy_consulting_total_personel")
-        * ass("Ass_B_D_energy_consulting_emplo_pct_of_B")
-        * entries.m_population_com_2018
-        / entries.m_population_nat
-    )
     p.invest_pa = p_nonresi.invest_pa
     p_nonresi.invest_pa_com = p_nonresi_com.invest_pa_com
     p.invest = p_nonresi.invest
@@ -695,11 +671,6 @@ def calc(
     p_nonresi.demand_emplo_new = max(
         0, p_nonresi.demand_emplo - p_nonresi.emplo_existing
     )
-    g.invest_pa_com = g_consult.invest_pa_com
-    g_consult.demand_emplo_new = max(
-        0, g_consult.demand_emplo - g_consult.emplo_existing
-    )
-    g.demand_emplo_new = g_consult.demand_emplo_new
     p.demand_heatnet = s_heatnet.energy
     p.demand_biomass = s_biomass.energy
     p.demand_solarth = s_solarth.energy
@@ -710,7 +681,6 @@ def calc(
     p.change_energy_pct = div(p.change_energy_MWh, b18.p.energy)
     s.invest_pa = s_heatpump.invest_pa + s_solarth.invest_pa
     s.invest_pa_com = s_heatpump.invest_pa_com + s_solarth.invest_pa_com
-    b.invest = g.invest + p.invest + s.invest
     p.invest_com = p_nonresi.invest_com
     s.cost_wage = s_heatpump.cost_wage + s_solarth.cost_wage
     s.demand_emplo = s_heatpump.demand_emplo + s_solarth.demand_emplo
@@ -718,7 +688,6 @@ def calc(
         0, s_heatpump.demand_emplo - s_heatpump.emplo_existing
     )
     p.invest_pa_com = p_nonresi.invest_pa_com
-    b.invest_com = g.invest_com + p.invest_com + s.invest_com
     p.demand_emplo_new = p_nonresi.demand_emplo_new
     p_nonresi_com.invest = (
         p_nonresi_com.area_m2_rehab
@@ -743,11 +712,6 @@ def calc(
     p_vehicles.change_energy_pct = div(
         p_vehicles.change_energy_MWh, b18.p_vehicles.energy
     )
-    b.change_CO2e_pct = s.change_CO2e_pct
-    b.invest_pa = g.invest_pa + p.invest_pa + s.invest_pa
-    b.invest_pa_com = g.invest_pa_com + p.invest_pa_com + s.invest_pa_com
-    b.cost_wage = g.cost_wage + p.cost_wage + s.cost_wage
-    b.demand_emplo = g.demand_emplo + p.demand_emplo + s.demand_emplo
     s_solarth.emplo_existing = (
         fact("Fact_B_P_install_heating_emplo_2017")
         * entries.m_population_com_2018
@@ -795,7 +759,6 @@ def calc(
     )
     s_solarth.CO2e_total = s_solarth.CO2e_combustion_based
     s.demand_emplo_new = s_heatpump.demand_emplo_new + s_solarth.demand_emplo_new
-    b.demand_emplo_new = g.demand_emplo_new + p.demand_emplo_new + s.demand_emplo_new
     s_elec.CO2e_combustion_based_per_MWh = b18.s_elec.CO2e_combustion_based_per_MWh
     s_elec.CO2e_combustion_based = s_elec.energy * s_elec.CO2e_combustion_based_per_MWh
     s_elec.CO2e_total = s_elec.CO2e_combustion_based
@@ -830,6 +793,21 @@ def calc(
         * entries.m_duration_neutral
         * fact("Fact_M_cost_per_CO2e_2020")
     )
+
+    general = energy_general.calc_general(inputs=inputs, b18=b18)
+
+    b.invest = general.g.invest + p.invest + s.invest
+    b.invest_com = general.g.invest_com + p.invest_com + s.invest_com
+    b.change_CO2e_pct = s.change_CO2e_pct
+    b.invest_pa = general.g.invest_pa + p.invest_pa + s.invest_pa
+    b.invest_pa_com = general.g.invest_pa_com + p.invest_pa_com + s.invest_pa_com
+    b.cost_wage = general.g.cost_wage + p.cost_wage + s.cost_wage
+    b.demand_emplo = general.g.demand_emplo + p.demand_emplo + s.demand_emplo
+    b.demand_emplo_new = (
+        general.g.demand_emplo_new + p.demand_emplo_new + s.demand_emplo_new
+    )
+    b.demand_emplo_com = general.g.demand_emplo_com
+
     rb.invest_pa = r30.r.invest_pa + b.invest_pa
     rb.invest_pa_com = r30.r.invest_pa_com + b.invest_pa_com
     rb.invest = r30.r.invest + b.invest
@@ -837,11 +815,6 @@ def calc(
     rb.cost_wage = r30.r.cost_wage + b.cost_wage
     rb.demand_emplo = r30.r.demand_emplo + b.demand_emplo
     rb.demand_emplo_new = r30.r.demand_emplo_new + b.demand_emplo_new
-
-    g_consult.demand_emplo_com = g_consult.demand_emplo_new
-    g.demand_emplo_com = g.demand_emplo_new
-    b.demand_emplo_com = g.demand_emplo_com
-
     rb.demand_emplo_com = b.demand_emplo_com + r30.r.demand_emplo_com
 
     s_emethan.change_CO2e_pct = div(
@@ -859,8 +832,8 @@ def calc(
 
     return B30(
         b=b,
-        g=g,
-        g_consult=g_consult,
+        g=general.g,
+        g_consult=general.g_consult,
         p=p,
         p_nonresi=p_nonresi,
         p_nonresi_com=p_nonresi_com,

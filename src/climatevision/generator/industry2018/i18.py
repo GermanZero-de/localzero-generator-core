@@ -2,8 +2,8 @@
 
 from dataclasses import dataclass
 
-from ..common.energy import EnergyWithPercentage, Energy
-from .production_branches import (
+from .energy_source import Energy, EnergyWithPercentage
+from .energy_demand import (
     ExtraEmission,
     ProductionSubBranch,
     ProductionSubBranchCO2viaFEC,

@@ -10,24 +10,16 @@ from ..transport2018.t18 import T18
 from ..electricity2018.e18 import E18
 from ..industry2018.i18 import I18
 
-from .h18 import H18, CO2eEmissions
+from .h18 import H18, CO2eEmission
 from . import energy_demand, energy_production
 
 
 def calc(inputs: Inputs, *, t18: T18, e18: E18, i18: I18) -> H18:
-    entries = inputs.entries
 
     demand = energy_demand.calc_demand(inputs, t18, i18)
+    production = energy_production.calc_production(inputs, t18, e18, i18)
 
-    p_heatnet_energy = (
-        entries.r_heatnet_fec + entries.b_heatnet_fec + i18.s_renew_heatnet.energy
-    )
-
-    production = energy_production.calc_production(
-        inputs, t18, e18, i18, demand.total.energy, p_heatnet_energy
-    )
-
-    h = CO2eEmissions(
+    h = CO2eEmission(
         CO2e_combustion_based=production.total.CO2e_combustion_based,
         CO2e_production_based=production.total.CO2e_production_based,
         CO2e_total=production.total.CO2e_total,

@@ -2,54 +2,48 @@
 
 from dataclasses import dataclass
 
-from .dataclasses import (
-    Vars0,
-    Vars1,
-    Vars2,
-    Vars3,
-    Vars4,
-    Vars5,
-    Vars6,
-    Vars7,
-    Vars8,
-    Vars9,
-    Vars10,
-    Vars11,
-    Vars12,
-    Vars13,
-    Vars14,
-    Vars15,
+from .energy_demand import EnergyDemand
+from .energy_general import G, GStorage, GPlanning
+from .energy_production.dataclasses import (
+    TotalHeatProduction,
+    HeatProductionWithCostFuel,
+    HeatProduction,
+    HeatnetProduction,
+    HeatnetPlantProduction,
+    HeatnetLheatpumpProduction,
+    HeatnetGeothProduction,
 )
+from .h import H
 
 
 @dataclass(kw_only=True)
 class H30:
-    h: Vars0
-    g: Vars1
-    g_storage: Vars2
-    g_planning: Vars3
-    d: Vars4
-    d_r: Vars4
-    d_b: Vars4
-    d_i: Vars4
-    d_t: Vars4
-    d_a: Vars4
-    p: Vars5
-    p_gas: Vars6
-    p_lpg: Vars7
-    p_fueloil: Vars8
-    p_opetpro: Vars9
-    p_coal: Vars6
-    p_heatnet: Vars10
-    p_heatnet_cogen: Vars9
-    p_heatnet_plant: Vars11
-    p_heatnet_lheatpump: Vars12
-    p_heatnet_geoth: Vars13
-    p_biomass: Vars14
-    p_ofossil: Vars15
-    p_orenew: Vars15
-    p_solarth: Vars15
-    p_heatpump: Vars15
+    h: H
+    g: G
+    g_storage: GStorage
+    g_planning: GPlanning
+    d: EnergyDemand
+    d_r: EnergyDemand
+    d_b: EnergyDemand
+    d_i: EnergyDemand
+    d_t: EnergyDemand
+    d_a: EnergyDemand
+    p: TotalHeatProduction
+    p_gas: HeatProductionWithCostFuel
+    p_lpg: HeatProduction
+    p_fueloil: HeatProductionWithCostFuel
+    p_opetpro: HeatProduction
+    p_coal: HeatProductionWithCostFuel
+    p_heatnet: HeatnetProduction
+    p_heatnet_cogen: HeatProduction
+    p_heatnet_plant: HeatnetPlantProduction
+    p_heatnet_lheatpump: HeatnetLheatpumpProduction
+    p_heatnet_geoth: HeatnetGeothProduction
+    p_biomass: HeatProductionWithCostFuel
+    p_ofossil: HeatProduction
+    p_orenew: HeatProduction
+    p_solarth: HeatProduction
+    p_heatpump: HeatProduction
 
     # for pdf
     p_fossil_change_CO2e_t: float = None  # type: ignore

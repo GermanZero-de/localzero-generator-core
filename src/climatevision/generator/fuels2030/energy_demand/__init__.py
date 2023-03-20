@@ -9,7 +9,7 @@ from ...residences2030.r30 import R30
 from ...transport2030.t30 import T30
 from ...common.energy import Energy as EnergyDemand
 
-from ..energy_production.newEFuelProduction import NewEFuelProduction
+from ..energy_production.new_efuel_production import NewEFuelProduction
 
 
 @dataclass(kw_only=True)

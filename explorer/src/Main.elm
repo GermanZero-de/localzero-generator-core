@@ -45,6 +45,7 @@ import Element.Events as Events
 import Element.Font as Font
 import Element.Input as Input
 import Element.Keyed
+import EnterInputsDialog
 import Explorable
 import FeatherIcons
 import File exposing (File)
@@ -55,7 +56,6 @@ import GeneratorRpc
 import Html exposing (Html, p)
 import Html.Attributes
 import Html5.DragDrop as DragDrop exposing (droppable)
-import Http
 import Json.Decode as Decode
 import Json.Encode as Encode
 import JsonRpc
@@ -66,6 +66,7 @@ import Lens.CellContent as CellContent
 import List.Extra
 import Maybe.Extra
 import Pivot exposing (Pivot)
+import Process
 import Run exposing (OverrideHandling(..), Path, Run)
 import Set exposing (Set)
 import Storage
@@ -184,6 +185,8 @@ type alias Model =
     , dragDrop : DragDrop
     , displayedTrace : List DisplayedTrace
     , agsIndex : AgsIndex
+    , showingSidebar : Bool
+    , temporaryHighlight : Maybe Run.Path
     }
 
 
@@ -196,26 +199,11 @@ type alias DisplayedTrace =
     }
 
 
-type alias EnterInputsDialogState =
-    { agsFilter : String
-    , year : Int
-    , filteredAgs : List GeneratorRpc.AgsData
-    }
-
-
 type ModalState
-    = EnterInputs (Maybe RunId) EnterInputsDialogState Run.Overrides
+    = EnterInputs (Maybe RunId) EnterInputsDialog.State Run.Overrides
     | Loading
     | ErrorMessage String String
     | ReMap ReMapModalState
-
-
-enterInputsInit : Int -> String -> AgsIndex -> EnterInputsDialogState
-enterInputsInit year agsFilter agsIndex =
-    { agsFilter = agsFilter
-    , year = year
-    , filteredAgs = AgsIndex.lookup agsFilter agsIndex
-    }
 
 
 type alias ReMapModalState =
@@ -233,6 +221,9 @@ port save : Encode.Value -> Cmd msg
 
 
 port copyToClipboard : Encode.Value -> Cmd msg
+
+
+port scrollIntoView : String -> Cmd msg
 
 
 toClipboardData : Lens -> AllRuns -> Encode.Value
@@ -321,6 +312,8 @@ init storage =
     , dragDrop = DragDrop.init
     , displayedTrace = []
     , agsIndex = AgsIndex.init []
+    , showingSidebar = True
+    , temporaryHighlight = Nothing
     }
         |> update (LocalStorageLoaded storage)
 
@@ -350,6 +343,8 @@ type Msg
     | FilterQuickAddRequested RunId
       -- Tree navigation
     | ToggleCollapseTreeClicked Explorable.Id Path
+    | Highlight RunId Path
+    | HighlightRemove
       -- Modal dialog
     | ModalMsg ModalMsg
     | DisplayCalculateModalClicked (Maybe RunId) { agsFilter : String, year : Int } Run.Overrides
@@ -397,13 +392,12 @@ type Msg
       -- Comparison
     | ToggleSelectForCompareClicked RunId
     | DiffToleranceUpdated RunId RunId Float
+    | ToggleSidebar
+    | ScrollIntoView String
 
 
 type ModalMsg
-    = -- Modal: PrepareCalculate
-      EnterInputsTargetYearUpdated Int
-    | EnterInputsAgsFilterUpdated String
-      -- Modal: ReMap
+    = UpdateEnterInputs EnterInputsDialog.State
     | ReMapChangeMapping RunId RunId
 
 
@@ -515,6 +509,32 @@ update msg model =
     case msg of
         Noop ->
             model
+                |> withNoCmd
+
+        Highlight r p ->
+            { model
+                | collapseStatus =
+                    CollapseStatus.expandUntil (Explorable.Run r) p model.collapseStatus
+                , temporaryHighlight = Just p
+            }
+                |> withCmd
+                    (Cmd.batch
+                        [ Task.perform (always (ScrollIntoView (treeItemId (Explorable.Run r) p))) (Process.sleep 50)
+                        , Task.perform (always HighlightRemove) (Process.sleep 3000.0)
+                        ]
+                    )
+
+        ScrollIntoView id ->
+            model
+                |> withCmd (scrollIntoView id)
+
+        HighlightRemove ->
+            { model | temporaryHighlight = Nothing }
+                |> withNoCmd
+
+        -- |> withCmd (Task.attempt HighlightGetElement (Browser.Dom.getElement ()
+        ToggleSidebar ->
+            { model | showingSidebar = not model.showingSidebar }
                 |> withNoCmd
 
         -- |> withNoCmd
@@ -726,7 +746,7 @@ update msg model =
         DisplayCalculateModalClicked maybeNdx { agsFilter, year } overrides ->
             let
                 modal =
-                    EnterInputs maybeNdx (enterInputsInit year agsFilter model.agsIndex) overrides
+                    EnterInputs maybeNdx (EnterInputsDialog.init year agsFilter model.agsIndex) overrides
             in
             { model | showModal = Just modal }
                 |> withNoCmd
@@ -1236,18 +1256,10 @@ updateModal msg model agsIndex =
             Nothing
                 |> withNoCmd
 
-        Just (EnterInputs ndx state overrides) ->
+        Just (EnterInputs ndx _ overrides) ->
             case msg of
-                EnterInputsAgsFilterUpdated f ->
-                    Just
-                        (EnterInputs ndx
-                            (enterInputsInit state.year f agsIndex)
-                            overrides
-                        )
-                        |> withNoCmd
-
-                EnterInputsTargetYearUpdated y ->
-                    Just (EnterInputs ndx { state | year = y } overrides)
+                UpdateEnterInputs ei ->
+                    Just (EnterInputs ndx ei overrides)
                         |> withNoCmd
 
                 ReMapChangeMapping _ _ ->
@@ -1260,11 +1272,7 @@ updateModal msg model agsIndex =
                     Just (ReMap { reMapState | mapping = Dict.insert a b reMapState.mapping })
                         |> withNoCmd
 
-                EnterInputsAgsFilterUpdated _ ->
-                    model
-                        |> withNoCmd
-
-                EnterInputsTargetYearUpdated _ ->
+                UpdateEnterInputs _ ->
                     model
                         |> withNoCmd
 
@@ -1466,6 +1474,8 @@ viewTree :
     { isCollapsed : Run.Path -> Bool
     , collapsedToggledMsg : Run.Path -> msg
     , viewLeaf : Run.Path -> String -> leaf -> List (Element msg)
+    , itemId : Run.Path -> String
+    , temporaryHighlight : Maybe Run.Path
     }
     -> Run.Path
     -> Tree leaf
@@ -1479,13 +1489,26 @@ viewTree cfg path tree =
             |> List.map
                 (\( name, val ) ->
                     let
-                        itemRow content =
-                            row
-                                ([ spacing sizes.large, width fill ] ++ treeElementStyle)
-                                content
-
                         childPath =
                             path ++ [ name ]
+
+                        maybeHighlight =
+                            if Just childPath == cfg.temporaryHighlight then
+                                [ Border.glow Styling.highlightColor 1.0 ]
+
+                            else
+                                []
+
+                        itemRow content =
+                            row
+                                ([ spacing sizes.large
+                                 , width fill
+                                 , Element.htmlAttribute (Html.Attributes.id (cfg.itemId childPath))
+                                 ]
+                                    ++ maybeHighlight
+                                    ++ treeElementStyle
+                                )
+                                content
 
                         element =
                             case val of
@@ -1549,17 +1572,28 @@ viewValue v =
             viewFloatValue f
 
 
+runsAndComparisonsViewPortId : String
+runsAndComparisonsViewPortId =
+    "runs-and-comparisons"
+
+
+treeItemId : Explorable.Id -> Run.Path -> String
+treeItemId runId path =
+    String.fromInt (Explorable.toComparable runId) ++ "_" ++ String.join "-" path
+
+
 viewValueTree :
     RunId
     -> LensId
     -> Run.Path
+    -> Maybe Run.Path
     -> (RunId -> Run.Path -> Bool)
     -> Lens
     -> Run.Overrides
     -> Maybe ActiveOverrideEditor
     -> Tree Value.MaybeWithTrace
     -> Element Msg
-viewValueTree runId lensId path checkIsCollapsed lens overrides activeOverrideEditor tree =
+viewValueTree runId lensId path temporaryHighlight checkIsCollapsed lens overrides activeOverrideEditor tree =
     let
         viewLeaf : Run.Path -> String -> Value.MaybeWithTrace -> List (Element Msg)
         viewLeaf pathToParent name valueWithTrace =
@@ -1617,9 +1651,8 @@ viewValueTree runId lensId path checkIsCollapsed lens overrides activeOverrideEd
                                     t
                                 )
                     , el
-                        ([ width fill
-                         ]
-                            ++ List.map Element.htmlAttribute
+                        (width fill
+                            :: List.map Element.htmlAttribute
                                 (DragDrop.draggable DragDropMsg (DragFromRun runId thisPath))
                         )
                         (text name)
@@ -1631,6 +1664,8 @@ viewValueTree runId lensId path checkIsCollapsed lens overrides activeOverrideEd
         { isCollapsed = checkIsCollapsed runId
         , collapsedToggledMsg = ToggleCollapseTreeClicked (Explorable.Run runId)
         , viewLeaf = viewLeaf
+        , itemId = treeItemId (Explorable.Run runId)
+        , temporaryHighlight = temporaryHighlight
         }
         path
         tree
@@ -1641,8 +1676,8 @@ buttons l =
     row [ Element.spacingXY sizes.medium 0 ] l
 
 
-viewDiffTree : Explorable.Id -> CollapseStatus -> Tree (Diff.Diff Value.MaybeWithTrace) -> Element Msg
-viewDiffTree id collapseStatus tree =
+viewDiffTree : Explorable.Id -> Maybe Run.Path -> CollapseStatus -> Tree (Diff.Diff Value.MaybeWithTrace) -> Element Msg
+viewDiffTree id temporaryHighlight collapseStatus tree =
     let
         missingElement =
             el (Font.alignRight :: fonts.explorerValues) <|
@@ -1674,13 +1709,15 @@ viewDiffTree id collapseStatus tree =
         { isCollapsed = \p -> isCollapsed id p collapseStatus
         , collapsedToggledMsg = ToggleCollapseTreeClicked id
         , viewLeaf = viewLeaf
+        , itemId = treeItemId id
+        , temporaryHighlight = temporaryHighlight
         }
         []
         tree
 
 
-viewComparison : RunId -> RunId -> CollapseStatus -> DiffData -> Element Msg
-viewComparison aId bId collapseStatus diffData =
+viewComparison : RunId -> RunId -> Maybe Run.Path -> CollapseStatus -> DiffData -> Element Msg
+viewComparison aId bId temporaryHighlight collapseStatus diffData =
     let
         id =
             Explorable.Diff aId bId
@@ -1739,13 +1776,14 @@ viewComparison aId bId collapseStatus diffData =
         --, differentIfFilterActive.filterPatternField
         , viewDiffTree
             id
+            temporaryHighlight
             collapseStatus
             diffData.diff
         ]
 
 
-viewRun : RunId -> LensId -> Lens -> CollapseStatus -> Maybe ActiveOverrideEditor -> Maybe ActiveSearch -> Maybe RunId -> Run -> Element Msg
-viewRun runId lensId lens collapseStatus activeOverrideEditor activeSearch selectedForComparison run =
+viewRun : RunId -> LensId -> Maybe Path -> Lens -> CollapseStatus -> Maybe ActiveOverrideEditor -> Maybe ActiveSearch -> Maybe RunId -> Run -> Element Msg
+viewRun runId lensId temporaryHighlight lens collapseStatus activeOverrideEditor activeSearch selectedForComparison run =
     let
         inputs =
             Run.getInputs run
@@ -1838,6 +1876,7 @@ viewRun runId lensId lens collapseStatus activeOverrideEditor activeSearch selec
             runId
             lensId
             []
+            temporaryHighlight
             differentIfFilterActive.isCollapsed
             lens
             overrides
@@ -1870,6 +1909,7 @@ viewRunsAndComparisons model =
             [ scrollbarY
             , width fill
             , height fill
+            , Element.htmlAttribute (Html.Attributes.id runsAndComparisonsViewPortId)
             ]
             (column
                 [ spacing sizes.large
@@ -1881,6 +1921,7 @@ viewRunsAndComparisons model =
                         (\( resultNdx, ir ) ->
                             viewRun resultNdx
                                 (Pivot.lengthL model.lenses)
+                                model.temporaryHighlight
                                 (getActiveLens model)
                                 model.collapseStatus
                                 model.activeOverrideEditor
@@ -1893,7 +1934,7 @@ viewRunsAndComparisons model =
                             |> Dict.toList
                             |> List.map
                                 (\( ( a, b ), diffData ) ->
-                                    viewComparison a b model.collapseStatus diffData
+                                    viewComparison a b model.temporaryHighlight model.collapseStatus diffData
                                 )
                        )
                 )
@@ -1922,9 +1963,6 @@ tableElementFromIndex ndx =
 viewValueSetAsUserDefinedTable : LensId -> DragDrop -> Lens.TableData -> ValueSet -> Element Msg
 viewValueSetAsUserDefinedTable lensId dragDrop td valueSet =
     let
-        cells =
-            Cells.toList td.grid
-
         ifEditing =
             if td.editing /= Nothing then
                 identity
@@ -1935,7 +1973,7 @@ viewValueSetAsUserDefinedTable lensId dragDrop td valueSet =
         viewCell : Lens.CellContent -> Cells.Pos -> Element Msg
         viewCell cell pos =
             let
-                editOnClick =
+                onClick =
                     ifEditing
                         [ Events.onClick
                             (CellOfLensTableEdited lensId pos cell)
@@ -1981,7 +2019,7 @@ viewValueSetAsUserDefinedTable lensId dragDrop td valueSet =
                           , padding 3
                           , Element.htmlAttribute <| Html.Attributes.tabindex 0
                           ]
-                            ++ editOnClick
+                            ++ onClick
                             ++ fonts.table
                             ++ dropTarget
                             ++ highlight
@@ -2009,7 +2047,7 @@ viewValueSetAsUserDefinedTable lensId dragDrop td valueSet =
                         , viewPath path
                         ]
 
-                displayCell c =
+                displayCell =
                     case cell of
                         CellContent.Label l ->
                             displayLabel l
@@ -2034,26 +2072,38 @@ viewValueSetAsUserDefinedTable lensId dragDrop td valueSet =
                                         cellElement [ Font.alignRight ] (text "INTERNAL ERROR")
 
                                     Just valueAndTrace ->
+                                        let
+                                            onValueClick =
+                                                Events.onClick (Highlight r p)
+                                        in
                                         case valueAndTrace.value of
                                             Float f ->
-                                                cellElement [ Font.alignRight ] (text (formatGermanNumber f))
+                                                cellElement [ onValueClick, Font.alignRight ] (text (formatGermanNumber f))
 
                                             Null ->
-                                                cellElement [ Font.alignRight, Font.bold ] (text "null")
+                                                cellElement [ onValueClick, Font.alignRight, Font.bold ] (text "null")
 
                                             String s ->
                                                 cellElement
-                                                    [ Font.alignRight
+                                                    [ onValueClick
+                                                    , Font.alignRight
                                                     , Font.family [ Font.monospace ]
                                                     ]
-                                                    (text s)
+                                                    (text
+                                                        (if s == "" then
+                                                            " "
+
+                                                         else
+                                                            s
+                                                        )
+                                                    )
             in
             case td.editing of
                 Nothing ->
-                    displayCell cell
+                    displayCell
 
                 Just Lens.All ->
-                    displayCell cell
+                    displayCell
 
                 Just (Lens.Cell p editValue) ->
                     if p == pos then
@@ -2118,7 +2168,7 @@ viewValueSetAsUserDefinedTable lensId dragDrop td valueSet =
                             }
 
                     else
-                        displayCell cell
+                        displayCell
 
         separator isColumn pos =
             let
@@ -2533,78 +2583,54 @@ viewRunsAndInterestLists model =
                             model.chartHovering
                             model.runs
                     )
+
+        sidebar =
+            if model.showingSidebar then
+                [ viewRunsAndComparisons model
+                , el
+                    [ width (px 2)
+                    , Background.color black
+                    , height fill
+                    ]
+                    Element.none
+                ]
+
+            else
+                []
     in
     row
         [ width fill
         , height (minimum 0 fill)
         , spacing sizes.large
         ]
-        [ viewRunsAndComparisons model
-        , el
-            [ width (px 2)
-            , Background.color black
-            , height fill
-            ]
-            Element.none
-        , el
-            [ width fill
-            , height (minimum 0 fill)
-            , Element.inFront
-                (row
-                    [ spacing 10
-                    , Element.alignBottom
-                    , Element.moveUp 10
-                    , Element.alignRight
-                    , padding 0
+        (sidebar
+            ++ [ el
+                    [ width fill
+                    , height (minimum 0 fill)
+                    , Element.inFront
+                        (row
+                            [ spacing 10
+                            , Element.alignBottom
+                            , Element.moveUp 10
+                            , Element.alignRight
+                            , padding 0
+                            ]
+                            [ floatingActionButton FeatherIcons.plus NewLensClicked
+                            , floatingActionButton FeatherIcons.grid NewTableClicked
+                            ]
+                        )
                     ]
-                    [ floatingActionButton FeatherIcons.plus NewLensClicked
-                    , floatingActionButton FeatherIcons.grid NewTableClicked
-                    ]
-                )
-            ]
-            (column
-                [ width fill
-                , height (minimum 0 fill)
-                , scrollbarY
-                , spacing sizes.medium
-                , padding sizes.medium
-                ]
-                interestLists
-            )
-        ]
-
-
-level : Value.Trace -> Int
-level tr =
-    case tr of
-        Value.LiteralTrace _ ->
-            0
-
-        Value.NameTrace _ ->
-            0
-
-        Value.DataTrace _ ->
-            0
-
-        Value.FactOrAssTrace _ ->
-            0
-
-        Value.UnaryTrace _ ->
-            1
-
-        Value.BinaryTrace { binary } ->
-            case binary of
-                Value.Times ->
-                    2
-
-                Value.Divide ->
-                    2
-
-                Value.Plus ->
-                    3
-
-                Value.Minus ->
-                    3
+                    (column
+                        [ width fill
+                        , height (minimum 0 fill)
+                        , scrollbarY
+                        , spacing sizes.medium
+                        , padding sizes.medium
+                        ]
+                        interestLists
+                    )
+               ]
+        )
 
 
 viewTraceAsBlocks : Set Path -> RunId -> AllRuns -> Value.Trace -> Element Msg
@@ -2839,7 +2865,15 @@ viewModel model =
                 [ text "LocalZero Explorer"
                 , el [ width fill ] Element.none
                 , buttons
-                    [ iconButton FeatherIcons.download DownloadClicked
+                    [ (if model.showingSidebar then
+                        dangerousIconButton
+
+                       else
+                        iconButton
+                      )
+                        FeatherIcons.sidebar
+                        ToggleSidebar
+                    , iconButton FeatherIcons.download DownloadClicked
                     , iconButton FeatherIcons.upload UploadClicked
                     ]
                 ]
@@ -2904,98 +2938,6 @@ viewModalDialogBox title content =
             , filler
             ]
         , filler
-        ]
-
-
-viewCalculateModal : Maybe Int -> EnterInputsDialogState -> Run.Overrides -> Element Msg
-viewCalculateModal maybeNdx state overrides =
-    let
-        labelStyle =
-            [ Font.alignRight, width (minimum 100 shrink) ]
-    in
-    column
-        [ width fill
-        , height fill
-        , spacing sizes.medium
-        ]
-        [ Input.text []
-            { label = Input.labelLeft labelStyle (text "AGS")
-            , text = state.agsFilter
-            , onChange = ModalMsg << EnterInputsAgsFilterUpdated
-            , placeholder = Nothing
-            }
-        , el
-            [ width fill
-            , height (minimum 0 fill)
-            , Border.solid
-            , Border.width 1
-            , Border.color black
-            , padding sizes.medium
-            ]
-          <|
-            if List.length state.filteredAgs > 2000 then
-                text "Enter a AGS (e.g. 08416041) or City name (e.g. Tübingen)"
-
-            else
-                column
-                    [ width fill
-                    , height fill
-                    , padding sizes.medium
-                    , spacing sizes.medium
-                    , scrollbarY
-                    ]
-                    (state.filteredAgs
-                        |> List.map
-                            (\a ->
-                                row
-                                    ([ width fill
-                                     , spacing sizes.medium
-                                     , Events.onClick (ModalMsg <| EnterInputsAgsFilterUpdated a.ags)
-                                     ]
-                                        ++ (case state.filteredAgs of
-                                                [ _ ] ->
-                                                    [ Border.rounded 4
-                                                    , Background.color Styling.germanZeroYellow
-                                                    , Font.color Styling.white
-                                                    , padding sizes.small
-                                                    ]
-
-                                                _ ->
-                                                    []
-                                           )
-                                    )
-                                    [ text a.ags
-                                    , text a.desc
-                                    ]
-                            )
-                    )
-        , Input.slider
-            [ height (px 20)
-            , Element.behindContent
-                (el
-                    [ width fill
-                    , height (px 2)
-                    , Element.centerY
-                    , Background.color germanZeroGreen
-                    , Border.rounded 2
-                    ]
-                    Element.none
-                )
-            ]
-            { label = Input.labelLeft labelStyle (text (String.fromInt state.year))
-            , min = 2025
-            , max = 2050
-            , step = Just 1.0
-            , onChange = ModalMsg << EnterInputsTargetYearUpdated << round
-            , value = toFloat state.year
-            , thumb = Input.defaultThumb
-            }
-        , case state.filteredAgs of
-            [ exactlyOne ] ->
-                iconButton (size32 FeatherIcons.check) (CalculateModalOkClicked maybeNdx { year = state.year, ags = exactlyOne.ags } overrides)
-
-            _ ->
-                text "Enter a valid AGS first!"
         ]
 
 
@@ -3076,7 +3018,10 @@ view model =
 
                                         Just ndx ->
                                             "Change generator run " ++ String.fromInt ndx
-                                    , viewCalculateModal maybeNdx state overrides
+                                    , EnterInputsDialog.view
+                                        (ModalMsg << UpdateEnterInputs)
+                                        (\i -> CalculateModalOkClicked maybeNdx i overrides)
+                                        state
                                     )
 
                                 Loading ->

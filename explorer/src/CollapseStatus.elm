@@ -3,11 +3,13 @@ module CollapseStatus exposing
     , allCollapsed
     , collapse
     , expand
+    , expandUntil
     , isCollapsed
     , toggle
     )
 
 import Explorable
+import List.Extra
 import Run exposing (Path)
 import Set exposing (Set)
 
@@ -29,6 +31,14 @@ absolutePath i p =
 expand : Explorable.Id -> Path -> CollapseStatus -> CollapseStatus
 expand i p (CollapseStatus s) =
     CollapseStatus (Set.insert (absolutePath i p) s)
+
+
+expandUntil : Explorable.Id -> Path -> CollapseStatus -> CollapseStatus
+expandUntil i p s =
+    List.foldl
+        (expand i)
+        s
+        (List.Extra.inits p)
 
 
 collapse : Explorable.Id -> Path -> CollapseStatus -> CollapseStatus

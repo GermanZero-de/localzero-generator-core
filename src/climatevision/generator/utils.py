@@ -22,5 +22,7 @@ T = TypeVar("T")
 
 
 def element_wise_plus(a: T, b: T) -> T:
-    """Element wise addition for a dataclasses"""
-    return type(a)(*(getattr(a, f.name) + getattr(b, f.name) for f in fields(a)))
+    """Element wise addition for a dataclasses. Must be called on a dataclass instance.
+    Sadly that is hard to express in python's type system for now (3.10)."""
+    fields_of_a = fields(a)  # type: ignore (see comment above)
+    return type(a)(*(getattr(a, f.name) + getattr(b, f.name) for f in fields_of_a))

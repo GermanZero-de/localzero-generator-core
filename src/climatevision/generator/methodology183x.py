@@ -27,7 +27,7 @@ from .fuels2030.f30 import F30
 
 
 @dataclass(kw_only=True)
-class zColVars:
+class ZColVars:
     energy_18: float = None  # type: ignore
     pct_energy_18: float = None  # type: ignore
     CO2e_production_based_18: float = None  # type: ignore
@@ -142,20 +142,20 @@ class M183X:
     change_CO2e_pct: float = None  # type: ignore
     cost_climate_saved: float = None  # type: ignore
 
-    z: zColVars = field(default_factory=zColVars)
-    s: zColVars = field(default_factory=zColVars)
-    d: zColVars = field(default_factory=zColVars)
+    z: ZColVars = field(default_factory=ZColVars)
+    s: ZColVars = field(default_factory=ZColVars)
+    d: ZColVars = field(default_factory=ZColVars)
 
-    e: zColVars = field(default_factory=zColVars)
-    h: zColVars = field(default_factory=zColVars)
-    f: zColVars = field(default_factory=zColVars)
-    rb: zColVars = field(default_factory=zColVars)
-    r: zColVars = field(default_factory=zColVars)
-    b: zColVars = field(default_factory=zColVars)
-    t: zColVars = field(default_factory=zColVars)
-    i: zColVars = field(default_factory=zColVars)
-    a: zColVars = field(default_factory=zColVars)
-    l: zColVars = field(default_factory=zColVars)
+    e: ZColVars = field(default_factory=ZColVars)
+    h: ZColVars = field(default_factory=ZColVars)
+    f: ZColVars = field(default_factory=ZColVars)
+    rb: ZColVars = field(default_factory=ZColVars)
+    r: ZColVars = field(default_factory=ZColVars)
+    b: ZColVars = field(default_factory=ZColVars)
+    t: ZColVars = field(default_factory=ZColVars)
+    i: ZColVars = field(default_factory=ZColVars)
+    a: ZColVars = field(default_factory=ZColVars)
+    l: ZColVars = field(default_factory=ZColVars)
 
     CO2e_per_capita_nat: float = None  # type: ignore
     CO2e_per_capita_com: float = None  # type: ignore

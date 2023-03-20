@@ -19,7 +19,7 @@ def calc(inputs: Inputs, inputs_germany: Inputs) -> I18:
     )
     supply = energy_source.calc_supply(inputs, production)
 
-    i = production.p
+    i = production.total
 
     return I18(
         i=i,

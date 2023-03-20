@@ -4,8 +4,6 @@ from dataclasses import dataclass
 
 from .dataclasses import (
     Vars0,
-    Vars1,
-    Vars2,
     Vars3,
     Vars4,
     Vars5,
@@ -23,13 +21,14 @@ from .dataclasses import (
     Vars17,
     Vars18,
 )
+from .energy_general import G, GConsult
 
 
 @dataclass(kw_only=True)
 class B30:
     b: Vars0
-    g: Vars1
-    g_consult: Vars2
+    g: G
+    g_consult: GConsult
     p: Vars3
     p_nonresi: Vars4
     p_nonresi_com: Vars5
