@@ -36,25 +36,25 @@ def calc_supply(inputs: Inputs, production: Production) -> EnergySource:
     # do for all subbranches + copy structure for branches from production_branches
     s_miner_cement = EnergySourceSubBranch.calc_energy_source_sub_branch(
         inputs=inputs,
-        energy_demand=production.p_miner_cement.energy,
+        energy_demand=production.miner_cement.energy,
         sub_branch="cement",
         branch="miner",
     )
     s_miner_chalk = EnergySourceSubBranch.calc_energy_source_sub_branch(
         inputs=inputs,
-        energy_demand=production.p_miner_chalk.energy,
+        energy_demand=production.miner_chalk.energy,
         sub_branch="chalk",
         branch="miner",
     )
     s_miner_glas = EnergySourceSubBranch.calc_energy_source_sub_branch(
         inputs=inputs,
-        energy_demand=production.p_miner_glas.energy,
+        energy_demand=production.miner_glas.energy,
         sub_branch="glas",
         branch="miner",
     )
     s_miner_ceram = EnergySourceSubBranch.calc_energy_source_sub_branch(
         inputs=inputs,
-        energy_demand=production.p_miner_ceram.energy,
+        energy_demand=production.miner_ceram.energy,
         sub_branch="ceram",
         branch="miner",
     )
@@ -64,19 +64,19 @@ def calc_supply(inputs: Inputs, production: Production) -> EnergySource:
 
     s_chem_basic = EnergySourceSubBranch.calc_energy_source_sub_branch(
         inputs=inputs,
-        energy_demand=production.p_chem_basic.energy,
+        energy_demand=production.chem_basic.energy,
         sub_branch="basic",
         branch="chem",
     )
     s_chem_ammonia = EnergySourceSubBranch.calc_energy_source_sub_branch(
         inputs=inputs,
-        energy_demand=production.p_chem_ammonia.energy,
+        energy_demand=production.chem_ammonia.energy,
         sub_branch="basic",  # assumtion same as chem basic (TODO Find specific factors for ammonia production)
         branch="chem",
     )
     s_chem_other = EnergySourceSubBranch.calc_energy_source_sub_branch(
         inputs=inputs,
-        energy_demand=production.p_chem_other.energy,
+        energy_demand=production.chem_other.energy,
         sub_branch="other",
         branch="chem",
     )
@@ -86,21 +86,21 @@ def calc_supply(inputs: Inputs, production: Production) -> EnergySource:
 
     s_metal_steel_primary = EnergySourceSubBranch.calc_energy_source_sub_branch(
         inputs=inputs,
-        energy_demand=production.p_metal_steel_primary.energy,
+        energy_demand=production.metal_steel_primary.energy,
         sub_branch="steel_primary",
         branch="metal",
     )
 
     s_metal_steel_secondary = EnergySourceSubBranch.calc_energy_source_sub_branch(
         inputs=inputs,
-        energy_demand=production.p_metal_steel_secondary.energy,
+        energy_demand=production.metal_steel_secondary.energy,
         sub_branch="steel_secondary",
         branch="metal",
     )
 
     s_metal_nonfe = EnergySourceSubBranch.calc_energy_source_sub_branch(
         inputs=inputs,
-        energy_demand=production.p_metal_nonfe.energy,
+        energy_demand=production.metal_nonfe.energy,
         sub_branch="nonfe",
         branch="metal",
     )
@@ -111,19 +111,19 @@ def calc_supply(inputs: Inputs, production: Production) -> EnergySource:
 
     s_other_paper = EnergySourceSubBranch.calc_energy_source_sub_branch(
         inputs=inputs,
-        energy_demand=production.p_other_paper.energy,
+        energy_demand=production.other_paper.energy,
         sub_branch="paper",
         branch="other",
     )
     s_other_food = EnergySourceSubBranch.calc_energy_source_sub_branch(
         inputs=inputs,
-        energy_demand=production.p_other_food.energy,
+        energy_demand=production.other_food.energy,
         sub_branch="food",
         branch="other",
     )
     s_other_further = EnergySourceSubBranch.calc_energy_source_sub_branch(
         inputs=inputs,
-        energy_demand=production.p_other_further.energy,
+        energy_demand=production.other_further.energy,
         sub_branch="further",
         branch="other",
     )
