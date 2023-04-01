@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from ...inputs import Inputs
 from ...utils import div
 
-from ..dataclasses import (
+from .dataclasses import (
     Vars2,
     Vars3,
     Vars4,

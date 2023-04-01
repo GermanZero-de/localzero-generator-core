@@ -2,11 +2,13 @@
 
 from dataclasses import dataclass
 
-from .dataclasses import (
-    Vars0,
+from .energy_demand import (
     Vars2,
     Vars3,
     Vars4,
+)
+from .dataclasses import (
+    Vars0,
     Vars5,
     Vars6,
     Vars7,
