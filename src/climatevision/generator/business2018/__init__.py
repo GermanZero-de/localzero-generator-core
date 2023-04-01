@@ -229,7 +229,7 @@ def calc(inputs: Inputs, *, r18: R18) -> B18:
 
     s_biomass.number_of_buildings = s_biomass.energy * div(
         production.nonresi.number_of_buildings,
-        production.nonresi.factor_adapted_to_fec * production.nonresi.area_m2,
+        production.nonresi.energy,
     )
     rp_p.CO2e_combustion_based = (
         r18.s.CO2e_combustion_based
