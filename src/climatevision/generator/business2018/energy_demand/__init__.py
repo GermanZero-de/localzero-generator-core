@@ -8,7 +8,7 @@ from ...utils import div
 from ..dataclasses import (
     Vars2,
     Vars3,
-    # Vars4,
+    Vars4,
 )
 
 
@@ -18,7 +18,7 @@ class Production:
     # total: Vars2
 
     nonresi: Vars3
-    # nonresi_com: Vars4
+    nonresi_com: Vars4
     elec_elcon: Vars2
     elec_heatpump: Vars2
     vehicles: Vars2
@@ -43,6 +43,7 @@ def calc_production(
 ) -> Production:
 
     fact = inputs.fact
+    ass = inputs.ass
     entries = inputs.entries
 
     elec_heatpump = Vars2()
@@ -86,10 +87,18 @@ def calc_production(
     )
     nonresi.factor_adapted_to_fec = div(nonresi.energy, nonresi.area_m2)
 
+    nonresi_com = Vars4()
+    nonresi_com.pct_x = ass(
+        "Ass_H_ratio_municipal_non_res_buildings_to_all_non_res_buildings_2050"
+    )
+    nonresi_com.area_m2 = nonresi.area_m2 * nonresi_com.pct_x
+    nonresi_com.energy = nonresi.energy * nonresi_com.pct_x
+    nonresi_com.factor_adapted_to_fec = div(nonresi_com.energy, nonresi_com.area_m2)
+
     return Production(
         # total=total,
         nonresi=nonresi,
-        # nonresi_com=nonresi_com,
+        nonresi_com=nonresi_com,
         elec_elcon=elec_elcon,
         elec_heatpump=elec_heatpump,
         vehicles=vehicles,

@@ -13,8 +13,6 @@ from .b18 import B18
 from .dataclasses import (
     Vars0,
     Vars2,
-    Vars3,
-    Vars4,
     Vars5,
     Vars6,
     Vars7,
@@ -28,12 +26,10 @@ from . import energy_demand
 # Berechnungsfunktion im Sektor GHD für 2018
 def calc(inputs: Inputs, *, r18: R18) -> B18:
     fact = inputs.fact
-    ass = inputs.ass
     entries = inputs.entries
 
     b = Vars0()
     p = Vars2()
-    p_nonresi_com = Vars4()
     s = Vars5()
     s_gas = Vars6()
     s_lpg = Vars6()
@@ -233,14 +229,6 @@ def calc(inputs: Inputs, *, r18: R18) -> B18:
         s_solarth.energy,
     )
 
-    p_nonresi_com.pct_x = ass(
-        "Ass_H_ratio_municipal_non_res_buildings_to_all_non_res_buildings_2050"
-    )
-    p_nonresi_com.area_m2 = production.nonresi.area_m2 * p_nonresi_com.pct_x
-    p_nonresi_com.energy = production.nonresi.energy * p_nonresi_com.pct_x
-    p_nonresi_com.factor_adapted_to_fec = div(
-        p_nonresi_com.energy, p_nonresi_com.area_m2
-    )
     s_biomass.number_of_buildings = s_biomass.energy * div(
         production.nonresi.number_of_buildings,
         production.nonresi.factor_adapted_to_fec * production.nonresi.area_m2,
@@ -266,7 +254,7 @@ def calc(inputs: Inputs, *, r18: R18) -> B18:
         b=b,
         p=p,
         p_nonresi=production.nonresi,
-        p_nonresi_com=p_nonresi_com,
+        p_nonresi_com=production.nonresi_com,
         p_elec_elcon=production.elec_elcon,
         p_elec_heatpump=production.elec_heatpump,
         p_vehicles=production.vehicles,
