@@ -33,7 +33,6 @@ def calc(inputs: Inputs, *, r18: R18) -> B18:
 
     b = Vars0()
     p = Vars2()
-    p_nonresi = Vars3()
     p_nonresi_com = Vars4()
     s = Vars5()
     s_gas = Vars6()
@@ -225,44 +224,28 @@ def calc(inputs: Inputs, *, r18: R18) -> B18:
         s_petrol.energy,
         s_jetfuel.energy,
         s_diesel.energy,
+        s_gas.energy,
+        s_lpg.energy,
+        s_fueloil.energy,
+        s_biomass.energy,
+        s_coal.energy,
+        s_heatnet.energy,
+        s_solarth.energy,
     )
 
-    p_nonresi.area_m2 = (
-        entries.r_area_m2
-        * fact("Fact_B_P_ratio_buisness_buildings_to_all_buildings_area_2016")
-        / (1 - fact("Fact_B_P_ratio_buisness_buildings_to_all_buildings_area_2016"))
-        * (1 - fact("Fact_A_P_energy_buildings_ratio_A_to_B"))
-    )
-    p_nonresi.energy = (
-        s_gas.energy
-        + s_lpg.energy
-        + s_fueloil.energy
-        + s_biomass.energy
-        + s_coal.energy
-        + s_heatnet.energy
-        + s_heatpump.energy
-        + s_solarth.energy
-        + s_elec_heating.energy
-    )
-    p_nonresi.number_of_buildings = (
-        fact("Fact_B_P_number_business_buildings_2016")
-        * entries.m_population_com_2018
-        / entries.m_population_nat
-    )
-    p_nonresi.factor_adapted_to_fec = div(p_nonresi.energy, p_nonresi.area_m2)
     p_nonresi_com.pct_x = ass(
         "Ass_H_ratio_municipal_non_res_buildings_to_all_non_res_buildings_2050"
     )
-    p_nonresi_com.area_m2 = p_nonresi.area_m2 * p_nonresi_com.pct_x
-    p_nonresi_com.energy = p_nonresi.energy * p_nonresi_com.pct_x
+    p_nonresi_com.area_m2 = production.nonresi.area_m2 * p_nonresi_com.pct_x
+    p_nonresi_com.energy = production.nonresi.energy * p_nonresi_com.pct_x
     p_nonresi_com.factor_adapted_to_fec = div(
         p_nonresi_com.energy, p_nonresi_com.area_m2
     )
     s_biomass.number_of_buildings = s_biomass.energy * div(
-        p_nonresi.number_of_buildings,
-        p_nonresi.factor_adapted_to_fec * p_nonresi.area_m2,
+        production.nonresi.number_of_buildings,
+        production.nonresi.factor_adapted_to_fec * production.nonresi.area_m2,
     )
-    p.energy = p_nonresi.energy + production.other.energy
+    p.energy = production.nonresi.energy + production.other.energy
     rp_p.CO2e_combustion_based = (
         r18.s.CO2e_combustion_based
         - r18.s_petrol.CO2e_combustion_based
@@ -282,7 +265,7 @@ def calc(inputs: Inputs, *, r18: R18) -> B18:
     return B18(
         b=b,
         p=p,
-        p_nonresi=p_nonresi,
+        p_nonresi=production.nonresi,
         p_nonresi_com=p_nonresi_com,
         p_elec_elcon=production.elec_elcon,
         p_elec_heatpump=production.elec_heatpump,
