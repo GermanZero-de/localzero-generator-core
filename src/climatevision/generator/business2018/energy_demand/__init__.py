@@ -46,21 +46,18 @@ def calc_production(
     ass = inputs.ass
     entries = inputs.entries
 
-    elec_heatpump = Energy()
-    elec_heatpump.energy = s_heatpump_energy / fact(
-        "Fact_R_S_heatpump_mean_annual_performance_factor_all"
+    elec_heatpump = Energy(
+        energy=s_heatpump_energy
+        / fact("Fact_R_S_heatpump_mean_annual_performance_factor_all")
     )
 
-    elec_elcon = Energy()
-    elec_elcon.energy = elec_elcon.energy = (
-        s_elec_energy - elec_heatpump.energy - s_elec_heating_energy
+    elec_elcon = Energy(
+        energy=s_elec_energy - elec_heatpump.energy - s_elec_heating_energy
     )
 
-    vehicles = Energy()
-    vehicles.energy = s_petrol_energy + s_jetfuel_energy + s_diesel_energy
+    vehicles = Energy(energy=s_petrol_energy + s_jetfuel_energy + s_diesel_energy)
 
-    other = Energy()
-    other.energy = elec_elcon.energy + elec_heatpump.energy + vehicles.energy
+    other = Energy(energy=elec_elcon.energy + elec_heatpump.energy + vehicles.energy)
 
     nonresi = Vars3()
     nonresi.area_m2 = (
@@ -95,8 +92,7 @@ def calc_production(
     nonresi_com.energy = nonresi.energy * nonresi_com.pct_x
     nonresi_com.factor_adapted_to_fec = div(nonresi_com.energy, nonresi_com.area_m2)
 
-    total = Energy()
-    total.energy = nonresi.energy + other.energy
+    total = Energy(energy=nonresi.energy + other.energy)
 
     return Production(
         total=total,
