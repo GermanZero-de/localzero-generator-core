@@ -4,12 +4,6 @@ from dataclasses import dataclass
 
 
 @dataclass(kw_only=True)
-class Vars2:
-    # Used by p, p_elec_elcon, p_elec_heatpump, p_vehicles, p_other
-    energy: float = None  # type: ignore
-
-
-@dataclass(kw_only=True)
 class Vars3:
     # Used by p_nonresi
     area_m2: float = None  # type: ignore

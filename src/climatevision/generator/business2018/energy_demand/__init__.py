@@ -4,9 +4,9 @@ from dataclasses import dataclass
 
 from ...inputs import Inputs
 from ...utils import div
+from ...common.energy import Energy
 
 from .dataclasses import (
-    Vars2,
     Vars3,
     Vars4,
 )
@@ -15,14 +15,14 @@ from .dataclasses import (
 @dataclass(kw_only=True)
 class Production:
 
-    total: Vars2
+    total: Energy
 
     nonresi: Vars3
     nonresi_com: Vars4
-    elec_elcon: Vars2
-    elec_heatpump: Vars2
-    vehicles: Vars2
-    other: Vars2
+    elec_elcon: Energy
+    elec_heatpump: Energy
+    vehicles: Energy
+    other: Energy
 
 
 def calc_production(
@@ -46,20 +46,20 @@ def calc_production(
     ass = inputs.ass
     entries = inputs.entries
 
-    elec_heatpump = Vars2()
+    elec_heatpump = Energy()
     elec_heatpump.energy = s_heatpump_energy / fact(
         "Fact_R_S_heatpump_mean_annual_performance_factor_all"
     )
 
-    elec_elcon = Vars2()
+    elec_elcon = Energy()
     elec_elcon.energy = elec_elcon.energy = (
         s_elec_energy - elec_heatpump.energy - s_elec_heating_energy
     )
 
-    vehicles = Vars2()
+    vehicles = Energy()
     vehicles.energy = s_petrol_energy + s_jetfuel_energy + s_diesel_energy
 
-    other = Vars2()
+    other = Energy()
     other.energy = elec_elcon.energy + elec_heatpump.energy + vehicles.energy
 
     nonresi = Vars3()
@@ -95,7 +95,7 @@ def calc_production(
     nonresi_com.energy = nonresi.energy * nonresi_com.pct_x
     nonresi_com.factor_adapted_to_fec = div(nonresi_com.energy, nonresi_com.area_m2)
 
-    total = Vars2()
+    total = Energy()
     total.energy = nonresi.energy + other.energy
 
     return Production(

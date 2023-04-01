@@ -3,7 +3,7 @@
 from dataclasses import dataclass
 
 from .energy_demand import (
-    Vars2,
+    Energy,
     Vars3,
     Vars4,
 )
@@ -21,13 +21,13 @@ from .dataclasses import (
 @dataclass(kw_only=True)
 class B18:
     b: Vars0
-    p: Vars2
+    p: Energy
     p_nonresi: Vars3
     p_nonresi_com: Vars4
-    p_elec_elcon: Vars2
-    p_elec_heatpump: Vars2
-    p_vehicles: Vars2
-    p_other: Vars2
+    p_elec_elcon: Energy
+    p_elec_heatpump: Energy
+    p_vehicles: Energy
+    p_other: Energy
     s: Vars5
     s_gas: Vars6
     s_lpg: Vars6
