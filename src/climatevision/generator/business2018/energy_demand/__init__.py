@@ -15,7 +15,7 @@ from ..dataclasses import (
 @dataclass(kw_only=True)
 class Production:
 
-    # total: Vars2
+    total: Vars2
 
     nonresi: Vars3
     nonresi_com: Vars4
@@ -95,8 +95,11 @@ def calc_production(
     nonresi_com.energy = nonresi.energy * nonresi_com.pct_x
     nonresi_com.factor_adapted_to_fec = div(nonresi_com.energy, nonresi_com.area_m2)
 
+    total = Vars2()
+    total.energy = nonresi.energy + other.energy
+
     return Production(
-        # total=total,
+        total=total,
         nonresi=nonresi,
         nonresi_com=nonresi_com,
         elec_elcon=elec_elcon,

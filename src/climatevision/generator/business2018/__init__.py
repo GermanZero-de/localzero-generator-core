@@ -12,7 +12,6 @@ from ..residences2018.r18 import R18
 from .b18 import B18
 from .dataclasses import (
     Vars0,
-    Vars2,
     Vars5,
     Vars6,
     Vars7,
@@ -29,7 +28,6 @@ def calc(inputs: Inputs, *, r18: R18) -> B18:
     entries = inputs.entries
 
     b = Vars0()
-    p = Vars2()
     s = Vars5()
     s_gas = Vars6()
     s_lpg = Vars6()
@@ -233,7 +231,6 @@ def calc(inputs: Inputs, *, r18: R18) -> B18:
         production.nonresi.number_of_buildings,
         production.nonresi.factor_adapted_to_fec * production.nonresi.area_m2,
     )
-    p.energy = production.nonresi.energy + production.other.energy
     rp_p.CO2e_combustion_based = (
         r18.s.CO2e_combustion_based
         - r18.s_petrol.CO2e_combustion_based
@@ -243,7 +240,7 @@ def calc(inputs: Inputs, *, r18: R18) -> B18:
         - s_diesel.CO2e_combustion_based
     )
     rp_p.CO2e_total = r18.s.CO2e_combustion_based + s.CO2e_combustion_based
-    rb.energy = r18.p.energy + p.energy
+    rb.energy = r18.p.energy + production.total.energy
     b.CO2e_combustion_based = s.CO2e_combustion_based
     b.CO2e_total = s.CO2e_total
     b.CO2e_production_based = 0
@@ -252,7 +249,7 @@ def calc(inputs: Inputs, *, r18: R18) -> B18:
 
     return B18(
         b=b,
-        p=p,
+        p=production.total,
         p_nonresi=production.nonresi,
         p_nonresi_com=production.nonresi_com,
         p_elec_elcon=production.elec_elcon,
