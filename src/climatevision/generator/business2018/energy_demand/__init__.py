@@ -21,7 +21,7 @@ class Production:
     elec_elcon: Vars2
     elec_heatpump: Vars2
     vehicles: Vars2
-    # other: Vars2
+    other: Vars2
 
 
 def calc_production(
@@ -49,6 +49,9 @@ def calc_production(
     vehicles = Vars2()
     vehicles.energy = s_petrol_energy + s_jetfuel_energy + s_diesel_energy
 
+    other = Vars2()
+    other.energy = elec_elcon.energy + elec_heatpump.energy + vehicles.energy
+
     return Production(
         # total=total,
         # nonresi=nonresi,
@@ -56,5 +59,5 @@ def calc_production(
         elec_elcon=elec_elcon,
         elec_heatpump=elec_heatpump,
         vehicles=vehicles,
-        # other=other,
+        other=other,
     )

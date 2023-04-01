@@ -35,7 +35,6 @@ def calc(inputs: Inputs, *, r18: R18) -> B18:
     p = Vars2()
     p_nonresi = Vars3()
     p_nonresi_com = Vars4()
-    p_other = Vars2()
     s = Vars5()
     s_gas = Vars6()
     s_lpg = Vars6()
@@ -263,12 +262,7 @@ def calc(inputs: Inputs, *, r18: R18) -> B18:
         p_nonresi.number_of_buildings,
         p_nonresi.factor_adapted_to_fec * p_nonresi.area_m2,
     )
-    p_other.energy = (
-        production.elec_elcon.energy
-        + production.elec_heatpump.energy
-        + production.vehicles.energy
-    )
-    p.energy = p_nonresi.energy + p_other.energy
+    p.energy = p_nonresi.energy + production.other.energy
     rp_p.CO2e_combustion_based = (
         r18.s.CO2e_combustion_based
         - r18.s_petrol.CO2e_combustion_based
@@ -293,7 +287,7 @@ def calc(inputs: Inputs, *, r18: R18) -> B18:
         p_elec_elcon=production.elec_elcon,
         p_elec_heatpump=production.elec_heatpump,
         p_vehicles=production.vehicles,
-        p_other=p_other,
+        p_other=production.other,
         s=s,
         s_gas=s_gas,
         s_lpg=s_lpg,
