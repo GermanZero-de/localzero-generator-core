@@ -87,7 +87,7 @@ class EnergyChangePOperationHeat(EnergyChangeAgri, Invest):
         self.demand_heat_nonrehab = (
             self.area_m2_nonrehab
             * (
-                getattr(a18, what).factor_adapted_to_fec
+                getattr(a18, what).ratio_energy_to_m2
                 - inputs.fact("Fact_B_P_ratio_renovated_to_not_renovated_2021")
                 * inputs.ass("Ass_B_D_ratio_fec_to_area_2050")
             )

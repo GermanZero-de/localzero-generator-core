@@ -12,7 +12,7 @@ from ...common.energy import EnergyWithPercentage
 class OperationHeatEnergy(EnergyWithPercentage):
     # Used by p_operation_heat
     area_m2: float
-    factor_adapted_to_fec: float
+    ratio_energy_to_m2: float
 
     @classmethod
     def calc(  # type: ignore
@@ -23,11 +23,11 @@ class OperationHeatEnergy(EnergyWithPercentage):
             * inputs.fact("Fact_A_P_energy_buildings_ratio_A_to_B")
             / (1 - inputs.fact("Fact_A_P_energy_buildings_ratio_A_to_B"))
         )
-        factor_adapted_to_fec = div(energy, area_m2)
+        ratio_energy_to_m2 = div(energy, area_m2)
 
         return cls(
             energy=energy,
             total_energy=total_energy,
-            factor_adapted_to_fec=factor_adapted_to_fec,
+            ratio_energy_to_m2=ratio_energy_to_m2,
             area_m2=area_m2,
         )

@@ -361,31 +361,31 @@ def calc(inputs: Inputs) -> R18:
     p_buildings_area_m2_com.energy = (
         p_buildings_total.energy * p_buildings_area_m2_com.pct_x
     )
-    p_buildings_total.factor_adapted_to_fec = div(
+    p_buildings_total.ratio_energy_to_m2 = div(
         p_buildings_total.energy, p_buildings_total.area_m2
     )
-    p_buildings_until_1919.factor_adapted_to_fec = div(
+    p_buildings_until_1919.ratio_energy_to_m2 = div(
         p_buildings_until_1919.energy, p_buildings_until_1919.area_m2
     )
-    p_buildings_1919_1948.factor_adapted_to_fec = div(
+    p_buildings_1919_1948.ratio_energy_to_m2 = div(
         p_buildings_1919_1948.energy, p_buildings_1919_1948.area_m2
     )
-    p_buildings_1949_1978.factor_adapted_to_fec = div(
+    p_buildings_1949_1978.ratio_energy_to_m2 = div(
         p_buildings_1949_1978.energy, p_buildings_1949_1978.area_m2
     )
-    p_buildings_1979_1995.factor_adapted_to_fec = div(
+    p_buildings_1979_1995.ratio_energy_to_m2 = div(
         p_buildings_1979_1995.energy, p_buildings_1979_1995.area_m2
     )
-    p_buildings_1996_2004.factor_adapted_to_fec = div(
+    p_buildings_1996_2004.ratio_energy_to_m2 = div(
         p_buildings_1996_2004.energy, p_buildings_1996_2004.area_m2
     )
-    p_buildings_2005_2011.factor_adapted_to_fec = div(
+    p_buildings_2005_2011.ratio_energy_to_m2 = div(
         p_buildings_2005_2011.energy, p_buildings_2005_2011.area_m2
     )
-    p_buildings_2011_today.factor_adapted_to_fec = div(
+    p_buildings_2011_today.ratio_energy_to_m2 = div(
         p_buildings_2011_today.energy, p_buildings_2011_today.area_m2
     )
-    p_buildings_area_m2_com.factor_adapted_to_fec = div(
+    p_buildings_area_m2_com.ratio_energy_to_m2 = div(
         p_buildings_area_m2_com.energy, p_buildings_area_m2_com.area_m2
     )
 
@@ -561,7 +561,7 @@ def calc(inputs: Inputs) -> R18:
 
     s_biomass.number_of_buildings = div(
         s_biomass.energy * p_buildings_total.number_of_buildings,
-        (p_buildings_total.factor_adapted_to_fec * p_buildings_total.area_m2),
+        (p_buildings_total.ratio_energy_to_m2 * p_buildings_total.area_m2),
     )
 
     return R18(

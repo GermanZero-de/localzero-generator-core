@@ -28,11 +28,9 @@ class EnergyChange:
 @dataclass(kw_only=True)
 class EnergyPerM2(Energy):
     area_m2: float
-    factor_adapted_to_fec: float = 0
+    ratio_energy_to_m2: float = 0
 
     def __post_init__(
         self,
     ):
-        # fec = final energy consumption
-        # factor_adapted_to_fec = factor_energy_per_m2
-        self.factor_adapted_to_fec = div(self.energy, self.area_m2)
+        self.ratio_energy_to_m2 = div(self.energy, self.area_m2)

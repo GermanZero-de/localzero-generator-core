@@ -22,7 +22,7 @@ class Vars3:
     area_m2: float = None  # type: ignore
     area_m2_relative_heat_ratio: float = None  # type: ignore
     energy: float = None  # type: ignore
-    factor_adapted_to_fec: float = None  # type: ignore
+    ratio_energy_to_m2: float = None  # type: ignore
     fec_after_BMWi: float = None  # type: ignore
     fec_factor_BMWi: float = None  # type: ignore
     number_of_buildings: float = None  # type: ignore
@@ -36,7 +36,7 @@ class Vars4:
     # Used by p_buildings_2005_2011, p_buildings_2011_today
     area_m2: float = None  # type: ignore
     energy: float = None  # type: ignore
-    factor_adapted_to_fec: float = None  # type: ignore
+    ratio_energy_to_m2: float = None  # type: ignore
     fec_after_BMWi: float = None  # type: ignore
     fec_factor_BMWi: float = None  # type: ignore
     number_of_buildings: float = None  # type: ignore
@@ -49,7 +49,7 @@ class Vars5:
     # Used by p_buildings_area_m2_com
     area_m2: float = None  # type: ignore
     energy: float = None  # type: ignore
-    factor_adapted_to_fec: float = None  # type: ignore
+    ratio_energy_to_m2: float = None  # type: ignore
     pct_x: float = None  # type: ignore
 
 

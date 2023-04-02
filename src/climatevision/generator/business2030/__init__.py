@@ -89,7 +89,7 @@ def calc(
     p_nonresi.demand_heat_nonrehab = (
         p_nonresi.area_m2_nonrehab
         * (
-            b18.p_nonresi.factor_adapted_to_fec
+            b18.p_nonresi.ratio_energy_to_m2
             - fact("Fact_B_P_ratio_renovated_to_not_renovated_2021")
             * ass("Ass_B_D_ratio_fec_to_area_2050")
         )
@@ -200,9 +200,7 @@ def calc(
             - b18.s_heatnet.energy
             - b18.s_elec_heating.energy
         )
-        * div(
-            ass("Ass_B_D_ratio_fec_to_area_2050"), b18.p_nonresi.factor_adapted_to_fec
-        )
+        * div(ass("Ass_B_D_ratio_fec_to_area_2050"), b18.p_nonresi.ratio_energy_to_m2)
         - s_solarth.energy,
     )
 

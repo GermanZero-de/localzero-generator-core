@@ -231,23 +231,23 @@ def calc(inputs: Inputs, *, r18: R18, b18: B18) -> R30:
 
     p_buildings_until_1919.demand_heat_nonrehab = (
         p_buildings_until_1919.area_m2_nonrehab
-        * r18.p_buildings_until_1919.factor_adapted_to_fec
+        * r18.p_buildings_until_1919.ratio_energy_to_m2
     )
     p_buildings_1919_1948.demand_heat_nonrehab = (
         p_buildings_1919_1948.area_m2_nonrehab
-        * r18.p_buildings_1919_1948.factor_adapted_to_fec
+        * r18.p_buildings_1919_1948.ratio_energy_to_m2
     )
     p_buildings_1949_1978.demand_heat_nonrehab = (
         p_buildings_1949_1978.area_m2_nonrehab
-        * r18.p_buildings_1949_1978.factor_adapted_to_fec
+        * r18.p_buildings_1949_1978.ratio_energy_to_m2
     )
     p_buildings_1979_1995.demand_heat_nonrehab = (
         p_buildings_1979_1995.area_m2_nonrehab
-        * r18.p_buildings_1979_1995.factor_adapted_to_fec
+        * r18.p_buildings_1979_1995.ratio_energy_to_m2
     )
     p_buildings_1996_2004.demand_heat_nonrehab = (
         p_buildings_1996_2004.area_m2_nonrehab
-        * r18.p_buildings_1996_2004.factor_adapted_to_fec
+        * r18.p_buildings_1996_2004.ratio_energy_to_m2
     )
     p_buildings_2005_2011.demand_heat_nonrehab = (
         p_buildings_2005_2011.area_m2_nonrehab
@@ -285,11 +285,11 @@ def calc(inputs: Inputs, *, r18: R18, b18: B18) -> R30:
     )
     p_buildings_2005_2011.demand_heat_rehab = (
         p_buildings_2005_2011.area_m2_rehab
-        * r18.p_buildings_2005_2011.factor_adapted_to_fec
+        * r18.p_buildings_2005_2011.ratio_energy_to_m2
     )
     p_buildings_2011_today.demand_heat_rehab = (
         p_buildings_2011_today.area_m2_rehab
-        * r18.p_buildings_2011_today.factor_adapted_to_fec
+        * r18.p_buildings_2011_today.ratio_energy_to_m2
     )
     p_buildings_total.demand_heat_rehab = (
         p_buildings_until_1919.demand_heat_rehab
@@ -538,7 +538,7 @@ def calc(inputs: Inputs, *, r18: R18, b18: B18) -> R30:
         )
         * div(
             ass("Ass_R_P_heat_consumption_after_renovation_per_area"),
-            r18.p_buildings_total.factor_adapted_to_fec,
+            r18.p_buildings_total.ratio_energy_to_m2,
         )
         - s_solarth.energy,
     )
