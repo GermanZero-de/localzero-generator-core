@@ -7,9 +7,10 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/hh_ghd.html
 
 from ..inputs import Inputs
 from ..utils import div, MILLION
+from ..common.energy import EnergyPerM2PctCommune
 
 from .r18 import R18
-from .dataclasses import Vars1, Vars2, Vars3, Vars4, Vars5, Vars6, Vars7, Vars8, Vars9
+from .dataclasses import Vars1, Vars2, Vars3, Vars4, Vars6, Vars7, Vars8, Vars9
 
 
 def calc(inputs: Inputs) -> R18:
@@ -377,11 +378,9 @@ def calc(inputs: Inputs) -> R18:
         p_buildings_2011_today.energy, p_buildings_2011_today.area_m2
     )
 
-    p_buildings_area_m2_com_pct_x = entries.r_pct_of_area_m2_com
-    p_buildings_area_m2_com = Vars5(
-        pct_x=p_buildings_area_m2_com_pct_x,
-        area_m2=(p_buildings_total.area_m2 * p_buildings_area_m2_com_pct_x),
-        energy=(p_buildings_total.energy * p_buildings_area_m2_com_pct_x),
+    p_buildings_area_m2_com = EnergyPerM2PctCommune(
+        pct_x=entries.r_pct_of_area_m2_com,
+        total=p_buildings_total,
     )
 
     s.energy = (

@@ -19,12 +19,9 @@ class Vars2:
 
 
 @dataclass(kw_only=True)
-class Vars3:
+class Vars3(EnergyPerM2):
     # Used by p_buildings_total, p_buildings_until_1919, p_buildings_1919_1948, p_buildings_1949_1978, p_buildings_1979_1995, p_buildings_1996_2004
-    area_m2: float = None  # type: ignore
     area_m2_relative_heat_ratio: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    ratio_energy_to_m2: float = None  # type: ignore
     fec_after_BMWi: float = None  # type: ignore
     fec_factor_BMWi: float = None  # type: ignore
     number_of_buildings: float = None  # type: ignore
@@ -34,22 +31,13 @@ class Vars3:
 
 
 @dataclass(kw_only=True)
-class Vars4:
+class Vars4(EnergyPerM2):
     # Used by p_buildings_2005_2011, p_buildings_2011_today
-    area_m2: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    ratio_energy_to_m2: float = None  # type: ignore
     fec_after_BMWi: float = None  # type: ignore
     fec_factor_BMWi: float = None  # type: ignore
     number_of_buildings: float = None  # type: ignore
     relative_building_ratio: float = None  # type: ignore
     relative_heat_ratio_BMWi: float = None  # type: ignore
-
-
-@dataclass(kw_only=True)
-class Vars5(EnergyPerM2):
-    # Used by p_buildings_area_m2_com
-    pct_x: float
 
 
 @dataclass(kw_only=True)
