@@ -11,7 +11,7 @@ from .energy_change_agri import EnergyChangeAgri
 
 
 @dataclass(kw_only=True)
-class CO2eChangePOperationHeat(EnergyChangeAgri, Invest):
+class EnergyChangePOperationHeat(EnergyChangeAgri, Invest):
     area_m2: float = 0
     area_m2_nonrehab: float = 0
     area_m2_rehab: float = 0

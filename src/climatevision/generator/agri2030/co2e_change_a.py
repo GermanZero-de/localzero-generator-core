@@ -7,7 +7,7 @@ from ..utils import div
 from ..common.invest import InvestCommune
 from ..agri2018.a18 import A18
 
-from .energy_demand import CO2eChangePOperation, CO2eChangeP
+from .energy_demand import EnergyChangePOperation, CO2eChangeP
 from .energy_source import CO2eChangeS
 from .energy_general import CO2eChangeG
 
@@ -30,7 +30,7 @@ class CO2eChangeA(InvestCommune):
     inputs: InitVar[Inputs]
     what: InitVar[str]
     a18: InitVar[A18]
-    p_operation: InitVar[CO2eChangePOperation]
+    p_operation: InitVar[EnergyChangePOperation]
     p: InitVar[CO2eChangeP]
     g: InitVar[CO2eChangeG]
     s: InitVar[CO2eChangeS]
@@ -40,7 +40,7 @@ class CO2eChangeA(InvestCommune):
         inputs: Inputs,
         what: str,
         a18: A18,
-        p_operation: CO2eChangePOperation,
+        p_operation: EnergyChangePOperation,
         p: CO2eChangeP,
         g: CO2eChangeG,
         s: CO2eChangeS,

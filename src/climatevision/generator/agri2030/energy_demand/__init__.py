@@ -13,11 +13,11 @@ from .co2e_change_fermentation_or_manure import CO2eChangeFermentationOrManure
 from .co2e_change_soil import CO2eChangeSoil
 from .co2e_change_other_liming import CO2eChangeOtherLiming
 from .co2e_change_other import CO2eChangeOther
-from .co2e_change_p_operation import CO2eChangePOperation
-from .co2e_change_p_operation_heat import CO2eChangePOperationHeat
-from .co2e_change_p_operation_elec_elcon import CO2eChangePOperationElecElcon
-from .co2e_change_p_operation_elec_heatpump import CO2eChangePOperationElecHeatpump
-from .co2e_change_p_operation_vehicles import CO2eChangePOperationVehicles
+from .energy_change_p_operation import EnergyChangePOperation
+from .energy_change_p_operation_heat import EnergyChangePOperationHeat
+from .energy_change_p_operation_elec_elcon import EnergyChangePOperationElecElcon
+from .energy_change_p_operation_elec_heatpump import EnergyChangePOperationElecHeatpump
+from .energy_change_p_operation_vehicles import EnergyChangePOperationVehicles
 
 
 @dataclass(kw_only=True)
@@ -60,11 +60,11 @@ class Production:
     other_kas: CO2eChangeOther
     other_ecrop: CO2eChangeOther
 
-    operation: CO2eChangePOperation
-    operation_heat: CO2eChangePOperationHeat
-    operation_elec_elcon: CO2eChangePOperationElecElcon
-    operation_elec_heatpump: CO2eChangePOperationElecHeatpump
-    operation_vehicles: CO2eChangePOperationVehicles
+    operation: EnergyChangePOperation
+    operation_heat: EnergyChangePOperationHeat
+    operation_elec_elcon: EnergyChangePOperationElecElcon
+    operation_elec_heatpump: EnergyChangePOperationElecHeatpump
+    operation_vehicles: EnergyChangePOperationVehicles
 
 
 def calc_production(inputs: Inputs, a18: A18, l30: L30) -> Production:
@@ -270,26 +270,26 @@ def calc_production(inputs: Inputs, a18: A18, l30: L30) -> Production:
         + other_ecrop.CO2e_production_based,
     )
 
-    operation_heat = CO2eChangePOperationHeat(
+    operation_heat = EnergyChangePOperationHeat(
         inputs=inputs, what="p_operation_heat", a18=a18
     )
 
-    operation_elec_elcon = CO2eChangePOperationElecElcon(
+    operation_elec_elcon = EnergyChangePOperationElecElcon(
         inputs=inputs, what="p_operation_elec_elcon", a18=a18
     )
 
-    operation_elec_heatpump = CO2eChangePOperationElecHeatpump(
+    operation_elec_heatpump = EnergyChangePOperationElecHeatpump(
         inputs=inputs,
         what="p_operation_elec_heatpump",
         a18=a18,
         operation_heat=operation_heat,
     )
 
-    operation_vehicles = CO2eChangePOperationVehicles(
+    operation_vehicles = EnergyChangePOperationVehicles(
         inputs=inputs, what="p_operation_vehicles", a18=a18
     )
 
-    operation = CO2eChangePOperation(
+    operation = EnergyChangePOperation(
         inputs=inputs,
         what="p_operation",
         a18=a18,
