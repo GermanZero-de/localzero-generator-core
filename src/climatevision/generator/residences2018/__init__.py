@@ -27,7 +27,6 @@ def calc(inputs: Inputs) -> R18:
     p_buildings_1996_2004 = Vars3()
     p_buildings_2005_2011 = Vars4()
     p_buildings_2011_today = Vars4()
-    p_buildings_area_m2_com = Vars5()
     p_vehicles = Vars2()
     p_other = Vars2()
 
@@ -203,11 +202,6 @@ def calc(inputs: Inputs) -> R18:
         + p_buildings_2011_today.relative_heat_ratio_BMWi
     )
 
-    p_buildings_area_m2_com.pct_x = entries.r_pct_of_area_m2_com
-    p_buildings_area_m2_com.area_m2 = (
-        p_buildings_total.area_m2 * p_buildings_area_m2_com.pct_x
-    )
-
     p_buildings_until_1919.relative_heat_ratio_buildings_until_2004 = div(
         p_buildings_until_1919.fec_after_BMWi,
         (
@@ -358,9 +352,6 @@ def calc(inputs: Inputs) -> R18:
         p_buildings_total.energy * p_buildings_2011_today.relative_heat_ratio_BMWi
     )
 
-    p_buildings_area_m2_com.energy = (
-        p_buildings_total.energy * p_buildings_area_m2_com.pct_x
-    )
     p_buildings_total.ratio_energy_to_m2 = div(
         p_buildings_total.energy, p_buildings_total.area_m2
     )
@@ -384,6 +375,15 @@ def calc(inputs: Inputs) -> R18:
     )
     p_buildings_2011_today.ratio_energy_to_m2 = div(
         p_buildings_2011_today.energy, p_buildings_2011_today.area_m2
+    )
+
+    p_buildings_area_m2_com = Vars5()
+    p_buildings_area_m2_com.pct_x = entries.r_pct_of_area_m2_com
+    p_buildings_area_m2_com.area_m2 = (
+        p_buildings_total.area_m2 * p_buildings_area_m2_com.pct_x
+    )
+    p_buildings_area_m2_com.energy = (
+        p_buildings_total.energy * p_buildings_area_m2_com.pct_x
     )
     p_buildings_area_m2_com.ratio_energy_to_m2 = div(
         p_buildings_area_m2_com.energy, p_buildings_area_m2_com.area_m2
