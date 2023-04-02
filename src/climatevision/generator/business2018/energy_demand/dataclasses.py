@@ -2,20 +2,29 @@
 
 from dataclasses import dataclass
 
-
-@dataclass(kw_only=True)
-class Vars3:
-    # Used by p_nonresi
-    area_m2: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    factor_adapted_to_fec: float = None  # type: ignore
-    number_of_buildings: float = None  # type: ignore
+from ...common.energy import Energy
+from ...utils import div
 
 
 @dataclass(kw_only=True)
-class Vars4:
-    # Used by p_nonresi_com
-    area_m2: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    factor_adapted_to_fec: float = None  # type: ignore
-    pct_x: float = None  # type: ignore
+class Vars3(Energy):
+    area_m2: float
+    factor_adapted_to_fec: float = 0
+    number_of_buildings: float
+
+    def __post_init__(
+        self,
+    ):
+        self.factor_adapted_to_fec = div(self.energy, self.area_m2)
+
+
+@dataclass(kw_only=True)
+class Vars4(Energy):
+    area_m2: float
+    factor_adapted_to_fec: float = 0
+    pct_x: float
+
+    def __post_init__(
+        self,
+    ):
+        self.factor_adapted_to_fec = div(self.energy, self.area_m2)

@@ -3,7 +3,6 @@
 from dataclasses import dataclass
 
 from ...inputs import Inputs
-from ...utils import div
 from ...common.energy import Energy
 
 from .dataclasses import (
@@ -59,39 +58,38 @@ def calc_production(
 
     other = Energy(energy=elec_elcon.energy + elec_heatpump.energy + vehicles.energy)
 
-    nonresi = Vars3()
-    nonresi.area_m2 = (
-        entries.r_area_m2
-        * fact("Fact_B_P_ratio_buisness_buildings_to_all_buildings_area_2016")
-        / (1 - fact("Fact_B_P_ratio_buisness_buildings_to_all_buildings_area_2016"))
-        * (1 - fact("Fact_A_P_energy_buildings_ratio_A_to_B"))
+    nonresi = Vars3(
+        area_m2=(
+            entries.r_area_m2
+            * fact("Fact_B_P_ratio_buisness_buildings_to_all_buildings_area_2016")
+            / (1 - fact("Fact_B_P_ratio_buisness_buildings_to_all_buildings_area_2016"))
+            * (1 - fact("Fact_A_P_energy_buildings_ratio_A_to_B"))
+        ),
+        energy=(
+            s_gas_energy
+            + s_lpg_energy
+            + s_fueloil_energy
+            + s_biomass_energy
+            + s_coal_energy
+            + s_heatnet_energy
+            + s_heatpump_energy
+            + s_solarth_energy
+            + s_elec_heating_energy
+        ),
+        number_of_buildings=(
+            fact("Fact_B_P_number_business_buildings_2016")
+            * entries.m_population_com_2018
+            / entries.m_population_nat
+        ),
     )
-    nonresi.energy = (
-        s_gas_energy
-        + s_lpg_energy
-        + s_fueloil_energy
-        + s_biomass_energy
-        + s_coal_energy
-        + s_heatnet_energy
-        + s_heatpump_energy
-        + s_solarth_energy
-        + s_elec_heating_energy
-    )
-    nonresi.number_of_buildings = (
-        fact("Fact_B_P_number_business_buildings_2016")
-        * entries.m_population_com_2018
-        / entries.m_population_nat
-    )
-    nonresi.factor_adapted_to_fec = div(nonresi.energy, nonresi.area_m2)
 
-    nonresi_commune = Vars4()
-    nonresi_commune.pct_x = ass(
+    nonresi_commune_pct_x = ass(
         "Ass_H_ratio_municipal_non_res_buildings_to_all_non_res_buildings_2050"
     )
-    nonresi_commune.area_m2 = nonresi.area_m2 * nonresi_commune.pct_x
-    nonresi_commune.energy = nonresi.energy * nonresi_commune.pct_x
-    nonresi_commune.factor_adapted_to_fec = div(
-        nonresi_commune.energy, nonresi_commune.area_m2
+    nonresi_commune = Vars4(
+        pct_x=nonresi_commune_pct_x,
+        area_m2=nonresi.area_m2 * nonresi_commune_pct_x,
+        energy=nonresi.energy * nonresi_commune_pct_x,
     )
 
     total = Energy(energy=nonresi.energy + other.energy)
