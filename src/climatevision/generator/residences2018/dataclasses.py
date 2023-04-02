@@ -2,6 +2,8 @@
 
 from dataclasses import dataclass
 
+from ..common.energy import EnergyPerM2
+
 
 @dataclass(kw_only=True)
 class Vars1:
@@ -45,12 +47,9 @@ class Vars4:
 
 
 @dataclass(kw_only=True)
-class Vars5:
+class Vars5(EnergyPerM2):
     # Used by p_buildings_area_m2_com
-    area_m2: float = None  # type: ignore
-    energy: float = None  # type: ignore
-    ratio_energy_to_m2: float = None  # type: ignore
-    pct_x: float = None  # type: ignore
+    pct_x: float
 
 
 @dataclass(kw_only=True)

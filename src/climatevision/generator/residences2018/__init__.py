@@ -377,16 +377,11 @@ def calc(inputs: Inputs) -> R18:
         p_buildings_2011_today.energy, p_buildings_2011_today.area_m2
     )
 
-    p_buildings_area_m2_com = Vars5()
-    p_buildings_area_m2_com.pct_x = entries.r_pct_of_area_m2_com
-    p_buildings_area_m2_com.area_m2 = (
-        p_buildings_total.area_m2 * p_buildings_area_m2_com.pct_x
-    )
-    p_buildings_area_m2_com.energy = (
-        p_buildings_total.energy * p_buildings_area_m2_com.pct_x
-    )
-    p_buildings_area_m2_com.ratio_energy_to_m2 = div(
-        p_buildings_area_m2_com.energy, p_buildings_area_m2_com.area_m2
+    p_buildings_area_m2_com_pct_x = entries.r_pct_of_area_m2_com
+    p_buildings_area_m2_com = Vars5(
+        pct_x=p_buildings_area_m2_com_pct_x,
+        area_m2=(p_buildings_total.area_m2 * p_buildings_area_m2_com_pct_x),
+        energy=(p_buildings_total.energy * p_buildings_area_m2_com_pct_x),
     )
 
     s.energy = (
