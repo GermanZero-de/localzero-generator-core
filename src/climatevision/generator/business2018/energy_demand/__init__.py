@@ -3,9 +3,7 @@
 from dataclasses import dataclass
 
 from ...inputs import Inputs
-from ...common.energy import Energy, EnergyPerM2PctCommune
-
-from .dataclasses import EnergyPerM2WithBuildings
+from ...common.energy import Energy, EnergyPerM2PctCommune, EnergyPerM2WithBuildings
 
 
 @dataclass(kw_only=True)

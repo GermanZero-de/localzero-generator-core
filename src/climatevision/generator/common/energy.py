@@ -37,6 +37,11 @@ class EnergyPerM2(Energy):
 
 
 @dataclass(kw_only=True)
+class EnergyPerM2WithBuildings(EnergyPerM2):
+    number_of_buildings: float
+
+
+@dataclass(kw_only=True)
 class EnergyPerM2PctCommune(EnergyPerM2):
     pct_x: float
 
