@@ -20,6 +20,12 @@ class EnergyWithPercentage(Energy):
 
 
 @dataclass(kw_only=True)
+class EnergyChange:
+    change_energy_MWh: float = 0
+    change_energy_pct: float = 0
+
+
+@dataclass(kw_only=True)
 class EnergyPerM2(Energy):
     area_m2: float
     factor_adapted_to_fec: float = 0
