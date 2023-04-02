@@ -18,7 +18,7 @@ class Production:
     total: Energy
 
     nonresi: Vars3
-    nonresi_com: Vars4
+    nonresi_commune: Vars4
     elec_elcon: Energy
     elec_heatpump: Energy
     vehicles: Energy
@@ -84,20 +84,22 @@ def calc_production(
     )
     nonresi.factor_adapted_to_fec = div(nonresi.energy, nonresi.area_m2)
 
-    nonresi_com = Vars4()
-    nonresi_com.pct_x = ass(
+    nonresi_commune = Vars4()
+    nonresi_commune.pct_x = ass(
         "Ass_H_ratio_municipal_non_res_buildings_to_all_non_res_buildings_2050"
     )
-    nonresi_com.area_m2 = nonresi.area_m2 * nonresi_com.pct_x
-    nonresi_com.energy = nonresi.energy * nonresi_com.pct_x
-    nonresi_com.factor_adapted_to_fec = div(nonresi_com.energy, nonresi_com.area_m2)
+    nonresi_commune.area_m2 = nonresi.area_m2 * nonresi_commune.pct_x
+    nonresi_commune.energy = nonresi.energy * nonresi_commune.pct_x
+    nonresi_commune.factor_adapted_to_fec = div(
+        nonresi_commune.energy, nonresi_commune.area_m2
+    )
 
     total = Energy(energy=nonresi.energy + other.energy)
 
     return Production(
         total=total,
         nonresi=nonresi,
-        nonresi_com=nonresi_com,
+        nonresi_commune=nonresi_commune,
         elec_elcon=elec_elcon,
         elec_heatpump=elec_heatpump,
         vehicles=vehicles,

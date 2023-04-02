@@ -251,7 +251,7 @@ def calc(inputs: Inputs, *, r18: R18) -> B18:
         b=b,
         p=production.total,
         p_nonresi=production.nonresi,
-        p_nonresi_com=production.nonresi_com,
+        p_nonresi_com=production.nonresi_commune,
         p_elec_elcon=production.elec_elcon,
         p_elec_heatpump=production.elec_heatpump,
         p_vehicles=production.vehicles,
