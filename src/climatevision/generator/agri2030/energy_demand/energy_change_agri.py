@@ -9,7 +9,7 @@ from ...agri2018.a18 import A18
 
 
 @dataclass(kw_only=True)
-class CO2eChangeEnergyAgri(Energy, EnergyChange):
+class EnergyChangeAgri(Energy, EnergyChange):
     inputs: InitVar[Inputs]
     what: InitVar[str]
     a18: InitVar[A18]
