@@ -27,7 +27,7 @@ class EnergyChange:
 
 @dataclass(kw_only=True)
 class EnergyPerM2(Energy):
-    area_m2: float
+    area_m2: float = 0
     ratio_energy_to_m2: float = 0
 
     def __post_init__(

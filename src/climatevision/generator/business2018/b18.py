@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from .energy_demand import (
     Energy,
     EnergyPerM2WithBuildings,
-    Vars4,
+    EnergyPerM2PctCommune,
 )
 from .dataclasses import (
     Vars0,
@@ -23,7 +23,7 @@ class B18:
     b: Vars0
     p: Energy
     p_nonresi: EnergyPerM2WithBuildings
-    p_nonresi_com: Vars4
+    p_nonresi_com: EnergyPerM2PctCommune
     p_elec_elcon: Energy
     p_elec_heatpump: Energy
     p_vehicles: Energy

@@ -7,7 +7,7 @@ from ...common.energy import Energy
 
 from .dataclasses import (
     EnergyPerM2WithBuildings,
-    Vars4,
+    EnergyPerM2PctCommune,
 )
 
 
@@ -17,7 +17,7 @@ class Production:
     total: Energy
 
     nonresi: EnergyPerM2WithBuildings
-    nonresi_commune: Vars4
+    nonresi_commune: EnergyPerM2PctCommune
     elec_elcon: Energy
     elec_heatpump: Energy
     vehicles: Energy
@@ -83,13 +83,11 @@ def calc_production(
         ),
     )
 
-    nonresi_commune_pct_x = ass(
-        "Ass_H_ratio_municipal_non_res_buildings_to_all_non_res_buildings_2050"
-    )
-    nonresi_commune = Vars4(
-        pct_x=nonresi_commune_pct_x,
-        area_m2=nonresi.area_m2 * nonresi_commune_pct_x,
-        energy=nonresi.energy * nonresi_commune_pct_x,
+    nonresi_commune = EnergyPerM2PctCommune(
+        pct_x=ass(
+            "Ass_H_ratio_municipal_non_res_buildings_to_all_non_res_buildings_2050"
+        ),
+        total=nonresi,
     )
 
     total = Energy(energy=nonresi.energy + other.energy)
