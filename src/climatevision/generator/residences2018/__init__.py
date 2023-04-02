@@ -20,41 +20,41 @@ def calc(inputs: Inputs) -> R18:
     ### P - Section ###
     r = Vars1()
     p = Vars2()
-    p_buildings_total = Vars3()
-    p_buildings_until_1919 = Vars3()
-    p_buildings_1919_1948 = Vars3()
-    p_buildings_1949_1978 = Vars3()
-    p_buildings_1979_1995 = Vars3()
-    p_buildings_1996_2004 = Vars3()
-    p_buildings_2005_2011 = Vars4()
-    p_buildings_2011_today = Vars4()
     p_vehicles = Vars2()
     p_other = Vars2()
 
-    p_buildings_until_1919.number_of_buildings = entries.r_buildings_until_1919
-    p_buildings_1919_1948.number_of_buildings = entries.r_buildings_1919_1948
-    p_buildings_1949_1978.number_of_buildings = entries.r_buildings_1949_1978
-    p_buildings_1979_1995.number_of_buildings = (
-        entries.r_buildings_1979_1986
-        + entries.r_buildings_1987_1990
-        + entries.r_buildings_1991_1995
+    p_buildings_until_1919 = Vars3(number_of_buildings=entries.r_buildings_until_1919)
+    p_buildings_1919_1948 = Vars3(number_of_buildings=entries.r_buildings_1919_1948)
+    p_buildings_1949_1978 = Vars3(number_of_buildings=entries.r_buildings_1949_1978)
+    p_buildings_1979_1995 = Vars3(
+        number_of_buildings=(
+            entries.r_buildings_1979_1986
+            + entries.r_buildings_1987_1990
+            + entries.r_buildings_1991_1995
+        )
     )
-    p_buildings_1996_2004.number_of_buildings = (
-        entries.r_buildings_1996_2000 + entries.r_buildings_2001_2004
+    p_buildings_1996_2004 = Vars3(
+        number_of_buildings=(
+            entries.r_buildings_1996_2000 + entries.r_buildings_2001_2004
+        )
     )
-    p_buildings_2005_2011.number_of_buildings = (
-        entries.r_buildings_2005_2008 + entries.r_buildings_2009_2011
+    p_buildings_2005_2011 = Vars4(
+        number_of_buildings=(
+            entries.r_buildings_2005_2008 + entries.r_buildings_2009_2011
+        )
     )
-    p_buildings_2011_today.number_of_buildings = entries.r_buildings_2011_today
+    p_buildings_2011_today = Vars4(number_of_buildings=entries.r_buildings_2011_today)
 
-    p_buildings_total.number_of_buildings = (
-        p_buildings_until_1919.number_of_buildings
-        + p_buildings_1919_1948.number_of_buildings
-        + p_buildings_1949_1978.number_of_buildings
-        + p_buildings_1979_1995.number_of_buildings
-        + p_buildings_1996_2004.number_of_buildings
-        + p_buildings_2005_2011.number_of_buildings
-        + p_buildings_2011_today.number_of_buildings
+    p_buildings_total = Vars3(
+        number_of_buildings=(
+            p_buildings_until_1919.number_of_buildings
+            + p_buildings_1919_1948.number_of_buildings
+            + p_buildings_1949_1978.number_of_buildings
+            + p_buildings_1979_1995.number_of_buildings
+            + p_buildings_1996_2004.number_of_buildings
+            + p_buildings_2005_2011.number_of_buildings
+            + p_buildings_2011_today.number_of_buildings
+        )
     )
 
     p_buildings_until_1919.relative_building_ratio = div(
