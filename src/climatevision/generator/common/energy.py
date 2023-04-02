@@ -17,3 +17,16 @@ class EnergyWithPercentage(Energy):
 
     def __post_init__(self, total_energy: float):
         self.pct_energy = div(self.energy, total_energy)
+
+
+@dataclass(kw_only=True)
+class EnergyPerM2(Energy):
+    area_m2: float
+    factor_adapted_to_fec: float = 0
+
+    def __post_init__(
+        self,
+    ):
+        # fec = final energy consumption
+        # factor_adapted_to_fec = factor_energy_per_m2
+        self.factor_adapted_to_fec = div(self.energy, self.area_m2)
