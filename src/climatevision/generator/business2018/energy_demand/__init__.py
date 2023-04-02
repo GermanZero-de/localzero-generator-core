@@ -6,7 +6,7 @@ from ...inputs import Inputs
 from ...common.energy import Energy
 
 from .dataclasses import (
-    Vars3,
+    EnergyPerM2WithBuildings,
     Vars4,
 )
 
@@ -16,7 +16,7 @@ class Production:
 
     total: Energy
 
-    nonresi: Vars3
+    nonresi: EnergyPerM2WithBuildings
     nonresi_commune: Vars4
     elec_elcon: Energy
     elec_heatpump: Energy
@@ -58,7 +58,7 @@ def calc_production(
 
     other = Energy(energy=elec_elcon.energy + elec_heatpump.energy + vehicles.energy)
 
-    nonresi = Vars3(
+    nonresi = EnergyPerM2WithBuildings(
         area_m2=(
             entries.r_area_m2
             * fact("Fact_B_P_ratio_buisness_buildings_to_all_buildings_area_2016")

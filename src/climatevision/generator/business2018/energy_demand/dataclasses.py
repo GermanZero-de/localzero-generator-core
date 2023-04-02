@@ -6,7 +6,7 @@ from ...common.energy import EnergyPerM2
 
 
 @dataclass(kw_only=True)
-class Vars3(EnergyPerM2):
+class EnergyPerM2WithBuildings(EnergyPerM2):
     number_of_buildings: float
 
 

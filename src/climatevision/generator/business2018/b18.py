@@ -4,7 +4,7 @@ from dataclasses import dataclass
 
 from .energy_demand import (
     Energy,
-    Vars3,
+    EnergyPerM2WithBuildings,
     Vars4,
 )
 from .dataclasses import (
@@ -22,7 +22,7 @@ from .dataclasses import (
 class B18:
     b: Vars0
     p: Energy
-    p_nonresi: Vars3
+    p_nonresi: EnergyPerM2WithBuildings
     p_nonresi_com: Vars4
     p_elec_elcon: Energy
     p_elec_heatpump: Energy
