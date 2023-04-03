@@ -6,15 +6,13 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/hh_ghd.html
 # pyright: strict
 
 from ..inputs import Inputs
-from ..utils import div, MILLION
+from ..utils import div
 from ..residences2018.r18 import R18
 
 from .b18 import B18
 from .dataclasses import (
     Vars0,
     Vars5,
-    Vars6,
-    Vars8,
     Vars9,
     Vars10,
 )
@@ -68,151 +66,80 @@ def calc(inputs: Inputs, *, r18: R18) -> B18:
         + supply_elec_energy
     )
 
-    s_gas = Vars6(energy=supply_gas_energy, total_energy=supply_total_energy)
-    s_lpg = Vars6(energy=supply_lpg_energy, total_energy=supply_total_energy)
-    s_petrol = Vars6(energy=supply_petrol_energy, total_energy=supply_total_energy)
-    s_jetfuel = Vars6(energy=supply_jetfuel_energy, total_energy=supply_total_energy)
-    s_diesel = Vars6(energy=supply_diesel_energy, total_energy=supply_total_energy)
-    s_fueloil = Vars6(energy=supply_fueloil_energy, total_energy=supply_total_energy)
-    s_coal = Vars6(energy=supply_coal_energy, total_energy=supply_total_energy)
-    s_heatnet = Vars6(energy=supply_heatnet_energy, total_energy=supply_total_energy)
-    s_elec_heating = Vars8(
-        energy=supply_elec_heating_energy, total_energy=supply_elec_energy
-    )
-    s_heatpump = Vars6(energy=supply_heatpump_energy, total_energy=supply_total_energy)
-    s_solarth = Vars6(energy=supply_solarth_energy, total_energy=supply_total_energy)
-    s_elec = Vars8(energy=supply_elec_energy, total_energy=supply_total_energy)
-
     s.energy = supply_total_energy
 
-    s_gas.cost_fuel_per_MWh = fact("Fact_R_S_gas_energy_cost_factor_2018")
-    s_gas.cost_fuel = s_gas.energy * s_gas.cost_fuel_per_MWh / MILLION
-    s_gas.CO2e_combustion_based_per_MWh = fact("Fact_H_P_ngas_cb_EF")
-    s_gas.CO2e_combustion_based = s_gas.energy * s_gas.CO2e_combustion_based_per_MWh
-    s_gas.CO2e_total = s_gas.CO2e_combustion_based
-    s_lpg.cost_fuel_per_MWh = fact("Fact_R_S_lpg_energy_cost_factor_2018")
-    s_lpg.cost_fuel = s_lpg.energy * s_lpg.cost_fuel_per_MWh / MILLION
-    s_lpg.CO2e_combustion_based_per_MWh = fact("Fact_H_P_LPG_cb_EF")
-    s_lpg.CO2e_combustion_based = s_lpg.energy * s_lpg.CO2e_combustion_based_per_MWh
-    s_lpg.CO2e_total = s_lpg.CO2e_combustion_based
-    s_petrol.cost_fuel_per_MWh = fact("Fact_R_S_petrol_energy_cost_factor_2018")
-    s_petrol.cost_fuel = s_petrol.energy * s_petrol.cost_fuel_per_MWh / MILLION
-    s_petrol.CO2e_combustion_based_per_MWh = fact("Fact_H_P_petrol_cb_EF")
-    s_petrol.CO2e_combustion_based = (
-        s_petrol.energy * s_petrol.CO2e_combustion_based_per_MWh
+    supply = energy_source.calc_supply(
+        inputs,
+        s.energy,
+        supply_gas_energy,
+        supply_lpg_energy,
+        supply_petrol_energy,
+        supply_jetfuel_energy,
+        supply_diesel_energy,
+        supply_fueloil_energy,
+        supply_biomass_energy,
+        supply_coal_energy,
+        supply_heatnet_energy,
+        supply_elec_heating_energy,
+        supply_heatpump_energy,
+        supply_solarth_energy,
+        supply_elec_energy,
     )
-    s_petrol.CO2e_total = s_petrol.CO2e_combustion_based
-    s_jetfuel.cost_fuel_per_MWh = fact("Fact_R_S_kerosine_energy_cost_factor_2018")
-    s_jetfuel.cost_fuel = s_jetfuel.energy * s_jetfuel.cost_fuel_per_MWh / MILLION
-    s_jetfuel.CO2e_combustion_based_per_MWh = fact("Fact_H_P_kerosene_cb_EF")
-    s_jetfuel.CO2e_combustion_based = (
-        s_jetfuel.energy * s_jetfuel.CO2e_combustion_based_per_MWh
-    )
-    s_jetfuel.CO2e_total = s_jetfuel.CO2e_combustion_based
-    s_diesel.cost_fuel_per_MWh = fact("Fact_R_S_fueloil_energy_cost_factor_2018")
-    s_diesel.cost_fuel = s_diesel.energy * s_diesel.cost_fuel_per_MWh / MILLION
-    s_diesel.CO2e_combustion_based_per_MWh = fact("Fact_H_P_fueloil_cb_EF")
-    s_diesel.CO2e_combustion_based = (
-        s_diesel.energy * s_diesel.CO2e_combustion_based_per_MWh
-    )
-    s_diesel.CO2e_total = s_diesel.CO2e_combustion_based
-    s_fueloil.cost_fuel_per_MWh = fact("Fact_R_S_fueloil_energy_cost_factor_2018")
-    s_fueloil.cost_fuel = s_fueloil.energy * s_fueloil.cost_fuel_per_MWh / MILLION
-    s_fueloil.CO2e_combustion_based_per_MWh = fact("Fact_H_P_fueloil_cb_EF")
-    s_fueloil.CO2e_combustion_based = (
-        s_fueloil.energy * s_fueloil.CO2e_combustion_based_per_MWh
-    )
-    s_fueloil.CO2e_total = s_fueloil.CO2e_combustion_based
-    s_coal.cost_fuel_per_MWh = fact("Fact_R_S_coal_energy_cost_factor_2018")
-    s_coal.cost_fuel = s_coal.energy * s_coal.cost_fuel_per_MWh / MILLION
-    s_coal.CO2e_combustion_based_per_MWh = fact("Fact_R_S_coal_CO2e_EF")
-    s_coal.CO2e_combustion_based = s_coal.energy * s_coal.CO2e_combustion_based_per_MWh
-    s_coal.CO2e_total = s_coal.CO2e_combustion_based
-    s_heatnet.cost_fuel_per_MWh = fact("Fact_R_S_heatnet_energy_cost_factor_2018")
-    s_heatnet.cost_fuel = s_heatnet.energy * s_heatnet.cost_fuel_per_MWh / MILLION
-    s_heatnet.CO2e_combustion_based = 0
-    s_heatnet.CO2e_combustion_based_per_MWh = 0
-    s_heatnet.CO2e_total = 0
-    s_elec_heating.CO2e_combustion_based = 0
-    s_elec_heating.CO2e_combustion_based_per_MWh = 0
-    s_elec_heating.CO2e_total = 0
-    s_heatpump.cost_fuel_per_MWh = (
-        fact("Fact_E_D_R_cost_fuel_per_MWh_2018")
-        / (
-            fact("Fact_R_S_ground_heatpump_mean_annual_performance_factor_stock_2018")
-            + fact("Fact_R_S_air_heatpump_mean_annual_performance_factor_stock_2018")
-        )
-        * 2
-    )
-    s_heatpump.cost_fuel = s_heatpump.energy * s_heatpump.cost_fuel_per_MWh / MILLION
-    s_heatpump.CO2e_combustion_based = 0
-    s_heatpump.CO2e_combustion_based_per_MWh = 0
-    s_heatpump.CO2e_total = 0
-    s_solarth.cost_fuel_per_MWh = 0
-    s_solarth.cost_fuel = 0
-    s_solarth.CO2e_combustion_based = 0
-    s_solarth.CO2e_combustion_based_per_MWh = 0
-    s_solarth.CO2e_total = 0
-    s_elec.CO2e_combustion_based = 0
-    s_elec.CO2e_combustion_based_per_MWh = 0
-    s_elec.CO2e_total = 0
-
-    supply = energy_source.calc_supply(inputs, s.energy, supply_biomass_energy)
 
     s.pct_energy = (
-        s_gas.pct_energy
-        + s_lpg.pct_energy
-        + s_petrol.pct_energy
-        + s_jetfuel.pct_energy
-        + s_diesel.pct_energy
-        + s_fueloil.pct_energy
+        supply.gas.pct_energy
+        + supply.lpg.pct_energy
+        + supply.petrol.pct_energy
+        + supply.jetfuel.pct_energy
+        + supply.diesel.pct_energy
+        + supply.fueloil.pct_energy
         + supply.biomass.pct_energy
-        + s_coal.pct_energy
-        + s_heatnet.pct_energy
-        + s_heatpump.pct_energy
-        + s_solarth.pct_energy
-        + s_elec.pct_energy
+        + supply.coal.pct_energy
+        + supply.heatnet.pct_energy
+        + supply.heatpump.pct_energy
+        + supply.solarth.pct_energy
+        + supply.elec.pct_energy
     )
     s.cost_fuel = (
-        s_gas.cost_fuel
-        + s_lpg.cost_fuel
-        + s_petrol.cost_fuel
-        + s_jetfuel.cost_fuel
-        + s_diesel.cost_fuel
-        + s_fueloil.cost_fuel
+        supply.gas.cost_fuel
+        + supply.lpg.cost_fuel
+        + supply.petrol.cost_fuel
+        + supply.jetfuel.cost_fuel
+        + supply.diesel.cost_fuel
+        + supply.fueloil.cost_fuel
         + supply.biomass.cost_fuel
-        + s_coal.cost_fuel
-        + s_heatnet.cost_fuel
-        + s_heatpump.cost_fuel
-        + s_solarth.cost_fuel
+        + supply.coal.cost_fuel
+        + supply.heatnet.cost_fuel
+        + supply.heatpump.cost_fuel
+        + supply.solarth.cost_fuel
     )
     s.CO2e_combustion_based = (
-        s_gas.CO2e_combustion_based
-        + s_lpg.CO2e_combustion_based
-        + s_petrol.CO2e_combustion_based
-        + s_jetfuel.CO2e_combustion_based
-        + s_diesel.CO2e_combustion_based
-        + s_fueloil.CO2e_combustion_based
+        supply.gas.CO2e_combustion_based
+        + supply.lpg.CO2e_combustion_based
+        + supply.petrol.CO2e_combustion_based
+        + supply.jetfuel.CO2e_combustion_based
+        + supply.diesel.CO2e_combustion_based
+        + supply.fueloil.CO2e_combustion_based
         + supply.biomass.CO2e_combustion_based
-        + s_coal.CO2e_combustion_based
+        + supply.coal.CO2e_combustion_based
     )
     s.CO2e_total = s.CO2e_combustion_based
 
     production = energy_demand.calc_production(
         inputs,
-        s_heatpump.energy,
-        s_elec.energy,
-        s_elec_heating.energy,
-        s_petrol.energy,
-        s_jetfuel.energy,
-        s_diesel.energy,
-        s_gas.energy,
-        s_lpg.energy,
-        s_fueloil.energy,
+        supply.heatpump.energy,
+        supply.elec.energy,
+        supply.elec_heating.energy,
+        supply.petrol.energy,
+        supply.jetfuel.energy,
+        supply.diesel.energy,
+        supply.gas.energy,
+        supply.lpg.energy,
+        supply.fueloil.energy,
         supply.biomass.energy,
-        s_coal.energy,
-        s_heatnet.energy,
-        s_solarth.energy,
+        supply.coal.energy,
+        supply.heatnet.energy,
+        supply.solarth.energy,
     )
 
     supply.biomass.number_of_buildings = supply.biomass.energy * div(
@@ -223,9 +150,9 @@ def calc(inputs: Inputs, *, r18: R18) -> B18:
         r18.s.CO2e_combustion_based
         - r18.s_petrol.CO2e_combustion_based
         + s.CO2e_combustion_based
-        - s_petrol.CO2e_combustion_based
-        - s_jetfuel.CO2e_combustion_based
-        - s_diesel.CO2e_combustion_based
+        - supply.petrol.CO2e_combustion_based
+        - supply.jetfuel.CO2e_combustion_based
+        - supply.diesel.CO2e_combustion_based
     )
     rp_p.CO2e_total = r18.s.CO2e_combustion_based + s.CO2e_combustion_based
     rb.energy = r18.p.energy + production.total.energy
@@ -245,19 +172,19 @@ def calc(inputs: Inputs, *, r18: R18) -> B18:
         p_vehicles=production.vehicles,
         p_other=production.other,
         s=s,
-        s_gas=s_gas,
-        s_lpg=s_lpg,
-        s_petrol=s_petrol,
-        s_jetfuel=s_jetfuel,
-        s_diesel=s_diesel,
-        s_fueloil=s_fueloil,
+        s_gas=supply.gas,
+        s_lpg=supply.lpg,
+        s_petrol=supply.petrol,
+        s_jetfuel=supply.jetfuel,
+        s_diesel=supply.diesel,
+        s_fueloil=supply.fueloil,
         s_biomass=supply.biomass,
-        s_coal=s_coal,
-        s_heatnet=s_heatnet,
-        s_elec_heating=s_elec_heating,
-        s_heatpump=s_heatpump,
-        s_solarth=s_solarth,
-        s_elec=s_elec,
+        s_coal=supply.coal,
+        s_heatnet=supply.heatnet,
+        s_elec_heating=supply.elec_heating,
+        s_heatpump=supply.heatpump,
+        s_solarth=supply.solarth,
+        s_elec=supply.elec,
         rb=rb,
         rp_p=rp_p,
     )
