@@ -3,7 +3,7 @@
 from dataclasses import dataclass
 
 from ...inputs import Inputs
-from ...utils import div, MILLION
+from ...utils import MILLION
 
 from ..dataclasses import Vars7
 
@@ -34,9 +34,7 @@ def calc_supply(
 
     fact = inputs.fact
 
-    biomass = Vars7()
-    biomass.energy = biomass_energy
-    biomass.pct_energy = div(biomass_energy, total_energy)
+    biomass = Vars7(energy=biomass_energy, total_energy=total_energy)
     biomass.cost_fuel_per_MWh = fact("Fact_R_S_wood_energy_cost_factor_2018")
     biomass.cost_fuel = biomass.energy * biomass.cost_fuel_per_MWh / MILLION
     biomass.CO2e_combustion_based_per_MWh = fact("Fact_RB_S_biomass_CO2e_EF")
