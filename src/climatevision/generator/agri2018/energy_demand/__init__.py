@@ -204,11 +204,14 @@ def calc_production(
     operation_vehicles = EnergyWithPercentage(
         energy=s_petrol_energy + s_diesel_energy, total_energy=operation.energy
     )
-    operation_heat = OperationHeatEnergy.calc(
-        inputs,
-        b18,
+    operation_heat = OperationHeatEnergy(
         energy=s_fueloil_energy + s_lpg_energy + s_gas_energy + s_biomass_energy,
         total_energy=operation.energy,
+        area_m2=(
+            b18.p_nonresi.area_m2
+            * inputs.fact("Fact_A_P_energy_buildings_ratio_A_to_B")
+            / (1 - inputs.fact("Fact_A_P_energy_buildings_ratio_A_to_B"))
+        ),
     )
 
     total = P(

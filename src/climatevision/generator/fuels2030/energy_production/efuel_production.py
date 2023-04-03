@@ -4,14 +4,14 @@ from dataclasses import dataclass
 
 from ...inputs import Inputs
 from ...utils import div
-from ...common.energy import Energy
-from ...common.co2e_change import CO2eChange, CO2eChangeEnergy
+from ...common.energy import Energy, EnergyChange
+from ...common.co2e_change import CO2eChange
 from ...common.invest import Invest
 from ...fuels2018.energy_production import EnergyWithCO2ePerMWh
 
 
 @dataclass(kw_only=True)
-class EFuelProduction(Energy, CO2eChange, CO2eChangeEnergy, Invest):
+class EFuelProduction(Energy, CO2eChange, EnergyChange, Invest):
     """This computes the replacement of fossil fuels by corresponding E-fuels.
     (e.g. petrol -> epetrol).
     """

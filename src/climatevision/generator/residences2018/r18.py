@@ -2,7 +2,18 @@
 
 from dataclasses import dataclass
 
-from .dataclasses import Vars1, Vars2, Vars3, Vars4, Vars5, Vars6, Vars7, Vars8, Vars9
+from ..common.energy import EnergyPerM2PctCommune
+
+from .dataclasses import (
+    Vars1,
+    Vars2,
+    Vars3,
+    Vars4,
+    Vars6,
+    Vars7,
+    Vars8,
+    Vars9,
+)
 
 
 @dataclass(kw_only=True)
@@ -17,7 +28,7 @@ class R18:
     p_buildings_1996_2004: Vars3
     p_buildings_2005_2011: Vars4
     p_buildings_2011_today: Vars4
-    p_buildings_area_m2_com: Vars5
+    p_buildings_area_m2_com: EnergyPerM2PctCommune
     p_elec_elcon: Vars2
     p_elec_heatpump: Vars2
     p_vehicles: Vars2

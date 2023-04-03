@@ -6,15 +6,15 @@ from ...inputs import Inputs
 from ...common.invest import Invest
 from ...agri2018.a18 import A18
 
-from .co2e_change_energy_agri import CO2eChangeEnergyAgri
-from .co2e_change_p_operation_vehicles import CO2eChangePOperationVehicles
-from .co2e_change_p_operation_heat import CO2eChangePOperationHeat
-from .co2e_change_p_operation_elec_elcon import CO2eChangePOperationElecElcon
-from .co2e_change_p_operation_elec_heatpump import CO2eChangePOperationElecHeatpump
+from .energy_change_agri import EnergyChangeAgri
+from .energy_change_p_operation_vehicles import EnergyChangePOperationVehicles
+from .energy_change_p_operation_heat import EnergyChangePOperationHeat
+from .energy_change_p_operation_elec_elcon import EnergyChangePOperationElecElcon
+from .energy_change_p_operation_elec_heatpump import EnergyChangePOperationElecHeatpump
 
 
 @dataclass(kw_only=True)
-class CO2eChangePOperation(CO2eChangeEnergyAgri, Invest):
+class EnergyChangePOperation(EnergyChangeAgri, Invest):
     demand_biomass: float = 0
     demand_ediesel: float = 0
     demand_electricity: float = 0
@@ -25,20 +25,20 @@ class CO2eChangePOperation(CO2eChangeEnergyAgri, Invest):
     inputs: InitVar[Inputs]
     what: InitVar[str]
     a18: InitVar[A18]
-    operation_vehicles: InitVar[CO2eChangePOperationVehicles]
-    operation_heat: InitVar[CO2eChangePOperationHeat]
-    operation_elec_elcon: InitVar[CO2eChangePOperationElecElcon]
-    operation_elec_heatpump: InitVar[CO2eChangePOperationElecHeatpump]
+    operation_vehicles: InitVar[EnergyChangePOperationVehicles]
+    operation_heat: InitVar[EnergyChangePOperationHeat]
+    operation_elec_elcon: InitVar[EnergyChangePOperationElecElcon]
+    operation_elec_heatpump: InitVar[EnergyChangePOperationElecHeatpump]
 
     def __post_init__(  # type: ignore
         self,
         inputs: Inputs,
         what: str,
         a18: A18,
-        operation_vehicles: CO2eChangePOperationVehicles,
-        operation_heat: CO2eChangePOperationHeat,
-        operation_elec_elcon: CO2eChangePOperationElecElcon,
-        operation_elec_heatpump: CO2eChangePOperationElecHeatpump,
+        operation_vehicles: EnergyChangePOperationVehicles,
+        operation_heat: EnergyChangePOperationHeat,
+        operation_elec_elcon: EnergyChangePOperationElecElcon,
+        operation_elec_heatpump: EnergyChangePOperationElecHeatpump,
     ):
         self.demand_epetrol = operation_vehicles.demand_epetrol
         self.demand_ediesel = operation_vehicles.demand_ediesel
@@ -63,4 +63,4 @@ class CO2eChangePOperation(CO2eChangeEnergyAgri, Invest):
         self.invest_pa = self.invest / inputs.entries.m_duration_target
         self.cost_wage = operation_heat.cost_wage
 
-        CO2eChangeEnergyAgri.__post_init__(self, inputs=inputs, what=what, a18=a18)
+        EnergyChangeAgri.__post_init__(self, inputs=inputs, what=what, a18=a18)

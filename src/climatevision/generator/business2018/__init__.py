@@ -12,9 +12,6 @@ from ..residences2018.r18 import R18
 from .b18 import B18
 from .dataclasses import (
     Vars0,
-    Vars2,
-    Vars3,
-    Vars4,
     Vars5,
     Vars6,
     Vars7,
@@ -22,22 +19,15 @@ from .dataclasses import (
     Vars9,
     Vars10,
 )
+from . import energy_demand
 
 
 # Berechnungsfunktion im Sektor GHD für 2018
 def calc(inputs: Inputs, *, r18: R18) -> B18:
     fact = inputs.fact
-    ass = inputs.ass
     entries = inputs.entries
 
     b = Vars0()
-    p = Vars2()
-    p_nonresi = Vars3()
-    p_nonresi_com = Vars4()
-    p_elec_elcon = Vars2()
-    p_elec_heatpump = Vars2()
-    p_vehicles = Vars2()
-    p_other = Vars2()
     s = Vars5()
     s_gas = Vars6()
     s_lpg = Vars6()
@@ -219,50 +209,28 @@ def calc(inputs: Inputs, *, r18: R18) -> B18:
         + s_coal.CO2e_combustion_based
     )
     s.CO2e_total = s.CO2e_combustion_based
-    p_nonresi.area_m2 = (
-        entries.r_area_m2
-        * fact("Fact_B_P_ratio_buisness_buildings_to_all_buildings_area_2016")
-        / (1 - fact("Fact_B_P_ratio_buisness_buildings_to_all_buildings_area_2016"))
-        * (1 - fact("Fact_A_P_energy_buildings_ratio_A_to_B"))
+
+    production = energy_demand.calc_production(
+        inputs,
+        s_heatpump.energy,
+        s_elec.energy,
+        s_elec_heating.energy,
+        s_petrol.energy,
+        s_jetfuel.energy,
+        s_diesel.energy,
+        s_gas.energy,
+        s_lpg.energy,
+        s_fueloil.energy,
+        s_biomass.energy,
+        s_coal.energy,
+        s_heatnet.energy,
+        s_solarth.energy,
     )
-    p_nonresi.energy = (
-        s_gas.energy
-        + s_lpg.energy
-        + s_fueloil.energy
-        + s_biomass.energy
-        + s_coal.energy
-        + s_heatnet.energy
-        + s_heatpump.energy
-        + s_solarth.energy
-        + s_elec_heating.energy
-    )
-    p_nonresi.number_of_buildings = (
-        fact("Fact_B_P_number_business_buildings_2016")
-        * entries.m_population_com_2018
-        / entries.m_population_nat
-    )
-    p_nonresi.factor_adapted_to_fec = div(p_nonresi.energy, p_nonresi.area_m2)
-    p_nonresi_com.pct_x = ass(
-        "Ass_H_ratio_municipal_non_res_buildings_to_all_non_res_buildings_2050"
-    )
-    p_nonresi_com.area_m2 = p_nonresi.area_m2 * p_nonresi_com.pct_x
-    p_nonresi_com.energy = p_nonresi.energy * p_nonresi_com.pct_x
-    p_nonresi_com.factor_adapted_to_fec = div(
-        p_nonresi_com.energy, p_nonresi_com.area_m2
-    )
+
     s_biomass.number_of_buildings = s_biomass.energy * div(
-        p_nonresi.number_of_buildings,
-        p_nonresi.factor_adapted_to_fec * p_nonresi.area_m2,
+        production.nonresi.number_of_buildings,
+        production.nonresi.energy,
     )
-    p_elec_heatpump.energy = s_heatpump.energy / fact(
-        "Fact_R_S_heatpump_mean_annual_performance_factor_all"
-    )
-    p_elec_elcon.energy = p_elec_elcon.energy = (
-        s_elec.energy - p_elec_heatpump.energy - s_elec_heating.energy
-    )
-    p_vehicles.energy = s_petrol.energy + s_jetfuel.energy + s_diesel.energy
-    p_other.energy = p_elec_elcon.energy + p_elec_heatpump.energy + p_vehicles.energy
-    p.energy = p_nonresi.energy + p_other.energy
     rp_p.CO2e_combustion_based = (
         r18.s.CO2e_combustion_based
         - r18.s_petrol.CO2e_combustion_based
@@ -272,7 +240,7 @@ def calc(inputs: Inputs, *, r18: R18) -> B18:
         - s_diesel.CO2e_combustion_based
     )
     rp_p.CO2e_total = r18.s.CO2e_combustion_based + s.CO2e_combustion_based
-    rb.energy = r18.p.energy + p.energy
+    rb.energy = r18.p.energy + production.total.energy
     b.CO2e_combustion_based = s.CO2e_combustion_based
     b.CO2e_total = s.CO2e_total
     b.CO2e_production_based = 0
@@ -281,13 +249,13 @@ def calc(inputs: Inputs, *, r18: R18) -> B18:
 
     return B18(
         b=b,
-        p=p,
-        p_nonresi=p_nonresi,
-        p_nonresi_com=p_nonresi_com,
-        p_elec_elcon=p_elec_elcon,
-        p_elec_heatpump=p_elec_heatpump,
-        p_vehicles=p_vehicles,
-        p_other=p_other,
+        p=production.total,
+        p_nonresi=production.nonresi,
+        p_nonresi_com=production.nonresi_commune,
+        p_elec_elcon=production.elec_elcon,
+        p_elec_heatpump=production.elec_heatpump,
+        p_vehicles=production.vehicles,
+        p_other=production.other,
         s=s,
         s_gas=s_gas,
         s_lpg=s_lpg,
