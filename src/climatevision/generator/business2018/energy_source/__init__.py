@@ -3,7 +3,7 @@
 from dataclasses import dataclass
 
 from ...inputs import Inputs
-from ...utils import MILLION
+from ...utils import div, MILLION
 
 from ..dataclasses import Vars7
 
@@ -28,13 +28,15 @@ class EnergySupply:
     # elec: Vars8
 
 
-def calc_supply(inputs: Inputs) -> EnergySupply:
+def calc_supply(
+    inputs: Inputs, total_energy: float, biomass_energy: float
+) -> EnergySupply:
 
-    entries = inputs.entries
     fact = inputs.fact
 
     biomass = Vars7()
-    biomass.energy = entries.b_biomass_fec
+    biomass.energy = biomass_energy
+    biomass.pct_energy = div(biomass_energy, total_energy)
     biomass.cost_fuel_per_MWh = fact("Fact_R_S_wood_energy_cost_factor_2018")
     biomass.cost_fuel = biomass.energy * biomass.cost_fuel_per_MWh / MILLION
     biomass.CO2e_combustion_based_per_MWh = fact("Fact_RB_S_biomass_CO2e_EF")
