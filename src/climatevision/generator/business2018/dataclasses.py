@@ -27,14 +27,16 @@ class Vars5:
 @dataclass(kw_only=True)
 class Vars6(EnergyWithPercentage):
     # Used by s_gas, s_lpg, s_petrol, s_jetfuel, s_diesel, s_fueloil, s_coal, s_heatnet, s_heatpump, s_solarth
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_combustion_based_per_MWh: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
+    CO2e_combustion_based: float = 0
+    CO2e_combustion_based_per_MWh: float
+    CO2e_total: float = 0
     cost_fuel: float = 0
     cost_fuel_per_MWh: float
 
     def __post_init__(self, total_energy: float):
         self.cost_fuel = self.energy * self.cost_fuel_per_MWh / MILLION
+        self.CO2e_combustion_based = self.energy * self.CO2e_combustion_based_per_MWh
+        self.CO2e_total = self.CO2e_combustion_based
 
         EnergyWithPercentage.__post_init__(self, total_energy)
 
@@ -42,15 +44,17 @@ class Vars6(EnergyWithPercentage):
 @dataclass(kw_only=True)
 class Vars7(EnergyWithPercentage):
     # Used by s_biomass
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_combustion_based_per_MWh: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
+    CO2e_combustion_based: float = 0
+    CO2e_combustion_based_per_MWh: float
+    CO2e_total: float = 0
     cost_fuel: float = 0
     cost_fuel_per_MWh: float
     number_of_buildings: float = None  # type: ignore
 
     def __post_init__(self, total_energy: float):
         self.cost_fuel = self.energy * self.cost_fuel_per_MWh / MILLION
+        self.CO2e_combustion_based = self.energy * self.CO2e_combustion_based_per_MWh
+        self.CO2e_total = self.CO2e_combustion_based
 
         EnergyWithPercentage.__post_init__(self, total_energy)
 
@@ -58,9 +62,15 @@ class Vars7(EnergyWithPercentage):
 @dataclass(kw_only=True)
 class Vars8(EnergyWithPercentage):
     # Used by s_elec_heating, s_elec
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_combustion_based_per_MWh: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
+    CO2e_combustion_based: float = 0
+    CO2e_combustion_based_per_MWh: float
+    CO2e_total: float = 0
+
+    def __post_init__(self, total_energy: float):
+        self.CO2e_combustion_based = self.energy * self.CO2e_combustion_based_per_MWh
+        self.CO2e_total = self.CO2e_combustion_based
+
+        EnergyWithPercentage.__post_init__(self, total_energy)
 
 
 @dataclass(kw_only=True)
