@@ -4,7 +4,6 @@ from dataclasses import dataclass
 
 from ..utils import div
 
-from .co2_equivalent_emission import CO2eEmission
 from .energy import EnergyWithPercentage
 from .energy_with_co2e import EnergyWithCO2e
 
@@ -15,10 +14,10 @@ class EnergyWithCO2ePerMWh(EnergyWithCO2e):
     CO2e_production_based_per_MWh: float = 0
 
     def __post_init__(self):
-        self.CO2e_production_based = self.energy * self.CO2e_production_based_per_MWh
         self.CO2e_combustion_based = self.energy * self.CO2e_combustion_based_per_MWh
+        self.CO2e_production_based = self.energy * self.CO2e_production_based_per_MWh
 
-        CO2eEmission.__post_init__(self)
+        EnergyWithCO2e.__post_init__(self)
 
     @classmethod
     def calc_sum(cls, *childs: "EnergyWithCO2ePerMWh") -> "EnergyWithCO2ePerMWh":
@@ -45,11 +44,14 @@ class EnergyWithCO2ePerMWh(EnergyWithCO2e):
 @dataclass(kw_only=True)
 class EnergyWithPercentageWithCO2ePerMWh(EnergyWithPercentage):
     CO2e_combustion_based: float = 0
-    CO2e_combustion_based_per_MWh: float
+    CO2e_production_based: float = 0
+    CO2e_combustion_based_per_MWh: float = 0
+    CO2e_production_based_per_MWh: float = 0
     CO2e_total: float = 0
 
     def __post_init__(self, total_energy: float):
         self.CO2e_combustion_based = self.energy * self.CO2e_combustion_based_per_MWh
+        self.CO2e_production_based = self.energy * self.CO2e_production_based_per_MWh
         self.CO2e_total = self.CO2e_combustion_based
 
         EnergyWithPercentage.__post_init__(self, total_energy)
