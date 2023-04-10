@@ -113,10 +113,10 @@ def calc(inputs: Inputs, *, r18: R18) -> B18:
     )
     rp_p.CO2e_total = r18.s.CO2e_combustion_based + supply.total.CO2e_combustion_based
 
-    rb = Vars9()
-    rb.energy = r18.p.energy + production.total.energy
-    rb.CO2e_combustion_based = r18.r.CO2e_combustion_based + b.CO2e_combustion_based
-    rb.CO2e_total = rb.CO2e_combustion_based
+    rb = Vars9(
+        energy=r18.p.energy + production.total.energy,
+        CO2e_combustion_based=r18.r.CO2e_combustion_based + b.CO2e_combustion_based,
+    )
 
     return B18(
         b=b,

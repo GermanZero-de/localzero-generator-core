@@ -3,7 +3,8 @@
 from dataclasses import dataclass
 
 from ..utils import MILLION
-from ..common.energy import EnergyWithPercentage
+from ..common.energy import Energy, EnergyWithPercentage
+from ..common.co2_equivalent_emission import CO2eEmission
 
 
 @dataclass(kw_only=True)
@@ -46,11 +47,8 @@ class Vars7(Vars6):
 
 
 @dataclass(kw_only=True)
-class Vars9:
-    # Used by rb
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-    energy: float = None  # type: ignore
+class Vars9(Energy, CO2eEmission):
+    pass
 
 
 @dataclass(kw_only=True)
