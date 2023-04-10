@@ -142,6 +142,11 @@ def calc(inputs: Inputs, *, r18: R18) -> B18:
         production.nonresi.number_of_buildings,
         production.nonresi.energy,
     )
+
+    b.CO2e_combustion_based = s.CO2e_combustion_based
+    b.CO2e_total = s.CO2e_total
+    b.CO2e_production_based = 0
+
     rp_p.CO2e_combustion_based = (
         r18.s.CO2e_combustion_based
         - r18.s_petrol.CO2e_combustion_based
@@ -151,10 +156,8 @@ def calc(inputs: Inputs, *, r18: R18) -> B18:
         - supply.diesel.CO2e_combustion_based
     )
     rp_p.CO2e_total = r18.s.CO2e_combustion_based + s.CO2e_combustion_based
+
     rb.energy = r18.p.energy + production.total.energy
-    b.CO2e_combustion_based = s.CO2e_combustion_based
-    b.CO2e_total = s.CO2e_total
-    b.CO2e_production_based = 0
     rb.CO2e_combustion_based = r18.r.CO2e_combustion_based + b.CO2e_combustion_based
     rb.CO2e_total = rb.CO2e_combustion_based
 
