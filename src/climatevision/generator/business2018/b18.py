@@ -10,13 +10,13 @@ from .energy_demand import (
     EnergyPerM2WithBuildings,
     EnergyPerM2PctCommune,
 )
-from .dataclasses import (
+from .energy_source import (
     Vars5,
     Vars6,
     Vars7,
     Vars8,
-    Vars10,
 )
+from .dataclasses import Vars10
 
 
 @dataclass(kw_only=True)

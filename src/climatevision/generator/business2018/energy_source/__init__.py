@@ -4,7 +4,7 @@ from dataclasses import dataclass
 
 from ...inputs import Inputs
 
-from ..dataclasses import Vars5, Vars6, Vars7, Vars8
+from .dataclasses import Vars5, Vars6, Vars7, Vars8
 
 
 @dataclass(kw_only=True)
