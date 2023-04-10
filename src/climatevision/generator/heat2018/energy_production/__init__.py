@@ -150,15 +150,13 @@ def calc_production(
 
     orenew_energy = entries.r_orenew_fec + entries.b_orenew_fec + entries.i_orenew_fec
 
-    solarth = EnergyWithCO2ePerMWh.calc_from_pct_energy_and_CO2e_per_MWh(
-        pct_energy=fact("Fact_R_S_ratio_solarth_to_orenew_2018"),
-        total_energy=orenew_energy,
+    solarth = EnergyWithCO2ePerMWh.calc_from_energy_and_CO2e_per_MWh(
+        energy=orenew_energy * fact("Fact_R_S_ratio_solarth_to_orenew_2018"),
         CO2e_production_based_per_MWh=fact("Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018"),
     )
 
-    heatpump = EnergyWithCO2ePerMWh.calc_from_pct_energy_and_CO2e_per_MWh(
-        pct_energy=fact("Fact_R_S_ratio_heatpump_to_orenew_2018"),
-        total_energy=orenew_energy,
+    heatpump = EnergyWithCO2ePerMWh.calc_from_energy_and_CO2e_per_MWh(
+        energy=orenew_energy * fact("Fact_R_S_ratio_heatpump_to_orenew_2018"),
         CO2e_production_based_per_MWh=fact("Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018"),
     )
 
