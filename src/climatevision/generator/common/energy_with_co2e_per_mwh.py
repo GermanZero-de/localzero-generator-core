@@ -43,10 +43,9 @@ class EnergyWithCO2ePerMWh(EnergyWithCO2e):
 
 @dataclass(kw_only=True)
 class EnergyWithPercentageWithCO2ePerMWh(EnergyWithPercentage, EnergyWithCO2ePerMWh):
-    def __post_init__(self, total_energy: float):  # type: ignore
-        self.CO2e_combustion_based = self.energy * self.CO2e_combustion_based_per_MWh
-        self.CO2e_production_based = self.energy * self.CO2e_production_based_per_MWh
-
-        EnergyWithCO2e.__post_init__(self)
-
+    def __post_init__(  # type: ignore
+        self,
+        total_energy: float,
+    ):
+        EnergyWithCO2ePerMWh.__post_init__(self)
         EnergyWithPercentage.__post_init__(self, total_energy)
