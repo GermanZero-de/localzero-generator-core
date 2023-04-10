@@ -101,9 +101,7 @@ class HeatProduction(EnergyWithCO2ePerMWh, CO2eChangeHeatProduction):
         what: str,
         h18: H18,
     ):
-        self.CO2e_production_based = self.energy * self.CO2e_production_based_per_MWh
-        self.CO2e_combustion_based = self.energy * self.CO2e_combustion_based_per_MWh
-
+        EnergyWithCO2ePerMWh.__post_init__(self)
         CO2eChangeHeatProduction.__post_init__(self, inputs=inputs, what=what, h18=h18)
 
 
