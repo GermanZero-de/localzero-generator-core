@@ -4,12 +4,12 @@ from dataclasses import dataclass
 
 from ...inputs import Inputs
 
-from ..dataclasses import Vars6, Vars7, Vars8
+from ..dataclasses import Vars5, Vars6, Vars7, Vars8
 
 
 @dataclass(kw_only=True)
 class EnergySupply:
-    # total: Vars5
+    total: Vars5
     gas: Vars6
     lpg: Vars6
     petrol: Vars6
@@ -143,8 +143,49 @@ def calc_supply(
         CO2e_combustion_based_per_MWh=fact("Fact_RB_S_biomass_CO2e_EF"),
     )
 
+    total = Vars5()
+    total.energy = total_energy
+    total.pct_energy = (
+        gas.pct_energy
+        + lpg.pct_energy
+        + petrol.pct_energy
+        + jetfuel.pct_energy
+        + diesel.pct_energy
+        + fueloil.pct_energy
+        + biomass.pct_energy
+        + coal.pct_energy
+        + heatnet.pct_energy
+        + heatpump.pct_energy
+        + solarth.pct_energy
+        + elec.pct_energy
+    )
+    total.cost_fuel = (
+        gas.cost_fuel
+        + lpg.cost_fuel
+        + petrol.cost_fuel
+        + jetfuel.cost_fuel
+        + diesel.cost_fuel
+        + fueloil.cost_fuel
+        + biomass.cost_fuel
+        + coal.cost_fuel
+        + heatnet.cost_fuel
+        + heatpump.cost_fuel
+        + solarth.cost_fuel
+    )
+    total.CO2e_combustion_based = (
+        gas.CO2e_combustion_based
+        + lpg.CO2e_combustion_based
+        + petrol.CO2e_combustion_based
+        + jetfuel.CO2e_combustion_based
+        + diesel.CO2e_combustion_based
+        + fueloil.CO2e_combustion_based
+        + biomass.CO2e_combustion_based
+        + coal.CO2e_combustion_based
+    )
+    total.CO2e_total = total.CO2e_combustion_based
+
     return EnergySupply(
-        # total=total,
+        total=total,
         gas=gas,
         lpg=lpg,
         petrol=petrol,

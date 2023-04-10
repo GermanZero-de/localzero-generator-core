@@ -11,7 +11,7 @@ from ..residences2018.r18 import R18
 from ..common.co2_equivalent_emission import CO2eEmission
 
 from .b18 import B18
-from .dataclasses import Vars5, Vars9, Vars10
+from .dataclasses import Vars9, Vars10
 from . import energy_demand, energy_source
 
 
@@ -19,11 +19,6 @@ from . import energy_demand, energy_source
 def calc(inputs: Inputs, *, r18: R18) -> B18:
     fact = inputs.fact
     entries = inputs.entries
-
-    b = CO2eEmission()
-    s = Vars5()
-    rb = Vars9()
-    rp_p = Vars10()
 
     supply_gas_energy = entries.b_gas_fec
     supply_lpg_energy = entries.b_lpg_fec
@@ -62,11 +57,9 @@ def calc(inputs: Inputs, *, r18: R18) -> B18:
         + supply_elec_energy
     )
 
-    s.energy = supply_total_energy
-
     supply = energy_source.calc_supply(
         inputs,
-        s.energy,
+        supply_total_energy,
         supply_gas_energy,
         supply_lpg_energy,
         supply_petrol_energy,
@@ -81,45 +74,6 @@ def calc(inputs: Inputs, *, r18: R18) -> B18:
         supply_solarth_energy,
         supply_elec_energy,
     )
-
-    s.pct_energy = (
-        supply.gas.pct_energy
-        + supply.lpg.pct_energy
-        + supply.petrol.pct_energy
-        + supply.jetfuel.pct_energy
-        + supply.diesel.pct_energy
-        + supply.fueloil.pct_energy
-        + supply.biomass.pct_energy
-        + supply.coal.pct_energy
-        + supply.heatnet.pct_energy
-        + supply.heatpump.pct_energy
-        + supply.solarth.pct_energy
-        + supply.elec.pct_energy
-    )
-    s.cost_fuel = (
-        supply.gas.cost_fuel
-        + supply.lpg.cost_fuel
-        + supply.petrol.cost_fuel
-        + supply.jetfuel.cost_fuel
-        + supply.diesel.cost_fuel
-        + supply.fueloil.cost_fuel
-        + supply.biomass.cost_fuel
-        + supply.coal.cost_fuel
-        + supply.heatnet.cost_fuel
-        + supply.heatpump.cost_fuel
-        + supply.solarth.cost_fuel
-    )
-    s.CO2e_combustion_based = (
-        supply.gas.CO2e_combustion_based
-        + supply.lpg.CO2e_combustion_based
-        + supply.petrol.CO2e_combustion_based
-        + supply.jetfuel.CO2e_combustion_based
-        + supply.diesel.CO2e_combustion_based
-        + supply.fueloil.CO2e_combustion_based
-        + supply.biomass.CO2e_combustion_based
-        + supply.coal.CO2e_combustion_based
-    )
-    s.CO2e_total = s.CO2e_combustion_based
 
     production = energy_demand.calc_production(
         inputs,
@@ -143,20 +97,23 @@ def calc(inputs: Inputs, *, r18: R18) -> B18:
         production.nonresi.energy,
     )
 
-    b.CO2e_combustion_based = s.CO2e_combustion_based
-    b.CO2e_total = s.CO2e_total
+    b = CO2eEmission()
+    b.CO2e_combustion_based = supply.total.CO2e_combustion_based
+    b.CO2e_total = supply.total.CO2e_total
     b.CO2e_production_based = 0
 
+    rp_p = Vars10()
     rp_p.CO2e_combustion_based = (
         r18.s.CO2e_combustion_based
         - r18.s_petrol.CO2e_combustion_based
-        + s.CO2e_combustion_based
+        + supply.total.CO2e_combustion_based
         - supply.petrol.CO2e_combustion_based
         - supply.jetfuel.CO2e_combustion_based
         - supply.diesel.CO2e_combustion_based
     )
-    rp_p.CO2e_total = r18.s.CO2e_combustion_based + s.CO2e_combustion_based
+    rp_p.CO2e_total = r18.s.CO2e_combustion_based + supply.total.CO2e_combustion_based
 
+    rb = Vars9()
     rb.energy = r18.p.energy + production.total.energy
     rb.CO2e_combustion_based = r18.r.CO2e_combustion_based + b.CO2e_combustion_based
     rb.CO2e_total = rb.CO2e_combustion_based
@@ -170,7 +127,7 @@ def calc(inputs: Inputs, *, r18: R18) -> B18:
         p_elec_heatpump=production.elec_heatpump,
         p_vehicles=production.vehicles,
         p_other=production.other,
-        s=s,
+        s=supply.total,
         s_gas=supply.gas,
         s_lpg=supply.lpg,
         s_petrol=supply.petrol,
