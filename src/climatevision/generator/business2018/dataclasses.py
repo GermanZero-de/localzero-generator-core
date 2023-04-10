@@ -7,14 +7,6 @@ from ..common.energy import EnergyWithPercentage
 
 
 @dataclass(kw_only=True)
-class Vars0:
-    # Used by b
-    CO2e_combustion_based: float = None  # type: ignore
-    CO2e_production_based: float = None  # type: ignore
-    CO2e_total: float = None  # type: ignore
-
-
-@dataclass(kw_only=True)
 class Vars5:
     # Used by s
     CO2e_combustion_based: float = None  # type: ignore
@@ -39,9 +31,6 @@ class Vars8(EnergyWithPercentage):
 
 @dataclass(kw_only=True)
 class Vars6(Vars8):
-    CO2e_combustion_based: float = 0
-    CO2e_combustion_based_per_MWh: float
-    CO2e_total: float = 0
     cost_fuel: float = 0
     cost_fuel_per_MWh: float
 

@@ -8,14 +8,10 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/hh_ghd.html
 from ..inputs import Inputs
 from ..utils import div
 from ..residences2018.r18 import R18
+from ..common.co2_equivalent_emission import CO2eEmission
 
 from .b18 import B18
-from .dataclasses import (
-    Vars0,
-    Vars5,
-    Vars9,
-    Vars10,
-)
+from .dataclasses import Vars5, Vars9, Vars10
 from . import energy_demand, energy_source
 
 
@@ -24,7 +20,7 @@ def calc(inputs: Inputs, *, r18: R18) -> B18:
     fact = inputs.fact
     entries = inputs.entries
 
-    b = Vars0()
+    b = CO2eEmission()
     s = Vars5()
     rb = Vars9()
     rp_p = Vars10()

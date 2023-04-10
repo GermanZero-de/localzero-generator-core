@@ -2,13 +2,14 @@
 
 from dataclasses import dataclass
 
+from ..common.co2_equivalent_emission import CO2eEmission
+
 from .energy_demand import (
     Energy,
     EnergyPerM2WithBuildings,
     EnergyPerM2PctCommune,
 )
 from .dataclasses import (
-    Vars0,
     Vars5,
     Vars6,
     Vars7,
@@ -20,7 +21,7 @@ from .dataclasses import (
 
 @dataclass(kw_only=True)
 class B18:
-    b: Vars0
+    b: CO2eEmission
     p: Energy
     p_nonresi: EnergyPerM2WithBuildings
     p_nonresi_com: EnergyPerM2PctCommune
