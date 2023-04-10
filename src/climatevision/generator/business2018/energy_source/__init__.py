@@ -4,7 +4,7 @@ from dataclasses import dataclass
 
 from ...inputs import Inputs
 
-from .dataclasses import Vars5, Vars6, Vars7, Vars8
+from .dataclasses import Vars5, Vars6, Vars7, EnergyWithPercentageWithCO2ePerMWh
 
 
 @dataclass(kw_only=True)
@@ -19,10 +19,10 @@ class EnergySupply:
     biomass: Vars7
     coal: Vars6
     heatnet: Vars6
-    elec_heating: Vars8
+    elec_heating: EnergyWithPercentageWithCO2ePerMWh
     heatpump: Vars6
     solarth: Vars6
-    elec: Vars8
+    elec: EnergyWithPercentageWithCO2ePerMWh
 
 
 def calc_supply(
@@ -101,7 +101,7 @@ def calc_supply(
         CO2e_combustion_based_per_MWh=0,
     )
 
-    elec_heating = Vars8(
+    elec_heating = EnergyWithPercentageWithCO2ePerMWh(
         energy=elec_heating_energy,
         total_energy=elec_energy,
         CO2e_combustion_based_per_MWh=0,
@@ -132,7 +132,7 @@ def calc_supply(
         CO2e_combustion_based_per_MWh=0,
     )
 
-    elec = Vars8(
+    elec = EnergyWithPercentageWithCO2ePerMWh(
         energy=elec_energy, total_energy=total_energy, CO2e_combustion_based_per_MWh=0
     )
 

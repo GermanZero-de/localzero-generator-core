@@ -8,7 +8,6 @@ from ...common.energy import EnergyWithPercentage
 
 @dataclass(kw_only=True)
 class Vars5:
-    # Used by s
     CO2e_combustion_based: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     cost_fuel: float = None  # type: ignore
@@ -17,7 +16,7 @@ class Vars5:
 
 
 @dataclass(kw_only=True)
-class Vars8(EnergyWithPercentage):
+class EnergyWithPercentageWithCO2ePerMWh(EnergyWithPercentage):
     CO2e_combustion_based: float = 0
     CO2e_combustion_based_per_MWh: float
     CO2e_total: float = 0
@@ -30,14 +29,14 @@ class Vars8(EnergyWithPercentage):
 
 
 @dataclass(kw_only=True)
-class Vars6(Vars8):
+class Vars6(EnergyWithPercentageWithCO2ePerMWh):
     cost_fuel: float = 0
     cost_fuel_per_MWh: float
 
     def __post_init__(self, total_energy: float):
         self.cost_fuel = self.energy * self.cost_fuel_per_MWh / MILLION
 
-        Vars8.__post_init__(self, total_energy)
+        EnergyWithPercentageWithCO2ePerMWh.__post_init__(self, total_energy)
 
 
 @dataclass(kw_only=True)
