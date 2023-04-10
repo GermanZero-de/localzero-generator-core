@@ -9,9 +9,10 @@ from ..inputs import Inputs
 from ..utils import div
 from ..residences2018.r18 import R18
 from ..common.co2_equivalent_emission import CO2eEmission
+from ..common.energy_with_co2e import EnergyWithCO2e
 
 from .b18 import B18
-from .dataclasses import Vars9, Vars10
+from .dataclasses import Vars10
 from . import energy_demand, energy_source
 
 
@@ -113,7 +114,7 @@ def calc(inputs: Inputs, *, r18: R18) -> B18:
     )
     rp_p.CO2e_total = r18.s.CO2e_combustion_based + supply.total.CO2e_combustion_based
 
-    rb = Vars9(
+    rb = EnergyWithCO2e(
         energy=r18.p.energy + production.total.energy,
         CO2e_combustion_based=r18.r.CO2e_combustion_based + b.CO2e_combustion_based,
     )

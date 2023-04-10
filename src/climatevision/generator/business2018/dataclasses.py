@@ -3,8 +3,7 @@
 from dataclasses import dataclass
 
 from ..utils import MILLION
-from ..common.energy import Energy, EnergyWithPercentage
-from ..common.co2_equivalent_emission import CO2eEmission
+from ..common.energy import EnergyWithPercentage
 
 
 @dataclass(kw_only=True)
@@ -44,11 +43,6 @@ class Vars6(Vars8):
 @dataclass(kw_only=True)
 class Vars7(Vars6):
     number_of_buildings: float = None  # type: ignore
-
-
-@dataclass(kw_only=True)
-class Vars9(Energy, CO2eEmission):
-    pass
 
 
 @dataclass(kw_only=True)

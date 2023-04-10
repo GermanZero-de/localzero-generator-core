@@ -4,12 +4,12 @@ from dataclasses import dataclass
 
 from ..utils import div
 
-from .energy import Energy
 from .co2_equivalent_emission import CO2eEmission
+from .energy_with_co2e import EnergyWithCO2e
 
 
 @dataclass(kw_only=True)
-class EnergyWithCO2ePerMWh(Energy, CO2eEmission):
+class EnergyWithCO2ePerMWh(EnergyWithCO2e):
     CO2e_combustion_based_per_MWh: float = 0
     CO2e_production_based_per_MWh: float = 0
 

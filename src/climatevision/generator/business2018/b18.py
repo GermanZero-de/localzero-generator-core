@@ -3,6 +3,7 @@
 from dataclasses import dataclass
 
 from ..common.co2_equivalent_emission import CO2eEmission
+from ..common.energy_with_co2e import EnergyWithCO2e
 
 from .energy_demand import (
     Energy,
@@ -14,7 +15,6 @@ from .dataclasses import (
     Vars6,
     Vars7,
     Vars8,
-    Vars9,
     Vars10,
 )
 
@@ -43,5 +43,5 @@ class B18:
     s_heatpump: Vars6
     s_solarth: Vars6
     s_elec: Vars8
-    rb: Vars9
+    rb: EnergyWithCO2e
     rp_p: Vars10
