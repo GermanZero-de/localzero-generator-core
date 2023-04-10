@@ -97,10 +97,10 @@ def calc(inputs: Inputs, *, r18: R18) -> B18:
         production.nonresi.energy,
     )
 
-    b = CO2eEmission()
-    b.CO2e_combustion_based = supply.total.CO2e_combustion_based
-    b.CO2e_total = supply.total.CO2e_total
-    b.CO2e_production_based = 0
+    b = CO2eEmission(
+        CO2e_combustion_based=supply.total.CO2e_combustion_based,
+        CO2e_production_based=0,
+    )
 
     rp_p = Vars10()
     rp_p.CO2e_combustion_based = (

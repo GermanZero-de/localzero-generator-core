@@ -18,7 +18,7 @@ class CO2eChangeHeatProduction(Energy, CO2eEmission, CO2eChange, EnergyChange):
     what: InitVar[str]
     h18: InitVar[H18]
 
-    def __post_init__(
+    def __post_init__(  # type: ignore
         self,
         inputs: Inputs,
         what: str,
@@ -32,7 +32,7 @@ class CO2eChangeHeatProduction(Energy, CO2eEmission, CO2eChange, EnergyChange):
         else:
             h18_p_what = getattr(h18, "p_" + what)
 
-        self.CO2e_total = self.CO2e_production_based + self.CO2e_combustion_based
+        CO2eEmission.__post_init__(self)
 
         self.change_energy_MWh = self.energy - h18_p_what.energy
         self.change_energy_pct = div(self.change_energy_MWh, h18_p_what.energy)
@@ -95,7 +95,7 @@ class HeatProduction(EnergyWithCO2ePerMWh, CO2eChangeHeatProduction):
     what: InitVar[str]
     h18: InitVar[H18]
 
-    def __post_init__(
+    def __post_init__(  # type: ignore
         self,
         inputs: Inputs,
         what: str,

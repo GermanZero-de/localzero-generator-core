@@ -9,6 +9,9 @@ class CO2eEmission:
     CO2e_production_based: float = 0
     CO2e_total: float = 0
 
+    def __post_init__(self):
+        self.CO2e_total = self.CO2e_production_based + self.CO2e_combustion_based
+
     @classmethod
     def sum(cls, *CO2es: "CO2eEmission") -> "CO2eEmission":
         return cls(
