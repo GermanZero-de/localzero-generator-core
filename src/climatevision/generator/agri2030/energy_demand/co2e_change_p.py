@@ -7,7 +7,7 @@ from ...utils import div
 from ...common.invest import Invest
 from ...agri2018.a18 import A18
 
-from .co2e_change_p_operation import CO2eChangePOperation
+from .energy_change_p_operation import EnergyChangePOperation
 
 
 @dataclass(kw_only=True)
@@ -23,14 +23,14 @@ class CO2eChangeP(Invest):
     inputs: InitVar[Inputs]
     what: InitVar[str]
     a18: InitVar[A18]
-    operation: InitVar[CO2eChangePOperation]
+    operation: InitVar[EnergyChangePOperation]
 
     def __post_init__(
         self,
         inputs: Inputs,
         what: str,
         a18: A18,
-        operation: CO2eChangePOperation,
+        operation: EnergyChangePOperation,
     ):
 
         a18_CO2e_total = getattr(a18, what).CO2e_total

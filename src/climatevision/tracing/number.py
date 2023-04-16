@@ -192,22 +192,22 @@ class TracedNumber:
         return self.lift(other) / self
 
     def __gt__(self, other: Union["TracedNumber", float, int]) -> bool:
-        if isinstance(other, self.__class__):
-            return self.value > other.value
-        else:
+        if isinstance(other, (float, int)):
             return self.value > other
+        else:
+            return self.value > other.value
 
     def __lt__(self, other: Union["TracedNumber", float, int]) -> bool:
-        if isinstance(other, self.__class__):
-            return self.value < other.value
+        if isinstance(other, (float, int)):
+            return self.value < other
         else:
-            return self.value < other  # type: ignore TODO: Figure out why the type checker does not like this but likes the above
+            return self.value < other.value
 
     def __le__(self, other: Union["TracedNumber", float, int]) -> bool:
-        if isinstance(other, self.__class__):
-            return self.value <= other.value
-        else:
+        if isinstance(other, (float, int)):
             return self.value <= other
+        else:
+            return self.value <= other.value
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, self.__class__):

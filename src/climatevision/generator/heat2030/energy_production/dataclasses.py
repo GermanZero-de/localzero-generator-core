@@ -5,15 +5,15 @@ from dataclasses import dataclass, InitVar
 from ...inputs import Inputs
 from ...utils import div, MILLION
 from ...heat2018.h18 import H18
-from ...common.energy import Energy
+from ...common.energy import Energy, EnergyChange
 from ...common.energy_with_co2e_per_mwh import EnergyWithCO2ePerMWh
 from ...common.co2_equivalent_emission import CO2eEmission
-from ...common.co2e_change import CO2eChange, CO2eChangeEnergy
+from ...common.co2e_change import CO2eChange
 from ...common.invest import InvestCommune
 
 
 @dataclass(kw_only=True)
-class CO2eChangeHeatProduction(Energy, CO2eEmission, CO2eChange, CO2eChangeEnergy):
+class CO2eChangeHeatProduction(Energy, CO2eEmission, CO2eChange, EnergyChange):
     inputs: InitVar[Inputs]
     what: InitVar[str]
     h18: InitVar[H18]

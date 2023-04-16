@@ -8,101 +8,101 @@
             "energy": 644416944.4444445
         },
         "p_buildings_total": {
-            "area_m2": 3753715000.0,
-            "area_m2_relative_heat_ratio": 938743553.4312892,
             "energy": 539936388.888889,
-            "factor_adapted_to_fec": 0.14384053900972477,
+            "area_m2": 3753715000.0,
+            "ratio_energy_to_m2": 0.14384053900972477,
+            "number_of_buildings": 19652588.0,
+            "area_m2_relative_heat_ratio": 938743553.4312892,
             "fec_after_BMWi": 618945868.7938293,
             "fec_factor_BMWi": 0.16488888175949143,
-            "number_of_buildings": 19652588.0,
             "relative_building_ratio": 0.9999999999999999,
             "relative_heat_ratio_BMWi": 0.9999999999999999,
             "relative_heat_ratio_buildings_until_2004": 1.0
         },
         "p_buildings_until_1919": {
-            "area_m2": 507122572.40776634,
-            "area_m2_relative_heat_ratio": 72348486.3574039,
             "energy": 74763491.57898013,
-            "factor_adapted_to_fec": 0.14742686610065628,
+            "area_m2": 507122572.40776634,
+            "ratio_energy_to_m2": 0.14742686610065628,
+            "number_of_buildings": 2655042.0,
+            "area_m2_relative_heat_ratio": 72348486.3574039,
             "fec_after_BMWi": 85703714.73691252,
             "fec_factor_BMWi": 0.169,
-            "number_of_buildings": 2655042.0,
             "relative_building_ratio": 0.13509884804993622,
             "relative_heat_ratio_BMWi": 0.13846722154221278,
             "relative_heat_ratio_buildings_until_2004": 0.1426646934958952
         },
         "p_buildings_1919_1948": {
-            "area_m2": 440749013.42484766,
-            "area_m2_relative_heat_ratio": 60470166.65859661,
             "energy": 71899005.69240187,
-            "factor_adapted_to_fec": 0.16312913586285635,
+            "area_m2": 440749013.42484766,
+            "ratio_energy_to_m2": 0.16312913586285635,
+            "number_of_buildings": 2307543.0,
+            "area_m2_relative_heat_ratio": 60470166.65859661,
             "fec_after_BMWi": 82420065.51044652,
             "fec_factor_BMWi": 0.187,
-            "number_of_buildings": 2307543.0,
             "relative_building_ratio": 0.11741674938690008,
             "relative_heat_ratio_BMWi": 0.13316199310137186,
             "relative_heat_ratio_buildings_until_2004": 0.13719864325665113
         },
         "p_buildings_1949_1978": {
-            "area_m2": 1372963843.4009302,
-            "area_m2_relative_heat_ratio": 652677132.8010753,
             "energy": 249122162.09490618,
-            "factor_adapted_to_fec": 0.18144845058542305,
+            "area_m2": 1372963843.4009302,
+            "ratio_energy_to_m2": 0.18144845058542305,
+            "number_of_buildings": 7188157.0,
+            "area_m2_relative_heat_ratio": 652677132.8010753,
             "fec_after_BMWi": 285576479.42739344,
             "fec_factor_BMWi": 0.208,
-            "number_of_buildings": 7188157.0,
             "relative_building_ratio": 0.3657613440021233,
             "relative_heat_ratio_BMWi": 0.46139168839418954,
             "relative_heat_ratio_buildings_until_2004": 0.4753782380636821
         },
         "p_buildings_1979_1995": {
-            "area_m2": 710212877.1147088,
-            "area_m2_relative_heat_ratio": 122587673.18662114,
             "energy": 90454739.50090764,
-            "factor_adapted_to_fec": 0.12736285473784503,
+            "area_m2": 710212877.1147088,
+            "ratio_energy_to_m2": 0.12736285473784503,
+            "number_of_buildings": 3718322.0,
+            "area_m2_relative_heat_ratio": 122587673.18662114,
             "fec_after_BMWi": 103691080.05874747,
             "fec_factor_BMWi": 0.146,
-            "number_of_buildings": 3718322.0,
             "relative_building_ratio": 0.1892026637916594,
             "relative_heat_ratio_BMWi": 0.16752851143641276,
             "relative_heat_ratio_buildings_until_2004": 0.17260694242076044
         },
         "p_buildings_1996_2004": {
-            "area_m2": 424940600.7122319,
-            "area_m2_relative_heat_ratio": 30660094.42759215,
             "energy": 37811014.35667061,
-            "factor_adapted_to_fec": 0.08897952865246708,
+            "area_m2": 424940600.7122319,
+            "ratio_energy_to_m2": 0.08897952865246708,
+            "number_of_buildings": 2224778.0,
+            "area_m2_relative_heat_ratio": 30660094.42759215,
             "fec_after_BMWi": 43343941.27264765,
             "fec_factor_BMWi": 0.102,
-            "number_of_buildings": 2224778.0,
             "relative_building_ratio": 0.1132053447617179,
             "relative_heat_ratio_BMWi": 0.07002864621604818,
             "relative_heat_ratio_buildings_until_2004": 0.07215148276301103
         },
         "p_buildings_2005_2011": {
-            "area_m2": 158299197.17647365,
             "energy": 9804534.750085164,
-            "factor_adapted_to_fec": 0.06193673072867807,
+            "area_m2": 158299197.17647365,
+            "ratio_energy_to_m2": 0.06193673072867807,
+            "number_of_buildings": 828776.0,
             "fec_after_BMWi": 11239242.999529628,
             "fec_factor_BMWi": 0.071,
-            "number_of_buildings": 828776.0,
             "relative_building_ratio": 0.04217134150474228,
             "relative_heat_ratio_BMWi": 0.018158684896681033
         },
         "p_buildings_2011_today": {
-            "area_m2": 139426895.76304147,
             "energy": 6081440.914937299,
-            "factor_adapted_to_fec": 0.04361741600611131,
+            "area_m2": 139426895.76304147,
+            "ratio_energy_to_m2": 0.04361741600611131,
+            "number_of_buildings": 729970.0,
             "fec_after_BMWi": 6971344.7881520735,
             "fec_factor_BMWi": 0.05,
-            "number_of_buildings": 729970.0,
             "relative_building_ratio": 0.037143708502920834,
             "relative_heat_ratio_BMWi": 0.011263254413083781
         },
         "p_buildings_area_m2_com": {
-            "area_m2": 217715470.0,
             "energy": 31316310.55555556,
-            "factor_adapted_to_fec": 0.14384053900972477,
+            "area_m2": 217715470.0,
+            "ratio_energy_to_m2": 0.14384053900972477,
             "pct_x": 0.058
         },
         "p_elec_elcon": {
@@ -233,15 +233,15 @@
             "energy": 319388888.88888896
         },
         "p_nonresi": {
-            "area_m2": 1518873780.653951,
             "energy": 177741111.33333337,
-            "factor_adapted_to_fec": 0.11702164695792362,
+            "area_m2": 1518873780.653951,
+            "ratio_energy_to_m2": 0.11702164695792362,
             "number_of_buildings": 2700000.0
         },
         "p_nonresi_com": {
-            "area_m2": 312980051.77111715,
             "energy": 36625441.12323233,
-            "factor_adapted_to_fec": 0.11702164695792362,
+            "area_m2": 312980051.77111715,
+            "ratio_energy_to_m2": 0.11702164695792362,
             "pct_x": 0.20606060606060606
         },
         "p_elec_elcon": {
@@ -1254,9 +1254,9 @@
         },
         "p_operation_heat": {
             "energy": 16722222.22222222,
-            "pct_energy": 0.40321500334896176,
             "area_m2": 168763753.40599453,
-            "factor_adapted_to_fec": 0.0990865744849465
+            "ratio_energy_to_m2": 0.0990865744849465,
+            "pct_energy": 0.40321500334896176
         },
         "p_operation_elec_elcon": {
             "energy": 5250000.0,
