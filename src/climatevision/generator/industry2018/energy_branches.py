@@ -37,8 +37,6 @@ class EnergySourceSubBranch:
             + energy_type
             + "_2018"
         )
-        # add 0% facts in table -> remove try block
-
         fec_pct = fact(fact_name)
 
         return fec_pct

@@ -5,12 +5,6 @@ from dataclasses import dataclass
 from .utils import div
 from .refdata import RefData, Row
 
-# FIXME: This block should die
-
-# test_ags = "03159016"
-# ags = 'DG000000'
-# test_year = 2035
-
 
 @dataclass(kw_only=True, frozen=True)
 class Entries:
