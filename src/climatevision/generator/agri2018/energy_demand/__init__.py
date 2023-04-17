@@ -66,7 +66,6 @@ def calc_production(
     inputs: Inputs,
     l18: L18,
     b18: B18,
-    total_energy: float,
     s_elec_energy: float,
     s_petrol_energy: float,
     s_diesel_energy: float,
@@ -77,6 +76,17 @@ def calc_production(
 ) -> Production:
 
     entries = inputs.entries
+
+    # Energy
+    total_energy = (
+        entries.a_petrol_fec
+        + entries.a_diesel_fec
+        + entries.a_fueloil_fec
+        + entries.a_lpg_fec
+        + entries.a_gas_fec
+        + entries.a_biomass_fec
+        + entries.a_elec_fec
+    )
 
     # Fermen
     fermen_dairycow = CO2eFromFermentationOrManure.calc_fermen(inputs, "dairycow")
