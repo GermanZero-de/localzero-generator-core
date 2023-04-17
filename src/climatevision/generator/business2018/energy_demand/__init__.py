@@ -8,9 +8,7 @@ from ...common.energy import Energy, EnergyPerM2PctCommune, EnergyPerM2WithBuild
 
 @dataclass(kw_only=True)
 class Production:
-
     total: Energy
-
     nonresi: EnergyPerM2WithBuildings
     nonresi_commune: EnergyPerM2PctCommune
     elec_elcon: Energy

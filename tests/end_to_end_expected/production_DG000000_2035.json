@@ -265,126 +265,149 @@
         },
         "s_gas": {
             "CO2e_combustion_based": 19819102.5,
-            "CO2e_combustion_based_per_MWh": 0.201,
+            "CO2e_production_based": 0.0,
             "CO2e_total": 19819102.5,
-            "cost_fuel": 6685.2495,
-            "cost_fuel_per_MWh": 67.8,
             "energy": 98602500.0,
-            "pct_energy": 0.3087223865020003
+            "CO2e_combustion_based_per_MWh": 0.201,
+            "CO2e_production_based_per_MWh": 0,
+            "pct_energy": 0.3087223865020003,
+            "cost_fuel": 6685.2495,
+            "cost_fuel_per_MWh": 67.8
         },
         "s_lpg": {
             "CO2e_combustion_based": 718726.111111111,
-            "CO2e_combustion_based_per_MWh": 0.239,
+            "CO2e_production_based": 0.0,
             "CO2e_total": 718726.111111111,
-            "cost_fuel": 205.9947222222222,
-            "cost_fuel_per_MWh": 68.5,
             "energy": 3007222.222222222,
-            "pct_energy": 0.009415550530527046
+            "CO2e_combustion_based_per_MWh": 0.239,
+            "CO2e_production_based_per_MWh": 0,
+            "pct_energy": 0.009415550530527046,
+            "cost_fuel": 205.9947222222222,
+            "cost_fuel_per_MWh": 68.5
         },
         "s_petrol": {
             "CO2e_combustion_based": 440093.2,
-            "CO2e_combustion_based_per_MWh": 0.26388,
+            "CO2e_production_based": 0.0,
             "CO2e_total": 440093.2,
-            "cost_fuel": 255.17,
-            "cost_fuel_per_MWh": 153.0,
             "energy": 1667777.7777777778,
-            "pct_energy": 0.005221777700469645
+            "CO2e_combustion_based_per_MWh": 0.26388,
+            "CO2e_production_based_per_MWh": 0,
+            "pct_energy": 0.005221777700469645,
+            "cost_fuel": 255.17,
+            "cost_fuel_per_MWh": 153.0
         },
         "s_jetfuel": {
             "CO2e_combustion_based": 71749.99999999999,
-            "CO2e_combustion_based_per_MWh": 0.252,
+            "CO2e_production_based": 0.0,
             "CO2e_total": 71749.99999999999,
-            "cost_fuel": 14.23611111111111,
-            "cost_fuel_per_MWh": 50.0,
             "energy": 284722.2222222222,
-            "pct_energy": 0.0008914593842407373
+            "CO2e_combustion_based_per_MWh": 0.252,
+            "CO2e_production_based_per_MWh": 0,
+            "pct_energy": 0.0008914593842407373,
+            "cost_fuel": 14.23611111111111,
+            "cost_fuel_per_MWh": 50.0
         },
         "s_diesel": {
             "CO2e_combustion_based": 2402792.777777777,
-            "CO2e_combustion_based_per_MWh": 0.266,
+            "CO2e_production_based": 0.0,
             "CO2e_total": 2402792.777777777,
-            "cost_fuel": 596.1816666666665,
-            "cost_fuel_per_MWh": 66.0,
             "energy": 9033055.555555552,
-            "pct_energy": 0.028282309966950758
+            "CO2e_combustion_based_per_MWh": 0.266,
+            "CO2e_production_based_per_MWh": 0,
+            "pct_energy": 0.028282309966950758,
+            "cost_fuel": 596.1816666666665,
+            "cost_fuel_per_MWh": 66.0
         },
         "s_fueloil": {
             "CO2e_combustion_based": 8876493.888888888,
-            "CO2e_combustion_based_per_MWh": 0.266,
+            "CO2e_production_based": 0.0,
             "CO2e_total": 8876493.888888888,
-            "cost_fuel": 2202.438333333333,
-            "cost_fuel_per_MWh": 66.0,
             "energy": 33370277.777777772,
-            "pct_energy": 0.10448164898243169
+            "CO2e_combustion_based_per_MWh": 0.266,
+            "CO2e_production_based_per_MWh": 0,
+            "pct_energy": 0.10448164898243169,
+            "cost_fuel": 2202.438333333333,
+            "cost_fuel_per_MWh": 66.0
         },
         "s_biomass": {
             "CO2e_combustion_based": 383453.6261111112,
-            "CO2e_combustion_based_per_MWh": 0.018382000000000003,
+            "CO2e_production_based": 0.0,
             "CO2e_total": 383453.6261111112,
+            "energy": 20860277.77777778,
+            "CO2e_combustion_based_per_MWh": 0.018382000000000003,
+            "CO2e_production_based_per_MWh": 0,
+            "pct_energy": 0.0653130979300748,
             "cost_fuel": 1251.6166666666668,
             "cost_fuel_per_MWh": 60.0,
-            "energy": 20860277.77777778,
-            "number_of_buildings": 316880.82502406015,
-            "pct_energy": 0.0653130979300748
+            "number_of_buildings": 316880.82502406015
         },
         "s_coal": {
             "CO2e_combustion_based": 81332.55555555555,
-            "CO2e_combustion_based_per_MWh": 0.3494,
+            "CO2e_production_based": 0.0,
             "CO2e_total": 81332.55555555555,
-            "cost_fuel": 19.57661111111111,
-            "cost_fuel_per_MWh": 84.1,
             "energy": 232777.77777777778,
-            "pct_energy": 0.0007288224038963296
+            "CO2e_combustion_based_per_MWh": 0.3494,
+            "CO2e_production_based_per_MWh": 0,
+            "pct_energy": 0.0007288224038963296,
+            "cost_fuel": 19.57661111111111,
+            "cost_fuel_per_MWh": 84.1
         },
         "s_heatnet": {
-            "CO2e_combustion_based": 0,
-            "CO2e_combustion_based_per_MWh": 0,
-            "CO2e_total": 0,
-            "cost_fuel": 586.975,
-            "cost_fuel_per_MWh": 90.0,
+            "CO2e_combustion_based": 0.0,
+            "CO2e_production_based": 0.0,
+            "CO2e_total": 0.0,
             "energy": 6521944.444444444,
-            "pct_energy": 0.02042007305618368
+            "CO2e_combustion_based_per_MWh": 0,
+            "CO2e_production_based_per_MWh": 0,
+            "pct_energy": 0.02042007305618368,
+            "cost_fuel": 586.975,
+            "cost_fuel_per_MWh": 90.0
         },
         "s_elec_heating": {
-            "CO2e_combustion_based": 0,
-            "CO2e_combustion_based_per_MWh": 0,
-            "CO2e_total": 0,
+            "CO2e_combustion_based": 0.0,
+            "CO2e_production_based": 0.0,
+            "CO2e_total": 0.0,
             "energy": 13027778.0,
+            "CO2e_combustion_based_per_MWh": 0,
+            "CO2e_production_based_per_MWh": 0,
             "pct_energy": 0.09066586401280534
         },
         "s_heatpump": {
-            "CO2e_combustion_based": 0,
-            "CO2e_combustion_based_per_MWh": 0,
-            "CO2e_total": 0,
-            "cost_fuel": 104.74934899258247,
-            "cost_fuel_per_MWh": 83.00000000000001,
+            "CO2e_combustion_based": 0.0,
+            "CO2e_production_based": 0.0,
+            "CO2e_total": 0.0,
             "energy": 1262040.3493082223,
-            "pct_energy": 0.0039514222103927635
+            "CO2e_combustion_based_per_MWh": 0,
+            "CO2e_production_based_per_MWh": 0,
+            "pct_energy": 0.0039514222103927635,
+            "cost_fuel": 104.74934899258247,
+            "cost_fuel_per_MWh": 83.00000000000001
         },
         "s_solarth": {
-            "CO2e_combustion_based": 0,
-            "CO2e_combustion_based_per_MWh": 0,
-            "CO2e_total": 0,
-            "cost_fuel": 0,
-            "cost_fuel_per_MWh": 0,
+            "CO2e_combustion_based": 0.0,
+            "CO2e_production_based": 0.0,
+            "CO2e_total": 0.0,
             "energy": 856292.9840251112,
-            "pct_energy": 0.002681035608358323
+            "CO2e_combustion_based_per_MWh": 0,
+            "CO2e_production_based_per_MWh": 0,
+            "pct_energy": 0.002681035608358323,
+            "cost_fuel": 0.0,
+            "cost_fuel_per_MWh": 0
         },
         "s_elec": {
-            "CO2e_combustion_based": 0,
-            "CO2e_combustion_based_per_MWh": 0,
-            "CO2e_total": 0,
+            "CO2e_combustion_based": 0.0,
+            "CO2e_production_based": 0.0,
+            "CO2e_total": 0.0,
             "energy": 143690000.0,
+            "CO2e_combustion_based_per_MWh": 0,
+            "CO2e_production_based_per_MWh": 0,
             "pct_energy": 0.44989041572447375
         },
         "rb": {
             "CO2e_combustion_based": 118619519.25277779,
+            "CO2e_production_based": 0,
             "CO2e_total": 118619519.25277779,
             "energy": 963805833.3333335
-        },
-        "rp_p": {
-            "CO2e_combustion_based": 115406552.275,
-            "CO2e_total": 118619519.25277779
         }
     },
     "i18": {
@@ -1784,14 +1807,14 @@
             "energy": 16722222.22222222
         },
         "h": {
-            "CO2e_combustion_based": 49524008.633951336,
+            "CO2e_combustion_based": 49524008.63395133,
             "CO2e_production_based": 8522639.866653107,
-            "CO2e_total": 58046648.50060444
+            "CO2e_total": 58046648.500604436
         },
         "p": {
-            "CO2e_combustion_based": 49524008.633951336,
+            "CO2e_combustion_based": 49524008.63395133,
             "CO2e_production_based": 8522639.866653107,
-            "CO2e_total": 58046648.50060444,
+            "CO2e_total": 58046648.500604436,
             "energy": 1220199349.848574,
             "CO2e_combustion_based_per_MWh": 0.04058681775244122,
             "CO2e_production_based_per_MWh": 0.006984629083527017
@@ -1837,9 +1860,9 @@
             "CO2e_production_based_per_MWh": 0.01843246236947314
         },
         "p_heatnet": {
-            "CO2e_combustion_based": 29837792.08036053,
-            "CO2e_production_based": 0,
-            "CO2e_total": 29837792.08036053,
+            "CO2e_combustion_based": 29837792.080360528,
+            "CO2e_production_based": 0.0,
+            "CO2e_total": 29837792.080360528,
             "energy": 109472500.0,
             "CO2e_combustion_based_per_MWh": 0.2725597029423876,
             "CO2e_production_based_per_MWh": 0.0
@@ -1893,7 +1916,7 @@
             "CO2e_production_based_per_MWh": 0.0
         },
         "p_orenew": {
-            "CO2e_combustion_based": 0,
+            "CO2e_combustion_based": 0.0,
             "CO2e_production_based": 0.0,
             "CO2e_total": 0.0,
             "energy": 23364722.22222222,
@@ -6510,10 +6533,10 @@
         "h": {
             "change_energy_MWh": -898436901.2583728,
             "change_energy_pct": -0.7363033764686634,
-            "CO2e_total_2021_estimated": 54188356.15789757,
+            "CO2e_total_2021_estimated": 54188356.15789756,
             "change_CO2e_pct": -0.9878745276167625,
-            "change_CO2e_t": -57342805.46727087,
-            "cost_climate_saved": 224233821274.7346,
+            "change_CO2e_t": -57342805.467270866,
+            "cost_climate_saved": 224233821274.73453,
             "cost_wage": 628571806.144983,
             "demand_emplo": 12554.862747396677,
             "demand_emplo_new": 12554.862747396677,
@@ -6579,10 +6602,10 @@
         "p": {
             "change_energy_MWh": -898436901.2583728,
             "change_energy_pct": -0.7363033764686634,
-            "CO2e_total_2021_estimated": 54188356.15789757,
+            "CO2e_total_2021_estimated": 54188356.15789756,
             "change_CO2e_pct": -0.9878745276167625,
-            "change_CO2e_t": -57342805.46727087,
-            "cost_climate_saved": 224233821274.7346,
+            "change_CO2e_t": -57342805.467270866,
+            "cost_climate_saved": 224233821274.73453,
             "CO2e_combustion_based": 703843.0333335714,
             "CO2e_production_based": 0.0,
             "CO2e_total": 703843.0333335714,
@@ -6678,10 +6701,10 @@
         "p_heatnet": {
             "change_energy_MWh": -32165277.777777776,
             "change_energy_pct": -0.29382061958736466,
-            "CO2e_total_2021_estimated": 27854509.191844825,
+            "CO2e_total_2021_estimated": 27854509.19184482,
             "change_CO2e_pct": -0.976411021585044,
-            "change_CO2e_t": -29133949.047026962,
-            "cost_climate_saved": 113829167869.55844,
+            "change_CO2e_t": -29133949.04702696,
+            "cost_climate_saved": 113829167869.55841,
             "CO2e_combustion_based": 703843.0333335714,
             "CO2e_production_based": 0.0,
             "CO2e_total": 703843.0333335714,
@@ -6863,7 +6886,7 @@
             "CO2e_combustion_based_per_MWh": 0,
             "CO2e_production_based_per_MWh": 0.0
         },
-        "p_fossil_change_CO2e_t": -28208856.42024391
+        "p_fossil_change_CO2e_t": -28208856.420243908
     },
     "l30": {
         "l": {
@@ -9064,7 +9087,7 @@
             "energy_18": 2579171234.2365084,
             "pct_energy_18": 1,
             "CO2e_production_based_18": 8522639.866653107,
-            "CO2e_combustion_based_18": 334578453.2820824,
+            "CO2e_combustion_based_18": 334578453.2820823,
             "CO2e_total_18": 343101093.14873546,
             "pct_CO2e_total_18": 0.38167244519114346,
             "energy_30": 1840237987.5784512,
@@ -9189,7 +9212,7 @@
             "demand_emplo_new": null,
             "demand_emplo_com": null,
             "invest_pct": 0.006064574998125235,
-            "cost_climate_saved_pct": 0.06323876993501142,
+            "cost_climate_saved_pct": 0.0632387699350114,
             "demand_emplo_new_pct": 0.013734275794518283
         },
         "f": {
@@ -9640,13 +9663,13 @@
             },
             "solarth": {
                 "CO2e_pb": 0.0,
-                "CO2e_cb": 0,
+                "CO2e_cb": 0.0,
                 "CO2e_total": 0.0,
                 "energy": 856292.9840251112
             },
             "heatpump": {
                 "CO2e_pb": 0.0,
-                "CO2e_cb": 0,
+                "CO2e_cb": 0.0,
                 "CO2e_total": 0.0,
                 "energy": 1262040.3493082223
             }
