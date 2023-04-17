@@ -22,7 +22,6 @@ def calc(inputs: Inputs, *, t18: T18, e18: E18, i18: I18) -> H18:
     h = CO2eEmission(
         CO2e_combustion_based=production.total.CO2e_combustion_based,
         CO2e_production_based=production.total.CO2e_production_based,
-        CO2e_total=production.total.CO2e_total,
     )
 
     return H18(
