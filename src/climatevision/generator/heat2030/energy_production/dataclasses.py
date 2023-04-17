@@ -53,7 +53,6 @@ class CO2eChangeHeatProduction(EnergyWithCO2e, CO2eChange, EnergyChange):
 
 @dataclass(kw_only=True)
 class InvestPerX:
-    pct_energy: float
     invest_per_x: float
 
 

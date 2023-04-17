@@ -6699,7 +6699,6 @@
             "CO2e_production_based_per_MWh": 0.0
         },
         "p_heatnet_plant": {
-            "pct_energy": 0.10377358490566037,
             "invest_per_x": 2257142.8571428573,
             "cost_wage": 863.5104836928414,
             "demand_emplo": 0.01829663529475093,
@@ -6725,7 +6724,6 @@
             "area_ha_available": 0.019503463394402717
         },
         "p_heatnet_lheatpump": {
-            "pct_energy": 0.5707547169811321,
             "invest_per_x": 325000.0,
             "cost_wage": 663.5435587629095,
             "demand_emplo": 0.014059602895550503,
@@ -6753,7 +6751,6 @@
             "demand_electricity": 161.3782148120933
         },
         "p_heatnet_geoth": {
-            "pct_energy": 0.3254716981132076,
             "invest_per_x": 3236571.4285714286,
             "cost_wage": 5501.58527456207,
             "demand_emplo": 0.11657125328826953,
