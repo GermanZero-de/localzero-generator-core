@@ -260,8 +260,7 @@
             "CO2e_combustion_based": 2365.7028305607855,
             "CO2e_total": 2365.7028305607855,
             "cost_fuel": 0.8244319156498817,
-            "energy": 22714.33154131206,
-            "pct_energy": 1.0
+            "energy": 22714.33154131206
         },
         "s_gas": {
             "CO2e_combustion_based": 1428.7702634417667,

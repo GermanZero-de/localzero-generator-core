@@ -12,7 +12,6 @@ class Vars5:
     CO2e_total: float = None  # type: ignore
     cost_fuel: float = None  # type: ignore
     energy: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
 
 
 @dataclass(kw_only=True)

@@ -145,20 +145,6 @@ def calc_supply(
 
     total = Vars5()
     total.energy = total_energy
-    total.pct_energy = (
-        gas.pct_energy
-        + lpg.pct_energy
-        + petrol.pct_energy
-        + jetfuel.pct_energy
-        + diesel.pct_energy
-        + fueloil.pct_energy
-        + biomass.pct_energy
-        + coal.pct_energy
-        + heatnet.pct_energy
-        + heatpump.pct_energy
-        + solarth.pct_energy
-        + elec.pct_energy
-    )
     total.cost_fuel = (
         gas.cost_fuel
         + lpg.cost_fuel
