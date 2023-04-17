@@ -2,25 +2,25 @@
 
 from dataclasses import dataclass
 
+from ..common.co2_equivalent_emission import CO2eEmission
+from ..common.energy_with_co2e import EnergyWithCO2e
+
 from .energy_demand import (
     Energy,
     EnergyPerM2WithBuildings,
     EnergyPerM2PctCommune,
 )
-from .dataclasses import (
-    Vars0,
+from .energy_source import (
     Vars5,
     Vars6,
     Vars7,
-    Vars8,
-    Vars9,
-    Vars10,
+    EnergyWithPercentageWithCO2ePerMWh,
 )
 
 
 @dataclass(kw_only=True)
 class B18:
-    b: Vars0
+    b: CO2eEmission
     p: Energy
     p_nonresi: EnergyPerM2WithBuildings
     p_nonresi_com: EnergyPerM2PctCommune
@@ -38,9 +38,8 @@ class B18:
     s_biomass: Vars7
     s_coal: Vars6
     s_heatnet: Vars6
-    s_elec_heating: Vars8
+    s_elec_heating: EnergyWithPercentageWithCO2ePerMWh
     s_heatpump: Vars6
     s_solarth: Vars6
-    s_elec: Vars8
-    rb: Vars9
-    rp_p: Vars10
+    s_elec: EnergyWithPercentageWithCO2ePerMWh
+    rb: EnergyWithCO2e

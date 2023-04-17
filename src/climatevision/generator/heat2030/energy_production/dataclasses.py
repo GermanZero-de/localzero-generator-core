@@ -5,20 +5,20 @@ from dataclasses import dataclass, InitVar
 from ...inputs import Inputs
 from ...utils import div, MILLION
 from ...heat2018.h18 import H18
-from ...common.energy import Energy, EnergyChange
+from ...common.energy import EnergyChange
 from ...common.energy_with_co2e_per_mwh import EnergyWithCO2ePerMWh
-from ...common.co2_equivalent_emission import CO2eEmission
+from ...common.energy_with_co2e import EnergyWithCO2e
 from ...common.co2e_change import CO2eChange
 from ...common.invest import InvestCommune
 
 
 @dataclass(kw_only=True)
-class CO2eChangeHeatProduction(Energy, CO2eEmission, CO2eChange, EnergyChange):
+class CO2eChangeHeatProduction(EnergyWithCO2e, CO2eChange, EnergyChange):
     inputs: InitVar[Inputs]
     what: InitVar[str]
     h18: InitVar[H18]
 
-    def __post_init__(
+    def __post_init__(  # type: ignore
         self,
         inputs: Inputs,
         what: str,
@@ -32,7 +32,7 @@ class CO2eChangeHeatProduction(Energy, CO2eEmission, CO2eChange, EnergyChange):
         else:
             h18_p_what = getattr(h18, "p_" + what)
 
-        self.CO2e_total = self.CO2e_production_based + self.CO2e_combustion_based
+        EnergyWithCO2e.__post_init__(self)
 
         self.change_energy_MWh = self.energy - h18_p_what.energy
         self.change_energy_pct = div(self.change_energy_MWh, h18_p_what.energy)
@@ -95,15 +95,13 @@ class HeatProduction(EnergyWithCO2ePerMWh, CO2eChangeHeatProduction):
     what: InitVar[str]
     h18: InitVar[H18]
 
-    def __post_init__(
+    def __post_init__(  # type: ignore
         self,
         inputs: Inputs,
         what: str,
         h18: H18,
     ):
-        self.CO2e_production_based = self.energy * self.CO2e_production_based_per_MWh
-        self.CO2e_combustion_based = self.energy * self.CO2e_combustion_based_per_MWh
-
+        EnergyWithCO2ePerMWh.__post_init__(self)
         CO2eChangeHeatProduction.__post_init__(self, inputs=inputs, what=what, h18=h18)
 
 

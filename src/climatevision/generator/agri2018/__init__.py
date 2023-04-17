@@ -44,7 +44,6 @@ def calc(inputs: Inputs, l18: L18, b18: B18) -> A18:
     )
 
     a = CO2eEmission(
-        CO2e_total=production.total.CO2e_total + supply.total.CO2e_total,
         CO2e_production_based=production.total.CO2e_production_based,
         CO2e_combustion_based=supply.total.CO2e_combustion_based,
     )
