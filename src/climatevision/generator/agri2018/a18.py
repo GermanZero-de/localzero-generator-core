@@ -8,7 +8,6 @@ from .energy_demand import (
     CO2eFromSoil,
     CO2eFromOther,
     Energy,
-    EnergyWithPercentage,
     EnergyPerM2,
     CO2eEmission,
 )
@@ -52,9 +51,9 @@ class A18:
     p_other_kas: CO2eFromOther
     p_operation: Energy
     p_operation_heat: EnergyPerM2
-    p_operation_elec_elcon: EnergyWithPercentage
+    p_operation_elec_elcon: Energy
     p_operation_elec_heatpump: Energy
-    p_operation_vehicles: EnergyWithPercentage
+    p_operation_vehicles: Energy
     s: CO2eFromEnergyUse
     s_petrol: CO2eFromEnergyUseDetail
     s_diesel: CO2eFromEnergyUseDetail
