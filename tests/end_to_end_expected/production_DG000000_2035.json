@@ -121,8 +121,7 @@
             "CO2e_combustion_based": 85825774.59333333,
             "CO2e_total": 85825774.59333333,
             "cost_fuel": 35305.247500000005,
-            "energy": 644416944.4444444,
-            "pct_energy": 1.0
+            "energy": 644416944.4444444
         },
         "s_fueloil": {
             "CO2e_combustion_based": 28513796.111111112,
@@ -130,8 +129,7 @@
             "CO2e_total": 28513796.111111112,
             "cost_fuel": 7074.851666666667,
             "cost_fuel_per_MWh": 66.0,
-            "energy": 107194722.22222222,
-            "pct_energy": 0.16634373621977835
+            "energy": 107194722.22222222
         },
         "s_lpg": {
             "CO2e_combustion_based": 2416422.777777778,
@@ -139,8 +137,7 @@
             "CO2e_total": 2416422.777777778,
             "cost_fuel": 692.5730555555556,
             "cost_fuel_per_MWh": 68.5,
-            "energy": 10110555.555555556,
-            "pct_energy": 0.01568946261068899
+            "energy": 10110555.555555556
         },
         "s_biomass": {
             "CO2e_combustion_based": 1235923.9822222223,
@@ -149,8 +146,7 @@
             "cost_fuel": 4034.133333333333,
             "cost_fuel_per_MWh": 60.0,
             "energy": 67235555.55555555,
-            "number_of_buildings": 2447237.673688927,
-            "pct_energy": 0.10433548672982167
+            "number_of_buildings": 2447237.673688927
         },
         "s_coal": {
             "CO2e_combustion_based": 2006526.5555555555,
@@ -158,8 +154,7 @@
             "CO2e_total": 2006526.5555555555,
             "cost_fuel": 482.9676111111111,
             "cost_fuel_per_MWh": 84.1,
-            "energy": 5742777.777777778,
-            "pct_energy": 0.008911587175487231
+            "energy": 5742777.777777778
         },
         "s_petrol": {
             "CO2e_combustion_based": 298331.0,
@@ -167,8 +162,7 @@
             "CO2e_total": 298331.0,
             "cost_fuel": 172.975,
             "cost_fuel_per_MWh": 153.0,
-            "energy": 1130555.5555555555,
-            "pct_energy": 0.0017543852086791634
+            "energy": 1130555.5555555555
         },
         "s_heatnet": {
             "CO2e_combustion_based": 0,
@@ -176,8 +170,7 @@
             "CO2e_total": 0.0,
             "cost_fuel": 4480.675,
             "cost_fuel_per_MWh": 90.0,
-            "energy": 49785277.777777776,
-            "pct_energy": 0.07725631395477651
+            "energy": 49785277.777777776
         },
         "s_solarth": {
             "CO2e_combustion_based": 0,
@@ -185,8 +178,7 @@
             "CO2e_total": 0.0,
             "cost_fuel": 0.0,
             "cost_fuel_per_MWh": 0,
-            "energy": 8537777.77777778,
-            "pct_energy": 0.013248841222103878
+            "energy": 8537777.77777778
         },
         "s_heatpump": {
             "CO2e_combustion_based": 0,
@@ -194,8 +186,7 @@
             "CO2e_total": 0.0,
             "cost_fuel": 1044.4166666666667,
             "cost_fuel_per_MWh": 83.00000000000001,
-            "energy": 12583333.333333332,
-            "pct_energy": 0.01952669532018823
+            "energy": 12583333.333333332
         },
         "s_elec_heating": {
             "CO2e_combustion_based": 0.0,
@@ -203,8 +194,7 @@
             "CO2e_total": 0.0,
             "cost_fuel": 6947.1,
             "cost_fuel_per_MWh": 298.8,
-            "energy": 23250000.0,
-            "pct_energy": 0.18364928909952608
+            "energy": 23250000.0
         },
         "s_gas": {
             "CO2e_combustion_based": 51354774.16666667,
@@ -212,15 +202,13 @@
             "CO2e_total": 51354774.16666667,
             "cost_fuel": 17322.655166666667,
             "cost_fuel_per_MWh": 67.8,
-            "energy": 255496388.8888889,
-            "pct_energy": 0.39647683241655574
+            "energy": 255496388.8888889
         },
         "s_elec": {
             "CO2e_combustion_based": 0.0,
             "CO2e_combustion_based_per_MWh": 0.0,
             "CO2e_total": 0.0,
-            "energy": 126600000.0,
-            "pct_energy": 0.1964566591419203
+            "energy": 126600000.0
         }
     },
     "b18": {

@@ -45,7 +45,6 @@ class Vars6:
     CO2e_total: float = None  # type: ignore
     cost_fuel: float = None  # type: ignore
     energy: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
 
 
 @dataclass(kw_only=True)
@@ -57,7 +56,6 @@ class Vars7:
     cost_fuel: float = None  # type: ignore
     cost_fuel_per_MWh: float = None  # type: ignore
     energy: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
 
 
 @dataclass(kw_only=True)
@@ -70,7 +68,6 @@ class Vars8:
     cost_fuel_per_MWh: float = None  # type: ignore
     energy: float = None  # type: ignore
     number_of_buildings: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
 
 
 @dataclass(kw_only=True)
@@ -80,4 +77,3 @@ class Vars9:
     CO2e_combustion_based_per_MWh: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     energy: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
