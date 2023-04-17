@@ -103,7 +103,9 @@ def calc(inputs: Inputs, *, t18: T18) -> E18:
     d_t.cost_fuel = d_t.energy * d_t.cost_fuel_per_MWh / 1000000
     d_a.energy = entries.a_elec_fec
     d_w.energy = entries.w_elec_fec
-    d.energy = d_r.energy + d_b.energy + d_i.energy + d_t.energy + d_a.energy + d_w.energy
+    d.energy = (
+        d_r.energy + d_b.energy + d_i.energy + d_t.energy + d_a.energy + d_w.energy
+    )
     d.cost_fuel = d_r.cost_fuel + d_b.cost_fuel + d_i.cost_fuel + d_t.cost_fuel
     p.energy = d.energy
 

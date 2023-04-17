@@ -1437,7 +1437,7 @@ def calc(inputs: Inputs, *, l18: L18) -> L30:
     l.invest_pa = g.invest_pa
     l.invest = g.invest
     l.cost_wage = g.cost_wage
-    l.demand_emplo = g.demand_emplo 
+    l.demand_emplo = g.demand_emplo
     l.demand_emplo_new = g.demand_emplo_new
 
     return L30(

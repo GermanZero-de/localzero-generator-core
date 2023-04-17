@@ -701,7 +701,9 @@ def make_entries(data: RefData, ags: str, year: int) -> Entries:
         "nonCO2_budget_2016_to_year"
     )
 
-    w_elec_fec = data.fact("Fact_W_S_elec_fec_2018") * m_population_com_2018/ m_population_nat
+    w_elec_fec = (
+        data.fact("Fact_W_S_elec_fec_2018") * m_population_com_2018 / m_population_nat
+    )
 
     return Entries(
         a_area_agri_com_pct_of_organic=a_area_agri_com_pct_of_organic,
@@ -868,5 +870,5 @@ def make_entries(data: RefData, ags: str, year: int) -> Entries:
         t_rt3=t_rt3,
         t_rt7=t_rt7,
         ags=ags,
-        w_elec_fec = w_elec_fec,
+        w_elec_fec=w_elec_fec,
     )

@@ -36,7 +36,7 @@ def calc(
     i30: I30,
     r30: R30,
     t30: T30,
-    wastelines : WasteLines,
+    wastelines: WasteLines,
     p_local_biomass_cogen: EColVars2030,
     p_local_biomass: EColVars2030,
 ) -> E30:

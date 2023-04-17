@@ -32,7 +32,7 @@ from .agri2030.a30 import A30
 from .heat2030.h30 import H30
 from .lulucf2030.l30 import L30
 from .fuels2030.f30 import F30
-from .waste2030 import W30,WasteLines,Pyrolysis
+from .waste2030 import W30, WasteLines, Pyrolysis
 
 from . import electricity2018
 from . import business2018
@@ -207,7 +207,7 @@ def calculate(inputs: Inputs) -> Result:
     print("calc waste 2030 ")
     wastelines = WasteLines.calc_waste_lines(inputs=inputs, w18=w18)
 
-    #TODO: Include demand from waste
+    # TODO: Include demand from waste
     print("Electricity2030_calc", file=stderr)
     e30 = electricity2030.calc(
         inputs,
@@ -241,7 +241,7 @@ def calculate(inputs: Inputs) -> Result:
     )
 
     print("Waste2030_calcPyr", file=stderr)
-    pyr =  Pyrolysis.calc(
+    pyr = Pyrolysis.calc(
         inputs,
         l30=l30,
         a30=a30,
@@ -256,7 +256,7 @@ def calculate(inputs: Inputs) -> Result:
     )
 
     print("calc_sums_including_pyrolysis", file=stderr)
-    w30 = W30.calc(inputs=inputs,w18=w18,wastelines=wastelines,pyrolysis=pyr)
+    w30 = W30.calc(inputs=inputs, w18=w18, wastelines=wastelines, pyrolysis=pyr)
 
     print("Methodology2030_calcZ", file=stderr)
     methodology183x.calc_z(
