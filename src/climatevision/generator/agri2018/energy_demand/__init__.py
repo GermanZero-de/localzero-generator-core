@@ -5,14 +5,13 @@ from dataclasses import dataclass
 from ...inputs import Inputs
 from ...lulucf2018.l18 import L18
 from ...business2018.b18 import B18
-from ...common.energy import Energy, EnergyWithPercentage
+from ...common.energy import Energy, EnergyWithPercentage, EnergyPerM2
 from ...common.co2_equivalent_emission import CO2eEmission
 
 from .p import P
 from .co2e_from_fermentation_or_manure import CO2eFromFermentationOrManure
 from .co2e_from_soil import CO2eFromSoil
 from .co2e_from_other import CO2eFromOther
-from .operation_heat_energy import OperationHeatEnergy
 
 
 @dataclass(kw_only=True)
@@ -56,7 +55,7 @@ class Production:
     other_kas: CO2eFromOther
 
     operation: Energy
-    operation_heat: OperationHeatEnergy
+    operation_heat: EnergyPerM2
     operation_elec_elcon: EnergyWithPercentage
     operation_elec_heatpump: Energy
     operation_vehicles: EnergyWithPercentage
@@ -214,9 +213,8 @@ def calc_production(
     operation_vehicles = EnergyWithPercentage(
         energy=s_petrol_energy + s_diesel_energy, total_energy=operation.energy
     )
-    operation_heat = OperationHeatEnergy(
+    operation_heat = EnergyPerM2(
         energy=s_fueloil_energy + s_lpg_energy + s_gas_energy + s_biomass_energy,
-        total_energy=operation.energy,
         area_m2=(
             b18.p_nonresi.area_m2
             * inputs.fact("Fact_A_P_energy_buildings_ratio_A_to_B")

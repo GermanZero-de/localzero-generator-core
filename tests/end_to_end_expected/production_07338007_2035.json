@@ -1277,8 +1277,7 @@
         "p_operation_heat": {
             "energy": 384.85294330953843,
             "area_m2": 14521.798365122613,
-            "ratio_energy_to_m2": 0.026501741288038394,
-            "pct_energy": 0.4032150033489618
+            "ratio_energy_to_m2": 0.026501741288038394
         },
         "p_operation_elec_elcon": {
             "energy": 120.82592406229695,
