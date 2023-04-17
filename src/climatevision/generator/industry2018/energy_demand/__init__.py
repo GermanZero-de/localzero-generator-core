@@ -172,7 +172,6 @@ def calc_production_by_co2e(
         metal_steel_primary.energy + metal_steel_secondary.energy + metal_nonfe.energy
     )
     metal_steel = ProductionSubSum.calc_production_sub_sum(
-        energy_consumption_branch=energy_consumption_metal,
         sub_branch_list=[metal_steel_primary, metal_steel_secondary],
     )
     metal = ProductionBranch.calc_production_sum(

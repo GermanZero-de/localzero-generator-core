@@ -3,13 +3,11 @@
 from dataclasses import dataclass
 
 from ...inputs import Inputs
-from ...utils import div
 
 
 @dataclass(kw_only=True)
 class ProductionSubBranch:
     energy: float
-    pct_energy: float
 
     prod_volume: float
     energy_use_factor: float
@@ -103,7 +101,6 @@ class ProductionSubBranch:
 
         return cls(
             energy=energy,
-            pct_energy=pct_energy,
             prod_volume=production_volume,
             energy_use_factor=energy_use_factor,
             CO2e_combustion_based=CO2e_combustion_based,
@@ -120,7 +117,6 @@ class ProductionSubBranchCO2viaFEC:
     Therefore we set the prod_volume to 100% an and calculate the CO2e Emissiones via a Emmissions/Energy_consumption - Factor"""
 
     energy: float
-    pct_energy: float
 
     prod_volume: float
 
@@ -164,7 +160,6 @@ class ProductionSubBranchCO2viaFEC:
 
         return cls(
             energy=energy,
-            pct_energy=pct_energy,
             prod_volume=production_volume,
             CO2e_combustion_based=CO2e_combustion_based,
             CO2e_combustion_based_per_MWh=CO2e_combustion_based_per_MWh,
@@ -205,7 +200,6 @@ class ExtraEmission:
 @dataclass(kw_only=True)
 class ProductionSubSum:
     energy: float
-    pct_energy: float
     prod_volume: float
     CO2e_combustion_based: float
     CO2e_production_based: float
@@ -214,7 +208,6 @@ class ProductionSubSum:
     @classmethod
     def calc_production_sub_sum(
         cls,
-        energy_consumption_branch: float,
         sub_branch_list: list[ProductionSubBranch],
     ) -> "ProductionSubSum":
 
@@ -231,11 +224,8 @@ class ProductionSubSum:
             CO2e_production_based += sub_branch.CO2e_production_based
             CO2e_total += sub_branch.CO2e_total
 
-        pct_energy = div(energy, energy_consumption_branch)
-
         return cls(
             energy=energy,
-            pct_energy=pct_energy,
             prod_volume=production_volume,
             CO2e_combustion_based=CO2e_combustion_based,
             CO2e_production_based=CO2e_production_based,
