@@ -43,7 +43,7 @@ class EnergyWithCO2ePerMWh(EnergyWithCO2e):
 
 @dataclass(kw_only=True)
 class EnergyWithPercentageWithCO2ePerMWh(EnergyWithPercentage, EnergyWithCO2ePerMWh):
-    def __post_init__(  # type: ignore
+    def __post_init__(  # type: ignore[override]
         self,
         total_energy: float,
     ):

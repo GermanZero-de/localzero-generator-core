@@ -47,7 +47,10 @@ class EnergyPerM2PctCommune(EnergyPerM2):
 
     total: InitVar[EnergyPerM2]
 
-    def __post_init__(self, total: EnergyPerM2):  # type: ignore
+    def __post_init__(  # type: ignore[override]
+        self,
+        total: EnergyPerM2,
+    ):
         self.area_m2 = total.area_m2 * self.pct_x
         self.energy = total.energy * self.pct_x
 

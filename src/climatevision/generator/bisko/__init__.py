@@ -44,7 +44,9 @@ class Emissions(ProductionBasedEmission):
         self.CO2e_total = self.CO2e_cb + self.CO2e_pb
 
     @classmethod
-    def calc_sum_emissions(cls, *args: "Emissions") -> "Emissions":  # type: ignore
+    def calc_sum_emissions(  # type: ignore[override]
+        cls, *args: "Emissions"
+    ) -> "Emissions":
         CO2e_cb: float = sum([elem.CO2e_cb for elem in args])
         CO2e_pb: float = sum([elem.CO2e_pb for elem in args])
         return cls(CO2e_cb=CO2e_cb, CO2e_pb=CO2e_pb)

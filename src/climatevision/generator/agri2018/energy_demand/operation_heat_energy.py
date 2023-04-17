@@ -9,6 +9,9 @@ from ...common.energy import EnergyWithPercentage, EnergyPerM2
 class OperationHeatEnergy(EnergyWithPercentage, EnergyPerM2):
     total_energy: InitVar[float]
 
-    def __post_init__(self, total_energy: float):  # type: ignore
+    def __post_init__(  # type: ignore[override]
+        self,
+        total_energy: float,
+    ):
         EnergyWithPercentage.__post_init__(self, total_energy=total_energy)
         EnergyPerM2.__post_init__(self)
