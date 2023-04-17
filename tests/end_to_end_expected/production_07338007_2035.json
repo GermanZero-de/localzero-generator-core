@@ -2832,8 +2832,7 @@
             "change_energy_pct": -0.13393685295166455,
             "cost_climate_saved": 7073203.510605762,
             "cost_fuel": 0.09022975054301471,
-            "energy": 19672.045457767992,
-            "pct_energy": 1.0
+            "energy": 19672.045457767992
         },
         "s_gas": {
             "CO2e_combustion_based": 0.0,
@@ -2849,8 +2848,7 @@
             "cost_fuel": 0.0,
             "cost_fuel_per_MWh": 85.1,
             "energy": 0,
-            "full_load_hour": 1650.0,
-            "pct_energy": 0.0
+            "full_load_hour": 1650.0
         },
         "s_emethan": {
             "CO2e_combustion_based": 361.42286043871377,
@@ -2861,8 +2859,7 @@
             "change_CO2e_t": 361.42286043871377,
             "change_energy_MWh": 1830.9792154504403,
             "cost_climate_saved": -1515265.3423893075,
-            "energy": 1830.9792154504403,
-            "pct_energy": 0.09307518221128515
+            "energy": 1830.9792154504403
         },
         "s_lpg": {
             "CO2e_combustion_based": 0.0,
@@ -2874,8 +2871,7 @@
             "change_energy_MWh": -216.79234398592868,
             "change_energy_pct": -1.0,
             "cost_climate_saved": 202788.6949708115,
-            "energy": 0,
-            "pct_energy": 0.0
+            "energy": 0
         },
         "s_petrol": {
             "CO2e_combustion_based": 0.0,
@@ -2887,8 +2883,7 @@
             "change_energy_MWh": -121.13701921023993,
             "change_energy_pct": -1.0,
             "cost_climate_saved": 125108.05047700355,
-            "energy": 0,
-            "pct_energy": 0.0
+            "energy": 0
         },
         "s_jetfuel": {
             "CO2e_combustion_based": 0.0,
@@ -2900,8 +2895,7 @@
             "change_energy_MWh": -20.680453812540957,
             "change_energy_pct": -1.0,
             "cost_climate_saved": 20396.821904371624,
-            "energy": 0,
-            "pct_energy": 0.0
+            "energy": 0
         },
         "s_diesel": {
             "CO2e_combustion_based": 132.28233385215984,
@@ -2913,8 +2907,7 @@
             "change_energy_MWh": -158.80304428579234,
             "change_energy_pct": -0.2420390514956929,
             "cost_climate_saved": 128463.26809755448,
-            "energy": 497.3020069630069,
-            "pct_energy": 0.02527962880274023
+            "energy": 497.3020069630069
         },
         "s_fueloil": {
             "CO2e_combustion_based": 0.0,
@@ -2928,8 +2921,7 @@
             "change_energy_pct": -1.0,
             "cost_climate_saved": 2504504.266390682,
             "cost_fuel": 0,
-            "energy": 0,
-            "pct_energy": 0
+            "energy": 0
         },
         "s_biomass": {
             "CO2e_combustion_based": 27.64338790802828,
@@ -2944,8 +2936,7 @@
             "cost_climate_saved": -7703.397723343896,
             "cost_fuel": 0.09022975054301471,
             "cost_fuel_per_MWh": 60.0,
-            "energy": 1503.829175716912,
-            "pct_energy": 0.07644498275206496
+            "energy": 1503.829175716912
         },
         "s_coal": {
             "CO2e_combustion_based": 0.0,
@@ -2959,8 +2950,7 @@
             "change_energy_pct": -1.0,
             "cost_climate_saved": 22947.99443734466,
             "cost_fuel": 0,
-            "energy": 0,
-            "pct_energy": 0
+            "energy": 0
         },
         "s_heatnet": {
             "CO2e_combustion_based": 0.0,
@@ -2975,8 +2965,7 @@
             "cost_climate_saved": 0.0,
             "cost_fuel": 0.0,
             "cost_fuel_per_MWh": 0,
-            "energy": 75.55354047194456,
-            "pct_energy": 0.003840655036820809
+            "energy": 75.55354047194456
         },
         "s_elec_heating": {
             "CO2e_combustion_based": 0.0,
@@ -2988,8 +2977,7 @@
             "change_energy_MWh": 0.0,
             "change_energy_pct": 0.0,
             "cost_climate_saved": 0.0,
-            "energy": 939.1798546438141,
-            "pct_energy": 0.04774185056963438
+            "energy": 939.1798546438141
         },
         "s_heatpump": {
             "cost_wage": 85565.57587235488,
@@ -3014,7 +3002,6 @@
             "energy": 4577.575077982024,
             "full_load_hour": 1650.0,
             "invest_per_x": 1328.1860000000001,
-            "pct_energy": 0.23269441339026875,
             "pct_of_wage": 0.308,
             "power_installed": 0.05514012102810064,
             "power_to_be_installed": 2.7191478050216107,
@@ -3043,7 +3030,6 @@
             "energy": 851.5444588027158,
             "energy_installable": 59120.696096,
             "invest_per_x": 1500.0,
-            "pct_energy": 0.04328703187631475,
             "pct_of_wage": 0.308,
             "power_to_be_installed_pct": 0.05,
             "ratio_wage_to_emplo": 40184.961515689756
@@ -3058,8 +3044,7 @@
             "change_energy_MWh": -101.48715904972414,
             "change_energy_pct": -0.009724020159385786,
             "cost_climate_saved": 0.0,
-            "energy": 10335.261982380947,
-            "pct_energy": 0.5253781059305053
+            "energy": 10335.261982380947
         },
         "rb": {
             "cost_wage": 4461305.8626321275,
