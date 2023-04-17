@@ -16,7 +16,6 @@ from .energy_source import (
     Vars7,
     EnergyWithPercentageWithCO2ePerMWh,
 )
-from .dataclasses import Vars10
 
 
 @dataclass(kw_only=True)
@@ -44,4 +43,3 @@ class B18:
     s_solarth: Vars6
     s_elec: EnergyWithPercentageWithCO2ePerMWh
     rb: EnergyWithCO2e
-    rp_p: Vars10
