@@ -2,11 +2,11 @@
 
 from dataclasses import dataclass
 
-from ...common.co2e_change import CO2eChangeEnergy
+from ...common.energy import EnergyChange
 
 
 @dataclass(kw_only=True)
-class FuelWithoutDirectReplacement(CO2eChangeEnergy):
+class FuelWithoutDirectReplacement(EnergyChange):
     """This computes the effect on our CO2e and energy budget of us totally stopping
     to produce some fuels without a direct replacement."""
 

@@ -1,4 +1,4 @@
-# pyright: strict reportMissingTypeStubs=true
+# pyright: basic
 import dataclasses
 from typing import Callable
 

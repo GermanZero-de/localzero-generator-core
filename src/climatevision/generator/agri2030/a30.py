@@ -14,11 +14,11 @@ from .energy_demand import (
     CO2eChangeSoil,
     CO2eChangeOtherLiming,
     CO2eChangeOther,
-    CO2eChangePOperation,
-    CO2eChangePOperationHeat,
-    CO2eChangePOperationElecElcon,
-    CO2eChangePOperationElecHeatpump,
-    CO2eChangePOperationVehicles,
+    EnergyChangePOperation,
+    EnergyChangePOperationHeat,
+    EnergyChangePOperationElecElcon,
+    EnergyChangePOperationElecHeatpump,
+    EnergyChangePOperationVehicles,
 )
 from .energy_source import (
     CO2eChangeS,
@@ -70,11 +70,11 @@ class A30:
     p_other_urea: CO2eChangeOther
     p_other_kas: CO2eChangeOther
     p_other_ecrop: CO2eChangeOther
-    p_operation: CO2eChangePOperation
-    p_operation_heat: CO2eChangePOperationHeat
-    p_operation_elec_elcon: CO2eChangePOperationElecElcon
-    p_operation_elec_heatpump: CO2eChangePOperationElecHeatpump
-    p_operation_vehicles: CO2eChangePOperationVehicles
+    p_operation: EnergyChangePOperation
+    p_operation_heat: EnergyChangePOperationHeat
+    p_operation_elec_elcon: EnergyChangePOperationElecElcon
+    p_operation_elec_heatpump: EnergyChangePOperationElecHeatpump
+    p_operation_vehicles: EnergyChangePOperationVehicles
 
     s: CO2eChangeS
     s_petrol: CO2eChangeEnergyPerMWh

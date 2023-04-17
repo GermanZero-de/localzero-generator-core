@@ -20,7 +20,7 @@ from ..waste2030 import WasteLines
 
 from .e30 import E30
 from .electricity2030_core import EColVars2030
-from . import electricity2030_ger, electricity2030_com
+from . import electricity2030_germany, electricity2030_commune
 
 
 def calc(
@@ -46,7 +46,7 @@ def calc(
     Each change of variable calculus has to be consistently edited within the 2 files"""
 
     if inputs.entries.m_AGS_com == "DG000000":
-        return electricity2030_ger.calc(
+        return electricity2030_germany.calc(
             inputs,
             e18=e18,
             r18=r18,
@@ -63,7 +63,7 @@ def calc(
             p_local_biomass=p_local_biomass,
         )
     else:
-        return electricity2030_com.calc(
+        return electricity2030_commune.calc(
             inputs,
             e18=e18,
             r18=r18,
