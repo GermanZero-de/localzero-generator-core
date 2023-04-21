@@ -10,7 +10,7 @@ from ..inputs import Inputs
 from .i18 import I18
 from . import energy_demand, energy_source
 
-# for mineral industry the energy_use_factor still needs to be added to facts
+
 def calc(inputs: Inputs, inputs_germany: Inputs) -> I18:
     production_germany = energy_demand.calc_production_by_energy(inputs_germany)
 

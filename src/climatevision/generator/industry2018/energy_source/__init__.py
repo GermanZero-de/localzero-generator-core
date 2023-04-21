@@ -30,7 +30,6 @@ class EnergySource:
     s_renew_orenew: EnergyWithPercentage
 
 
-# TODO Energy calculation with new facts for each sector
 def calc_supply(inputs: Inputs, production: Production) -> EnergySource:
 
     # do for all subbranches + copy structure for branches from production_branches
