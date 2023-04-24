@@ -7,7 +7,7 @@ from ..common.energy import Energy
 
 
 @dataclass(kw_only=True)
-class EnergySourceSubBranch:
+class EnergySupplySubBranch:
     s: Energy
     s_fossil: Energy
     s_fossil_gas: Energy
@@ -42,13 +42,13 @@ class EnergySourceSubBranch:
         return fec_pct
 
     @classmethod
-    def calc_energy_source_sub_branch(
+    def calc_energy_supply_sub_branch(
         cls,
         inputs: Inputs,
         energy_demand: float,
         sub_branch: str,
         branch: str,
-    ) -> "EnergySourceSubBranch":
+    ) -> "EnergySupplySubBranch":
 
         branch_energy_supply = energy_demand
 
@@ -136,7 +136,7 @@ class EnergySourceSubBranch:
 
 
 @dataclass(kw_only=True)
-class EnergySourceBranch:
+class EnergySupplyBranch:
     s: Energy
     s_fossil: Energy
     s_fossil_gas: Energy
@@ -153,9 +153,9 @@ class EnergySourceBranch:
     s_renew_orenew: Energy
 
     @classmethod
-    def calc_energy_source_sum(
-        cls, sub_branch_list: list[EnergySourceSubBranch]
-    ) -> "EnergySourceBranch":
+    def calc_energy_supply_sum(
+        cls, sub_branch_list: list[EnergySupplySubBranch]
+    ) -> "EnergySupplyBranch":
         s = 0
         s_fossil = 0
         s_fossil_gas = 0
@@ -221,7 +221,7 @@ class EnergySourceBranch:
 
 
 @dataclass(kw_only=True)
-class EnergySourceSum:
+class EnergySupplySum:
     s: Energy
     s_fossil: Energy
     s_fossil_gas: Energy
@@ -238,9 +238,9 @@ class EnergySourceSum:
     s_renew_orenew: Energy
 
     @classmethod
-    def calc_energy_source_sum(
-        cls, branch_list: list[EnergySourceBranch]
-    ) -> "EnergySourceSum":
+    def calc_energy_supply_sum(
+        cls, branch_list: list[EnergySupplyBranch]
+    ) -> "EnergySupplySum":
         energy_sum = 0
         s = 0
         s_fossil = 0
