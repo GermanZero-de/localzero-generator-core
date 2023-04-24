@@ -2,8 +2,8 @@
 
 from dataclasses import dataclass
 
-from ..inputs import Inputs
-from ..common.energy import Energy
+from ...inputs import Inputs
+from ...common.energy import Energy
 
 
 @dataclass(kw_only=True)
