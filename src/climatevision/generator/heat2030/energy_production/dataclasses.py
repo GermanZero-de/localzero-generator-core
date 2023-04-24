@@ -89,7 +89,7 @@ class InvestHeatProduction(InvestCommune):
 
 
 @dataclass(kw_only=True)
-class HeatProduction(EnergyWithCO2ePerMWh, CO2eChangeHeatProduction):
+class HeatProduction(EnergyWithCO2ePerMWh, CO2eChangeHeatProduction):  # type: ignore[override]
     inputs: InitVar[Inputs]
     what: InitVar[str]
     h18: InitVar[H18]
