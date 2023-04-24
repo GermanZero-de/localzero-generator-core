@@ -24,24 +24,6 @@ class EnergySupplySubBranch:
     renew_orenew: Energy
 
     @classmethod
-    def _get_energy_pct_fact(
-        cls, inputs: Inputs, sub_branch: str, branch: str, energy_type: str
-    ) -> float:
-        fact = inputs.fact
-        fact_name = (
-            "Fact_I_S_"
-            + branch
-            + "_"
-            + sub_branch
-            + "_fec_pct_of_"
-            + energy_type
-            + "_2018"
-        )
-        fec_pct = fact(fact_name)
-
-        return fec_pct
-
-    @classmethod
     def calc_energy_supply_sub_branch(
         cls,
         inputs: Inputs,
@@ -50,41 +32,31 @@ class EnergySupplySubBranch:
         branch: str,
     ) -> "EnergySupplySubBranch":
 
+        fact = inputs.fact
+
         branch_energy_supply = energy_demand
 
-        fec_pct_gas = cls._get_energy_pct_fact(
-            inputs=inputs, sub_branch=sub_branch, branch=branch, energy_type="gas"
-        )
+        fact_prefix = "Fact_I_S_" + branch + "_" + sub_branch + "_fec_pct_of_"
+
+        fec_pct_gas = fact(fact_prefix + "gas" + "_2018")
         fossil_gas = Energy(energy=branch_energy_supply * fec_pct_gas)
 
-        fec_pct_coal = cls._get_energy_pct_fact(
-            inputs=inputs, sub_branch=sub_branch, branch=branch, energy_type="coal"
-        )
+        fec_pct_coal = fact(fact_prefix + "coal" + "_2018")
         fossil_coal = Energy(energy=branch_energy_supply * fec_pct_coal)
 
-        fec_pct_diesel = cls._get_energy_pct_fact(
-            inputs=inputs, sub_branch=sub_branch, branch=branch, energy_type="diesel"
-        )
+        fec_pct_diesel = fact(fact_prefix + "diesel" + "_2018")
         fossil_diesel = Energy(energy=branch_energy_supply * fec_pct_diesel)
 
-        fec_pct_fueloil = cls._get_energy_pct_fact(
-            inputs=inputs, sub_branch=sub_branch, branch=branch, energy_type="fueloil"
-        )
+        fec_pct_fueloil = fact(fact_prefix + "fueloil" + "_2018")
         fossil_fueloil = Energy(energy=branch_energy_supply * fec_pct_fueloil)
 
-        fec_pct_lpg = cls._get_energy_pct_fact(
-            inputs=inputs, sub_branch=sub_branch, branch=branch, energy_type="lpg"
-        )
+        fec_pct_lpg = fact(fact_prefix + "lpg" + "_2018")
         fossil_lpg = Energy(energy=branch_energy_supply * fec_pct_lpg)
 
-        fec_pct_opetpro = cls._get_energy_pct_fact(
-            inputs=inputs, sub_branch=sub_branch, branch=branch, energy_type="opetpro"
-        )
+        fec_pct_opetpro = fact(fact_prefix + "opetpro" + "_2018")
         fossil_opetpro = Energy(energy=branch_energy_supply * fec_pct_opetpro)
 
-        fec_pct_ofossil = cls._get_energy_pct_fact(
-            inputs=inputs, sub_branch=sub_branch, branch=branch, energy_type="ofossil"
-        )
+        fec_pct_ofossil = fact(fact_prefix + "ofossil" + "_2018")
         fossil_ofossil = Energy(energy=branch_energy_supply * fec_pct_ofossil)
 
         fossil = Energy(
@@ -97,24 +69,16 @@ class EnergySupplySubBranch:
             + fossil_ofossil.energy
         )
 
-        fec_pct_biomass = cls._get_energy_pct_fact(
-            inputs=inputs, sub_branch=sub_branch, branch=branch, energy_type="biomass"
-        )
+        fec_pct_biomass = fact(fact_prefix + "biomass" + "_2018")
         renew_biomass = Energy(energy=branch_energy_supply * fec_pct_biomass)
 
-        fec_pct_heatnet = cls._get_energy_pct_fact(
-            inputs=inputs, sub_branch=sub_branch, branch=branch, energy_type="heatnet"
-        )
+        fec_pct_heatnet = fact(fact_prefix + "heatnet" + "_2018")
         renew_heatnet = Energy(energy=branch_energy_supply * fec_pct_heatnet)
 
-        fec_pct_elec = cls._get_energy_pct_fact(
-            inputs=inputs, sub_branch=sub_branch, branch=branch, energy_type="elec"
-        )
+        fec_pct_elec = fact(fact_prefix + "elec" + "_2018")
         renew_elec = Energy(energy=branch_energy_supply * fec_pct_elec)
 
-        fec_pct_orenew = cls._get_energy_pct_fact(
-            inputs=inputs, sub_branch=sub_branch, branch=branch, energy_type="orenew"
-        )
+        fec_pct_orenew = fact(fact_prefix + "orenew" + "_2018")
         renew_orenew = Energy(energy=branch_energy_supply * fec_pct_orenew)
 
         renew = Energy(
