@@ -7,7 +7,6 @@ from .energy_demand import (
     ExtraEmission,
     ProductionSubBranch,
     ProductionSubBranchCO2viaFEC,
-    ProductionSubSum,
     ProductionBranch,
     ProductionSum,
 )
@@ -31,7 +30,7 @@ class I18:
     p_chem_other: ProductionSubBranch
 
     p_metal: ProductionBranch
-    p_metal_steel: ProductionSubSum
+    p_metal_steel: ProductionSum
     p_metal_steel_primary: ProductionSubBranch
     p_metal_steel_secondary: ProductionSubBranch
     p_metal_nonfe: ProductionSubBranch

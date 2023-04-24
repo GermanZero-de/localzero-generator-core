@@ -6,7 +6,16 @@ from ...inputs import Inputs
 
 
 @dataclass(kw_only=True)
-class ProductionSubBranch:
+class BasicProductionBranch:
+    energy: float
+    prod_volume: float
+    CO2e_combustion_based: float
+    CO2e_production_based: float
+    CO2e_total: float
+
+
+@dataclass(kw_only=True)
+class ProductionSubBranch(BasicProductionBranch):
     energy: float
 
     prod_volume: float
@@ -109,7 +118,7 @@ class ProductionSubBranch:
 
 
 @dataclass(kw_only=True)
-class ProductionSubBranchCO2viaFEC:
+class ProductionSubBranchCO2viaFEC(BasicProductionBranch):
     """This class is only used by p_other_further as we were not able to determine a production volume for this quantitiy
     Therefore we set the prod_volume to 100% an and calculate the CO2e Emissiones via a Emmissions/Energy_consumption - Factor"""
 
@@ -195,7 +204,7 @@ class ExtraEmission:
 
 
 @dataclass(kw_only=True)
-class ProductionSubSum:
+class ProductionSum(BasicProductionBranch):
     energy: float
     prod_volume: float
     CO2e_combustion_based: float
@@ -203,9 +212,7 @@ class ProductionSubSum:
     CO2e_total: float
 
     @classmethod
-    def calc_production_sub_sum(
-        cls, *branches: ProductionSubBranch
-    ) -> "ProductionSubSum":
+    def calc_production_sum(cls, *branches: BasicProductionBranch) -> "ProductionSum":
 
         energy = sum(branch.energy for branch in branches)
         prod_volume = sum(branch.prod_volume for branch in branches)
@@ -223,7 +230,7 @@ class ProductionSubSum:
 
 
 @dataclass(kw_only=True)
-class ProductionBranch:
+class ProductionBranch(BasicProductionBranch):
     energy: float
     prod_volume: float
     CO2e_combustion_based: float
@@ -233,7 +240,7 @@ class ProductionBranch:
     @classmethod
     def calc_production_sum(
         cls,
-        sub_branch_list: list[ProductionSubBranch | ProductionSubSum],
+        sub_branch_list: list[ProductionSubBranch | ProductionSum],
         sub_branch_via_FEC_list: list[ProductionSubBranchCO2viaFEC] = [],
         extra_emission_list: list[ExtraEmission] = [],
     ) -> "ProductionBranch":
@@ -266,32 +273,6 @@ class ProductionBranch:
         return cls(
             energy=energy,
             prod_volume=production_volume,
-            CO2e_combustion_based=CO2e_combustion_based,
-            CO2e_production_based=CO2e_production_based,
-            CO2e_total=CO2e_total,
-        )
-
-
-@dataclass(kw_only=True)
-class ProductionSum:
-    energy: float
-    prod_volume: float
-    CO2e_combustion_based: float
-    CO2e_production_based: float
-    CO2e_total: float
-
-    @classmethod
-    def calc_production_sum(cls, *branches: ProductionBranch) -> "ProductionSum":
-
-        energy = sum(branch.energy for branch in branches)
-        prod_volume = sum(branch.prod_volume for branch in branches)
-        CO2e_combustion_based = sum(branch.CO2e_combustion_based for branch in branches)
-        CO2e_production_based = sum(branch.CO2e_production_based for branch in branches)
-        CO2e_total = sum(branch.CO2e_total for branch in branches)
-
-        return cls(
-            energy=energy,
-            prod_volume=prod_volume,
             CO2e_combustion_based=CO2e_combustion_based,
             CO2e_production_based=CO2e_production_based,
             CO2e_total=CO2e_total,

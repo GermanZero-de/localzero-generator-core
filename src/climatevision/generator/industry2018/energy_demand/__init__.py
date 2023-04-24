@@ -8,7 +8,6 @@ from .production_branches import (
     ExtraEmission,
     ProductionSubBranch,
     ProductionSubBranchCO2viaFEC,
-    ProductionSubSum,
     ProductionBranch,
     ProductionSum,
 )
@@ -31,7 +30,7 @@ class Production:
     chem_other: ProductionSubBranch
 
     metal: ProductionBranch
-    metal_steel: ProductionSubSum
+    metal_steel: ProductionSum
     metal_steel_primary: ProductionSubBranch
     metal_steel_secondary: ProductionSubBranch
     metal_nonfe: ProductionSubBranch
@@ -167,7 +166,7 @@ def calc_production_by_co2e(
         sub_branch="nonfe",
         co2e_sub_branch=co2e_metal_nonfe_corrected,
     )
-    metal_steel = ProductionSubSum.calc_production_sub_sum(
+    metal_steel = ProductionSum.calc_production_sum(
         metal_steel_primary,
         metal_steel_secondary,
     )
@@ -417,7 +416,7 @@ def calc_production_by_energy(inputs: Inputs) -> Production:
         sub_branch="steel_secondary",
         energy_consumption_branch=energy_consumption_metal_steel,
     )
-    metal_steel = ProductionSubSum.calc_production_sub_sum(
+    metal_steel = ProductionSum.calc_production_sum(
         metal_steel_primary,
         metal_steel_secondary,
     )
