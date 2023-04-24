@@ -134,35 +134,34 @@ def calc_production(
         ),
     )
 
-    heatnet_plant_pct_energy = ass("Ass_H_P_heatnet_fraction_solarth_2050")
+    heatnet_orenew_energy = heatnet_energy - heatnet_cogen_energy
+
     heatnet_plant = HeatnetPlantProduction(
         inputs=inputs,
         what="heatnet_plant",
         h18=h18,
-        energy=(heatnet_energy - heatnet_cogen_energy) * heatnet_plant_pct_energy,
+        energy=heatnet_orenew_energy * ass("Ass_H_P_heatnet_fraction_solarth_2050"),
         CO2e_production_based_per_MWh=fact("Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018"),
         CO2e_combustion_based_per_MWh=0,
         invest_per_x=fact("Fact_H_P_heatnet_solarth_park_invest_203X"),
     )
 
-    heatnet_lheatpump_pct_energy = ass("Ass_H_P_heatnet_fraction_lheatpump_2050")
     heatnet_lheatpump = HeatnetLheatpumpProduction(
         inputs=inputs,
         what="heatnet_lheatpump",
         h18=h18,
-        energy=(heatnet_energy - heatnet_cogen_energy) * heatnet_lheatpump_pct_energy,
+        energy=heatnet_orenew_energy * ass("Ass_H_P_heatnet_fraction_lheatpump_2050"),
         CO2e_production_based_per_MWh=fact("Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018"),
         CO2e_combustion_based_per_MWh=0,
         full_load_hour=fact("Fact_H_P_heatnet_lheatpump_full_load_hours"),
         invest_per_x=fact("Fact_H_P_heatnet_lheatpump_invest_203X"),
     )
 
-    heatnet_geoth_pct_energy = ass("Ass_H_P_heatnet_fraction_geoth_2050")
     heatnet_geoth = HeatnetGeothProduction(
         inputs=inputs,
         what="heatnet_geoth",
         h18=h18,
-        energy=(heatnet_energy - heatnet_cogen_energy) * heatnet_geoth_pct_energy,
+        energy=heatnet_orenew_energy * ass("Ass_H_P_heatnet_fraction_geoth_2050"),
         CO2e_production_based_per_MWh=fact("Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018"),
         CO2e_combustion_based_per_MWh=0,
         full_load_hour=fact("Fact_H_P_heatnet_geoth_full_load_hours"),
