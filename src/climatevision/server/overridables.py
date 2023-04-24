@@ -158,100 +158,100 @@ _sections: list[OverridableSection] = [
             },
         ],
     },
-    {
-        "section": "Endenergieverbrauch Industrie (MWh)",
-        "elements": [
-            {
-                "override_name": "i_coal_fec",
-                "override_type": "int",
-                "override_label": "Kohle",
-            },
-            {
-                "override_name": "i_diesel_fec",
-                "override_type": "int",
-                "override_label": "Diesel",
-            },
-            {
-                "override_name": "i_fueloil_fec",
-                "override_type": "int",
-                "override_label": "Heizöl",
-            },
-            {
-                "override_name": "i_lpg_fec",
-                "override_type": "int",
-                "override_label": "Flüssiggas",
-            },
-            {
-                "override_name": "i_gas_fec",
-                "override_type": "int",
-                "override_label": "Erdgas",
-            },
-            {
-                "override_name": "i_opetpro_fec",
-                "override_type": "int",
-                "override_label": "Sonstige Mineralölprodukte",
-            },
-            {
-                "override_name": "i_biomass_fec",
-                "override_type": "int",
-                "override_label": "Biomasse",
-            },
-            {
-                "override_name": "i_orenew_fec",
-                "override_type": "int",
-                "override_label": "Sonstige Erneuerbare Energien",
-            },
-            {
-                "override_name": "i_ofossil_fec",
-                "override_type": "int",
-                "override_label": "Sonstige Konventionelle",
-            },
-            {
-                "override_name": "i_elec_fec",
-                "override_type": "int",
-                "override_label": "Strom",
-            },
-            {
-                "override_name": "i_heatnet_fec",
-                "override_type": "int",
-                "override_label": "Fernwärme",
-            },
-        ],
-    },
-    {
-        "section": "Industrieanteile",
-        "elements": [
-            {
-                "info_title": "Erklärung",
-                "info_text": """Hier kann eine geschätzte Endenergie-Zuteilung der kommunalen Industriestruktur (mineralische, chemische, metallische und sonstige Industrie)
-                erfolgen. Weißt du bspw., dass es keine Metallische Industrie gibt, setzt du diesen Wert auf 0 und teilst die anderen Subsektoren so auf, dass sie in Summe 1 ergeben.
-                Zur Orientierung kannst du die größten Emittenten in der
-                <a href="https://www.dehst.de/DE/Europaeischer-Emissionshandel/Anlagenbetreiber/2013-2020/2013-2020_node.html" target="_blank" rel="noopener nofollow" style="color: #00aed8">Anlagenliste 2018 bei der DEHSt</a> nachschauen.
-                Eine grobe graphische Übersicht und Einführung in die Industriezweige bietet zudem die Studie
-                <a href="https://www.agora-energiewende.de/veroeffentlichungen/klimaneutrale-industrie-hauptstudie/" target="_blank" rel="noopener nofollow" style="color: #00aed8">"Klimaneutrale Industrie" von Agora Energiewende</a>""",
-            },
-            {
-                "override_name": "i_fec_pct_of_miner",
-                "override_type": "float",
-                "override_label": "Anteil mineralische Industrie",
-            },
-            {
-                "override_name": "i_fec_pct_of_chem",
-                "override_type": "float",
-                "override_label": "Anteil chemische Industrie",
-            },
-            {
-                "override_name": "i_fec_pct_of_metal",
-                "override_type": "float",
-                "override_label": "Anteil metallische Industrie",
-            },
-            {
-                "override_name": "i_fec_pct_of_other",
-                "override_type": "float",
-                "override_label": "Anteil sonstige Industrie",
-            },
-        ],
-    },
+    # {
+    #     "section": "Endenergieverbrauch Industrie (MWh)",
+    #     "elements": [
+    #         {
+    #             "override_name": "i_coal_fec",
+    #             "override_type": "int",
+    #             "override_label": "Kohle",
+    #         },
+    #         {
+    #             "override_name": "i_diesel_fec",
+    #             "override_type": "int",
+    #             "override_label": "Diesel",
+    #         },
+    #         {
+    #             "override_name": "i_fueloil_fec",
+    #             "override_type": "int",
+    #             "override_label": "Heizöl",
+    #         },
+    #         {
+    #             "override_name": "i_lpg_fec",
+    #             "override_type": "int",
+    #             "override_label": "Flüssiggas",
+    #         },
+    #         {
+    #             "override_name": "i_gas_fec",
+    #             "override_type": "int",
+    #             "override_label": "Erdgas",
+    #         },
+    #         {
+    #             "override_name": "i_opetpro_fec",
+    #             "override_type": "int",
+    #             "override_label": "Sonstige Mineralölprodukte",
+    #         },
+    #         {
+    #             "override_name": "i_biomass_fec",
+    #             "override_type": "int",
+    #             "override_label": "Biomasse",
+    #         },
+    #         {
+    #             "override_name": "i_orenew_fec",
+    #             "override_type": "int",
+    #             "override_label": "Sonstige Erneuerbare Energien",
+    #         },
+    #         {
+    #             "override_name": "i_ofossil_fec",
+    #             "override_type": "int",
+    #             "override_label": "Sonstige Konventionelle",
+    #         },
+    #         {
+    #             "override_name": "i_elec_fec",
+    #             "override_type": "int",
+    #             "override_label": "Strom",
+    #         },
+    #         {
+    #             "override_name": "i_heatnet_fec",
+    #             "override_type": "int",
+    #             "override_label": "Fernwärme",
+    #         },
+    #     ],
+    # },
+    # {
+    #     "section": "Industrieanteile",
+    #     "elements": [
+    #         {
+    #             "info_title": "Erklärung",
+    #             "info_text": """Hier kann eine geschätzte Endenergie-Zuteilung der kommunalen Industriestruktur (mineralische, chemische, metallische und sonstige Industrie)
+    #             erfolgen. Weißt du bspw., dass es keine Metallische Industrie gibt, setzt du diesen Wert auf 0 und teilst die anderen Subsektoren so auf, dass sie in Summe 1 ergeben.
+    #             Zur Orientierung kannst du die größten Emittenten in der
+    #             <a href="https://www.dehst.de/DE/Europaeischer-Emissionshandel/Anlagenbetreiber/2013-2020/2013-2020_node.html" target="_blank" rel="noopener nofollow" style="color: #00aed8">Anlagenliste 2018 bei der DEHSt</a> nachschauen.
+    #             Eine grobe graphische Übersicht und Einführung in die Industriezweige bietet zudem die Studie
+    #             <a href="https://www.agora-energiewende.de/veroeffentlichungen/klimaneutrale-industrie-hauptstudie/" target="_blank" rel="noopener nofollow" style="color: #00aed8">"Klimaneutrale Industrie" von Agora Energiewende</a>""",
+    #         },
+    #         {
+    #             "override_name": "i_fec_pct_of_miner",
+    #             "override_type": "float",
+    #             "override_label": "Anteil mineralische Industrie",
+    #         },
+    #         {
+    #             "override_name": "i_fec_pct_of_chem",
+    #             "override_type": "float",
+    #             "override_label": "Anteil chemische Industrie",
+    #         },
+    #         {
+    #             "override_name": "i_fec_pct_of_metal",
+    #             "override_type": "float",
+    #             "override_label": "Anteil metallische Industrie",
+    #         },
+    #         {
+    #             "override_name": "i_fec_pct_of_other",
+    #             "override_type": "float",
+    #             "override_label": "Anteil sonstige Industrie",
+    #         },
+    #     ],
+    # },
     {
         "section": "Endenergieverbrauch Landwirtschaft (MWh)",
         "elements": [

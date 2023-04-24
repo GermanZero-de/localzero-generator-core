@@ -4,109 +4,150 @@ from dataclasses import dataclass
 
 from ...inputs import Inputs
 from ...common.energy import Energy, EnergyWithPercentage
+from ..energy_demand import Production
+from ..energy_branches import (
+    EnergySourceSubBranch,
+    EnergySourceBranch,
+    EnergySourceSum,
+)
 
 
 @dataclass(kw_only=True)
-class EnergySupply:
-    total: EnergyWithPercentage
-    fossil: Energy
-    fossil_gas: EnergyWithPercentage
-    fossil_coal: EnergyWithPercentage
-    fossil_diesel: EnergyWithPercentage
-    fossil_fueloil: EnergyWithPercentage
-    fossil_lpg: EnergyWithPercentage
-    fossil_opetpro: EnergyWithPercentage
-    fossil_ofossil: EnergyWithPercentage
-    renew: Energy
-    renew_biomass: EnergyWithPercentage
-    renew_heatnet: EnergyWithPercentage
-    renew_heatpump: EnergyWithPercentage
-    renew_solarth: EnergyWithPercentage
-    renew_elec: EnergyWithPercentage
+class EnergySource:
+    s: EnergyWithPercentage
+    s_fossil: Energy
+    s_fossil_gas: EnergyWithPercentage
+    s_fossil_coal: EnergyWithPercentage
+    s_fossil_diesel: EnergyWithPercentage
+    s_fossil_fueloil: EnergyWithPercentage
+    s_fossil_lpg: EnergyWithPercentage
+    s_fossil_opetpro: EnergyWithPercentage
+    s_fossil_ofossil: EnergyWithPercentage
+    s_renew: Energy
+    s_renew_biomass: EnergyWithPercentage
+    s_renew_heatnet: EnergyWithPercentage
+    s_renew_elec: EnergyWithPercentage
+    s_renew_orenew: EnergyWithPercentage
 
 
-def calc_supply(inputs: Inputs) -> EnergySupply:
-    fact = inputs.fact
-    entries = inputs.entries
+def calc_supply(inputs: Inputs, production: Production) -> EnergySource:
 
-    total_energy_supply = entries.i_energy_total
-
-    fossil_gas = EnergyWithPercentage(
-        energy=entries.i_gas_fec, total_energy=total_energy_supply
+    # do for all subbranches + copy structure for branches from production_branches
+    s_miner_cement = EnergySourceSubBranch.calc_energy_source_sub_branch(
+        inputs=inputs,
+        energy_demand=production.miner_cement.energy,
+        sub_branch="cement",
+        branch="miner",
     )
-    fossil_coal = EnergyWithPercentage(
-        energy=entries.i_coal_fec, total_energy=total_energy_supply
+    s_miner_chalk = EnergySourceSubBranch.calc_energy_source_sub_branch(
+        inputs=inputs,
+        energy_demand=production.miner_chalk.energy,
+        sub_branch="chalk",
+        branch="miner",
     )
-    fossil_diesel = EnergyWithPercentage(
-        energy=entries.i_diesel_fec, total_energy=total_energy_supply
+    s_miner_glas = EnergySourceSubBranch.calc_energy_source_sub_branch(
+        inputs=inputs,
+        energy_demand=production.miner_glas.energy,
+        sub_branch="glas",
+        branch="miner",
     )
-    fossil_fueloil = EnergyWithPercentage(
-        energy=entries.i_fueloil_fec, total_energy=total_energy_supply
+    s_miner_ceram = EnergySourceSubBranch.calc_energy_source_sub_branch(
+        inputs=inputs,
+        energy_demand=production.miner_ceram.energy,
+        sub_branch="ceram",
+        branch="miner",
     )
-    fossil_lpg = EnergyWithPercentage(
-        energy=entries.i_lpg_fec, total_energy=total_energy_supply
-    )
-    fossil_opetpro = EnergyWithPercentage(
-        energy=entries.i_opetpro_fec, total_energy=total_energy_supply
-    )
-    fossil_ofossil = EnergyWithPercentage(
-        energy=entries.i_ofossil_fec, total_energy=total_energy_supply
-    )
-
-    fossil = Energy(
-        energy=fossil_gas.energy
-        + fossil_coal.energy
-        + fossil_diesel.energy
-        + fossil_fueloil.energy
-        + fossil_lpg.energy
-        + fossil_opetpro.energy
-        + fossil_ofossil.energy
+    s_miner = EnergySourceBranch.calc_energy_source_sum(
+        sub_branch_list=[s_miner_cement, s_miner_chalk, s_miner_glas, s_miner_ceram]
     )
 
-    renew_biomass = EnergyWithPercentage(
-        energy=entries.i_biomass_fec, total_energy=total_energy_supply
+    s_chem_basic = EnergySourceSubBranch.calc_energy_source_sub_branch(
+        inputs=inputs,
+        energy_demand=production.chem_basic.energy,
+        sub_branch="basic",
+        branch="chem",
     )
-    renew_heatnet = EnergyWithPercentage(
-        energy=entries.i_heatnet_fec, total_energy=total_energy_supply
+    s_chem_ammonia = EnergySourceSubBranch.calc_energy_source_sub_branch(
+        inputs=inputs,
+        energy_demand=production.chem_ammonia.energy,
+        sub_branch="basic",  # assumtion same as chem basic (TODO Find specific factors for ammonia production)
+        branch="chem",
     )
-    renew_heatpump = EnergyWithPercentage(
-        energy=entries.i_orenew_fec * fact("Fact_R_S_ratio_heatpump_to_orenew_2018"),
-        total_energy=total_energy_supply,
+    s_chem_other = EnergySourceSubBranch.calc_energy_source_sub_branch(
+        inputs=inputs,
+        energy_demand=production.chem_other.energy,
+        sub_branch="other",
+        branch="chem",
     )
-    renew_solarth = EnergyWithPercentage(
-        energy=entries.i_orenew_fec * fact("Fact_R_S_ratio_solarth_to_orenew_2018"),
-        total_energy=total_energy_supply,
-    )
-    renew_elec = EnergyWithPercentage(
-        energy=entries.i_elec_fec, total_energy=total_energy_supply
-    )
-
-    renew = Energy(
-        energy=renew_biomass.energy
-        + renew_heatnet.energy
-        + renew_heatpump.energy
-        + renew_solarth.energy
-        + renew_elec.energy
+    s_chem = EnergySourceBranch.calc_energy_source_sum(
+        sub_branch_list=[s_chem_basic, s_chem_ammonia, s_chem_other]
     )
 
-    total = EnergyWithPercentage(
-        energy=entries.i_energy_total, total_energy=entries.i_energy_total
+    s_metal_steel_primary = EnergySourceSubBranch.calc_energy_source_sub_branch(
+        inputs=inputs,
+        energy_demand=production.metal_steel_primary.energy,
+        sub_branch="steel_primary",
+        branch="metal",
     )
 
-    return EnergySupply(
-        total=total,
-        fossil=fossil,
-        fossil_gas=fossil_gas,
-        fossil_coal=fossil_coal,
-        fossil_diesel=fossil_diesel,
-        fossil_fueloil=fossil_fueloil,
-        fossil_lpg=fossil_lpg,
-        fossil_opetpro=fossil_opetpro,
-        fossil_ofossil=fossil_ofossil,
-        renew=renew,
-        renew_biomass=renew_biomass,
-        renew_heatnet=renew_heatnet,
-        renew_heatpump=renew_heatpump,
-        renew_solarth=renew_solarth,
-        renew_elec=renew_elec,
+    s_metal_steel_secondary = EnergySourceSubBranch.calc_energy_source_sub_branch(
+        inputs=inputs,
+        energy_demand=production.metal_steel_secondary.energy,
+        sub_branch="steel_secondary",
+        branch="metal",
+    )
+
+    s_metal_nonfe = EnergySourceSubBranch.calc_energy_source_sub_branch(
+        inputs=inputs,
+        energy_demand=production.metal_nonfe.energy,
+        sub_branch="nonfe",
+        branch="metal",
+    )
+
+    s_metal = EnergySourceBranch.calc_energy_source_sum(
+        sub_branch_list=[s_metal_steel_primary, s_metal_steel_secondary, s_metal_nonfe]
+    )
+
+    s_other_paper = EnergySourceSubBranch.calc_energy_source_sub_branch(
+        inputs=inputs,
+        energy_demand=production.other_paper.energy,
+        sub_branch="paper",
+        branch="other",
+    )
+    s_other_food = EnergySourceSubBranch.calc_energy_source_sub_branch(
+        inputs=inputs,
+        energy_demand=production.other_food.energy,
+        sub_branch="food",
+        branch="other",
+    )
+    s_other_further = EnergySourceSubBranch.calc_energy_source_sub_branch(
+        inputs=inputs,
+        energy_demand=production.other_further.energy,
+        sub_branch="further",
+        branch="other",
+    )
+
+    s_other = EnergySourceBranch.calc_energy_source_sum(
+        sub_branch_list=[s_other_paper, s_other_food, s_other_further]
+    )
+
+    s = EnergySourceSum.calc_energy_source_sum(
+        branch_list=[s_miner, s_metal, s_chem, s_other]
+    )
+
+    return EnergySource(
+        s=s.s,
+        s_fossil=s.s_fossil,
+        s_fossil_gas=s.s_fossil_gas,
+        s_fossil_coal=s.s_fossil_coal,
+        s_fossil_diesel=s.s_fossil_diesel,
+        s_fossil_fueloil=s.s_fossil_fueloil,
+        s_fossil_lpg=s.s_fossil_lpg,
+        s_fossil_opetpro=s.s_fossil_opetpro,
+        s_fossil_ofossil=s.s_fossil_ofossil,
+        s_renew=s.s_renew,
+        s_renew_biomass=s.s_renew_biomass,
+        s_renew_heatnet=s.s_renew_heatnet,
+        s_renew_elec=s.s_renew_elec,
+        s_renew_orenew=s.s_renew_orenew,
     )

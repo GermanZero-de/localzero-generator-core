@@ -640,8 +640,9 @@ class BiskoIndustry(BiskoSector):
     other_fossil: EnergyAndEmissions
     heatnet: EnergyAndEmissions
     biomass: EnergyAndEmissions
-    solarth: EnergyAndEmissions
-    heatpump: EnergyAndEmissions
+    orenew: EnergyAndEmissions
+    # solarth: EnergyAndEmissions
+    # heatpump: EnergyAndEmissions
 
     miner: Emissions
     chemistry: Emissions
@@ -712,14 +713,19 @@ class BiskoIndustry(BiskoSector):
             eb_CO2e_pb_from_heat=i18.s_renew_biomass.energy
             * fact("Fact_H_P_biomass_ratio_CO2e_pb_to_fec_2018"),
         )
-        solarth = EnergyAndEmissionsCalcIntermediate(
-            eb_energy_from_same_sector=i18.s_renew_solarth.energy,
-            eb_CO2e_pb_from_heat=i18.s_renew_solarth.energy
-            * fact("Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018"),
-        )
-        heatpump = EnergyAndEmissionsCalcIntermediate(
-            eb_energy_from_same_sector=i18.s_renew_heatpump.energy,
-            eb_CO2e_pb_from_heat=i18.s_renew_heatpump.energy
+        # solarth = EnergyAndEmissionsCalcIntermediate(
+        #     eb_energy_from_same_sector=i18.s_renew_solarth.energy,
+        #     eb_CO2e_pb_from_heat=i18.s_renew_solarth.energy
+        #     * fact("Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018"),
+        # )
+        # heatpump = EnergyAndEmissionsCalcIntermediate(
+        #     eb_energy_from_same_sector=i18.s_renew_heatpump.energy,
+        #     eb_CO2e_pb_from_heat=i18.s_renew_heatpump.energy
+        #     * fact("Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018"),
+        # )
+        orenew = EnergyAndEmissionsCalcIntermediate(
+            eb_energy_from_same_sector=i18.s_renew_orenew.energy,
+            eb_CO2e_pb_from_heat=i18.s_renew_orenew.energy
             * fact("Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018"),
         )
         elec = EnergyAndEmissionsCalcIntermediate(
@@ -737,8 +743,7 @@ class BiskoIndustry(BiskoSector):
             other_fossil,
             heatnet,
             biomass,
-            solarth,
-            heatpump,
+            orenew,
             elec,
         )
 
@@ -775,8 +780,9 @@ class BiskoIndustry(BiskoSector):
             other_fossil=other_fossil.to_energy_and_emissions(),
             heatnet=heatnet.to_energy_and_emissions(),
             biomass=biomass.to_energy_and_emissions(),
-            solarth=solarth.to_energy_and_emissions(),
-            heatpump=heatpump.to_energy_and_emissions(),
+            orenew=orenew.to_energy_and_emissions(),
+            # solarth=solarth.to_energy_and_emissions(),
+            # heatpump=heatpump.to_energy_and_emissions(),
             elec=elec.to_energy_and_emissions(),
             total_supply=total_supply,
             miner=miner,

@@ -9,6 +9,7 @@ from ..utils import div, MILLION
 from ..transport2018.t18 import T18
 
 from .e18 import E18
+from ..industry2018.i18 import I18
 from .dataclasses import (
     Vars0,
     Vars2,
@@ -31,7 +32,7 @@ from .dataclasses import (
 )
 
 
-def calc(inputs: Inputs, *, t18: T18) -> E18:
+def calc(inputs: Inputs, *, t18: T18, i18: I18) -> E18:
     fact = inputs.fact
     ass = inputs.ass
     entries = inputs.entries
@@ -94,7 +95,8 @@ def calc(inputs: Inputs, *, t18: T18) -> E18:
     d_b.energy = entries.b_elec_fec
     d_b.cost_fuel_per_MWh = fact("Fact_E_D_B_cost_fuel_per_MWh_2018")
     d_b.cost_fuel = d_b.cost_fuel_per_MWh * d_b.energy / 1000000
-    d_i.energy = entries.i_elec_fec
+    # d_i.energy = entries.i_elec_fec
+    d_i.energy = i18.s_renew_elec.energy
     d_i.cost_fuel_per_MWh = fact("Fact_E_D_I_cost_fuel_per_MWh_2018")
     d_i.cost_fuel = d_i.energy * d_i.cost_fuel_per_MWh / 1000000
     d_t.energy = t18.t.demand_electricity

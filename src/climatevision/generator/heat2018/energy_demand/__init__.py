@@ -4,6 +4,7 @@ from dataclasses import dataclass
 
 from ...inputs import Inputs
 from ...transport2018.t18 import T18
+from ...industry2018.i18 import I18
 from ...common.energy import Energy as EnergyDemand
 
 
@@ -18,7 +19,7 @@ class Demand:
     total: EnergyDemand
 
 
-def calc_demand(inputs: Inputs, t18: T18) -> Demand:
+def calc_demand(inputs: Inputs, t18: T18, i18: I18) -> Demand:
 
     entries = inputs.entries
 
@@ -43,15 +44,15 @@ def calc_demand(inputs: Inputs, t18: T18) -> Demand:
     )
 
     industry = EnergyDemand(
-        energy=entries.i_coal_fec
-        + entries.i_fueloil_fec
-        + entries.i_lpg_fec
-        + entries.i_opetpro_fec
-        + entries.i_gas_fec
-        + entries.i_biomass_fec
-        + entries.i_orenew_fec
-        + entries.i_ofossil_fec
-        + entries.i_heatnet_fec
+        energy=i18.s_fossil_coal.energy
+        + i18.s_fossil_fueloil.energy
+        + i18.s_fossil_lpg.energy
+        + i18.s_fossil_opetpro.energy
+        + i18.s_fossil_gas.energy
+        + i18.s_renew_biomass.energy
+        + i18.s_renew_orenew.energy
+        + i18.s_fossil_ofossil.energy
+        + i18.s_renew_heatnet.energy
     )
 
     transport = EnergyDemand(

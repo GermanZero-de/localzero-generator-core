@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from ...inputs import Inputs
 from ...transport2018.t18 import T18
 from ...electricity2018.e18 import E18
+from ...industry2018.i18 import I18
 
 from ...common.energy_with_co2e_per_mwh import EnergyWithCO2ePerMWh
 
@@ -33,19 +34,20 @@ def calc_production(
     inputs: Inputs,
     t18: T18,
     e18: E18,
+    i18: I18,
 ) -> Production:
 
     entries = inputs.entries
     fact = inputs.fact
 
     p_heatnet_energy = (
-        entries.r_heatnet_fec + entries.b_heatnet_fec + entries.i_heatnet_fec
+        entries.r_heatnet_fec + entries.b_heatnet_fec + i18.s_renew_heatnet.energy
     )
 
     gas = EnergyWithCO2ePerMWh(
         energy=entries.r_gas_fec
         + entries.b_gas_fec
-        + entries.i_gas_fec
+        + i18.s_fossil_gas.energy
         + entries.a_gas_fec
         + t18.t.demand_gas,
         CO2e_production_based_per_MWh=fact("Fact_H_P_gas_ratio_CO2e_pb_to_fec_2018"),
@@ -55,7 +57,7 @@ def calc_production(
     lpg = EnergyWithCO2ePerMWh(
         energy=entries.r_lpg_fec
         + entries.b_lpg_fec
-        + entries.i_lpg_fec
+        + i18.s_fossil_lpg.energy
         + entries.a_lpg_fec
         + t18.s_lpg.energy,
         CO2e_combustion_based_per_MWh=fact("Fact_H_P_lpg_ratio_CO2e_cb_to_fec_2018"),
@@ -64,7 +66,7 @@ def calc_production(
     fueloil = EnergyWithCO2ePerMWh(
         energy=entries.r_fueloil_fec
         + entries.b_fueloil_fec
-        + entries.i_fueloil_fec
+        + i18.s_fossil_fueloil.energy
         + entries.a_fueloil_fec
         + t18.s_fueloil.energy,
         CO2e_combustion_based_per_MWh=fact(
@@ -73,7 +75,7 @@ def calc_production(
     )
 
     opetpro = EnergyWithCO2ePerMWh(
-        energy=entries.i_opetpro_fec,
+        energy=i18.s_fossil_opetpro.energy,
         CO2e_production_based_per_MWh=fact(
             "Fact_H_P_opetpro_ratio_CO2e_pb_to_fec_2018"
         ),
@@ -83,7 +85,7 @@ def calc_production(
     )
 
     coal = EnergyWithCO2ePerMWh(
-        energy=entries.r_coal_fec + entries.b_coal_fec + entries.i_coal_fec,
+        energy=entries.r_coal_fec + entries.b_coal_fec + i18.s_fossil_coal.energy,
         CO2e_production_based_per_MWh=fact("Fact_H_P_coal_ratio_CO2e_pb_to_fec_2018"),
         CO2e_combustion_based_per_MWh=fact("Fact_H_P_coal_ratio_CO2e_cb_to_fec_2018"),
     )
@@ -130,7 +132,7 @@ def calc_production(
     biomass = EnergyWithCO2ePerMWh(
         energy=entries.r_biomass_fec
         + entries.b_biomass_fec
-        + entries.i_biomass_fec
+        + i18.s_renew_biomass.energy
         + entries.a_biomass_fec,
         CO2e_production_based_per_MWh=fact(
             "Fact_H_P_biomass_ratio_CO2e_pb_to_fec_2018"
@@ -138,13 +140,15 @@ def calc_production(
     )
 
     ofossil = EnergyWithCO2ePerMWh(
-        energy=entries.i_ofossil_fec,
+        energy=i18.s_fossil_ofossil.energy,
         CO2e_production_based_per_MWh=fact(
             "Fact_H_P_ofossil_ratio_CO2e_pb_to_fec_2018"
         ),
     )
 
-    orenew_energy = entries.r_orenew_fec + entries.b_orenew_fec + entries.i_orenew_fec
+    orenew_energy = (
+        entries.r_orenew_fec + entries.b_orenew_fec + i18.s_renew_orenew.energy
+    )
 
     solarth = EnergyWithCO2ePerMWh(
         energy=orenew_energy * fact("Fact_R_S_ratio_solarth_to_orenew_2018"),

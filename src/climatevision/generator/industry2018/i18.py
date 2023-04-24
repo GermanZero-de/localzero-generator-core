@@ -17,6 +17,7 @@ from .energy_demand import (
 class I18:
     i: ProductionSum
     p: ProductionSum
+    p_germany: ProductionSum
 
     p_miner: ProductionBranch
     p_miner_cement: ProductionSubBranch
@@ -54,6 +55,5 @@ class I18:
     s_renew: Energy
     s_renew_biomass: EnergyWithPercentage
     s_renew_heatnet: EnergyWithPercentage
-    s_renew_heatpump: EnergyWithPercentage
-    s_renew_solarth: EnergyWithPercentage
     s_renew_elec: EnergyWithPercentage
+    s_renew_orenew: EnergyWithPercentage

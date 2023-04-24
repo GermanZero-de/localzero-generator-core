@@ -300,6 +300,28 @@ class Row(Generic[KeyT]):
 
 
 @dataclass(kw_only=True)
+class OptRow(Generic[KeyT]):
+    def __init__(self, df: DataFrame[KeyT], key_value: KeyT):
+        try:
+            self.row = Row(df, key_value)
+        except RowNotFound:
+            self.row = None
+
+    def float_or_zero(self, attr: str) -> float:
+        """Access a float attribute."""
+        if self.row is None:
+            return 0.0
+        else:
+            return self.row.float(attr)
+
+    def __str__(self):
+        if self.row is None:
+            return "No entry"
+        else:
+            return self.row.__str__()
+
+
+@dataclass(kw_only=True)
 class FactOrAssumptionCompleteRow:
     label: str
     group: str
@@ -390,6 +412,7 @@ class RefData:
     _population: DataFrame[str]
     _renewable_energy: DataFrame[str]
     _traffic: DataFrame[str]
+    _industry_dehst: DataFrame[str]
 
     def __init__(
         self,
@@ -410,6 +433,7 @@ class RefData:
         population: DataFrame[str],
         renewable_energy: DataFrame[str],
         traffic: DataFrame[str],
+        industry_dehst: DataFrame[str],
         fix_missing_entries: bool,
     ):
 
@@ -430,11 +454,13 @@ class RefData:
         self._population = population
         self._renewable_energy = renewable_energy
         self._traffic = traffic
+        self._industry_dehst = industry_dehst
 
         if fix_missing_entries:
             self._fix_missing_gemfr_ags()
             self._fix_add_derived_rows_for_renewables()
             self._fix_add_derived_rows_for_traffic()
+            self._fix_add_derived_rows_for_industry_dehst()
 
     def _fix_missing_gemfr_ags(self):
         all_gemfr: set[str] = set()
@@ -467,6 +493,9 @@ class RefData:
 
     def _fix_add_derived_rows_for_traffic(self):
         _add_derived_rows_for_summable(self._traffic)
+
+    def _fix_add_derived_rows_for_industry_dehst(self):
+        _add_derived_rows_for_summable(self._industry_dehst)
 
     def ags_master(self) -> dict[str, str]:
         """Returns the complete dictionary of AGS, where no big
@@ -531,6 +560,10 @@ class RefData:
     def traffic(self, ags: str):
         """TODO"""
         return Row(self._traffic, ags)
+
+    def industry_dehst(self, ags: str):
+        """TODO Function to read CO2e for each ags from DEHST Table."""
+        return OptRow(self._industry_dehst, ags)
 
     @classmethod
     def load(
@@ -607,6 +640,7 @@ class RefData:
             ),
             renewable_energy=DataFrame.load_ags(datadir, "renewable_energy"),
             traffic=DataFrame.load_ags(datadir, "traffic"),
+            industry_dehst=DataFrame.load_ags(datadir, "industry_facilites"),
             fix_missing_entries=fix_missing_entries,
         )
         return d

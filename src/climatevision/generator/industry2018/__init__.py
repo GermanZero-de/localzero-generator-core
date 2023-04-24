@@ -10,17 +10,21 @@ from ..inputs import Inputs
 from .i18 import I18
 from . import energy_demand, energy_source
 
-# for mineral industry the energy_use_factor still needs to be added to facts
-def calc(inputs: Inputs) -> I18:
 
-    production = energy_demand.calc_production(inputs)
-    supply = energy_source.calc_supply(inputs)
+def calc(inputs: Inputs, inputs_germany: Inputs) -> I18:
+    production_germany = energy_demand.calc_production_by_energy(inputs_germany)
+
+    production = energy_demand.calc_production_by_co2e(
+        inputs, inputs_germany, production_germany
+    )
+    supply = energy_source.calc_supply(inputs, production)
 
     i = production.total
 
     return I18(
         i=i,
         p=production.total,
+        p_germany=production_germany.total,
         p_miner=production.miner,
         p_miner_cement=production.miner_cement,
         p_miner_chalk=production.miner_chalk,
@@ -40,19 +44,18 @@ def calc(inputs: Inputs) -> I18:
         p_other_food=production.other_food,
         p_other_further=production.other_further,
         p_other_2efgh=production.other_2efgh,
-        s=supply.total,
-        s_fossil=supply.fossil,
-        s_fossil_gas=supply.fossil_gas,
-        s_fossil_coal=supply.fossil_coal,
-        s_fossil_diesel=supply.fossil_diesel,
-        s_fossil_fueloil=supply.fossil_fueloil,
-        s_fossil_lpg=supply.fossil_lpg,
-        s_fossil_opetpro=supply.fossil_opetpro,
-        s_fossil_ofossil=supply.fossil_ofossil,
-        s_renew=supply.renew,
-        s_renew_biomass=supply.renew_biomass,
-        s_renew_heatnet=supply.renew_heatnet,
-        s_renew_heatpump=supply.renew_heatpump,
-        s_renew_solarth=supply.renew_solarth,
-        s_renew_elec=supply.renew_elec,
+        s=supply.s,
+        s_fossil=supply.s_fossil,
+        s_fossil_gas=supply.s_fossil_gas,
+        s_fossil_coal=supply.s_fossil_coal,
+        s_fossil_diesel=supply.s_fossil_diesel,
+        s_fossil_fueloil=supply.s_fossil_fueloil,
+        s_fossil_lpg=supply.s_fossil_lpg,
+        s_fossil_opetpro=supply.s_fossil_opetpro,
+        s_fossil_ofossil=supply.s_fossil_ofossil,
+        s_renew=supply.s_renew,
+        s_renew_biomass=supply.s_renew_biomass,
+        s_renew_heatnet=supply.s_renew_heatnet,
+        s_renew_elec=supply.s_renew_elec,
+        s_renew_orenew=supply.s_renew_orenew,
     )
