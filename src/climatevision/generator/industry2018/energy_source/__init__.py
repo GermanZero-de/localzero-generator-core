@@ -95,9 +95,7 @@ def calc_supply(inputs: Inputs, production: Production) -> EnergySupply:
         sub_branch="nonfe",
         branch="metal",
     )
-    metal = EnergySupplySum.sum(
-        metal_steel_primary, metal_steel_secondary, metal_nonfe
-    )
+    metal = EnergySupplySum.sum(metal_steel_primary, metal_steel_secondary, metal_nonfe)
 
     other_paper = EnergySupplySubBranch.calc_sub_branch(
         inputs=inputs,
