@@ -16,18 +16,9 @@ class BasicProductionBranch:
 
 @dataclass(kw_only=True)
 class ProductionSubBranch(BasicProductionBranch):
-    energy: float
-
-    prod_volume: float
     energy_use_factor: float
-
-    CO2e_combustion_based: float
     CO2e_combustion_based_per_t: float
-
-    CO2e_production_based: float
     CO2e_production_based_per_t: float
-
-    CO2e_total: float
 
     @classmethod
     def calc_production_sub_branch_by_co2e(
@@ -122,17 +113,8 @@ class ProductionSubBranchCO2viaFEC(BasicProductionBranch):
     """This class is only used by p_other_further as we were not able to determine a production volume for this quantitiy
     Therefore we set the prod_volume to 100% an and calculate the CO2e Emissiones via a Emmissions/Energy_consumption - Factor"""
 
-    energy: float
-
-    prod_volume: float
-
-    CO2e_combustion_based: float
     CO2e_combustion_based_per_MWh: float
-
-    CO2e_production_based: float
     CO2e_production_based_per_MWh: float
-
-    CO2e_total: float
 
     @classmethod
     def calc_production_sub_branch(
@@ -205,12 +187,6 @@ class ExtraEmission:
 
 @dataclass(kw_only=True)
 class ProductionSum(BasicProductionBranch):
-    energy: float
-    prod_volume: float
-    CO2e_combustion_based: float
-    CO2e_production_based: float
-    CO2e_total: float
-
     @classmethod
     def calc_production_sum(cls, *branches: BasicProductionBranch) -> "ProductionSum":
 
@@ -231,12 +207,6 @@ class ProductionSum(BasicProductionBranch):
 
 @dataclass(kw_only=True)
 class ProductionBranch(BasicProductionBranch):
-    energy: float
-    prod_volume: float
-    CO2e_combustion_based: float
-    CO2e_production_based: float
-    CO2e_total: float
-
     @classmethod
     def calc_production_sum(
         cls,
