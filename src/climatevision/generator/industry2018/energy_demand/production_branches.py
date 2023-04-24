@@ -188,7 +188,7 @@ class ExtraEmission:
 @dataclass(kw_only=True)
 class ProductionSum(BasicProductionBranch):
     @classmethod
-    def calc_sum(cls, *branches: BasicProductionBranch) -> "ProductionSum":
+    def sum(cls, *branches: BasicProductionBranch) -> "ProductionSum":
 
         energy = sum(branch.energy for branch in branches)
         prod_volume = sum(branch.prod_volume for branch in branches)
@@ -208,7 +208,7 @@ class ProductionSum(BasicProductionBranch):
 @dataclass(kw_only=True)
 class ProductionBranch(BasicProductionBranch):
     @classmethod
-    def calc_sum(
+    def sum(
         cls,
         sub_branch_list: list[ProductionSubBranch | ProductionSum],
         sub_branch_via_FEC_list: list[ProductionSubBranchCO2viaFEC] = [],

@@ -19,7 +19,10 @@ class EnergyWithCO2ePerMWh(EnergyWithCO2e):
         EnergyWithCO2e.__post_init__(self)
 
     @classmethod
-    def calc_sum(cls, *childs: "EnergyWithCO2ePerMWh") -> "EnergyWithCO2ePerMWh":
+    def sum(  # type: ignore[override]
+        cls,
+        *childs: "EnergyWithCO2ePerMWh",
+    ) -> "EnergyWithCO2ePerMWh":
         energy = sum(child.energy for child in childs)
 
         CO2e_combustion_based = sum(child.CO2e_combustion_based for child in childs)

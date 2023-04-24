@@ -96,7 +96,7 @@ def calc_production_by_co2e(
         co2e_sub_branch=co2e_miner_ceram_corrected,
     )
 
-    miner = ProductionBranch.calc_sum(
+    miner = ProductionBranch.sum(
         sub_branch_list=[miner_cement, miner_chalk, miner_glas, miner_ceram]
     )
 
@@ -136,9 +136,7 @@ def calc_production_by_co2e(
         co2e_sub_branch=co2e_chem_other_corrected,
     )
 
-    chem = ProductionBranch.calc_sum(
-        sub_branch_list=[chem_basic, chem_ammonia, chem_other]
-    )
+    chem = ProductionBranch.sum(sub_branch_list=[chem_basic, chem_ammonia, chem_other])
 
     co2e_metal_steel_primary_corrected = (
         entries.i_dehst_metal_steel_primary
@@ -176,12 +174,12 @@ def calc_production_by_co2e(
         co2e_sub_branch=co2e_metal_nonfe_corrected,
     )
 
-    metal_steel = ProductionSum.calc_sum(
+    metal_steel = ProductionSum.sum(
         metal_steel_primary,
         metal_steel_secondary,
     )
 
-    metal = ProductionBranch.calc_sum(sub_branch_list=[metal_steel, metal_nonfe])
+    metal = ProductionBranch.sum(sub_branch_list=[metal_steel, metal_nonfe])
 
     co2e_other_paper_corrected = (
         entries.i_dehst_other_paper
@@ -243,13 +241,13 @@ def calc_production_by_co2e(
         energy_consumption=other_further.energy,
     )
 
-    other = ProductionBranch.calc_sum(
+    other = ProductionBranch.sum(
         sub_branch_list=[other_paper, other_food],
         sub_branch_via_FEC_list=[other_further],
         extra_emission_list=[other_2efgh],
     )
 
-    total = ProductionSum.calc_sum(miner, chem, metal, other)
+    total = ProductionSum.sum(miner, chem, metal, other)
 
     return Production(
         total=total,
@@ -383,7 +381,7 @@ def calc_production_by_energy(inputs: Inputs) -> Production:
         sub_branch="ceram",
         energy_consumption_branch=energy_consumption_miner,
     )
-    miner = ProductionBranch.calc_sum(
+    miner = ProductionBranch.sum(
         sub_branch_list=[miner_cement, miner_chalk, miner_glas, miner_ceram]
     )
 
@@ -406,9 +404,7 @@ def calc_production_by_energy(inputs: Inputs) -> Production:
         sub_branch="other",
         energy_consumption_branch=energy_consumption_chemistry,
     )
-    chem = ProductionBranch.calc_sum(
-        sub_branch_list=[chem_basic, chem_ammonia, chem_other]
-    )
+    chem = ProductionBranch.sum(sub_branch_list=[chem_basic, chem_ammonia, chem_other])
 
     energy_consumption_metal = energy_consumption_industry * i_fec_pct_of_metal
     energy_consumption_metal_steel = energy_consumption_metal * fact(
@@ -426,7 +422,7 @@ def calc_production_by_energy(inputs: Inputs) -> Production:
         sub_branch="steel_secondary",
         energy_consumption_branch=energy_consumption_metal_steel,
     )
-    metal_steel = ProductionSum.calc_sum(
+    metal_steel = ProductionSum.sum(
         metal_steel_primary,
         metal_steel_secondary,
     )
@@ -436,7 +432,7 @@ def calc_production_by_energy(inputs: Inputs) -> Production:
         sub_branch="nonfe",
         energy_consumption_branch=energy_consumption_metal,
     )
-    metal = ProductionBranch.calc_sum(sub_branch_list=[metal_steel, metal_nonfe])
+    metal = ProductionBranch.sum(sub_branch_list=[metal_steel, metal_nonfe])
 
     energy_consumption_other = energy_consumption_industry * i_fec_pct_of_other
     other_paper = ProductionSubBranch.calc_sub_branch_by_energy(
@@ -463,13 +459,13 @@ def calc_production_by_energy(inputs: Inputs) -> Production:
         sub_branch="2efgh",
         energy_consumption=other_further.energy,
     )
-    other = ProductionBranch.calc_sum(
+    other = ProductionBranch.sum(
         sub_branch_list=[other_paper, other_food],
         sub_branch_via_FEC_list=[other_further],
         extra_emission_list=[other_2efgh],
     )
 
-    total = ProductionSum.calc_sum(miner, chem, metal, other)
+    total = ProductionSum.sum(miner, chem, metal, other)
 
     return Production(
         total=total,

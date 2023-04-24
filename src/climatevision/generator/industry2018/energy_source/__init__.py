@@ -55,7 +55,7 @@ def calc_supply(inputs: Inputs, production: Production) -> EnergySupply:
         sub_branch="ceram",
         branch="miner",
     )
-    miner = EnergySupplySum.calc_sum(miner_cement, miner_chalk, miner_glas, miner_ceram)
+    miner = EnergySupplySum.sum(miner_cement, miner_chalk, miner_glas, miner_ceram)
 
     chem_basic = EnergySupplySubBranch.calc_sub_branch(
         inputs=inputs,
@@ -75,7 +75,7 @@ def calc_supply(inputs: Inputs, production: Production) -> EnergySupply:
         sub_branch="other",
         branch="chem",
     )
-    chem = EnergySupplySum.calc_sum(chem_basic, chem_ammonia, chem_other)
+    chem = EnergySupplySum.sum(chem_basic, chem_ammonia, chem_other)
 
     metal_steel_primary = EnergySupplySubBranch.calc_sub_branch(
         inputs=inputs,
@@ -95,7 +95,7 @@ def calc_supply(inputs: Inputs, production: Production) -> EnergySupply:
         sub_branch="nonfe",
         branch="metal",
     )
-    metal = EnergySupplySum.calc_sum(
+    metal = EnergySupplySum.sum(
         metal_steel_primary, metal_steel_secondary, metal_nonfe
     )
 
@@ -117,9 +117,9 @@ def calc_supply(inputs: Inputs, production: Production) -> EnergySupply:
         sub_branch="further",
         branch="other",
     )
-    other = EnergySupplySum.calc_sum(other_paper, other_food, other_further)
+    other = EnergySupplySum.sum(other_paper, other_food, other_further)
 
-    total = EnergySupplySum.calc_sum(miner, metal, chem, other)
+    total = EnergySupplySum.sum(miner, metal, chem, other)
 
     return EnergySupply(
         total=total.total,
