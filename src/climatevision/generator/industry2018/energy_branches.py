@@ -3,7 +3,7 @@
 from dataclasses import dataclass
 
 from ..inputs import Inputs
-from ..common.energy import Energy, EnergyWithPercentage
+from ..common.energy import Energy
 
 
 @dataclass(kw_only=True)
@@ -222,20 +222,20 @@ class EnergySourceBranch:
 
 @dataclass(kw_only=True)
 class EnergySourceSum:
-    s: EnergyWithPercentage
+    s: Energy
     s_fossil: Energy
-    s_fossil_gas: EnergyWithPercentage
-    s_fossil_coal: EnergyWithPercentage
-    s_fossil_diesel: EnergyWithPercentage
-    s_fossil_fueloil: EnergyWithPercentage
-    s_fossil_lpg: EnergyWithPercentage
-    s_fossil_opetpro: EnergyWithPercentage
-    s_fossil_ofossil: EnergyWithPercentage
+    s_fossil_gas: Energy
+    s_fossil_coal: Energy
+    s_fossil_diesel: Energy
+    s_fossil_fueloil: Energy
+    s_fossil_lpg: Energy
+    s_fossil_opetpro: Energy
+    s_fossil_ofossil: Energy
     s_renew: Energy
-    s_renew_biomass: EnergyWithPercentage
-    s_renew_heatnet: EnergyWithPercentage
-    s_renew_elec: EnergyWithPercentage
-    s_renew_orenew: EnergyWithPercentage
+    s_renew_biomass: Energy
+    s_renew_heatnet: Energy
+    s_renew_elec: Energy
+    s_renew_orenew: Energy
 
     @classmethod
     def calc_energy_source_sum(
@@ -274,42 +274,20 @@ class EnergySourceSum:
             s_renew_elec += branch.s_renew_elec.energy
             s_renew_orenew += branch.s_renew_orenew.energy
 
-        s = EnergyWithPercentage(energy=s, total_energy=energy_sum)
+        s = Energy(energy=s)
         s_fossil = Energy(energy=s_fossil)
-        s_fossil_gas = EnergyWithPercentage(
-            energy=s_fossil_gas, total_energy=energy_sum
-        )
-        s_fossil_coal = EnergyWithPercentage(
-            energy=s_fossil_coal, total_energy=energy_sum
-        )
-        s_fossil_diesel = EnergyWithPercentage(
-            energy=s_fossil_diesel, total_energy=energy_sum
-        )
-        s_fossil_fueloil = EnergyWithPercentage(
-            energy=s_fossil_fueloil, total_energy=energy_sum
-        )
-        s_fossil_lpg = EnergyWithPercentage(
-            energy=s_fossil_lpg, total_energy=energy_sum
-        )
-        s_fossil_opetpro = EnergyWithPercentage(
-            energy=s_fossil_opetpro, total_energy=energy_sum
-        )
-        s_fossil_ofossil = EnergyWithPercentage(
-            energy=s_fossil_ofossil, total_energy=energy_sum
-        )
+        s_fossil_gas = Energy(energy=s_fossil_gas)
+        s_fossil_coal = Energy(energy=s_fossil_coal)
+        s_fossil_diesel = Energy(energy=s_fossil_diesel)
+        s_fossil_fueloil = Energy(energy=s_fossil_fueloil)
+        s_fossil_lpg = Energy(energy=s_fossil_lpg)
+        s_fossil_opetpro = Energy(energy=s_fossil_opetpro)
+        s_fossil_ofossil = Energy(energy=s_fossil_ofossil)
         s_renew = Energy(energy=s_renew)
-        s_renew_biomass = EnergyWithPercentage(
-            energy=s_renew_biomass, total_energy=energy_sum
-        )
-        s_renew_heatnet = EnergyWithPercentage(
-            energy=s_renew_heatnet, total_energy=energy_sum
-        )
-        s_renew_elec = EnergyWithPercentage(
-            energy=s_renew_elec, total_energy=energy_sum
-        )
-        s_renew_orenew = EnergyWithPercentage(
-            energy=s_renew_orenew, total_energy=energy_sum
-        )
+        s_renew_biomass = Energy(energy=s_renew_biomass)
+        s_renew_heatnet = Energy(energy=s_renew_heatnet)
+        s_renew_elec = Energy(energy=s_renew_elec)
+        s_renew_orenew = Energy(energy=s_renew_orenew)
 
         return cls(
             s=s,

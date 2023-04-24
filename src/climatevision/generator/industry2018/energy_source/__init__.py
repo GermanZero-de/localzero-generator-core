@@ -3,7 +3,7 @@
 from dataclasses import dataclass
 
 from ...inputs import Inputs
-from ...common.energy import Energy, EnergyWithPercentage
+from ...common.energy import Energy
 from ..energy_demand import Production
 from ..energy_branches import (
     EnergySourceSubBranch,
@@ -14,20 +14,20 @@ from ..energy_branches import (
 
 @dataclass(kw_only=True)
 class EnergySource:
-    s: EnergyWithPercentage
+    s: Energy
     s_fossil: Energy
-    s_fossil_gas: EnergyWithPercentage
-    s_fossil_coal: EnergyWithPercentage
-    s_fossil_diesel: EnergyWithPercentage
-    s_fossil_fueloil: EnergyWithPercentage
-    s_fossil_lpg: EnergyWithPercentage
-    s_fossil_opetpro: EnergyWithPercentage
-    s_fossil_ofossil: EnergyWithPercentage
+    s_fossil_gas: Energy
+    s_fossil_coal: Energy
+    s_fossil_diesel: Energy
+    s_fossil_fueloil: Energy
+    s_fossil_lpg: Energy
+    s_fossil_opetpro: Energy
+    s_fossil_ofossil: Energy
     s_renew: Energy
-    s_renew_biomass: EnergyWithPercentage
-    s_renew_heatnet: EnergyWithPercentage
-    s_renew_elec: EnergyWithPercentage
-    s_renew_orenew: EnergyWithPercentage
+    s_renew_biomass: Energy
+    s_renew_heatnet: Energy
+    s_renew_elec: Energy
+    s_renew_orenew: Energy
 
 
 def calc_supply(inputs: Inputs, production: Production) -> EnergySource:
