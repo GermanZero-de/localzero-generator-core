@@ -21,17 +21,8 @@ class ProductionBasedEmission:
     CO2e_pb: float
 
     @classmethod
-    def calc_sum_pb_emission(
-        cls, *args: "ProductionBasedEmission"
-    ) -> "ProductionBasedEmission":
-        CO2e_pb = sum([elem.CO2e_pb for elem in args])
-        return cls(CO2e_pb=CO2e_pb)
-
-    def add_production_based_emission(self, *args: "ProductionBasedEmission"):
-        self.CO2e_pb = self.CO2e_pb + sum([elem.CO2e_pb for elem in args])
-
-    def add_combustion_based_emission(self, *args: "Emissions"):
-        self.CO2e_cb = self.CO2e_cb + sum([elem.CO2e_cb for elem in args])
+    def sum(cls, *args: "ProductionBasedEmission") -> "ProductionBasedEmission":
+        return cls(CO2e_pb=sum([elem.CO2e_pb for elem in args]))
 
 
 @dataclass(kw_only=True)
@@ -47,9 +38,10 @@ class Emissions(ProductionBasedEmission):
     def calc_sum_emissions(  # type: ignore[override]
         cls, *args: "Emissions"
     ) -> "Emissions":
-        CO2e_cb: float = sum([elem.CO2e_cb for elem in args])
-        CO2e_pb: float = sum([elem.CO2e_pb for elem in args])
-        return cls(CO2e_cb=CO2e_cb, CO2e_pb=CO2e_pb)
+        return cls(
+            CO2e_cb=sum([elem.CO2e_cb for elem in args]),
+            CO2e_pb=sum([elem.CO2e_pb for elem in args]),
+        )
 
     @classmethod
     def calc_sum_from_emissions_and_pb_emissions(
@@ -66,6 +58,12 @@ class Emissions(ProductionBasedEmission):
     def update_CO2e_total(self):
         self.CO2e_total = self.CO2e_cb + self.CO2e_pb
 
+    def add_production_based_emission(self, *args: "ProductionBasedEmission"):
+        self.CO2e_pb = self.CO2e_pb + sum([elem.CO2e_pb for elem in args])
+
+    def add_combustion_based_emission(self, *args: "Emissions"):
+        self.CO2e_cb = self.CO2e_cb + sum([elem.CO2e_cb for elem in args])
+
 
 @dataclass(kw_only=True)
 class EnergyAndEmissions(Emissions):
@@ -79,7 +77,7 @@ class EnergyAndEmissions(Emissions):
     energy: float
 
     @classmethod
-    def calc_sum_energy_and_emissions(
+    def sum(  # type: ignore[override]
         cls, *args: "EnergyAndEmissions"
     ) -> "EnergyAndEmissions":
         return cls(
@@ -811,9 +809,7 @@ class BiskoAgriculture:
         soil = ProductionBasedEmission(CO2e_pb=a18.p_soil.CO2e_production_based)
         other = ProductionBasedEmission(CO2e_pb=a18.p_other.CO2e_production_based)
 
-        total = ProductionBasedEmission.calc_sum_pb_emission(
-            forest, manure, soil, other
-        )
+        total = ProductionBasedEmission.sum(forest, manure, soil, other)
 
         return cls(forest=forest, manure=manure, soil=soil, other=other, total=total)
 

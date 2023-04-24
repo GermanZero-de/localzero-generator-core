@@ -71,7 +71,7 @@ class Bisko:
         agri_bisko = BiskoAgriculture.calc_bisko_agri(a18=a18)
         lulucf_bisko = BiskoLULUCF.calc_bisko_lulucf(l18=l18)
 
-        total = EnergyAndEmissions.calc_sum_energy_and_emissions(
+        total = EnergyAndEmissions.sum(
             priv_residences_bisko.total,
             business_bisko.total,
             transport_bisko.total,
@@ -83,7 +83,7 @@ class Bisko:
 
         total.update_CO2e_total()
 
-        communal_facilities = EnergyAndEmissions.calc_sum_energy_and_emissions(
+        communal_facilities = EnergyAndEmissions.sum(
             priv_residences_bisko.communal_facilities,
             business_bisko.communal_facilities,
         )
