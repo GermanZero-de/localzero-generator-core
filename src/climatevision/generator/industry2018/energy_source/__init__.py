@@ -4,8 +4,10 @@ from dataclasses import dataclass
 
 from ...inputs import Inputs
 from ...common.energy import Energy
+
 from ..energy_demand import Production
-from .energy_branches import (
+
+from .supply_branches import (
     EnergySupplySubBranch,
     EnergySupplyBranch,
     EnergySupplySum,
