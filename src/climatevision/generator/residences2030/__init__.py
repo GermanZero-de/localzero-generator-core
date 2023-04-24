@@ -476,15 +476,6 @@ def calc(inputs: Inputs, *, r18: R18, b18: B18) -> R30:
     s_emethan = Vars15()
     s_elec = Vars14()
 
-    # pct_energy
-    s_fueloil.pct_energy = 0
-
-    s_lpg.pct_energy = 0
-
-    s_coal.pct_energy = 0
-
-    s_petrol.pct_energy = 0
-
     s_gas.energy = 0
 
     # formula from e30 not still calc here
@@ -583,11 +574,11 @@ def calc(inputs: Inputs, *, r18: R18, b18: B18) -> R30:
     )
     s_elec.energy = p.demand_electricity
     s.energy = p_buildings_total.energy + p_other.energy
-    s_fueloil.energy = s_fueloil.pct_energy * s.energy
-    s_lpg.energy = s_lpg.pct_energy * s.energy
-    s_biomass.pct_energy = div(s_biomass.energy, s.energy)
-    s_coal.energy = s_coal.pct_energy * s.energy
-    s_petrol.energy = s_petrol.pct_energy * s.energy
+
+    s_fueloil.energy = 0
+    s_lpg.energy = 0
+    s_coal.energy = 0
+    s_petrol.energy = 0
 
     if (
         p_buildings_total.energy - s_solarth.energy - s_heatpump.energy
@@ -600,10 +591,6 @@ def calc(inputs: Inputs, *, r18: R18, b18: B18) -> R30:
     else:
         s_heatnet.energy = r18.s_heatnet.energy
 
-    s_heatnet.pct_energy = div(s_heatnet.energy, s.energy)
-    s_solarth.pct_energy = div(s_solarth.energy, s.energy)
-    s_heatpump.pct_energy = div(s_heatpump.energy, s.energy)
-
     sum_fueloil_to_heatpump_energy = (
         s_fueloil.energy
         + s_lpg.energy
@@ -615,30 +602,11 @@ def calc(inputs: Inputs, *, r18: R18, b18: B18) -> R30:
         + s_heatpump.energy
     )
 
-    s_elec_heating.pct_energy = div(s_elec_heating.energy, s.energy)
-
     s_emethan.energy = max(
         0,
         p_buildings_total.energy
         - (sum_fueloil_to_heatpump_energy + s_elec_heating.energy),
     )
-
-    s_emethan.pct_energy = div(s_emethan.energy, s.energy)
-
-    s_elec.pct_energy = div(s_elec.energy, s.energy)
-
-    s.pct_energy = (
-        s_fueloil.pct_energy
-        + s_lpg.pct_energy
-        + s_biomass.pct_energy
-        + s_coal.pct_energy
-        + s_petrol.pct_energy
-        + s_heatnet.pct_energy
-        + s_solarth.pct_energy
-        + s_heatpump.pct_energy
-        + s_emethan.pct_energy
-        + s_elec.pct_energy
-    )  # SUM(s_fueloil.pct_energy:s_elec.pct_energy)
 
     s.demand_heat_nonrehab = p_buildings_total.demand_heat_nonrehab
     s.demand_heat_rehab = p_buildings_total.demand_heat_rehab
@@ -1125,7 +1093,6 @@ def calc(inputs: Inputs, *, r18: R18, b18: B18) -> R30:
     s_solarth.invest_pa_com = s_solarth.invest_com / Kalkulationszeitraum
     s_heatpump.invest_pa_com = s_heatpump.invest_com / Kalkulationszeitraum
 
-    s_gas.pct_energy = div(s_gas.energy, s.energy)
     s_gas.cost_fuel_per_MWh = ass("Ass_R_S_gas_energy_cost_factor_2035")
     s_gas.cost_fuel = s_gas.energy * s_gas.cost_fuel_per_MWh / MILLION
     s_gas.change_energy_MWh = s_gas.energy - r18.s_gas.energy

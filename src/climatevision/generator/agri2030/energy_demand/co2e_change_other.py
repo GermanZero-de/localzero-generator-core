@@ -20,7 +20,7 @@ class CO2eChangeOther(CO2eChangeAgri):
     ass_demand_change: InitVar[str]
     fact_production_based_per_t: InitVar[str]
 
-    def __post_init__(  # type: ignore
+    def __post_init__(  # type: ignore[override]
         self,
         inputs: Inputs,
         what: str,

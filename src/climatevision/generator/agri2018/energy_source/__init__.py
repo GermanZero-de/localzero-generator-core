@@ -21,54 +21,46 @@ class EnergySupply:
     heatpump: CO2eFromEnergyUseDetail
 
 
-def calc_supply(inputs: Inputs, total_energy: float) -> EnergySupply:
+def calc_supply(inputs: Inputs) -> EnergySupply:
 
     entries = inputs.entries
 
     heatpump = CO2eFromEnergyUseDetail.calc(
         energy=0,
-        total_energy=total_energy,
         CO2e_combustion_based_per_MWh=inputs.fact(
             "Fact_RB_S_heatpump_ratio_CO2e_to_fec"
         ),
     )
     petrol = CO2eFromEnergyUseDetail.calc(
         energy=entries.a_petrol_fec,
-        total_energy=total_energy,
         CO2e_combustion_based_per_MWh=inputs.fact(
             "Fact_T_S_petrol_EmFa_tank_wheel_2018"
         ),
     )
     diesel = CO2eFromEnergyUseDetail.calc(
         energy=entries.a_diesel_fec,
-        total_energy=total_energy,
         CO2e_combustion_based_per_MWh=inputs.fact(
             "Fact_T_S_diesel_EmFa_tank_wheel_2018"
         ),
     )
     fueloil = CO2eFromEnergyUseDetail.calc(
         energy=entries.a_fueloil_fec,
-        total_energy=total_energy,
         CO2e_combustion_based_per_MWh=inputs.fact("Fact_H_P_fueloil_cb_EF"),
     )
     lpg = CO2eFromEnergyUseDetail.calc(
         energy=entries.a_lpg_fec,
-        total_energy=total_energy,
         CO2e_combustion_based_per_MWh=inputs.fact("Fact_T_S_lpg_EmFa_tank_wheel_2018"),
     )
     gas = CO2eFromEnergyUseDetail.calc(
         energy=entries.a_gas_fec,
-        total_energy=total_energy,
         CO2e_combustion_based_per_MWh=inputs.fact("Fact_H_P_ngas_cb_EF"),
     )
     biomass = CO2eFromEnergyUseDetail.calc(
         energy=entries.a_biomass_fec,
-        total_energy=total_energy,
         CO2e_combustion_based_per_MWh=inputs.fact("Fact_RB_S_biomass_CO2e_EF"),
     )
     elec = CO2eFromEnergyUseDetail.calc(
         energy=entries.a_elec_fec,
-        total_energy=total_energy,
         CO2e_combustion_based_per_MWh=inputs.fact("Fact_RB_S_elec_ratio_CO2e_to_fec"),
     )
     total = CO2eFromEnergyUse.sum(petrol, diesel, fueloil, lpg, gas, biomass, elec)

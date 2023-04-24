@@ -15,25 +15,12 @@ from . import energy_demand, energy_source
 
 
 def calc(inputs: Inputs, l18: L18, b18: B18) -> A18:
-    entries = inputs.entries
 
-    # Energy
-    total_energy = (
-        entries.a_petrol_fec
-        + entries.a_diesel_fec
-        + entries.a_fueloil_fec
-        + entries.a_lpg_fec
-        + entries.a_gas_fec
-        + entries.a_biomass_fec
-        + entries.a_elec_fec
-    )
-
-    supply = energy_source.calc_supply(inputs, total_energy)
+    supply = energy_source.calc_supply(inputs)
     production = energy_demand.calc_production(
         inputs,
         l18,
         b18,
-        total_energy,
         supply.elec.energy,
         supply.petrol.energy,
         supply.diesel.energy,

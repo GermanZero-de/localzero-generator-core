@@ -8,8 +8,7 @@ from .energy_demand import (
     CO2eFromSoil,
     CO2eFromOther,
     Energy,
-    EnergyWithPercentage,
-    OperationHeatEnergy,
+    EnergyPerM2,
     CO2eEmission,
 )
 from .energy_source import CO2eFromEnergyUse, CO2eFromEnergyUseDetail
@@ -51,10 +50,10 @@ class A18:
     p_other_liming_calcit: CO2eFromOther
     p_other_kas: CO2eFromOther
     p_operation: Energy
-    p_operation_heat: OperationHeatEnergy
-    p_operation_elec_elcon: EnergyWithPercentage
+    p_operation_heat: EnergyPerM2
+    p_operation_elec_elcon: Energy
     p_operation_elec_heatpump: Energy
-    p_operation_vehicles: EnergyWithPercentage
+    p_operation_vehicles: Energy
     s: CO2eFromEnergyUse
     s_petrol: CO2eFromEnergyUseDetail
     s_diesel: CO2eFromEnergyUseDetail

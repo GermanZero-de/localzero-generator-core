@@ -15,7 +15,7 @@ class CO2eChangeAgri(CO2eEmission, CO2eChange):
     what: InitVar[str]
     a18: InitVar[A18]
 
-    def __post_init__(  # type: ignore
+    def __post_init__(  # type: ignore[override]
         self,
         inputs: Inputs,
         what: str,
