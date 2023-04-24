@@ -416,42 +416,42 @@
         "p_miner_cement": {
             "energy": 44677843.09503303,
             "prod_volume": 34000000.00000001,
-            "energy_use_factor": 0.7610036126336612,
             "CO2e_combustion_based": 6134135.426524514,
-            "CO2e_combustion_based_per_t": 0.18041574783895628,
             "CO2e_production_based": 13227900.000000006,
-            "CO2e_production_based_per_t": 0.3890558823529412,
-            "CO2e_total": 19362035.42652452
+            "CO2e_total": 19362035.42652452,
+            "energy_use_factor": 0.7610036126336612,
+            "CO2e_combustion_based_per_t": 0.18041574783895628,
+            "CO2e_production_based_per_t": 0.3890558823529412
         },
         "p_miner_chalk": {
             "energy": 11642434.68274476,
             "prod_volume": 6438000.000000002,
-            "energy_use_factor": 0.5529771199439714,
             "CO2e_combustion_based": 2045576.7461548897,
-            "CO2e_combustion_based_per_t": 0.3177348161160126,
             "CO2e_production_based": 4831000.0,
-            "CO2e_production_based_per_t": 0.7503883193538365,
-            "CO2e_total": 6876576.746154889
+            "CO2e_total": 6876576.746154889,
+            "energy_use_factor": 0.5529771199439714,
+            "CO2e_combustion_based_per_t": 0.3177348161160126,
+            "CO2e_production_based_per_t": 0.7503883193538365
         },
         "p_miner_glas": {
             "energy": 14522974.347551698,
             "prod_volume": 6784000.000000002,
-            "energy_use_factor": 0.46712194331897705,
             "CO2e_combustion_based": 3428245.6417735135,
-            "CO2e_combustion_based_per_t": 0.5053428127614258,
             "CO2e_production_based": 903457.0,
-            "CO2e_production_based_per_t": 0.13317467570754718,
-            "CO2e_total": 4331702.6417735135
+            "CO2e_total": 4331702.6417735135,
+            "energy_use_factor": 0.46712194331897705,
+            "CO2e_combustion_based_per_t": 0.5053428127614258,
+            "CO2e_production_based_per_t": 0.13317467570754718
         },
         "p_miner_ceram": {
             "energy": 8934803.430226084,
             "prod_volume": 7668900.000000002,
-            "energy_use_factor": 0.8583177078139648,
             "CO2e_combustion_based": 2239582.185547085,
-            "CO2e_combustion_based_per_t": 0.29203434463183564,
             "CO2e_production_based": 598700.0,
-            "CO2e_production_based_per_t": 0.07806856263610165,
-            "CO2e_total": 2838282.185547085
+            "CO2e_total": 2838282.185547085,
+            "energy_use_factor": 0.8583177078139648,
+            "CO2e_combustion_based_per_t": 0.29203434463183564,
+            "CO2e_production_based_per_t": 0.07806856263610165
         },
         "p_chem": {
             "energy": 171225833.44444448,
@@ -463,32 +463,32 @@
         "p_chem_basic": {
             "energy": 125091389.00000003,
             "prod_volume": 5357000.000000001,
-            "energy_use_factor": 0.042824690354985186,
             "CO2e_combustion_based": 15511195.000000002,
-            "CO2e_combustion_based_per_t": 2.8955002800074667,
             "CO2e_production_based": 2458950.000000002,
-            "CO2e_production_based_per_t": 0.4590162404330782,
-            "CO2e_total": 17970145.000000004
+            "CO2e_total": 17970145.000000004,
+            "energy_use_factor": 0.042824690354985186,
+            "CO2e_combustion_based_per_t": 2.8955002800074667,
+            "CO2e_production_based_per_t": 0.4590162404330782
         },
         "p_chem_ammonia": {
             "energy": 21910000.000000007,
             "prod_volume": 3130000.000000001,
-            "energy_use_factor": 0.14285714285714285,
             "CO2e_combustion_based": 1565000.0000000005,
-            "CO2e_combustion_based_per_t": 0.5,
             "CO2e_production_based": 4157000.0000000005,
-            "CO2e_production_based_per_t": 1.3281150159744408,
-            "CO2e_total": 5722000.000000001
+            "CO2e_total": 5722000.000000001,
+            "energy_use_factor": 0.14285714285714285,
+            "CO2e_combustion_based_per_t": 0.5,
+            "CO2e_production_based_per_t": 1.3281150159744408
         },
         "p_chem_other": {
             "energy": 24224444.444444448,
             "prod_volume": 3813000.0000000005,
-            "energy_use_factor": 0.15740299055132556,
             "CO2e_combustion_based": 2621450.0000000005,
-            "CO2e_combustion_based_per_t": 0.687503278258589,
             "CO2e_production_based": 0.0,
-            "CO2e_production_based_per_t": 0.0,
-            "CO2e_total": 2621450.0000000005
+            "CO2e_total": 2621450.0000000005,
+            "energy_use_factor": 0.15740299055132556,
+            "CO2e_combustion_based_per_t": 0.687503278258589,
+            "CO2e_production_based_per_t": 0.0
         },
         "p_metal": {
             "energy": 190428058.8544,
@@ -507,32 +507,32 @@
         "p_metal_steel_primary": {
             "energy": 141992956.026,
             "prod_volume": 30300000.000000007,
-            "energy_use_factor": 0.2133908670402766,
             "CO2e_combustion_based": 26117696.914700553,
-            "CO2e_combustion_based_per_t": 0.8619701952046385,
             "CO2e_production_based": 20093082.0,
-            "CO2e_production_based_per_t": 0.6631380198019802,
-            "CO2e_total": 46210778.91470055
+            "CO2e_total": 46210778.91470055,
+            "energy_use_factor": 0.2133908670402766,
+            "CO2e_combustion_based_per_t": 0.8619701952046385,
+            "CO2e_production_based_per_t": 0.6631380198019802
         },
         "p_metal_steel_secondary": {
             "energy": 13080100.000000002,
             "prod_volume": 12100000.000000002,
-            "energy_use_factor": 0.9250693802035153,
             "CO2e_combustion_based": 9319235.662431942,
-            "CO2e_combustion_based_per_t": 0.7701847654902431,
             "CO2e_production_based": 75669.00000000025,
-            "CO2e_production_based_per_t": 0.006253636363636364,
-            "CO2e_total": 9394904.662431942
+            "CO2e_total": 9394904.662431942,
+            "energy_use_factor": 0.9250693802035153,
+            "CO2e_combustion_based_per_t": 0.7701847654902431,
+            "CO2e_production_based_per_t": 0.006253636363636364
         },
         "p_metal_nonfe": {
             "energy": 35355002.82840001,
             "prod_volume": 12411000.000000002,
-            "energy_use_factor": 0.3510394288536297,
             "CO2e_combustion_based": 2855587.4228675137,
-            "CO2e_combustion_based_per_t": 0.23008520045665243,
             "CO2e_production_based": 1320000.0,
-            "CO2e_production_based_per_t": 0.1063572637176698,
-            "CO2e_total": 4175587.4228675137
+            "CO2e_total": 4175587.4228675137,
+            "energy_use_factor": 0.3510394288536297,
+            "CO2e_combustion_based_per_t": 0.23008520045665243,
+            "CO2e_production_based_per_t": 0.1063572637176698
         },
         "p_other": {
             "energy": 281008333.2222222,
@@ -544,31 +544,31 @@
         "p_other_paper": {
             "energy": 58444722.222222246,
             "prod_volume": 22681549.000000007,
-            "energy_use_factor": 0.3880854957913698,
             "CO2e_combustion_based": 6555000.000000003,
-            "CO2e_combustion_based_per_t": 0.2890014257844559,
             "CO2e_production_based": 0.0,
-            "CO2e_production_based_per_t": 0.0,
-            "CO2e_total": 6555000.000000003
+            "CO2e_total": 6555000.000000003,
+            "energy_use_factor": 0.3880854957913698,
+            "CO2e_combustion_based_per_t": 0.2890014257844559,
+            "CO2e_production_based_per_t": 0.0
         },
         "p_other_food": {
             "energy": 59155833.333333336,
             "prod_volume": 105178000.00000001,
-            "energy_use_factor": 1.777981884006931,
             "CO2e_combustion_based": 8900000.000000002,
-            "CO2e_combustion_based_per_t": 0.08461845633117192,
             "CO2e_production_based": 0.0,
-            "CO2e_production_based_per_t": 0.0,
-            "CO2e_total": 8900000.000000002
+            "CO2e_total": 8900000.000000002,
+            "energy_use_factor": 1.777981884006931,
+            "CO2e_combustion_based_per_t": 0.08461845633117192,
+            "CO2e_production_based_per_t": 0.0
         },
         "p_other_further": {
             "energy": 163407777.6666666,
             "prod_volume": 1.0,
             "CO2e_combustion_based": 3651810.0000000005,
-            "CO2e_combustion_based_per_MWh": 0.02234783467558858,
             "CO2e_production_based": 2034850.0000000005,
-            "CO2e_production_based_per_MWh": 0.012452589644483536,
-            "CO2e_total": 5686660.000000001
+            "CO2e_total": 5686660.000000001,
+            "CO2e_combustion_based_per_MWh": 0.02234783467558858,
+            "CO2e_production_based_per_MWh": 0.012452589644483536
         },
         "p_other_2efgh": {
             "CO2e_production_based": 15022000.000000002,
