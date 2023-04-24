@@ -168,7 +168,8 @@ def calc_production_by_co2e(
         co2e_sub_branch=co2e_metal_nonfe_corrected,
     )
     metal_steel = ProductionSubSum.calc_production_sub_sum(
-        sub_branch_list=[metal_steel_primary, metal_steel_secondary],
+        metal_steel_primary,
+        metal_steel_secondary,
     )
     metal = ProductionBranch.calc_production_sum(
         sub_branch_list=[metal_steel, metal_nonfe]
@@ -239,7 +240,7 @@ def calc_production_by_co2e(
         extra_emission_list=[other_2efgh],
     )
 
-    total = ProductionSum.calc_production_sum(branch_list=[miner, chem, metal, other])
+    total = ProductionSum.calc_production_sum(miner, chem, metal, other)
 
     return Production(
         total=total,
@@ -417,7 +418,8 @@ def calc_production_by_energy(inputs: Inputs) -> Production:
         energy_consumption_branch=energy_consumption_metal_steel,
     )
     metal_steel = ProductionSubSum.calc_production_sub_sum(
-        sub_branch_list=[metal_steel_primary, metal_steel_secondary],
+        metal_steel_primary,
+        metal_steel_secondary,
     )
     metal_nonfe = ProductionSubBranch.calc_production_sub_branch_by_energy(
         inputs=inputs,
@@ -460,7 +462,7 @@ def calc_production_by_energy(inputs: Inputs) -> Production:
         extra_emission_list=[other_2efgh],
     )
 
-    total = ProductionSum.calc_production_sum(branch_list=[miner, chem, metal, other])
+    total = ProductionSum.calc_production_sum(miner, chem, metal, other)
 
     return Production(
         total=total,

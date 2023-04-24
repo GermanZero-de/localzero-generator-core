@@ -204,26 +204,18 @@ class ProductionSubSum:
 
     @classmethod
     def calc_production_sub_sum(
-        cls,
-        sub_branch_list: list[ProductionSubBranch],
+        cls, *branches: ProductionSubBranch
     ) -> "ProductionSubSum":
 
-        energy = 0
-        production_volume = 0
-        CO2e_combustion_based = 0
-        CO2e_production_based = 0
-        CO2e_total = 0
-
-        for sub_branch in sub_branch_list:
-            energy += sub_branch.energy
-            production_volume += sub_branch.prod_volume
-            CO2e_combustion_based += sub_branch.CO2e_combustion_based
-            CO2e_production_based += sub_branch.CO2e_production_based
-            CO2e_total += sub_branch.CO2e_total
+        energy = sum(branch.energy for branch in branches)
+        prod_volume = sum(branch.prod_volume for branch in branches)
+        CO2e_combustion_based = sum(branch.CO2e_combustion_based for branch in branches)
+        CO2e_production_based = sum(branch.CO2e_production_based for branch in branches)
+        CO2e_total = sum(branch.CO2e_total for branch in branches)
 
         return cls(
             energy=energy,
-            prod_volume=production_volume,
+            prod_volume=prod_volume,
             CO2e_combustion_based=CO2e_combustion_based,
             CO2e_production_based=CO2e_production_based,
             CO2e_total=CO2e_total,
@@ -289,26 +281,17 @@ class ProductionSum:
     CO2e_total: float
 
     @classmethod
-    def calc_production_sum(
-        cls, branch_list: list[ProductionBranch]
-    ) -> "ProductionSum":
+    def calc_production_sum(cls, *branches: ProductionBranch) -> "ProductionSum":
 
-        energy = 0
-        production_volume = 0
-        CO2e_combustion_based = 0
-        CO2e_production_based = 0
-        CO2e_total = 0
-
-        for branch in branch_list:
-            energy += branch.energy
-            production_volume += branch.prod_volume
-            CO2e_combustion_based += branch.CO2e_combustion_based
-            CO2e_production_based += branch.CO2e_production_based
-            CO2e_total += branch.CO2e_total
+        energy = sum(branch.energy for branch in branches)
+        prod_volume = sum(branch.prod_volume for branch in branches)
+        CO2e_combustion_based = sum(branch.CO2e_combustion_based for branch in branches)
+        CO2e_production_based = sum(branch.CO2e_production_based for branch in branches)
+        CO2e_total = sum(branch.CO2e_total for branch in branches)
 
         return cls(
             energy=energy,
-            prod_volume=production_volume,
+            prod_volume=prod_volume,
             CO2e_combustion_based=CO2e_combustion_based,
             CO2e_production_based=CO2e_production_based,
             CO2e_total=CO2e_total,
