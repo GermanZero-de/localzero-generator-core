@@ -214,7 +214,7 @@ class EnergySupplySum:
     def calc_energy_supply_sum(
         cls, branch_list: list[EnergySupplyBranch]
     ) -> "EnergySupplySum":
-        energy_sum = 0
+
         total = 0
         fossil = 0
         fossil_gas = 0
@@ -231,7 +231,6 @@ class EnergySupplySum:
         renew_orenew = 0
 
         for branch in branch_list:
-            energy_sum += branch.total.energy
             total += branch.total.energy
             fossil += branch.fossil.energy
             fossil_gas += branch.fossil_gas.energy
