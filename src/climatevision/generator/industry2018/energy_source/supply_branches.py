@@ -27,7 +27,7 @@ class BasicEnergySupplyBranch:
 @dataclass(kw_only=True)
 class EnergySupplySubBranch(BasicEnergySupplyBranch):
     @classmethod
-    def calc_energy_supply_sub_branch(
+    def calc_sub_branch(
         cls,
         inputs: Inputs,
         energy_demand: float,
@@ -114,9 +114,7 @@ class EnergySupplySubBranch(BasicEnergySupplyBranch):
 @dataclass(kw_only=True)
 class EnergySupplySum(BasicEnergySupplyBranch):
     @classmethod
-    def calc_energy_supply_sum(
-        cls, *branches: BasicEnergySupplyBranch
-    ) -> "EnergySupplySum":
+    def calc_sum(cls, *branches: BasicEnergySupplyBranch) -> "EnergySupplySum":
 
         total = sum(branch.total.energy for branch in branches)
         fossil = sum(branch.fossil.energy for branch in branches)

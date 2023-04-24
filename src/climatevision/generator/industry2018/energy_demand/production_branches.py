@@ -21,7 +21,7 @@ class ProductionSubBranch(BasicProductionBranch):
     CO2e_production_based_per_t: float
 
     @classmethod
-    def calc_production_sub_branch_by_co2e(
+    def calc_sub_branch_by_co2e(
         cls,
         inputs: Inputs,
         sub_branch: str,
@@ -66,7 +66,7 @@ class ProductionSubBranch(BasicProductionBranch):
         )
 
     @classmethod
-    def calc_production_sub_branch_by_energy(
+    def calc_sub_branch_by_energy(
         cls,
         inputs: Inputs,
         sub_branch: str,
@@ -117,7 +117,7 @@ class ProductionSubBranchCO2viaFEC(BasicProductionBranch):
     CO2e_production_based_per_MWh: float
 
     @classmethod
-    def calc_production_sub_branch(
+    def calc_sub_branch(
         cls,
         inputs: Inputs,
         sub_branch: str,
@@ -188,7 +188,7 @@ class ExtraEmission:
 @dataclass(kw_only=True)
 class ProductionSum(BasicProductionBranch):
     @classmethod
-    def calc_production_sum(cls, *branches: BasicProductionBranch) -> "ProductionSum":
+    def calc_sum(cls, *branches: BasicProductionBranch) -> "ProductionSum":
 
         energy = sum(branch.energy for branch in branches)
         prod_volume = sum(branch.prod_volume for branch in branches)
@@ -208,7 +208,7 @@ class ProductionSum(BasicProductionBranch):
 @dataclass(kw_only=True)
 class ProductionBranch(BasicProductionBranch):
     @classmethod
-    def calc_production_sum(
+    def calc_sum(
         cls,
         sub_branch_list: list[ProductionSubBranch | ProductionSum],
         sub_branch_via_FEC_list: list[ProductionSubBranchCO2viaFEC] = [],
