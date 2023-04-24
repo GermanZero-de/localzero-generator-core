@@ -7,7 +7,7 @@ from ...common.energy import Energy
 
 
 @dataclass(kw_only=True)
-class EnergySupplySubBranch:
+class BasicEnergySupplyBranch:
     total: Energy
     fossil: Energy
     fossil_gas: Energy
@@ -23,6 +23,9 @@ class EnergySupplySubBranch:
     renew_elec: Energy
     renew_orenew: Energy
 
+
+@dataclass(kw_only=True)
+class EnergySupplySubBranch(BasicEnergySupplyBranch):
     @classmethod
     def calc_energy_supply_sub_branch(
         cls,
@@ -109,142 +112,26 @@ class EnergySupplySubBranch:
 
 
 @dataclass(kw_only=True)
-class EnergySupplyBranch:
-    total: Energy
-    fossil: Energy
-    fossil_gas: Energy
-    fossil_coal: Energy
-    fossil_diesel: Energy
-    fossil_fueloil: Energy
-    fossil_lpg: Energy
-    fossil_opetpro: Energy
-    fossil_ofossil: Energy
-    renew: Energy
-    renew_biomass: Energy
-    renew_heatnet: Energy
-    renew_elec: Energy
-    renew_orenew: Energy
-
+class EnergySupplySum(BasicEnergySupplyBranch):
     @classmethod
     def calc_energy_supply_sum(
-        cls, sub_branch_list: list[EnergySupplySubBranch]
-    ) -> "EnergySupplyBranch":
-        total = 0
-        fossil = 0
-        fossil_gas = 0
-        fossil_coal = 0
-        fossil_diesel = 0
-        fossil_fueloil = 0
-        fossil_lpg = 0
-        fossil_opetpro = 0
-        fossil_ofossil = 0
-        renew = 0
-        renew_biomass = 0
-        renew_heatnet = 0
-        renew_elec = 0
-        renew_orenew = 0
-
-        for sub_branch in sub_branch_list:
-            total += sub_branch.total.energy
-            fossil += sub_branch.fossil.energy
-            fossil_gas += sub_branch.fossil_gas.energy
-            fossil_coal += sub_branch.fossil_coal.energy
-            fossil_diesel += sub_branch.fossil_diesel.energy
-            fossil_fueloil += sub_branch.fossil_fueloil.energy
-            fossil_lpg += sub_branch.fossil_lpg.energy
-            fossil_opetpro += sub_branch.fossil_opetpro.energy
-            fossil_ofossil += sub_branch.fossil_ofossil.energy
-            renew += sub_branch.renew.energy
-            renew_biomass += sub_branch.renew_biomass.energy
-            renew_heatnet += sub_branch.renew_heatnet.energy
-            renew_elec += sub_branch.renew_elec.energy
-            renew_orenew += sub_branch.renew_orenew.energy
-
-        total = Energy(energy=total)
-        fossil = Energy(energy=fossil)
-        fossil_gas = Energy(energy=fossil_gas)
-        fossil_coal = Energy(energy=fossil_coal)
-        fossil_diesel = Energy(energy=fossil_diesel)
-        fossil_fueloil = Energy(energy=fossil_fueloil)
-        fossil_lpg = Energy(energy=fossil_lpg)
-        fossil_opetpro = Energy(energy=fossil_opetpro)
-        fossil_ofossil = Energy(energy=fossil_ofossil)
-        renew = Energy(energy=renew)
-        renew_biomass = Energy(energy=renew_biomass)
-        renew_heatnet = Energy(energy=renew_heatnet)
-        renew_elec = Energy(energy=renew_elec)
-        renew_orenew = Energy(energy=renew_orenew)
-
-        return cls(
-            total=total,
-            fossil=fossil,
-            fossil_gas=fossil_gas,
-            fossil_coal=fossil_coal,
-            fossil_diesel=fossil_diesel,
-            fossil_fueloil=fossil_fueloil,
-            fossil_lpg=fossil_lpg,
-            fossil_opetpro=fossil_opetpro,
-            fossil_ofossil=fossil_ofossil,
-            renew=renew,
-            renew_biomass=renew_biomass,
-            renew_heatnet=renew_heatnet,
-            renew_elec=renew_elec,
-            renew_orenew=renew_orenew,
-        )
-
-
-@dataclass(kw_only=True)
-class EnergySupplySum:
-    total: Energy
-    fossil: Energy
-    fossil_gas: Energy
-    fossil_coal: Energy
-    fossil_diesel: Energy
-    fossil_fueloil: Energy
-    fossil_lpg: Energy
-    fossil_opetpro: Energy
-    fossil_ofossil: Energy
-    renew: Energy
-    renew_biomass: Energy
-    renew_heatnet: Energy
-    renew_elec: Energy
-    renew_orenew: Energy
-
-    @classmethod
-    def calc_energy_supply_sum(
-        cls, branch_list: list[EnergySupplyBranch]
+        cls, *branches: BasicEnergySupplyBranch
     ) -> "EnergySupplySum":
 
-        total = 0
-        fossil = 0
-        fossil_gas = 0
-        fossil_coal = 0
-        fossil_diesel = 0
-        fossil_fueloil = 0
-        fossil_lpg = 0
-        fossil_opetpro = 0
-        fossil_ofossil = 0
-        renew = 0
-        renew_biomass = 0
-        renew_heatnet = 0
-        renew_elec = 0
-        renew_orenew = 0
-
-        for branch in branch_list:
-            total += branch.total.energy
-            fossil += branch.fossil.energy
-            fossil_gas += branch.fossil_gas.energy
-            fossil_coal += branch.fossil_coal.energy
-            fossil_diesel += branch.fossil_diesel.energy
-            fossil_fueloil += branch.fossil_fueloil.energy
-            fossil_lpg += branch.fossil_lpg.energy
-            fossil_opetpro += branch.fossil_opetpro.energy
-            fossil_ofossil += branch.fossil_ofossil.energy
-            renew += branch.renew.energy
-            renew_biomass += branch.renew_biomass.energy
-            renew_heatnet += branch.renew_heatnet.energy
-            renew_elec += branch.renew_elec.energy
-            renew_orenew += branch.renew_orenew.energy
+        total = sum(branch.total.energy for branch in branches)
+        fossil = sum(branch.fossil.energy for branch in branches)
+        fossil_gas = sum(branch.fossil_gas.energy for branch in branches)
+        fossil_coal = sum(branch.fossil_coal.energy for branch in branches)
+        fossil_diesel = sum(branch.fossil_diesel.energy for branch in branches)
+        fossil_fueloil = sum(branch.fossil_fueloil.energy for branch in branches)
+        fossil_lpg = sum(branch.fossil_lpg.energy for branch in branches)
+        fossil_opetpro = sum(branch.fossil_opetpro.energy for branch in branches)
+        fossil_ofossil = sum(branch.fossil_ofossil.energy for branch in branches)
+        renew = sum(branch.renew.energy for branch in branches)
+        renew_biomass = sum(branch.renew_biomass.energy for branch in branches)
+        renew_heatnet = sum(branch.renew_heatnet.energy for branch in branches)
+        renew_elec = sum(branch.renew_elec.energy for branch in branches)
+        renew_orenew = sum(branch.renew_orenew.energy for branch in branches)
 
         total = Energy(energy=total)
         fossil = Energy(energy=fossil)

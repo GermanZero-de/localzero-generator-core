@@ -7,11 +7,7 @@ from ...common.energy import Energy
 
 from ..energy_demand import Production
 
-from .supply_branches import (
-    EnergySupplySubBranch,
-    EnergySupplyBranch,
-    EnergySupplySum,
-)
+from .supply_branches import EnergySupplySubBranch, EnergySupplySum
 
 
 @dataclass(kw_only=True)
@@ -59,8 +55,8 @@ def calc_supply(inputs: Inputs, production: Production) -> EnergySupply:
         sub_branch="ceram",
         branch="miner",
     )
-    miner = EnergySupplyBranch.calc_energy_supply_sum(
-        sub_branch_list=[miner_cement, miner_chalk, miner_glas, miner_ceram]
+    miner = EnergySupplySum.calc_energy_supply_sum(
+        miner_cement, miner_chalk, miner_glas, miner_ceram
     )
 
     chem_basic = EnergySupplySubBranch.calc_energy_supply_sub_branch(
@@ -81,9 +77,7 @@ def calc_supply(inputs: Inputs, production: Production) -> EnergySupply:
         sub_branch="other",
         branch="chem",
     )
-    chem = EnergySupplyBranch.calc_energy_supply_sum(
-        sub_branch_list=[chem_basic, chem_ammonia, chem_other]
-    )
+    chem = EnergySupplySum.calc_energy_supply_sum(chem_basic, chem_ammonia, chem_other)
 
     metal_steel_primary = EnergySupplySubBranch.calc_energy_supply_sub_branch(
         inputs=inputs,
@@ -106,8 +100,8 @@ def calc_supply(inputs: Inputs, production: Production) -> EnergySupply:
         branch="metal",
     )
 
-    metal = EnergySupplyBranch.calc_energy_supply_sum(
-        sub_branch_list=[metal_steel_primary, metal_steel_secondary, metal_nonfe]
+    metal = EnergySupplySum.calc_energy_supply_sum(
+        metal_steel_primary, metal_steel_secondary, metal_nonfe
     )
 
     other_paper = EnergySupplySubBranch.calc_energy_supply_sub_branch(
@@ -129,13 +123,11 @@ def calc_supply(inputs: Inputs, production: Production) -> EnergySupply:
         branch="other",
     )
 
-    other = EnergySupplyBranch.calc_energy_supply_sum(
-        sub_branch_list=[other_paper, other_food, other_further]
+    other = EnergySupplySum.calc_energy_supply_sum(
+        other_paper, other_food, other_further
     )
 
-    total = EnergySupplySum.calc_energy_supply_sum(
-        branch_list=[miner, metal, chem, other]
-    )
+    total = EnergySupplySum.calc_energy_supply_sum(miner, metal, chem, other)
 
     return EnergySupply(
         total=total.total,
