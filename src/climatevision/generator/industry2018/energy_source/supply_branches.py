@@ -131,34 +131,19 @@ class EnergySupplySum(BasicEnergySupplyBranch):
         renew_elec = sum(branch.renew_elec.energy for branch in branches)
         renew_orenew = sum(branch.renew_orenew.energy for branch in branches)
 
-        total = Energy(energy=total)
-        fossil = Energy(energy=fossil)
-        fossil_gas = Energy(energy=fossil_gas)
-        fossil_coal = Energy(energy=fossil_coal)
-        fossil_diesel = Energy(energy=fossil_diesel)
-        fossil_fueloil = Energy(energy=fossil_fueloil)
-        fossil_lpg = Energy(energy=fossil_lpg)
-        fossil_opetpro = Energy(energy=fossil_opetpro)
-        fossil_ofossil = Energy(energy=fossil_ofossil)
-        renew = Energy(energy=renew)
-        renew_biomass = Energy(energy=renew_biomass)
-        renew_heatnet = Energy(energy=renew_heatnet)
-        renew_elec = Energy(energy=renew_elec)
-        renew_orenew = Energy(energy=renew_orenew)
-
         return cls(
-            total=total,
-            fossil=fossil,
-            fossil_gas=fossil_gas,
-            fossil_coal=fossil_coal,
-            fossil_diesel=fossil_diesel,
-            fossil_fueloil=fossil_fueloil,
-            fossil_lpg=fossil_lpg,
-            fossil_opetpro=fossil_opetpro,
-            fossil_ofossil=fossil_ofossil,
-            renew=renew,
-            renew_biomass=renew_biomass,
-            renew_heatnet=renew_heatnet,
-            renew_elec=renew_elec,
-            renew_orenew=renew_orenew,
+            total=Energy(energy=total),
+            fossil=Energy(energy=fossil),
+            fossil_gas=Energy(energy=fossil_gas),
+            fossil_coal=Energy(energy=fossil_coal),
+            fossil_diesel=Energy(energy=fossil_diesel),
+            fossil_fueloil=Energy(energy=fossil_fueloil),
+            fossil_lpg=Energy(energy=fossil_lpg),
+            fossil_opetpro=Energy(energy=fossil_opetpro),
+            fossil_ofossil=Energy(energy=fossil_ofossil),
+            renew=Energy(energy=renew),
+            renew_biomass=Energy(energy=renew_biomass),
+            renew_heatnet=Energy(energy=renew_heatnet),
+            renew_elec=Energy(energy=renew_elec),
+            renew_orenew=Energy(energy=renew_orenew),
         )
