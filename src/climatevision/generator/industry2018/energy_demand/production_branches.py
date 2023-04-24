@@ -52,13 +52,10 @@ class ProductionSubBranch:
             "Fact_I_P_" + branch + "_" + sub_branch + "_ratio_prodvol_to_fec"
         )
 
-        pct_energy = fact("Fact_I_P_" + branch + "_fec_pct_of_" + sub_branch)
-
         energy = production_volume / energy_use_factor
 
         return cls(
             energy=energy,
-            pct_energy=pct_energy,  # to be consistend with energy based calculation, factor not needed
             prod_volume=production_volume,
             energy_use_factor=energy_use_factor,
             CO2e_combustion_based=CO2e_combustion_based,
