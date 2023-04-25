@@ -64,7 +64,7 @@ def calc_production(inputs: Inputs, t18: T18, i18: I18) -> Production:
         ),
     )
 
-    total = EnergyWithCO2ePerMWh.calc_sum(
+    total = EnergyWithCO2ePerMWh.sum(
         petrol,
         jetfuel,
         diesel,

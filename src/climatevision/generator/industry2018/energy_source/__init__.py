@@ -3,151 +3,135 @@
 from dataclasses import dataclass
 
 from ...inputs import Inputs
-from ...common.energy import Energy, EnergyWithPercentage
+from ...common.energy import Energy
+
 from ..energy_demand import Production
-from ..energy_branches import (
-    EnergySourceSubBranch,
-    EnergySourceBranch,
-    EnergySourceSum,
-)
+
+from .supply_branches import EnergySupplySubBranch, EnergySupplySum
 
 
 @dataclass(kw_only=True)
-class EnergySource:
-    s: EnergyWithPercentage
-    s_fossil: Energy
-    s_fossil_gas: EnergyWithPercentage
-    s_fossil_coal: EnergyWithPercentage
-    s_fossil_diesel: EnergyWithPercentage
-    s_fossil_fueloil: EnergyWithPercentage
-    s_fossil_lpg: EnergyWithPercentage
-    s_fossil_opetpro: EnergyWithPercentage
-    s_fossil_ofossil: EnergyWithPercentage
-    s_renew: Energy
-    s_renew_biomass: EnergyWithPercentage
-    s_renew_heatnet: EnergyWithPercentage
-    s_renew_elec: EnergyWithPercentage
-    s_renew_orenew: EnergyWithPercentage
+class EnergySupply:
+    total: Energy
+    fossil: Energy
+    fossil_gas: Energy
+    fossil_coal: Energy
+    fossil_diesel: Energy
+    fossil_fueloil: Energy
+    fossil_lpg: Energy
+    fossil_opetpro: Energy
+    fossil_ofossil: Energy
+    renew: Energy
+    renew_biomass: Energy
+    renew_heatnet: Energy
+    renew_elec: Energy
+    renew_orenew: Energy
 
 
-def calc_supply(inputs: Inputs, production: Production) -> EnergySource:
+def calc_supply(inputs: Inputs, production: Production) -> EnergySupply:
 
     # do for all subbranches + copy structure for branches from production_branches
-    s_miner_cement = EnergySourceSubBranch.calc_energy_source_sub_branch(
+    miner_cement = EnergySupplySubBranch.calc_sub_branch(
         inputs=inputs,
         energy_demand=production.miner_cement.energy,
         sub_branch="cement",
         branch="miner",
     )
-    s_miner_chalk = EnergySourceSubBranch.calc_energy_source_sub_branch(
+    miner_chalk = EnergySupplySubBranch.calc_sub_branch(
         inputs=inputs,
         energy_demand=production.miner_chalk.energy,
         sub_branch="chalk",
         branch="miner",
     )
-    s_miner_glas = EnergySourceSubBranch.calc_energy_source_sub_branch(
+    miner_glas = EnergySupplySubBranch.calc_sub_branch(
         inputs=inputs,
         energy_demand=production.miner_glas.energy,
         sub_branch="glas",
         branch="miner",
     )
-    s_miner_ceram = EnergySourceSubBranch.calc_energy_source_sub_branch(
+    miner_ceram = EnergySupplySubBranch.calc_sub_branch(
         inputs=inputs,
         energy_demand=production.miner_ceram.energy,
         sub_branch="ceram",
         branch="miner",
     )
-    s_miner = EnergySourceBranch.calc_energy_source_sum(
-        sub_branch_list=[s_miner_cement, s_miner_chalk, s_miner_glas, s_miner_ceram]
-    )
+    miner = EnergySupplySum.sum(miner_cement, miner_chalk, miner_glas, miner_ceram)
 
-    s_chem_basic = EnergySourceSubBranch.calc_energy_source_sub_branch(
+    chem_basic = EnergySupplySubBranch.calc_sub_branch(
         inputs=inputs,
         energy_demand=production.chem_basic.energy,
         sub_branch="basic",
         branch="chem",
     )
-    s_chem_ammonia = EnergySourceSubBranch.calc_energy_source_sub_branch(
+    chem_ammonia = EnergySupplySubBranch.calc_sub_branch(
         inputs=inputs,
         energy_demand=production.chem_ammonia.energy,
         sub_branch="basic",  # assumtion same as chem basic (TODO Find specific factors for ammonia production)
         branch="chem",
     )
-    s_chem_other = EnergySourceSubBranch.calc_energy_source_sub_branch(
+    chem_other = EnergySupplySubBranch.calc_sub_branch(
         inputs=inputs,
         energy_demand=production.chem_other.energy,
         sub_branch="other",
         branch="chem",
     )
-    s_chem = EnergySourceBranch.calc_energy_source_sum(
-        sub_branch_list=[s_chem_basic, s_chem_ammonia, s_chem_other]
-    )
+    chem = EnergySupplySum.sum(chem_basic, chem_ammonia, chem_other)
 
-    s_metal_steel_primary = EnergySourceSubBranch.calc_energy_source_sub_branch(
+    metal_steel_primary = EnergySupplySubBranch.calc_sub_branch(
         inputs=inputs,
         energy_demand=production.metal_steel_primary.energy,
         sub_branch="steel_primary",
         branch="metal",
     )
-
-    s_metal_steel_secondary = EnergySourceSubBranch.calc_energy_source_sub_branch(
+    metal_steel_secondary = EnergySupplySubBranch.calc_sub_branch(
         inputs=inputs,
         energy_demand=production.metal_steel_secondary.energy,
         sub_branch="steel_secondary",
         branch="metal",
     )
-
-    s_metal_nonfe = EnergySourceSubBranch.calc_energy_source_sub_branch(
+    metal_nonfe = EnergySupplySubBranch.calc_sub_branch(
         inputs=inputs,
         energy_demand=production.metal_nonfe.energy,
         sub_branch="nonfe",
         branch="metal",
     )
+    metal = EnergySupplySum.sum(metal_steel_primary, metal_steel_secondary, metal_nonfe)
 
-    s_metal = EnergySourceBranch.calc_energy_source_sum(
-        sub_branch_list=[s_metal_steel_primary, s_metal_steel_secondary, s_metal_nonfe]
-    )
-
-    s_other_paper = EnergySourceSubBranch.calc_energy_source_sub_branch(
+    other_paper = EnergySupplySubBranch.calc_sub_branch(
         inputs=inputs,
         energy_demand=production.other_paper.energy,
         sub_branch="paper",
         branch="other",
     )
-    s_other_food = EnergySourceSubBranch.calc_energy_source_sub_branch(
+    other_food = EnergySupplySubBranch.calc_sub_branch(
         inputs=inputs,
         energy_demand=production.other_food.energy,
         sub_branch="food",
         branch="other",
     )
-    s_other_further = EnergySourceSubBranch.calc_energy_source_sub_branch(
+    other_further = EnergySupplySubBranch.calc_sub_branch(
         inputs=inputs,
         energy_demand=production.other_further.energy,
         sub_branch="further",
         branch="other",
     )
+    other = EnergySupplySum.sum(other_paper, other_food, other_further)
 
-    s_other = EnergySourceBranch.calc_energy_source_sum(
-        sub_branch_list=[s_other_paper, s_other_food, s_other_further]
-    )
+    total = EnergySupplySum.sum(miner, metal, chem, other)
 
-    s = EnergySourceSum.calc_energy_source_sum(
-        branch_list=[s_miner, s_metal, s_chem, s_other]
-    )
-
-    return EnergySource(
-        s=s.s,
-        s_fossil=s.s_fossil,
-        s_fossil_gas=s.s_fossil_gas,
-        s_fossil_coal=s.s_fossil_coal,
-        s_fossil_diesel=s.s_fossil_diesel,
-        s_fossil_fueloil=s.s_fossil_fueloil,
-        s_fossil_lpg=s.s_fossil_lpg,
-        s_fossil_opetpro=s.s_fossil_opetpro,
-        s_fossil_ofossil=s.s_fossil_ofossil,
-        s_renew=s.s_renew,
-        s_renew_biomass=s.s_renew_biomass,
-        s_renew_heatnet=s.s_renew_heatnet,
-        s_renew_elec=s.s_renew_elec,
-        s_renew_orenew=s.s_renew_orenew,
+    return EnergySupply(
+        total=total.total,
+        fossil=total.fossil,
+        fossil_gas=total.fossil_gas,
+        fossil_coal=total.fossil_coal,
+        fossil_diesel=total.fossil_diesel,
+        fossil_fueloil=total.fossil_fueloil,
+        fossil_lpg=total.fossil_lpg,
+        fossil_opetpro=total.fossil_opetpro,
+        fossil_ofossil=total.fossil_ofossil,
+        renew=total.renew,
+        renew_biomass=total.renew_biomass,
+        renew_heatnet=total.renew_heatnet,
+        renew_elec=total.renew_elec,
+        renew_orenew=total.renew_orenew,
     )

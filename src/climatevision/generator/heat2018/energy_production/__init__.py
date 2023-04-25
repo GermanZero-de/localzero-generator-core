@@ -127,7 +127,7 @@ def calc_production(
     # TODO: Check, why heatnet_lheatpump is completely 0
     heatnet_lheatpump = EnergyWithCO2ePerMWh(energy=0)
 
-    heatnet = EnergyWithCO2ePerMWh.calc_sum(heatnet_cogen, heatnet_plant)
+    heatnet = EnergyWithCO2ePerMWh.sum(heatnet_cogen, heatnet_plant)
 
     biomass = EnergyWithCO2ePerMWh(
         energy=entries.r_biomass_fec
@@ -160,9 +160,9 @@ def calc_production(
         CO2e_production_based_per_MWh=fact("Fact_H_P_orenew_ratio_CO2e_pb_to_fec_2018"),
     )
 
-    orenew = EnergyWithCO2ePerMWh.calc_sum(solarth, heatpump)
+    orenew = EnergyWithCO2ePerMWh.sum(solarth, heatpump)
 
-    total = EnergyWithCO2ePerMWh.calc_sum(
+    total = EnergyWithCO2ePerMWh.sum(
         gas,
         lpg,
         fueloil,
