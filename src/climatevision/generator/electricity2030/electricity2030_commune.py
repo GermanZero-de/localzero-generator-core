@@ -88,7 +88,6 @@ def calc_production_renewable_geothermal(
 
     Kalkulationszeitraum = entries.m_duration_target
 
-    pct_energy = ass("Ass_E_P_renew_geoth_pct_of_nep_2035")
     CO2e_total = 0
     invest = 0
     demand_emplo = 0
@@ -141,7 +140,6 @@ def calc_production_renewable_geothermal(
     return RenewableGeothermalProduction(
         energy=energy,
         energy_installable=energy_installable,
-        pct_energy=pct_energy,
         CO2e_combustion_based_per_MWh=CO2e_combustion_based_per_MWh,
         CO2e_combustion_based=CO2e_combustion_based,
         cost_climate_saved=cost_climate_saved,
@@ -1456,9 +1454,7 @@ def calc(
     p_renew_biomass.energy = p_renew.energy * ass(
         "Ass_E_P_renew_biomass_pct_of_nep_2035"
     )
-
-    p_renew_geoth.energy = p_renew.energy * p_renew_geoth.pct_energy
-
+    p_renew_geoth.energy = p_renew.energy * ass("Ass_E_P_renew_geoth_pct_of_nep_2035")
     p_renew_hydro.energy = p_renew.energy * ass("Ass_E_P_renew_hydro_pct_of_nep_2035")
     p_renew_reverse.energy = p_renew.energy * ass(
         "Ass_E_P_renew_reverse_pct_of_nep_2035"
