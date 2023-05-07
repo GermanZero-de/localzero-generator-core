@@ -5337,7 +5337,7 @@
         },
         "p_renew_pv_roof": {
             "energy": 0,
-            "pct_energy": 0,
+            "pct_energy": null,
             "change_energy_MWh": -27439181.68183996,
             "change_energy_pct": -1.0,
             "cost_fuel_per_MWh": null,
@@ -5389,7 +5389,7 @@
         },
         "p_renew_pv_facade": {
             "energy": 0,
-            "pct_energy": 0,
+            "pct_energy": null,
             "change_energy_MWh": -243653.93569939877,
             "change_energy_pct": -1.0,
             "cost_fuel_per_MWh": null,
@@ -5441,7 +5441,7 @@
         },
         "p_renew_pv_park": {
             "energy": 0,
-            "pct_energy": 0,
+            "pct_energy": null,
             "change_energy_MWh": -9558731.32359179,
             "change_energy_pct": -1.0,
             "cost_fuel_per_MWh": null,
@@ -5493,7 +5493,7 @@
         },
         "p_renew_pv_agri": {
             "energy": 0,
-            "pct_energy": 0,
+            "pct_energy": null,
             "change_energy_MWh": -243653.93569939877,
             "change_energy_pct": -1.0,
             "cost_fuel_per_MWh": null,
@@ -5596,8 +5596,8 @@
             "lifecycle": null
         },
         "p_renew_wind_onshore": {
-            "energy": 0.0,
-            "pct_energy": 0,
+            "energy": 0,
+            "pct_energy": null,
             "change_energy_MWh": -72916457.04808134,
             "change_energy_pct": -1.0,
             "cost_fuel_per_MWh": null,
@@ -5700,8 +5700,8 @@
             "lifecycle": null
         },
         "p_renew_biomass": {
-            "energy": 0.0,
-            "pct_energy": 0,
+            "energy": 0,
+            "pct_energy": null,
             "change_energy_MWh": 0,
             "change_energy_pct": 0.0,
             "cost_fuel_per_MWh": 75.75,
@@ -5785,8 +5785,8 @@
             "full_load_hour": 4238.0952380952385
         },
         "p_renew_hydro": {
-            "energy": 0.0,
-            "pct_energy": 0,
+            "energy": 0,
+            "pct_energy": null,
             "change_energy_MWh": -14377892.939058295,
             "change_energy_pct": -1.0,
             "cost_fuel_per_MWh": null,
