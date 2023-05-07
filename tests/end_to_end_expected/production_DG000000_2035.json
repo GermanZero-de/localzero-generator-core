@@ -4957,13 +4957,13 @@
         },
         "d": {
             "energy": 1127423497.6296258,
-            "pct_energy": 1.0000000000000002,
+            "pct_energy": null,
             "change_energy_MWh": 613927321.2346867,
             "change_energy_pct": 1.1955830431783085
         },
         "d_r": {
             "energy": 114847746.83726408,
-            "pct_energy": 0.10186744118667744,
+            "pct_energy": null,
             "change_energy_MWh": -11752253.162735924,
             "change_energy_pct": -0.09282980381307997,
             "cost_fuel_per_MWh": 298.8,
@@ -4971,7 +4971,7 @@
         },
         "d_b": {
             "energy": 139667890.80982703,
-            "pct_energy": 0.12388236638980347,
+            "pct_energy": null,
             "change_energy_MWh": -4022109.1901729703,
             "change_energy_pct": -0.02799157345795094,
             "cost_fuel_per_MWh": 215.6,
@@ -4979,13 +4979,13 @@
         },
         "d_h": {
             "energy": 12427302.440830193,
-            "pct_energy": 0.011022745638137066,
+            "pct_energy": null,
             "change_energy_MWh": 12427302.440830193,
             "change_energy_pct": 0.0
         },
         "d_i": {
             "energy": 154883800.0,
-            "pct_energy": 0.13737854526328266,
+            "pct_energy": null,
             "change_energy_MWh": -71213405.29870817,
             "change_energy_pct": -0.3149680917312738,
             "cost_fuel_per_MWh": 153.0,
@@ -4993,7 +4993,7 @@
         },
         "d_t": {
             "energy": 111514071.51773661,
-            "pct_energy": 0.09891054404329129,
+            "pct_energy": null,
             "change_energy_MWh": 99655100.42150572,
             "change_energy_pct": 8.403351320518766,
             "cost_fuel_per_MWh": 298.8,
@@ -5001,7 +5001,7 @@
         },
         "d_a": {
             "energy": 6561907.969731979,
-            "pct_energy": 0.005820268943771524,
+            "pct_energy": null,
             "change_energy_MWh": 1311907.969731979,
             "change_energy_pct": 0.2498872323299008,
             "cost_fuel_per_MWh": 298.8,
@@ -5009,13 +5009,13 @@
         },
         "d_f_hydrogen_reconv": {
             "energy": 109136933.21911676,
-            "pct_energy": 0.09680207433016422,
+            "pct_energy": null,
             "change_energy_MWh": 109136933.21911676,
             "change_energy_pct": null
         },
         "d_f_wo_hydrogen": {
             "energy": 478383844.83511925,
-            "pct_energy": 0.4243160142048724,
+            "pct_energy": null,
             "change_energy_MWh": 478383844.83511925,
             "change_energy_pct": null
         },
@@ -5233,7 +5233,7 @@
         },
         "p_renew": {
             "energy": 308419911.6094157,
-            "pct_energy": 0.9999999999999999,
+            "pct_energy": null,
             "change_energy_MWh": 126488216.3126888,
             "change_energy_pct": 0.6952511276629896,
             "cost_fuel_per_MWh": null,
@@ -5285,7 +5285,7 @@
         },
         "p_renew_pv": {
             "energy": 0,
-            "pct_energy": 0,
+            "pct_energy": null,
             "change_energy_MWh": -37485220.87683055,
             "change_energy_pct": -1.0,
             "cost_fuel_per_MWh": null,
@@ -5545,7 +5545,7 @@
         },
         "p_renew_wind": {
             "energy": 245325507.1901079,
-            "pct_energy": 0.795426942151482,
+            "pct_energy": null,
             "change_energy_MWh": 156490668.67378345,
             "change_energy_pct": 1.7615911875049612,
             "cost_fuel_per_MWh": null,
@@ -5649,7 +5649,7 @@
         },
         "p_renew_wind_offshore": {
             "energy": 245325507.1901079,
-            "pct_energy": 1.0,
+            "pct_energy": null,
             "change_energy_MWh": 229407125.7218648,
             "change_energy_pct": 14.411460498011555,
             "cost_fuel_per_MWh": null,
@@ -5753,7 +5753,7 @@
         },
         "p_renew_geoth": {
             "energy": 16241869.318713654,
-            "pct_energy": 0.05266154585791603,
+            "pct_energy": null,
             "change_energy_MWh": 16087820.465795172,
             "change_energy_pct": 104.433237645128,
             "energy_installable": 23202670.455305222,
@@ -5838,7 +5838,7 @@
         },
         "p_renew_reverse": {
             "energy": 46852535.10059411,
-            "pct_energy": 0.15191151199060182,
+            "pct_energy": null,
             "change_energy_MWh": 46852535.10059411,
             "change_energy_pct": null,
             "cost_fuel_per_MWh": null,
@@ -5890,7 +5890,7 @@
         },
         "p_local": {
             "energy": 858953034.1562418,
-            "pct_energy": 0.9999999999999998,
+            "pct_energy": null,
             "change_energy_MWh": 615183181.7616446,
             "change_energy_pct": 2.5236228997088217,
             "cost_fuel_per_MWh": null,
@@ -5942,7 +5942,7 @@
         },
         "p_local_pv": {
             "energy": 475922580.0601817,
-            "pct_energy": 0.5540728784172527,
+            "pct_energy": null,
             "change_energy_MWh": 423395000.87431985,
             "change_energy_pct": 8.060432394498768,
             "cost_fuel_per_MWh": null,
@@ -5994,7 +5994,7 @@
         },
         "p_local_pv_roof": {
             "energy": 138499409.80822656,
-            "pct_energy": 0.2910124789429258,
+            "pct_energy": null,
             "change_energy_MWh": 99963191.3573139,
             "change_energy_pct": 2.5940062459591564,
             "cost_fuel_per_MWh": null,
@@ -6046,7 +6046,7 @@
         },
         "p_local_pv_facade": {
             "energy": 7591839.627259885,
-            "pct_energy": 0.015951837431835817,
+            "pct_energy": null,
             "change_energy_MWh": 7367174.418149039,
             "change_energy_pct": 32.791790270091255,
             "cost_fuel_per_MWh": null,
@@ -6098,7 +6098,7 @@
         },
         "p_local_pv_park": {
             "energy": 329831330.62469524,
-            "pct_energy": 0.6930356836252384,
+            "pct_energy": null,
             "change_energy_MWh": 316406828.2954839,
             "change_energy_pct": 23.569352556704526,
             "cost_fuel_per_MWh": null,
@@ -6150,7 +6150,7 @@
         },
         "p_local_pv_agri": {
             "energy": 0,
-            "pct_energy": 0.0,
+            "pct_energy": null,
             "change_energy_MWh": -342193.1966269565,
             "change_energy_pct": -1.0,
             "cost_fuel_per_MWh": null,
@@ -6202,7 +6202,7 @@
         },
         "p_local_wind_onshore": {
             "energy": 302741438.98733795,
-            "pct_energy": 0.35245400731918236,
+            "pct_energy": null,
             "change_energy_MWh": 191788180.8873247,
             "change_energy_pct": 1.7285493384470678,
             "cost_fuel_per_MWh": null,
@@ -6254,7 +6254,7 @@
         },
         "p_local_biomass": {
             "energy": 53126524.0224466,
-            "pct_energy": 0.06185032465090868,
+            "pct_energy": null,
             "change_energy_MWh": 0.0,
             "change_energy_pct": null,
             "cost_fuel_per_MWh": 75.75,
@@ -6358,7 +6358,7 @@
         },
         "p_local_hydro": {
             "energy": 27162491.086275436,
-            "pct_energy": 0.03162278961265609,
+            "pct_energy": null,
             "change_energy_MWh": 0.0,
             "change_energy_pct": null,
             "cost_fuel_per_MWh": null,
