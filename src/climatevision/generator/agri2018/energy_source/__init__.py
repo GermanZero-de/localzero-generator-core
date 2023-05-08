@@ -3,14 +3,14 @@
 from dataclasses import dataclass
 
 from ...inputs import Inputs
+from ...common.energy_with_co2e import EnergyWithCO2e
 
-from .co2e_from_energy_use import CO2eFromEnergyUse
 from .co2e_from_energy_use_detail import CO2eFromEnergyUseDetail
 
 
 @dataclass(kw_only=True)
 class EnergySupply:
-    total: CO2eFromEnergyUse
+    total: EnergyWithCO2e
     petrol: CO2eFromEnergyUseDetail
     diesel: CO2eFromEnergyUseDetail
     fueloil: CO2eFromEnergyUseDetail
@@ -63,7 +63,7 @@ def calc_supply(inputs: Inputs) -> EnergySupply:
         energy=entries.a_elec_fec,
         CO2e_combustion_based_per_MWh=inputs.fact("Fact_RB_S_elec_ratio_CO2e_to_fec"),
     )
-    total = CO2eFromEnergyUse.sum(petrol, diesel, fueloil, lpg, gas, biomass, elec)
+    total = EnergyWithCO2e.sum(petrol, diesel, fueloil, lpg, gas, biomass, elec)
 
     return EnergySupply(
         petrol=petrol,
