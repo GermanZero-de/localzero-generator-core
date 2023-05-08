@@ -35,26 +35,15 @@ class FossilFuelsProduction:
         energy_18: float,
         CO2e_total_18: float,
     ) -> "FossilFuelsProduction":
-        energy = 0
-        CO2e_total_2021_estimated = 0
-        cost_fuel = 0
-        cost_mro = 0
-        CO2e_combustion_based = 0
-        change_cost_energy = 0
-        change_cost_mro = 0
-        cost_climate_saved = 0
-        change_CO2e_t = 0
-
-        for ff in ffs:
-            energy += ff.energy
-            CO2e_total_2021_estimated += ff.CO2e_total_2021_estimated
-            cost_fuel += ff.cost_fuel
-            cost_mro += ff.cost_mro
-            CO2e_combustion_based += ff.CO2e_combustion_based
-            change_cost_energy += ff.change_cost_energy
-            change_cost_mro += ff.change_cost_mro
-            cost_climate_saved += ff.cost_climate_saved
-            change_CO2e_t += ff.change_CO2e_t
+        energy = sum(ff.energy for ff in ffs)
+        CO2e_total_2021_estimated = sum(ff.CO2e_total_2021_estimated for ff in ffs)
+        cost_fuel = sum(ff.cost_fuel for ff in ffs)
+        cost_mro = sum(ff.cost_mro for ff in ffs)
+        CO2e_combustion_based = sum(ff.CO2e_combustion_based for ff in ffs)
+        change_cost_energy = sum(ff.change_cost_energy for ff in ffs)
+        change_cost_mro = sum(ff.change_cost_mro for ff in ffs)
+        cost_climate_saved = sum(ff.cost_climate_saved for ff in ffs)
+        change_CO2e_t = sum(ff.change_CO2e_t for ff in ffs)
 
         change_energy_MWh = energy - energy_18
 
