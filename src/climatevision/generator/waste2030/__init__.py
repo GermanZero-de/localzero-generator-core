@@ -23,7 +23,7 @@ from ..transport2030.t30 import T30
 
 
 @dataclass(kw_only=True)
-class landfilling:
+class Landfilling:
     CO2e_production_based: float
     CO2e_total: float
     CO2e_total_2021_estimated: float
@@ -73,7 +73,7 @@ class landfilling:
 
 
 @dataclass(kw_only=True)
-class organic_treatment:
+class Organic_treatment:
     prod_volume: float
     CO2e_pb_per_t: float
     CO2e_production_based: float
@@ -153,7 +153,7 @@ class organic_treatment:
 
 
 @dataclass(kw_only=True)
-class wastewater:
+class Wastewater:
     energy: float
     prod_volume: float
     CO2e_pb_per_t: float
@@ -266,18 +266,18 @@ class EnergySupplyDetail:
 
 @dataclass(kw_only=True)
 class WasteLines:
-    p_landfilling: landfilling
-    p_organic_treatment: organic_treatment
-    p_wastewater: wastewater
+    p_landfilling: Landfilling
+    p_organic_treatment: Organic_treatment
+    p_wastewater: Wastewater
 
     s_elec: EnergySupplyDetail
 
     @classmethod
     def calc_waste_lines(cls, inputs: Inputs, w18: W18):
 
-        p_landfilling = landfilling.calc(inputs=inputs, w18=w18)
-        p_organic_treatment = organic_treatment.calc(inputs=inputs, w18=w18)
-        p_wastewater = wastewater.calc(inputs=inputs, w18=w18)
+        p_landfilling = Landfilling.calc(inputs=inputs, w18=w18)
+        p_organic_treatment = Organic_treatment.calc(inputs=inputs, w18=w18)
+        p_wastewater = Wastewater.calc(inputs=inputs, w18=w18)
 
         electricity_demand = p_wastewater.demand_electricity
 
@@ -471,9 +471,9 @@ class EnergyProduction:
     def calc(
         cls,
         w18: W18,
-        landfilling: landfilling,
-        organic_treatment: organic_treatment,
-        wastewater: wastewater,
+        landfilling: Landfilling,
+        organic_treatment: Organic_treatment,
+        wastewater: Wastewater,
         pyr: Pyrolysis,
     ):
 
@@ -544,9 +544,9 @@ class EnergyProduction:
 
 @dataclass(kw_only=True)
 class W30:
-    p_landfilling: landfilling
-    p_organic_treatment: organic_treatment
-    p_wastewater: wastewater
+    p_landfilling: Landfilling
+    p_organic_treatment: Organic_treatment
+    p_wastewater: Wastewater
 
     pyrolysis: Pyrolysis
 
