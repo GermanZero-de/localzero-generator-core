@@ -10,17 +10,21 @@ from ..inputs import Inputs
 from .i18 import I18
 from . import energy_demand, energy_source
 
-# for mineral industry the energy_use_factor still needs to be added to facts
-def calc(inputs: Inputs) -> I18:
 
-    production = energy_demand.calc_production(inputs)
-    supply = energy_source.calc_supply(inputs)
+def calc(inputs: Inputs, inputs_germany: Inputs) -> I18:
+    production_germany = energy_demand.calc_production_by_energy(inputs_germany)
+
+    production = energy_demand.calc_production_by_co2e(
+        inputs, inputs_germany, production_germany
+    )
+    supply = energy_source.calc_supply(inputs, production)
 
     i = production.total
 
     return I18(
         i=i,
         p=production.total,
+        p_germany=production_germany.total,
         p_miner=production.miner,
         p_miner_cement=production.miner_cement,
         p_miner_chalk=production.miner_chalk,
@@ -52,7 +56,6 @@ def calc(inputs: Inputs) -> I18:
         s_renew=supply.renew,
         s_renew_biomass=supply.renew_biomass,
         s_renew_heatnet=supply.renew_heatnet,
-        s_renew_heatpump=supply.renew_heatpump,
-        s_renew_solarth=supply.renew_solarth,
         s_renew_elec=supply.renew_elec,
+        s_renew_orenew=supply.renew_orenew,
     )

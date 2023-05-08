@@ -18,7 +18,13 @@ class EnergyChangePOperationElecHeatpump(EnergyChangeAgri):
     a18: InitVar[A18]
     operation_heat: InitVar[EnergyChangePOperationHeat]
 
-    def __post_init__(self, inputs: Inputs, what: str, a18: A18, operation_heat: EnergyChangePOperationHeat):  # type: ignore
+    def __post_init__(  # type: ignore[override]
+        self,
+        inputs: Inputs,
+        what: str,
+        a18: A18,
+        operation_heat: EnergyChangePOperationHeat,
+    ):
 
         self.energy = operation_heat.demand_heatpump / inputs.fact(
             "Fact_R_S_heatpump_mean_annual_performance_factor_all"

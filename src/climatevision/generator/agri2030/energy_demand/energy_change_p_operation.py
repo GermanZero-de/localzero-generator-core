@@ -30,7 +30,7 @@ class EnergyChangePOperation(EnergyChangeAgri, Invest):
     operation_elec_elcon: InitVar[EnergyChangePOperationElecElcon]
     operation_elec_heatpump: InitVar[EnergyChangePOperationElecHeatpump]
 
-    def __post_init__(  # type: ignore
+    def __post_init__(  # type: ignore[override]
         self,
         inputs: Inputs,
         what: str,

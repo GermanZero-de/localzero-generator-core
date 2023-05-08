@@ -5,14 +5,13 @@ from dataclasses import dataclass
 from ...inputs import Inputs
 from ...lulucf2018.l18 import L18
 from ...business2018.b18 import B18
-from ...common.energy import Energy, EnergyWithPercentage
+from ...common.energy import Energy, EnergyPerM2
 from ...common.co2_equivalent_emission import CO2eEmission
 
 from .p import P
 from .co2e_from_fermentation_or_manure import CO2eFromFermentationOrManure
 from .co2e_from_soil import CO2eFromSoil
 from .co2e_from_other import CO2eFromOther
-from .operation_heat_energy import OperationHeatEnergy
 
 
 @dataclass(kw_only=True)
@@ -56,17 +55,16 @@ class Production:
     other_kas: CO2eFromOther
 
     operation: Energy
-    operation_heat: OperationHeatEnergy
-    operation_elec_elcon: EnergyWithPercentage
+    operation_heat: EnergyPerM2
+    operation_elec_elcon: Energy
     operation_elec_heatpump: Energy
-    operation_vehicles: EnergyWithPercentage
+    operation_vehicles: Energy
 
 
 def calc_production(
     inputs: Inputs,
     l18: L18,
     b18: B18,
-    total_energy: float,
     s_elec_energy: float,
     s_petrol_energy: float,
     s_diesel_energy: float,
@@ -77,6 +75,17 @@ def calc_production(
 ) -> Production:
 
     entries = inputs.entries
+
+    # Energy
+    total_energy = (
+        entries.a_petrol_fec
+        + entries.a_diesel_fec
+        + entries.a_fueloil_fec
+        + entries.a_lpg_fec
+        + entries.a_gas_fec
+        + entries.a_biomass_fec
+        + entries.a_elec_fec
+    )
 
     # Fermen
     fermen_dairycow = CO2eFromFermentationOrManure.calc_fermen(inputs, "dairycow")
@@ -198,15 +207,10 @@ def calc_production(
 
     operation_elec_heatpump = Energy(energy=0)
     operation = Energy(energy=total_energy)
-    operation_elec_elcon = EnergyWithPercentage(
-        energy=s_elec_energy, total_energy=operation.energy
-    )
-    operation_vehicles = EnergyWithPercentage(
-        energy=s_petrol_energy + s_diesel_energy, total_energy=operation.energy
-    )
-    operation_heat = OperationHeatEnergy(
+    operation_elec_elcon = Energy(energy=s_elec_energy)
+    operation_vehicles = Energy(energy=s_petrol_energy + s_diesel_energy)
+    operation_heat = EnergyPerM2(
         energy=s_fueloil_energy + s_lpg_energy + s_gas_energy + s_biomass_energy,
-        total_energy=operation.energy,
         area_m2=(
             b18.p_nonresi.area_m2
             * inputs.fact("Fact_A_P_energy_buildings_ratio_A_to_B")

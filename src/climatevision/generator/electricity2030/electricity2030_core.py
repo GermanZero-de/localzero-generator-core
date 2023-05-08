@@ -81,7 +81,6 @@ class Energy:
 
 @dataclass(kw_only=True)
 class EnergyDemand(Energy):
-    pct_energy: float = None  # type: ignore
     change_energy_MWh: float = None  # type: ignore
     change_energy_pct: float = None  # type: ignore
 
@@ -211,9 +210,8 @@ def calc_biomass_cogen(
 
     p_local_biomass_cogen = EColVars2030()
 
-    p_local_biomass_cogen.pct_energy = fact("Fact_E_P_renew_cogen_ratio_2018")
-    p_local_biomass_cogen.energy = (
-        p_local_biomass.energy * p_local_biomass_cogen.pct_energy
+    p_local_biomass_cogen.energy = p_local_biomass.energy * fact(
+        "Fact_E_P_renew_cogen_ratio_2018"
     )
 
     return p_local_biomass_cogen

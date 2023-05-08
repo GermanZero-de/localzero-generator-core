@@ -138,7 +138,6 @@ class Vars9(InvestCommune):
     demand_heat_rehab: float = None  # type: ignore
     emplo_existing: float = None  # type: ignore
     energy: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
 
 
 @dataclass(kw_only=True)
@@ -158,7 +157,6 @@ class Vars10:
     cost_fuel: float = None  # type: ignore
     cost_fuel_per_MWh: float = None  # type: ignore
     energy: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
 
 
 @dataclass(kw_only=True)
@@ -183,7 +181,6 @@ class Vars11(InvestCommune):
     energy: float = None  # type: ignore
     energy_installable: float = None  # type: ignore
     invest_per_x: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
     pct_of_wage: float = None  # type: ignore
     power_to_be_installed_pct: float = None  # type: ignore
     ratio_wage_to_emplo: float = None  # type: ignore
@@ -209,7 +206,6 @@ class Vars12(InvestCommune):
     energy: float = None  # type: ignore
     full_load_hour: float = None  # type: ignore
     invest_per_x: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
     pct_of_wage: float = None  # type: ignore
     power_installed: float = None  # type: ignore
     power_to_be_installed: float = None  # type: ignore
@@ -232,7 +228,6 @@ class Vars13:
     cost_fuel: float = None  # type: ignore
     cost_fuel_per_MWh: float = None  # type: ignore
     energy: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
 
 
 @dataclass(kw_only=True)
@@ -249,7 +244,6 @@ class Vars14:
     change_energy_pct: float = None  # type: ignore
     cost_climate_saved: float = None  # type: ignore
     energy: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
 
 
 @dataclass(kw_only=True)
@@ -267,7 +261,6 @@ class Vars15:
     cost_climate_saved: float = None  # type: ignore
     cost_fuel: float = None  # type: ignore
     energy: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
 
 
 @dataclass(kw_only=True)

@@ -4,6 +4,7 @@ from dataclasses import dataclass
 
 from ...inputs import Inputs
 from ...transport2018.t18 import T18
+from ...industry2018.i18 import I18
 from ...common.energy_with_co2e_per_mwh import EnergyWithCO2ePerMWh
 
 
@@ -19,7 +20,7 @@ class Production:
     total: EnergyWithCO2ePerMWh
 
 
-def calc_production(inputs: Inputs, t18: T18) -> Production:
+def calc_production(inputs: Inputs, t18: T18, i18: I18) -> Production:
 
     entries = inputs.entries
     fact = inputs.fact
@@ -39,7 +40,7 @@ def calc_production(inputs: Inputs, t18: T18) -> Production:
     )
     diesel = EnergyWithCO2ePerMWh(
         energy=entries.b_diesel_fec
-        + entries.i_diesel_fec
+        + i18.s_fossil_diesel.energy
         + t18.t.demand_diesel
         + entries.a_diesel_fec,
         CO2e_combustion_based_per_MWh=fact("Fact_F_P_diesel_ratio_CO2e_cb_to_fec_2018"),
@@ -63,7 +64,7 @@ def calc_production(inputs: Inputs, t18: T18) -> Production:
         ),
     )
 
-    total = EnergyWithCO2ePerMWh.calc_sum(
+    total = EnergyWithCO2ePerMWh.sum(
         petrol,
         jetfuel,
         diesel,

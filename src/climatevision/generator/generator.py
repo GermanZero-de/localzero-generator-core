@@ -123,7 +123,7 @@ class Result:
         return dataclass_to_result_dict(self)
 
 
-def calculate(inputs: Inputs) -> Result:
+def calculate(inputs: Inputs, inputs_germany: Inputs) -> Result:
     """This is the entry point to the actual calculation."""
     start_t = time()
     # 2018
@@ -134,13 +134,13 @@ def calculate(inputs: Inputs) -> Result:
     b18 = business2018.calc(inputs, r18=r18)
 
     print("Industry2018_calc", file=stderr)
-    i18 = industry2018.calc(inputs)
+    i18 = industry2018.calc(inputs, inputs_germany)
 
     print("Transport2018_calc", file=stderr)
     t18 = transport2018.calc(inputs)
 
     print("Fuels2018_calc", file=stderr)
-    f18 = fuels2018.calc(inputs, t18=t18)
+    f18 = fuels2018.calc(inputs, t18=t18, i18=i18)
 
     print("Lulucf2018_calc", file=stderr)
     l18 = lulucf2018.calc(inputs)
@@ -149,10 +149,10 @@ def calculate(inputs: Inputs) -> Result:
     a18 = agri2018.calc(inputs, l18=l18, b18=b18)
 
     print("Electricity2018_calc", file=stderr)
-    e18 = electricity2018.calc(inputs, t18=t18)
+    e18 = electricity2018.calc(inputs, t18=t18, i18=i18)
 
     print("Heat2018_calc", file=stderr)
-    h18 = heat2018.calc(inputs, t18=t18, e18=e18)
+    h18 = heat2018.calc(inputs, t18=t18, e18=e18, i18=i18)
 
     print("Waste2018_calc", file=stderr)
     w18 = W18.calc(inputs)
@@ -326,7 +326,14 @@ def calculate_with_default_inputs(ags: str, year: int) -> Result:
     """Calculate without the ability to override entries."""
     refdata = RefData.load()
     entries = make_entries(refdata, ags=ags, year=year)
+    if ags == "DG000000":
+        entries_germany = entries
+    else:
+        entries_germany = make_entries(refdata, ags="DG000000", year=year)
     inputs = Inputs(
         facts_and_assumptions=refdata.facts_and_assumptions(), entries=entries
     )
-    return calculate(inputs)
+    inputs_germany = Inputs(
+        facts_and_assumptions=refdata.facts_and_assumptions(), entries=entries_germany
+    )
+    return calculate(inputs, inputs_germany)

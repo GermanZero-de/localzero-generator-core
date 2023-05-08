@@ -14,7 +14,7 @@ from .energy_source import (
     Vars5,
     Vars6,
     Vars7,
-    EnergyWithPercentageWithCO2ePerMWh,
+    EnergyWithCO2ePerMWh,
 )
 
 
@@ -38,8 +38,8 @@ class B18:
     s_biomass: Vars7
     s_coal: Vars6
     s_heatnet: Vars6
-    s_elec_heating: EnergyWithPercentageWithCO2ePerMWh
+    s_elec_heating: EnergyWithCO2ePerMWh
     s_heatpump: Vars6
     s_solarth: Vars6
-    s_elec: EnergyWithPercentageWithCO2ePerMWh
+    s_elec: EnergyWithCO2ePerMWh
     rb: EnergyWithCO2e

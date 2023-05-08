@@ -18,7 +18,7 @@ class CO2eChangeHeatProduction(EnergyWithCO2e, CO2eChange, EnergyChange):
     what: InitVar[str]
     h18: InitVar[H18]
 
-    def __post_init__(  # type: ignore
+    def __post_init__(  # type: ignore[override]
         self,
         inputs: Inputs,
         what: str,
@@ -53,7 +53,6 @@ class CO2eChangeHeatProduction(EnergyWithCO2e, CO2eChange, EnergyChange):
 
 @dataclass(kw_only=True)
 class InvestPerX:
-    pct_energy: float
     invest_per_x: float
 
 
@@ -90,12 +89,12 @@ class InvestHeatProduction(InvestCommune):
 
 
 @dataclass(kw_only=True)
-class HeatProduction(EnergyWithCO2ePerMWh, CO2eChangeHeatProduction):
+class HeatProduction(EnergyWithCO2ePerMWh, CO2eChangeHeatProduction):  # type: ignore[override]
     inputs: InitVar[Inputs]
     what: InitVar[str]
     h18: InitVar[H18]
 
-    def __post_init__(  # type: ignore
+    def __post_init__(  # type: ignore[override]
         self,
         inputs: Inputs,
         what: str,

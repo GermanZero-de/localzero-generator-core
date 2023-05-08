@@ -4,7 +4,6 @@ from dataclasses import dataclass
 
 from ..utils import div
 
-from .energy import EnergyWithPercentage
 from .energy_with_co2e import EnergyWithCO2e
 
 
@@ -20,7 +19,10 @@ class EnergyWithCO2ePerMWh(EnergyWithCO2e):
         EnergyWithCO2e.__post_init__(self)
 
     @classmethod
-    def calc_sum(cls, *childs: "EnergyWithCO2ePerMWh") -> "EnergyWithCO2ePerMWh":
+    def sum(  # type: ignore[override]
+        cls,
+        *childs: "EnergyWithCO2ePerMWh",
+    ) -> "EnergyWithCO2ePerMWh":
         energy = sum(child.energy for child in childs)
 
         CO2e_combustion_based = sum(child.CO2e_combustion_based for child in childs)
@@ -39,13 +41,3 @@ class EnergyWithCO2ePerMWh(EnergyWithCO2e):
             CO2e_production_based_per_MWh=CO2e_production_based_per_MWh,
             CO2e_total=CO2e_total,
         )
-
-
-@dataclass(kw_only=True)
-class EnergyWithPercentageWithCO2ePerMWh(EnergyWithPercentage, EnergyWithCO2ePerMWh):
-    def __post_init__(  # type: ignore
-        self,
-        total_energy: float,
-    ):
-        EnergyWithCO2ePerMWh.__post_init__(self)
-        EnergyWithPercentage.__post_init__(self, total_energy)

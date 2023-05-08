@@ -14,7 +14,9 @@ class CO2eFromEnergyUse(CO2eEmission):
     energy: float
 
     @classmethod
-    def sum(cls, *CO2es: "CO2eFromEnergyUse") -> "CO2eFromEnergyUse":  # type: ignore
+    def sum(  # type: ignore[override]
+        cls, *CO2es: "CO2eFromEnergyUse"
+    ) -> "CO2eFromEnergyUse":
         return cls(
             CO2e_combustion_based=sum(c.CO2e_combustion_based for c in CO2es),
             CO2e_production_based=sum(c.CO2e_production_based for c in CO2es),

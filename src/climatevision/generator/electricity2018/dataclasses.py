@@ -54,7 +54,6 @@ class Vars6:
     cost_fuel: float = None  # type: ignore
     cost_mro: float = None  # type: ignore
     energy: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
 
 
 @dataclass(kw_only=True)
@@ -70,14 +69,12 @@ class FossilFuelsProduction:
     cost_mro: float = None  # type: ignore
     cost_mro_per_MWh: float = None  # type: ignore
     energy: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
 
 
 @dataclass(kw_only=True)
 class Vars8:
     # Used by p_fossil_coal_brown_cogen, p_fossil_coal_black_cogen, p_fossil_gas_cogen, p_fossil_ofossil_cogen, p_renew_biomass_cogen, p_local_biomass_cogen
     energy: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
 
 
 @dataclass(kw_only=True)
@@ -89,7 +86,6 @@ class Vars9:
     cost_fuel: float = None  # type: ignore
     cost_mro: float = None  # type: ignore
     energy: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
 
 
 @dataclass(kw_only=True)
@@ -99,7 +95,6 @@ class Vars10:
     CO2e_total: float = None  # type: ignore
     cost_mro: float = None  # type: ignore
     energy: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
 
 
 @dataclass(kw_only=True)
@@ -111,7 +106,6 @@ class Vars11:
     cost_mro: float = None  # type: ignore
     cost_mro_per_MWh: float = None  # type: ignore
     energy: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
 
 
 @dataclass(kw_only=True)
@@ -125,7 +119,6 @@ class Vars12:
     cost_mro: float = None  # type: ignore
     cost_mro_per_MWh: float = None  # type: ignore
     energy: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
 
 
 @dataclass(kw_only=True)
@@ -135,7 +128,6 @@ class Vars13:
     CO2e_combustion_based_per_MWh: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
     energy: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore
 
 
 @dataclass(kw_only=True)
@@ -188,4 +180,3 @@ class Vars18:
     cost_fuel: float = None  # type: ignore
     cost_mro: float = None  # type: ignore
     energy: float = None  # type: ignore
-    pct_energy: float = None  # type: ignore

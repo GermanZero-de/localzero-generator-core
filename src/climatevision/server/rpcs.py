@@ -60,10 +60,22 @@ class GeneratorRpcs:
             defaults = dataclasses.asdict(generator.make_entries(self.rd, ags, year))
             defaults.update(overrides)
             entries = generator.Entries(**defaults)
+
+            if ags == "DG000000":
+                entries_germany = entries
+            else:
+                entries_germany = generator.make_entries(
+                    self.rd, ags="DG000000", year=year
+                )
+
             inputs = generator.Inputs(
                 facts_and_assumptions=self.rd.facts_and_assumptions(), entries=entries
             )
-            g = generator.calculate(inputs)
+            inputs_germany = generator.Inputs(
+                facts_and_assumptions=self.rd.facts_and_assumptions(),
+                entries=entries_germany,
+            )
+            g = generator.calculate(inputs, inputs_germany)
             return g.result_dict()
 
         return self.wrap_result(lambda: with_tracing(enabled=trace, f=calculate))

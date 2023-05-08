@@ -11,15 +11,6 @@ class Energy:
 
 
 @dataclass(kw_only=True)
-class EnergyWithPercentage(Energy):
-    pct_energy: float = 0
-    total_energy: InitVar[float]
-
-    def __post_init__(self, total_energy: float):
-        self.pct_energy = div(self.energy, total_energy)
-
-
-@dataclass(kw_only=True)
 class EnergyChange:
     change_energy_MWh: float = 0
     change_energy_pct: float = 0
@@ -47,7 +38,10 @@ class EnergyPerM2PctCommune(EnergyPerM2):
 
     total: InitVar[EnergyPerM2]
 
-    def __post_init__(self, total: EnergyPerM2):  # type: ignore
+    def __post_init__(  # type: ignore[override]
+        self,
+        total: EnergyPerM2,
+    ):
         self.area_m2 = total.area_m2 * self.pct_x
         self.energy = total.energy * self.pct_x
 

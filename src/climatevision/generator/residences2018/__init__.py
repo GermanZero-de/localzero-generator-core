@@ -396,33 +396,6 @@ def calc(inputs: Inputs) -> R18:
         + s_elec.energy
     )
 
-    # pct_energy
-    s_fueloil.pct_energy = div(s_fueloil.energy, s.energy)
-    s_lpg.pct_energy = div(s_lpg.energy, s.energy)
-    s_biomass.pct_energy = div(s_biomass.energy, s.energy)
-    s_coal.pct_energy = div(s_coal.energy, s.energy)
-    s_petrol.pct_energy = div(s_petrol.energy, s.energy)
-    s_heatnet.pct_energy = div(s_heatnet.energy, s.energy)
-    s_solarth.pct_energy = div(s_solarth.energy, s.energy)
-    s_heatpump.pct_energy = div(s_heatpump.energy, s.energy)
-    s_elec_heating.pct_energy = div(s_elec_heating.energy, s_elec.energy)
-
-    s_gas.pct_energy = div(s_gas.energy, s.energy)
-    s_elec.pct_energy = div(s_elec.energy, s.energy)
-
-    s.pct_energy = (
-        s_fueloil.pct_energy
-        + s_lpg.pct_energy
-        + s_biomass.pct_energy
-        + s_coal.pct_energy
-        + s_petrol.pct_energy
-        + s_heatnet.pct_energy
-        + s_solarth.pct_energy
-        + s_heatpump.pct_energy
-        + s_gas.pct_energy
-        + s_elec.pct_energy
-    )
-
     # CO2e_cb_per_MWh
     s_lpg.CO2e_combustion_based_per_MWh = fact("Fact_H_P_LPG_cb_EF")
     s_fueloil.CO2e_combustion_based_per_MWh = fact("Fact_H_P_fueloil_cb_EF")

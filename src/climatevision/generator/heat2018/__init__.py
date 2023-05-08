@@ -8,15 +8,16 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/heat.html
 from ..inputs import Inputs
 from ..transport2018.t18 import T18
 from ..electricity2018.e18 import E18
+from ..industry2018.i18 import I18
 
 from .h18 import H18, CO2eEmission
 from . import energy_demand, energy_production
 
 
-def calc(inputs: Inputs, *, t18: T18, e18: E18) -> H18:
+def calc(inputs: Inputs, *, t18: T18, e18: E18, i18: I18) -> H18:
 
-    demand = energy_demand.calc_demand(inputs, t18)
-    production = energy_production.calc_production(inputs, t18, e18)
+    demand = energy_demand.calc_demand(inputs, t18, i18)
+    production = energy_production.calc_production(inputs, t18, e18, i18)
 
     h = CO2eEmission(
         CO2e_combustion_based=production.total.CO2e_combustion_based,

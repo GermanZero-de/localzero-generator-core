@@ -33,7 +33,7 @@ class CO2eChangeS(CO2eChangeAgri, Invest):
     elec: InitVar[CO2eChangeEnergyPerMWh]
     heatpump: InitVar[CO2eChangeFuelHeatpump]
 
-    def __post_init__(  # type: ignore
+    def __post_init__(  # type: ignore[override]
         self,
         inputs: Inputs,
         what: str,
