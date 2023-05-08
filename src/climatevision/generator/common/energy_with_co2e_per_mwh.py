@@ -20,8 +20,7 @@ class EnergyWithCO2ePerMWh(EnergyWithCO2e):
 
     @classmethod
     def sum(  # type: ignore[override]
-        cls,
-        *childs: "EnergyWithCO2ePerMWh",
+        cls, *childs: "EnergyWithCO2ePerMWh"
     ) -> "EnergyWithCO2ePerMWh":
         energy = sum(child.energy for child in childs)
 
