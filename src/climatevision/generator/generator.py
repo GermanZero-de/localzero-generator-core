@@ -9,7 +9,6 @@ from .refdata import RefData
 from .makeentries import make_entries
 from .bisko import Bisko
 from .methodology183x import M183X
-from .lulucf2030 import lulucf2030_pyr
 from .electricity2030 import electricity2030_core
 
 # hier Sektoren Files importieren:
@@ -22,6 +21,7 @@ from .agri2018.a18 import A18
 from .heat2018.h18 import H18
 from .lulucf2018.l18 import L18
 from .fuels2018.f18 import F18
+from .waste2018 import W18
 
 from .electricity2030.e30 import E30
 from .business2030.b30 import B30
@@ -32,6 +32,7 @@ from .agri2030.a30 import A30
 from .heat2030.h30 import H30
 from .lulucf2030.l30 import L30
 from .fuels2030.f30 import F30
+from .waste2030 import W30, WasteLines, Pyrolysis
 
 from . import electricity2018
 from . import business2018
@@ -101,6 +102,7 @@ class Result:
     e18: E18
     h18: H18
     l18: L18
+    w18: W18
 
     # Zieljahr
     r30: R30
@@ -112,6 +114,7 @@ class Result:
     h30: H30
     l30: L30
     a30: A30
+    w30: W30
 
     m183X: M183X
     bisko: Bisko
@@ -150,6 +153,9 @@ def calculate(inputs: Inputs, inputs_germany: Inputs) -> Result:
 
     print("Heat2018_calc", file=stderr)
     h18 = heat2018.calc(inputs, t18=t18, e18=e18, i18=i18)
+
+    print("Waste2018_calc", file=stderr)
+    w18 = W18.calc(inputs)
 
     end_t = time()
     print(
@@ -198,6 +204,10 @@ def calculate(inputs: Inputs, inputs_germany: Inputs) -> Result:
         inputs, f18=f18, a30=a30, b30=b30, h30=h30, i30=i30, r30=r30, t30=t30
     )
 
+    print("calc waste 2030 ")
+    wastelines = WasteLines.calc_waste_lines(inputs=inputs, w18=w18)
+
+    # TODO: Include demand from waste
     print("Electricity2030_calc", file=stderr)
     e30 = electricity2030.calc(
         inputs,
@@ -211,6 +221,7 @@ def calculate(inputs: Inputs, inputs_germany: Inputs) -> Result:
         i30=i30,
         r30=r30,
         t30=t30,
+        wastelines=wastelines,
         p_local_biomass_cogen=p_local_biomass_cogen,
         p_local_biomass=p_local_biomass,
     )
@@ -229,10 +240,9 @@ def calculate(inputs: Inputs, inputs_germany: Inputs) -> Result:
         t18=t18,
     )
 
-    print("Lulucf2030_calcPyr", file=stderr)
-    lulucf2030_pyr.calc(
+    print("Waste2030_calcPyr", file=stderr)
+    pyr = Pyrolysis.calc(
         inputs,
-        l18=l18,
         l30=l30,
         a30=a30,
         b30=b30,
@@ -242,7 +252,11 @@ def calculate(inputs: Inputs, inputs_germany: Inputs) -> Result:
         i30=i30,
         r30=r30,
         t30=t30,
+        wastelines=wastelines,
     )
+
+    print("calc_sums_including_pyrolysis", file=stderr)
+    w30 = W30.calc(inputs=inputs, w18=w18, wastelines=wastelines, pyrolysis=pyr)
 
     print("Methodology2030_calcZ", file=stderr)
     methodology183x.calc_z(
@@ -292,6 +306,7 @@ def calculate(inputs: Inputs, inputs_germany: Inputs) -> Result:
         a18=a18,
         e18=e18,
         h18=h18,
+        w18=w18,
         t30=t30,
         i30=i30,
         r30=r30,
@@ -301,6 +316,7 @@ def calculate(inputs: Inputs, inputs_germany: Inputs) -> Result:
         l30=l30,
         a30=a30,
         h30=h30,
+        w30=w30,
         m183X=m183X,
         bisko=bisko,
     )

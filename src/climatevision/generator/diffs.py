@@ -75,7 +75,7 @@ def all_helper(path: str, actual: Any, expected: Any, *, rel: float) -> Iterator
         f = float(actual)  # type: ignore
         e = float(expected)  # type: ignore
         if not float_matches(actual=f, expected=e, rel=rel):
-            yield Diff(path=path, actual=actual, expected=expected)  # type: ignore
+            yield Diff(path=path, actual=f, expected=e)  # type: ignore
     elif actual != expected:
         yield Diff(path=path, actual=actual, expected=expected)  # type: ignore
 

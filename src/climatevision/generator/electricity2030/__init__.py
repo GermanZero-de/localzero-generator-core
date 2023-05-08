@@ -16,6 +16,7 @@ from ..heat2030.h30 import H30
 from ..industry2030.i30 import I30
 from ..residences2030.r30 import R30
 from ..transport2030.t30 import T30
+from ..waste2030 import WasteLines
 
 from .e30 import E30
 from .electricity2030_core import EColVars2030
@@ -35,6 +36,7 @@ def calc(
     i30: I30,
     r30: R30,
     t30: T30,
+    wastelines: WasteLines,
     p_local_biomass_cogen: EColVars2030,
     p_local_biomass: EColVars2030,
 ) -> E30:
@@ -56,6 +58,7 @@ def calc(
             i30=i30,
             r30=r30,
             t30=t30,
+            wastelines=wastelines,
             p_local_biomass_cogen=p_local_biomass_cogen,
             p_local_biomass=p_local_biomass,
         )
@@ -72,6 +75,7 @@ def calc(
             i30=i30,
             r30=r30,
             t30=t30,
+            wastelines=wastelines,
             p_local_biomass_cogen=p_local_biomass_cogen,
             p_local_biomass=p_local_biomass,
         )

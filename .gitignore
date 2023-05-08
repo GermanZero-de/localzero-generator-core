@@ -166,7 +166,3 @@ cython_debug/
 # It might actually be a code idea to check a "good" config file in. But for that I need
 # to figure out what the right subset of my global settings to include is
 localzero-generator-core.code-workspace
-
-# temporary ignore for development of industry per region
-explorative_notebooks/industry_ags_match_full_export.csv
-explorative_notebooks/data_exports/
