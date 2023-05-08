@@ -11,7 +11,7 @@ from .energy_demand import (
     EnergyPerM2,
     CO2eEmission,
 )
-from .energy_source import EnergyWithCO2e, CO2eFromEnergyUseDetail
+from .energy_source import EnergyWithCO2e, EnergyWithCO2ePerMWh
 
 
 @dataclass(kw_only=True)
@@ -55,11 +55,11 @@ class A18:
     p_operation_elec_heatpump: Energy
     p_operation_vehicles: Energy
     s: EnergyWithCO2e
-    s_petrol: CO2eFromEnergyUseDetail
-    s_diesel: CO2eFromEnergyUseDetail
-    s_fueloil: CO2eFromEnergyUseDetail
-    s_lpg: CO2eFromEnergyUseDetail
-    s_gas: CO2eFromEnergyUseDetail
-    s_biomass: CO2eFromEnergyUseDetail
-    s_elec: CO2eFromEnergyUseDetail
-    s_heatpump: CO2eFromEnergyUseDetail
+    s_petrol: EnergyWithCO2ePerMWh
+    s_diesel: EnergyWithCO2ePerMWh
+    s_fueloil: EnergyWithCO2ePerMWh
+    s_lpg: EnergyWithCO2ePerMWh
+    s_gas: EnergyWithCO2ePerMWh
+    s_biomass: EnergyWithCO2ePerMWh
+    s_elec: EnergyWithCO2ePerMWh
+    s_heatpump: EnergyWithCO2ePerMWh

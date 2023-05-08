@@ -4,62 +4,61 @@ from dataclasses import dataclass
 
 from ...inputs import Inputs
 from ...common.energy_with_co2e import EnergyWithCO2e
-
-from .co2e_from_energy_use_detail import CO2eFromEnergyUseDetail
+from ...common.energy_with_co2e_per_mwh import EnergyWithCO2ePerMWh
 
 
 @dataclass(kw_only=True)
 class EnergySupply:
     total: EnergyWithCO2e
-    petrol: CO2eFromEnergyUseDetail
-    diesel: CO2eFromEnergyUseDetail
-    fueloil: CO2eFromEnergyUseDetail
-    lpg: CO2eFromEnergyUseDetail
-    gas: CO2eFromEnergyUseDetail
-    biomass: CO2eFromEnergyUseDetail
-    elec: CO2eFromEnergyUseDetail
-    heatpump: CO2eFromEnergyUseDetail
+    petrol: EnergyWithCO2ePerMWh
+    diesel: EnergyWithCO2ePerMWh
+    fueloil: EnergyWithCO2ePerMWh
+    lpg: EnergyWithCO2ePerMWh
+    gas: EnergyWithCO2ePerMWh
+    biomass: EnergyWithCO2ePerMWh
+    elec: EnergyWithCO2ePerMWh
+    heatpump: EnergyWithCO2ePerMWh
 
 
 def calc_supply(inputs: Inputs) -> EnergySupply:
 
     entries = inputs.entries
 
-    heatpump = CO2eFromEnergyUseDetail.calc(
+    heatpump = EnergyWithCO2ePerMWh(
         energy=0,
         CO2e_combustion_based_per_MWh=inputs.fact(
             "Fact_RB_S_heatpump_ratio_CO2e_to_fec"
         ),
     )
-    petrol = CO2eFromEnergyUseDetail.calc(
+    petrol = EnergyWithCO2ePerMWh(
         energy=entries.a_petrol_fec,
         CO2e_combustion_based_per_MWh=inputs.fact(
             "Fact_T_S_petrol_EmFa_tank_wheel_2018"
         ),
     )
-    diesel = CO2eFromEnergyUseDetail.calc(
+    diesel = EnergyWithCO2ePerMWh(
         energy=entries.a_diesel_fec,
         CO2e_combustion_based_per_MWh=inputs.fact(
             "Fact_T_S_diesel_EmFa_tank_wheel_2018"
         ),
     )
-    fueloil = CO2eFromEnergyUseDetail.calc(
+    fueloil = EnergyWithCO2ePerMWh(
         energy=entries.a_fueloil_fec,
         CO2e_combustion_based_per_MWh=inputs.fact("Fact_H_P_fueloil_cb_EF"),
     )
-    lpg = CO2eFromEnergyUseDetail.calc(
+    lpg = EnergyWithCO2ePerMWh(
         energy=entries.a_lpg_fec,
         CO2e_combustion_based_per_MWh=inputs.fact("Fact_T_S_lpg_EmFa_tank_wheel_2018"),
     )
-    gas = CO2eFromEnergyUseDetail.calc(
+    gas = EnergyWithCO2ePerMWh(
         energy=entries.a_gas_fec,
         CO2e_combustion_based_per_MWh=inputs.fact("Fact_H_P_ngas_cb_EF"),
     )
-    biomass = CO2eFromEnergyUseDetail.calc(
+    biomass = EnergyWithCO2ePerMWh(
         energy=entries.a_biomass_fec,
         CO2e_combustion_based_per_MWh=inputs.fact("Fact_RB_S_biomass_CO2e_EF"),
     )
-    elec = CO2eFromEnergyUseDetail.calc(
+    elec = EnergyWithCO2ePerMWh(
         energy=entries.a_elec_fec,
         CO2e_combustion_based_per_MWh=inputs.fact("Fact_RB_S_elec_ratio_CO2e_to_fec"),
     )

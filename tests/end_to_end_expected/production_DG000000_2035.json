@@ -1248,56 +1248,64 @@
             "CO2e_production_based": 0.0,
             "CO2e_total": 90343.20000000001,
             "energy": 333333.3333333333,
-            "CO2e_combustion_based_per_MWh": 0.27102960000000004
+            "CO2e_combustion_based_per_MWh": 0.27102960000000004,
+            "CO2e_production_based_per_MWh": 0
         },
         "s_diesel": {
             "CO2e_combustion_based": 5107863.0,
             "CO2e_production_based": 0.0,
             "CO2e_total": 5107863.0,
             "energy": 19166666.666666668,
-            "CO2e_combustion_based_per_MWh": 0.2664972
+            "CO2e_combustion_based_per_MWh": 0.2664972,
+            "CO2e_production_based_per_MWh": 0
         },
         "s_fueloil": {
             "CO2e_combustion_based": 642833.3333333334,
             "CO2e_production_based": 0.0,
             "CO2e_total": 642833.3333333334,
             "energy": 2416666.6666666665,
-            "CO2e_combustion_based_per_MWh": 0.266
+            "CO2e_combustion_based_per_MWh": 0.266,
+            "CO2e_production_based_per_MWh": 0
         },
         "s_lpg": {
             "CO2e_combustion_based": 570472.3999999999,
             "CO2e_production_based": 0.0,
             "CO2e_total": 570472.3999999999,
             "energy": 2388888.888888889,
-            "CO2e_combustion_based_per_MWh": 0.23880239999999997
+            "CO2e_combustion_based_per_MWh": 0.23880239999999997,
+            "CO2e_production_based_per_MWh": 0
         },
         "s_gas": {
             "CO2e_combustion_based": 591833.3333333334,
             "CO2e_production_based": 0.0,
             "CO2e_total": 591833.3333333334,
             "energy": 2944444.4444444445,
-            "CO2e_combustion_based_per_MWh": 0.201
+            "CO2e_combustion_based_per_MWh": 0.201,
+            "CO2e_production_based_per_MWh": 0
         },
         "s_biomass": {
             "CO2e_combustion_based": 164927.38888888888,
             "CO2e_production_based": 0.0,
             "CO2e_total": 164927.38888888888,
             "energy": 8972222.22222222,
-            "CO2e_combustion_based_per_MWh": 0.018382000000000003
+            "CO2e_combustion_based_per_MWh": 0.018382000000000003,
+            "CO2e_production_based_per_MWh": 0
         },
         "s_elec": {
             "CO2e_combustion_based": 0.0,
             "CO2e_production_based": 0.0,
             "CO2e_total": 0.0,
             "energy": 5250000.0,
-            "CO2e_combustion_based_per_MWh": 0.0
+            "CO2e_combustion_based_per_MWh": 0.0,
+            "CO2e_production_based_per_MWh": 0
         },
         "s_heatpump": {
             "CO2e_combustion_based": 0.0,
-            "CO2e_production_based": 0.0,
+            "CO2e_production_based": 0,
             "CO2e_total": 0.0,
             "energy": 0,
-            "CO2e_combustion_based_per_MWh": 0.0
+            "CO2e_combustion_based_per_MWh": 0.0,
+            "CO2e_production_based_per_MWh": 0
         }
     },
     "f18": {
