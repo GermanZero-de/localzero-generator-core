@@ -274,7 +274,6 @@ class WasteLines:
 
     @classmethod
     def calc_waste_lines(cls, inputs: Inputs, w18: W18):
-
         p_landfilling = Landfilling.calc(inputs=inputs, w18=w18)
         p_organic_treatment = Organic_treatment.calc(inputs=inputs, w18=w18)
         p_wastewater = Wastewater.calc(inputs=inputs, w18=w18)
@@ -307,7 +306,6 @@ class EnergySupply:
 
     @classmethod
     def calc(cls, w18: W18, energy_supplies: list[EnergySupplyDetail]):
-
         energy = sum([supply.energy for supply in energy_supplies])
         CO2e_cb = sum([supply.CO2e_combustion_based for supply in energy_supplies])
         CO2e_total = sum([supply.CO2e_total for supply in energy_supplies])
@@ -340,7 +338,6 @@ class EnergySupply:
 
 @dataclass(kw_only=True)
 class Pyrolysis:
-
     prod_volume: float = None  # type: ignore
     CO2e_production_based: float = None  # type: ignore
     CO2e_production_based_per_t: float = None  # type: ignore
@@ -456,7 +453,7 @@ class EnergyProduction:
     change_energy_MWh: float
     change_energy_pct: float
     change_CO2e_t: float
-    change_CO2_pct: float
+    change_CO2e_pct: float
     CO2e_total_2021_estimated: float
     cost_climate_saved: float
     invest_pa: float
@@ -476,7 +473,6 @@ class EnergyProduction:
         wastewater: Wastewater,
         pyr: Pyrolysis,
     ):
-
         energy = wastewater.energy
         prod_vol = (
             organic_treatment.prod_volume + wastewater.prod_volume + pyr.prod_volume
@@ -501,7 +497,7 @@ class EnergyProduction:
             + wastewater.change_CO2e_t
             + pyr.change_CO2e_t
         )
-        change_CO2_pct = change_CO2e_t / w18.p.CO2e_total
+        change_CO2e_pct = change_CO2e_t / w18.p.CO2e_total
         CO2e_total_2021_estimated = (
             landfilling.CO2e_total_2021_estimated
             + organic_treatment.CO2e_total_2021_estimated
@@ -529,7 +525,7 @@ class EnergyProduction:
             change_energy_MWh=change_energy_MWh,
             change_energy_pct=change_energy_pct,
             change_CO2e_t=change_CO2e_t,
-            change_CO2_pct=change_CO2_pct,
+            change_CO2e_pct=change_CO2e_pct,
             CO2e_total_2021_estimated=CO2e_total_2021_estimated,
             cost_climate_saved=cost_climate_saved,
             invest_pa=invest_pa,
@@ -560,7 +556,6 @@ class W30:
     def calc(
         cls, inputs: Inputs, w18: W18, wastelines: WasteLines, pyrolysis: Pyrolysis
     ):
-
         s = EnergySupply.calc(w18=w18, energy_supplies=[wastelines.s_elec])
         p = EnergyProduction.calc(
             w18=w18,
