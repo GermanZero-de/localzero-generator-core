@@ -33,12 +33,6 @@ def calc_production(inputs: Inputs, energies: Energies, e18: E18) -> Production:
 
     fact = inputs.fact
 
-    p_heatnet_energy = (
-        energies.r18_heatnet.energy
-        + energies.b18_heatnet.energy
-        + energies.i18_renew_heatnet.energy
-    )
-
     gas = EnergyWithCO2ePerMWh(
         energy=energies.r18_gas.energy
         + energies.b18_gas.energy
@@ -87,21 +81,22 @@ def calc_production(inputs: Inputs, energies: Energies, e18: E18) -> Production:
         CO2e_combustion_based_per_MWh=fact("Fact_H_P_coal_ratio_CO2e_cb_to_fec_2018"),
     )
 
-    if (
+    p_heatnet_energy = (
+        energies.r18_heatnet.energy
+        + energies.b18_heatnet.energy
+        + energies.i18_renew_heatnet.energy
+    )
+
+    e18_energy = (
         e18.p_fossil_coal_brown_cogen.energy
         + e18.p_fossil_coal_black_cogen.energy
         + e18.p_fossil_gas_cogen.energy
         + e18.p_fossil_ofossil_cogen.energy
         + e18.p_renew_biomass_cogen.energy
-        < p_heatnet_energy
-    ):
-        heatnet_cogen_energy = (
-            e18.p_fossil_coal_brown_cogen.energy
-            + e18.p_fossil_coal_black_cogen.energy
-            + e18.p_fossil_gas_cogen.energy
-            + e18.p_fossil_ofossil_cogen.energy
-            + e18.p_renew_biomass_cogen.energy
-        )
+    )
+
+    if e18_energy < p_heatnet_energy:
+        heatnet_cogen_energy = e18_energy
     else:
         heatnet_cogen_energy = p_heatnet_energy
 
