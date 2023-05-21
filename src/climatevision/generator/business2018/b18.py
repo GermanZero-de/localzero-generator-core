@@ -12,8 +12,8 @@ from .energy_demand import (
 )
 from .energy_source import (
     Vars5,
-    Vars6,
-    Vars7,
+    EnergyWithCO2ePerMWhAndCostFuel,
+    EnergyWithCO2ePerMWhAndCostFuelAndBuildings,
     EnergyWithCO2ePerMWh,
 )
 
@@ -29,17 +29,17 @@ class B18:
     p_vehicles: Energy
     p_other: Energy
     s: Vars5
-    s_gas: Vars6
-    s_lpg: Vars6
-    s_petrol: Vars6
-    s_jetfuel: Vars6
-    s_diesel: Vars6
-    s_fueloil: Vars6
-    s_biomass: Vars7
-    s_coal: Vars6
-    s_heatnet: Vars6
+    s_gas: EnergyWithCO2ePerMWhAndCostFuel
+    s_lpg: EnergyWithCO2ePerMWhAndCostFuel
+    s_petrol: EnergyWithCO2ePerMWhAndCostFuel
+    s_jetfuel: EnergyWithCO2ePerMWhAndCostFuel
+    s_diesel: EnergyWithCO2ePerMWhAndCostFuel
+    s_fueloil: EnergyWithCO2ePerMWhAndCostFuel
+    s_biomass: EnergyWithCO2ePerMWhAndCostFuelAndBuildings
+    s_coal: EnergyWithCO2ePerMWhAndCostFuel
+    s_heatnet: EnergyWithCO2ePerMWhAndCostFuel
     s_elec_heating: EnergyWithCO2ePerMWh
-    s_heatpump: Vars6
-    s_solarth: Vars6
+    s_heatpump: EnergyWithCO2ePerMWhAndCostFuel
+    s_solarth: EnergyWithCO2ePerMWhAndCostFuel
     s_elec: EnergyWithCO2ePerMWh
     rb: EnergyWithCO2e
