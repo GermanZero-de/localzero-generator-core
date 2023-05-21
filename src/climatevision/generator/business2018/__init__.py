@@ -19,13 +19,14 @@ from . import energy_base, energy_demand, energy_source
 def calc(inputs: Inputs, *, r18: R18) -> B18:
     energies = energy_base.calc(inputs=inputs)
 
-    supply = energy_source.calc_supply(inputs, energies)
     production = energy_demand.calc_production(inputs, energies)
 
-    supply.biomass.number_of_buildings = supply.biomass.energy * div(
+    building_energy_ratio = div(
         production.nonresi.number_of_buildings,
         production.nonresi.energy,
     )
+
+    supply = energy_source.calc_supply(inputs, energies, building_energy_ratio)
 
     b = CO2eEmission(
         CO2e_combustion_based=supply.total.CO2e_combustion_based,

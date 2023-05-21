@@ -32,7 +32,9 @@ class EnergySupply:
     elec: EnergyWithCO2ePerMWh
 
 
-def calc_supply(inputs: Inputs, energies: Energies) -> EnergySupply:
+def calc_supply(
+    inputs: Inputs, energies: Energies, building_energy_ratio: float
+) -> EnergySupply:
 
     fact = inputs.fact
 
@@ -120,6 +122,7 @@ def calc_supply(inputs: Inputs, energies: Energies) -> EnergySupply:
         energy=energies.biomass.energy,
         cost_fuel_per_MWh=fact("Fact_R_S_wood_energy_cost_factor_2018"),
         CO2e_combustion_based_per_MWh=fact("Fact_RB_S_biomass_CO2e_EF"),
+        number_of_buildings=energies.biomass.energy * building_energy_ratio,
     )
 
     total = Vars5()

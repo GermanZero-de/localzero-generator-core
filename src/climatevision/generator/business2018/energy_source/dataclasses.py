@@ -27,4 +27,4 @@ class EnergyWithCO2ePerMWhAndCostFuel(EnergyWithCO2ePerMWh):
 
 @dataclass(kw_only=True)
 class EnergyWithCO2ePerMWhAndCostFuelAndBuildings(EnergyWithCO2ePerMWhAndCostFuel):
-    number_of_buildings: float = None  # type: ignore
+    number_of_buildings: float
