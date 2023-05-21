@@ -19,19 +19,19 @@ class Production:
 
 def calc_production(
     inputs: Inputs,
-    s_heatpump_energy: float,
-    s_elec_energy: float,
-    s_elec_heating_energy: float,
-    s_petrol_energy: float,
-    s_jetfuel_energy: float,
-    s_diesel_energy: float,
-    s_gas_energy: float,
-    s_lpg_energy: float,
-    s_fueloil_energy: float,
-    s_biomass_energy: float,
-    s_coal_energy: float,
-    s_heatnet_energy: float,
-    s_solarth_energy: float,
+    heatpump_energy: float,
+    elec_energy: float,
+    elec_heating_energy: float,
+    petrol_energy: float,
+    jetfuel_energy: float,
+    diesel_energy: float,
+    gas_energy: float,
+    lpg_energy: float,
+    fueloil_energy: float,
+    biomass_energy: float,
+    coal_energy: float,
+    heatnet_energy: float,
+    solarth_energy: float,
 ) -> Production:
 
     fact = inputs.fact
@@ -39,15 +39,13 @@ def calc_production(
     entries = inputs.entries
 
     elec_heatpump = Energy(
-        energy=s_heatpump_energy
+        energy=heatpump_energy
         / fact("Fact_R_S_heatpump_mean_annual_performance_factor_all")
     )
 
-    elec_elcon = Energy(
-        energy=s_elec_energy - elec_heatpump.energy - s_elec_heating_energy
-    )
+    elec_elcon = Energy(energy=elec_energy - elec_heatpump.energy - elec_heating_energy)
 
-    vehicles = Energy(energy=s_petrol_energy + s_jetfuel_energy + s_diesel_energy)
+    vehicles = Energy(energy=petrol_energy + jetfuel_energy + diesel_energy)
 
     other = Energy(energy=elec_elcon.energy + elec_heatpump.energy + vehicles.energy)
 
@@ -59,15 +57,15 @@ def calc_production(
             * (1 - fact("Fact_A_P_energy_buildings_ratio_A_to_B"))
         ),
         energy=(
-            s_gas_energy
-            + s_lpg_energy
-            + s_fueloil_energy
-            + s_biomass_energy
-            + s_coal_energy
-            + s_heatnet_energy
-            + s_heatpump_energy
-            + s_solarth_energy
-            + s_elec_heating_energy
+            gas_energy
+            + lpg_energy
+            + fueloil_energy
+            + biomass_energy
+            + coal_energy
+            + heatnet_energy
+            + heatpump_energy
+            + solarth_energy
+            + elec_heating_energy
         ),
         number_of_buildings=(
             fact("Fact_B_P_number_business_buildings_2016")
