@@ -187,7 +187,7 @@ def calc_production(
 
     other = CO2eEmission.sum(other_liming, other_urea, other_kas, other_ecrop)
 
-    operation_elec_heatpump = Energy(energy=0)
+    operation_elec_heatpump = Energy(energy=energies.heatpump.energy)
     operation_elec_elcon = Energy(energy=energies.elec.energy)
     operation_vehicles = Energy(energy=energies.petrol.energy + energies.diesel.energy)
     operation_heat = EnergyPerM2(
@@ -202,14 +202,11 @@ def calc_production(
         ),
     )
 
-    operation = Energy(
-        energy=energies.petrol.energy
-        + energies.diesel.energy
-        + energies.fueloil.energy
-        + energies.lpg.energy
-        + energies.gas.energy
-        + energies.biomass.energy
-        + energies.elec.energy
+    operation = Energy.sum(
+        operation_elec_heatpump,
+        operation_elec_elcon,
+        operation_vehicles,
+        operation_heat,
     )
 
     total = EnergyWithCO2e(

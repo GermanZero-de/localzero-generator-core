@@ -8,6 +8,7 @@ from ...common.energy import Energy
 
 @dataclass(kw_only=True)
 class Energies:
+    heatpump: Energy
     gas: Energy
     lpg: Energy
     petrol: Energy
@@ -20,6 +21,7 @@ class Energies:
 def calc(inputs: Inputs) -> Energies:
     entries = inputs.entries
 
+    heatpump = Energy(energy=0)
     gas = Energy(energy=entries.a_gas_fec)
     lpg = Energy(energy=entries.a_lpg_fec)
     petrol = Energy(energy=entries.a_petrol_fec)
@@ -29,6 +31,7 @@ def calc(inputs: Inputs) -> Energies:
     elec = Energy(energy=entries.a_elec_fec)
 
     return Energies(
+        heatpump=heatpump,
         gas=gas,
         lpg=lpg,
         petrol=petrol,

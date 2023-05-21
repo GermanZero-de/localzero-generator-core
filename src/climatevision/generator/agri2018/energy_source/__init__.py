@@ -26,7 +26,7 @@ def calc_supply(inputs: Inputs, energies: Energies) -> EnergySupply:
     fact = inputs.fact
 
     heatpump = EnergyWithCO2ePerMWh(
-        energy=0,
+        energy=energies.heatpump.energy,
         CO2e_combustion_based_per_MWh=fact("Fact_RB_S_heatpump_ratio_CO2e_to_fec"),
     )
     petrol = EnergyWithCO2ePerMWh(
