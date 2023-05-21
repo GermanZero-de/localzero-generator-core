@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from ...inputs import Inputs
 from ...common.energy import Energy
 
-from ..energy_demand import Production
+from ..energy_base import Energies
 
 from .supply_branches import EnergySupplySubBranch, EnergySupplySum
 
@@ -28,30 +28,30 @@ class EnergySupply:
     renew_orenew: Energy
 
 
-def calc_supply(inputs: Inputs, production: Production) -> EnergySupply:
+def calc_supply(inputs: Inputs, energies: Energies) -> EnergySupply:
 
     # do for all subbranches + copy structure for branches from production_branches
     miner_cement = EnergySupplySubBranch.calc_sub_branch(
         inputs=inputs,
-        energy_demand=production.miner_cement.energy,
+        energy_demand=energies.miner_cement.energy,
         sub_branch="cement",
         branch="miner",
     )
     miner_chalk = EnergySupplySubBranch.calc_sub_branch(
         inputs=inputs,
-        energy_demand=production.miner_chalk.energy,
+        energy_demand=energies.miner_chalk.energy,
         sub_branch="chalk",
         branch="miner",
     )
     miner_glas = EnergySupplySubBranch.calc_sub_branch(
         inputs=inputs,
-        energy_demand=production.miner_glas.energy,
+        energy_demand=energies.miner_glas.energy,
         sub_branch="glas",
         branch="miner",
     )
     miner_ceram = EnergySupplySubBranch.calc_sub_branch(
         inputs=inputs,
-        energy_demand=production.miner_ceram.energy,
+        energy_demand=energies.miner_ceram.energy,
         sub_branch="ceram",
         branch="miner",
     )
@@ -59,19 +59,19 @@ def calc_supply(inputs: Inputs, production: Production) -> EnergySupply:
 
     chem_basic = EnergySupplySubBranch.calc_sub_branch(
         inputs=inputs,
-        energy_demand=production.chem_basic.energy,
+        energy_demand=energies.chem_basic.energy,
         sub_branch="basic",
         branch="chem",
     )
     chem_ammonia = EnergySupplySubBranch.calc_sub_branch(
         inputs=inputs,
-        energy_demand=production.chem_ammonia.energy,
+        energy_demand=energies.chem_ammonia.energy,
         sub_branch="basic",  # assumtion same as chem basic (TODO Find specific factors for ammonia production)
         branch="chem",
     )
     chem_other = EnergySupplySubBranch.calc_sub_branch(
         inputs=inputs,
-        energy_demand=production.chem_other.energy,
+        energy_demand=energies.chem_other.energy,
         sub_branch="other",
         branch="chem",
     )
@@ -79,19 +79,19 @@ def calc_supply(inputs: Inputs, production: Production) -> EnergySupply:
 
     metal_steel_primary = EnergySupplySubBranch.calc_sub_branch(
         inputs=inputs,
-        energy_demand=production.metal_steel_primary.energy,
+        energy_demand=energies.metal_steel_primary.energy,
         sub_branch="steel_primary",
         branch="metal",
     )
     metal_steel_secondary = EnergySupplySubBranch.calc_sub_branch(
         inputs=inputs,
-        energy_demand=production.metal_steel_secondary.energy,
+        energy_demand=energies.metal_steel_secondary.energy,
         sub_branch="steel_secondary",
         branch="metal",
     )
     metal_nonfe = EnergySupplySubBranch.calc_sub_branch(
         inputs=inputs,
-        energy_demand=production.metal_nonfe.energy,
+        energy_demand=energies.metal_nonfe.energy,
         sub_branch="nonfe",
         branch="metal",
     )
@@ -99,19 +99,19 @@ def calc_supply(inputs: Inputs, production: Production) -> EnergySupply:
 
     other_paper = EnergySupplySubBranch.calc_sub_branch(
         inputs=inputs,
-        energy_demand=production.other_paper.energy,
+        energy_demand=energies.other_paper.energy,
         sub_branch="paper",
         branch="other",
     )
     other_food = EnergySupplySubBranch.calc_sub_branch(
         inputs=inputs,
-        energy_demand=production.other_food.energy,
+        energy_demand=energies.other_food.energy,
         sub_branch="food",
         branch="other",
     )
     other_further = EnergySupplySubBranch.calc_sub_branch(
         inputs=inputs,
-        energy_demand=production.other_further.energy,
+        energy_demand=energies.other_further.energy,
         sub_branch="further",
         branch="other",
     )
