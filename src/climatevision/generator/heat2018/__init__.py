@@ -11,13 +11,14 @@ from ..electricity2018.e18 import E18
 from ..industry2018.i18 import I18
 
 from .h18 import H18, CO2eEmission
-from . import energy_demand, energy_production
+from . import energy_base, energy_demand, energy_production
 
 
 def calc(inputs: Inputs, *, t18: T18, e18: E18, i18: I18) -> H18:
 
-    demand = energy_demand.calc_demand(inputs, t18, i18)
-    production = energy_production.calc_production(inputs, t18, e18, i18)
+    energies = energy_base.calc(inputs, t18, i18)
+    demand = energy_demand.calc_demand(energies)
+    production = energy_production.calc_production(inputs, energies, e18)
 
     h = CO2eEmission(
         CO2e_combustion_based=production.total.CO2e_combustion_based,
