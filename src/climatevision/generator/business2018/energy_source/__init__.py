@@ -27,7 +27,6 @@ class EnergySupply:
 
 def calc_supply(
     inputs: Inputs,
-    total_energy: float,
     gas_energy: float,
     lpg_energy: float,
     petrol_energy: float,
@@ -130,7 +129,20 @@ def calc_supply(
     )
 
     total = Vars5()
-    total.energy = total_energy
+    total.energy = (
+        gas.energy
+        + lpg.energy
+        + petrol.energy
+        + jetfuel.energy
+        + diesel.energy
+        + fueloil.energy
+        + biomass.energy
+        + coal.energy
+        + heatnet.energy
+        + heatpump.energy
+        + solarth.energy
+        + elec.energy
+    )
     total.cost_fuel = (
         gas.cost_fuel
         + lpg.cost_fuel

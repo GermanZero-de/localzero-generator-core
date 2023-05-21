@@ -42,24 +42,8 @@ def calc(inputs: Inputs, *, r18: R18) -> B18:
     )
     supply_elec_energy = entries.b_elec_fec
 
-    supply_total_energy = (
-        supply_gas_energy
-        + supply_lpg_energy
-        + supply_petrol_energy
-        + supply_jetfuel_energy
-        + supply_diesel_energy
-        + supply_fueloil_energy
-        + supply_biomass_energy
-        + supply_coal_energy
-        + supply_heatnet_energy
-        + supply_heatpump_energy
-        + supply_solarth_energy
-        + supply_elec_energy
-    )
-
     supply = energy_source.calc_supply(
         inputs,
-        supply_total_energy,
         supply_gas_energy,
         supply_lpg_energy,
         supply_petrol_energy,
