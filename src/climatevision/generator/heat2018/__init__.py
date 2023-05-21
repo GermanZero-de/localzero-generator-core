@@ -16,9 +16,9 @@ from . import energy_base, energy_demand, energy_production
 
 def calc(inputs: Inputs, *, t18: T18, e18: E18, i18: I18) -> H18:
 
-    energies = energy_base.calc(inputs, t18, i18)
+    energies = energy_base.calc(inputs, t18, i18, e18)
     demand = energy_demand.calc_demand(energies)
-    production = energy_production.calc_production(inputs, energies, e18)
+    production = energy_production.calc_production(inputs, energies)
 
     h = CO2eEmission(
         CO2e_combustion_based=production.total.CO2e_combustion_based,

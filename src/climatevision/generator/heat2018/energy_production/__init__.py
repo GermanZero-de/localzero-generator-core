@@ -3,7 +3,6 @@
 from dataclasses import dataclass
 
 from ...inputs import Inputs
-from ...electricity2018.e18 import E18
 from ...common.energy_with_co2e_per_mwh import EnergyWithCO2ePerMWh
 
 from ..energy_base import Energies
@@ -29,7 +28,7 @@ class Production:
     heatpump: EnergyWithCO2ePerMWh
 
 
-def calc_production(inputs: Inputs, energies: Energies, e18: E18) -> Production:
+def calc_production(inputs: Inputs, energies: Energies) -> Production:
 
     fact = inputs.fact
 
@@ -88,11 +87,11 @@ def calc_production(inputs: Inputs, energies: Energies, e18: E18) -> Production:
     )
 
     e18_energy = (
-        e18.p_fossil_coal_brown_cogen.energy
-        + e18.p_fossil_coal_black_cogen.energy
-        + e18.p_fossil_gas_cogen.energy
-        + e18.p_fossil_ofossil_cogen.energy
-        + e18.p_renew_biomass_cogen.energy
+        energies.e18_fossil_coal_brown_cogen.energy
+        + energies.e18_fossil_coal_black_cogen.energy
+        + energies.e18_fossil_gas_cogen.energy
+        + energies.e18_fossil_ofossil_cogen.energy
+        + energies.e18_renew_biomass_cogen.energy
     )
 
     if e18_energy < heatnet_energy:

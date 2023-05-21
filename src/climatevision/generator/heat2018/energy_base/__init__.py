@@ -6,6 +6,7 @@ from ...inputs import Inputs
 from ...common.energy import Energy
 from ...industry2018.i18 import I18
 from ...transport2018.t18 import T18
+from ...electricity2018.e18 import E18
 
 
 @dataclass(kw_only=True)
@@ -45,8 +46,15 @@ class Energies:
     t18_lpg: Energy
     t18_gas: Energy
 
+    # For production only
+    e18_fossil_coal_brown_cogen: Energy
+    e18_fossil_coal_black_cogen: Energy
+    e18_fossil_gas_cogen: Energy
+    e18_fossil_ofossil_cogen: Energy
+    e18_renew_biomass_cogen: Energy
 
-def calc(inputs: Inputs, t18: T18, i18: I18) -> Energies:
+
+def calc(inputs: Inputs, t18: T18, i18: I18, e18: E18) -> Energies:
     entries = inputs.entries
 
     r18_coal = Energy(energy=entries.r_coal_fec)
@@ -84,6 +92,12 @@ def calc(inputs: Inputs, t18: T18, i18: I18) -> Energies:
     t18_lpg = Energy(energy=t18.t.demand_lpg)
     t18_gas = Energy(energy=t18.t.demand_gas)
 
+    e18_fossil_coal_brown_cogen = Energy(energy=e18.p_fossil_coal_brown_cogen.energy)
+    e18_fossil_coal_black_cogen = Energy(energy=e18.p_fossil_coal_black_cogen.energy)
+    e18_fossil_gas_cogen = Energy(energy=e18.p_fossil_gas_cogen.energy)
+    e18_fossil_ofossil_cogen = Energy(energy=e18.p_fossil_ofossil_cogen.energy)
+    e18_renew_biomass_cogen = Energy(energy=e18.p_renew_biomass_cogen.energy)
+
     return Energies(
         r18_coal=r18_coal,
         r18_fueloil=r18_fueloil,
@@ -115,4 +129,9 @@ def calc(inputs: Inputs, t18: T18, i18: I18) -> Energies:
         t18_fueloil=t18_fueloil,
         t18_lpg=t18_lpg,
         t18_gas=t18_gas,
+        e18_fossil_coal_brown_cogen=e18_fossil_coal_brown_cogen,
+        e18_fossil_coal_black_cogen=e18_fossil_coal_black_cogen,
+        e18_fossil_gas_cogen=e18_fossil_gas_cogen,
+        e18_fossil_ofossil_cogen=e18_fossil_ofossil_cogen,
+        e18_renew_biomass_cogen=e18_renew_biomass_cogen,
     )
