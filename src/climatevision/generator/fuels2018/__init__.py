@@ -10,7 +10,7 @@ from ..transport2018.t18 import T18
 from ..industry2018.i18 import I18
 
 from .f18 import F18, CO2eEmission
-from . import energy_demand, energy_production
+from . import energy_base, energy_demand, energy_production
 
 
 def calc(inputs: Inputs, *, t18: T18, i18: I18) -> F18:
@@ -24,8 +24,9 @@ def calc(inputs: Inputs, *, t18: T18, i18: I18) -> F18:
     # So now we just determine the total amounts of each fuel and then multiply
     # by the "this is how much CO2e is emitted during production" factor.
 
-    demand = energy_demand.calc_demand(inputs, t18, i18)
-    production = energy_production.calc_production(inputs, t18, i18)
+    energies = energy_base.calc(inputs, t18, i18)
+    demand = energy_demand.calc_demand(energies)
+    production = energy_production.calc_production(inputs, energies)
 
     f = CO2eEmission(
         CO2e_combustion_based=production.total.CO2e_combustion_based,
