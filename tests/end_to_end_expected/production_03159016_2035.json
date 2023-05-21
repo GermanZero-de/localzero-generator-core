@@ -1009,6 +1009,7 @@
             "CO2e_total": 21677.549799922173
         },
         "p": {
+            "CO2e_combustion_based": 0,
             "CO2e_production_based": 20116.612193354496,
             "CO2e_total": 20116.612193354496,
             "energy": 9030.843887394141

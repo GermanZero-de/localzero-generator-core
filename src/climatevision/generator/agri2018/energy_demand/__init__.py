@@ -6,11 +6,11 @@ from ...inputs import Inputs
 from ...lulucf2018.l18 import L18
 from ...business2018.b18 import B18
 from ...common.energy import Energy, EnergyPerM2
+from ...common.energy_with_co2e import EnergyWithCO2e
 from ...common.co2_equivalent_emission import CO2eEmission
 
 from ..energy_base import Energies
 
-from .p import P
 from .co2e_from_fermentation_or_manure import CO2eFromFermentationOrManure
 from .co2e_from_soil import CO2eFromSoil
 from .co2e_from_other import CO2eFromOther
@@ -19,7 +19,7 @@ from .co2e_from_other import CO2eFromOther
 @dataclass(kw_only=True)
 class Production:
 
-    total: P
+    total: EnergyWithCO2e
 
     fermen: CO2eEmission
     fermen_dairycow: CO2eFromFermentationOrManure
@@ -212,7 +212,7 @@ def calc_production(
         + energies.elec.energy
     )
 
-    total = P(
+    total = EnergyWithCO2e(
         CO2e_production_based=(
             fermen.CO2e_production_based
             + manure.CO2e_production_based
