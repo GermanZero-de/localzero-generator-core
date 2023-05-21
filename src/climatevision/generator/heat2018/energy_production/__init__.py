@@ -81,7 +81,7 @@ def calc_production(inputs: Inputs, energies: Energies, e18: E18) -> Production:
         CO2e_combustion_based_per_MWh=fact("Fact_H_P_coal_ratio_CO2e_cb_to_fec_2018"),
     )
 
-    p_heatnet_energy = (
+    heatnet_energy = (
         energies.r18_heatnet.energy
         + energies.b18_heatnet.energy
         + energies.i18_renew_heatnet.energy
@@ -95,10 +95,10 @@ def calc_production(inputs: Inputs, energies: Energies, e18: E18) -> Production:
         + e18.p_renew_biomass_cogen.energy
     )
 
-    if e18_energy < p_heatnet_energy:
+    if e18_energy < heatnet_energy:
         heatnet_cogen_energy = e18_energy
     else:
-        heatnet_cogen_energy = p_heatnet_energy
+        heatnet_cogen_energy = heatnet_energy
 
     heatnet_cogen = EnergyWithCO2ePerMWh(
         energy=heatnet_cogen_energy,
@@ -108,7 +108,7 @@ def calc_production(inputs: Inputs, energies: Energies, e18: E18) -> Production:
     )
 
     heatnet_plant = EnergyWithCO2ePerMWh(
-        energy=p_heatnet_energy - heatnet_cogen.energy,
+        energy=heatnet_energy - heatnet_cogen.energy,
         CO2e_combustion_based_per_MWh=fact(
             "Fact_H_P_heatnet_plant_ratio_CO2e_cb_to_fec_2018"
         ),
