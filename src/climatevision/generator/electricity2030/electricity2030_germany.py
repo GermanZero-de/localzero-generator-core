@@ -27,6 +27,9 @@ from .electricity2030_core import (
     calc_production_local_pv_facade,
     calc_production_local_pv_agri,
     calc_production_local_pv_park,
+    calc_production_local_wind_onshore,
+    calc_renew_wind_offshore,
+    calc_production_local_hydro,
 )
 
 
@@ -81,7 +84,7 @@ def calc(
     p_renew_pv_agri = EColVars2030()
     p_renew_wind = EColVars2030()
     p_renew_wind_onshore = EColVars2030()
-    p_renew_wind_offshore = EColVars2030()
+    p_renew_wind_offshore = calc_renew_wind_offshore(inputs, d_energy=0)
     p_renew_biomass = EColVars2030()
     p_renew_hydro = EColVars2030()
     p_renew_reverse = EColVars2030()
@@ -100,8 +103,7 @@ def calc(
         local_pv_park_full_load_hour=p_local_pv_park.full_load_hour,
         local_pv_roof_full_load_hour=p_local_pv_roof.full_load_hour,
     )
-    p_local_wind_onshore = EColVars2030()
-    p_local_hydro = EColVars2030()
+    p_local_hydro = calc_production_local_hydro(inputs, e18=e18)
     p_local_surplus = Energy()
 
     """S T A R T"""
@@ -199,42 +201,14 @@ def calc(
     p_renew_wind.CO2e_combustion_based_per_MWh = fact(
         "Fact_E_P_climate_neutral_ratio_CO2e_cb_to_fec"
     )
-    p_renew_wind_offshore.invest_pa_outside = 0
-    p_renew_wind_offshore.invest_outside = 0
-    p_renew_wind_offshore.emplo_existing = fact("Fact_E_P_wind_offshore_emplo_2018")
     p_renew_wind_onshore.cost_mro_per_MWh = (
         ass("Ass_E_P_local_wind_onshore_ratio_invest_to_power_2020")
         * ass("Ass_E_P_local_wind_onshore_mro_per_year")
         / fact("Fact_E_P_wind_onshore_full_load_hours")
         * 1000
     )
-    p_renew_wind_offshore.power_installed = fact(
-        "Fact_E_P_wind_offshore_power_installed_2018"
-    )
-    p_renew_wind_offshore.full_load_hour = fact(
-        "Fact_E_P_wind_offshore_full_load_hours"
-    )
-    p_renew_wind_offshore.cost_mro_per_MWh = (
-        ass("Ass_E_P_renew_wind_offshore_ratio_invest_to_power_2030")
-        * ass("Ass_E_P_renew_wind_offshore_mro_per_year")
-        / fact("Fact_E_P_wind_offshore_full_load_hours")
-        * 1000
-    )
-    p_renew_wind_offshore.invest_per_x = (
-        ass("Ass_E_P_renew_wind_offshore_ratio_invest_to_power_2030") * 1000
-    )
-    p_renew_wind_offshore.pct_of_wage = ass(
-        "Ass_E_P_constr_plant_invest_pct_of_wage_2017"
-    )
-    p_renew_wind_offshore.ratio_wage_to_emplo = ass(
-        "Ass_E_P_constr_elec_ratio_wage_to_emplo_2017"
-    )
-    p_renew_wind_offshore.power_installable = ass(
-        "Ass_E_P_renew_wind_offshore_power_installable"
-    )
-    p_renew_wind_offshore.power_to_be_installed_pct = ass(
-        "Ass_E_P_renew_wind_offshore_power_to_be_installed_2035"
-    )
+
+    p_renew_wind_offshore.emplo_existing = fact("Fact_E_P_wind_offshore_emplo_2018")
     p_renew_biomass.cost_fuel_per_MWh = ass(
         "Ass_E_P_local_biomass_material_costs"
     ) / ass("Ass_E_P_local_biomass_efficiency")
@@ -274,43 +248,7 @@ def calc(
         * entries.m_population_com_2018
         / entries.m_population_nat
     )
-    p_local_wind_onshore.power_installed = entries.e_PV_power_inst_wind_on
-    p_local_wind_onshore.full_load_hour = fact("Fact_E_P_wind_onshore_full_load_hours")
-    p_local_wind_onshore.cost_mro_per_MWh = (
-        ass("Ass_E_P_local_wind_onshore_ratio_invest_to_power_2030")
-        * ass("Ass_E_P_local_wind_onshore_mro_per_year")
-        / fact("Fact_E_P_wind_onshore_full_load_hours")
-        * 1000
-    )
-    p_local_wind_onshore.CO2e_combustion_based_per_MWh = fact(
-        "Fact_E_P_climate_neutral_ratio_CO2e_cb_to_fec"
-    )
-    p_local_wind_onshore.invest_per_x = (
-        ass("Ass_E_P_local_wind_onshore_ratio_invest_to_power_2030") * 1000
-    )
-    p_local_wind_onshore.pct_of_wage = ass(
-        "Ass_E_P_constr_plant_invest_pct_of_wage_2017"
-    )
-    p_local_wind_onshore.ratio_wage_to_emplo = ass(
-        "Ass_E_P_constr_elec_ratio_wage_to_emplo_2017"
-    )
-    p_local_wind_onshore.emplo_existing = (
-        fact("Fact_E_P_wind_onshore_emplo_2018")
-        * entries.m_population_com_2018
-        / entries.m_population_nat
-    )
-    p_local_wind_onshore.power_to_be_installed_pct = (
-        entries.e_PV_power_to_be_inst_local_wind_onshore
-    )
-    p_local_wind_onshore.ratio_power_to_area_ha = (
-        entries.e_local_wind_onshore_ratio_power_to_area_sta
-    )
-    p_local_wind_onshore.area_ha_available = (
-        entries.m_area_agri_com + entries.m_area_wood_com
-    )
-    p_local_wind_onshore.area_ha_available_pct_of_action = ass(
-        "Ass_E_P_local_wind_onshore_pct_action"
-    )
+    p_local_wind_onshore = calc_production_local_wind_onshore(inputs, e18=e18)
     p_local_biomass.cost_fuel_per_MWh = ass(
         "Ass_E_P_local_biomass_material_costs"
     ) / ass("Ass_E_P_local_biomass_efficiency")
@@ -331,12 +269,6 @@ def calc(
         fact("Fact_E_P_biomass_emplo_2018")
         * entries.m_population_com_2018
         / entries.m_population_nat
-    )
-    p_local_hydro.power_installed = entries.e_PV_power_inst_water
-    p_local_hydro.full_load_hour = fact("Fact_E_P_hydro_full_load_hours")  # energy
-    p_local_hydro.cost_mro_per_MWh = ass("Ass_E_P_local_hydro_mro_per_MWh")  # cost_mro
-    p_local_hydro.CO2e_combustion_based_per_MWh = fact(
-        "Fact_E_P_climate_neutral_ratio_CO2e_cb_to_fec"
     )
     g.invest_outside = g_grid_offshore.invest_outside
     g_grid_offshore.invest_pa_outside = (
@@ -420,17 +352,6 @@ def calc(
     p_renew_wind.invest_pa_outside = p_renew_wind_offshore.invest_pa_outside
     p_renew_wind.invest_outside = p_renew_wind_offshore.invest_outside
     p_renew_wind.emplo_existing = p_renew_wind_offshore.emplo_existing
-    p_renew_wind_offshore.energy_installable = (
-        p_renew_wind_offshore.full_load_hour
-        * p_renew_wind_offshore.power_installable
-        * (1 - ass("Ass_E_P_renew_loss_brutto_to_netto"))
-    )
-    p_renew_wind_offshore.power_to_be_installed = max(
-        0,
-        p_renew_wind_offshore.power_installable
-        * p_renew_wind_offshore.power_to_be_installed_pct
-        - p_renew_wind_offshore.power_installed,
-    )
     p_renew_biomass.change_energy_pct = div(
         p_renew_biomass.change_energy_MWh, e18.p_renew_biomass.energy
     )
@@ -449,22 +370,12 @@ def calc(
         + p_local_pv_park.power_installed
         + p_local_pv_agri.power_installed
     )  #
-    p_local_wind_onshore.power_installable = (
-        p_local_wind_onshore.ratio_power_to_area_ha
-        * p_local_wind_onshore.area_ha_available
-        * p_local_wind_onshore.area_ha_available_pct_of_action
-    )
     p_local_biomass.energy_installable = (
         p_local_biomass.power_installable
         * p_local_biomass.full_load_hour
         * (1 - ass("Ass_E_P_renew_loss_brutto_to_netto"))
     )
 
-    p_local_hydro.energy = (
-        p_local_hydro.power_installed
-        * p_local_hydro.full_load_hour
-        * (1 - ass("Ass_E_P_renew_loss_brutto_to_netto"))
-    )
     g.invest_pa_outside = g_grid_offshore.invest_pa_outside
     d_h.change_energy_pct = div(d_h.change_energy_MWh, e18.d_h.energy)  # todo div0
     d_r.change_energy_pct = div(d_r.change_energy_MWh, e18.d_r.energy)  # todo
@@ -565,28 +476,9 @@ def calc(
         + p_local_pv_park.power_installable
         + p_local_pv_agri.power_installable
     )
-    p_local_wind_onshore.power_to_be_installed = max(
-        0,
-        p_local_wind_onshore.power_installable
-        * p_local_wind_onshore.power_to_be_installed_pct
-        - p_local_wind_onshore.power_installed,
-    )
-    p_local_wind_onshore.energy_installable = (
-        p_local_wind_onshore.full_load_hour
-        * p_local_wind_onshore.power_installable
-        * (1 - ass("Ass_E_P_renew_loss_brutto_to_netto"))
-    )
     p_local_biomass.invest = (
         p_local_biomass.power_to_be_installed * p_local_biomass.invest_per_x
     )
-    p_local_hydro.cost_mro = (
-        p_local_hydro.energy * p_local_hydro.cost_mro_per_MWh / MILLION
-    )
-    p_local_hydro.CO2e_combustion_based = (
-        p_local_hydro.energy * p_local_hydro.CO2e_combustion_based_per_MWh
-    )
-    p_local_hydro.CO2e_total = p_local_hydro.CO2e_combustion_based
-    p_local_hydro.change_energy_MWh = p_local_hydro.energy - e18.p_local_hydro.energy
     p_renew_reverse.change_cost_mro = p_renew_reverse.cost_mro - 0
     d.change_energy_pct = div(d.change_energy_MWh, e18.d.energy)
     p_fossil.change_energy_pct = div(p_fossil.change_energy_MWh, e18.p_fossil.energy)
@@ -673,17 +565,6 @@ def calc(
         + p_local_pv_agri.energy_installable
     )
     g_grid_onshore.power_to_be_installed = p_local_wind_onshore.power_to_be_installed
-    p_local_wind_onshore.energy = (
-        (
-            p_local_wind_onshore.power_to_be_installed
-            + p_local_wind_onshore.power_installed
-        )
-        * p_local_wind_onshore.full_load_hour
-        * (1 - ass("Ass_E_P_renew_loss_brutto_to_netto"))
-    )
-    p_local_wind_onshore.invest = (
-        p_local_wind_onshore.power_to_be_installed * p_local_wind_onshore.invest_per_x
-    )
     p_local_biomass.cost_fuel = (
         p_local_biomass.cost_fuel_per_MWh * p_local_biomass.energy / MILLION
     )
@@ -765,16 +646,6 @@ def calc(
             + p_renew.energy
         ),
     )
-    p_local_wind_onshore.cost_mro = (
-        p_local_wind_onshore.energy * p_local_wind_onshore.cost_mro_per_MWh / MILLION
-    )
-    p_local_wind_onshore.CO2e_combustion_based = (
-        p_local_wind_onshore.energy * p_local_wind_onshore.CO2e_combustion_based_per_MWh
-    )
-    p_local_wind_onshore.change_energy_MWh = (
-        p_local_wind_onshore.energy - e18.p_local_wind_onshore.energy
-    )
-    p_local_wind_onshore.invest_pa = p_local_wind_onshore.invest / Kalkulationszeitraum
     p_local.cost_fuel = p_local_biomass.cost_fuel
     p_local_biomass.change_cost_energy = (
         p_local_biomass.cost_fuel - e18.p_local_biomass.cost_fuel
@@ -862,15 +733,6 @@ def calc(
     )
     p_local_pv_agri.power_to_be_installed_pct = div(
         p_local_pv_agri.energy, p_local_pv_agri.energy_installable
-    )
-    p_local_wind_onshore.change_cost_mro = (
-        p_local_wind_onshore.cost_mro - e18.p_local_wind_onshore.cost_mro
-    )
-    p_local_wind_onshore.change_energy_pct = div(
-        p_local_wind_onshore.change_energy_MWh, e18.p_local_wind_onshore.energy
-    )
-    p_local_wind_onshore.cost_wage = (
-        p_local_wind_onshore.invest_pa * p_local_wind_onshore.pct_of_wage
     )
     p_local.change_cost_energy = p_local_biomass.change_cost_energy
     p_local.change_cost_mro = p_local_biomass.change_cost_mro
@@ -1330,9 +1192,6 @@ def calc(
     p_local_wind_onshore.CO2e_total = 0
     p_local_wind_onshore.cost_climate_saved = 0
 
-    p_local_hydro.cost_climate_saved = 0
-    p_local_hydro.change_CO2e_t = 0
-
     p_fossil.CO2e_total = 0
 
     p_renew_wind.change_CO2e_t = 0
@@ -1382,7 +1241,6 @@ def calc(
     p_local_biomass.change_CO2e_pct = div(
         p_local_biomass.change_CO2e_t, e18.p_local_biomass.CO2e_total
     )
-    p_local_hydro.change_CO2e_pct = 0
 
     p_renew_pv.cost_climate_saved = 0
     p_renew_pv_roof.cost_climate_saved = 0
@@ -1403,8 +1261,6 @@ def calc(
     p_local_pv_facade.cost_climate_saved = 0
     p_local_pv_park.cost_climate_saved = 0
     p_local_wind_onshore.cost_climate_saved = 0
-
-    p_local_hydro.cost_climate_saved = 0
 
     return E30(
         e=e,
