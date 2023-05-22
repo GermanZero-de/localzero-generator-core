@@ -933,6 +933,8 @@ def calc(
         "Fact_B_P_constr_main_ratio_wage_to_emplo_2017"
     )
 
+    # Energy demand. Industry and Business have special electricity prices.
+    # Everybody else uses the standard residential prices.
     d_a = calc_energy_demand(
         inputs,
         energy=a30.p_operation.demand_electricity,

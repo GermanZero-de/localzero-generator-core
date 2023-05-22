@@ -72,6 +72,8 @@ class Energy:
 class EnergyDemand(Energy):
     change_energy_MWh: float = None  # type: ignore
     change_energy_pct: float = None  # type: ignore
+    # Percent of total energy demand
+    pct_energy: float = None  # type: ignore
 
 
 @dataclass(kw_only=True)
