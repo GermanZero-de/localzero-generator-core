@@ -1,6 +1,8 @@
 """
 Documentation:
-https://localzero-generator.readthedocs.io/de/latest/sectors/agriculture.html
+    - missing :-(
+    - This primarily models organic waste treatment and landfilling, we do not
+      model industrial waste treatment.
 """
 
 # pyright: strict
@@ -37,6 +39,11 @@ class Landfilling:
         fact = inputs.fact
         ass = inputs.ass
 
+        # In germany since 2005 we have stricter standards for waste separation / cover on
+        # land fills. That means newer landfills produce less methan.
+        # But we have lots of old landfills hence the exp function to model the decay over
+        # time.  Socket value and decay are taken from various studies (see comments on the
+        # assumptions)
         CO2e_pb = (
             (
                 ass("Ass_W_P_landfilling_socket")
@@ -74,6 +81,8 @@ class Landfilling:
 
 @dataclass(kw_only=True)
 class Organic_treatment:
+    """Past 2005 we have a different method of treating organic waste in germany that is more climate friendly."""
+
     prod_volume: float
     CO2e_pb_per_t: float
     CO2e_production_based: float
@@ -154,6 +163,8 @@ class Organic_treatment:
 
 @dataclass(kw_only=True)
 class Wastewater:
+    """Wastewater treatment."""
+
     energy: float
     prod_volume: float
     CO2e_pb_per_t: float
@@ -338,6 +349,8 @@ class EnergySupply:
 
 @dataclass(kw_only=True)
 class Pyrolysis:
+    """This is our escape hatch. If we can't find a better way to deal with CO2e."""
+
     prod_volume: float = None  # type: ignore
     CO2e_production_based: float = None  # type: ignore
     CO2e_production_based_per_t: float = None  # type: ignore
