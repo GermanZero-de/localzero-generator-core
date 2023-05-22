@@ -24,6 +24,7 @@ from .electricity2030_core import (
     calc_production_renewable_geothermal,
     calc_stop_production_by_fossil_fuels,
     calc_production_local_pv_roof,
+    calc_production_local_pv_facade,
 )
 
 
@@ -85,7 +86,9 @@ def calc(
     p_local = EColVars2030()
     p_local_pv = EColVars2030()
     p_local_pv_roof = calc_production_local_pv_roof(inputs, e18=e18, b18=b18, r18=r18)
-    p_local_pv_facade = EColVars2030()
+    p_local_pv_facade = calc_production_local_pv_facade(
+        inputs, e18=e18, b18=b18, r18=r18
+    )
     p_local_pv_park = EColVars2030()
     p_local_pv_agri = EColVars2030()
     p_local_wind_onshore = EColVars2030()
@@ -184,7 +187,6 @@ def calc(
     p_renew_pv.CO2e_combustion_based_per_MWh = fact(
         "Fact_E_P_climate_neutral_ratio_CO2e_cb_to_fec"
     )
-    p_local_pv_facade.full_load_hour = ass("Ass_E_P_local_pv_facade_full_load_hours")
     p_renew_wind.CO2e_combustion_based_per_MWh = fact(
         "Fact_E_P_climate_neutral_ratio_CO2e_cb_to_fec"
     )
@@ -263,34 +265,8 @@ def calc(
         * entries.m_population_com_2018
         / entries.m_population_nat
     )
-    p_local_pv_facade.power_installed = entries.e_PV_power_inst_facade
     p_local_pv_park.power_installed = entries.e_PV_power_inst_park
     p_local_pv_agri.power_installed = entries.e_PV_power_inst_agripv
-    p_local_pv_facade.cost_mro_per_MWh = (
-        ass("Ass_E_S_local_pv_facade_ratio_invest_to_power")
-        * ass("Ass_E_P_local_pv_roof_mro_per_year")
-        / ass("Ass_E_P_local_pv_facade_full_load_hours")
-        * 1000
-    )
-    p_local_pv_facade.invest_per_x = (
-        ass("Ass_E_S_local_pv_facade_ratio_invest_to_power") * 1000
-    )
-    p_local_pv_facade.pct_of_wage = ass("Ass_E_P_pv_invest_pct_of_wage")
-    p_local_pv_facade.ratio_wage_to_emplo = ass(
-        "Ass_E_P_constr_elec_ratio_wage_to_emplo_2017"
-    )
-    p_local_pv_facade.power_to_be_installed_pct = entries.e_PV_power_to_be_inst_facade
-    p_local_pv_facade.ratio_power_to_area_ha = ass(
-        "Ass_E_P_local_pv_facade_ratio_power_to_area_ha"
-    )
-    p_local_pv_facade.area_ha_available = (
-        ass("Ass_E_P_lcoal_pv_facade_potential")
-        * entries.r_buildings_com
-        / entries.r_buildings_nat
-    )
-    p_local_pv_facade.area_ha_available_pct_of_action = ass(
-        "Ass_E_P_local_pv_facade_potential_usable"
-    )
     p_local_pv_park.invest_per_x = (
         ass("Ass_E_S_local_pv_park_ratio_invest_to_power_2030") * 1000
     )
@@ -493,11 +469,6 @@ def calc(
         + p_local_pv_park.power_installed
         + p_local_pv_agri.power_installed
     )  #
-    p_local_pv_facade.power_installable = (
-        p_local_pv_facade.ratio_power_to_area_ha
-        * p_local_pv_facade.area_ha_available
-        * p_local_pv_facade.area_ha_available_pct_of_action
-    )
     p_local_pv_park.power_installable = (
         p_local_pv_park.ratio_power_to_area_ha
         * p_local_pv_park.area_ha_available_pct_of_action
@@ -630,17 +601,6 @@ def calc(
     p_renew_reverse.invest = (
         p_renew_reverse.power_to_be_installed * p_renew_reverse.invest_per_x
     )
-    p_local_pv_facade.power_to_be_installed = max(
-        0,
-        p_local_pv_facade.power_installable
-        * p_local_pv_facade.power_to_be_installed_pct
-        - p_local_pv_facade.power_installed,
-    )
-    p_local_pv_facade.energy_installable = (
-        p_local_pv_facade.full_load_hour
-        * p_local_pv_facade.power_installable
-        * (1 - ass("Ass_E_P_renew_loss_brutto_to_netto"))
-    )
     p_local_pv_park.power_to_be_installed = max(
         0,
         p_local_pv_park.power_installable * p_local_pv_park.power_to_be_installed_pct
@@ -763,14 +723,6 @@ def calc(
     )
 
     p_renew_reverse.invest_pa = p_renew_reverse.invest / Kalkulationszeitraum
-    p_local_pv_facade.energy = (
-        (p_local_pv_facade.power_to_be_installed + p_local_pv_facade.power_installed)
-        * p_local_pv_facade.full_load_hour
-        * (1 - ass("Ass_E_P_renew_loss_brutto_to_netto"))
-    )
-    p_local_pv_facade.invest = (
-        p_local_pv_facade.power_to_be_installed * p_local_pv_facade.invest_per_x
-    )
     p_local_pv_park.energy = (
         (p_local_pv_park.power_to_be_installed + p_local_pv_park.power_installed)
         * p_local_pv_park.full_load_hour
@@ -862,18 +814,6 @@ def calc(
     p_renew_hydro.energy = 0
     p_renew_reverse.cost_wage = p_renew_reverse.invest_pa * p_renew_reverse.pct_of_wage
 
-    p_local_pv_facade.cost_mro = (
-        p_local_pv_facade.energy * p_local_pv_facade.cost_mro_per_MWh / MILLION
-    )
-    p_local_pv_facade.change_energy_MWh = (
-        p_local_pv_facade.energy - e18.p_local_pv_facade.energy
-    )
-    p_local_pv_facade.invest_pa = p_local_pv_facade.invest / Kalkulationszeitraum
-    p_local_pv_facade.invest_com = (
-        p_local_pv_facade.invest
-        * (r18.p_buildings_area_m2_com.area_m2 + b18.p_nonresi_com.area_m2)
-        / (b18.p_nonresi.area_m2 + r18.p_buildings_total.area_m2)
-    )
     p_local_pv_park.cost_mro = (
         p_local_pv_park.energy * p_local_pv_park.cost_mro_per_MWh / MILLION
     )
@@ -975,19 +915,7 @@ def calc(
     p_renew_reverse.demand_emplo = div(
         p_renew_reverse.cost_wage, p_renew_reverse.ratio_wage_to_emplo
     )
-    p_local_pv_facade.change_cost_mro = (
-        p_local_pv_facade.cost_mro - e18.p_local_pv_facade.cost_mro
-    )
-    p_local_pv_facade.change_energy_pct = div(
-        p_local_pv_facade.change_energy_MWh, e18.p_local_pv_facade.energy
-    )
-    p_local_pv_facade.cost_wage = (
-        p_local_pv_facade.invest_pa * p_local_pv_facade.pct_of_wage
-    )
     p_local_pv.invest_com = p_local_pv_roof.invest_com + p_local_pv_facade.invest_com
-    p_local_pv_facade.invest_pa_com = (
-        p_local_pv_facade.invest_com / Kalkulationszeitraum
-    )
     p_local_pv_park.change_cost_mro = (
         p_local_pv_park.cost_mro - e18.p_local_pv_park.cost_mro
     )
@@ -1094,9 +1022,6 @@ def calc(
     p_renew_reverse.demand_emplo_new = p_renew_reverse.demand_emplo
     p_local_pv_roof.demand_emplo = div(
         p_local_pv_roof.cost_wage, p_local_pv_roof.ratio_wage_to_emplo
-    )
-    p_local_pv_facade.demand_emplo = div(
-        p_local_pv_facade.cost_wage, p_local_pv_facade.ratio_wage_to_emplo
     )
     p_local.invest_com = p_local_pv.invest_com
     p_local_pv_park.invest_pa_com = 0
