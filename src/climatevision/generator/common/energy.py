@@ -9,6 +9,12 @@ from ..utils import div
 class Energy:
     energy: float = 0
 
+    @classmethod
+    def sum(cls, *energies: "Energy") -> "Energy":
+        return cls(
+            energy=sum(e.energy for e in energies),
+        )
+
 
 @dataclass(kw_only=True)
 class EnergyChange:

@@ -6,9 +6,11 @@ from ...inputs import Inputs
 from ...lulucf2018.l18 import L18
 from ...business2018.b18 import B18
 from ...common.energy import Energy, EnergyPerM2
+from ...common.energy_with_co2e import EnergyWithCO2e
 from ...common.co2_equivalent_emission import CO2eEmission
 
-from .p import P
+from ..energy_base import Energies
+
 from .co2e_from_fermentation_or_manure import CO2eFromFermentationOrManure
 from .co2e_from_soil import CO2eFromSoil
 from .co2e_from_other import CO2eFromOther
@@ -17,7 +19,7 @@ from .co2e_from_other import CO2eFromOther
 @dataclass(kw_only=True)
 class Production:
 
-    total: P
+    total: EnergyWithCO2e
 
     fermen: CO2eEmission
     fermen_dairycow: CO2eFromFermentationOrManure
@@ -62,30 +64,10 @@ class Production:
 
 
 def calc_production(
-    inputs: Inputs,
-    l18: L18,
-    b18: B18,
-    s_elec_energy: float,
-    s_petrol_energy: float,
-    s_diesel_energy: float,
-    s_fueloil_energy: float,
-    s_lpg_energy: float,
-    s_gas_energy: float,
-    s_biomass_energy: float,
+    inputs: Inputs, l18: L18, b18: B18, energies: Energies
 ) -> Production:
 
     entries = inputs.entries
-
-    # Energy
-    total_energy = (
-        entries.a_petrol_fec
-        + entries.a_diesel_fec
-        + entries.a_fueloil_fec
-        + entries.a_lpg_fec
-        + entries.a_gas_fec
-        + entries.a_biomass_fec
-        + entries.a_elec_fec
-    )
 
     # Fermen
     fermen_dairycow = CO2eFromFermentationOrManure.calc_fermen(inputs, "dairycow")
@@ -205,12 +187,14 @@ def calc_production(
 
     other = CO2eEmission.sum(other_liming, other_urea, other_kas, other_ecrop)
 
-    operation_elec_heatpump = Energy(energy=0)
-    operation = Energy(energy=total_energy)
-    operation_elec_elcon = Energy(energy=s_elec_energy)
-    operation_vehicles = Energy(energy=s_petrol_energy + s_diesel_energy)
+    operation_elec_heatpump = Energy(energy=energies.heatpump.energy)
+    operation_elec_elcon = Energy(energy=energies.elec.energy)
+    operation_vehicles = Energy(energy=energies.petrol.energy + energies.diesel.energy)
     operation_heat = EnergyPerM2(
-        energy=s_fueloil_energy + s_lpg_energy + s_gas_energy + s_biomass_energy,
+        energy=energies.fueloil.energy
+        + energies.lpg.energy
+        + energies.gas.energy
+        + energies.biomass.energy,
         area_m2=(
             b18.p_nonresi.area_m2
             * inputs.fact("Fact_A_P_energy_buildings_ratio_A_to_B")
@@ -218,7 +202,14 @@ def calc_production(
         ),
     )
 
-    total = P(
+    operation = Energy.sum(
+        operation_elec_heatpump,
+        operation_elec_elcon,
+        operation_vehicles,
+        operation_heat,
+    )
+
+    total = EnergyWithCO2e(
         CO2e_production_based=(
             fermen.CO2e_production_based
             + manure.CO2e_production_based

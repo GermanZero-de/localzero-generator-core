@@ -12,90 +12,21 @@ from ..common.co2_equivalent_emission import CO2eEmission
 from ..common.energy_with_co2e import EnergyWithCO2e
 
 from .b18 import B18
-from . import energy_demand, energy_source
+from . import energy_base, energy_demand, energy_source
 
 
 # Berechnungsfunktion im Sektor GHD für 2018
 def calc(inputs: Inputs, *, r18: R18) -> B18:
-    fact = inputs.fact
-    entries = inputs.entries
+    energies = energy_base.calc(inputs=inputs)
 
-    supply_gas_energy = entries.b_gas_fec
-    supply_lpg_energy = entries.b_lpg_fec
-    supply_petrol_energy = entries.b_petrol_fec
-    supply_jetfuel_energy = entries.b_jetfuel_fec
-    supply_diesel_energy = entries.b_diesel_fec
-    supply_fueloil_energy = entries.b_fueloil_fec
-    supply_biomass_energy = entries.b_biomass_fec
-    supply_coal_energy = entries.b_coal_fec
-    supply_heatnet_energy = entries.b_heatnet_fec
-    supply_elec_heating_energy = (
-        fact("Fact_B_S_elec_heating_fec_2018")
-        * entries.r_flats_wo_heatnet
-        / fact("Fact_R_P_flats_wo_heatnet_2011")
-    )
-    supply_heatpump_energy = entries.b_orenew_fec * fact(
-        "Fact_R_S_ratio_heatpump_to_orenew_2018"
-    )
-    supply_solarth_energy = entries.b_orenew_fec * (
-        1 - fact("Fact_R_S_ratio_heatpump_to_orenew_2018")
-    )
-    supply_elec_energy = entries.b_elec_fec
+    production = energy_demand.calc_production(inputs, energies)
 
-    supply_total_energy = (
-        supply_gas_energy
-        + supply_lpg_energy
-        + supply_petrol_energy
-        + supply_jetfuel_energy
-        + supply_diesel_energy
-        + supply_fueloil_energy
-        + supply_biomass_energy
-        + supply_coal_energy
-        + supply_heatnet_energy
-        + supply_heatpump_energy
-        + supply_solarth_energy
-        + supply_elec_energy
-    )
-
-    supply = energy_source.calc_supply(
-        inputs,
-        supply_total_energy,
-        supply_gas_energy,
-        supply_lpg_energy,
-        supply_petrol_energy,
-        supply_jetfuel_energy,
-        supply_diesel_energy,
-        supply_fueloil_energy,
-        supply_biomass_energy,
-        supply_coal_energy,
-        supply_heatnet_energy,
-        supply_elec_heating_energy,
-        supply_heatpump_energy,
-        supply_solarth_energy,
-        supply_elec_energy,
-    )
-
-    production = energy_demand.calc_production(
-        inputs,
-        supply.heatpump.energy,
-        supply.elec.energy,
-        supply.elec_heating.energy,
-        supply.petrol.energy,
-        supply.jetfuel.energy,
-        supply.diesel.energy,
-        supply.gas.energy,
-        supply.lpg.energy,
-        supply.fueloil.energy,
-        supply.biomass.energy,
-        supply.coal.energy,
-        supply.heatnet.energy,
-        supply.solarth.energy,
-    )
-
-    supply.biomass.number_of_buildings = supply.biomass.energy * div(
+    building_energy_ratio = div(
         production.nonresi.number_of_buildings,
         production.nonresi.energy,
     )
+
+    supply = energy_source.calc_supply(inputs, energies, building_energy_ratio)
 
     b = CO2eEmission(
         CO2e_combustion_based=supply.total.CO2e_combustion_based,

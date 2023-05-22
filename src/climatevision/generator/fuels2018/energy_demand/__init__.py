@@ -2,10 +2,9 @@
 
 from dataclasses import dataclass
 
-from ...inputs import Inputs
-from ...transport2018.t18 import T18
 from ...common.energy import Energy as EnergyDemand
-from ...industry2018.i18 import I18
+
+from ..energy_base import Energies
 
 
 @dataclass(kw_only=True)
@@ -19,29 +18,29 @@ class Demand:
     total: EnergyDemand
 
 
-def calc_demand(inputs: Inputs, t18: T18, i18: I18) -> Demand:
+def calc_demand(energies: Energies) -> Demand:
 
-    entries = inputs.entries
-
-    residences = EnergyDemand(energy=entries.r_petrol_fec)
+    residences = EnergyDemand(energy=energies.r18_petrol.energy)
 
     business = EnergyDemand(
-        energy=entries.b_petrol_fec + entries.b_jetfuel_fec + entries.b_diesel_fec
+        energy=energies.b18_petrol.energy
+        + energies.b18_jetfuel.energy
+        + energies.b18_diesel.energy
     )
 
     # industry = EnergyDemand(energy=entries.i_diesel_fec)
-    industry = EnergyDemand(energy=i18.s_fossil_diesel.energy)
+    industry = EnergyDemand(energy=energies.i18_fossil_diesel.energy)
 
     transport = EnergyDemand(
-        energy=t18.t.demand_petrol
-        + t18.t.demand_jetfuel
-        + t18.t.demand_diesel
-        + t18.t.demand_biogas
-        + t18.t.demand_bioethanol
-        + t18.t.demand_biodiesel
+        energy=energies.t18_petrol.energy
+        + energies.t18_jetfuel.energy
+        + energies.t18_diesel.energy
+        + energies.t18_biogas.energy
+        + energies.t18_bioethanol.energy
+        + energies.t18_biodiesel.energy
     )
 
-    agri = EnergyDemand(energy=entries.a_petrol_fec + entries.a_diesel_fec)
+    agri = EnergyDemand(energy=energies.a18_petrol.energy + energies.a18_diesel.energy)
 
     total = EnergyDemand(
         energy=residences.energy

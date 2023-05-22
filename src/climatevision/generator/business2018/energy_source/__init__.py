@@ -4,102 +4,95 @@ from dataclasses import dataclass
 
 from ...inputs import Inputs
 
-from .dataclasses import Vars5, Vars6, Vars7, EnergyWithCO2ePerMWh
+from ..energy_base import Energies
+
+from .dataclasses import (
+    Vars5,
+    EnergyWithCO2ePerMWhAndCostFuel,
+    EnergyWithCO2ePerMWhAndCostFuelAndBuildings,
+    EnergyWithCO2ePerMWh,
+)
 
 
 @dataclass(kw_only=True)
 class EnergySupply:
     total: Vars5
-    gas: Vars6
-    lpg: Vars6
-    petrol: Vars6
-    jetfuel: Vars6
-    diesel: Vars6
-    fueloil: Vars6
-    biomass: Vars7
-    coal: Vars6
-    heatnet: Vars6
+    gas: EnergyWithCO2ePerMWhAndCostFuel
+    lpg: EnergyWithCO2ePerMWhAndCostFuel
+    petrol: EnergyWithCO2ePerMWhAndCostFuel
+    jetfuel: EnergyWithCO2ePerMWhAndCostFuel
+    diesel: EnergyWithCO2ePerMWhAndCostFuel
+    fueloil: EnergyWithCO2ePerMWhAndCostFuel
+    biomass: EnergyWithCO2ePerMWhAndCostFuelAndBuildings
+    coal: EnergyWithCO2ePerMWhAndCostFuel
+    heatnet: EnergyWithCO2ePerMWhAndCostFuel
     elec_heating: EnergyWithCO2ePerMWh
-    heatpump: Vars6
-    solarth: Vars6
+    heatpump: EnergyWithCO2ePerMWhAndCostFuel
+    solarth: EnergyWithCO2ePerMWhAndCostFuel
     elec: EnergyWithCO2ePerMWh
 
 
 def calc_supply(
-    inputs: Inputs,
-    total_energy: float,
-    gas_energy: float,
-    lpg_energy: float,
-    petrol_energy: float,
-    jetfuel_energy: float,
-    diesel_energy: float,
-    fueloil_energy: float,
-    biomass_energy: float,
-    coal_energy: float,
-    heatnet_energy: float,
-    elec_heating_energy: float,
-    heatpump_energy: float,
-    solarth_energy: float,
-    elec_energy: float,
+    inputs: Inputs, energies: Energies, building_energy_ratio: float
 ) -> EnergySupply:
 
     fact = inputs.fact
 
-    gas = Vars6(
-        energy=gas_energy,
+    gas = EnergyWithCO2ePerMWhAndCostFuel(
+        energy=energies.gas.energy,
         cost_fuel_per_MWh=fact("Fact_R_S_gas_energy_cost_factor_2018"),
         CO2e_combustion_based_per_MWh=fact("Fact_H_P_ngas_cb_EF"),
     )
 
-    lpg = Vars6(
-        energy=lpg_energy,
+    lpg = EnergyWithCO2ePerMWhAndCostFuel(
+        energy=energies.lpg.energy,
         cost_fuel_per_MWh=fact("Fact_R_S_lpg_energy_cost_factor_2018"),
         CO2e_combustion_based_per_MWh=fact("Fact_H_P_LPG_cb_EF"),
     )
 
-    petrol = Vars6(
-        energy=petrol_energy,
+    petrol = EnergyWithCO2ePerMWhAndCostFuel(
+        energy=energies.petrol.energy,
         cost_fuel_per_MWh=fact("Fact_R_S_petrol_energy_cost_factor_2018"),
         CO2e_combustion_based_per_MWh=fact("Fact_H_P_petrol_cb_EF"),
     )
 
-    jetfuel = Vars6(
-        energy=jetfuel_energy,
+    jetfuel = EnergyWithCO2ePerMWhAndCostFuel(
+        energy=energies.jetfuel.energy,
         cost_fuel_per_MWh=fact("Fact_R_S_kerosine_energy_cost_factor_2018"),
         CO2e_combustion_based_per_MWh=fact("Fact_H_P_kerosene_cb_EF"),
     )
 
-    diesel = Vars6(
-        energy=diesel_energy,
+    diesel = EnergyWithCO2ePerMWhAndCostFuel(
+        energy=energies.diesel.energy,
         cost_fuel_per_MWh=fact("Fact_R_S_fueloil_energy_cost_factor_2018"),
         CO2e_combustion_based_per_MWh=fact("Fact_H_P_fueloil_cb_EF"),
     )
 
-    fueloil = Vars6(
-        energy=fueloil_energy,
+    fueloil = EnergyWithCO2ePerMWhAndCostFuel(
+        energy=energies.fueloil.energy,
         cost_fuel_per_MWh=fact("Fact_R_S_fueloil_energy_cost_factor_2018"),
         CO2e_combustion_based_per_MWh=fact("Fact_H_P_fueloil_cb_EF"),
     )
 
-    coal = Vars6(
-        energy=coal_energy,
+    coal = EnergyWithCO2ePerMWhAndCostFuel(
+        energy=energies.coal.energy,
         cost_fuel_per_MWh=fact("Fact_R_S_coal_energy_cost_factor_2018"),
         CO2e_combustion_based_per_MWh=fact("Fact_R_S_coal_CO2e_EF"),
     )
 
-    heatnet = Vars6(
-        energy=heatnet_energy,
+    heatnet = EnergyWithCO2ePerMWhAndCostFuel(
+        energy=energies.heatnet.energy,
         cost_fuel_per_MWh=fact("Fact_R_S_heatnet_energy_cost_factor_2018"),
         CO2e_combustion_based_per_MWh=0,
     )
 
     elec_heating = EnergyWithCO2ePerMWh(
-        energy=elec_heating_energy,
+        energy=energies.elec_heating.energy,
         CO2e_combustion_based_per_MWh=0,
     )
 
-    heatpump = Vars6(
-        energy=heatpump_energy,
+    heatpump = EnergyWithCO2ePerMWhAndCostFuel(
+        energy=energies.heatpump.energy,
         cost_fuel_per_MWh=(
             fact("Fact_E_D_R_cost_fuel_per_MWh_2018")
             / (
@@ -115,22 +108,38 @@ def calc_supply(
         CO2e_combustion_based_per_MWh=0,
     )
 
-    solarth = Vars6(
-        energy=solarth_energy,
+    solarth = EnergyWithCO2ePerMWhAndCostFuel(
+        energy=energies.solarth.energy,
         cost_fuel_per_MWh=0,
         CO2e_combustion_based_per_MWh=0,
     )
 
-    elec = EnergyWithCO2ePerMWh(energy=elec_energy, CO2e_combustion_based_per_MWh=0)
+    elec = EnergyWithCO2ePerMWh(
+        energy=energies.elec.energy, CO2e_combustion_based_per_MWh=0
+    )
 
-    biomass = Vars7(
-        energy=biomass_energy,
+    biomass = EnergyWithCO2ePerMWhAndCostFuelAndBuildings(
+        energy=energies.biomass.energy,
         cost_fuel_per_MWh=fact("Fact_R_S_wood_energy_cost_factor_2018"),
         CO2e_combustion_based_per_MWh=fact("Fact_RB_S_biomass_CO2e_EF"),
+        number_of_buildings=energies.biomass.energy * building_energy_ratio,
     )
 
     total = Vars5()
-    total.energy = total_energy
+    total.energy = (
+        gas.energy
+        + lpg.energy
+        + petrol.energy
+        + jetfuel.energy
+        + diesel.energy
+        + fueloil.energy
+        + biomass.energy
+        + coal.energy
+        + heatnet.energy
+        + heatpump.energy
+        + solarth.energy
+        + elec.energy
+    )
     total.cost_fuel = (
         gas.cost_fuel
         + lpg.cost_fuel

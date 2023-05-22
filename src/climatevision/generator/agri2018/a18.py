@@ -3,12 +3,12 @@
 from dataclasses import dataclass
 
 from .energy_demand import (
-    P,
     CO2eFromFermentationOrManure,
     CO2eFromSoil,
     CO2eFromOther,
     Energy,
     EnergyPerM2,
+    EnergyWithCO2e,
     CO2eEmission,
 )
 from .energy_source import EnergyWithCO2e, EnergyWithCO2ePerMWh
@@ -17,7 +17,7 @@ from .energy_source import EnergyWithCO2e, EnergyWithCO2ePerMWh
 @dataclass(kw_only=True)
 class A18:
     a: CO2eEmission
-    p: P
+    p: EnergyWithCO2e
     p_fermen: CO2eEmission
     p_fermen_dairycow: CO2eFromFermentationOrManure
     p_fermen_nondairy: CO2eFromFermentationOrManure

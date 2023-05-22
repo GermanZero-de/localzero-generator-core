@@ -8,7 +8,7 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/industry.html
 from ..inputs import Inputs
 
 from .i18 import I18
-from . import energy_demand, energy_source
+from . import energy_base, energy_demand, energy_source
 
 
 def calc(inputs: Inputs, inputs_germany: Inputs) -> I18:
@@ -17,7 +17,10 @@ def calc(inputs: Inputs, inputs_germany: Inputs) -> I18:
     production = energy_demand.calc_production_by_co2e(
         inputs, inputs_germany, production_germany
     )
-    supply = energy_source.calc_supply(inputs, production)
+
+    energies = energy_base.calc(production=production)
+
+    supply = energy_source.calc_supply(inputs, energies)
 
     i = production.total
 

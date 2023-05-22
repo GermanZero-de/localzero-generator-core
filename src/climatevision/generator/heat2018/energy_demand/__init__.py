@@ -2,10 +2,9 @@
 
 from dataclasses import dataclass
 
-from ...inputs import Inputs
-from ...transport2018.t18 import T18
-from ...industry2018.i18 import I18
 from ...common.energy import Energy as EnergyDemand
+
+from ..energy_base import Energies
 
 
 @dataclass(kw_only=True)
@@ -19,51 +18,51 @@ class Demand:
     total: EnergyDemand
 
 
-def calc_demand(inputs: Inputs, t18: T18, i18: I18) -> Demand:
-
-    entries = inputs.entries
+def calc_demand(energies: Energies) -> Demand:
 
     residences = EnergyDemand(
-        energy=entries.r_coal_fec
-        + entries.r_fueloil_fec
-        + entries.r_lpg_fec
-        + entries.r_gas_fec
-        + entries.r_biomass_fec
-        + entries.r_orenew_fec
-        + entries.r_heatnet_fec
+        energy=energies.r18_coal.energy
+        + energies.r18_fueloil.energy
+        + energies.r18_lpg.energy
+        + energies.r18_gas.energy
+        + energies.r18_biomass.energy
+        + energies.r18_orenew.energy
+        + energies.r18_heatnet.energy
     )
 
     business = EnergyDemand(
-        energy=entries.b_coal_fec
-        + entries.b_fueloil_fec
-        + entries.b_lpg_fec
-        + entries.b_gas_fec
-        + entries.b_biomass_fec
-        + entries.b_orenew_fec
-        + entries.b_heatnet_fec
+        energy=energies.b18_coal.energy
+        + energies.b18_fueloil.energy
+        + energies.b18_lpg.energy
+        + energies.b18_gas.energy
+        + energies.b18_biomass.energy
+        + energies.b18_orenew.energy
+        + energies.b18_heatnet.energy
     )
 
     industry = EnergyDemand(
-        energy=i18.s_fossil_coal.energy
-        + i18.s_fossil_fueloil.energy
-        + i18.s_fossil_lpg.energy
-        + i18.s_fossil_opetpro.energy
-        + i18.s_fossil_gas.energy
-        + i18.s_renew_biomass.energy
-        + i18.s_renew_orenew.energy
-        + i18.s_fossil_ofossil.energy
-        + i18.s_renew_heatnet.energy
+        energy=energies.i18_fossil_coal.energy
+        + energies.i18_fossil_fueloil.energy
+        + energies.i18_fossil_lpg.energy
+        + energies.i18_fossil_opetpro.energy
+        + energies.i18_fossil_gas.energy
+        + energies.i18_renew_biomass.energy
+        + energies.i18_renew_orenew.energy
+        + energies.i18_fossil_ofossil.energy
+        + energies.i18_renew_heatnet.energy
     )
 
     transport = EnergyDemand(
-        energy=t18.t.demand_fueloil + t18.t.demand_lpg + t18.t.demand_gas
+        energy=energies.t18_fueloil.energy
+        + energies.t18_lpg.energy
+        + energies.t18_gas.energy
     )
 
     agri = EnergyDemand(
-        energy=entries.a_fueloil_fec
-        + entries.a_lpg_fec
-        + entries.a_gas_fec
-        + entries.a_biomass_fec
+        energy=energies.a18_fueloil.energy
+        + energies.a18_lpg.energy
+        + energies.a18_gas.energy
+        + energies.a18_biomass.energy
     )
 
     total = EnergyDemand(

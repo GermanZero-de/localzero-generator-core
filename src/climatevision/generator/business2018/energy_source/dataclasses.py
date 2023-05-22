@@ -15,7 +15,7 @@ class Vars5:
 
 
 @dataclass(kw_only=True)
-class Vars6(EnergyWithCO2ePerMWh):
+class EnergyWithCO2ePerMWhAndCostFuel(EnergyWithCO2ePerMWh):
     cost_fuel: float = 0
     cost_fuel_per_MWh: float
 
@@ -26,5 +26,5 @@ class Vars6(EnergyWithCO2ePerMWh):
 
 
 @dataclass(kw_only=True)
-class Vars7(Vars6):
-    number_of_buildings: float = None  # type: ignore
+class EnergyWithCO2ePerMWhAndCostFuelAndBuildings(EnergyWithCO2ePerMWhAndCostFuel):
+    number_of_buildings: float

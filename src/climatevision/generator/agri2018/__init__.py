@@ -11,24 +11,14 @@ from ..business2018.b18 import B18
 
 from .a18 import A18
 from .energy_demand import CO2eEmission
-from . import energy_demand, energy_source
+from . import energy_base, energy_demand, energy_source
 
 
 def calc(inputs: Inputs, l18: L18, b18: B18) -> A18:
+    energies = energy_base.calc(inputs=inputs)
 
-    supply = energy_source.calc_supply(inputs)
-    production = energy_demand.calc_production(
-        inputs,
-        l18,
-        b18,
-        supply.elec.energy,
-        supply.petrol.energy,
-        supply.diesel.energy,
-        supply.fueloil.energy,
-        supply.lpg.energy,
-        supply.gas.energy,
-        supply.biomass.energy,
-    )
+    supply = energy_source.calc_supply(inputs, energies)
+    production = energy_demand.calc_production(inputs, l18, b18, energies)
 
     a = CO2eEmission(
         CO2e_production_based=production.total.CO2e_production_based,
