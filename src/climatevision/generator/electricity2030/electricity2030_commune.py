@@ -1,8 +1,5 @@
 # pyright: strict
 
-from climatevision.generator.electricity2030.electricity2030_core import (
-    calc_production_renewable_geothermal,
-)
 from ..inputs import Inputs
 from ..utils import div, MILLION
 from ..electricity2018.e18 import E18
@@ -16,7 +13,6 @@ from ..industry2030.i30 import I30
 from ..residences2030.r30 import R30
 from ..transport2030.t30 import T30
 from ..waste2030 import WasteLines
-from .. import electricity2018
 
 from .e30 import E30
 from .electricity2030_core import (
@@ -25,59 +21,9 @@ from .electricity2030_core import (
     EnergyDemandWithCostFuel,
     EnergyDemand,
     Energy,
+    calc_production_renewable_geothermal,
+    calc_stop_production_by_fossil_fuels,
 )
-
-
-def calc_stop_production_by_fossil_fuels(
-    inputs: Inputs, *, e18_production: electricity2018.dataclasses.FossilFuelsProduction
-) -> FossilFuelsProduction:
-    """Compute what happens if we stop producing electricity from a fossil fuel."""
-    fact = inputs.fact
-    entries = inputs.entries
-
-    KlimaneutraleJahre = entries.m_duration_neutral
-
-    energy = 0
-    CO2e_total_2021_estimated = e18_production.CO2e_combustion_based * fact(
-        "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
-    )
-    cost_fuel_per_MWh = e18_production.cost_fuel_per_MWh
-    cost_mro_per_MWh = e18_production.cost_mro_per_MWh
-    CO2e_combustion_based_per_MWh = e18_production.CO2e_combustion_based_per_MWh
-    change_energy_MWh = energy - e18_production.energy
-    cost_fuel = cost_fuel_per_MWh * energy / 1000000
-    cost_mro = cost_mro_per_MWh * energy / 1000000
-    CO2e_combustion_based = energy * CO2e_combustion_based_per_MWh
-    change_energy_pct = div(change_energy_MWh, e18_production.energy)
-    change_cost_energy = cost_fuel - e18_production.cost_fuel
-    change_cost_mro = cost_mro - e18_production.cost_mro
-    CO2e_total = CO2e_combustion_based
-    cost_climate_saved = (
-        (CO2e_total_2021_estimated - CO2e_combustion_based)
-        * KlimaneutraleJahre
-        * fact("Fact_M_cost_per_CO2e_2020")
-    )
-    change_CO2e_t = CO2e_total - e18_production.CO2e_total
-    change_CO2e_pct = div(change_CO2e_t, e18_production.CO2e_total)
-
-    return FossilFuelsProduction(
-        energy=energy,
-        cost_fuel_per_MWh=cost_fuel_per_MWh,
-        cost_fuel=cost_fuel,
-        CO2e_combustion_based_per_MWh=CO2e_combustion_based_per_MWh,
-        CO2e_combustion_based=CO2e_combustion_based,
-        cost_climate_saved=cost_climate_saved,
-        cost_mro=cost_mro,
-        CO2e_total=CO2e_total,
-        CO2e_total_2021_estimated=CO2e_total_2021_estimated,
-        change_energy_MWh=change_energy_MWh,
-        change_energy_pct=change_energy_pct,
-        change_CO2e_t=change_CO2e_t,
-        change_CO2e_pct=change_CO2e_pct,
-        change_cost_energy=change_cost_energy,
-        change_cost_mro=change_cost_mro,
-        cost_mro_per_MWh=cost_mro_per_MWh,
-    )
 
 
 def calc_production_local_pv_roof(
