@@ -330,10 +330,16 @@ def calculate_with_default_inputs(ags: str, year: int) -> Result:
         entries_germany = entries
     else:
         entries_germany = make_entries(refdata, ags="DG000000", year=year)
+
     inputs = Inputs(
-        facts_and_assumptions=refdata.facts_and_assumptions(), entries=entries
+        facts=refdata.facts(),
+        assumptions=refdata.assumptions(),
+        entries=entries,
     )
     inputs_germany = Inputs(
-        facts_and_assumptions=refdata.facts_and_assumptions(), entries=entries_germany
+        facts=refdata.facts(),
+        assumptions=refdata.assumptions(),
+        entries=entries_germany,
     )
+
     return calculate(inputs, inputs_germany)

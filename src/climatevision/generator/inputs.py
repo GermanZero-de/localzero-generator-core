@@ -18,24 +18,26 @@ calculation (most famously electricity basically depends on everything else).
 
 from dataclasses import dataclass
 
-from .makeentries import Entries
-from .refdata import FactsAndAssumptions
+from .entries import Entries
+from .refdata import Facts, Assumptions
 
 
 @dataclass(kw_only=True)
 class Inputs:
     def __init__(
         self,
-        facts_and_assumptions: FactsAndAssumptions,
+        facts: Facts,
+        assumptions: Assumptions,
         entries: Entries,
     ):
-        self._facts_and_assumptions = facts_and_assumptions
+        self.facts = facts
+        self.assumptions = assumptions
         self.entries = entries
 
     def fact(self, keyname: str) -> float:
         """Statistics about the past. Must be able to give a source for each fact."""
-        return self._facts_and_assumptions.fact(keyname)
+        return self.facts.fact(keyname)
 
     def ass(self, keyname: str) -> float:
         """Similar to fact, but these try to describe the future. And are therefore based on various assumptions."""
-        return self._facts_and_assumptions.ass(keyname)
+        return self.assumptions.ass(keyname)

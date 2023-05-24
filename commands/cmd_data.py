@@ -1,6 +1,6 @@
 # pyright: strict
 
-from typing import Callable, Literal, TextIO, Any
+from typing import Callable, TextIO, Any
 import csv
 import sys
 import os.path
@@ -128,17 +128,14 @@ def lookup_by_ags(ags: str, *, fix_missing_entries: bool):
         print_lookup(name, lookup_fn, key=ags_sta)
 
 
-def lookup_fact_or_ass(
+def lookup_fact(
     pattern: str,
-    what: Literal["fact", "assumption"],
-    lookup: Callable[
-        [refdata.FactsAndAssumptions, str], refdata.FactOrAssumptionCompleteRow
-    ],
+    lookup: Callable[[refdata.Facts, str], refdata.FactOrAssumptionCompleteRow],
 ):
 
     data = refdata.RefData.load()
     try:
-        res = lookup(data.facts_and_assumptions(), pattern)
+        res = lookup(data.facts(), pattern)
         bold(pattern)
         print(res.value, end="")
         if res.unit != "":
@@ -156,7 +153,36 @@ def lookup_fact_or_ass(
             bold("reference")
             faint("no reference provided")
     except:
-        bold(f"No {what} called {pattern} found!", file=sys.stderr)
+        bold(f"No fact called {pattern} found!", file=sys.stderr)
+        exit(1)
+
+
+def lookup_ass(
+    pattern: str,
+    lookup: Callable[[refdata.Assumptions, str], refdata.FactOrAssumptionCompleteRow],
+):
+
+    data = refdata.RefData.load()
+    try:
+        res = lookup(data.assumptions(), pattern)
+        bold(pattern)
+        print(res.value, end="")
+        if res.unit != "":
+            print(f" {res.unit}\t({res.description})")
+        else:
+            print(f"\t({res.description})")
+        print("")
+        if res.rationale:
+            print(res.rationale)
+        if res.reference or res.link:
+            bold("reference")
+            print(res.reference)
+            print(res.link)
+        else:
+            bold("reference")
+            faint("no reference provided")
+    except:
+        bold(f"No assumption called {pattern} found!", file=sys.stderr)
         exit(1)
 
 
@@ -165,11 +191,9 @@ def cmd_data_lookup(args: Any):
     if ags.is_valid(pattern):
         lookup_by_ags(pattern, fix_missing_entries=args.fix_missing_entries)
     elif pattern.startswith("Ass_"):
-        lookup_fact_or_ass(
-            pattern, "assumption", refdata.FactsAndAssumptions.complete_ass
-        )
+        lookup_ass(pattern, refdata.Assumptions.complete_ass)
     elif pattern.startswith("Fact_"):
-        lookup_fact_or_ass(pattern, "fact", refdata.FactsAndAssumptions.complete_fact)
+        lookup_fact(pattern, refdata.Facts.complete_fact)
     else:
         print(
             f"This {pattern} does not look like a AGS, fact or pattern... do not know what to do... giving up!",
