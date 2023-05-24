@@ -69,10 +69,13 @@ class GeneratorRpcs:
                 )
 
             inputs = generator.Inputs(
-                facts_and_assumptions=self.rd.facts_and_assumptions(), entries=entries
+                facts=self.rd.facts(),
+                assumptions=self.rd.assumptions(),
+                entries=entries,
             )
             inputs_germany = generator.Inputs(
-                facts_and_assumptions=self.rd.facts_and_assumptions(),
+                facts=self.rd.facts(),
+                assumptions=self.rd.assumptions(),
                 entries=entries_germany,
             )
             g = generator.calculate(inputs, inputs_germany)
