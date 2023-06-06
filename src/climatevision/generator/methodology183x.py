@@ -14,6 +14,7 @@ from .agri2018.a18 import A18
 from .heat2018.h18 import H18
 from .lulucf2018.l18 import L18
 from .fuels2018.f18 import F18
+from .waste2018 import W18
 
 from .electricity2030.e30 import E30
 from .business2030.b30 import B30
@@ -24,6 +25,7 @@ from .agri2030.a30 import A30
 from .heat2030.h30 import H30
 from .lulucf2030.l30 import L30
 from .fuels2030.f30 import F30
+from .waste2030 import W30
 
 
 @dataclass(kw_only=True)
@@ -156,6 +158,7 @@ class M183X:
     i: ZColVars = field(default_factory=ZColVars)
     a: ZColVars = field(default_factory=ZColVars)
     l: ZColVars = field(default_factory=ZColVars)
+    w: ZColVars = field(default_factory=ZColVars)
 
     CO2e_per_capita_nat: float = None  # type: ignore
     CO2e_per_capita_com: float = None  # type: ignore
@@ -177,6 +180,7 @@ def calc_budget(
     l18: L18,
     r18: R18,
     t18: T18,
+    w18: W18,
 ) -> M183X:
     """Calculate the budget needed."""
 
@@ -258,6 +262,7 @@ def calc_budget(
         + i18.i.CO2e_total
         + t18.t.CO2e_total
         + a18.a.CO2e_total
+        + w18.w.CO2e_total
     )
 
     # calculate the CO2e of all sectors without LULUCF for 2015-2017 and 2019-2021 by multiplying 2018's value with percentage
@@ -644,6 +649,7 @@ def calc_z(
     l18: L18,
     r18: R18,
     t18: T18,
+    w18: W18,
     a30: A30,
     b30: B30,
     e30: E30,
@@ -653,6 +659,7 @@ def calc_z(
     l30: L30,
     r30: R30,
     t30: T30,
+    w30: W30,
 ):
     """This updates several values in m183X inplace."""
 
@@ -664,6 +671,9 @@ def calc_z(
     ##################################################################
 
     # get the CO2e of all sectors for 203X (the target year) excluding LULUCF
+    # TODO: Warum exkludieren wir LULUCF?
+    #   Weil es negativ ist?  Dann müssten wir auch Fuels2030 exkludieren?
+    #   Ist es die Pyrolyse?
     m183X.CO2e_wo_lulucf_203X = (
         h30.h.CO2e_total
         + e30.e.CO2e_total
@@ -673,6 +683,7 @@ def calc_z(
         + i30.i.CO2e_total
         + t30.t.transport.CO2e_total
         + a30.a.CO2e_total
+        + w30.w.CO2e_total
     )
 
     # TODO: Check with Hauke if this is correct:
@@ -715,10 +726,16 @@ def calc_z(
     t = m183X.t
     a = m183X.a
     l = m183X.l
+    w = m183X.w
 
     s.energy_18 = h18.p.energy + e18.p.energy + f18.p.energy
     d.energy_18 = (
-        r18.p.energy + b18.p.energy + i18.p.energy + t18.t.energy + a18.p.energy
+        r18.p.energy
+        + b18.p.energy
+        + i18.p.energy
+        + t18.t.energy
+        + a18.p.energy
+        + w18.p.energy
     )
     z.energy_18 = s.energy_18
 
@@ -732,6 +749,7 @@ def calc_z(
         i18.i.CO2e_production_based
         + a18.a.CO2e_production_based
         + l18.l.CO2e_production_based
+        + w18.w.CO2e_production_based
     )
     z.CO2e_production_based_18 = s.CO2e_production_based_18 + d.CO2e_production_based_18
 
@@ -747,6 +765,7 @@ def calc_z(
         + t18.t.CO2e_combustion_based
         + a18.a.CO2e_combustion_based
         + l18.l.CO2e_combustion_based
+        # + w18.w.CO2e_combustion_based = 0 ### <--- no combustion based emissions in waste sector
     )
     z.CO2e_combustion_based_18 = s.CO2e_combustion_based_18 + d.CO2e_combustion_based_18
 
@@ -758,6 +777,7 @@ def calc_z(
         + t18.t.CO2e_total
         + a18.a.CO2e_total
         + l18.l.CO2e_total
+        + w18.w.CO2e_total
     )
     z.CO2e_total_18 = s.CO2e_total_18 + d.CO2e_total_18
 
@@ -768,6 +788,7 @@ def calc_z(
         + i30.p.energy
         + t30.t.transport.energy
         + a30.p.energy
+        + w30.w.energy
     )
     z.energy_30 = s.energy_30
 
@@ -780,6 +801,7 @@ def calc_z(
         i30.i.CO2e_production_based
         + a30.a.CO2e_production_based
         + l30.l.CO2e_production_based
+        + w30.w.CO2e_production_based
     )
     z.CO2e_production_based_30 = s.CO2e_production_based_30 + d.CO2e_production_based_30
 
@@ -794,6 +816,7 @@ def calc_z(
         + t30.t.transport.CO2e_combustion_based
         + a30.a.CO2e_combustion_based
         + l30.l.CO2e_combustion_based
+        # + w30.w.CO2e_combustion_based = 0 ### <--- no combustion based emissions in waste sector
     )
     z.CO2e_combustion_based_30 = s.CO2e_combustion_based_30 + d.CO2e_combustion_based_30
 
@@ -807,6 +830,7 @@ def calc_z(
         + t30.t.transport.CO2e_total
         + a30.a.CO2e_total
         + l30.l.CO2e_total
+        + w30.w.CO2e_total
     )
     z.CO2e_total_30 = s.CO2e_total_30 + d.CO2e_total_30
 
@@ -856,6 +880,7 @@ def calc_z(
         + t30.t.invest_pa
         + a30.a.invest_pa
         + l30.l.invest_pa
+        + w30.w.invest_pa
     )
     z.invest_pa = s.invest_pa + d.invest_pa
 
@@ -868,6 +893,7 @@ def calc_z(
         + i30.i.invest_pa_com
         + t30.t.invest_pa_com
         + a30.a.invest_pa_com
+        + w30.w.invest_pa_com
     )
     z.invest_pa_com = s.invest_pa_com + d.invest_pa_com
 
@@ -885,6 +911,7 @@ def calc_z(
         + t30.t.invest
         + a30.a.invest
         + l30.l.invest
+        + w30.w.invest
     )
     z.invest = s.invest + d.invest
 
@@ -897,6 +924,7 @@ def calc_z(
         + i30.i.invest_com
         + t30.t.invest_com
         + a30.a.invest_com
+        + w30.w.invest_com
     )
     z.invest_com = s.invest_com + d.invest_com
 
@@ -914,6 +942,7 @@ def calc_z(
         + t30.t.cost_wage
         + a30.a.cost_wage
         + l30.l.cost_wage
+        + w30.w.cost_wage
     )
     z.cost_wage = s.cost_wage + d.cost_wage
 
@@ -925,6 +954,7 @@ def calc_z(
         + t30.t.demand_emplo
         + a30.a.demand_emplo
         + l30.l.demand_emplo
+        + w30.w.demand_emplo
     )
     z.demand_emplo = s.demand_emplo + d.demand_emplo
 
@@ -938,6 +968,7 @@ def calc_z(
         + t30.t.demand_emplo_new
         + a30.a.demand_emplo_new
         + l30.l.demand_emplo_new
+        + w30.w.demand_emplo_new
     )
     z.demand_emplo_new = s.demand_emplo_new + d.demand_emplo_new
 
@@ -975,6 +1006,7 @@ def calc_z(
     i.pct_energy_18 = div(i18.p.energy, d.energy_18)
     t.pct_energy_18 = div(t18.t.energy, d.energy_18)
     a.pct_energy_18 = div(a18.p.energy, d.energy_18)
+    w.pct_energy_18 = div(w18.p.energy, d.energy_18)
 
     z.pct_CO2e_total_18 = 1
     s.pct_CO2e_total_18 = div(s.CO2e_total_18, z.CO2e_total_18)
@@ -991,6 +1023,7 @@ def calc_z(
     t.pct_CO2e_total_18 = div(t18.t.CO2e_total, z.CO2e_total_18)
     a.pct_CO2e_total_18 = div(a18.a.CO2e_total, z.CO2e_total_18)
     l.pct_CO2e_total_18 = div(l18.l.CO2e_total, z.CO2e_total_18)
+    w.pct_CO2e_total_18 = div(w18.w.CO2e_total, z.CO2e_total_18)
 
     s.pct_energy_30 = 1
     d.pct_energy_30 = 1
@@ -1005,6 +1038,7 @@ def calc_z(
     i.pct_energy_30 = div(i30.p.energy, d.energy_30)
     t.pct_energy_30 = div(t30.t.transport.energy, d.energy_30)
     a.pct_energy_30 = div(a30.p.energy, d.energy_30)
+    w.pct_energy_30 = div(w30.w.energy, d.energy_30)
 
     h.invest_pct = div(h30.h.invest, z.invest)
     e.invest_pct = div(e30.e.invest, z.invest)
@@ -1015,6 +1049,7 @@ def calc_z(
     t.invest_pct = div(t30.t.invest, z.invest)
     a.invest_pct = div(a30.a.invest, z.invest)
     l.invest_pct = div(l30.l.invest, z.invest)
+    w.invest_pct = div(w30.w.invest, z.invest)
 
     h.cost_climate_saved_pct = div(h30.h.cost_climate_saved, z.cost_climate_saved)
     e.cost_climate_saved_pct = div(e30.e.cost_climate_saved, z.cost_climate_saved)
@@ -1027,6 +1062,7 @@ def calc_z(
     )
     a.cost_climate_saved_pct = div(a30.a.cost_climate_saved, z.cost_climate_saved)
     l.cost_climate_saved_pct = div(l30.l.cost_climate_saved, z.cost_climate_saved)
+    w.cost_climate_saved_pct = div(w30.w.cost_climate_saved, z.cost_climate_saved)
 
     h.demand_emplo_new_pct = div(h30.h.demand_emplo_new, z.demand_emplo_new)
     e.demand_emplo_new_pct = div(e30.e.demand_emplo_new, z.demand_emplo_new)
@@ -1037,3 +1073,4 @@ def calc_z(
     t.demand_emplo_new_pct = div(t30.t.demand_emplo_new, z.demand_emplo_new)
     a.demand_emplo_new_pct = div(a30.a.demand_emplo_new, z.demand_emplo_new)
     l.demand_emplo_new_pct = div(l30.l.demand_emplo_new, z.demand_emplo_new)
+    w.demand_emplo_new_pct = div(w30.w.demand_emplo_new, z.demand_emplo_new)
