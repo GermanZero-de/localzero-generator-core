@@ -709,6 +709,7 @@ def calc_z(
         + t30.t.transport.cost_climate_saved
         + a30.a.cost_climate_saved
         + l30.l.cost_climate_saved
+        + w30.w.cost_climate_saved
     )
 
     # ==========Excel-Z-Script Calclulations=====================
