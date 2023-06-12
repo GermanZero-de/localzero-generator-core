@@ -216,35 +216,29 @@ def calc_budget(
     ############################################
     ### beginning with LULUCF                ###
     ############################################
+    start_year = 2015
+    current_year = 2022
+
+    years_list = list(range(start_year, current_year))
+
+    years_list_wo_2018 = years_list.copy()
+    years_list_wo_2018.remove(2018)
+
+    years_list_wo_2015 = years_list.copy()
+    years_list_wo_2015.remove(2015)
+
+    years_dict = {year: {} for year in years_list}
 
     # get the CO2e of LULUCF for 2018 as calculated
-    m183X.CO2e_lulucf_2018 = l18.l.CO2e_total
+    years_dict[2018]["CO2e_lulucf"] = l18.l.CO2e_total
 
     # calculate the CO2e of LULUCF for 2015-2017 and 2019-2021 by multiplying 2018's value with percentage
     # 2015 just as a backup, probably not needed
-    m183X.CO2e_lulucf_2015 = m183X.CO2e_lulucf_2018 * fact(
-        "Fact_M_CO2e_lulucf_2015_vs_2018"
-    )
 
-    m183X.CO2e_lulucf_2016 = m183X.CO2e_lulucf_2018 * fact(
-        "Fact_M_CO2e_lulucf_2016_vs_2018"
-    )
-
-    m183X.CO2e_lulucf_2017 = m183X.CO2e_lulucf_2018 * fact(
-        "Fact_M_CO2e_lulucf_2017_vs_2018"
-    )
-
-    m183X.CO2e_lulucf_2019 = m183X.CO2e_lulucf_2018 * fact(
-        "Fact_M_CO2e_lulucf_2019_vs_2018"
-    )
-
-    m183X.CO2e_lulucf_2020 = m183X.CO2e_lulucf_2018 * fact(
-        "Fact_M_CO2e_lulucf_2020_vs_2018"
-    )
-
-    m183X.CO2e_lulucf_2021 = m183X.CO2e_lulucf_2018 * fact(
-        "Fact_M_CO2e_lulucf_2021_vs_2018"
-    )
+    for year in years_list_wo_2018:
+        years_dict[year]["CO2e_lulucf"] = years_dict[2018]["CO2e_lulucf"] * fact(
+            f"Fact_M_CO2e_lulucf_{year}_vs_2018"
+        )
 
     ############################################
     ### 2018 as base for emissions 2016-2021 ###
@@ -253,7 +247,7 @@ def calc_budget(
     ############################################
 
     # get the CO2e of all sectors for 2018 excluding LULUCF since this is negative
-    m183X.CO2e_wo_lulucf_2018 = (
+    years_dict[2018]["CO2e_wo_lulucf"] = (
         h18.h.CO2e_total
         + e18.e.CO2e_total
         + f18.f.CO2e_total
@@ -267,29 +261,10 @@ def calc_budget(
 
     # calculate the CO2e of all sectors without LULUCF for 2015-2017 and 2019-2021 by multiplying 2018's value with percentage
     # 2015 just as a backup, probably not needed
-    m183X.CO2e_wo_lulucf_2015 = m183X.CO2e_wo_lulucf_2018 * fact(
-        "Fact_M_CO2e_wo_lulucf_2015_vs_2018"
-    )
-
-    m183X.CO2e_wo_lulucf_2016 = m183X.CO2e_wo_lulucf_2018 * fact(
-        "Fact_M_CO2e_wo_lulucf_2016_vs_2018"
-    )
-
-    m183X.CO2e_wo_lulucf_2017 = m183X.CO2e_wo_lulucf_2018 * fact(
-        "Fact_M_CO2e_wo_lulucf_2017_vs_2018"
-    )
-
-    m183X.CO2e_wo_lulucf_2019 = m183X.CO2e_wo_lulucf_2018 * fact(
-        "Fact_M_CO2e_wo_lulucf_2019_vs_2018"
-    )
-
-    m183X.CO2e_wo_lulucf_2020 = m183X.CO2e_wo_lulucf_2018 * fact(
-        "Fact_M_CO2e_wo_lulucf_2020_vs_2018"
-    )
-
-    m183X.CO2e_wo_lulucf_2021 = m183X.CO2e_wo_lulucf_2018 * fact(
-        "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
-    )
+    for year in years_list_wo_2018:
+        years_dict[year]["CO2e_wo_lulucf"] = years_dict[2018]["CO2e_wo_lulucf"] * fact(
+            f"Fact_M_CO2e_wo_lulucf_{year}_vs_2018"
+        )
 
     #############################################
     ### 2018 as base for emissions 2016-2021  ###
@@ -297,34 +272,21 @@ def calc_budget(
     ### sum up CO2e_wo_lulucf and CO2e_lulucf ###
     #############################################
 
-    # 2015 just as a backup, probably not needed
-    m183X.CO2e_w_lulucf_2015 = m183X.CO2e_wo_lulucf_2015 + m183X.CO2e_lulucf_2015
-
-    m183X.CO2e_w_lulucf_2016 = m183X.CO2e_wo_lulucf_2016 + m183X.CO2e_lulucf_2016
-
-    m183X.CO2e_w_lulucf_2017 = m183X.CO2e_wo_lulucf_2017 + m183X.CO2e_lulucf_2017
-
-    m183X.CO2e_w_lulucf_2018 = m183X.CO2e_wo_lulucf_2018 + m183X.CO2e_lulucf_2018
-
-    m183X.CO2e_w_lulucf_2019 = m183X.CO2e_wo_lulucf_2019 + m183X.CO2e_lulucf_2019
-
-    m183X.CO2e_w_lulucf_2020 = m183X.CO2e_wo_lulucf_2020 + m183X.CO2e_lulucf_2020
-
-    m183X.CO2e_w_lulucf_2021 = m183X.CO2e_wo_lulucf_2021 + m183X.CO2e_lulucf_2021
+    # 2015 just as a backup, probably not
+    for year in years_list:
+        years_dict[year]["CO2e_w_lulucf"] = (
+            years_dict[year]["CO2e_wo_lulucf"] + years_dict[year]["CO2e_lulucf"]
+        )
 
     ####################################################################
     ### remaining local greenhouse gas budget 2022 until target year ###
     ####################################################################
 
-    m183X.GHG_budget_2022_to_year_target = (
-        m183X.GHG_budget_2016_to_year_target
-        - m183X.CO2e_w_lulucf_2016
-        - m183X.CO2e_w_lulucf_2017
-        - m183X.CO2e_w_lulucf_2018
-        - m183X.CO2e_w_lulucf_2019
-        - m183X.CO2e_w_lulucf_2020
-        - m183X.CO2e_w_lulucf_2021
-    )
+    temp_val = m183X.GHG_budget_2016_to_year_target
+    for year in years_list_wo_2015:
+        temp_val -= years_dict[year]["CO2e_w_lulucf"]
+
+    m183X.GHG_budget_2022_to_year_target = temp_val
 
     #########################################################
     ### calculating the linear decrease until target year ###
@@ -333,7 +295,7 @@ def calc_budget(
     #########################################################
 
     # calculating the yearly decrease of the emissions, going down linearly to 0 in target_year+1
-    m183X.CO2e_w_lulucf_change_pa = m183X.CO2e_w_lulucf_2021 / (
+    m183X.CO2e_w_lulucf_change_pa = years_dict[2021]["CO2e_w_lulucf"] / (
         entries.m_year_target
         - 2021
         + 1  # TODO end of 2022,  substract year 2021 as emissions are only known until that year
@@ -341,9 +303,9 @@ def calc_budget(
     # reducing the yearly emissions year by year, starting with 2022
 
     # INFO  '> 1' instead '> 0' to avoid having very small numbers such as 0.00000001 and unwanted additional substraction of CO2e_w_lulucf_change_pa
-    if m183X.CO2e_w_lulucf_2021 > 1:
+    if years_dict[2021]["CO2e_w_lulucf"] > 1:
         m183X.CO2e_w_lulucf_2022 = (
-            m183X.CO2e_w_lulucf_2021 - m183X.CO2e_w_lulucf_change_pa
+            years_dict[2021]["CO2e_w_lulucf"] - m183X.CO2e_w_lulucf_change_pa
         )
     else:
         m183X.CO2e_w_lulucf_2022 = 0
@@ -632,6 +594,38 @@ def calc_budget(
     m183X.CO2e_2022_to_year_target = (
         m183X.GHG_budget_2022_to_year_target - m183X.GHG_budget_after_year_target
     )
+
+    print([years_dict[year]["CO2e_lulucf"] for year in years_list])
+
+    (
+        m183X.CO2e_lulucf_2015,
+        m183X.CO2e_lulucf_2016,
+        m183X.CO2e_lulucf_2017,
+        m183X.CO2e_lulucf_2018,
+        m183X.CO2e_lulucf_2019,
+        m183X.CO2e_lulucf_2020,
+        m183X.CO2e_lulucf_2021,
+    ) = [years_dict[year]["CO2e_lulucf"] for year in years_list]
+
+    (
+        m183X.CO2e_wo_lulucf_2015,
+        m183X.CO2e_wo_lulucf_2016,
+        m183X.CO2e_wo_lulucf_2017,
+        m183X.CO2e_wo_lulucf_2018,
+        m183X.CO2e_wo_lulucf_2019,
+        m183X.CO2e_wo_lulucf_2020,
+        m183X.CO2e_wo_lulucf_2021,
+    ) = [years_dict[year]["CO2e_wo_lulucf"] for year in years_list]
+
+    (
+        m183X.CO2e_w_lulucf_2015,
+        m183X.CO2e_w_lulucf_2016,
+        m183X.CO2e_w_lulucf_2017,
+        m183X.CO2e_w_lulucf_2018,
+        m183X.CO2e_w_lulucf_2019,
+        m183X.CO2e_w_lulucf_2020,
+        m183X.CO2e_w_lulucf_2021,
+    ) = [years_dict[year]["CO2e_w_lulucf"] for year in years_list]
 
     return m183X
 
