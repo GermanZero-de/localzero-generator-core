@@ -11,7 +11,6 @@ from ..residences2030.r30 import R30
 from ..business2030.b30 import B30
 from ..agri2030.a30 import A30
 from ..industry2030.i30 import I30
-from ..electricity2030.electricity2030_core import EColVars2030
 
 from .h30 import H30
 from .h import H
@@ -26,7 +25,7 @@ def calc(
     b30: B30,
     a30: A30,
     i30: I30,
-    p_local_biomass_cogen: EColVars2030,
+    e30_p_local_biomass_cogen_energy: float,
 ) -> H30:
 
     demand = energy_demand.calc_demand(r30, b30, i30, a30)
@@ -38,7 +37,7 @@ def calc(
         b30,
         a30,
         i30,
-        p_local_biomass_cogen,
+        e30_p_local_biomass_cogen_energy,
     )
 
     general = energy_general.calc_general(
