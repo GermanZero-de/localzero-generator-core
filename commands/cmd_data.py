@@ -1,6 +1,6 @@
 # pyright: strict
 
-from typing import Callable, TextIO, Any
+from typing import TextIO, Any
 import csv
 import sys
 import os.path
@@ -145,26 +145,18 @@ def print_fact_or_ass(name: str, record: refdata.FactOrAssumptionCompleteRow):
         faint("no reference provided")
 
 
-def lookup_fact(
-    data: refdata.RefData,
-    pattern: str,
-    lookup: Callable[[refdata.Facts, str], refdata.FactOrAssumptionCompleteRow],
-):
+def lookup_fact(data: refdata.RefData, pattern: str):
     try:
-        record = lookup(data.facts(), pattern)
+        record = refdata.Facts.complete_fact(data.facts(), pattern)
         print_fact_or_ass(name=pattern, record=record)
     except:
         bold(f"No fact called {pattern} found!", file=sys.stderr)
         exit(1)
 
 
-def lookup_ass(
-    data: refdata.RefData,
-    pattern: str,
-    lookup: Callable[[refdata.Assumptions, str], refdata.FactOrAssumptionCompleteRow],
-):
+def lookup_ass(data: refdata.RefData, pattern: str):
     try:
-        record = lookup(data.assumptions(), pattern)
+        record = refdata.Assumptions.complete_ass(data.assumptions(), pattern)
         print_fact_or_ass(name=pattern, record=record)
     except:
         bold(f"No assumption called {pattern} found!", file=sys.stderr)
@@ -180,9 +172,9 @@ def cmd_data_lookup(args: Any):
     if ags.is_valid(pattern):
         lookup_by_ags(data, pattern)
     elif pattern.startswith("Ass_"):
-        lookup_ass(data, pattern, refdata.Assumptions.complete_ass)
+        lookup_ass(data, pattern)
     elif pattern.startswith("Fact_"):
-        lookup_fact(data, pattern, refdata.Facts.complete_fact)
+        lookup_fact(data, pattern)
     else:
         print(
             f"This {pattern} does not look like a AGS, fact or pattern... do not know what to do... giving up!",
