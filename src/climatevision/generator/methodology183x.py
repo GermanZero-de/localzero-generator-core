@@ -227,7 +227,11 @@ def calc_budget(
     years_list_wo_2015 = years_list.copy()
     years_list_wo_2015.remove(2015)
 
-    years_dict = {year: {} for year in years_list}
+    years_list_to_2051 = list(range(start_year, 2052))
+
+    years_predicted = list(range(current_year, 2052))
+
+    years_dict: dict[int, dict[str, float]] = {year: {} for year in years_list}
 
     # get the CO2e of LULUCF for 2018 as calculated
     years_dict[2018]["CO2e_lulucf"] = l18.l.CO2e_total
@@ -295,308 +299,46 @@ def calc_budget(
     #########################################################
 
     # calculating the yearly decrease of the emissions, going down linearly to 0 in target_year+1
-    m183X.CO2e_w_lulucf_change_pa = years_dict[2021]["CO2e_w_lulucf"] / (
+    m183X.CO2e_w_lulucf_change_pa = years_dict[current_year - 1]["CO2e_w_lulucf"] / (
         entries.m_year_target
-        - 2021
+        - (current_year - 1)
         + 1  # TODO end of 2022,  substract year 2021 as emissions are only known until that year
     )  # +1 because we want to reach 0 in target_year+1
     # reducing the yearly emissions year by year, starting with 2022
 
-    # INFO  '> 1' instead '> 0' to avoid having very small numbers such as 0.00000001 and unwanted additional substraction of CO2e_w_lulucf_change_pa
-    if years_dict[2021]["CO2e_w_lulucf"] > 1:
-        m183X.CO2e_w_lulucf_2022 = (
-            years_dict[2021]["CO2e_w_lulucf"] - m183X.CO2e_w_lulucf_change_pa
-        )
-    else:
-        m183X.CO2e_w_lulucf_2022 = 0
-
-    # 2023
-    if m183X.CO2e_w_lulucf_2022 > 1:
-        m183X.CO2e_w_lulucf_2023 = (
-            m183X.CO2e_w_lulucf_2022 - m183X.CO2e_w_lulucf_change_pa
-        )
-    else:
-        m183X.CO2e_w_lulucf_2023 = 0
-
-    # 2024
-    if m183X.CO2e_w_lulucf_2023 > 1:
-        m183X.CO2e_w_lulucf_2024 = (
-            m183X.CO2e_w_lulucf_2023 - m183X.CO2e_w_lulucf_change_pa
-        )
-    else:
-        m183X.CO2e_w_lulucf_2024 = 0
-
-    # 2025
-    if m183X.CO2e_w_lulucf_2024 > 1:
-        m183X.CO2e_w_lulucf_2025 = (
-            m183X.CO2e_w_lulucf_2024 - m183X.CO2e_w_lulucf_change_pa
-        )
-    else:
-        m183X.CO2e_w_lulucf_2025 = 0
-
-    # 2026
-    if m183X.CO2e_w_lulucf_2025 > 1:
-        m183X.CO2e_w_lulucf_2026 = (
-            m183X.CO2e_w_lulucf_2025 - m183X.CO2e_w_lulucf_change_pa
-        )
-    else:
-        m183X.CO2e_w_lulucf_2026 = 0
-
-    # 2027
-    if m183X.CO2e_w_lulucf_2026 > 1:
-        m183X.CO2e_w_lulucf_2027 = (
-            m183X.CO2e_w_lulucf_2026 - m183X.CO2e_w_lulucf_change_pa
-        )
-    else:
-        m183X.CO2e_w_lulucf_2027 = 0
-
-    # 2028
-    if m183X.CO2e_w_lulucf_2027 > 1:
-        m183X.CO2e_w_lulucf_2028 = (
-            m183X.CO2e_w_lulucf_2027 - m183X.CO2e_w_lulucf_change_pa
-        )
-    else:
-        m183X.CO2e_w_lulucf_2028 = 0
-
-    # 2029
-    if m183X.CO2e_w_lulucf_2028 > 1:
-        m183X.CO2e_w_lulucf_2029 = (
-            m183X.CO2e_w_lulucf_2028 - m183X.CO2e_w_lulucf_change_pa
-        )
-    else:
-        m183X.CO2e_w_lulucf_2029 = 0
-
-    # 2030
-    if m183X.CO2e_w_lulucf_2029 > 1:
-        m183X.CO2e_w_lulucf_2030 = (
-            m183X.CO2e_w_lulucf_2029 - m183X.CO2e_w_lulucf_change_pa
-        )
-    else:
-        m183X.CO2e_w_lulucf_2030 = 0
-
-    # 2031
-    if m183X.CO2e_w_lulucf_2030 > 1:
-        m183X.CO2e_w_lulucf_2031 = (
-            m183X.CO2e_w_lulucf_2030 - m183X.CO2e_w_lulucf_change_pa
-        )
-    else:
-        m183X.CO2e_w_lulucf_2031 = 0
-
-    # 2032
-    if m183X.CO2e_w_lulucf_2031 > 1:
-        m183X.CO2e_w_lulucf_2032 = (
-            m183X.CO2e_w_lulucf_2031 - m183X.CO2e_w_lulucf_change_pa
-        )
-    else:
-        m183X.CO2e_w_lulucf_2032 = 0
-
-    # 2033
-    if m183X.CO2e_w_lulucf_2032 > 1:
-        m183X.CO2e_w_lulucf_2033 = (
-            m183X.CO2e_w_lulucf_2032 - m183X.CO2e_w_lulucf_change_pa
-        )
-    else:
-        m183X.CO2e_w_lulucf_2033 = 0
-
-    # 2034
-    if m183X.CO2e_w_lulucf_2033 > 1:
-        m183X.CO2e_w_lulucf_2034 = (
-            m183X.CO2e_w_lulucf_2033 - m183X.CO2e_w_lulucf_change_pa
-        )
-    else:
-        m183X.CO2e_w_lulucf_2034 = 0
-
-    # 2035
-    if m183X.CO2e_w_lulucf_2034 > 1:
-        m183X.CO2e_w_lulucf_2035 = (
-            m183X.CO2e_w_lulucf_2034 - m183X.CO2e_w_lulucf_change_pa
-        )
-    else:
-        m183X.CO2e_w_lulucf_2035 = 0
-
-    # 2036
-    if m183X.CO2e_w_lulucf_2035 > 1:
-        m183X.CO2e_w_lulucf_2036 = (
-            m183X.CO2e_w_lulucf_2035 - m183X.CO2e_w_lulucf_change_pa
-        )
-    else:
-        m183X.CO2e_w_lulucf_2036 = 0
-
-    # 2037
-    if m183X.CO2e_w_lulucf_2036 > 1:
-        m183X.CO2e_w_lulucf_2037 = (
-            m183X.CO2e_w_lulucf_2036 - m183X.CO2e_w_lulucf_change_pa
-        )
-    else:
-        m183X.CO2e_w_lulucf_2037 = 0
-
-    # 2038
-    if m183X.CO2e_w_lulucf_2037 > 1:
-        m183X.CO2e_w_lulucf_2038 = (
-            m183X.CO2e_w_lulucf_2037 - m183X.CO2e_w_lulucf_change_pa
-        )
-    else:
-        m183X.CO2e_w_lulucf_2038 = 0
-
-    # 2039
-    if m183X.CO2e_w_lulucf_2038 > 1:
-        m183X.CO2e_w_lulucf_2039 = (
-            m183X.CO2e_w_lulucf_2038 - m183X.CO2e_w_lulucf_change_pa
-        )
-    else:
-        m183X.CO2e_w_lulucf_2039 = 0
-
-    # 2040
-    if m183X.CO2e_w_lulucf_2039 > 1:
-        m183X.CO2e_w_lulucf_2040 = (
-            m183X.CO2e_w_lulucf_2039 - m183X.CO2e_w_lulucf_change_pa
-        )
-    else:
-        m183X.CO2e_w_lulucf_2040 = 0
-
-    # 2041
-    if m183X.CO2e_w_lulucf_2040 > 1:
-        m183X.CO2e_w_lulucf_2041 = (
-            m183X.CO2e_w_lulucf_2040 - m183X.CO2e_w_lulucf_change_pa
-        )
-    else:
-        m183X.CO2e_w_lulucf_2041 = 0
-
-    # 2042
-    if m183X.CO2e_w_lulucf_2041 > 1:
-        m183X.CO2e_w_lulucf_2042 = (
-            m183X.CO2e_w_lulucf_2041 - m183X.CO2e_w_lulucf_change_pa
-        )
-    else:
-        m183X.CO2e_w_lulucf_2042 = 0
-
-    # 2043
-    if m183X.CO2e_w_lulucf_2042 > 1:
-        m183X.CO2e_w_lulucf_2043 = (
-            m183X.CO2e_w_lulucf_2042 - m183X.CO2e_w_lulucf_change_pa
-        )
-    else:
-        m183X.CO2e_w_lulucf_2043 = 0
-
-    # 2044
-    if m183X.CO2e_w_lulucf_2043 > 1:
-        m183X.CO2e_w_lulucf_2044 = (
-            m183X.CO2e_w_lulucf_2043 - m183X.CO2e_w_lulucf_change_pa
-        )
-    else:
-        m183X.CO2e_w_lulucf_2044 = 0
-
-    # 2045
-    if m183X.CO2e_w_lulucf_2044 > 1:
-        m183X.CO2e_w_lulucf_2045 = (
-            m183X.CO2e_w_lulucf_2044 - m183X.CO2e_w_lulucf_change_pa
-        )
-    else:
-        m183X.CO2e_w_lulucf_2045 = 0
-
-    # 2046
-    if m183X.CO2e_w_lulucf_2045 > 1:
-        m183X.CO2e_w_lulucf_2046 = (
-            m183X.CO2e_w_lulucf_2045 - m183X.CO2e_w_lulucf_change_pa
-        )
-    else:
-        m183X.CO2e_w_lulucf_2046 = 0
-
-    # 2047
-    if m183X.CO2e_w_lulucf_2046 > 1:
-        m183X.CO2e_w_lulucf_2047 = (
-            m183X.CO2e_w_lulucf_2046 - m183X.CO2e_w_lulucf_change_pa
-        )
-    else:
-        m183X.CO2e_w_lulucf_2047 = 0
-
-    # 2048
-    if m183X.CO2e_w_lulucf_2047 > 1:
-        m183X.CO2e_w_lulucf_2048 = (
-            m183X.CO2e_w_lulucf_2047 - m183X.CO2e_w_lulucf_change_pa
-        )
-    else:
-        m183X.CO2e_w_lulucf_2048 = 0
-
-    # 2049
-    if m183X.CO2e_w_lulucf_2048 > 1:
-        m183X.CO2e_w_lulucf_2049 = (
-            m183X.CO2e_w_lulucf_2048 - m183X.CO2e_w_lulucf_change_pa
-        )
-    else:
-        m183X.CO2e_w_lulucf_2049 = 0
-
-    # 2050
-    if m183X.CO2e_w_lulucf_2049 > 1:
-        m183X.CO2e_w_lulucf_2050 = (
-            m183X.CO2e_w_lulucf_2049 - m183X.CO2e_w_lulucf_change_pa
-        )
-    else:
-        m183X.CO2e_w_lulucf_2050 = 0
-
-    # 2051
-    if m183X.CO2e_w_lulucf_2050 > 1:
-        m183X.CO2e_w_lulucf_2051 = (
-            m183X.CO2e_w_lulucf_2050 - m183X.CO2e_w_lulucf_change_pa
-        )
-    else:
-        m183X.CO2e_w_lulucf_2051 = 0
+    for year in years_predicted:
+        # INFO  '> 1' instead '> 0' to avoid having very small numbers such as 0.00000001 and unwanted additional substraction of CO2e_w_lulucf_change_pa
+        if years_dict[year - 1]["CO2e_w_lulucf"] > 1:
+            years_dict[year] = {
+                "CO2e_w_lulucf": (
+                    years_dict[year - 1]["CO2e_w_lulucf"]
+                    - m183X.CO2e_w_lulucf_change_pa
+                )
+            }
+        else:
+            years_dict[year] = {"CO2e_w_lulucf": 0}
 
     ##############################################################################################
     ### remaining local greenhouse gas budget after reaching climate neutrality in target year ###
     ##############################################################################################
 
     # all emission values until 2051 are subtracted since they are 0 after target year
-    m183X.GHG_budget_after_year_target = (
-        m183X.GHG_budget_2022_to_year_target
-        - m183X.CO2e_w_lulucf_2022
-        - m183X.CO2e_w_lulucf_2023
-        - m183X.CO2e_w_lulucf_2024
-        - m183X.CO2e_w_lulucf_2025
-        - m183X.CO2e_w_lulucf_2026
-        - m183X.CO2e_w_lulucf_2027
-        - m183X.CO2e_w_lulucf_2028
-        - m183X.CO2e_w_lulucf_2029
-        - m183X.CO2e_w_lulucf_2030
-        - m183X.CO2e_w_lulucf_2031
-        - m183X.CO2e_w_lulucf_2032
-        - m183X.CO2e_w_lulucf_2033
-        - m183X.CO2e_w_lulucf_2034
-        - m183X.CO2e_w_lulucf_2035
-        - m183X.CO2e_w_lulucf_2036
-        - m183X.CO2e_w_lulucf_2037
-        - m183X.CO2e_w_lulucf_2038
-        - m183X.CO2e_w_lulucf_2039
-        - m183X.CO2e_w_lulucf_2040
-        - m183X.CO2e_w_lulucf_2041
-        - m183X.CO2e_w_lulucf_2042
-        - m183X.CO2e_w_lulucf_2043
-        - m183X.CO2e_w_lulucf_2044
-        - m183X.CO2e_w_lulucf_2045
-        - m183X.CO2e_w_lulucf_2046
-        - m183X.CO2e_w_lulucf_2047
-        - m183X.CO2e_w_lulucf_2048
-        - m183X.CO2e_w_lulucf_2049
-        - m183X.CO2e_w_lulucf_2050
-        - m183X.CO2e_w_lulucf_2051
-    )
+    temp_val = m183X.GHG_budget_2022_to_year_target
+    for year in years_predicted:
+        temp_val -= years_dict[year]["CO2e_w_lulucf"]
+    m183X.GHG_budget_after_year_target = temp_val
 
-    m183X.GHG_budget_2022_to_year_target_nat = (
-        entries.m_GHG_budget_2016_to_year_target
-        - fact("Fact_M_CO2e_w_lulucf_2016")
-        - fact("Fact_M_CO2e_w_lulucf_2017")
-        - fact("Fact_M_CO2e_w_lulucf_2018")
-        - fact("Fact_M_CO2e_w_lulucf_2019")
-        - fact("Fact_M_CO2e_w_lulucf_2020")
-        - fact("Fact_M_CO2e_w_lulucf_2021")
-    )
+    temp_val = entries.m_GHG_budget_2016_to_year_target
+    for year in years_list_wo_2015:
+        temp_val -= fact(f"Fact_M_CO2e_w_lulucf_{year}")
+
+    m183X.GHG_budget_2022_to_year_target_nat = temp_val
 
     m183X.CO2e_2022_to_year_target = (
         m183X.GHG_budget_2022_to_year_target - m183X.GHG_budget_after_year_target
     )
 
-    print([years_dict[year]["CO2e_lulucf"] for year in years_list])
-
+    # safe dict values in class variables
     (
         m183X.CO2e_lulucf_2015,
         m183X.CO2e_lulucf_2016,
@@ -625,7 +367,37 @@ def calc_budget(
         m183X.CO2e_w_lulucf_2019,
         m183X.CO2e_w_lulucf_2020,
         m183X.CO2e_w_lulucf_2021,
-    ) = [years_dict[year]["CO2e_w_lulucf"] for year in years_list]
+        m183X.CO2e_w_lulucf_2022,
+        m183X.CO2e_w_lulucf_2023,
+        m183X.CO2e_w_lulucf_2024,
+        m183X.CO2e_w_lulucf_2025,
+        m183X.CO2e_w_lulucf_2026,
+        m183X.CO2e_w_lulucf_2027,
+        m183X.CO2e_w_lulucf_2028,
+        m183X.CO2e_w_lulucf_2029,
+        m183X.CO2e_w_lulucf_2030,
+        m183X.CO2e_w_lulucf_2031,
+        m183X.CO2e_w_lulucf_2032,
+        m183X.CO2e_w_lulucf_2033,
+        m183X.CO2e_w_lulucf_2034,
+        m183X.CO2e_w_lulucf_2035,
+        m183X.CO2e_w_lulucf_2036,
+        m183X.CO2e_w_lulucf_2037,
+        m183X.CO2e_w_lulucf_2038,
+        m183X.CO2e_w_lulucf_2039,
+        m183X.CO2e_w_lulucf_2040,
+        m183X.CO2e_w_lulucf_2041,
+        m183X.CO2e_w_lulucf_2042,
+        m183X.CO2e_w_lulucf_2043,
+        m183X.CO2e_w_lulucf_2044,
+        m183X.CO2e_w_lulucf_2045,
+        m183X.CO2e_w_lulucf_2046,
+        m183X.CO2e_w_lulucf_2047,
+        m183X.CO2e_w_lulucf_2048,
+        m183X.CO2e_w_lulucf_2049,
+        m183X.CO2e_w_lulucf_2050,
+        m183X.CO2e_w_lulucf_2051,
+    ) = [years_dict[year]["CO2e_w_lulucf"] for year in years_list_to_2051]
 
     return m183X
 
