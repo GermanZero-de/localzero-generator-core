@@ -128,30 +128,33 @@ def lookup_by_ags(ags: str, *, fix_missing_entries: bool):
         print_lookup(name, lookup_fn, key=ags_sta)
 
 
+def print_fact_or_ass(name: str, record: refdata.FactOrAssumptionCompleteRow):
+    bold(name)
+    print(record.value, end="")
+    if record.unit != "":
+        print(f" {record.unit}\t({record.description})")
+    else:
+        print(f"\t({record.description})")
+    print("")
+    if record.rationale:
+        print(record.rationale)
+    if record.reference or record.link:
+        bold("reference")
+        print(record.reference)
+        print(record.link)
+    else:
+        bold("reference")
+        faint("no reference provided")
+
+
 def lookup_fact(
     pattern: str,
     lookup: Callable[[refdata.Facts, str], refdata.FactOrAssumptionCompleteRow],
 ):
-
     data = refdata.RefData.load()
     try:
-        res = lookup(data.facts(), pattern)
-        bold(pattern)
-        print(res.value, end="")
-        if res.unit != "":
-            print(f" {res.unit}\t({res.description})")
-        else:
-            print(f"\t({res.description})")
-        print("")
-        if res.rationale:
-            print(res.rationale)
-        if res.reference or res.link:
-            bold("reference")
-            print(res.reference)
-            print(res.link)
-        else:
-            bold("reference")
-            faint("no reference provided")
+        record = lookup(data.facts(), pattern)
+        print_fact_or_ass(name=pattern, record=record)
     except:
         bold(f"No fact called {pattern} found!", file=sys.stderr)
         exit(1)
@@ -161,26 +164,10 @@ def lookup_ass(
     pattern: str,
     lookup: Callable[[refdata.Assumptions, str], refdata.FactOrAssumptionCompleteRow],
 ):
-
     data = refdata.RefData.load()
     try:
-        res = lookup(data.assumptions(), pattern)
-        bold(pattern)
-        print(res.value, end="")
-        if res.unit != "":
-            print(f" {res.unit}\t({res.description})")
-        else:
-            print(f"\t({res.description})")
-        print("")
-        if res.rationale:
-            print(res.rationale)
-        if res.reference or res.link:
-            bold("reference")
-            print(res.reference)
-            print(res.link)
-        else:
-            bold("reference")
-            faint("no reference provided")
+        record = lookup(data.assumptions(), pattern)
+        print_fact_or_ass(name=pattern, record=record)
     except:
         bold(f"No assumption called {pattern} found!", file=sys.stderr)
         exit(1)
