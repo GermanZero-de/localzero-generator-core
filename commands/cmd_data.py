@@ -67,7 +67,7 @@ def faint(s, end=None, file: TextIO = sys.stdout):  # type: ignore
     print(f"\033[2m{s}\033[0m", end=end, file=file)  # type: ignore
 
 
-def lookup_by_ags(ags: str, *, fix_missing_entries: bool):
+def lookup_by_ags(data: refdata.RefData, ags: str):
     ags_dis = ags[:5] + "000"  # This identifies the administrative district (Landkreis)
     ags_sta = ags[:2] + "000000"  # This identifies the federal state (Bundesland)
 
@@ -83,8 +83,6 @@ def lookup_by_ags(ags: str, *, fix_missing_entries: bool):
         else:
             print(record)
         print()
-
-    data = refdata.RefData.load(fix_missing_entries=fix_missing_entries)
 
     by_ags = [
         ("area", data.area),
@@ -148,10 +146,10 @@ def print_fact_or_ass(name: str, record: refdata.FactOrAssumptionCompleteRow):
 
 
 def lookup_fact(
+    data: refdata.RefData,
     pattern: str,
     lookup: Callable[[refdata.Facts, str], refdata.FactOrAssumptionCompleteRow],
 ):
-    data = refdata.RefData.load()
     try:
         record = lookup(data.facts(), pattern)
         print_fact_or_ass(name=pattern, record=record)
@@ -161,10 +159,10 @@ def lookup_fact(
 
 
 def lookup_ass(
+    data: refdata.RefData,
     pattern: str,
     lookup: Callable[[refdata.Assumptions, str], refdata.FactOrAssumptionCompleteRow],
 ):
-    data = refdata.RefData.load()
     try:
         record = lookup(data.assumptions(), pattern)
         print_fact_or_ass(name=pattern, record=record)
@@ -175,12 +173,16 @@ def lookup_ass(
 
 def cmd_data_lookup(args: Any):
     pattern: str = args.pattern
+    data: refdata.RefData = refdata.RefData.load(
+        fix_missing_entries=args.fix_missing_entries
+    )
+
     if ags.is_valid(pattern):
-        lookup_by_ags(pattern, fix_missing_entries=args.fix_missing_entries)
+        lookup_by_ags(data, pattern)
     elif pattern.startswith("Ass_"):
-        lookup_ass(pattern, refdata.Assumptions.complete_ass)
+        lookup_ass(data, pattern, refdata.Assumptions.complete_ass)
     elif pattern.startswith("Fact_"):
-        lookup_fact(pattern, refdata.Facts.complete_fact)
+        lookup_fact(data, pattern, refdata.Facts.complete_fact)
     else:
         print(
             f"This {pattern} does not look like a AGS, fact or pattern... do not know what to do... giving up!",
