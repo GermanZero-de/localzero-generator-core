@@ -147,8 +147,8 @@ def print_fact_or_ass(name: str, record: refdata.FactOrAssumptionCompleteRow):
 
 def lookup_fact(data: refdata.RefData, pattern: str):
     try:
-        record = refdata.Facts.complete_fact(data.facts(), pattern)
-        print_fact_or_ass(name=pattern, record=record)
+        complete_fact = data.facts().complete_fact(pattern)
+        print_fact_or_ass(name=pattern, record=complete_fact)
     except:
         bold(f"No fact called {pattern} found!", file=sys.stderr)
         exit(1)
@@ -156,8 +156,8 @@ def lookup_fact(data: refdata.RefData, pattern: str):
 
 def lookup_ass(data: refdata.RefData, pattern: str):
     try:
-        record = refdata.Assumptions.complete_ass(data.assumptions(), pattern)
-        print_fact_or_ass(name=pattern, record=record)
+        complete_ass = data.assumptions().complete_ass(pattern)
+        print_fact_or_ass(name=pattern, record=complete_ass)
     except:
         bold(f"No assumption called {pattern} found!", file=sys.stderr)
         exit(1)
