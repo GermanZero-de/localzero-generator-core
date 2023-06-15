@@ -5,7 +5,8 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/heat.html
 
 # pyright: strict
 
-from ..inputs import Inputs
+from ..makeentries import Entries
+from ..refdata import Facts, Assumptions
 from ..heat2018.h18 import H18
 from ..residences2030.r30 import R30
 from ..business2030.b30 import B30
@@ -18,7 +19,9 @@ from . import energy_demand, energy_general, energy_production
 
 
 def calc(
-    inputs: Inputs,
+    entries: Entries,
+    facts: Facts,
+    assumptions: Assumptions,
     *,
     h18: H18,
     r30: R30,
@@ -27,9 +30,6 @@ def calc(
     i30: I30,
     e30_p_local_biomass_cogen_energy: float,
 ) -> H30:
-    entries = inputs.entries
-    facts = inputs.facts
-    assumptions = inputs.assumptions
 
     demand = energy_demand.calc_demand(r30, b30, i30, a30)
 

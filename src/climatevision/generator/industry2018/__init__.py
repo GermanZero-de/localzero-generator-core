@@ -5,16 +5,14 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/industry.html
 
 # pyright: strict
 
-from ..inputs import Inputs
+from ..makeentries import Entries
+from ..refdata import Facts
 
 from .i18 import I18
 from . import energy_base, energy_demand, energy_source
 
 
-def calc(inputs: Inputs, inputs_germany: Inputs) -> I18:
-    entries = inputs.entries
-    entries_germany = inputs_germany.entries
-    facts = inputs.facts
+def calc(entries: Entries, entries_germany: Entries, facts: Facts) -> I18:
 
     production_germany = energy_demand.calc_production_by_energy(entries_germany, facts)
 

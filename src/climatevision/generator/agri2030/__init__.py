@@ -5,7 +5,8 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/agriculture.html
 
 # pyright: strict
 
-from ..inputs import Inputs
+from ..makeentries import Entries
+from ..refdata import Facts, Assumptions
 from ..agri2018.a18 import A18
 from ..lulucf2030.l30 import L30
 
@@ -14,10 +15,9 @@ from .a30 import A30
 from . import energy_demand, energy_source, energy_general
 
 
-def calc(inputs: Inputs, a18: A18, l30: L30) -> A30:
-    entries = inputs.entries
-    facts = inputs.facts
-    assumptions = inputs.assumptions
+def calc(
+    entries: Entries, facts: Facts, assumptions: Assumptions, a18: A18, l30: L30
+) -> A30:
 
     production = energy_demand.calc_production(entries, facts, assumptions, a18, l30)
     supply = energy_source.calc_supply(entries, facts, assumptions, a18, production)

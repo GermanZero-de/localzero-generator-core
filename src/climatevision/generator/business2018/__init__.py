@@ -5,7 +5,8 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/hh_ghd.html
 
 # pyright: strict
 
-from ..inputs import Inputs
+from ..makeentries import Entries
+from ..refdata import Facts, Assumptions
 from ..utils import div
 from ..residences2018.r18 import R18
 from ..common.co2_equivalent_emission import CO2eEmission
@@ -16,11 +17,7 @@ from . import energy_base, energy_demand, energy_source
 
 
 # Berechnungsfunktion im Sektor GHD für 2018
-def calc(inputs: Inputs, *, r18: R18) -> B18:
-    entries = inputs.entries
-    facts = inputs.facts
-    assumptions = inputs.assumptions
-
+def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, r18: R18) -> B18:
     energies = energy_base.calc(entries=entries, facts=facts)
 
     production = energy_demand.calc_production(entries, facts, assumptions, energies)

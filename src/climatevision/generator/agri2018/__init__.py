@@ -5,7 +5,8 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/agriculture.html
 
 # pyright: strict
 
-from ..inputs import Inputs
+from ..makeentries import Entries
+from ..refdata import Facts
 from ..lulucf2018.l18 import L18
 from ..business2018.b18 import B18
 
@@ -14,10 +15,7 @@ from .energy_demand import CO2eEmission
 from . import energy_base, energy_demand, energy_source
 
 
-def calc(inputs: Inputs, l18: L18, b18: B18) -> A18:
-    entries = inputs.entries
-    facts = inputs.facts
-
+def calc(entries: Entries, facts: Facts, l18: L18, b18: B18) -> A18:
     energies = energy_base.calc(entries=entries)
 
     supply = energy_source.calc_supply(facts, energies)
