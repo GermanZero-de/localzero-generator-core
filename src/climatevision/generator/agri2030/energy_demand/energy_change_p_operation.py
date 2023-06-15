@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass, InitVar
 
-from ...inputs import Inputs
+from ...makeentries import Entries
 from ...common.invest import Invest
 from ...agri2018.a18 import A18
 
@@ -22,9 +22,9 @@ class EnergyChangePOperation(EnergyChangeAgri, Invest):
     demand_epetrol: float = 0
     demand_heatpump: float = 0
 
-    inputs: InitVar[Inputs]
     what: InitVar[str]
     a18: InitVar[A18]
+    entries: InitVar[Entries]
     operation_vehicles: InitVar[EnergyChangePOperationVehicles]
     operation_heat: InitVar[EnergyChangePOperationHeat]
     operation_elec_elcon: InitVar[EnergyChangePOperationElecElcon]
@@ -32,9 +32,9 @@ class EnergyChangePOperation(EnergyChangeAgri, Invest):
 
     def __post_init__(  # type: ignore[override]
         self,
-        inputs: Inputs,
         what: str,
         a18: A18,
+        entries: Entries,
         operation_vehicles: EnergyChangePOperationVehicles,
         operation_heat: EnergyChangePOperationHeat,
         operation_elec_elcon: EnergyChangePOperationElecElcon,
@@ -60,7 +60,7 @@ class EnergyChangePOperation(EnergyChangeAgri, Invest):
         )
 
         self.invest = operation_heat.invest
-        self.invest_pa = self.invest / inputs.entries.m_duration_target
+        self.invest_pa = self.invest / entries.m_duration_target
         self.cost_wage = operation_heat.cost_wage
 
-        EnergyChangeAgri.__post_init__(self, inputs=inputs, what=what, a18=a18)
+        EnergyChangeAgri.__post_init__(self, what=what, a18=a18)

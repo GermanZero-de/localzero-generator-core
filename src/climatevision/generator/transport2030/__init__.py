@@ -14,11 +14,15 @@ from .t import T
 
 
 def calc(inputs: Inputs, *, t18: T18) -> T30:
+    entries = inputs.entries
+    facts = inputs.facts
+    assumptions = inputs.assumptions
 
-    production = energy_demand.calc_production(inputs, t18)
+    production = energy_demand.calc_production(entries, facts, assumptions, t18)
 
     general = energy_general.calc_general(
-        inputs,
+        entries,
+        assumptions,
         production.road_bus_action_infra,
         production.road_gds_mhd_action_wire,
         production.road_action_charger,

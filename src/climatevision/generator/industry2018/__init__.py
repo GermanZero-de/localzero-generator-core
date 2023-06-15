@@ -12,15 +12,19 @@ from . import energy_base, energy_demand, energy_source
 
 
 def calc(inputs: Inputs, inputs_germany: Inputs) -> I18:
-    production_germany = energy_demand.calc_production_by_energy(inputs_germany)
+    entries = inputs.entries
+    entries_germany = inputs_germany.entries
+    facts = inputs.facts
+
+    production_germany = energy_demand.calc_production_by_energy(entries_germany, facts)
 
     production = energy_demand.calc_production_by_co2e(
-        inputs, inputs_germany, production_germany
+        entries, entries_germany, facts, production_germany
     )
 
     energies = energy_base.calc(production=production)
 
-    supply = energy_source.calc_supply(inputs, energies)
+    supply = energy_source.calc_supply(facts, energies)
 
     i = production.total
 

@@ -2,7 +2,8 @@
 
 from dataclasses import dataclass
 
-from ...inputs import Inputs
+from ...makeentries import Entries
+from ...refdata import Facts, Assumptions
 from ...utils import div
 from ...common.invest import InvestCommune
 
@@ -16,10 +17,11 @@ class InvestmentAction(InvestCommune):
     ratio_wage_to_emplo: float
 
     @classmethod
-    def calc_rail_action_invest_infra(cls, inputs: Inputs) -> "InvestmentAction":
-        ass = inputs.ass
-        fact = inputs.fact
-        entries = inputs.entries
+    def calc_rail_action_invest_infra(
+        cls, entries: Entries, facts: Facts, assumptions: Assumptions
+    ) -> "InvestmentAction":
+        fact = facts.fact
+        ass = assumptions.ass
 
         invest_per_x = ass("Ass_T_C_cost_per_trnsprt_rail_infrstrctr")
         invest = invest_per_x * entries.m_population_com_203X
@@ -49,10 +51,11 @@ class InvestmentAction(InvestCommune):
         )
 
     @classmethod
-    def calc_rail_action_invest_station(cls, inputs: Inputs) -> "InvestmentAction":
-        ass = inputs.ass
-        fact = inputs.fact
-        entries = inputs.entries
+    def calc_rail_action_invest_station(
+        cls, entries: Entries, facts: Facts, assumptions: Assumptions
+    ) -> "InvestmentAction":
+        fact = facts.fact
+        ass = assumptions.ass
 
         invest_per_x = ass("Ass_T_C_cost_per_trnsprt_rail_train station")
         invest = invest_per_x * entries.m_population_com_203X
@@ -82,10 +85,11 @@ class InvestmentAction(InvestCommune):
         )
 
     @classmethod
-    def calc_other_foot_action_infra(cls, inputs: Inputs) -> "InvestmentAction":
-        ass = inputs.ass
-        fact = inputs.fact
-        entries = inputs.entries
+    def calc_other_foot_action_infra(
+        cls, entries: Entries, facts: Facts, assumptions: Assumptions
+    ) -> "InvestmentAction":
+        fact = facts.fact
+        ass = assumptions.ass
 
         invest_per_x = ass("Ass_T_D_invest_pedestrians")
         invest_pa = invest_per_x * entries.m_population_com_203X
@@ -113,11 +117,14 @@ class InvestmentAction(InvestCommune):
 
     @classmethod
     def calc_other_cycl_action_infra(
-        cls, inputs: Inputs, cycle_transport_capacity_pkm: float
+        cls,
+        entries: Entries,
+        facts: Facts,
+        assumptions: Assumptions,
+        cycle_transport_capacity_pkm: float,
     ) -> "InvestmentAction":
-        ass = inputs.ass
-        fact = inputs.fact
-        entries = inputs.entries
+        fact = facts.fact
+        ass = assumptions.ass
 
         invest_per_x = ass("Ass_T_C_cost_per_trnsprt_ppl_cycle")
         invest = cycle_transport_capacity_pkm * invest_per_x
@@ -153,11 +160,14 @@ class RoadInvestmentAction(InvestmentAction):
 
     @classmethod
     def calc_car_action_charger(
-        cls, inputs: Inputs, car_base_unit: float
+        cls,
+        entries: Entries,
+        facts: Facts,
+        assumptions: Assumptions,
+        car_base_unit: float,
     ) -> "RoadInvestmentAction":
-        ass = inputs.ass
-        fact = inputs.fact
-        entries = inputs.entries
+        fact = facts.fact
+        ass = assumptions.ass
 
         # Divide cars by chargers/car => chargers
         base_unit = car_base_unit / (

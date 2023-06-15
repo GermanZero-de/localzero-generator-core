@@ -2,7 +2,8 @@
 
 from dataclasses import dataclass
 
-from ...inputs import Inputs
+from ...makeentries import Entries
+from ...refdata import Facts, Assumptions
 from ...agri2018.a18 import A18
 
 from .co2e_change_agri import CO2eChangeAgri
@@ -16,18 +17,27 @@ class CO2eChangeFermentationOrManure(CO2eChangeAgri):
 
     @classmethod
     def calc_fermen(
-        cls, inputs: Inputs, what: str, ass_demand_change: str, a18: A18
+        cls,
+        entries: Entries,
+        facts: Facts,
+        assumptions: Assumptions,
+        what: str,
+        ass_demand_change: str,
+        a18: A18,
     ) -> "CO2eChangeFermentationOrManure":
+        ass = assumptions.ass
+
         CO2e_combustion_based = 0
 
-        demand_change = inputs.ass(ass_demand_change)
+        demand_change = ass(ass_demand_change)
         amount = getattr(a18, what).amount * (1 + demand_change)
 
         CO2e_production_based_per_t = getattr(a18, what).CO2e_production_based_per_t
         CO2e_production_based = amount * CO2e_production_based_per_t
 
         parent = CO2eChangeAgri(
-            inputs=inputs,
+            entries=entries,
+            facts=facts,
             what=what,
             a18=a18,
             CO2e_combustion_based=CO2e_combustion_based,
@@ -35,7 +45,8 @@ class CO2eChangeFermentationOrManure(CO2eChangeAgri):
         )
 
         return cls(
-            inputs=inputs,
+            entries=entries,
+            facts=facts,
             what=what,
             a18=a18,
             CO2e_combustion_based=CO2e_combustion_based,
@@ -52,11 +63,19 @@ class CO2eChangeFermentationOrManure(CO2eChangeAgri):
 
     @classmethod
     def calc_manure(
-        cls, inputs: Inputs, what: str, a18: A18, amount: float
+        cls,
+        entries: Entries,
+        facts: Facts,
+        assumptions: Assumptions,
+        what: str,
+        a18: A18,
+        amount: float,
     ) -> "CO2eChangeFermentationOrManure":
+        ass = assumptions.ass
+
         CO2e_combustion_based = 0
 
-        demand_change = inputs.ass("Ass_A_P_manure_ratio_CO2e_to_amount_change")
+        demand_change = ass("Ass_A_P_manure_ratio_CO2e_to_amount_change")
 
         CO2e_production_based_per_t = getattr(a18, what).CO2e_production_based_per_t * (
             1 + demand_change
@@ -64,7 +83,8 @@ class CO2eChangeFermentationOrManure(CO2eChangeAgri):
         CO2e_production_based = amount * CO2e_production_based_per_t
 
         parent = CO2eChangeAgri(
-            inputs=inputs,
+            entries=entries,
+            facts=facts,
             what=what,
             a18=a18,
             CO2e_combustion_based=CO2e_combustion_based,
@@ -72,7 +92,8 @@ class CO2eChangeFermentationOrManure(CO2eChangeAgri):
         )
 
         return cls(
-            inputs=inputs,
+            entries=entries,
+            facts=facts,
             what=what,
             a18=a18,
             CO2e_combustion_based=CO2e_combustion_based,

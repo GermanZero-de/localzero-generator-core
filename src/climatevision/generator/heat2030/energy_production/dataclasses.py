@@ -2,7 +2,8 @@
 
 from dataclasses import dataclass, InitVar
 
-from ...inputs import Inputs
+from ...makeentries import Entries
+from ...refdata import Facts, Assumptions
 from ...utils import div, MILLION
 from ...heat2018.h18 import H18
 from ...common.energy import EnergyChange
@@ -14,18 +15,19 @@ from ...common.invest import InvestCommune
 
 @dataclass(kw_only=True)
 class CO2eChangeHeatProduction(EnergyWithCO2e, CO2eChange, EnergyChange):
-    inputs: InitVar[Inputs]
+    entries: InitVar[Entries]
+    facts: InitVar[Facts]
     what: InitVar[str]
     h18: InitVar[H18]
 
     def __post_init__(  # type: ignore[override]
         self,
-        inputs: Inputs,
+        entries: Entries,
+        facts: Facts,
         what: str,
         h18: H18,
     ):
-        fact = inputs.fact
-        entries = inputs.entries
+        fact = facts.fact
 
         if what == "":
             h18_p_what = getattr(h18, "p" + what)
@@ -61,18 +63,17 @@ class InvestHeatProduction(InvestCommune):
     pct_of_wage: float = 0
     ratio_wage_to_emplo: float = 0
 
-    inputs: InitVar[Inputs]
+    entries: InitVar[Entries]
+    facts: InitVar[Facts]
     what: InitVar[str]
     h18: InitVar[H18]
 
-    def __post_init__(
+    def __post_init__(  # type: ignore[override]
         self,
-        inputs: Inputs,
-        what: str,
-        h18: H18,
+        entries: Entries,
+        facts: Facts,
     ):
-        entries = inputs.entries
-        fact = inputs.fact
+        fact = facts.fact
 
         self.pct_of_wage = fact("Fact_B_P_constr_main_revenue_pct_of_wage_2017")
         self.ratio_wage_to_emplo = fact("Fact_B_P_constr_main_ratio_wage_to_emplo_2017")
@@ -90,18 +91,22 @@ class InvestHeatProduction(InvestCommune):
 
 @dataclass(kw_only=True)
 class HeatProduction(EnergyWithCO2ePerMWh, CO2eChangeHeatProduction):  # type: ignore[override]
-    inputs: InitVar[Inputs]
+    entries: InitVar[Entries]
+    facts: InitVar[Facts]
     what: InitVar[str]
     h18: InitVar[H18]
 
     def __post_init__(  # type: ignore[override]
         self,
-        inputs: Inputs,
+        entries: Entries,
+        facts: Facts,
         what: str,
         h18: H18,
     ):
         EnergyWithCO2ePerMWh.__post_init__(self)
-        CO2eChangeHeatProduction.__post_init__(self, inputs=inputs, what=what, h18=h18)
+        CO2eChangeHeatProduction.__post_init__(
+            self, entries=entries, facts=facts, what=what, h18=h18
+        )
 
 
 @dataclass(kw_only=True)
@@ -109,20 +114,26 @@ class HeatProductionWithCostFuel(HeatProduction):
     cost_fuel: float = 0
     cost_fuel_per_MWh: float = 0
 
-    inputs: InitVar[Inputs]
+    entries: InitVar[Entries]
+    facts: InitVar[Facts]
+    assumptions: InitVar[Assumptions]
     what: InitVar[str]
     h18: InitVar[H18]
 
-    def __post_init__(
+    def __post_init__(  # type: ignore[override]
         self,
-        inputs: Inputs,
+        entries: Entries,
+        facts: Facts,
         what: str,
         h18: H18,
+        assumptions: Assumptions,
     ):
-        fact = inputs.fact
-        ass = inputs.ass
+        fact = facts.fact
+        ass = assumptions.ass
 
-        HeatProduction.__post_init__(self, inputs=inputs, what=what, h18=h18)
+        HeatProduction.__post_init__(
+            self, entries=entries, facts=facts, what=what, h18=h18
+        )
 
         if what == "biomass":
             self.cost_fuel_per_MWh = fact("Fact_R_S_wood_energy_cost_factor_2018")
@@ -136,26 +147,30 @@ class HeatProductionWithCostFuel(HeatProduction):
 class HeatnetPlantProduction(HeatProduction, InvestHeatProduction, InvestPerX):
     area_ha_available: float = 0
 
-    inputs: InitVar[Inputs]
+    entries: InitVar[Entries]
+    facts: InitVar[Facts]
     what: InitVar[str]
     h18: InitVar[H18]
 
-    def __post_init__(
+    def __post_init__(  # type: ignore[override]
         self,
-        inputs: Inputs,
+        entries: Entries,
+        facts: Facts,
         what: str,
         h18: H18,
     ):
-        fact = inputs.fact
+        fact = facts.fact
 
-        HeatProduction.__post_init__(self, inputs=inputs, what=what, h18=h18)
+        HeatProduction.__post_init__(
+            self, entries=entries, facts=facts, what=what, h18=h18
+        )
 
         self.area_ha_available = self.energy / fact(
             "Fact_H_P_heatnet_solarth_park_yield_2025"
         )
         self.invest = self.invest_per_x * self.area_ha_available
 
-        InvestHeatProduction.__post_init__(self, inputs=inputs, what=what, h18=h18)
+        InvestHeatProduction.__post_init__(self, entries=entries, facts=facts)
 
 
 @dataclass(kw_only=True)
@@ -163,59 +178,71 @@ class HeatnetGeothProduction(HeatProduction, InvestHeatProduction, InvestPerX):
     full_load_hour: float
     power_to_be_installed: float = 0
 
-    inputs: InitVar[Inputs]
+    entries: InitVar[Entries]
+    facts: InitVar[Facts]
     what: InitVar[str]
     h18: InitVar[H18]
 
-    def __post_init__(
+    def __post_init__(  # type: ignore[override]
         self,
-        inputs: Inputs,
+        entries: Entries,
+        facts: Facts,
         what: str,
         h18: H18,
     ):
-        HeatProduction.__post_init__(self, inputs=inputs, what=what, h18=h18)
+        HeatProduction.__post_init__(
+            self, entries=entries, facts=facts, what=what, h18=h18
+        )
 
         self.power_to_be_installed = div(self.energy, self.full_load_hour)
         self.invest = self.invest_per_x * self.power_to_be_installed
 
-        InvestHeatProduction.__post_init__(self, inputs=inputs, what=what, h18=h18)
+        InvestHeatProduction.__post_init__(self, entries=entries, facts=facts)
 
 
 @dataclass(kw_only=True)
 class HeatnetLheatpumpProduction(HeatnetGeothProduction):
     demand_electricity: float = 0
 
-    inputs: InitVar[Inputs]
+    entries: InitVar[Entries]
+    facts: InitVar[Facts]
     what: InitVar[str]
     h18: InitVar[H18]
 
     def __post_init__(
         self,
-        inputs: Inputs,
+        entries: Entries,
+        facts: Facts,
         what: str,
         h18: H18,
     ):
-        fact = inputs.fact
+        fact = facts.fact
 
-        HeatnetGeothProduction.__post_init__(self, inputs=inputs, what=what, h18=h18)
+        HeatnetGeothProduction.__post_init__(
+            self, entries=entries, facts=facts, what=what, h18=h18
+        )
 
         self.demand_electricity = self.energy / fact("Fact_H_P_heatnet_lheatpump_apf")
 
 
 @dataclass(kw_only=True)
 class HeatnetProduction(InvestHeatProduction, CO2eChangeHeatProduction):
-    inputs: InitVar[Inputs]
+    entries: InitVar[Entries]
+    facts: InitVar[Facts]
     what: InitVar[str]
     h18: InitVar[H18]
 
-    def __post_init__(
+    def __post_init__(  # type: ignore[override]
         self,
-        inputs: Inputs,
+        entries: Entries,
+        facts: Facts,
         what: str,
         h18: H18,
     ):
-        CO2eChangeHeatProduction.__post_init__(self, inputs=inputs, what=what, h18=h18)
-        InvestHeatProduction.__post_init__(self, inputs=inputs, what=what, h18=h18)
+        CO2eChangeHeatProduction.__post_init__(
+            self, entries=entries, facts=facts, what=what, h18=h18
+        )
+        InvestHeatProduction.__post_init__(self, entries=entries, facts=facts)
 
 
 @dataclass(kw_only=True)
@@ -223,14 +250,18 @@ class TotalHeatProduction(HeatnetProduction):
     cost_fuel: float = 0
     demand_electricity: float = 0
 
-    inputs: InitVar[Inputs]
+    entries: InitVar[Entries]
+    facts: InitVar[Facts]
     what: InitVar[str]
     h18: InitVar[H18]
 
     def __post_init__(
         self,
-        inputs: Inputs,
+        entries: Entries,
+        facts: Facts,
         what: str,
         h18: H18,
     ):
-        HeatnetProduction.__post_init__(self, inputs=inputs, what=what, h18=h18)
+        HeatnetProduction.__post_init__(
+            self, entries=entries, facts=facts, what=what, h18=h18
+        )

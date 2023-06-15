@@ -27,11 +27,16 @@ def calc(
     i30: I30,
     e30_p_local_biomass_cogen_energy: float,
 ) -> H30:
+    entries = inputs.entries
+    facts = inputs.facts
+    assumptions = inputs.assumptions
 
     demand = energy_demand.calc_demand(r30, b30, i30, a30)
 
     production = energy_production.calc_production(
-        inputs,
+        entries,
+        facts,
+        assumptions,
         h18,
         r30,
         b30,
@@ -41,7 +46,10 @@ def calc(
     )
 
     general = energy_general.calc_general(
-        inputs=inputs, p_heatnet_energy=production.heatnet.energy
+        entries=entries,
+        facts=facts,
+        assumptions=assumptions,
+        p_heatnet_energy=production.heatnet.energy,
     )
 
     h = H.of_p_and_g(production.total, general.g)

@@ -15,13 +15,17 @@ from . import energy_demand, energy_source, energy_general
 
 
 def calc(inputs: Inputs, a18: A18, l30: L30) -> A30:
+    entries = inputs.entries
+    facts = inputs.facts
+    assumptions = inputs.assumptions
 
-    production = energy_demand.calc_production(inputs, a18, l30)
-    supply = energy_source.calc_supply(inputs, a18, production)
-    general = energy_general.calc_general(inputs=inputs)
+    production = energy_demand.calc_production(entries, facts, assumptions, a18, l30)
+    supply = energy_source.calc_supply(entries, facts, assumptions, a18, production)
+    general = energy_general.calc_general(entries, facts, assumptions)
 
     a = CO2eChangeA(
-        inputs=inputs,
+        entries=entries,
+        facts=facts,
         what="a",
         a18=a18,
         p_operation=production.operation,

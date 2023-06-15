@@ -2,7 +2,8 @@
 
 from dataclasses import dataclass
 
-from ...inputs import Inputs
+from ...makeentries import Entries
+from ...refdata import Assumptions
 from ...common.g import G, GConsult as GPlanning
 
 from ..energy_demand import (
@@ -20,7 +21,8 @@ class General:
 
 
 def calc_general(
-    inputs: Inputs,
+    entries: Entries,
+    assumptions: Assumptions,
     road_bus_action_infra: InvestmentAction,
     road_gds_mhd_action_wire: InvestmentAction,
     road_action_charger: RoadInvestmentAction,
@@ -29,7 +31,7 @@ def calc_general(
     other_cycl: OtherCycle,
 ) -> General:
 
-    ass = inputs.ass
+    ass = assumptions.ass
 
     invest = ass("Ass_T_C_planer_cost_per_invest_cost") * (
         road_bus_action_infra.invest
@@ -41,7 +43,7 @@ def calc_general(
     )
 
     g_planning = GPlanning.calc_from_invest_calc_planning_with_invest_commune(
-        inputs, invest
+        entries, assumptions, invest
     )
 
     # TODO: This Seems to be a pointless rename?

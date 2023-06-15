@@ -2,7 +2,8 @@
 
 from dataclasses import dataclass
 
-from ..inputs import Inputs
+from ..makeentries import Entries
+from ..refdata import Facts, Assumptions
 from ..utils import div
 
 from .invest import InvestCommune
@@ -32,10 +33,9 @@ class GConsult(G):
 
     @classmethod
     def calc_from_invest(
-        cls, inputs: Inputs, invest: float, emplo_existing: float
+        cls, entries: Entries, facts: Facts, invest: float, emplo_existing: float
     ) -> "GConsult":
-        fact = inputs.fact
-        entries = inputs.entries
+        fact = facts.fact
 
         invest_pa = invest / entries.m_duration_target
 
@@ -64,11 +64,10 @@ class GConsult(G):
 
     @classmethod
     def calc_from_invest_calc_planning(
-        cls, inputs: Inputs, invest: float
+        cls, entries: Entries, facts: Facts, assumptions: Assumptions, invest: float
     ) -> "GConsult":
-        entries = inputs.entries
-        ass = inputs.ass
-        fact = inputs.fact
+        fact = facts.fact
+        ass = assumptions.ass
 
         invest_pa = invest / entries.m_duration_target
 
@@ -97,10 +96,9 @@ class GConsult(G):
 
     @classmethod
     def calc_from_invest_calc_planning_with_invest_commune(
-        cls, inputs: Inputs, invest: float
+        cls, entries: Entries, assumptions: Assumptions, invest: float
     ) -> "GConsult":
-        ass = inputs.ass
-        entries = inputs.entries
+        ass = assumptions.ass
 
         invest_pa = invest / entries.m_duration_target
 
@@ -129,10 +127,13 @@ class GConsult(G):
 
     @classmethod
     def calc_from_invest_pa(
-        cls, inputs: Inputs, invest_pa: float, ratio_wage_to_emplo: float
+        cls,
+        entries: Entries,
+        assumptions: Assumptions,
+        invest_pa: float,
+        ratio_wage_to_emplo: float,
     ) -> "GConsult":
-        ass = inputs.ass
-        entries = inputs.entries
+        ass = assumptions.ass
 
         invest = invest_pa * entries.m_duration_target
 
@@ -160,9 +161,8 @@ class GConsult(G):
         )
 
     @classmethod
-    def calc_storage(cls, inputs: Inputs, energy: float) -> "GConsult":
-        entries = inputs.entries
-        fact = inputs.fact
+    def calc_storage(cls, entries: Entries, facts: Facts, energy: float) -> "GConsult":
+        fact = facts.fact
 
         pct_energy = fact("Fact_H_P_storage_specific_volume")
         power_to_be_installed = energy * pct_energy

@@ -1,7 +1,8 @@
 # pyright: strict
 from dataclasses import dataclass
 
-from ...inputs import Inputs
+from ...makeentries import Entries
+from ...refdata import Facts, Assumptions
 from ...agri2018.a18 import A18
 
 from ..energy_demand import Production
@@ -27,10 +28,17 @@ class EnergySupply:
     emethan: CO2eChangeFuelEmethan
 
 
-def calc_supply(inputs: Inputs, a18: A18, production: Production) -> EnergySupply:
+def calc_supply(
+    entries: Entries,
+    facts: Facts,
+    assumptions: Assumptions,
+    a18: A18,
+    production: Production,
+) -> EnergySupply:
 
     petrol = CO2eChangeEnergyPerMWh(
-        inputs=inputs,
+        entries=entries,
+        facts=facts,
         what="s_petrol",
         a18=a18,
         energy=production.operation_vehicles.demand_epetrol,
@@ -38,7 +46,8 @@ def calc_supply(inputs: Inputs, a18: A18, production: Production) -> EnergySuppl
         CO2e_production_based=None,  # type: ignore
     )
     diesel = CO2eChangeEnergyPerMWh(
-        inputs=inputs,
+        entries=entries,
+        facts=facts,
         what="s_diesel",
         a18=a18,
         energy=production.operation_vehicles.demand_ediesel,
@@ -46,7 +55,8 @@ def calc_supply(inputs: Inputs, a18: A18, production: Production) -> EnergySuppl
         CO2e_production_based=None,  # type: ignore
     )
     lpg = CO2eChangeEnergyPerMWh(
-        inputs=inputs,
+        entries=entries,
+        facts=facts,
         what="s_lpg",
         a18=a18,
         energy=0,
@@ -54,7 +64,8 @@ def calc_supply(inputs: Inputs, a18: A18, production: Production) -> EnergySuppl
         CO2e_production_based=None,  # type: ignore
     )
     biomass = CO2eChangeEnergyPerMWh(
-        inputs=inputs,
+        entries=entries,
+        facts=facts,
         what="s_biomass",
         a18=a18,
         energy=production.operation.demand_biomass,
@@ -62,7 +73,8 @@ def calc_supply(inputs: Inputs, a18: A18, production: Production) -> EnergySuppl
         CO2e_production_based=None,  # type: ignore
     )
     elec = CO2eChangeEnergyPerMWh(
-        inputs=inputs,
+        entries=entries,
+        facts=facts,
         what="s_elec",
         a18=a18,
         energy=production.operation.demand_electricity,
@@ -70,7 +82,8 @@ def calc_supply(inputs: Inputs, a18: A18, production: Production) -> EnergySuppl
         CO2e_production_based=None,  # type: ignore
     )
     fueloil = CO2eChangeFuelOilGas(
-        inputs=inputs,
+        entries=entries,
+        facts=facts,
         what="s_fueloil",
         a18=a18,
         energy=0,
@@ -78,7 +91,8 @@ def calc_supply(inputs: Inputs, a18: A18, production: Production) -> EnergySuppl
         CO2e_production_based=None,  # type: ignore
     )
     gas = CO2eChangeFuelOilGas(
-        inputs=inputs,
+        entries=entries,
+        facts=facts,
         what="s_gas",
         a18=a18,
         energy=0,
@@ -86,7 +100,9 @@ def calc_supply(inputs: Inputs, a18: A18, production: Production) -> EnergySuppl
         CO2e_production_based=None,  # type: ignore
     )
     heatpump = CO2eChangeFuelHeatpump(
-        inputs=inputs,
+        entries=entries,
+        facts=facts,
+        assumptions=assumptions,
         what="s_heatpump",
         a18=a18,
         energy=production.operation.demand_heatpump,
@@ -94,7 +110,8 @@ def calc_supply(inputs: Inputs, a18: A18, production: Production) -> EnergySuppl
         CO2e_production_based=None,  # type: ignore
     )
     emethan = CO2eChangeFuelEmethan(
-        inputs=inputs,
+        entries=entries,
+        facts=facts,
         what="",
         a18=a18,
         energy=production.operation_heat.demand_emethan,
@@ -103,7 +120,8 @@ def calc_supply(inputs: Inputs, a18: A18, production: Production) -> EnergySuppl
     )
 
     total = CO2eChangeS(
-        inputs=inputs,
+        entries=entries,
+        facts=facts,
         what="s",
         a18=a18,
         petrol=petrol,

@@ -4,7 +4,6 @@ from dataclasses import dataclass
 
 from ...makeentries import Entries
 from ...refdata import Facts
-
 from ...common.co2_equivalent_emission import CO2eEmission
 
 

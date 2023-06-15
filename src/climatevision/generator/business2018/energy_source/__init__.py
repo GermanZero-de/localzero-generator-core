@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass
 
-from ...inputs import Inputs
+from ...refdata import Facts
 
 from ..energy_base import Energies
 
@@ -33,10 +33,10 @@ class EnergySupply:
 
 
 def calc_supply(
-    inputs: Inputs, energies: Energies, building_energy_ratio: float
+    facts: Facts, energies: Energies, building_energy_ratio: float
 ) -> EnergySupply:
 
-    fact = inputs.fact
+    fact = facts.fact
 
     gas = EnergyWithCO2ePerMWhAndCostFuel(
         energy=energies.gas.energy,

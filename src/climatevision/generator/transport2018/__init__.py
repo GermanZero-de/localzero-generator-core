@@ -13,8 +13,11 @@ from . import energy_demand, energy_source
 
 
 def calc(inputs: Inputs) -> T18:
+    entries = inputs.entries
+    facts = inputs.facts
+    assumptions = inputs.assumptions
 
-    production = energy_demand.calc_production(inputs)
+    production = energy_demand.calc_production(entries, facts, assumptions)
 
     t = (
         Transport.lift_air(production.air)

@@ -1,7 +1,8 @@
 # pyright: strict
 from dataclasses import dataclass, InitVar
 
-from ...inputs import Inputs
+from ...makeentries import Entries
+from ...refdata import Facts
 from ...utils import div
 from ...common.invest import Invest
 from ...agri2018.a18 import A18
@@ -20,7 +21,8 @@ class CO2eChangeS(CO2eChangeAgri, Invest):
     change_energy_pct: float = 0
     energy: float = 0
 
-    inputs: InitVar[Inputs]
+    entries: InitVar[Entries]
+    facts: InitVar[Facts]
     what: InitVar[str]
     a18: InitVar[A18]
     petrol: InitVar[CO2eChangeEnergyPerMWh]
@@ -35,7 +37,8 @@ class CO2eChangeS(CO2eChangeAgri, Invest):
 
     def __post_init__(  # type: ignore[override]
         self,
-        inputs: Inputs,
+        entries: Entries,
+        facts: Facts,
         what: str,
         a18: A18,
         petrol: CO2eChangeEnergyPerMWh,
@@ -63,7 +66,7 @@ class CO2eChangeS(CO2eChangeAgri, Invest):
         )
 
         self.invest = heatpump.invest
-        self.invest_pa = self.invest / inputs.entries.m_duration_target
+        self.invest_pa = self.invest / entries.m_duration_target
 
         self.energy = (
             petrol.energy
@@ -84,4 +87,6 @@ class CO2eChangeS(CO2eChangeAgri, Invest):
 
         self.cost_wage = heatpump.cost_wage
 
-        CO2eChangeAgri.__post_init__(self, inputs=inputs, what=what, a18=a18)
+        CO2eChangeAgri.__post_init__(
+            self, entries=entries, facts=facts, what=what, a18=a18
+        )

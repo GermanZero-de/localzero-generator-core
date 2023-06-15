@@ -2,7 +2,8 @@
 
 from dataclasses import dataclass, InitVar
 
-from ..inputs import Inputs
+from ..makeentries import Entries
+from ..refdata import Facts
 from ..utils import div
 from ..common.invest import InvestCommune
 from ..agri2018.a18 import A18
@@ -27,7 +28,8 @@ class CO2eChangeA(InvestCommune):
     invest_outside: float = 0
     invest_pa_outside: float = 0
 
-    inputs: InitVar[Inputs]
+    entries: InitVar[Entries]
+    facts: InitVar[Facts]
     what: InitVar[str]
     a18: InitVar[A18]
     p_operation: InitVar[EnergyChangePOperation]
@@ -37,7 +39,8 @@ class CO2eChangeA(InvestCommune):
 
     def __post_init__(
         self,
-        inputs: Inputs,
+        entries: Entries,
+        facts: Facts,
         what: str,
         a18: A18,
         p_operation: EnergyChangePOperation,
@@ -45,12 +48,13 @@ class CO2eChangeA(InvestCommune):
         g: CO2eChangeG,
         s: CO2eChangeS,
     ):
+        fact = facts.fact
 
         self.CO2e_production_based = p.CO2e_production_based
         self.CO2e_combustion_based = s.CO2e_combustion_based
         self.CO2e_total = g.CO2e_total + p.CO2e_total + s.CO2e_total
 
-        self.CO2e_total_2021_estimated = getattr(a18, what).CO2e_total * inputs.fact(
+        self.CO2e_total_2021_estimated = getattr(a18, what).CO2e_total * fact(
             "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
         )
 
@@ -59,7 +63,7 @@ class CO2eChangeA(InvestCommune):
         self.invest_com = g.invest_com
         self.invest = g.invest + s.invest + p.invest
         self.invest_pa_com = g.invest_pa_com
-        self.invest_pa = self.invest / inputs.entries.m_duration_target
+        self.invest_pa = self.invest / entries.m_duration_target
 
         self.change_CO2e_t = self.CO2e_total - getattr(a18, what).CO2e_total
         self.change_CO2e_pct = div(self.change_CO2e_t, a18.a.CO2e_total)
@@ -74,8 +78,8 @@ class CO2eChangeA(InvestCommune):
 
         self.cost_climate_saved = (
             (self.CO2e_total_2021_estimated - self.CO2e_total)
-            * inputs.entries.m_duration_neutral
-            * inputs.fact("Fact_M_cost_per_CO2e_2020")
+            * entries.m_duration_neutral
+            * fact("Fact_M_cost_per_CO2e_2020")
         )
 
         self.cost_wage = g.cost_wage + p.cost_wage + s.cost_wage

@@ -1,10 +1,11 @@
 # pyright: strict
 
-from ...inputs import Inputs
+from ...refdata import Facts, Assumptions
 
 
 def from_demands(
-    inputs: Inputs,
+    facts: Facts,
+    assumptions: Assumptions,
     *,
     demand_biodiesel: float = 0,
     demand_bioethanol: float = 0,
@@ -18,16 +19,19 @@ def from_demands(
     demand_petrol: float = 0,
     demand_jetpetrol: float = 0,
 ) -> float:
+    fact = facts.fact
+    ass = assumptions.ass
+
     return (
-        demand_biodiesel * inputs.ass("Ass_T_S_biodiesel_EmFa_tank_wheel")
-        + demand_bioethanol * inputs.ass("Ass_T_S_bioethanol_EmFa_tank_wheel")
-        + demand_biogas * inputs.ass("Ass_T_S_biogas_EmFa_tank_wheel")
-        + demand_diesel * inputs.fact("Fact_T_S_diesel_EmFa_tank_wheel_2018")
-        + demand_electricity * inputs.fact("Fact_T_S_electricity_EmFa_tank_wheel_2018")
-        + demand_fueloil * inputs.fact("Fact_T_S_fueloil_EmFa_tank_wheel_2018")
-        + demand_gas * inputs.fact("Fact_T_S_cng_EmFa_tank_wheel_2018")
-        + demand_jetfuel * inputs.fact("Fact_T_S_jetfuel_EmFa_tank_wheel_2018")
-        + demand_lpg * inputs.fact("Fact_T_S_lpg_EmFa_tank_wheel_2018")
-        + demand_petrol * inputs.fact("Fact_T_S_petrol_EmFa_tank_wheel_2018")
-        + demand_jetpetrol * inputs.fact("Fact_T_S_petroljet_EmFa_tank_wheel_2018")
+        demand_biodiesel * ass("Ass_T_S_biodiesel_EmFa_tank_wheel")
+        + demand_bioethanol * ass("Ass_T_S_bioethanol_EmFa_tank_wheel")
+        + demand_biogas * ass("Ass_T_S_biogas_EmFa_tank_wheel")
+        + demand_diesel * fact("Fact_T_S_diesel_EmFa_tank_wheel_2018")
+        + demand_electricity * fact("Fact_T_S_electricity_EmFa_tank_wheel_2018")
+        + demand_fueloil * fact("Fact_T_S_fueloil_EmFa_tank_wheel_2018")
+        + demand_gas * fact("Fact_T_S_cng_EmFa_tank_wheel_2018")
+        + demand_jetfuel * fact("Fact_T_S_jetfuel_EmFa_tank_wheel_2018")
+        + demand_lpg * fact("Fact_T_S_lpg_EmFa_tank_wheel_2018")
+        + demand_petrol * fact("Fact_T_S_petrol_EmFa_tank_wheel_2018")
+        + demand_jetpetrol * fact("Fact_T_S_petroljet_EmFa_tank_wheel_2018")
     )

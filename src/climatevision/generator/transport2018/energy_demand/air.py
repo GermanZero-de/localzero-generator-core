@@ -2,7 +2,8 @@
 
 from dataclasses import dataclass
 
-from ...inputs import Inputs
+from ...makeentries import Entries
+from ...refdata import Facts, Assumptions
 from ...utils import element_wise_plus
 
 from . import co2e
@@ -22,32 +23,39 @@ class Air:
         return element_wise_plus(self, other)
 
     @classmethod
-    def calc_domestic(cls, inputs: Inputs) -> "Air":
+    def calc_domestic(
+        cls, entries: Entries, facts: Facts, assumptions: Assumptions
+    ) -> "Air":
+        fact = facts.fact
+
         demand_petrol = (
-            inputs.fact("Fact_T_S_Air_petrol_fec_2018")
-            * inputs.entries.m_population_com_2018
-            / inputs.entries.m_population_nat
+            fact("Fact_T_S_Air_petrol_fec_2018")
+            * entries.m_population_com_2018
+            / entries.m_population_nat
         )
         demand_jetfuel = (
-            inputs.fact("Fact_T_S_Air_nat_EB_dmstc_2018")
-            * inputs.entries.m_population_com_2018
-            / inputs.entries.m_population_nat
+            fact("Fact_T_S_Air_nat_EB_dmstc_2018")
+            * entries.m_population_com_2018
+            / entries.m_population_nat
         )
 
         transport_capacity_pkm = (
-            inputs.fact("Fact_T_D_Air_dmstc_nat_trnsprt_ppl_2019")
-            * inputs.entries.m_population_com_2018
-            / inputs.entries.m_population_nat
+            fact("Fact_T_D_Air_dmstc_nat_trnsprt_ppl_2019")
+            * entries.m_population_com_2018
+            / entries.m_population_nat
         )
         transport_capacity_tkm = (
-            inputs.fact("Fact_T_D_Air_dmstc_nat_trnsprt_gds_2019")
-            * inputs.fact("Fact_T_D_Air_dmstc_nat_ratio_2018")
-            * inputs.entries.m_population_com_2018
-            / inputs.entries.m_population_nat
+            fact("Fact_T_D_Air_dmstc_nat_trnsprt_gds_2019")
+            * fact("Fact_T_D_Air_dmstc_nat_ratio_2018")
+            * entries.m_population_com_2018
+            / entries.m_population_nat
         )
 
         CO2e_combustion_based = co2e.from_demands(
-            inputs, demand_jetfuel=demand_jetfuel, demand_jetpetrol=demand_petrol
+            facts,
+            assumptions,
+            demand_jetfuel=demand_jetfuel,
+            demand_jetpetrol=demand_petrol,
         )
         CO2e_total = CO2e_combustion_based
 
@@ -63,27 +71,33 @@ class Air:
         )
 
     @classmethod
-    def calc_international(cls, inputs: Inputs) -> "Air":
+    def calc_international(
+        cls, entries: Entries, facts: Facts, assumptions: Assumptions
+    ) -> "Air":
+        fact = facts.fact
+
         transport_capacity_pkm = (
-            inputs.fact("Fact_T_D_Air_nat_trnsprt_ppl_2019")
-            * inputs.entries.m_population_com_2018
-            / inputs.entries.m_population_nat
+            fact("Fact_T_D_Air_nat_trnsprt_ppl_2019")
+            * entries.m_population_com_2018
+            / entries.m_population_nat
         )
 
         transport_capacity_tkm = (
-            inputs.fact("Fact_T_D_Air_dmstc_nat_trnsprt_gds_2019")
-            * inputs.fact("Fact_T_D_Air_inter_nat_ratio_2018")
-            * inputs.entries.m_population_com_2018
-            / inputs.entries.m_population_nat
+            fact("Fact_T_D_Air_dmstc_nat_trnsprt_gds_2019")
+            * fact("Fact_T_D_Air_inter_nat_ratio_2018")
+            * entries.m_population_com_2018
+            / entries.m_population_nat
         )
 
         demand_jetfuel = (
-            inputs.fact("Fact_T_S_Air_nat_EB_inter_2018")
-            * inputs.entries.m_population_com_2018
-            / inputs.entries.m_population_nat
+            fact("Fact_T_S_Air_nat_EB_inter_2018")
+            * entries.m_population_com_2018
+            / entries.m_population_nat
         )
 
-        CO2e_combustion_based = co2e.from_demands(inputs, demand_jetfuel=demand_jetfuel)
+        CO2e_combustion_based = co2e.from_demands(
+            facts, assumptions, demand_jetfuel=demand_jetfuel
+        )
         CO2e_total = CO2e_combustion_based
         energy = demand_jetfuel
         return cls(

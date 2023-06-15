@@ -2,7 +2,8 @@
 
 from dataclasses import dataclass
 
-from ...inputs import Inputs
+from ...makeentries import Entries
+from ...refdata import Facts, Assumptions
 
 from .air import Air
 from .road import Road
@@ -46,46 +47,52 @@ class Production:
     other: Other
 
 
-def calc_production(inputs: Inputs) -> Production:
+def calc_production(
+    entries: Entries, facts: Facts, assumptions: Assumptions
+) -> Production:
     # TODO: Fix the it at confusion
 
     # --- Air ---
-    air_dmstc = Air.calc_domestic(inputs)
-    air_inter = Air.calc_international(inputs)
+    air_dmstc = Air.calc_domestic(entries, facts, assumptions)
+    air_inter = Air.calc_international(entries, facts, assumptions)
     air = air_dmstc + air_inter
 
     # --- Road ---
-    road_car_it_ot = Road.calc_car(inputs, "it_ot")
-    road_car_ab = Road.calc_car(inputs, "ab")
+    road_car_it_ot = Road.calc_car(entries, facts, assumptions, "it_ot")
+    road_car_ab = Road.calc_car(entries, facts, assumptions, "ab")
     road_car = road_car_it_ot + road_car_ab
-    road_bus = Road.calc_bus(inputs)
+    road_bus = Road.calc_bus(entries, facts, assumptions)
     road_ppl = road_car + road_bus
     road_gds_mhd_it_ot = Road.calc_goods_medium_and_heavy_duty_it_ot(
-        inputs, road_bus_mileage=road_bus.mileage
+        entries, facts, assumptions, road_bus_mileage=road_bus.mileage
     )
-    road_gds_mhd_ab = Road.calc_goods_medium_and_heavy_duty_ab(inputs)
+    road_gds_mhd_ab = Road.calc_goods_medium_and_heavy_duty_ab(
+        entries, facts, assumptions
+    )
     road_gds_mhd = road_gds_mhd_ab + road_gds_mhd_it_ot
-    road_gds_ldt_it_ot = Road.calc_goods_light_duty(inputs, "it_ot")
-    road_gds_ldt_ab = Road.calc_goods_light_duty(inputs, "ab")
+    road_gds_ldt_it_ot = Road.calc_goods_light_duty(
+        entries, facts, assumptions, "it_ot"
+    )
+    road_gds_ldt_ab = Road.calc_goods_light_duty(entries, facts, assumptions, "ab")
     road_gds_ldt = road_gds_ldt_it_ot + road_gds_ldt_ab
     road_gds = road_gds_ldt + road_gds_mhd
     road = road_gds + road_ppl
 
     # --- Rail ---
-    rail_ppl_metro = Rail.calc_rail_people_metro(inputs)
-    rail_ppl_distance = Rail.calc_people_distance(inputs)
+    rail_ppl_metro = Rail.calc_rail_people_metro(entries, facts, assumptions)
+    rail_ppl_distance = Rail.calc_people_distance(entries, facts, assumptions)
     rail_ppl = rail_ppl_metro + rail_ppl_distance
-    rail_gds = Rail.calc_goods(inputs)
+    rail_gds = Rail.calc_goods(entries, facts, assumptions)
     rail = rail_ppl + rail_gds
 
     # --- Ship ---
-    ship_dmstc = Ship.calc_ship_domestic(inputs)
-    ship_inter = Ship.calc_ship_international(inputs)
+    ship_dmstc = Ship.calc_ship_domestic(entries, facts, assumptions)
+    ship_inter = Ship.calc_ship_international(entries, facts, assumptions)
     ship = ship_dmstc + ship_inter
 
     # --- Other ---
-    other_foot = Other.calc_foot(inputs)
-    other_cycl = Other.calc_cycle(inputs)
+    other_foot = Other.calc_foot(entries, facts)
+    other_cycl = Other.calc_cycle(entries, facts)
     other = other_foot + other_cycl
 
     return Production(

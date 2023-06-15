@@ -2,7 +2,8 @@
 
 from dataclasses import dataclass
 
-from ...inputs import Inputs
+from ...makeentries import Entries
+from ...refdata import Facts, Assumptions
 from ...utils import div
 from ...common.invest import InvestCommune
 from ...transport2018.t18 import T18
@@ -31,14 +32,19 @@ class OtherFoot:
 
     @classmethod
     def calc(
-        cls, inputs: Inputs, *, t18: T18, total_transport_capacity_pkm: float
+        cls,
+        entries: Entries,
+        facts: Facts,
+        assumptions: Assumptions,
+        *,
+        t18: T18,
+        total_transport_capacity_pkm: float,
     ) -> "OtherFoot":
         """Everybody should walk more it's healthy and has no negative effects
         on the climate. But of course how much we can walk depends on the
         kind of area we are in."""
-        ass = inputs.ass
-        fact = inputs.fact
-        entries = inputs.entries
+        fact = facts.fact
+        ass = assumptions.ass
 
         transport_capacity_pkm = total_transport_capacity_pkm * (
             ass("Ass_T_D_trnsprt_ppl_city_foot_frac_2050")
@@ -92,11 +98,15 @@ class OtherCycle:
 
     @classmethod
     def calc(
-        cls, inputs: Inputs, t18: T18, total_transport_capacity_pkm: float
+        cls,
+        entries: Entries,
+        facts: Facts,
+        assumptions: Assumptions,
+        t18: T18,
+        total_transport_capacity_pkm: float,
     ) -> "OtherCycle":
-        fact = inputs.fact
-        ass = inputs.ass
-        entries = inputs.entries
+        fact = facts.fact
+        ass = assumptions.ass
 
         transport_capacity_pkm = total_transport_capacity_pkm * (
             ass("Ass_T_D_trnsprt_ppl_city_cycl_frac_2050")
@@ -158,7 +168,7 @@ class Other(InvestCommune):
     @classmethod
     def calc(
         cls,
-        inputs: Inputs,
+        entries: Entries,
         *,
         t18: T18,
         other_foot: OtherFoot,
@@ -201,7 +211,7 @@ class Other(InvestCommune):
             other_foot_action_infra.cost_wage + other_cycl_action_infra.cost_wage
         )
         other_cycl_action_infra.invest_pa = (
-            other_cycl_action_infra.invest / inputs.entries.m_duration_target
+            other_cycl_action_infra.invest / entries.m_duration_target
         )
         other_cycl_action_infra.demand_emplo = div(
             other_cycl_action_infra.cost_wage,

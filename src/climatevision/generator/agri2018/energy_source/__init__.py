@@ -2,11 +2,11 @@
 
 from dataclasses import dataclass
 
-from ..energy_base import Energies
-
 from ...refdata import Facts
 from ...common.energy_with_co2e import EnergyWithCO2e
 from ...common.energy_with_co2e_per_mwh import EnergyWithCO2ePerMWh
+
+from ..energy_base import Energies
 
 
 @dataclass(kw_only=True)

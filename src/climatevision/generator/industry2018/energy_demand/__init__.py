@@ -2,7 +2,8 @@
 
 from dataclasses import dataclass
 
-from ...inputs import Inputs
+from ...makeentries import Entries
+from ...refdata import Facts
 
 from .production_branches import (
     ExtraEmission,
@@ -43,18 +44,20 @@ class Production:
 
 
 def calc_production_by_co2e(
-    inputs: Inputs, inputs_germany: Inputs, production_germany: Production
+    entries: Entries,
+    entries_germany: Entries,
+    facts: Facts,
+    production_germany: Production,
 ) -> Production:
-
-    entries = inputs.entries
+    fact = facts.fact
 
     co2e_miner_cement_corrected = (
         entries.i_dehst_miner_cement
         * production_germany.miner_cement.CO2e_total
-        / inputs_germany.entries.i_dehst_miner_cement
+        / entries_germany.i_dehst_miner_cement
     )
     miner_cement = ProductionSubBranch.calc_sub_branch_by_co2e(
-        inputs=inputs,
+        facts=facts,
         branch="miner",
         sub_branch="cement",
         co2e_sub_branch=co2e_miner_cement_corrected,
@@ -63,10 +66,10 @@ def calc_production_by_co2e(
     co2e_miner_chalk_corrected = (
         entries.i_dehst_miner_chalk
         * production_germany.miner_chalk.CO2e_total
-        / inputs_germany.entries.i_dehst_miner_chalk
+        / entries_germany.i_dehst_miner_chalk
     )
     miner_chalk = ProductionSubBranch.calc_sub_branch_by_co2e(
-        inputs=inputs,
+        facts=facts,
         branch="miner",
         sub_branch="chalk",
         co2e_sub_branch=co2e_miner_chalk_corrected,
@@ -75,10 +78,10 @@ def calc_production_by_co2e(
     co2e_miner_glas_corrected = (
         entries.i_dehst_miner_glas
         * production_germany.miner_glas.CO2e_total
-        / inputs_germany.entries.i_dehst_miner_glas
+        / entries_germany.i_dehst_miner_glas
     )
     miner_glas = ProductionSubBranch.calc_sub_branch_by_co2e(
-        inputs=inputs,
+        facts=facts,
         branch="miner",
         sub_branch="glas",
         co2e_sub_branch=co2e_miner_glas_corrected,
@@ -87,10 +90,10 @@ def calc_production_by_co2e(
     co2e_miner_ceram_corrected = (
         entries.i_dehst_miner_ceram
         * production_germany.miner_ceram.CO2e_total
-        / inputs_germany.entries.i_dehst_miner_ceram
+        / entries_germany.i_dehst_miner_ceram
     )
     miner_ceram = ProductionSubBranch.calc_sub_branch_by_co2e(
-        inputs=inputs,
+        facts=facts,
         branch="miner",
         sub_branch="ceram",
         co2e_sub_branch=co2e_miner_ceram_corrected,
@@ -103,10 +106,10 @@ def calc_production_by_co2e(
     co2e_chem_basic_corrected = (
         entries.i_dehst_chem_basic
         * production_germany.chem_basic.CO2e_total
-        / inputs_germany.entries.i_dehst_chem_basic
+        / entries_germany.i_dehst_chem_basic
     )
     chem_basic = ProductionSubBranch.calc_sub_branch_by_co2e(
-        inputs=inputs,
+        facts=facts,
         branch="chem",
         sub_branch="basic",
         co2e_sub_branch=co2e_chem_basic_corrected,
@@ -115,10 +118,10 @@ def calc_production_by_co2e(
     co2e_chem_ammonia_corrected = (
         entries.i_dehst_chem_ammonia
         * production_germany.chem_ammonia.CO2e_total
-        / inputs_germany.entries.i_dehst_chem_ammonia
+        / entries_germany.i_dehst_chem_ammonia
     )
     chem_ammonia = ProductionSubBranch.calc_sub_branch_by_co2e(
-        inputs=inputs,
+        facts=facts,
         branch="chem",
         sub_branch="ammonia",
         co2e_sub_branch=co2e_chem_ammonia_corrected,
@@ -127,10 +130,10 @@ def calc_production_by_co2e(
     co2e_chem_other_corrected = (
         entries.i_dehst_chem_other
         * production_germany.chem_other.CO2e_total
-        / inputs_germany.entries.i_dehst_chem_other
+        / entries_germany.i_dehst_chem_other
     )
     chem_other = ProductionSubBranch.calc_sub_branch_by_co2e(
-        inputs=inputs,
+        facts=facts,
         branch="chem",
         sub_branch="other",
         co2e_sub_branch=co2e_chem_other_corrected,
@@ -141,10 +144,10 @@ def calc_production_by_co2e(
     co2e_metal_steel_primary_corrected = (
         entries.i_dehst_metal_steel_primary
         * production_germany.metal_steel_primary.CO2e_total
-        / inputs_germany.entries.i_dehst_metal_steel_primary
+        / entries_germany.i_dehst_metal_steel_primary
     )
     metal_steel_primary = ProductionSubBranch.calc_sub_branch_by_co2e(
-        inputs=inputs,
+        facts=facts,
         branch="metal",
         sub_branch="steel_primary",
         co2e_sub_branch=co2e_metal_steel_primary_corrected,
@@ -153,10 +156,10 @@ def calc_production_by_co2e(
     co2e_metal_steel_secondary_corrected = (
         entries.i_dehst_metal_steel_secondary
         * production_germany.metal_steel_secondary.CO2e_total
-        / inputs_germany.entries.i_dehst_metal_steel_secondary
+        / entries_germany.i_dehst_metal_steel_secondary
     )
     metal_steel_secondary = ProductionSubBranch.calc_sub_branch_by_co2e(
-        inputs=inputs,
+        facts=facts,
         branch="metal",
         sub_branch="steel_secondary",
         co2e_sub_branch=co2e_metal_steel_secondary_corrected,
@@ -165,10 +168,10 @@ def calc_production_by_co2e(
     co2e_metal_nonfe_corrected = (
         entries.i_dehst_metal_nonfe
         * production_germany.metal_nonfe.CO2e_total
-        / inputs_germany.entries.i_dehst_metal_nonfe
+        / entries_germany.i_dehst_metal_nonfe
     )
     metal_nonfe = ProductionSubBranch.calc_sub_branch_by_co2e(
-        inputs=inputs,
+        facts=facts,
         branch="metal",
         sub_branch="nonfe",
         co2e_sub_branch=co2e_metal_nonfe_corrected,
@@ -184,10 +187,10 @@ def calc_production_by_co2e(
     co2e_other_paper_corrected = (
         entries.i_dehst_other_paper
         * production_germany.other_paper.CO2e_total
-        / inputs_germany.entries.i_dehst_other_paper
+        / entries_germany.i_dehst_other_paper
     )
     other_paper = ProductionSubBranch.calc_sub_branch_by_co2e(
-        inputs=inputs,
+        facts=facts,
         branch="other",
         sub_branch="paper",
         co2e_sub_branch=co2e_other_paper_corrected,
@@ -196,17 +199,16 @@ def calc_production_by_co2e(
     co2e_other_food_corrected = (
         entries.i_dehst_other_food
         * production_germany.other_food.CO2e_total
-        / inputs_germany.entries.i_dehst_other_food
+        / entries_germany.i_dehst_other_food
     )
     other_food = ProductionSubBranch.calc_sub_branch_by_co2e(
-        inputs=inputs,
+        facts=facts,
         branch="other",
         sub_branch="food",
         co2e_sub_branch=co2e_other_food_corrected,
     )
 
     # use old logic for calculation by area and energy for other_further and 2efgh
-    fact = inputs.fact
     i_energy_total = (
         (
             fact("Fact_I_S_coal_fec_2018")
@@ -221,21 +223,21 @@ def calc_production_by_co2e(
             + fact("Fact_I_S_elec_fec_2018")
             + fact("Fact_I_S_heatnet_fec_2018")
         )
-        * inputs.entries.m_area_industry_com
-        / inputs.entries.m_area_industry_nat
+        * entries.m_area_industry_com
+        / entries.m_area_industry_nat
     )
     energy_consumption_industry = i_energy_total
     i_fec_pct_of_other = fact("Fact_I_P_other_ratio_fec_to_industry_2018")
     energy_consumption_other = energy_consumption_industry * i_fec_pct_of_other
     other_further = ProductionSubBranchCO2viaFEC.calc_sub_branch(
-        inputs=inputs,
+        facts=facts,
         branch="other",
         sub_branch="further",
         energy_consumption_branch=energy_consumption_other,
     )
 
     other_2efgh = ExtraEmission.calc_extra_emission(
-        inputs=inputs,
+        facts=facts,
         branch="other",
         sub_branch="2efgh",
         energy_consumption=other_further.energy,
@@ -273,9 +275,8 @@ def calc_production_by_co2e(
     )
 
 
-def calc_production_by_energy(inputs: Inputs) -> Production:
-    fact = inputs.fact
-    entries = inputs.entries
+def calc_production_by_energy(entries: Entries, facts: Facts) -> Production:
+    fact = facts.fact
 
     # Calculation was performed in entries
     i_coal_fec = (
@@ -358,25 +359,25 @@ def calc_production_by_energy(inputs: Inputs) -> Production:
     energy_consumption_miner = energy_consumption_industry * i_fec_pct_of_miner
 
     miner_cement = ProductionSubBranch.calc_sub_branch_by_energy(
-        inputs=inputs,
+        facts=facts,
         branch="miner",
         sub_branch="cement",
         energy_consumption_branch=energy_consumption_miner,
     )
     miner_chalk = ProductionSubBranch.calc_sub_branch_by_energy(
-        inputs=inputs,
+        facts=facts,
         branch="miner",
         sub_branch="chalk",
         energy_consumption_branch=energy_consumption_miner,
     )
     miner_glas = ProductionSubBranch.calc_sub_branch_by_energy(
-        inputs=inputs,
+        facts=facts,
         branch="miner",
         sub_branch="glas",
         energy_consumption_branch=energy_consumption_miner,
     )
     miner_ceram = ProductionSubBranch.calc_sub_branch_by_energy(
-        inputs=inputs,
+        facts=facts,
         branch="miner",
         sub_branch="ceram",
         energy_consumption_branch=energy_consumption_miner,
@@ -387,19 +388,19 @@ def calc_production_by_energy(inputs: Inputs) -> Production:
 
     energy_consumption_chemistry = energy_consumption_industry * i_fec_pct_of_chem
     chem_basic = ProductionSubBranch.calc_sub_branch_by_energy(
-        inputs=inputs,
+        facts=facts,
         branch="chem",
         sub_branch="basic",
         energy_consumption_branch=energy_consumption_chemistry,
     )
     chem_ammonia = ProductionSubBranch.calc_sub_branch_by_energy(
-        inputs=inputs,
+        facts=facts,
         branch="chem",
         sub_branch="ammonia",
         energy_consumption_branch=energy_consumption_chemistry,
     )
     chem_other = ProductionSubBranch.calc_sub_branch_by_energy(
-        inputs=inputs,
+        facts=facts,
         branch="chem",
         sub_branch="other",
         energy_consumption_branch=energy_consumption_chemistry,
@@ -411,13 +412,13 @@ def calc_production_by_energy(inputs: Inputs) -> Production:
         "Fact_I_P_metal_fec_pct_of_steel"
     )
     metal_steel_primary = ProductionSubBranch.calc_sub_branch_by_energy(
-        inputs=inputs,
+        facts=facts,
         branch="metal",
         sub_branch="steel_primary",
         energy_consumption_branch=energy_consumption_metal_steel,
     )
     metal_steel_secondary = ProductionSubBranch.calc_sub_branch_by_energy(
-        inputs=inputs,
+        facts=facts,
         branch="metal",
         sub_branch="steel_secondary",
         energy_consumption_branch=energy_consumption_metal_steel,
@@ -427,7 +428,7 @@ def calc_production_by_energy(inputs: Inputs) -> Production:
         metal_steel_secondary,
     )
     metal_nonfe = ProductionSubBranch.calc_sub_branch_by_energy(
-        inputs=inputs,
+        facts=facts,
         branch="metal",
         sub_branch="nonfe",
         energy_consumption_branch=energy_consumption_metal,
@@ -436,25 +437,25 @@ def calc_production_by_energy(inputs: Inputs) -> Production:
 
     energy_consumption_other = energy_consumption_industry * i_fec_pct_of_other
     other_paper = ProductionSubBranch.calc_sub_branch_by_energy(
-        inputs=inputs,
+        facts=facts,
         branch="other",
         sub_branch="paper",
         energy_consumption_branch=energy_consumption_other,
     )
     other_food = ProductionSubBranch.calc_sub_branch_by_energy(
-        inputs=inputs,
+        facts=facts,
         branch="other",
         sub_branch="food",
         energy_consumption_branch=energy_consumption_other,
     )
     other_further = ProductionSubBranchCO2viaFEC.calc_sub_branch(
-        inputs=inputs,
+        facts=facts,
         branch="other",
         sub_branch="further",
         energy_consumption_branch=energy_consumption_other,
     )
     other_2efgh = ExtraEmission.calc_extra_emission(
-        inputs=inputs,
+        facts=facts,
         branch="other",
         sub_branch="2efgh",
         energy_consumption=other_further.energy,

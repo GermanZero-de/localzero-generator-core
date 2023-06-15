@@ -17,16 +17,20 @@ from . import energy_base, energy_demand, energy_source
 
 # Berechnungsfunktion im Sektor GHD für 2018
 def calc(inputs: Inputs, *, r18: R18) -> B18:
-    energies = energy_base.calc(inputs=inputs)
+    entries = inputs.entries
+    facts = inputs.facts
+    assumptions = inputs.assumptions
 
-    production = energy_demand.calc_production(inputs, energies)
+    energies = energy_base.calc(entries=entries, facts=facts)
+
+    production = energy_demand.calc_production(entries, facts, assumptions, energies)
 
     building_energy_ratio = div(
         production.nonresi.number_of_buildings,
         production.nonresi.energy,
     )
 
-    supply = energy_source.calc_supply(inputs, energies, building_energy_ratio)
+    supply = energy_source.calc_supply(facts, energies, building_energy_ratio)
 
     b = CO2eEmission(
         CO2e_combustion_based=supply.total.CO2e_combustion_based,

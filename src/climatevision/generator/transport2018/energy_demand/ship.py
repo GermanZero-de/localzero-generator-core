@@ -2,7 +2,8 @@
 
 from dataclasses import dataclass
 
-from ...inputs import Inputs
+from ...makeentries import Entries
+from ...refdata import Facts, Assumptions
 from ...utils import element_wise_plus
 
 from . import co2e
@@ -22,20 +23,26 @@ class Ship:
         return element_wise_plus(self, other)
 
     @classmethod
-    def calc_ship_domestic(cls, inputs: Inputs) -> "Ship":
+    def calc_ship_domestic(
+        cls, entries: Entries, facts: Facts, assumptions: Assumptions
+    ) -> "Ship":
+        fact = facts.fact
+
         transport_capacity_tkm = (
-            inputs.fact("Fact_T_D_Shp_dmstc_trnsprt_gds_2018")
-            * inputs.entries.m_population_com_2018
-            / inputs.entries.m_population_nat
+            fact("Fact_T_D_Shp_dmstc_trnsprt_gds_2018")
+            * entries.m_population_com_2018
+            / entries.m_population_nat
         )
         demand_diesel = (
-            inputs.entries.m_population_com_2018
-            / inputs.entries.m_population_nat
-            * inputs.fact("Fact_T_S_Shp_diesel_fec_2018")
+            entries.m_population_com_2018
+            / entries.m_population_nat
+            * fact("Fact_T_S_Shp_diesel_fec_2018")
         )
         energy = demand_diesel
 
-        CO2e_combustion_based = co2e.from_demands(inputs, demand_diesel=demand_diesel)
+        CO2e_combustion_based = co2e.from_demands(
+            facts, assumptions, demand_diesel=demand_diesel
+        )
         CO2e_total = CO2e_combustion_based
         return cls(
             CO2e_combustion_based=CO2e_combustion_based,
@@ -48,18 +55,24 @@ class Ship:
         )
 
     @classmethod
-    def calc_ship_international(cls, inputs: Inputs) -> "Ship":
+    def calc_ship_international(
+        cls, entries: Entries, facts: Facts, assumptions: Assumptions
+    ) -> "Ship":
+        fact = facts.fact
+
         transport_capacity_tkm = (
-            inputs.fact("Fact_T_D_Shp_sea_nat_mlg_2013")
-            * inputs.entries.m_population_com_2018
-            / inputs.entries.m_population_nat
+            fact("Fact_T_D_Shp_sea_nat_mlg_2013")
+            * entries.m_population_com_2018
+            / entries.m_population_nat
         )
         demand_fueloil = (
-            inputs.entries.m_population_com_2018 / inputs.entries.m_population_nat
-        ) * inputs.fact("Fact_T_D_Shp_sea_nat_EC_2018")
+            entries.m_population_com_2018 / entries.m_population_nat
+        ) * fact("Fact_T_D_Shp_sea_nat_EC_2018")
 
         energy = demand_fueloil
-        CO2e_combustion_based = co2e.from_demands(inputs, demand_fueloil=demand_fueloil)
+        CO2e_combustion_based = co2e.from_demands(
+            facts, assumptions, demand_fueloil=demand_fueloil
+        )
         CO2e_total = CO2e_combustion_based
         return cls(
             CO2e_combustion_based=CO2e_combustion_based,

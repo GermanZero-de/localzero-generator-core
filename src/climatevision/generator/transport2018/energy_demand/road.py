@@ -3,7 +3,8 @@
 from dataclasses import dataclass
 from typing import Literal
 
-from ...inputs import Inputs
+from ...makeentries import Entries
+from ...refdata import Facts, Assumptions
 from ...utils import element_wise_plus, MILLION
 
 from . import co2e
@@ -34,7 +35,8 @@ class Road:
     @classmethod
     def calc_road(
         cls,
-        inputs: Inputs,
+        facts: Facts,
+        assumptions: Assumptions,
         *,
         mileage: float,
         transport_capacity_pkm_factor: float,
@@ -57,7 +59,8 @@ class Road:
         demand_lpg = mileage * lpg
         demand_petrol = mileage * petrol
         CO2e_combustion_based = co2e.from_demands(
-            inputs,
+            facts,
+            assumptions,
             demand_petrol=demand_petrol,
             demand_diesel=demand_diesel,
             demand_lpg=demand_lpg,
@@ -96,12 +99,19 @@ class Road:
         )
 
     @classmethod
-    def calc_car(cls, inputs: Inputs, subsection: Literal["it_ot", "ab"]) -> "Road":
-        fact = inputs.fact
+    def calc_car(
+        cls,
+        entries: Entries,
+        facts: Facts,
+        assumptions: Assumptions,
+        subsection: Literal["it_ot", "ab"],
+    ) -> "Road":
+        fact = facts.fact
 
         return cls.calc_road(
-            inputs,
-            mileage=getattr(inputs.entries, "t_mil_car_" + subsection) * MILLION,
+            facts,
+            assumptions,
+            mileage=getattr(entries, "t_mil_car_" + subsection) * MILLION,
             transport_capacity_pkm_factor=fact(f"Fact_T_D_lf_ppl_Car_2018"),
             transport_capacity_tkm_factor=0,
             biodiesel=(
@@ -145,16 +155,19 @@ class Road:
         )
 
     @classmethod
-    def calc_bus(cls, inputs: Inputs) -> "Road":
-        fact = inputs.fact
+    def calc_bus(
+        cls, entries: Entries, facts: Facts, assumptions: Assumptions
+    ) -> "Road":
+        fact = facts.fact
 
         return cls.calc_road(
-            inputs,
+            facts,
+            assumptions,
             mileage=(
-                inputs.entries.t_bus_mega_km_dis
+                entries.t_bus_mega_km_dis
                 * MILLION
-                * inputs.entries.m_population_com_2018
-                / inputs.entries.m_population_dis
+                * entries.m_population_com_2018
+                / entries.m_population_dis
             ),
             transport_capacity_pkm_factor=fact("Fact_T_D_lf_ppl_Bus_2018"),
             transport_capacity_tkm_factor=0,
@@ -190,13 +203,18 @@ class Road:
 
     @classmethod
     def calc_goods_light_duty(
-        cls, inputs: Inputs, section: Literal["it_ot", "ab"]
+        cls,
+        entries: Entries,
+        facts: Facts,
+        assumptions: Assumptions,
+        section: Literal["it_ot", "ab"],
     ) -> "Road":
-        fact = inputs.fact
+        fact = facts.fact
 
         return cls.calc_road(
-            inputs,
-            mileage=getattr(inputs.entries, "t_mil_ldt_" + section) * MILLION,
+            facts,
+            assumptions,
+            mileage=getattr(entries, "t_mil_ldt_" + section) * MILLION,
             transport_capacity_pkm_factor=0,
             transport_capacity_tkm_factor=fact("Fact_T_D_lf_gds_LDT_2018"),
             biodiesel=(
@@ -234,13 +252,18 @@ class Road:
 
     @classmethod
     def calc_goods_medium_and_heavy_duty_it_ot(
-        cls, inputs: Inputs, road_bus_mileage: float
+        cls,
+        entries: Entries,
+        facts: Facts,
+        assumptions: Assumptions,
+        road_bus_mileage: float,
     ):
-        fact = inputs.fact
+        fact = facts.fact
 
         return cls.calc_road(
-            inputs,
-            mileage=inputs.entries.t_mil_mhd_it_ot * MILLION - road_bus_mileage,
+            facts,
+            assumptions,
+            mileage=entries.t_mil_mhd_it_ot * MILLION - road_bus_mileage,
             transport_capacity_tkm_factor=fact("Fact_T_D_lf_gds_MHD_2018"),
             transport_capacity_pkm_factor=0,
             biogas=(
@@ -273,12 +296,15 @@ class Road:
         )
 
     @classmethod
-    def calc_goods_medium_and_heavy_duty_ab(cls, inputs: Inputs):
-        fact = inputs.fact
+    def calc_goods_medium_and_heavy_duty_ab(
+        cls, entries: Entries, facts: Facts, assumptions: Assumptions
+    ):
+        fact = facts.fact
 
         return cls.calc_road(
-            inputs,
-            mileage=inputs.entries.t_mil_mhd_ab * MILLION,
+            facts,
+            assumptions,
+            mileage=entries.t_mil_mhd_ab * MILLION,
             transport_capacity_tkm_factor=fact("Fact_T_D_lf_gds_MHD_2018"),
             transport_capacity_pkm_factor=0,
             biodiesel=(
