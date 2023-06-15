@@ -15,10 +15,13 @@ from . import energy_base, energy_demand, energy_source
 
 
 def calc(inputs: Inputs, l18: L18, b18: B18) -> A18:
-    energies = energy_base.calc(inputs=inputs)
+    entries = inputs.entries
+    facts = inputs.facts
 
-    supply = energy_source.calc_supply(inputs, energies)
-    production = energy_demand.calc_production(inputs, l18, b18, energies)
+    energies = energy_base.calc(entries=entries)
+
+    supply = energy_source.calc_supply(facts, energies)
+    production = energy_demand.calc_production(entries, facts, l18, b18, energies)
 
     a = CO2eEmission(
         CO2e_production_based=production.total.CO2e_production_based,
