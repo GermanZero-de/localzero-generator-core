@@ -1,6 +1,6 @@
 # pyright: strict
 
-from typing import TextIO, Any
+from typing import TextIO, Any, Callable
 import csv
 import sys
 import os.path
@@ -9,7 +9,7 @@ from climatevision.generator import ags, refdatatools, refdata
 
 
 def cmd_data_normalize(args: Any):
-    def sortby_and_check_ags_column(rows: Any):
+    def sortby_and_check_ags_column(rows: list[list[str]]) -> list[list[str]]:
         header = rows[0]
         if header[0] != "ags":
             # All files that have an AGS have it in the first column.
@@ -22,7 +22,7 @@ def cmd_data_normalize(args: Any):
             exit(1)
         return sorted(rows, key=lambda r: r[0])
 
-    def find_duplicate_ags_in_sorted(rows: Any) -> Any:
+    def find_duplicate_ags_in_sorted(rows: list[list[str]]) -> list[list[str]]:
         dups = []
         current = []
         for r in rows:
@@ -71,7 +71,7 @@ def lookup_by_ags(data: refdata.RefData, ags: str):
     ags_dis = ags[:5] + "000"  # This identifies the administrative district (Landkreis)
     ags_sta = ags[:2] + "000000"  # This identifies the federal state (Bundesland)
 
-    def print_lookup(name: str, lookup_fn: Any, key: str):
+    def print_lookup(name: str, lookup_fn: Callable[[str], refdata.Row[str]], key: str):
         bold(name)
         try:
             record: object = lookup_fn(key)
@@ -110,19 +110,19 @@ def lookup_by_ags(data: refdata.RefData, ags: str):
     bold(f"{ags} {description} (commune level data)")
     bold("---------------------------------------------------------------")
     print()
-    for (name, lookup_fn) in by_ags:
+    for name, lookup_fn in by_ags:
         print_lookup(name, lookup_fn, key=ags)
 
     bold(f"{ags_dis} (administrative district level data)")
     bold("--------------------------------------------------")
     print()
-    for (name, lookup_fn) in by_dis:
+    for name, lookup_fn in by_dis:
         print_lookup(name, lookup_fn, key=ags_dis)
 
     bold(f"{ags_sta} (federal state level data)")
     bold("--------------------------------------------------")
     print()
-    for (name, lookup_fn) in by_sta:
+    for name, lookup_fn in by_sta:
         print_lookup(name, lookup_fn, key=ags_sta)
 
 
