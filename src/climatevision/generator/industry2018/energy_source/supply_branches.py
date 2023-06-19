@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass
 
-from ...inputs import Inputs
+from ...refdata import Facts
 from ...common.energy import Energy
 
 
@@ -29,13 +29,13 @@ class EnergySupplySubBranch(BasicEnergySupplyBranch):
     @classmethod
     def calc_sub_branch(
         cls,
-        inputs: Inputs,
+        facts: Facts,
         energy_demand: float,
         sub_branch: str,
         branch: str,
     ) -> "EnergySupplySubBranch":
 
-        fact = inputs.fact
+        fact = facts.fact
 
         branch_energy_supply = energy_demand
 

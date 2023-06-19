@@ -2,11 +2,11 @@
 
 from dataclasses import dataclass
 
-from ..energy_base import Energies
-
-from ...inputs import Inputs
+from ...refdata import Facts
 from ...common.energy_with_co2e import EnergyWithCO2e
 from ...common.energy_with_co2e_per_mwh import EnergyWithCO2ePerMWh
+
+from ..energy_base import Energies
 
 
 @dataclass(kw_only=True)
@@ -22,8 +22,8 @@ class EnergySupply:
     heatpump: EnergyWithCO2ePerMWh
 
 
-def calc_supply(inputs: Inputs, energies: Energies) -> EnergySupply:
-    fact = inputs.fact
+def calc_supply(facts: Facts, energies: Energies) -> EnergySupply:
+    fact = facts.fact
 
     heatpump = EnergyWithCO2ePerMWh(
         energy=energies.heatpump.energy,

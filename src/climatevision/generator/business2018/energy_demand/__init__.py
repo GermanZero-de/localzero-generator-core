@@ -2,7 +2,8 @@
 
 from dataclasses import dataclass
 
-from ...inputs import Inputs
+from ...makeentries import Entries
+from ...refdata import Facts, Assumptions
 from ...common.energy import Energy, EnergyPerM2PctCommune, EnergyPerM2WithBuildings
 
 from ..energy_base import Energies
@@ -19,10 +20,11 @@ class Production:
     other: Energy
 
 
-def calc_production(inputs: Inputs, energies: Energies) -> Production:
-    fact = inputs.fact
-    ass = inputs.ass
-    entries = inputs.entries
+def calc_production(
+    entries: Entries, facts: Facts, assumptions: Assumptions, energies: Energies
+) -> Production:
+    fact = facts.fact
+    ass = assumptions.ass
 
     elec_heatpump = Energy(
         energy=energies.heatpump.energy

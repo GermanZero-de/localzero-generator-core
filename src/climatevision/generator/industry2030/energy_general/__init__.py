@@ -23,7 +23,9 @@ def calc_general(inputs: Inputs) -> General:
 
     ratio_wage_to_emplo = ass("Ass_T_C_yearly_costs_per_planer")
 
-    g_consult = GConsult.calc_from_invest_pa(inputs, invest_pa, ratio_wage_to_emplo)
+    g_consult = GConsult.calc_from_invest_pa(
+        inputs.entries, inputs.assumptions, invest_pa, ratio_wage_to_emplo
+    )
 
     g = G.sum(g_consult)
 

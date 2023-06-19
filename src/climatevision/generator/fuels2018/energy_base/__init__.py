@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass
 
-from ...inputs import Inputs
+from ...makeentries import Entries
 from ...common.energy import Energy
 from ...industry2018.i18 import I18
 from ...transport2018.t18 import T18
@@ -29,9 +29,7 @@ class Energies:
     t18_biodiesel: Energy
 
 
-def calc(inputs: Inputs, t18: T18, i18: I18) -> Energies:
-    entries = inputs.entries
-
+def calc(entries: Entries, t18: T18, i18: I18) -> Energies:
     r18_petrol = Energy(energy=entries.r_petrol_fec)
 
     b18_petrol = Energy(energy=entries.b_petrol_fec)

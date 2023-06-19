@@ -31,7 +31,9 @@ def calc_general(inputs: Inputs, b18: B18) -> General:
         / entries.m_population_nat
     )
 
-    g_consult = GConsult.calc_from_invest(inputs, invest, emplo_existing)
+    g_consult = GConsult.calc_from_invest(
+        inputs.entries, inputs.facts, invest, emplo_existing
+    )
 
     g = G.sum(g_consult)
 

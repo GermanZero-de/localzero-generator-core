@@ -2,7 +2,8 @@
 
 from dataclasses import dataclass
 
-from ...inputs import Inputs
+from ...makeentries import Entries
+from ...refdata import Facts
 from ...lulucf2018.l18 import L18
 from ...business2018.b18 import B18
 from ...common.energy import Energy, EnergyPerM2
@@ -64,19 +65,22 @@ class Production:
 
 
 def calc_production(
-    inputs: Inputs, l18: L18, b18: B18, energies: Energies
+    entries: Entries, facts: Facts, l18: L18, b18: B18, energies: Energies
 ) -> Production:
-
-    entries = inputs.entries
+    fact = facts.fact
 
     # Fermen
-    fermen_dairycow = CO2eFromFermentationOrManure.calc_fermen(inputs, "dairycow")
-    fermen_nondairy = CO2eFromFermentationOrManure.calc_fermen(inputs, "nondairy")
-    fermen_swine = CO2eFromFermentationOrManure.calc_fermen(
-        inputs, "swine", alias="pig"
+    fermen_dairycow = CO2eFromFermentationOrManure.calc_fermen(
+        entries, facts, "dairycow"
     )
-    fermen_poultry = CO2eFromFermentationOrManure.calc_fermen(inputs, "poultry")
-    fermen_oanimal = CO2eFromFermentationOrManure.calc_fermen(inputs, "oanimal")
+    fermen_nondairy = CO2eFromFermentationOrManure.calc_fermen(
+        entries, facts, "nondairy"
+    )
+    fermen_swine = CO2eFromFermentationOrManure.calc_fermen(
+        entries, facts, "swine", alias="pig"
+    )
+    fermen_poultry = CO2eFromFermentationOrManure.calc_fermen(entries, facts, "poultry")
+    fermen_oanimal = CO2eFromFermentationOrManure.calc_fermen(entries, facts, "oanimal")
 
     fermen = CO2eEmission.sum(
         fermen_dairycow,
@@ -88,22 +92,22 @@ def calc_production(
 
     # Manure
     manure_dairycow = CO2eFromFermentationOrManure.calc_manure(
-        inputs, "dairycow", amount=fermen_dairycow.amount
+        entries, "dairycow", amount=fermen_dairycow.amount
     )
     manure_nondairy = CO2eFromFermentationOrManure.calc_manure(
-        inputs, "nondairy", amount=fermen_nondairy.amount
+        entries, "nondairy", amount=fermen_nondairy.amount
     )
     manure_swine = CO2eFromFermentationOrManure.calc_manure(
-        inputs, "swine", amount=fermen_swine.amount
+        entries, "swine", amount=fermen_swine.amount
     )
     manure_poultry = CO2eFromFermentationOrManure.calc_manure(
-        inputs, "poultry", amount=fermen_poultry.amount
+        entries, "poultry", amount=fermen_poultry.amount
     )
     manure_oanimal = CO2eFromFermentationOrManure.calc_manure(
-        inputs, "oanimal", amount=fermen_oanimal.amount
+        entries, "oanimal", amount=fermen_oanimal.amount
     )
     manure_deposition = CO2eFromFermentationOrManure.calc_deposition(
-        inputs,
+        entries,
         fermen_dairycow=fermen_dairycow,
         fermen_nondairy=fermen_nondairy,
         fermen_swine=fermen_swine,
@@ -177,13 +181,13 @@ def calc_production(
     )
 
     # Other
-    other_liming_calcit = CO2eFromOther.calc(inputs, "liming_calcit")
-    other_liming_dolomite = CO2eFromOther.calc(inputs, "liming_dolomite")
+    other_liming_calcit = CO2eFromOther.calc(entries, facts, "liming_calcit")
+    other_liming_dolomite = CO2eFromOther.calc(entries, facts, "liming_dolomite")
     other_liming = CO2eEmission.sum(other_liming_calcit, other_liming_dolomite)
 
-    other_urea = CO2eFromOther.calc(inputs, "urea", ratio_suffix="")
-    other_ecrop = CO2eFromOther.calc(inputs, "ecrop")
-    other_kas = CO2eFromOther.calc(inputs, "kas")
+    other_urea = CO2eFromOther.calc(entries, facts, "urea", ratio_suffix="")
+    other_ecrop = CO2eFromOther.calc(entries, facts, "ecrop")
+    other_kas = CO2eFromOther.calc(entries, facts, "kas")
 
     other = CO2eEmission.sum(other_liming, other_urea, other_kas, other_ecrop)
 
@@ -197,8 +201,8 @@ def calc_production(
         + energies.biomass.energy,
         area_m2=(
             b18.p_nonresi.area_m2
-            * inputs.fact("Fact_A_P_energy_buildings_ratio_A_to_B")
-            / (1 - inputs.fact("Fact_A_P_energy_buildings_ratio_A_to_B"))
+            * fact("Fact_A_P_energy_buildings_ratio_A_to_B")
+            / (1 - fact("Fact_A_P_energy_buildings_ratio_A_to_B"))
         ),
     )
 

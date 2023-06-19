@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass
 
-from ...inputs import Inputs
+from ...makeentries import Entries
 from ...common.energy import Energy
 
 
@@ -18,9 +18,7 @@ class Energies:
     elec: Energy
 
 
-def calc(inputs: Inputs) -> Energies:
-    entries = inputs.entries
-
+def calc(entries: Entries) -> Energies:
     heatpump = Energy(energy=0)
     gas = Energy(energy=entries.a_gas_fec)
     lpg = Energy(energy=entries.a_lpg_fec)

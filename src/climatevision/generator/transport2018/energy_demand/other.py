@@ -2,7 +2,8 @@
 
 from dataclasses import dataclass
 
-from ...inputs import Inputs
+from ...makeentries import Entries
+from ...refdata import Facts
 from ...utils import element_wise_plus
 
 
@@ -16,22 +17,24 @@ class Other:
         return element_wise_plus(self, other)
 
     @classmethod
-    def calc_foot(cls, inputs: Inputs) -> "Other":
-        t_rt7 = inputs.entries.t_rt7
+    def calc_foot(cls, entries: Entries, facts: Facts) -> "Other":
+        fact = facts.fact
+
+        t_rt7 = entries.t_rt7
         if t_rt7 in ["71", "72", "73", "74", "75", "76", "77"]:
             transport_capacity_pkm = (
-                inputs.entries.m_population_com_2018
+                entries.m_population_com_2018
                 * 365
-                * inputs.fact("Fact_T_D_modal_split_foot_rt" + t_rt7)
+                * fact("Fact_T_D_modal_split_foot_rt" + t_rt7)
             )
 
         # This happens if we run Local Zero for a Landkreis a Bundesland or Germany.
         # We do not have a area_kind entry in this case and just use the mean mean modal split of germany.
         elif t_rt7 == "nd":
             transport_capacity_pkm = (
-                inputs.entries.m_population_com_2018
+                entries.m_population_com_2018
                 * 365
-                * inputs.fact("Fact_T_D_modal_split_foot_nat")
+                * fact("Fact_T_D_modal_split_foot_nat")
             )
         else:
             assert False, f"Do not know how to handle entries.t_rt7 = {t_rt7}"
@@ -42,22 +45,24 @@ class Other:
         )
 
     @classmethod
-    def calc_cycle(cls, inputs: Inputs) -> "Other":
-        t_rt7 = inputs.entries.t_rt7
+    def calc_cycle(cls, entries: Entries, facts: Facts) -> "Other":
+        fact = facts.fact
+
+        t_rt7 = entries.t_rt7
         if t_rt7 in ["71", "72", "73", "74", "75", "76", "77"]:
             transport_capacity_pkm = (
-                inputs.entries.m_population_com_2018
+                entries.m_population_com_2018
                 * 365
-                * inputs.fact("Fact_T_D_modal_split_cycl_rt" + t_rt7)
+                * fact("Fact_T_D_modal_split_cycl_rt" + t_rt7)
             )
 
         # This happens if we run Local Zero for a Landkreis a Bundesland or Germany.
         # We do not have a area_kind entry in this case and just use the mean mean modal split of germany.
         elif t_rt7 == "nd":
             transport_capacity_pkm = (
-                inputs.entries.m_population_com_2018
+                entries.m_population_com_2018
                 * 365
-                * inputs.fact("Fact_T_D_modal_split_foot_nat")
+                * fact("Fact_T_D_modal_split_foot_nat")
             )
         else:
             assert False, f"Do not know how to handle entries.t_rt7 = {t_rt7}"

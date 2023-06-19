@@ -1,7 +1,8 @@
 # pyright: strict
 from dataclasses import dataclass, InitVar
 
-from ...inputs import Inputs
+from ...makeentries import Entries
+from ...refdata import Facts
 from ...agri2018.a18 import A18
 
 from ..energy_demand import CO2eChangeAgri
@@ -15,21 +16,25 @@ class CO2eChangeFuelEmethan(CO2eChangeAgri):
     change_energy_MWh: float = 0
     demand_emethan: float = 0
 
-    inputs: InitVar[Inputs]
+    entries: InitVar[Entries]
+    facts: InitVar[Facts]
     what: InitVar[str]
     a18: InitVar[A18]
 
-    def __post_init__(self, inputs: Inputs, what: str, a18: A18):
+    def __post_init__(self, entries: Entries, facts: Facts, what: str, a18: A18):
+        fact = facts.fact
 
         what = ""
 
         self.CO2e_production_based = 0
         self.CO2e_combustion_based = 0
-        self.CO2e_combustion_based_per_MWh = inputs.fact(
+        self.CO2e_combustion_based_per_MWh = fact(
             "Fact_T_S_methan_EmFa_tank_wheel_2018"
         )
 
         self.change_energy_MWh = self.energy
         self.demand_emethan = self.energy
 
-        CO2eChangeAgri.__post_init__(self, inputs=inputs, what=what, a18=a18)
+        CO2eChangeAgri.__post_init__(
+            self, entries=entries, facts=facts, what=what, a18=a18
+        )

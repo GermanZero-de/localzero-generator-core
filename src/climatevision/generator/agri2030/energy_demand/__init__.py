@@ -2,7 +2,10 @@
 
 from dataclasses import dataclass
 
-from ...inputs import Inputs
+from climatevision.generator.refdata import Assumptions
+
+from ...makeentries import Entries
+from ...refdata import Facts, Assumptions
 from ...utils import div
 from ...agri2018.a18 import A18
 from ...lulucf2030.l30 import L30
@@ -67,40 +70,69 @@ class Production:
     operation_vehicles: EnergyChangePOperationVehicles
 
 
-def calc_production(inputs: Inputs, a18: A18, l30: L30) -> Production:
+def calc_production(
+    entries: Entries, facts: Facts, assumptions: Assumptions, a18: A18, l30: L30
+) -> Production:
     fermen_dairycow = CO2eChangeFermentationOrManure.calc_fermen(
-        inputs, "p_fermen_dairycow", "Ass_A_P_fermen_dairycow_change", a18
+        entries,
+        facts,
+        assumptions,
+        "p_fermen_dairycow",
+        "Ass_A_P_fermen_dairycow_change",
+        a18,
     )
     fermen_nondairy = CO2eChangeFermentationOrManure.calc_fermen(
-        inputs, "p_fermen_nondairy", "Ass_A_P_fermen_nondairy_change", a18
+        entries,
+        facts,
+        assumptions,
+        "p_fermen_nondairy",
+        "Ass_A_P_fermen_nondairy_change",
+        a18,
     )
     fermen_swine = CO2eChangeFermentationOrManure.calc_fermen(
-        inputs, "p_fermen_swine", "Ass_A_P_fermen_swine_change", a18
+        entries,
+        facts,
+        assumptions,
+        "p_fermen_swine",
+        "Ass_A_P_fermen_swine_change",
+        a18,
     )
     fermen_poultry = CO2eChangeFermentationOrManure.calc_fermen(
-        inputs, "p_fermen_poultry", "Ass_A_P_fermen_poultry_change", a18
+        entries,
+        facts,
+        assumptions,
+        "p_fermen_poultry",
+        "Ass_A_P_fermen_poultry_change",
+        a18,
     )
     fermen_oanimal = CO2eChangeFermentationOrManure.calc_fermen(
-        inputs, "p_fermen_oanimal", "Ass_A_P_fermen_oanimal_change", a18
+        entries,
+        facts,
+        assumptions,
+        "p_fermen_oanimal",
+        "Ass_A_P_fermen_oanimal_change",
+        a18,
     )
 
     manure_dairycow = CO2eChangeFermentationOrManure.calc_manure(
-        inputs, "p_manure_dairycow", a18, fermen_dairycow.amount
+        entries, facts, assumptions, "p_manure_dairycow", a18, fermen_dairycow.amount
     )
     manure_nondairy = CO2eChangeFermentationOrManure.calc_manure(
-        inputs, "p_manure_nondairy", a18, fermen_nondairy.amount
+        entries, facts, assumptions, "p_manure_nondairy", a18, fermen_nondairy.amount
     )
     manure_swine = CO2eChangeFermentationOrManure.calc_manure(
-        inputs, "p_manure_swine", a18, fermen_swine.amount
+        entries, facts, assumptions, "p_manure_swine", a18, fermen_swine.amount
     )
     manure_poultry = CO2eChangeFermentationOrManure.calc_manure(
-        inputs, "p_manure_poultry", a18, fermen_poultry.amount
+        entries, facts, assumptions, "p_manure_poultry", a18, fermen_poultry.amount
     )
     manure_oanimal = CO2eChangeFermentationOrManure.calc_manure(
-        inputs, "p_manure_oanimal", a18, fermen_oanimal.amount
+        entries, facts, assumptions, "p_manure_oanimal", a18, fermen_oanimal.amount
     )
     manure_deposition = CO2eChangeFermentationOrManure.calc_manure(
-        inputs,
+        entries,
+        facts,
+        assumptions,
         "p_manure_deposition",
         a18,
         fermen_dairycow.amount
@@ -110,19 +142,20 @@ def calc_production(inputs: Inputs, a18: A18, l30: L30) -> Production:
     )
 
     soil_fertilizer = CO2eChangeSoil.calc_soil(
-        inputs, "p_soil_fertilizer", a18, l30.g_crop.area_ha
+        entries, facts, assumptions, "p_soil_fertilizer", a18, l30.g_crop.area_ha
     )
     soil_manure = CO2eChangeSoil.calc_soil(
-        inputs, "p_soil_manure", a18, l30.g_crop.area_ha
+        entries, facts, assumptions, "p_soil_manure", a18, l30.g_crop.area_ha
     )
     soil_sludge = CO2eChangeSoil.calc_soil(
-        inputs, "p_soil_sludge", a18, l30.g_crop.area_ha
+        entries, facts, assumptions, "p_soil_sludge", a18, l30.g_crop.area_ha
     )
     soil_ecrop = CO2eChangeSoil.calc_soil(
-        inputs, "p_soil_ecrop", a18, l30.g_crop.area_ha
+        entries, facts, assumptions, "p_soil_ecrop", a18, l30.g_crop.area_ha
     )
     soil_grazing = CO2eChangeSoil.calc_soil_special(
-        inputs,
+        entries,
+        facts,
         "p_soil_grazing",
         a18,
         l30.g_grass.area_ha,
@@ -135,14 +168,16 @@ def calc_production(inputs: Inputs, a18: A18, l30: L30) -> Production:
         ),
     )
     soil_residue = CO2eChangeSoil.calc_soil_special(
-        inputs,
+        entries,
+        facts,
         "p_soil_residue",
         a18,
         l30.g_crop.area_ha,
         a18.p_soil_residue.CO2e_production_based_per_t,
     )
     soil_orgfarm = CO2eChangeSoil.calc_soil_special(
-        inputs,
+        entries,
+        facts,
         "p_soil_orgfarm",
         a18,
         l30.g_crop_org_low.area_ha
@@ -152,21 +187,34 @@ def calc_production(inputs: Inputs, a18: A18, l30: L30) -> Production:
         a18.p_soil_orgfarm.CO2e_production_based_per_t,
     )
     soil_orgloss = CO2eChangeSoil.calc_soil_special(
-        inputs,
+        entries,
+        facts,
         "p_soil_orgloss",
         a18,
         l30.g_crop_org_low.area_ha + l30.g_crop_org_high.area_ha,
         a18.p_soil_orgloss.CO2e_production_based_per_t,
     )
     soil_leaching = CO2eChangeSoil.calc_soil(
-        inputs, "p_soil_leaching", a18, l30.g_crop.area_ha + l30.g_grass.area_ha
+        entries,
+        facts,
+        assumptions,
+        "p_soil_leaching",
+        a18,
+        l30.g_crop.area_ha + l30.g_grass.area_ha,
     )
     soil_deposition = CO2eChangeSoil.calc_soil(
-        inputs, "p_soil_deposition", a18, l30.g_crop.area_ha + l30.g_grass.area_ha
+        entries,
+        facts,
+        assumptions,
+        "p_soil_deposition",
+        a18,
+        l30.g_crop.area_ha + l30.g_grass.area_ha,
     )
 
     other_liming_calcit = CO2eChangeOther(
-        inputs=inputs,
+        entries=entries,
+        facts=facts,
+        assumptions=assumptions,
         what="p_other_liming_calcit",
         a18=a18,
         ass_demand_change="Ass_A_P_other_liming_calcit_amount_change",
@@ -175,7 +223,9 @@ def calc_production(inputs: Inputs, a18: A18, l30: L30) -> Production:
         CO2e_production_based=None,  # type: ignore
     )
     other_liming_dolomite = CO2eChangeOther(
-        inputs=inputs,
+        entries=entries,
+        facts=facts,
+        assumptions=assumptions,
         what="p_other_liming_dolomite",
         a18=a18,
         ass_demand_change="Ass_A_P_other_liming_dolomit_amount_change",
@@ -184,7 +234,9 @@ def calc_production(inputs: Inputs, a18: A18, l30: L30) -> Production:
         CO2e_production_based=None,  # type: ignore
     )
     other_urea = CO2eChangeOther(
-        inputs=inputs,
+        entries=entries,
+        facts=facts,
+        assumptions=assumptions,
         what="p_other_urea",
         a18=a18,
         ass_demand_change="Ass_A_P_other_urea_amount_change",
@@ -193,7 +245,9 @@ def calc_production(inputs: Inputs, a18: A18, l30: L30) -> Production:
         CO2e_production_based=None,  # type: ignore
     )
     other_kas = CO2eChangeOther(
-        inputs=inputs,
+        entries=entries,
+        facts=facts,
+        assumptions=assumptions,
         what="p_other_kas",
         a18=a18,
         ass_demand_change="Ass_A_P_other_kas_amount_change",
@@ -202,7 +256,9 @@ def calc_production(inputs: Inputs, a18: A18, l30: L30) -> Production:
         CO2e_production_based=None,  # type: ignore
     )
     other_ecrop = CO2eChangeOther(
-        inputs=inputs,
+        entries=entries,
+        facts=facts,
+        assumptions=assumptions,
         what="p_other_ecrop",
         a18=a18,
         ass_demand_change="Ass_A_P_other_ecrop_amount_change",
@@ -211,7 +267,8 @@ def calc_production(inputs: Inputs, a18: A18, l30: L30) -> Production:
         CO2e_production_based=None,  # type: ignore
     )
     other_liming = CO2eChangeOtherLiming(
-        inputs=inputs,
+        entries=entries,
+        facts=facts,
         what="p_other_liming",
         a18=a18,
         prod_volume=other_liming_calcit.prod_volume + other_liming_dolomite.prod_volume,
@@ -221,7 +278,8 @@ def calc_production(inputs: Inputs, a18: A18, l30: L30) -> Production:
     )
 
     fermen = CO2eChangeAgri(
-        inputs=inputs,
+        entries=entries,
+        facts=facts,
         what="p_fermen",
         a18=a18,
         CO2e_combustion_based=0,
@@ -232,7 +290,8 @@ def calc_production(inputs: Inputs, a18: A18, l30: L30) -> Production:
         + fermen_oanimal.CO2e_production_based,
     )
     manure = CO2eChangeAgri(
-        inputs=inputs,
+        entries=entries,
+        facts=facts,
         what="p_manure",
         a18=a18,
         CO2e_combustion_based=0,
@@ -244,7 +303,8 @@ def calc_production(inputs: Inputs, a18: A18, l30: L30) -> Production:
         + manure_deposition.CO2e_production_based,
     )
     soil = CO2eChangeAgri(
-        inputs=inputs,
+        entries=entries,
+        facts=facts,
         what="p_soil",
         a18=a18,
         CO2e_combustion_based=0,
@@ -260,7 +320,8 @@ def calc_production(inputs: Inputs, a18: A18, l30: L30) -> Production:
         + soil_deposition.CO2e_production_based,
     )
     other = CO2eChangeAgri(
-        inputs=inputs,
+        entries=entries,
+        facts=facts,
         what="p_other",
         a18=a18,
         CO2e_combustion_based=0,
@@ -271,26 +332,30 @@ def calc_production(inputs: Inputs, a18: A18, l30: L30) -> Production:
     )
 
     operation_heat = EnergyChangePOperationHeat(
-        inputs=inputs, what="p_operation_heat", a18=a18
+        entries=entries,
+        facts=facts,
+        assumptions=assumptions,
+        what="p_operation_heat",
+        a18=a18,
     )
 
     operation_elec_elcon = EnergyChangePOperationElecElcon(
-        inputs=inputs, what="p_operation_elec_elcon", a18=a18
+        assumptions=assumptions, what="p_operation_elec_elcon", a18=a18
     )
 
     operation_elec_heatpump = EnergyChangePOperationElecHeatpump(
-        inputs=inputs,
+        facts=facts,
         what="p_operation_elec_heatpump",
         a18=a18,
         operation_heat=operation_heat,
     )
 
     operation_vehicles = EnergyChangePOperationVehicles(
-        inputs=inputs, what="p_operation_vehicles", a18=a18
+        assumptions=assumptions, what="p_operation_vehicles", a18=a18
     )
 
     operation = EnergyChangePOperation(
-        inputs=inputs,
+        entries=entries,
         what="p_operation",
         a18=a18,
         operation_vehicles=operation_vehicles,
@@ -300,7 +365,8 @@ def calc_production(inputs: Inputs, a18: A18, l30: L30) -> Production:
     )
 
     total = CO2eChangeP(
-        inputs=inputs,
+        entries=entries,
+        facts=facts,
         what="p",
         a18=a18,
         operation=operation,

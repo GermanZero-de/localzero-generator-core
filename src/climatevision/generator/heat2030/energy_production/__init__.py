@@ -2,7 +2,8 @@
 
 from dataclasses import dataclass
 
-from ...inputs import Inputs
+from ...makeentries import Entries
+from ...refdata import Facts, Assumptions
 from ...heat2018.h18 import H18
 from ...residences2030.r30 import R30
 from ...business2030.b30 import B30
@@ -41,7 +42,9 @@ class Production:
 
 
 def calc_production(
-    inputs: Inputs,
+    entries: Entries,
+    facts: Facts,
+    assumptions: Assumptions,
     h18: H18,
     r30: R30,
     b30: B30,
@@ -50,11 +53,13 @@ def calc_production(
     e30_p_local_biomass_cogen_energy: float,
 ) -> Production:
 
-    fact = inputs.fact
-    ass = inputs.ass
+    fact = facts.fact
+    ass = assumptions.ass
 
     gas = HeatProductionWithCostFuel(
-        inputs=inputs,
+        entries=entries,
+        facts=facts,
+        assumptions=assumptions,
         what="gas",
         h18=h18,
         energy=r30.s_gas.energy + b30.s_gas.energy,
@@ -62,7 +67,9 @@ def calc_production(
         CO2e_combustion_based_per_MWh=h18.p_gas.CO2e_combustion_based_per_MWh,
     )
     coal = HeatProductionWithCostFuel(
-        inputs=inputs,
+        entries=entries,
+        facts=facts,
+        assumptions=assumptions,
         what="coal",
         h18=h18,
         energy=r30.s_coal.energy + b30.s_coal.energy,
@@ -70,7 +77,9 @@ def calc_production(
         CO2e_combustion_based_per_MWh=h18.p_coal.CO2e_combustion_based_per_MWh,
     )
     fueloil = HeatProductionWithCostFuel(
-        inputs=inputs,
+        entries=entries,
+        facts=facts,
+        assumptions=assumptions,
         what="fueloil",
         h18=h18,
         energy=r30.s_fueloil.energy + b30.s_fueloil.energy,
@@ -79,7 +88,9 @@ def calc_production(
     )
 
     biomass = HeatProductionWithCostFuel(
-        inputs=inputs,
+        entries=entries,
+        facts=facts,
+        assumptions=assumptions,
         what="biomass",
         h18=h18,
         energy=r30.s_biomass.energy
@@ -93,7 +104,8 @@ def calc_production(
     )
 
     lpg = HeatProduction(
-        inputs=inputs,
+        entries=entries,
+        facts=facts,
         what="lpg",
         h18=h18,
         energy=r30.s_lpg.energy + b30.s_lpg.energy,
@@ -102,7 +114,8 @@ def calc_production(
     )
 
     opetpro = HeatProduction(
-        inputs=inputs,
+        entries=entries,
+        facts=facts,
         what="opetpro",
         h18=h18,
         energy=0,
@@ -121,7 +134,8 @@ def calc_production(
     )
 
     heatnet_cogen = HeatProduction(
-        inputs=inputs,
+        entries=entries,
+        facts=facts,
         what="heatnet_cogen",
         h18=h18,
         energy=heatnet_cogen_energy,
@@ -136,7 +150,8 @@ def calc_production(
     heatnet_orenew_energy = heatnet_energy - heatnet_cogen_energy
 
     heatnet_plant = HeatnetPlantProduction(
-        inputs=inputs,
+        entries=entries,
+        facts=facts,
         what="heatnet_plant",
         h18=h18,
         energy=heatnet_orenew_energy * ass("Ass_H_P_heatnet_fraction_solarth_2050"),
@@ -146,7 +161,8 @@ def calc_production(
     )
 
     heatnet_lheatpump = HeatnetLheatpumpProduction(
-        inputs=inputs,
+        entries=entries,
+        facts=facts,
         what="heatnet_lheatpump",
         h18=h18,
         energy=heatnet_orenew_energy * ass("Ass_H_P_heatnet_fraction_lheatpump_2050"),
@@ -157,7 +173,8 @@ def calc_production(
     )
 
     heatnet_geoth = HeatnetGeothProduction(
-        inputs=inputs,
+        entries=entries,
+        facts=facts,
         what="heatnet_geoth",
         h18=h18,
         energy=heatnet_orenew_energy * ass("Ass_H_P_heatnet_fraction_geoth_2050"),
@@ -168,7 +185,8 @@ def calc_production(
     )
 
     heatnet = HeatnetProduction(
-        inputs=inputs,
+        entries=entries,
+        facts=facts,
         what="heatnet",
         h18=h18,
         energy=heatnet_energy,
@@ -183,7 +201,8 @@ def calc_production(
     )
 
     ofossil = HeatProduction(
-        inputs=inputs,
+        entries=entries,
+        facts=facts,
         what="ofossil",
         h18=h18,
         energy=0,
@@ -193,7 +212,8 @@ def calc_production(
         CO2e_combustion_based_per_MWh=0,
     )
     solarth = HeatProduction(
-        inputs=inputs,
+        entries=entries,
+        facts=facts,
         what="solarth",
         h18=h18,
         energy=r30.s_solarth.energy + b30.s_solarth.energy,
@@ -201,7 +221,8 @@ def calc_production(
         CO2e_combustion_based_per_MWh=0,
     )
     heatpump = HeatProduction(
-        inputs=inputs,
+        entries=entries,
+        facts=facts,
         what="heatpump",
         h18=h18,
         energy=r30.s_heatpump.energy + b30.s_heatpump.energy + a30.s_heatpump.energy,
@@ -209,7 +230,8 @@ def calc_production(
         CO2e_combustion_based_per_MWh=0,
     )
     orenew = HeatProduction(
-        inputs=inputs,
+        entries=entries,
+        facts=facts,
         what="orenew",
         h18=h18,
         energy=solarth.energy + heatpump.energy,
@@ -218,7 +240,8 @@ def calc_production(
     )
 
     total = TotalHeatProduction(
-        inputs=inputs,
+        entries=entries,
+        facts=facts,
         what="",
         h18=h18,
         energy=(

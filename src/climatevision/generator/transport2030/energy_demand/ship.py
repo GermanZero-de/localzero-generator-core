@@ -2,7 +2,8 @@
 
 from dataclasses import dataclass
 
-from ...inputs import Inputs
+from ...makeentries import Entries
+from ...refdata import Facts, Assumptions
 from ...utils import div
 from ...common.invest import Invest, InvestCommune
 from ...transport2018.t18 import T18
@@ -22,10 +23,11 @@ class ShipDomestic(Invest):
     ratio_wage_to_emplo: float
 
     @classmethod
-    def calc(cls, inputs: Inputs, *, t18: T18) -> "ShipDomestic":
-        fact = inputs.fact
-        ass = inputs.ass
-        entries = inputs.entries
+    def calc(
+        cls, entries: Entries, facts: Facts, assumptions: Assumptions, *, t18: T18
+    ) -> "ShipDomestic":
+        fact = facts.fact
+        ass = assumptions.ass
 
         transport_capacity_tkm = (
             ass("Ass_T_D_trnsprt_gds_ship_2050")
@@ -94,10 +96,11 @@ class ShipDomesticActionInfra(InvestCommune):
     ratio_wage_to_emplo: float
 
     @classmethod
-    def calc(cls, inputs: Inputs) -> "ShipDomesticActionInfra":
-        fact = inputs.fact
-        ass = inputs.ass
-        entries = inputs.entries
+    def calc(
+        cls, entries: Entries, facts: Facts, assumptions: Assumptions
+    ) -> "ShipDomesticActionInfra":
+        fact = facts.fact
+        ass = assumptions.ass
 
         invest = (
             ass("Ass_T_C_invest_water_ways")
@@ -141,10 +144,11 @@ class ShipInternational:
     transport: Transport
 
     @classmethod
-    def calc(cls, inputs: Inputs, *, t18: T18) -> "ShipInternational":
-        fact = inputs.fact
-        ass = inputs.ass
-        entries = inputs.entries
+    def calc(
+        cls, entries: Entries, facts: Facts, assumptions: Assumptions, *, t18: T18
+    ) -> "ShipInternational":
+        fact = facts.fact
+        ass = assumptions.ass
 
         CO2e_total_2021_estimated = t18.ship_inter.CO2e_combustion_based * fact(
             "Fact_M_CO2e_wo_lulucf_2021_vs_2018"

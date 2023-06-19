@@ -2,7 +2,8 @@
 
 from dataclasses import dataclass
 
-from ...inputs import Inputs
+from ...makeentries import Entries
+from ...refdata import Facts, Assumptions
 from ...utils import div
 from ...common.co2e_change import CO2eChange
 from ...common.invest import Invest
@@ -29,16 +30,17 @@ class NewEFuelProduction(CO2eChange, Invest):
     @classmethod
     def calc(
         cls,
-        inputs: Inputs,
+        entries: Entries,
+        facts: Facts,
+        assumptions: Assumptions,
         energy: float,
         CO2e_emission_factor: float,
         invest_per_power: float,
         full_load_hour: float,
         fuel_efficiency: float,
     ) -> "NewEFuelProduction":
-        fact = inputs.fact
-        ass = inputs.ass
-        entries = inputs.entries
+        fact = facts.fact
+        ass = assumptions.ass
 
         CO2e_total_2021_estimated = 0
         # We assume that we take as much CO2e out of the air when the E-Fuel

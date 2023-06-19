@@ -2,7 +2,8 @@
 
 from dataclasses import dataclass
 
-from ...inputs import Inputs
+from ...makeentries import Entries
+from ...refdata import Facts, Assumptions
 from ...utils import div
 from ...common.invest import Invest, InvestCommune
 from ...transport2018.t18 import T18
@@ -25,11 +26,16 @@ class RailPeople(Invest):
 
     @classmethod
     def calc_metro(
-        cls, inputs: Inputs, *, t18: T18, total_transport_capacity_pkm: float
+        cls,
+        entries: Entries,
+        facts: Facts,
+        assumptions: Assumptions,
+        *,
+        t18: T18,
+        total_transport_capacity_pkm: float,
     ) -> "RailPeople":
-        ass = inputs.ass
-        entries = inputs.entries
-        fact = inputs.fact
+        fact = facts.fact
+        ass = assumptions.ass
 
         transport_capacity_pkm = div(
             total_transport_capacity_pkm * t18.rail_ppl_metro.transport_capacity_pkm,
@@ -99,11 +105,16 @@ class RailPeople(Invest):
 
     @classmethod
     def calc_distance(
-        cls, inputs: Inputs, *, t18: T18, total_transport_capacity_pkm: float
+        cls,
+        entries: Entries,
+        facts: Facts,
+        assumptions: Assumptions,
+        *,
+        t18: T18,
+        total_transport_capacity_pkm: float,
     ) -> "RailPeople":
-        fact = inputs.fact
-        ass = inputs.ass
-        entries = inputs.entries
+        fact = facts.fact
+        ass = assumptions.ass
 
         transport_capacity_pkm = div(
             total_transport_capacity_pkm * t18.rail_ppl_distance.transport_capacity_pkm,
@@ -185,11 +196,15 @@ class RailPeopleMetroActionInfra(InvestCommune):
 
     @classmethod
     def calc(
-        cls, inputs: Inputs, *, metro_transport_capacity_pkm: float
+        cls,
+        entries: Entries,
+        facts: Facts,
+        assumptions: Assumptions,
+        *,
+        metro_transport_capacity_pkm: float,
     ) -> "RailPeopleMetroActionInfra":
-        ass = inputs.ass
-        fact = inputs.fact
-        entries = inputs.entries
+        fact = facts.fact
+        ass = assumptions.ass
 
         invest_per_x = ass("Ass_T_C_cost_per_trnsprt_ppl_metro")
         invest = metro_transport_capacity_pkm * invest_per_x
@@ -306,10 +321,11 @@ class RailGoods(Invest):
     ratio_wage_to_emplo: float
 
     @classmethod
-    def calc(cls, inputs: Inputs, *, t18: T18) -> "RailGoods":
-        ass = inputs.ass
-        fact = inputs.fact
-        entries = inputs.entries
+    def calc(
+        cls, entries: Entries, facts: Facts, assumptions: Assumptions, *, t18: T18
+    ) -> "RailGoods":
+        fact = facts.fact
+        ass = assumptions.ass
 
         transport_capacity_tkm = t18.rail_gds.transport_capacity_tkm * (
             ass("Ass_T_D_trnsprt_gds_Rl_2050")

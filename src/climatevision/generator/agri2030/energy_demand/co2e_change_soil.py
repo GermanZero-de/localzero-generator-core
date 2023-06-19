@@ -2,7 +2,8 @@
 
 from dataclasses import dataclass
 
-from ...inputs import Inputs
+from ...makeentries import Entries
+from ...refdata import Facts, Assumptions
 from ...utils import div
 from ...agri2018.a18 import A18
 
@@ -19,13 +20,13 @@ class CO2eChangeSoil(CO2eChangeAgri):
     @classmethod
     def calc_soil_special(
         cls,
-        inputs: Inputs,
+        entries: Entries,
+        facts: Facts,
         what: str,
         a18: A18,
         area_ha: float,
         CO2e_production_based_per_t: float,
     ) -> "CO2eChangeSoil":
-
         CO2e_combustion_based = 0
 
         demand_change = (
@@ -41,7 +42,8 @@ class CO2eChangeSoil(CO2eChangeAgri):
         area_ha_change = -(getattr(a18, what).area_ha - area_ha)
 
         parent = CO2eChangeAgri(
-            inputs=inputs,
+            entries=entries,
+            facts=facts,
             what=what,
             a18=a18,
             CO2e_combustion_based=CO2e_combustion_based,
@@ -49,7 +51,8 @@ class CO2eChangeSoil(CO2eChangeAgri):
         )
 
         return cls(
-            inputs=inputs,
+            entries=entries,
+            facts=facts,
             what=what,
             a18=a18,
             CO2e_combustion_based=CO2e_combustion_based,
@@ -67,11 +70,19 @@ class CO2eChangeSoil(CO2eChangeAgri):
 
     @classmethod
     def calc_soil(
-        cls, inputs: Inputs, what: str, a18: A18, area_ha: float
+        cls,
+        entries: Entries,
+        facts: Facts,
+        assumptions: Assumptions,
+        what: str,
+        a18: A18,
+        area_ha: float,
     ) -> "CO2eChangeSoil":
+        ass = assumptions.ass
+
         CO2e_combustion_based = 0
 
-        demand_change = inputs.ass("Ass_A_P_soil_N_application_2030_change")
+        demand_change = ass("Ass_A_P_soil_N_application_2030_change")
         CO2e_production_based_per_t = getattr(a18, what).CO2e_production_based_per_t * (
             1 + demand_change
         )
@@ -81,7 +92,8 @@ class CO2eChangeSoil(CO2eChangeAgri):
         area_ha_change = -(getattr(a18, what).area_ha - area_ha)
 
         parent = CO2eChangeAgri(
-            inputs=inputs,
+            entries=entries,
+            facts=facts,
             what=what,
             a18=a18,
             CO2e_combustion_based=CO2e_combustion_based,
@@ -89,7 +101,8 @@ class CO2eChangeSoil(CO2eChangeAgri):
         )
 
         return cls(
-            inputs=inputs,
+            entries=entries,
+            facts=facts,
             what=what,
             a18=a18,
             CO2e_combustion_based=CO2e_combustion_based,

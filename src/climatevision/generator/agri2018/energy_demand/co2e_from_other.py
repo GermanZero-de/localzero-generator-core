@@ -2,8 +2,8 @@
 
 from dataclasses import dataclass
 
-from ...inputs import Inputs
-
+from ...makeentries import Entries
+from ...refdata import Facts
 from ...common.co2_equivalent_emission import CO2eEmission
 
 
@@ -15,17 +15,19 @@ class CO2eFromOther(CO2eEmission):
 
     @classmethod
     def calc(
-        cls, inputs: Inputs, what: str, ratio_suffix: str = "_ratio"
+        cls, entries: Entries, facts: Facts, what: str, ratio_suffix: str = "_ratio"
     ) -> "CO2eFromOther":
+        fact = facts.fact
+
         # No idea why we use ratio_ with
         #   Fact_A_P_other_liming_calcit_ratio_CO2e_pb_to_amount_2018
         # but not with
         #   Fact_A_P_other_urea_CO2e_pb_to_amount_2018
         CO2e_combustion_based = 0.0
-        CO2e_production_based_per_t = inputs.fact(
+        CO2e_production_based_per_t = fact(
             "Fact_A_P_other_" + what + ratio_suffix + "_CO2e_pb_to_amount_2018"
         )
-        prod_volume = getattr(inputs.entries, "a_other_" + what + "_prod_volume")
+        prod_volume = getattr(entries, "a_other_" + what + "_prod_volume")
         CO2e_production_based = prod_volume * CO2e_production_based_per_t
         CO2e_total = CO2e_production_based
         return cls(

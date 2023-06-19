@@ -2,7 +2,8 @@
 
 from dataclasses import dataclass, asdict
 
-from ...inputs import Inputs
+from ...makeentries import Entries
+from ...refdata import Facts, Assumptions
 from ...utils import div
 from ...common.invest import InvestCommune
 from ...transport2018.t18 import T18
@@ -32,10 +33,11 @@ class Road:
     mileage: float
 
     @classmethod
-    def calc_goods_lightduty_it_ot(cls, inputs: Inputs, *, t18: T18) -> "Road":
-        ass = inputs.ass
-        fact = inputs.fact
-        entries = inputs.entries
+    def calc_goods_lightduty_it_ot(
+        cls, entries: Entries, facts: Facts, assumptions: Assumptions, *, t18: T18
+    ) -> "Road":
+        fact = facts.fact
+        ass = assumptions.ass
 
         transport_capacity_tkm = (
             ass("Ass_T_D_trnsprt_gds_Rd_2050")
@@ -87,10 +89,11 @@ class Road:
         )
 
     @classmethod
-    def calc_goods_lightduty_ab(cls, inputs: Inputs, *, t18: T18) -> "Road":
-        ass = inputs.ass
-        fact = inputs.fact
-        entries = inputs.entries
+    def calc_goods_lightduty_ab(
+        cls, entries: Entries, facts: Facts, assumptions: Assumptions, *, t18: T18
+    ) -> "Road":
+        fact = facts.fact
+        ass = assumptions.ass
 
         transport_capacity_tkm = (
             ass("Ass_T_D_trnsprt_gds_Rd_2050")
@@ -140,10 +143,11 @@ class Road:
         )
 
     @classmethod
-    def calc_goods_medium_and_heavy_duty_ab(cls, inputs: Inputs, *, t18: T18) -> "Road":
-        ass = inputs.ass
-        fact = inputs.fact
-        entries = inputs.entries
+    def calc_goods_medium_and_heavy_duty_ab(
+        cls, entries: Entries, facts: Facts, assumptions: Assumptions, *, t18: T18
+    ) -> "Road":
+        fact = facts.fact
+        ass = assumptions.ass
 
         CO2e_total_2021_estimated = t18.road_gds_mhd_ab.CO2e_combustion_based * fact(
             "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
@@ -195,11 +199,10 @@ class Road:
 
     @classmethod
     def calc_goods_medium_and_heavy_duty_it_ot(
-        cls, inputs: Inputs, *, t18: T18
+        cls, entries: Entries, facts: Facts, assumptions: Assumptions, *, t18: T18
     ) -> "Road":
-        ass = inputs.ass
-        fact = inputs.fact
-        entries = inputs.entries
+        fact = facts.fact
+        ass = assumptions.ass
 
         transport_capacity_tkm = (
             ass("Ass_T_D_trnsprt_gds_Rd_2050")
@@ -253,14 +256,15 @@ class Road:
     @classmethod
     def calc_car_it_ot(
         cls,
-        inputs: Inputs,
+        entries: Entries,
+        facts: Facts,
+        assumptions: Assumptions,
         *,
         t18: T18,
         required_domestic_transport_capacity_pkm: float,
     ) -> "Road":
-        ass = inputs.ass
-        entries = inputs.entries
-        fact = inputs.fact
+        fact = facts.fact
+        ass = assumptions.ass
 
         transport_capacity_pkm = (
             required_domestic_transport_capacity_pkm
@@ -333,14 +337,15 @@ class Road:
     @classmethod
     def calc_car_ab(
         cls,
-        inputs: Inputs,
+        entries: Entries,
+        facts: Facts,
+        assumptions: Assumptions,
         *,
         t18: T18,
         required_domestic_transport_capacity_pkm: float,
     ) -> "Road":
-        ass = inputs.ass
-        entries = inputs.entries
-        fact = inputs.fact
+        fact = facts.fact
+        ass = assumptions.ass
 
         transport_capacity_pkm = (
             required_domestic_transport_capacity_pkm
@@ -417,12 +422,15 @@ class RoadCar(Road):
 
     @staticmethod
     def calc_cost_modernisation_of_fleet(
-        inputs: Inputs, *, sum_it_ot_ab: Transport
+        entries: Entries,
+        facts: Facts,
+        assumptions: Assumptions,
+        *,
+        sum_it_ot_ab: Transport,
     ) -> TransportInvestments:
         """Many cars will have to be replaced."""
-        fact = inputs.fact
-        ass = inputs.ass
-        entries = inputs.entries
+        fact = facts.fact
+        ass = assumptions.ass
 
         base_unit = sum_it_ot_ab.transport_capacity_pkm / fact(
             "Fact_T_S_Car_ratio_mlg_to_stock_2018"
@@ -439,13 +447,22 @@ class RoadCar(Road):
         )
 
     @classmethod
-    def calc(cls, inputs: Inputs, *, t18: T18, it_ot: Road, ab: Road) -> "RoadCar":
+    def calc(
+        cls,
+        entries: Entries,
+        facts: Facts,
+        assumptions: Assumptions,
+        *,
+        t18: T18,
+        it_ot: Road,
+        ab: Road,
+    ) -> "RoadCar":
         sum = Transport.sum(it_ot.transport, ab.transport, transport2018=t18.road_car)
         return cls(
             mileage=it_ot.mileage + ab.mileage,
             transport=sum,
             fleet_modernisation_cost=cls.calc_cost_modernisation_of_fleet(
-                inputs, sum_it_ot_ab=sum
+                entries, facts, assumptions, sum_it_ot_ab=sum
             ),
         )
 
@@ -466,21 +483,26 @@ class BusInvestments(TransportInvestments):
 class RoadBus(Road, BusInvestments):
     @staticmethod
     def calc_action_infra(
-        inputs: Inputs, *, bus_transport_capacity_pkm: float
+        entries: Entries,
+        facts: Facts,
+        assumptions: Assumptions,
+        *,
+        bus_transport_capacity_pkm: float,
     ) -> InvestmentAction:
         """Costs of bus stations and similar."""
-        invest_per_x = inputs.ass("Ass_T_C_cost_per_trnsprt_ppl_bus_infrstrctr")
+        fact = facts.fact
+        ass = assumptions.ass
+
+        invest_per_x = ass("Ass_T_C_cost_per_trnsprt_ppl_bus_infrstrctr")
         invest = bus_transport_capacity_pkm * invest_per_x
-        invest_pa = invest / inputs.entries.m_duration_target
-        pct_of_wage = inputs.fact("Fact_T_D_constr_roadrail_revenue_pct_of_wage_2018")
+        invest_pa = invest / entries.m_duration_target
+        pct_of_wage = fact("Fact_T_D_constr_roadrail_revenue_pct_of_wage_2018")
         cost_wage = invest_pa * pct_of_wage
-        ratio_wage_to_emplo = inputs.fact(
-            "Fact_T_D_constr_roadrail_ratio_wage_to_emplo_2018"
-        )
+        ratio_wage_to_emplo = fact("Fact_T_D_constr_roadrail_ratio_wage_to_emplo_2018")
         demand_emplo = div(cost_wage, ratio_wage_to_emplo)
         demand_emplo_new = demand_emplo
-        invest_com = invest * inputs.ass("Ass_T_C_ratio_public_sector_100")
-        invest_pa_com = invest_com / inputs.entries.m_duration_target
+        invest_com = invest * ass("Ass_T_C_ratio_public_sector_100")
+        invest_pa_com = invest_com / entries.m_duration_target
         return InvestmentAction(
             cost_wage=cost_wage,
             demand_emplo=demand_emplo,
@@ -496,12 +518,16 @@ class RoadBus(Road, BusInvestments):
 
     @staticmethod
     def calc_bus_investments(
-        inputs: Inputs, *, t18: T18, mileage: float
+        entries: Entries,
+        facts: Facts,
+        assumptions: Assumptions,
+        *,
+        t18: T18,
+        mileage: float,
     ) -> BusInvestments:
         """Cost of buses and bus drivers"""
-        fact = inputs.fact
-        ass = inputs.ass
-        entries = inputs.entries
+        fact = facts.fact
+        ass = assumptions.ass
 
         base_unit = mileage / fact("Fact_T_S_Bus_ratio_mlg_to_stock_2018")
         invest_per_x = ass("Ass_T_S_bus_average_price_2050")
@@ -532,11 +558,16 @@ class RoadBus(Road, BusInvestments):
 
     @classmethod
     def calc(
-        cls, inputs: Inputs, *, t18: T18, total_transport_capacity_pkm: float
+        cls,
+        entries: Entries,
+        facts: Facts,
+        assumptions: Assumptions,
+        *,
+        t18: T18,
+        total_transport_capacity_pkm: float,
     ) -> "RoadBus":
-        ass = inputs.ass
-        entries = inputs.entries
-        fact = inputs.fact
+        fact = facts.fact
+        ass = assumptions.ass
 
         t18_public_transport_capacity_pkm = (
             t18.road_bus.transport_capacity_pkm
@@ -598,7 +629,11 @@ class RoadBus(Road, BusInvestments):
                 transport_capacity_tkm=0,
                 transport2018=t18.road_bus,
             ),
-            **asdict(cls.calc_bus_investments(inputs, t18=t18, mileage=mileage)),
+            **asdict(
+                cls.calc_bus_investments(
+                    entries, facts, assumptions, t18=t18, mileage=mileage
+                )
+            ),
         )
 
 
@@ -609,7 +644,6 @@ class RoadPeople(Road, InvestCommune):
     @classmethod
     def calc(
         cls,
-        inputs: Inputs,
         *,
         t18: T18,
         car: RoadCar,
@@ -662,9 +696,16 @@ class RoadGoodsMediumAndHeavyDuty(Road):
 
     @classmethod
     def calc(
-        cls, inputs: Inputs, t18: T18, it_ot: Road, ab: Road
+        cls,
+        entries: Entries,
+        facts: Facts,
+        assumptions: Assumptions,
+        t18: T18,
+        it_ot: Road,
+        ab: Road,
     ) -> "RoadGoodsMediumAndHeavyDuty":
-        fact = inputs.fact
+        fact = facts.fact
+        ass = assumptions.ass
 
         sum = Transport.sum(
             it_ot.transport, ab.transport, transport2018=t18.road_gds_mhd
@@ -679,9 +720,9 @@ class RoadGoodsMediumAndHeavyDuty(Road):
         base_unit = (sum.transport_capacity_tkm) / fact(
             "Fact_T_S_MHD_ratio_mlg_to_stock_2018"
         )
-        invest_per_x = inputs.ass("Ass_T_S_MHCV_BEV_FCEV_average_price_2050")
+        invest_per_x = ass("Ass_T_S_MHCV_BEV_FCEV_average_price_2050")
         invest = base_unit * invest_per_x
-        invest_pa = invest / inputs.entries.m_duration_target
+        invest_pa = invest / entries.m_duration_target
         return cls(
             mileage=it_ot.mileage + ab.mileage,
             base_unit=base_unit,
@@ -695,10 +736,11 @@ class RoadGoodsMediumAndHeavyDuty(Road):
         )
 
     @staticmethod
-    def calc_action_wire(inputs: Inputs) -> InvestmentAction:
-        ass = inputs.ass
-        entries = inputs.entries
-        fact = inputs.fact
+    def calc_action_wire(
+        entries: Entries, facts: Facts, assumptions: Assumptions
+    ) -> InvestmentAction:
+        fact = facts.fact
+        ass = assumptions.ass
 
         invest_per_x = ass("Ass_T_C_cost_per_trnsprt_gds_truck_infrstrctr")
         invest = entries.m_population_com_203X * invest_per_x
@@ -735,15 +777,16 @@ class RoadGoodsLightDuty(Road):
     @classmethod
     def calc(
         cls,
-        inputs: Inputs,
+        entries: Entries,
+        facts: Facts,
+        assumptions: Assumptions,
         *,
         t18: T18,
         it_ot: Road,
         ab: Road,
     ) -> "RoadGoodsLightDuty":
-        ass = inputs.ass
-        fact = inputs.fact
-        entries = inputs.entries
+        fact = facts.fact
+        ass = assumptions.ass
 
         sum = Transport.sum(
             ab.transport, it_ot.transport, transport2018=t18.road_gds_ldt

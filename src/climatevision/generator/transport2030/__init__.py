@@ -5,7 +5,8 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/traffic.html
 
 # pyright: strict
 
-from ..inputs import Inputs
+from ..makeentries import Entries
+from ..refdata import Facts, Assumptions
 from ..transport2018.t18 import T18
 from . import energy_demand, energy_source, energy_general
 
@@ -13,12 +14,13 @@ from .t30 import T30
 from .t import T
 
 
-def calc(inputs: Inputs, *, t18: T18) -> T30:
+def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, t18: T18) -> T30:
 
-    production = energy_demand.calc_production(inputs, t18)
+    production = energy_demand.calc_production(entries, facts, assumptions, t18)
 
     general = energy_general.calc_general(
-        inputs,
+        entries,
+        assumptions,
         production.road_bus_action_infra,
         production.road_gds_mhd_action_wire,
         production.road_action_charger,

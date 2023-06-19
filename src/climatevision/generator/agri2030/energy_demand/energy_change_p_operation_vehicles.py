@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass, InitVar
 
-from ...inputs import Inputs
+from ...refdata import Assumptions
 from ...utils import div
 from ...agri2018.a18 import A18
 
@@ -19,23 +19,24 @@ class EnergyChangePOperationVehicles(EnergyChangeAgri):
     demand_epetrol: float = 0
     demand_heatpump: float = 0
 
-    inputs: InitVar[Inputs]
     what: InitVar[str]
     a18: InitVar[A18]
+    assumptions: InitVar[Assumptions]
 
-    def __post_init__(
+    def __post_init__(  # type: ignore[override]
         self,
-        inputs: Inputs,
         what: str,
         a18: A18,
+        assumptions: Assumptions,
     ):
+        ass = assumptions.ass
 
         self.demand_electricity = 0
         self.demand_biomass = 0
         self.demand_heatpump = 0
         self.demand_emethan = 0
 
-        self.demand_change = inputs.ass("Ass_B_D_fec_vehicles_change")
+        self.demand_change = ass("Ass_B_D_fec_vehicles_change")
         self.energy = getattr(a18, what).energy * (1 + self.demand_change)
 
         self.demand_epetrol = div(
@@ -47,4 +48,4 @@ class EnergyChangePOperationVehicles(EnergyChangeAgri):
             a18.s_petrol.energy + a18.s_diesel.energy,
         )
 
-        EnergyChangeAgri.__post_init__(self, inputs=inputs, what=what, a18=a18)
+        EnergyChangeAgri.__post_init__(self, what=what, a18=a18)

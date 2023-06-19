@@ -125,34 +125,41 @@ class Result:
 
 def calculate(inputs: Inputs, inputs_germany: Inputs) -> Result:
     """This is the entry point to the actual calculation."""
+    entries = inputs.entries
+    entries_germany = inputs_germany.entries
+
+    facts = inputs.facts
+    assumptions = inputs.assumptions
+
     start_t = time()
+
     # 2018
     print("Residence2018_calc", file=stderr)
     r18 = residences2018.calc(inputs)
 
     print("Business2018_calc", file=stderr)
-    b18 = business2018.calc(inputs, r18=r18)
+    b18 = business2018.calc(entries, facts, assumptions, r18=r18)
 
     print("Industry2018_calc", file=stderr)
-    i18 = industry2018.calc(inputs, inputs_germany)
+    i18 = industry2018.calc(entries, entries_germany, facts)
 
     print("Transport2018_calc", file=stderr)
-    t18 = transport2018.calc(inputs)
+    t18 = transport2018.calc(entries, facts, assumptions)
 
     print("Fuels2018_calc", file=stderr)
-    f18 = fuels2018.calc(inputs, t18=t18, i18=i18)
+    f18 = fuels2018.calc(entries, facts, t18=t18, i18=i18)
 
     print("Lulucf2018_calc", file=stderr)
     l18 = lulucf2018.calc(inputs)
 
     print("Agri2018_calc", file=stderr)
-    a18 = agri2018.calc(inputs, l18=l18, b18=b18)
+    a18 = agri2018.calc(entries, facts, l18=l18, b18=b18)
 
     print("Electricity2018_calc", file=stderr)
     e18 = electricity2018.calc(inputs, t18=t18, i18=i18)
 
     print("Heat2018_calc", file=stderr)
-    h18 = heat2018.calc(inputs, t18=t18, e18=e18, i18=i18)
+    h18 = heat2018.calc(entries, facts, t18=t18, e18=e18, i18=i18)
 
     print("Waste2018_calc", file=stderr)
     w18 = W18.calc(inputs)
@@ -165,7 +172,7 @@ def calculate(inputs: Inputs, inputs_germany: Inputs) -> Result:
 
     # target year
     print("Transport2030", file=stderr)
-    t30 = transport2030.calc(inputs, t18=t18)
+    t30 = transport2030.calc(entries, facts, assumptions, t18=t18)
 
     print("Industry2030", file=stderr)
     i30 = industry2030.calc(inputs, i18=i18)
@@ -180,7 +187,7 @@ def calculate(inputs: Inputs, inputs_germany: Inputs) -> Result:
     l30 = lulucf2030.calc(inputs, l18=l18)
 
     print("Agri2030_calc", file=stderr)
-    a30 = agri2030.calc(inputs, a18=a18, l30=l30)
+    a30 = agri2030.calc(entries, facts, assumptions, a18=a18, l30=l30)
 
     print("Electricity2030_calc_biomass", file=stderr)
     e30_p_local_biomass = electricity2030_core.calc_biomass(inputs)
@@ -190,7 +197,9 @@ def calculate(inputs: Inputs, inputs_germany: Inputs) -> Result:
 
     print("Heat2030_calc", file=stderr)
     h30 = heat2030.calc(
-        inputs,
+        entries,
+        facts,
+        assumptions,
         h18=h18,
         r30=r30,
         b30=b30,
@@ -201,7 +210,16 @@ def calculate(inputs: Inputs, inputs_germany: Inputs) -> Result:
 
     print("Fuels2030_calc", file=stderr)
     f30 = fuels2030.calc(
-        inputs, f18=f18, a30=a30, b30=b30, h30=h30, i30=i30, r30=r30, t30=t30
+        entries,
+        facts,
+        assumptions,
+        f18=f18,
+        a30=a30,
+        b30=b30,
+        h30=h30,
+        i30=i30,
+        r30=r30,
+        t30=t30,
     )
 
     print("calc waste 2030 ")
@@ -333,10 +351,16 @@ def calculate_with_default_inputs(ags: str, year: int) -> Result:
         entries_germany = entries
     else:
         entries_germany = make_entries(refdata, ags="DG000000", year=year)
+
     inputs = Inputs(
-        facts_and_assumptions=refdata.facts_and_assumptions(), entries=entries
+        facts=refdata.facts(),
+        assumptions=refdata.assumptions(),
+        entries=entries,
     )
     inputs_germany = Inputs(
-        facts_and_assumptions=refdata.facts_and_assumptions(), entries=entries_germany
+        facts=refdata.facts(),
+        assumptions=refdata.assumptions(),
+        entries=entries_germany,
     )
+
     return calculate(inputs, inputs_germany)

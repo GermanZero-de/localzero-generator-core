@@ -5,7 +5,8 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/fuel.html
 
 # pyright: strict
 
-from ..inputs import Inputs
+from ..makeentries import Entries
+from ..refdata import Facts, Assumptions
 from ..fuels2018.f18 import F18
 from ..agri2030.a30 import A30
 from ..business2030.b30 import B30
@@ -21,7 +22,9 @@ from . import energy_demand, energy_production
 
 
 def calc(
-    inputs: Inputs,
+    entries: Entries,
+    facts: Facts,
+    assumptions: Assumptions,
     *,
     f18: F18,
     a30: A30,
@@ -33,7 +36,7 @@ def calc(
 ) -> F30:
 
     production = energy_production.calc_production(
-        inputs, f18, a30, b30, h30, i30, r30, t30
+        entries, facts, assumptions, f18, a30, b30, h30, i30, r30, t30
     )
     demand = energy_demand.calc_demand(
         a30, b30, i30, r30, t30, production.hydrogen_reconv

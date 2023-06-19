@@ -5,7 +5,8 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/heat.html
 
 # pyright: strict
 
-from ..inputs import Inputs
+from ..makeentries import Entries
+from ..refdata import Facts
 from ..transport2018.t18 import T18
 from ..electricity2018.e18 import E18
 from ..industry2018.i18 import I18
@@ -14,11 +15,11 @@ from .h18 import H18, CO2eEmission
 from . import energy_base, energy_demand, energy_production
 
 
-def calc(inputs: Inputs, *, t18: T18, e18: E18, i18: I18) -> H18:
+def calc(entries: Entries, facts: Facts, *, t18: T18, e18: E18, i18: I18) -> H18:
 
-    energies = energy_base.calc(inputs, t18, i18, e18)
+    energies = energy_base.calc(entries, t18, i18, e18)
     demand = energy_demand.calc_demand(energies)
-    production = energy_production.calc_production(inputs, energies)
+    production = energy_production.calc_production(facts, energies)
 
     h = CO2eEmission(
         CO2e_combustion_based=production.total.CO2e_combustion_based,

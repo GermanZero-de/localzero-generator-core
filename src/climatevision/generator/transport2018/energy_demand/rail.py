@@ -2,7 +2,8 @@
 
 from dataclasses import dataclass
 
-from ...inputs import Inputs
+from ...makeentries import Entries
+from ...refdata import Facts, Assumptions
 from ...utils import element_wise_plus, MILLION
 
 from . import co2e
@@ -24,24 +25,29 @@ class Rail:
         return element_wise_plus(self, other)
 
     @classmethod
-    def calc_people_distance(cls, inputs: Inputs) -> "Rail":
-        demand_electricity = inputs.entries.t_ec_rail_ppl_elec
-        demand_diesel = inputs.entries.t_ec_rail_ppl_diesel * (
-            1 - inputs.fact("Fact_T_S_Rl_Rd_diesel_bio_frac_2018")
+    def calc_people_distance(
+        cls, entries: Entries, facts: Facts, assumptions: Assumptions
+    ) -> "Rail":
+        fact = facts.fact
+
+        demand_electricity = entries.t_ec_rail_ppl_elec
+        demand_diesel = entries.t_ec_rail_ppl_diesel * (
+            1 - fact("Fact_T_S_Rl_Rd_diesel_bio_frac_2018")
         )
-        demand_biodiesel = inputs.entries.t_ec_rail_ppl_diesel * inputs.fact(
+        demand_biodiesel = entries.t_ec_rail_ppl_diesel * fact(
             "Fact_T_S_Rl_Rd_diesel_bio_frac_2018"
         )
 
-        transport_capacity_pkm = (demand_diesel + demand_biodiesel) / inputs.fact(
+        transport_capacity_pkm = (demand_diesel + demand_biodiesel) / fact(
             "Fact_T_S_Rl_Train_ppl_long_diesel_SEC_2018"
-        ) + demand_electricity / inputs.fact("Fact_T_S_Rl_Train_ppl_long_elec_SEC_2018")
-        mileage = transport_capacity_pkm / inputs.fact(
+        ) + demand_electricity / fact("Fact_T_S_Rl_Train_ppl_long_elec_SEC_2018")
+        mileage = transport_capacity_pkm / fact(
             "Fact_T_D_rail_ppl_ratio_pkm_to_fzkm_2018"
         )
         energy = demand_diesel + demand_biodiesel + demand_electricity
         CO2e_combustion_based = co2e.from_demands(
-            inputs,
+            facts,
+            assumptions,
             demand_diesel=demand_diesel,
             demand_biodiesel=demand_biodiesel,
             demand_electricity=demand_electricity,
@@ -60,22 +66,28 @@ class Rail:
         )
 
     @classmethod
-    def calc_goods(cls, inputs: Inputs) -> "Rail":
-        demand_electricity = inputs.entries.t_ec_rail_gds_elec
-        demand_diesel = inputs.entries.t_ec_rail_gds_diesel * (
-            1 - inputs.fact("Fact_T_S_Rl_Rd_diesel_bio_frac_2018")
+    def calc_goods(
+        cls, entries: Entries, facts: Facts, assumptions: Assumptions
+    ) -> "Rail":
+        fact = facts.fact
+
+        demand_electricity = entries.t_ec_rail_gds_elec
+        demand_diesel = entries.t_ec_rail_gds_diesel * (
+            1 - fact("Fact_T_S_Rl_Rd_diesel_bio_frac_2018")
         )
-        demand_biodiesel = inputs.entries.t_ec_rail_gds_diesel * inputs.fact(
+        demand_biodiesel = entries.t_ec_rail_gds_diesel * fact(
             "Fact_T_S_Rl_Rd_diesel_bio_frac_2018"
         )
 
-        transport_capacity_tkm = (demand_diesel + demand_biodiesel) / inputs.fact(
+        transport_capacity_tkm = (demand_diesel + demand_biodiesel) / fact(
             "Fact_T_S_Rl_Train_gds_diesel_SEC_2018"
-        ) + demand_electricity / inputs.fact("Fact_T_S_Rl_Train_gds_elec_SEC_2018")
+        ) + demand_electricity / fact("Fact_T_S_Rl_Train_gds_elec_SEC_2018")
 
-        CO2e_combustion_based = co2e.from_demands(inputs, demand_diesel=demand_diesel)
+        CO2e_combustion_based = co2e.from_demands(
+            facts, assumptions, demand_diesel=demand_diesel
+        )
         energy = demand_diesel + demand_biodiesel + demand_electricity
-        mileage = transport_capacity_tkm / inputs.fact(
+        mileage = transport_capacity_tkm / fact(
             "Fact_T_D_rail_gds_ratio_tkm_to_fzkm_2018"
         )
         CO2e_total = CO2e_combustion_based
@@ -92,18 +104,22 @@ class Rail:
         )
 
     @classmethod
-    def calc_rail_people_metro(cls, inputs: Inputs) -> "Rail":
+    def calc_rail_people_metro(
+        cls, entries: Entries, facts: Facts, assumptions: Assumptions
+    ) -> "Rail":
+        fact = facts.fact
+
         mileage = (
-            inputs.entries.t_metro_mega_km_dis
+            entries.t_metro_mega_km_dis
             * MILLION
-            * inputs.entries.m_population_com_2018
-            / inputs.entries.m_population_dis
+            * entries.m_population_com_2018
+            / entries.m_population_dis
         )
-        demand_electricity = mileage * inputs.fact("Fact_T_S_Rl_Metro_SEC_fzkm_2018")
+        demand_electricity = mileage * fact("Fact_T_S_Rl_Metro_SEC_fzkm_2018")
         energy = demand_electricity
-        transport_capacity_pkm = mileage * inputs.fact("Fact_T_D_lf_Rl_Metro_2018")
+        transport_capacity_pkm = mileage * fact("Fact_T_D_lf_Rl_Metro_2018")
         CO2e_combustion_based = co2e.from_demands(
-            inputs, demand_electricity=demand_electricity
+            facts, assumptions, demand_electricity=demand_electricity
         )
         CO2e_total = CO2e_combustion_based
         return cls(

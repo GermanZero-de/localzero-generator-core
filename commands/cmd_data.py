@@ -1,6 +1,6 @@
 # pyright: strict
 
-from typing import Callable, Literal, TextIO, Any
+from typing import TextIO, Any, Callable
 import csv
 import sys
 import os.path
@@ -9,7 +9,7 @@ from climatevision.generator import ags, refdatatools, refdata
 
 
 def cmd_data_normalize(args: Any):
-    def sortby_and_check_ags_column(rows: Any):
+    def sortby_and_check_ags_column(rows: list[list[str]]) -> list[list[str]]:
         header = rows[0]
         if header[0] != "ags":
             # All files that have an AGS have it in the first column.
@@ -22,7 +22,7 @@ def cmd_data_normalize(args: Any):
             exit(1)
         return sorted(rows, key=lambda r: r[0])
 
-    def find_duplicate_ags_in_sorted(rows: Any) -> Any:
+    def find_duplicate_ags_in_sorted(rows: list[list[str]]) -> list[list[str]]:
         dups = []
         current = []
         for r in rows:
@@ -67,11 +67,11 @@ def faint(s, end=None, file: TextIO = sys.stdout):  # type: ignore
     print(f"\033[2m{s}\033[0m", end=end, file=file)  # type: ignore
 
 
-def lookup_by_ags(ags: str, *, fix_missing_entries: bool):
+def lookup_by_ags(data: refdata.RefData, ags: str):
     ags_dis = ags[:5] + "000"  # This identifies the administrative district (Landkreis)
     ags_sta = ags[:2] + "000000"  # This identifies the federal state (Bundesland)
 
-    def print_lookup(name: str, lookup_fn: Any, key: str):
+    def print_lookup(name: str, lookup_fn: Callable[[str], refdata.Row[str]], key: str):
         bold(name)
         try:
             record: object = lookup_fn(key)
@@ -83,8 +83,6 @@ def lookup_by_ags(ags: str, *, fix_missing_entries: bool):
         else:
             print(record)
         print()
-
-    data = refdata.RefData.load(fix_missing_entries=fix_missing_entries)
 
     by_ags = [
         ("area", data.area),
@@ -112,64 +110,71 @@ def lookup_by_ags(ags: str, *, fix_missing_entries: bool):
     bold(f"{ags} {description} (commune level data)")
     bold("---------------------------------------------------------------")
     print()
-    for (name, lookup_fn) in by_ags:
+    for name, lookup_fn in by_ags:
         print_lookup(name, lookup_fn, key=ags)
 
     bold(f"{ags_dis} (administrative district level data)")
     bold("--------------------------------------------------")
     print()
-    for (name, lookup_fn) in by_dis:
+    for name, lookup_fn in by_dis:
         print_lookup(name, lookup_fn, key=ags_dis)
 
     bold(f"{ags_sta} (federal state level data)")
     bold("--------------------------------------------------")
     print()
-    for (name, lookup_fn) in by_sta:
+    for name, lookup_fn in by_sta:
         print_lookup(name, lookup_fn, key=ags_sta)
 
 
-def lookup_fact_or_ass(
-    pattern: str,
-    what: Literal["fact", "assumption"],
-    lookup: Callable[
-        [refdata.FactsAndAssumptions, str], refdata.FactOrAssumptionCompleteRow
-    ],
-):
+def print_fact_or_ass(name: str, record: refdata.FactOrAssumptionCompleteRow):
+    bold(name)
+    print(record.value, end="")
+    if record.unit != "":
+        print(f" {record.unit}\t({record.description})")
+    else:
+        print(f"\t({record.description})")
+    print("")
+    if record.rationale:
+        print(record.rationale)
+    if record.reference or record.link:
+        bold("reference")
+        print(record.reference)
+        print(record.link)
+    else:
+        bold("reference")
+        faint("no reference provided")
 
-    data = refdata.RefData.load()
+
+def lookup_fact(data: refdata.RefData, pattern: str):
     try:
-        res = lookup(data.facts_and_assumptions(), pattern)
-        bold(pattern)
-        print(res.value, end="")
-        if res.unit != "":
-            print(f" {res.unit}\t({res.description})")
-        else:
-            print(f"\t({res.description})")
-        print("")
-        if res.rationale:
-            print(res.rationale)
-        if res.reference or res.link:
-            bold("reference")
-            print(res.reference)
-            print(res.link)
-        else:
-            bold("reference")
-            faint("no reference provided")
+        complete_fact = data.facts().complete_fact(pattern)
+        print_fact_or_ass(name=pattern, record=complete_fact)
     except:
-        bold(f"No {what} called {pattern} found!", file=sys.stderr)
+        bold(f"No fact called {pattern} found!", file=sys.stderr)
+        exit(1)
+
+
+def lookup_ass(data: refdata.RefData, pattern: str):
+    try:
+        complete_ass = data.assumptions().complete_ass(pattern)
+        print_fact_or_ass(name=pattern, record=complete_ass)
+    except:
+        bold(f"No assumption called {pattern} found!", file=sys.stderr)
         exit(1)
 
 
 def cmd_data_lookup(args: Any):
     pattern: str = args.pattern
+    data: refdata.RefData = refdata.RefData.load(
+        fix_missing_entries=args.fix_missing_entries
+    )
+
     if ags.is_valid(pattern):
-        lookup_by_ags(pattern, fix_missing_entries=args.fix_missing_entries)
+        lookup_by_ags(data, pattern)
     elif pattern.startswith("Ass_"):
-        lookup_fact_or_ass(
-            pattern, "assumption", refdata.FactsAndAssumptions.complete_ass
-        )
+        lookup_ass(data, pattern)
     elif pattern.startswith("Fact_"):
-        lookup_fact_or_ass(pattern, "fact", refdata.FactsAndAssumptions.complete_fact)
+        lookup_fact(data, pattern)
     else:
         print(
             f"This {pattern} does not look like a AGS, fact or pattern... do not know what to do... giving up!",

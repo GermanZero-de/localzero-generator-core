@@ -2,7 +2,8 @@
 
 from dataclasses import dataclass, InitVar
 
-from ...inputs import Inputs
+from ...makeentries import Entries
+from ...refdata import Facts, Assumptions
 from ...utils import div
 from ...common.invest import Invest
 from ...agri2018.a18 import A18
@@ -32,20 +33,27 @@ class EnergyChangePOperationHeat(EnergyChangeAgri, Invest):
     rate_rehab_pa: float = 0
     ratio_wage_to_emplo: float = 0
 
-    inputs: InitVar[Inputs]
     what: InitVar[str]
     a18: InitVar[A18]
+    entries: InitVar[Entries]
+    facts: InitVar[Facts]
+    assumptions: InitVar[Assumptions]
 
-    def __post_init__(
+    def __post_init__(  # type: ignore[override]
         self,
-        inputs: Inputs,
         what: str,
         a18: A18,
+        entries: Entries,
+        facts: Facts,
+        assumptions: Assumptions,
     ):
-        self.rate_rehab_pa = inputs.entries.r_rehab_rate_pa
+        fact = facts.fact
+        ass = assumptions.ass
+
+        self.rate_rehab_pa = entries.r_rehab_rate_pa
         self.pct_rehab = (
-            inputs.fact("Fact_B_P_ratio_renovated_to_not_renovated_2021")
-            + self.rate_rehab_pa * inputs.entries.m_duration_target
+            fact("Fact_B_P_ratio_renovated_to_not_renovated_2021")
+            + self.rate_rehab_pa * entries.m_duration_target
         )
         self.pct_nonrehab = 1 - self.pct_rehab
 
@@ -53,45 +61,41 @@ class EnergyChangePOperationHeat(EnergyChangeAgri, Invest):
         self.area_m2_rehab = self.pct_rehab * getattr(a18, what).area_m2
         self.area_m2_nonrehab = self.pct_nonrehab * getattr(a18, what).area_m2
 
-        self.invest_per_x = inputs.fact("Fact_R_P_energetical_renovation_cost_business")
+        self.invest_per_x = fact("Fact_R_P_energetical_renovation_cost_business")
         self.invest = (
             self.area_m2_rehab
-            * (1 - inputs.fact("Fact_B_P_ratio_renovated_to_not_renovated_2021"))
+            * (1 - fact("Fact_B_P_ratio_renovated_to_not_renovated_2021"))
             * self.invest_per_x
         )
-        self.invest_pa = self.invest / inputs.entries.m_duration_target
+        self.invest_pa = self.invest / entries.m_duration_target
 
-        self.pct_of_wage = inputs.fact(
-            "Fact_B_P_renovations_ratio_wage_to_main_revenue_2017"
-        )
-        self.cost_wage = (
-            div(self.invest, inputs.entries.m_duration_target) * self.pct_of_wage
-        )
+        self.pct_of_wage = fact("Fact_B_P_renovations_ratio_wage_to_main_revenue_2017")
+        self.cost_wage = div(self.invest, entries.m_duration_target) * self.pct_of_wage
 
-        self.ratio_wage_to_emplo = inputs.fact(
+        self.ratio_wage_to_emplo = fact(
             "Fact_B_P_renovations_wage_per_person_per_year_2017"
         )
         self.emplo_existing = (
-            inputs.fact("Fact_B_P_renovation_emplo_2017")
-            * inputs.ass("Ass_B_D_renovation_emplo_pct_of_A")
-            * inputs.entries.m_population_com_2018
-            / inputs.entries.m_population_nat
+            fact("Fact_B_P_renovation_emplo_2017")
+            * ass("Ass_B_D_renovation_emplo_pct_of_A")
+            * entries.m_population_com_2018
+            / entries.m_population_nat
         )
 
         self.demand_electricity = 0
         self.demand_epetrol = 0
         self.demand_ediesel = 0
-        self.demand_heat_rehab = self.area_m2_rehab * inputs.ass(
+        self.demand_heat_rehab = self.area_m2_rehab * ass(
             "Ass_B_D_ratio_fec_to_area_2050"
         )
         self.demand_heat_nonrehab = (
             self.area_m2_nonrehab
             * (
                 getattr(a18, what).ratio_energy_to_m2
-                - inputs.fact("Fact_B_P_ratio_renovated_to_not_renovated_2021")
-                * inputs.ass("Ass_B_D_ratio_fec_to_area_2050")
+                - fact("Fact_B_P_ratio_renovated_to_not_renovated_2021")
+                * ass("Ass_B_D_ratio_fec_to_area_2050")
             )
-            / (1 - inputs.fact("Fact_B_P_ratio_renovated_to_not_renovated_2021"))
+            / (1 - fact("Fact_B_P_ratio_renovated_to_not_renovated_2021"))
         )
         self.demand_heatpump = self.demand_heat_rehab
         self.demand_emplo = div(self.cost_wage, self.ratio_wage_to_emplo)
@@ -106,4 +110,4 @@ class EnergyChangePOperationHeat(EnergyChangeAgri, Invest):
 
         self.fec_factor_averaged = div(self.energy, getattr(a18, what).area_m2)
 
-        EnergyChangeAgri.__post_init__(self, inputs=inputs, what=what, a18=a18)
+        EnergyChangeAgri.__post_init__(self, what=what, a18=a18)

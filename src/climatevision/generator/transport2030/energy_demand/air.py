@@ -2,28 +2,31 @@
 
 from dataclasses import dataclass
 
-from ...inputs import Inputs
+from ...makeentries import Entries
+from ...refdata import Facts, Assumptions
 from ...utils import div
 from ...transport2018.t18 import T18
 
 from .transport import Transport
 
 
-def calc_air_domestic(inputs: Inputs, t18: T18) -> "Transport":
+def calc_air_domestic(entries: Entries, facts: Facts, t18: T18) -> "Transport":
     """We assume that no domestic flights are allowed when Germany is carbon neutral as trains
     are a good and cheap alternative (or should be).
 
     So this just computes the reduction to 0.
     """
-    CO2e_total_2021_estimated = t18.air_dmstc.CO2e_combustion_based * inputs.fact(
+    fact = facts.fact
+
+    CO2e_total_2021_estimated = t18.air_dmstc.CO2e_combustion_based * fact(
         "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
     )
     # Assuming every year from 2021 onwards we would have use the same amount
     # of CO2e on domestic flights if we hadn't decided to ban them.
     cost_climate_saved = (
         (CO2e_total_2021_estimated)
-        * inputs.entries.m_duration_neutral
-        * inputs.fact("Fact_M_cost_per_CO2e_2020")
+        * entries.m_duration_neutral
+        * fact("Fact_M_cost_per_CO2e_2020")
     )
     return Transport(
         CO2e_total_2021_estimated=CO2e_total_2021_estimated,
@@ -37,28 +40,33 @@ def calc_air_domestic(inputs: Inputs, t18: T18) -> "Transport":
     )
 
 
-def calc_air_international(inputs: Inputs, t18: T18) -> "Transport":
+def calc_air_international(
+    entries: Entries, facts: Facts, assumptions: Assumptions, t18: T18
+) -> "Transport":
     """However for many international flights there are no good alternatives.
     So we will need ejetfuels.
     """
+    fact = facts.fact
+    ass = assumptions.ass
+
     demand_ejetfuel = (
-        inputs.ass("Ass_T_D_Air_nat_EB_2050")
-        * inputs.entries.m_population_com_203X
-        / inputs.entries.m_population_nat
+        ass("Ass_T_D_Air_nat_EB_2050")
+        * entries.m_population_com_203X
+        / entries.m_population_nat
     )
     transport_capacity_tkm = t18.air_inter.transport_capacity_tkm * div(
         demand_ejetfuel, t18.air_inter.demand_jetfuel
     )
-    CO2e_combustion_based = demand_ejetfuel * inputs.ass(
+    CO2e_combustion_based = demand_ejetfuel * ass(
         "Ass_T_S_jetfuel_EmFa_tank_wheel_2050"
     )
-    CO2e_total_2021_estimated = t18.air_inter.CO2e_combustion_based * inputs.fact(
+    CO2e_total_2021_estimated = t18.air_inter.CO2e_combustion_based * fact(
         "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
     )
     cost_climate_saved = (
         (CO2e_total_2021_estimated - CO2e_combustion_based)
-        * inputs.entries.m_duration_neutral
-        * inputs.fact("Fact_M_cost_per_CO2e_2020")
+        * entries.m_duration_neutral
+        * fact("Fact_M_cost_per_CO2e_2020")
     )
     transport_capacity_pkm = t18.air_inter.transport_capacity_pkm * div(
         demand_ejetfuel, t18.air_inter.demand_jetfuel

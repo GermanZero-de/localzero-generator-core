@@ -347,10 +347,9 @@ class FactOrAssumptionCompleteRow:
 
 
 @dataclass(kw_only=True)
-class FactsAndAssumptions:
-    def __init__(self, facts: DataFrame[str], assumptions: DataFrame[str]):
+class Facts:
+    def __init__(self, facts: DataFrame[str]):
         self._facts = facts
-        self._assumptions = assumptions
 
     def fact(self, keyname: str) -> float:
         """Statistics about the past. Must be able to give a source for each fact."""
@@ -359,6 +358,12 @@ class FactsAndAssumptions:
     def complete_fact(self, keyname: str) -> FactOrAssumptionCompleteRow:
         r = Row(self._facts, keyname)
         return FactOrAssumptionCompleteRow.of_row(keyname, r)
+
+
+@dataclass(kw_only=True)
+class Assumptions:
+    def __init__(self, assumptions: DataFrame[str]):
+        self._assumptions = assumptions
 
     def complete_ass(self, keyname: str) -> FactOrAssumptionCompleteRow:
         r = Row(self._assumptions, keyname)
@@ -399,11 +404,11 @@ class RefData:
     _ags_master: dict[str, str]
     _area: DataFrame[str]
     _area_kinds: DataFrame[str]
-    _assumptions: DataFrame[str]
+    _assumptions: Assumptions
     _buildings: DataFrame[str]
     _co2path: DataFrame[int]
     _destatis: DataFrame[str]
-    _facts: DataFrame[str]
+    _facts: Facts
     _flats: DataFrame[str]
     _nat_agri: DataFrame[str]
     _nat_organic_agri: DataFrame[str]
@@ -442,7 +447,8 @@ class RefData:
             k: r["description"] for (k, r) in ags_master.to_dict().items()
         }
         self._area_kinds = area_kinds
-        self._facts_and_assumptions = FactsAndAssumptions(facts, assumptions)
+        self._facts = Facts(facts)
+        self._assumptions = Assumptions(assumptions)
         self._buildings = buildings
         self._co2path = co2path
         self._destatis = destatis
@@ -502,14 +508,17 @@ class RefData:
         changes have happened to the relevant commune. Key is AGS value is description"""
         return self._ags_master
 
-    def facts_and_assumptions(self) -> FactsAndAssumptions:
-        return self._facts_and_assumptions
+    def facts(self) -> Facts:
+        return self._facts
+
+    def assumptions(self) -> Assumptions:
+        return self._assumptions
 
     def fact(self, keyname: str) -> float:
-        return self._facts_and_assumptions.fact(keyname)
+        return self._facts.fact(keyname)
 
     def ass(self, keyname: str) -> float:
-        return self._facts_and_assumptions.ass(keyname)
+        return self._assumptions.ass(keyname)
 
     def area(self, ags: str):
         """How many hectare of land are used for what (e.g. farmland, traffic, ...) in each community / administrative district and federal state."""

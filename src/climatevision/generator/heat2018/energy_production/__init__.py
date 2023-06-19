@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass
 
-from ...inputs import Inputs
+from ...refdata import Facts
 from ...common.energy_with_co2e_per_mwh import EnergyWithCO2ePerMWh
 
 from ..energy_base import Energies
@@ -28,9 +28,9 @@ class Production:
     heatpump: EnergyWithCO2ePerMWh
 
 
-def calc_production(inputs: Inputs, energies: Energies) -> Production:
+def calc_production(facts: Facts, energies: Energies) -> Production:
 
-    fact = inputs.fact
+    fact = facts.fact
 
     gas = EnergyWithCO2ePerMWh(
         energy=energies.r18_gas.energy

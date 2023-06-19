@@ -2,8 +2,8 @@
 
 from dataclasses import dataclass
 
-from ...inputs import Inputs
-
+from ...makeentries import Entries
+from ...refdata import Facts
 from ...common.co2_equivalent_emission import CO2eEmission
 
 
@@ -15,19 +15,21 @@ class CO2eFromFermentationOrManure(CO2eEmission):
 
     @classmethod
     def calc_fermen(
-        cls, inputs: Inputs, what: str, alias: str | None = None
+        cls, entries: Entries, facts: Facts, what: str, alias: str | None = None
     ) -> "CO2eFromFermentationOrManure":
+        fact = facts.fact
+
         CO2e_combustion_based = 0.0
         # This line and the next might just be a little too cute.
         # They make the callsite nice and short, but forego any type checking
         # I'll keep it like this for now, but this is one of the places where
         # a better overall design is probably lurking somewhere
-        CO2e_production_based_per_t = inputs.fact(
+        CO2e_production_based_per_t = fact(
             "Fact_A_P_fermen_" + what + "_ratio_CO2e_to_amount_2018"
         )
         # Also don't ask me why we called swine swine except when we called them pig
         amount = getattr(
-            inputs.entries, "a_fermen_" + (what if alias is None else alias) + "_amount"
+            entries, "a_fermen_" + (what if alias is None else alias) + "_amount"
         )
         CO2e_production_based = amount * CO2e_production_based_per_t
         CO2e_total = CO2e_production_based + CO2e_combustion_based
@@ -41,11 +43,11 @@ class CO2eFromFermentationOrManure(CO2eEmission):
 
     @classmethod
     def calc_manure(
-        cls, inputs: Inputs, what: str, amount: float
+        cls, entries: Entries, what: str, amount: float
     ) -> "CO2eFromFermentationOrManure":
         CO2e_combustion_based = 0.0
         CO2e_production_based_per_t = getattr(
-            inputs.entries, "a_manure_" + what + "_ratio_CO2e_to_amount"
+            entries, "a_manure_" + what + "_ratio_CO2e_to_amount"
         )
         CO2e_production_based = amount * CO2e_production_based_per_t
         CO2e_total = CO2e_production_based + CO2e_combustion_based
@@ -60,7 +62,7 @@ class CO2eFromFermentationOrManure(CO2eEmission):
     @classmethod
     def calc_deposition(
         cls,
-        inputs: Inputs,
+        entries: Entries,
         fermen_dairycow: "CO2eFromFermentationOrManure",
         fermen_nondairy: "CO2eFromFermentationOrManure",
         fermen_swine: "CO2eFromFermentationOrManure",
@@ -69,9 +71,7 @@ class CO2eFromFermentationOrManure(CO2eEmission):
         """This computes the deposition of reactive nitrogen of animals (excluding poultry)"""
 
         CO2e_combustion_based = 0.0
-        CO2e_production_based_per_t = (
-            inputs.entries.a_manure_deposition_ratio_CO2e_to_amount
-        )
+        CO2e_production_based_per_t = entries.a_manure_deposition_ratio_CO2e_to_amount
         amount = (
             fermen_dairycow.amount
             + fermen_nondairy.amount

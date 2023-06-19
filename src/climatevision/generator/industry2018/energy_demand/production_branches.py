@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass
 
-from ...inputs import Inputs
+from ...refdata import Facts
 
 
 @dataclass(kw_only=True)
@@ -23,13 +23,13 @@ class ProductionSubBranch(BasicProductionBranch):
     @classmethod
     def calc_sub_branch_by_co2e(
         cls,
-        inputs: Inputs,
+        facts: Facts,
         sub_branch: str,
         branch: str,
         co2e_sub_branch: float,
     ) -> "ProductionSubBranch":
 
-        fact = inputs.fact
+        fact = facts.fact
 
         CO2e_total = co2e_sub_branch
         # calculate production volume from CO2e (with CO2e cb as this factor is > 0 for all industries)
@@ -68,13 +68,13 @@ class ProductionSubBranch(BasicProductionBranch):
     @classmethod
     def calc_sub_branch_by_energy(
         cls,
-        inputs: Inputs,
+        facts: Facts,
         sub_branch: str,
         branch: str,
         energy_consumption_branch: float,
     ) -> "ProductionSubBranch":
 
-        fact = inputs.fact
+        fact = facts.fact
 
         pct_energy = fact("Fact_I_P_" + branch + "_fec_pct_of_" + sub_branch)
         energy = energy_consumption_branch * pct_energy
@@ -119,13 +119,13 @@ class ProductionSubBranchCO2viaFEC(BasicProductionBranch):
     @classmethod
     def calc_sub_branch(
         cls,
-        inputs: Inputs,
+        facts: Facts,
         sub_branch: str,
         branch: str,
         energy_consumption_branch: float,
     ) -> "ProductionSubBranchCO2viaFEC":
 
-        fact = inputs.fact
+        fact = facts.fact
 
         pct_energy = fact("Fact_I_P_" + branch + "_fec_pct_of_" + sub_branch)
         energy = energy_consumption_branch * pct_energy
@@ -167,10 +167,10 @@ class ExtraEmission:
 
     @classmethod
     def calc_extra_emission(
-        cls, inputs: Inputs, energy_consumption: float, branch: str, sub_branch: str
+        cls, facts: Facts, energy_consumption: float, branch: str, sub_branch: str
     ) -> "ExtraEmission":
 
-        fact = inputs.fact
+        fact = facts.fact
 
         CO2e_production_based_per_MWh = fact(
             "Fact_I_P_" + branch + "_" + sub_branch + "_ratio_CO2e_pb_to_fec"
