@@ -57,7 +57,7 @@ class Landfilling:
             / entries.m_population_nat
         )
         CO2e_total = CO2e_pb
-        change_CO2e_t = w18.p_landfilling.CO2e_total - CO2e_total
+        change_CO2e_t = CO2e_total - w18.p_landfilling.CO2e_total
         change_CO2e_pct = change_CO2e_t / w18.p_landfilling.CO2e_total
 
         CO2e_total_2021_estimated = w18.p_landfilling.CO2e_total * fact(
@@ -114,7 +114,7 @@ class Organic_treatment:
         CO2e_pb_per_t = ass("Ass_W_P_organic_treatment_CO2e_pb_2050_per_prodvol")
         CO2e_pb = prod_volume * CO2e_pb_per_t
         CO2e_total = CO2e_pb
-        change_CO2e_t = w18.p_organic_treatment.CO2e_total - CO2e_total
+        change_CO2e_t = CO2e_total - w18.p_organic_treatment.CO2e_total
         change_CO2e_pct = change_CO2e_t / w18.p_organic_treatment.CO2e_total
 
         CO2e_total_2021_estimated = w18.p_organic_treatment.CO2e_total * fact(
@@ -196,7 +196,7 @@ class Wastewater:
         change_energy_MWh = energy - w18.p_wastewater.energy
         change_energy_pct = change_energy_MWh / w18.p_wastewater.energy
 
-        change_CO2e_t = w18.p_organic_treatment.CO2e_total - CO2e_total
+        change_CO2e_t = CO2e_total - w18.p_organic_treatment.CO2e_total
         change_CO2e_pct = div(change_CO2e_t, w18.p_organic_treatment.CO2e_total)
 
         CO2e_total_2021_estimated = w18.p_organic_treatment.CO2e_total * fact(

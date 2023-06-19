@@ -238,6 +238,7 @@ def calculate(inputs: Inputs, inputs_germany: Inputs) -> Result:
         l18=l18,
         r18=r18,
         t18=t18,
+        w18=w18,
     )
 
     print("Waste2030_calcPyr", file=stderr)
@@ -271,6 +272,7 @@ def calculate(inputs: Inputs, inputs_germany: Inputs) -> Result:
         l18=l18,
         r18=r18,
         t18=t18,
+        w18=w18,
         a30=a30,
         b30=b30,
         e30=e30,
@@ -280,6 +282,7 @@ def calculate(inputs: Inputs, inputs_germany: Inputs) -> Result:
         l30=l30,
         r30=r30,
         t30=t30,
+        w30=w30,
     )
 
     print("Bisko_calc", file=stderr)
