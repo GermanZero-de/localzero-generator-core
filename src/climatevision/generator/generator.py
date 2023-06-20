@@ -208,6 +208,9 @@ def calculate(inputs: Inputs, inputs_germany: Inputs) -> Result:
         e30_p_local_biomass_cogen_energy=e30_p_local_biomass_cogen.energy,
     )
 
+    print("calc waste 2030 ")
+    wastelines = WasteLines.calc_waste_lines(inputs=inputs, w18=w18)
+
     print("Fuels2030_calc", file=stderr)
     f30 = fuels2030.calc(
         entries,
@@ -220,12 +223,9 @@ def calculate(inputs: Inputs, inputs_germany: Inputs) -> Result:
         i30=i30,
         r30=r30,
         t30=t30,
+        wastelines=wastelines,
     )
 
-    print("calc waste 2030 ")
-    wastelines = WasteLines.calc_waste_lines(inputs=inputs, w18=w18)
-
-    # TODO: Include demand from waste
     print("Electricity2030_calc", file=stderr)
     e30 = electricity2030.calc(
         inputs,

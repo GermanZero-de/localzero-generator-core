@@ -11,6 +11,7 @@ from ...heat2030.h30 import H30
 from ...industry2030.i30 import I30
 from ...residences2030.r30 import R30
 from ...transport2030.t30 import T30
+from ...waste2030 import WasteLines
 
 from ..energy_demand import EnergyDemand
 
@@ -49,6 +50,7 @@ def calc_production(
     i30: I30,
     r30: R30,
     t30: T30,
+    wastelines: WasteLines,
 ) -> Production:
 
     fact = facts.fact
@@ -121,6 +123,7 @@ def calc_production(
                 + i30.p.demand_electricity
                 + t30.t.transport.demand_electricity
                 + a30.p_operation.demand_electricity
+                + wastelines.p_wastewater.demand_electricity
                 + petrol.demand_electricity
                 + jetfuel.demand_electricity
                 + diesel.demand_electricity
