@@ -88,10 +88,23 @@ class GeneratorRpcs:
             lambda: overridables.sections_with_defaults(self.rd, ags, year)
         )
 
+    def info(self, key: str) -> jsonrpcserver.Result:
+        if key.startswith("Fact_"):
+            return self.wrap_result(
+                lambda: dataclasses.asdict(self.rd.facts().complete_fact(key))
+            )
+        elif key.startswith("Ass_"):
+            return self.wrap_result(
+                lambda: dataclasses.asdict(self.rd.assumptions().complete_ass(key))
+            )
+        else:
+            return self.wrap_result(lambda: None)
+
     def methods(self) -> jsonrpcserver.methods.Methods:
         return {
             "make-entries": self.make_entries,
             "get-overridables": self.get_overridables,
             "list-ags": self.list_ags,
             "calculate": self.calculate,
+            "info": self.info,
         }

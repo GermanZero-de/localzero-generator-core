@@ -1,4 +1,4 @@
-port module Main exposing (Model, Msg(..), init, main, subscriptions, update, view)
+port module Main exposing (..)
 
 --import Element.Background as Background
 
@@ -196,6 +196,7 @@ type alias DisplayedTrace =
     , value : Value
     , trace : Value.Trace
     , expanded : Set Path
+    , showInfo : Maybe GeneratorRpc.Info
     }
 
 
@@ -264,6 +265,13 @@ toClipboardData lens allRuns =
                 |> Encode.list (Encode.list encodeCell)
 
 
+initiateInfo : String -> Model -> ( Model, Cmd Msg )
+initiateInfo name model =
+    ( model -- TODO: Think about showing a loading spinner
+    , GeneratorRpc.info { name = name, toMsg = GotInfo }
+    )
+
+
 initiateCalculate : Maybe RunId -> Run.Inputs -> Run.Entries -> Run.Overrides -> Model -> ( Model, Cmd Msg )
 initiateCalculate maybeNdx inputs entries overrides model =
     ( { model | showModal = Just Loading }
@@ -327,11 +335,14 @@ type Msg
       GotGeneratorResult (Maybe RunId) Run.Inputs Run.Entries Run.Overrides (JsonRpc.RpcData (Tree Value.MaybeWithTrace))
     | GotEntries (Maybe RunId) Run.Inputs Run.Overrides (JsonRpc.RpcData Run.Entries)
     | GotListAgs (JsonRpc.RpcData (List GeneratorRpc.AgsData))
+    | GotInfo (JsonRpc.RpcData GeneratorRpc.Info)
       -- trace handling
     | DisplayTrace RunId Path Value Value.Trace
     | CloseTrace Int -- Number of steps to pop
     | ExpandInTrace Path
     | CollapseInTrace Path
+    | FactOrAssTraceInfoRequest String
+    | CloseInfo
       -- Override handling
     | AddOrUpdateOverrideClicked RunId String Float
     | RemoveOverrideClicked RunId String
@@ -539,7 +550,7 @@ update msg model =
 
         -- |> withNoCmd
         DisplayTrace runId path value trace ->
-            { model | displayedTrace = { runId = runId, path = path, value = value, trace = trace, expanded = Set.empty } :: model.displayedTrace }
+            { model | displayedTrace = { runId = runId, path = path, value = value, trace = trace, expanded = Set.empty, showInfo = Nothing } :: model.displayedTrace }
                 |> withNoCmd
 
         ExpandInTrace path ->
@@ -553,6 +564,13 @@ update msg model =
         CloseTrace n ->
             { model | displayedTrace = List.drop n model.displayedTrace }
                 |> withNoCmd
+
+        CloseInfo ->
+            { model | displayedTrace = mapHead (\dt -> { dt | showInfo = Nothing }) model.displayedTrace }
+                |> withNoCmd
+
+        FactOrAssTraceInfoRequest name ->
+            initiateInfo name model
 
         AddRowToLensTableClicked id num ->
             model
@@ -640,6 +658,24 @@ update msg model =
                 JsonRpc.HttpErr _ ->
                     model
                         |> withErrorMessage "Failed to call list-ags rpc"
+                            "HTTP failed"
+
+        GotInfo response ->
+            case JsonRpc.flat response of
+                JsonRpc.RpcResult info ->
+                    { model
+                        | displayedTrace = mapHead (\dt -> { dt | showInfo = Just info }) model.displayedTrace
+                    }
+                        |> withNoCmd
+
+                JsonRpc.RpcErr _ ->
+                    model
+                        |> withErrorMessage "Failed to call info rpc"
+                            "rpc failed"
+
+                JsonRpc.HttpErr _ ->
+                    model
+                        |> withErrorMessage "Failed to call info rpc"
                             "HTTP failed"
 
         GotEntries maybeRunId inputs overrides response ->
@@ -2749,7 +2785,7 @@ viewTraceAsBlocks expanded runId allRuns t =
                 , Border.color Styling.modalDim
                 , width fill
                 ]
-                [ nameText fact_or_ass
+                [ el [ Events.onClick (FactOrAssTraceInfoRequest fact_or_ass) ] <| nameText fact_or_ass
                 , el [ Element.alignRight ] <| viewValue (Float value)
                 ]
 
@@ -2820,8 +2856,18 @@ viewTraceAsBlocks expanded runId allRuns t =
                 ]
 
 
+viewInfo : GeneratorRpc.Info -> Element Msg
+viewInfo { label, description, value, unit, rationale, reference, link } =
+    column [ width fill, height fill, padding sizes.medium, spacing sizes.small, Events.onClick CloseInfo ]
+        [ paragraph fonts.explorer [text label, text " -- ", text description]
+        , row ( spacing sizes.small :: fonts.explorerValues) [ text (formatGermanNumber value), text unit ]
+        , paragraph fonts.explorerItems [text rationale]
+        , el fonts.explorerItems (text reference)
+        , Element.link fonts.explorerItems { url = link, label = text link }
+        ]
+
 viewDisplayedTrace : AllRuns -> List Path -> DisplayedTrace -> Element Msg
-viewDisplayedTrace allRuns breadcrumbs { runId, path, expanded, value, trace } =
+viewDisplayedTrace allRuns breadcrumbs { runId, path, expanded, value, trace, showInfo } =
     let
         breadcrumbsWithCloseActions =
             breadcrumbs
@@ -2845,8 +2891,12 @@ viewDisplayedTrace allRuns breadcrumbs { runId, path, expanded, value, trace } =
                 )
             , iconButton FeatherIcons.x (CloseTrace (List.length breadcrumbs + 1))
             ]
-        , el [] <|
-            viewTraceAsBlocks (Set.insert path expanded) runId allRuns (Value.NameTrace { name = String.join "." path })
+        ,
+            case showInfo of
+                Nothing ->
+                    el [] <| viewTraceAsBlocks (Set.insert path expanded) runId allRuns (Value.NameTrace { name = String.join "." path })
+                Just info ->
+                    viewInfo info
         ]
 
 

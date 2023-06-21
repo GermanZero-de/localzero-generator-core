@@ -1,4 +1,4 @@
-module GeneratorRpc exposing (AgsData, calculate, listAgs, makeEntries)
+module GeneratorRpc exposing (AgsData, Info, calculate, info, listAgs, makeEntries)
 
 import Json.Decode as Decode
 import Json.Encode as Encode
@@ -11,6 +11,29 @@ import Value
 type alias AgsData =
     { ags : String, desc : String, short : String }
 
+type alias Info =
+    {
+        label: String,
+        group: String,
+        description: String,
+        value: Float,
+        unit: String,
+        rationale: String,
+        reference: String,
+        link: String
+    }
+
+infoDecoder : Decode.Decoder Info
+infoDecoder =
+    Decode.map8 Info
+        (Decode.field "label" Decode.string)
+        (Decode.field "group" Decode.string)
+        (Decode.field "description" Decode.string)
+        (Decode.field "value" Decode.float)
+        (Decode.field "unit" Decode.string)
+        (Decode.field "rationale" Decode.string)
+        (Decode.field "reference" Decode.string)
+        (Decode.field "link" Decode.string)
 
 apiUrl : String
 apiUrl =
@@ -68,4 +91,16 @@ calculate { inputs, overrides, toMsg } =
             ]
         }
         (Tree.decoder (Value.maybeWithTraceDecoder "result"))
+        toMsg
+
+info : { name: String, toMsg : JsonRpc.RpcData Info -> msg } -> Cmd msg
+info { name, toMsg } =
+    JsonRpc.call
+        { url = apiUrl
+        , token = Nothing
+        , method = "info"
+        , params =
+            [ ( "key", Encode.string name)]
+        }
+        infoDecoder
         toMsg
