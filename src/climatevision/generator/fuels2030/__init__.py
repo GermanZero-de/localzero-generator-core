@@ -14,7 +14,7 @@ from ..heat2030.h30 import H30
 from ..industry2030.i30 import I30
 from ..residences2030.r30 import R30
 from ..transport2030.t30 import T30
-
+from ..waste2030 import WasteLines
 from .f30 import F30
 from .f import F
 from .energy_demand import EnergyDemand
@@ -33,10 +33,11 @@ def calc(
     i30: I30,
     r30: R30,
     t30: T30,
+    wastelines: WasteLines,
 ) -> F30:
 
     production = energy_production.calc_production(
-        entries, facts, assumptions, f18, a30, b30, h30, i30, r30, t30
+        entries, facts, assumptions, f18, a30, b30, h30, i30, r30, t30, wastelines
     )
     demand = energy_demand.calc_demand(
         a30, b30, i30, r30, t30, production.hydrogen_reconv
