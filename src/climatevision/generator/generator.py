@@ -56,6 +56,7 @@ from . import lulucf2030
 from . import industry2030
 
 from . import methodology183x
+from . import yearlycarbonenergycosts
 
 
 def _convert_item(v: object) -> object:
@@ -118,6 +119,8 @@ class Result:
 
     m183X: M183X
     bisko: Bisko
+
+    ycec: yearlycarbonenergycosts.YCEC
 
     def result_dict(self):
         return dataclass_to_result_dict(self)
@@ -317,6 +320,10 @@ def calculate(inputs: Inputs, inputs_germany: Inputs) -> Result:
         h18=h18,
     )
 
+    ycec = yearlycarbonenergycosts.calc(
+        a18=a18, b18=b18, e18=e18, h18=h18, i18=i18, r18=r18, t18=t18
+    )
+
     return Result(
         r18=r18,
         b18=b18,
@@ -340,6 +347,7 @@ def calculate(inputs: Inputs, inputs_germany: Inputs) -> Result:
         w30=w30,
         m183X=m183X,
         bisko=bisko,
+        ycec=ycec,
     )
 
 
