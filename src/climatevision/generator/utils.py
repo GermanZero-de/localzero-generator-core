@@ -26,3 +26,11 @@ def element_wise_plus(a: T, b: T) -> T:
     Sadly that is hard to express in python's type system for now (3.10)."""
     fields_of_a = fields(a)  # type: ignore (see comment above)
     return type(a)(*(getattr(a, f.name) + getattr(b, f.name) for f in fields_of_a))
+
+
+def convert_MWh_to_TJ(MWh: float) -> float:
+    """1 W = 1 J/s
+    1 kWh = 1000 Wh = 1000 J/s * 3600 s = 3.6 MJ
+    1 MWh = 1000 kWh = 3.6 GJ
+    """
+    return MWh * 0.0036

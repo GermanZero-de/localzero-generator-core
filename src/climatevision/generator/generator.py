@@ -321,7 +321,7 @@ def calculate(inputs: Inputs, inputs_germany: Inputs) -> Result:
     )
 
     ycec = yearlycarbonenergycosts.calc(
-        a18=a18, b18=b18, e18=e18, h18=h18, i18=i18, r18=r18, t18=t18
+        inputs, a18=a18, b18=b18, e18=e18, h18=h18, i18=i18, r18=r18, t18=t18
     )
 
     return Result(
