@@ -89,18 +89,17 @@ sizes =
     , tableGap = 5
     , medium = 8
     , large = 12
-    , tableFontSize = 14
-    , fontSize = 24
+    , tableFontSize = 12
+    , fontSize = 20
     }
 
 
 fonts =
     { explorer = [ Font.size sizes.fontSize ]
-    , explorerItems = [ Font.size 16 ]
-    , explorerValues = [ Font.size 16, Font.family [ Font.monospace ] ]
-    , explorerNodeSize = [ Font.size 16 ]
+    , explorerItems = [ Font.size 14 ]
+    , explorerValues = [ Font.size 14, Font.family [ Font.monospace ] ]
+    , explorerNodeSize = [ Font.size 14 ]
     , table = [ Font.size sizes.tableFontSize ]
-    , smallTextButton = [ Font.size 12 ]
     }
 
 

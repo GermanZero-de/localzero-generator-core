@@ -2406,18 +2406,21 @@ viewValueSetAsClassicTable shortPathLabels lensId valueSet =
                         , view =
                             \path ->
                                 let
+                                    highlight =
+                                        Events.onClick (Highlight runId path)
+
                                     value =
                                         case Dict.get ( runId, path ) valueSet.values |> Maybe.map .value of
                                             Just (Float f) ->
-                                                el (Font.alignRight :: fonts.explorerValues) <|
+                                                el (highlight :: Font.alignRight :: fonts.explorerValues) <|
                                                     text (formatGermanNumber f)
 
                                             Just (String s) ->
-                                                el (Font.alignRight :: fonts.explorerValues) <|
+                                                el (highlight :: Font.alignRight :: fonts.explorerValues) <|
                                                     text s
 
                                             Just Null ->
-                                                el (Font.alignRight :: Font.bold :: fonts.explorerValues) <|
+                                                el (highlight :: Font.alignRight :: Font.bold :: fonts.explorerValues) <|
                                                     text "bold"
 
                                             Nothing ->
