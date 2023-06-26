@@ -317,11 +317,9 @@ def calculate(inputs: Inputs, inputs_germany: Inputs) -> Result:
         b18=b18,
         i18=i18,
         t18=t18,
-        f18=f18,
         l18=l18,
         a18=a18,
         e18=e18,
-        h18=h18,
     )
 
     return Result(
