@@ -5,7 +5,8 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/hh_ghd.html
 
 # pyright: strict
 
-from ..inputs import Inputs
+from ..makeentries import Entries
+from ..refdata import Facts, Assumptions
 from ..utils import div, MILLION
 from ..business2018.b18 import B18
 from ..residences2018.r18 import R18
@@ -36,15 +37,16 @@ from . import energy_general
 
 # Berechnungsfunktion im Sektor GHD für 2030
 def calc(
-    inputs: Inputs,
+    entries: Entries,
+    facts: Facts,
+    assumptions: Assumptions,
     *,
     b18: B18,
     r18: R18,
     r30: R30,
 ) -> B30:
-    fact = inputs.fact
-    ass = inputs.ass
-    entries = inputs.entries
+    fact = facts.fact
+    ass = assumptions.ass
 
     Kalkulationszeitraum = entries.m_duration_target
 
@@ -759,7 +761,7 @@ def calc(
         * fact("Fact_M_cost_per_CO2e_2020")
     )
 
-    general = energy_general.calc_general(inputs=inputs, b18=b18)
+    general = energy_general.calc_general(entries, facts, assumptions, b18=b18)
 
     b.invest = general.g.invest + p.invest + s.invest
     b.invest_com = general.g.invest_com + p.invest_com + s.invest_com

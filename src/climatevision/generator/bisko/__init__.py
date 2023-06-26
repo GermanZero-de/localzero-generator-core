@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass
 
-from ..inputs import Inputs
+from ..refdata import Facts, Assumptions
 from ..utils import div
 from ..agri2018.a18 import A18
 from ..electricity2018.e18 import E18
@@ -43,7 +43,8 @@ class Bisko:
     @classmethod
     def calc(
         cls,
-        inputs: Inputs,
+        facts: Facts,
+        assumptions: Assumptions,
         *,
         a18: A18,
         b18: B18,
@@ -57,17 +58,15 @@ class Bisko:
     ) -> "Bisko":
 
         priv_residences_bisko = BiskoPrivResidences.calc_priv_residences_bisko(
-            inputs=inputs, r18=r18, h18=h18, f18=f18, e18=e18
+            facts, r18=r18, h18=h18, f18=f18, e18=e18
         )
         business_bisko = BiskoBusiness.calc_business_bisko(
-            inputs=inputs, b18=b18, e18=e18, a18=a18
+            facts, b18=b18, e18=e18, a18=a18
         )
         transport_bisko = BiskoTransport.calc_transport_bisko(
-            inputs=inputs, t18=t18, e18=e18
+            facts, assumptions, t18=t18, e18=e18
         )
-        industry_bisko = BiskoIndustry.calc_industry_bisko(
-            inputs=inputs, i18=i18, e18=e18
-        )
+        industry_bisko = BiskoIndustry.calc_industry_bisko(facts, i18=i18, e18=e18)
         agri_bisko = BiskoAgriculture.calc_bisko_agri(a18=a18)
         lulucf_bisko = BiskoLULUCF.calc_bisko_lulucf(l18=l18)
 

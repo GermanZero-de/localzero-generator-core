@@ -6,7 +6,9 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/agriculture.html
 # pyright: strict
 
 from dataclasses import dataclass
-from ..inputs import Inputs
+
+from ..makeentries import Entries
+from ..refdata import Facts
 
 
 @dataclass(kw_only=True)
@@ -21,13 +23,12 @@ class WasteBranch:
     @classmethod
     def calc(
         cls,
-        inputs: Inputs,
+        entries: Entries,
         use_prod_vol: bool,
         CO2e_pb_per_t: float,
         prod_vol_per_cap: float = 0,
         energy: float = 0,
     ):
-        entries = inputs.entries
         prod_vol = entries.m_population_com_2018 * prod_vol_per_cap
         if use_prod_vol:
             CO2e_pb = CO2e_pb_per_t * prod_vol
@@ -115,29 +116,27 @@ class W18:
     s_elec: EnergySupplyDetail
 
     @classmethod
-    def calc(cls, inputs: Inputs):
-
-        entries = inputs.entries
-        fact = inputs.fact
+    def calc(cls, entries: Entries, facts: Facts):
+        fact = facts.fact
 
         s_elec = EnergySupplyDetail.calc(energy=entries.w_elec_fec, CO2e_cb_per_MWh=0)
         s = EnergySupply.calc(s_elec)
 
         p_landfilling = WasteBranch.calc(
-            inputs=inputs,
+            entries=entries,
             energy=0,
             use_prod_vol=False,
             CO2e_pb_per_t=fact("Fact_W_P_landfilling_CO2e_pb_2018_per_capita"),
         )
         p_organic_treatment = WasteBranch.calc(
-            inputs=inputs,
+            entries=entries,
             energy=0,
             use_prod_vol=True,
             prod_vol_per_cap=fact("Fact_W_P_organic_treatment_prodvol_2018_per_capita"),
             CO2e_pb_per_t=fact("Fact_W_P_organic_treatment_CO2e_pb_2018_per_prodvol"),
         )
         p_wastewater = WasteBranch.calc(
-            inputs=inputs,
+            entries=entries,
             energy=entries.w_elec_fec,
             use_prod_vol=True,
             prod_vol_per_cap=fact("Fact_W_P_wastewater_prodvol_2018_per_capita"),

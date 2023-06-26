@@ -5,7 +5,8 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/lulucf.html
 
 # pyright: strict
 
-from ..inputs import Inputs
+from ..makeentries import Entries
+from ..refdata import Facts, Assumptions
 from ..utils import div
 from ..lulucf2018.l18 import L18
 
@@ -13,7 +14,7 @@ from .l30 import L30
 from .dataclasses import LColVars2030
 
 
-def calc(inputs: Inputs, *, l18: L18) -> L30:
+def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, l18: L18) -> L30:
     """Calculates lulucf. Note that this calculation consists of two steps, because we need to
     compute most of lulucf early for other sectors calculations, but can only finish the
     lulucf calculations when those sectors are done.
@@ -21,9 +22,8 @@ def calc(inputs: Inputs, *, l18: L18) -> L30:
     Most notably the pyr sector and most of l are computed in lulucf2030_pyr.calc
     """
 
-    fact = inputs.fact
-    ass = inputs.ass
-    entries = inputs.entries
+    fact = facts.fact
+    ass = assumptions.ass
 
     l = LColVars2030()
     g = LColVars2030()

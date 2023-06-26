@@ -9,10 +9,11 @@ Documentation:
 
 
 from dataclasses import dataclass
-from ..inputs import Inputs
-from ..utils import div
 import math
 
+from ..makeentries import Entries
+from ..refdata import Facts, Assumptions
+from ..utils import div
 from ..waste2018 import W18
 
 
@@ -30,9 +31,15 @@ class EnergySupplyDetail:
     cost_climate_saved: float
 
     @classmethod
-    def calc(cls, inputs: Inputs, energy: float, CO2e_cb_per_MWh: float, w18: W18):
-        fact = inputs.fact
-        entries = inputs.entries
+    def calc(
+        cls,
+        entries: Entries,
+        facts: Facts,
+        energy: float,
+        CO2e_cb_per_MWh: float,
+        w18: W18,
+    ):
+        fact = facts.fact
 
         CO2e_cb = CO2e_cb_per_MWh * energy
         CO2e_total = CO2e_cb
@@ -73,10 +80,9 @@ class Landfilling:
     cost_climate_saved: float
 
     @classmethod
-    def calc(cls, inputs: Inputs, w18: W18):
-        entries = inputs.entries
-        fact = inputs.fact
-        ass = inputs.ass
+    def calc(cls, entries: Entries, facts: Facts, assumptions: Assumptions, w18: W18):
+        fact = facts.fact
+        ass = assumptions.ass
 
         # In germany since 2005 we have stricter standards for waste separation / cover on
         # land fills. That means newer landfills produce less methan.
@@ -142,10 +148,9 @@ class Organic_treatment:
     demand_emplo_new: float
 
     @classmethod
-    def calc(cls, inputs: Inputs, w18: W18):
-        entries = inputs.entries
-        fact = inputs.fact
-        ass = inputs.ass
+    def calc(cls, entries: Entries, facts: Facts, assumptions: Assumptions, w18: W18):
+        fact = facts.fact
+        ass = assumptions.ass
 
         prod_volume = entries.m_population_com_203X * ass(
             "Ass_W_P_organic_treatment_prodvol_2050_per_capita"
@@ -218,10 +223,9 @@ class Wastewater:
     demand_electricity: float
 
     @classmethod
-    def calc(cls, inputs: Inputs, w18: W18):
-        entries = inputs.entries
-        fact = inputs.fact
-        ass = inputs.ass
+    def calc(cls, entries: Entries, facts: Facts, assumptions: Assumptions, w18: W18):
+        fact = facts.fact
+        ass = assumptions.ass
 
         prod_volume = entries.m_population_com_203X * ass(
             "Ass_W_P_wastewater_prodvol_2050_per_capita"
@@ -276,15 +280,19 @@ class WasteLines:
     s_elec: EnergySupplyDetail
 
     @classmethod
-    def calc_waste_lines(cls, inputs: Inputs, w18: W18):
-        p_landfilling = Landfilling.calc(inputs=inputs, w18=w18)
-        p_organic_treatment = Organic_treatment.calc(inputs=inputs, w18=w18)
-        p_wastewater = Wastewater.calc(inputs=inputs, w18=w18)
+    def calc_waste_lines(
+        cls, entries: Entries, facts: Facts, assumptions: Assumptions, w18: W18
+    ):
+        p_landfilling = Landfilling.calc(entries, facts, assumptions, w18=w18)
+        p_organic_treatment = Organic_treatment.calc(
+            entries, facts, assumptions, w18=w18
+        )
+        p_wastewater = Wastewater.calc(entries, facts, assumptions, w18=w18)
 
         electricity_demand = p_wastewater.demand_electricity
 
         s_elec = EnergySupplyDetail.calc(
-            inputs=inputs, w18=w18, energy=electricity_demand, CO2e_cb_per_MWh=0
+            entries, facts, w18=w18, energy=electricity_demand, CO2e_cb_per_MWh=0
         )
 
         return cls(

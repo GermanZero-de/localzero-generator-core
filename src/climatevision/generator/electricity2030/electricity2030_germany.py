@@ -1,6 +1,7 @@
 # pyright: strict
 
-from ..inputs import Inputs
+from ..makeentries import Entries
+from ..refdata import Facts, Assumptions
 from ..utils import div, MILLION
 from ..electricity2018.e18 import E18
 from ..residences2018.r18 import R18
@@ -35,7 +36,9 @@ from .electricity2030_core import (
 
 # Berechnungsfunktion im Sektor E für 203X
 def calc(
-    inputs: Inputs,
+    entries: Entries,
+    facts: Facts,
+    assumptions: Assumptions,
     *,
     e18: E18,
     r18: R18,
@@ -51,9 +54,8 @@ def calc(
     p_local_biomass_cogen: EColVars2030,
     p_local_biomass: EColVars2030,
 ) -> E30:
-    fact = inputs.fact
-    ass = inputs.ass
-    entries = inputs.entries
+    fact = facts.fact
+    ass = assumptions.ass
 
     Kalkulationszeitraum = entries.m_duration_target
     KlimaneutraleJahre = entries.m_duration_neutral
@@ -84,26 +86,34 @@ def calc(
     p_renew_pv_agri = EColVars2030()
     p_renew_wind = EColVars2030()
     p_renew_wind_onshore = EColVars2030()
-    p_renew_wind_offshore = calc_renew_wind_offshore(inputs, d_energy=0)
+    p_renew_wind_offshore = calc_renew_wind_offshore(
+        entries, facts, assumptions, d_energy=0
+    )
     p_renew_biomass = EColVars2030()
     p_renew_hydro = EColVars2030()
     p_renew_reverse = EColVars2030()
     p_local = EColVars2030()
     p_local_pv = EColVars2030()
-    p_local_pv_roof = calc_production_local_pv_roof(inputs, e18=e18, b18=b18, r18=r18)
+    p_local_pv_roof = calc_production_local_pv_roof(
+        entries, assumptions, e18=e18, b18=b18, r18=r18
+    )
     p_local_pv_facade = calc_production_local_pv_facade(
-        inputs, e18=e18, b18=b18, r18=r18
+        entries, assumptions, e18=e18, b18=b18, r18=r18
     )
     p_local_pv_park = calc_production_local_pv_park(
-        inputs, e18=e18, local_pv_roof_full_load_hour=p_local_pv_roof.full_load_hour
+        entries,
+        assumptions,
+        e18=e18,
+        local_pv_roof_full_load_hour=p_local_pv_roof.full_load_hour,
     )
     p_local_pv_agri = calc_production_local_pv_agri(
-        inputs,
+        entries,
+        assumptions,
         e18=e18,
         local_pv_park_full_load_hour=p_local_pv_park.full_load_hour,
         local_pv_roof_full_load_hour=p_local_pv_roof.full_load_hour,
     )
-    p_local_hydro = calc_production_local_hydro(inputs, e18=e18)
+    p_local_hydro = calc_production_local_hydro(entries, facts, assumptions, e18=e18)
     p_local_surplus = Energy()
 
     """S T A R T"""
@@ -146,24 +156,26 @@ def calc(
     p_renew.invest_pa_com = 0
     p_renew.invest_com = 0
     p_fossil_nuclear = calc_stop_production_by_fossil_fuels(
-        inputs, e18_production=e18.p_fossil_nuclear
+        entries, facts, e18_production=e18.p_fossil_nuclear
     )
     p_fossil_coal_brown = calc_stop_production_by_fossil_fuels(
-        inputs, e18_production=e18.p_fossil_coal_brown
+        entries, facts, e18_production=e18.p_fossil_coal_brown
     )
     p_fossil_coal_black = calc_stop_production_by_fossil_fuels(
-        inputs, e18_production=e18.p_fossil_coal_black
+        entries, facts, e18_production=e18.p_fossil_coal_black
     )
     p_fossil_gas = calc_stop_production_by_fossil_fuels(
-        inputs, e18_production=e18.p_fossil_gas
+        entries, facts, e18_production=e18.p_fossil_gas
     )
     p_fossil_ofossil = calc_stop_production_by_fossil_fuels(
-        inputs, e18_production=e18.p_fossil_ofossil
+        entries, facts, e18_production=e18.p_fossil_ofossil
     )
     p_renew_pv.CO2e_total = 0
     p_renew_wind.CO2e_total = 0
 
-    p_renew_geoth = calc_production_renewable_geothermal(inputs, d_energy=0)
+    p_renew_geoth = calc_production_renewable_geothermal(
+        entries, facts, assumptions, d_energy=0
+    )
     # Not all values are calculated in the function, so we need to calculate them here
     p_renew_geoth.energy = (
         (p_renew_geoth.power_to_be_installed + p_renew_geoth.power_installed)
@@ -248,7 +260,9 @@ def calc(
         * entries.m_population_com_2018
         / entries.m_population_nat
     )
-    p_local_wind_onshore = calc_production_local_wind_onshore(inputs, e18=e18)
+    p_local_wind_onshore = calc_production_local_wind_onshore(
+        entries, facts, assumptions, e18=e18
+    )
     p_local_biomass.cost_fuel_per_MWh = ass(
         "Ass_E_P_local_biomass_material_costs"
     ) / ass("Ass_E_P_local_biomass_efficiency")

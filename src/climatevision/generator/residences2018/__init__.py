@@ -5,7 +5,8 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/hh_ghd.html
 
 # pyright: strict
 
-from ..inputs import Inputs
+from ..makeentries import Entries
+from ..refdata import Facts
 from ..utils import div, MILLION
 from ..common.energy import EnergyPerM2PctCommune
 
@@ -13,9 +14,8 @@ from .r18 import R18
 from .dataclasses import Vars1, Vars2, Vars3, Vars4, Vars6, Vars7, Vars8, Vars9
 
 
-def calc(inputs: Inputs) -> R18:
-    fact = inputs.fact
-    entries = inputs.entries
+def calc(entries: Entries, facts: Facts) -> R18:
+    fact = facts.fact
 
     ### P - Section ###
     r = Vars1()

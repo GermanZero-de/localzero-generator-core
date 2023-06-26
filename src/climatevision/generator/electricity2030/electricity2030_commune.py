@@ -1,6 +1,7 @@
 # pyright: strict
 
-from ..inputs import Inputs
+from ..makeentries import Entries
+from ..refdata import Facts, Assumptions
 from ..utils import div, MILLION
 from ..electricity2018.e18 import E18
 from ..residences2018.r18 import R18
@@ -34,14 +35,15 @@ from .electricity2030_core import (
 
 
 def calc_production_local_biomass_stage2(
-    inputs: Inputs,
+    entries: Entries,
+    facts: Facts,
+    assumptions: Assumptions,
     *,
     e18: E18,
     p_local_biomass: EColVars2030,
 ) -> None:
-    entries = inputs.entries
-    ass = inputs.ass
-    fact = inputs.fact
+    fact = facts.fact
+    ass = assumptions.ass
     Kalkulationszeitraum = entries.m_duration_target
     KlimaneutraleJahre = entries.m_duration_neutral
 
@@ -114,10 +116,11 @@ def calc_production_local_biomass_stage2(
     )
 
 
-def calc_production_renewable_reverse(inputs: Inputs, *, d_energy: float):
-    entries = inputs.entries
-    ass = inputs.ass
-    fact = inputs.fact
+def calc_production_renewable_reverse(
+    entries: Entries, facts: Facts, assumptions: Assumptions, *, d_energy: float
+):
+    fact = facts.fact
+    ass = assumptions.ass
 
     Kalkulationszeitraum = entries.m_duration_target
     p_renew_reverse = EColVars2030()
@@ -166,18 +169,20 @@ def calc_production_renewable_reverse(inputs: Inputs, *, d_energy: float):
 
 
 def calc_energy_demand(
-    inputs: Inputs, *, energy: float, energy_18: float, cost_fuel_per_MWh: str
+    facts: Facts, *, energy: float, energy_18: float, cost_fuel_per_MWh: str
 ) -> EnergyDemandWithCostFuel:
     d = EnergyDemandWithCostFuel()
     d.energy = energy
-    d.cost_fuel_per_MWh = inputs.fact(cost_fuel_per_MWh)
+    d.cost_fuel_per_MWh = facts.fact(cost_fuel_per_MWh)
     d.change_energy_MWh = energy - energy_18
     d.change_energy_pct = div(d.change_energy_MWh, energy_18)
     return d
 
 
 def calc(
-    inputs: Inputs,
+    entries: Entries,
+    facts: Facts,
+    assumptions: Assumptions,
     *,
     e18: E18,
     r18: R18,
@@ -193,9 +198,8 @@ def calc(
     p_local_biomass_cogen: EColVars2030,
     p_local_biomass: EColVars2030,
 ) -> E30:
-    fact = inputs.fact
-    ass = inputs.ass
-    entries = inputs.entries
+    fact = facts.fact
+    ass = assumptions.ass
 
     KlimaneutraleJahre = entries.m_duration_neutral
 
@@ -214,31 +218,31 @@ def calc(
     )
 
     d_a = calc_energy_demand(
-        inputs,
+        facts,
         energy=a30.p_operation.demand_electricity,
         energy_18=e18.d_a.energy,
         cost_fuel_per_MWh="Fact_E_D_R_cost_fuel_per_MWh_2018",
     )
     d_b = calc_energy_demand(
-        inputs,
+        facts,
         energy=b30.p.demand_electricity,
         energy_18=e18.d_b.energy,
         cost_fuel_per_MWh="Fact_E_D_B_cost_fuel_per_MWh_2018",
     )
     d_i = calc_energy_demand(
-        inputs,
+        facts,
         energy=i30.p.demand_electricity,
         energy_18=e18.d_i.energy,
         cost_fuel_per_MWh="Fact_E_D_I_cost_fuel_per_MWh_2018",
     )
     d_r = calc_energy_demand(
-        inputs,
+        facts,
         energy=r30.p.demand_electricity,
         energy_18=e18.d_r.energy,
         cost_fuel_per_MWh="Fact_E_D_R_cost_fuel_per_MWh_2018",
     )
     d_t = calc_energy_demand(
-        inputs,
+        facts,
         energy=t30.t.transport.demand_electricity,
         energy_18=e18.d_t.energy,
         cost_fuel_per_MWh="Fact_E_D_R_cost_fuel_per_MWh_2018",
@@ -288,19 +292,19 @@ def calc(
     p_renew.invest_com = 0
 
     p_fossil_nuclear = calc_stop_production_by_fossil_fuels(
-        inputs, e18_production=e18.p_fossil_nuclear
+        entries, facts, e18_production=e18.p_fossil_nuclear
     )
     p_fossil_coal_brown = calc_stop_production_by_fossil_fuels(
-        inputs, e18_production=e18.p_fossil_coal_brown
+        entries, facts, e18_production=e18.p_fossil_coal_brown
     )
     p_fossil_coal_black = calc_stop_production_by_fossil_fuels(
-        inputs, e18_production=e18.p_fossil_coal_black
+        entries, facts, e18_production=e18.p_fossil_coal_black
     )
     p_fossil_gas = calc_stop_production_by_fossil_fuels(
-        inputs, e18_production=e18.p_fossil_gas
+        entries, facts, e18_production=e18.p_fossil_gas
     )
     p_fossil_ofossil = calc_stop_production_by_fossil_fuels(
-        inputs, e18_production=e18.p_fossil_ofossil
+        entries, facts, e18_production=e18.p_fossil_ofossil
     )
 
     p_fossil = FossilFuelsProduction.sum(
@@ -328,27 +332,33 @@ def calc(
         / entries.m_population_nat
     )
 
-    p_local_pv_roof = calc_production_local_pv_roof(inputs, e18=e18, b18=b18, r18=r18)
+    p_local_pv_roof = calc_production_local_pv_roof(
+        entries, assumptions, e18=e18, b18=b18, r18=r18
+    )
     p_local_pv_facade = calc_production_local_pv_facade(
-        inputs, e18=e18, b18=b18, r18=r18
+        entries, assumptions, e18=e18, b18=b18, r18=r18
     )
     p_local_pv_park = calc_production_local_pv_park(
-        inputs,
+        entries,
+        assumptions,
         e18=e18,
         local_pv_roof_full_load_hour=p_local_pv_roof.full_load_hour,
     )
     p_local_pv_agri = calc_production_local_pv_agri(
-        inputs,
+        entries,
+        assumptions,
         e18=e18,
         local_pv_roof_full_load_hour=p_local_pv_roof.full_load_hour,
         local_pv_park_full_load_hour=p_local_pv_park.full_load_hour,
     )
-    p_local_wind_onshore = calc_production_local_wind_onshore(inputs, e18=e18)
+    p_local_wind_onshore = calc_production_local_wind_onshore(
+        entries, facts, assumptions, e18=e18
+    )
     calc_production_local_biomass_stage2(
-        inputs, p_local_biomass=p_local_biomass, e18=e18
+        entries, facts, assumptions, p_local_biomass=p_local_biomass, e18=e18
     )
 
-    p_local_hydro = calc_production_local_hydro(inputs, e18=e18)
+    p_local_hydro = calc_production_local_hydro(entries, facts, assumptions, e18=e18)
 
     g_grid_offshore = EColVars2030()
     g_grid_offshore.invest = 0
@@ -388,7 +398,9 @@ def calc(
         e18.p_renew_biomass.CO2e_combustion_based_per_MWh
     )
 
-    p_renew_geoth = calc_production_renewable_geothermal(inputs, d_energy=d.energy)
+    p_renew_geoth = calc_production_renewable_geothermal(
+        entries, facts, assumptions, d_energy=d.energy
+    )
 
     p_renew_hydro = EColVars2030()
     p_renew_hydro.cost_mro_per_MWh = ass("Ass_E_P_local_hydro_mro_per_MWh")
@@ -397,13 +409,17 @@ def calc(
     )
     p_renew_hydro.CO2e_total = 0
 
-    p_renew_reverse = calc_production_renewable_reverse(inputs, d_energy=d.energy)
+    p_renew_reverse = calc_production_renewable_reverse(
+        entries, facts, assumptions, d_energy=d.energy
+    )
 
     p_renew_pv_facade = EColVars2030()
     p_renew_pv_park = EColVars2030()
     p_renew_pv_agri = EColVars2030()
 
-    p_renew_wind_offshore = calc_renew_wind_offshore(inputs, d_energy=d.energy)
+    p_renew_wind_offshore = calc_renew_wind_offshore(
+        entries, facts, assumptions, d_energy=d.energy
+    )
 
     p_renew_wind_onshore = EColVars2030()
     p_renew_wind_onshore.cost_mro_per_MWh = (
