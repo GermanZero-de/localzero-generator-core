@@ -246,22 +246,6 @@ def calculate(inputs: Inputs, inputs_germany: Inputs) -> Result:
         p_local_biomass=e30_p_local_biomass,
     )
 
-    print("Methodology2030_calc", file=stderr)
-    m183X = methodology183x.calc_budget(
-        entries,
-        facts,
-        a18=a18,
-        b18=b18,
-        e18=e18,
-        f18=f18,
-        h18=h18,
-        i18=i18,
-        l18=l18,
-        r18=r18,
-        t18=t18,
-        w18=w18,
-    )
-
     print("Waste2030_calcPyr", file=stderr)
     pyr = Pyrolysis.calc(
         entries,
@@ -282,6 +266,21 @@ def calculate(inputs: Inputs, inputs_germany: Inputs) -> Result:
     print("calc_sums_including_pyrolysis", file=stderr)
     w30 = W30.calc(w18=w18, wastelines=wastelines, pyrolysis=pyr)
 
+    print("Methodology2030_calc", file=stderr)
+    m183X = methodology183x.calc_budget(
+        entries,
+        facts,
+        a18=a18,
+        b18=b18,
+        e18=e18,
+        f18=f18,
+        h18=h18,
+        i18=i18,
+        l18=l18,
+        r18=r18,
+        t18=t18,
+        w18=w18,
+    )
     print("Methodology2030_calcZ", file=stderr)
     methodology183x.calc_z(
         entries,
