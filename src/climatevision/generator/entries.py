@@ -106,7 +106,6 @@ class Entries:
     m_area_wood_com: float
     m_duration_neutral: float
     m_duration_target: int
-    m_duration_target_until_2050: int
     m_nonCO2_budget_2016_to_year_target: float
     m_population_com_2018: int
     m_population_com_203X: int
