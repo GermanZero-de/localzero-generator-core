@@ -5,7 +5,8 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/industry.html
 
 # pyright: strict
 
-from ..inputs import Inputs
+from ..makeentries import Entries
+from ..refdata import Facts, Assumptions
 from ..utils import div
 from ..industry2018.i18 import I18
 
@@ -30,10 +31,9 @@ from .dataclasses import (
 from . import energy_general
 
 
-def calc(inputs: Inputs, *, i18: I18) -> I30:
-    fact = inputs.fact
-    ass = inputs.ass
-    entries = inputs.entries
+def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, i18: I18) -> I30:
+    fact = facts.fact
+    ass = assumptions.ass
 
     i = Vars2()
 
@@ -884,7 +884,7 @@ def calc(inputs: Inputs, *, i18: I18) -> I30:
         p_miner_cement.prod_volume * p_miner_cement.CO2e_combustion_based_per_t
     )
 
-    general = energy_general.calc_general(inputs=inputs)
+    general = energy_general.calc_general(entries, assumptions)
 
     i.demand_emplo_com = general.g.demand_emplo_com
 

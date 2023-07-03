@@ -8,18 +8,11 @@ Documentation:
 # pyright: strict
 
 from dataclasses import dataclass
-from ..inputs import Inputs
+
+from ..makeentries import Entries
+from ..refdata import Facts, Assumptions
 from ..utils import div
 from ..waste2018 import W18
-
-from .wastelines import (
-    EnergySupplyDetail,
-    WasteLines,
-    Wastewater,
-    Organic_treatment,
-    Landfilling,
-)
-
 
 from ..lulucf2030.l30 import L30
 from ..agri2030.a30 import A30
@@ -30,6 +23,14 @@ from ..heat2030.h30 import H30
 from ..industry2030.i30 import I30
 from ..residences2030.r30 import R30
 from ..transport2030.t30 import T30
+
+from .wastelines import (
+    EnergySupplyDetail,
+    WasteLines,
+    Wastewater,
+    Organic_treatment,
+    Landfilling,
+)
 
 
 @dataclass(kw_only=True)
@@ -101,7 +102,9 @@ class Pyrolysis:
     @classmethod
     def calc(
         cls,
-        inputs: Inputs,
+        entries: Entries,
+        facts: Facts,
+        assumptions: Assumptions,
         *,
         l30: L30,
         a30: A30,
@@ -116,9 +119,8 @@ class Pyrolysis:
     ):
         """This updates the l and pyr sections in l30 inplace."""
 
-        fact = inputs.fact
-        ass = inputs.ass
-        entries = inputs.entries
+        fact = facts.fact
+        ass = assumptions.ass
 
         CO2e_total = min(
             -(
@@ -295,9 +297,7 @@ class W30:
     s_elec: EnergySupplyDetail
 
     @classmethod
-    def calc(
-        cls, inputs: Inputs, w18: W18, wastelines: WasteLines, pyrolysis: Pyrolysis
-    ):
+    def calc(cls, w18: W18, wastelines: WasteLines, pyrolysis: Pyrolysis):
         s = EnergySupply.calc(w18=w18, energy_supplies=[wastelines.s_elec])
         p = EnergyProduction.calc(
             w18=w18,

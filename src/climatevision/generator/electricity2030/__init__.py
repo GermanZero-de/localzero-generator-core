@@ -5,7 +5,8 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/electricity.html
 
 # pyright: strict
 
-from ..inputs import Inputs
+from ..makeentries import Entries
+from ..refdata import Facts, Assumptions
 from ..electricity2018.e18 import E18
 from ..residences2018.r18 import R18
 from ..business2018.b18 import B18
@@ -24,7 +25,9 @@ from . import electricity2030_germany, electricity2030_commune
 
 
 def calc(
-    inputs: Inputs,
+    entries: Entries,
+    facts: Facts,
+    assumptions: Assumptions,
     *,
     e18: E18,
     r18: R18,
@@ -45,9 +48,11 @@ def calc(
     than else sides. Hence  we have to hold two files for the 2 situations
     Each change of variable calculus has to be consistently edited within the 2 files"""
 
-    if inputs.entries.m_AGS_com == "DG000000":
+    if entries.m_AGS_com == "DG000000":
         return electricity2030_germany.calc(
-            inputs,
+            entries,
+            facts,
+            assumptions,
             e18=e18,
             r18=r18,
             b18=b18,
@@ -64,7 +69,9 @@ def calc(
         )
     else:
         return electricity2030_commune.calc(
-            inputs,
+            entries,
+            facts,
+            assumptions,
             e18=e18,
             r18=r18,
             b18=b18,

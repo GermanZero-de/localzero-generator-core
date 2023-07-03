@@ -2,13 +2,11 @@
 
 from dataclasses import dataclass
 
-from ..inputs import Inputs
+from ..refdata import Facts, Assumptions
 from ..utils import div
 from ..agri2018.a18 import A18
 from ..electricity2018.e18 import E18
 from ..business2018.b18 import B18
-from ..fuels2018.f18 import F18
-from ..heat2018.h18 import H18
 from ..industry2018.i18 import I18
 from ..lulucf2018.l18 import L18
 from ..residences2018.r18 import R18
@@ -226,15 +224,12 @@ class BiskoPrivResidences(BiskoSector, BiskoSectorWithExtraCommunalFacilities):
     @classmethod
     def calc_priv_residences_bisko(
         cls,
-        inputs: Inputs,
+        facts: Facts,
         r18: R18,
-        h18: H18,
-        f18: F18,
         e18: E18,
     ) -> "BiskoPrivResidences":
 
-        fact = inputs.fact
-        # ass = inputs.ass
+        fact = facts.fact
 
         petrol = EnergyAndEmissionsCalcIntermediate(
             eb_energy_from_same_sector=r18.s_petrol.energy,
@@ -351,13 +346,13 @@ class BiskoBusiness(BiskoSector, BiskoSectorWithExtraCommunalFacilities):
     @classmethod
     def calc_business_bisko(
         cls,
-        inputs: Inputs,
+        facts: Facts,
         b18: B18,
         e18: E18,
         a18: A18,
     ) -> "BiskoBusiness":
 
-        fact = inputs.fact
+        fact = facts.fact
 
         petrol = EnergyAndEmissionsCalcIntermediate(
             eb_energy_from_same_sector=b18.s_petrol.energy,
@@ -513,13 +508,14 @@ class BiskoTransport(BiskoSector):
     @classmethod
     def calc_transport_bisko(
         cls,
-        inputs: Inputs,
+        facts: Facts,
+        assumptions: Assumptions,
         t18: T18,
         e18: E18,
     ) -> "BiskoTransport":
 
-        fact = inputs.fact
-        ass = inputs.ass
+        fact = facts.fact
+        ass = assumptions.ass
 
         petrol = EnergyAndEmissionsCalcIntermediate(
             eb_energy_from_same_sector=t18.s_petrol.energy,
@@ -655,12 +651,12 @@ class BiskoIndustry(BiskoSector):
     @classmethod
     def calc_industry_bisko(
         cls,
-        inputs: Inputs,
+        facts: Facts,
         i18: I18,
         e18: E18,
     ) -> "BiskoIndustry":
 
-        fact = inputs.fact
+        fact = facts.fact
 
         # Bereitstellung
         diesel = EnergyAndEmissionsCalcIntermediate(

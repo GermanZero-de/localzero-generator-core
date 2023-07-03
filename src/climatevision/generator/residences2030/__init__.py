@@ -5,7 +5,8 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/hh_ghd.html
 
 # pyright: strict
 
-from ..inputs import Inputs
+from ..makeentries import Entries
+from ..refdata import Facts, Assumptions
 from ..utils import div, MILLION
 from ..residences2018.r18 import R18
 from ..business2018.b18 import B18
@@ -33,10 +34,11 @@ from .dataclasses import (
 from . import energy_general
 
 
-def calc(inputs: Inputs, *, r18: R18, b18: B18) -> R30:
-    fact = inputs.fact
-    ass = inputs.ass
-    entries = inputs.entries
+def calc(
+    entries: Entries, facts: Facts, assumptions: Assumptions, *, r18: R18, b18: B18
+) -> R30:
+    fact = facts.fact
+    ass = assumptions.ass
 
     ### P - Section ###
     p = Vars2()
@@ -1101,7 +1103,7 @@ def calc(inputs: Inputs, *, r18: R18, b18: B18) -> R30:
     s_gas.change_cost_energy = s_gas.cost_fuel - r18.s_gas.cost_fuel
     p_buildings_total.invest_pa = p_buildings_total.invest / Kalkulationszeitraum
 
-    general = energy_general.calc_general(inputs=inputs)
+    general = energy_general.calc_general(entries, facts, assumptions)
 
     p.demand_heatnet = s_heatnet.energy
     p.demand_biomass = s_biomass.energy

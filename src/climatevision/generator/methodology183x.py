@@ -2,7 +2,8 @@
 
 from dataclasses import dataclass, field
 
-from .inputs import Inputs
+from .makeentries import Entries
+from .refdata import Facts
 from .utils import div
 
 from .electricity2018.e18 import E18
@@ -169,7 +170,8 @@ class M183X:
 
 
 def calc_budget(
-    inputs: Inputs,
+    entries: Entries,
+    facts: Facts,
     *,
     a18: A18,
     b18: B18,
@@ -184,8 +186,7 @@ def calc_budget(
 ) -> M183X:
     """Calculate the budget needed."""
 
-    fact = inputs.fact
-    entries = inputs.entries
+    fact = facts.fact
 
     ######################################
     ### budgets 2016 until target year ###
@@ -403,7 +404,8 @@ def calc_budget(
 
 
 def calc_z(
-    inputs: Inputs,
+    entries: Entries,
+    facts: Facts,
     *,
     m183X: M183X,
     a18: A18,
@@ -429,8 +431,7 @@ def calc_z(
 ):
     """This updates several values in m183X inplace."""
 
-    fact = inputs.fact
-    entries = inputs.entries
+    fact = facts.fact
 
     ##################################################################
     ### total emissions 203X, saved emissions, saved climate costs ###

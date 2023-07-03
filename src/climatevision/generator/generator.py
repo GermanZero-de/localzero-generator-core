@@ -135,7 +135,7 @@ def calculate(inputs: Inputs, inputs_germany: Inputs) -> Result:
 
     # 2018
     print("Residence2018_calc", file=stderr)
-    r18 = residences2018.calc(inputs)
+    r18 = residences2018.calc(entries, facts)
 
     print("Business2018_calc", file=stderr)
     b18 = business2018.calc(entries, facts, assumptions, r18=r18)
@@ -150,19 +150,19 @@ def calculate(inputs: Inputs, inputs_germany: Inputs) -> Result:
     f18 = fuels2018.calc(entries, facts, t18=t18, i18=i18)
 
     print("Lulucf2018_calc", file=stderr)
-    l18 = lulucf2018.calc(inputs)
+    l18 = lulucf2018.calc(entries, facts)
 
     print("Agri2018_calc", file=stderr)
     a18 = agri2018.calc(entries, facts, l18=l18, b18=b18)
 
     print("Electricity2018_calc", file=stderr)
-    e18 = electricity2018.calc(inputs, t18=t18, i18=i18)
+    e18 = electricity2018.calc(entries, facts, assumptions, t18=t18, i18=i18)
 
     print("Heat2018_calc", file=stderr)
     h18 = heat2018.calc(entries, facts, t18=t18, e18=e18, i18=i18)
 
     print("Waste2018_calc", file=stderr)
-    w18 = W18.calc(inputs)
+    w18 = W18.calc(entries, facts)
 
     end_t = time()
     print(
@@ -175,24 +175,24 @@ def calculate(inputs: Inputs, inputs_germany: Inputs) -> Result:
     t30 = transport2030.calc(entries, facts, assumptions, t18=t18)
 
     print("Industry2030", file=stderr)
-    i30 = industry2030.calc(inputs, i18=i18)
+    i30 = industry2030.calc(entries, facts, assumptions, i18=i18)
 
     print("Residenctial2030", file=stderr)
-    r30 = residences2030.calc(inputs, r18=r18, b18=b18)
+    r30 = residences2030.calc(entries, facts, assumptions, r18=r18, b18=b18)
 
     print("Business2030_calc", file=stderr)
-    b30 = business2030.calc(inputs, b18=b18, r18=r18, r30=r30)
+    b30 = business2030.calc(entries, facts, assumptions, b18=b18, r18=r18, r30=r30)
 
     print("Lulucf2030_calc", file=stderr)
-    l30 = lulucf2030.calc(inputs, l18=l18)
+    l30 = lulucf2030.calc(entries, facts, assumptions, l18=l18)
 
     print("Agri2030_calc", file=stderr)
     a30 = agri2030.calc(entries, facts, assumptions, a18=a18, l30=l30)
 
     print("Electricity2030_calc_biomass", file=stderr)
-    e30_p_local_biomass = electricity2030_core.calc_biomass(inputs)
+    e30_p_local_biomass = electricity2030_core.calc_biomass(entries, facts, assumptions)
     e30_p_local_biomass_cogen = electricity2030_core.calc_biomass_cogen(
-        inputs, p_local_biomass=e30_p_local_biomass
+        facts, p_local_biomass=e30_p_local_biomass
     )
 
     print("Heat2030_calc", file=stderr)
@@ -209,7 +209,7 @@ def calculate(inputs: Inputs, inputs_germany: Inputs) -> Result:
     )
 
     print("calc waste 2030 ")
-    wastelines = WasteLines.calc_waste_lines(inputs=inputs, w18=w18)
+    wastelines = WasteLines.calc_waste_lines(entries, facts, assumptions, w18=w18)
 
     print("Fuels2030_calc", file=stderr)
     f30 = fuels2030.calc(
@@ -228,7 +228,9 @@ def calculate(inputs: Inputs, inputs_germany: Inputs) -> Result:
 
     print("Electricity2030_calc", file=stderr)
     e30 = electricity2030.calc(
-        inputs,
+        entries,
+        facts,
+        assumptions,
         e18=e18,
         r18=r18,
         b18=b18,
@@ -244,24 +246,11 @@ def calculate(inputs: Inputs, inputs_germany: Inputs) -> Result:
         p_local_biomass=e30_p_local_biomass,
     )
 
-    print("Methodology2030_calc", file=stderr)
-    m183X = methodology183x.calc_budget(
-        inputs,
-        a18=a18,
-        b18=b18,
-        e18=e18,
-        f18=f18,
-        h18=h18,
-        i18=i18,
-        l18=l18,
-        r18=r18,
-        t18=t18,
-        w18=w18,
-    )
-
     print("Waste2030_calcPyr", file=stderr)
     pyr = Pyrolysis.calc(
-        inputs,
+        entries,
+        facts,
+        assumptions,
         l30=l30,
         a30=a30,
         b30=b30,
@@ -275,11 +264,27 @@ def calculate(inputs: Inputs, inputs_germany: Inputs) -> Result:
     )
 
     print("calc_sums_including_pyrolysis", file=stderr)
-    w30 = W30.calc(inputs=inputs, w18=w18, wastelines=wastelines, pyrolysis=pyr)
+    w30 = W30.calc(w18=w18, wastelines=wastelines, pyrolysis=pyr)
 
+    print("Methodology2030_calc", file=stderr)
+    m183X = methodology183x.calc_budget(
+        entries,
+        facts,
+        a18=a18,
+        b18=b18,
+        e18=e18,
+        f18=f18,
+        h18=h18,
+        i18=i18,
+        l18=l18,
+        r18=r18,
+        t18=t18,
+        w18=w18,
+    )
     print("Methodology2030_calcZ", file=stderr)
     methodology183x.calc_z(
-        inputs,
+        entries,
+        facts,
         m183X=m183X,
         a18=a18,
         b18=b18,
@@ -305,16 +310,15 @@ def calculate(inputs: Inputs, inputs_germany: Inputs) -> Result:
 
     print("Bisko_calc", file=stderr)
     bisko = Bisko.calc(
-        inputs,
+        facts,
+        assumptions,
         r18=r18,
         b18=b18,
         i18=i18,
         t18=t18,
-        f18=f18,
         l18=l18,
         a18=a18,
         e18=e18,
-        h18=h18,
     )
 
     return Result(

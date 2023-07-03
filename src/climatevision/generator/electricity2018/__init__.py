@@ -4,7 +4,8 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/electricity.html
 """
 # pyright: strict
 
-from ..inputs import Inputs
+from ..makeentries import Entries
+from ..refdata import Facts, Assumptions
 from ..utils import div, MILLION
 from ..transport2018.t18 import T18
 
@@ -32,10 +33,11 @@ from .dataclasses import (
 )
 
 
-def calc(inputs: Inputs, *, t18: T18, i18: I18) -> E18:
-    fact = inputs.fact
-    ass = inputs.ass
-    entries = inputs.entries
+def calc(
+    entries: Entries, facts: Facts, assumptions: Assumptions, *, t18: T18, i18: I18
+) -> E18:
+    fact = facts.fact
+    ass = assumptions.ass
 
     """variable abbrevations"""
     e = Vars0()

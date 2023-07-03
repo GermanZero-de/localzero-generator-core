@@ -2,17 +2,13 @@
 
 from dataclasses import dataclass
 
-from climatevision.generator.inputs import Inputs
-
-from climatevision.generator import electricity2018
-from climatevision.generator.utils import MILLION, div
-
-from climatevision.generator.business2018.b18 import B18
-from climatevision.generator.electricity2018.e18 import E18
-from climatevision.generator.residences2018.r18 import R18
-
-from ..inputs import Inputs
-from ..utils import div
+from ..makeentries import Entries
+from ..refdata import Facts, Assumptions
+from ..utils import MILLION, div
+from .. import electricity2018
+from ..business2018.b18 import B18
+from ..electricity2018.e18 import E18
+from ..residences2018.r18 import R18
 
 
 @dataclass(kw_only=True)
@@ -172,10 +168,11 @@ class EColVars2030(EnergyDemandWithCostFuel):
     lifecycle: float = None  # type: ignore
 
 
-def calc_biomass(inputs: Inputs) -> EColVars2030:
-    fact = inputs.fact
-    ass = inputs.ass
-    entries = inputs.entries
+def calc_biomass(
+    entries: Entries, facts: Facts, assumptions: Assumptions
+) -> EColVars2030:
+    fact = facts.fact
+    ass = assumptions.ass
 
     p_local_biomass = EColVars2030()
 
@@ -201,10 +198,8 @@ def calc_biomass(inputs: Inputs) -> EColVars2030:
     return p_local_biomass
 
 
-def calc_biomass_cogen(
-    inputs: Inputs, *, p_local_biomass: EColVars2030
-) -> EColVars2030:
-    fact = inputs.fact
+def calc_biomass_cogen(facts: Facts, *, p_local_biomass: EColVars2030) -> EColVars2030:
+    fact = facts.fact
 
     p_local_biomass_cogen = EColVars2030()
 
@@ -216,13 +211,14 @@ def calc_biomass_cogen(
 
 
 def calc_production_renewable_geothermal(
-    inputs: Inputs,
+    entries: Entries,
+    facts: Facts,
+    assumptions: Assumptions,
     *,
     d_energy: float,
 ) -> RenewableGeothermalProduction:
-    ass = inputs.ass
-    fact = inputs.fact
-    entries = inputs.entries
+    fact = facts.fact
+    ass = assumptions.ass
 
     Kalkulationszeitraum = entries.m_duration_target
 
@@ -310,11 +306,13 @@ def calc_production_renewable_geothermal(
 
 
 def calc_stop_production_by_fossil_fuels(
-    inputs: Inputs, *, e18_production: electricity2018.dataclasses.FossilFuelsProduction
+    entries: Entries,
+    facts: Facts,
+    *,
+    e18_production: electricity2018.dataclasses.FossilFuelsProduction,
 ) -> FossilFuelsProduction:
     """Compute what happens if we stop producing electricity from a fossil fuel."""
-    fact = inputs.fact
-    entries = inputs.entries
+    fact = facts.fact
 
     KlimaneutraleJahre = entries.m_duration_neutral
 
@@ -362,14 +360,14 @@ def calc_stop_production_by_fossil_fuels(
 
 
 def calc_production_local_pv_roof(
-    inputs: Inputs,
+    entries: Entries,
+    assumptions: Assumptions,
     *,
     e18: E18,
     b18: B18,
     r18: R18,
 ):
-    entries = inputs.entries
-    ass = inputs.ass
+    ass = assumptions.ass
     Kalkulationszeitraum = entries.m_duration_target
 
     # TODO: Change the below
@@ -469,14 +467,14 @@ def calc_production_local_pv_roof(
 
 
 def calc_production_local_pv_facade(
-    inputs: Inputs,
+    entries: Entries,
+    assumptions: Assumptions,
     *,
     e18: E18,
     b18: B18,
     r18: R18,
 ):
-    entries = inputs.entries
-    ass = inputs.ass
+    ass = assumptions.ass
     Kalkulationszeitraum = entries.m_duration_target
 
     # TODO: Change the below
@@ -568,14 +566,14 @@ def calc_production_local_pv_facade(
 
 
 def calc_production_local_pv_agri(
-    inputs: Inputs,
+    entries: Entries,
+    assumptions: Assumptions,
     *,
     e18: E18,
     local_pv_roof_full_load_hour: float,
     local_pv_park_full_load_hour: float,
 ):
-    entries = inputs.entries
-    ass = inputs.ass
+    ass = assumptions.ass
     Kalkulationszeitraum = entries.m_duration_target
 
     # TODO: Change the below
@@ -647,13 +645,13 @@ def calc_production_local_pv_agri(
 
 
 def calc_production_local_pv_park(
-    inputs: Inputs,
+    entries: Entries,
+    assumptions: Assumptions,
     *,
     e18: E18,
     local_pv_roof_full_load_hour: float,
 ):
-    entries = inputs.entries
-    ass = inputs.ass
+    ass = assumptions.ass
     Kalkulationszeitraum = entries.m_duration_target
 
     # TODO: Change the below
@@ -726,13 +724,14 @@ def calc_production_local_pv_park(
 
 
 def calc_production_local_wind_onshore(
-    inputs: Inputs,
+    entries: Entries,
+    facts: Facts,
+    assumptions: Assumptions,
     *,
     e18: E18,
 ):
-    entries = inputs.entries
-    ass = inputs.ass
-    fact = inputs.fact
+    fact = facts.fact
+    ass = assumptions.ass
     Kalkulationszeitraum = entries.m_duration_target
 
     # TODO: Change the below
@@ -829,10 +828,11 @@ def calc_production_local_wind_onshore(
     return p_local_wind_onshore
 
 
-def calc_renew_wind_offshore(inputs: Inputs, *, d_energy: float):
-    entries = inputs.entries
-    ass = inputs.ass
-    fact = inputs.fact
+def calc_renew_wind_offshore(
+    entries: Entries, facts: Facts, assumptions: Assumptions, *, d_energy: float
+):
+    fact = facts.fact
+    ass = assumptions.ass
 
     Kalkulationszeitraum = entries.m_duration_target
     p_renew_wind_offshore = EColVars2030()
@@ -905,13 +905,14 @@ def calc_renew_wind_offshore(inputs: Inputs, *, d_energy: float):
 
 
 def calc_production_local_hydro(
-    inputs: Inputs,
+    entries: Entries,
+    facts: Facts,
+    assumptions: Assumptions,
     *,
     e18: E18,
 ):
-    entries = inputs.entries
-    ass = inputs.ass
-    fact = inputs.fact
+    fact = facts.fact
+    ass = assumptions.ass
 
     # TODO: Change the below
     p_local_hydro = EColVars2030()

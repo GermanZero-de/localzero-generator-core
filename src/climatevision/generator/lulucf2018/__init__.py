@@ -5,7 +5,8 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/lulucf.html
 
 # pyright: strict
 
-from ..inputs import Inputs
+from ..makeentries import Entries
+from ..refdata import Facts
 
 from .l18 import L18
 from .dataclasses import (
@@ -20,9 +21,8 @@ from .dataclasses import (
 )
 
 
-def calc(inputs: Inputs) -> L18:
-    fact = inputs.fact
-    entries = inputs.entries
+def calc(entries: Entries, facts: Facts) -> L18:
+    fact = facts.fact
 
     g = Vars1()
     l = Vars0()

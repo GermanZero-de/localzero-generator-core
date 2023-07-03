@@ -11,7 +11,7 @@ from ...heat2030.h30 import H30
 from ...industry2030.i30 import I30
 from ...residences2030.r30 import R30
 from ...transport2030.t30 import T30
-from ...waste2030 import WasteLines
+from ...waste2030.wastelines import WasteLines
 
 from ..energy_demand import EnergyDemand
 
