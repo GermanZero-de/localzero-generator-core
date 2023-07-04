@@ -2,7 +2,6 @@
 
 from dataclasses import dataclass
 
-from ...makeentries import Entries
 from ...refdata import Facts, Assumptions
 from ...common.g import G, GConsult
 from ...business2018.b18 import B18
@@ -15,7 +14,12 @@ class General:
 
 
 def calc_general(
-    entries: Entries, facts: Facts, assumptions: Assumptions, b18: B18
+    facts: Facts,
+    assumptions: Assumptions,
+    duration_until_target_year: int,
+    population_commune_2018: int,
+    population_germany_2018: int,
+    b18: B18,
 ) -> General:
     fact = facts.fact
     ass = assumptions.ass
@@ -28,11 +32,13 @@ def calc_general(
     emplo_existing = (
         fact("Fact_R_G_energy_consulting_total_personel")
         * ass("Ass_B_D_energy_consulting_emplo_pct_of_B")
-        * entries.m_population_com_2018
-        / entries.m_population_nat
+        * population_commune_2018
+        / population_germany_2018
     )
 
-    g_consult = GConsult.calc_from_invest(entries, facts, invest, emplo_existing)
+    g_consult = GConsult.calc_from_invest(
+        facts, duration_until_target_year, invest, emplo_existing
+    )
 
     g = G.sum(g_consult)
 
