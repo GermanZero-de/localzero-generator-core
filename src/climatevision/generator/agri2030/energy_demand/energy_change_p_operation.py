@@ -2,7 +2,6 @@
 
 from dataclasses import dataclass, InitVar
 
-from ...makeentries import Entries
 from ...common.invest import Invest
 from ...agri2018.a18 import A18
 
@@ -24,7 +23,7 @@ class EnergyChangePOperation(EnergyChangeAgri, Invest):
 
     what: InitVar[str]
     a18: InitVar[A18]
-    entries: InitVar[Entries]
+    duration_until_target_year: InitVar[int]
     operation_vehicles: InitVar[EnergyChangePOperationVehicles]
     operation_heat: InitVar[EnergyChangePOperationHeat]
     operation_elec_elcon: InitVar[EnergyChangePOperationElecElcon]
@@ -34,7 +33,7 @@ class EnergyChangePOperation(EnergyChangeAgri, Invest):
         self,
         what: str,
         a18: A18,
-        entries: Entries,
+        duration_until_target_year: int,
         operation_vehicles: EnergyChangePOperationVehicles,
         operation_heat: EnergyChangePOperationHeat,
         operation_elec_elcon: EnergyChangePOperationElecElcon,
@@ -60,7 +59,7 @@ class EnergyChangePOperation(EnergyChangeAgri, Invest):
         )
 
         self.invest = operation_heat.invest
-        self.invest_pa = self.invest / entries.m_duration_target
+        self.invest_pa = self.invest / duration_until_target_year
         self.cost_wage = operation_heat.cost_wage
 
         EnergyChangeAgri.__post_init__(self, what=what, a18=a18)

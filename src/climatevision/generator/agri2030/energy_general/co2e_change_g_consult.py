@@ -2,7 +2,6 @@
 
 from dataclasses import dataclass, InitVar
 
-from ...makeentries import Entries
 from ...refdata import Assumptions
 from ...utils import div
 from ...common.invest import InvestCommune
@@ -16,18 +15,24 @@ class CO2eChangeGConsult(InvestCommune):
     pct_of_wage: float = 0
     ratio_wage_to_emplo: float = 0
 
-    entries: InitVar[Entries]
     assumptions: InitVar[Assumptions]
+    duration_until_target_year: InitVar[int]
+    farm_amount: InitVar[float]
 
-    def __post_init__(self, entries: Entries, assumptions: Assumptions):
+    def __post_init__(
+        self,
+        assumptions: Assumptions,
+        duration_until_target_year: int,
+        farm_amount: float,
+    ):
         ass = assumptions.ass
 
-        self.area_ha_available = entries.a_farm_amount
+        self.area_ha_available = farm_amount
 
         self.invest_per_x = ass("Ass_A_G_consult_invest_per_farm")
         self.invest = self.area_ha_available * self.invest_per_x
         self.invest_com = self.invest * ass("Ass_A_G_consult_invest_pct_of_public")
-        self.invest_pa = self.invest / entries.m_duration_target
+        self.invest_pa = self.invest / duration_until_target_year
         self.invest_pa_com = self.invest_pa * ass(
             "Ass_A_G_consult_invest_pct_of_public"
         )

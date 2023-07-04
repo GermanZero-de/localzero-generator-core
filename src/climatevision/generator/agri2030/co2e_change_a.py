@@ -2,7 +2,6 @@
 
 from dataclasses import dataclass, InitVar
 
-from ..makeentries import Entries
 from ..refdata import Facts
 from ..utils import div
 from ..common.invest import InvestCommune
@@ -28,8 +27,9 @@ class CO2eChangeA(InvestCommune):
     invest_outside: float = 0
     invest_pa_outside: float = 0
 
-    entries: InitVar[Entries]
     facts: InitVar[Facts]
+    duration_until_target_year: InitVar[int]
+    duration_CO2e_neutral_years: InitVar[float]
     what: InitVar[str]
     a18: InitVar[A18]
     p_operation: InitVar[EnergyChangePOperation]
@@ -39,8 +39,9 @@ class CO2eChangeA(InvestCommune):
 
     def __post_init__(
         self,
-        entries: Entries,
         facts: Facts,
+        duration_until_target_year: int,
+        duration_CO2e_neutral_years: float,
         what: str,
         a18: A18,
         p_operation: EnergyChangePOperation,
@@ -63,7 +64,7 @@ class CO2eChangeA(InvestCommune):
         self.invest_com = g.invest_com
         self.invest = g.invest + s.invest + p.invest
         self.invest_pa_com = g.invest_pa_com
-        self.invest_pa = self.invest / entries.m_duration_target
+        self.invest_pa = self.invest / duration_until_target_year
 
         self.change_CO2e_t = self.CO2e_total - getattr(a18, what).CO2e_total
         self.change_CO2e_pct = div(self.change_CO2e_t, a18.a.CO2e_total)
@@ -78,7 +79,7 @@ class CO2eChangeA(InvestCommune):
 
         self.cost_climate_saved = (
             (self.CO2e_total_2021_estimated - self.CO2e_total)
-            * entries.m_duration_neutral
+            * duration_CO2e_neutral_years
             * fact("Fact_M_cost_per_CO2e_2020")
         )
 

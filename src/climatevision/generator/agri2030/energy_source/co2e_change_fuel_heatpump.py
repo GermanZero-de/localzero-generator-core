@@ -1,7 +1,6 @@
 # pyright: strict
 from dataclasses import dataclass, InitVar
 
-from ...makeentries import Entries
 from ...refdata import Facts, Assumptions
 from ...utils import div, MILLION
 from ...common.invest import Invest
@@ -22,19 +21,25 @@ class CO2eChangeFuelHeatpump(CO2eChangeEnergyPerMWh, Invest):
     power_to_be_installed: float = 0
     ratio_wage_to_emplo: float = 0
 
-    entries: InitVar[Entries]
     facts: InitVar[Facts]
+    duration_CO2e_neutral_years: InitVar[float]
     assumptions: InitVar[Assumptions]
+    duration_until_target_year: InitVar[int]
+    population_commune_2018: InitVar[int]
+    population_germany_2018: InitVar[int]
     what: InitVar[str]
     a18: InitVar[A18]
 
     def __post_init__(  # type: ignore[override]
         self,
-        entries: Entries,
         facts: Facts,
+        duration_CO2e_neutral_years: float,
         what: str,
         a18: A18,
         assumptions: Assumptions,
+        duration_until_target_year: int,
+        population_commune_2018: int,
+        population_germany_2018: int,
     ):
         fact = facts.fact
         ass = assumptions.ass
@@ -53,7 +58,7 @@ class CO2eChangeFuelHeatpump(CO2eChangeEnergyPerMWh, Invest):
 
         self.invest_per_x = fact("Fact_R_S_heatpump_cost")
         self.invest = self.invest_per_x * self.power_to_be_installed * 1000
-        self.invest_pa = self.invest / entries.m_duration_target
+        self.invest_pa = self.invest / duration_until_target_year
 
         self.pct_of_wage = fact("Fact_B_P_plumbing_ratio_wage_to_main_revenue_2017")
         self.cost_wage = self.invest_pa * self.pct_of_wage
@@ -62,15 +67,19 @@ class CO2eChangeFuelHeatpump(CO2eChangeEnergyPerMWh, Invest):
 
         self.emplo_existing = (
             fact("Fact_B_P_install_heating_emplo_2017")
-            * entries.m_population_com_2018
-            / entries.m_population_nat
+            * population_commune_2018
+            / population_germany_2018
             * ass("Ass_B_D_install_heating_emplo_pct_of_A_heatpump")
         )
 
         self.demand_emplo_new = max(0, self.demand_emplo - self.emplo_existing)
 
         CO2eChangeEnergyPerMWh.__post_init__(
-            self, entries=entries, facts=facts, what=what, a18=a18
+            self,
+            facts=facts,
+            duration_CO2e_neutral_years=duration_CO2e_neutral_years,
+            what=what,
+            a18=a18,
         )
 
         # override value from CO2eChangeEnergyPerMWh!

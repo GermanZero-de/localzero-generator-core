@@ -2,7 +2,6 @@
 
 from dataclasses import dataclass, InitVar
 
-from ...makeentries import Entries
 from ...refdata import Facts, Assumptions
 from ...agri2018.a18 import A18
 
@@ -15,9 +14,9 @@ class CO2eChangeOther(CO2eChangeAgri):
     demand_change: float = 0
     prod_volume: float = 0
 
-    entries: InitVar[Entries]
     facts: InitVar[Facts]
     assumptions: InitVar[Assumptions]
+    duration_CO2e_neutral_years: InitVar[float]
     what: InitVar[str]
     a18: InitVar[A18]
     ass_demand_change: InitVar[str]
@@ -25,8 +24,8 @@ class CO2eChangeOther(CO2eChangeAgri):
 
     def __post_init__(  # type: ignore[override]
         self,
-        entries: Entries,
         facts: Facts,
+        duration_CO2e_neutral_years: float,
         what: str,
         a18: A18,
         assumptions: Assumptions,
@@ -45,5 +44,9 @@ class CO2eChangeOther(CO2eChangeAgri):
         self.CO2e_production_based = self.prod_volume * self.CO2e_production_based_per_t
 
         CO2eChangeAgri.__post_init__(
-            self, entries=entries, facts=facts, what=what, a18=a18
+            self,
+            facts=facts,
+            duration_CO2e_neutral_years=duration_CO2e_neutral_years,
+            what=what,
+            a18=a18,
         )
