@@ -3,7 +3,7 @@
 from ....refdata import Facts
 from ....utils import div
 
-from ...core.electricity2030_core import EnergyDemandWithCostFuel
+from ...core.energy import EnergyDemandWithCostFuel
 
 
 def calc_energy_demand(

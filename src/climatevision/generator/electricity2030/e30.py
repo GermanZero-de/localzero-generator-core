@@ -2,14 +2,14 @@
 
 from dataclasses import dataclass
 
-from .core.electricity2030_core import (
-    EColVars2030,
+from .core.energy import (
     EnergyDemand,
     EnergyDemandWithCostFuel,
-    FossilFuelsProduction,
-    RenewableGeothermalProduction,
     Energy,
 )
+from .core.e_col_vars_2030 import EColVars2030
+from .core.fossil_fuels_production import FossilFuelsProduction
+from .core.renewable_geothermal_production import RenewableGeothermalProduction
 
 
 @dataclass(kw_only=True)

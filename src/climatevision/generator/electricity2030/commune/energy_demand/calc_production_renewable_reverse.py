@@ -2,7 +2,7 @@
 
 from ....refdata import Facts, Assumptions
 
-from ...core.electricity2030_core import EColVars2030
+from ...core.e_col_vars_2030 import EColVars2030
 
 
 def calc_production_renewable_reverse(

@@ -16,22 +16,19 @@ from ...transport2030.t30 import T30
 from ...waste2030 import WasteLines
 
 from ..e30 import E30
-from ..core.electricity2030_core import (
-    EColVars2030,
-    EnergyDemand,
-    EnergyDemandWithCostFuel,
-    FossilFuelsProduction,
-    Energy,
-    calc_production_renewable_geothermal,
-    calc_stop_production_by_fossil_fuels,
-    calc_production_local_pv_roof,
-    calc_production_local_pv_facade,
+from ..core.energy import Energy, EnergyDemand, EnergyDemandWithCostFuel
+from ..core.fossil_fuels_production import FossilFuelsProduction
+from ..core.e_col_vars_2030 import EColVars2030
+from ..core.geothermal import calc_production_renewable_geothermal
+from ..core.fossil_fuels import calc_stop_production_by_fossil_fuels
+from ..core.pv import (
     calc_production_local_pv_agri,
+    calc_production_local_pv_facade,
     calc_production_local_pv_park,
-    calc_production_local_wind_onshore,
-    calc_renew_wind_offshore,
-    calc_production_local_hydro,
+    calc_production_local_pv_roof,
 )
+from ..core.wind import calc_production_local_wind_onshore, calc_renew_wind_offshore
+from ..core.hydro import calc_production_local_hydro
 
 
 # Berechnungsfunktion im Sektor E für 203X

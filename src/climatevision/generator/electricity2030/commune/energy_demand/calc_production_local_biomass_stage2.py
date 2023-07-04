@@ -5,7 +5,7 @@ from ....refdata import Facts, Assumptions
 from ....utils import div, MILLION
 from ....electricity2018.e18 import E18
 
-from ...core.electricity2030_core import EColVars2030
+from ...core.e_col_vars_2030 import EColVars2030
 
 
 def calc_production_local_biomass_stage2(
