@@ -2,13 +2,13 @@
 
 from dataclasses import dataclass
 
-from ..makeentries import Entries
-from ..refdata import Facts, Assumptions
-from ..utils import MILLION, div
-from .. import electricity2018
-from ..business2018.b18 import B18
-from ..electricity2018.e18 import E18
-from ..residences2018.r18 import R18
+from ...makeentries import Entries
+from ...refdata import Facts, Assumptions
+from ...utils import MILLION, div
+from ... import electricity2018
+from ...business2018.b18 import B18
+from ...electricity2018.e18 import E18
+from ...residences2018.r18 import R18
 
 
 @dataclass(kw_only=True)
@@ -211,16 +211,14 @@ def calc_biomass_cogen(facts: Facts, *, p_local_biomass: EColVars2030) -> EColVa
 
 
 def calc_production_renewable_geothermal(
-    entries: Entries,
     facts: Facts,
     assumptions: Assumptions,
+    duration_until_target_year: int,
     *,
     d_energy: float,
 ) -> RenewableGeothermalProduction:
     fact = facts.fact
     ass = assumptions.ass
-
-    Kalkulationszeitraum = entries.m_duration_target
 
     CO2e_total = 0
     invest = 0
@@ -238,7 +236,7 @@ def calc_production_renewable_geothermal(
     power_installed = fact("Fact_E_P_geoth_power_installed_2018")
     full_load_hour = fact("Fact_E_P_geoth_full_load_hours")
 
-    invest_pa = invest / Kalkulationszeitraum
+    invest_pa = invest / duration_until_target_year
     demand_emplo_new = max(0, demand_emplo - emplo_existing)
     power_to_be_installed = max(
         0,
@@ -254,7 +252,7 @@ def calc_production_renewable_geothermal(
     invest_pa_outside = (
         power_to_be_installed
         * invest_per_x
-        / Kalkulationszeitraum
+        / duration_until_target_year
         * d_energy
         / ass("Ass_E_P_renew_nep_total_2035")
     )
@@ -314,7 +312,7 @@ def calc_stop_production_by_fossil_fuels(
     """Compute what happens if we stop producing electricity from a fossil fuel."""
     fact = facts.fact
 
-    KlimaneutraleJahre = entries.m_duration_neutral
+    duration_CO2e_neutral_years = entries.m_duration_neutral
 
     energy = 0
     CO2e_total_2021_estimated = e18_production.CO2e_combustion_based * fact(
@@ -333,7 +331,7 @@ def calc_stop_production_by_fossil_fuels(
     CO2e_total = CO2e_combustion_based
     cost_climate_saved = (
         (CO2e_total_2021_estimated - CO2e_combustion_based)
-        * KlimaneutraleJahre
+        * duration_CO2e_neutral_years
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     change_CO2e_t = CO2e_total - e18_production.CO2e_total
@@ -368,7 +366,8 @@ def calc_production_local_pv_roof(
     r18: R18,
 ):
     ass = assumptions.ass
-    Kalkulationszeitraum = entries.m_duration_target
+
+    duration_until_target_year = entries.m_duration_target
 
     # TODO: Change the below
     p_local_pv_roof = EColVars2030()
@@ -444,7 +443,7 @@ def calc_production_local_pv_roof(
     p_local_pv_roof.change_energy_MWh = (
         p_local_pv_roof.energy - e18.p_local_pv_roof.energy
     )
-    p_local_pv_roof.invest_pa = p_local_pv_roof.invest / Kalkulationszeitraum
+    p_local_pv_roof.invest_pa = p_local_pv_roof.invest / duration_until_target_year
     p_local_pv_roof.invest_com = div(
         p_local_pv_roof.invest
         * (r18.p_buildings_area_m2_com.area_m2 + b18.p_nonresi_com.area_m2),
@@ -457,7 +456,9 @@ def calc_production_local_pv_roof(
         p_local_pv_roof.change_energy_MWh, e18.p_local_pv_roof.energy
     )
     p_local_pv_roof.cost_wage = p_local_pv_roof.invest_pa * p_local_pv_roof.pct_of_wage
-    p_local_pv_roof.invest_pa_com = p_local_pv_roof.invest_com / Kalkulationszeitraum
+    p_local_pv_roof.invest_pa_com = (
+        p_local_pv_roof.invest_com / duration_until_target_year
+    )
     p_local_pv_roof.change_CO2e_t = 0
     p_local_pv_roof.cost_climate_saved = 0
     p_local_pv_roof.CO2e_total = 0
@@ -475,7 +476,8 @@ def calc_production_local_pv_facade(
     r18: R18,
 ):
     ass = assumptions.ass
-    Kalkulationszeitraum = entries.m_duration_target
+
+    duration_until_target_year = entries.m_duration_target
 
     # TODO: Change the below
     p_local_pv_facade = EColVars2030()
@@ -537,7 +539,7 @@ def calc_production_local_pv_facade(
     p_local_pv_facade.change_energy_MWh = (
         p_local_pv_facade.energy - e18.p_local_pv_facade.energy
     )
-    p_local_pv_facade.invest_pa = p_local_pv_facade.invest / Kalkulationszeitraum
+    p_local_pv_facade.invest_pa = p_local_pv_facade.invest / duration_until_target_year
     p_local_pv_facade.invest_com = div(
         p_local_pv_facade.invest
         * (r18.p_buildings_area_m2_com.area_m2 + b18.p_nonresi_com.area_m2),
@@ -553,7 +555,7 @@ def calc_production_local_pv_facade(
         p_local_pv_facade.invest_pa * p_local_pv_facade.pct_of_wage
     )
     p_local_pv_facade.invest_pa_com = (
-        p_local_pv_facade.invest_com / Kalkulationszeitraum
+        p_local_pv_facade.invest_com / duration_until_target_year
     )
     p_local_pv_facade.demand_emplo = div(
         p_local_pv_facade.cost_wage, p_local_pv_facade.ratio_wage_to_emplo
@@ -574,7 +576,8 @@ def calc_production_local_pv_agri(
     local_pv_park_full_load_hour: float,
 ):
     ass = assumptions.ass
-    Kalkulationszeitraum = entries.m_duration_target
+
+    duration_until_target_year = entries.m_duration_target
 
     # TODO: Change the below
     p_local_pv_agri = EColVars2030()
@@ -628,7 +631,7 @@ def calc_production_local_pv_agri(
     p_local_pv_agri.change_energy_MWh = (
         p_local_pv_agri.energy - e18.p_local_pv_agri.energy
     )
-    p_local_pv_agri.invest_pa = p_local_pv_agri.invest / Kalkulationszeitraum
+    p_local_pv_agri.invest_pa = p_local_pv_agri.invest / duration_until_target_year
     p_local_pv_agri.change_cost_mro = (
         p_local_pv_agri.cost_mro - e18.p_local_pv_agri.cost_mro
     )
@@ -652,7 +655,8 @@ def calc_production_local_pv_park(
     local_pv_roof_full_load_hour: float,
 ):
     ass = assumptions.ass
-    Kalkulationszeitraum = entries.m_duration_target
+
+    duration_until_target_year = entries.m_duration_target
 
     # TODO: Change the below
     p_local_pv_park = EColVars2030()
@@ -707,7 +711,7 @@ def calc_production_local_pv_park(
     p_local_pv_park.change_energy_MWh = (
         p_local_pv_park.energy - e18.p_local_pv_park.energy
     )
-    p_local_pv_park.invest_pa = p_local_pv_park.invest / Kalkulationszeitraum
+    p_local_pv_park.invest_pa = p_local_pv_park.invest / duration_until_target_year
     p_local_pv_park.change_cost_mro = (
         p_local_pv_park.cost_mro - e18.p_local_pv_park.cost_mro
     )
@@ -732,7 +736,11 @@ def calc_production_local_wind_onshore(
 ):
     fact = facts.fact
     ass = assumptions.ass
-    Kalkulationszeitraum = entries.m_duration_target
+
+    duration_until_target_year = entries.m_duration_target
+
+    population_commune_2018 = entries.m_population_com_2018
+    population_germany_2018 = entries.m_population_nat
 
     # TODO: Change the below
     p_local_wind_onshore = EColVars2030()
@@ -759,8 +767,8 @@ def calc_production_local_wind_onshore(
     )
     p_local_wind_onshore.emplo_existing = (
         fact("Fact_E_P_wind_onshore_emplo_2018")
-        * entries.m_population_com_2018
-        / entries.m_population_nat
+        * population_commune_2018
+        / population_germany_2018
     )
     p_local_wind_onshore.power_to_be_installed_pct = (
         entries.e_PV_power_to_be_inst_local_wind_onshore
@@ -817,7 +825,9 @@ def calc_production_local_wind_onshore(
     p_local_wind_onshore.change_energy_pct = div(
         p_local_wind_onshore.change_energy_MWh, e18.p_local_wind_onshore.energy
     )
-    p_local_wind_onshore.invest_pa = p_local_wind_onshore.invest / Kalkulationszeitraum
+    p_local_wind_onshore.invest_pa = (
+        p_local_wind_onshore.invest / duration_until_target_year
+    )
     p_local_wind_onshore.cost_wage = (
         p_local_wind_onshore.invest_pa * p_local_wind_onshore.pct_of_wage
     )
@@ -829,12 +839,15 @@ def calc_production_local_wind_onshore(
 
 
 def calc_renew_wind_offshore(
-    entries: Entries, facts: Facts, assumptions: Assumptions, *, d_energy: float
+    facts: Facts,
+    assumptions: Assumptions,
+    duration_until_target_year: int,
+    *,
+    d_energy: float,
 ):
     fact = facts.fact
     ass = assumptions.ass
 
-    Kalkulationszeitraum = entries.m_duration_target
     p_renew_wind_offshore = EColVars2030()
     p_renew_wind_offshore.invest = 0
     p_renew_wind_offshore.demand_emplo = 0
@@ -867,7 +880,7 @@ def calc_renew_wind_offshore(
         "Fact_E_P_wind_offshore_full_load_hours"
     )
     p_renew_wind_offshore.invest_pa = (
-        p_renew_wind_offshore.invest / Kalkulationszeitraum
+        p_renew_wind_offshore.invest / duration_until_target_year
     )
     p_renew_wind_offshore.demand_emplo_new = max(
         0, p_renew_wind_offshore.demand_emplo - p_renew_wind_offshore.emplo_existing
@@ -886,12 +899,12 @@ def calc_renew_wind_offshore(
     p_renew_wind_offshore.cost_wage = (
         p_renew_wind_offshore.invest_pa
         * p_renew_wind_offshore.pct_of_wage
-        / Kalkulationszeitraum
+        / duration_until_target_year
     )
     p_renew_wind_offshore.invest_pa_outside = (
         p_renew_wind_offshore.power_to_be_installed
         * p_renew_wind_offshore.invest_per_x
-        / Kalkulationszeitraum
+        / duration_until_target_year
         * d_energy
         / ass("Ass_E_P_renew_nep_total_2035")
     )

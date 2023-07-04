@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass
 
-from .electricity2030_core import (
+from .core.electricity2030_core import (
     EColVars2030,
     EnergyDemand,
     EnergyDemandWithCostFuel,
