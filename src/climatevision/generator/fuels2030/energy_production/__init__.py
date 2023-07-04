@@ -2,7 +2,6 @@
 
 from dataclasses import dataclass
 
-from ...makeentries import Entries
 from ...refdata import Facts, Assumptions
 from ...fuels2018.f18 import F18
 from ...agri2030.a30 import A30
@@ -40,9 +39,10 @@ class Production:
 
 
 def calc_production(
-    entries: Entries,
     facts: Facts,
     assumptions: Assumptions,
+    duration_CO2e_neutral_years: float,
+    duration_until_target_year: int,
     f18: F18,
     a30: A30,
     b30: B30,
@@ -59,17 +59,19 @@ def calc_production(
     petrol = EFuelProduction.calc(
         energy=t30.t.transport.demand_epetrol + a30.p_operation.demand_epetrol,
         CO2e_emission_factor=fact("Fact_T_S_petrol_EmFa_tank_wheel_2018"),
-        entries=entries,
         facts=facts,
         assumptions=assumptions,
+        duration_CO2e_neutral_years=duration_CO2e_neutral_years,
+        duration_until_target_year=duration_until_target_year,
         production_2018=f18.p_petrol,
     )
     jetfuel = EFuelProduction.calc(
         energy=t30.t.transport.demand_ejetfuel,
         CO2e_emission_factor=fact("Fact_T_S_petroljet_EmFa_tank_wheel_2018"),
-        entries=entries,
         facts=facts,
         assumptions=assumptions,
+        duration_CO2e_neutral_years=duration_CO2e_neutral_years,
+        duration_until_target_year=duration_until_target_year,
         production_2018=f18.p_jetfuel,
     )
     diesel = EFuelProduction.calc(
@@ -79,9 +81,10 @@ def calc_production(
             + a30.p_operation.demand_ediesel
         ),
         CO2e_emission_factor=fact("Fact_T_S_diesel_EmFa_tank_wheel_2018"),
-        entries=entries,
         facts=facts,
         assumptions=assumptions,
+        duration_CO2e_neutral_years=duration_CO2e_neutral_years,
+        duration_until_target_year=duration_until_target_year,
         production_2018=f18.p_diesel,
     )
     biogas = FuelWithoutDirectReplacement.calc(energy2018=f18.p_biogas.energy)
@@ -89,9 +92,10 @@ def calc_production(
     bioethanol = FuelWithoutDirectReplacement.calc(energy2018=f18.p_bioethanol.energy)
 
     emethan = NewEFuelProduction.calc(
-        entries=entries,
         facts=facts,
         assumptions=assumptions,
+        duration_CO2e_neutral_years=duration_CO2e_neutral_years,
+        duration_until_target_year=duration_until_target_year,
         energy=r30.p.demand_emethan
         + b30.p.demand_emethan
         + i30.p.demand_emethan
@@ -102,9 +106,10 @@ def calc_production(
         fuel_efficiency=ass("Ass_S_methan_efficiency"),
     )
     hydrogen = NewEFuelProduction.calc(
-        entries=entries,
         facts=facts,
         assumptions=assumptions,
+        duration_CO2e_neutral_years=duration_CO2e_neutral_years,
+        duration_until_target_year=duration_until_target_year,
         energy=i30.p.demand_hydrogen + t30.t.transport.demand_hydrogen,
         CO2e_emission_factor=0,
         invest_per_power=ass("Ass_S_electrolyses_invest_per_power"),
@@ -112,9 +117,10 @@ def calc_production(
         fuel_efficiency=ass("Ass_F_P_electrolysis_efficiency"),
     )
     hydrogen_reconv = NewEFuelProduction.calc(
-        entries=entries,
         facts=facts,
         assumptions=assumptions,
+        duration_CO2e_neutral_years=duration_CO2e_neutral_years,
+        duration_until_target_year=duration_until_target_year,
         energy=(
             (
                 h30.p.demand_electricity
