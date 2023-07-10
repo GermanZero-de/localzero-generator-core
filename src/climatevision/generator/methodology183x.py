@@ -188,6 +188,9 @@ def calc_budget(
 
     fact = facts.fact
 
+    population_commune_2018 = entries.m_population_com_2018
+    population_germany_2018 = entries.m_population_nat
+
     ######################################
     ### budgets 2016 until target year ###
     ######################################
@@ -196,15 +199,15 @@ def calc_budget(
     # local greenhouse gas budget from 2016 until target year in com!!
     m183X.GHG_budget_2016_to_year_target = (
         entries.m_GHG_budget_2016_to_year_target
-        * entries.m_population_com_2018
-        / entries.m_population_nat
+        * population_commune_2018
+        / population_germany_2018
     )
 
     # local nonCO2 budget from 2016 until target year in com!!
     m183X.nonCO2_budget_2016_to_year_target = (
         entries.m_nonCO2_budget_2016_to_year_target
-        * entries.m_population_com_2018
-        / entries.m_population_nat
+        * population_commune_2018
+        / population_germany_2018
     )
 
     # local CO2 budget from 2016 until infinity
@@ -433,6 +436,11 @@ def calc_z(
 
     fact = facts.fact
 
+    duration_CO2e_neutral_years = entries.m_duration_neutral
+
+    population_commune_2018 = entries.m_population_com_2018
+    population_germany_2018 = entries.m_population_nat
+
     ##################################################################
     ### total emissions 203X, saved emissions, saved climate costs ###
     ##################################################################
@@ -630,12 +638,12 @@ def calc_z(
 
     s.cost_climate_saved = (
         (s.CO2e_total_2021_estimated - s.CO2e_total_30)
-        * entries.m_duration_neutral
+        * duration_CO2e_neutral_years
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     d.cost_climate_saved = (
         (d.CO2e_total_2021_estimated - d.CO2e_total_30)
-        * entries.m_duration_neutral
+        * duration_CO2e_neutral_years
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     z.cost_climate_saved = s.cost_climate_saved + d.cost_climate_saved
@@ -754,9 +762,9 @@ def calc_z(
     # ==========Extra Calculations=====================
 
     m183X.CO2e_per_capita_nat = div(
-        fact("Fact_M_CO2e_w_lulucf_2018"), entries.m_population_nat
+        fact("Fact_M_CO2e_w_lulucf_2018"), population_germany_2018
     )
-    m183X.CO2e_per_capita_com = div(z.CO2e_total_18, entries.m_population_com_2018)
+    m183X.CO2e_per_capita_com = div(z.CO2e_total_18, population_commune_2018)
     m183X.CO2e_per_capita_com_pct_of_nat = div(
         m183X.CO2e_per_capita_com, m183X.CO2e_per_capita_nat
     )
