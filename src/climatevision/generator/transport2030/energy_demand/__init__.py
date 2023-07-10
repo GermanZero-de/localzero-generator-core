@@ -82,57 +82,82 @@ def calc_production(
 ) -> Production:
     ass = assumptions.ass
 
+    duration_until_target_year = entries.m_duration_target
+    duration_CO2e_neutral_years = entries.m_duration_neutral
+
+    population_commune_203X = entries.m_population_com_203X
+    population_germany_203X = entries.m_population_nat
+
+    area_kind = entries.t_rt3
+
     # --- Air ---
-    air_dmstc = calc_air_domestic(entries, facts, t18)
-    air_inter = calc_air_international(entries, facts, assumptions, t18)
+    air_dmstc = calc_air_domestic(facts, duration_CO2e_neutral_years, t18)
+    air_inter = calc_air_international(
+        facts,
+        assumptions,
+        duration_CO2e_neutral_years,
+        population_commune_203X,
+        population_germany_203X,
+        t18,
+    )
     air = Air.calc(t18, domestic=air_dmstc, international=air_inter)
 
     # First we estimate the total required transport capacity in the target year (excluding air).
-    required_domestic_transport_capacity_pkm = entries.m_population_com_203X * (
+    required_domestic_transport_capacity_pkm = population_commune_203X * (
         ass("Ass_T_D_ratio_trnsprt_ppl_to_ppl_city")
-        if entries.t_rt3 == "city"
+        if area_kind == "city"
         else ass("Ass_T_D_ratio_trnsprt_ppl_to_ppl_smcity")
-        if entries.t_rt3 == "smcty"
+        if area_kind == "smcty"
         else ass("Ass_T_D_ratio_trnsprt_ppl_to_ppl_rural")
-        if entries.t_rt3 == "rural"
-        else ass("Ass_T_D_trnsprt_ppl_nat") / entries.m_population_nat
+        if area_kind == "rural"
+        else ass("Ass_T_D_trnsprt_ppl_nat") / population_germany_203X
     )
 
     # -- Road ---
     road_car_it_ot = Road.calc_car_it_ot(
-        entries,
         facts,
         assumptions,
+        duration_CO2e_neutral_years,
+        area_kind,
         t18=t18,
         required_domestic_transport_capacity_pkm=required_domestic_transport_capacity_pkm,
     )
     road_car_ab = Road.calc_car_ab(
-        entries,
         facts,
         assumptions,
+        duration_CO2e_neutral_years,
+        area_kind,
         t18=t18,
         required_domestic_transport_capacity_pkm=required_domestic_transport_capacity_pkm,
     )
     road_car = RoadCar.calc(
-        entries, facts, assumptions, t18=t18, it_ot=road_car_it_ot, ab=road_car_ab
-    )
-    road_action_charger = RoadInvestmentAction.calc_car_action_charger(
-        entries,
         facts,
         assumptions,
+        duration_until_target_year,
+        t18=t18,
+        it_ot=road_car_it_ot,
+        ab=road_car_ab,
+    )
+    road_action_charger = RoadInvestmentAction.calc_car_action_charger(
+        facts,
+        assumptions,
+        duration_until_target_year,
+        area_kind,
         car_base_unit=road_car.fleet_modernisation_cost.base_unit,
     )
     road_bus = RoadBus.calc(
-        entries,
         facts,
         assumptions,
+        duration_until_target_year,
+        duration_CO2e_neutral_years,
+        area_kind,
         t18=t18,
         total_transport_capacity_pkm=required_domestic_transport_capacity_pkm,
     )
     road_bus_action_infra = RoadBus.calc_action_infra(
-        entries,
         facts,
         assumptions,
+        duration_until_target_year,
         bus_transport_capacity_pkm=road_bus.transport.transport_capacity_pkm,
     )
     road_ppl = RoadPeople.calc(
@@ -142,33 +167,35 @@ def calc_production(
         road_bus_action_infra=road_bus_action_infra,
     )
     road_gds_ldt_it_ot = Road.calc_goods_lightduty_it_ot(
-        entries, facts, assumptions, t18=t18
+        facts, assumptions, duration_CO2e_neutral_years, t18=t18
     )
-    road_gds_ldt_ab = Road.calc_goods_lightduty_ab(entries, facts, assumptions, t18=t18)
+    road_gds_ldt_ab = Road.calc_goods_lightduty_ab(
+        facts, assumptions, duration_CO2e_neutral_years, t18=t18
+    )
     road_gds_ldt = RoadGoodsLightDuty.calc(
-        entries,
         facts,
         assumptions,
+        duration_until_target_year,
         t18=t18,
         it_ot=road_gds_ldt_it_ot,
         ab=road_gds_ldt_ab,
     )
     road_gds_mhd_ab = Road.calc_goods_medium_and_heavy_duty_ab(
-        entries, facts, assumptions, t18=t18
+        facts, assumptions, duration_CO2e_neutral_years, t18=t18
     )
     road_gds_mhd_it_ot = Road.calc_goods_medium_and_heavy_duty_it_ot(
-        entries, facts, assumptions, t18=t18
+        facts, assumptions, duration_CO2e_neutral_years, t18=t18
     )
     road_gds_mhd = RoadGoodsMediumAndHeavyDuty.calc(
-        entries,
         facts,
         assumptions,
+        duration_until_target_year,
         t18=t18,
         it_ot=road_gds_mhd_it_ot,
         ab=road_gds_mhd_ab,
     )
     road_gds_mhd_action_wire = RoadGoodsMediumAndHeavyDuty.calc_action_wire(
-        entries, facts, assumptions
+        facts, assumptions, duration_until_target_year, population_commune_203X
     )
     road_gds = RoadGoods.calc(
         t18=t18,
@@ -185,29 +212,33 @@ def calc_production(
 
     # --- Rail ---
     rail_ppl_metro = RailPeople.calc_metro(
-        entries,
         facts,
         assumptions,
+        duration_until_target_year,
+        duration_CO2e_neutral_years,
+        area_kind,
         t18=t18,
         total_transport_capacity_pkm=required_domestic_transport_capacity_pkm,
     )
     rail_ppl_distance = RailPeople.calc_distance(
-        entries,
         facts,
         assumptions,
+        duration_until_target_year,
+        duration_CO2e_neutral_years,
+        area_kind,
         t18=t18,
         total_transport_capacity_pkm=required_domestic_transport_capacity_pkm,
     )
     rail_action_invest_infra = InvestmentAction.calc_rail_action_invest_infra(
-        entries, facts, assumptions
+        facts, assumptions, duration_until_target_year, population_commune_203X
     )
     rail_action_invest_station = InvestmentAction.calc_rail_action_invest_station(
-        entries, facts, assumptions
+        facts, assumptions, duration_until_target_year, population_commune_203X
     )
     rail_ppl_metro_action_infra = RailPeopleMetroActionInfra.calc(
-        entries,
         facts,
         assumptions,
+        duration_until_target_year,
         metro_transport_capacity_pkm=rail_ppl_metro.transport.transport_capacity_pkm,
     )
     rail_ppl = RailPeopleSum.calc(
@@ -216,7 +247,13 @@ def calc_production(
         rail_ppl_distance=rail_ppl_distance,
         rail_ppl_metro_action_infra=rail_ppl_metro_action_infra,
     )
-    rail_gds = RailGoods.calc(entries, facts, assumptions, t18=t18)
+    rail_gds = RailGoods.calc(
+        facts,
+        assumptions,
+        duration_until_target_year,
+        duration_CO2e_neutral_years,
+        t18=t18,
+    )
     rail = Rail.calc(
         t18=t18,
         rail_ppl=rail_ppl,
@@ -226,9 +263,30 @@ def calc_production(
     )
 
     # --- Ship ---
-    ship_dmstc = ShipDomestic.calc(entries, facts, assumptions, t18=t18)
-    ship_inter = ShipInternational.calc(entries, facts, assumptions, t18=t18)
-    ship_dmstc_action_infra = ShipDomesticActionInfra.calc(entries, facts, assumptions)
+    ship_dmstc = ShipDomestic.calc(
+        facts,
+        assumptions,
+        duration_until_target_year,
+        duration_CO2e_neutral_years,
+        population_commune_203X,
+        population_germany_203X,
+        t18=t18,
+    )
+    ship_inter = ShipInternational.calc(
+        facts,
+        assumptions,
+        duration_CO2e_neutral_years,
+        population_commune_203X,
+        population_germany_203X,
+        t18=t18,
+    )
+    ship_dmstc_action_infra = ShipDomesticActionInfra.calc(
+        facts,
+        assumptions,
+        duration_until_target_year,
+        population_commune_203X,
+        population_germany_203X,
+    )
     ship = Ship.calc(
         t18=t18,
         ship_inter=ship_inter,
@@ -238,30 +296,33 @@ def calc_production(
 
     # --- Other ---
     other_cycl = OtherCycle.calc(
-        entries,
         facts,
         assumptions,
+        duration_until_target_year,
+        duration_CO2e_neutral_years,
+        area_kind,
         t18,
         total_transport_capacity_pkm=required_domestic_transport_capacity_pkm,
     )
     other_cycl_action_infra = InvestmentAction.calc_other_cycl_action_infra(
-        entries,
         facts,
         assumptions,
+        duration_until_target_year,
         cycle_transport_capacity_pkm=other_cycl.transport.transport_capacity_pkm,
     )
     other_foot = OtherFoot.calc(
-        entries,
         facts,
         assumptions,
+        duration_CO2e_neutral_years,
+        area_kind,
         t18=t18,
         total_transport_capacity_pkm=required_domestic_transport_capacity_pkm,
     )
     other_foot_action_infra = InvestmentAction.calc_other_foot_action_infra(
-        entries, facts, assumptions
+        facts, assumptions, duration_until_target_year, population_commune_203X
     )
     other = Other.calc(
-        entries,
+        duration_until_target_year,
         t18=t18,
         other_foot=other_foot,
         other_cycl=other_cycl,

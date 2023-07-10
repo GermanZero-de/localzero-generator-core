@@ -2,7 +2,6 @@
 
 from dataclasses import dataclass
 
-from ...makeentries import Entries
 from ...refdata import Assumptions
 from ...common.g import G, GConsult as GPlanning
 
@@ -21,8 +20,8 @@ class General:
 
 
 def calc_general(
-    entries: Entries,
     assumptions: Assumptions,
+    duration_until_target_year: int,
     road_bus_action_infra: InvestmentAction,
     road_gds_mhd_action_wire: InvestmentAction,
     road_action_charger: RoadInvestmentAction,
@@ -43,7 +42,7 @@ def calc_general(
     )
 
     g_planning = GPlanning.calc_from_invest_calc_planning_with_invest_commune(
-        entries, assumptions, invest
+        assumptions, duration_until_target_year, invest
     )
 
     # TODO: This Seems to be a pointless rename?

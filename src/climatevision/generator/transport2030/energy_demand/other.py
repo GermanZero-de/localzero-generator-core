@@ -2,7 +2,6 @@
 
 from dataclasses import dataclass
 
-from ...makeentries import Entries
 from ...refdata import Facts, Assumptions
 from ...utils import div
 from ...common.invest import InvestCommune
@@ -33,9 +32,10 @@ class OtherFoot:
     @classmethod
     def calc(
         cls,
-        entries: Entries,
         facts: Facts,
         assumptions: Assumptions,
+        duration_CO2e_neutral_years: float,
+        area_kind: str,
         *,
         t18: T18,
         total_transport_capacity_pkm: float,
@@ -48,11 +48,11 @@ class OtherFoot:
 
         transport_capacity_pkm = total_transport_capacity_pkm * (
             ass("Ass_T_D_trnsprt_ppl_city_foot_frac_2050")
-            if entries.t_rt3 == "city"
+            if area_kind == "city"
             else ass("Ass_T_D_trnsprt_ppl_smcty_foot_frac_2050")
-            if entries.t_rt3 == "smcty"
+            if area_kind == "smcty"
             else ass("Ass_T_D_trnsprt_ppl_rural_foot_frac_2050")
-            if entries.t_rt3 == "rural"
+            if area_kind == "rural"
             else ass("Ass_T_D_trnsprt_ppl_nat_foot_frac_2050")
         )
 
@@ -61,7 +61,7 @@ class OtherFoot:
         )
         cost_climate_saved = (
             (CO2e_total_2021_estimated)
-            * entries.m_duration_neutral
+            * duration_CO2e_neutral_years
             * fact("Fact_M_cost_per_CO2e_2020")
         )
         res = cls(
@@ -99,9 +99,11 @@ class OtherCycle:
     @classmethod
     def calc(
         cls,
-        entries: Entries,
         facts: Facts,
         assumptions: Assumptions,
+        duration_until_target_year: int,
+        duration_CO2e_neutral_years: float,
+        area_kind: str,
         t18: T18,
         total_transport_capacity_pkm: float,
     ) -> "OtherCycle":
@@ -110,11 +112,11 @@ class OtherCycle:
 
         transport_capacity_pkm = total_transport_capacity_pkm * (
             ass("Ass_T_D_trnsprt_ppl_city_cycl_frac_2050")
-            if entries.t_rt3 == "city"
+            if area_kind == "city"
             else ass("Ass_T_D_trnsprt_ppl_smcty_cycl_frac_2050")
-            if entries.t_rt3 == "smcty"
+            if area_kind == "smcty"
             else ass("Ass_T_D_trnsprt_ppl_rural_cycl_frac_2050")
-            if entries.t_rt3 == "rural"
+            if area_kind == "rural"
             else ass("Ass_T_D_trnsprt_ppl_nat_cycl_frac_2050")
         )
 
@@ -130,12 +132,12 @@ class OtherCycle:
         )
         cost_climate_saved = (
             (CO2e_total_2021_estimated)
-            * entries.m_duration_neutral
+            * duration_CO2e_neutral_years
             * fact("Fact_M_cost_per_CO2e_2020")
         )
         invest_com = 0
-        invest_pa = invest / entries.m_duration_target
-        invest_pa_com = invest_com / entries.m_duration_target
+        invest_pa = invest / duration_until_target_year
+        invest_pa_com = invest_com / duration_until_target_year
 
         return cls(
             base_unit=base_unit,
@@ -168,7 +170,7 @@ class Other(InvestCommune):
     @classmethod
     def calc(
         cls,
-        entries: Entries,
+        duration_until_target_year: int,
         *,
         t18: T18,
         other_foot: OtherFoot,
@@ -211,7 +213,7 @@ class Other(InvestCommune):
             other_foot_action_infra.cost_wage + other_cycl_action_infra.cost_wage
         )
         other_cycl_action_infra.invest_pa = (
-            other_cycl_action_infra.invest / entries.m_duration_target
+            other_cycl_action_infra.invest / duration_until_target_year
         )
         other_cycl_action_infra.demand_emplo = div(
             other_cycl_action_infra.cost_wage,
