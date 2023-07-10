@@ -44,7 +44,11 @@ def calc(
     p = Vars2()
     r = Vars8()
 
-    Kalkulationszeitraum = entries.m_duration_target
+    duration_until_target_year = entries.m_duration_target
+    duration_CO2e_neutral_years = entries.m_duration_neutral
+
+    population_commune_2018 = entries.m_population_com_2018
+    population_germany_2018 = entries.m_population_nat
 
     p_buildings_total = Vars3()
     p_buildings_until_1919 = Vars4()
@@ -82,7 +86,7 @@ def calc(
         1.0,
         fact("Fact_R_P_ratio_renovated_buildings to_not_renovated_2021")
         + p_buildings_total.rate_rehab_pa
-        * Kalkulationszeitraum
+        * duration_until_target_year
         * r18.p_buildings_until_1919.relative_heat_ratio_buildings_until_2004
         * div(p_buildings_total.area_m2, p_buildings_until_1919.area_m2),
     )
@@ -90,7 +94,7 @@ def calc(
         1.0,
         fact("Fact_R_P_ratio_renovated_buildings to_not_renovated_2021")
         + p_buildings_total.rate_rehab_pa
-        * Kalkulationszeitraum
+        * duration_until_target_year
         * r18.p_buildings_1919_1948.relative_heat_ratio_buildings_until_2004
         * div(p_buildings_total.area_m2, p_buildings_1919_1948.area_m2),
     )
@@ -98,7 +102,7 @@ def calc(
         1.0,
         fact("Fact_R_P_ratio_renovated_buildings to_not_renovated_2021")
         + p_buildings_total.rate_rehab_pa
-        * Kalkulationszeitraum
+        * duration_until_target_year
         * p_buildings_total.area_m2
         * div(
             r18.p_buildings_1919_1948.relative_heat_ratio_buildings_until_2004,
@@ -110,7 +114,7 @@ def calc(
         1.0,
         fact("Fact_R_P_ratio_renovated_buildings to_not_renovated_2021")
         + p_buildings_total.rate_rehab_pa
-        * Kalkulationszeitraum
+        * duration_until_target_year
         * r18.p_buildings_1949_1978.relative_heat_ratio_buildings_until_2004
         * div(p_buildings_total.area_m2, p_buildings_1949_1978.area_m2),
     )
@@ -118,7 +122,7 @@ def calc(
         1.0,
         fact("Fact_R_P_ratio_renovated_buildings to_not_renovated_2021")
         + p_buildings_total.rate_rehab_pa
-        * Kalkulationszeitraum
+        * duration_until_target_year
         * p_buildings_total.area_m2
         * div(
             r18.p_buildings_1949_1978.relative_heat_ratio_buildings_until_2004,
@@ -129,7 +133,7 @@ def calc(
         1.0,
         fact("Fact_R_P_ratio_renovated_buildings to_not_renovated_2021")
         + p_buildings_total.rate_rehab_pa
-        * Kalkulationszeitraum
+        * duration_until_target_year
         * r18.p_buildings_1979_1995.relative_heat_ratio_buildings_until_2004
         * div(p_buildings_total.area_m2, p_buildings_1979_1995.area_m2),
     )
@@ -137,7 +141,7 @@ def calc(
         1.0,
         fact("Fact_R_P_ratio_renovated_buildings to_not_renovated_2021")
         + p_buildings_total.rate_rehab_pa
-        * Kalkulationszeitraum
+        * duration_until_target_year
         * r18.p_buildings_1996_2004.relative_heat_ratio_buildings_until_2004
         * div(p_buildings_total.area_m2, p_buildings_1996_2004.area_m2),
     )
@@ -147,7 +151,7 @@ def calc(
     p_buildings_2011_today.pct_rehab = 1 - p_buildings_2011_today.pct_nonrehab
 
     p_buildings_new.pct_x = max(
-        div(entries.m_population_com_203X, entries.m_population_com_2018) - 1, 0
+        div(entries.m_population_com_203X, population_commune_2018) - 1, 0
     )
 
     p_buildings_new.area_m2 = p_buildings_total.area_m2 * p_buildings_new.pct_x
@@ -443,23 +447,23 @@ def calc(
     p_buildings_until_1919.rate_rehab_pa = (
         p_buildings_until_1919.pct_rehab
         - fact("Fact_R_P_ratio_renovated_buildings to_not_renovated_2021")
-    ) / Kalkulationszeitraum
+    ) / duration_until_target_year
     p_buildings_1919_1948.rate_rehab_pa = (
         p_buildings_1919_1948.pct_rehab
         - fact("Fact_R_P_ratio_renovated_buildings to_not_renovated_2021")
-    ) / Kalkulationszeitraum
+    ) / duration_until_target_year
     p_buildings_1949_1978.rate_rehab_pa = (
         p_buildings_1949_1978.pct_rehab
         - fact("Fact_R_P_ratio_renovated_buildings to_not_renovated_2021")
-    ) / Kalkulationszeitraum
+    ) / duration_until_target_year
     p_buildings_1979_1995.rate_rehab_pa = (
         p_buildings_1979_1995.pct_rehab
         - fact("Fact_R_P_ratio_renovated_buildings to_not_renovated_2021")
-    ) / Kalkulationszeitraum
+    ) / duration_until_target_year
     p_buildings_1996_2004.rate_rehab_pa = (
         p_buildings_1996_2004.pct_rehab
         - fact("Fact_R_P_ratio_renovated_buildings to_not_renovated_2021")
-    ) / Kalkulationszeitraum
+    ) / duration_until_target_year
 
     ### S - Section ###
 
@@ -800,8 +804,6 @@ def calc(
         "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
     )
 
-    KlimaneutraleJahre = entries.m_duration_neutral
-
     s_fueloil.CO2e_production_based = 0
     s_lpg.CO2e_production_based = 0
     s_biomass.CO2e_production_based = 0
@@ -816,7 +818,7 @@ def calc(
             s_fueloil.CO2e_total_2021_estimated
             - (s_fueloil.CO2e_production_based + s_fueloil.CO2e_combustion_based)
         )
-        * KlimaneutraleJahre
+        * duration_CO2e_neutral_years
         * fact("Fact_M_cost_per_CO2e_2020")
     )
 
@@ -825,7 +827,7 @@ def calc(
             s_lpg.CO2e_total_2021_estimated
             - (s_lpg.CO2e_production_based + s_lpg.CO2e_combustion_based)
         )
-        * KlimaneutraleJahre
+        * duration_CO2e_neutral_years
         * fact("Fact_M_cost_per_CO2e_2020")
     )
 
@@ -834,7 +836,7 @@ def calc(
             s_biomass.CO2e_total_2021_estimated
             - (s_biomass.CO2e_production_based + s_biomass.CO2e_combustion_based)
         )
-        * KlimaneutraleJahre
+        * duration_CO2e_neutral_years
         * fact("Fact_M_cost_per_CO2e_2020")
     )
 
@@ -843,7 +845,7 @@ def calc(
             s_coal.CO2e_total_2021_estimated
             - (s_coal.CO2e_production_based + s_coal.CO2e_combustion_based)
         )
-        * KlimaneutraleJahre
+        * duration_CO2e_neutral_years
         * fact("Fact_M_cost_per_CO2e_2020")
     )
 
@@ -852,7 +854,7 @@ def calc(
             s_petrol.CO2e_total_2021_estimated
             - (s_petrol.CO2e_production_based + s_petrol.CO2e_combustion_based)
         )
-        * KlimaneutraleJahre
+        * duration_CO2e_neutral_years
         * fact("Fact_M_cost_per_CO2e_2020")
     )
 
@@ -861,7 +863,7 @@ def calc(
             s_heatnet.CO2e_total_2021_estimated
             - (s_heatnet.CO2e_production_based + s_heatnet.CO2e_combustion_based)
         )
-        * KlimaneutraleJahre
+        * duration_CO2e_neutral_years
         * fact("Fact_M_cost_per_CO2e_2020")
     )
 
@@ -870,7 +872,7 @@ def calc(
             s_solarth.CO2e_total_2021_estimated
             - (s_solarth.CO2e_production_based + s_solarth.CO2e_combustion_based)
         )
-        * KlimaneutraleJahre
+        * duration_CO2e_neutral_years
         * fact("Fact_M_cost_per_CO2e_2020")
     )
 
@@ -879,26 +881,26 @@ def calc(
             s_heatpump.CO2e_total_2021_estimated
             - (s_heatpump.CO2e_production_based + s_heatpump.CO2e_combustion_based)
         )
-        * KlimaneutraleJahre
+        * duration_CO2e_neutral_years
         * fact("Fact_M_cost_per_CO2e_2020")
     )
 
     s_gas.cost_climate_saved = (
         (s_gas.CO2e_total_2021_estimated - (0 + s_gas.CO2e_combustion_based))
-        * KlimaneutraleJahre
+        * duration_CO2e_neutral_years
         * fact("Fact_M_cost_per_CO2e_2020")
     )
 
     s_emethan.cost_climate_saved = (
         (s_emethan.CO2e_total_2021_estimated - s_emethan.CO2e_combustion_based)
-        * entries.m_duration_neutral
+        * duration_CO2e_neutral_years
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     s_elec_heating.cost_climate_saved = 0
 
     s.cost_climate_saved = (
         (s.CO2e_total_2021_estimated - s.CO2e_combustion_based)
-        * entries.m_duration_neutral
+        * duration_CO2e_neutral_years
         * fact("Fact_M_cost_per_CO2e_2020")
     )
 
@@ -1011,8 +1013,8 @@ def calc(
 
     s.invest = s_solarth.invest + s_heatpump.invest
 
-    s_solarth.invest_pa = s_solarth.invest / Kalkulationszeitraum
-    s_heatpump.invest_pa = s_heatpump.invest / Kalkulationszeitraum
+    s_solarth.invest_pa = s_solarth.invest / duration_until_target_year
+    s_heatpump.invest_pa = s_heatpump.invest / duration_until_target_year
 
     s_solarth.pct_of_wage = fact("Fact_B_P_plumbing_ratio_wage_to_main_revenue_2017")
     s_heatpump.pct_of_wage = fact("Fact_B_P_plumbing_ratio_wage_to_main_revenue_2017")
@@ -1023,7 +1025,9 @@ def calc(
     s_solarth.cost_wage = s_solarth.invest_pa * s_solarth.pct_of_wage
     s_heatpump.cost_wage = s_heatpump.invest_pa * s_heatpump.pct_of_wage
     p_buildings_total.cost_wage = (
-        p_buildings_total.invest / Kalkulationszeitraum * p_buildings_total.pct_of_wage
+        p_buildings_total.invest
+        / duration_until_target_year
+        * p_buildings_total.pct_of_wage
     )
 
     s_solarth.ratio_wage_to_emplo = fact("Fact_B_P_heating_wage_per_person_per_year")
@@ -1040,22 +1044,22 @@ def calc(
     )
     s_solarth.emplo_existing = (
         fact("Fact_B_P_install_heating_emplo_2017")
-        * entries.m_population_com_2018
-        / entries.m_population_nat
+        * population_commune_2018
+        / population_germany_2018
         * ass("Ass_B_D_install_heating_emplo_pct_of_R_solarth")
     )
     s_heatpump.emplo_existing = (
         fact("Fact_B_P_install_heating_emplo_2017")
-        * entries.m_population_com_2018
-        / entries.m_population_nat
+        * population_commune_2018
+        / population_germany_2018
         * ass("Ass_B_D_install_heating_emplo_pct_of_R_heatpump")
     )
 
     p_buildings_total.emplo_existing = (
         fact("Fact_B_P_renovation_emplo_2017")
         * ass("Ass_B_D_renovation_emplo_pct_of_R")
-        * entries.m_population_com_2018
-        / entries.m_population_nat
+        * population_commune_2018
+        / population_germany_2018
     )
     p_buildings_total.demand_emplo_new = max(
         0, p_buildings_total.demand_emplo - p_buildings_total.emplo_existing
@@ -1090,10 +1094,10 @@ def calc(
     s.invest_com = s_solarth.invest_com + s_heatpump.invest_com
 
     p_buildings_total.invest_pa_com = (
-        p_buildings_total.invest_com / Kalkulationszeitraum
+        p_buildings_total.invest_com / duration_until_target_year
     )
-    s_solarth.invest_pa_com = s_solarth.invest_com / Kalkulationszeitraum
-    s_heatpump.invest_pa_com = s_heatpump.invest_com / Kalkulationszeitraum
+    s_solarth.invest_pa_com = s_solarth.invest_com / duration_until_target_year
+    s_heatpump.invest_pa_com = s_heatpump.invest_com / duration_until_target_year
 
     s_gas.cost_fuel_per_MWh = ass("Ass_R_S_gas_energy_cost_factor_2035")
     s_gas.cost_fuel = s_gas.energy * s_gas.cost_fuel_per_MWh / MILLION
@@ -1101,7 +1105,7 @@ def calc(
     s_gas.change_energy_pct = div(s_gas.change_energy_MWh, r18.s_gas.energy)
     s_gas.change_CO2e_t = s_gas.CO2e_combustion_based - r18.s_gas.CO2e_combustion_based
     s_gas.change_cost_energy = s_gas.cost_fuel - r18.s_gas.cost_fuel
-    p_buildings_total.invest_pa = p_buildings_total.invest / Kalkulationszeitraum
+    p_buildings_total.invest_pa = p_buildings_total.invest / duration_until_target_year
 
     general = energy_general.calc_general(entries, facts, assumptions)
 
@@ -1186,19 +1190,19 @@ def calc(
     )
     p_buildings_area_m2_com.invest_com = p_buildings_area_m2_com.invest
     p_buildings_area_m2_com.invest_pa = (
-        p_buildings_area_m2_com.invest / entries.m_duration_target
+        p_buildings_area_m2_com.invest / duration_until_target_year
     )
     p_buildings_area_m2_com.invest_pa_com = (
-        p_buildings_area_m2_com.invest_com / entries.m_duration_target
+        p_buildings_area_m2_com.invest_com / duration_until_target_year
     )
     p_buildings_area_m2_com.invest_pa = (
-        p_buildings_area_m2_com.invest / entries.m_duration_target
+        p_buildings_area_m2_com.invest / duration_until_target_year
     )
     p_buildings_area_m2_com.invest_pa_com = (
-        p_buildings_area_m2_com.invest_com / entries.m_duration_target
+        p_buildings_area_m2_com.invest_com / duration_until_target_year
     )
     p_buildings_area_m2_com.invest_pa_com = (
-        p_buildings_area_m2_com.invest_com / entries.m_duration_target
+        p_buildings_area_m2_com.invest_com / duration_until_target_year
     )
     p_buildings_new.change_energy_MWh = p_buildings_new.energy - 0
     p_other.change_energy_MWh = p_other.energy - r18.p_other.energy
@@ -1304,7 +1308,7 @@ def calc(
     )
     s_elec.cost_climate_saved = (
         (s_elec.CO2e_total_2021_estimated - s_elec.CO2e_combustion_based)
-        * entries.m_duration_neutral
+        * duration_CO2e_neutral_years
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     s_elec.change_cost_energy = 0
@@ -1352,22 +1356,22 @@ def calc(
     r.demand_emplo_com = general.g.demand_emplo_com
 
     p_buildings_area_m2_com.invest_pa = (
-        p_buildings_area_m2_com.invest / entries.m_duration_target
+        p_buildings_area_m2_com.invest / duration_until_target_year
     )
     p_buildings_until_1919.invest_pa = (
-        p_buildings_until_1919.invest / entries.m_duration_target
+        p_buildings_until_1919.invest / duration_until_target_year
     )
     p_buildings_1919_1948.invest_pa = (
-        p_buildings_1919_1948.invest / entries.m_duration_target
+        p_buildings_1919_1948.invest / duration_until_target_year
     )
     p_buildings_1949_1978.invest_pa = (
-        p_buildings_1949_1978.invest / entries.m_duration_target
+        p_buildings_1949_1978.invest / duration_until_target_year
     )
     p_buildings_1979_1995.invest_pa = (
-        p_buildings_1979_1995.invest / entries.m_duration_target
+        p_buildings_1979_1995.invest / duration_until_target_year
     )
     p_buildings_1996_2004.invest_pa = (
-        p_buildings_1996_2004.invest / entries.m_duration_target
+        p_buildings_1996_2004.invest / duration_until_target_year
     )
 
     s_emethan.change_CO2e_pct = div(
