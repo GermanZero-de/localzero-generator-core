@@ -33,8 +33,8 @@ class EnergySupplyDetail:
     @classmethod
     def calc(
         cls,
-        entries: Entries,
         facts: Facts,
+        duration_CO2e_neutral_years: float,
         energy: float,
         CO2e_cb_per_MWh: float,
         w18: W18,
@@ -52,7 +52,7 @@ class EnergySupplyDetail:
         )
         cost_climate_saved = (
             (CO2e_total_2021_estimated - CO2e_total)
-            * entries.m_duration_neutral
+            * duration_CO2e_neutral_years
             * fact("Fact_M_cost_per_CO2e_2020")
         )
 
@@ -80,7 +80,16 @@ class Landfilling:
     cost_climate_saved: float
 
     @classmethod
-    def calc(cls, entries: Entries, facts: Facts, assumptions: Assumptions, w18: W18):
+    def calc(
+        cls,
+        facts: Facts,
+        assumptions: Assumptions,
+        year_target: int,
+        duration_CO2e_neutral_years: float,
+        population_commune_2018: int,
+        population_germany_2018: int,
+        w18: W18,
+    ):
         fact = facts.fact
         ass = assumptions.ass
 
@@ -94,12 +103,11 @@ class Landfilling:
                 ass("Ass_W_P_landfilling_socket")
                 + ass("Ass_W_P_landfilling_CO2e_pb_2005")
                 * math.exp(
-                    -(entries.m_year_target - 2005)
-                    / ass("Ass_W_P_landfilling_methane_decay")
+                    -(year_target - 2005) / ass("Ass_W_P_landfilling_methane_decay")
                 )
             )
-            * entries.m_population_com_2018
-            / entries.m_population_nat
+            * population_commune_2018
+            / population_germany_2018
         )
         CO2e_total = CO2e_pb
         change_CO2e_t = CO2e_total - w18.p_landfilling.CO2e_total
@@ -110,7 +118,7 @@ class Landfilling:
         )
         cost_climate_saved = (
             (CO2e_total_2021_estimated - CO2e_total)
-            * entries.m_duration_neutral
+            * duration_CO2e_neutral_years
             * fact("Fact_M_cost_per_CO2e_2020")
         )
 
@@ -148,11 +156,19 @@ class Organic_treatment:
     demand_emplo_new: float
 
     @classmethod
-    def calc(cls, entries: Entries, facts: Facts, assumptions: Assumptions, w18: W18):
+    def calc(
+        cls,
+        facts: Facts,
+        assumptions: Assumptions,
+        duration_until_target_year: int,
+        duration_CO2e_neutral_years: float,
+        population_commune_203X: int,
+        w18: W18,
+    ):
         fact = facts.fact
         ass = assumptions.ass
 
-        prod_volume = entries.m_population_com_203X * ass(
+        prod_volume = population_commune_203X * ass(
             "Ass_W_P_organic_treatment_prodvol_2050_per_capita"
         )
         CO2e_pb_per_t = ass("Ass_W_P_organic_treatment_CO2e_pb_2050_per_prodvol")
@@ -166,7 +182,7 @@ class Organic_treatment:
         )
         cost_climate_saved = (
             (CO2e_total_2021_estimated - CO2e_total)
-            * entries.m_duration_neutral
+            * duration_CO2e_neutral_years
             * fact("Fact_M_cost_per_CO2e_2020")
         )
 
@@ -177,7 +193,7 @@ class Organic_treatment:
         pct_of_wage = fact("Fact_I_P_constr_civil_revenue_pct_of_wage_2018")
         invest = prod_volume * invest_per_x
         invest_com = invest
-        invest_pa = invest / entries.m_duration_target
+        invest_pa = invest / duration_until_target_year
         invest_pa_com = invest_pa
         cost_wage = invest_pa * pct_of_wage
         demand_emplo = cost_wage / ratio_wage_to_emplo
@@ -223,11 +239,18 @@ class Wastewater:
     demand_electricity: float
 
     @classmethod
-    def calc(cls, entries: Entries, facts: Facts, assumptions: Assumptions, w18: W18):
+    def calc(
+        cls,
+        facts: Facts,
+        assumptions: Assumptions,
+        duration_CO2e_neutral_years: float,
+        population_commune_203X: int,
+        w18: W18,
+    ):
         fact = facts.fact
         ass = assumptions.ass
 
-        prod_volume = entries.m_population_com_203X * ass(
+        prod_volume = population_commune_203X * ass(
             "Ass_W_P_wastewater_prodvol_2050_per_capita"
         )
         energy = w18.p_wastewater.energy * (prod_volume / w18.p_wastewater.prod_volume)
@@ -247,7 +270,7 @@ class Wastewater:
         )
         cost_climate_saved = (
             (CO2e_total_2021_estimated - CO2e_total)
-            * entries.m_duration_neutral
+            * duration_CO2e_neutral_years
             * fact("Fact_M_cost_per_CO2e_2020")
         )
 
@@ -283,16 +306,49 @@ class WasteLines:
     def calc_waste_lines(
         cls, entries: Entries, facts: Facts, assumptions: Assumptions, w18: W18
     ):
-        p_landfilling = Landfilling.calc(entries, facts, assumptions, w18=w18)
-        p_organic_treatment = Organic_treatment.calc(
-            entries, facts, assumptions, w18=w18
+        year_target = entries.m_year_target
+
+        duration_until_target_year = entries.m_duration_target
+        duration_CO2e_neutral_years = entries.m_duration_neutral
+
+        population_commune_2018 = entries.m_population_com_2018
+        population_germany_2018 = entries.m_population_nat
+
+        population_commune_203X = entries.m_population_com_203X
+
+        p_landfilling = Landfilling.calc(
+            facts,
+            assumptions,
+            year_target,
+            duration_CO2e_neutral_years,
+            population_commune_2018,
+            population_germany_2018,
+            w18=w18,
         )
-        p_wastewater = Wastewater.calc(entries, facts, assumptions, w18=w18)
+        p_organic_treatment = Organic_treatment.calc(
+            facts,
+            assumptions,
+            duration_until_target_year,
+            duration_CO2e_neutral_years,
+            population_commune_203X,
+            w18=w18,
+        )
+        p_wastewater = Wastewater.calc(
+            facts,
+            assumptions,
+            duration_CO2e_neutral_years,
+            population_commune_203X,
+            w18=w18,
+        )
 
         electricity_demand = p_wastewater.demand_electricity
 
         s_elec = EnergySupplyDetail.calc(
-            entries, facts, w18=w18, energy=electricity_demand, CO2e_cb_per_MWh=0
+            facts,
+            duration_CO2e_neutral_years,
+            w18=w18,
+            energy=electricity_demand,
+            CO2e_cb_per_MWh=0,
         )
 
         return cls(
