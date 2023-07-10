@@ -157,19 +157,19 @@ def calc(
     p_renew.invest_com = 0
 
     p_fossil_nuclear = calc_stop_production_by_fossil_fuels(
-        entries, facts, e18_production=e18.p_fossil_nuclear
+        facts, duration_CO2e_neutral_years, e18_production=e18.p_fossil_nuclear
     )
     p_fossil_coal_brown = calc_stop_production_by_fossil_fuels(
-        entries, facts, e18_production=e18.p_fossil_coal_brown
+        facts, duration_CO2e_neutral_years, e18_production=e18.p_fossil_coal_brown
     )
     p_fossil_coal_black = calc_stop_production_by_fossil_fuels(
-        entries, facts, e18_production=e18.p_fossil_coal_black
+        facts, duration_CO2e_neutral_years, e18_production=e18.p_fossil_coal_black
     )
     p_fossil_gas = calc_stop_production_by_fossil_fuels(
-        entries, facts, e18_production=e18.p_fossil_gas
+        facts, duration_CO2e_neutral_years, e18_production=e18.p_fossil_gas
     )
     p_fossil_ofossil = calc_stop_production_by_fossil_fuels(
-        entries, facts, e18_production=e18.p_fossil_ofossil
+        facts, duration_CO2e_neutral_years, e18_production=e18.p_fossil_ofossil
     )
 
     p_fossil = FossilFuelsProduction.sum(
@@ -220,7 +220,14 @@ def calc(
         entries, facts, assumptions, e18=e18
     )
     calc_production_local_biomass_stage2(
-        entries, facts, assumptions, p_local_biomass=p_local_biomass, e18=e18
+        facts,
+        assumptions,
+        duration_until_target_year,
+        duration_CO2e_neutral_years,
+        population_commune_2018,
+        population_germany_2018,
+        p_local_biomass=p_local_biomass,
+        e18=e18,
     )
 
     p_local_hydro = calc_production_local_hydro(entries, facts, assumptions, e18=e18)

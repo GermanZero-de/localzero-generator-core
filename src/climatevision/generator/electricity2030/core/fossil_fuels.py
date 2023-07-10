@@ -1,6 +1,5 @@
 # pyright: strict
 
-from ...makeentries import Entries
 from ...refdata import Facts
 from ...utils import div
 from ... import electricity2018
@@ -9,15 +8,13 @@ from .fossil_fuels_production import FossilFuelsProduction
 
 
 def calc_stop_production_by_fossil_fuels(
-    entries: Entries,
     facts: Facts,
+    duration_CO2e_neutral_years: float,
     *,
     e18_production: electricity2018.dataclasses.FossilFuelsProduction,
 ) -> FossilFuelsProduction:
     """Compute what happens if we stop producing electricity from a fossil fuel."""
     fact = facts.fact
-
-    duration_CO2e_neutral_years = entries.m_duration_neutral
 
     energy = 0
     CO2e_total_2021_estimated = e18_production.CO2e_combustion_based * fact(

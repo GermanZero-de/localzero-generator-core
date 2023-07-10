@@ -1,6 +1,5 @@
 # pyright: strict
 
-from ....makeentries import Entries
 from ....refdata import Facts, Assumptions
 from ....utils import div, MILLION
 from ....electricity2018.e18 import E18
@@ -9,21 +8,18 @@ from ...core.e_col_vars_2030 import EColVars2030
 
 
 def calc_production_local_biomass_stage2(
-    entries: Entries,
     facts: Facts,
     assumptions: Assumptions,
+    duration_until_target_year: int,
+    duration_CO2e_neutral_years: float,
+    population_commune_2018: int,
+    population_germany_2018: int,
     *,
     e18: E18,
     p_local_biomass: EColVars2030,
 ) -> None:
     fact = facts.fact
     ass = assumptions.ass
-
-    duration_until_target_year = entries.m_duration_target
-    duration_CO2e_neutral_years = entries.m_duration_neutral
-
-    population_commune_2018 = entries.m_population_com_2018
-    population_germany_2018 = entries.m_population_nat
 
     p_local_biomass.cost_fuel_per_MWh = ass(
         "Ass_E_P_local_biomass_material_costs"

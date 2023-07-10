@@ -55,7 +55,10 @@ def calc(
     ass = assumptions.ass
 
     duration_until_target_year = entries.m_duration_target
-    KlimaneutraleJahre = entries.m_duration_neutral
+    duration_CO2e_neutral_years = entries.m_duration_neutral
+
+    population_commune_2018 = entries.m_population_com_2018
+    population_germany_2018 = entries.m_population_nat
 
     e = EColVars2030()
     g = EColVars2030()
@@ -153,19 +156,19 @@ def calc(
     p_renew.invest_pa_com = 0
     p_renew.invest_com = 0
     p_fossil_nuclear = calc_stop_production_by_fossil_fuels(
-        entries, facts, e18_production=e18.p_fossil_nuclear
+        facts, duration_CO2e_neutral_years, e18_production=e18.p_fossil_nuclear
     )
     p_fossil_coal_brown = calc_stop_production_by_fossil_fuels(
-        entries, facts, e18_production=e18.p_fossil_coal_brown
+        facts, duration_CO2e_neutral_years, e18_production=e18.p_fossil_coal_brown
     )
     p_fossil_coal_black = calc_stop_production_by_fossil_fuels(
-        entries, facts, e18_production=e18.p_fossil_coal_black
+        facts, duration_CO2e_neutral_years, e18_production=e18.p_fossil_coal_black
     )
     p_fossil_gas = calc_stop_production_by_fossil_fuels(
-        entries, facts, e18_production=e18.p_fossil_gas
+        facts, duration_CO2e_neutral_years, e18_production=e18.p_fossil_gas
     )
     p_fossil_ofossil = calc_stop_production_by_fossil_fuels(
-        entries, facts, e18_production=e18.p_fossil_ofossil
+        facts, duration_CO2e_neutral_years, e18_production=e18.p_fossil_ofossil
     )
     p_renew_pv.CO2e_total = 0
     p_renew_wind.CO2e_total = 0
@@ -254,8 +257,8 @@ def calc(
     )
     p_local_pv.emplo_existing = (
         fact("Fact_B_P_install_elec_emplo_2017")
-        * entries.m_population_com_2018
-        / entries.m_population_nat
+        * population_commune_2018
+        / population_germany_2018
     )
     p_local_wind_onshore = calc_production_local_wind_onshore(
         entries, facts, assumptions, e18=e18
@@ -278,8 +281,8 @@ def calc(
     )  # demand_emplo
     p_local_biomass.emplo_existing = (
         fact("Fact_E_P_biomass_emplo_2018")
-        * entries.m_population_com_2018
-        / entries.m_population_nat
+        * population_commune_2018
+        / population_germany_2018
     )
     g.invest_outside = g_grid_offshore.invest_outside
     g_grid_offshore.invest_pa_outside = (
@@ -670,7 +673,7 @@ def calc(
             p_local_biomass.CO2e_total_2021_estimated
             - p_local_biomass.CO2e_combustion_based
         )
-        * KlimaneutraleJahre
+        * duration_CO2e_neutral_years
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     p_local_biomass.cost_wage = (
@@ -796,7 +799,7 @@ def calc(
             p_renew_biomass.CO2e_total_2021_estimated
             - p_renew_biomass.CO2e_combustion_based
         )
-        * KlimaneutraleJahre
+        * duration_CO2e_neutral_years
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     p_renew_hydro.change_cost_mro = p_renew_hydro.cost_mro - e18.p_renew_hydro.cost_mro
