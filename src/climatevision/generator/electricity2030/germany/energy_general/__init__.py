@@ -1,0 +1,114 @@
+# pyright: strict
+
+from dataclasses import dataclass
+
+from ....refdata import Facts, Assumptions
+from ....utils import div, MILLION
+
+from ...core.e_col_vars_2030 import EColVars2030
+
+
+@dataclass(kw_only=True)
+class General:
+    g: EColVars2030
+    g_grid_offshore: EColVars2030
+    g_grid_onshore: EColVars2030
+    g_grid_pv: EColVars2030
+
+
+def calc_general(
+    facts: Facts,
+    assumptions: Assumptions,
+    duration_until_target_year: int,
+    p_renew_wind_offshore_power_to_be_installed: float,
+    p_local_wind_onshore_power_to_be_installed: float,
+    p_local_pv_power_to_be_installed: float,
+) -> General:
+    fact = facts.fact
+    ass = assumptions.ass
+
+    g_grid_offshore = EColVars2030()
+    g_grid_offshore.invest_outside = 0
+    g_grid_offshore.invest_per_x = ass("Ass_E_G_grid_offshore_ratio_invest_to_power")
+    g_grid_offshore.pct_of_wage = fact("Fact_B_P_constr_main_revenue_pct_of_wage_2017")
+    g_grid_offshore.ratio_wage_to_emplo = fact(
+        "Fact_B_P_constr_main_ratio_wage_to_emplo_2017"
+    )
+    g_grid_offshore.invest_pa_outside = (
+        g_grid_offshore.invest_outside / duration_until_target_year
+    )
+    g_grid_offshore.power_to_be_installed = p_renew_wind_offshore_power_to_be_installed
+    g_grid_offshore.invest = (
+        g_grid_offshore.power_to_be_installed * g_grid_offshore.invest_per_x
+    )
+    g_grid_offshore.cost_mro = (
+        g_grid_offshore.invest * ass("Ass_E_G_grid_offshore_mro") / MILLION
+    )
+    g_grid_offshore.invest_pa = g_grid_offshore.invest / duration_until_target_year
+    g_grid_offshore.cost_wage = g_grid_offshore.invest_pa * g_grid_offshore.pct_of_wage
+    g_grid_offshore.demand_emplo = div(
+        g_grid_offshore.cost_wage, g_grid_offshore.ratio_wage_to_emplo
+    )
+    g_grid_offshore.demand_emplo_new = g_grid_offshore.demand_emplo
+
+    g_grid_onshore = EColVars2030()
+    g_grid_onshore.invest_per_x = ass("Ass_E_G_grid_onshore_ratio_invest_to_power")
+    g_grid_onshore.pct_of_wage = fact("Fact_B_P_constr_main_revenue_pct_of_wage_2017")
+    g_grid_onshore.ratio_wage_to_emplo = fact(
+        "Fact_B_P_constr_main_ratio_wage_to_emplo_2017"
+    )
+    g_grid_onshore.power_to_be_installed = p_local_wind_onshore_power_to_be_installed
+    g_grid_onshore.invest = (
+        g_grid_onshore.power_to_be_installed * g_grid_onshore.invest_per_x
+    )
+    g_grid_onshore.cost_mro = (
+        g_grid_onshore.invest * ass("Ass_E_G_grid_onshore_mro") / MILLION
+    )
+    g_grid_onshore.invest_pa = g_grid_onshore.invest / duration_until_target_year
+    g_grid_onshore.cost_wage = g_grid_onshore.invest_pa * g_grid_onshore.pct_of_wage
+    g_grid_onshore.demand_emplo = div(
+        g_grid_onshore.cost_wage, g_grid_onshore.ratio_wage_to_emplo
+    )
+    g_grid_onshore.demand_emplo_new = g_grid_onshore.demand_emplo
+
+    g_grid_pv = EColVars2030()
+    g_grid_pv.invest_per_x = ass("Ass_E_G_grid_pv_ratio_invest_to_power")
+    g_grid_pv.pct_of_wage = fact("Fact_B_P_constr_main_revenue_pct_of_wage_2017")
+    g_grid_pv.ratio_wage_to_emplo = fact(
+        "Fact_B_P_constr_main_ratio_wage_to_emplo_2017"
+    )
+    g_grid_pv.power_to_be_installed = p_local_pv_power_to_be_installed
+    g_grid_pv.invest = g_grid_pv.power_to_be_installed * g_grid_pv.invest_per_x
+    g_grid_pv.cost_mro = g_grid_pv.invest * ass("Ass_E_G_grid_pv_mro") / MILLION
+    g_grid_pv.invest_pa = g_grid_pv.invest / duration_until_target_year
+    g_grid_pv.cost_wage = g_grid_pv.invest_pa * g_grid_pv.pct_of_wage
+    g_grid_pv.demand_emplo = div(g_grid_pv.cost_wage, g_grid_pv.ratio_wage_to_emplo)
+    g_grid_pv.demand_emplo_new = g_grid_pv.demand_emplo
+
+    g = EColVars2030()
+    g.invest_outside = g_grid_offshore.invest_outside
+    g.invest_pa_outside = g_grid_offshore.invest_pa_outside
+    g.invest = g_grid_offshore.invest + g_grid_onshore.invest + g_grid_pv.invest
+    g.invest_pa = (
+        g_grid_offshore.invest_pa + g_grid_onshore.invest_pa + g_grid_pv.invest_pa
+    )
+    g.cost_wage = (
+        g_grid_offshore.cost_wage + g_grid_onshore.cost_wage + g_grid_pv.cost_wage
+    )
+    g.demand_emplo = (
+        g_grid_offshore.demand_emplo
+        + g_grid_onshore.demand_emplo
+        + g_grid_pv.demand_emplo
+    )
+    g.demand_emplo_new = (
+        g_grid_offshore.demand_emplo_new
+        + g_grid_onshore.demand_emplo_new
+        + g_grid_pv.demand_emplo_new
+    )
+
+    return General(
+        g=g,
+        g_grid_offshore=g_grid_offshore,
+        g_grid_onshore=g_grid_onshore,
+        g_grid_pv=g_grid_pv,
+    )
