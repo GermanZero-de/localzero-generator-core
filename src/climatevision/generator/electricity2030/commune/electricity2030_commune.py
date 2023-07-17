@@ -427,8 +427,6 @@ def calc(
 
     g_grid_offshore.demand_emplo_new = g_grid_offshore.demand_emplo
 
-    e = EColVars2030()
-    e.CO2e_total_2021_estimated = p.CO2e_total_2021_estimated
     p_fossil_and_renew.invest_pa = p_renew.invest_pa
 
     p_fossil_and_renew.demand_emplo_new = p_renew.demand_emplo_new
@@ -576,11 +574,8 @@ def calc(
         p_local_wind_onshore.cost_wage, p_local_wind_onshore.ratio_wage_to_emplo
     )
     p_local.change_CO2e_t = p_local_biomass.change_CO2e_t
-    e.invest_pa_outside = g.invest_pa_outside + p.invest_pa_outside
-    e.invest_outside = g.invest_outside + p.invest_outside
     p.invest_com = p_fossil_and_renew.invest_com + p_local.invest_com
     p.invest_pa_com = p_fossil_and_renew.invest_pa_com + p_local.invest_pa_com
-    e.invest = g.invest + p.invest
     g.invest_pa = (
         g_grid_offshore.invest_pa + g_grid_onshore.invest_pa + g_grid_pv.invest_pa
     )
@@ -610,9 +605,6 @@ def calc(
     p_local_wind_onshore.demand_emplo_new = max(
         0, p_local_wind_onshore.demand_emplo - p_local_wind_onshore.emplo_existing
     )
-    e.invest_com = 0 + p.invest_com
-    e.invest_pa_com = 0 + p.invest_pa_com
-    e.invest_pa = g.invest_pa + p.invest_pa
     g.cost_wage = (
         g_grid_offshore.cost_wage + g_grid_onshore.cost_wage + g_grid_pv.cost_wage
     )
@@ -720,7 +712,6 @@ def calc(
         p_renew_reverse.energy * p_renew_reverse.CO2e_combustion_based_per_MWh
     )
     p_renew_reverse.change_energy_MWh = p_renew_reverse.energy
-    e.cost_wage = g.cost_wage + p.cost_wage
     p.demand_emplo = p_fossil_and_renew.demand_emplo + p_local.demand_emplo
     p_local.demand_emplo_new = (
         p_local_pv.demand_emplo_new
@@ -854,9 +845,7 @@ def calc(
         p_renew_hydro.change_energy_MWh, e18.p_renew_hydro.energy
     )
     p_renew_reverse.change_cost_mro = p_renew_reverse.cost_mro - 0
-    e.demand_emplo = g.demand_emplo + p.demand_emplo
     p.demand_emplo_new = p_fossil_and_renew.demand_emplo_new + p_local.demand_emplo_new
-    e.change_energy_MWh = p.change_energy_MWh
     p.change_energy_pct = div(p.change_energy_MWh, e18.p.energy)
     p_renew_pv_roof.change_cost_mro = (
         p_renew_pv_roof.cost_mro - e18.p_renew_pv_roof.cost_mro
@@ -921,8 +910,6 @@ def calc(
         p_renew_biomass.CO2e_total - e18.p_renew_biomass.CO2e_total
     )
     p_renew.cost_climate_saved = p_renew_biomass.cost_climate_saved
-    e.demand_emplo_new = g.demand_emplo_new + p.demand_emplo_new
-    e.change_energy_pct = p.change_energy_pct
     p_renew.cost_mro = (
         p_renew_pv.cost_mro
         + p_renew_wind.cost_mro
@@ -981,17 +968,12 @@ def calc(
         p_fossil_and_renew.cost_climate_saved + p_local.cost_climate_saved
     )
     p.cost_mro = p_fossil_and_renew.cost_mro + p_local.cost_mro
-    e.CO2e_combustion_based = p.CO2e_combustion_based
     p.CO2e_combustion_based_per_MWh = div(p.CO2e_combustion_based, p.energy)
     p.CO2e_total = p.CO2e_combustion_based
-    e.change_CO2e_t = p.change_CO2e_t
     p.change_CO2e_pct = div(p.change_CO2e_t, e18.p.CO2e_combustion_based)
     p_fossil_and_renew.change_CO2e_pct = div(
         p_fossil_and_renew.change_CO2e_t, e18.p_fossil_and_renew.CO2e_total
     )
-    e.cost_climate_saved = p.cost_climate_saved
-    e.CO2e_total = p.CO2e_total
-    e.change_CO2e_pct = p.change_CO2e_pct
 
     p_local.power_installed = (
         p_local_pv.power_installed
@@ -1079,6 +1061,25 @@ def calc(
     p_local_pv.cost_climate_saved = 0
 
     p_renew_reverse.change_CO2e_pct = 0
+
+    e = EColVars2030()
+    e.CO2e_total_2021_estimated = p.CO2e_total_2021_estimated
+    e.invest_pa_outside = g.invest_pa_outside + p.invest_pa_outside
+    e.invest_outside = g.invest_outside + p.invest_outside
+    e.invest = g.invest + p.invest
+    e.invest_com = 0 + p.invest_com
+    e.invest_pa_com = 0 + p.invest_pa_com
+    e.invest_pa = g.invest_pa + p.invest_pa
+    e.cost_wage = g.cost_wage + p.cost_wage
+    e.demand_emplo = g.demand_emplo + p.demand_emplo
+    e.change_energy_MWh = p.change_energy_MWh
+    e.demand_emplo_new = g.demand_emplo_new + p.demand_emplo_new
+    e.change_energy_pct = p.change_energy_pct
+    e.CO2e_combustion_based = p.CO2e_combustion_based
+    e.change_CO2e_t = p.change_CO2e_t
+    e.cost_climate_saved = p.cost_climate_saved
+    e.CO2e_total = p.CO2e_total
+    e.change_CO2e_pct = p.change_CO2e_pct
 
     return E30(
         e=e,
