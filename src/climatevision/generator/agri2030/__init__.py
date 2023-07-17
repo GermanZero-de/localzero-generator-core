@@ -19,13 +19,40 @@ def calc(
     entries: Entries, facts: Facts, assumptions: Assumptions, a18: A18, l30: L30
 ) -> A30:
 
-    production = energy_demand.calc_production(entries, facts, assumptions, a18, l30)
-    supply = energy_source.calc_supply(entries, facts, assumptions, a18, production)
-    general = energy_general.calc_general(entries, facts, assumptions)
+    production = energy_demand.calc_production(
+        facts,
+        assumptions,
+        entries.m_duration_neutral,
+        entries.m_duration_target,
+        entries.m_population_com_2018,
+        entries.m_population_nat,
+        entries.r_rehab_rate_pa,
+        a18,
+        l30,
+    )
+    supply = energy_source.calc_supply(
+        facts,
+        assumptions,
+        entries.m_duration_neutral,
+        entries.m_duration_target,
+        entries.m_population_com_2018,
+        entries.m_population_nat,
+        a18,
+        production,
+    )
+    general = energy_general.calc_general(
+        facts,
+        assumptions,
+        entries.m_duration_target,
+        entries.a_farm_amount,
+        entries.m_area_agri_com,
+        entries.a_area_agri_com_pct_of_organic,
+    )
 
     a = CO2eChangeA(
-        entries=entries,
         facts=facts,
+        duration_until_target_year=entries.m_duration_target,
+        duration_CO2e_neutral_years=entries.m_duration_neutral,
         what="a",
         a18=a18,
         p_operation=production.operation,

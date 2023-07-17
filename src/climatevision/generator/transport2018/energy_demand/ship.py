@@ -2,7 +2,6 @@
 
 from dataclasses import dataclass
 
-from ...makeentries import Entries
 from ...refdata import Facts, Assumptions
 from ...utils import element_wise_plus
 
@@ -24,18 +23,22 @@ class Ship:
 
     @classmethod
     def calc_ship_domestic(
-        cls, entries: Entries, facts: Facts, assumptions: Assumptions
+        cls,
+        facts: Facts,
+        assumptions: Assumptions,
+        population_commune_2018: int,
+        population_germany_2018: int,
     ) -> "Ship":
         fact = facts.fact
 
         transport_capacity_tkm = (
             fact("Fact_T_D_Shp_dmstc_trnsprt_gds_2018")
-            * entries.m_population_com_2018
-            / entries.m_population_nat
+            * population_commune_2018
+            / population_germany_2018
         )
         demand_diesel = (
-            entries.m_population_com_2018
-            / entries.m_population_nat
+            population_commune_2018
+            / population_germany_2018
             * fact("Fact_T_S_Shp_diesel_fec_2018")
         )
         energy = demand_diesel
@@ -56,18 +59,22 @@ class Ship:
 
     @classmethod
     def calc_ship_international(
-        cls, entries: Entries, facts: Facts, assumptions: Assumptions
+        cls,
+        facts: Facts,
+        assumptions: Assumptions,
+        population_commune_2018: int,
+        population_germany_2018: int,
     ) -> "Ship":
         fact = facts.fact
 
         transport_capacity_tkm = (
             fact("Fact_T_D_Shp_sea_nat_mlg_2013")
-            * entries.m_population_com_2018
-            / entries.m_population_nat
+            * population_commune_2018
+            / population_germany_2018
         )
-        demand_fueloil = (
-            entries.m_population_com_2018 / entries.m_population_nat
-        ) * fact("Fact_T_D_Shp_sea_nat_EC_2018")
+        demand_fueloil = (population_commune_2018 / population_germany_2018) * fact(
+            "Fact_T_D_Shp_sea_nat_EC_2018"
+        )
 
         energy = demand_fueloil
         CO2e_combustion_based = co2e.from_demands(

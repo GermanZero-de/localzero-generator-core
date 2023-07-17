@@ -37,7 +37,18 @@ def calc(
 ) -> F30:
 
     production = energy_production.calc_production(
-        entries, facts, assumptions, f18, a30, b30, h30, i30, r30, t30, wastelines
+        facts,
+        assumptions,
+        entries.m_duration_neutral,
+        entries.m_duration_target,
+        f18,
+        a30,
+        b30,
+        h30,
+        i30,
+        r30,
+        t30,
+        wastelines,
     )
     demand = energy_demand.calc_demand(
         a30, b30, i30, r30, t30, production.hydrogen_reconv

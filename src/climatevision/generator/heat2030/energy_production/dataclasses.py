@@ -2,7 +2,6 @@
 
 from dataclasses import dataclass, InitVar
 
-from ...makeentries import Entries
 from ...refdata import Facts, Assumptions
 from ...utils import div, MILLION
 from ...heat2018.h18 import H18
@@ -15,15 +14,15 @@ from ...common.invest import InvestCommune
 
 @dataclass(kw_only=True)
 class CO2eChangeHeatProduction(EnergyWithCO2e, CO2eChange, EnergyChange):
-    entries: InitVar[Entries]
     facts: InitVar[Facts]
+    duration_CO2e_neutral_years: InitVar[float]
     what: InitVar[str]
     h18: InitVar[H18]
 
     def __post_init__(  # type: ignore[override]
         self,
-        entries: Entries,
         facts: Facts,
+        duration_CO2e_neutral_years: float,
         what: str,
         h18: H18,
     ):
@@ -48,7 +47,7 @@ class CO2eChangeHeatProduction(EnergyWithCO2e, CO2eChange, EnergyChange):
 
         self.cost_climate_saved = (
             (self.CO2e_total_2021_estimated - self.CO2e_total)
-            * entries.m_duration_neutral
+            * duration_CO2e_neutral_years
             * fact("Fact_M_cost_per_CO2e_2020")
         )
 
@@ -63,15 +62,13 @@ class InvestHeatProduction(InvestCommune):
     pct_of_wage: float = 0
     ratio_wage_to_emplo: float = 0
 
-    entries: InitVar[Entries]
     facts: InitVar[Facts]
+    duration_until_target_year: InitVar[int]
     what: InitVar[str]
     h18: InitVar[H18]
 
     def __post_init__(  # type: ignore[override]
-        self,
-        entries: Entries,
-        facts: Facts,
+        self, facts: Facts, duration_until_target_year: int
     ):
         fact = facts.fact
 
@@ -80,7 +77,7 @@ class InvestHeatProduction(InvestCommune):
 
         self.invest_com = self.invest
 
-        self.invest_pa = self.invest / entries.m_duration_target
+        self.invest_pa = self.invest / duration_until_target_year
         self.invest_pa_com = self.invest_pa
 
         self.cost_wage = self.pct_of_wage * self.invest_pa
@@ -91,21 +88,25 @@ class InvestHeatProduction(InvestCommune):
 
 @dataclass(kw_only=True)
 class HeatProduction(EnergyWithCO2ePerMWh, CO2eChangeHeatProduction):  # type: ignore[override]
-    entries: InitVar[Entries]
     facts: InitVar[Facts]
+    duration_CO2e_neutral_years: InitVar[float]
     what: InitVar[str]
     h18: InitVar[H18]
 
     def __post_init__(  # type: ignore[override]
         self,
-        entries: Entries,
         facts: Facts,
+        duration_CO2e_neutral_years: float,
         what: str,
         h18: H18,
     ):
         EnergyWithCO2ePerMWh.__post_init__(self)
         CO2eChangeHeatProduction.__post_init__(
-            self, entries=entries, facts=facts, what=what, h18=h18
+            self,
+            facts=facts,
+            duration_CO2e_neutral_years=duration_CO2e_neutral_years,
+            what=what,
+            h18=h18,
         )
 
 
@@ -114,16 +115,16 @@ class HeatProductionWithCostFuel(HeatProduction):
     cost_fuel: float = 0
     cost_fuel_per_MWh: float = 0
 
-    entries: InitVar[Entries]
     facts: InitVar[Facts]
     assumptions: InitVar[Assumptions]
+    duration_CO2e_neutral_years: InitVar[float]
     what: InitVar[str]
     h18: InitVar[H18]
 
     def __post_init__(  # type: ignore[override]
         self,
-        entries: Entries,
         facts: Facts,
+        duration_CO2e_neutral_years: float,
         what: str,
         h18: H18,
         assumptions: Assumptions,
@@ -132,7 +133,11 @@ class HeatProductionWithCostFuel(HeatProduction):
         ass = assumptions.ass
 
         HeatProduction.__post_init__(
-            self, entries=entries, facts=facts, what=what, h18=h18
+            self,
+            facts=facts,
+            duration_CO2e_neutral_years=duration_CO2e_neutral_years,
+            what=what,
+            h18=h18,
         )
 
         if what == "biomass":
@@ -147,22 +152,28 @@ class HeatProductionWithCostFuel(HeatProduction):
 class HeatnetPlantProduction(HeatProduction, InvestHeatProduction, InvestPerX):
     area_ha_available: float = 0
 
-    entries: InitVar[Entries]
     facts: InitVar[Facts]
+    duration_CO2e_neutral_years: InitVar[float]
     what: InitVar[str]
     h18: InitVar[H18]
+    duration_until_target_year: InitVar[int]
 
     def __post_init__(  # type: ignore[override]
         self,
-        entries: Entries,
         facts: Facts,
+        duration_until_target_year: int,
         what: str,
         h18: H18,
+        duration_CO2e_neutral_years: float,
     ):
         fact = facts.fact
 
         HeatProduction.__post_init__(
-            self, entries=entries, facts=facts, what=what, h18=h18
+            self,
+            facts=facts,
+            duration_CO2e_neutral_years=duration_CO2e_neutral_years,
+            what=what,
+            h18=h18,
         )
 
         self.area_ha_available = self.energy / fact(
@@ -170,7 +181,9 @@ class HeatnetPlantProduction(HeatProduction, InvestHeatProduction, InvestPerX):
         )
         self.invest = self.invest_per_x * self.area_ha_available
 
-        InvestHeatProduction.__post_init__(self, entries=entries, facts=facts)
+        InvestHeatProduction.__post_init__(
+            self, facts=facts, duration_until_target_year=duration_until_target_year
+        )
 
 
 @dataclass(kw_only=True)
@@ -178,48 +191,63 @@ class HeatnetGeothProduction(HeatProduction, InvestHeatProduction, InvestPerX):
     full_load_hour: float
     power_to_be_installed: float = 0
 
-    entries: InitVar[Entries]
     facts: InitVar[Facts]
+    duration_until_target_year: InitVar[int]
     what: InitVar[str]
     h18: InitVar[H18]
+    duration_CO2e_neutral_years: InitVar[float]
 
     def __post_init__(  # type: ignore[override]
         self,
-        entries: Entries,
         facts: Facts,
+        duration_until_target_year: int,
         what: str,
         h18: H18,
+        duration_CO2e_neutral_years: float,
     ):
         HeatProduction.__post_init__(
-            self, entries=entries, facts=facts, what=what, h18=h18
+            self,
+            facts=facts,
+            duration_CO2e_neutral_years=duration_CO2e_neutral_years,
+            what=what,
+            h18=h18,
         )
 
         self.power_to_be_installed = div(self.energy, self.full_load_hour)
         self.invest = self.invest_per_x * self.power_to_be_installed
 
-        InvestHeatProduction.__post_init__(self, entries=entries, facts=facts)
+        InvestHeatProduction.__post_init__(
+            self, facts=facts, duration_until_target_year=duration_until_target_year
+        )
 
 
 @dataclass(kw_only=True)
 class HeatnetLheatpumpProduction(HeatnetGeothProduction):
     demand_electricity: float = 0
 
-    entries: InitVar[Entries]
     facts: InitVar[Facts]
+    duration_until_target_year: InitVar[int]
     what: InitVar[str]
     h18: InitVar[H18]
+    duration_CO2e_neutral_years: InitVar[float]
 
     def __post_init__(
         self,
-        entries: Entries,
         facts: Facts,
+        duration_until_target_year: int,
         what: str,
         h18: H18,
+        duration_CO2e_neutral_years: float,
     ):
         fact = facts.fact
 
         HeatnetGeothProduction.__post_init__(
-            self, entries=entries, facts=facts, what=what, h18=h18
+            self,
+            facts=facts,
+            duration_CO2e_neutral_years=duration_CO2e_neutral_years,
+            what=what,
+            h18=h18,
+            duration_until_target_year=duration_until_target_year,
         )
 
         self.demand_electricity = self.energy / fact("Fact_H_P_heatnet_lheatpump_apf")
@@ -227,22 +255,30 @@ class HeatnetLheatpumpProduction(HeatnetGeothProduction):
 
 @dataclass(kw_only=True)
 class HeatnetProduction(InvestHeatProduction, CO2eChangeHeatProduction):
-    entries: InitVar[Entries]
     facts: InitVar[Facts]
+    duration_CO2e_neutral_years: InitVar[float]
     what: InitVar[str]
     h18: InitVar[H18]
+    duration_until_target_year: InitVar[int]
 
     def __post_init__(  # type: ignore[override]
         self,
-        entries: Entries,
         facts: Facts,
+        duration_CO2e_neutral_years: float,
         what: str,
         h18: H18,
+        duration_until_target_year: int,
     ):
         CO2eChangeHeatProduction.__post_init__(
-            self, entries=entries, facts=facts, what=what, h18=h18
+            self,
+            facts=facts,
+            what=what,
+            duration_CO2e_neutral_years=duration_CO2e_neutral_years,
+            h18=h18,
         )
-        InvestHeatProduction.__post_init__(self, entries=entries, facts=facts)
+        InvestHeatProduction.__post_init__(
+            self, facts=facts, duration_until_target_year=duration_until_target_year
+        )
 
 
 @dataclass(kw_only=True)
@@ -250,18 +286,26 @@ class TotalHeatProduction(HeatnetProduction):
     cost_fuel: float = 0
     demand_electricity: float = 0
 
-    entries: InitVar[Entries]
     facts: InitVar[Facts]
+    duration_CO2e_neutral_years: InitVar[float]
     what: InitVar[str]
     h18: InitVar[H18]
+    facts: InitVar[Facts]
+    duration_until_target_year: InitVar[int]
 
     def __post_init__(
         self,
-        entries: Entries,
         facts: Facts,
+        duration_CO2e_neutral_years: float,
         what: str,
         h18: H18,
+        duration_until_target_year: int,
     ):
         HeatnetProduction.__post_init__(
-            self, entries=entries, facts=facts, what=what, h18=h18
+            self,
+            facts=facts,
+            duration_CO2e_neutral_years=duration_CO2e_neutral_years,
+            what=what,
+            h18=h18,
+            duration_until_target_year=duration_until_target_year,
         )

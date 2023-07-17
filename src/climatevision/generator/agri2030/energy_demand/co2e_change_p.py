@@ -2,7 +2,6 @@
 
 from dataclasses import dataclass, InitVar
 
-from ...makeentries import Entries
 from ...refdata import Facts
 from ...utils import div
 from ...common.invest import Invest
@@ -21,16 +20,18 @@ class CO2eChangeP(Invest):
     cost_climate_saved: float = 0
     energy: float = 0
 
-    entries: InitVar[Entries]
     facts: InitVar[Facts]
+    duration_until_target_year: InitVar[int]
+    duration_CO2e_neutral_years: InitVar[float]
     what: InitVar[str]
     a18: InitVar[A18]
     operation: InitVar[EnergyChangePOperation]
 
     def __post_init__(
         self,
-        entries: Entries,
         facts: Facts,
+        duration_until_target_year: int,
+        duration_CO2e_neutral_years: float,
         what: str,
         a18: A18,
         operation: EnergyChangePOperation,
@@ -46,14 +47,14 @@ class CO2eChangeP(Invest):
         self.change_CO2e_t = self.CO2e_total - a18_CO2e_total
         self.cost_climate_saved = (
             (self.CO2e_total_2021_estimated - self.CO2e_total)
-            * entries.m_duration_neutral
+            * duration_CO2e_neutral_years
             * fact("Fact_M_cost_per_CO2e_2020")
         )
         self.change_CO2e_pct = div(self.change_CO2e_t, a18_CO2e_total)
         self.demand_emplo = operation.demand_emplo
 
         self.invest = operation.invest
-        self.invest_pa = self.invest / entries.m_duration_target
+        self.invest_pa = self.invest / duration_until_target_year
 
         self.demand_emplo_new = operation.demand_emplo_new
         self.energy = operation.energy

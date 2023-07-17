@@ -2,7 +2,6 @@
 
 from dataclasses import dataclass
 
-from ...makeentries import Entries
 from ...refdata import Facts, Assumptions
 from ...utils import div
 from ...common.invest import Invest, InvestCommune
@@ -24,20 +23,28 @@ class ShipDomestic(Invest):
 
     @classmethod
     def calc(
-        cls, entries: Entries, facts: Facts, assumptions: Assumptions, *, t18: T18
+        cls,
+        facts: Facts,
+        assumptions: Assumptions,
+        duration_until_target_year: int,
+        duration_CO2e_neutral_years: float,
+        population_commune_203X: int,
+        population_germany_203X: int,
+        *,
+        t18: T18,
     ) -> "ShipDomestic":
         fact = facts.fact
         ass = assumptions.ass
 
         transport_capacity_tkm = (
             ass("Ass_T_D_trnsprt_gds_ship_2050")
-            * entries.m_population_com_203X
-            / entries.m_population_nat
+            * population_commune_203X
+            / population_germany_203X
         )
         demand_ediesel = (
             ass("Ass_T_D_Shp_dmstc_nat_EB_2050")
-            * entries.m_population_com_203X
-            / entries.m_population_nat
+            * population_commune_203X
+            / population_germany_203X
         )
         CO2e_combustion_based = demand_ediesel * ass(
             "Ass_T_S_diesel_EmFa_tank_wheel_2050"
@@ -47,7 +54,7 @@ class ShipDomestic(Invest):
         )
         cost_climate_saved = (
             (CO2e_total_2021_estimated - CO2e_combustion_based)
-            * entries.m_duration_neutral
+            * duration_CO2e_neutral_years
             * fact("Fact_M_cost_per_CO2e_2020")
         )
         ratio_wage_to_emplo = ass("Ass_T_D_shp_wage_driver")
@@ -60,8 +67,8 @@ class ShipDomestic(Invest):
         base_unit = change_km / fact("Fact_T_D_Shp_dmstc_nat_ratio_mlg_to_vehicle")
         invest_per_x = fact("Fact_T_D_Shp_dmstc_vehicle_invest")
         cost_wage = ratio_wage_to_emplo * demand_emplo_new
-        invest = base_unit * invest_per_x + cost_wage * entries.m_duration_target
-        invest_pa = invest / entries.m_duration_target
+        invest = base_unit * invest_per_x + cost_wage * duration_until_target_year
+        invest_pa = invest / duration_until_target_year
         pct_of_wage = div(cost_wage, invest_pa)
 
         return cls(
@@ -97,23 +104,28 @@ class ShipDomesticActionInfra(InvestCommune):
 
     @classmethod
     def calc(
-        cls, entries: Entries, facts: Facts, assumptions: Assumptions
+        cls,
+        facts: Facts,
+        assumptions: Assumptions,
+        duration_until_target_year: int,
+        population_commune_203X: int,
+        population_germany_203X: int,
     ) -> "ShipDomesticActionInfra":
         fact = facts.fact
         ass = assumptions.ass
 
         invest = (
             ass("Ass_T_C_invest_water_ways")
-            * entries.m_population_com_203X
-            / entries.m_population_nat
+            * population_commune_203X
+            / population_germany_203X
         )
         invest_com = invest * ass("Ass_T_C_ratio_public_sector_100")
         demand_ediesel = 0
         pct_of_wage = fact("Fact_T_D_constr_roadrail_revenue_pct_of_wage_2018")
-        invest_pa = invest / entries.m_duration_target
+        invest_pa = invest / duration_until_target_year
         cost_wage = invest_pa * pct_of_wage
         ratio_wage_to_emplo = fact("Fact_T_D_constr_roadrail_ratio_wage_to_emplo_2018")
-        invest_pa_com = invest_com / entries.m_duration_target
+        invest_pa_com = invest_com / duration_until_target_year
         demand_emplo = div(
             cost_wage,
             ratio_wage_to_emplo,
@@ -145,7 +157,14 @@ class ShipInternational:
 
     @classmethod
     def calc(
-        cls, entries: Entries, facts: Facts, assumptions: Assumptions, *, t18: T18
+        cls,
+        facts: Facts,
+        assumptions: Assumptions,
+        duration_CO2e_neutral_years: float,
+        population_commune_203X: int,
+        population_germany_203X: int,
+        *,
+        t18: T18,
     ) -> "ShipInternational":
         fact = facts.fact
         ass = assumptions.ass
@@ -155,15 +174,15 @@ class ShipInternational:
         )
         demand_ediesel = (
             ass("Ass_T_D_Shp_sea_nat_EB_2050")
-            * entries.m_population_com_203X
-            / entries.m_population_nat
+            * population_commune_203X
+            / population_germany_203X
         )
         CO2e_combustion_based = demand_ediesel * ass(
             "Ass_T_S_diesel_EmFa_tank_wheel_2050"
         )
         cost_climate_saved = (
             (CO2e_total_2021_estimated - CO2e_combustion_based)
-            * entries.m_duration_neutral
+            * duration_CO2e_neutral_years
             * fact("Fact_M_cost_per_CO2e_2020")
         )
         transport_capacity_tkm = t18.ship_inter.transport_capacity_tkm * div(

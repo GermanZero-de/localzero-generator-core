@@ -1,7 +1,6 @@
 # pyright: strict
 from dataclasses import dataclass, InitVar
 
-from ...makeentries import Entries
 from ...refdata import Facts
 from ...utils import div
 from ...common.invest import Invest
@@ -21,10 +20,11 @@ class CO2eChangeS(CO2eChangeAgri, Invest):
     change_energy_pct: float = 0
     energy: float = 0
 
-    entries: InitVar[Entries]
     facts: InitVar[Facts]
+    duration_CO2e_neutral_years: InitVar[float]
     what: InitVar[str]
     a18: InitVar[A18]
+    duration_until_target_year: InitVar[int]
     petrol: InitVar[CO2eChangeEnergyPerMWh]
     diesel: InitVar[CO2eChangeEnergyPerMWh]
     fueloil: InitVar[CO2eChangeFuelOilGas]
@@ -37,10 +37,11 @@ class CO2eChangeS(CO2eChangeAgri, Invest):
 
     def __post_init__(  # type: ignore[override]
         self,
-        entries: Entries,
         facts: Facts,
+        duration_CO2e_neutral_years: float,
         what: str,
         a18: A18,
+        duration_until_target_year: int,
         petrol: CO2eChangeEnergyPerMWh,
         diesel: CO2eChangeEnergyPerMWh,
         fueloil: CO2eChangeFuelOilGas,
@@ -51,7 +52,6 @@ class CO2eChangeS(CO2eChangeAgri, Invest):
         elec: CO2eChangeEnergyPerMWh,
         heatpump: CO2eChangeFuelHeatpump,
     ):
-
         self.CO2e_production_based = 0
         self.CO2e_combustion_based = (
             petrol.CO2e_combustion_based
@@ -66,7 +66,7 @@ class CO2eChangeS(CO2eChangeAgri, Invest):
         )
 
         self.invest = heatpump.invest
-        self.invest_pa = self.invest / entries.m_duration_target
+        self.invest_pa = self.invest / duration_until_target_year
 
         self.energy = (
             petrol.energy
@@ -88,5 +88,9 @@ class CO2eChangeS(CO2eChangeAgri, Invest):
         self.cost_wage = heatpump.cost_wage
 
         CO2eChangeAgri.__post_init__(
-            self, entries=entries, facts=facts, what=what, a18=a18
+            self,
+            facts=facts,
+            duration_CO2e_neutral_years=duration_CO2e_neutral_years,
+            what=what,
+            a18=a18,
         )

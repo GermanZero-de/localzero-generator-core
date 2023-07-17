@@ -2,7 +2,6 @@
 
 from dataclasses import dataclass
 
-from ...makeentries import Entries
 from ...refdata import Facts, Assumptions
 from ...utils import div
 from ...common.co2e_change import CO2eChange
@@ -30,9 +29,10 @@ class NewEFuelProduction(CO2eChange, Invest):
     @classmethod
     def calc(
         cls,
-        entries: Entries,
         facts: Facts,
         assumptions: Assumptions,
+        duration_CO2e_neutral_years: float,
+        duration_until_target_year: int,
         energy: float,
         CO2e_emission_factor: float,
         invest_per_power: float,
@@ -58,9 +58,11 @@ class NewEFuelProduction(CO2eChange, Invest):
         power_to_be_installed = demand_electricity / full_load_hour
         invest = power_to_be_installed * invest_per_power
         cost_climate_saved = (
-            -CO2e_total * entries.m_duration_neutral * fact("Fact_M_cost_per_CO2e_2020")
+            -CO2e_total
+            * duration_CO2e_neutral_years
+            * fact("Fact_M_cost_per_CO2e_2020")
         )
-        invest_pa = invest / entries.m_duration_target
+        invest_pa = invest / duration_until_target_year
         invest_outside = invest
         invest_pa_outside = invest_pa
         cost_wage = invest_pa * pct_of_wage

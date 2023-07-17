@@ -122,6 +122,9 @@ class Pyrolysis:
         fact = facts.fact
         ass = assumptions.ass
 
+        duration_until_target_year = entries.m_duration_target
+        duration_CO2e_neutral_years = entries.m_duration_neutral
+
         CO2e_total = min(
             -(
                 h30.h.CO2e_total
@@ -151,13 +154,13 @@ class Pyrolysis:
 
         cost_climate_saved = (
             (CO2e_total_2021_estimated - CO2e_total)
-            * entries.m_duration_neutral
+            * duration_CO2e_neutral_years
             * fact("Fact_M_cost_per_CO2e_2020")
         )
 
         invest_per_x = ass("Ass_L_P_pyrolysis_plant_ratio_invest_to_biochar_pa")
         invest = prod_volume * invest_per_x
-        invest_pa = div(invest, entries.m_duration_target)
+        invest_pa = div(invest, duration_until_target_year)
         pct_of_wage = fact("Fact_B_P_constr_main_revenue_pct_of_wage_2017")
         cost_wage = invest_pa * pct_of_wage
 

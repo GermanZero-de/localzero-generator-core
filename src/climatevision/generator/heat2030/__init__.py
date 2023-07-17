@@ -34,9 +34,10 @@ def calc(
     demand = energy_demand.calc_demand(r30, b30, i30, a30)
 
     production = energy_production.calc_production(
-        entries,
         facts,
         assumptions,
+        entries.m_duration_neutral,
+        entries.m_duration_target,
         h18,
         r30,
         b30,
@@ -46,9 +47,10 @@ def calc(
     )
 
     general = energy_general.calc_general(
-        entries=entries,
         facts=facts,
         assumptions=assumptions,
+        duration_until_target_year=entries.m_duration_target,
+        population_commune_2018=entries.m_population_com_2018,
         p_heatnet_energy=production.heatnet.energy,
     )
 

@@ -9,7 +9,7 @@ from .refdata import RefData
 from .makeentries import make_entries
 from .bisko import Bisko
 from .methodology183x import M183X
-from .electricity2030 import electricity2030_core
+from .electricity2030.core.biomass import calc_biomass, calc_biomass_cogen
 
 # hier Sektoren Files importieren:
 from .electricity2018.e18 import E18
@@ -190,8 +190,8 @@ def calculate(inputs: Inputs, inputs_germany: Inputs) -> Result:
     a30 = agri2030.calc(entries, facts, assumptions, a18=a18, l30=l30)
 
     print("Electricity2030_calc_biomass", file=stderr)
-    e30_p_local_biomass = electricity2030_core.calc_biomass(entries, facts, assumptions)
-    e30_p_local_biomass_cogen = electricity2030_core.calc_biomass_cogen(
+    e30_p_local_biomass = calc_biomass(entries, facts, assumptions)
+    e30_p_local_biomass_cogen = calc_biomass_cogen(
         facts, p_local_biomass=e30_p_local_biomass
     )
 

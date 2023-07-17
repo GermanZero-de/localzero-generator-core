@@ -2,7 +2,6 @@
 
 from dataclasses import dataclass
 
-from ...makeentries import Entries
 from ...refdata import Facts, Assumptions
 from ...agri2018.a18 import A18
 
@@ -18,9 +17,9 @@ class CO2eChangeFermentationOrManure(CO2eChangeAgri):
     @classmethod
     def calc_fermen(
         cls,
-        entries: Entries,
         facts: Facts,
         assumptions: Assumptions,
+        duration_CO2e_neutral_years: float,
         what: str,
         ass_demand_change: str,
         a18: A18,
@@ -36,8 +35,8 @@ class CO2eChangeFermentationOrManure(CO2eChangeAgri):
         CO2e_production_based = amount * CO2e_production_based_per_t
 
         parent = CO2eChangeAgri(
-            entries=entries,
             facts=facts,
+            duration_CO2e_neutral_years=duration_CO2e_neutral_years,
             what=what,
             a18=a18,
             CO2e_combustion_based=CO2e_combustion_based,
@@ -45,8 +44,8 @@ class CO2eChangeFermentationOrManure(CO2eChangeAgri):
         )
 
         return cls(
-            entries=entries,
             facts=facts,
+            duration_CO2e_neutral_years=duration_CO2e_neutral_years,
             what=what,
             a18=a18,
             CO2e_combustion_based=CO2e_combustion_based,
@@ -64,9 +63,9 @@ class CO2eChangeFermentationOrManure(CO2eChangeAgri):
     @classmethod
     def calc_manure(
         cls,
-        entries: Entries,
         facts: Facts,
         assumptions: Assumptions,
+        duration_CO2e_neutral_years: float,
         what: str,
         a18: A18,
         amount: float,
@@ -83,8 +82,8 @@ class CO2eChangeFermentationOrManure(CO2eChangeAgri):
         CO2e_production_based = amount * CO2e_production_based_per_t
 
         parent = CO2eChangeAgri(
-            entries=entries,
             facts=facts,
+            duration_CO2e_neutral_years=duration_CO2e_neutral_years,
             what=what,
             a18=a18,
             CO2e_combustion_based=CO2e_combustion_based,
@@ -92,8 +91,8 @@ class CO2eChangeFermentationOrManure(CO2eChangeAgri):
         )
 
         return cls(
-            entries=entries,
             facts=facts,
+            duration_CO2e_neutral_years=duration_CO2e_neutral_years,
             what=what,
             a18=a18,
             CO2e_combustion_based=CO2e_combustion_based,

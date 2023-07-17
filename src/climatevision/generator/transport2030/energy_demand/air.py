@@ -2,7 +2,6 @@
 
 from dataclasses import dataclass
 
-from ...makeentries import Entries
 from ...refdata import Facts, Assumptions
 from ...utils import div
 from ...transport2018.t18 import T18
@@ -10,7 +9,9 @@ from ...transport2018.t18 import T18
 from .transport import Transport
 
 
-def calc_air_domestic(entries: Entries, facts: Facts, t18: T18) -> "Transport":
+def calc_air_domestic(
+    facts: Facts, duration_CO2e_neutral_years: float, t18: T18
+) -> "Transport":
     """We assume that no domestic flights are allowed when Germany is carbon neutral as trains
     are a good and cheap alternative (or should be).
 
@@ -25,7 +26,7 @@ def calc_air_domestic(entries: Entries, facts: Facts, t18: T18) -> "Transport":
     # of CO2e on domestic flights if we hadn't decided to ban them.
     cost_climate_saved = (
         (CO2e_total_2021_estimated)
-        * entries.m_duration_neutral
+        * duration_CO2e_neutral_years
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     return Transport(
@@ -41,7 +42,12 @@ def calc_air_domestic(entries: Entries, facts: Facts, t18: T18) -> "Transport":
 
 
 def calc_air_international(
-    entries: Entries, facts: Facts, assumptions: Assumptions, t18: T18
+    facts: Facts,
+    assumptions: Assumptions,
+    duration_CO2e_neutral_years: float,
+    population_commune_203X: int,
+    population_germany_203X: int,
+    t18: T18,
 ) -> "Transport":
     """However for many international flights there are no good alternatives.
     So we will need ejetfuels.
@@ -51,8 +57,8 @@ def calc_air_international(
 
     demand_ejetfuel = (
         ass("Ass_T_D_Air_nat_EB_2050")
-        * entries.m_population_com_203X
-        / entries.m_population_nat
+        * population_commune_203X
+        / population_germany_203X
     )
     transport_capacity_tkm = t18.air_inter.transport_capacity_tkm * div(
         demand_ejetfuel, t18.air_inter.demand_jetfuel
@@ -65,7 +71,7 @@ def calc_air_international(
     )
     cost_climate_saved = (
         (CO2e_total_2021_estimated - CO2e_combustion_based)
-        * entries.m_duration_neutral
+        * duration_CO2e_neutral_years
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     transport_capacity_pkm = t18.air_inter.transport_capacity_pkm * div(

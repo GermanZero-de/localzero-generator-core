@@ -2,7 +2,6 @@
 
 from dataclasses import dataclass
 
-from ...makeentries import Entries
 from ...refdata import Facts, Assumptions
 from ...utils import div
 from ...common.invest import InvestCommune
@@ -18,14 +17,18 @@ class InvestmentAction(InvestCommune):
 
     @classmethod
     def calc_rail_action_invest_infra(
-        cls, entries: Entries, facts: Facts, assumptions: Assumptions
+        cls,
+        facts: Facts,
+        assumptions: Assumptions,
+        duration_until_target_year: int,
+        population_commune_203X: int,
     ) -> "InvestmentAction":
         fact = facts.fact
         ass = assumptions.ass
 
         invest_per_x = ass("Ass_T_C_cost_per_trnsprt_rail_infrstrctr")
-        invest = invest_per_x * entries.m_population_com_203X
-        invest_pa = invest / entries.m_duration_target
+        invest = invest_per_x * population_commune_203X
+        invest_pa = invest / duration_until_target_year
         pct_of_wage = fact("Fact_T_D_constr_roadrail_revenue_pct_of_wage_2018")
         cost_wage = invest_pa * pct_of_wage
         ratio_wage_to_emplo = fact("Fact_T_D_constr_roadrail_ratio_wage_to_emplo_2018")
@@ -35,7 +38,7 @@ class InvestmentAction(InvestCommune):
         )
         invest_com = invest * ass("Ass_T_C_ratio_public_sector_100")
         demand_emplo_new = demand_emplo
-        invest_pa_com = invest_com / entries.m_duration_target
+        invest_pa_com = invest_com / duration_until_target_year
 
         return cls(
             cost_wage=cost_wage,
@@ -52,16 +55,20 @@ class InvestmentAction(InvestCommune):
 
     @classmethod
     def calc_rail_action_invest_station(
-        cls, entries: Entries, facts: Facts, assumptions: Assumptions
+        cls,
+        facts: Facts,
+        assumptions: Assumptions,
+        duration_until_target_year: int,
+        population_commune_203X: int,
     ) -> "InvestmentAction":
         fact = facts.fact
         ass = assumptions.ass
 
         invest_per_x = ass("Ass_T_C_cost_per_trnsprt_rail_train station")
-        invest = invest_per_x * entries.m_population_com_203X
+        invest = invest_per_x * population_commune_203X
         invest_com = invest * ass("Ass_T_C_ratio_public_sector_100")
-        invest_pa_com = invest_com / entries.m_duration_target
-        invest_pa = invest / entries.m_duration_target
+        invest_pa_com = invest_com / duration_until_target_year
+        invest_pa = invest / duration_until_target_year
         pct_of_wage = fact("Fact_T_D_constr_roadrail_revenue_pct_of_wage_2018")
         cost_wage = invest_pa * pct_of_wage
         ratio_wage_to_emplo = fact("Fact_T_D_constr_roadrail_ratio_wage_to_emplo_2018")
@@ -86,14 +93,18 @@ class InvestmentAction(InvestCommune):
 
     @classmethod
     def calc_other_foot_action_infra(
-        cls, entries: Entries, facts: Facts, assumptions: Assumptions
+        cls,
+        facts: Facts,
+        assumptions: Assumptions,
+        duration_until_target_year: int,
+        population_commune_203X: int,
     ) -> "InvestmentAction":
         fact = facts.fact
         ass = assumptions.ass
 
         invest_per_x = ass("Ass_T_D_invest_pedestrians")
-        invest_pa = invest_per_x * entries.m_population_com_203X
-        invest = invest_pa * entries.m_duration_target
+        invest_pa = invest_per_x * population_commune_203X
+        invest = invest_pa * duration_until_target_year
         invest_com = invest
         invest_pa_com = invest_pa
         pct_of_wage = fact("Fact_T_D_constr_roadrail_revenue_pct_of_wage_2018")
@@ -118,9 +129,9 @@ class InvestmentAction(InvestCommune):
     @classmethod
     def calc_other_cycl_action_infra(
         cls,
-        entries: Entries,
         facts: Facts,
         assumptions: Assumptions,
+        duration_until_target_year: int,
         cycle_transport_capacity_pkm: float,
     ) -> "InvestmentAction":
         fact = facts.fact
@@ -129,10 +140,10 @@ class InvestmentAction(InvestCommune):
         invest_per_x = ass("Ass_T_C_cost_per_trnsprt_ppl_cycle")
         invest = cycle_transport_capacity_pkm * invest_per_x
         invest_com = invest * ass("Ass_T_C_ratio_public_sector_100")
-        invest_pa_com = invest_com / entries.m_duration_target
+        invest_pa_com = invest_com / duration_until_target_year
         ratio_wage_to_emplo = fact("Fact_T_D_constr_roadrail_ratio_wage_to_emplo_2018")
         pct_of_wage = fact("Fact_T_D_constr_roadrail_revenue_pct_of_wage_2018")
-        invest_pa = invest / entries.m_duration_target
+        invest_pa = invest / duration_until_target_year
         cost_wage = invest_pa * pct_of_wage
         demand_emplo = div(
             cost_wage,
@@ -161,9 +172,10 @@ class RoadInvestmentAction(InvestmentAction):
     @classmethod
     def calc_car_action_charger(
         cls,
-        entries: Entries,
         facts: Facts,
         assumptions: Assumptions,
+        duration_until_target_year: int,
+        area_kind: str,
         car_base_unit: float,
     ) -> "RoadInvestmentAction":
         fact = facts.fact
@@ -172,22 +184,22 @@ class RoadInvestmentAction(InvestmentAction):
         # Divide cars by chargers/car => chargers
         base_unit = car_base_unit / (
             ass("Ass_S_ratio_bev_car_per_charge_point_city")
-            if entries.t_rt3 == "city"
+            if area_kind == "city"
             else ass("Ass_S_ratio_bev_car_per_charge_point_smcity_rural")
-            if entries.t_rt3 == "smcty"
+            if area_kind == "smcty"
             else ass("Ass_S_ratio_bev_car_per_charge_point_smcity_rural")
-            if entries.t_rt3 == "rural"
+            if area_kind == "rural"
             else ass("Ass_S_ratio_bev_car_per_charge_point_nat")
         )
         invest_per_x = ass("Ass_T_C_cost_per_charge_point")
         invest = base_unit * invest_per_x
-        invest_pa = invest / entries.m_duration_target
+        invest_pa = invest / duration_until_target_year
         pct_of_wage = fact("Fact_T_D_constr_roadrail_revenue_pct_of_wage_2018")
         invest_com = invest * ass("Ass_T_C_invest_state_charge_point_prctg")
         cost_wage = invest_pa * pct_of_wage
         ratio_wage_to_emplo = fact("Fact_T_D_constr_roadrail_ratio_wage_to_emplo_2018")
         demand_emplo = div(cost_wage, ratio_wage_to_emplo)
-        invest_pa_com = invest_com / entries.m_duration_target
+        invest_pa_com = invest_com / duration_until_target_year
         demand_emplo_new = demand_emplo
         return cls(
             base_unit=base_unit,

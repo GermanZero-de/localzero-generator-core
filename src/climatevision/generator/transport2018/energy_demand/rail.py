@@ -2,7 +2,6 @@
 
 from dataclasses import dataclass
 
-from ...makeentries import Entries
 from ...refdata import Facts, Assumptions
 from ...utils import element_wise_plus, MILLION
 
@@ -26,15 +25,19 @@ class Rail:
 
     @classmethod
     def calc_people_distance(
-        cls, entries: Entries, facts: Facts, assumptions: Assumptions
+        cls,
+        facts: Facts,
+        assumptions: Assumptions,
+        ec_rail_ppl_elec: float,
+        ec_rail_ppl_diesel: float,
     ) -> "Rail":
         fact = facts.fact
 
-        demand_electricity = entries.t_ec_rail_ppl_elec
-        demand_diesel = entries.t_ec_rail_ppl_diesel * (
+        demand_electricity = ec_rail_ppl_elec
+        demand_diesel = ec_rail_ppl_diesel * (
             1 - fact("Fact_T_S_Rl_Rd_diesel_bio_frac_2018")
         )
-        demand_biodiesel = entries.t_ec_rail_ppl_diesel * fact(
+        demand_biodiesel = ec_rail_ppl_diesel * fact(
             "Fact_T_S_Rl_Rd_diesel_bio_frac_2018"
         )
 
@@ -67,15 +70,19 @@ class Rail:
 
     @classmethod
     def calc_goods(
-        cls, entries: Entries, facts: Facts, assumptions: Assumptions
+        cls,
+        facts: Facts,
+        assumptions: Assumptions,
+        ec_rail_gds_elec: float,
+        ec_rail_gds_diesel: float,
     ) -> "Rail":
         fact = facts.fact
 
-        demand_electricity = entries.t_ec_rail_gds_elec
-        demand_diesel = entries.t_ec_rail_gds_diesel * (
+        demand_electricity = ec_rail_gds_elec
+        demand_diesel = ec_rail_gds_diesel * (
             1 - fact("Fact_T_S_Rl_Rd_diesel_bio_frac_2018")
         )
-        demand_biodiesel = entries.t_ec_rail_gds_diesel * fact(
+        demand_biodiesel = ec_rail_gds_diesel * fact(
             "Fact_T_S_Rl_Rd_diesel_bio_frac_2018"
         )
 
@@ -105,15 +112,20 @@ class Rail:
 
     @classmethod
     def calc_rail_people_metro(
-        cls, entries: Entries, facts: Facts, assumptions: Assumptions
+        cls,
+        facts: Facts,
+        assumptions: Assumptions,
+        population_commune_2018: int,
+        population_district_2018: int,
+        t_metro_mega_km_dis: float,
     ) -> "Rail":
         fact = facts.fact
 
         mileage = (
-            entries.t_metro_mega_km_dis
+            t_metro_mega_km_dis
             * MILLION
-            * entries.m_population_com_2018
-            / entries.m_population_dis
+            * population_commune_2018
+            / population_district_2018
         )
         demand_electricity = mileage * fact("Fact_T_S_Rl_Metro_SEC_fzkm_2018")
         energy = demand_electricity

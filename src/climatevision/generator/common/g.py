@@ -2,7 +2,6 @@
 
 from dataclasses import dataclass
 
-from ..makeentries import Entries
 from ..refdata import Facts, Assumptions
 from ..utils import div
 
@@ -33,11 +32,15 @@ class GConsult(G):
 
     @classmethod
     def calc_from_invest(
-        cls, entries: Entries, facts: Facts, invest: float, emplo_existing: float
+        cls,
+        facts: Facts,
+        duration_until_target_year: int,
+        invest: float,
+        emplo_existing: float,
     ) -> "GConsult":
         fact = facts.fact
 
-        invest_pa = invest / entries.m_duration_target
+        invest_pa = invest / duration_until_target_year
 
         invest_commune = invest
         invest_pa_commune = invest_pa
@@ -64,12 +67,16 @@ class GConsult(G):
 
     @classmethod
     def calc_from_invest_calc_planning(
-        cls, entries: Entries, facts: Facts, assumptions: Assumptions, invest: float
+        cls,
+        facts: Facts,
+        assumptions: Assumptions,
+        duration_until_target_year: int,
+        invest: float,
     ) -> "GConsult":
         fact = facts.fact
         ass = assumptions.ass
 
-        invest_pa = invest / entries.m_duration_target
+        invest_pa = invest / duration_until_target_year
 
         invest_commune = invest
         invest_pa_commune = invest_pa
@@ -96,14 +103,14 @@ class GConsult(G):
 
     @classmethod
     def calc_from_invest_calc_planning_with_invest_commune(
-        cls, entries: Entries, assumptions: Assumptions, invest: float
+        cls, assumptions: Assumptions, duration_until_target_year: int, invest: float
     ) -> "GConsult":
         ass = assumptions.ass
 
-        invest_pa = invest / entries.m_duration_target
+        invest_pa = invest / duration_until_target_year
 
         invest_commune = invest * ass("Ass_T_C_ratio_public_sector_100")
-        invest_pa_commune = invest_commune / entries.m_duration_target
+        invest_pa_commune = invest_commune / duration_until_target_year
 
         cost_wage = invest_pa
 
@@ -128,14 +135,14 @@ class GConsult(G):
     @classmethod
     def calc_from_invest_pa(
         cls,
-        entries: Entries,
         assumptions: Assumptions,
+        duration_until_target_year: int,
         invest_pa: float,
         ratio_wage_to_emplo: float,
     ) -> "GConsult":
         ass = assumptions.ass
 
-        invest = invest_pa * entries.m_duration_target
+        invest = invest_pa * duration_until_target_year
 
         invest_pa_commune = invest_pa
         invest_commune = invest
@@ -161,7 +168,12 @@ class GConsult(G):
         )
 
     @classmethod
-    def calc_storage(cls, entries: Entries, facts: Facts, energy: float) -> "GConsult":
+    def calc_storage(
+        cls,
+        facts: Facts,
+        duration_until_target_year: int,
+        energy: float,
+    ) -> "GConsult":
         fact = facts.fact
 
         pct_energy = fact("Fact_H_P_storage_specific_volume")
@@ -169,7 +181,7 @@ class GConsult(G):
 
         invest_per_x = fact("Fact_H_P_storage_specific_cost")
         invest = invest_per_x * power_to_be_installed
-        invest_pa = invest / entries.m_duration_target
+        invest_pa = invest / duration_until_target_year
 
         invest_commune = invest
         invest_pa_commune = invest_pa

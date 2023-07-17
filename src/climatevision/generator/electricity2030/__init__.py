@@ -20,8 +20,9 @@ from ..transport2030.t30 import T30
 from ..waste2030 import WasteLines
 
 from .e30 import E30
-from .electricity2030_core import EColVars2030
-from . import electricity2030_germany, electricity2030_commune
+from .core.e_col_vars_2030 import EColVars2030
+from .germany import electricity2030_germany
+from .commune import electricity2030_commune
 
 
 def calc(

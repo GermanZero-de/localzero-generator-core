@@ -19,8 +19,8 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, t18: T18) 
     production = energy_demand.calc_production(entries, facts, assumptions, t18)
 
     general = energy_general.calc_general(
-        entries,
         assumptions,
+        entries.m_duration_target,
         production.road_bus_action_infra,
         production.road_gds_mhd_action_wire,
         production.road_action_charger,

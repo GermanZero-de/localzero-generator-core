@@ -2,7 +2,6 @@
 
 from dataclasses import dataclass, asdict
 
-from ...makeentries import Entries
 from ...refdata import Facts, Assumptions
 from ...utils import div
 from ...common.invest import InvestCommune
@@ -34,7 +33,12 @@ class Road:
 
     @classmethod
     def calc_goods_lightduty_it_ot(
-        cls, entries: Entries, facts: Facts, assumptions: Assumptions, *, t18: T18
+        cls,
+        facts: Facts,
+        assumptions: Assumptions,
+        duration_CO2e_neutral_years: float,
+        *,
+        t18: T18,
     ) -> "Road":
         fact = facts.fact
         ass = assumptions.ass
@@ -69,7 +73,7 @@ class Road:
         )
         cost_climate_saved = (
             (CO2e_total_2021_estimated - CO2e_combustion_based)
-            * entries.m_duration_neutral
+            * duration_CO2e_neutral_years
             * fact("Fact_M_cost_per_CO2e_2020")
         )
         return cls(
@@ -90,7 +94,12 @@ class Road:
 
     @classmethod
     def calc_goods_lightduty_ab(
-        cls, entries: Entries, facts: Facts, assumptions: Assumptions, *, t18: T18
+        cls,
+        facts: Facts,
+        assumptions: Assumptions,
+        duration_CO2e_neutral_years: float,
+        *,
+        t18: T18,
     ) -> "Road":
         fact = facts.fact
         ass = assumptions.ass
@@ -124,7 +133,7 @@ class Road:
         )
         cost_climate_saved = (
             (CO2e_total_2021_estimated - CO2e_combustion_based)
-            * entries.m_duration_neutral
+            * duration_CO2e_neutral_years
             * fact("Fact_M_cost_per_CO2e_2020")
         )
         return cls(
@@ -144,7 +153,12 @@ class Road:
 
     @classmethod
     def calc_goods_medium_and_heavy_duty_ab(
-        cls, entries: Entries, facts: Facts, assumptions: Assumptions, *, t18: T18
+        cls,
+        facts: Facts,
+        assumptions: Assumptions,
+        duration_CO2e_neutral_years: float,
+        *,
+        t18: T18,
     ) -> "Road":
         fact = facts.fact
         ass = assumptions.ass
@@ -178,7 +192,7 @@ class Road:
         )
         cost_climate_saved = (
             (CO2e_total_2021_estimated - CO2e_combustion_based)
-            * entries.m_duration_neutral
+            * duration_CO2e_neutral_years
             * fact("Fact_M_cost_per_CO2e_2020")
         )
         return cls(
@@ -199,7 +213,12 @@ class Road:
 
     @classmethod
     def calc_goods_medium_and_heavy_duty_it_ot(
-        cls, entries: Entries, facts: Facts, assumptions: Assumptions, *, t18: T18
+        cls,
+        facts: Facts,
+        assumptions: Assumptions,
+        duration_CO2e_neutral_years: float,
+        *,
+        t18: T18,
     ) -> "Road":
         fact = facts.fact
         ass = assumptions.ass
@@ -234,7 +253,7 @@ class Road:
         )
         cost_climate_saved = (
             (CO2e_total_2021_estimated - CO2e_combustion_based)
-            * entries.m_duration_neutral
+            * duration_CO2e_neutral_years
             * fact("Fact_M_cost_per_CO2e_2020")
         )
         return cls(
@@ -256,9 +275,10 @@ class Road:
     @classmethod
     def calc_car_it_ot(
         cls,
-        entries: Entries,
         facts: Facts,
         assumptions: Assumptions,
+        duration_CO2e_neutral_years: float,
+        area_kind: str,
         *,
         t18: T18,
         required_domestic_transport_capacity_pkm: float,
@@ -278,17 +298,17 @@ class Road:
                     + ass("Ass_T_D_trnsprt_ppl_city_car2_frac_2050")
                     + ass("Ass_T_D_trnsprt_ppl_city_car3_frac_2050")
                     + ass("Ass_T_D_trnsprt_ppl_city_car4_frac_2050")
-                    if entries.t_rt3 == "city"
+                    if area_kind == "city"
                     else ass("Ass_T_D_trnsprt_ppl_smcty_car1_frac_2050")
                     + ass("Ass_T_D_trnsprt_ppl_smcty_car2_frac_2050")
                     + ass("Ass_T_D_trnsprt_ppl_smcty_car3_frac_2050")
                     + ass("Ass_T_D_trnsprt_ppl_smcty_car4_frac_2050")
-                    if entries.t_rt3 == "smcty"
+                    if area_kind == "smcty"
                     else ass("Ass_T_D_trnsprt_ppl_rural_car1_frac_2050")
                     + ass("Ass_T_D_trnsprt_ppl_rural_car2_frac_2050")
                     + ass("Ass_T_D_trnsprt_ppl_rural_car3_frac_2050")
                     + ass("Ass_T_D_trnsprt_ppl_rural_car4_frac_2050")
-                    if entries.t_rt3 == "rural"
+                    if area_kind == "rural"
                     else ass("Ass_T_D_trnsprt_ppl_nat_car1_frac_2050")
                     + ass("Ass_T_D_trnsprt_ppl_nat_car2_frac_2050")
                     + ass("Ass_T_D_trnsprt_ppl_nat_car3_frac_2050")
@@ -315,7 +335,7 @@ class Road:
         )
         cost_climate_saved = (
             (CO2e_total_2021_estimated - CO2e_combustion_based)
-            * entries.m_duration_neutral
+            * duration_CO2e_neutral_years
             * fact("Fact_M_cost_per_CO2e_2020")
         )
         return cls(
@@ -337,9 +357,10 @@ class Road:
     @classmethod
     def calc_car_ab(
         cls,
-        entries: Entries,
         facts: Facts,
         assumptions: Assumptions,
+        duration_CO2e_neutral_years: float,
+        area_kind: str,
         *,
         t18: T18,
         required_domestic_transport_capacity_pkm: float,
@@ -358,17 +379,17 @@ class Road:
                 + ass("Ass_T_D_trnsprt_ppl_city_car2_frac_2050")
                 + ass("Ass_T_D_trnsprt_ppl_city_car3_frac_2050")
                 + ass("Ass_T_D_trnsprt_ppl_city_car4_frac_2050")
-                if entries.t_rt3 == "city"
+                if area_kind == "city"
                 else ass("Ass_T_D_trnsprt_ppl_smcty_car1_frac_2050")
                 + ass("Ass_T_D_trnsprt_ppl_smcty_car2_frac_2050")
                 + ass("Ass_T_D_trnsprt_ppl_smcty_car3_frac_2050")
                 + ass("Ass_T_D_trnsprt_ppl_smcty_car4_frac_2050")
-                if entries.t_rt3 == "smcty"
+                if area_kind == "smcty"
                 else ass("Ass_T_D_trnsprt_ppl_rural_car1_frac_2050")
                 + ass("Ass_T_D_trnsprt_ppl_rural_car2_frac_2050")
                 + ass("Ass_T_D_trnsprt_ppl_rural_car3_frac_2050")
                 + ass("Ass_T_D_trnsprt_ppl_rural_car4_frac_2050")
-                if entries.t_rt3 == "rural"
+                if area_kind == "rural"
                 else ass("Ass_T_D_trnsprt_ppl_nat_car1_frac_2050")
                 + ass("Ass_T_D_trnsprt_ppl_nat_car2_frac_2050")
                 + ass("Ass_T_D_trnsprt_ppl_nat_car3_frac_2050")
@@ -394,7 +415,7 @@ class Road:
         )
         cost_climate_saved = (
             (CO2e_total_2021_estimated - CO2e_combustion_based)
-            * entries.m_duration_neutral
+            * duration_CO2e_neutral_years
             * fact("Fact_M_cost_per_CO2e_2020")
         )
 
@@ -422,9 +443,9 @@ class RoadCar(Road):
 
     @staticmethod
     def calc_cost_modernisation_of_fleet(
-        entries: Entries,
         facts: Facts,
         assumptions: Assumptions,
+        duration_until_target_year: int,
         *,
         sum_it_ot_ab: Transport,
     ) -> TransportInvestments:
@@ -437,7 +458,7 @@ class RoadCar(Road):
         )
         invest_per_x = ass("Ass_T_S_car_average_price_2050")
         invest = base_unit * invest_per_x
-        invest_pa = invest / entries.m_duration_target
+        invest_pa = invest / duration_until_target_year
 
         return TransportInvestments(
             base_unit=base_unit,
@@ -449,9 +470,9 @@ class RoadCar(Road):
     @classmethod
     def calc(
         cls,
-        entries: Entries,
         facts: Facts,
         assumptions: Assumptions,
+        duration_until_target_year: int,
         *,
         t18: T18,
         it_ot: Road,
@@ -462,7 +483,7 @@ class RoadCar(Road):
             mileage=it_ot.mileage + ab.mileage,
             transport=sum,
             fleet_modernisation_cost=cls.calc_cost_modernisation_of_fleet(
-                entries, facts, assumptions, sum_it_ot_ab=sum
+                facts, assumptions, duration_until_target_year, sum_it_ot_ab=sum
             ),
         )
 
@@ -483,9 +504,9 @@ class BusInvestments(TransportInvestments):
 class RoadBus(Road, BusInvestments):
     @staticmethod
     def calc_action_infra(
-        entries: Entries,
         facts: Facts,
         assumptions: Assumptions,
+        duration_until_target_year: int,
         *,
         bus_transport_capacity_pkm: float,
     ) -> InvestmentAction:
@@ -495,14 +516,14 @@ class RoadBus(Road, BusInvestments):
 
         invest_per_x = ass("Ass_T_C_cost_per_trnsprt_ppl_bus_infrstrctr")
         invest = bus_transport_capacity_pkm * invest_per_x
-        invest_pa = invest / entries.m_duration_target
+        invest_pa = invest / duration_until_target_year
         pct_of_wage = fact("Fact_T_D_constr_roadrail_revenue_pct_of_wage_2018")
         cost_wage = invest_pa * pct_of_wage
         ratio_wage_to_emplo = fact("Fact_T_D_constr_roadrail_ratio_wage_to_emplo_2018")
         demand_emplo = div(cost_wage, ratio_wage_to_emplo)
         demand_emplo_new = demand_emplo
         invest_com = invest * ass("Ass_T_C_ratio_public_sector_100")
-        invest_pa_com = invest_com / entries.m_duration_target
+        invest_pa_com = invest_com / duration_until_target_year
         return InvestmentAction(
             cost_wage=cost_wage,
             demand_emplo=demand_emplo,
@@ -518,9 +539,9 @@ class RoadBus(Road, BusInvestments):
 
     @staticmethod
     def calc_bus_investments(
-        entries: Entries,
         facts: Facts,
         assumptions: Assumptions,
+        duration_until_target_year: int,
         *,
         t18: T18,
         mileage: float,
@@ -536,11 +557,11 @@ class RoadBus(Road, BusInvestments):
         emplo_existing = div(t18.road_bus.mileage, mileage) * demand_emplo
         demand_emplo_new = demand_emplo - emplo_existing
         cost_wage = ratio_wage_to_emplo * demand_emplo_new
-        invest = base_unit * invest_per_x + cost_wage * entries.m_duration_target
+        invest = base_unit * invest_per_x + cost_wage * duration_until_target_year
         invest_com = invest * ass("Ass_T_C_ratio_public_sector_100")
-        invest_pa = invest / entries.m_duration_target
+        invest_pa = invest / duration_until_target_year
         pct_of_wage = div(cost_wage, invest_pa)
-        invest_pa_com = invest_com / entries.m_duration_target
+        invest_pa_com = invest_com / duration_until_target_year
         return BusInvestments(
             base_unit=base_unit,
             cost_wage=cost_wage,
@@ -559,9 +580,11 @@ class RoadBus(Road, BusInvestments):
     @classmethod
     def calc(
         cls,
-        entries: Entries,
         facts: Facts,
         assumptions: Assumptions,
+        duration_until_target_year: int,
+        duration_CO2e_neutral_years: float,
+        area_kind: str,
         *,
         t18: T18,
         total_transport_capacity_pkm: float,
@@ -576,11 +599,11 @@ class RoadBus(Road, BusInvestments):
         )
         public_transport_ppl_frac_2050 = (
             ass("Ass_T_D_trnsprt_ppl_city_pt_frac_2050")
-            if entries.t_rt3 == "city"
+            if area_kind == "city"
             else ass("Ass_T_D_trnsprt_ppl_smcty_pt_frac_2050")
-            if entries.t_rt3 == "smcty"
+            if area_kind == "smcty"
             else ass("Ass_T_D_trnsprt_ppl_rural_pt_frac_2050")
-            if entries.t_rt3 == "rural"
+            if area_kind == "rural"
             else ass("Ass_T_D_trnsprt_ppl_nat_pt_frac_2050")
         )
 
@@ -614,7 +637,7 @@ class RoadBus(Road, BusInvestments):
         )
         cost_climate_saved = (
             (CO2e_total_2021_estimated - CO2e_combustion_based)
-            * entries.m_duration_neutral
+            * duration_CO2e_neutral_years
             * fact("Fact_M_cost_per_CO2e_2020")
         )
 
@@ -631,7 +654,11 @@ class RoadBus(Road, BusInvestments):
             ),
             **asdict(
                 cls.calc_bus_investments(
-                    entries, facts, assumptions, t18=t18, mileage=mileage
+                    facts,
+                    assumptions,
+                    duration_until_target_year,
+                    t18=t18,
+                    mileage=mileage,
                 )
             ),
         )
@@ -697,9 +724,9 @@ class RoadGoodsMediumAndHeavyDuty(Road):
     @classmethod
     def calc(
         cls,
-        entries: Entries,
         facts: Facts,
         assumptions: Assumptions,
+        duration_until_target_year: int,
         t18: T18,
         it_ot: Road,
         ab: Road,
@@ -722,7 +749,7 @@ class RoadGoodsMediumAndHeavyDuty(Road):
         )
         invest_per_x = ass("Ass_T_S_MHCV_BEV_FCEV_average_price_2050")
         invest = base_unit * invest_per_x
-        invest_pa = invest / entries.m_duration_target
+        invest_pa = invest / duration_until_target_year
         return cls(
             mileage=it_ot.mileage + ab.mileage,
             base_unit=base_unit,
@@ -737,16 +764,19 @@ class RoadGoodsMediumAndHeavyDuty(Road):
 
     @staticmethod
     def calc_action_wire(
-        entries: Entries, facts: Facts, assumptions: Assumptions
+        facts: Facts,
+        assumptions: Assumptions,
+        duration_until_target_year: int,
+        population_commune_203X: int,
     ) -> InvestmentAction:
         fact = facts.fact
         ass = assumptions.ass
 
         invest_per_x = ass("Ass_T_C_cost_per_trnsprt_gds_truck_infrstrctr")
-        invest = entries.m_population_com_203X * invest_per_x
+        invest = population_commune_203X * invest_per_x
         invest_com = invest * ass("Ass_T_C_ratio_public_sector_100")
-        invest_pa = invest / entries.m_duration_target
-        invest_pa_com = invest_com / entries.m_duration_target
+        invest_pa = invest / duration_until_target_year
+        invest_pa_com = invest_com / duration_until_target_year
         pct_of_wage = fact("Fact_T_D_constr_roadrail_revenue_pct_of_wage_2018")
         cost_wage = invest_pa * pct_of_wage
         ratio_wage_to_emplo = fact("Fact_T_D_constr_roadrail_ratio_wage_to_emplo_2018")
@@ -777,9 +807,9 @@ class RoadGoodsLightDuty(Road):
     @classmethod
     def calc(
         cls,
-        entries: Entries,
         facts: Facts,
         assumptions: Assumptions,
+        duration_until_target_year: int,
         *,
         t18: T18,
         it_ot: Road,
@@ -797,7 +827,7 @@ class RoadGoodsLightDuty(Road):
         )
         invest_per_x = ass("Ass_T_S_LCV_average_price_2050")
         invest = base_unit * invest_per_x
-        invest_pa = invest / entries.m_duration_target
+        invest_pa = invest / duration_until_target_year
         return cls(
             base_unit=base_unit,
             invest=invest,

@@ -2,7 +2,6 @@
 
 from dataclasses import dataclass
 
-from ...makeentries import Entries
 from ...refdata import Facts, Assumptions
 from ...utils import div
 from ...common.invest import Invest, InvestCommune
@@ -27,9 +26,11 @@ class RailPeople(Invest):
     @classmethod
     def calc_metro(
         cls,
-        entries: Entries,
         facts: Facts,
         assumptions: Assumptions,
+        duration_until_target_year: int,
+        duration_CO2e_neutral_years: float,
+        area_kind: str,
         *,
         t18: T18,
         total_transport_capacity_pkm: float,
@@ -46,11 +47,11 @@ class RailPeople(Invest):
             ),
         ) * (
             ass("Ass_T_D_trnsprt_ppl_city_pt_frac_2050")
-            if entries.t_rt3 == "city"
+            if area_kind == "city"
             else ass("Ass_T_D_trnsprt_ppl_smcty_pt_frac_2050")
-            if entries.t_rt3 == "smcty"
+            if area_kind == "smcty"
             else ass("Ass_T_D_trnsprt_ppl_rural_pt_frac_2050")
-            if entries.t_rt3 == "rural"
+            if area_kind == "rural"
             else ass("Ass_T_D_trnsprt_ppl_nat_pt_frac_2050")
         )
         mileage = transport_capacity_pkm / ass("Ass_T_D_lf_Rl_Metro_2050")
@@ -69,16 +70,16 @@ class RailPeople(Invest):
         )
         demand_emplo_new = demand_emplo - emplo_existing
         cost_wage = ratio_wage_to_emplo * demand_emplo_new
-        invest = base_unit * invest_per_x + cost_wage * entries.m_duration_target
+        invest = base_unit * invest_per_x + cost_wage * duration_until_target_year
         CO2e_total_2021_estimated = t18.rail_ppl_metro.CO2e_combustion_based * fact(
             "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
         )
         cost_climate_saved = (
             (CO2e_total_2021_estimated - CO2e_combustion_based)
-            * entries.m_duration_neutral
+            * duration_CO2e_neutral_years
             * fact("Fact_M_cost_per_CO2e_2020")
         )
-        invest_pa = invest / entries.m_duration_target
+        invest_pa = invest / duration_until_target_year
         pct_of_wage = div(cost_wage, invest_pa)
         return cls(
             base_unit=base_unit,
@@ -106,9 +107,11 @@ class RailPeople(Invest):
     @classmethod
     def calc_distance(
         cls,
-        entries: Entries,
         facts: Facts,
         assumptions: Assumptions,
+        duration_until_target_year: int,
+        duration_CO2e_neutral_years: float,
+        area_kind: str,
         *,
         t18: T18,
         total_transport_capacity_pkm: float,
@@ -123,11 +126,11 @@ class RailPeople(Invest):
             + t18.rail_ppl_metro.transport_capacity_pkm,
         ) * (
             ass("Ass_T_D_trnsprt_ppl_city_pt_frac_2050")
-            if entries.t_rt3 == "city"
+            if area_kind == "city"
             else ass("Ass_T_D_trnsprt_ppl_smcty_pt_frac_2050")
-            if entries.t_rt3 == "smcty"
+            if area_kind == "smcty"
             else ass("Ass_T_D_trnsprt_ppl_rural_pt_frac_2050")
-            if entries.t_rt3 == "rural"
+            if area_kind == "rural"
             else ass("Ass_T_D_trnsprt_ppl_nat_pt_frac_2050")
         )
         demand_electricity = transport_capacity_pkm * ass(
@@ -156,11 +159,11 @@ class RailPeople(Invest):
         )
         cost_climate_saved = (
             (CO2e_total_2021_estimated - CO2e_combustion_based)
-            * entries.m_duration_neutral
+            * duration_CO2e_neutral_years
             * fact("Fact_M_cost_per_CO2e_2020")
         )
-        invest = base_unit * invest_per_x + cost_wage * entries.m_duration_target
-        invest_pa = invest / entries.m_duration_target
+        invest = base_unit * invest_per_x + cost_wage * duration_until_target_year
+        invest_pa = invest / duration_until_target_year
         pct_of_wage = div(cost_wage, invest_pa)
         return cls(
             base_unit=base_unit,
@@ -197,9 +200,9 @@ class RailPeopleMetroActionInfra(InvestCommune):
     @classmethod
     def calc(
         cls,
-        entries: Entries,
         facts: Facts,
         assumptions: Assumptions,
+        duration_until_target_year: int,
         *,
         metro_transport_capacity_pkm: float,
     ) -> "RailPeopleMetroActionInfra":
@@ -210,9 +213,9 @@ class RailPeopleMetroActionInfra(InvestCommune):
         invest = metro_transport_capacity_pkm * invest_per_x
         base_unit = 0
         invest_com = invest * ass("Ass_T_C_ratio_public_sector_100")
-        invest_pa = invest / entries.m_duration_target
+        invest_pa = invest / duration_until_target_year
         pct_of_wage = fact("Fact_T_D_constr_roadrail_revenue_pct_of_wage_2018")
-        invest_pa_com = invest_com / entries.m_duration_target
+        invest_pa_com = invest_com / duration_until_target_year
         cost_wage = invest_pa * pct_of_wage
         ratio_wage_to_emplo = fact("Fact_T_D_constr_roadrail_ratio_wage_to_emplo_2018")
         emplo_existing = 0  # nicht existent oder ausgelastet
@@ -322,7 +325,13 @@ class RailGoods(Invest):
 
     @classmethod
     def calc(
-        cls, entries: Entries, facts: Facts, assumptions: Assumptions, *, t18: T18
+        cls,
+        facts: Facts,
+        assumptions: Assumptions,
+        duration_until_target_year: int,
+        duration_CO2e_neutral_years: float,
+        *,
+        t18: T18,
     ) -> "RailGoods":
         fact = facts.fact
         ass = assumptions.ass
@@ -345,7 +354,7 @@ class RailGoods(Invest):
         )
         cost_climate_saved = (
             (CO2e_total_2021_estimated - CO2e_combustion_based)
-            * entries.m_duration_neutral
+            * duration_CO2e_neutral_years
             * fact("Fact_M_cost_per_CO2e_2020")
         )
         ratio_wage_to_emplo = ass("Ass_T_D_rail_wage_driver")
@@ -359,8 +368,8 @@ class RailGoods(Invest):
         base_unit = change_km / fact("Fact_T_D_rail_gds_ratio_mlg_to_vehicle")
         invest_per_x = fact("Fact_T_D_rail_gds_vehicle_invest")
         cost_wage = ratio_wage_to_emplo * demand_emplo_new
-        invest = base_unit * invest_per_x + cost_wage * entries.m_duration_target
-        invest_pa = invest / entries.m_duration_target
+        invest = base_unit * invest_per_x + cost_wage * duration_until_target_year
+        invest_pa = invest / duration_until_target_year
         pct_of_wage = div(cost_wage, invest_pa)
 
         return cls(
