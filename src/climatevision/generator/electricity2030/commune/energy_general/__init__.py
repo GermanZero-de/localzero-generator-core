@@ -7,6 +7,7 @@ from ....utils import div, MILLION
 
 from ...core.e_col_vars_2030 import EColVars2030
 from ...core.g_grid_pv import calc_g_grid_pv
+from ...core.g import calc_g
 
 
 @dataclass(kw_only=True)
@@ -80,26 +81,7 @@ def calc_general(
         g_grid_offshore.invest_outside / duration_until_target_year
     )
 
-    g = EColVars2030()
-    g.invest_outside = g_grid_offshore.invest_outside
-    g.invest_pa_outside = g_grid_offshore.invest_pa_outside
-    g.invest = g_grid_offshore.invest + g_grid_onshore.invest + g_grid_pv.invest
-    g.invest_pa = (
-        g_grid_offshore.invest_pa + g_grid_onshore.invest_pa + g_grid_pv.invest_pa
-    )
-    g.cost_wage = (
-        g_grid_offshore.cost_wage + g_grid_onshore.cost_wage + g_grid_pv.cost_wage
-    )
-    g.demand_emplo = (
-        g_grid_offshore.demand_emplo
-        + g_grid_onshore.demand_emplo
-        + g_grid_pv.demand_emplo
-    )
-    g.demand_emplo_new = (
-        g_grid_offshore.demand_emplo_new
-        + g_grid_onshore.demand_emplo_new
-        + g_grid_pv.demand_emplo_new
-    )
+    g = calc_g(g_grid_offshore, g_grid_onshore, g_grid_pv)
 
     return General(
         g=g,
