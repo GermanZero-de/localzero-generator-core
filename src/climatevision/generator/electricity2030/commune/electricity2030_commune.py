@@ -38,6 +38,7 @@ from .energy_demand.calc_production_local_biomass_stage2 import (
 from .energy_demand.calc_production_renewable_reverse import (
     calc_production_renewable_reverse,
 )
+from . import energy_general
 
 
 def calc(
@@ -67,20 +68,6 @@ def calc(
 
     population_commune_2018 = entries.m_population_com_2018
     population_germany_2018 = entries.m_population_nat
-
-    g_grid_onshore = EColVars2030()
-    g_grid_onshore.invest_per_x = ass("Ass_E_G_grid_onshore_ratio_invest_to_power")
-    g_grid_onshore.pct_of_wage = fact("Fact_B_P_constr_main_revenue_pct_of_wage_2017")
-    g_grid_onshore.ratio_wage_to_emplo = fact(
-        "Fact_B_P_constr_main_ratio_wage_to_emplo_2017"
-    )
-
-    g_grid_pv = EColVars2030()
-    g_grid_pv.invest_per_x = ass("Ass_E_G_grid_pv_ratio_invest_to_power")
-    g_grid_pv.pct_of_wage = fact("Fact_B_P_constr_main_revenue_pct_of_wage_2017")
-    g_grid_pv.ratio_wage_to_emplo = fact(
-        "Fact_B_P_constr_main_ratio_wage_to_emplo_2017"
-    )
 
     d_a = calc_energy_demand(
         facts,
@@ -232,19 +219,6 @@ def calc(
 
     p_local_hydro = calc_production_local_hydro(entries, facts, assumptions, e18=e18)
 
-    g_grid_offshore = EColVars2030()
-    g_grid_offshore.invest = 0
-    g_grid_offshore.invest_per_x = ass("Ass_E_G_grid_offshore_ratio_invest_to_power")
-    g_grid_offshore.pct_of_wage = fact("Fact_B_P_constr_main_revenue_pct_of_wage_2017")
-    g_grid_offshore.ratio_wage_to_emplo = fact(
-        "Fact_B_P_constr_main_ratio_wage_to_emplo_2017"
-    )
-    g_grid_offshore.cost_mro = (
-        g_grid_offshore.invest * ass("Ass_E_G_grid_offshore_mro") / MILLION
-    )
-    g_grid_offshore.invest_pa = g_grid_offshore.invest / duration_until_target_year
-    g_grid_offshore.cost_wage = g_grid_offshore.invest_pa * g_grid_offshore.pct_of_wage
-
     p_renew_pv = EColVars2030()
     p_renew_pv.CO2e_total = 0
     p_renew_pv.CO2e_combustion_based_per_MWh = fact(
@@ -385,17 +359,12 @@ def calc(
     p_fossil_and_renew.CO2e_total_2021_estimated = (
         p_fossil.CO2e_total_2021_estimated + p_renew.CO2e_total_2021_estimated
     )
-    g_grid_offshore.power_to_be_installed = p_renew_wind_offshore.power_to_be_installed
 
     p_local_pv.power_installable = (
         p_local_pv_roof.power_installable
         + p_local_pv_facade.power_installable
         + p_local_pv_park.power_installable
         + p_local_pv_agri.power_installable
-    )
-
-    g_grid_offshore.demand_emplo = div(
-        g_grid_offshore.cost_wage, g_grid_offshore.ratio_wage_to_emplo
     )
 
     p = EColVars2030()
@@ -405,12 +374,6 @@ def calc(
     p_fossil_and_renew.invest = p_renew.invest
 
     p_fossil_and_renew.demand_emplo = p_renew.demand_emplo
-    g_grid_offshore.invest_outside = (
-        g_grid_offshore.power_to_be_installed
-        * g_grid_offshore.invest_per_x
-        * d.energy
-        / ass("Ass_E_P_renew_nep_total_2035")
-    )
     p_local_pv.power_to_be_installed = (
         p_local_pv_roof.power_to_be_installed
         + p_local_pv_facade.power_to_be_installed
@@ -423,20 +386,11 @@ def calc(
         + p_local_pv_park.energy_installable
         + p_local_pv_agri.energy_installable
     )
-    g_grid_onshore.power_to_be_installed = p_local_wind_onshore.power_to_be_installed
-
-    g_grid_offshore.demand_emplo_new = g_grid_offshore.demand_emplo
 
     p_fossil_and_renew.invest_pa = p_renew.invest_pa
 
     p_fossil_and_renew.demand_emplo_new = p_renew.demand_emplo_new
 
-    g = EColVars2030()
-    g.invest_outside = g_grid_offshore.invest_outside
-    g_grid_offshore.invest_pa_outside = (
-        g_grid_offshore.invest_outside / duration_until_target_year
-    )
-    g_grid_pv.power_to_be_installed = p_local_pv.power_to_be_installed
     p_local_pv.energy = (
         p_local_pv_roof.energy
         + p_local_pv_facade.energy
@@ -450,9 +404,6 @@ def calc(
         + p_local_pv_park.invest
         + p_local_pv_agri.invest
     )  #
-    g_grid_onshore.invest = (
-        g_grid_onshore.power_to_be_installed * g_grid_onshore.invest_per_x
-    )
 
     p_local.invest = (
         p_local_pv_roof.invest
@@ -464,11 +415,9 @@ def calc(
     )
     p_local.cost_fuel = p_local_biomass.cost_fuel
     p_fossil_and_renew.cost_wage = p_renew.cost_wage
-    g.invest_pa_outside = g_grid_offshore.invest_pa_outside
     p_fossil_and_renew.invest_pa_outside = p_renew.invest_pa_outside
     p_fossil_and_renew.invest_outside = p_renew.invest_outside
     p_local_pv.invest_com = p_local_pv_roof.invest_com + p_local_pv_facade.invest_com
-    g_grid_pv.invest = g_grid_pv.power_to_be_installed * g_grid_pv.invest_per_x
     p_local.energy = (
         p_local_pv.energy
         + p_local_wind_onshore.energy
@@ -500,10 +449,6 @@ def calc(
         + p_local_pv_park.invest_pa
         + p_local_pv_agri.invest_pa
     )  # (
-    g_grid_onshore.cost_mro = (
-        g_grid_onshore.invest * ass("Ass_E_G_grid_onshore_mro") / MILLION
-    )
-    g_grid_onshore.invest_pa = g_grid_onshore.invest / duration_until_target_year
     p.invest = p_fossil_and_renew.invest + p_local.invest
     p_local.invest_pa = (
         p_local_pv_roof.invest_pa
@@ -536,9 +481,6 @@ def calc(
     p_local_pv_park.demand_emplo = div(
         p_local_pv_park.cost_wage, p_local_pv_park.ratio_wage_to_emplo
     )
-    g.invest = g_grid_offshore.invest + g_grid_onshore.invest + g_grid_pv.invest
-    g_grid_pv.cost_mro = g_grid_pv.invest * ass("Ass_E_G_grid_pv_mro") / MILLION
-    g_grid_pv.invest_pa = g_grid_pv.invest / duration_until_target_year
     p_local.change_energy_MWh = p_local.energy - e18.p_local.energy
     p_local_surplus = Energy()
     p_local_surplus.energy = p_local.energy - d.energy
@@ -568,7 +510,6 @@ def calc(
     p_local_pv_agri.demand_emplo = div(
         p_local_pv_agri.cost_wage, p_local_pv_agri.ratio_wage_to_emplo
     )
-    g_grid_onshore.cost_wage = g_grid_onshore.invest_pa * g_grid_onshore.pct_of_wage
     p.invest_pa = p_fossil_and_renew.invest_pa + p_local.invest_pa
     p_local_wind_onshore.demand_emplo = div(
         p_local_wind_onshore.cost_wage, p_local_wind_onshore.ratio_wage_to_emplo
@@ -576,10 +517,6 @@ def calc(
     p_local.change_CO2e_t = p_local_biomass.change_CO2e_t
     p.invest_com = p_fossil_and_renew.invest_com + p_local.invest_com
     p.invest_pa_com = p_fossil_and_renew.invest_pa_com + p_local.invest_pa_com
-    g.invest_pa = (
-        g_grid_offshore.invest_pa + g_grid_onshore.invest_pa + g_grid_pv.invest_pa
-    )
-    g_grid_pv.cost_wage = g_grid_pv.invest_pa * g_grid_pv.pct_of_wage
     p_local.change_energy_pct = div(p_local.change_energy_MWh, e18.p_local.energy)
 
     p_renew.energy = max(0, -p_local_surplus.energy)
@@ -599,16 +536,9 @@ def calc(
         + p_local_pv_park.demand_emplo
         + p_local_pv_agri.demand_emplo
     )
-    g_grid_onshore.demand_emplo = div(
-        g_grid_onshore.cost_wage, g_grid_onshore.ratio_wage_to_emplo
-    )
     p_local_wind_onshore.demand_emplo_new = max(
         0, p_local_wind_onshore.demand_emplo - p_local_wind_onshore.emplo_existing
     )
-    g.cost_wage = (
-        g_grid_offshore.cost_wage + g_grid_onshore.cost_wage + g_grid_pv.cost_wage
-    )
-    g_grid_pv.demand_emplo = div(g_grid_pv.cost_wage, g_grid_pv.ratio_wage_to_emplo)
     p_fossil_and_renew.energy = p_renew.energy
     p_renew.change_energy_MWh = p_renew.energy - e18.p_renew.energy
 
@@ -637,13 +567,6 @@ def calc(
     p_local_pv.demand_emplo_new = max(
         0, p_local_pv.demand_emplo - p_local_pv.emplo_existing
     )
-    g_grid_onshore.demand_emplo_new = g_grid_onshore.demand_emplo
-    g.demand_emplo = (
-        g_grid_offshore.demand_emplo
-        + g_grid_onshore.demand_emplo
-        + g_grid_pv.demand_emplo
-    )
-    g_grid_pv.demand_emplo_new = g_grid_pv.demand_emplo
     p.energy = p_fossil_and_renew.energy + p_local.energy
     p_fossil_and_renew.change_energy_MWh = (
         p_fossil_and_renew.energy - e18.p_fossil_and_renew.energy
@@ -718,11 +641,6 @@ def calc(
         + p_local_wind_onshore.demand_emplo_new
         + p_local_biomass.demand_emplo_new
     )  # lifecycle
-    g.demand_emplo_new = (
-        g_grid_offshore.demand_emplo_new
-        + g_grid_onshore.demand_emplo_new
-        + g_grid_pv.demand_emplo_new
-    )
     d_r.cost_fuel = (
         d_r.energy
         * d_r.cost_fuel_per_MWh
@@ -1062,18 +980,28 @@ def calc(
 
     p_renew_reverse.change_CO2e_pct = 0
 
+    general = energy_general.calc_general(
+        facts,
+        assumptions,
+        entries.m_duration_target,
+        p_renew_wind_offshore.power_to_be_installed,
+        p_local_wind_onshore.power_to_be_installed,
+        p_local_pv.power_to_be_installed,
+        d.energy,
+    )
+
     e = EColVars2030()
     e.CO2e_total_2021_estimated = p.CO2e_total_2021_estimated
-    e.invest_pa_outside = g.invest_pa_outside + p.invest_pa_outside
-    e.invest_outside = g.invest_outside + p.invest_outside
-    e.invest = g.invest + p.invest
+    e.invest_pa_outside = general.g.invest_pa_outside + p.invest_pa_outside
+    e.invest_outside = general.g.invest_outside + p.invest_outside
+    e.invest = general.g.invest + p.invest
     e.invest_com = 0 + p.invest_com
     e.invest_pa_com = 0 + p.invest_pa_com
-    e.invest_pa = g.invest_pa + p.invest_pa
-    e.cost_wage = g.cost_wage + p.cost_wage
-    e.demand_emplo = g.demand_emplo + p.demand_emplo
+    e.invest_pa = general.g.invest_pa + p.invest_pa
+    e.cost_wage = general.g.cost_wage + p.cost_wage
+    e.demand_emplo = general.g.demand_emplo + p.demand_emplo
     e.change_energy_MWh = p.change_energy_MWh
-    e.demand_emplo_new = g.demand_emplo_new + p.demand_emplo_new
+    e.demand_emplo_new = general.g.demand_emplo_new + p.demand_emplo_new
     e.change_energy_pct = p.change_energy_pct
     e.CO2e_combustion_based = p.CO2e_combustion_based
     e.change_CO2e_t = p.change_CO2e_t
@@ -1083,10 +1011,10 @@ def calc(
 
     return E30(
         e=e,
-        g=g,
-        g_grid_offshore=g_grid_offshore,
-        g_grid_onshore=g_grid_onshore,
-        g_grid_pv=g_grid_pv,
+        g=general.g,
+        g_grid_offshore=general.g_grid_offshore,
+        g_grid_onshore=general.g_grid_onshore,
+        g_grid_pv=general.g_grid_pv,
         d=d,
         d_r=d_r,
         d_b=d_b,
