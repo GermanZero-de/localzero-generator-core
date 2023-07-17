@@ -6,6 +6,7 @@ from ....refdata import Facts, Assumptions
 from ....utils import div, MILLION
 
 from ...core.e_col_vars_2030 import EColVars2030
+from ...core.g_grid_onshore import calc_g_grid_onshore
 from ...core.g_grid_pv import calc_g_grid_pv
 from ...core.g import calc_g
 
@@ -30,25 +31,12 @@ def calc_general(
     fact = facts.fact
     ass = assumptions.ass
 
-    g_grid_onshore = EColVars2030()
-    g_grid_onshore.invest_per_x = ass("Ass_E_G_grid_onshore_ratio_invest_to_power")
-    g_grid_onshore.pct_of_wage = fact("Fact_B_P_constr_main_revenue_pct_of_wage_2017")
-    g_grid_onshore.ratio_wage_to_emplo = fact(
-        "Fact_B_P_constr_main_ratio_wage_to_emplo_2017"
+    g_grid_onshore = calc_g_grid_onshore(
+        facts,
+        assumptions,
+        duration_until_target_year,
+        p_local_wind_onshore_power_to_be_installed,
     )
-    g_grid_onshore.power_to_be_installed = p_local_wind_onshore_power_to_be_installed
-    g_grid_onshore.invest = (
-        g_grid_onshore.power_to_be_installed * g_grid_onshore.invest_per_x
-    )
-    g_grid_onshore.cost_mro = (
-        g_grid_onshore.invest * ass("Ass_E_G_grid_onshore_mro") / MILLION
-    )
-    g_grid_onshore.invest_pa = g_grid_onshore.invest / duration_until_target_year
-    g_grid_onshore.cost_wage = g_grid_onshore.invest_pa * g_grid_onshore.pct_of_wage
-    g_grid_onshore.demand_emplo = div(
-        g_grid_onshore.cost_wage, g_grid_onshore.ratio_wage_to_emplo
-    )
-    g_grid_onshore.demand_emplo_new = g_grid_onshore.demand_emplo
 
     g_grid_pv = calc_g_grid_pv(
         facts, assumptions, duration_until_target_year, p_local_pv_power_to_be_installed
