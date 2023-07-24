@@ -5,8 +5,7 @@ from dataclasses import dataclass
 from ...common.invest import Invest
 
 from .g_grid_offshore import GGridOffshore
-from .g_grid_onshore import GGridOnshore
-from .g_grid_pv import GGridPV
+from .g_grid_onshore_or_pv import GGridOnshoreOrPV
 
 
 @dataclass(kw_only=True)
@@ -18,8 +17,8 @@ class G(Invest):
     def sum(
         cls,
         g_grid_offshore: GGridOffshore,
-        g_grid_onshore: GGridOnshore,
-        g_grid_pv: GGridPV,
+        g_grid_onshore: GGridOnshoreOrPV,
+        g_grid_pv: GGridOnshoreOrPV,
     ) -> "G":
         invest_outside = g_grid_offshore.invest_outside
         invest_pa_outside = g_grid_offshore.invest_pa_outside

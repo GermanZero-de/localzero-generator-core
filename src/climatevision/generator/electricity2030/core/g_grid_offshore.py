@@ -4,16 +4,12 @@ from dataclasses import dataclass
 
 from ...refdata import Facts, Assumptions
 from ...utils import div, MILLION
-from ...common.invest import Invest
+
+from .g_grid_onshore_or_pv import GGridOnshoreOrPV
 
 
 @dataclass(kw_only=True)
-class GGridOffshore(Invest):
-    invest_per_x: float = 0
-    pct_of_wage: float = 0
-    ratio_wage_to_emplo: float = 0
-    power_to_be_installed: float = 0
-    cost_mro: float = 0
+class GGridOffshore(GGridOnshoreOrPV):
     invest_outside: float = 0
     invest_pa_outside: float = 0
 
