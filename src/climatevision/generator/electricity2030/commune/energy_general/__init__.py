@@ -22,16 +22,16 @@ def calc_general(
     facts: Facts,
     assumptions: Assumptions,
     duration_until_target_year: int,
-    p_renew_wind_offshore_power_to_be_installed: float,
-    p_local_wind_onshore_power_to_be_installed: float,
-    p_local_pv_power_to_be_installed: float,
+    wind_offshore_power_to_be_installed: float,
+    wind_onshore_power_to_be_installed: float,
+    pv_power_to_be_installed: float,
     d_energy: float,
 ) -> General:
     g_grid_offshore = GGridOffshore.calc_commune(
         facts,
         assumptions,
         duration_until_target_year,
-        p_renew_wind_offshore_power_to_be_installed,
+        wind_offshore_power_to_be_installed,
         d_energy,
     )
 
@@ -39,11 +39,11 @@ def calc_general(
         facts,
         assumptions,
         duration_until_target_year,
-        p_local_wind_onshore_power_to_be_installed,
+        wind_onshore_power_to_be_installed,
     )
 
     g_grid_pv = GGridPV.calc(
-        facts, assumptions, duration_until_target_year, p_local_pv_power_to_be_installed
+        facts, assumptions, duration_until_target_year, pv_power_to_be_installed
     )
 
     g = G.sum(g_grid_offshore, g_grid_onshore, g_grid_pv)
