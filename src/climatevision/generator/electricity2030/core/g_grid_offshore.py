@@ -23,7 +23,7 @@ class GGridOffshore(Invest):
         facts: Facts,
         assumptions: Assumptions,
         duration_until_target_year: int,
-        p_renew_wind_offshore_power_to_be_installed: float,
+        power_to_be_installed: float,
         d_energy: float,
     ) -> "GGridOffshore":
         fact = facts.fact
@@ -32,7 +32,6 @@ class GGridOffshore(Invest):
         invest_per_x = ass("Ass_E_G_grid_offshore_ratio_invest_to_power")
         pct_of_wage = fact("Fact_B_P_constr_main_revenue_pct_of_wage_2017")
         ratio_wage_to_emplo = fact("Fact_B_P_constr_main_ratio_wage_to_emplo_2017")
-        power_to_be_installed = p_renew_wind_offshore_power_to_be_installed
 
         invest = 0
         invest_outside = (
@@ -69,7 +68,7 @@ class GGridOffshore(Invest):
         facts: Facts,
         assumptions: Assumptions,
         duration_until_target_year: int,
-        p_renew_wind_offshore_power_to_be_installed: float,
+        power_to_be_installed: float,
     ) -> "GGridOffshore":
         fact = facts.fact
         ass = assumptions.ass
@@ -77,7 +76,6 @@ class GGridOffshore(Invest):
         invest_per_x = ass("Ass_E_G_grid_offshore_ratio_invest_to_power")
         pct_of_wage = fact("Fact_B_P_constr_main_revenue_pct_of_wage_2017")
         ratio_wage_to_emplo = fact("Fact_B_P_constr_main_ratio_wage_to_emplo_2017")
-        power_to_be_installed = p_renew_wind_offshore_power_to_be_installed
 
         invest_outside = 0
         invest_pa_outside = invest_outside / duration_until_target_year
