@@ -31,16 +31,17 @@ def calc_general(
     ass = assumptions.ass
 
     g_grid_offshore = EColVars2030()
-    g_grid_offshore.invest_outside = 0
     g_grid_offshore.invest_per_x = ass("Ass_E_G_grid_offshore_ratio_invest_to_power")
     g_grid_offshore.pct_of_wage = fact("Fact_B_P_constr_main_revenue_pct_of_wage_2017")
     g_grid_offshore.ratio_wage_to_emplo = fact(
         "Fact_B_P_constr_main_ratio_wage_to_emplo_2017"
     )
+    g_grid_offshore.power_to_be_installed = p_renew_wind_offshore_power_to_be_installed
+    
+    g_grid_offshore.invest_outside = 0
     g_grid_offshore.invest_pa_outside = (
         g_grid_offshore.invest_outside / duration_until_target_year
     )
-    g_grid_offshore.power_to_be_installed = p_renew_wind_offshore_power_to_be_installed
     g_grid_offshore.invest = (
         g_grid_offshore.power_to_be_installed * g_grid_offshore.invest_per_x
     )
