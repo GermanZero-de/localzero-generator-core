@@ -6,7 +6,7 @@ from ....refdata import Facts, Assumptions
 from ....utils import div, MILLION
 
 from ...core.e_col_vars_2030 import EColVars2030
-from ...core.g_grid_onshore import calc_g_grid_onshore
+from ...core.g_grid_onshore import GGridOnshore
 from ...core.g_grid_pv import GGridPV
 from ...core.g import G
 
@@ -15,7 +15,7 @@ from ...core.g import G
 class General:
     g: G
     g_grid_offshore: EColVars2030
-    g_grid_onshore: EColVars2030
+    g_grid_onshore: GGridOnshore
     g_grid_pv: GGridPV
 
 
@@ -55,7 +55,7 @@ def calc_general(
     )
     g_grid_offshore.demand_emplo_new = g_grid_offshore.demand_emplo
 
-    g_grid_onshore = calc_g_grid_onshore(
+    g_grid_onshore = GGridOnshore.calc(
         facts,
         assumptions,
         duration_until_target_year,
