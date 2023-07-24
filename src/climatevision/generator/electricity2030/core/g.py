@@ -2,21 +2,18 @@
 
 from dataclasses import dataclass
 
+from ...common.invest import Invest
+
 from .e_col_vars_2030 import EColVars2030
 
 
 @dataclass(kw_only=True)
-class G:
-    cost_wage: float = 0
-    demand_emplo: float = 0
-    demand_emplo_new: float = 0
-    invest: float = 0
-    invest_pa: float = 0
+class G(Invest):
     invest_outside: float = 0
     invest_pa_outside: float = 0
 
     @classmethod
-    def calc_g(
+    def sum(
         cls,
         g_grid_offshore: EColVars2030,
         g_grid_onshore: EColVars2030,

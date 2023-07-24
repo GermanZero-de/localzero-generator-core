@@ -70,7 +70,7 @@ def calc_general(
     )
     g_grid_offshore.demand_emplo_new = g_grid_offshore.demand_emplo
 
-    g = G.calc_g(g_grid_offshore, g_grid_onshore, g_grid_pv)
+    g = G.sum(g_grid_offshore, g_grid_onshore, g_grid_pv)
 
     return General(
         g=g,

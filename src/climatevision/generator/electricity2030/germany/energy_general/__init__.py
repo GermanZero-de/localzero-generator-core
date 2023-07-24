@@ -66,7 +66,7 @@ def calc_general(
         facts, assumptions, duration_until_target_year, p_local_pv_power_to_be_installed
     )
 
-    g = G.calc_g(g_grid_offshore, g_grid_onshore, g_grid_pv)
+    g = G.sum(g_grid_offshore, g_grid_onshore, g_grid_pv)
 
     return General(
         g=g,
