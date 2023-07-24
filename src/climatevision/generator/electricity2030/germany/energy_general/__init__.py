@@ -7,7 +7,7 @@ from ....utils import div, MILLION
 
 from ...core.e_col_vars_2030 import EColVars2030
 from ...core.g_grid_onshore import calc_g_grid_onshore
-from ...core.g_grid_pv import calc_g_grid_pv
+from ...core.g_grid_pv import GGridPV
 from ...core.g import G
 
 
@@ -16,7 +16,7 @@ class General:
     g: G
     g_grid_offshore: EColVars2030
     g_grid_onshore: EColVars2030
-    g_grid_pv: EColVars2030
+    g_grid_pv: GGridPV
 
 
 def calc_general(
@@ -62,7 +62,7 @@ def calc_general(
         p_local_wind_onshore_power_to_be_installed,
     )
 
-    g_grid_pv = calc_g_grid_pv(
+    g_grid_pv = GGridPV.calc(
         facts, assumptions, duration_until_target_year, p_local_pv_power_to_be_installed
     )
 

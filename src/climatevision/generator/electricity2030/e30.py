@@ -11,6 +11,7 @@ from .core.e_col_vars_2030 import EColVars2030
 from .core.fossil_fuels_production import FossilFuelsProduction
 from .core.renewable_geothermal_production import RenewableGeothermalProduction
 from .core.g import G
+from .core.g_grid_pv import GGridPV
 
 
 @dataclass(kw_only=True)
@@ -19,7 +20,7 @@ class E30:
     g: G
     g_grid_offshore: EColVars2030
     g_grid_onshore: EColVars2030
-    g_grid_pv: EColVars2030
+    g_grid_pv: GGridPV
     d: EnergyDemand
     d_r: EnergyDemandWithCostFuel
     d_b: EnergyDemandWithCostFuel

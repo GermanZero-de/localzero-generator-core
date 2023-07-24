@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from ...common.invest import Invest
 
 from .e_col_vars_2030 import EColVars2030
+from .g_grid_pv import GGridPV
 
 
 @dataclass(kw_only=True)
@@ -17,7 +18,7 @@ class G(Invest):
         cls,
         g_grid_offshore: EColVars2030,
         g_grid_onshore: EColVars2030,
-        g_grid_pv: EColVars2030,
+        g_grid_pv: GGridPV,
     ) -> "G":
         invest_outside = g_grid_offshore.invest_outside
         invest_pa_outside = g_grid_offshore.invest_pa_outside
