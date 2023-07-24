@@ -8,12 +8,12 @@ from ....utils import div, MILLION
 from ...core.e_col_vars_2030 import EColVars2030
 from ...core.g_grid_onshore import calc_g_grid_onshore
 from ...core.g_grid_pv import calc_g_grid_pv
-from ...core.g import calc_g
+from ...core.g import G
 
 
 @dataclass(kw_only=True)
 class General:
-    g: EColVars2030
+    g: G
     g_grid_offshore: EColVars2030
     g_grid_onshore: EColVars2030
     g_grid_pv: EColVars2030
@@ -70,7 +70,7 @@ def calc_general(
     )
     g_grid_offshore.demand_emplo_new = g_grid_offshore.demand_emplo
 
-    g = calc_g(g_grid_offshore, g_grid_onshore, g_grid_pv)
+    g = G.calc_g(g_grid_offshore, g_grid_onshore, g_grid_pv)
 
     return General(
         g=g,

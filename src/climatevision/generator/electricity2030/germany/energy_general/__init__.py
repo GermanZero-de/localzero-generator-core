@@ -8,12 +8,12 @@ from ....utils import div, MILLION
 from ...core.e_col_vars_2030 import EColVars2030
 from ...core.g_grid_onshore import calc_g_grid_onshore
 from ...core.g_grid_pv import calc_g_grid_pv
-from ...core.g import calc_g
+from ...core.g import G
 
 
 @dataclass(kw_only=True)
 class General:
-    g: EColVars2030
+    g: G
     g_grid_offshore: EColVars2030
     g_grid_onshore: EColVars2030
     g_grid_pv: EColVars2030
@@ -37,7 +37,7 @@ def calc_general(
         "Fact_B_P_constr_main_ratio_wage_to_emplo_2017"
     )
     g_grid_offshore.power_to_be_installed = p_renew_wind_offshore_power_to_be_installed
-    
+
     g_grid_offshore.invest_outside = 0
     g_grid_offshore.invest_pa_outside = (
         g_grid_offshore.invest_outside / duration_until_target_year
@@ -66,7 +66,7 @@ def calc_general(
         facts, assumptions, duration_until_target_year, p_local_pv_power_to_be_installed
     )
 
-    g = calc_g(g_grid_offshore, g_grid_onshore, g_grid_pv)
+    g = G.calc_g(g_grid_offshore, g_grid_onshore, g_grid_pv)
 
     return General(
         g=g,
