@@ -16,7 +16,7 @@ from ...transport2030.t30 import T30
 from ...waste2030 import WasteLines
 
 from ..e30 import E30
-from ..core.energy import Energy, EnergyDemand
+from ..core.energy import Energy
 from ..core.fossil_fuels_production import FossilFuelsProduction
 from ..core.e_col_vars_2030 import EColVars2030
 from ..core.geothermal import calc_production_renewable_geothermal
@@ -30,15 +30,13 @@ from ..core.pv import (
 from ..core.wind import calc_production_local_wind_onshore, calc_renew_wind_offshore
 from ..core.hydro import calc_production_local_hydro
 
-
-from .energy_demand.calc_energy_demand import calc_energy_demand
-from .energy_demand.calc_production_local_biomass_stage2 import (
+from .energy_production.calc_production_local_biomass_stage2 import (
     calc_production_local_biomass_stage2,
 )
-from .energy_demand.calc_production_renewable_reverse import (
+from .energy_production.calc_production_renewable_reverse import (
     calc_production_renewable_reverse,
 )
-from . import energy_general
+from . import energy_general, energy_demand
 
 
 def calc(
@@ -69,75 +67,9 @@ def calc(
     population_commune_2018 = entries.m_population_com_2018
     population_germany_2018 = entries.m_population_nat
 
-    d_a = calc_energy_demand(
-        facts,
-        energy=a30.p_operation.demand_electricity,
-        energy_18=e18.d_a.energy,
-        cost_fuel_per_MWh="Fact_E_D_R_cost_fuel_per_MWh_2018",
+    demand = energy_demand.calc_demand(
+        facts, e18, a30, b30, f30, h30, i30, r30, t30, wastelines
     )
-    d_b = calc_energy_demand(
-        facts,
-        energy=b30.p.demand_electricity,
-        energy_18=e18.d_b.energy,
-        cost_fuel_per_MWh="Fact_E_D_B_cost_fuel_per_MWh_2018",
-    )
-    d_i = calc_energy_demand(
-        facts,
-        energy=i30.p.demand_electricity,
-        energy_18=e18.d_i.energy,
-        cost_fuel_per_MWh="Fact_E_D_I_cost_fuel_per_MWh_2018",
-    )
-    d_r = calc_energy_demand(
-        facts,
-        energy=r30.p.demand_electricity,
-        energy_18=e18.d_r.energy,
-        cost_fuel_per_MWh="Fact_E_D_R_cost_fuel_per_MWh_2018",
-    )
-    d_t = calc_energy_demand(
-        facts,
-        energy=t30.t.transport.demand_electricity,
-        energy_18=e18.d_t.energy,
-        cost_fuel_per_MWh="Fact_E_D_R_cost_fuel_per_MWh_2018",
-    )
-
-    d_w = EnergyDemand(energy=wastelines.s_elec.energy)
-
-    d_h = EnergyDemand()
-    d_h.energy = h30.p.demand_electricity
-
-    d_f_wo_hydrogen = EnergyDemand()
-    d_f_wo_hydrogen.energy = (
-        f30.p_petrol.demand_electricity
-        + f30.p_jetfuel.demand_electricity
-        + f30.p_diesel.demand_electricity
-        + f30.p_emethan.demand_electricity
-        + f30.p_hydrogen.demand_electricity
-    )
-
-    d_f_hydrogen_reconv = EnergyDemand()
-    d_h.change_energy_MWh = d_h.energy - e18.d_h.energy  #
-    d_f_wo_hydrogen.change_energy_MWh = d_f_wo_hydrogen.energy - 0
-    d_h.change_energy_pct = div(d_h.change_energy_MWh, e18.d_h.energy)
-    d_f_hydrogen_reconv.energy = f30.p_hydrogen_reconv.demand_electricity
-
-    d = EnergyDemand()
-    d.energy = (
-        d_h.energy
-        + d_r.energy
-        + d_b.energy
-        + d_i.energy
-        + d_t.energy
-        + d_a.energy
-        + d_w.energy
-        + d_f_wo_hydrogen.energy
-        + d_f_hydrogen_reconv.energy
-    )  #
-    d_f_hydrogen_reconv.change_energy_MWh = (
-        d_f_hydrogen_reconv.energy - e18.d_f_hydrogen_reconv.energy
-    )
-
-    d.change_energy_MWh = d.energy - e18.d.energy
-    d.change_energy_pct = div(d.change_energy_MWh, e18.d.energy)
 
     p_renew = EColVars2030()
     p_renew.invest_pa_com = 0
@@ -245,7 +177,7 @@ def calc(
     )
 
     p_renew_geoth = calc_production_renewable_geothermal(
-        facts, assumptions, duration_until_target_year, d_energy=d.energy
+        facts, assumptions, duration_until_target_year, d_energy=demand.total.energy
     )
 
     p_renew_hydro = EColVars2030()
@@ -259,7 +191,7 @@ def calc(
         facts,
         assumptions,
         duration_until_target_year,
-        d_energy=d.energy,
+        d_energy=demand.total.energy,
     )
 
     p_renew_pv_facade = EColVars2030()
@@ -267,7 +199,7 @@ def calc(
     p_renew_pv_agri = EColVars2030()
 
     p_renew_wind_offshore = calc_renew_wind_offshore(
-        facts, assumptions, duration_until_target_year, d_energy=d.energy
+        facts, assumptions, duration_until_target_year, d_energy=demand.total.energy
     )
 
     p_renew_wind_onshore = EColVars2030()
@@ -483,7 +415,7 @@ def calc(
     )
     p_local.change_energy_MWh = p_local.energy - e18.p_local.energy
     p_local_surplus = Energy()
-    p_local_surplus.energy = p_local.energy - d.energy
+    p_local_surplus.energy = p_local.energy - demand.total.energy
 
     p_local.CO2e_combustion_based = (
         p_local_pv.CO2e_combustion_based
@@ -641,37 +573,37 @@ def calc(
         + p_local_wind_onshore.demand_emplo_new
         + p_local_biomass.demand_emplo_new
     )  # lifecycle
-    d_r.cost_fuel = (
-        d_r.energy
-        * d_r.cost_fuel_per_MWh
+    demand.residences.cost_fuel = (
+        demand.residences.energy
+        * demand.residences.cost_fuel_per_MWh
         * p_fossil_and_renew.energy
         / p.energy
         / MILLION
     )
-    d_b.cost_fuel = (
-        d_b.energy
-        * d_b.cost_fuel_per_MWh
+    demand.business.cost_fuel = (
+        demand.business.energy
+        * demand.business.cost_fuel_per_MWh
         * p_fossil_and_renew.energy
         / p.energy
         / MILLION
     )
-    d_i.cost_fuel = (
-        d_i.energy
-        * d_i.cost_fuel_per_MWh
+    demand.industry.cost_fuel = (
+        demand.industry.energy
+        * demand.industry.cost_fuel_per_MWh
         * p_fossil_and_renew.energy
         / p.energy
         / MILLION
     )
-    d_t.cost_fuel = (
-        d_t.energy
-        * d_t.cost_fuel_per_MWh
+    demand.transport.cost_fuel = (
+        demand.transport.energy
+        * demand.transport.cost_fuel_per_MWh
         * p_fossil_and_renew.energy
         / p.energy
         / MILLION
     )
-    d_a.cost_fuel = (
-        d_a.energy
-        * d_a.cost_fuel_per_MWh
+    demand.agri.cost_fuel = (
+        demand.agri.energy
+        * demand.agri.cost_fuel_per_MWh
         * p_fossil_and_renew.energy
         / p.energy
         / MILLION
@@ -987,7 +919,7 @@ def calc(
         p_renew_wind_offshore.power_to_be_installed,
         p_local_wind_onshore.power_to_be_installed,
         p_local_pv.power_to_be_installed,
-        d.energy,
+        demand.total.energy,
     )
 
     e = EColVars2030()
@@ -1015,16 +947,16 @@ def calc(
         g_grid_offshore=general.g_grid_offshore,
         g_grid_onshore=general.g_grid_onshore,
         g_grid_pv=general.g_grid_pv,
-        d=d,
-        d_r=d_r,
-        d_b=d_b,
-        d_h=d_h,
-        d_i=d_i,
-        d_t=d_t,
-        d_a=d_a,
-        d_w=d_w,
-        d_f_hydrogen_reconv=d_f_hydrogen_reconv,
-        d_f_wo_hydrogen=d_f_wo_hydrogen,
+        d=demand.total,
+        d_r=demand.residences,
+        d_b=demand.business,
+        d_h=demand.heat,
+        d_i=demand.industry,
+        d_t=demand.transport,
+        d_a=demand.agri,
+        d_w=demand.waste,
+        d_f_hydrogen_reconv=demand.fuels_hydrogen_reconv,
+        d_f_wo_hydrogen=demand.fuels_wo_hydrogen,
         p=p,
         p_fossil_and_renew=p_fossil_and_renew,
         p_fossil=p_fossil,
