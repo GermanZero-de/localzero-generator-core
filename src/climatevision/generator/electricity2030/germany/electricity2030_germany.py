@@ -29,8 +29,9 @@ from ..core.pv import (
 )
 from ..core.wind import calc_production_local_wind_onshore, calc_renew_wind_offshore
 from ..core.hydro import calc_production_local_hydro
+from ..core import energy_demand
 
-from . import energy_general, energy_demand
+from . import energy_general
 
 
 # Berechnungsfunktion im Sektor E für 203X

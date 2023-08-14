@@ -29,6 +29,7 @@ from ..core.pv import (
 )
 from ..core.wind import calc_production_local_wind_onshore, calc_renew_wind_offshore
 from ..core.hydro import calc_production_local_hydro
+from ..core import energy_demand
 
 from .energy_production.calc_production_local_biomass_stage2 import (
     calc_production_local_biomass_stage2,
@@ -36,7 +37,7 @@ from .energy_production.calc_production_local_biomass_stage2 import (
 from .energy_production.calc_production_renewable_reverse import (
     calc_production_renewable_reverse,
 )
-from . import energy_general, energy_demand
+from . import energy_general
 
 
 def calc(
