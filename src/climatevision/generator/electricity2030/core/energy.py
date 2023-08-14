@@ -1,6 +1,6 @@
 # pyright: strict
 
-from dataclasses import dataclass
+from dataclasses import dataclass, InitVar
 
 from ...utils import div
 
@@ -18,16 +18,11 @@ class EnergyDemand(Energy):
 
 @dataclass(kw_only=True)
 class EnergyDemandWithCostFuel(EnergyDemand):
-    cost_fuel_per_MWh: float = None  # type: ignore
+    cost_fuel_per_MWh: float
     cost_fuel: float = None  # type: ignore
 
+    energy_18: InitVar[float]
 
-def calc_energy_demand(
-    energy: float, energy_18: float, cost_fuel_per_MWh: float
-) -> EnergyDemandWithCostFuel:
-    d = EnergyDemandWithCostFuel()
-    d.energy = energy
-    d.cost_fuel_per_MWh = cost_fuel_per_MWh
-    d.change_energy_MWh = energy - energy_18
-    d.change_energy_pct = div(d.change_energy_MWh, energy_18)
-    return d
+    def __post_init__(self, energy_18: float):
+        self.change_energy_MWh = self.energy - energy_18
+        self.change_energy_pct = div(self.change_energy_MWh, energy_18)

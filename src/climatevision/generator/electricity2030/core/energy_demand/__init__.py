@@ -14,7 +14,7 @@ from ....residences2030.r30 import R30
 from ....transport2030.t30 import T30
 from ....waste2030 import WasteLines
 
-from ...core.energy import EnergyDemand, EnergyDemandWithCostFuel, calc_energy_demand
+from ...core.energy import EnergyDemand, EnergyDemandWithCostFuel
 
 
 @dataclass(kw_only=True)
@@ -47,27 +47,27 @@ def calc_demand(
 ) -> Demand:
     fact = facts.fact
 
-    agri = calc_energy_demand(
+    agri = EnergyDemandWithCostFuel(
         energy=a30.p_operation.demand_electricity,
         energy_18=e18.d_a.energy,
         cost_fuel_per_MWh=fact("Fact_E_D_R_cost_fuel_per_MWh_2018"),
     )
-    business = calc_energy_demand(
+    business = EnergyDemandWithCostFuel(
         energy=b30.p.demand_electricity,
         energy_18=e18.d_b.energy,
         cost_fuel_per_MWh=fact("Fact_E_D_B_cost_fuel_per_MWh_2018"),
     )
-    industry = calc_energy_demand(
+    industry = EnergyDemandWithCostFuel(
         energy=i30.p.demand_electricity,
         energy_18=e18.d_i.energy,
         cost_fuel_per_MWh=fact("Fact_E_D_I_cost_fuel_per_MWh_2018"),
     )
-    residences = calc_energy_demand(
+    residences = EnergyDemandWithCostFuel(
         energy=r30.p.demand_electricity,
         energy_18=e18.d_r.energy,
         cost_fuel_per_MWh=fact("Fact_E_D_R_cost_fuel_per_MWh_2018"),
     )
-    transport = calc_energy_demand(
+    transport = EnergyDemandWithCostFuel(
         energy=t30.t.transport.demand_electricity,
         energy_18=e18.d_t.energy,
         cost_fuel_per_MWh=fact("Fact_E_D_R_cost_fuel_per_MWh_2018"),

@@ -2,11 +2,13 @@
 
 from dataclasses import dataclass
 
-from .energy import EnergyDemandWithCostFuel
+from .energy import EnergyDemand
 
 # Definition der relevanten Spaltennamen für den Sektor E
 @dataclass(kw_only=True)
-class EColVars2030(EnergyDemandWithCostFuel):
+class EColVars2030(EnergyDemand):
+    cost_fuel_per_MWh: float = None  # type: ignore
+    cost_fuel: float = None  # type: ignore
     pet_sites: float = None  # type: ignore
     energy_installable: float = None  # type: ignore
     cost_fuel_per_MWh: float = None  # type: ignore
