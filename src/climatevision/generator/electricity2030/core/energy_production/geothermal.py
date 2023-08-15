@@ -1,6 +1,6 @@
 # pyright: strict
 
-from ...refdata import Facts, Assumptions
+from ....refdata import Facts, Assumptions
 
 from .renewable_geothermal_production import RenewableGeothermalProduction
 

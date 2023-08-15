@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass
 
-from .energy import EnergyDemand
+from ..energy import EnergyDemand
 
 
 @dataclass(kw_only=True)

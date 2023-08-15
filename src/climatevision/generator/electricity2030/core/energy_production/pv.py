@@ -1,13 +1,13 @@
 # pyright: strict
 
-from ...makeentries import Entries
-from ...refdata import Assumptions
-from ...utils import MILLION, div
-from ...business2018.b18 import B18
-from ...electricity2018.e18 import E18
-from ...residences2018.r18 import R18
+from ....makeentries import Entries
+from ....refdata import Assumptions
+from ....utils import MILLION, div
+from ....business2018.b18 import B18
+from ....electricity2018.e18 import E18
+from ....residences2018.r18 import R18
 
-from .e_col_vars_2030 import EColVars2030
+from ..e_col_vars_2030 import EColVars2030
 
 
 def calc_production_local_pv_roof(

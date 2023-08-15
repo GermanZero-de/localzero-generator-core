@@ -1,9 +1,9 @@
 # pyright: strict
 
-from ...makeentries import Entries
-from ...refdata import Facts, Assumptions
+from ....makeentries import Entries
+from ....refdata import Facts, Assumptions
 
-from .e_col_vars_2030 import EColVars2030
+from ..e_col_vars_2030 import EColVars2030
 
 
 def calc_biomass(

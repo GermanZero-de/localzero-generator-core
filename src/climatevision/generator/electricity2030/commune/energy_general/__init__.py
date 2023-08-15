@@ -4,9 +4,9 @@ from dataclasses import dataclass
 
 from ....refdata import Facts, Assumptions
 
-from ...core.g_grid_offshore import GGridOffshore
-from ...core.g_grid_onshore_or_pv import GGridOnshoreOrPV
-from ...core.g import G
+from ...core.energy_general.g_grid_offshore import GGridOffshore
+from ...core.energy_general.g_grid_onshore_or_pv import GGridOnshoreOrPV
+from ...core.energy_general.g import G
 
 
 @dataclass(kw_only=True)

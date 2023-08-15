@@ -2,8 +2,8 @@
 
 from dataclasses import dataclass
 
-from ...refdata import Facts, Assumptions
-from ...utils import div, MILLION
+from ....refdata import Facts, Assumptions
+from ....utils import div, MILLION
 
 from .g_grid_onshore_or_pv import GGridOnshoreOrPV
 
