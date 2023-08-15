@@ -12,7 +12,7 @@ def calc_production_renewable_biomass(
     assumptions: Assumptions,
     duration_CO2e_neutral_years: float,
     *,
-    e18: E18
+    e18: E18,
 ):
     fact = facts.fact
     ass = assumptions.ass
