@@ -1043,7 +1043,7 @@ def calc(
         p_local_pv.demand_emplo_new
         + p_local_wind_onshore.demand_emplo_new
         + p_local_biomass.demand_emplo_new
-    )  # lifecycle
+    )
     p.demand_emplo_new = p_fossil_and_renew.demand_emplo_new + p_local.demand_emplo_new
 
     p_local.power_installed = (

@@ -573,7 +573,7 @@ def calc(
         p_local_pv.demand_emplo_new
         + p_local_wind_onshore.demand_emplo_new
         + p_local_biomass.demand_emplo_new
-    )  # lifecycle
+    )
     demand.residences.cost_fuel = (
         demand.residences.energy
         * demand.residences.cost_fuel_per_MWh
