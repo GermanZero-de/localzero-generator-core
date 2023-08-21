@@ -12,7 +12,7 @@ def calc_production_renew_pv_roof(
     *,
     e18: E18,
     p_local_pv_roof_full_load_hour: float,
-    energy: float
+    energy: float,
 ):
     ass = assumptions.ass
 

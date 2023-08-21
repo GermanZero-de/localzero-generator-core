@@ -12,7 +12,7 @@ def calc_production_renew_pv_park(
     *,
     e18: E18,
     p_local_pv_park_full_load_hour: float,
-    energy: float
+    energy: float,
 ):
     ass = assumptions.ass
 
