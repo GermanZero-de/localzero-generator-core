@@ -33,13 +33,11 @@ from ..core.energy_production.wind import (
 )
 from ..core.energy_production.hydro import calc_production_local_hydro
 from ..core.energy_production.renew_hydro import calc_production_renew_hydro
+from ..core.energy_production.renew_pv_agri import calc_production_renewable_pv_agri
 from ..core import energy_demand
 
 from .energy_production.calc_production_local_biomass_stage2 import (
     calc_production_local_biomass_stage2,
-)
-from .energy_production.calc_production_renewable_pv_agri import (
-    calc_production_renewable_pv_agri,
 )
 from .energy_production.calc_production_renewable_pv_facade import (
     calc_production_renewable_pv_facade,
@@ -512,7 +510,7 @@ def calc(
         assumptions,
         e18=e18,
         p_local_pv_agri_full_load_hour=p_local_pv_agri.full_load_hour,
-        p_renew_pv_energy=p_renew_pv.energy,
+        energy=p_renew_pv.energy * ass("Ass_E_P_renew_pv_agri_pct_of_nep_2035"),
     )
 
     p_renew_wind_onshore.cost_mro = (

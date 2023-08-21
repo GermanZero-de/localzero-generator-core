@@ -12,7 +12,7 @@ def calc_production_renewable_pv_agri(
     *,
     e18: E18,
     p_local_pv_agri_full_load_hour: float,
-    p_renew_pv_energy: float
+    energy: float
 ):
     ass = assumptions.ass
 
@@ -23,9 +23,7 @@ def calc_production_renewable_pv_agri(
         / p_local_pv_agri_full_load_hour
         * 1000
     )
-    p_renew_pv_agri.energy = p_renew_pv_energy * ass(
-        "Ass_E_P_renew_pv_agri_pct_of_nep_2035"
-    )
+    p_renew_pv_agri.energy = energy
     p_renew_pv_agri.cost_mro = (
         p_renew_pv_agri.energy * p_renew_pv_agri.cost_mro_per_MWh / MILLION
     )
