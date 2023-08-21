@@ -7,7 +7,7 @@ from ....electricity2018.e18 import E18
 from ...core.e_col_vars_2030 import EColVars2030
 
 
-def calc_production_renewable_pv_agri(
+def calc_production_renew_pv_agri(
     assumptions: Assumptions,
     *,
     e18: E18,

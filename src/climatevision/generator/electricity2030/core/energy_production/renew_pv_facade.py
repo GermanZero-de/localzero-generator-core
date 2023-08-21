@@ -7,12 +7,12 @@ from ....electricity2018.e18 import E18
 from ...core.e_col_vars_2030 import EColVars2030
 
 
-def calc_production_renewable_pv_facade(
+def calc_production_renew_pv_facade(
     assumptions: Assumptions,
     *,
     e18: E18,
     p_local_pv_facade_full_load_hour: float,
-    p_renew_pv_energy: float
+    energy: float
 ):
     ass = assumptions.ass
 
@@ -23,9 +23,7 @@ def calc_production_renewable_pv_facade(
         / p_local_pv_facade_full_load_hour
         * 1000
     )
-    p_renew_pv_facade.energy = p_renew_pv_energy * ass(
-        "Ass_E_P_renew_pv_facade_pct_of_nep_2035"
-    )
+    p_renew_pv_facade.energy = energy
     p_renew_pv_facade.cost_mro = (
         p_renew_pv_facade.energy * p_renew_pv_facade.cost_mro_per_MWh / MILLION
     )
