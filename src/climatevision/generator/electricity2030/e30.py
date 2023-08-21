@@ -8,11 +8,13 @@ from .core.energy import (
     Energy,
 )
 from .core.e_col_vars_2030 import EColVars2030
-from .core.fossil_fuels_production import FossilFuelsProduction
-from .core.renewable_geothermal_production import RenewableGeothermalProduction
-from .core.g import G
-from .core.g_grid_offshore import GGridOffshore
-from .core.g_grid_onshore_or_pv import GGridOnshoreOrPV
+from .core.energy_production.fossil_fuels_production import FossilFuelsProduction
+from .core.energy_production.renewable_geothermal_production import (
+    RenewableGeothermalProduction,
+)
+from .core.energy_general.g import G
+from .core.energy_general.g_grid_offshore import GGridOffshore
+from .core.energy_general.g_grid_onshore_or_pv import GGridOnshoreOrPV
 
 
 @dataclass(kw_only=True)

@@ -1,8 +1,8 @@
 # pyright: strict
 
-from ...refdata import Facts
-from ...utils import div
-from ... import electricity2018
+from ....refdata import Facts
+from ....utils import div
+from .... import electricity2018
 
 from .fossil_fuels_production import FossilFuelsProduction
 

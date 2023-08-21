@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass
 
-from ...common.invest import Invest
+from ....common.invest import Invest
 
 from .g_grid_offshore import GGridOffshore
 from .g_grid_onshore_or_pv import GGridOnshoreOrPV

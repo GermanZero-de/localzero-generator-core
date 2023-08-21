@@ -9,7 +9,10 @@ from .refdata import RefData
 from .makeentries import make_entries
 from .bisko import Bisko
 from .methodology183x import M183X
-from .electricity2030.core.biomass import calc_biomass, calc_biomass_cogen
+from .electricity2030.core.energy_production.biomass import (
+    calc_biomass,
+    calc_biomass_cogen,
+)
 
 # hier Sektoren Files importieren:
 from .electricity2018.e18 import E18

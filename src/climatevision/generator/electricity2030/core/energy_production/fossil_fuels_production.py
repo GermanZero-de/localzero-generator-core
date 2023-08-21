@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass
 
-from ...utils import div
+from ....utils import div
 
 
 @dataclass(kw_only=True)

@@ -1,11 +1,11 @@
 # pyright: strict
 
-from ...makeentries import Entries
-from ...refdata import Facts, Assumptions
-from ...utils import MILLION
-from ...electricity2018.e18 import E18
+from ....makeentries import Entries
+from ....refdata import Facts, Assumptions
+from ....utils import MILLION
+from ....electricity2018.e18 import E18
 
-from .e_col_vars_2030 import EColVars2030
+from ..e_col_vars_2030 import EColVars2030
 
 
 def calc_production_local_hydro(
