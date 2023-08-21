@@ -36,13 +36,11 @@ from ..core.energy_production.renew_hydro import calc_production_renew_hydro
 from ..core.energy_production.renew_pv_agri import calc_production_renew_pv_agri
 from ..core.energy_production.renew_pv_facade import calc_production_renew_pv_facade
 from ..core.energy_production.renew_pv_park import calc_production_renew_pv_park
+from ..core.energy_production.renew_pv_roof import calc_production_renew_pv_roof
 from ..core import energy_demand
 
 from .energy_production.calc_production_local_biomass_stage2 import (
     calc_production_local_biomass_stage2,
-)
-from .energy_production.calc_production_renewable_pv_roof import (
-    calc_production_renewable_pv_roof,
 )
 from .energy_production.calc_production_renewable_reverse import (
     calc_production_renewable_reverse,
@@ -488,11 +486,11 @@ def calc(
         p_renew_pv.energy * p_renew_pv.CO2e_combustion_based_per_MWh
     )
 
-    p_renew_pv_roof = calc_production_renewable_pv_roof(
+    p_renew_pv_roof = calc_production_renew_pv_roof(
         assumptions,
         e18=e18,
         p_local_pv_roof_full_load_hour=p_local_pv_roof.full_load_hour,
-        p_renew_pv_energy=p_renew_pv.energy,
+        energy=p_renew_pv.energy * ass("Ass_E_P_renew_pv_roof_pct_of_nep_2035"),
     )
 
     p_renew_pv_park = calc_production_renew_pv_park(

@@ -36,6 +36,7 @@ from ..core.energy_production.renew_hydro import calc_production_renew_hydro
 from ..core.energy_production.renew_pv_agri import calc_production_renew_pv_agri
 from ..core.energy_production.renew_pv_facade import calc_production_renew_pv_facade
 from ..core.energy_production.renew_pv_park import calc_production_renew_pv_park
+from ..core.energy_production.renew_pv_roof import calc_production_renew_pv_roof
 from ..core import energy_demand
 
 from .energy_production.calc_production_renewable_reverse import (
@@ -43,9 +44,6 @@ from .energy_production.calc_production_renewable_reverse import (
 )
 from .energy_production.calc_production_renewable_biomass import (
     calc_production_renewable_biomass,
-)
-from .energy_production.calc_production_renewable_pv_roof import (
-    calc_production_renewable_pv_roof,
 )
 from . import energy_general
 
@@ -127,10 +125,11 @@ def calc(
         facts, e18, a30, b30, f30, h30, i30, r30, t30, wastelines
     )
 
-    p_renew_pv_roof = calc_production_renewable_pv_roof(
+    p_renew_pv_roof = calc_production_renew_pv_roof(
         assumptions,
         e18=e18,
         p_local_pv_roof_full_load_hour=p_local_pv_roof.full_load_hour,
+        energy=0,
     )
 
     p_renew.invest_pa_com = 0
