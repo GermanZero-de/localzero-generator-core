@@ -33,6 +33,10 @@ from ..core.energy_production.wind import (
 )
 from ..core.energy_production.hydro import calc_production_local_hydro
 from ..core.energy_production.renew_hydro import calc_production_renew_hydro
+from ..core.energy_production.renew_pv_agri import calc_production_renew_pv_agri
+from ..core.energy_production.renew_pv_facade import calc_production_renew_pv_facade
+from ..core.energy_production.renew_pv_park import calc_production_renew_pv_park
+from ..core.energy_production.renew_pv_roof import calc_production_renew_pv_roof
 from ..core import energy_demand
 
 from .energy_production.calc_production_renewable_reverse import (
@@ -40,9 +44,6 @@ from .energy_production.calc_production_renewable_reverse import (
 )
 from .energy_production.calc_production_renewable_biomass import (
     calc_production_renewable_biomass,
-)
-from .energy_production.calc_production_renewable_pv_roof import (
-    calc_production_renewable_pv_roof,
 )
 from . import energy_general
 
@@ -80,9 +81,6 @@ def calc(
     p_fossil_and_renew = EColVars2030()
     p_fossil = FossilFuelsProduction()
     p_renew = EColVars2030()
-    p_renew_pv_facade = EColVars2030()
-    p_renew_pv_park = EColVars2030()
-    p_renew_pv_agri = EColVars2030()
     p_renew_wind = EColVars2030()
     p_renew_wind_onshore = EColVars2030()
 
@@ -127,10 +125,11 @@ def calc(
         facts, e18, a30, b30, f30, h30, i30, r30, t30, wastelines
     )
 
-    p_renew_pv_roof = calc_production_renewable_pv_roof(
+    p_renew_pv_roof = calc_production_renew_pv_roof(
         assumptions,
         e18=e18,
         p_local_pv_roof_full_load_hour=p_local_pv_roof.full_load_hour,
+        energy=0,
     )
 
     p_renew.invest_pa_com = 0
@@ -253,15 +252,27 @@ def calc(
     )
     p_renew.CO2e_total_2021_estimated = p_renew_biomass.CO2e_total_2021_estimated
 
-    p_renew_pv_facade.energy = 0
-    p_renew_pv_facade.cost_mro_per_MWh = (
-        ass("Ass_E_S_local_pv_facade_ratio_invest_to_power")
-        * ass("Ass_E_P_local_pv_roof_mro_per_year")
-        / p_local_pv_facade.full_load_hour
-        * 1000
+    p_renew_pv_facade = calc_production_renew_pv_facade(
+        assumptions,
+        e18=e18,
+        p_local_pv_facade_full_load_hour=p_local_pv_facade.full_load_hour,
+        energy=0,
     )
-    p_renew_pv_park.energy = 0
-    p_renew_pv_agri.energy = 0
+
+    p_renew_pv_park = calc_production_renew_pv_park(
+        assumptions,
+        e18=e18,
+        p_local_pv_park_full_load_hour=p_local_pv_park.full_load_hour,
+        energy=0,
+    )
+
+    p_renew_pv_agri = calc_production_renew_pv_agri(
+        assumptions,
+        e18=e18,
+        p_local_pv_agri_full_load_hour=p_local_pv_agri.full_load_hour,
+        energy=0,
+    )
+
     p_renew_wind.invest_pa_outside = p_renew_wind_offshore.invest_pa_outside
     p_renew_wind.invest_outside = p_renew_wind_offshore.invest_outside
     p_renew_wind.emplo_existing = p_renew_wind_offshore.emplo_existing
@@ -296,30 +307,6 @@ def calc(
     )
     p_fossil_and_renew.CO2e_total_2021_estimated = (
         p_fossil.CO2e_total_2021_estimated + p_renew.CO2e_total_2021_estimated
-    )
-    p_renew_pv_park.cost_mro_per_MWh = (
-        ass("Ass_E_S_local_pv_park_ratio_invest_to_power_2020")
-        * ass("Ass_E_P_local_pv_park_mro_per_year")
-        / p_local_pv_park.full_load_hour
-        * 1000
-    )
-    p_renew_pv_agri.cost_mro_per_MWh = (
-        ass("Ass_E_P_local_pv_agri_ratio_invest_to_power")
-        * ass("Ass_E_P_local_pv_roof_mro_per_year")
-        / p_local_pv_agri.full_load_hour
-        * 1000
-    )
-    p_renew_pv_facade.change_energy_MWh = (
-        p_renew_pv_facade.energy - e18.p_renew_pv_facade.energy
-    )
-    p_renew_pv_facade.cost_mro = (
-        p_renew_pv_facade.energy * p_renew_pv_facade.cost_mro_per_MWh / MILLION
-    )
-    p_renew_pv_park.change_energy_MWh = (
-        p_renew_pv_park.energy - e18.p_renew_pv_park.energy
-    )
-    p_renew_pv_agri.change_energy_MWh = (
-        p_renew_pv_agri.energy - e18.p_renew_pv_agri.energy
     )
     p_renew.invest_pa_outside = (
         p_renew_wind.invest_pa_outside
@@ -367,29 +354,11 @@ def calc(
     p.CO2e_total_2021_estimated = (
         p_fossil_and_renew.CO2e_total_2021_estimated + p_local.CO2e_total_2021_estimated
     )
-    p_renew_pv_park.cost_mro = (
-        p_renew_pv_park.energy * p_renew_pv_park.cost_mro_per_MWh / MILLION
-    )
-    p_renew_pv_agri.cost_mro = (
-        p_renew_pv_agri.energy * p_renew_pv_agri.cost_mro_per_MWh / MILLION
-    )
-    p_renew_pv_facade.change_energy_pct = div(
-        p_renew_pv_facade.change_energy_MWh, e18.p_renew_pv_facade.energy
-    )
-    p_renew_pv_facade.change_cost_mro = (
-        p_renew_pv_facade.cost_mro - e18.p_renew_pv_facade.cost_mro
-    )
-    p_renew_pv_park.change_energy_pct = div(
-        p_renew_pv_park.change_energy_MWh, e18.p_renew_pv_park.energy
-    )
     p_renew_pv.change_energy_MWh = (
         p_renew_pv_roof.change_energy_MWh
         + p_renew_pv_facade.change_energy_MWh
         + p_renew_pv_park.change_energy_MWh
         + p_renew_pv_agri.change_energy_MWh
-    )
-    p_renew_pv_agri.change_energy_pct = div(
-        p_renew_pv_agri.change_energy_MWh, e18.p_renew_pv_agri.energy
     )
     p_fossil_and_renew.invest_pa_outside = p_renew.invest_pa_outside
     p_fossil_and_renew.invest_outside = p_renew.invest_outside
@@ -432,17 +401,11 @@ def calc(
         + p_fossil_gas.change_CO2e_t
         + p_fossil_ofossil.change_CO2e_t
     )
-    p_renew_pv_park.change_cost_mro = (
-        p_renew_pv_park.cost_mro - e18.p_renew_pv_park.cost_mro
-    )
     p_renew_pv.cost_mro = (
         p_renew_pv_roof.cost_mro
         + p_renew_pv_facade.cost_mro
         + p_renew_pv_park.cost_mro
         + p_renew_pv_agri.cost_mro
-    )  #
-    p_renew_pv_agri.change_cost_mro = (
-        p_renew_pv_agri.cost_mro - e18.p_renew_pv_agri.cost_mro
     )
     p_renew_pv.change_energy_pct = div(
         p_renew_pv.change_energy_MWh, e18.p_renew_pv.energy
@@ -978,18 +941,11 @@ def calc(
     p_renew_pv.cost_climate_saved = 0
     p_renew_pv.change_CO2e_t = 0
 
-    p_renew_pv_agri.change_CO2e_t = 0
-    p_renew_pv_facade.change_CO2e_t = 0
-    p_renew_pv_park.change_CO2e_t = 0
-
     p_renew_geoth.change_CO2e_t = 0
     p_renew_geoth.cost_climate_saved = 0
 
     # ---copy
     p_renew_pv.change_CO2e_pct = 0
-    p_renew_pv_agri.change_CO2e_pct = 0
-    p_renew_pv_facade.change_CO2e_pct = 0
-    p_renew_pv_park.change_CO2e_pct = 0
 
     p_renew_wind.change_CO2e_pct = 0
     p_renew_wind_onshore.change_CO2e_pct = 0
@@ -1005,9 +961,6 @@ def calc(
     )
 
     p_renew_pv.cost_climate_saved = 0
-    p_renew_pv_agri.cost_climate_saved = 0
-    p_renew_pv_facade.cost_climate_saved = 0
-    p_renew_pv_park.cost_climate_saved = 0
 
     p_renew_wind.cost_climate_saved = 0
     p_renew_wind_onshore.cost_climate_saved = 0
