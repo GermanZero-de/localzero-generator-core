@@ -454,6 +454,8 @@ class RefData:
     _population: DataFrame[str]
     _renewable_energy: DataFrame[str]
     _traffic: DataFrame[str]
+    _traffic_air: DataFrame[str]
+    _traffic_ships: DataFrame[str]
     _industry_dehst: DataFrame[str]
     _year_ref: int
 
@@ -476,6 +478,8 @@ class RefData:
         population: DataFrame[str],
         renewable_energy: DataFrame[str],
         traffic: DataFrame[str],
+        traffic_air: DataFrame[str],
+        traffic_ships: DataFrame[str],
         industry_dehst: DataFrame[str],
         fix_missing_entries: bool,
     ):
@@ -497,6 +501,8 @@ class RefData:
         self._population = population
         self._renewable_energy = renewable_energy
         self._traffic = traffic
+        self._traffic_air = traffic_air
+        self._traffic_ships = traffic_ships
         self._industry_dehst = industry_dehst
         # TODO: Provide a way to set this from the outside
         self._year_ref = 2018
@@ -621,6 +627,21 @@ class RefData:
     def industry_dehst(self, ags: str):
         """TODO Function to read CO2e for each ags from DEHST Table."""
         return OptRow(self._industry_dehst, ags)
+    
+    def traffic_air(self, ags: str):
+        """TODO"""
+        return Row(self._traffic_air, ags)
+    
+    def traffic_ships(self, ags: str):
+        """TODO"""
+        return Row(self._traffic_ships, ags)
+    
+    def get_df_traffic_ships(self):
+        return self._traffic_ships
+    
+    def get_df_traffic_air(self):
+        return self._traffic_air
+
 
     @classmethod
     def load(
@@ -697,6 +718,8 @@ class RefData:
             ),
             renewable_energy=DataFrame.load_ags(datadir, "renewable_energy"),
             traffic=DataFrame.load_ags(datadir, "traffic"),
+            traffic_air=DataFrame.load_ags(datadir, "traffic_air"),
+            traffic_ships=DataFrame.load_ags(datadir, "traffic_ships"),
             industry_dehst=DataFrame.load_ags(datadir, "industry_facilites"),
             fix_missing_entries=fix_missing_entries,
         )
