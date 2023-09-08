@@ -3,6 +3,7 @@
 from dataclasses import dataclass
 
 from ...refdata import Facts, Assumptions
+from ...inputs import Inputs
 from ...utils import element_wise_plus
 
 from . import co2e
@@ -36,11 +37,11 @@ class Ship:
             * population_commune_2018
             / population_germany_2018
         )
+        
         demand_diesel = (
-            population_commune_2018
-            / population_germany_2018
-            * fact("Fact_T_S_Shp_diesel_fec_2018")
+            Inputs.entries.t_s_eev_diesel_inland_mwh_com
         )
+        
         energy = demand_diesel
 
         CO2e_combustion_based = co2e.from_demands(
@@ -72,8 +73,9 @@ class Ship:
             * population_commune_2018
             / population_germany_2018
         )
-        demand_fueloil = (population_commune_2018 / population_germany_2018) * fact(
-            "Fact_T_D_Shp_sea_nat_EC_2018"
+
+        demand_fueloil = (
+            Inputs.entries.t_s_eev_fuel_overseas_mwh_com
         )
 
         energy = demand_fueloil
