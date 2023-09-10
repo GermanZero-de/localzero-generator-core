@@ -3,7 +3,7 @@
 from dataclasses import dataclass
 
 from ...refdata import Facts, Assumptions
-from ...inputs import Inputs
+from ...entries import Entries
 from ...utils import element_wise_plus
 
 from . import co2e
@@ -26,6 +26,7 @@ class Ship:
     def calc_ship_domestic(
         cls,
         facts: Facts,
+        entries: Entries,
         assumptions: Assumptions,
         population_commune_2018: int,
         population_germany_2018: int,
@@ -39,7 +40,7 @@ class Ship:
         )
         
         demand_diesel = (
-            Inputs.entries.t_s_eev_diesel_inland_mwh_com
+            entries.t_s_eev_diesel_inland_mwh_com
         )
         
         energy = demand_diesel
@@ -62,6 +63,7 @@ class Ship:
     def calc_ship_international(
         cls,
         facts: Facts,
+        entries: Entries,
         assumptions: Assumptions,
         population_commune_2018: int,
         population_germany_2018: int,
@@ -75,7 +77,7 @@ class Ship:
         )
 
         demand_fueloil = (
-            Inputs.entries.t_s_eev_fuel_overseas_mwh_com
+            entries.t_s_eev_fuel_overseas_mwh_com
         )
 
         energy = demand_fueloil
