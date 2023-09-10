@@ -60,10 +60,10 @@ def calc_production(
 
     # --- Air ---
     air_dmstc = Air.calc_domestic(
-        facts, assumptions, population_commune_2018, population_germany_2018
+        facts, entries, assumptions, population_commune_2018, population_germany_2018
     )
     air_inter = Air.calc_international(
-        facts, assumptions, population_commune_2018, population_germany_2018
+        facts, entries, assumptions, population_commune_2018, population_germany_2018
     )
     air = air_dmstc + air_inter
 
@@ -115,10 +115,10 @@ def calc_production(
 
     # --- Ship ---
     ship_dmstc = Ship.calc_ship_domestic(
-        facts, assumptions, population_commune_2018, population_germany_2018
+        facts, entries, assumptions, population_commune_2018, population_germany_2018
     )
     ship_inter = Ship.calc_ship_international(
-        facts, assumptions, population_commune_2018, population_germany_2018
+        facts, entries, assumptions, population_commune_2018, population_germany_2018
     )
     ship = ship_dmstc + ship_inter
 
