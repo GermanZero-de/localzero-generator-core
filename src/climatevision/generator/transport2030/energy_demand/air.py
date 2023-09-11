@@ -3,6 +3,7 @@
 from dataclasses import dataclass
 
 from ...refdata import Facts, Assumptions
+from ...entries import Entries
 from ...utils import div
 from ...transport2018.t18 import T18
 
@@ -44,10 +45,9 @@ def calc_air_domestic(
 def calc_air_international(
     facts: Facts,
     assumptions: Assumptions,
+    entries: Entries,
     duration_CO2e_neutral_years: float,
-    population_commune_203X: int,
-    population_germany_203X: int,
-    t18: T18,
+    t18: T18
 ) -> "Transport":
     """However for many international flights there are no good alternatives.
     So we will need ejetfuels.
@@ -57,8 +57,8 @@ def calc_air_international(
 
     demand_ejetfuel = (
         ass("Ass_T_D_Air_nat_EB_2050")
-        * population_commune_203X
-        / population_germany_203X
+        * entries.t_a_eev_kerosene_overseas_com 
+        / entries.t_a_eev_kerosene_overseas_total
     )
     transport_capacity_tkm = t18.air_inter.transport_capacity_tkm * div(
         demand_ejetfuel, t18.air_inter.demand_jetfuel
