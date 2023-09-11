@@ -31,9 +31,9 @@ class Air:
         population_germany_2018: int,
     ) -> "Air":
 
-        demand_petrol = entries.t_a_eev_kerosene_inland_com
+        demand_petrol = entries.t_a_eev_petrol_inland_com
 
-        demand_jetfuel = entries.t_a_eev_petrol_inland_com
+        demand_jetfuel = entries.t_a_eev_kerosene_inland_com
 									 
         transport_capacity_pkm = entries.t_a_conveyance_capa_inland_pkm_com
 
