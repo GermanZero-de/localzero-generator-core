@@ -164,6 +164,7 @@ class Entries:
     t_mil_mhd_it_ot: float
     t_rt3: str
     t_rt7: str
+    t_a_eev_kerosene_overseas_total: float
     t_a_conveyance_capa_inland_pkm_com: float
     t_a_transport_capa_inland_tkm_com: float
     t_a_flight_kilometer_inland_km_com: float

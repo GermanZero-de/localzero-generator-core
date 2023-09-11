@@ -3,7 +3,7 @@
 from .entries import Entries
 from .utils import div
 from .refdata import RefData, Row
-
+import pdb
 
 def make_entries(data: RefData, ags: str, year: int) -> Entries:
     # ags identifies the community (Kommune)
@@ -317,6 +317,7 @@ def make_entries(data: RefData, ags: str, year: int) -> Entries:
     t_metro_mega_km_dis = data_destatis_com.float("metro_mega_km")
     t_bus_mega_km_dis = data_destatis_com.float("bus_mega_km")
 
+    t_a_eev_kerosene_overseas_total = 0
     t_a_conveyance_capa_inland_pkm_com = 0
     t_a_transport_capa_inland_tkm_com = 0
     t_a_flight_kilometer_inland_km_com = 0
@@ -333,7 +334,11 @@ def make_entries(data: RefData, ags: str, year: int) -> Entries:
     t_a_sum_ghg_com = 0
     traffic_air_df = data.get_df_traffic_air()
     traffic_air_rows = traffic_air_df.rows()
+    # lookup municipality specific data for traffic_air
     for row in traffic_air_rows:
+        t_a_eev_kerosene_overseas_total += float(row[1][13]) # PROBLEM: Daten teilweise mehrfach -> Excel falsch?
+        "DEBUG"
+        pdb.set_trace()
         if ags in row[0]:
             data_destatis_traffic_air = data.traffic_air(ags)
             t_a_conveyance_capa_inland_pkm_com = data_destatis_traffic_air.float("conveyance_capacity_inland_pkm")
@@ -350,8 +355,7 @@ def make_entries(data: RefData, ags: str, year: int) -> Entries:
             t_a_eev_kerosene_overseas_com = data_destatis_traffic_air.float("eev_kerosene_overseas_mwh")
             t_a_ghg_overseas_com = data_destatis_traffic_air.float("ghg_overseas_tco2e")
             t_a_sum_ghg_com = data_destatis_traffic_air.float("sum_ghg_tco2e") 
-            break
-
+    
     t_s_eev_diesel_inland_mwh_com=0
     t_s_eev_fuel_overseas_mwh_com=0
     t_s_ghg_inland_com=0
@@ -359,6 +363,7 @@ def make_entries(data: RefData, ags: str, year: int) -> Entries:
     t_s_ghg_sum_com=0
     traffic_ships_df = data.get_df_traffic_ships()
     traffic_ships_rows = traffic_ships_df.rows()
+    # lookup municipality specific data for traffic_ships
     for row in traffic_ships_rows:
         if ags in row[0]:
             data_destatis_traffic_ships = data.traffic_ships(ags)
@@ -696,6 +701,7 @@ def make_entries(data: RefData, ags: str, year: int) -> Entries:
         t_mil_mhd_it_ot=t_mil_mhd_it_ot,
         t_rt3=t_rt3,
         t_rt7=t_rt7,
+        t_a_eev_kerosene_overseas_total = t_a_eev_kerosene_overseas_total,
         t_a_conveyance_capa_inland_pkm_com=t_a_conveyance_capa_inland_pkm_com, 
         t_a_transport_capa_inland_tkm_com=t_a_transport_capa_inland_tkm_com,
         t_a_flight_kilometer_inland_km_com=t_a_flight_kilometer_inland_km_com, 
