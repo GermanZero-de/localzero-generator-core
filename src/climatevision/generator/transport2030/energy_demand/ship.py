@@ -3,6 +3,7 @@
 from dataclasses import dataclass
 
 from ...refdata import Facts, Assumptions
+from ...entries import Entries
 from ...utils import div
 from ...common.invest import Invest, InvestCommune
 from ...transport2018.t18 import T18
@@ -26,6 +27,7 @@ class ShipDomestic(Invest):
         cls,
         facts: Facts,
         assumptions: Assumptions,
+        entries: Entries,
         duration_until_target_year: int,
         duration_CO2e_neutral_years: float,
         population_commune_203X: int,
@@ -43,8 +45,8 @@ class ShipDomestic(Invest):
         )
         demand_ediesel = (
             ass("Ass_T_D_Shp_dmstc_nat_EB_2050")
-            * population_commune_203X
-            / population_germany_203X
+            * entries.t_s_eev_diesel_inland_mwh_com
+            / entries.t_s_eev_diesel_inland_mwh_total
         )
         CO2e_combustion_based = demand_ediesel * ass(
             "Ass_T_S_diesel_EmFa_tank_wheel_2050"
@@ -160,6 +162,7 @@ class ShipInternational:
         cls,
         facts: Facts,
         assumptions: Assumptions,
+        entries: Entries,
         duration_CO2e_neutral_years: float,
         population_commune_203X: int,
         population_germany_203X: int,
@@ -174,8 +177,8 @@ class ShipInternational:
         )
         demand_ediesel = (
             ass("Ass_T_D_Shp_sea_nat_EB_2050")
-            * population_commune_203X
-            / population_germany_203X
+            * entries.t_s_eev_fuel_overseas_mwh_com
+            / entries.t_s_eev_fuel_overseas_mwh_total
         )
         CO2e_combustion_based = demand_ediesel * ass(
             "Ass_T_S_diesel_EmFa_tank_wheel_2050"
