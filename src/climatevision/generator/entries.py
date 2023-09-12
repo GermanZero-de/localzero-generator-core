@@ -179,6 +179,8 @@ class Entries:
     t_a_eev_kerosene_overseas_com: float
     t_a_ghg_overseas_com: float
     t_a_sum_ghg_com: float
+    t_s_eev_diesel_inland_mwh_total: float
+    t_s_eev_fuel_overseas_mwh_total: float
     t_s_eev_diesel_inland_mwh_com: float
     t_s_eev_fuel_overseas_mwh_com: float
     t_s_ghg_inland_com: float

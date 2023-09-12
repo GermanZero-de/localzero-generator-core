@@ -3,7 +3,6 @@
 from .entries import Entries
 from .utils import div
 from .refdata import RefData, Row
-import pdb
 
 def make_entries(data: RefData, ags: str, year: int) -> Entries:
     # ags identifies the community (Kommune)
@@ -755,8 +754,8 @@ def make_entries(data: RefData, ags: str, year: int) -> Entries:
         t_a_flight_kilometer_share_overseas_com=t_a_flight_kilometer_share_overseas_com,
         t_a_eev_kerosene_overseas_com=t_a_eev_kerosene_overseas_com,
         t_a_ghg_overseas_com=t_a_ghg_overseas_com,
-        t_a_sum_ghg_com=t_a_sum_ghg_com,
-        t_s_eev_diesel_inland_mwh_total=t_s_eev_diesel_inland_mwh_total,
+        t_a_sum_ghg_com=t_a_sum_ghg_com, 
+        t_s_eev_diesel_inland_mwh_total=t_s_eev_diesel_inland_mwh_total, 
         t_s_eev_fuel_overseas_mwh_total=t_s_eev_fuel_overseas_mwh_total,
         t_s_eev_diesel_inland_mwh_com=t_s_eev_diesel_inland_mwh_com,
         t_s_eev_fuel_overseas_mwh_com=t_s_eev_fuel_overseas_mwh_com,

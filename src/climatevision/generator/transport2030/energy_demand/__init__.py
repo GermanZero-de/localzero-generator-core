@@ -265,6 +265,7 @@ def calc_production(
     ship_dmstc = ShipDomestic.calc(
         facts,
         assumptions,
+        entries,
         duration_until_target_year,
         duration_CO2e_neutral_years,
         population_commune_203X,
@@ -274,6 +275,7 @@ def calc_production(
     ship_inter = ShipInternational.calc(
         facts,
         assumptions,
+        entries,
         duration_CO2e_neutral_years,
         population_commune_203X,
         population_germany_203X,
