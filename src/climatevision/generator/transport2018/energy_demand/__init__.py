@@ -60,10 +60,10 @@ def calc_production(
 
     # --- Air ---
     air_dmstc = Air.calc_domestic(
-        facts, entries, assumptions, population_commune_2018, population_germany_2018
+        facts, entries, assumptions
     )
     air_inter = Air.calc_international(
-        facts, entries, assumptions, population_commune_2018, population_germany_2018
+        facts, entries, assumptions
     )
     air = air_dmstc + air_inter
 
