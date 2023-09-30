@@ -27,8 +27,6 @@ class Air:
         facts: Facts,
         entries: Entries,
         assumptions: Assumptions,
-        population_commune_2018: int,
-        population_germany_2018: int,
     ) -> "Air":
 
         demand_petrol = entries.t_a_eev_petrol_inland_com
@@ -64,8 +62,6 @@ class Air:
         facts: Facts,
         entries: Entries,
         assumptions: Assumptions,
-        population_commune_2018: int,
-        population_germany_2018: int,
     ) -> "Air":
 
         transport_capacity_pkm = entries.t_a_conveyance_capa_overseas_pkm_com
