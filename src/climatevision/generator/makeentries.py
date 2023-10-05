@@ -336,9 +336,7 @@ def make_entries(data: RefData, ags: str, year: int) -> Entries:
     traffic_air_rows = traffic_air_df.rows()
     # lookup municipality specific data for traffic_air
     for row in traffic_air_rows:
-        t_a_eev_kerosene_overseas_total += float(row[1][13]) # PROBLEM: Daten teilweise mehrfach -> Excel falsch?
-        "DEBUG"
-        pdb.set_trace()
+        t_a_eev_kerosene_overseas_total += float(row[1][13])
         if ags in row[0]:
             data_destatis_traffic_air = data.traffic_air(ags)
             t_a_conveyance_capa_inland_pkm_com = data_destatis_traffic_air.float("conveyance_capacity_inland_pkm")
@@ -365,6 +363,8 @@ def make_entries(data: RefData, ags: str, year: int) -> Entries:
     traffic_ships_rows = traffic_ships_df.rows()
     # lookup municipality specific data for traffic_ships
     for row in traffic_ships_rows:
+        t_s_eev_diesel_inland_mwh_total += float(row[1][5]) 
+        t_s_eev_fuel_overseas_mwh_total += float(row[1][9])
         if ags in row[0]:
             data_destatis_traffic_ships = data.traffic_ships(ags)
             t_s_eev_diesel_inland_mwh_com=data_destatis_traffic_ships.float("inland_eev_diesel_mwh")
