@@ -3,6 +3,7 @@ import sys
 import re
 
 PRELUDE = """from . import refdata
+
 def calculate_derived_facts(rd: refdata.RefData):
     f = rd.facts()
 """
