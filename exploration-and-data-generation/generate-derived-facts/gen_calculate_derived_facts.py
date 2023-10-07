@@ -1,11 +1,13 @@
 import openpyxl
 import sys
-
+import re
 
 PRELUDE = """from . import refdata
 def calculate_derived_facts(rd: refdata.RefData):
     f = rd.facts()
 """
+
+FACT_REGEX = re.compile(r"(Fact_[A-Za-z0-9_]+)")
 
 
 def main():
@@ -28,7 +30,8 @@ def main():
             and data["Formula"] != "noch nicht existent"
         ):
             label = data["label"]
-            formula = data["Formula"]
+            formula: str = data["Formula"]  # type: ignore
+            formula = FACT_REGEX.sub(r'f.fact("\1")', formula)
             del data["Formula"]
             del data["label"]
             del data["update 2022"]
