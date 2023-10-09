@@ -923,7 +923,7 @@ def calc(
     p_local_pv_facade.cost_climate_saved = 0
     p_local_pv_park.cost_climate_saved = 0
     p_local_wind_onshore.cost_climate_saved = 0
-    
+
     p_renew_reverse.change_CO2e_pct = 0
 
     e = EColVars2030()
