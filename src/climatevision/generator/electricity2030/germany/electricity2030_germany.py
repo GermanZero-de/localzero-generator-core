@@ -625,7 +625,8 @@ def calc(
         + p_fossil_ofossil.energy
     )
     p_fossil.CO2e_total_2021_estimated = (
-        p_fossil_coal_brown.CO2e_total_2021_estimated
+        p_fossil_nuclear.CO2e_total_2021_estimated
+        + p_fossil_coal_brown.CO2e_total_2021_estimated
         + p_fossil_coal_black.CO2e_total_2021_estimated
         + p_fossil_gas.CO2e_total_2021_estimated
         + p_fossil_ofossil.CO2e_total_2021_estimated
@@ -641,6 +642,7 @@ def calc(
     p_fossil.cost_mro = (
         p_fossil_nuclear.cost_mro
         + p_fossil_coal_brown.cost_mro
+        + p_fossil_coal_black.cost_mro
         + p_fossil_gas.cost_mro
         + p_fossil_ofossil.cost_mro
     )
@@ -667,7 +669,8 @@ def calc(
         + p_fossil_ofossil.change_cost_mro
     )
     p_fossil.cost_climate_saved = (
-        p_fossil_coal_brown.cost_climate_saved
+        p_fossil_nuclear.cost_climate_saved
+        + p_fossil_coal_brown.cost_climate_saved
         + p_fossil_coal_black.cost_climate_saved
         + p_fossil_gas.cost_climate_saved
         + p_fossil_ofossil.cost_climate_saved
