@@ -625,13 +625,6 @@ def calc(
         energy_18=e18.p_fossil.energy,
         CO2e_total_18=e18.p_fossil.CO2e_total,
     )
-    p_fossil.change_cost_mro = (
-        p_fossil_nuclear.change_cost_mro
-        + p_fossil_coal_brown.change_cost_mro
-        + p_fossil_coal_black.change_cost_mro
-        + p_fossil_gas.change_cost_mro
-        + p_fossil_ofossil.change_cost_mro
-    )
     p_fossil.CO2e_total = 0
 
     p_fossil_and_renew = EColVars2030()
