@@ -5008,7 +5008,7 @@
             "change_energy_MWh": -334039794.6451307,
             "change_energy_pct": -1.0,
             "change_CO2e_t": -271092119.66310316,
-            "change_CO2e_pct": null,
+            "change_CO2e_pct": -1.0,
             "change_cost_energy": -8582.649608547643,
             "change_cost_mro": -5032.652640240626,
             "cost_mro_per_MWh": null

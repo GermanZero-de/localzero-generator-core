@@ -682,6 +682,7 @@ def calc(
         + p_fossil_gas.change_CO2e_t
         + p_fossil_ofossil.change_CO2e_t
     )
+    p_fossil.change_CO2e_pct = div(p_fossil.change_CO2e_t, e18.p_fossil.CO2e_total)
     p_fossil.CO2e_total = 0
 
     p_fossil_and_renew = EColVars2030()
