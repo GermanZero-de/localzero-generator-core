@@ -627,21 +627,20 @@ class RefData:
     def industry_dehst(self, ags: str):
         """TODO Function to read CO2e for each ags from DEHST Table."""
         return OptRow(self._industry_dehst, ags)
-    
+
     def traffic_air(self, ags: str):
         """TODO"""
         return Row(self._traffic_air, ags)
-    
+
     def traffic_ships(self, ags: str):
         """TODO"""
         return Row(self._traffic_ships, ags)
-    
+
     def get_df_traffic_ships(self):
         return self._traffic_ships
-    
+
     def get_df_traffic_air(self):
         return self._traffic_air
-
 
     @classmethod
     def load(

@@ -47,7 +47,7 @@ def calc_air_international(
     assumptions: Assumptions,
     entries: Entries,
     duration_CO2e_neutral_years: float,
-    t18: T18
+    t18: T18,
 ) -> "Transport":
     """However for many international flights there are no good alternatives.
     So we will need ejetfuels.
@@ -57,7 +57,7 @@ def calc_air_international(
 
     demand_ejetfuel = (
         ass("Ass_T_D_Air_nat_EB_2050")
-        * entries.t_a_eev_kerosene_overseas_com 
+        * entries.t_a_eev_kerosene_overseas_com
         / entries.t_a_eev_kerosene_overseas_total
     )
     transport_capacity_tkm = t18.air_inter.transport_capacity_tkm * div(
