@@ -5644,7 +5644,7 @@
             "area_ha_available_pct_of_action": null,
             "ratio_power_to_area_ha": null,
             "change_CO2e_t": 0,
-            "change_CO2e_pct": null,
+            "change_CO2e_pct": 0,
             "change_cost_energy": null,
             "change_cost_mro": 1464.141721893566,
             "invest": 44229355150.0,
