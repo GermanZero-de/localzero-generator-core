@@ -59,12 +59,8 @@ def calc_production(
     area_kind_rt7 = entries.t_rt7
 
     # --- Air ---
-    air_dmstc = Air.calc_domestic(
-        facts, entries, assumptions
-    )
-    air_inter = Air.calc_international(
-        facts, entries, assumptions
-    )
+    air_dmstc = Air.calc_domestic(facts, entries, assumptions)
+    air_inter = Air.calc_international(facts, entries, assumptions)
     air = air_dmstc + air_inter
 
     # --- Road ---

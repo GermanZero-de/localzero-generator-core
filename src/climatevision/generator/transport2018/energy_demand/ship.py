@@ -38,11 +38,9 @@ class Ship:
             * population_commune_2018
             / population_germany_2018
         )
-        
-        demand_diesel = (
-            entries.t_s_eev_diesel_inland_mwh_com
-        )
-        
+
+        demand_diesel = entries.t_s_eev_diesel_inland_mwh_com
+
         energy = demand_diesel
 
         CO2e_combustion_based = co2e.from_demands(
@@ -76,9 +74,7 @@ class Ship:
             / population_germany_2018
         )
 
-        demand_fueloil = (
-            entries.t_s_eev_fuel_overseas_mwh_com
-        )
+        demand_fueloil = entries.t_s_eev_fuel_overseas_mwh_com
 
         energy = demand_fueloil
         CO2e_combustion_based = co2e.from_demands(
