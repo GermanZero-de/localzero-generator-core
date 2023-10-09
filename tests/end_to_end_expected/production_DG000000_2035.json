@@ -4934,7 +4934,7 @@
             "change_CO2e_t": -270922062.3638464,
             "change_CO2e_pct": -0.9861739992780858,
             "change_cost_energy": -12510.544053984637,
-            "change_cost_mro": -6013.718817239543,
+            "change_cost_mro": -4748.308177367906,
             "invest": 749860916577.8369,
             "invest_pa": 57681608967.52592,
             "invest_com": 11922533338.68466,
@@ -4978,7 +4978,7 @@
             "change_CO2e_t": -274720346.0668918,
             "change_CO2e_pct": -1.0,
             "change_cost_energy": -12510.544053984637,
-            "change_cost_mro": -6013.718817239543,
+            "change_cost_mro": -4748.308177367906,
             "invest": 313835859512.8396,
             "invest_pa": 24141219962.526123,
             "invest_com": 0,
@@ -5010,7 +5010,7 @@
             "change_CO2e_t": -271092119.66310316,
             "change_CO2e_pct": -1.0,
             "change_cost_energy": -8582.649608547643,
-            "change_cost_mro": -5032.652640240626,
+            "change_cost_mro": -3767.242000368989,
             "cost_mro_per_MWh": null
         },
         "p_fossil_nuclear": {

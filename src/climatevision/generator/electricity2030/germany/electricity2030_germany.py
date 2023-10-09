@@ -626,7 +626,7 @@ def calc(
         CO2e_total_18=e18.p_fossil.CO2e_total,
     )
     p_fossil.change_cost_mro = (
-        p_fossil_nuclear.change_cost_energy
+        p_fossil_nuclear.change_cost_mro
         + p_fossil_coal_brown.change_cost_mro
         + p_fossil_coal_black.change_cost_mro
         + p_fossil_gas.change_cost_mro
