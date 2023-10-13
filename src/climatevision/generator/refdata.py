@@ -359,9 +359,17 @@ class FactOrAssumptionCompleteRow:
         )
 
 
+@dataclass
+class NotEqual(Exception):
+    label: str
+    previous: float
+    value: float
+
+
 @dataclass(kw_only=True)
 class Facts:
     _derived_facts: dict[str, FactOrAssumptionCompleteRow]
+    _facts: DataFrame[str]
 
     def __init__(self, facts: DataFrame[str]):
         self._facts = facts
@@ -387,6 +395,13 @@ class Facts:
         self._derived_facts[label] = FactOrAssumptionCompleteRow.create_derived_fact(
             label, value, other_data
         )
+        # TODO: Remove this once we actually got rid of the derived facts in the reference data
+        import math
+
+        previous = float(Row(self._facts, label).float("value"))
+        if not math.isclose(float(previous), float(value)):
+            raise NotEqual(label, previous, float(value))
+        del self._facts._rows[label]  # type: ignore
 
 
 @dataclass(kw_only=True)
@@ -681,4 +696,7 @@ class RefData:
             industry_dehst=DataFrame.load_ags(datadir, "industry_facilites"),
             fix_missing_entries=fix_missing_entries,
         )
+        from . import calculate_derived_facts
+
+        calculate_derived_facts.calculate_derived_facts(d)
         return d

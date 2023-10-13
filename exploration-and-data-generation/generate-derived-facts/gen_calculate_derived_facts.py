@@ -2,7 +2,13 @@ import openpyxl
 import sys
 import re
 
-PRELUDE = """from . import refdata
+PRELUDE = """\"\"\"
+This module was auto generated from an annotated version of the 2018 facts file, which
+contained explicit formulas for every derived fact. This way we could simplify updating
+the facts, without changing a lot of the actual code.
+\"\"\"
+
+from . import refdata
 
 def calculate_derived_facts(rd: refdata.RefData):
     f = rd.facts()
@@ -37,7 +43,8 @@ def main():
             del data["label"]
             del data["update 2022"]
             del data["value"]
-            print(f"""    f.add_derived_fact({label}, {formula}, {data})""")
+            data = {k: ("" if v is None else v) for k, v in data.items()}
+            print(f"""    f.add_derived_fact("{label}", {formula}, {data})""")
 
 
 main()
