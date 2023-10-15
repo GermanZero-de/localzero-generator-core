@@ -131,6 +131,15 @@ class DataFrame(Generic[KeyT]):
             column_dict.update(upd)
         return (keyword_data, column_dict)
 
+    def column_ags(self) -> list[str]:
+        """Return list of all ags in dataframe except germany"""
+        lst = [""]
+        for row in self._rows.items():
+            if row[0] != "DG000000":
+                lst.append(str(row[0]))
+        lst.remove("")
+        return lst
+
     @classmethod
     def load_ags(
         cls,
