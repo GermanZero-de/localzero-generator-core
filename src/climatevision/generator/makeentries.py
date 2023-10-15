@@ -333,14 +333,13 @@ def make_entries(data: RefData, ags: str, year: int) -> Entries:
     t_a_ghg_overseas_com = 0
     t_a_sum_ghg_com = 0
     traffic_air_df = data.get_df_traffic_air()
-    traffic_air_rows = traffic_air_df.rows()
     # lookup municipality specific data for traffic_air
+    # lookup total german data
+    eev_kerosene_overseas_column = traffic_air_df.columns("eev_kerosene_overseas_mwh")
+    t_a_eev_kerosene_overseas_total = float(eev_kerosene_overseas_column[1].get('DG000000',0.0))
+    # lookup data for ags to be evaluated
+    traffic_air_rows = traffic_air_df.rows()
     for row in traffic_air_rows:
-        # lookup total german data
-        if 'DG000000' in row[0]:
-            data_destatis_traffic_air = data.traffic_air('DG000000')
-            t_a_eev_kerosene_overseas_total = data_destatis_traffic_air.float("eev_kerosene_overseas_mwh")
-        # lookup data for ags to be evaluated
         if ags in row[0]:
             data_destatis_traffic_air = data.traffic_air(ags)
             t_a_conveyance_capa_inland_pkm_com = data_destatis_traffic_air.float(
@@ -379,6 +378,7 @@ def make_entries(data: RefData, ags: str, year: int) -> Entries:
             )
             t_a_ghg_overseas_com = data_destatis_traffic_air.float("ghg_overseas_tco2e")
             t_a_sum_ghg_com = data_destatis_traffic_air.float("sum_ghg_tco2e")
+            break
 
     t_s_eev_diesel_inland_mwh_total = 0 
     t_s_eev_fuel_overseas_mwh_total = 0
@@ -388,15 +388,15 @@ def make_entries(data: RefData, ags: str, year: int) -> Entries:
     t_s_ghg_overseas_com = 0
     t_s_ghg_sum_com = 0
     traffic_ships_df = data.get_df_traffic_ships()
-    traffic_ships_rows = traffic_ships_df.rows()
     # lookup municipality specific data for traffic_ships
+    # lookup total german data
+    inland_eev_diesel_column = traffic_ships_df.columns("inland_eev_diesel_mwh")
+    overseas_eev_fuel_column = traffic_ships_df.columns("overseas_eev_fuel_mwh")
+    t_s_eev_diesel_inland_mwh_total = float(inland_eev_diesel_column[1].get('DG000000',0.0))
+    t_s_eev_fuel_overseas_mwh_total = float(overseas_eev_fuel_column[1].get('DG000000',0.0))
+    # lookup data for ags to be evaluated
+    traffic_ships_rows = traffic_ships_df.rows()
     for row in traffic_ships_rows:
-        # lookup total german data
-        if 'DG000000' in row[0]:
-            data_destatis_traffic_ships = data.traffic_ships('DG000000')
-            t_s_eev_diesel_inland_mwh_total = data_destatis_traffic_ships.float("inland_eev_diesel_mwh")
-            t_s_eev_fuel_overseas_mwh_total = data_destatis_traffic_ships.float("overseas_eev_fuel_mwh")
-        # lookup data for ags to be evaluated
         if ags in row[0]:
             data_destatis_traffic_ships = data.traffic_ships(ags)
             t_s_eev_diesel_inland_mwh_com = data_destatis_traffic_ships.float(
