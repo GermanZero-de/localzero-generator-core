@@ -317,6 +317,7 @@ def make_entries(data: RefData, ags: str, year: int) -> Entries:
     t_metro_mega_km_dis = data_destatis_com.float("metro_mega_km")
     t_bus_mega_km_dis = data_destatis_com.float("bus_mega_km")
 
+    # traffic air 
     t_a_eev_kerosene_overseas_total = 0
     t_a_conveyance_capa_inland_pkm_com = 0
     t_a_transport_capa_inland_tkm_com = 0
@@ -337,49 +338,54 @@ def make_entries(data: RefData, ags: str, year: int) -> Entries:
     # lookup total german data
     eev_kerosene_overseas_column = traffic_air_df.columns("eev_kerosene_overseas_mwh")
     t_a_eev_kerosene_overseas_total = float(eev_kerosene_overseas_column[1].get('DG000000',0.0))
-    # lookup data for ags to be evaluated
-    traffic_air_rows = traffic_air_df.rows()
-    for row in traffic_air_rows:
-        if ags in row[0]:
-            data_destatis_traffic_air = data.traffic_air(ags)
-            t_a_conveyance_capa_inland_pkm_com = data_destatis_traffic_air.float(
-                "conveyance_capacity_inland_pkm"
-            )
-            t_a_transport_capa_inland_tkm_com = data_destatis_traffic_air.float(
-                "transport_capacity_inland_tkm"
-            )
-            t_a_flight_kilometer_inland_km_com = data_destatis_traffic_air.float(
-                "flight_kilometer_inland_km"
-            )
-            t_a_flight_kilometer_share_inland_com = data_destatis_traffic_air.float(
-                "flight_kilometer_share_inland"
-            )
-            t_a_eev_kerosene_inland_com = data_destatis_traffic_air.float(
-                "eev_kerosene_inland_mwh"
-            )
-            t_a_eev_petrol_inland_com = data_destatis_traffic_air.float(
-                "eev_petrol_inland_mwh"
-            )
-            t_a_ghg_inland_com = data_destatis_traffic_air.float("ghg_inland_tco2e")
-            t_a_conveyance_capa_overseas_pkm_com = data_destatis_traffic_air.float(
-                "conveyance_capacity_overseas_pkm"
-            )
-            t_a_transport_capa_overseas_tkm_com = data_destatis_traffic_air.float(
-                "transport_capacity_overseas_tkm"
-            )
-            t_a_flight_kilometer_overseas_km_com = data_destatis_traffic_air.float(
-                "flight_kilometer_overseas_km"
-            )
-            t_a_flight_kilometer_share_overseas_com = data_destatis_traffic_air.float(
-                "flight_kilometer_share_overseas"
-            )
-            t_a_eev_kerosene_overseas_com = data_destatis_traffic_air.float(
-                "eev_kerosene_overseas_mwh"
-            )
-            t_a_ghg_overseas_com = data_destatis_traffic_air.float("ghg_overseas_tco2e")
-            t_a_sum_ghg_com = data_destatis_traffic_air.float("sum_ghg_tco2e")
-            break
+    # lookup data for ags to be evaluated    
+    """TEST"""
+    # old
+    # traffic_air_rows = traffic_air_df.rows()
+    # for row in traffic_air_rows:
+    # if ags in row[0]:
+    """TEST"""
+    traffic_air_ags = traffic_air_df.column_ags()
+    if ags in traffic_air_ags:
+        data_destatis_traffic_air = data.traffic_air(ags)
+        t_a_conveyance_capa_inland_pkm_com = data_destatis_traffic_air.float(
+            "conveyance_capacity_inland_pkm"
+        )
+        t_a_transport_capa_inland_tkm_com = data_destatis_traffic_air.float(
+            "transport_capacity_inland_tkm"
+        )
+        t_a_flight_kilometer_inland_km_com = data_destatis_traffic_air.float(
+            "flight_kilometer_inland_km"
+        )
+        t_a_flight_kilometer_share_inland_com = data_destatis_traffic_air.float(
+            "flight_kilometer_share_inland"
+        )
+        t_a_eev_kerosene_inland_com = data_destatis_traffic_air.float(
+            "eev_kerosene_inland_mwh"
+        )
+        t_a_eev_petrol_inland_com = data_destatis_traffic_air.float(
+            "eev_petrol_inland_mwh"
+        )
+        t_a_ghg_inland_com = data_destatis_traffic_air.float("ghg_inland_tco2e")
+        t_a_conveyance_capa_overseas_pkm_com = data_destatis_traffic_air.float(
+            "conveyance_capacity_overseas_pkm"
+        )
+        t_a_transport_capa_overseas_tkm_com = data_destatis_traffic_air.float(
+            "transport_capacity_overseas_tkm"
+        )
+        t_a_flight_kilometer_overseas_km_com = data_destatis_traffic_air.float(
+            "flight_kilometer_overseas_km"
+        )
+        t_a_flight_kilometer_share_overseas_com = data_destatis_traffic_air.float(
+            "flight_kilometer_share_overseas"
+        )
+        t_a_eev_kerosene_overseas_com = data_destatis_traffic_air.float(
+            "eev_kerosene_overseas_mwh"
+        )
+        t_a_ghg_overseas_com = data_destatis_traffic_air.float("ghg_overseas_tco2e")
+        t_a_sum_ghg_com = data_destatis_traffic_air.float("sum_ghg_tco2e")
 
+    # traffic ships
     t_s_eev_diesel_inland_mwh_total = 0 
     t_s_eev_fuel_overseas_mwh_total = 0
     t_s_eev_diesel_inland_mwh_com = 0
@@ -388,29 +394,35 @@ def make_entries(data: RefData, ags: str, year: int) -> Entries:
     t_s_ghg_overseas_com = 0
     t_s_ghg_sum_com = 0
     traffic_ships_df = data.get_df_traffic_ships()
+
     # lookup municipality specific data for traffic_ships
     # lookup total german data
     inland_eev_diesel_column = traffic_ships_df.columns("inland_eev_diesel_mwh")
     overseas_eev_fuel_column = traffic_ships_df.columns("overseas_eev_fuel_mwh")
     t_s_eev_diesel_inland_mwh_total = float(inland_eev_diesel_column[1].get('DG000000',0.0))
     t_s_eev_fuel_overseas_mwh_total = float(overseas_eev_fuel_column[1].get('DG000000',0.0))
+
+    """TEST"""
+    # traffic_ships_rows = traffic_ships_df.rows()
+    # for row in traffic_ships_rows:
+    # if ags in row[0]:
+    """TEST"""
+    
     # lookup data for ags to be evaluated
-    traffic_ships_rows = traffic_ships_df.rows()
-    for row in traffic_ships_rows:
-        if ags in row[0]:
-            data_destatis_traffic_ships = data.traffic_ships(ags)
-            t_s_eev_diesel_inland_mwh_com = data_destatis_traffic_ships.float(
-                "inland_eev_diesel_mwh"
-            )
-            t_s_eev_fuel_overseas_mwh_com = data_destatis_traffic_ships.float(
-                "overseas_eev_fuel_mwh"
-            )
-            t_s_ghg_inland_com = data_destatis_traffic_ships.float("inland_ghg_tco2e")
-            t_s_ghg_overseas_com = data_destatis_traffic_ships.float(
-                "overseas_ghg_tco2e"
-            )
-            t_s_ghg_sum_com = data_destatis_traffic_ships.float("sum_ghg_tco2e")
-            break
+    traffic_ships_ags = traffic_ships_df.column_ags()
+    if ags in traffic_ships_ags:
+        data_destatis_traffic_ships = data.traffic_ships(ags)
+        t_s_eev_diesel_inland_mwh_com = data_destatis_traffic_ships.float(
+            "inland_eev_diesel_mwh"
+        )
+        t_s_eev_fuel_overseas_mwh_com = data_destatis_traffic_ships.float(
+            "overseas_eev_fuel_mwh"
+        )
+        t_s_ghg_inland_com = data_destatis_traffic_ships.float("inland_ghg_tco2e")
+        t_s_ghg_overseas_com = data_destatis_traffic_ships.float(
+            "overseas_ghg_tco2e"
+        )
+        t_s_ghg_sum_com = data_destatis_traffic_ships.float("sum_ghg_tco2e")
 
     a_petrol_fec = (
         data.fact("Fact_A_S_petrol_fec_2018") * m_area_agri_com / m_area_agri_nat
