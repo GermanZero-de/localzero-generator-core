@@ -4,16 +4,8 @@ from dataclasses import dataclass
 
 from ..common.energy import EnergyPerM2PctCommune
 
-from .dataclasses import (
-    Vars1,
-    Vars2,
-    Vars3,
-    Vars4,
-    Vars6,
-    Vars7,
-    Vars8,
-    Vars9,
-)
+from .energy_source import Vars6, Vars7, Vars8, Vars9
+from .dataclasses import Vars1, Vars2, Vars3, Vars4
 
 
 @dataclass(kw_only=True)
