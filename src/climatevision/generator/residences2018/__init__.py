@@ -286,15 +286,15 @@ def calc(entries: Entries, facts: Facts) -> R18:
     )
 
     p_buildings_total.energy = (
-        supply.s_fueloil.energy
-        + supply.s_lpg.energy
-        + supply.s_biomass.energy
-        + supply.s_coal.energy
-        + supply.s_heatnet.energy
-        + supply.s_solarth.energy
-        + supply.s_heatpump.energy
-        + supply.s_gas.energy
-        + supply.s_elec_heating.energy
+        supply.fueloil.energy
+        + supply.lpg.energy
+        + supply.biomass.energy
+        + supply.coal.energy
+        + supply.heatnet.energy
+        + supply.solarth.energy
+        + supply.heatpump.energy
+        + supply.gas.energy
+        + supply.elec_heating.energy
     )
 
     p_buildings_until_1919.energy = (
@@ -349,26 +349,26 @@ def calc(entries: Entries, facts: Facts) -> R18:
         total=p_buildings_total,
     )
 
-    r.CO2e_combustion_based = supply.s.CO2e_combustion_based
+    r.CO2e_combustion_based = supply.total.CO2e_combustion_based
 
     # CO2e_total
 
-    r.CO2e_total = supply.s.CO2e_total
+    r.CO2e_total = supply.total.CO2e_total
 
-    p_elec_heatpump.energy = supply.s_heatpump.energy / fact(
+    p_elec_heatpump.energy = supply.heatpump.energy / fact(
         "Fact_R_S_heatpump_mean_annual_performance_factor_all"
     )
 
     p_elec_elcon.energy = (
-        supply.s_elec.energy - p_elec_heatpump.energy - supply.s_elec_heating.energy
+        supply.elec.energy - p_elec_heatpump.energy - supply.elec_heating.energy
     )
-    p_vehicles.energy = supply.s_petrol.energy
+    p_vehicles.energy = supply.petrol.energy
     p_other.energy = p_elec_heatpump.energy + p_elec_elcon.energy + p_vehicles.energy
 
     p.energy = p_buildings_total.energy + p_other.energy
 
-    supply.s_biomass.number_of_buildings = div(
-        supply.s_biomass.energy * p_buildings_total.number_of_buildings,
+    supply.biomass.number_of_buildings = div(
+        supply.biomass.energy * p_buildings_total.number_of_buildings,
         (p_buildings_total.ratio_energy_to_m2 * p_buildings_total.area_m2),
     )
 
@@ -388,16 +388,16 @@ def calc(entries: Entries, facts: Facts) -> R18:
         p_elec_heatpump=p_elec_heatpump,
         p_vehicles=p_vehicles,
         p_other=p_other,
-        s=supply.s,
-        s_fueloil=supply.s_fueloil,
-        s_lpg=supply.s_lpg,
-        s_biomass=supply.s_biomass,
-        s_coal=supply.s_coal,
-        s_petrol=supply.s_petrol,
-        s_heatnet=supply.s_heatnet,
-        s_solarth=supply.s_solarth,
-        s_heatpump=supply.s_heatpump,
-        s_elec_heating=supply.s_elec_heating,
-        s_gas=supply.s_gas,
-        s_elec=supply.s_elec,
+        s=supply.total,
+        s_fueloil=supply.fueloil,
+        s_lpg=supply.lpg,
+        s_biomass=supply.biomass,
+        s_coal=supply.coal,
+        s_petrol=supply.petrol,
+        s_heatnet=supply.heatnet,
+        s_solarth=supply.solarth,
+        s_heatpump=supply.heatpump,
+        s_elec_heating=supply.elec_heating,
+        s_gas=supply.gas,
+        s_elec=supply.elec,
     )
