@@ -80,7 +80,7 @@ def calc(
         + p_buildings_1949_1978.area_m2
         + p_buildings_1979_1995.area_m2
         + p_buildings_1996_2004.area_m2
-    )  # SUM(p_buildings_until_1919.area_m2:p_buildings_1996_2004.area_m2)
+    )
 
     p_buildings_until_1919.pct_rehab = min(
         1.0,
@@ -465,6 +465,117 @@ def calc(
         - fact("Fact_R_P_ratio_renovated_buildings to_not_renovated_2021")
     ) / duration_until_target_year
 
+    p_vehicles.demand_change = ass("Ass_R_D_fec_vehicles_change")
+    p_vehicles.energy = r18.p_vehicles.energy * (1 + p_vehicles.demand_change)
+
+    p_buildings_total.change_energy_MWh = (
+        p_buildings_total.energy - r18.p_buildings_total.energy
+    )
+    p_buildings_total.change_energy_pct = div(
+        p_buildings_total.change_energy_MWh, r18.p_buildings_total.energy
+    )
+    p_buildings_until_1919.invest_per_x = fact(
+        "Fact_R_P_energetical_renovation_cost_detached_house_until_1949"
+    ) * div(
+        entries.r_area_m2_1flat + entries.r_area_m2_2flat, entries.r_area_m2
+    ) + fact(
+        "Fact_R_P_energetical_renovation_cost_apartm_building_until_1949"
+    ) * div(
+        entries.r_area_m2_3flat + entries.r_area_m2_dorm, entries.r_area_m2
+    )
+
+    p_buildings_1919_1948.invest_per_x = p_buildings_until_1919.invest_per_x
+    p_buildings_1949_1978.invest_per_x = fact(
+        "Fact_R_P_energetical_renovation_cost_detached_house_1949_1979"
+    ) * div(
+        entries.r_area_m2_1flat + entries.r_area_m2_2flat, entries.r_area_m2
+    ) + fact(
+        "Fact_R_P_energetical_renovation_cost_apartm_building_1949_1979"
+    ) * div(
+        entries.r_area_m2_3flat + entries.r_area_m2_dorm, entries.r_area_m2
+    )
+
+    p_buildings_1979_1995.invest_per_x = fact(
+        "Fact_R_P_energetical_renovation_cost_detached_house_1980+"
+    ) * div(
+        entries.r_area_m2_1flat + entries.r_area_m2_2flat, entries.r_area_m2
+    ) + fact(
+        "Fact_R_P_energetical_renovation_cost_apartm_building_1980+"
+    ) * div(
+        entries.r_area_m2_3flat + entries.r_area_m2_dorm, entries.r_area_m2
+    )
+    p_buildings_1996_2004.invest_per_x = p_buildings_1979_1995.invest_per_x
+    p_buildings_area_m2_com.invest_per_x = fact(
+        "Fact_R_P_energetical_renovation_cost_housing_complex"
+    )
+    p_buildings_until_1919.invest = (
+        p_buildings_until_1919.area_m2_rehab
+        * (1 - fact("Fact_R_P_ratio_renovated_buildings to_not_renovated_2021"))
+        * p_buildings_until_1919.invest_per_x
+    )
+    p_buildings_1919_1948.invest = (
+        p_buildings_1919_1948.area_m2_rehab
+        * (1 - fact("Fact_R_P_ratio_renovated_buildings to_not_renovated_2021"))
+        * p_buildings_1919_1948.invest_per_x
+    )
+    p_buildings_1949_1978.invest = (
+        p_buildings_1949_1978.area_m2_rehab
+        * (1 - fact("Fact_R_P_ratio_renovated_buildings to_not_renovated_2021"))
+        * p_buildings_1949_1978.invest_per_x
+    )
+    p_buildings_1979_1995.invest = (
+        p_buildings_1979_1995.area_m2_rehab
+        * (1 - fact("Fact_R_P_ratio_renovated_buildings to_not_renovated_2021"))
+        * p_buildings_1979_1995.invest_per_x
+    )
+    p_buildings_1996_2004.invest = (
+        p_buildings_1996_2004.area_m2_rehab
+        * (1 - fact("Fact_R_P_ratio_renovated_buildings to_not_renovated_2021"))
+        * p_buildings_1996_2004.invest_per_x
+    )
+
+    p_buildings_total.invest = (
+        p_buildings_until_1919.invest
+        + p_buildings_1919_1948.invest
+        + p_buildings_1949_1978.invest
+        + p_buildings_1979_1995.invest
+        + p_buildings_1996_2004.invest
+    )
+    p_buildings_total.cost_mro = 0
+    p_buildings_total.pct_of_wage = fact(
+        "Fact_B_P_renovations_ratio_wage_to_main_revenue_2017"
+    )
+    p_buildings_total.cost_wage = (
+        p_buildings_total.invest
+        / duration_until_target_year
+        * p_buildings_total.pct_of_wage
+    )
+    p_buildings_total.ratio_wage_to_emplo = fact(
+        "Fact_B_P_renovations_wage_per_person_per_year_2017"
+    )
+    p_buildings_total.emplo_existing = (
+        fact("Fact_B_P_renovation_emplo_2017")
+        * ass("Ass_B_D_renovation_emplo_pct_of_R")
+        * population_commune_2018
+        / population_germany_2018
+    )
+    p_buildings_area_m2_com.invest_com = (
+        (
+            p_buildings_until_1919.area_m2_rehab
+            + p_buildings_1919_1948.area_m2_rehab
+            + p_buildings_1949_1978.area_m2_rehab
+            + p_buildings_1979_1995.area_m2_rehab
+            + p_buildings_1996_2004.area_m2_rehab
+        )
+        * (1 - fact("Fact_R_P_ratio_renovated_buildings to_not_renovated_2021"))
+        * r18.p_buildings_area_m2_com.pct_x
+        * p_buildings_area_m2_com.invest_per_x
+    )
+    p_buildings_total.invest_com = p_buildings_area_m2_com.invest_com
+    p_buildings_total.invest_pa_com = (
+        p_buildings_total.invest_com / duration_until_target_year
+    )
+
     ### S - Section ###
 
     # Definitions
@@ -555,13 +666,11 @@ def calc(
         "Fact_R_S_heatpump_mean_annual_performance_factor_all"
     )
     p_elec_heatpump.energy = p_elec_heatpump.demand_electricity
-    p_vehicles.demand_change = ass("Ass_R_D_fec_vehicles_change")
-    p_vehicles.energy = r18.p_vehicles.energy * (1 + p_vehicles.demand_change)
     p_other.energy = p_elec_heatpump.energy + p_elec_elcon.energy + p_vehicles.energy
     p.energy = p_buildings_total.energy + p_other.energy
     p_other.demand_electricity = (
         p_elec_heatpump.demand_electricity + p_elec_elcon.demand_electricity
-    )  # SUM(p_elec_heatpump.demand_electricity:p_elec_elcon.demand_electricity)
+    )
 
     if (
         p_buildings_total.energy - s_solarth.energy - s_heatpump.energy
@@ -643,7 +752,7 @@ def calc(
         + s_petrol.cost_fuel
         + s_heatnet.cost_fuel
         + s_solarth.cost_fuel
-    )  # SUM(s_fueloil.cost_fuel:s_solarth.cost_fuel)
+    )
 
     s_fueloil.CO2e_combustion_based_per_MWh = (
         r18.s_fueloil.CO2e_combustion_based_per_MWh
@@ -714,13 +823,6 @@ def calc(
     s_elec_heating.change_energy_MWh = s_elec_heating.energy - r18.s_elec_heating.energy
     s_emethan.change_energy_MWh = s_emethan.energy - 0
     s_elec.change_energy_MWh = s_elec.energy - r18.s_elec.energy
-
-    p_buildings_total.change_energy_MWh = (
-        p_buildings_total.energy - r18.p_buildings_total.energy
-    )
-    p_buildings_total.change_energy_pct = div(
-        p_buildings_total.change_energy_MWh, r18.p_buildings_total.energy
-    )
 
     s.change_energy_pct = div(s.change_energy_MWh, r18.s.energy)
     s_fueloil.change_energy_pct = div(s_fueloil.change_energy_MWh, r18.s_fueloil.energy)
@@ -916,40 +1018,6 @@ def calc(
     s_gas.change_cost_energy = 0 - r18.s_gas.cost_fuel  # no more gas in target year
     s_emethan.change_cost_energy = s_emethan.cost_fuel - 0  # no emethan in 2018
 
-    p_buildings_until_1919.invest_per_x = fact(
-        "Fact_R_P_energetical_renovation_cost_detached_house_until_1949"
-    ) * div(
-        entries.r_area_m2_1flat + entries.r_area_m2_2flat, entries.r_area_m2
-    ) + fact(
-        "Fact_R_P_energetical_renovation_cost_apartm_building_until_1949"
-    ) * div(
-        entries.r_area_m2_3flat + entries.r_area_m2_dorm, entries.r_area_m2
-    )
-
-    p_buildings_1919_1948.invest_per_x = p_buildings_until_1919.invest_per_x
-    p_buildings_1949_1978.invest_per_x = fact(
-        "Fact_R_P_energetical_renovation_cost_detached_house_1949_1979"
-    ) * div(
-        entries.r_area_m2_1flat + entries.r_area_m2_2flat, entries.r_area_m2
-    ) + fact(
-        "Fact_R_P_energetical_renovation_cost_apartm_building_1949_1979"
-    ) * div(
-        entries.r_area_m2_3flat + entries.r_area_m2_dorm, entries.r_area_m2
-    )
-
-    p_buildings_1979_1995.invest_per_x = fact(
-        "Fact_R_P_energetical_renovation_cost_detached_house_1980+"
-    ) * div(
-        entries.r_area_m2_1flat + entries.r_area_m2_2flat, entries.r_area_m2
-    ) + fact(
-        "Fact_R_P_energetical_renovation_cost_apartm_building_1980+"
-    ) * div(
-        entries.r_area_m2_3flat + entries.r_area_m2_dorm, entries.r_area_m2
-    )
-    p_buildings_1996_2004.invest_per_x = p_buildings_1979_1995.invest_per_x
-    p_buildings_area_m2_com.invest_per_x = fact(
-        "Fact_R_P_energetical_renovation_cost_housing_complex"
-    )
     s_solarth.invest_per_x = ass("Ass_R_P_soltherm_cost_per_sqm")
     s_heatpump.invest_per_x = fact("Fact_R_S_heatpump_cost")
 
@@ -964,32 +1032,6 @@ def calc(
         * 10000
     )
 
-    p_buildings_until_1919.invest = (
-        p_buildings_until_1919.area_m2_rehab
-        * (1 - fact("Fact_R_P_ratio_renovated_buildings to_not_renovated_2021"))
-        * p_buildings_until_1919.invest_per_x
-    )
-    p_buildings_1919_1948.invest = (
-        p_buildings_1919_1948.area_m2_rehab
-        * (1 - fact("Fact_R_P_ratio_renovated_buildings to_not_renovated_2021"))
-        * p_buildings_1919_1948.invest_per_x
-    )
-    p_buildings_1949_1978.invest = (
-        p_buildings_1949_1978.area_m2_rehab
-        * (1 - fact("Fact_R_P_ratio_renovated_buildings to_not_renovated_2021"))
-        * p_buildings_1949_1978.invest_per_x
-    )
-    p_buildings_1979_1995.invest = (
-        p_buildings_1979_1995.area_m2_rehab
-        * (1 - fact("Fact_R_P_ratio_renovated_buildings to_not_renovated_2021"))
-        * p_buildings_1979_1995.invest_per_x
-    )
-    p_buildings_1996_2004.invest = (
-        p_buildings_1996_2004.area_m2_rehab
-        * (1 - fact("Fact_R_P_ratio_renovated_buildings to_not_renovated_2021"))
-        * p_buildings_1996_2004.invest_per_x
-    )
-
     s_heatpump.full_load_hour = fact("Fact_R_S_fhou")
     s_heatpump.power_installed = div(r18.s_heatpump.energy, s_heatpump.full_load_hour)
     s_heatpump.power_to_be_installed = (
@@ -1002,15 +1044,6 @@ def calc(
         s_heatpump.invest_per_x * s_heatpump.power_to_be_installed * 1000
     )
 
-    p_buildings_total.invest = (
-        p_buildings_until_1919.invest
-        + p_buildings_1919_1948.invest
-        + p_buildings_1949_1978.invest
-        + p_buildings_1979_1995.invest
-        + p_buildings_1996_2004.invest
-    )  # SUM(p_buildings_until_1919.invest:p_buildings_1996_2004.invest)
-    p_buildings_total.cost_mro = 0
-
     s.invest = s_solarth.invest + s_heatpump.invest
 
     s_solarth.invest_pa = s_solarth.invest / duration_until_target_year
@@ -1018,23 +1051,12 @@ def calc(
 
     s_solarth.pct_of_wage = fact("Fact_B_P_plumbing_ratio_wage_to_main_revenue_2017")
     s_heatpump.pct_of_wage = fact("Fact_B_P_plumbing_ratio_wage_to_main_revenue_2017")
-    p_buildings_total.pct_of_wage = fact(
-        "Fact_B_P_renovations_ratio_wage_to_main_revenue_2017"
-    )
 
     s_solarth.cost_wage = s_solarth.invest_pa * s_solarth.pct_of_wage
     s_heatpump.cost_wage = s_heatpump.invest_pa * s_heatpump.pct_of_wage
-    p_buildings_total.cost_wage = (
-        p_buildings_total.invest
-        / duration_until_target_year
-        * p_buildings_total.pct_of_wage
-    )
 
     s_solarth.ratio_wage_to_emplo = fact("Fact_B_P_heating_wage_per_person_per_year")
     s_heatpump.ratio_wage_to_emplo = fact("Fact_B_P_heating_wage_per_person_per_year")
-    p_buildings_total.ratio_wage_to_emplo = fact(
-        "Fact_B_P_renovations_wage_per_person_per_year_2017"
-    )
 
     s_solarth.demand_emplo = div(s_solarth.cost_wage, s_solarth.ratio_wage_to_emplo)
     s_heatpump.demand_emplo = div(s_heatpump.cost_wage, s_heatpump.ratio_wage_to_emplo)
@@ -1055,15 +1077,6 @@ def calc(
         * ass("Ass_B_D_install_heating_emplo_pct_of_R_heatpump")
     )
 
-    p_buildings_total.emplo_existing = (
-        fact("Fact_B_P_renovation_emplo_2017")
-        * ass("Ass_B_D_renovation_emplo_pct_of_R")
-        * population_commune_2018
-        / population_germany_2018
-    )
-    p_buildings_total.demand_emplo_new = max(
-        0, p_buildings_total.demand_emplo - p_buildings_total.emplo_existing
-    )
     s_solarth.demand_emplo_new = max(
         0, s_solarth.demand_emplo - s_solarth.emplo_existing
     )
@@ -1075,27 +1088,14 @@ def calc(
     # s_solarth.base_unit € / qm
     # s_heatpump.base_unit € / kW
 
-    p_buildings_area_m2_com.invest_com = (
-        (
-            p_buildings_until_1919.area_m2_rehab
-            + p_buildings_1919_1948.area_m2_rehab
-            + p_buildings_1949_1978.area_m2_rehab
-            + p_buildings_1979_1995.area_m2_rehab
-            + p_buildings_1996_2004.area_m2_rehab
-        )
-        * (1 - fact("Fact_R_P_ratio_renovated_buildings to_not_renovated_2021"))
-        * r18.p_buildings_area_m2_com.pct_x
-        * p_buildings_area_m2_com.invest_per_x
+    p_buildings_total.demand_emplo_new = max(
+        0, p_buildings_total.demand_emplo - p_buildings_total.emplo_existing
     )
-    p_buildings_total.invest_com = p_buildings_area_m2_com.invest_com
 
     s_solarth.invest_com = s_solarth.invest * entries.r_pct_of_area_m2_com
     s_heatpump.invest_com = s_heatpump.invest * entries.r_pct_of_area_m2_com
     s.invest_com = s_solarth.invest_com + s_heatpump.invest_com
 
-    p_buildings_total.invest_pa_com = (
-        p_buildings_total.invest_com / duration_until_target_year
-    )
     s_solarth.invest_pa_com = s_solarth.invest_com / duration_until_target_year
     s_heatpump.invest_pa_com = s_heatpump.invest_com / duration_until_target_year
 
@@ -1123,7 +1123,6 @@ def calc(
     p.invest_com = p_buildings_total.invest_com
     p.cost_wage = p_buildings_total.cost_wage
     p.demand_emplo = p_buildings_total.demand_emplo
-    p.demand_emplo_new = p_buildings_total.demand_emplo_new
     p.demand_emplo_new = p_buildings_total.demand_emplo_new
     p_buildings_until_1919.change_energy_MWh = (
         p_buildings_until_1919.energy - r18.p_buildings_until_1919.energy
