@@ -10,6 +10,7 @@ from agshistory import (
     JsonEncoder,
     show,
 )
+import agshistory
 import traffic
 import json
 
@@ -123,6 +124,14 @@ def convert():
     json.dump(changes, sys.stdout, indent=2, cls=JsonEncoder)
 
 
+def changed_urban_area():
+    changes = agshistory.load()
+    for ch in changes:
+        excluding_commune = ch.ags[:-3]
+        if any(excluding_commune != a[:-3] for a in ch.all_new_ags()):
+            print(ch)
+
+
 def main():
     match sys.argv:
         case [_, "convert"]:
@@ -134,6 +143,8 @@ def main():
             traffic.transplant(target_date)
         case [_, "compare-traffic", file1, file2]:
             traffic.compare(file1, file2)
+        case [_, "changed-urban-area"]:
+            changed_urban_area()
 
         case _:
             print(
@@ -143,6 +154,7 @@ Where CMD is
     show <ags>                        -- Show history of one AGS from the json
     transplant-traffic <target-date>] -- Transplant traffic data from 2018 to the given date"
     compare-traffic <file1> <file2>   -- Compare two traffic files
+    changed-urban-area                -- List all AGS changes that changed urban area
 """
             )
             sys.exit(1)
