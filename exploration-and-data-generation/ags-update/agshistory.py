@@ -6,7 +6,8 @@ import datetime
 
 @dataclasses.dataclass
 class Change:
-    """A change to a commune"""
+    """All changes to a commune include the AGS and the name and
+    happen as of a particular date."""
 
     effective_date: datetime.date
     ags: str
@@ -21,6 +22,8 @@ class Change:
 
 @dataclasses.dataclass
 class AgsOrNameChange(Change):
+    """Either the AGS or the name or both of commune is changed."""
+
     new_ags: str
     new_name: str
 
@@ -28,26 +31,6 @@ class AgsOrNameChange(Change):
         a = "" if self.new_ags == self.ags else f" NEW AGS {self.new_ags}"
         n = "" if self.new_name == self.name else f" NEW NAME {self.new_name}"
         return f"{super().__str__()}{a}{n}"
-
-    def mentions_ags(self, ags: str) -> bool:
-        return super().mentions_ags(ags) or self.new_ags == ags
-
-
-@dataclasses.dataclass
-class Dissolution(Change):
-    """A dissolution is a change where a commune ceases to exist.
-
-    new_ags: The ags of the commune that incorporates the area of the dissolved commune.
-    new_name: is the name of the commune that incorporates the area of the dissolved commune.
-    """
-
-    ags: str
-    name: str
-    new_ags: str
-    new_name: str
-
-    def __str__(self) -> str:
-        return f"{super().__str__()} DISSOLVED (AREA JOINED {self.new_ags} ({self.new_name}))"
 
     def mentions_ags(self, ags: str) -> bool:
         return super().mentions_ags(ags) or self.new_ags == ags
@@ -64,6 +47,24 @@ class Part:
         return (
             f"{self.area_in_sqm} SQM {self.population} POP to {self.ags} ({self.name})"
         )
+
+
+@dataclasses.dataclass
+class Dissolution(Change):
+    """A dissolution is a change where a commune ceases to exist.
+    And the area joins other communes.
+    """
+
+    ags: str
+    name: str
+    parts: list[Part]
+
+    def __str__(self) -> str:
+        parts_desc = ", ".join(str(p) for p in self.parts)
+        return f"{super().__str__()} DISSOLVED (AREA JOINED {parts_desc})"
+
+    def mentions_ags(self, ags: str) -> bool:
+        return super().mentions_ags(ags) or any(p.ags == ags for p in self.parts)
 
 
 @dataclasses.dataclass
@@ -123,6 +124,8 @@ class JsonDecoder(json.JSONDecoder):
                 case "AgsOrNameChange":
                     return AgsOrNameChange(**dct)  # type: ignore
                 case "Dissolution":
+                    assert "parts" in dct
+                    dct["parts"] = [Part(**p) for p in dct["parts"]]  # type: ignore
                     return Dissolution(**dct)  # type: ignore
                 case "PartialSpinOff":
                     assert "parts" in dct
