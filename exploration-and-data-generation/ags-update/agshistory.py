@@ -50,30 +50,37 @@ class Part:
 
 
 @dataclasses.dataclass
-class Dissolution(Change):
+class ChangeWithParts(Change):
+    parts: list[Part]
+
+    def mentions_ags(self, ags: str) -> bool:
+        return super().mentions_ags(ags) or any(p.ags == ags for p in self.parts)
+
+    def total_area_of_parts_in_sqm(self) -> int:
+        return sum(p.area_in_sqm for p in self.parts)
+
+    def total_population_of_parts(self) -> int:
+        return sum(p.population for p in self.parts)
+
+
+@dataclasses.dataclass
+class Dissolution(ChangeWithParts):
     """A dissolution is a change where a commune ceases to exist.
     And the area joins other communes.
     """
-
-    ags: str
-    name: str
-    parts: list[Part]
 
     def __str__(self) -> str:
         parts_desc = ", ".join(str(p) for p in self.parts)
         return f"{super().__str__()} DISSOLVED (AREA JOINED {parts_desc})"
 
-    def mentions_ags(self, ags: str) -> bool:
-        return super().mentions_ags(ags) or any(p.ags == ags for p in self.parts)
+    def parts_with_ratios_by_area(self) -> list[tuple[Part, float]]:
+        total_area = self.total_area_of_parts_in_sqm()
+        return [(p, p.area_in_sqm / total_area) for p in self.parts]
 
 
 @dataclasses.dataclass
-class PartialSpinOff(Change):
+class PartialSpinOff(ChangeWithParts):
     """A partial spin off is a change where a commune loses some of its area to other communes."""
-
-    ags: str
-    name: str
-    parts: list[Part]
 
     remaining_area: int
     remaining_population: int
@@ -86,8 +93,9 @@ class PartialSpinOff(Change):
             + f" LEFTOVER {self.remaining_area} {self.remaining_population}"
         )
 
-    def mentions_ags(self, ags: str) -> bool:
-        return super().mentions_ags(ags) or any(p.ags == ags for p in self.parts)
+    def parts_with_ratios_by_area(self) -> list[tuple[Part, float]]:
+        total_area = self.total_area_of_parts_in_sqm() + self.remaining_area
+        return [(p, p.area_in_sqm / total_area) for p in self.parts]
 
 
 FIRST_DATE_OF_INTEREST = datetime.date(2019, 1, 1)

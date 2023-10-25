@@ -132,10 +132,18 @@ def main():
         case [_, "transplant-traffic", target_date]:
             target_date = datetime.date.fromisoformat(target_date)
             traffic.transplant(target_date)
+        case [_, "compare-traffic", file1, file2]:
+            traffic.compare(file1, file2)
 
         case _:
             print(
-                "Usage: python agshistory.py [convert|show <ags>|transplant-traffic <target-date>]"
+                """Usage: python agshistory.py CMD...
+Where CMD is
+    convert                           -- Convert excel to json
+    show <ags>                        -- Show history of one AGS from the json
+    transplant-traffic <target-date>] -- Transplant traffic data from 2018 to the given date"
+    compare-traffic <file1> <file2>   -- Compare two traffic files
+"""
             )
             sys.exit(1)
 
