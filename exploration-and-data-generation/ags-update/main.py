@@ -1,4 +1,5 @@
 import sys
+import datetime
 from loadexcel import load, RawRecord, ChangeKind
 from agshistory import (
     Change,
@@ -9,6 +10,7 @@ from agshistory import (
     JsonEncoder,
     show,
 )
+import traffic
 import json
 
 
@@ -94,8 +96,14 @@ def main():
             convert()
         case [_, "show", ags]:
             show(ags)
+        case [_, "transplant-traffic", target_date]:
+            target_date = datetime.date.fromisoformat(target_date)
+            traffic.transplant(target_date)
+
         case _:
-            print("Usage: python agshistory.py [convert|show <ags>]")
+            print(
+                "Usage: python agshistory.py [convert|show <ags>|transplant-traffic <target-date>]"
+            )
             sys.exit(1)
 
 
