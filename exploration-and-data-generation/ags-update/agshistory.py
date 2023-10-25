@@ -17,7 +17,10 @@ class Change:
         return f"{self.effective_date}: {self.ags} ({self.name})"
 
     def mentions_ags(self, ags: str) -> bool:
-        return self.ags == ags
+        return self.ags == ags or ags in self.all_new_ags()
+
+    def all_new_ags(self) -> list[str]:
+        assert False, "This needs to be implemented in each child"
 
 
 @dataclasses.dataclass
@@ -32,8 +35,8 @@ class AgsOrNameChange(Change):
         n = "" if self.new_name == self.name else f" NEW NAME {self.new_name}"
         return f"{super().__str__()}{a}{n}"
 
-    def mentions_ags(self, ags: str) -> bool:
-        return super().mentions_ags(ags) or self.new_ags == ags
+    def all_new_ags(self) -> list[str]:
+        return [self.new_ags]
 
 
 @dataclasses.dataclass
@@ -53,8 +56,8 @@ class Part:
 class ChangeWithParts(Change):
     parts: list[Part]
 
-    def mentions_ags(self, ags: str) -> bool:
-        return super().mentions_ags(ags) or any(p.ags == ags for p in self.parts)
+    def all_new_ags(self) -> list[str]:
+        return [p.ags for p in self.parts]
 
     def total_area_of_parts_in_sqm(self) -> int:
         return sum(p.area_in_sqm for p in self.parts)
