@@ -137,7 +137,9 @@ def main():
         case [_, "convert"]:
             convert()
         case [_, "show", ags]:
-            show(ags)
+            show(False, ags)
+        case [_, "show", "-p", ags]:
+            show(True, ags)
         case [_, "transplant-traffic", target_date]:
             target_date = datetime.date.fromisoformat(target_date)
             traffic.transplant(target_date)

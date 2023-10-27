@@ -4,6 +4,13 @@ import dataclasses
 import datetime
 
 
+def pct(n: int, tot: int) -> str:
+    if tot == 0:
+        return "0%"
+    else:
+        return f"{n/tot*100:.2f}%"
+
+
 @dataclasses.dataclass
 class Change:
     """All changes to a commune include the AGS and the name and
@@ -22,6 +29,9 @@ class Change:
     def all_new_ags(self) -> list[str]:
         assert False, "This needs to be implemented in each child"
 
+    def show(self, percent: bool) -> str:
+        assert False, "This needs to be implemented in each child"
+
 
 @dataclasses.dataclass
 class AgsOrNameChange(Change):
@@ -38,6 +48,9 @@ class AgsOrNameChange(Change):
     def all_new_ags(self) -> list[str]:
         return [self.new_ags]
 
+    def show(self, percent: bool):
+        return str(self)
+
 
 @dataclasses.dataclass
 class Part:
@@ -50,6 +63,12 @@ class Part:
         return (
             f"{self.area_in_sqm} SQM {self.population} POP to {self.ags} ({self.name})"
         )
+
+    def show(self, total_area: int | None, total_pop: int | None) -> str:
+        if total_area is not None and total_pop is not None:
+            return f"{pct(self.area_in_sqm,total_area)} SQM {pct(self.population,total_pop)} POP to {self.ags} ({self.name})"
+        else:
+            return f"{self.area_in_sqm} SQM {self.population} POP to {self.ags} ({self.name})"
 
 
 @dataclasses.dataclass
@@ -72,6 +91,14 @@ class ChangeWithParts(Change):
         total_area = self.total_area_in_sqm()
         return [(p, p.area_in_sqm / total_area) for p in self.parts]
 
+    def show_parts(self, percent: bool) -> str:
+        if percent:
+            total_area = self.total_area_in_sqm()
+            total_pop = self.total_population_of_parts()
+            return ", ".join(p.show(total_area, total_pop) for p in self.parts)
+        else:
+            return ", ".join(str(p) for p in self.parts)
+
 
 @dataclasses.dataclass
 class Dissolution(ChangeWithParts):
@@ -85,6 +112,9 @@ class Dissolution(ChangeWithParts):
     def __str__(self) -> str:
         parts_desc = ", ".join(str(p) for p in self.parts)
         return f"{super().__str__()} DISSOLVED (AREA JOINED {parts_desc})"
+
+    def show(self, percent: bool) -> str:
+        return f"{super().__str__()} DISSOLVED (AREA JOINED {self.show_parts(percent)})"
 
 
 @dataclasses.dataclass
@@ -102,6 +132,14 @@ class PartialSpinOff(ChangeWithParts):
             super().__str__()
             + " SPINNED OFF "
             + ", ".join(str(p) for p in self.parts)
+            + f" LEFTOVER {self.remaining_area} {self.remaining_population}"
+        )
+
+    def show(self, percent: bool) -> str:
+        return (
+            super().__str__()
+            + " SPINNED OFF "
+            + self.show_parts(percent)
             + f" LEFTOVER {self.remaining_area} {self.remaining_population}"
         )
 
@@ -158,8 +196,8 @@ def load() -> list[Change]:
     return data
 
 
-def show(ags: str):
+def show(percent: bool, ags: str):
     changes = load()
     for ch in changes:
-        if ch.mentions_ags(ags):
-            print(ch)
+        if ags == "ALL" or ch.mentions_ags(ags):
+            print(ch.show(percent))
