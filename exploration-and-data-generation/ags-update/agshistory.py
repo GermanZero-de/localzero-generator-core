@@ -65,6 +65,13 @@ class ChangeWithParts(Change):
     def total_population_of_parts(self) -> int:
         return sum(p.population for p in self.parts)
 
+    def total_area_in_sqm(self) -> int:
+        assert False, "this needs to be overriden in the child classes"
+
+    def parts_with_ratios_by_area(self) -> list[tuple[Part, float]]:
+        total_area = self.total_area_in_sqm()
+        return [(p, p.area_in_sqm / total_area) for p in self.parts]
+
 
 @dataclasses.dataclass
 class Dissolution(ChangeWithParts):
@@ -72,13 +79,12 @@ class Dissolution(ChangeWithParts):
     And the area joins other communes.
     """
 
+    def total_area_in_sqm(self) -> int:
+        return self.total_area_of_parts_in_sqm()
+
     def __str__(self) -> str:
         parts_desc = ", ".join(str(p) for p in self.parts)
         return f"{super().__str__()} DISSOLVED (AREA JOINED {parts_desc})"
-
-    def parts_with_ratios_by_area(self) -> list[tuple[Part, float]]:
-        total_area = self.total_area_of_parts_in_sqm()
-        return [(p, p.area_in_sqm / total_area) for p in self.parts]
 
 
 @dataclasses.dataclass
@@ -88,6 +94,9 @@ class PartialSpinOff(ChangeWithParts):
     remaining_area: int
     remaining_population: int
 
+    def total_area_in_sqm(self) -> int:
+        return self.total_area_of_parts_in_sqm() + self.remaining_area
+
     def __str__(self) -> str:
         return (
             super().__str__()
@@ -95,10 +104,6 @@ class PartialSpinOff(ChangeWithParts):
             + ", ".join(str(p) for p in self.parts)
             + f" LEFTOVER {self.remaining_area} {self.remaining_population}"
         )
-
-    def parts_with_ratios_by_area(self) -> list[tuple[Part, float]]:
-        total_area = self.total_area_of_parts_in_sqm() + self.remaining_area
-        return [(p, p.area_in_sqm / total_area) for p in self.parts]
 
 
 FIRST_DATE_OF_INTEREST = datetime.date(2019, 1, 1)
