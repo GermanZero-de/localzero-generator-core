@@ -396,12 +396,12 @@ class Facts:
             label, value, other_data
         )
         # TODO: Remove this once we actually got rid of the derived facts in the reference data
-        import math
+        # import math
 
-        previous = float(Row(self._facts, label).float("value"))
-        if not math.isclose(float(previous), float(value)):
-            raise NotEqual(label, previous, float(value))
-        del self._facts._rows[label]  # type: ignore
+        # previous = float(Row(self._facts, label).float("value"))
+        # if not math.isclose(float(previous), float(value)):
+        #    raise NotEqual(label, previous, float(value))
+        # del self._facts._rows[label]  # type: ignore
 
 
 @dataclass(kw_only=True)

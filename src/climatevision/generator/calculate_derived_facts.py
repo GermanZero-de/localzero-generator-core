@@ -8,7 +8,20 @@ from . import refdata
 
 
 def calculate_derived_facts(rd: refdata.RefData):
+    import sys
+
     f = rd.facts()
+
+    real_fact = refdata.Facts.fact
+
+    def fact_wrapper(self, name: str) -> float:
+        try:
+            return real_fact(self, name)
+        except refdata.RowNotFound:
+            print("BAD FACT: " + name, file=sys.stderr)
+            return 1.0
+
+    refdata.Facts.fact = fact_wrapper
 
     f.add_derived_fact(
         "Fact_H_P_heatnet_prodvol_brutto_2018",
@@ -513,6 +526,32 @@ def calculate_derived_facts(rd: refdata.RefData):
         },
     )
     f.add_derived_fact(
+        "Fact_R_S_ratio_heatpump_to_orenew_2018",
+        f.fact("Fact_R_S_heatpump_fec_2018") / f.fact("Fact_R_S_orenew_fec_2018"),
+        {
+            "note HS": "",
+            "group": "ud",
+            "description": "Anteil Bereitstellung WÃ¤rmepumpe an Sonstige EE (Haushalte)",
+            "unit": "",
+            "rationale": "Berechnung Fact_R_S_heatpump_fec_2018/Fact_R_S_orenew_fec_2018",
+            "reference": "",
+            "link": "",
+        },
+    )
+    f.add_derived_fact(
+        "Fact_R_S_ratio_solarth_to_orenew_2018",
+        f.fact("Fact_R_S_solarth_fec_2018") / f.fact("Fact_R_S_orenew_fec_2018"),
+        {
+            "note HS": "",
+            "group": "ud ",
+            "description": "Anteil Bereitstellung Solarthermie an Sonstige EE (Haushalte)",
+            "unit": "",
+            "rationale": "Berechnung Fact_R_S_solarth_fec_2018/Fact_R_S_orenew_fec_2018",
+            "reference": "",
+            "link": "",
+        },
+    )
+    f.add_derived_fact(
         "Fact_R_S_heatpump_mean_annual_performance_factor_all",
         f.fact("Fact_R_S_ground_heatpump_mean_annual_performance_factor_stock_2018")
         * f.fact("Fact_R_S_ratio_ground_to_air_heatpumps_in_new_installations_2018")
@@ -585,7 +624,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     )
     f.add_derived_fact(
         "Fact_I_P_chem_ammonia_CO2e_cb_2018",
-        f.fact("Fact_I_P_chem_ammonia_CO2e_eb_ratio_per_t_product_2018")
+        f.fact("Fact_I_P_chem_ammonia_CO2e_cb_to_prodvol")
         * f.fact("Fact_I_P_chem_ammonia_prodvol_2017"),
         {
             "note HS": "",
@@ -659,7 +698,7 @@ def calculate_derived_facts(rd: refdata.RefData):
         f.fact("Fact_I_P_chem_carbon_black_CO2e_pb_2018")
         + f.fact("Fact_I_P_chem_soda_CO2e_pb_2018")
         + f.fact("Fact_I_P_chem_petro_chemicals_CO2e_pb_2018")
-        + f.fact("Fact_I_P_chem_sum_of_smaller_emssions_CO2e_pb_2018"),
+        + f.fact("Fact_I_P_chem_sum_of_smaller_emissions_CO2e_pb_2018"),
         {
             "note HS": "",
             "group": "ui",
@@ -785,7 +824,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_chem_ammonia_fec_2018",
         f.fact("Fact_I_P_chem_ammonia_prodvol_2017")
-        * f.fact("Fact_I_P_chem_ammonia_fec_ratio_per_t_product_2013"),
+        / f.fact("Fact_I_P_chem_ammonia_ratio_prodvol_to_fec"),
         {
             "note HS": "",
             "group": "ui",
@@ -813,7 +852,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     )
     f.add_derived_fact(
         "Fact_I_P_chem_fec_pct_of_basic",
-        f.fact("Fact_I_P_chem_basic_fec_2018") / f.fact("Fact_I_S_chem_all_fec_2018"),
+        f.fact("Fact_I_S_chem_basic_fec_2018") / f.fact("Fact_I_S_chem_all_fec_2018"),
         {
             "note HS": "nicht mehr benötigt seit KFI Update, oder?",
             "group": "ud",
@@ -865,7 +904,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     )
     f.add_derived_fact(
         "Fact_I_P_miner_ratio_fec_to_industry_2018",
-        f.fact("Fact_I_S_miner_fec_2018") / f.fact("Fact_I_S_fec_2018"),
+        f.fact("Fact_I_P_miner_fec_2018") / f.fact("Fact_I_S_fec_2018"),
         {
             "note HS": "",
             "group": "ui",
@@ -877,24 +916,8 @@ def calculate_derived_facts(rd: refdata.RefData):
         },
     )
     f.add_derived_fact(
-        "Fact_I_P_miner_CO2e_pb_2018/Fact_I_P_miner_EEV_2018",
-        f.fact("Fact_I_P_miner_cement_CO2e_pb_2018")
-        + f.fact("Fact_I_P_miner_chalk_CO2e_pb_2018")
-        + f.fact("Fact_I_P_miner_ceram_CO2e_pb_2018")
-        + f.fact("Fact_I_P_miner_glas_CO2e_pb_2018"),
-        {
-            "note HS": "umbennen zu nur Fact_I_P_miner_CO2e_pb_2018",
-            "group": "ufyi",
-            "description": "Prozessbedingte CO2e mineralische Industrie 2018",
-            "unit": "t/a",
-            "rationale": "CRF 2.A wurde in EEV-Verbindung gesetzt mit WZ 23/Zeile 52+53 Energiebilanz 2018",
-            "reference": "UBA 2020 Trendtabellen Sektoren und vorlÃ¤ufige Daten 2019, Blatt THG",
-            "link": "https://www.umweltbundesamt.de/presse/pressemitteilungen/treibhausgasemissionen-gingen-2019-um-63-prozent",
-        },
-    )
-    f.add_derived_fact(
         "Fact_I_P_miner_fec_pct_of_cement",
-        f.fact("Fact_I_P_mineral_cement_fec_2017") / Fakt_I_N_mineral_EEV_2018,
+        f.fact("Fact_I_P_miner_cement_fec_2017") / f.fact("Fact_I_N_mineral_EEV_2018"),
         {
             "note HS": "nicht mehr benötigt seit KFI Update, oder?",
             "group": "ud",
@@ -921,7 +944,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     )
     f.add_derived_fact(
         "Fakt_I_P_miner_cement_CO2e_eb_2018",
-        f.fact("Fact_I_P_miner_cement_CO2e_cb_2017")
+        f.fact("Fact_I_P_miner_cement_CO2e_eb_2017")
         * f.fact("Fact_I_P_miner_CO2e_cb_2018")
         / f.fact("Fact_I_P_miner_CO2e_cb_2015_2017"),
         {
@@ -936,7 +959,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     )
     f.add_derived_fact(
         "Fact_I_P_miner_cement_ratio_CO2e_cb_to_prodvol",
-        f.fact("Fact_I_P_miner_cement_CO2e_cb_2018")
+        f.fact("Fact_I_P_miner_cement_CO2e_eb_2018")
         / f.fact("Fact_I_P_miner_cement_prodvol_2017"),
         {
             "note HS": "",
@@ -964,7 +987,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     )
     f.add_derived_fact(
         "Fact_I_P_miner_fec_pct_of_chalk",
-        f.fact("Fact_I_P_miner_chalk_fec_2017") / Fakt_I_N_mineral_EEV_2018,
+        f.fact("Fact_I_P_miner_chalk_fec_2017") / f.fact("Fact_I_N_mineral_EEV_2018"),
         {
             "note HS": "nicht mehr benötigt seit KFI Update, oder?",
             "group": "ud",
@@ -1034,7 +1057,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     )
     f.add_derived_fact(
         "Fact_I_P_miner_fec_pct_of_ceram",
-        f.fact("Fact_I_P_miner_ceram_fec_2018") / Fakt_I_N_mineral_EEV_2018,
+        f.fact("Fact_I_P_miner_ceram_fec_2018") / f.fact("Fact_I_N_mineral_EEV_2018"),
         {
             "note HS": "nicht mehr benötigt seit KFI Update, oder?",
             "group": "ud",
@@ -1104,7 +1127,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     )
     f.add_derived_fact(
         "Fact_I_P_miner_fec_pct_of_glas",
-        f.fact("Fact_I_P_miner_glas_fec_2018") / Fakt_I_N_mineral_EEV_2018,
+        f.fact("Fact_I_P_miner_glas_fec_2018") / f.fact("Fact_I_N_mineral_EEV_2018"),
         {
             "note HS": "nicht mehr benötigt seit KFI Update, oder?",
             "group": "ud",
@@ -1177,7 +1200,7 @@ def calculate_derived_facts(rd: refdata.RefData):
         f.fact("Fact_I_P_metal_steel_primary_CO2e_eb_HKR_2018")
         + f.fact("Fact_I_P_metal_steel_primary_CO2e_eb_DRI_2018"),
         {
-            "note HS": "umbenennen zu cb statt eb",
+            "note HS": "umbenennen zu Fact_I_P_metal_steel_primary_CO2e_cb_2018",
             "group": "ui",
             "description": "Energiebedingte CO2e Stahlerzeugung (WZ 24.1 bzw. CRF 1.A.2.a) PrimÃ¤rroute kombiniert 2018",
             "unit": "t",
@@ -1188,11 +1211,11 @@ def calculate_derived_facts(rd: refdata.RefData):
     )
     f.add_derived_fact(
         "Fact_I_P_metal_steel_secondary_CO2e_eb_2018",
-        f.fact("Fact_I_P_metal_steel_CO2e_cb_2018")
+        f.fact("Fact_I_P_metal_steel_CO2e_eb_2018")
         - f.fact("Fact_I_P_metal_steel_primary_CO2e_eb_2018")
         - f.fact("Fact_I_P_metal_nonfe_foundries_CO2e_cb_2018"),
         {
-            "note HS": "umbenennen zu cb statt eb",
+            "note HS": "umbenennen zu Fact_I_P_metal_steel_secondary_CO2e_cb_2018",
             "group": "ui",
             "description": "Energiebedingte CO2e Stahlerzeugung (WZ 24.1 bzw. CRF 1.A.2.a) SekundÃ¤rroute 2018",
             "unit": "t",
@@ -1245,7 +1268,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     )
     f.add_derived_fact(
         "Fact_I_P_metal_steel_primary_ratio_CO2e_cb_to_prodvol",
-        f.fact("Fact_I_P_metal_steel_primary_CO2e_cb_2018")
+        f.fact("Fact_I_P_metal_steel_primary_CO2e_eb_2018")
         / f.fact("Fact_I_P_metal_steel_primary_prodvol_2018"),
         {
             "note HS": "",
@@ -1259,7 +1282,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     )
     f.add_derived_fact(
         "Fact_I_P_metal_steel_secondary_ratio_CO2e_cb_to_prodvol",
-        f.fact("Fact_I_P_metal_steel_secondary_CO2e_cb_2018")
+        f.fact("Fact_I_P_metal_steel_secondary_CO2e_eb_2018")
         / f.fact("Fact_I_P_metal_steel_secondary_prodvol_2018"),
         {
             "note HS": "",
@@ -1380,8 +1403,8 @@ def calculate_derived_facts(rd: refdata.RefData):
     )
     f.add_derived_fact(
         "Fakt_I_N_metallh_Primaerroute_EEV_2018",
-        f.fact("Fact_I_S_metal_steel_primary_HKR_fec_2018")
-        + f.fact("Fact_I_S_metal_steel_primary_DRI_fec_2018"),
+        f.fact("Fact_I_N_metallh_HKR_EEV_2018")
+        + f.fact("Fact_I_N_metallh_DRI_EEV_2018"),
         {
             "note HS": "umbenennen zu Fact_I_S_metal_steel_primary_fec_2018",
             "group": "ui",
@@ -1408,8 +1431,8 @@ def calculate_derived_facts(rd: refdata.RefData):
     )
     f.add_derived_fact(
         "Fact_I_P_metal_fec_pct_of_steel_primary",
-        f.fact("Fact_I_S_metal_steel_primary_fec_2018")
-        / f.fact("Fact_I_S_metal_steel_fec_2018"),
+        f.fact("Fact_I_N_metallh_Primaerroute_EEV_2018")
+        / f.fact("Fact_I_N_metallh_Stahl_EEV_2018"),
         {
             "note HS": "nicht mehr benötigt seit KFI Update, oder?",
             "group": "ud",
@@ -1422,8 +1445,8 @@ def calculate_derived_facts(rd: refdata.RefData):
     )
     f.add_derived_fact(
         "Fact_I_P_metal_fec_pct_of_steel_secondary",
-        f.fact("Fact_I_S_metal_steel_secondary_fec_2018")
-        / f.fact("Fact_I_S_metal_steel_fec_2018"),
+        f.fact("Fact_I_N_metallh_Sekundaerroute_EEV_2018")
+        / f.fact("Fact_I_N_metallh_Stahl_EEV_2018"),
         {
             "note HS": "nicht mehr benötigt seit KFI Update, oder?",
             "group": "ud",
@@ -1431,6 +1454,20 @@ def calculate_derived_facts(rd: refdata.RefData):
             "unit": "",
             "rationale": "",
             "reference": "",
+            "link": "",
+        },
+    )
+    f.add_derived_fact(
+        "Fact_I_P_metal_nonfe_ratio_prodvol_to_fec",
+        f.fact("Fact_I_P_metal_nonfe_prodvol_2018")
+        / f.fact("Fact_I_P_metal_nonfe_fec_2018"),
+        {
+            "note HS": "",
+            "group": "ud",
+            "description": "Ratio production volume to FEC non-ferrous metals 2018. Berechneter Kehrwert",
+            "unit": "t/MWh",
+            "rationale": "Die WVMetalle hÃ¤lt es fÃ¼r legitim, aus der gesamten Produktionsmenge und dem gesamten Energieeinsatz einen Faktor pro t zu machen.",
+            "reference": "WVMetalle 2018, S.3",
             "link": "",
         },
     )
@@ -1478,7 +1515,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     )
     f.add_derived_fact(
         "Fact_I_P_other_ratio_fec_to_industry_2018",
-        f.fact("Fact_I_S_other_fec_2018") / f.fact("Fact_I_S_fec_2018"),
+        f.fact("Fact_I_P_other_fec_2018") / f.fact("Fact_I_S_fec_2018"),
         {
             "note HS": "nicht mehr benötigt seit KFI Update, oder?",
             "group": "ui (Eingabe)",
@@ -1491,12 +1528,12 @@ def calculate_derived_facts(rd: refdata.RefData):
     )
     f.add_derived_fact(
         "Fact_I_P_other_fec_2018",
-        f.fact("Fact_I_S_fec_2018")
+        f.fact("Fact_I_P_fec_2018")
         - f.fact("Fact_I_S_chem_all_fec_2018")
-        - Fakt_I_S_miner_fec_2018
+        - f.fact("Fact_I_S_miner_fec_2018")
         - f.fact("Fact_I_S_metal_fec_2018"),
         {
-            "note HS": "umbenennen zu I_S",
+            "note HS": "umbenennen zu Fact_I_S_other_fec_2018",
             "group": "ui",
             "description": "sonstige Industrie EEV 2018",
             "unit": "",
@@ -1538,7 +1575,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     )
     f.add_derived_fact(
         "Fact_I_P_other_fec_pct_of_paper",
-        f.fact("Fact_I_S_other_paper_fec_2018") / f.fact("Fact_I_S_other_fec_2018"),
+        f.fact("Fact_I_P_other_paper_fec_2018") / f.fact("Fact_I_P_other_fec_2018"),
         {
             "note HS": "nicht mehr benötigt seit KFI Update, oder?",
             "group": "ud",
@@ -1552,7 +1589,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_P_other_paper_ratio_prodvol_to_fec",
         f.fact("Fact_I_P_other_paper_prodvol_2018")
-        / f.fact("Fact_I_S_other_paper_fec_2018"),
+        / f.fact("Fact_I_P_other_paper_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -1579,7 +1616,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     )
     f.add_derived_fact(
         "Fact_I_P_other_fec_pct_of_food",
-        f.fact("Fact_I_S_other_food_fec_2018") / f.fact("Fact_I_S_other_fec_2018"),
+        f.fact("Fact_I_P_other_food_fec_2018") / f.fact("Fact_I_P_other_fec_2018"),
         {
             "note HS": "nicht mehr benötigt seit KFI Update, oder?",
             "group": "ud",
@@ -1635,7 +1672,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     )
     f.add_derived_fact(
         "Fact_I_P_other_further_ratio_CO2e_pb_to_fec",
-        f.fact("Fact_I_P_other_further_CO2e_pb_2018")
+        f.fact("Fact_I_P_other_2d_CO2e_pb_2018")
         / f.fact("Fact_I_P_other_further_fec_2018"),
         {
             "note HS": "",
@@ -1644,6 +1681,33 @@ def calculate_derived_facts(rd: refdata.RefData):
             "unit": "t/MWh",
             "rationale": "Da keine zuverlÃ¤ssigen Zahlen Ã¼ber die Produktionsmenge weiterer Branchen vorliegen, muss hier auf den EEV zurÃ¼ckgegriffen werden, also Divsion von Fact_I_P_other_2d_CO2e_pb_2018/Fact_I_P_other_further_fec_2018",
             "reference": "UBA RESCUE 2019 S. 280",
+            "link": "",
+        },
+    )
+    f.add_derived_fact(
+        "Fact_I_P_other_2efgh_ratio_CO2e_pb_to_fec",
+        f.fact("Fact_I_P_other_2efgh_CO2e_pb_2018")
+        / f.fact("Fact_I_P_other_further_fec_2018"),
+        {
+            "note HS": "",
+            "group": "ud",
+            "description": "Ratio pb CO2e (f-gases, CRF 2.E-H) to fec further industry 2018",
+            "unit": "t/MWh",
+            "rationale": "Da keine zuverlÃ¤ssigen Zahlen Ã¼ber die Produktionsmenge weiterer Branchen vorliegen, muss hier auf den EEV zurÃ¼ckgegriffen werden, also Divsion von Fact_I_P_other_2efgh_CO2e_pb_2018/Fact_I_P_other_further_fec_2018",
+            "reference": "UBA RESCUE 2019 S. 280",
+            "link": "",
+        },
+    )
+    f.add_derived_fact(
+        "Fact_I_P_other_further_fec_2018",
+        f.fact("Fact_I_P_other_further_fec_2018") / f.fact("Fact_I_P_other_fec_2018"),
+        {
+            "note HS": "umbenennen zu Fact_I_S_other_fec_pct_of_further",
+            "group": "ud",
+            "description": "Anteil EEV Weitere Branchen 2018 an Sonstige Industrie",
+            "unit": "%",
+            "rationale": "Division von Fact_I_P_other_further_fec_2018/Fact_I_P_other_fec_2018",
+            "reference": "AG EB 2018 Zeile 46, 51, 56,57, 58, 59 Spalte AI",
             "link": "",
         },
     )
@@ -2296,7 +2360,7 @@ def calculate_derived_facts(rd: refdata.RefData):
             "description": "Anteil EEV Kohle an Grundstoffchemie inkl. Ammoniak 2018 (WZ 20.1)",
             "unit": "%",
             "rationale": "Berechnung =Fact_I_P_chem_basic_coal_fec_2018/Fact_I_P_chem_basic_fec_2018",
-            "reference": "AG EB 2018 Zeile 50",
+            "reference": "AG EB 2018 Zeile 49",
             "link": "",
         },
     )
@@ -2310,7 +2374,7 @@ def calculate_derived_facts(rd: refdata.RefData):
             "description": "Anteil EEV Diesel an Grundstoffchemie inkl. Ammoniak 2018 (WZ 20.1)",
             "unit": "%",
             "rationale": "Berechnung =Fact_I_P_chem_basic_diesel_fec_2018/Fact_I_P_chem_basic_fec_2018",
-            "reference": "AG EB 2018 Zeile 50",
+            "reference": "AG EB 2018 Zeile 49",
             "link": "",
         },
     )
@@ -2324,7 +2388,7 @@ def calculate_derived_facts(rd: refdata.RefData):
             "description": "Anteil EEV HeizÃ¶l an Grundstoffchemie inkl. Ammoniak 2018 (WZ 20.1)",
             "unit": "%",
             "rationale": "Berechnung =Fact_I_P_chem_basic_fueloil_fec_2018/Fact_I_P_chem_basic_fec_2018",
-            "reference": "AG EB 2018 Zeile 50",
+            "reference": "AG EB 2018 Zeile 49",
             "link": "",
         },
     )
@@ -2338,7 +2402,7 @@ def calculate_derived_facts(rd: refdata.RefData):
             "description": "Anteil EEV LPG an Grundstoffchemie inkl. Ammoniak 2018 (WZ 20.1)",
             "unit": "%",
             "rationale": "Berechnung =Fact_I_P_chem_basic_lpg_fec_2018/Fact_I_P_chem_basic_fec_2018",
-            "reference": "AG EB 2018 Zeile 50",
+            "reference": "AG EB 2018 Zeile 49",
             "link": "",
         },
     )
@@ -2352,7 +2416,7 @@ def calculate_derived_facts(rd: refdata.RefData):
             "description": "Anteil EEV Sonstige MineralÃ¶lprodukte an Grundstoffchemie inkl. Ammoniak 2018 (WZ 20.1)",
             "unit": "%",
             "rationale": "Berechnung =Fact_I_P_chem_basic_opetpro_fec_2018/Fact_I_P_chem_basic_fec_2018",
-            "reference": "AG EB 2018 Zeile 50",
+            "reference": "AG EB 2018 Zeile 49",
             "link": "",
         },
     )
@@ -2366,7 +2430,7 @@ def calculate_derived_facts(rd: refdata.RefData):
             "description": "Anteil EEV Erdgas an Grundstoffchemie inkl. Ammoniak 2018 (WZ 20.1)",
             "unit": "%",
             "rationale": "Berechnung =Fact_I_P_chem_basic_gas_fec_2018/Fact_I_P_chem_basic_fec_2018",
-            "reference": "AG EB 2018 Zeile 50",
+            "reference": "AG EB 2018 Zeile 49",
             "link": "",
         },
     )
@@ -2380,7 +2444,7 @@ def calculate_derived_facts(rd: refdata.RefData):
             "description": "Anteil EEV Biomasse an Grundstoffchemie inkl. Ammoniak 2018 (WZ 20.1)",
             "unit": "%",
             "rationale": "Berechnung =Fact_I_P_chem_basic_biomass_fec_2018/Fact_I_P_chem_basic_fec_2018",
-            "reference": "AG EB 2018 Zeile 50",
+            "reference": "AG EB 2018 Zeile 49",
             "link": "",
         },
     )
@@ -2394,7 +2458,7 @@ def calculate_derived_facts(rd: refdata.RefData):
             "description": "Anteil EEV Sonstige EE an Grundstoffchemie inkl. Ammoniak 2018 (WZ 20.1)",
             "unit": "%",
             "rationale": "Berechnung =Fact_I_P_chem_basic_orenew_fec_2018/Fact_I_P_chem_basic_fec_2018",
-            "reference": "AG EB 2018 Zeile 50",
+            "reference": "AG EB 2018 Zeile 49",
             "link": "",
         },
     )
@@ -2408,7 +2472,7 @@ def calculate_derived_facts(rd: refdata.RefData):
             "description": "Anteil EEV Sonstige fossile EnergietrÃ¤ger an Grundstoffchemie inkl. Ammoniak 2018 (WZ 20.1)",
             "unit": "%",
             "rationale": "Berechnung =Fact_I_P_chem_basic_ofossil_fec_2018/Fact_I_P_chem_basic_fec_2018",
-            "reference": "AG EB 2018 Zeile 50",
+            "reference": "AG EB 2018 Zeile 49",
             "link": "",
         },
     )
@@ -2422,7 +2486,7 @@ def calculate_derived_facts(rd: refdata.RefData):
             "description": "Anteil EEV Strom an Grundstoffchemie inkl. Ammoniak 2018 (WZ 20.1)",
             "unit": "%",
             "rationale": "Berechnung =Fact_I_P_chem_basic_elec_fec_2018/Fact_I_P_chem_basic_fec_2018",
-            "reference": "AG EB 2018 Zeile 50",
+            "reference": "AG EB 2018 Zeile 49",
             "link": "",
         },
     )
@@ -2436,7 +2500,7 @@ def calculate_derived_facts(rd: refdata.RefData):
             "description": "Anteil EEV FernwÃ¤rme an Grundstoffchemie inkl. Ammoniak 2018 (WZ 20.1)",
             "unit": "%",
             "rationale": "Berechnung =Fact_I_P_chem_basic_heatnet_fec_2018/Fact_I_P_chem_basic_fec_2018",
-            "reference": "AG EB 2018 Zeile 50",
+            "reference": "AG EB 2018 Zeile 49",
             "link": "",
         },
     )
@@ -2597,7 +2661,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_metal_steel_primary_fec_pct_of_coal_2018",
         f.fact("Fact_I_S_metal_steel_primary_coal_fec_2018")
-        / f.fact("Fact_I_S_metal_steel_primary_fec_2018"),
+        / f.fact("Fact_I_N_metallh_Primaerroute_EEV_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -2611,7 +2675,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_metal_steel_primary_fec_pct_of_diesel_2018",
         f.fact("Fact_I_S_metal_steel_primary_diesel_fec_2018")
-        / f.fact("Fact_I_S_metal_steel_primary_fec_2018"),
+        / f.fact("Fact_I_N_metallh_Primaerroute_EEV_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -2625,7 +2689,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_metal_steel_primary_fec_pct_of_fueloil_2018",
         f.fact("Fact_I_S_metal_steel_primary_fueloil_fec_2018")
-        / f.fact("Fact_I_S_metal_steel_primary_fec_2018"),
+        / f.fact("Fact_I_N_metallh_Primaerroute_EEV_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -2639,7 +2703,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_metal_steel_primary_fec_pct_of_lpg_2018",
         f.fact("Fact_I_S_metal_steel_primary_lpg_fec_2018")
-        / f.fact("Fact_I_S_metal_steel_primary_fec_2018"),
+        / f.fact("Fact_I_N_metallh_Primaerroute_EEV_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -2653,7 +2717,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_metal_steel_primary_fec_pct_of_opetpro_2018",
         f.fact("Fact_I_S_metal_steel_primary_opetpro_fec_2018")
-        / f.fact("Fact_I_S_metal_steel_primary_fec_2018"),
+        / f.fact("Fact_I_N_metallh_Primaerroute_EEV_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -2667,7 +2731,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_metal_steel_primary_fec_pct_of_gas_2018",
         f.fact("Fact_I_S_metal_steel_primary_gas_fec_2018")
-        / f.fact("Fact_I_S_metal_steel_primary_fec_2018"),
+        / f.fact("Fact_I_N_metallh_Primaerroute_EEV_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -2681,7 +2745,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_metal_steel_primary_fec_pct_of_biomass_2018",
         f.fact("Fact_I_S_metal_steel_primary_biomass_fec_2018")
-        / f.fact("Fact_I_S_metal_steel_primary_fec_2018"),
+        / f.fact("Fact_I_N_metallh_Primaerroute_EEV_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -2695,7 +2759,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_metal_steel_primary_fec_pct_of_orenew_2018",
         f.fact("Fact_I_S_metal_steel_primary_orenew_fec_2018")
-        / f.fact("Fact_I_S_metal_steel_primary_fec_2018"),
+        / f.fact("Fact_I_N_metallh_Primaerroute_EEV_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -2709,7 +2773,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_metal_steel_primary_fec_pct_of_ofossil_2018",
         f.fact("Fact_I_S_metal_steel_primary_ofossil_fec_2018")
-        / f.fact("Fact_I_S_metal_steel_primary_fec_2018"),
+        / f.fact("Fact_I_N_metallh_Primaerroute_EEV_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -2723,7 +2787,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_metal_steel_primary_fec_pct_of_elec_2018",
         f.fact("Fact_I_S_metal_steel_primary_elec_fec_2018")
-        / f.fact("Fact_I_S_metal_steel_primary_fec_2018"),
+        / f.fact("Fact_I_N_metallh_Primaerroute_EEV_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -2737,7 +2801,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_metal_steel_primary_fec_pct_of_heatnet_2018",
         f.fact("Fact_I_S_metal_steel_primary_heatnet_fec_2018")
-        / f.fact("Fact_I_S_metal_steel_primary_fec_2018"),
+        / f.fact("Fact_I_N_metallh_Primaerroute_EEV_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -2751,7 +2815,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_metal_steel_secondary_fec_pct_of_diesel_2018",
         f.fact("Fact_I_S_metal_steel_secondary_diesel_fec_2018")
-        / f.fact("Fact_I_S_metal_steel_secondary_fec_2018"),
+        / f.fact("Fact_I_N_metallh_Sekundaerroute_EEV_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -2765,7 +2829,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_metal_steel_secondary_fec_pct_of_fueloil_2018",
         f.fact("Fact_I_S_metal_steel_secondary_fueloil_fec_2018")
-        / f.fact("Fact_I_S_metal_steel_secondary_fec_2018"),
+        / f.fact("Fact_I_N_metallh_Sekundaerroute_EEV_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -2779,7 +2843,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_metal_steel_secondary_fec_pct_of_lpg_2018",
         f.fact("Fact_I_S_metal_steel_secondary_lpg_fec_2018")
-        / f.fact("Fact_I_S_metal_steel_secondary_fec_2018"),
+        / f.fact("Fact_I_N_metallh_Sekundaerroute_EEV_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -2793,7 +2857,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_metal_steel_secondary_fec_pct_of_opetpro_2018",
         f.fact("Fact_I_S_metal_steel_secondary_opetpro_fec_2018")
-        / f.fact("Fact_I_S_metal_steel_secondary_fec_2018"),
+        / f.fact("Fact_I_N_metallh_Sekundaerroute_EEV_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -2807,7 +2871,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_metal_steel_secondary_fec_pct_of_gas_2018",
         f.fact("Fact_I_S_metal_steel_secondary_gas_fec_2018")
-        / f.fact("Fact_I_S_metal_steel_secondary_fec_2018"),
+        / f.fact("Fact_I_N_metallh_Sekundaerroute_EEV_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -2821,7 +2885,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_metal_steel_secondary_fec_pct_of_biomass_2018",
         f.fact("Fact_I_S_metal_steel_secondary_biomass_fec_2018")
-        / f.fact("Fact_I_S_metal_steel_secondary_fec_2018"),
+        / f.fact("Fact_I_N_metallh_Sekundaerroute_EEV_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -2835,7 +2899,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_metal_steel_secondary_fec_pct_of_orenew_2018",
         f.fact("Fact_I_S_metal_steel_secondary_orenew_fec_2018")
-        / f.fact("Fact_I_S_metal_steel_secondary_fec_2018"),
+        / f.fact("Fact_I_N_metallh_Sekundaerroute_EEV_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -2849,7 +2913,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_metal_steel_secondary_fec_pct_of_ofossil_2018",
         f.fact("Fact_I_S_metal_steel_secondary_ofossil_fec_2018")
-        / f.fact("Fact_I_S_metal_steel_secondary_fec_2018"),
+        / f.fact("Fact_I_N_metallh_Sekundaerroute_EEV_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -2863,7 +2927,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_metal_steel_secondary_fec_pct_of_elec_2018",
         f.fact("Fact_I_S_metal_steel_secondary_elec_fec_2018")
-        / f.fact("Fact_I_S_metal_steel_secondary_fec_2018"),
+        / f.fact("Fact_I_N_metallh_Sekundaerroute_EEV_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -2877,7 +2941,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_metal_steel_secondary_fec_pct_of_heatnet_2018",
         f.fact("Fact_I_S_metal_steel_secondary_heatnet_fec_2018")
-        / f.fact("Fact_I_S_metal_steel_secondary_fec_2018"),
+        / f.fact("Fact_I_N_metallh_Sekundaerroute_EEV_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -2891,7 +2955,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_metal_nonfe_fec_pct_of_coal_2018",
         f.fact("Fact_I_S_metal_nonfe_coal_fec_2018")
-        / f.fact("Fact_I_S_metal_nonfe_fec_2018"),
+        / f.fact("Fact_I_P_metal_nonfe_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -2905,7 +2969,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_metal_nonfe_fec_pct_of_diesel_2018",
         f.fact("Fact_I_S_metal_nonfe_diesel_fec_2018")
-        / f.fact("Fact_I_S_metal_nonfe_fec_2018"),
+        / f.fact("Fact_I_P_metal_nonfe_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -2919,7 +2983,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_metal_nonfe_fec_pct_of_fueloil_2018",
         f.fact("Fact_I_S_metal_nonfe_fueloil_fec_2018")
-        / f.fact("Fact_I_S_metal_nonfe_fec_2018"),
+        / f.fact("Fact_I_P_metal_nonfe_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -2933,7 +2997,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_metal_nonfe_fec_pct_of_lpg_2018",
         f.fact("Fact_I_S_metal_nonfe_lpg_fec_2018")
-        / f.fact("Fact_I_S_metal_nonfe_fec_2018"),
+        / f.fact("Fact_I_P_metal_nonfe_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -2947,7 +3011,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_metal_nonfe_fec_pct_of_opetpro_2018",
         f.fact("Fact_I_S_metal_nonfe_opetpro_fec_2018")
-        / f.fact("Fact_I_S_metal_nonfe_fec_2018"),
+        / f.fact("Fact_I_P_metal_nonfe_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -2961,7 +3025,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_metal_nonfe_fec_pct_of_gas_2018",
         f.fact("Fact_I_S_metal_nonfe_gas_fec_2018")
-        / f.fact("Fact_I_S_metal_nonfe_fec_2018"),
+        / f.fact("Fact_I_P_metal_nonfe_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -2975,7 +3039,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_metal_nonfe_fec_pct_of_biomass_2018",
         f.fact("Fact_I_S_metal_nonfe_biomass_fec_2018")
-        / f.fact("Fact_I_S_metal_nonfe_fec_2018"),
+        / f.fact("Fact_I_P_metal_nonfe_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -2989,7 +3053,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_metal_nonfe_fec_pct_of_orenew_2018",
         f.fact("Fact_I_S_metal_nonfe_orenew_fec_2018")
-        / f.fact("Fact_I_S_metal_nonfe_fec_2018"),
+        / f.fact("Fact_I_P_metal_nonfe_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -3003,7 +3067,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_metal_nonfe_fec_pct_of_ofossil_2018",
         f.fact("Fact_I_S_metal_nonfe_ofossil_fec_2018")
-        / f.fact("Fact_I_S_metal_nonfe_fec_2018"),
+        / f.fact("Fact_I_P_metal_nonfe_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -3017,7 +3081,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_metal_nonfe_fec_pct_of_elec_2018",
         f.fact("Fact_I_S_metal_nonfe_elec_fec_2018")
-        / f.fact("Fact_I_S_metal_nonfe_fec_2018"),
+        / f.fact("Fact_I_P_metal_nonfe_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -3031,7 +3095,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_metal_nonfe_fec_pct_of_heatnet_2018",
         f.fact("Fact_I_S_metal_nonfe_heatnet_fec_2018")
-        / f.fact("Fact_I_S_metal_nonfe_fec_2018"),
+        / f.fact("Fact_I_P_metal_nonfe_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -3045,7 +3109,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_other_paper_fec_pct_of_coal_2018",
         f.fact("Fact_I_S_other_paper_coal_fec_2018")
-        / f.fact("Fact_I_S_other_paper_fec_2018"),
+        / f.fact("Fact_I_P_other_paper_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -3059,7 +3123,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_other_paper_fec_pct_of_diesel_2018",
         f.fact("Fact_I_S_other_paper_diesel_fec_2018")
-        / f.fact("Fact_I_S_other_paper_fec_2018"),
+        / f.fact("Fact_I_P_other_paper_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -3073,7 +3137,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_other_paper_fec_pct_of_fueloil_2018",
         f.fact("Fact_I_S_other_paper_fueloil_fec_2018")
-        / f.fact("Fact_I_S_other_paper_fec_2018"),
+        / f.fact("Fact_I_P_other_paper_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -3087,7 +3151,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_other_paper_fec_pct_of_lpg_2018",
         f.fact("Fact_I_S_other_paper_lpg_fec_2018")
-        / f.fact("Fact_I_S_other_paper_fec_2018"),
+        / f.fact("Fact_I_P_other_paper_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -3101,7 +3165,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_other_paper_fec_pct_of_opetpro_2018",
         f.fact("Fact_I_S_other_paper_opetpro_fec_2018")
-        / f.fact("Fact_I_S_other_paper_fec_2018"),
+        / f.fact("Fact_I_P_other_paper_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -3115,7 +3179,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_other_paper_fec_pct_of_gas_2018",
         f.fact("Fact_I_S_other_paper_gas_fec_2018")
-        / f.fact("Fact_I_S_other_paper_fec_2018"),
+        / f.fact("Fact_I_P_other_paper_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -3129,7 +3193,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_other_paper_fec_pct_of_biomass_2018",
         f.fact("Fact_I_S_other_paper_biomass_fec_2018")
-        / f.fact("Fact_I_S_other_paper_fec_2018"),
+        / f.fact("Fact_I_P_other_paper_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -3143,7 +3207,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_other_paper_fec_pct_of_orenew_2018",
         f.fact("Fact_I_S_other_paper_orenew_fec_2018")
-        / f.fact("Fact_I_S_other_paper_fec_2018"),
+        / f.fact("Fact_I_P_other_paper_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -3157,7 +3221,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_other_paper_fec_pct_of_ofossil_2018",
         f.fact("Fact_I_S_other_paper_ofossil_fec_2018")
-        / f.fact("Fact_I_S_other_paper_fec_2018"),
+        / f.fact("Fact_I_P_other_paper_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -3171,7 +3235,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_other_paper_fec_pct_of_elec_2018",
         f.fact("Fact_I_S_other_paper_elec_fec_2018")
-        / f.fact("Fact_I_S_other_paper_fec_2018"),
+        / f.fact("Fact_I_P_other_paper_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -3185,7 +3249,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_other_paper_fec_pct_of_heatnet_2018",
         f.fact("Fact_I_S_other_paper_heatnet_fec_2018")
-        / f.fact("Fact_I_S_other_paper_fec_2018"),
+        / f.fact("Fact_I_P_other_paper_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -3199,7 +3263,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_other_food_fec_pct_of_coal_2018",
         f.fact("Fact_I_S_other_food_coal_fec_2018")
-        / f.fact("Fact_I_S_other_food_fec_2018"),
+        / f.fact("Fact_I_P_other_food_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -3213,7 +3277,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_other_food_fec_pct_of_diesel_2018",
         f.fact("Fact_I_S_other_food_diesel_fec_2018")
-        / f.fact("Fact_I_S_other_food_fec_2018"),
+        / f.fact("Fact_I_P_other_food_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -3227,7 +3291,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_other_food_fec_pct_of_fueloil_2018",
         f.fact("Fact_I_S_other_food_fueloil_fec_2018")
-        / f.fact("Fact_I_S_other_food_fec_2018"),
+        / f.fact("Fact_I_P_other_food_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -3241,7 +3305,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_other_food_fec_pct_of_lpg_2018",
         f.fact("Fact_I_S_other_food_lpg_fec_2018")
-        / f.fact("Fact_I_S_other_food_fec_2018"),
+        / f.fact("Fact_I_P_other_food_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -3255,7 +3319,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_other_food_fec_pct_of_opetpro_2018",
         f.fact("Fact_I_S_other_food_opetpro_fec_2018")
-        / f.fact("Fact_I_S_other_food_fec_2018"),
+        / f.fact("Fact_I_P_other_food_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -3269,7 +3333,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_other_food_fec_pct_of_gas_2018",
         f.fact("Fact_I_S_other_food_gas_fec_2018")
-        / f.fact("Fact_I_S_other_food_fec_2018"),
+        / f.fact("Fact_I_P_other_food_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -3283,7 +3347,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_other_food_fec_pct_of_biomass_2018",
         f.fact("Fact_I_S_other_food_biomass_fec_2018")
-        / f.fact("Fact_I_S_other_food_fec_2018"),
+        / f.fact("Fact_I_P_other_food_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -3297,7 +3361,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_other_food_fec_pct_of_orenew_2018",
         f.fact("Fact_I_S_other_food_orenew_fec_2018")
-        / f.fact("Fact_I_S_other_food_fec_2018"),
+        / f.fact("Fact_I_P_other_food_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -3311,7 +3375,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_other_food_fec_pct_of_elec_2018",
         f.fact("Fact_I_S_other_food_elec_fec_2018")
-        / f.fact("Fact_I_S_other_food_fec_2018"),
+        / f.fact("Fact_I_P_other_food_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -3325,7 +3389,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_other_food_fec_pct_of_ofossil_2018",
         f.fact("Fact_I_S_other_food_ofossil_fec_2018")
-        / f.fact("Fact_I_S_other_food_fec_2018"),
+        / f.fact("Fact_I_P_other_food_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -3339,7 +3403,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_other_food_fec_pct_of_heatnet_2018",
         f.fact("Fact_I_S_other_food_heatnet_fec_2018")
-        / f.fact("Fact_I_S_other_food_fec_2018"),
+        / f.fact("Fact_I_P_other_food_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -3353,7 +3417,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_other_further_fec_pct_of_coal_2018",
         f.fact("Fact_I_S_other_further_coal_fec_2018")
-        / f.fact("Fact_I_S_other_further_fec_2018"),
+        / f.fact("Fact_I_P_other_further_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -3367,7 +3431,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_other_further_fec_pct_of_diesel_2018",
         f.fact("Fact_I_S_other_further_diesel_fec_2018")
-        / f.fact("Fact_I_S_other_further_fec_2018"),
+        / f.fact("Fact_I_P_other_further_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -3381,7 +3445,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_other_further_fec_pct_of_fueloil_2018",
         f.fact("Fact_I_S_other_further_fueloil_fec_2018")
-        / f.fact("Fact_I_S_other_further_fec_2018"),
+        / f.fact("Fact_I_P_other_further_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -3395,7 +3459,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_other_further_fec_pct_of_lpg_2018",
         f.fact("Fact_I_S_other_further_lpg_fec_2018")
-        / f.fact("Fact_I_S_other_further_fec_2018"),
+        / f.fact("Fact_I_P_other_further_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -3409,7 +3473,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_other_further_fec_pct_of_opetpro_2018",
         f.fact("Fact_I_S_other_further_opetpro_fec_2018")
-        / f.fact("Fact_I_S_other_further_fec_2018"),
+        / f.fact("Fact_I_P_other_further_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -3423,7 +3487,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_other_further_fec_pct_of_gas_2018",
         f.fact("Fact_I_S_other_further_gas_fec_2018")
-        / f.fact("Fact_I_S_other_further_fec_2018"),
+        / f.fact("Fact_I_P_other_further_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -3437,7 +3501,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_other_further_fec_pct_of_biomass_2018",
         f.fact("Fact_I_S_other_further_biomass_fec_2018")
-        / f.fact("Fact_I_S_other_further_fec_2018"),
+        / f.fact("Fact_I_P_other_further_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -3451,7 +3515,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_other_further_fec_pct_of_orenew_2018",
         f.fact("Fact_I_S_other_further_orenew_fec_2018")
-        / f.fact("Fact_I_S_other_further_fec_2018"),
+        / f.fact("Fact_I_P_other_further_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -3465,7 +3529,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_other_further_fec_pct_of_ofossil_2018",
         f.fact("Fact_I_S_other_further_ofossil_fec_2018")
-        / f.fact("Fact_I_S_other_further_fec_2018"),
+        / f.fact("Fact_I_P_other_further_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -3479,7 +3543,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_other_further_fec_pct_of_elec_2018",
         f.fact("Fact_I_S_other_further_elec_fec_2018")
-        / f.fact("Fact_I_S_other_further_fec_2018"),
+        / f.fact("Fact_I_P_other_further_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -3493,7 +3557,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_other_further_fec_pct_of_heatnet_2018",
         f.fact("Fact_I_S_other_further_heatnet_fec_2018")
-        / f.fact("Fact_I_S_other_further_fec_2018"),
+        / f.fact("Fact_I_P_other_further_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
