@@ -4,6 +4,7 @@ import sys
 import re
 import typing
 import datetime
+import csv
 
 PRELUDE = """\"\"\"
 This module was auto generated from an annotated version of the 2018 facts file, which
@@ -59,23 +60,12 @@ def rows_with_header(w: openpyxl.Workbook) -> ROWS:
     return rows
 
 
-def main():
-    if len(sys.argv) != 2:
-        print(
-            "Usage: python gen_calculate_derived_facts.py <path-to-2018_facts_edit_2022.xlsx>"
-        )
-        sys.exit(1)
-    w = openpyxl.load_workbook(sys.argv[1])
-    rows = rows_with_header(w)
-    print(file=sys.stderr)
-
+def gen_calculate_derived_facts(rows: ROWS):
     print(PRELUDE)
     for data in rows:
-        if (
-            data["update 2022"] == "F"
-            and data["Formula"] is not None
-            and data["Formula"] != "noch nicht existent"
-        ):
+        if data["update 2022"] == "F":
+            if data["Formula"] is None or data["Formula"] == "noch nicht existent":
+                raise Exception(f"Missing formula for {data['label']}")
             label = data["label"]
             formula: str = data["Formula"]  # type: ignore
             formula = formula.replace("Fakt_", "Fact_")  # sigh
@@ -88,6 +78,49 @@ def main():
             del data["value"]
             data = {k: ("" if v is None else v) for k, v in data.items()}
             print(f"""    f.add_derived_fact("{label}", {formula}, {data})""")
+
+
+def extract_new_facts(rows: ROWS):
+    columns = [
+        "label",
+        "group",
+        "description",
+        "value",
+        "unit",
+        "rationale",
+        "reference",
+        "link",
+    ]
+    with open("new_facts.csv", "w", encoding="utf-8") as fp:
+        writer = csv.writer(fp, lineterminator="\n")
+        for data in rows:
+            if data["update 2022"] == "NEW" and data["value"] is not None:
+                writer.writerow([data[c] for c in columns])
+
+
+def main():
+    mode: typing.Literal["gen_calculate_derived_facts", "extract_new_facts", "usage"]
+    filename: str = ""
+    match sys.argv:
+        case [_, f, "gen_calculate_derived_facts"]:
+            filename = f
+            mode = "gen_calculate_derived_facts"
+        case [_, f, "extract_new_facts"]:
+            filename = f
+            mode = "extract_new_facts"
+        case _:
+            print(
+                f"Usage: python {sys.argv[0]} <path-to-2018_facts_edit_2022.xlsx> gen_calculate_derived_facts|extract_new_facts"
+            )
+            sys.exit(1)
+
+    w = openpyxl.load_workbook(filename)
+    rows = rows_with_header(w)
+    match mode:
+        case "gen_calculate_derived_facts":
+            gen_calculate_derived_facts(rows)
+        case "extract_new_facts":
+            extract_new_facts(rows)
 
 
 main()
