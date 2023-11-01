@@ -65,7 +65,8 @@ def gen_calculate_derived_facts(rows: ROWS):
     for data in rows:
         if data["update 2022"] == "F":
             if data["Formula"] is None or data["Formula"] == "noch nicht existent":
-                raise Exception(f"Missing formula for {data['label']}")
+                continue
+                # raise Exception(f"Missing formula for {data['label']}")
             label = data["label"]
             formula: str = data["Formula"]  # type: ignore
             formula = formula.replace("Fakt_", "Fact_")  # sigh
@@ -114,7 +115,7 @@ def main():
             )
             sys.exit(1)
 
-    w = openpyxl.load_workbook(filename)
+    w = openpyxl.load_workbook(filename, data_only=True)
     rows = rows_with_header(w)
     match mode:
         case "gen_calculate_derived_facts":
