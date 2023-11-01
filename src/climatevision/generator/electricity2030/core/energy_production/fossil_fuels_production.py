@@ -46,11 +46,14 @@ class FossilFuelsProduction:
 
         change_energy_MWh = energy - energy_18
 
+        change_energy_pct = div(change_energy_MWh, energy_18)
+        change_CO2e_pct = div(change_CO2e_t, CO2e_total_18)
+
         return FossilFuelsProduction(
             energy=energy,
             CO2e_total_2021_estimated=CO2e_total_2021_estimated,
             change_energy_MWh=change_energy_MWh,
-            change_energy_pct=div(change_energy_MWh, energy_18),
+            change_energy_pct=change_energy_pct,
             cost_fuel=cost_fuel,
             cost_mro=cost_mro,
             CO2e_combustion_based=CO2e_combustion_based,
@@ -58,5 +61,5 @@ class FossilFuelsProduction:
             change_cost_mro=change_cost_mro,
             cost_climate_saved=cost_climate_saved,
             change_CO2e_t=change_CO2e_t,
-            change_CO2e_pct=div(change_CO2e_t, CO2e_total_18),
+            change_CO2e_pct=change_CO2e_pct,
         )
