@@ -30,7 +30,7 @@ def calculate_derived_facts(rd: refdata.RefData):
 """
 ROWS: typing.TypeAlias = list[dict[str, str | float | datetime.datetime | None]]
 
-FACT_REGEX = re.compile(r"(Fact_[A-Za-z0-9_]+)")
+FACT_REGEX = re.compile(r"(Fa[ck]t_[A-Za-z0-9_]+)")
 
 
 def replace_fact_name_by_fact_lookup(fact_name: str) -> str:
@@ -69,7 +69,6 @@ def gen_calculate_derived_facts(rows: ROWS):
                 # raise Exception(f"Missing formula for {data['label']}")
             label = data["label"]
             formula: str = data["Formula"]  # type: ignore
-            formula = formula.replace("Fakt_", "Fact_")  # sigh
             formula = FACT_REGEX.sub(
                 lambda m: replace_fact_name_by_fact_lookup(m.group(1)), formula
             )
