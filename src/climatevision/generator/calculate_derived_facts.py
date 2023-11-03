@@ -403,6 +403,24 @@ def calculate_derived_facts(rd: refdata.RefData):
         },
     )
     f.add_derived_fact(
+        "Fact_E_P_renew_cogen_ratio_2018",
+        f.fact("Fact_H_P_heatnet_cogen_renew_prodvol_2018")
+        * f.fact("Fact_H_P_heatnet_ratio_netto_to_brutto_2018")
+        / (
+            f.fact("Fact_E_P_elec_prodvol_netto_2018")
+            * f.fact("Fact_E_P_biomass_pct_of_gep_2018")
+        ),
+        {
+            "note HS": "",
+            "group": "ud",
+            "description": "Prozentualer Aufschlag Netto(EEV)-KWK-FernwÃ¤rmeerzeugung auf Nettostromerzeugung aus Biomasse/Eneuerbarer Energie 2018",
+            "unit": "%",
+            "rationale": "Netto(EEV)-KWK-FernwÃ¤rme aus Erneuerbaren Energien geteilt durch Nettostromerzeugung aus Biomasse: Fact_H_P_heatnet_cogen_renew_prodvol_2018*Fact_H_P_heatnet_ratio_netto_to_brutto_2018/(Fact_E_P_elec_prodvol_netto_2018*Fakt_S_B_Biomasse_Anteil2018)",
+            "reference": "Berechnung",
+            "link": "",
+        },
+    )
+    f.add_derived_fact(
         "Fact_E_P_pv_rest_pct_of_gep_pv_2017",
         1
         - f.fact("Fact_E_P_pv_roof_pct_of_gep_pv_2017")
@@ -917,8 +935,8 @@ def calculate_derived_facts(rd: refdata.RefData):
     )
     f.add_derived_fact(
         "Fact_I_P_miner_CO2e_cb_2015_2017",
-        f.fact("Fact_I_P_miner_cement_CO2e_eb_2017")
-        + f.fact("Fact_I_P_miner_chalk_CO2e_cb_2017")
+        f.fact("Fakt_I_P_miner_cement_CO2e_eb_2017")
+        + f.fact("Fact_I_P_miner_chalk_CO2e_cb_2016")
         + f.fact("Fact_I_P_miner_ceram_CO2e_cb_2016")
         + f.fact("Fact_I_P_miner_glas_CO2e_cb_2015"),
         {
@@ -960,7 +978,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     )
     f.add_derived_fact(
         "Fakt_I_P_miner_cement_CO2e_eb_2018",
-        f.fact("Fact_I_P_miner_cement_CO2e_eb_2017")
+        f.fact("Fakt_I_P_miner_cement_CO2e_eb_2017")
         * f.fact("Fact_I_P_miner_CO2e_cb_2018")
         / f.fact("Fact_I_P_miner_CO2e_cb_2015_2017"),
         {
@@ -975,7 +993,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     )
     f.add_derived_fact(
         "Fact_I_P_miner_cement_ratio_CO2e_cb_to_prodvol",
-        f.fact("Fact_I_P_miner_cement_CO2e_eb_2018")
+        f.fact("Fakt_I_P_miner_cement_CO2e_eb_2018")
         / f.fact("Fact_I_P_miner_cement_prodvol_2017"),
         {
             "note HS": "",
@@ -1016,7 +1034,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     )
     f.add_derived_fact(
         "Fact_I_P_miner_chalk_ratio_prodvol_to_fec",
-        f.fact("Fact_I_P_miner_chalk_prodvol_2017")
+        f.fact("Fact_I_P_miner_chalk_prodvol_2018")
         / f.fact("Fact_I_P_miner_chalk_fec_2017"),
         {
             "note HS": "",
@@ -1030,7 +1048,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     )
     f.add_derived_fact(
         "Fact_I_P_miner_chalk_CO2e_cb_2018",
-        f.fact("Fact_I_P_miner_chalk_CO2e_cb_2017")
+        f.fact("Fact_I_P_miner_chalk_CO2e_cb_2016")
         * f.fact("Fact_I_P_miner_CO2e_cb_2018")
         / f.fact("Fact_I_P_miner_CO2e_cb_2015_2017"),
         {
@@ -1046,7 +1064,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_P_miner_chalk_ratio_CO2e_cb_to_prodvol",
         f.fact("Fact_I_P_miner_chalk_CO2e_cb_2018")
-        / f.fact("Fact_I_P_miner_chalk_prodvol_2017"),
+        / f.fact("Fact_I_P_miner_chalk_prodvol_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -1060,7 +1078,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_P_miner_chalk_ratio_CO2e_pb_to_prodvol",
         f.fact("Fact_I_P_miner_chalk_CO2e_pb_2018")
-        / f.fact("Fact_I_P_miner_chalk_prodvol_2017"),
+        / f.fact("Fact_I_P_miner_chalk_prodvol_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -1086,7 +1104,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     )
     f.add_derived_fact(
         "Fact_I_P_miner_ceram_ratio_prodvol_to_fec",
-        f.fact("Fact_I_P_miner_ceramic_prodvol_2017")
+        f.fact("Fact_I_P_miner_ceram_prodvol_2018")
         / f.fact("Fact_I_P_miner_ceram_fec_2018"),
         {
             "note HS": "",
@@ -1116,7 +1134,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_P_miner_ceram_ratio_CO2e_cb_to_prodvol",
         f.fact("Fact_I_P_miner_ceram_CO2e_cb_2018")
-        / f.fact("Fact_I_P_miner_ceramic_prodvol_2017"),
+        / f.fact("Fact_I_P_miner_ceram_prodvol_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -1130,7 +1148,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_P_miner_ceram_ratio_CO2e_pb_to_prodvol",
         f.fact("Fact_I_P_miner_ceram_CO2e_pb_2018")
-        / f.fact("Fact_I_P_miner_ceramic_prodvol_2017"),
+        / f.fact("Fact_I_P_miner_ceram_prodvol_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -1419,8 +1437,8 @@ def calculate_derived_facts(rd: refdata.RefData):
     )
     f.add_derived_fact(
         "Fakt_I_N_metallh_Primaerroute_EEV_2018",
-        f.fact("Fact_I_N_metallh_HKR_EEV_2018")
-        + f.fact("Fact_I_N_metallh_DRI_EEV_2018"),
+        f.fact("Fakt_I_N_metallh_HKR_EEV_2018")
+        + f.fact("Fakt_I_N_metallh_DRI_EEV_2018"),
         {
             "note HS": "umbenennen zu Fact_I_S_metal_steel_primary_fec_2018",
             "group": "ui",
@@ -1447,8 +1465,8 @@ def calculate_derived_facts(rd: refdata.RefData):
     )
     f.add_derived_fact(
         "Fact_I_P_metal_fec_pct_of_steel_primary",
-        f.fact("Fact_I_N_metallh_Primaerroute_EEV_2018")
-        / f.fact("Fact_I_N_metallh_Stahl_EEV_2018"),
+        f.fact("Fakt_I_N_metallh_Primaerroute_EEV_2018")
+        / f.fact("Fakt_I_N_metallh_Stahl_EEV_2018"),
         {
             "note HS": "nicht mehr benötigt seit KFI Update, oder?",
             "group": "ud",
@@ -1461,8 +1479,8 @@ def calculate_derived_facts(rd: refdata.RefData):
     )
     f.add_derived_fact(
         "Fact_I_P_metal_fec_pct_of_steel_secondary",
-        f.fact("Fact_I_N_metallh_Sekundaerroute_EEV_2018")
-        / f.fact("Fact_I_N_metallh_Stahl_EEV_2018"),
+        f.fact("Fakt_I_N_metallh_Sekundaerroute_EEV_2018")
+        / f.fact("Fakt_I_N_metallh_Stahl_EEV_2018"),
         {
             "note HS": "nicht mehr benötigt seit KFI Update, oder?",
             "group": "ud",
@@ -1544,10 +1562,10 @@ def calculate_derived_facts(rd: refdata.RefData):
     )
     f.add_derived_fact(
         "Fact_I_P_other_fec_2018",
-        f.fact("Fact_I_P_fec_2018")
+        f.fact("Fact_I_S_fec_2018")
         - f.fact("Fact_I_S_chem_all_fec_2018")
-        - f.fact("Fact_I_S_miner_fec_2018")
-        - f.fact("Fact_I_S_metal_fec_2018"),
+        - f.fact("Fact_I_P_miner_fec_2018")
+        - f.fact("Fact_I_P_metal_fec_2018"),
         {
             "note HS": "umbenennen zu Fact_I_S_other_fec_2018",
             "group": "ui",
@@ -1752,8 +1770,8 @@ def calculate_derived_facts(rd: refdata.RefData):
     )
     f.add_derived_fact(
         "Fact_I_S_miner_cement_fec_pct_of_coal_2018",
-        f.fact("Fact_I_P_miner_cementchalk_coal_fec_2018")
-        / f.fact("Fact_I_P_miner_cementchalk_fec_2018"),
+        f.fact("Fact_I_S_miner_cementchalk_coal_fec_2018")
+        / f.fact("Fact_I_S_miner_cementchalk_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -1766,8 +1784,8 @@ def calculate_derived_facts(rd: refdata.RefData):
     )
     f.add_derived_fact(
         "Fact_I_S_miner_cement_fec_pct_of_diesel_2018",
-        f.fact("Fact_I_P_miner_cementchalk_diesel_fec_2018")
-        / f.fact("Fact_I_P_miner_cementchalk_fec_2018"),
+        f.fact("Fact_I_S_miner_cementchalk_diesel_fec_2018")
+        / f.fact("Fact_I_S_miner_cementchalk_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -1780,8 +1798,8 @@ def calculate_derived_facts(rd: refdata.RefData):
     )
     f.add_derived_fact(
         "Fact_I_S_miner_cement_fec_pct_of_fueloil_2018",
-        f.fact("Fact_I_P_miner_cementchalk_fueloil_fec_2018")
-        / f.fact("Fact_I_P_miner_cementchalk_fec_2018"),
+        f.fact("Fact_I_S_miner_cementchalk_fueloil_fec_2018")
+        / f.fact("Fact_I_S_miner_cementchalk_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -1794,8 +1812,8 @@ def calculate_derived_facts(rd: refdata.RefData):
     )
     f.add_derived_fact(
         "Fact_I_S_miner_cement_fec_pct_of_lpg_2018",
-        f.fact("Fact_I_P_miner_cementchalk_lpg_fec_2018")
-        / f.fact("Fact_I_P_miner_cementchalk_fec_2018"),
+        f.fact("Fact_I_S_miner_cementchalk_lpg_fec_2018")
+        / f.fact("Fact_I_S_miner_cementchalk_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -1808,8 +1826,8 @@ def calculate_derived_facts(rd: refdata.RefData):
     )
     f.add_derived_fact(
         "Fact_I_S_miner_cement_fec_pct_of_opetpro_2018",
-        f.fact("Fact_I_P_miner_cementchalk_opetpro_fec_2018")
-        / f.fact("Fact_I_P_miner_cementchalk_fec_2018"),
+        f.fact("Fact_I_S_miner_cementchalk_opetpro_fec_2018")
+        / f.fact("Fact_I_S_miner_cementchalk_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -1822,8 +1840,8 @@ def calculate_derived_facts(rd: refdata.RefData):
     )
     f.add_derived_fact(
         "Fact_I_S_miner_cement_fec_pct_of_gas_2018",
-        f.fact("Fact_I_P_miner_cementchalk_gas_fec_2018")
-        / f.fact("Fact_I_P_miner_cementchalk_fec_2018"),
+        f.fact("Fact_I_S_miner_cementchalk_gas_fec_2018")
+        / f.fact("Fact_I_S_miner_cementchalk_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -1836,8 +1854,8 @@ def calculate_derived_facts(rd: refdata.RefData):
     )
     f.add_derived_fact(
         "Fact_I_S_miner_cement_fec_pct_of_biomass_2018",
-        f.fact("Fact_I_P_miner_cementchalk_biomass_fec_2018")
-        / f.fact("Fact_I_P_miner_cementchalk_fec_2018"),
+        f.fact("Fact_I_S_miner_cementchalk_biomass_fec_2018")
+        / f.fact("Fact_I_S_miner_cementchalk_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -1850,8 +1868,8 @@ def calculate_derived_facts(rd: refdata.RefData):
     )
     f.add_derived_fact(
         "Fact_I_S_miner_cement_fec_pct_of_orenew_2018",
-        f.fact("Fact_I_P_miner_cementchalk_orenew_fec_2018")
-        / f.fact("Fact_I_P_miner_cementchalk_fec_2018"),
+        f.fact("Fact_I_S_miner_cementchalk_orenew_fec_2018")
+        / f.fact("Fact_I_S_miner_cementchalk_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -1864,8 +1882,8 @@ def calculate_derived_facts(rd: refdata.RefData):
     )
     f.add_derived_fact(
         "Fact_I_S_miner_cement_fec_pct_of_ofossil_2018",
-        f.fact("Fact_I_P_miner_cementchalk_ofossil_fec_2018")
-        / f.fact("Fact_I_P_miner_cementchalk_fec_2018"),
+        f.fact("Fact_I_S_miner_cementchalk_ofossil_fec_2018")
+        / f.fact("Fact_I_S_miner_cementchalk_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -1878,8 +1896,8 @@ def calculate_derived_facts(rd: refdata.RefData):
     )
     f.add_derived_fact(
         "Fact_I_S_miner_cement_fec_pct_of_elec_2018",
-        f.fact("Fact_I_P_miner_cementchalk_elec_fec_2018")
-        / f.fact("Fact_I_P_miner_cementchalk_fec_2018"),
+        f.fact("Fact_I_S_miner_cementchalk_elec_fec_2018")
+        / f.fact("Fact_I_S_miner_cementchalk_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -1892,8 +1910,8 @@ def calculate_derived_facts(rd: refdata.RefData):
     )
     f.add_derived_fact(
         "Fact_I_S_miner_cement_fec_pct_of_heatnet_2018",
-        f.fact("Fact_I_P_miner_cementchalk_heatnet_fec_2018")
-        / f.fact("Fact_I_P_miner_cementchalk_fec_2018"),
+        f.fact("Fact_I_S_miner_cementchalk_heatnet_fec_2018")
+        / f.fact("Fact_I_S_miner_cementchalk_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -1906,8 +1924,8 @@ def calculate_derived_facts(rd: refdata.RefData):
     )
     f.add_derived_fact(
         "Fact_I_S_miner_chalk_fec_pct_of_coal_2018",
-        f.fact("Fact_I_P_miner_cementchalk_coal_fec_2018")
-        / f.fact("Fact_I_P_miner_cementchalk_fec_2018"),
+        f.fact("Fact_I_S_miner_cementchalk_coal_fec_2018")
+        / f.fact("Fact_I_S_miner_cementchalk_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -1920,8 +1938,8 @@ def calculate_derived_facts(rd: refdata.RefData):
     )
     f.add_derived_fact(
         "Fact_I_S_miner_chalk_fec_pct_of_diesel_2018",
-        f.fact("Fact_I_P_miner_cementchalk_diesel_fec_2018")
-        / f.fact("Fact_I_P_miner_cementchalk_fec_2018"),
+        f.fact("Fact_I_S_miner_cementchalk_diesel_fec_2018")
+        / f.fact("Fact_I_S_miner_cementchalk_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -1934,8 +1952,8 @@ def calculate_derived_facts(rd: refdata.RefData):
     )
     f.add_derived_fact(
         "Fact_I_S_miner_chalk_fec_pct_of_fueloil_2018",
-        f.fact("Fact_I_P_miner_cementchalk_fueloil_fec_2018")
-        / f.fact("Fact_I_P_miner_cementchalk_fec_2018"),
+        f.fact("Fact_I_S_miner_cementchalk_fueloil_fec_2018")
+        / f.fact("Fact_I_S_miner_cementchalk_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -1948,8 +1966,8 @@ def calculate_derived_facts(rd: refdata.RefData):
     )
     f.add_derived_fact(
         "Fact_I_S_miner_chalk_fec_pct_of_lpg_2018",
-        f.fact("Fact_I_P_miner_cementchalk_lpg_fec_2018")
-        / f.fact("Fact_I_P_miner_cementchalk_fec_2018"),
+        f.fact("Fact_I_S_miner_cementchalk_lpg_fec_2018")
+        / f.fact("Fact_I_S_miner_cementchalk_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -1962,8 +1980,8 @@ def calculate_derived_facts(rd: refdata.RefData):
     )
     f.add_derived_fact(
         "Fact_I_S_miner_chalk_fec_pct_of_opetpro_2018",
-        f.fact("Fact_I_P_miner_cementchalk_opetpro_fec_2018")
-        / f.fact("Fact_I_P_miner_cementchalk_fec_2018"),
+        f.fact("Fact_I_S_miner_cementchalk_opetpro_fec_2018")
+        / f.fact("Fact_I_S_miner_cementchalk_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -1976,8 +1994,8 @@ def calculate_derived_facts(rd: refdata.RefData):
     )
     f.add_derived_fact(
         "Fact_I_S_miner_chalk_fec_pct_of_gas_2018",
-        f.fact("Fact_I_P_miner_cementchalk_gas_fec_2018")
-        / f.fact("Fact_I_P_miner_cementchalk_fec_2018"),
+        f.fact("Fact_I_S_miner_cementchalk_gas_fec_2018")
+        / f.fact("Fact_I_S_miner_cementchalk_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -1990,8 +2008,8 @@ def calculate_derived_facts(rd: refdata.RefData):
     )
     f.add_derived_fact(
         "Fact_I_S_miner_chalk_fec_pct_of_biomass_2018",
-        f.fact("Fact_I_P_miner_cementchalk_biomass_fec_2018")
-        / f.fact("Fact_I_P_miner_cementchalk_fec_2018"),
+        f.fact("Fact_I_S_miner_cementchalk_biomass_fec_2018")
+        / f.fact("Fact_I_S_miner_cementchalk_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -2004,8 +2022,8 @@ def calculate_derived_facts(rd: refdata.RefData):
     )
     f.add_derived_fact(
         "Fact_I_S_miner_chalk_fec_pct_of_orenew_2018",
-        f.fact("Fact_I_P_miner_cementchalk_orenew_fec_2018")
-        / f.fact("Fact_I_P_miner_cementchalk_fec_2018"),
+        f.fact("Fact_I_S_miner_cementchalk_orenew_fec_2018")
+        / f.fact("Fact_I_S_miner_cementchalk_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -2018,8 +2036,8 @@ def calculate_derived_facts(rd: refdata.RefData):
     )
     f.add_derived_fact(
         "Fact_I_S_miner_chalk_fec_pct_of_ofossil_2018",
-        f.fact("Fact_I_P_miner_cementchalk_ofossil_fec_2018")
-        / f.fact("Fact_I_P_miner_cementchalk_fec_2018"),
+        f.fact("Fact_I_S_miner_cementchalk_ofossil_fec_2018")
+        / f.fact("Fact_I_S_miner_cementchalk_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -2032,8 +2050,8 @@ def calculate_derived_facts(rd: refdata.RefData):
     )
     f.add_derived_fact(
         "Fact_I_S_miner_chalk_fec_pct_of_elec_2018",
-        f.fact("Fact_I_P_miner_cementchalk_elec_fec_2018")
-        / f.fact("Fact_I_P_miner_cementchalk_fec_2018"),
+        f.fact("Fact_I_S_miner_cementchalk_elec_fec_2018")
+        / f.fact("Fact_I_S_miner_cementchalk_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -2046,8 +2064,8 @@ def calculate_derived_facts(rd: refdata.RefData):
     )
     f.add_derived_fact(
         "Fact_I_S_miner_chalk_fec_pct_of_heatnet_2018",
-        f.fact("Fact_I_P_miner_cementchalk_heatnet_fec_2018")
-        / f.fact("Fact_I_P_miner_cementchalk_fec_2018"),
+        f.fact("Fact_I_S_miner_cementchalk_heatnet_fec_2018")
+        / f.fact("Fact_I_S_miner_cementchalk_fec_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -2677,7 +2695,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_metal_steel_primary_fec_pct_of_coal_2018",
         f.fact("Fact_I_S_metal_steel_primary_coal_fec_2018")
-        / f.fact("Fact_I_N_metallh_Primaerroute_EEV_2018"),
+        / f.fact("Fakt_I_N_metallh_Primaerroute_EEV_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -2691,7 +2709,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_metal_steel_primary_fec_pct_of_diesel_2018",
         f.fact("Fact_I_S_metal_steel_primary_diesel_fec_2018")
-        / f.fact("Fact_I_N_metallh_Primaerroute_EEV_2018"),
+        / f.fact("Fakt_I_N_metallh_Primaerroute_EEV_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -2705,7 +2723,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_metal_steel_primary_fec_pct_of_fueloil_2018",
         f.fact("Fact_I_S_metal_steel_primary_fueloil_fec_2018")
-        / f.fact("Fact_I_N_metallh_Primaerroute_EEV_2018"),
+        / f.fact("Fakt_I_N_metallh_Primaerroute_EEV_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -2719,7 +2737,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_metal_steel_primary_fec_pct_of_lpg_2018",
         f.fact("Fact_I_S_metal_steel_primary_lpg_fec_2018")
-        / f.fact("Fact_I_N_metallh_Primaerroute_EEV_2018"),
+        / f.fact("Fakt_I_N_metallh_Primaerroute_EEV_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -2733,7 +2751,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_metal_steel_primary_fec_pct_of_opetpro_2018",
         f.fact("Fact_I_S_metal_steel_primary_opetpro_fec_2018")
-        / f.fact("Fact_I_N_metallh_Primaerroute_EEV_2018"),
+        / f.fact("Fakt_I_N_metallh_Primaerroute_EEV_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -2747,7 +2765,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_metal_steel_primary_fec_pct_of_gas_2018",
         f.fact("Fact_I_S_metal_steel_primary_gas_fec_2018")
-        / f.fact("Fact_I_N_metallh_Primaerroute_EEV_2018"),
+        / f.fact("Fakt_I_N_metallh_Primaerroute_EEV_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -2761,7 +2779,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_metal_steel_primary_fec_pct_of_biomass_2018",
         f.fact("Fact_I_S_metal_steel_primary_biomass_fec_2018")
-        / f.fact("Fact_I_N_metallh_Primaerroute_EEV_2018"),
+        / f.fact("Fakt_I_N_metallh_Primaerroute_EEV_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -2775,7 +2793,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_metal_steel_primary_fec_pct_of_orenew_2018",
         f.fact("Fact_I_S_metal_steel_primary_orenew_fec_2018")
-        / f.fact("Fact_I_N_metallh_Primaerroute_EEV_2018"),
+        / f.fact("Fakt_I_N_metallh_Primaerroute_EEV_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -2789,7 +2807,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_metal_steel_primary_fec_pct_of_ofossil_2018",
         f.fact("Fact_I_S_metal_steel_primary_ofossil_fec_2018")
-        / f.fact("Fact_I_N_metallh_Primaerroute_EEV_2018"),
+        / f.fact("Fakt_I_N_metallh_Primaerroute_EEV_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -2803,7 +2821,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_metal_steel_primary_fec_pct_of_elec_2018",
         f.fact("Fact_I_S_metal_steel_primary_elec_fec_2018")
-        / f.fact("Fact_I_N_metallh_Primaerroute_EEV_2018"),
+        / f.fact("Fakt_I_N_metallh_Primaerroute_EEV_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -2817,7 +2835,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_metal_steel_primary_fec_pct_of_heatnet_2018",
         f.fact("Fact_I_S_metal_steel_primary_heatnet_fec_2018")
-        / f.fact("Fact_I_N_metallh_Primaerroute_EEV_2018"),
+        / f.fact("Fakt_I_N_metallh_Primaerroute_EEV_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -2831,7 +2849,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_metal_steel_secondary_fec_pct_of_diesel_2018",
         f.fact("Fact_I_S_metal_steel_secondary_diesel_fec_2018")
-        / f.fact("Fact_I_N_metallh_Sekundaerroute_EEV_2018"),
+        / f.fact("Fakt_I_N_metallh_Sekundaerroute_EEV_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -2845,7 +2863,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_metal_steel_secondary_fec_pct_of_fueloil_2018",
         f.fact("Fact_I_S_metal_steel_secondary_fueloil_fec_2018")
-        / f.fact("Fact_I_N_metallh_Sekundaerroute_EEV_2018"),
+        / f.fact("Fakt_I_N_metallh_Sekundaerroute_EEV_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -2859,7 +2877,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_metal_steel_secondary_fec_pct_of_lpg_2018",
         f.fact("Fact_I_S_metal_steel_secondary_lpg_fec_2018")
-        / f.fact("Fact_I_N_metallh_Sekundaerroute_EEV_2018"),
+        / f.fact("Fakt_I_N_metallh_Sekundaerroute_EEV_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -2873,7 +2891,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_metal_steel_secondary_fec_pct_of_opetpro_2018",
         f.fact("Fact_I_S_metal_steel_secondary_opetpro_fec_2018")
-        / f.fact("Fact_I_N_metallh_Sekundaerroute_EEV_2018"),
+        / f.fact("Fakt_I_N_metallh_Sekundaerroute_EEV_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -2887,7 +2905,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_metal_steel_secondary_fec_pct_of_gas_2018",
         f.fact("Fact_I_S_metal_steel_secondary_gas_fec_2018")
-        / f.fact("Fact_I_N_metallh_Sekundaerroute_EEV_2018"),
+        / f.fact("Fakt_I_N_metallh_Sekundaerroute_EEV_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -2901,7 +2919,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_metal_steel_secondary_fec_pct_of_biomass_2018",
         f.fact("Fact_I_S_metal_steel_secondary_biomass_fec_2018")
-        / f.fact("Fact_I_N_metallh_Sekundaerroute_EEV_2018"),
+        / f.fact("Fakt_I_N_metallh_Sekundaerroute_EEV_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -2915,7 +2933,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_metal_steel_secondary_fec_pct_of_orenew_2018",
         f.fact("Fact_I_S_metal_steel_secondary_orenew_fec_2018")
-        / f.fact("Fact_I_N_metallh_Sekundaerroute_EEV_2018"),
+        / f.fact("Fakt_I_N_metallh_Sekundaerroute_EEV_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -2929,7 +2947,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_metal_steel_secondary_fec_pct_of_ofossil_2018",
         f.fact("Fact_I_S_metal_steel_secondary_ofossil_fec_2018")
-        / f.fact("Fact_I_N_metallh_Sekundaerroute_EEV_2018"),
+        / f.fact("Fakt_I_N_metallh_Sekundaerroute_EEV_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -2943,7 +2961,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_metal_steel_secondary_fec_pct_of_elec_2018",
         f.fact("Fact_I_S_metal_steel_secondary_elec_fec_2018")
-        / f.fact("Fact_I_N_metallh_Sekundaerroute_EEV_2018"),
+        / f.fact("Fakt_I_N_metallh_Sekundaerroute_EEV_2018"),
         {
             "note HS": "",
             "group": "ud",
@@ -2957,7 +2975,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     f.add_derived_fact(
         "Fact_I_S_metal_steel_secondary_fec_pct_of_heatnet_2018",
         f.fact("Fact_I_S_metal_steel_secondary_heatnet_fec_2018")
-        / f.fact("Fact_I_N_metallh_Sekundaerroute_EEV_2018"),
+        / f.fact("Fakt_I_N_metallh_Sekundaerroute_EEV_2018"),
         {
             "note HS": "",
             "group": "ud",

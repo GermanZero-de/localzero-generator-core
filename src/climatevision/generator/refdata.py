@@ -396,12 +396,16 @@ class Facts:
             label, value, other_data
         )
         # TODO: Remove this once we actually got rid of the derived facts in the reference data
-        # import math
+        import math
+        import sys
 
-        # previous = float(Row(self._facts, label).float("value"))
-        # if not math.isclose(float(previous), float(value)):
-        #    raise NotEqual(label, previous, float(value))
-        # del self._facts._rows[label]  # type: ignore
+        previous = float(Row(self._facts, label).float("value"))
+        if not math.isclose(float(previous), float(value), rel_tol=0.05):
+            print(
+                f"WARNING: Derived fact {label} has changed from {previous} to {value}",
+                file=sys.stderr,
+            )
+        del self._facts._rows[label]  # type: ignore
 
 
 @dataclass(kw_only=True)
