@@ -95,7 +95,9 @@ def extract_new_facts(rows: ROWS):
         writer = csv.writer(fp, lineterminator="\n")
         for data in rows:
             if data["update 2022"] == "NEW" and data["value"] is not None:
-                writer.writerow([data[c] for c in columns])
+                row = [data[c] for c in columns]
+                row = [d if type(d) != str else d.replace("\n", " ") for d in row]
+                writer.writerow(row)
 
 
 def main():
@@ -110,7 +112,7 @@ def main():
             mode = "extract_new_facts"
         case _:
             print(
-                f"Usage: python {sys.argv[0]} <path-to-2018_facts_edit_2022.xlsx> gen_calculate_derived_facts|extract_new_facts"
+                f"Usage: python  <path-to-2018_facts_edit_2022.xlsx> gen_calculate_derived_facts|extract_new_facts"
             )
             sys.exit(1)
 
