@@ -49,7 +49,8 @@ def cmd_data_normalize(args: Any):
         writer = csv.writer(fp, lineterminator="\n")
         writer.writerow(rows_with_header[0])
         for row in sorted_rows:
-            writer.writerow(row)
+            data = [x.replace("\n", " ") if type(x) == str else x for x in row]
+            writer.writerow(data)
 
 
 def cmd_data_is_production(args: Any):
