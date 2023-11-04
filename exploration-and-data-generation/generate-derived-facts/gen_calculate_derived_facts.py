@@ -1,4 +1,6 @@
 # pyright: strict
+from dataclasses import dataclass
+import graphlib
 import openpyxl
 import sys
 import re
@@ -50,14 +52,33 @@ def rows_with_header(w: openpyxl.Workbook) -> ROWS:
     return rows
 
 
+@dataclass
+class DerivedFact:
+    code: str
+    label: str
+    depends_on: set[str]
+    original_row_num: int
+
+
 def gen_calculate_derived_facts(rows: ROWS):
     print(PRELUDE)
+    derived_facts: dict[str, DerivedFact] = {}
+    row_num = 0
+    all_derived_facts: set[str] = set()
     for data in rows:
         if data["update 2022"] == "F":
             if data["Formula"] is None or data["Formula"] == "noch nicht existent":
                 continue
+            label: str = data["label"]  # type: ignore
+            all_derived_facts.add(label)
+
+    for data in rows:
+        row_num += 1
+        if data["update 2022"] == "F":
+            if data["Formula"] is None or data["Formula"] == "noch nicht existent":
+                continue
                 # raise Exception(f"Missing formula for {data['label']}")
-            label = data["label"]
+            label: str = data["label"]  # type: ignore
             formula: str = data["Formula"]  # type: ignore
             formula = FACT_REGEX.sub(
                 lambda m: replace_fact_name_by_fact_lookup(m.group(1)), formula
@@ -67,7 +88,29 @@ def gen_calculate_derived_facts(rows: ROWS):
             del data["update 2022"]
             del data["value"]
             data = {k: ("" if v is None else v) for k, v in data.items()}
-            print(f"""    f.add_derived_fact("{label}", {formula}, {data})""")
+            code = f"""    f.add_derived_fact("{label}", {formula}, {data})"""
+            dependencies = set(FACT_REGEX.findall(formula)) & all_derived_facts
+            df = DerivedFact(
+                code=code,
+                label=label,
+                depends_on=dependencies,
+                original_row_num=row_num,
+            )
+            derived_facts[label] = df
+
+    tsorter = graphlib.TopologicalSorter(
+        {df.label: df.depends_on for df in derived_facts.values()}
+    )
+    for df in list(tsorter.static_order()):
+        print(derived_facts[df].code)
+
+
+def list_derived_facts(rows: ROWS):
+    for data in rows:
+        if data["update 2022"] == "F":
+            if data["Formula"] is None or data["Formula"] == "noch nicht existent":
+                continue
+            print(data["label"])
 
 
 def extract_new_facts(rows: ROWS):
@@ -91,12 +134,20 @@ def extract_new_facts(rows: ROWS):
 
 
 def main():
-    mode: typing.Literal["gen_calculate_derived_facts", "extract_new_facts", "usage"]
+    mode: typing.Literal[
+        "gen_calculate_derived_facts",
+        "list_derived_facts",
+        "extract_new_facts",
+        "usage",
+    ]
     filename: str = ""
     match sys.argv:
         case [_, f, "gen_calculate_derived_facts"]:
             filename = f
             mode = "gen_calculate_derived_facts"
+        case [_, f, "list_derived_facts"]:
+            filename = f
+            mode = "list_derived_facts"
         case [_, f, "extract_new_facts"]:
             filename = f
             mode = "extract_new_facts"
@@ -111,6 +162,8 @@ def main():
     match mode:
         case "gen_calculate_derived_facts":
             gen_calculate_derived_facts(rows)
+        case "list_derived_facts":
+            list_derived_facts(rows)
         case "extract_new_facts":
             extract_new_facts(rows)
 
