@@ -870,7 +870,8 @@ def calculate_derived_facts(rd: refdata.RefData):
     )
     f.add_derived_fact(
         "Fact_I_P_chem_fec_pct_of_basic",
-        f.fact("Fact_I_S_chem_basic_fec_2018") / f.fact("Fact_I_S_chem_all_fec_2018"),
+        f.fact("Fact_I_S_chem_basic_wo_ammonia_fec_2018")
+        / f.fact("Fact_I_S_chem_all_fec_2018"),
         {
             "note HS": "nicht mehr benötigt seit KFI Update, oder?",
             "group": "ud",
@@ -1733,7 +1734,7 @@ def calculate_derived_facts(rd: refdata.RefData):
         },
     )
     f.add_derived_fact(
-        "Fact_I_P_other_further_fec_2018",
+        "Fact_I_P_other_fec_pct_of_further",
         f.fact("Fact_I_P_other_further_fec_2018") / f.fact("Fact_I_P_other_fec_2018"),
         {
             "note HS": "umbenennen zu Fact_I_S_other_fec_pct_of_further",
@@ -3754,7 +3755,7 @@ def calculate_derived_facts(rd: refdata.RefData):
         "Fact_T_D_MHD_ratio_mlg_to_driver",
         (
             f.fact("Fact_T_D_mlg_MHD_2018_ifeu")
-            + f.fact("Fact_T_D_mlg_Bus_2018_Destatis")
+            - f.fact("Fact_T_D_mlg_Bus_2018_Destatis")
         )
         / f.fact("Fact_T_D_MHD_driver_2018"),
         {
@@ -3962,7 +3963,7 @@ def calculate_derived_facts(rd: refdata.RefData):
         "Fact_T_S_Car_frac_elec_usage_phev_2020",
         f.fact("Fact_T_S_Car_frac_company_2019")
         * f.fact("Fact_T_S_Car_frac_elec_usage_company_phev_2020")
-        + (1 - f.fact("Fact_T_S_Car_frac_elec_usage_company_phev_2020"))
+        + (1 - f.fact("Fact_T_S_Car_frac_company_2019"))
         * f.fact("Fact_T_S_Car_frac_elec_usage_private_phev_2020"),
         {
             "note HS": "",
