@@ -12,17 +12,6 @@ def calculate_derived_facts(rd: refdata.RefData):
 
     f = rd.facts()
 
-    real_fact = refdata.Facts.fact
-
-    def fact_wrapper(self, name: str) -> float:
-        try:
-            return real_fact(self, name)
-        except refdata.RowNotFound:
-            print("BAD FACT: " + name, file=sys.stderr)
-            return 1.0
-
-    refdata.Facts.fact = fact_wrapper
-
     f.add_derived_fact(
         "Fact_H_P_heatnet_prodvol_brutto_2018",
         f.fact("Fact_H_P_heatnet_cogen_prodvol_2018")
