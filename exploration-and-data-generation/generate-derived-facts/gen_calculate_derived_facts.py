@@ -17,16 +17,6 @@ from . import refdata
 def calculate_derived_facts(rd: refdata.RefData):
     import sys
     f = rd.facts()
-
-    real_fact = refdata.Facts.fact
-    def fact_wrapper(self, name: str) -> float:
-        try:
-            return real_fact(self, name)
-        except refdata.RowNotFound:
-            print("BAD FACT: " + name, file=sys.stderr)
-            return 1.0
-
-    refdata.Facts.fact = fact_wrapper
 """
 ROWS: typing.TypeAlias = list[dict[str, str | float | datetime.datetime | None]]
 
