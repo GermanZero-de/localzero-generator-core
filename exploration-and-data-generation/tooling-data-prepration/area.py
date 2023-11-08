@@ -48,29 +48,34 @@ def read_new_ags_master() -> set[str]:
     return set(d[0] for d in newmaster[1:])
 
 
-def compare_with_master(destatis):
-    newmasterags = read_new_ags_master()
-
-    ags_in_destatis = set(d[0] for d in destatis)
-
-    print("In destatis but not in master: ", len(ags_in_destatis - newmasterags))
-    for ags in sorted(list(ags_in_destatis - newmasterags)):
-        print("", ags)
-    print("In master but not in destatis: ", len(newmasterags - ags_in_destatis))
-    for ags in newmasterags - ags_in_destatis:
-        print("", ags)
-
-
 def main():
     ags_to_settlement_ghd = read_and_filter_destatis_settlement()
     destatis_area = read_and_filter_destatis_area()
-    print(len(destatis_area))
-    compare_with_master(destatis_area)
+    ags_in_master = read_new_ags_master()
 
-    for rows in destatis_area:
-        ags = rows[0]
-        if ags not in ags_to_settlement_ghd:
-            assert False, f"Missing ags {ags}"
+    with open("../../data/public/area/2021.csv", "w", encoding="utf-8") as f:
+        csvdata = csv.writer(f, delimiter=",")
+        csvdata.writerow(
+            [
+                "ags",
+                "land_total",
+                "land_settlement",
+                "land_traffic",
+                "veg_agri",
+                "veg_forrest",
+                "veg_wood",
+                "veg_heath",
+                "veg_moor",
+                "veg_marsh",
+                "veg_plant_uncover_com",
+                "water_total",
+                "settlement_ghd",
+            ]
+        )
+        for row in destatis_area:
+            ags = row[0]
+            if ags in ags_in_master:
+                csvdata.writerow(row + [ags_to_settlement_ghd[ags]])
 
 
 main()
