@@ -78,4 +78,5 @@ def main():
                 csvdata.writerow(row + [ags_to_settlement_ghd[ags]])
 
 
-main()
+if __name__ == "__main__":
+    main()
