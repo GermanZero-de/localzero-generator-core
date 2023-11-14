@@ -15,6 +15,7 @@ from agshistory import (
 import agshistory
 import traffic
 import json
+import agsmaster
 
 
 def create_partial_spin_off(
@@ -134,127 +135,6 @@ def changed_urban_area():
             print(ch)
 
 
-def read_master(filename: str) -> typing.Tuple[list[str], dict[str, str]]:
-    """Read the traffic data.  Returns a tuple of the header and a dict
-    mapping the AGS (first column of the file) to the remaining data.
-    """
-    with open(filename, encoding="utf-8") as f:
-        csv_reader = csv.reader(f, delimiter=",")
-        header = next(csv_reader)
-        result = {}
-        for row in csv_reader:
-            ags = row[0]
-            result[ags] = row[1]
-        return header, result
-
-
-def writer_master(date: datetime.date, header: list[str], data: dict[str, str]):
-    with open(
-        f"../../data/public/ags/{date.isoformat()}.csv", "w", encoding="utf-8"
-    ) as f:
-        csv_writer = csv.writer(f, delimiter=",", lineterminator="\n")
-        csv_writer.writerow(header)
-        for ags, desc in sorted(data.items(), key=lambda x: x[0]):
-            csv_writer.writerow([ags, desc])
-
-
-def compare_master(file1: str, file2: str):
-    """Compare two traffic files."""
-    (header1, data1) = read_master(file1)
-    (header2, data2) = read_master(file2)
-    assert header1 == header2
-    equals = 0
-    only_in_1 = []
-    only_in_2 = []
-    unequal = []
-    all_ags = sorted(list(set(data1.keys()) | set(data2.keys())))
-    for ags in all_ags:
-        if ags not in data1:
-            only_in_2.append(ags)
-        elif ags not in data2:
-            only_in_1.append(ags)
-        else:
-            if data1[ags] == data2[ags]:
-                equals += 1
-            else:
-                unequal.append(ags)
-
-    print("SUMMARY")
-    print(
-        "only in 1:",
-        len(only_in_1),
-        "only in 2:",
-        len(only_in_2),
-        "equals:",
-        equals,
-        "unequal:",
-        len(unequal),
-    )
-    print()
-
-    print("ONLY IN 1")
-    for a in only_in_1:
-        print(a)
-    print()
-
-    print("ONLY IN 2")
-    for a in only_in_2:
-        print(a, data2[a])
-    print()
-
-    print("UNEQUAL")
-    for a in unequal:
-        print(a)
-        print(data1[a])
-        print(data2[a])
-    print()
-
-
-def transplant_master(target_date: datetime.date):
-    changes = agshistory.load()
-    master_header, master_data = read_master("../../data/public/ags/master.csv")
-
-    def maybe_create(label: str, change: PartialSpinOff | Dissolution) -> bool:
-        if change.ags not in master_data:
-            print(
-                f"WARNING (during  {label}): {change.ags} ({change.name}) not found.",
-                file=sys.stderr,
-            )
-            return False
-        for p in change.parts:
-            if p.ags not in master_data:
-                master_data[p.ags] = p.name
-        return True
-
-    for ch in changes:
-        if ch.effective_date < agshistory.FIRST_DATE_OF_INTEREST:
-            continue
-        if ch.effective_date > target_date:
-            break
-        match ch:
-            case PartialSpinOff():
-                maybe_create("spin off", ch)
-            case Dissolution(ags=ags):
-                if maybe_create("dissolution", ch):
-                    del master_data[ags]
-            case AgsOrNameChange(
-                ags=ags, new_ags=new_ags, name=name, new_name=new_name
-            ):
-                if ags not in master_data:
-                    print(
-                        f"WARNING (during change): {ags} ({name}) not found.",
-                        file=sys.stderr,
-                    )
-                    continue
-                data = master_data[ags]
-                del master_data[ags]
-                assert new_ags not in master_data
-                master_data[new_ags] = new_name
-            case _:
-                continue
-    writer_master(target_date, master_header, master_data)
-
-
 def main():
     match sys.argv:
         case [_, "convert"]:
@@ -268,11 +148,11 @@ def main():
             traffic.transplant(target_date)
         case [_, "transplant-master", target_date]:
             target_date = datetime.date.fromisoformat(target_date)
-            transplant_master(target_date)
+            agsmaster.transplant(target_date)
         case [_, "compare-traffic", file1, file2]:
             traffic.compare(file1, file2)
         case [_, "compare-master", file1, file2]:
-            compare_master(file1, file2)
+            agsmaster.compare(file1, file2)
         case [_, "changed-urban-area"]:
             changed_urban_area()
 
