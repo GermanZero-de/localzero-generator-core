@@ -345,19 +345,56 @@ class FactOrAssumptionCompleteRow:
             link=row.str("link").strip(),
         )
 
+    @classmethod
+    def create_derived_fact(cls, label: str, value: float, other_data: dict[str, str]):
+        return cls(
+            label=label,
+            group=other_data["group"],
+            description=other_data["description"].strip(),
+            value=value,
+            unit=other_data["unit"].strip(),
+            rationale=other_data["rationale"].strip(),
+            reference=other_data["reference"].strip(),
+            link=other_data["link"].strip(),
+        )
+
+
+@dataclass
+class NotEqual(Exception):
+    label: str
+    previous: float
+    value: float
+
 
 @dataclass(kw_only=True)
 class Facts:
+    _derived_facts: dict[str, FactOrAssumptionCompleteRow]
+    _facts: DataFrame[str]
+
     def __init__(self, facts: DataFrame[str]):
         self._facts = facts
+        self._derived_facts = {}
 
     def fact(self, keyname: str) -> float:
         """Statistics about the past. Must be able to give a source for each fact."""
-        return Row(self._facts, keyname).float("value")
+        df = self._derived_facts.get(keyname)
+        if df is not None:
+            return df.value
+        else:
+            return Row(self._facts, keyname).float("value")
 
     def complete_fact(self, keyname: str) -> FactOrAssumptionCompleteRow:
-        r = Row(self._facts, keyname)
-        return FactOrAssumptionCompleteRow.of_row(keyname, r)
+        df = self._derived_facts.get(keyname)
+        if df is not None:
+            return df
+        else:
+            r = Row(self._facts, keyname)
+            return FactOrAssumptionCompleteRow.of_row(keyname, r)
+
+    def add_derived_fact(self, label: str, value: float, other_data: dict[str, str]):
+        self._derived_facts[label] = FactOrAssumptionCompleteRow.create_derived_fact(
+            label, value, other_data
+        )
 
 
 @dataclass(kw_only=True)
@@ -441,7 +478,6 @@ class RefData:
         industry_dehst: DataFrame[str],
         fix_missing_entries: bool,
     ):
-
         self._area = area
         self._ags_master = {  # type: ignore
             k: r["description"] for (k, r) in ags_master.to_dict().items()
@@ -470,7 +506,7 @@ class RefData:
 
     def _fix_missing_gemfr_ags(self):
         all_gemfr: set[str] = set()
-        for (k, v) in self._ags_master.items():
+        for k, v in self._ags_master.items():
             if (
                 v.find("gemfr. Geb") != -1
                 or v.find("gemeindefreies Gebiet") != -1
@@ -505,7 +541,8 @@ class RefData:
 
     def ags_master(self) -> dict[str, str]:
         """Returns the complete dictionary of AGS, where no big
-        changes have happened to the relevant commune. Key is AGS value is description"""
+        changes have happened to the relevant commune. Key is AGS value is description
+        """
         return self._ags_master
 
     def facts(self) -> Facts:
@@ -652,4 +689,7 @@ class RefData:
             industry_dehst=DataFrame.load_ags(datadir, "industry_facilites"),
             fix_missing_entries=fix_missing_entries,
         )
+        from . import calculate_derived_facts
+
+        calculate_derived_facts.calculate_derived_facts(d)
         return d
