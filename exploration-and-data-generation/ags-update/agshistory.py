@@ -4,6 +4,13 @@ import dataclasses
 import datetime
 
 
+def pct(n: int, tot: int) -> str:
+    if tot == 0:
+        return "0%"
+    else:
+        return f"{n/tot*100:.2f}%"
+
+
 @dataclasses.dataclass
 class Change:
     """All changes to a commune include the AGS and the name and
@@ -17,7 +24,13 @@ class Change:
         return f"{self.effective_date}: {self.ags} ({self.name})"
 
     def mentions_ags(self, ags: str) -> bool:
-        return self.ags == ags
+        return self.ags == ags or ags in self.all_new_ags()
+
+    def all_new_ags(self) -> list[str]:
+        assert False, "This needs to be implemented in each child"
+
+    def show(self, percent: bool) -> str:
+        assert False, "This needs to be implemented in each child"
 
 
 @dataclasses.dataclass
@@ -32,8 +45,11 @@ class AgsOrNameChange(Change):
         n = "" if self.new_name == self.name else f" NEW NAME {self.new_name}"
         return f"{super().__str__()}{a}{n}"
 
-    def mentions_ags(self, ags: str) -> bool:
-        return super().mentions_ags(ags) or self.new_ags == ags
+    def all_new_ags(self) -> list[str]:
+        return [self.new_ags]
+
+    def show(self, percent: bool):
+        return str(self)
 
 
 @dataclasses.dataclass
@@ -48,35 +64,68 @@ class Part:
             f"{self.area_in_sqm} SQM {self.population} POP to {self.ags} ({self.name})"
         )
 
+    def show(self, total_area: int | None, total_pop: int | None) -> str:
+        if total_area is not None and total_pop is not None:
+            return f"{pct(self.area_in_sqm,total_area)} SQM {pct(self.population,total_pop)} POP to {self.ags} ({self.name})"
+        else:
+            return f"{self.area_in_sqm} SQM {self.population} POP to {self.ags} ({self.name})"
+
 
 @dataclasses.dataclass
-class Dissolution(Change):
+class ChangeWithParts(Change):
+    parts: list[Part]
+
+    def all_new_ags(self) -> list[str]:
+        return [p.ags for p in self.parts]
+
+    def total_area_of_parts_in_sqm(self) -> int:
+        return sum(p.area_in_sqm for p in self.parts)
+
+    def total_population_of_parts(self) -> int:
+        return sum(p.population for p in self.parts)
+
+    def total_area_in_sqm(self) -> int:
+        assert False, "this needs to be overriden in the child classes"
+
+    def parts_with_ratios_by_area(self) -> list[tuple[Part, float]]:
+        total_area = self.total_area_in_sqm()
+        return [(p, p.area_in_sqm / total_area) for p in self.parts]
+
+    def show_parts(self, percent: bool) -> str:
+        if percent:
+            total_area = self.total_area_in_sqm()
+            total_pop = self.total_population_of_parts()
+            return ", ".join(p.show(total_area, total_pop) for p in self.parts)
+        else:
+            return ", ".join(str(p) for p in self.parts)
+
+
+@dataclasses.dataclass
+class Dissolution(ChangeWithParts):
     """A dissolution is a change where a commune ceases to exist.
     And the area joins other communes.
     """
 
-    ags: str
-    name: str
-    parts: list[Part]
+    def total_area_in_sqm(self) -> int:
+        return self.total_area_of_parts_in_sqm()
 
     def __str__(self) -> str:
         parts_desc = ", ".join(str(p) for p in self.parts)
         return f"{super().__str__()} DISSOLVED (AREA JOINED {parts_desc})"
 
-    def mentions_ags(self, ags: str) -> bool:
-        return super().mentions_ags(ags) or any(p.ags == ags for p in self.parts)
+    def show(self, percent: bool) -> str:
+        return f"{super().__str__()} DISSOLVED (AREA JOINED {self.show_parts(percent)})"
 
 
 @dataclasses.dataclass
-class PartialSpinOff(Change):
+class PartialSpinOff(ChangeWithParts):
     """A partial spin off is a change where a commune loses some of its area to other communes."""
-
-    ags: str
-    name: str
-    parts: list[Part]
 
     remaining_area: int
     remaining_population: int
+
+    def total_area_in_sqm(self) -> int:
+        return self.total_area_of_parts_in_sqm() + self.remaining_area
 
     def __str__(self) -> str:
         return (
@@ -86,8 +135,13 @@ class PartialSpinOff(Change):
             + f" LEFTOVER {self.remaining_area} {self.remaining_population}"
         )
 
-    def mentions_ags(self, ags: str) -> bool:
-        return super().mentions_ags(ags) or any(p.ags == ags for p in self.parts)
+    def show(self, percent: bool) -> str:
+        return (
+            super().__str__()
+            + " SPINNED OFF "
+            + self.show_parts(percent)
+            + f" LEFTOVER {self.remaining_area} {self.remaining_population}"
+        )
 
 
 FIRST_DATE_OF_INTEREST = datetime.date(2019, 1, 1)
@@ -142,8 +196,8 @@ def load() -> list[Change]:
     return data
 
 
-def show(ags: str):
+def show(percent: bool, ags: str):
     changes = load()
     for ch in changes:
-        if ch.mentions_ags(ags):
-            print(ch)
+        if ags == "ALL" or ch.mentions_ags(ags):
+            print(ch.show(percent))
