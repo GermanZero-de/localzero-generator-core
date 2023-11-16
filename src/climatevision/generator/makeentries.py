@@ -442,13 +442,20 @@ def make_entries(data: RefData, ags: str, year: int) -> Entries:
     a_soil_orgfarm_ratio_CO2e_to_ha = compute_efactor_from_n2o(
         "farmed_soil", farmland_area_organic_sta + greenland_area_organic_sta
     )
-    # unlike the other factors we don't have the n2o levels below the national level available :-(
     data_nat_agri_germany = data.nat_agri(ags_germany)
-    a_soil_orgloss_ratio_CO2e_to_ha = compute_efactor_from_n2o(
-        "farmed_soil_loss_organic",
-        area=farmland_area_organic_germany,
-        data_nat_agri=data_nat_agri_germany,
-    )
+    if data.year_ref() == 2018:
+        # unlike the other factors we don't have the n2o levels below the national level available
+        # in 2018 :-(
+        a_soil_orgloss_ratio_CO2e_to_ha = compute_efactor_from_n2o(
+            "farmed_soil_loss_organic",
+            area=farmland_area_organic_germany,
+            data_nat_agri=data_nat_agri_germany,
+        )
+    else:
+        # But in 2021 we do
+        a_soil_orgloss_ratio_CO2e_to_ha = compute_efactor_from_n2o(
+            "farmed_soil_loss_organic", area=farmland_area_organic_sta
+        )
     a_soil_leaching_ratio_CO2e_to_ha = compute_efactor_from_n2o(
         "diffuse_nitrate_emissions",
         area=farmland_area_total_sta + greenland_area_total_sta,
