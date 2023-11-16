@@ -455,6 +455,7 @@ class RefData:
     _renewable_energy: DataFrame[str]
     _traffic: DataFrame[str]
     _industry_dehst: DataFrame[str]
+    _year_ref: int
 
     def __init__(
         self,
@@ -497,6 +498,8 @@ class RefData:
         self._renewable_energy = renewable_energy
         self._traffic = traffic
         self._industry_dehst = industry_dehst
+        # TODO: Provide a way to set this from the outside
+        self._year_ref = 2018
 
         if fix_missing_entries:
             self._fix_missing_gemfr_ags()
@@ -538,6 +541,14 @@ class RefData:
 
     def _fix_add_derived_rows_for_industry_dehst(self):
         _add_derived_rows_for_summable(self._industry_dehst)
+
+    def year_ref(self) -> int:
+        """Returns the reference year for the reference data.
+        Note individual data sets might sometimes use a slightly different
+        year (e.g. for 2018 we use 2016 nat_organic_agri as that is the best
+        available data for that year).
+        """
+        return self._year_ref
 
     def ags_master(self) -> dict[str, str]:
         """Returns the complete dictionary of AGS, where no big
