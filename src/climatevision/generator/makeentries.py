@@ -123,6 +123,48 @@ def make_entries(data: RefData, ags: str, year: int) -> Entries:
     r_rehab_rate_pa = data.ass("Ass_R_B_P_renovation_rate")
     r_heatnet_ratio_year_target = div(r_flats_w_heatnet, r_flats_com)
 
+    # TODO: Daten von 2021
+    r_new_buildings_gas = 0
+    r_new_buildings_lpg = 0
+    r_new_buildings_fueloil = 0
+    r_new_buildings_coal = 0
+    r_new_buildings_heatnet = 0
+    r_new_buildings_biomass = 0
+    r_new_buildings_elec_heating = 0
+    r_new_buildings_elec_heatpump = 0
+    r_new_buildings_without_heating = 0
+    r_new_flats_gas = 0
+    r_new_flats_lpg = 0
+    r_new_flats_fueloil = 0
+    r_new_flats_coal = 0
+    r_new_flats_heatnet = 0
+    r_new_flats_biomass = 0
+    r_new_flats_elec_heating = 0
+    r_new_flats_elec_heatpump = 0
+    r_new_flats_wo_heating = 0
+
+    r_new_buildings_2001_2004 = data_buildings_com.float("buildings_2001_2004")
+    r_new_buildings_2005_2008 = data_buildings_com.float("buildings_2005_2008")
+    r_new_buildings_2009_2011 = data_buildings_com.float("buildings_2009_2011")
+    r_new_buildings_2011_today = (
+        data.fact("Fact_R_P_newbuilt_2011_2018")
+        * m_population_com_2018
+        / m_population_nat
+    )  # TODO: Altersklassen bis 2021
+    r_new_buildings_2001_today = (
+        r_new_buildings_2001_2004
+        + r_new_buildings_2005_2008
+        + r_new_buildings_2009_2011
+        + r_new_buildings_2011_today
+    )
+
+    r_new_flats = data_buildings_com.float("flats_total")
+    r_new_area_m2 = data_flats_com.float("residential_buildings_area_total") * 1000.0
+
+    r_new_ratio_area_m2_to_flat = div(
+        r_new_area_m2, r_new_flats
+    )  # Durchschnittliche Wohnfläche pro Wohnung
+
     if ags == ags_germany or ags == ags_sta_padded or ags == ags_dis_padded:
         t_rt7 = "nd"
         t_rt3 = "nd"
@@ -631,6 +673,32 @@ def make_entries(data: RefData, ags: str, year: int) -> Entries:
         r_pct_of_area_m2_com=r_pct_of_area_m2_com,
         r_petrol_fec=r_petrol_fec,
         r_rehab_rate_pa=r_rehab_rate_pa,
+        r_new_buildings_gas=r_new_buildings_gas,
+        r_new_buildings_lpg=r_new_buildings_lpg,
+        r_new_buildings_fueloil=r_new_buildings_fueloil,
+        r_new_buildings_coal=r_new_buildings_coal,
+        r_new_buildings_heatnet=r_new_buildings_heatnet,
+        r_new_buildings_biomass=r_new_buildings_biomass,
+        r_new_buildings_elec_heating=r_new_buildings_elec_heating,
+        r_new_buildings_elec_heatpump=r_new_buildings_elec_heatpump,
+        r_new_buildings_without_heating=r_new_buildings_without_heating,
+        r_new_flats_gas=r_new_flats_gas,
+        r_new_flats_lpg=r_new_flats_lpg,
+        r_new_flats_fueloil=r_new_flats_fueloil,
+        r_new_flats_coal=r_new_flats_coal,
+        r_new_flats_heatnet=r_new_flats_heatnet,
+        r_new_flats_biomass=r_new_flats_biomass,
+        r_new_flats_elec_heating=r_new_flats_elec_heating,
+        r_new_flats_elec_heatpump=r_new_flats_elec_heatpump,
+        r_new_flats_wo_heating=r_new_flats_wo_heating,
+        r_new_buildings_2001_2004=r_new_buildings_2001_2004,
+        r_new_buildings_2005_2008=r_new_buildings_2005_2008,
+        r_new_buildings_2009_2011=r_new_buildings_2009_2011,
+        r_new_buildings_2011_today=r_new_buildings_2011_today,
+        r_new_buildings_2001_today=r_new_buildings_2001_today,
+        r_new_flats=r_new_flats,
+        r_new_area_m2=r_new_area_m2,
+        r_new_ratio_area_m2_to_flat=r_new_ratio_area_m2_to_flat,
         t_bus_mega_km_dis=t_bus_mega_km_dis,
         t_ec_rail_gds_diesel=t_ec_rail_gds_diesel,
         t_ec_rail_gds_elec=t_ec_rail_gds_elec,

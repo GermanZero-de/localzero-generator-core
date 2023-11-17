@@ -140,8 +140,8 @@ class Entries:
     r_elec_fec: float
     r_energy_total: float
     r_flats_com: float
-    r_flats_w_heatnet: float
-    r_flats_wo_heatnet: float
+    r_flats_w_heatnet: float  # mit Fernwärme
+    r_flats_wo_heatnet: float  # ohne Fernwärme
     r_fueloil_fec: float
     r_gas_fec: float
     r_heatnet_fec: float
@@ -151,6 +151,32 @@ class Entries:
     r_pct_of_area_m2_com: float
     r_petrol_fec: float
     r_rehab_rate_pa: float
+    r_new_buildings_gas: float
+    r_new_buildings_lpg: float
+    r_new_buildings_fueloil: float
+    r_new_buildings_coal: float
+    r_new_buildings_heatnet: float  # Fernwärme
+    r_new_buildings_biomass: float
+    r_new_buildings_elec_heating: float  # Nachtspeicherheizung
+    r_new_buildings_elec_heatpump: float  # Wärmepumpe
+    r_new_buildings_without_heating: float
+    r_new_flats_gas: float
+    r_new_flats_lpg: float
+    r_new_flats_fueloil: float
+    r_new_flats_coal: float
+    r_new_flats_heatnet: float  # Fernwärme = r_flats_w_heatnet
+    r_new_flats_biomass: float
+    r_new_flats_elec_heating: float  # Nachtspeicherheizung
+    r_new_flats_elec_heatpump: float  # Wärmepumpe
+    r_new_flats_wo_heating: float  # ohne Heitung (without)
+    r_new_buildings_2001_2004: float
+    r_new_buildings_2005_2008: float
+    r_new_buildings_2009_2011: float
+    r_new_buildings_2011_today: float
+    r_new_buildings_2001_today: float
+    r_new_flats: float
+    r_new_area_m2: float
+    r_new_ratio_area_m2_to_flat: float
     t_bus_mega_km_dis: float
     t_ec_rail_gds_diesel: float
     t_ec_rail_gds_elec: float
