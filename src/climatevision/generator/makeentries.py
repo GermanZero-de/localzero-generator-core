@@ -316,29 +316,13 @@ def make_entries(data: RefData, ags: str, year: int) -> Entries:
     t_metro_mega_km_dis = data_destatis_com.float("metro_mega_km")
     t_bus_mega_km_dis = data_destatis_com.float("bus_mega_km")
 
-    # traffic air 
-    t_a_eev_kerosene_overseas_total = 0
-    t_a_conveyance_capa_inland_pkm_com = 0
-    t_a_transport_capa_inland_tkm_com = 0
-    t_a_flight_kilometer_inland_km_com = 0
-    t_a_flight_kilometer_share_inland_com = 0
-    t_a_eev_kerosene_inland_com = 0
-    t_a_eev_petrol_inland_com = 0
-    t_a_ghg_inland_com = 0
-    t_a_conveyance_capa_overseas_pkm_com = 0
-    t_a_transport_capa_overseas_tkm_com = 0
-    t_a_flight_kilometer_overseas_km_com = 0
-    t_a_flight_kilometer_share_overseas_com = 0
-    t_a_eev_kerosene_overseas_com = 0
-    t_a_ghg_overseas_com = 0
-    t_a_sum_ghg_com = 0
+    # traffic air
     traffic_air_df = data.get_df_traffic_air()
-    
-    # lookup municipality specific data for traffic_air
     # lookup total german data
     eev_kerosene_overseas_column = traffic_air_df.columns("eev_kerosene_overseas_mwh")
     t_a_eev_kerosene_overseas_total = float(eev_kerosene_overseas_column[1].get('DG000000',0.0))
 
+    # lookup municipality specific data for traffic_air
     # lookup data for ags to be evaluated    
     traffic_air_ags = traffic_air_df.column_ags()
     if ags in traffic_air_ags:
@@ -379,24 +363,31 @@ def make_entries(data: RefData, ags: str, year: int) -> Entries:
         )
         t_a_ghg_overseas_com = data_destatis_traffic_air.float("ghg_overseas_tco2e")
         t_a_sum_ghg_com = data_destatis_traffic_air.float("sum_ghg_tco2e")
+    else:
+        t_a_conveyance_capa_inland_pkm_com = 0
+        t_a_transport_capa_inland_tkm_com = 0
+        t_a_flight_kilometer_inland_km_com = 0
+        t_a_flight_kilometer_share_inland_com = 0
+        t_a_eev_kerosene_inland_com = 0
+        t_a_eev_petrol_inland_com = 0
+        t_a_ghg_inland_com = 0
+        t_a_conveyance_capa_overseas_pkm_com = 0
+        t_a_transport_capa_overseas_tkm_com = 0
+        t_a_flight_kilometer_overseas_km_com = 0
+        t_a_flight_kilometer_share_overseas_com = 0
+        t_a_eev_kerosene_overseas_com = 0
+        t_a_ghg_overseas_com = 0
+        t_a_sum_ghg_com = 0
 
     # traffic ships
-    t_s_eev_diesel_inland_mwh_total = 0 
-    t_s_eev_fuel_overseas_mwh_total = 0
-    t_s_eev_diesel_inland_mwh_com = 0
-    t_s_eev_fuel_overseas_mwh_com = 0
-    t_s_ghg_inland_com = 0
-    t_s_ghg_overseas_com = 0
-    t_s_ghg_sum_com = 0
     traffic_ships_df = data.get_df_traffic_ships()
-
-    # lookup municipality specific data for traffic_ships
     # lookup total german data
     inland_eev_diesel_column = traffic_ships_df.columns("inland_eev_diesel_mwh")
     overseas_eev_fuel_column = traffic_ships_df.columns("overseas_eev_fuel_mwh")
     t_s_eev_diesel_inland_mwh_total = float(inland_eev_diesel_column[1].get('DG000000',0.0))
     t_s_eev_fuel_overseas_mwh_total = float(overseas_eev_fuel_column[1].get('DG000000',0.0))
 
+    # lookup municipality specific data for traffic_ships
     # lookup data for ags to be evaluated
     traffic_ships_ags = traffic_ships_df.column_ags()
     if ags in traffic_ships_ags:
@@ -412,6 +403,12 @@ def make_entries(data: RefData, ags: str, year: int) -> Entries:
             "overseas_ghg_tco2e"
         )
         t_s_ghg_sum_com = data_destatis_traffic_ships.float("sum_ghg_tco2e")
+    else:
+        t_s_eev_diesel_inland_mwh_com = 0
+        t_s_eev_fuel_overseas_mwh_com = 0
+        t_s_ghg_inland_com = 0
+        t_s_ghg_overseas_com = 0
+        t_s_ghg_sum_com = 0
 
     a_petrol_fec = (
         data.fact("Fact_A_S_petrol_fec_2018") * m_area_agri_com / m_area_agri_nat
