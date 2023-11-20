@@ -594,6 +594,7 @@ def make_entries(data: RefData, ags: str, year: int) -> Entries:
         m_population_sta=m_population_sta,
         m_year_target=m_year_target,
         m_year_today=m_year_today,
+        m_year_ref=data.year_ref(),
         r_area_m2=r_area_m2,
         r_area_m2_1flat=r_area_m2_1flat,
         r_area_m2_2flat=r_area_m2_2flat,

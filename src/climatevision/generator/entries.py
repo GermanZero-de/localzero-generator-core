@@ -114,6 +114,7 @@ class Entries:
     m_population_sta: int  # population of state in 2018
     m_year_target: int
     m_year_today: int
+    m_year_ref: int  # reference year for data (i.e RefData.year_ref() )
     r_area_m2: float
     r_area_m2_1flat: float
     r_area_m2_2flat: float
