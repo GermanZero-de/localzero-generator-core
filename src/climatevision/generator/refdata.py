@@ -120,14 +120,14 @@ class DataFrame(Generic[KeyT]):
 
     def rows(self) -> Iterable[tuple[KeyT, list[str]]]:
         return self._rows.items()
-    
-    def columns(self, keyword_data:str) -> tuple[str, dict[str,str]]:
+
+    def columns(self, keyword_data: str) -> tuple[str, dict[str, str]]:
         """Return column of a given keyword."""
-        column_dict = {"":""}
+        column_dict = {"": ""}
         column_dict.update()
         idx_header = self.header.get(keyword_data, 0)
         for row in self._rows.items():
-            upd = {str(row[0]):str(row[1][idx_header])}
+            upd = {str(row[0]): str(row[1][idx_header])}
             column_dict.update(upd)
         return (keyword_data, column_dict)
 
