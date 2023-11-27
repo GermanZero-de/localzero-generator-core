@@ -128,14 +128,6 @@ class DataFrame(Generic[KeyT]):
         value = float(row[idx_header])
         return value
 
-    def columns(self, keyword_data: str) -> tuple[str, dict[KeyT, str]]:
-        """Return column of a given keyword"""
-        column_dict: dict[KeyT,str] = {}
-        idx_header = self.header.get(keyword_data, 0)
-        for row in self._rows.items():
-            column_dict[(row[0])] = row[1][idx_header]
-        return (keyword_data, column_dict)
-
     def column_ags(self) -> list[KeyT]:
         """Return list of all ags in dataframe except germany"""
         lst = list(self._rows.keys())
