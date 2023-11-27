@@ -121,23 +121,17 @@ class DataFrame(Generic[KeyT]):
     def rows(self) -> Iterable[tuple[KeyT, list[str]]]:
         return self._rows.items()
 
-    def columns(self, keyword_data: str) -> tuple[str, dict[str, str]]:
-        """Return column of a given keyword."""
-        column_dict = {"": ""}
-        column_dict.update()
+    def columns(self, keyword_data: str) -> tuple[str, dict[KeyT, str]]:
+        """Return column of a given keyword"""
+        column_dict: dict[KeyT,str] = {}
         idx_header = self.header.get(keyword_data, 0)
         for row in self._rows.items():
-            upd = {str(row[0]): str(row[1][idx_header])}
-            column_dict.update(upd)
+            column_dict[(row[0])] = row[1][idx_header]
         return (keyword_data, column_dict)
 
-    def column_ags(self) -> list[str]:
+    def column_ags(self) -> list[KeyT]:
         """Return list of all ags in dataframe except germany"""
-        lst = [""]
-        for row in self._rows.items():
-            if row[0] != "DG000000":
-                lst.append(str(row[0]))
-        lst.remove("")
+        lst = list(self._rows.keys())
         return lst
 
     @classmethod
@@ -648,11 +642,9 @@ class RefData:
         return OptRow(self._industry_dehst, ags)
 
     def traffic_air(self, ags: str):
-        """TODO"""
         return Row(self._traffic_air, ags)
 
     def traffic_ships(self, ags: str):
-        """TODO"""
         return Row(self._traffic_ships, ags)
 
     def get_df_traffic_ships(self):
