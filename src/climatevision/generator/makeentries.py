@@ -3,6 +3,7 @@
 from .entries import Entries
 from .utils import div
 from .refdata import RefData, Row
+import pdb
 
 
 def make_entries(data: RefData, ags: str, year: int) -> Entries:
@@ -319,11 +320,8 @@ def make_entries(data: RefData, ags: str, year: int) -> Entries:
 
     # traffic air
     traffic_air_df = data.get_df_traffic_air()
-    # lookup total german data
-    eev_kerosene_overseas_column = traffic_air_df.columns("eev_kerosene_overseas_mwh")
-    t_a_eev_kerosene_overseas_total = float(
-        eev_kerosene_overseas_column[1].get("DG000000", 0.0)
-    )
+    # lookup total german kerosene overseas
+    t_a_eev_kerosene_overseas_total = traffic_air_df.value_in_row("DG000000", "eev_kerosene_overseas_mwh")
 
     # lookup municipality specific data for traffic_air
     # lookup data for ags to be evaluated
@@ -384,15 +382,9 @@ def make_entries(data: RefData, ags: str, year: int) -> Entries:
 
     # traffic ships
     traffic_ships_df = data.get_df_traffic_ships()
-    # lookup total german data
-    inland_eev_diesel_column = traffic_ships_df.columns("inland_eev_diesel_mwh")
-    overseas_eev_fuel_column = traffic_ships_df.columns("overseas_eev_fuel_mwh")
-    t_s_eev_diesel_inland_mwh_total = float(
-        inland_eev_diesel_column[1].get("DG000000", 0.0)
-    )
-    t_s_eev_fuel_overseas_mwh_total = float(
-        overseas_eev_fuel_column[1].get("DG000000", 0.0)
-    )
+    # lookup total german inland eev diesel and overseas eev fuel
+    t_s_eev_diesel_inland_mwh_total = traffic_ships_df.value_in_row("DG000000", "inland_eev_diesel_mwh")
+    t_s_eev_fuel_overseas_mwh_total = traffic_ships_df.value_in_row("DG000000", "overseas_eev_fuel_mwh")
 
     # lookup municipality specific data for traffic_ships
     # lookup data for ags to be evaluated

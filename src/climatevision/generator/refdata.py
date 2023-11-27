@@ -121,6 +121,13 @@ class DataFrame(Generic[KeyT]):
     def rows(self) -> Iterable[tuple[KeyT, list[str]]]:
         return self._rows.items()
 
+    def value_in_row(self, key:KeyT, keyword_value:str) -> float:
+        """Return specified (keyword) value in row"""
+        row = self._rows[key]
+        idx_header = self.header.get(keyword_value, 0)
+        value = float(row[idx_header])
+        return value
+
     def columns(self, keyword_data: str) -> tuple[str, dict[KeyT, str]]:
         """Return column of a given keyword"""
         column_dict: dict[KeyT,str] = {}
