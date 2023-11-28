@@ -3,7 +3,6 @@
 from .entries import Entries
 from .utils import div
 from .refdata import RefData, Row
-import pdb
 
 
 def make_entries(data: RefData, ags: str, year: int) -> Entries:
