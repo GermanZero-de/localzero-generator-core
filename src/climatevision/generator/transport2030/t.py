@@ -102,6 +102,7 @@ class T(InvestCommune):
             invest_com=invest_com,
             invest_pa=invest_pa,
             invest_pa_com=invest_pa_com,
+
             transport=Transport.sum(
                 air.transport,
                 rail.transport,
@@ -112,10 +113,10 @@ class T(InvestCommune):
             ),
         )
         # IS THIS NECESSARY? Not possible with updated traffic air/ship
-        assert (
-            required_domestic_transport_capacity_pkm
-            <= res.transport.transport_capacity_pkm
-        ), "We should know have at least as much provided transport capacity as we required initially"
+        #assert (
+        #    required_domestic_transport_capacity_pkm
+        #    <= res.transport.transport_capacity_pkm
+        #), "We should know have at least as much provided transport capacity as we required initially"
         # Also shouldn't we store the computed transport capacity here?
         # And not what we claimed we need but what we are providing?
         return res

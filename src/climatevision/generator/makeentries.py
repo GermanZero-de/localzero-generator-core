@@ -320,7 +320,8 @@ def make_entries(data: RefData, ags: str, year: int) -> Entries:
     # traffic air
     traffic_air_df = data.get_df_traffic_air()
     # lookup total german kerosene overseas
-    t_a_eev_kerosene_overseas_total = traffic_air_df.value_in_row("DG000000", "eev_kerosene_overseas_mwh")
+    traffic_air_row_germany = Row(traffic_air_df, "DG000000")
+    t_a_eev_kerosene_overseas_total = traffic_air_row_germany.float("eev_kerosene_overseas_mwh")
 
     # lookup municipality specific data for traffic_air
     # lookup data for ags to be evaluated
@@ -382,8 +383,9 @@ def make_entries(data: RefData, ags: str, year: int) -> Entries:
     # traffic ships
     traffic_ships_df = data.get_df_traffic_ships()
     # lookup total german inland eev diesel and overseas eev fuel
-    t_s_eev_diesel_inland_mwh_total = traffic_ships_df.value_in_row("DG000000", "inland_eev_diesel_mwh")
-    t_s_eev_fuel_overseas_mwh_total = traffic_ships_df.value_in_row("DG000000", "overseas_eev_fuel_mwh")
+    traffic_ships_row_germany = Row(traffic_ships_df, "DG000000")
+    t_s_eev_diesel_inland_mwh_total = traffic_ships_row_germany.float("inland_eev_diesel_mwh")
+    t_s_eev_fuel_overseas_mwh_total = traffic_ships_row_germany.float("overseas_eev_fuel_mwh")
 
     # lookup municipality specific data for traffic_ships
     # lookup data for ags to be evaluated
