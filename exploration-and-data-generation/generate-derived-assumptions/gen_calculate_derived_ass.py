@@ -121,8 +121,8 @@ def gen_calculate_derived_ass(rows: ROWS):
 
 def list_derived_assumptions(rows: ROWS):
     for data in rows:
-        if data["update 2022"] == "F":
-            if data["Formula"] is None or data["Formula"] == "noch nicht existent":
+        if data["update 2022?"] == "F":
+            if data[FORMULA] is None or data[FORMULA] == "noch nicht existent":
                 continue
             print(data["label"])
 
@@ -141,7 +141,7 @@ def extract_new_assumptions(rows: ROWS):
     with open("new_assumptions.csv", "w", encoding="utf-8") as fp:
         writer = csv.writer(fp, lineterminator="\n")
         for data in rows:
-            if data["update 2022"] == "NEW" and data["value"] is not None:
+            if data["update 2022?"] in ["NEW", "NEWF"] and data["value"] is not None:
                 row = [data[c] for c in columns]
                 row = [d if type(d) != str else d.replace("\n", " ") for d in row]
                 writer.writerow(row)
