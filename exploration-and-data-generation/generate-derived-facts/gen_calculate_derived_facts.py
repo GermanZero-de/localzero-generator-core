@@ -127,7 +127,7 @@ def extract_new_facts(rows: ROWS):
     with open("new_facts.csv", "w", encoding="utf-8") as fp:
         writer = csv.writer(fp, lineterminator="\n")
         for data in rows:
-            if data["update 2022"] == "NEW" and data["value"] is not None:
+            if data["update 2022"] in ["xNEW"] and data["value"] is not None:
                 row = [data[c] for c in columns]
                 row = [d if type(d) != str else d.replace("\n", " ") for d in row]
                 writer.writerow(row)

@@ -111,14 +111,14 @@ def calculate_derived_assumptions(rd: refdata.RefData):
     a.add_derived_assumption(
         "Ass_I_P_miner_chalk_prodvol_change",
         a.ass("Ass_I_P_miner_chalk_prodvol_2050")
-        / f.fact("Fact_I_P_miner_chalk_prodvol_2017")
+        / f.fact("Fact_I_P_miner_chalk_prodvol_2018")
         - 1,
         {
             "NOTE": "",
             "group": "ud",
             "description": "chalk industry prodvol 2050 change",
             "unit": "%",
-            "rationale": "Berechnung =Ass_I_P_miner_chalk_prodvol_2050/Fact_I_P_miner_chalk_prodvol_2017-1",
+            "rationale": "Berechnung =Ass_I_P_miner_chalk_prodvol_2050/Fact_I_P_miner_chalk_prodvol_2018-1",
             "reference": "",
             "link": "",
         },
@@ -126,14 +126,14 @@ def calculate_derived_assumptions(rd: refdata.RefData):
     a.add_derived_assumption(
         "Ass_I_P_miner_ceramic_prodvol_change",
         a.ass("Ass_I_P_miner_ceramic_prodvol_2050")
-        / f.fact("Fact_I_P_miner_ceramic_prodvol_2017")
+        / f.fact("Fact_I_P_miner_ceram_prodvol_2018")
         - 1,
         {
             "NOTE": "",
             "group": "ud",
             "description": "ceramic industry prodvol 2050 change",
             "unit": "%",
-            "rationale": "Berechnung =Ass_I_P_miner_ceramic_prodvol_2050/Fact_I_P_miner_ceramic_prodvol_2017-1",
+            "rationale": "Berechnung =Ass_I_P_miner_ceramic_prodvol_2050/Fact_I_P_miner_ceram_prodvol_2018-1",
             "reference": "",
             "link": "",
         },
@@ -201,7 +201,7 @@ def calculate_derived_assumptions(rd: refdata.RefData):
     a.add_derived_assumption(
         "Ass_I_P_metal_steel_primary_prodvol_change_2050",
         a.ass("Ass_I_P_metal_steel_primary_prodvol_2050")
-        / f.fact("Fakt_I_N_metallh_Rohstahlmenge_Primaerroute_2018")
+        / f.fact("Fact_I_P_metal_steel_primary_prodvol_2018")
         - 1,
         {
             "NOTE": "",
@@ -216,7 +216,7 @@ def calculate_derived_assumptions(rd: refdata.RefData):
     a.add_derived_assumption(
         "Ass_I_P_metal_steel_secondary_prodvol_change_2050",
         a.ass("Ass_I_P_metal_steel_secondary_prodvol_2050")
-        / f.fact("Fakt_I_N_metallh_Rohstahlmenge_Sekundaerroute_2018")
+        / f.fact("Fact_I_P_metal_steel_secondary_prodvol_2018")
         - 1,
         {
             "NOTE": "",
@@ -303,7 +303,7 @@ def calculate_derived_assumptions(rd: refdata.RefData):
     )
     a.add_derived_assumption(
         "Ass_T_S_Rl_Train_ppl_long_elec_SEC_2050",
-        f.fact("Fact_T_S_RL_Train_gds_EC_elec_2018"),
+        f.fact("Fact_T_S_Rl_Train_ppl_long_elec_SEC_2018"),
         {
             "NOTE": "",
             "group": "ud",
