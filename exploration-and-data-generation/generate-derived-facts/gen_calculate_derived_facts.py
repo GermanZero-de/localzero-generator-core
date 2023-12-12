@@ -66,7 +66,7 @@ def gen_calculate_derived_facts(rows: ROWS):
     row_num = 0
     all_derived_facts: set[str] = set()
     for data in rows:
-        if data["update 2022"] == "F":
+        if data["update 2022"] == "xF":
             if data["Formula"] is None or data["Formula"] == "noch nicht existent":
                 continue
             label: str = data["label"]  # type: ignore
@@ -74,7 +74,7 @@ def gen_calculate_derived_facts(rows: ROWS):
 
     for data in rows:
         row_num += 1
-        if data["update 2022"] == "F":
+        if data["update 2022"] == "xF":
             if data["Formula"] is None or data["Formula"] == "noch nicht existent":
                 continue
                 # raise Exception(f"Missing formula for {data['label']}")
