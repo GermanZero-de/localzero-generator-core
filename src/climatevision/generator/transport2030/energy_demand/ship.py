@@ -40,8 +40,8 @@ class ShipDomestic(Invest):
 
         transport_capacity_tkm = (
             ass("Ass_T_D_trnsprt_gds_ship_2050")
-            * population_commune_203X
-            / population_germany_203X
+            * entries.t_s_eev_fuel_overseas_mwh_com
+            / entries.t_s_eev_fuel_overseas_mwh_total
         )
         demand_ediesel = (
             ass("Ass_T_D_Shp_dmstc_nat_EB_2050")
