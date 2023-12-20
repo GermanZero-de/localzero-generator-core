@@ -5426,3 +5426,18 @@ def calculate_derived_facts(rd: refdata.RefData):
             "link": "",
         },
     )
+    f.add_derived_fact(
+        "Fact_B_S_elec_fec_2018",
+        f.fact("Fact_BAW_S_elec_fec_2018")
+        - f.fact("Fact_A_S_elec_fec_2018")
+        - f.fact("Fact_W_S_elec_fec_2018"),
+        {
+            "note HS": "",
+            "group": "ud",
+            "description": "EEV GHD, Landwirtschaft, Abfallwirtschaft 2021 Strom",
+            "unit": "",
+            "rationale": "Strom Spalte AD (enthält Landwirtschaft Fact_A_S_elec_fec_2018 und Abfallwirtschaft Fact_W_S_elec_fec_2018)",
+            "reference": "AG EB 2023 Bilanz 2021 Zeile 67, Spalte AD",
+            "link": "https://ag-energiebilanzen.de/wp-content/uploads/2023/03/Bilanz-2021.pdf",
+        },
+    )

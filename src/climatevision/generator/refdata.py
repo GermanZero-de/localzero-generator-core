@@ -346,7 +346,7 @@ class FactOrAssumptionCompleteRow:
         )
 
     @classmethod
-    def create_derived_fact(cls, label: str, value: float, other_data: dict[str, str]):
+    def create_derived(cls, label: str, value: float, other_data: dict[str, str]):
         return cls(
             label=label,
             group=other_data["group"],
@@ -392,23 +392,42 @@ class Facts:
             return FactOrAssumptionCompleteRow.of_row(keyname, r)
 
     def add_derived_fact(self, label: str, value: float, other_data: dict[str, str]):
-        self._derived_facts[label] = FactOrAssumptionCompleteRow.create_derived_fact(
+        self._derived_facts[label] = FactOrAssumptionCompleteRow.create_derived(
             label, value, other_data
         )
 
 
 @dataclass(kw_only=True)
 class Assumptions:
+    _derived_assumptions: dict[str, FactOrAssumptionCompleteRow]
+    _assumptions: DataFrame[str]
+
     def __init__(self, assumptions: DataFrame[str]):
         self._assumptions = assumptions
+        self._derived_assumptions = {}
 
     def complete_ass(self, keyname: str) -> FactOrAssumptionCompleteRow:
-        r = Row(self._assumptions, keyname)
-        return FactOrAssumptionCompleteRow.of_row(keyname, r)
+        da = self._derived_assumptions.get(keyname)
+        if da is not None:
+            return da
+        else:
+            r = Row(self._assumptions, keyname)
+            return FactOrAssumptionCompleteRow.of_row(keyname, r)
 
     def ass(self, keyname: str) -> float:
         """Similar to fact, but these try to describe the future. And are therefore based on various assumptions."""
-        return Row(self._assumptions, keyname).float("value")
+        da = self._derived_assumptions.get(keyname)
+        if da is not None:
+            return da.value
+        else:
+            return Row(self._assumptions, keyname).float("value")
+
+    def add_derived_assumption(
+        self, label: str, value: float, other_data: dict[str, str]
+    ):
+        self._derived_assumptions[label] = FactOrAssumptionCompleteRow.create_derived(
+            label, value, other_data
+        )
 
 
 def datadir_or_default(datadir: str | None = None) -> str:
@@ -701,6 +720,8 @@ class RefData:
             fix_missing_entries=fix_missing_entries,
         )
         from . import calculate_derived_facts
+        from . import calculate_derived_assumptions
 
         calculate_derived_facts.calculate_derived_facts(d)
+        calculate_derived_assumptions.calculate_derived_assumptions(d)
         return d
