@@ -37,18 +37,22 @@ class Air:
 
         demand_jetfuel = entries.t_a_eev_kerosene_inland_com
 
-        transport_capacity_pkm = (
-            fact("Fact_T_D_Air_dmstc_nat_trnsprt_ppl_2019")
-            * population_commune_2018
-            / population_germany_2018
-        )
+        # transport_capacity_pkm = (
+        #     fact("Fact_T_D_Air_dmstc_nat_trnsprt_ppl_2019")
+        #     * population_commune_2018
+        #     / population_germany_2018
+        # )
+
+        transport_capacity_pkm = entries.t_a_conveyance_capa_inland_pkm_com
         
-        transport_capacity_tkm = (
-            fact("Fact_T_D_Air_dmstc_nat_trnsprt_gds_2019")
-            * fact("Fact_T_D_Air_dmstc_nat_ratio_2018")
-            * population_commune_2018
-            / population_germany_2018
-        )
+        # transport_capacity_tkm = (
+        #     fact("Fact_T_D_Air_dmstc_nat_trnsprt_gds_2019")
+        #     * fact("Fact_T_D_Air_dmstc_nat_ratio_2018")
+        #     * population_commune_2018
+        #     / population_germany_2018
+        # )
+
+        transport_capacity_tkm = entries.t_a_transport_capa_inland_tkm_com
 
         CO2e_combustion_based = co2e.from_demands(
             facts,
@@ -81,20 +85,22 @@ class Air:
 
         fact = facts.fact
         
-        transport_capacity_pkm = (
-            fact("Fact_T_D_Air_nat_trnsprt_ppl_2019")
-            * population_commune_2018
-            / population_germany_2018
-        )
+        # transport_capacity_pkm = (
+        #     fact("Fact_T_D_Air_nat_trnsprt_ppl_2019")
+        #     * population_commune_2018
+        #     / population_germany_2018
+        # )
 
-        transport_capacity_tkm = (
-            fact("Fact_T_D_Air_dmstc_nat_trnsprt_gds_2019")
-            * fact("Fact_T_D_Air_inter_nat_ratio_2018")
-            * population_commune_2018
-            / population_germany_2018
-        )
+        transport_capacity_pkm = entries.t_a_conveyance_capa_overseas_pkm_com
 
-        transport_capacity_tkm = entries.t_a_transport_capa_inland_tkm_com
+        # transport_capacity_tkm = (
+        #     fact("Fact_T_D_Air_dmstc_nat_trnsprt_gds_2019")
+        #     * fact("Fact_T_D_Air_inter_nat_ratio_2018")
+        #     * population_commune_2018
+        #     / population_germany_2018
+        # )
+
+        transport_capacity_tkm = entries.t_a_transport_capa_overseas_tkm_com
 
         demand_jetfuel = entries.t_a_eev_kerosene_overseas_com
 
