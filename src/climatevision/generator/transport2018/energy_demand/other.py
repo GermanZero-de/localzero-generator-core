@@ -65,7 +65,7 @@ class Other:
         # We do not have a area_kind entry in this case and just use the mean mean modal split of germany.
         elif area_kind_rt7 == "nd":
             transport_capacity_pkm = (
-                population_commune_2018 * 365 * fact("Fact_T_D_modal_split_foot_nat")
+                population_commune_2018 * 365 * fact("Fact_T_D_modal_split_cycl_nat")
             )
         else:
             assert False, f"Do not know how to handle entries.t_rt7 = {area_kind_rt7}"
