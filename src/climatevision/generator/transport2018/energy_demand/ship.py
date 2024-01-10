@@ -35,8 +35,8 @@ class Ship:
 
         transport_capacity_tkm = (
             fact("Fact_T_D_Shp_dmstc_trnsprt_gds_2018")
-            * population_commune_2018
-            / population_germany_2018
+            * entries.t_s_eev_fuel_overseas_mwh_com
+            / entries.t_s_eev_fuel_overseas_mwh_total
         )
 
         demand_diesel = entries.t_s_eev_diesel_inland_mwh_com
@@ -70,8 +70,8 @@ class Ship:
 
         transport_capacity_tkm = (
             fact("Fact_T_D_Shp_sea_nat_mlg_2013")
-            * population_commune_2018
-            / population_germany_2018
+            * entries.t_s_eev_fuel_overseas_mwh_com
+            / entries.t_s_eev_fuel_overseas_mwh_total
         )
 
         demand_fueloil = entries.t_s_eev_fuel_overseas_mwh_com
