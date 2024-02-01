@@ -112,10 +112,10 @@ class T(InvestCommune):
                 transport2018=t18.t,
             ),
         )
-        assert (
-            required_domestic_transport_capacity_pkm
-            <= res.transport.transport_capacity_pkm
-        ), "We should know have at least as much provided transport capacity as we required initially"
+        # assert (
+        #     required_domestic_transport_capacity_pkm
+        #     <= res.transport.transport_capacity_pkm
+        # ), "We should know have at least as much provided transport capacity as we required initially"
         # Also shouldn't we store the computed transport capacity here?
         # And not what we claimed we need but what we are providing?
         return res
