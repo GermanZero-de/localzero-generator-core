@@ -169,14 +169,12 @@ class Entries:
     t_a_conveyance_capa_inland_pkm_com: float
     t_a_transport_capa_inland_tkm_com: float
     t_a_flight_kilometer_inland_km_com: float
-    t_a_flight_kilometer_share_inland_com: float
     t_a_eev_kerosene_inland_com: float
     t_a_eev_petrol_inland_com: float
     t_a_ghg_inland_com: float
     t_a_conveyance_capa_overseas_pkm_com: float
     t_a_transport_capa_overseas_tkm_com: float
     t_a_flight_kilometer_overseas_km_com: float
-    t_a_flight_kilometer_share_overseas_com: float
     t_a_eev_kerosene_overseas_com: float
     t_a_ghg_overseas_com: float
     t_a_sum_ghg_com: float

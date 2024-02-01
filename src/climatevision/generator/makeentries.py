@@ -337,9 +337,6 @@ def make_entries(data: RefData, ags: str, year: int) -> Entries:
         t_a_flight_kilometer_inland_km_com = data_destatis_traffic_air.float(
             "flight_kilometer_inland_km"
         )
-        t_a_flight_kilometer_share_inland_com = data_destatis_traffic_air.float(
-            "flight_kilometer_share_inland"
-        )
         t_a_eev_kerosene_inland_com = data_destatis_traffic_air.float(
             "eev_kerosene_inland_mwh"
         )
@@ -356,9 +353,6 @@ def make_entries(data: RefData, ags: str, year: int) -> Entries:
         t_a_flight_kilometer_overseas_km_com = data_destatis_traffic_air.float(
             "flight_kilometer_overseas_km"
         )
-        t_a_flight_kilometer_share_overseas_com = data_destatis_traffic_air.float(
-            "flight_kilometer_share_overseas"
-        )
         t_a_eev_kerosene_overseas_com = data_destatis_traffic_air.float(
             "eev_kerosene_overseas_mwh"
         )
@@ -368,14 +362,12 @@ def make_entries(data: RefData, ags: str, year: int) -> Entries:
         t_a_conveyance_capa_inland_pkm_com = 0
         t_a_transport_capa_inland_tkm_com = 0
         t_a_flight_kilometer_inland_km_com = 0
-        t_a_flight_kilometer_share_inland_com = 0
         t_a_eev_kerosene_inland_com = 0
         t_a_eev_petrol_inland_com = 0
         t_a_ghg_inland_com = 0
         t_a_conveyance_capa_overseas_pkm_com = 0
         t_a_transport_capa_overseas_tkm_com = 0
         t_a_flight_kilometer_overseas_km_com = 0
-        t_a_flight_kilometer_share_overseas_com = 0
         t_a_eev_kerosene_overseas_com = 0
         t_a_ghg_overseas_com = 0
         t_a_sum_ghg_com = 0
@@ -740,14 +732,12 @@ def make_entries(data: RefData, ags: str, year: int) -> Entries:
         t_a_conveyance_capa_inland_pkm_com=t_a_conveyance_capa_inland_pkm_com,
         t_a_transport_capa_inland_tkm_com=t_a_transport_capa_inland_tkm_com,
         t_a_flight_kilometer_inland_km_com=t_a_flight_kilometer_inland_km_com,
-        t_a_flight_kilometer_share_inland_com=t_a_flight_kilometer_share_inland_com,
         t_a_eev_kerosene_inland_com=t_a_eev_kerosene_inland_com,
         t_a_eev_petrol_inland_com=t_a_eev_petrol_inland_com,
         t_a_ghg_inland_com=t_a_ghg_inland_com,
         t_a_conveyance_capa_overseas_pkm_com=t_a_conveyance_capa_overseas_pkm_com,
         t_a_transport_capa_overseas_tkm_com=t_a_transport_capa_overseas_tkm_com,
         t_a_flight_kilometer_overseas_km_com=t_a_flight_kilometer_overseas_km_com,
-        t_a_flight_kilometer_share_overseas_com=t_a_flight_kilometer_share_overseas_com,
         t_a_eev_kerosene_overseas_com=t_a_eev_kerosene_overseas_com,
         t_a_ghg_overseas_com=t_a_ghg_overseas_com,
         t_a_sum_ghg_com=t_a_sum_ghg_com,
