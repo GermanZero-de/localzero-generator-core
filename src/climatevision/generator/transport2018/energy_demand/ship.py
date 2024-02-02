@@ -3,6 +3,7 @@
 from dataclasses import dataclass
 
 from ...refdata import Facts, Assumptions
+from ...entries import Entries
 from ...utils import element_wise_plus
 
 from . import co2e
@@ -25,6 +26,7 @@ class Ship:
     def calc_ship_domestic(
         cls,
         facts: Facts,
+        entries: Entries,
         assumptions: Assumptions,
         population_commune_2018: int,
         population_germany_2018: int,
@@ -33,14 +35,12 @@ class Ship:
 
         transport_capacity_tkm = (
             fact("Fact_T_D_Shp_dmstc_trnsprt_gds_2018")
-            * population_commune_2018
-            / population_germany_2018
+            * entries.t_s_eev_fuel_overseas_mwh_com
+            / entries.t_s_eev_fuel_overseas_mwh_total
         )
-        demand_diesel = (
-            population_commune_2018
-            / population_germany_2018
-            * fact("Fact_T_S_Shp_diesel_fec_2018")
-        )
+
+        demand_diesel = entries.t_s_eev_diesel_inland_mwh_com
+
         energy = demand_diesel
 
         CO2e_combustion_based = co2e.from_demands(
@@ -61,6 +61,7 @@ class Ship:
     def calc_ship_international(
         cls,
         facts: Facts,
+        entries: Entries,
         assumptions: Assumptions,
         population_commune_2018: int,
         population_germany_2018: int,
@@ -69,12 +70,11 @@ class Ship:
 
         transport_capacity_tkm = (
             fact("Fact_T_D_Shp_sea_nat_mlg_2013")
-            * population_commune_2018
-            / population_germany_2018
+            * entries.t_s_eev_fuel_overseas_mwh_com
+            / entries.t_s_eev_fuel_overseas_mwh_total
         )
-        demand_fueloil = (population_commune_2018 / population_germany_2018) * fact(
-            "Fact_T_D_Shp_sea_nat_EC_2018"
-        )
+
+        demand_fueloil = entries.t_s_eev_fuel_overseas_mwh_com
 
         energy = demand_fueloil
         CO2e_combustion_based = co2e.from_demands(
