@@ -1,6 +1,7 @@
 """Module refdata -- tools to read the reference data used by the generator.
 
 """
+
 # pyright: strict
 
 from dataclasses import dataclass
@@ -167,8 +168,8 @@ def _add_derived_rows_for_summable(df: DataFrame[str]) -> None:
         else:
             d[ags] = [float(x) for x in e]
 
-    sums_by_sta = {}
-    sums_by_dis = {}
+    sums_by_sta: dict[str, list[float]] = {}
+    sums_by_dis: dict[str, list[float]] = {}
     already_in_raw_data: set[str] = set()
 
     for ags, row in df.rows():
@@ -453,6 +454,96 @@ class Version:
             return cls(public=d["public"], proprietary=d["proprietary"])
 
 
+def filename(year_ref: int, what: str) -> str:
+    """Return the filename of the given data set for the current year_ref."""
+    # Most of the time the name is identical to the refyear (e.g. 2018)
+    # But sometimes we only got older data and have stored the file accordingly
+    # (or similarly couldn't get an update of the data and are using 2018 data
+    # for 2021)
+    exceptions: dict[int, dict[str, str]] = {
+        2018: {
+            "ags": "master",  # This is a bit stupid, we should have named that file by year as well.
+            "nat_organic_agri": "2016",
+        },
+        # 2021: {
+        #     "ags": "2021",
+        #     "area": "2021",
+        #     "area_kinds": "2021",
+        #     "assumptions": "2021",
+        #     "buildings": "2018",  # Building census is delayed
+        #     "co2path": "2018",  # We can use this unchanged.
+        #     "destatis": "2018",  # TODO: What about this? (Landkreisfeiner öffentlicher Verkehr)
+        # Have to check for above that we can use the traffic code to do the transplant
+        #     "facts": "2018",  # TODO: Bene is late
+        #     "flats": "2018",  # TODO: Building census is delayed
+        #     "industry_facilites": "2018",  # TODO: Jan
+        #     "nat_agri": "2021",
+        #     "nat_energy": "2021",
+        #     "nat_organic_agri": "2020",
+        #     "nat_res_buildings": "2018",  # TODO: Building census is delayed
+        #     "population": "2021",
+        #     "renewable_energy": "2018",  # TODO: What about this?
+        #     "traffic": "2018",  # TODO: We did write code to transplant this, must still check in the work
+        #     "traffic_air": "2018",  # TODO: ? Can we use the transplant code for this as well?!
+        #     "traffic_rail": "2018",  # TODO: ? CAn we use the transplant code for this as well?!
+        # },
+        # For Testing
+        2021: {
+            "ags": "master",
+            "area": "2021",  # Checked Germany + Göttingen
+            "area_kinds": "2018",
+            "assumptions": "2018",
+            "buildings": "2018",  # Building census is delayed
+            "co2path": "2018",  # TODO: Will we get this?
+            "destatis": "2018",  # TODO: What about this?
+            "facts": "2018",  # TODO: Bene is late
+            "flats": "2018",  # TODO: Building census is delayed
+            "industry_facilites": "2018",  # TODO: Jan
+            "nat_agri": "2018",
+            "nat_energy": "2018",
+            "nat_organic_agri": "2016",
+            "nat_res_buildings": "2018",  # TODO: Building census is delayed
+            "population": "2018",  # Checked Germany
+            "renewable_energy": "2018",  # TODO: What about this?
+            "traffic": "2018",  # TODO: We did write code to transplant this, must still check in the work
+            "traffic_air": "2018",  # TODO: ?
+            "traffic_rail": "2018",  # TODO: ?
+        },
+    }
+    return exceptions.get(year_ref, {}).get(what, str(year_ref))
+
+
+def load_data_frame_ags(
+    datadir: str, year_ref: int, what: str, set_nans_to_0_in_columns: list[str] = []
+) -> DataFrame[str]:
+    """Load a data frame for the given data set for the current refyear."""
+    return DataFrame.load_ags(
+        datadir,
+        what,
+        filename=filename(year_ref, what),
+        set_nans_to_0_in_columns=set_nans_to_0_in_columns,
+    )
+
+
+def load_data_frame(
+    datadir: str,
+    year_ref: int,
+    what: str,
+    key_column: str,
+    key_from_raw: Callable[[str], KeyT],
+    set_nans_to_0_in_columns: list[str] = [],
+) -> DataFrame[KeyT]:
+    """Load a data frame for the given data set for the current refyear."""
+    return DataFrame.load(
+        datadir,
+        what,
+        key_column,
+        key_from_raw,
+        filename=filename(year_ref, what),
+        set_nans_to_0_in_columns=set_nans_to_0_in_columns,
+    )
+
+
 @dataclass(kw_only=True)
 class RefData:
     """This class gives you a single handle around all the reference data."""
@@ -638,7 +729,7 @@ class RefData:
         return Row(self._traffic, ags)
 
     def industry_dehst(self, ags: str):
-        """TODO Function to read CO2e for each ags from DEHST Table."""
+        """Function to read CO2e for each ags from DEHST Table."""
         return OptRow(self._industry_dehst, ags)
 
     @classmethod
@@ -655,6 +746,8 @@ class RefData:
         as we can't yet run the generator without the data.
         """
         datadir = datadir_or_default(datadir)
+        year_ref: int = 2021
+
         area_0_columns = (
             [
                 "land_settlement",
@@ -687,36 +780,47 @@ class RefData:
         population_0_columns = ["total"] if fix_missing_entries else []
         d = cls(
             ags_master=DataFrame.load_ags(datadir, "ags", filename="master"),
-            area=DataFrame.load_ags(
-                datadir, "area", set_nans_to_0_in_columns=area_0_columns
+            area=load_data_frame_ags(
+                datadir, year_ref, "area", set_nans_to_0_in_columns=area_0_columns
             ),
-            area_kinds=DataFrame.load_ags(datadir, "area_kinds"),
-            assumptions=DataFrame.load(
-                datadir, "assumptions", key_column="label", key_from_raw=lambda k: k
+            area_kinds=load_data_frame_ags(datadir, year_ref, "area_kinds"),
+            assumptions=load_data_frame(
+                datadir,
+                year_ref,
+                "assumptions",
+                key_column="label",
+                key_from_raw=lambda k: k,
             ),
-            buildings=DataFrame.load_ags(datadir, "buildings"),
-            co2path=DataFrame.load(
-                datadir, "co2path", key_column="year", key_from_raw=int
+            buildings=load_data_frame_ags(datadir, year_ref, "buildings"),
+            co2path=load_data_frame(
+                datadir, year_ref, "co2path", key_column="year", key_from_raw=int
             ),
-            destatis=DataFrame.load_ags(datadir, "destatis"),
-            facts=DataFrame.load(
-                datadir, "facts", key_column="label", key_from_raw=lambda k: k
+            destatis=load_data_frame_ags(datadir, year_ref, "destatis"),
+            facts=load_data_frame(
+                datadir,
+                year_ref,
+                "facts",
+                key_column="label",
+                key_from_raw=lambda k: k,
             ),
-            flats=DataFrame.load_ags(
-                datadir, "flats", set_nans_to_0_in_columns=flats_0_columns
+            flats=load_data_frame_ags(
+                datadir, year_ref, "flats", set_nans_to_0_in_columns=flats_0_columns
             ),
-            nat_agri=DataFrame.load_ags(datadir, "nat_agri"),
-            nat_organic_agri=DataFrame.load_ags(
-                datadir, "nat_organic_agri", filename="2016"
+            nat_agri=load_data_frame_ags(datadir, year_ref, "nat_agri"),
+            nat_organic_agri=load_data_frame_ags(datadir, year_ref, "nat_organic_agri"),
+            nat_energy=load_data_frame_ags(datadir, year_ref, "nat_energy"),
+            nat_res_buildings=load_data_frame_ags(
+                datadir, year_ref, "nat_res_buildings"
             ),
-            nat_energy=DataFrame.load_ags(datadir, "nat_energy"),
-            nat_res_buildings=DataFrame.load_ags(datadir, "nat_res_buildings"),
-            population=DataFrame.load_ags(
-                datadir, "population", set_nans_to_0_in_columns=population_0_columns
+            population=load_data_frame_ags(
+                datadir,
+                year_ref,
+                "population",
+                set_nans_to_0_in_columns=population_0_columns,
             ),
-            renewable_energy=DataFrame.load_ags(datadir, "renewable_energy"),
-            traffic=DataFrame.load_ags(datadir, "traffic"),
-            industry_dehst=DataFrame.load_ags(datadir, "industry_facilites"),
+            renewable_energy=load_data_frame_ags(datadir, year_ref, "renewable_energy"),
+            traffic=load_data_frame_ags(datadir, year_ref, "traffic"),
+            industry_dehst=load_data_frame_ags(datadir, year_ref, "industry_facilites"),
             fix_missing_entries=fix_missing_entries,
         )
         from . import calculate_derived_facts

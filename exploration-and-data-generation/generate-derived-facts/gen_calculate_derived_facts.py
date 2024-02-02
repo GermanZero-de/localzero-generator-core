@@ -66,24 +66,24 @@ def gen_calculate_derived_facts(rows: ROWS):
     row_num = 0
     all_derived_facts: set[str] = set()
     for data in rows:
-        if data["update 2022"] == "xF":
-            if data["Formula"] is None or data["Formula"] == "noch nicht existent":
+        if data["update 2022"] in ["xF"]:
+            if data["Updated?"] is None or data["Updated?"] == "noch nicht existent":
                 continue
             label: str = data["label"]  # type: ignore
             all_derived_facts.add(label)
 
     for data in rows:
         row_num += 1
-        if data["update 2022"] == "xF":
-            if data["Formula"] is None or data["Formula"] == "noch nicht existent":
+        if data["update 2022"] in ["xF"]:
+            if data["Updated?"] is None or data["Updated?"] == "noch nicht existent":
                 continue
                 # raise Exception(f"Missing formula for {data['label']}")
             label: str = data["label"]  # type: ignore
-            formula: str = data["Formula"]  # type: ignore
+            formula: str = data["Updated?"]  # type: ignore
             formula = FACT_REGEX.sub(
                 lambda m: replace_fact_name_by_fact_lookup(m.group(1)), formula
             )
-            del data["Formula"]
+            del data["Updated?"]
             del data["label"]
             del data["update 2022"]
             del data["value"]
@@ -127,7 +127,13 @@ def extract_new_facts(rows: ROWS):
     with open("new_facts.csv", "w", encoding="utf-8") as fp:
         writer = csv.writer(fp, lineterminator="\n")
         for data in rows:
-            if data["update 2022"] in ["xNEW"] and data["value"] is not None:
+            if (
+                data["update 2022"]
+                in ["xF"]  # ["x", "NEW", "xNEW", "ASS", "xF", "", None, "ggf"]
+                and data["value"] is not None
+            ):
+                if data["Updated?"] != "done":
+                    print(data["label"], data["Updated?"])
                 row = [data[c] for c in columns]
                 row = [d if type(d) != str else d.replace("\n", " ") for d in row]
                 writer.writerow(row)
