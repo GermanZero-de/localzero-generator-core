@@ -165,5 +165,25 @@ class Entries:
     t_mil_mhd_it_ot: float
     t_rt3: str
     t_rt7: str
+    t_a_eev_kerosene_overseas_total: float
+    t_a_conveyance_capa_inland_pkm_com: float
+    t_a_transport_capa_inland_tkm_com: float
+    t_a_flight_kilometer_inland_km_com: float
+    t_a_eev_kerosene_inland_com: float
+    t_a_eev_petrol_inland_com: float
+    t_a_ghg_inland_com: float
+    t_a_conveyance_capa_overseas_pkm_com: float
+    t_a_transport_capa_overseas_tkm_com: float
+    t_a_flight_kilometer_overseas_km_com: float
+    t_a_eev_kerosene_overseas_com: float
+    t_a_ghg_overseas_com: float
+    t_a_sum_ghg_com: float
+    t_s_eev_diesel_inland_mwh_total: float
+    t_s_eev_fuel_overseas_mwh_total: float
+    t_s_eev_diesel_inland_mwh_com: float
+    t_s_eev_fuel_overseas_mwh_com: float
+    t_s_ghg_inland_com: float
+    t_s_ghg_overseas_com: float
+    t_s_ghg_sum_com: float
     w_elec_fec: float
     ags: str
