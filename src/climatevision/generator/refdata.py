@@ -1,10 +1,11 @@
 """Module refdata -- tools to read the reference data used by the generator.
 
 """
+
 # pyright: strict
 
 from dataclasses import dataclass
-from typing import Generic, TypeVar, Callable, Iterable, ParamSpec
+from typing import Generic, TypeVar, Callable, Iterable
 from os import path, getcwd
 import csv
 import json
