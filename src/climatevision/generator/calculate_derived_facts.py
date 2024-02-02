@@ -1028,20 +1028,23 @@ def calculate_derived_facts(rd: refdata.RefData):
         },
     )
 
-    f.add_derived_fact(
-        "Fact_I_P_metal_nonfe_prodvol_2018",
-        f.fact("Fact_I_P_metal_nonfe_semi_prodvol_2018")
-        + f.fact("Fact_I_P_metal_nonfe_foundries_prodvol_2018"),
-        {
-            "note HS": "",
-            "group": "ui",
-            "description": "Produktionsmenge NE-Metalle Halbzeug und Gießereien 2021",
-            "unit": "t/a",
-            "rationale": 'Die gesamte Produktionsmenge der Nichteisen-Metalle (6.505.634 t fÃ¼r "Erzeugung, Halbzeug, Guss") wird zusammengefasst und wie Aluminium behandelt, da 2/3 der Emissionen aus der Aluminium-Prdouktion stammen, 1/7 aus Kupfer, der Rest Blei, Zink, Sonstiges (DEHSt 2018). Die WVMetalle gibt keine Emissionen an, hÃ¤lt es aber ebenso fÃ¼r legitim, aus der gesamten Produktionsmenge und dem gesamten Energieeinsatz einen Faktor pro t zu machen. Hinzu kommt noch die Produktionsmenge der Eisen-Gießereien i.H.v . 3.100.000 t.',
-            "reference": "WVMetalle 2023 Quartalsbericht August 2023 S.2,\nDEHSt 2018 S. 33",
-            "link": "https://www.wvmetalle.de/index.php?eID=dumpFile&t=f&f=444730&token=5716e1a4ebbd79113eeabfe8899807ca5188eaa9\nhttps://www.dehst.de/SharedDocs/downloads/DE/publikationen/VET-Bericht-2018.pdf?__blob=publicationFile&v=5",
-        },
-    )
+    if rd.year_ref() != 2018:
+        # In 2018 we had Fact_I_P_metal_nonfe_prodvol_2018 as a non derived fact.
+        # In 2021 we derived it.
+        f.add_derived_fact(
+            "Fact_I_P_metal_nonfe_prodvol_2018",
+            f.fact("Fact_I_P_metal_nonfe_semi_prodvol_2018")
+            + f.fact("Fact_I_P_metal_nonfe_foundries_prodvol_2018"),
+            {
+                "note HS": "",
+                "group": "ui",
+                "description": "Produktionsmenge NE-Metalle Halbzeug und Gießereien 2021",
+                "unit": "t/a",
+                "rationale": 'Die gesamte Produktionsmenge der Nichteisen-Metalle (6.505.634 t fÃ¼r "Erzeugung, Halbzeug, Guss") wird zusammengefasst und wie Aluminium behandelt, da 2/3 der Emissionen aus der Aluminium-Prdouktion stammen, 1/7 aus Kupfer, der Rest Blei, Zink, Sonstiges (DEHSt 2018). Die WVMetalle gibt keine Emissionen an, hÃ¤lt es aber ebenso fÃ¼r legitim, aus der gesamten Produktionsmenge und dem gesamten Energieeinsatz einen Faktor pro t zu machen. Hinzu kommt noch die Produktionsmenge der Eisen-Gießereien i.H.v . 3.100.000 t.',
+                "reference": "WVMetalle 2023 Quartalsbericht August 2023 S.2,\nDEHSt 2018 S. 33",
+                "link": "https://www.wvmetalle.de/index.php?eID=dumpFile&t=f&f=444730&token=5716e1a4ebbd79113eeabfe8899807ca5188eaa9\nhttps://www.dehst.de/SharedDocs/downloads/DE/publikationen/VET-Bericht-2018.pdf?__blob=publicationFile&v=5",
+            },
+        )
 
     f.add_derived_fact(
         "Fact_I_P_metal_nonfe_ratio_prodvol_to_fec",
@@ -1143,50 +1146,6 @@ def calculate_derived_facts(rd: refdata.RefData):
         },
     )
 
-    f.add_derived_fact(
-        "Fact_I_P_other_further_fec_2018",
-        f.fact("Fact_I_P_other_fec_2018")
-        - f.fact("Fact_I_P_other_paper_fec_2018")
-        - f.fact("Fact_I_P_other_food_fec_2018"),
-        {
-            "note HS": "umbenennen zu Fact_I_S_other_further_fec_2018",
-            "group": "ui",
-            "description": "EEV Weitere Branchen 2021 (WZ  8, 22, 24.2, 24.3, 25, 28 ohne 28.23, 29, 30, alle anderen WZ ohne 5.1, 5.2, 6, 9, 19.1 ,19.2)",
-            "unit": "",
-            "rationale": "Von dem gesamten EEV von sonstiger Industrie wurden die EEV von Papier- und ErnÃ¤hrungsindustrie abgezogen. =Fact_I_P_other_fec_2018-Fact_I_P_other_paper_fec_2018-Fact_I_P_other_food_fec_2018",
-            "reference": "AG EB 2018 Zeile 46, 51, 56,57, 58, 59 Spalte AI",
-            "link": "",
-        },
-    )
-
-    f.add_derived_fact(
-        "Fact_I_P_other_further_ratio_CO2e_pb_to_fec",
-        f.fact("Fact_I_P_other_2d_CO2e_pb_2018")
-        / f.fact("Fact_I_P_other_further_fec_2018"),
-        {
-            "note HS": "",
-            "group": "ud",
-            "description": "Ratio pb CO2e (CRF 2.D) to fec further industry 2018",
-            "unit": "t/MWh",
-            "rationale": "Da keine zuverlÃ¤ssigen Zahlen Ã¼ber die Produktionsmenge weiterer Branchen vorliegen, muss hier auf den EEV zurÃ¼ckgegriffen werden, also Divsion von Fact_I_P_other_2d_CO2e_pb_2018/Fact_I_P_other_further_fec_2018",
-            "reference": "UBA RESCUE 2019 S. 280",
-            "link": "",
-        },
-    )
-    f.add_derived_fact(
-        "Fact_I_P_other_2efgh_ratio_CO2e_pb_to_fec",
-        f.fact("Fact_I_P_other_2efgh_CO2e_pb_2018")
-        / f.fact("Fact_I_P_other_further_fec_2018"),
-        {
-            "note HS": "",
-            "group": "ud",
-            "description": "Ratio pb CO2e (f-gases, CRF 2.E-H) to fec further industry 2018",
-            "unit": "t/MWh",
-            "rationale": "Da keine zuverlÃ¤ssigen Zahlen Ã¼ber die Produktionsmenge weiterer Branchen vorliegen, muss hier auf den EEV zurÃ¼ckgegriffen werden, also Divsion von Fact_I_P_other_2efgh_CO2e_pb_2018/Fact_I_P_other_further_fec_2018",
-            "reference": "UBA RESCUE 2019 S. 280",
-            "link": "",
-        },
-    )
     f.add_derived_fact(
         "Fact_I_S_miner_cement_fec_pct_of_coal_2018",
         f.fact("Fact_I_S_miner_cementchalk_coal_fec_2018")
@@ -4593,6 +4552,21 @@ def calculate_derived_facts(rd: refdata.RefData):
             "link": "",
         },
     )
+    f.add_derived_fact(
+        "Fact_E_P_wind_onshore_full_load_hours",
+        f.fact("Fact_E_P_elec_prodvol_brutto_2018")
+        * f.fact("Fact_E_P_wind_onshore_pct_of_gep_2018")
+        / f.fact("Fact_E_P_wind_onshore_power_installed_2018"),
+        {
+            "note HS": "",
+            "group": "ud",
+            "description": "WEA Onshore Volllaststunden 2021",
+            "unit": "",
+            "rationale": "",
+            "reference": "",
+            "link": "",
+        },
+    )
 
     f.add_derived_fact(
         "Fact_E_P_coal_black_cogen_ratio_2018",
@@ -5918,5 +5892,49 @@ def calculate_derived_facts(rd: refdata.RefData):
             "rationale": "Strom Spalte AD (enthält Landwirtschaft Fact_A_S_elec_fec_2018 und Abfallwirtschaft Fact_W_S_elec_fec_2018)",
             "reference": "AG EB 2023 Bilanz 2021 Zeile 67, Spalte AD",
             "link": "https://ag-energiebilanzen.de/wp-content/uploads/2023/03/Bilanz-2021.pdf",
+        },
+    )
+    f.add_derived_fact(
+        "Fact_I_P_other_further_fec_2018",
+        f.fact("Fact_I_P_other_fec_2018")
+        - f.fact("Fact_I_P_other_paper_fec_2018")
+        - f.fact("Fact_I_P_other_food_fec_2018"),
+        {
+            "note HS": "umbenennen zu Fact_I_S_other_further_fec_2018",
+            "group": "ui",
+            "description": "EEV Weitere Branchen 2021 (WZ  8, 22, 24.2, 24.3, 25, 28 ohne 28.23, 29, 30, alle anderen WZ ohne 5.1, 5.2, 6, 9, 19.1 ,19.2)",
+            "unit": "",
+            "rationale": "Von dem gesamten EEV von sonstiger Industrie wurden die EEV von Papier- und ErnÃ¤hrungsindustrie abgezogen. =Fact_I_P_other_fec_2018-Fact_I_P_other_paper_fec_2018-Fact_I_P_other_food_fec_2018",
+            "reference": "AG EB 2018 Zeile 46, 51, 56,57, 58, 59 Spalte AI",
+            "link": "",
+        },
+    )
+
+    f.add_derived_fact(
+        "Fact_I_P_other_further_ratio_CO2e_pb_to_fec",
+        f.fact("Fact_I_P_other_2d_CO2e_pb_2018")
+        / f.fact("Fact_I_P_other_further_fec_2018"),
+        {
+            "note HS": "",
+            "group": "ud",
+            "description": "Ratio pb CO2e (CRF 2.D) to fec further industry 2018",
+            "unit": "t/MWh",
+            "rationale": "Da keine zuverlÃ¤ssigen Zahlen Ã¼ber die Produktionsmenge weiterer Branchen vorliegen, muss hier auf den EEV zurÃ¼ckgegriffen werden, also Divsion von Fact_I_P_other_2d_CO2e_pb_2018/Fact_I_P_other_further_fec_2018",
+            "reference": "UBA RESCUE 2019 S. 280",
+            "link": "",
+        },
+    )
+    f.add_derived_fact(
+        "Fact_I_P_other_2efgh_ratio_CO2e_pb_to_fec",
+        f.fact("Fact_I_P_other_2efgh_CO2e_pb_2018")
+        / f.fact("Fact_I_P_other_further_fec_2018"),
+        {
+            "note HS": "",
+            "group": "ud",
+            "description": "Ratio pb CO2e (f-gases, CRF 2.E-H) to fec further industry 2018",
+            "unit": "t/MWh",
+            "rationale": "Da keine zuverlÃ¤ssigen Zahlen Ã¼ber die Produktionsmenge weiterer Branchen vorliegen, muss hier auf den EEV zurÃ¼ckgegriffen werden, also Divsion von Fact_I_P_other_2efgh_CO2e_pb_2018/Fact_I_P_other_further_fec_2018",
+            "reference": "UBA RESCUE 2019 S. 280",
+            "link": "",
         },
     )
