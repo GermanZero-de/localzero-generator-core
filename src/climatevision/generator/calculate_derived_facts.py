@@ -13,6 +13,272 @@ def calculate_derived_facts(rd: refdata.RefData):
     f = rd.facts()
 
     f.add_derived_fact(
+        "Fact_M_CO2e_lulucf_year_ref",
+        f.fact(f"Fact_M_CO2e_lulucf_{rd.year_ref()}"),
+        {
+            "note HS": "",
+            "group": "ud",
+            "description": "",
+            "unit": "%",
+            "rationale": "",
+            "reference": "",
+            "link": "",
+        },
+    )
+    f.add_derived_fact(
+        "Fact_M_CO2e_wo_lulucf_year_ref",
+        f.fact(f"Fact_M_CO2e_wo_lulucf_{rd.year_ref()}"),
+        {
+            "note HS": "",
+            "group": "ud",
+            "description": "",
+            "unit": "%",
+            "rationale": "",
+            "reference": "",
+            "link": "",
+        },
+    )
+    f.add_derived_fact(
+        "Fact_M_CO2e_wo_lulucf_2015_vs_2018",
+        f.fact("Fact_M_CO2e_wo_lulucf_2015") / f.fact("Fact_M_CO2e_wo_lulucf_year_ref"),
+        {
+            "note HS": "ACHTUNG VARIABLE ENDUNG",
+            "group": "ud",
+            "description": "Emissionen ohne LULUCF Deutschland 2015 vs 2018 in Prozentpunkten",
+            "unit": "%",
+            "rationale": "Offizieller Wert",
+            "reference": "UBA 2021 Trendtabelle THG 1990-2020, Blatt THG",
+            "link": "https://www.umweltbundesamt.de/themen/klima-energie/treibhausgas-emissionen",
+        },
+    )
+    f.add_derived_fact(
+        "Fact_M_CO2e_wo_lulucf_2016_vs_2018",
+        f.fact("Fact_M_CO2e_wo_lulucf_2016") / f.fact("Fact_M_CO2e_wo_lulucf_year_ref"),
+        {
+            "note HS": "ACHTUNG VARIABLE ENDUNG",
+            "group": "ud",
+            "description": "Emissionen ohne LULUCF Deutschland 2016 vs 2018 in Prozentpunkten",
+            "unit": "%",
+            "rationale": "Offizieller Wert",
+            "reference": "UBA 2021 Trendtabelle THG 1990-2020, Blatt THG",
+            "link": "https://www.umweltbundesamt.de/themen/klima-energie/treibhausgas-emissionen",
+        },
+    )
+    f.add_derived_fact(
+        "Fact_M_CO2e_wo_lulucf_2017_vs_2018",
+        f.fact("Fact_M_CO2e_wo_lulucf_2017") / f.fact("Fact_M_CO2e_wo_lulucf_year_ref"),
+        {
+            "note HS": "ACHTUNG VARIABLE ENDUNG",
+            "group": "ud",
+            "description": "Emissionen ohne LULUCF Deutschland 2017 vs 2018 in Prozentpunkten",
+            "unit": "%",
+            "rationale": "Offizieller Wert",
+            "reference": "UBA 2021 Trendtabelle THG 1990-2020, Blatt THG",
+            "link": "https://www.umweltbundesamt.de/themen/klima-energie/treibhausgas-emissionen",
+        },
+    )
+    f.add_derived_fact(
+        "Fact_M_CO2e_wo_lulucf_2018_vs_2018",
+        f.fact("Fact_M_CO2e_wo_lulucf_2018") / f.fact("Fact_M_CO2e_wo_lulucf_year_ref"),
+        {
+            "note HS": "ACHTUNG VARIABLE ENDUNG",
+            "group": "ud",
+            "description": "Emissionen ohne LULUCF Deutschland 2018 vs 2018 in Prozentpunkten",
+            "unit": "%",
+            "rationale": "Offizieller Wert",
+            "reference": "UBA 2021 Trendtabelle THG 1990-2020, Blatt THG",
+            "link": "https://www.umweltbundesamt.de/themen/klima-energie/treibhausgas-emissionen",
+        },
+    )
+    f.add_derived_fact(
+        "Fact_M_CO2e_wo_lulucf_2019_vs_2018",
+        f.fact("Fact_M_CO2e_wo_lulucf_2019") / f.fact("Fact_M_CO2e_wo_lulucf_year_ref"),
+        {
+            "note HS": "ACHTUNG VARIABLE ENDUNG",
+            "group": "ud",
+            "description": "Emissionen ohne LULUCF Deutschland 2019 vs 2018 in Prozentpunkten",
+            "unit": "%",
+            "rationale": "Offizieller Wert",
+            "reference": "UBA 2021 Trendtabelle THG 1990-2020, Blatt THG",
+            "link": "https://www.umweltbundesamt.de/themen/klima-energie/treibhausgas-emissionen",
+        },
+    )
+    f.add_derived_fact(
+        "Fact_M_CO2e_wo_lulucf_2020_vs_2018",
+        f.fact("Fact_M_CO2e_wo_lulucf_2020") / f.fact("Fact_M_CO2e_wo_lulucf_year_ref"),
+        {
+            "note HS": "ACHTUNG VARIABLE ENDUNG",
+            "group": "ud",
+            "description": "Emissionen ohne LULUCF Deutschland 2020 vs 2018 in Prozentpunkten",
+            "unit": "%",
+            "rationale": "Offizielle SchÃ¤tzung",
+            "reference": "UBA 2021 Trendtabelle THG 1990-2020, Blatt THG",
+            "link": "https://www.umweltbundesamt.de/themen/klima-energie/treibhausgas-emissionen",
+        },
+    )
+    f.add_derived_fact(
+        "Fact_M_CO2e_wo_lulucf_2021_vs_2018",
+        f.fact("Fact_M_CO2e_wo_lulucf_2021") / f.fact("Fact_M_CO2e_wo_lulucf_year_ref"),
+        {
+            "note HS": "ACHTUNG VARIABLE ENDUNG",
+            "group": "ud",
+            "description": "Emissionen ohne LULUCF Deutschland 2021 vs 2018 in Prozentpunkten",
+            "unit": "%",
+            "rationale": "SchÃ¤tzung von August 2021",
+            "reference": "Ã–ko-Institut 2021 Hochrechnung der deutschen THG-Emissionen 2021",
+            "link": "https://www.oeko.de/fileadmin/oekodoc/Hochrechnung-der-deutschen-THG-Emissionen-2021.pdf ",
+        },
+    )
+
+    # TODO: ENABLE WHEN DATA WAS ADDED
+    # f.add_derived_fact(
+    #     "Fact_M_CO2e_wo_lulucf_2022_vs_2018",
+    #     f.fact("Fact_M_CO2e_wo_lulucf_2022") / f.fact("Fact_M_CO2e_wo_lulucf_year_ref"),
+    #     {
+    #         "note HS": "ACHTUNG VARIABLE ENDUNG",
+    #         "group": "ud",
+    #         "description": "Emissionen ohne LULUCF Deutschland 2022 vs 2018 in Prozentpunkten",
+    #         "unit": "%",
+    #         "rationale": "SchÃ¤tzung von August 2021",
+    #         "reference": "Ã–ko-Institut 2021 Hochrechnung der deutschen THG-Emissionen 2021",
+    #         "link": "https://www.oeko.de/fileadmin/oekodoc/Hochrechnung-der-deutschen-THG-Emissionen-2021.pdf ",
+    #     },
+    # )
+    # f.add_derived_fact(
+    #     "Fact_M_CO2e_wo_lulucf_2023_vs_2018",
+    #     f.fact("Fact_M_CO2e_wo_lulucf_2023") / f.fact("Fact_M_CO2e_wo_lulucf_year_ref"),
+    #     {
+    #         "note HS": "ACHTUNG VARIABLE ENDUNG",
+    #         "group": "ud",
+    #         "description": "Emissionen ohne LULUCF Deutschland 2023 vs 2018 in Prozentpunkten",
+    #         "unit": "%",
+    #         "rationale": "SchÃ¤tzung von August 2021",
+    #         "reference": "Ã–ko-Institut 2021 Hochrechnung der deutschen THG-Emissionen 2021",
+    #         "link": "https://www.oeko.de/fileadmin/oekodoc/Hochrechnung-der-deutschen-THG-Emissionen-2021.pdf ",
+    #     },
+    # )
+
+    f.add_derived_fact(
+        "Fact_M_CO2e_lulucf_2015_vs_2018",
+        f.fact("Fact_M_CO2e_lulucf_2015") / f.fact("Fact_M_CO2e_lulucf_year_ref"),
+        {
+            "note HS": "ACHTUNG VARIABLE ENDUNG",
+            "group": "ud",
+            "description": "Emissionen LULUCF Deutschland 2015 vs 2018 in Prozentpunkten",
+            "unit": "%",
+            "rationale": "Offizieller Wert",
+            "reference": "UBA 2021 Trendtabelle THG 1990-2020, Blatt THG",
+            "link": "https://www.umweltbundesamt.de/themen/klima-energie/treibhausgas-emissionen",
+        },
+    )
+    f.add_derived_fact(
+        "Fact_M_CO2e_lulucf_2016_vs_2018",
+        f.fact("Fact_M_CO2e_lulucf_2016") / f.fact("Fact_M_CO2e_lulucf_year_ref"),
+        {
+            "note HS": "ACHTUNG VARIABLE ENDUNG",
+            "group": "ud",
+            "description": "Emissionen LULUCF Deutschland 2016 vs 2018 in Prozentpunkten",
+            "unit": "%",
+            "rationale": "Offizieller Wert",
+            "reference": "UBA 2021 Trendtabelle THG 1990-2020, Blatt THG",
+            "link": "https://www.umweltbundesamt.de/themen/klima-energie/treibhausgas-emissionen",
+        },
+    )
+    f.add_derived_fact(
+        "Fact_M_CO2e_lulucf_2017_vs_2018",
+        f.fact("Fact_M_CO2e_lulucf_2017") / f.fact("Fact_M_CO2e_lulucf_year_ref"),
+        {
+            "note HS": "ACHTUNG VARIABLE ENDUNG",
+            "group": "ud",
+            "description": "Emissionen LULUCF Deutschland 2017 vs 2018 in Prozentpunkten",
+            "unit": "%",
+            "rationale": "Offizieller Wert",
+            "reference": "UBA 2021 Trendtabelle THG 1990-2020, Blatt THG",
+            "link": "https://www.umweltbundesamt.de/themen/klima-energie/treibhausgas-emissionen",
+        },
+    )
+    f.add_derived_fact(
+        "Fact_M_CO2e_lulucf_2018_vs_2018",
+        f.fact("Fact_M_CO2e_lulucf_2018") / f.fact("Fact_M_CO2e_lulucf_year_ref"),
+        {
+            "note HS": "ACHTUNG VARIABLE ENDUNG",
+            "group": "ud",
+            "description": "Emissionen LULUCF Deutschland 2018 vs 2018 in Prozentpunkten",
+            "unit": "%",
+            "rationale": "Offizieller Wert",
+            "reference": "UBA 2021 Trendtabelle THG 1990-2020, Blatt THG",
+            "link": "https://www.umweltbundesamt.de/themen/klima-energie/treibhausgas-emissionen",
+        },
+    )
+    f.add_derived_fact(
+        "Fact_M_CO2e_lulucf_2019_vs_2018",
+        f.fact("Fact_M_CO2e_lulucf_2019") / f.fact("Fact_M_CO2e_lulucf_year_ref"),
+        {
+            "note HS": "ACHTUNG VARIABLE ENDUNG",
+            "group": "ud",
+            "description": "Emissionen LULUCF Deutschland 2019 vs 2018 in Prozentpunkten",
+            "unit": "%",
+            "rationale": "Offizieller Wert",
+            "reference": "UBA 2021 Trendtabelle THG 1990-2020, Blatt THG",
+            "link": "https://www.umweltbundesamt.de/themen/klima-energie/treibhausgas-emissionen",
+        },
+    )
+    f.add_derived_fact(
+        "Fact_M_CO2e_lulucf_2020_vs_2018",
+        f.fact("Fact_M_CO2e_lulucf_2020") / f.fact("Fact_M_CO2e_lulucf_year_ref"),
+        {
+            "note HS": "ACHTUNG VARIABLE ENDUNG",
+            "group": "ud",
+            "description": "Emissionen LULUCF Deutschland 2020 vs 2018 in Prozentpunkten",
+            "unit": "%",
+            "rationale": "Offizielle SchÃ¤tzung",
+            "reference": "UBA 2021 Trendtabelle THG 1990-2020, Blatt THG",
+            "link": "https://www.umweltbundesamt.de/themen/klima-energie/treibhausgas-emissionen",
+        },
+    )
+    f.add_derived_fact(
+        "Fact_M_CO2e_lulucf_2021_vs_2018",
+        f.fact("Fact_M_CO2e_lulucf_2021") / f.fact("Fact_M_CO2e_lulucf_year_ref"),
+        {
+            "note HS": "ACHTUNG VARIABLE ENDUNG",
+            "group": "ud",
+            "description": "Emissionen LULUCF Deutschland 2021 vs 2018 in Prozentpunkten",
+            "unit": "%",
+            "rationale": "Gleicher LULUCF-Wert wie 2020 angenommen, da in den Vorjahren auch kaum VerÃ¤nderung",
+            "reference": "Ã–ko-Institut 2021 Hochrechnung der deutschen THG-Emissionen 2021",
+            "link": "https://www.oeko.de/fileadmin/oekodoc/Hochrechnung-der-deutschen-THG-Emissionen-2021.pdf ",
+        },
+    )
+
+    # TODO: ENABLE WHEN DATA WAS ADDED
+    # f.add_derived_fact(
+    #     "Fact_M_CO2e_lulucf_2022_vs_2018",
+    #     f.fact("Fact_M_CO2e_lulucf_2022") / f.fact("Fact_M_CO2e_lulucf_year_ref"),
+    #     {
+    #         "note HS": "ACHTUNG VARIABLE ENDUNG",
+    #         "group": "ud",
+    #         "description": "Emissionen ohne LULUCF Deutschland 2022 vs 2018 in Prozentpunkten",
+    #         "unit": "%",
+    #         "rationale": "SchÃ¤tzung von August 2021",
+    #         "reference": "Ã–ko-Institut 2021 Hochrechnung der deutschen THG-Emissionen 2021",
+    #         "link": "https://www.oeko.de/fileadmin/oekodoc/Hochrechnung-der-deutschen-THG-Emissionen-2021.pdf ",
+    #     },
+    # )
+    # f.add_derived_fact(
+    #     "Fact_M_CO2e_lulucf_2023_vs_2018",
+    #     f.fact("Fact_M_CO2e_lulucf_2023") / f.fact("Fact_M_CO2e_lulucf_year_ref"),
+    #     {
+    #         "note HS": "ACHTUNG VARIABLE ENDUNG",
+    #         "group": "ud",
+    #         "description": "Emissionen ohne LULUCF Deutschland 2023 vs 2018 in Prozentpunkten",
+    #         "unit": "%",
+    #         "rationale": "SchÃ¤tzung von August 2021",
+    #         "reference": "Ã–ko-Institut 2021 Hochrechnung der deutschen THG-Emissionen 2021",
+    #         "link": "https://www.oeko.de/fileadmin/oekodoc/Hochrechnung-der-deutschen-THG-Emissionen-2021.pdf ",
+    #     },
+    # )
+
+    f.add_derived_fact(
         "Fact_H_P_heatnet_prodvol_brutto_2018",
         f.fact("Fact_H_P_heatnet_cogen_prodvol_2018")
         + f.fact("Fact_H_P_heatnet_plant_prodvol_2018"),
@@ -261,6 +527,36 @@ def calculate_derived_facts(rd: refdata.RefData):
             "link": "",
         },
     )
+
+    f.add_derived_fact(
+        "Fact_B_P_renovations_wage_per_person_per_year_2017",
+        f.fact("Fact_B_P_renovation_wage_2018")
+        / f.fact("Fact_B_P_renovation_emplo_2017"),
+        {
+            "note HS": "",
+            "group": "ud",
+            "description": "Personalkosten Ausbaugewerbe (WZ 43.2+43.3) pro Person und Jahr 2018",
+            "unit": "â‚¬",
+            "rationale": "Personalkosten im Ausbaugewerbe (WZ 43.2+43.3) insgesamt (15.525.684.000â‚¬, S.79) geteilt durch Arbeitnehmer insgesamt (378973, S.73) ",
+            "reference": "destatis 2020 Fachserie 4 Reihe 5.3 Produzierendes Gewerbe Kostenstruktur der Rechtlichen Einheiten im Baugewerbe 2018, S. 70, 76",
+            "link": "https://www.destatis.de/DE/Themen/Branchen-Unternehmen/Bauen/Publikationen/Downloads-Baugewerbe-Struktur/kostenstruktur-baugewerbe-2040530187004.pdf?__blob=publicationFile",
+        },
+    )
+    f.add_derived_fact(
+        "Fact_B_P_heating_wage_per_person_per_year",
+        f.fact("Fact_B_P_install_heating_wage_2018")
+        / f.fact("Fact_B_P_install_heating_emplo_2017"),
+        {
+            "note HS": "",
+            "group": "ud",
+            "description": "Personalkosten Gas-, Wasser-, Heizungs- sowie LÃ¼ftungs- und Klimainstallation (WZ 43.22) pro Person und Jahr 2018",
+            "unit": "â‚¬",
+            "rationale": "Personalkosten in Heizungsinstallation (WZ 43.22) insgesamt (5.993.365.000 â‚¬, S.76) geteilt durch Arbeitnehmer insgesamt (138641, S.70) ",
+            "reference": "destatis 2020 Fachserie 4 Reihe 5.3 Produzierendes Gewerbe Kostenstruktur der Rechtlichen Einheiten im Baugewerbe 2018, S. 70, 76",
+            "link": "https://www.destatis.de/DE/Themen/Branchen-Unternehmen/Bauen/Publikationen/Downloads-Baugewerbe-Struktur/kostenstruktur-baugewerbe-2040530187004.pdf?__blob=publicationFile",
+        },
+    )
+
     f.add_derived_fact(
         "Fact_B_P_constr_main_ratio_wage_to_emplo_2017",
         f.fact("Fact_B_P_constr_main_wage_2017")
@@ -731,6 +1027,25 @@ def calculate_derived_facts(rd: refdata.RefData):
             "link": "",
         },
     )
+
+    if rd.year_ref() != 2018:
+        # In 2018 we had Fact_I_P_metal_nonfe_prodvol_2018 as a non derived fact.
+        # In 2021 we derived it.
+        f.add_derived_fact(
+            "Fact_I_P_metal_nonfe_prodvol_2018",
+            f.fact("Fact_I_P_metal_nonfe_semi_prodvol_2018")
+            + f.fact("Fact_I_P_metal_nonfe_foundries_prodvol_2018"),
+            {
+                "note HS": "",
+                "group": "ui",
+                "description": "Produktionsmenge NE-Metalle Halbzeug und Gießereien 2021",
+                "unit": "t/a",
+                "rationale": 'Die gesamte Produktionsmenge der Nichteisen-Metalle (6.505.634 t fÃ¼r "Erzeugung, Halbzeug, Guss") wird zusammengefasst und wie Aluminium behandelt, da 2/3 der Emissionen aus der Aluminium-Prdouktion stammen, 1/7 aus Kupfer, der Rest Blei, Zink, Sonstiges (DEHSt 2018). Die WVMetalle gibt keine Emissionen an, hÃ¤lt es aber ebenso fÃ¼r legitim, aus der gesamten Produktionsmenge und dem gesamten Energieeinsatz einen Faktor pro t zu machen. Hinzu kommt noch die Produktionsmenge der Eisen-Gießereien i.H.v . 3.100.000 t.',
+                "reference": "WVMetalle 2023 Quartalsbericht August 2023 S.2,\nDEHSt 2018 S. 33",
+                "link": "https://www.wvmetalle.de/index.php?eID=dumpFile&t=f&f=444730&token=5716e1a4ebbd79113eeabfe8899807ca5188eaa9\nhttps://www.dehst.de/SharedDocs/downloads/DE/publikationen/VET-Bericht-2018.pdf?__blob=publicationFile&v=5",
+            },
+        )
+
     f.add_derived_fact(
         "Fact_I_P_metal_nonfe_ratio_prodvol_to_fec",
         f.fact("Fact_I_P_metal_nonfe_prodvol_2018")
@@ -787,6 +1102,7 @@ def calculate_derived_facts(rd: refdata.RefData):
             "link": "",
         },
     )
+
     f.add_derived_fact(
         "Fact_I_P_other_paper_ratio_prodvol_to_fec",
         f.fact("Fact_I_P_other_paper_prodvol_2018")
@@ -829,34 +1145,7 @@ def calculate_derived_facts(rd: refdata.RefData):
             "link": "",
         },
     )
-    f.add_derived_fact(
-        "Fact_I_P_other_further_ratio_CO2e_pb_to_fec",
-        f.fact("Fact_I_P_other_2d_CO2e_pb_2018")
-        / f.fact("Fact_I_P_other_further_fec_2018"),
-        {
-            "note HS": "",
-            "group": "ud",
-            "description": "Ratio pb CO2e (CRF 2.D) to fec further industry 2018",
-            "unit": "t/MWh",
-            "rationale": "Da keine zuverlÃ¤ssigen Zahlen Ã¼ber die Produktionsmenge weiterer Branchen vorliegen, muss hier auf den EEV zurÃ¼ckgegriffen werden, also Divsion von Fact_I_P_other_2d_CO2e_pb_2018/Fact_I_P_other_further_fec_2018",
-            "reference": "UBA RESCUE 2019 S. 280",
-            "link": "",
-        },
-    )
-    f.add_derived_fact(
-        "Fact_I_P_other_2efgh_ratio_CO2e_pb_to_fec",
-        f.fact("Fact_I_P_other_2efgh_CO2e_pb_2018")
-        / f.fact("Fact_I_P_other_further_fec_2018"),
-        {
-            "note HS": "",
-            "group": "ud",
-            "description": "Ratio pb CO2e (f-gases, CRF 2.E-H) to fec further industry 2018",
-            "unit": "t/MWh",
-            "rationale": "Da keine zuverlÃ¤ssigen Zahlen Ã¼ber die Produktionsmenge weiterer Branchen vorliegen, muss hier auf den EEV zurÃ¼ckgegriffen werden, also Divsion von Fact_I_P_other_2efgh_CO2e_pb_2018/Fact_I_P_other_further_fec_2018",
-            "reference": "UBA RESCUE 2019 S. 280",
-            "link": "",
-        },
-    )
+
     f.add_derived_fact(
         "Fact_I_S_miner_cement_fec_pct_of_coal_2018",
         f.fact("Fact_I_S_miner_cementchalk_coal_fec_2018")
@@ -2892,6 +3181,36 @@ def calculate_derived_facts(rd: refdata.RefData):
             "link": "",
         },
     )
+
+    f.add_derived_fact(
+        "Fact_L_forest_conv_2018",
+        f.fact("Fact_L_G_forest_area1_2018")
+        * f.fact("Fact_L_G_forest_pct_of_conv_2018"),
+        {
+            "note HS": "",
+            "group": "ui",
+            "description": "WaldflÃ¤che herkÃ¶mmlich bewirtscahft 2021",
+            "unit": "ha",
+            "rationale": "",
+            "reference": "",
+            "link": "",
+        },
+    )
+    f.add_derived_fact(
+        "Fact_L_G_forest_nature_2018",
+        f.fact("Fact_L_G_forest_area1_2018")
+        * f.fact("Fact_L_G_forest_pct_of_nature_2018"),
+        {
+            "note HS": "",
+            "group": "ui",
+            "description": "WaldfÃ¤che Naturwald 2021",
+            "unit": "ha",
+            "rationale": "",
+            "reference": "",
+            "link": "",
+        },
+    )
+
     f.add_derived_fact(
         "Fact_L_G_forest_CO2e_cb_per_ha_2018",
         f.fact("Fact_L_G_forest_CO2e_cb_2018") / f.fact("Fact_L_forest_conv_2018"),
@@ -4172,6 +4491,83 @@ def calculate_derived_facts(rd: refdata.RefData):
             "link": "",
         },
     )
+
+    f.add_derived_fact(
+        "Fact_E_P_biomass_full_load_hours",
+        f.fact("Fact_E_P_elec_prodvol_brutto_2018")
+        * f.fact("Fact_E_P_biomass_pct_of_gep_2018")
+        / f.fact("Fact_E_P_biomass_power_installed_2018"),
+        {
+            "note HS": "",
+            "group": "ud",
+            "description": "Volllaststunden Biomasse Stromerzeugung 2021",
+            "unit": "",
+            "rationale": "",
+            "reference": "",
+            "link": "",
+        },
+    )
+    f.add_derived_fact(
+        "Fact_E_P_hydro_full_load_hours",
+        f.fact("Fact_E_P_elec_prodvol_brutto_2018")
+        * f.fact("Fact_E_P_hydro_pct_of_gep_2018")
+        / f.fact("Fact_E_P_hydro_power_installed_2018"),
+        {
+            "note HS": "",
+            "group": "ud",
+            "description": "Volllaststunden Laufwasser 2021",
+            "unit": "h/a",
+            "rationale": "",
+            "reference": "",
+            "link": "",
+        },
+    )
+    f.add_derived_fact(
+        "Fact_E_P_geoth_full_load_hours",
+        f.fact("Fact_E_P_elec_prodvol_brutto_2018")
+        * f.fact("Fact_E_P_geothermal_pct_of_gep_2018")
+        / f.fact("Fact_E_P_geoth_power_installed_2018"),
+        {
+            "note HS": "",
+            "group": "ud",
+            "description": "Volllaststunden Tiefengeothermie 2021",
+            "unit": "h/a",
+            "rationale": "",
+            "reference": "",
+            "link": "",
+        },
+    )
+    f.add_derived_fact(
+        "Fact_E_P_wind_offshore_full_load_hours",
+        f.fact("Fact_E_P_elec_prodvol_brutto_2018")
+        * f.fact("Fact_E_P_wind_offshore_pct_of_gep_2018")
+        / f.fact("Fact_E_P_wind_offshore_power_installed_2018"),
+        {
+            "note HS": "",
+            "group": "ud",
+            "description": "WEA Offshore Volllaststunden 2021",
+            "unit": "",
+            "rationale": "",
+            "reference": "",
+            "link": "",
+        },
+    )
+    f.add_derived_fact(
+        "Fact_E_P_wind_onshore_full_load_hours",
+        f.fact("Fact_E_P_elec_prodvol_brutto_2018")
+        * f.fact("Fact_E_P_wind_onshore_pct_of_gep_2018")
+        / f.fact("Fact_E_P_wind_onshore_power_installed_2018"),
+        {
+            "note HS": "",
+            "group": "ud",
+            "description": "WEA Onshore Volllaststunden 2021",
+            "unit": "",
+            "rationale": "",
+            "reference": "",
+            "link": "",
+        },
+    )
+
     f.add_derived_fact(
         "Fact_E_P_coal_black_cogen_ratio_2018",
         f.fact("Fact_H_P_heatnet_cogen_coal_black_prodvol_2018")
@@ -4933,6 +5329,63 @@ def calculate_derived_facts(rd: refdata.RefData):
             "link": "https://ag-energiebilanzen.de",
         },
     )
+
+    f.add_derived_fact(
+        "Fact_I_P_metal_fec_2018",
+        f.fact("Fakt_I_N_metallh_Stahl_EEV_2018")
+        + f.fact("Fact_I_P_metal_nonfe_fec_2018"),
+        {
+            "note HS": "umbenennen zu Fact_I_S_metal_fec_2018",
+            "group": "ui",
+            "description": "Final Energy Consumption (FEC) metals producing industry 2021",
+            "unit": "",
+            "rationale": "Metallerzeugung; NE-Metalle, -gießereien: Energieträger insgesamt Summe (Umgerechnet in MWh)",
+            "reference": "AG EB 2023 Bilanz 2021 Zeile 54+55, Spalte AI",
+            "link": "https://ag-energiebilanzen.de/wp-content/uploads/2023/03/Bilanz-2021.pdf ",
+        },
+    )
+
+    f.add_derived_fact(
+        "Fact_I_P_fec_pct_of_metal_2018",
+        f.fact("Fact_I_P_metal_fec_2018") / f.fact("Fact_I_S_fec_2018"),
+        {
+            "note HS": "",
+            "group": "ui",
+            "description": "Anteil Metallherstellung Industrie EEV 2021",
+            "unit": "",
+            "rationale": "Spalte AK, Zeile 54+55 in Excel-Tabelle AG Energieblianzen",
+            "reference": "AG Energiebilanzen: Energiebilanz der BR Deutschland 2018, eigene Aufteilung ohne Spalten AA, AB, AD, AF",
+            "link": "https://germanzero.sharepoint.com/Files/200_Campaigning_Mobilisierung/10_Klimaentscheide/101_Klimastadtplan-Generator/20_KStP-Generator_v2/Bilanzierung%20Deutschland/AG_Energiebilanzen_2020_bilanz18d.xls?d=w49bda7d5a021439e84b3ffbf84872ff4&csf=1&web=1&e=tc2Zak",
+        },
+    )
+
+    f.add_derived_fact(
+        "Fact_I_P_metal_fec_pct_of_steel",
+        f.fact("Fakt_I_N_metallh_Stahl_EEV_2018") / f.fact("Fact_I_P_metal_fec_2018"),
+        {
+            "note HS": "",
+            "group": "ud",
+            "description": "Percentage of FEC steel on FEC metal producing industry",
+            "unit": "",
+            "rationale": "Just the share of steel industry's fec",
+            "reference": "AG Energiebilanzen bilanz18d, Blatt tj, Zeile 54+55, Spalte AI",
+            "link": "",
+        },
+    )
+    f.add_derived_fact(
+        "Fact_I_P_metal_fec_pct_of_nonfe",
+        f.fact("Fact_I_P_metal_nonfe_fec_2018") / f.fact("Fact_I_P_metal_fec_2018"),
+        {
+            "note HS": "",
+            "group": "ud",
+            "description": "Percentage of FEC non-ferrous on FEC metal producing industry",
+            "unit": "",
+            "rationale": "Just the share of non-ferrous industry's fec",
+            "reference": "AG Energiebilanzen bilanz18d, Blatt tj, Zeile 54+55, Spalte AI",
+            "link": "",
+        },
+    )
+
     f.add_derived_fact(
         "Fact_I_P_other_fec_2018",
         f.fact("Fact_I_S_fec_2018")
@@ -5422,6 +5875,65 @@ def calculate_derived_facts(rd: refdata.RefData):
             "description": "Ratio cb CO2e to fec further industry 2018",
             "unit": "t/MWh",
             "rationale": "Da keine zuverlÃ¤ssigen Zahlen Ã¼ber die Produktionsmenge weiterer Branchen vorliegen, muss hier auf den EEV zurÃ¼ckgegriffen werden, also Divsion von Fact_I_P_other_further_CO2e_cb_2018/Fact_I_P_other_further_fec_2018",
+            "reference": "UBA RESCUE 2019 S. 280",
+            "link": "",
+        },
+    )
+    f.add_derived_fact(
+        "Fact_B_S_elec_fec_2018",
+        f.fact("Fact_BAW_S_elec_fec_2018")
+        - f.fact("Fact_A_S_elec_fec_2018")
+        - f.fact("Fact_W_S_elec_fec_2018"),
+        {
+            "note HS": "",
+            "group": "ud",
+            "description": "EEV GHD, Landwirtschaft, Abfallwirtschaft 2021 Strom",
+            "unit": "",
+            "rationale": "Strom Spalte AD (enthält Landwirtschaft Fact_A_S_elec_fec_2018 und Abfallwirtschaft Fact_W_S_elec_fec_2018)",
+            "reference": "AG EB 2023 Bilanz 2021 Zeile 67, Spalte AD",
+            "link": "https://ag-energiebilanzen.de/wp-content/uploads/2023/03/Bilanz-2021.pdf",
+        },
+    )
+    f.add_derived_fact(
+        "Fact_I_P_other_further_fec_2018",
+        f.fact("Fact_I_P_other_fec_2018")
+        - f.fact("Fact_I_P_other_paper_fec_2018")
+        - f.fact("Fact_I_P_other_food_fec_2018"),
+        {
+            "note HS": "umbenennen zu Fact_I_S_other_further_fec_2018",
+            "group": "ui",
+            "description": "EEV Weitere Branchen 2021 (WZ  8, 22, 24.2, 24.3, 25, 28 ohne 28.23, 29, 30, alle anderen WZ ohne 5.1, 5.2, 6, 9, 19.1 ,19.2)",
+            "unit": "",
+            "rationale": "Von dem gesamten EEV von sonstiger Industrie wurden die EEV von Papier- und ErnÃ¤hrungsindustrie abgezogen. =Fact_I_P_other_fec_2018-Fact_I_P_other_paper_fec_2018-Fact_I_P_other_food_fec_2018",
+            "reference": "AG EB 2018 Zeile 46, 51, 56,57, 58, 59 Spalte AI",
+            "link": "",
+        },
+    )
+
+    f.add_derived_fact(
+        "Fact_I_P_other_further_ratio_CO2e_pb_to_fec",
+        f.fact("Fact_I_P_other_2d_CO2e_pb_2018")
+        / f.fact("Fact_I_P_other_further_fec_2018"),
+        {
+            "note HS": "",
+            "group": "ud",
+            "description": "Ratio pb CO2e (CRF 2.D) to fec further industry 2018",
+            "unit": "t/MWh",
+            "rationale": "Da keine zuverlÃ¤ssigen Zahlen Ã¼ber die Produktionsmenge weiterer Branchen vorliegen, muss hier auf den EEV zurÃ¼ckgegriffen werden, also Divsion von Fact_I_P_other_2d_CO2e_pb_2018/Fact_I_P_other_further_fec_2018",
+            "reference": "UBA RESCUE 2019 S. 280",
+            "link": "",
+        },
+    )
+    f.add_derived_fact(
+        "Fact_I_P_other_2efgh_ratio_CO2e_pb_to_fec",
+        f.fact("Fact_I_P_other_2efgh_CO2e_pb_2018")
+        / f.fact("Fact_I_P_other_further_fec_2018"),
+        {
+            "note HS": "",
+            "group": "ud",
+            "description": "Ratio pb CO2e (f-gases, CRF 2.E-H) to fec further industry 2018",
+            "unit": "t/MWh",
+            "rationale": "Da keine zuverlÃ¤ssigen Zahlen Ã¼ber die Produktionsmenge weiterer Branchen vorliegen, muss hier auf den EEV zurÃ¼ckgegriffen werden, also Divsion von Fact_I_P_other_2efgh_CO2e_pb_2018/Fact_I_P_other_further_fec_2018",
             "reference": "UBA RESCUE 2019 S. 280",
             "link": "",
         },

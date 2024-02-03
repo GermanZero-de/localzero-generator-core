@@ -76,7 +76,7 @@ class OtherFoot:
                 transport_capacity_pkm=transport_capacity_pkm,
                 transport_capacity_tkm=0,
                 transport2018=ZeroEnergyAndCO2e(
-                    transport_capacity_pkm=t18.other_cycl.transport_capacity_pkm,
+                    transport_capacity_pkm=t18.other_foot.transport_capacity_pkm,
                     transport_capacity_tkm=0,
                 ),
             ),

@@ -47,6 +47,19 @@ class Diff:
         return f"at {self.path} expected {self.expected} got {self.actual}"
 
 
+@dataclass(kw_only=True)
+class FloatDiff(Diff):
+    path: str
+
+    def __str__(self) -> str:
+        actual: float = float(self.actual)  # type: ignore
+        expected: float = float(self.expected)  # type: ignore
+        diff: float = actual - expected
+        percent: float = expected / 100.0 if expected != 0 else 0
+        pstr: str = "{:.2f}%".format(diff / percent) if percent != 0 else "0%"
+        return f"at {self.path} expected {self.expected} got {self.actual} ({pstr})"
+
+
 def all_helper(path: str, actual: Any, expected: Any, *, rel: float) -> Iterator[Diff]:
     if isinstance(actual, Mapping) and isinstance(expected, Mapping):
         keys1: Any = frozenset(actual.keys())  # type: ignore
@@ -70,12 +83,12 @@ def all_helper(path: str, actual: Any, expected: Any, *, rel: float) -> Iterator
             )
     elif isinstance(actual, Number) and isinstance(expected, Number):
         if not float_matches(actual=actual, expected=expected, rel=rel):
-            yield Diff(path=path, actual=actual, expected=expected)
+            yield FloatDiff(path=path, actual=actual, expected=expected)
     elif hasattr(actual, "__float__") and hasattr(expected, "__float__"):  # type: ignore
         f = float(actual)  # type: ignore
         e = float(expected)  # type: ignore
         if not float_matches(actual=f, expected=e, rel=rel):
-            yield Diff(path=path, actual=f, expected=e)  # type: ignore
+            yield FloatDiff(path=path, actual=f, expected=e)  # type: ignore
     elif actual != expected:
         yield Diff(path=path, actual=actual, expected=expected)  # type: ignore
 
