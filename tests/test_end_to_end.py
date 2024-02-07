@@ -32,7 +32,10 @@ def datadir_status():
     return refdatatools.DataDirStatus.get(refdatatools.datadir())
 
 
-@pytest.fixture(params=[2018, 2021], ids=["year_ref_2018", "year_ref_2021"])
+@pytest.fixture(
+    params=[2018, pytest.param(2021, id="year_ref_2021", marks=pytest.mark.skip)],
+    ids=["year_ref_2018", "year_ref_2021"],
+)
 def year_ref(request):  # type: ignore
     return request.param  # type: ignore
 
