@@ -35,12 +35,13 @@ def update_entries(year_ref: int, ags: str, year: int, file_path: str):
 
 
 def expectation_files(year_ref: int, pattern: str) -> Iterator[tuple[str, str, int]]:
-    for filename in os.listdir(os.path.join(test_dir, f"{year_ref}")):
+    dir = os.path.join(test_dir, f"{year_ref}")
+    for filename in os.listdir(dir):
         m = re.match(pattern, filename)
         if m is not None:
             ags = m.group(1)
             year = int(m.group(4))
-            file_path = os.path.join(test_dir, filename)
+            file_path = os.path.join(dir, filename)
             yield (file_path, ags, year)
 
 
