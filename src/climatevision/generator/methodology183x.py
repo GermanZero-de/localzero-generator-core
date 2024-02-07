@@ -334,7 +334,9 @@ def calc_budget(
 
     temp_val = entries.m_GHG_budget_2016_to_year_target
     for year in years_list_wo_2015:
-        temp_val -= fact(f"Fact_M_CO2e_w_lulucf_{year}")
+        temp_val -= fact(f"Fact_M_CO2e_lulucf_{year}") + fact(
+            f"Fact_M_CO2e_wo_lulucf_{year}"
+        )
 
     m183X.GHG_budget_2022_to_year_target_nat = temp_val
 
