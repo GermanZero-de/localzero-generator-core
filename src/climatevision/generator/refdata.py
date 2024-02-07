@@ -496,6 +496,7 @@ def filename(year_ref: int, what: str) -> str:
             "buildings": "2018",  # Building census is delayed
             "co2path": "2018",  # TODO: Will we get this?
             "destatis": "2018",  # TODO: What about this?
+            # "facts": "2021",  # TODO: Bene is late
             "facts": "2018",  # TODO: Bene is late
             "flats": "2018",  # TODO: Building census is delayed
             "industry_facilites": "2018",  # TODO: Jan
@@ -746,7 +747,7 @@ class RefData:
         as we can't yet run the generator without the data.
         """
         datadir = datadir_or_default(datadir)
-        year_ref: int = 2021
+        year_ref: int = 2018
 
         area_0_columns = (
             [

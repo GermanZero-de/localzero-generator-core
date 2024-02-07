@@ -128,8 +128,7 @@ def extract_new_facts(rows: ROWS):
         writer = csv.writer(fp, lineterminator="\n")
         for data in rows:
             if (
-                data["update 2022"]
-                in ["xF"]  # ["x", "NEW", "xNEW", "ASS", "xF", "", None, "ggf"]
+                data["update 2022"] in ["x", "NEW", "xNEW", "ASS", "", None, "ggf"]
                 and data["value"] is not None
             ):
                 if data["Updated?"] != "done":
