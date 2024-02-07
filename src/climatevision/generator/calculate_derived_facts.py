@@ -3167,20 +3167,6 @@ def calculate_derived_facts(rd: refdata.RefData):
             "link": "",
         },
     )
-    f.add_derived_fact(
-        "Fact_A_P_manure_CO2e_N2O_2018",
-        f.fact("Fact_A_P_manure_CO2e_N2O_direct_2018")
-        + f.fact("Fact_A_P_manure_CO2e_N2O_indirect_2018"),
-        {
-            "note HS": "",
-            "group": "ui",
-            "description": "CO2e (N2O) emissions total ",
-            "unit": "t CO2e/a",
-            "rationale": "Summe von direkten und indirekten N2O Emissionen ",
-            "reference": "",
-            "link": "",
-        },
-    )
 
     f.add_derived_fact(
         "Fact_L_forest_conv_2018",
