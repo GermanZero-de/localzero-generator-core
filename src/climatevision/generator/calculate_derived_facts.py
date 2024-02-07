@@ -3808,6 +3808,20 @@ def calculate_derived_facts(rd: refdata.RefData):
         },
     )
     f.add_derived_fact(
+        "Fact_I_S_metal_steel_secondary_fec_pct_of_coal_2018",
+        f.fact("Fact_I_S_metal_steel_secondary_coal_fec_2018")
+        / f.fact("Fakt_I_N_metallh_Sekundaerroute_EEV_2018"),
+        {
+            "note HS": "",
+            "group": "ud",
+            "description": "Anteil EEV Kohle an Stahlerzeugung SekundÃ¤rroute inkl. Warmwalzen 2018 (WZ 24.1)",
+            "unit": "%",
+            "rationale": "Berechnung =Fact_I_P_metal_steel_secondary_coal_fec_2018/Fact_I_P_metal_steel_secondary_fec_2018",
+            "reference": "AG EB 2018 Zeile 54",
+            "link": "",
+        },
+    )
+    f.add_derived_fact(
         "Fact_I_S_metal_steel_secondary_fec_pct_of_biomass_2018",
         f.fact("Fact_I_S_metal_steel_secondary_biomass_fec_2018")
         / f.fact("Fakt_I_N_metallh_Sekundaerroute_EEV_2018"),
