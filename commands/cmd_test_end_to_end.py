@@ -48,7 +48,7 @@ def cmd_test_end_to_end_update_expectations(args: Any):
     expect_entries_pattern = r"entries_((\d+)|(DG000000))_(20\d\d)\.json"
     expect_file_pattern = r"production_((\d+)|(DG000000))_(20\d\d)\.json"
 
-    for year_ref in [2018, 2035]:
+    for year_ref in [2018, 2021]:
         for file_path, ags, year in expectation_files(year_ref, expect_entries_pattern):
             update_entries(year_ref=year_ref, ags=ags, year=year, file_path=file_path)
 
@@ -60,7 +60,7 @@ def cmd_test_end_to_end_update_expectations(args: Any):
 
 def cmd_test_end_to_end_create_expectation(args: Any):
     filename = "production_" + args.ags + "_" + str(args.year) + ".json"
-    for year_ref in [2018, 2035]:
+    for year_ref in [2018, 2021]:
         filepath = os.path.join(test_dir, f"{year_ref}", filename)
         update_expectation(
             year_ref=year_ref, ags=args.ags, year=int(args.year), file_path=filepath
