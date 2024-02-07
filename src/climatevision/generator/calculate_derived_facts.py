@@ -2533,160 +2533,6 @@ def calculate_derived_facts(rd: refdata.RefData):
         },
     )
     f.add_derived_fact(
-        "Fact_I_S_other_further_fec_pct_of_coal_2018",
-        f.fact("Fact_I_S_other_further_coal_fec_2018")
-        / f.fact("Fact_I_P_other_further_fec_2018"),
-        {
-            "note HS": "",
-            "group": "ud",
-            "description": "Anteil EEV Kohle an Weitere Branchen 2018 (WZ 8 22 24.2 24.3 25 28 ohne 28.23 29 30 alle anderen WZ ohne 5.1 5.2 6 9 19.1 19.2)",
-            "unit": "%",
-            "rationale": "Berechnung =Fact_I_P_other_further_coal_fec_2018/Fact_I_P_other_further_fec_2018",
-            "reference": "AG EB 2018 Zeile 46+51+56+57+58+59",
-            "link": "",
-        },
-    )
-    f.add_derived_fact(
-        "Fact_I_S_other_further_fec_pct_of_diesel_2018",
-        f.fact("Fact_I_S_other_further_diesel_fec_2018")
-        / f.fact("Fact_I_P_other_further_fec_2018"),
-        {
-            "note HS": "",
-            "group": "ud",
-            "description": "Anteil EEV Diesel an Weitere Branchen 2018 (WZ 8 22 24.2 24.3 25 28 ohne 28.23 29 30 alle anderen WZ ohne 5.1 5.2 6 9 19.1 19.2)",
-            "unit": "%",
-            "rationale": "Berechnung =Fact_I_P_other_further_diesel_fec_2018/Fact_I_P_other_further_fec_2018",
-            "reference": "AG EB 2018 Zeile 46+51+56+57+58+59",
-            "link": "",
-        },
-    )
-    f.add_derived_fact(
-        "Fact_I_S_other_further_fec_pct_of_fueloil_2018",
-        f.fact("Fact_I_S_other_further_fueloil_fec_2018")
-        / f.fact("Fact_I_P_other_further_fec_2018"),
-        {
-            "note HS": "",
-            "group": "ud",
-            "description": "Anteil EEV HeizÃ¶l an Weitere Branchen 2018 (WZ 8 22 24.2 24.3 25 28 ohne 28.23 29 30 alle anderen WZ ohne 5.1 5.2 6 9 19.1 19.2)",
-            "unit": "%",
-            "rationale": "Berechnung =Fact_I_P_other_further_fueloil_fec_2018/Fact_I_P_other_further_fec_2018",
-            "reference": "AG EB 2018 Zeile 46+51+56+57+58+59",
-            "link": "",
-        },
-    )
-    f.add_derived_fact(
-        "Fact_I_S_other_further_fec_pct_of_lpg_2018",
-        f.fact("Fact_I_S_other_further_lpg_fec_2018")
-        / f.fact("Fact_I_P_other_further_fec_2018"),
-        {
-            "note HS": "",
-            "group": "ud",
-            "description": "Anteil EEV LPG an Weitere Branchen 2018 (WZ 8 22 24.2 24.3 25 28 ohne 28.23 29 30 alle anderen WZ ohne 5.1 5.2 6 9 19.1 19.2)",
-            "unit": "%",
-            "rationale": "Berechnung =Fact_I_P_other_further_lpg_fec_2018/Fact_I_P_other_further_fec_2018",
-            "reference": "AG EB 2018 Zeile 46+51+56+57+58+59",
-            "link": "",
-        },
-    )
-    f.add_derived_fact(
-        "Fact_I_S_other_further_fec_pct_of_opetpro_2018",
-        f.fact("Fact_I_S_other_further_opetpro_fec_2018")
-        / f.fact("Fact_I_P_other_further_fec_2018"),
-        {
-            "note HS": "",
-            "group": "ud",
-            "description": "Anteil EEV Sonstige MineralÃ¶lprodukte an Weitere Branchen 2018 (WZ 8 22 24.2 24.3 25 28 ohne 28.23 29 30 alle anderen WZ ohne 5.1 5.2 6 9 19.1 19.2)",
-            "unit": "%",
-            "rationale": "Berechnung =Fact_I_P_other_further_opetpro_fec_2018/Fact_I_P_other_further_fec_2018",
-            "reference": "AG EB 2018 Zeile 46+51+56+57+58+59",
-            "link": "",
-        },
-    )
-    f.add_derived_fact(
-        "Fact_I_S_other_further_fec_pct_of_gas_2018",
-        f.fact("Fact_I_S_other_further_gas_fec_2018")
-        / f.fact("Fact_I_P_other_further_fec_2018"),
-        {
-            "note HS": "",
-            "group": "ud",
-            "description": "Anteil EEV Erdgas an Weitere Branchen 2018 (WZ 8 22 24.2 24.3 25 28 ohne 28.23 29 30 alle anderen WZ ohne 5.1 5.2 6 9 19.1 19.2)",
-            "unit": "%",
-            "rationale": "Berechnung =Fact_I_P_other_further_gas_fec_2018/Fact_I_P_other_further_fec_2018",
-            "reference": "AG EB 2018 Zeile 46+51+56+57+58+59",
-            "link": "",
-        },
-    )
-    f.add_derived_fact(
-        "Fact_I_S_other_further_fec_pct_of_biomass_2018",
-        f.fact("Fact_I_S_other_further_biomass_fec_2018")
-        / f.fact("Fact_I_P_other_further_fec_2018"),
-        {
-            "note HS": "",
-            "group": "ud",
-            "description": "Anteil EEV Biomasse an Weitere Branchen 2018 (WZ 8 22 24.2 24.3 25 28 ohne 28.23 29 30 alle anderen WZ ohne 5.1 5.2 6 9 19.1 19.2)",
-            "unit": "%",
-            "rationale": "Berechnung =Fact_I_P_other_further_biomass_fec_2018/Fact_I_P_other_further_fec_2018",
-            "reference": "AG EB 2018 Zeile 46+51+56+57+58+59",
-            "link": "",
-        },
-    )
-    f.add_derived_fact(
-        "Fact_I_S_other_further_fec_pct_of_orenew_2018",
-        f.fact("Fact_I_S_other_further_orenew_fec_2018")
-        / f.fact("Fact_I_P_other_further_fec_2018"),
-        {
-            "note HS": "",
-            "group": "ud",
-            "description": "Anteil EEV Sonstige EE an Weitere Branchen 2018 (WZ 8 22 24.2 24.3 25 28 ohne 28.23 29 30 alle anderen WZ ohne 5.1 5.2 6 9 19.1 19.2)",
-            "unit": "%",
-            "rationale": "Berechnung =Fact_I_P_other_further_orenew_fec_2018/Fact_I_P_other_further_fec_2018",
-            "reference": "AG EB 2018 Zeile 46+51+56+57+58+59",
-            "link": "",
-        },
-    )
-    f.add_derived_fact(
-        "Fact_I_S_other_further_fec_pct_of_ofossil_2018",
-        f.fact("Fact_I_S_other_further_ofossil_fec_2018")
-        / f.fact("Fact_I_P_other_further_fec_2018"),
-        {
-            "note HS": "",
-            "group": "ud",
-            "description": "Anteil EEV Sonstige fossile EnergietrÃ¤ger an Weitere Branchen 2018 (WZ 8 22 24.2 24.3 25 28 ohne 28.23 29 30 alle anderen WZ ohne 5.1 5.2 6 9 19.1 19.2)",
-            "unit": "%",
-            "rationale": "Berechnung =Fact_I_P_other_further_ofossil_fec_2018/Fact_I_P_other_further_fec_2018",
-            "reference": "AG EB 2018 Zeile 46+51+56+57+58+59",
-            "link": "",
-        },
-    )
-    f.add_derived_fact(
-        "Fact_I_S_other_further_fec_pct_of_elec_2018",
-        f.fact("Fact_I_S_other_further_elec_fec_2018")
-        / f.fact("Fact_I_P_other_further_fec_2018"),
-        {
-            "note HS": "",
-            "group": "ud",
-            "description": "Anteil EEV Strom an Weitere Branchen 2018 (WZ 8 22 24.2 24.3 25 28 ohne 28.23 29 30 alle anderen WZ ohne 5.1 5.2 6 9 19.1 19.2)",
-            "unit": "%",
-            "rationale": "Berechnung =Fact_I_P_other_further_elec_fec_2018/Fact_I_P_other_further_fec_2018",
-            "reference": "AG EB 2018 Zeile 46+51+56+57+58+59",
-            "link": "",
-        },
-    )
-    f.add_derived_fact(
-        "Fact_I_S_other_further_fec_pct_of_heatnet_2018",
-        f.fact("Fact_I_S_other_further_heatnet_fec_2018")
-        / f.fact("Fact_I_P_other_further_fec_2018"),
-        {
-            "note HS": "",
-            "group": "ud",
-            "description": "Anteil EEV FernwÃ¤rme an Weitere Branchen 2018 (WZ 8 22 24.2 24.3 25 28 ohne 28.23 29 30 alle anderen WZ ohne 5.1 5.2 6 9 19.1 19.2)",
-            "unit": "%",
-            "rationale": "Berechnung =Fact_I_P_other_further_heatnet_fec_2018/Fact_I_P_other_further_fec_2018",
-            "reference": "AG EB 2018 Zeile 46+51+56+57+58+59",
-            "link": "",
-        },
-    )
-    f.add_derived_fact(
         "Fact_T_D_constr_roadrail_ratio_wage_to_emplo_2018",
         f.fact("Fact_T_D_constr_roadrail_wage_2018")
         / f.fact("Fact_T_D_constr_roadrail_emplo_2018"),
@@ -5839,33 +5685,6 @@ def calculate_derived_facts(rd: refdata.RefData):
         },
     )
     f.add_derived_fact(
-        "Fact_I_P_other_fec_pct_of_further",
-        f.fact("Fact_I_P_other_further_fec_2018") / f.fact("Fact_I_P_other_fec_2018"),
-        {
-            "note HS": "umbenennen zu Fact_I_S_other_fec_pct_of_further",
-            "group": "ud",
-            "description": "Anteil EEV Weitere Branchen 2018 an Sonstige Industrie",
-            "unit": "%",
-            "rationale": "Division von Fact_I_P_other_further_fec_2018/Fact_I_P_other_fec_2018",
-            "reference": "AG EB 2018 Zeile 46, 51, 56,57, 58, 59 Spalte AI",
-            "link": "",
-        },
-    )
-    f.add_derived_fact(
-        "Fact_I_P_other_further_ratio_CO2e_cb_to_fec",
-        f.fact("Fact_I_P_other_further_CO2e_cb_2018")
-        / f.fact("Fact_I_P_other_further_fec_2018"),
-        {
-            "note HS": "",
-            "group": "ud",
-            "description": "Ratio cb CO2e to fec further industry 2018",
-            "unit": "t/MWh",
-            "rationale": "Da keine zuverlÃ¤ssigen Zahlen Ã¼ber die Produktionsmenge weiterer Branchen vorliegen, muss hier auf den EEV zurÃ¼ckgegriffen werden, also Divsion von Fact_I_P_other_further_CO2e_cb_2018/Fact_I_P_other_further_fec_2018",
-            "reference": "UBA RESCUE 2019 S. 280",
-            "link": "",
-        },
-    )
-    f.add_derived_fact(
         "Fact_B_S_elec_fec_2018",
         f.fact("Fact_BAW_S_elec_fec_2018")
         - f.fact("Fact_A_S_elec_fec_2018")
@@ -5895,6 +5714,160 @@ def calculate_derived_facts(rd: refdata.RefData):
             "link": "",
         },
     )
+    f.add_derived_fact(
+        "Fact_I_S_other_further_fec_pct_of_coal_2018",
+        f.fact("Fact_I_S_other_further_coal_fec_2018")
+        / f.fact("Fact_I_P_other_further_fec_2018"),
+        {
+            "note HS": "",
+            "group": "ud",
+            "description": "Anteil EEV Kohle an Weitere Branchen 2018 (WZ 8 22 24.2 24.3 25 28 ohne 28.23 29 30 alle anderen WZ ohne 5.1 5.2 6 9 19.1 19.2)",
+            "unit": "%",
+            "rationale": "Berechnung =Fact_I_P_other_further_coal_fec_2018/Fact_I_P_other_further_fec_2018",
+            "reference": "AG EB 2018 Zeile 46+51+56+57+58+59",
+            "link": "",
+        },
+    )
+    f.add_derived_fact(
+        "Fact_I_S_other_further_fec_pct_of_diesel_2018",
+        f.fact("Fact_I_S_other_further_diesel_fec_2018")
+        / f.fact("Fact_I_P_other_further_fec_2018"),
+        {
+            "note HS": "",
+            "group": "ud",
+            "description": "Anteil EEV Diesel an Weitere Branchen 2018 (WZ 8 22 24.2 24.3 25 28 ohne 28.23 29 30 alle anderen WZ ohne 5.1 5.2 6 9 19.1 19.2)",
+            "unit": "%",
+            "rationale": "Berechnung =Fact_I_P_other_further_diesel_fec_2018/Fact_I_P_other_further_fec_2018",
+            "reference": "AG EB 2018 Zeile 46+51+56+57+58+59",
+            "link": "",
+        },
+    )
+    f.add_derived_fact(
+        "Fact_I_S_other_further_fec_pct_of_fueloil_2018",
+        f.fact("Fact_I_S_other_further_fueloil_fec_2018")
+        / f.fact("Fact_I_P_other_further_fec_2018"),
+        {
+            "note HS": "",
+            "group": "ud",
+            "description": "Anteil EEV HeizÃ¶l an Weitere Branchen 2018 (WZ 8 22 24.2 24.3 25 28 ohne 28.23 29 30 alle anderen WZ ohne 5.1 5.2 6 9 19.1 19.2)",
+            "unit": "%",
+            "rationale": "Berechnung =Fact_I_P_other_further_fueloil_fec_2018/Fact_I_P_other_further_fec_2018",
+            "reference": "AG EB 2018 Zeile 46+51+56+57+58+59",
+            "link": "",
+        },
+    )
+    f.add_derived_fact(
+        "Fact_I_S_other_further_fec_pct_of_lpg_2018",
+        f.fact("Fact_I_S_other_further_lpg_fec_2018")
+        / f.fact("Fact_I_P_other_further_fec_2018"),
+        {
+            "note HS": "",
+            "group": "ud",
+            "description": "Anteil EEV LPG an Weitere Branchen 2018 (WZ 8 22 24.2 24.3 25 28 ohne 28.23 29 30 alle anderen WZ ohne 5.1 5.2 6 9 19.1 19.2)",
+            "unit": "%",
+            "rationale": "Berechnung =Fact_I_P_other_further_lpg_fec_2018/Fact_I_P_other_further_fec_2018",
+            "reference": "AG EB 2018 Zeile 46+51+56+57+58+59",
+            "link": "",
+        },
+    )
+    f.add_derived_fact(
+        "Fact_I_S_other_further_fec_pct_of_opetpro_2018",
+        f.fact("Fact_I_S_other_further_opetpro_fec_2018")
+        / f.fact("Fact_I_P_other_further_fec_2018"),
+        {
+            "note HS": "",
+            "group": "ud",
+            "description": "Anteil EEV Sonstige MineralÃ¶lprodukte an Weitere Branchen 2018 (WZ 8 22 24.2 24.3 25 28 ohne 28.23 29 30 alle anderen WZ ohne 5.1 5.2 6 9 19.1 19.2)",
+            "unit": "%",
+            "rationale": "Berechnung =Fact_I_P_other_further_opetpro_fec_2018/Fact_I_P_other_further_fec_2018",
+            "reference": "AG EB 2018 Zeile 46+51+56+57+58+59",
+            "link": "",
+        },
+    )
+    f.add_derived_fact(
+        "Fact_I_S_other_further_fec_pct_of_gas_2018",
+        f.fact("Fact_I_S_other_further_gas_fec_2018")
+        / f.fact("Fact_I_P_other_further_fec_2018"),
+        {
+            "note HS": "",
+            "group": "ud",
+            "description": "Anteil EEV Erdgas an Weitere Branchen 2018 (WZ 8 22 24.2 24.3 25 28 ohne 28.23 29 30 alle anderen WZ ohne 5.1 5.2 6 9 19.1 19.2)",
+            "unit": "%",
+            "rationale": "Berechnung =Fact_I_P_other_further_gas_fec_2018/Fact_I_P_other_further_fec_2018",
+            "reference": "AG EB 2018 Zeile 46+51+56+57+58+59",
+            "link": "",
+        },
+    )
+    f.add_derived_fact(
+        "Fact_I_S_other_further_fec_pct_of_biomass_2018",
+        f.fact("Fact_I_S_other_further_biomass_fec_2018")
+        / f.fact("Fact_I_P_other_further_fec_2018"),
+        {
+            "note HS": "",
+            "group": "ud",
+            "description": "Anteil EEV Biomasse an Weitere Branchen 2018 (WZ 8 22 24.2 24.3 25 28 ohne 28.23 29 30 alle anderen WZ ohne 5.1 5.2 6 9 19.1 19.2)",
+            "unit": "%",
+            "rationale": "Berechnung =Fact_I_P_other_further_biomass_fec_2018/Fact_I_P_other_further_fec_2018",
+            "reference": "AG EB 2018 Zeile 46+51+56+57+58+59",
+            "link": "",
+        },
+    )
+    f.add_derived_fact(
+        "Fact_I_S_other_further_fec_pct_of_orenew_2018",
+        f.fact("Fact_I_S_other_further_orenew_fec_2018")
+        / f.fact("Fact_I_P_other_further_fec_2018"),
+        {
+            "note HS": "",
+            "group": "ud",
+            "description": "Anteil EEV Sonstige EE an Weitere Branchen 2018 (WZ 8 22 24.2 24.3 25 28 ohne 28.23 29 30 alle anderen WZ ohne 5.1 5.2 6 9 19.1 19.2)",
+            "unit": "%",
+            "rationale": "Berechnung =Fact_I_P_other_further_orenew_fec_2018/Fact_I_P_other_further_fec_2018",
+            "reference": "AG EB 2018 Zeile 46+51+56+57+58+59",
+            "link": "",
+        },
+    )
+    f.add_derived_fact(
+        "Fact_I_S_other_further_fec_pct_of_ofossil_2018",
+        f.fact("Fact_I_S_other_further_ofossil_fec_2018")
+        / f.fact("Fact_I_P_other_further_fec_2018"),
+        {
+            "note HS": "",
+            "group": "ud",
+            "description": "Anteil EEV Sonstige fossile EnergietrÃ¤ger an Weitere Branchen 2018 (WZ 8 22 24.2 24.3 25 28 ohne 28.23 29 30 alle anderen WZ ohne 5.1 5.2 6 9 19.1 19.2)",
+            "unit": "%",
+            "rationale": "Berechnung =Fact_I_P_other_further_ofossil_fec_2018/Fact_I_P_other_further_fec_2018",
+            "reference": "AG EB 2018 Zeile 46+51+56+57+58+59",
+            "link": "",
+        },
+    )
+    f.add_derived_fact(
+        "Fact_I_S_other_further_fec_pct_of_elec_2018",
+        f.fact("Fact_I_S_other_further_elec_fec_2018")
+        / f.fact("Fact_I_P_other_further_fec_2018"),
+        {
+            "note HS": "",
+            "group": "ud",
+            "description": "Anteil EEV Strom an Weitere Branchen 2018 (WZ 8 22 24.2 24.3 25 28 ohne 28.23 29 30 alle anderen WZ ohne 5.1 5.2 6 9 19.1 19.2)",
+            "unit": "%",
+            "rationale": "Berechnung =Fact_I_P_other_further_elec_fec_2018/Fact_I_P_other_further_fec_2018",
+            "reference": "AG EB 2018 Zeile 46+51+56+57+58+59",
+            "link": "",
+        },
+    )
+    f.add_derived_fact(
+        "Fact_I_S_other_further_fec_pct_of_heatnet_2018",
+        f.fact("Fact_I_S_other_further_heatnet_fec_2018")
+        / f.fact("Fact_I_P_other_further_fec_2018"),
+        {
+            "note HS": "",
+            "group": "ud",
+            "description": "Anteil EEV FernwÃ¤rme an Weitere Branchen 2018 (WZ 8 22 24.2 24.3 25 28 ohne 28.23 29 30 alle anderen WZ ohne 5.1 5.2 6 9 19.1 19.2)",
+            "unit": "%",
+            "rationale": "Berechnung =Fact_I_P_other_further_heatnet_fec_2018/Fact_I_P_other_further_fec_2018",
+            "reference": "AG EB 2018 Zeile 46+51+56+57+58+59",
+            "link": "",
+        },
+    )
 
     f.add_derived_fact(
         "Fact_I_P_other_further_ratio_CO2e_pb_to_fec",
@@ -5920,6 +5893,33 @@ def calculate_derived_facts(rd: refdata.RefData):
             "description": "Ratio pb CO2e (f-gases, CRF 2.E-H) to fec further industry 2018",
             "unit": "t/MWh",
             "rationale": "Da keine zuverlÃ¤ssigen Zahlen Ã¼ber die Produktionsmenge weiterer Branchen vorliegen, muss hier auf den EEV zurÃ¼ckgegriffen werden, also Divsion von Fact_I_P_other_2efgh_CO2e_pb_2018/Fact_I_P_other_further_fec_2018",
+            "reference": "UBA RESCUE 2019 S. 280",
+            "link": "",
+        },
+    )
+    f.add_derived_fact(
+        "Fact_I_P_other_fec_pct_of_further",
+        f.fact("Fact_I_P_other_further_fec_2018") / f.fact("Fact_I_P_other_fec_2018"),
+        {
+            "note HS": "umbenennen zu Fact_I_S_other_fec_pct_of_further",
+            "group": "ud",
+            "description": "Anteil EEV Weitere Branchen 2018 an Sonstige Industrie",
+            "unit": "%",
+            "rationale": "Division von Fact_I_P_other_further_fec_2018/Fact_I_P_other_fec_2018",
+            "reference": "AG EB 2018 Zeile 46, 51, 56,57, 58, 59 Spalte AI",
+            "link": "",
+        },
+    )
+    f.add_derived_fact(
+        "Fact_I_P_other_further_ratio_CO2e_cb_to_fec",
+        f.fact("Fact_I_P_other_further_CO2e_cb_2018")
+        / f.fact("Fact_I_P_other_further_fec_2018"),
+        {
+            "note HS": "",
+            "group": "ud",
+            "description": "Ratio cb CO2e to fec further industry 2018",
+            "unit": "t/MWh",
+            "rationale": "Da keine zuverlÃ¤ssigen Zahlen Ã¼ber die Produktionsmenge weiterer Branchen vorliegen, muss hier auf den EEV zurÃ¼ckgegriffen werden, also Divsion von Fact_I_P_other_further_CO2e_cb_2018/Fact_I_P_other_further_fec_2018",
             "reference": "UBA RESCUE 2019 S. 280",
             "link": "",
         },
