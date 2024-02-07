@@ -1014,6 +1014,72 @@ def calculate_derived_facts(rd: refdata.RefData):
         },
     )
     f.add_derived_fact(
+        "Fact_I_S_metal_steel_secondary_elec_fec_2018",
+        f.fact("Fact_I_P_metal_steel_secondary_prodvol_2018")
+        * (
+            f.fact("Fact_I_P_metal_steel_secondary_ratio_fec_elec_to_prodvol_2018")
+            + f.fact("Fact_I_P_metal_steel_further_ratio_fec_elec_to_prodvol_2018")
+        ),
+        {
+            "note HS": "",
+            "group": "ui",
+            "description": "",
+            "unit": "",
+            "rationale": "",
+            "reference": "",
+            "link": "",
+        },
+    )
+
+    f.add_derived_fact(
+        "Fact_I_S_metal_steel_primary_elec_fec_2018",
+        f.fact("Fact_I_S_metal_steel_elec_fec_2018")
+        - f.fact("Fact_I_S_metal_steel_secondary_elec_fec_2018"),
+        {
+            "note HS": "",
+            "group": "ui",
+            "description": "",
+            "unit": "",
+            "rationale": "",
+            "reference": "",
+            "link": "",
+        },
+    )
+
+    f.add_derived_fact(
+        "Fact_I_S_metal_steel_secondary_gas_fec_2018",
+        f.fact("Fact_I_P_metal_steel_secondary_prodvol_2018")
+        * (
+            f.fact("Fact_I_P_metal_steel_secondary_ratio_fec_gas_to_prodvol_2018")
+            + f.fact("Fact_I_P_metal_steel_further_ratio_fec_gas_to_prodvol_2018")
+        ),
+        {
+            "note HS": "",
+            "group": "ui",
+            "description": "",
+            "unit": "",
+            "rationale": "",
+            "reference": "",
+            "link": "",
+        },
+    )
+
+    f.add_derived_fact(
+        "Fact_I_S_metal_steel_primary_gas_fec_2018",
+        f.fact("Fact_I_S_metal_steel_gas_fec_2018")
+        - f.fact("Fact_I_S_metal_steel_secondary_gas_fec_2018"),
+        {
+            "note HS": "",
+            "group": "ui",
+            "description": "",
+            "unit": "",
+            "rationale": "",
+            "reference": "",
+            "link": "",
+        },
+    )
+
+    f.add_derived_fact(
         "Fakt_I_N_metallh_Sekundaerroute_EEV_2018",
         f.fact("Fact_I_S_metal_steel_secondary_gas_fec_2018")
         + f.fact("Fact_I_S_metal_steel_secondary_elec_fec_2018"),
