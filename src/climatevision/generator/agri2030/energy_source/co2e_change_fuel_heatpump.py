@@ -60,7 +60,7 @@ class CO2eChangeFuelHeatpump(CO2eChangeEnergyPerMWh, Invest):
         self.invest = self.invest_per_x * self.power_to_be_installed * 1000
         self.invest_pa = self.invest / duration_until_target_year
 
-        self.pct_of_wage = fact("Fact_B_P_plumbing_ratio_wage_to_main_revenue_2017")
+        self.pct_of_wage = fact("Fact_B_P_renovations_ratio_wage_to_main_revenue_2017")
         self.cost_wage = self.invest_pa * self.pct_of_wage
         self.ratio_wage_to_emplo = fact("Fact_B_P_heating_wage_per_person_per_year")
         self.demand_emplo = div(self.cost_wage, self.ratio_wage_to_emplo)
