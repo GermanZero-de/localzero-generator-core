@@ -19,7 +19,7 @@ from climatevision.server import GeneratorRpcs
 
 
 def cmd_explorer(args: Any):
-    rd = RefData.load()
+    rd = RefData.load(args.year_ref)
     generator_rpcs = GeneratorRpcs(rd)
     with open("explorer/index.html", encoding="utf-8") as index_file:
         index = index_file.read()

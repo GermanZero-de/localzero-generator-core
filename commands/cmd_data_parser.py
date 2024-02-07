@@ -42,6 +42,7 @@ def add_cmd_data_parser(subcmd_parsers: Any):
         "lookup",
         help="Lookup all the reference data for a given AGS, or lookup a fact or assumption.",
     )
+    cmd_data_lookup_parser.add_argument("-year_ref", default=2018)
     cmd_data_lookup_parser.add_argument("pattern")
     cmd_data_lookup_parser.add_argument(
         "-no-fixes", action="store_false", dest="fix_missing_entries"

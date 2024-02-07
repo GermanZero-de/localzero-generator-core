@@ -7,6 +7,7 @@ from commands.cmd_run import cmd_run, cmd_make_entries
 
 def add_cmd_run_parser(subcmd_parsers: Any):
     cmd_run_parser = subcmd_parsers.add_parser("run", help="Run the generator")
+    cmd_run_parser.add_argument("-year_ref", default=2018)
     cmd_run_parser.add_argument("-ags", default="03159016")
     cmd_run_parser.add_argument("-year", default=2035)
     cmd_run_parser.add_argument("-o", default=None)
@@ -16,6 +17,7 @@ def add_cmd_run_parser(subcmd_parsers: Any):
 
 def add_cmd_make_entries_parser(subcmd_parsers: Any):
     cmd_make_entries_parser = subcmd_parsers.add_parser("make", help="Run make entries")
+    cmd_make_entries_parser.add_argument("-year_ref", default=2018)
     cmd_make_entries_parser.add_argument("-ags", default="03159016")
     cmd_make_entries_parser.add_argument("-year", default=2035)
     cmd_make_entries_parser.add_argument("-o", default=None)

@@ -1016,8 +1016,10 @@ def calc(
     s_solarth.invest_pa = s_solarth.invest / duration_until_target_year
     s_heatpump.invest_pa = s_heatpump.invest / duration_until_target_year
 
-    s_solarth.pct_of_wage = fact("Fact_B_P_plumbing_ratio_wage_to_main_revenue_2017")
-    s_heatpump.pct_of_wage = fact("Fact_B_P_plumbing_ratio_wage_to_main_revenue_2017")
+    s_solarth.pct_of_wage = fact("Fact_B_P_renovations_ratio_wage_to_main_revenue_2017")
+    s_heatpump.pct_of_wage = fact(
+        "Fact_B_P_renovations_ratio_wage_to_main_revenue_2017"
+    )
     p_buildings_total.pct_of_wage = fact(
         "Fact_B_P_renovations_ratio_wage_to_main_revenue_2017"
     )
