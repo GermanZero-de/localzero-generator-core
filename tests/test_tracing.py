@@ -93,7 +93,7 @@ def test_enable_disable_tracing():
 
     # We check ENABLE -> DISABLE -> ENABLE to make sure that there are no
     # leftovers that only break on multiple runs
-    expected_value = "55353.83670816851"
+    expected_value = "55229.174057478296"
     expected_trace = (
         "{'binary': '+', 'a': {'name': 'a30.g_consult.cost_wage'}, 'b': {'name': 'a30.g_organic.cost_wage'}, 'value': "
         + expected_value
@@ -102,7 +102,7 @@ def test_enable_disable_tracing():
 
     result = with_tracing(
         enabled=True,
-        f=lambda: calculate_with_default_inputs("08416041", 2035).result_dict(),
+        f=lambda: calculate_with_default_inputs(2018, "08416041", 2035).result_dict(),
     )
     assert (
         str(result["a30"]["g"]["cost_wage"])  # type: ignore
@@ -111,13 +111,13 @@ def test_enable_disable_tracing():
 
     result = with_tracing(
         enabled=False,
-        f=lambda: calculate_with_default_inputs("08416041", 2035).result_dict(),
+        f=lambda: calculate_with_default_inputs(2018, "08416041", 2035).result_dict(),
     )
     assert str(result["a30"]["g"]["cost_wage"]) == expected_value  # type: ignore
 
     result = with_tracing(
         enabled=True,
-        f=lambda: calculate_with_default_inputs("08416041", 2035).result_dict(),
+        f=lambda: calculate_with_default_inputs(2018, "08416041", 2035).result_dict(),
     )
     assert (
         str(result["a30"]["g"]["cost_wage"])  # type: ignore

@@ -350,9 +350,9 @@ def calculate(inputs: Inputs, inputs_germany: Inputs) -> Result:
     )
 
 
-def calculate_with_default_inputs(ags: str, year: int) -> Result:
+def calculate_with_default_inputs(year_ref: int, ags: str, year: int) -> Result:
     """Calculate without the ability to override entries."""
-    refdata = RefData.load()
+    refdata = RefData.load(year_ref=year_ref)
     entries = make_entries(refdata, ags=ags, year=year)
     if ags == "DG000000":
         entries_germany = entries

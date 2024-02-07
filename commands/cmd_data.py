@@ -167,7 +167,7 @@ def lookup_ass(data: refdata.RefData, pattern: str):
 def cmd_data_lookup(args: Any):
     pattern: str = args.pattern
     data: refdata.RefData = refdata.RefData.load(
-        fix_missing_entries=args.fix_missing_entries
+        year_ref=args.year_ref, fix_missing_entries=args.fix_missing_entries
     )
 
     if ags.is_valid(pattern):

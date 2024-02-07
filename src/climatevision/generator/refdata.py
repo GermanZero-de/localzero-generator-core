@@ -735,7 +735,11 @@ class RefData:
 
     @classmethod
     def load(
-        cls, datadir: str | None = None, *, fix_missing_entries: bool = True
+        cls,
+        year_ref: int,
+        datadir: str | None = None,
+        *,
+        fix_missing_entries: bool = True,
     ) -> "RefData":
         """Load all the reference data into memory.  This assumes that the working directory has a subdirectory
         called 'data' that contains the reference data in two subfolders one called 'public' and the other
@@ -747,7 +751,6 @@ class RefData:
         as we can't yet run the generator without the data.
         """
         datadir = datadir_or_default(datadir)
-        year_ref: int = 2018
 
         area_0_columns = (
             [

@@ -32,6 +32,11 @@ def datadir_status():
     return refdatatools.DataDirStatus.get(refdatatools.datadir())
 
 
+@pytest.fixture(params=[2018, 2021], ids=["year_ref_2018", "year_ref_2021"])
+def year_ref(request):  # type: ignore
+    return request.param  # type: ignore
+
+
 def test_datadir_proprietary_has_production_checked_out(
     datadir_status: refdatatools.DataDirStatus,
 ):
@@ -67,7 +72,7 @@ def test_all_used_variables_are_populated():
     reminder when we change that something that will need KNUD to be adjusted.
     """
     root = refdatatools.root_of_this_repo()
-    g = calculate_with_default_inputs(ags="03159016", year=2035)
+    g = calculate_with_default_inputs(2018, ags="03159016", year=2035)
     result = g.result_dict()
     with open(os.path.join(root, "tests", "usage.json")) as fp:
         usage = json.load(fp)
@@ -92,13 +97,15 @@ def test_all_used_variables_are_populated():
     ), f"The following variables are used by KNUD but populated with None: {populated_with_none}"
 
 
-def end_to_end(ags: str, year: int = 2035):
+def end_to_end(year_ref: int, ags: str, year: int = 2035):
     """This runs an end to end test. No entries are overriden, only AGS"""
     root = refdatatools.root_of_this_repo()
     fname = f"production_{ags}_{year}.json"
-    with open(os.path.join(root, "tests", "end_to_end_expected", fname)) as fp:
+    with open(
+        os.path.join(root, "tests", "end_to_end_expected", f"{year_ref}", fname)
+    ) as fp:
         expected = json.load(fp)
-        g = calculate_with_default_inputs(ags=ags, year=year)
+        g = calculate_with_default_inputs(year_ref=year_ref, ags=ags, year=year)
         got = g.result_dict()
         ds = list(diffs.all(expected=expected, actual=got))  # type: ignore
         if ds:
@@ -115,11 +122,13 @@ def end_to_end(ags: str, year: int = 2035):
         ), f"h18 energy demand {g.h18.d.energy} is not equal to energy production {g.h18.p.energy}"
 
 
-def make_entries_test(ags: str, year: int):
-    refdata = RefData.load()
+def make_entries_test(year_ref: int, ags: str, year: int):
+    refdata = RefData.load(year_ref=year_ref)
     root = refdatatools.root_of_this_repo()
     fname = f"entries_{ags}_{year}.json"
-    with open(os.path.join(root, "tests", "end_to_end_expected", fname)) as fp:
+    with open(
+        os.path.join(root, "tests", "end_to_end_expected", f"{year_ref}", fname)
+    ) as fp:
         expected = json.load(fp)
         e = make_entries(refdata, ags, year)
         got = asdict(e)
@@ -130,30 +139,30 @@ def make_entries_test(ags: str, year: int):
             assert False, "make entries test failed"
 
 
-def test_entries_test():
-    make_entries_test("03159016", 2035)
+def test_entries_test(year_ref: int):
+    make_entries_test(year_ref, "03159016", 2035)
 
 
 # Default year = 2035
-def test_end_to_end_goettingen():
-    end_to_end("03159016")
+def test_end_to_end_goettingen(year_ref: int):
+    end_to_end(year_ref, "03159016")
 
 
 # Default year = 2035
-def test_end_to_end_germany():
-    end_to_end("DG000000")
+def test_end_to_end_germany(year_ref: int):
+    end_to_end(year_ref, "DG000000")
 
 
 # Min year for the generator = 2021
-def test_end_to_end_goettingen_2021():
-    end_to_end(ags="03159016", year=2021)
+def test_end_to_end_goettingen_2021(year_ref: int):
+    end_to_end(year_ref, ags="03159016", year=2021)
 
 
 # Min year for the website = 2025
-def test_end_to_end_goettingen_2025():
-    end_to_end(ags="03159016", year=2025)
+def test_end_to_end_goettingen_2025(year_ref: int):
+    end_to_end(year_ref, ags="03159016", year=2025)
 
 
 # Max year for the generator and website = 2050
-def test_end_to_end_goettingen_2050():
-    end_to_end(ags="03159016", year=2050)
+def test_end_to_end_goettingen_2050(year_ref: int):
+    end_to_end(year_ref, ags="03159016", year=2050)

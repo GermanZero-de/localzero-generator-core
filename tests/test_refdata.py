@@ -17,7 +17,7 @@ FEDERAL_STATES = ["%02i000000" % i for i in range(1, 17)]
 
 @pytest.fixture
 def refdata():
-    return RefData.load()
+    return RefData.load(year_ref=2018)  # type: ignore
 
 
 def test_traffic_has_an_entry_for_every_federal_state(refdata: RefData):
