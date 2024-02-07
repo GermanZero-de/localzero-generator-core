@@ -762,7 +762,8 @@ def calc_z(
     # ==========Extra Calculations=====================
 
     m183X.CO2e_per_capita_nat = div(
-        fact("Fact_M_CO2e_w_lulucf_2018"), population_germany_2018
+        fact("Fact_M_CO2e_wo_lulucf_2018") + fact("Fact_M_CO2e_lulucf_2018"),
+        population_germany_2018,
     )
     m183X.CO2e_per_capita_com = div(z.CO2e_total_18, population_commune_2018)
     m183X.CO2e_per_capita_com_pct_of_nat = div(
