@@ -61,8 +61,8 @@ class Air:
     def calc_international(
         cls,
         facts: Facts,
-        assumptions: Assumptions,
         entries: Entries,
+        assumptions: Assumptions,
         population_commune_2018: int,
         population_germany_2018: int,
     ) -> "Air":
