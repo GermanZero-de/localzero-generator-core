@@ -617,6 +617,8 @@ class RefData:
         self._population = population
         self._renewable_energy = renewable_energy
         self._traffic = traffic
+        self._traffic_air = traffic_air
+        self._traffic_ships = traffic_ships
         self._industry_dehst = industry_dehst
         # TODO: Provide a way to set this from the outside
         self._year_ref = 2018
