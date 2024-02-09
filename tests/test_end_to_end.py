@@ -33,7 +33,7 @@ def datadir_status():
 
 
 @pytest.fixture(
-    params=[2018, pytest.param(2021, id="year_ref_2021", marks=pytest.mark.skip)],
+    params=[2018, 2021],
     ids=["year_ref_2018", "year_ref_2021"],
 )
 def year_ref(request):  # type: ignore

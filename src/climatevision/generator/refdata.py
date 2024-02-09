@@ -490,7 +490,7 @@ def filename(year_ref: int, what: str) -> str:
         # For Testing
         2021: {
             "ags": "master",
-            "area": "2021",  # Checked Germany + Göttingen
+            "area": "2018",  # Checked Germany + Göttingen
             "area_kinds": "2018",
             "assumptions": "2018",
             "buildings": "2018",  # Building census is delayed
@@ -571,6 +571,7 @@ class RefData:
     def __init__(
         self,
         *,
+        year_ref: int,
         ags_master: DataFrame[str],
         area: DataFrame[str],
         area_kinds: DataFrame[str],
@@ -610,7 +611,7 @@ class RefData:
         self._traffic = traffic
         self._industry_dehst = industry_dehst
         # TODO: Provide a way to set this from the outside
-        self._year_ref = 2018
+        self._year_ref = year_ref
 
         if fix_missing_entries:
             self._fix_missing_gemfr_ags()
@@ -783,6 +784,7 @@ class RefData:
         )
         population_0_columns = ["total"] if fix_missing_entries else []
         d = cls(
+            year_ref=year_ref,
             ags_master=DataFrame.load_ags(datadir, "ags", filename="master"),
             area=load_data_frame_ags(
                 datadir, year_ref, "area", set_nans_to_0_in_columns=area_0_columns
