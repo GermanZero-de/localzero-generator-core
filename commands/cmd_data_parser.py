@@ -7,6 +7,7 @@ from commands.cmd_data import (
     cmd_data_checkout,
     cmd_data_lookup,
     cmd_data_is_production,
+    cmd_data_diff,
 )
 
 
@@ -30,6 +31,17 @@ def add_cmd_data_parser(subcmd_parsers: Any):
     )
     cmd_data_normalize_parser.add_argument("file")
     cmd_data_normalize_parser.set_defaults(func=cmd_data_normalize)
+
+    cmd_data_diff_parser = subcmd_data.add_parser(
+        "diff",
+        help="Compare two data files on a single float column",
+    )
+    cmd_data_diff_parser.add_argument("file1")
+    cmd_data_diff_parser.add_argument("file2")
+    cmd_data_diff_parser.add_argument("-key", type=int, default=0)
+    cmd_data_diff_parser.add_argument("-value", type=int, default=1)
+    cmd_data_diff_parser.add_argument("-csv", action="store_true")
+    cmd_data_diff_parser.set_defaults(func=cmd_data_diff)
 
     cmd_data_checkout_parser = subcmd_data.add_parser(
         "checkout",

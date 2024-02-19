@@ -46,18 +46,35 @@ class Diff:
     def __str__(self) -> str:
         return f"at {self.path} expected {self.expected} got {self.actual}"
 
+    def csv(self) -> list[str]:
+        return [self.path, str(self.expected), str(self.actual)]
+
 
 @dataclass(kw_only=True)
 class FloatDiff(Diff):
     path: str
 
-    def __str__(self) -> str:
+    def diff_in_percent(self) -> float:
         actual: float = float(self.actual)  # type: ignore
         expected: float = float(self.expected)  # type: ignore
         diff: float = actual - expected
-        percent: float = expected / 100.0 if expected != 0 else 0
-        pstr: str = "{:.2f}%".format(diff / percent) if percent != 0 else "0%"
-        return f"at {self.path} expected {self.expected} got {self.actual} ({pstr})"
+        one_percent: float = expected / 100.0 if expected != 0 else 0
+        if one_percent != 0:
+            return diff / one_percent
+        else:
+            return 0
+
+    def __str__(self) -> str:
+        percent = self.diff_in_percent()
+        return f"at {self.path} expected {self.expected} got {self.actual} ({percent:.2f}%)"
+
+    def csv(self) -> list[str]:
+        return [
+            self.path,
+            str(self.expected),
+            str(self.actual),
+            str(self.diff_in_percent()),
+        ]
 
 
 def all_helper(path: str, actual: Any, expected: Any, *, rel: float) -> Iterator[Diff]:
