@@ -42,6 +42,7 @@ def add_cmd_test_end_to_end_parser(subcmd_parsers: Any):
         help="Runs the generator for all ags.",
     )
     cmd_test_end_to_end_run_all_ags_parser.add_argument("-year", default=2035)
+    cmd_test_end_to_end_run_all_ags_parser.add_argument("-year_ref", default=2018)
     cmd_test_end_to_end_run_all_ags_parser.set_defaults(
         func=cmd_test_end_to_end_run_all_ags
     )

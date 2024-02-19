@@ -7,6 +7,7 @@ from ...utils import element_wise_plus
 from ...entries import Entries
 from . import co2e
 
+
 @dataclass
 class Air:
     CO2e_combustion_based: float
