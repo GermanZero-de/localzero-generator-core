@@ -15,6 +15,7 @@ TRACE = Union[
     float,
     "DataTrace",
     "FactOrAss",
+    "DerivedFactOrAss",
     "NameTrace",
     "DefTrace",
     "BinaryTrace",
@@ -37,6 +38,12 @@ class DataTrace(TypedDict):
 class FactOrAss(TypedDict):
     fact_or_ass: str
     value: float | int
+
+
+class DerivedFactOrAss(TypedDict):
+    derived_fact_or_ass: str
+    value: float | int
+    trace: TRACE
 
 
 class NameTrace(TypedDict):
@@ -72,6 +79,10 @@ def fact_or_ass(n: str, value: float | int) -> TRACE:
     return {"fact_or_ass": n, "value": value}
 
 
+def derived_fact_or_ass(n: str, value: float | int, trace: TRACE) -> TRACE:
+    return {"derived_fact_or_ass": n, "value": value, "trace": trace}
+
+
 def _replace_name_defs_by_names(trace: TRACE) -> TRACE:
     match trace:
         case {"binary": op, "a": a, "b": b, "value": v}:
@@ -94,6 +105,11 @@ def _replace_name_defs_by_names(trace: TRACE) -> TRACE:
         case {"source": _, "key": _, "attr": _, "value": _}:
             return trace
         case {"fact_or_ass": _, "value": _}:
+            return trace
+        case {"derived_fact_or_ass": _, "value": _, "trace": _}:
+            # By construction derived facts or assumptions do not themselves contain
+            # named values (other than facts or assumptions). So we can return the
+            # original trace unchanged
             return trace
         case _:
             return trace
@@ -142,8 +158,11 @@ class TracedNumber:
             return cls(v, data(source, key, attr, v))
 
     @classmethod
-    def fact_or_ass(cls, n: str, v: float | int):
-        return cls(v, fact_or_ass(n, v))
+    def fact_or_ass(cls, n: str, v: Union[float, int, "TracedNumber"]):
+        if isinstance(v, TracedNumber):
+            return cls(v.value, derived_fact_or_ass(n, v.value, v.trace))
+        else:
+            return cls(v, fact_or_ass(n, v))
 
     def binop(
         self,

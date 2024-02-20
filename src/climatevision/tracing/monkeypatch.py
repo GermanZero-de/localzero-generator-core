@@ -2,9 +2,10 @@ from dataclasses import fields, is_dataclass
 from typing import Any, Callable, TypeVar
 
 from ..generator import Result
-from ..generator.refdata import Row
+from ..generator.refdata import Row, Facts
 
 original_row_float = Row.float
+original_facts_fact = Facts.fact
 
 
 def identity(x: object):
@@ -65,6 +66,7 @@ def recursively_patch_getattribute_on_dataclasses(
 def disable_tracing() -> None:
     recursively_patch_getattribute_on_dataclasses(Result, None)
     Row.float = original_row_float
+    Facts.fact = original_facts_fact
 
 
 def enable_tracing() -> Callable[[object], Any]:
@@ -77,12 +79,27 @@ def enable_tracing() -> Callable[[object], Any]:
     def traced_float(self: Row[str], attr: str):
         v = original_row_float(self, attr)
         # make facts and assumptions prettier
-        if self.dataset in ["facts", "assumptions"] and attr == "value":
-            return number.TracedNumber.fact_or_ass(str(self.key_value), v)
-        else:
-            return number.TracedNumber.data(v, self.dataset, self.key_value, attr)
+        return number.TracedNumber.data(v, self.dataset, self.key_value, attr)
+
+    def traced_fact(self: Facts, name: str):
+        v = original_facts_fact(self, name)
+        match v:
+            case number.TracedNumber(
+                value=_,
+                trace={"source": "facts", "key": name2, "attr": "value", "value": v2},
+            ):
+                # This can happen because we also overwrote Row.float
+                if name2 == name:
+                    return number.TracedNumber.fact_or_ass(name, v2)
+                else:
+                    return number.TracedNumber.fact_or_ass(
+                        name, number.TracedNumber.fact_or_ass(name2, v2)
+                    )
+            case _:
+                return number.TracedNumber.fact_or_ass(name, v)
 
     Row.float = traced_float  # type: ignore (pyright does not know that tracednumber can be used instead of float)
+    Facts.fact = traced_fact  # type: ignore (pyright doesn't know that tracednumber can be used instead of float)
 
     # Now make sure that whenever a value stored in a component of the final
     # result type is used, the trace contains a def_name and that the same
