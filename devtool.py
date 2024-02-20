@@ -25,6 +25,8 @@ from commands.cmd_test_end_to_end_parser import add_cmd_test_end_to_end_parser
 
 
 class Devtool:
+    parser: argparse.ArgumentParser
+
     def __init__(self):
         self.parser = argparse.ArgumentParser()
 
