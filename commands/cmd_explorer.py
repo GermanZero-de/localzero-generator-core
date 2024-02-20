@@ -16,9 +16,11 @@ import jsonrpcserver
 
 from climatevision.generator import RefData
 from climatevision.server import GeneratorRpcs
+from climatevision.tracing import enable_tracing
 
 
 def cmd_explorer(args: Any):
+    enable_tracing()
     rd = RefData.load(args.year_ref)
     generator_rpcs = GeneratorRpcs(rd)
     with open("explorer/index.html", encoding="utf-8") as index_file:

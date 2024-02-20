@@ -29,6 +29,7 @@ type alias MaybeWithTrace =
 type Trace
     = DataTrace { source : String, key : String, attr : String, value : Float }
     | FactOrAssTrace { fact_or_ass : String, value : Float }
+    | DerivedFactOrAssTrace { derived_fact_or_ass : String, value : Float, trace : Trace }
     | NameTrace { name : String }
     | BinaryTrace { value : Float, binary : BinaryOp, a : Trace, b : Trace }
     | UnaryTrace { unary : UnaryOp, a : Trace }
@@ -73,6 +74,7 @@ traceDecoder namePrefix =
                 [ Decode.float |> Decode.map LiteralTrace
                 , dataTraceDecoder
                 , factOrAssTraceDecoder
+                , derivedFactOrAssTraceDecoder namePrefix
                 , binaryTraceDecoder namePrefix
                 , nameTraceDecoder namePrefix
                 , unaryTraceDecoder namePrefix
@@ -94,6 +96,14 @@ factOrAssTraceDecoder =
     Decode.map2 (\s v -> FactOrAssTrace { fact_or_ass = s, value = v })
         (Decode.field "fact_or_ass" Decode.string)
         (Decode.field "value" Decode.float)
+
+
+derivedFactOrAssTraceDecoder : String -> Decode.Decoder Trace
+derivedFactOrAssTraceDecoder namePrefix =
+    Decode.map3 (\s v t -> DerivedFactOrAssTrace { derived_fact_or_ass = s, value = v, trace = t })
+        (Decode.field "derived_fact_or_ass" Decode.string)
+        (Decode.field "value" Decode.float)
+        (Decode.field "trace" <| traceDecoder namePrefix)
 
 
 nameTraceDecoder : String -> Decode.Decoder Trace

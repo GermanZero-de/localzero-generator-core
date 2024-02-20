@@ -267,7 +267,8 @@ toClipboardData lens allRuns =
 
 initiateInfo : String -> Model -> ( Model, Cmd Msg )
 initiateInfo name model =
-    ( model -- TODO: Think about showing a loading spinner
+    ( model
+      -- TODO: Think about showing a loading spinner
     , GeneratorRpc.info { name = name, toMsg = GotInfo }
     )
 
@@ -2792,6 +2793,20 @@ viewTraceAsBlocks expanded runId allRuns t =
                 , el [ Element.alignRight ] <| viewValue (Float value)
                 ]
 
+        Value.DerivedFactOrAssTrace { derived_fact_or_ass, value, trace } ->
+            column
+                [ spacing sizes.small
+                , padding sizes.medium
+                , Border.solid
+                , Border.width 1
+                , Border.color Styling.modalDim
+                , width fill
+                ]
+                [ el [] <| nameText derived_fact_or_ass
+                , el [ Element.alignRight ] <| viewValue (Float value)
+                , viewTraceAsBlocks expanded runId allRuns trace
+                ]
+
         Value.UnaryTrace { unary, a } ->
             row
                 [ spacing sizes.small
@@ -2862,12 +2877,13 @@ viewTraceAsBlocks expanded runId allRuns t =
 viewInfo : GeneratorRpc.Info -> Element Msg
 viewInfo { label, description, value, unit, rationale, reference, link } =
     column [ width fill, height fill, padding sizes.medium, spacing sizes.small, Events.onClick CloseInfo ]
-        [ paragraph fonts.explorer [text label, text " -- ", text description]
-        , row ( spacing sizes.small :: fonts.explorerValues) [ text (formatGermanNumber value), text unit ]
-        , paragraph fonts.explorerItems [text rationale]
+        [ paragraph fonts.explorer [ text label, text " -- ", text description ]
+        , row (spacing sizes.small :: fonts.explorerValues) [ text (formatGermanNumber value), text unit ]
+        , paragraph fonts.explorerItems [ text rationale ]
         , el fonts.explorerItems (text reference)
         , Element.link fonts.explorerItems { url = link, label = text link }
         ]
+
 
 viewDisplayedTrace : AllRuns -> List Path -> DisplayedTrace -> Element Msg
 viewDisplayedTrace allRuns breadcrumbs { runId, path, expanded, value, trace, showInfo } =
@@ -2894,12 +2910,12 @@ viewDisplayedTrace allRuns breadcrumbs { runId, path, expanded, value, trace, sh
                 )
             , iconButton FeatherIcons.x (CloseTrace (List.length breadcrumbs + 1))
             ]
-        ,
-            case showInfo of
-                Nothing ->
-                    el [] <| viewTraceAsBlocks (Set.insert path expanded) runId allRuns (Value.NameTrace { name = String.join "." path })
-                Just info ->
-                    viewInfo info
+        , case showInfo of
+            Nothing ->
+                el [] <| viewTraceAsBlocks (Set.insert path expanded) runId allRuns (Value.NameTrace { name = String.join "." path })
+
+            Just info ->
+                viewInfo info
         ]
 
 

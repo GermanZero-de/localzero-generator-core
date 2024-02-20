@@ -4,6 +4,6 @@
 calculation is done. Used by the explorer. Not used by the Klimavision website.
 """
 
-from .monkeypatch import with_tracing
+from .monkeypatch import with_tracing, enable_tracing
 
-__all__ = ["with_tracing"]
+__all__ = ["with_tracing", "enable_tracing"]
