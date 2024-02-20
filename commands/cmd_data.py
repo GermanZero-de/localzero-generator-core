@@ -183,6 +183,43 @@ def cmd_data_lookup(args: Any):
         )
 
 
+def import_csv_as_dict_of_floats(
+    name: str, key_column: int, value_column: int
+) -> dict[str, float]:
+    import csv
+
+    with open(name, "r", newline="", encoding="utf-8") as f1:
+        reader1 = csv.reader(f1)
+        result: dict[str, float] = {}
+        past_header = False
+        for row in reader1:
+            if past_header:
+                key = row[key_column]
+                value = float(row[value_column])
+                result[key] = value
+            else:
+                past_header = True
+    return result
+
+
+def cmd_data_diff(args: Any):
+    dict1 = import_csv_as_dict_of_floats(args.file1, args.key, args.value)
+    dict2 = import_csv_as_dict_of_floats(args.file2, args.key, args.value)
+
+    from climatevision.generator import diffs
+
+    all_diffs = diffs.all(expected=dict1, actual=dict2)
+    from csv import writer
+
+    if args.csv:
+        w = writer(sys.stdout)
+        for d in all_diffs:
+            w.writerow(d.csv())
+    else:
+        for d in all_diffs:
+            print(d)
+
+
 def cmd_data_checkout(args: Any):
     def update_existing(
         repo: refdatatools.PUBLIC_OR_PROPRIETARY, *, current: str, wanted: str
