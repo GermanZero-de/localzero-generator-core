@@ -495,7 +495,7 @@ def filename(year_ref: int, what: str) -> str:
         # For Testing
         2021: {
             "ags": "master",
-            "area": "2021",  # Checked Germany + Göttingen
+            "area": "2018",  # Checked Germany + Göttingen
             "area_kinds": "2018",
             "assumptions": "2018",
             "buildings": "2018",  # Building census is delayed
