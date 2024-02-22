@@ -4,7 +4,7 @@ from dataclasses import dataclass
 
 from ...refdata import Facts, Assumptions
 from ...utils import element_wise_plus
-
+from ...entries import Entries
 from . import co2e
 
 
@@ -25,34 +25,19 @@ class Air:
     def calc_domestic(
         cls,
         facts: Facts,
+        entries: Entries,
         assumptions: Assumptions,
         population_commune_2018: int,
         population_germany_2018: int,
     ) -> "Air":
-        fact = facts.fact
 
-        demand_petrol = (
-            fact("Fact_T_S_Air_petrol_fec_2018")
-            * population_commune_2018
-            / population_germany_2018
-        )
-        demand_jetfuel = (
-            fact("Fact_T_S_Air_nat_EB_dmstc_2018")
-            * population_commune_2018
-            / population_germany_2018
-        )
+        demand_petrol = entries.t_a_eev_petrol_inland_com
 
-        transport_capacity_pkm = (
-            fact("Fact_T_D_Air_dmstc_nat_trnsprt_ppl_2019")
-            * population_commune_2018
-            / population_germany_2018
-        )
-        transport_capacity_tkm = (
-            fact("Fact_T_D_Air_dmstc_nat_trnsprt_gds_2019")
-            * fact("Fact_T_D_Air_dmstc_nat_ratio_2018")
-            * population_commune_2018
-            / population_germany_2018
-        )
+        demand_jetfuel = entries.t_a_eev_kerosene_inland_com
+
+        transport_capacity_pkm = entries.t_a_conveyance_capa_inland_pkm_com
+
+        transport_capacity_tkm = entries.t_a_transport_capa_inland_tkm_com
 
         CO2e_combustion_based = co2e.from_demands(
             facts,
@@ -77,30 +62,17 @@ class Air:
     def calc_international(
         cls,
         facts: Facts,
+        entries: Entries,
         assumptions: Assumptions,
         population_commune_2018: int,
         population_germany_2018: int,
     ) -> "Air":
-        fact = facts.fact
 
-        transport_capacity_pkm = (
-            fact("Fact_T_D_Air_nat_trnsprt_ppl_2019")
-            * population_commune_2018
-            / population_germany_2018
-        )
+        transport_capacity_pkm = entries.t_a_conveyance_capa_overseas_pkm_com
 
-        transport_capacity_tkm = (
-            fact("Fact_T_D_Air_dmstc_nat_trnsprt_gds_2019")
-            * fact("Fact_T_D_Air_inter_nat_ratio_2018")
-            * population_commune_2018
-            / population_germany_2018
-        )
+        transport_capacity_tkm = entries.t_a_transport_capa_overseas_tkm_com
 
-        demand_jetfuel = (
-            fact("Fact_T_S_Air_nat_EB_inter_2018")
-            * population_commune_2018
-            / population_germany_2018
-        )
+        demand_jetfuel = entries.t_a_eev_kerosene_overseas_com
 
         CO2e_combustion_based = co2e.from_demands(
             facts, assumptions, demand_jetfuel=demand_jetfuel

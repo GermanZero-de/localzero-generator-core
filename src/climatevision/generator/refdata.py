@@ -122,6 +122,11 @@ class DataFrame(Generic[KeyT]):
     def rows(self) -> Iterable[tuple[KeyT, list[str]]]:
         return self._rows.items()
 
+    def column_ags(self) -> list[KeyT]:
+        """Return list of all ags in dataframe"""
+        lst = list(self._rows.keys())
+        return lst
+
     @classmethod
     def load_ags(
         cls,
@@ -565,6 +570,8 @@ class RefData:
     _population: DataFrame[str]
     _renewable_energy: DataFrame[str]
     _traffic: DataFrame[str]
+    _traffic_air: DataFrame[str]
+    _traffic_ships: DataFrame[str]
     _industry_dehst: DataFrame[str]
     _year_ref: int
 
@@ -587,6 +594,8 @@ class RefData:
         population: DataFrame[str],
         renewable_energy: DataFrame[str],
         traffic: DataFrame[str],
+        traffic_air: DataFrame[str],
+        traffic_ships: DataFrame[str],
         industry_dehst: DataFrame[str],
         fix_missing_entries: bool,
     ):
@@ -608,6 +617,8 @@ class RefData:
         self._population = population
         self._renewable_energy = renewable_energy
         self._traffic = traffic
+        self._traffic_air = traffic_air
+        self._traffic_ships = traffic_ships
         self._industry_dehst = industry_dehst
         # TODO: Provide a way to set this from the outside
         self._year_ref = 2018
@@ -733,6 +744,18 @@ class RefData:
         """Function to read CO2e for each ags from DEHST Table."""
         return OptRow(self._industry_dehst, ags)
 
+    def traffic_air(self, ags: str):
+        return Row(self._traffic_air, ags)
+
+    def traffic_ships(self, ags: str):
+        return Row(self._traffic_ships, ags)
+
+    def get_df_traffic_ships(self):
+        return self._traffic_ships
+
+    def get_df_traffic_air(self):
+        return self._traffic_air
+
     @classmethod
     def load(
         cls,
@@ -824,6 +847,8 @@ class RefData:
             ),
             renewable_energy=load_data_frame_ags(datadir, year_ref, "renewable_energy"),
             traffic=load_data_frame_ags(datadir, year_ref, "traffic"),
+            traffic_air=load_data_frame_ags(datadir, 2018, "traffic_air"),
+            traffic_ships=load_data_frame_ags(datadir, 2018, "traffic_ships"),
             industry_dehst=load_data_frame_ags(datadir, year_ref, "industry_facilites"),
             fix_missing_entries=fix_missing_entries,
         )
