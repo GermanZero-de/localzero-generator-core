@@ -578,6 +578,7 @@ class RefData:
     def __init__(
         self,
         *,
+        year_ref: int,
         ags_master: DataFrame[str],
         area: DataFrame[str],
         area_kinds: DataFrame[str],
@@ -620,8 +621,7 @@ class RefData:
         self._traffic_air = traffic_air
         self._traffic_ships = traffic_ships
         self._industry_dehst = industry_dehst
-        # TODO: Provide a way to set this from the outside
-        self._year_ref = 2018
+        self._year_ref = year_ref
 
         if fix_missing_entries:
             self._fix_missing_gemfr_ags()
@@ -806,6 +806,7 @@ class RefData:
         )
         population_0_columns = ["total"] if fix_missing_entries else []
         d = cls(
+            year_ref=year_ref,
             ags_master=DataFrame.load_ags(datadir, "ags", filename="master"),
             area=load_data_frame_ags(
                 datadir, year_ref, "area", set_nans_to_0_in_columns=area_0_columns
