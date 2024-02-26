@@ -85,6 +85,10 @@ def lookup_by_ags(data: refdata.RefData, ags: str):
             print(record)
         print()
 
+    def industry_dehst(a: str) -> refdata.Row[str]:
+        # Some hackery to get around the different interfaces of the two reference data sources
+        return refdata.Row(data._industry_dehst, a)  # type: ignore
+
     by_ags = [
         ("area", data.area),
         ("area_kinds", data.area_kinds),
@@ -93,6 +97,7 @@ def lookup_by_ags(data: refdata.RefData, ags: str):
         ("renewable_energy", data.renewable_energy),
         ("flats", data.flats),
         ("traffic", data.traffic),
+        ("industry", industry_dehst),
     ]
 
     by_dis = [
