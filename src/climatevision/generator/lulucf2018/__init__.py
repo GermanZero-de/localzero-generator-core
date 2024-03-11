@@ -255,12 +255,7 @@ def calc(entries: Entries, facts: Facts) -> L18:
     g_grove_org.area_ha = g_grove_org_low.area_ha + g_grove_org_high.area_ha
     g_wet_min.area_ha = g_wet.area_ha * g_wet_min.pct_x
 
-    g_water.area_ha = (
-        entries.m_area_agri_com * fact("Fact_L_G_factor_crop_to_grass")
-        + entries.m_area_veg_plant_uncover_com * fact("Fact_L_G_factor_grass_strict")
-        + entries.m_area_veg_heath_com
-        + entries.m_area_veg_marsh_com
-    )
+    g_water.area_ha = entries.m_area_water_com * fact("Fact_L_G_factor_wetland_water")
 
     g_water_min.CO2e_production_based_per_t = fact(
         "Fact_L_G_wetland_water_minrl_soil_ord_CO2e_per_ha_2018"
@@ -303,12 +298,7 @@ def calc(entries: Entries, facts: Facts) -> L18:
     g_wet_org.area_ha = g_wet_org_low.area_ha + g_wet_org_high.area_ha
     g_water_min.area_ha = g_water.area_ha * g_water_min.pct_x
 
-    g_settlement.area_ha = (
-        entries.m_area_agri_com * fact("Fact_L_G_factor_crop_to_grass")
-        + entries.m_area_veg_plant_uncover_com * fact("Fact_L_G_factor_grass_strict")
-        + entries.m_area_veg_heath_com
-        + entries.m_area_veg_marsh_com
-    )
+    g_settlement.area_ha = entries.m_area_settlement_com + entries.m_area_transport_com
     g_settlement_min.CO2e_production_based_per_t = fact(
         "Fact_L_G_settl_minrl_soil_CO2e_per_ha_2018"
     )
