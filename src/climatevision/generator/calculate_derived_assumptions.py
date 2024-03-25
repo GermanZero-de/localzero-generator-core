@@ -62,14 +62,41 @@ def calculate_derived_assumptions(rd: refdata.RefData):
         },
     )
     a.add_derived_assumption(
+        "Ass_B_D_fec_elec_elcon_2050",
+        a.ass("Ass_B_D_fec_elec_2050")
+        - f.fact("Fact_B_S_elec_heating_fec_2018")
+        - a.ass("Ass_B_D_fec_elec_heatpump_2050"),
+        {
+            "NOTE": "",
+            "group": "ui",
+            "description": "Stromverbrauch elektrische Verbraucher GHD inkl. Landwirtschaft 2050",
+            "unit": "MWh/a",
+            "rationale": "abgelesen in Tabelle 31: Endenergiebedarfe differenziert nach EnergietrÃ¤ger und Sektoren in GreenSupreme im Vergleich zu GreenEe2.\nDavon ziehen wir wieder den Strom der Stromheizungen ab (die vermutlich in GreenSupreme konstant gehalten werden) sowie die HÃ¤lfte der 47,8 TWh, die 2050 fÃ¼r WÃ¤rmepumpen verbraucht werden (S.84). Dass es die HÃ¤lfte ist, nehmen wir basierend auf unseren eigenen Kalkulationen an, wo im Deutschland-Szenario meist etwa die HÃ¤lfte des WÃ¤rmepumpen-Strombedarfs aus GHD stammt.\nBerechnung =126000000-Fact_B_S_elec_heating_fec_2018-47800000/2",
+            "reference": "UBA 2020 Greensupreme S. 82, 84",
+            "link": "https://www.umweltbundesamt.de/sites/default/files/medien/5750/publikationen/2020_12_28_cc_05-2020_endbericht_greensupreme.pdf",
+        },
+    )
+    a.add_derived_assumption(
+        "Ass_B_D_fec_elec_elcon_2018",
+        f.fact("Fact_BAW_S_elec_fec_2018")
+        - f.fact("Fact_B_S_elec_heating_fec_2018")
+        - f.fact("Fact_B_S_orenew_fec_2018")
+        * f.fact("Fact_R_S_ratio_heatpump_to_orenew_2018")
+        / f.fact("Fact_R_S_heatpump_mean_annual_performance_factor_all"),
+        {
+            "NOTE": "",
+            "group": "ud",
+            "description": "Endenergiebedarfs elektrische Verbraucher ohne WÃ¤rmepumpe und Direktheizung in GHD 2018",
+            "unit": "MWh/a",
+            "rationale": "Vom Stromverbrauch BAW (GHD, LW, Abfall) 2018 wird der GHD Strom fÃ¼r die Stromheizung sowie die WÃ¤rmepumpen abgezogen. Der komplette Strom in LW und Abfallwirtschaft bleibt drin, weil diese de facto nur elektrische Verbraucher haben, keine strombetriebenen Heizungen.  Berechnung = Fact_BAW_S_elec_fec_2018 - Fact_B_S_elec_heating_fec_2018 - Fact_B_S_orenew_fec_2018*Fact_R_S_ratio_heatpump_to_orenew_2018/Fact_R_S_heatpump_mean_annual_performance_factor_all",
+            "reference": "Berechnung",
+            "link": "",
+        },
+    )
+
+    a.add_derived_assumption(
         "Ass_B_D_fec_elec_elcon_change",
-        a.ass("Ass_B_D_fec_elec_elcon_2050")
-        / (
-            f.fact("Fact_B_S_elec_fec_2018")
-            + f.fact("Fact_A_S_elec_fec_2018")
-            + f.fact("Fact_W_S_elec_fec_2018")
-        )
-        - 1,
+        a.ass("Ass_B_D_fec_elec_elcon_2050") / a.ass("Ass_B_D_fec_elec_elcon_2018") - 1,
         {
             "NOTE": "",
             "group": "ud",
@@ -554,6 +581,21 @@ def calculate_derived_assumptions(rd: refdata.RefData):
             "rationale": "Berechnung =Ass_W_P_wastewater_CO2e_pb_2050_NIR/Ass_W_P_wastewater_prodvol_2050",
             "reference": "",
             "link": "",
+        },
+    )
+    a.add_derived_assumption(
+        "Ass_R_D_fec_elec_elcon_2050",
+        a.ass("Ass_R_D_fec_elec_2050")
+        - f.fact("Fact_R_S_elec_heating_fec_2018")
+        - a.ass("Ass_R_D_fec_elec_heatpump_2050"),
+        {
+            "NOTE": "",
+            "group": "ui",
+            "description": "Endenergiebedarfs aller Fahrzeuge in GHD inkl. Landwirtschaft 2050",
+            "unit": "MWh/a",
+            "rationale": "In Tabelle 31: Endenergiebedarfe differenziert nach EnergietrÃ¤ger und Sektoren in GreenSupreme im Vergleich zu GreenEe2 ist der gesamte Stromverbrauch von HH mit 123 TWh/a angegeben. Davon siehen wir wieder den Strom der Stromheizungen ab (die vermutlich in GreenSupreme konstant gehalten werden) sowie die HÃ¤lfte der 47,8 TWh, die 2050 fÃ¼r WÃ¤rmepumpen verbraucht werden (S.84). Dass es die HÃ¤lfte ist, nehmen wir basierend auf unseren eigenen Kalkulationen an, wo im Deutschland-Szenario meist etwas mehr als die HÃ¤lfte des WÃ¤rmepumpen-Strombedarfs aus den HH stammt.\nBerechnung =123000000-Fact_R_S_elec_heating_fec_2018-47800000/2",
+            "reference": "UBA 2020 Greensupreme S. 82, 84",
+            "link": "https://www.umweltbundesamt.de/sites/default/files/medien/5750/publikationen/2020_12_28_cc_05-2020_endbericht_greensupreme.pdf",
         },
     )
     a.add_derived_assumption(
