@@ -47,7 +47,7 @@ class EFuelProduction(Energy, CO2eChange, EnergyChange, Invest):
         # is produced, as we later emit when it is burned.
         CO2e_production_based_per_MWh = -1 * CO2e_emission_factor
         pct_of_wage = fact("Fact_B_P_constr_main_revenue_pct_of_wage_2017")
-        ratio_wage_to_emplo = ass("Ass_S_constr_renew_gas_wage_per_year_2017")
+        ratio_wage_to_emplo = fact("Fact_B_P_constr_main_ratio_wage_to_emplo_2017")
         invest_per_x = ass("Ass_S_power_to_x_invest_per_power")
         full_load_hour = ass("Ass_S_power_to_x_full_load_hours2")
         demand_electricity = energy / ass("Ass_S_power_to_x_efficiency")
