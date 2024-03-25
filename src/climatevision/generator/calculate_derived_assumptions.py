@@ -503,13 +503,13 @@ def calculate_derived_assumptions(rd: refdata.RefData):
     a.add_derived_assumption(
         "Ass_L_G_forest_conv_CO2e_per_ha_2050",
         f.fact("Fact_L_G_forest_conv_CO2e_per_ha_2018")
-        / (1 - a.ass("Ass_L_G_forest_conv_dead_pct_2018")),
+        / (1 - f.fact("Fact_L_G_forest_conv_dead_pct_2018")),
         {
             "NOTE": "",
             "group": "ud",
             "description": "Emissionsfaktor nachhaltig bewirtschafteter Wald 2020",
             "unit": "",
-            "rationale": "Berechnung =Fact_L_G_forest_conv_CO2e_per_ha_2018/(1-Ass_L_G_forest_conv_dead_pct_2018)",
+            "rationale": "Berechnung =Fact_L_G_forest_conv_CO2e_per_ha_2018/(1-Fact_L_G_forest_conv_dead_pct_2018)",
             "reference": "",
             "link": "",
         },

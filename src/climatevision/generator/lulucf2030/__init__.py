@@ -103,8 +103,8 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, l18: L18) 
     g_forest_managed.ratio_wage_to_emplo = fact(
         "Fact_L_G_forest_afforestation_ratio_wage_to_emplo_2018"
     )
-    g_forest_managed.area_ha_available_pct_of_action = ass(
-        "Ass_L_G_forest_conv_dead_pct_2018"
+    g_forest_managed.area_ha_available_pct_of_action = fact(
+        "Fact_L_G_forest_conv_dead_pct_2018"
     ) / ass("Ass_L_G_forest_conv_pct_2050")
     g_forest_natural.demand_change = ass("Ass_L_G_forest_nature_pct_change")
     g_forest_natural.CO2e_production_based_per_t = fact(
