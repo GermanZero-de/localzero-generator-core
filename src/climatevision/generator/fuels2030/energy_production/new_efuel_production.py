@@ -40,7 +40,6 @@ class NewEFuelProduction(CO2eChange, Invest):
         fuel_efficiency: float,
     ) -> "NewEFuelProduction":
         fact = facts.fact
-        ass = assumptions.ass
 
         CO2e_total_2021_estimated = 0
         # We assume that we take as much CO2e out of the air when the E-Fuel
