@@ -91,19 +91,18 @@ class Landfilling:
         w18: W18,
     ):
         fact = facts.fact
-        ass = assumptions.ass
 
         # In germany since 2005 we have stricter standards for waste separation / cover on
         # land fills. That means newer landfills produce less methan.
         # But we have lots of old landfills hence the exp function to model the decay over
-        # time.  Socket value and decay are taken from various studies (see comments on the
-        # assumptions)
+        # time.  Socket value and decay are taken from various studies (see comments in the
+        # facts)
         CO2e_pb = (
             (
-                ass("Ass_W_P_landfilling_socket")
-                + ass("Ass_W_P_landfilling_CO2e_pb_2005")
+                fact("Fact_W_P_landfilling_socket")
+                + fact("Fact_W_P_landfilling_CO2e_pb_2005")
                 * math.exp(
-                    -(year_target - 2005) / ass("Ass_W_P_landfilling_methane_decay")
+                    -(year_target - 2005) / fact("Fact_W_P_landfilling_methane_decay")
                 )
             )
             * population_commune_2018
