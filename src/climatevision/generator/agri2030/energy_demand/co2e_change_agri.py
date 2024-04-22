@@ -3,6 +3,7 @@
 from dataclasses import dataclass, InitVar
 
 from ...refdata import Facts
+from ...entries import Entries
 from ...utils import div
 from ...common.co2_equivalent_emission import CO2eEmission
 from ...common.co2e_change import CO2eChange
@@ -19,6 +20,7 @@ class CO2eChangeAgri(CO2eEmission, CO2eChange):
     def __post_init__(  # type: ignore[override]
         self,
         facts: Facts,
+        entries: Entries,
         duration_CO2e_neutral_years: float,
         what: str,
         a18: A18,
@@ -34,8 +36,10 @@ class CO2eChangeAgri(CO2eEmission, CO2eChange):
         self.change_CO2e_t = self.CO2e_total - a18_CO2e_total
         self.change_CO2e_pct = div(self.change_CO2e_t, a18_CO2e_total)
 
-        self.CO2e_total_2021_estimated = a18_CO2e_total * fact(
-            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+        self.CO2e_total_2021_estimated = (
+            a18_CO2e_total
+            * fact("Fact_M_CO2e_wo_lulucf_2021")
+            / fact(f"Fact_M_CO2e_wo_lulucf_{entries.m_year_ref}")
         )
         self.cost_climate_saved = (
             (self.CO2e_total_2021_estimated - self.CO2e_total)

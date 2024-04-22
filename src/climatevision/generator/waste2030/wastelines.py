@@ -34,6 +34,7 @@ class EnergySupplyDetail:
     def calc(
         cls,
         facts: Facts,
+        entries: Entries,
         duration_CO2e_neutral_years: float,
         energy: float,
         CO2e_cb_per_MWh: float,
@@ -47,8 +48,10 @@ class EnergySupplyDetail:
         change_energy_pct = div(change_energy_MWh, w18.s_elec.energy)
         change_CO2e_t = CO2e_total - w18.s_elec.CO2e_total
         change_CO2e_pct = div(change_CO2e_t, w18.s_elec.CO2e_total)
-        CO2e_total_2021_estimated = w18.s_elec.CO2e_total * fact(
-            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+        CO2e_total_2021_estimated = (
+            w18.s_elec.CO2e_total
+            * fact("Fact_M_CO2e_wo_lulucf_2021")
+            / fact(f"Fact_M_CO2e_wo_lulucf_{entries.m_year_ref}")
         )
         cost_climate_saved = (
             (CO2e_total_2021_estimated - CO2e_total)
@@ -83,6 +86,7 @@ class Landfilling:
     def calc(
         cls,
         facts: Facts,
+        entries: Entries,
         assumptions: Assumptions,
         year_target: int,
         duration_CO2e_neutral_years: float,
@@ -113,8 +117,10 @@ class Landfilling:
         change_CO2e_t = CO2e_total - w18.p_landfilling.CO2e_total
         change_CO2e_pct = change_CO2e_t / w18.p_landfilling.CO2e_total
 
-        CO2e_total_2021_estimated = w18.p_landfilling.CO2e_total * fact(
-            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+        CO2e_total_2021_estimated = (
+            w18.p_landfilling.CO2e_total
+            * fact("Fact_M_CO2e_wo_lulucf_2021")
+            / fact(f"Fact_M_CO2e_wo_lulucf_{entries.m_year_ref}")
         )
         cost_climate_saved = (
             (CO2e_total_2021_estimated - CO2e_total)
@@ -159,6 +165,7 @@ class Organic_treatment:
     def calc(
         cls,
         facts: Facts,
+        entries: Entries,
         assumptions: Assumptions,
         duration_until_target_year: int,
         duration_CO2e_neutral_years: float,
@@ -177,8 +184,10 @@ class Organic_treatment:
         change_CO2e_t = CO2e_total - w18.p_organic_treatment.CO2e_total
         change_CO2e_pct = change_CO2e_t / w18.p_organic_treatment.CO2e_total
 
-        CO2e_total_2021_estimated = w18.p_organic_treatment.CO2e_total * fact(
-            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+        CO2e_total_2021_estimated = (
+            w18.p_organic_treatment.CO2e_total
+            * fact("Fact_M_CO2e_wo_lulucf_2021")
+            / fact(f"Fact_M_CO2e_wo_lulucf_{entries.m_year_ref}")
         )
         cost_climate_saved = (
             (CO2e_total_2021_estimated - CO2e_total)
@@ -242,6 +251,7 @@ class Wastewater:
     def calc(
         cls,
         facts: Facts,
+        entries: Entries,
         assumptions: Assumptions,
         duration_CO2e_neutral_years: float,
         population_commune_203X: int,
@@ -265,8 +275,10 @@ class Wastewater:
         change_CO2e_t = CO2e_total - w18.p_organic_treatment.CO2e_total
         change_CO2e_pct = div(change_CO2e_t, w18.p_organic_treatment.CO2e_total)
 
-        CO2e_total_2021_estimated = w18.p_organic_treatment.CO2e_total * fact(
-            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+        CO2e_total_2021_estimated = (
+            w18.p_organic_treatment.CO2e_total
+            * fact("Fact_M_CO2e_wo_lulucf_2021")
+            / fact(f"Fact_M_CO2e_wo_lulucf_{entries.m_year_ref}")
         )
         cost_climate_saved = (
             (CO2e_total_2021_estimated - CO2e_total)
@@ -318,6 +330,7 @@ class WasteLines:
 
         p_landfilling = Landfilling.calc(
             facts,
+            entries,
             assumptions,
             year_target,
             duration_CO2e_neutral_years,
@@ -327,6 +340,7 @@ class WasteLines:
         )
         p_organic_treatment = Organic_treatment.calc(
             facts,
+            entries,
             assumptions,
             duration_until_target_year,
             duration_CO2e_neutral_years,
@@ -335,6 +349,7 @@ class WasteLines:
         )
         p_wastewater = Wastewater.calc(
             facts,
+            entries,
             assumptions,
             duration_CO2e_neutral_years,
             population_commune_203X,
@@ -345,6 +360,7 @@ class WasteLines:
 
         s_elec = EnergySupplyDetail.calc(
             facts,
+            entries,
             duration_CO2e_neutral_years,
             w18=w18,
             energy=electricity_demand,

@@ -221,12 +221,14 @@ def calc_budget(
     ### beginning with LULUCF                ###
     ############################################
     start_year = 2015
-    current_year = 2022
+    # sollte ein nicht overwritable entry werden?
+
+    current_year = entries.m_year_today
 
     years_list = list(range(start_year, current_year))
 
-    years_list_wo_2018 = years_list.copy()
-    years_list_wo_2018.remove(2018)
+    years_list_wo_year_ref = years_list.copy()
+    years_list_wo_year_ref.remove(entries.m_year_ref)
 
     years_list_wo_2015 = years_list.copy()
     years_list_wo_2015.remove(2015)
@@ -237,15 +239,29 @@ def calc_budget(
 
     years_dict: dict[int, dict[str, float]] = {year: {} for year in years_list}
 
-    # get the CO2e of LULUCF for 2018 as calculated
-    years_dict[2018]["CO2e_lulucf"] = l18.l.CO2e_total
+    # prepare facts
+    # CO2e_lulucf_ratios_to_2018: dict[int,Union[float,None]] = {year: None for year in years_list}
+    CO2e_lulucf_ratios_to_year_ref = {
+        year: fact(f"Fact_M_CO2e_lulucf_{year}")
+        / fact(f"Fact_M_CO2e_lulucf_{entries.m_year_ref}")
+        for year in years_list
+    }
+    CO2e_wo_lulucf_ratios_to_year_ref = {
+        year: fact(f"Fact_M_CO2e_wo_lulucf_{year}")
+        / fact(f"Fact_M_CO2e_wo_lulucf_{entries.m_year_ref}")
+        for year in years_list
+    }
 
-    # calculate the CO2e of LULUCF for 2015-2017 and 2019-2021 by multiplying 2018's value with percentage
+    # get the CO2e of LULUCF for 2018 as calculated
+    years_dict[entries.m_year_ref]["CO2e_lulucf"] = l18.l.CO2e_total
+
+    # calculate the CO2e of LULUCF for 2015-2017 and 2019-2021 by multiplying year_refs's value with percentage
     # 2015 just as a backup, probably not needed
 
-    for year in years_list_wo_2018:
-        years_dict[year]["CO2e_lulucf"] = years_dict[2018]["CO2e_lulucf"] * fact(
-            f"Fact_M_CO2e_lulucf_{year}_vs_2018"
+    for year in years_list_wo_year_ref:
+        years_dict[year]["CO2e_lulucf"] = (
+            years_dict[entries.m_year_ref]["CO2e_lulucf"]
+            * CO2e_lulucf_ratios_to_year_ref[year]
         )
 
     ############################################
@@ -255,7 +271,7 @@ def calc_budget(
     ############################################
 
     # get the CO2e of all sectors for 2018 excluding LULUCF since this is negative
-    years_dict[2018]["CO2e_wo_lulucf"] = (
+    years_dict[entries.m_year_ref]["CO2e_wo_lulucf"] = (
         h18.h.CO2e_total
         + e18.e.CO2e_total
         + f18.f.CO2e_total
@@ -269,9 +285,10 @@ def calc_budget(
 
     # calculate the CO2e of all sectors without LULUCF for 2015-2017 and 2019-2021 by multiplying 2018's value with percentage
     # 2015 just as a backup, probably not needed
-    for year in years_list_wo_2018:
-        years_dict[year]["CO2e_wo_lulucf"] = years_dict[2018]["CO2e_wo_lulucf"] * fact(
-            f"Fact_M_CO2e_wo_lulucf_{year}_vs_2018"
+    for year in years_list_wo_year_ref:
+        years_dict[year]["CO2e_wo_lulucf"] = (
+            years_dict[entries.m_year_ref]["CO2e_wo_lulucf"]
+            * CO2e_wo_lulucf_ratios_to_year_ref[year]
         )
 
     #############################################
@@ -280,7 +297,7 @@ def calc_budget(
     ### sum up CO2e_wo_lulucf and CO2e_lulucf ###
     #############################################
 
-    # 2015 just as a backup, probably not
+    # 2015 just as a backup, probably not needed
     for year in years_list:
         years_dict[year]["CO2e_w_lulucf"] = (
             years_dict[year]["CO2e_wo_lulucf"] + years_dict[year]["CO2e_lulucf"]
@@ -341,7 +358,7 @@ def calc_budget(
     m183X.CO2e_2022_to_year_target = (
         m183X.GHG_budget_2022_to_year_target - m183X.GHG_budget_after_year_target
     )
-
+    # TODO: Wie sieht das hier nach der Variablen Benennung aus?
     # safe dict values in class variables
     (
         m183X.CO2e_lulucf_2015,
@@ -446,9 +463,7 @@ def calc_z(
     ##################################################################
 
     # get the CO2e of all sectors for 203X (the target year) excluding LULUCF
-    # TODO: Warum exkludieren wir LULUCF?
-    #   Weil es negativ ist?  Dann müssten wir auch Fuels2030 exkludieren?
-    #   Ist es die Pyrolyse?
+    # We exclude LULUCF as we
     m183X.CO2e_wo_lulucf_203X = (
         h30.h.CO2e_total
         + e30.e.CO2e_total
@@ -626,11 +641,15 @@ def calc_z(
     d.change_CO2e_pct = div(d.CO2e_total_30, d.CO2e_total_18)
     z.change_CO2e_pct = div(z.CO2e_total_30, z.CO2e_total_18)
 
-    s.CO2e_total_2021_estimated = s.CO2e_total_18 * fact(
-        "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+    s.CO2e_total_2021_estimated = (
+        s.CO2e_total_18
+        * fact("Fact_M_CO2e_wo_lulucf_2021")
+        / fact(f"Fact_M_CO2e_wo_lulucf_{entries.m_year_ref}")
     )
-    d.CO2e_total_2021_estimated = d.CO2e_total_18 * fact(
-        "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+    d.CO2e_total_2021_estimated = (
+        d.CO2e_total_18
+        * fact("Fact_M_CO2e_wo_lulucf_2021")
+        / fact(f"Fact_M_CO2e_wo_lulucf_{entries.m_year_ref}")
     )
     z.CO2e_total_2021_estimated = (
         s.CO2e_total_2021_estimated + d.CO2e_total_2021_estimated

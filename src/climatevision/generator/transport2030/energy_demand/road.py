@@ -3,6 +3,7 @@
 from dataclasses import dataclass, asdict
 
 from ...refdata import Facts, Assumptions
+from ...makeentries import Entries
 from ...utils import div
 from ...common.invest import InvestCommune
 from ...transport2018.t18 import T18
@@ -35,6 +36,7 @@ class Road:
     def calc_goods_lightduty_it_ot(
         cls,
         facts: Facts,
+        entries: Entries,
         assumptions: Assumptions,
         duration_CO2e_neutral_years: float,
         *,
@@ -68,8 +70,10 @@ class Road:
             * ass("Ass_T_S_LDT_SEC_fcev_2030")
         )
 
-        CO2e_total_2021_estimated = t18.road_gds_ldt_it_ot.CO2e_combustion_based * fact(
-            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+        CO2e_total_2021_estimated = (
+            t18.road_gds_ldt_it_ot.CO2e_combustion_based
+            * fact("Fact_M_CO2e_wo_lulucf_2021")
+            / fact(f"Fact_M_CO2e_wo_lulucf_{entries.m_year_ref}")
         )
         cost_climate_saved = (
             (CO2e_total_2021_estimated - CO2e_combustion_based)
@@ -128,8 +132,10 @@ class Road:
         CO2e_combustion_based = demand_ediesel * ass(
             "Ass_T_S_diesel_EmFa_tank_wheel_2050"
         ) + demand_electricity * fact("Fact_T_S_electricity_EmFa_tank_wheel_2018")
-        CO2e_total_2021_estimated = t18.road_gds_ldt_ab.CO2e_combustion_based * fact(
-            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+        CO2e_total_2021_estimated = (
+            t18.road_gds_ldt_ab.CO2e_combustion_based
+            * fact("Fact_M_CO2e_wo_lulucf_2021")
+            / fact(f"Fact_M_CO2e_wo_lulucf_{entries.m_year_ref}")
         )
         cost_climate_saved = (
             (CO2e_total_2021_estimated - CO2e_combustion_based)
@@ -163,8 +169,10 @@ class Road:
         fact = facts.fact
         ass = assumptions.ass
 
-        CO2e_total_2021_estimated = t18.road_gds_mhd_ab.CO2e_combustion_based * fact(
-            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+        CO2e_total_2021_estimated = (
+            t18.road_gds_mhd_ab.CO2e_combustion_based
+            * fact("Fact_M_CO2e_wo_lulucf_2021")
+            / fact(f"Fact_M_CO2e_wo_lulucf_{entries.m_year_ref}")
         )
         transport_capacity_tkm = (
             ass("Ass_T_D_trnsprt_gds_Rd_2050")
@@ -248,8 +256,10 @@ class Road:
             * ass("Ass_T_S_MHD_SEC_fcev_2030")
         )
 
-        CO2e_total_2021_estimated = t18.road_gds_mhd_it_ot.CO2e_combustion_based * fact(
-            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+        CO2e_total_2021_estimated = (
+            t18.road_gds_mhd_it_ot.CO2e_combustion_based
+            * fact("Fact_M_CO2e_wo_lulucf_2021")
+            / fact(f"Fact_M_CO2e_wo_lulucf_{entries.m_year_ref}")
         )
         cost_climate_saved = (
             (CO2e_total_2021_estimated - CO2e_combustion_based)
@@ -330,8 +340,10 @@ class Road:
         CO2e_combustion_based = demand_epetrol * ass(
             "Ass_T_S_petrol_EmFa_tank_wheel_2050"
         ) + demand_electricity * fact("Fact_T_S_electricity_EmFa_tank_wheel_2018")
-        CO2e_total_2021_estimated = t18.road_car_it_ot.CO2e_combustion_based * fact(
-            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+        CO2e_total_2021_estimated = (
+            t18.road_car_it_ot.CO2e_combustion_based
+            * fact("Fact_M_CO2e_wo_lulucf_2021")
+            / fact(f"Fact_M_CO2e_wo_lulucf_{entries.m_year_ref}")
         )
         cost_climate_saved = (
             (CO2e_total_2021_estimated - CO2e_combustion_based)
@@ -410,8 +422,10 @@ class Road:
         CO2e_combustion_based = demand_epetrol * ass(
             "Ass_T_S_petrol_EmFa_tank_wheel_2050"
         ) + demand_electricity * fact("Fact_T_S_electricity_EmFa_tank_wheel_2018")
-        CO2e_total_2021_estimated = t18.road_car_ab.CO2e_combustion_based * fact(
-            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+        CO2e_total_2021_estimated = (
+            t18.road_car_ab.CO2e_combustion_based
+            * fact("Fact_M_CO2e_wo_lulucf_2021")
+            / fact(f"Fact_M_CO2e_wo_lulucf_{entries.m_year_ref}")
         )
         cost_climate_saved = (
             (CO2e_total_2021_estimated - CO2e_combustion_based)
@@ -632,8 +646,10 @@ class RoadBus(Road, BusInvestments):
             "Fact_T_S_electricity_EmFa_tank_wheel_2018"
         )
 
-        CO2e_total_2021_estimated = t18.road_bus.CO2e_combustion_based * fact(
-            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+        CO2e_total_2021_estimated = (
+            t18.road_bus.CO2e_combustion_based
+            * fact("Fact_M_CO2e_wo_lulucf_2021")
+            / fact(f"Fact_M_CO2e_wo_lulucf_{entries.m_year_ref}")
         )
         cost_climate_saved = (
             (CO2e_total_2021_estimated - CO2e_combustion_based)

@@ -3,6 +3,7 @@
 from dataclasses import dataclass
 
 from ...refdata import Facts, Assumptions
+from ...makeentries import Entries
 from ...utils import div
 from ...common.invest import Invest, InvestCommune
 from ...transport2018.t18 import T18
@@ -27,6 +28,7 @@ class RailPeople(Invest):
     def calc_metro(
         cls,
         facts: Facts,
+        entries: Entries,
         assumptions: Assumptions,
         duration_until_target_year: int,
         duration_CO2e_neutral_years: float,
@@ -71,8 +73,10 @@ class RailPeople(Invest):
         demand_emplo_new = demand_emplo - emplo_existing
         cost_wage = ratio_wage_to_emplo * demand_emplo_new
         invest = base_unit * invest_per_x + cost_wage * duration_until_target_year
-        CO2e_total_2021_estimated = t18.rail_ppl_metro.CO2e_combustion_based * fact(
-            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+        CO2e_total_2021_estimated = (
+            t18.rail_ppl_metro.CO2e_combustion_based
+            * fact("Fact_M_CO2e_wo_lulucf_2021")
+            / fact(f"Fact_M_CO2e_wo_lulucf_{entries.m_year_ref}")
         )
         cost_climate_saved = (
             (CO2e_total_2021_estimated - CO2e_combustion_based)
@@ -154,8 +158,10 @@ class RailPeople(Invest):
         ratio_wage_to_emplo = ass("Ass_T_D_rail_wage_driver")
         cost_wage = ratio_wage_to_emplo * demand_emplo_new
         invest_per_x = fact("Fact_T_D_rail_ppl_vehicle_invest")
-        CO2e_total_2021_estimated = t18.rail_ppl_distance.CO2e_combustion_based * fact(
-            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+        CO2e_total_2021_estimated = (
+            t18.rail_ppl_distance.CO2e_combustion_based
+            * fact("Fact_M_CO2e_wo_lulucf_2021")
+            / fact(f"Fact_M_CO2e_wo_lulucf_{entries.m_year_ref}")
         )
         cost_climate_saved = (
             (CO2e_total_2021_estimated - CO2e_combustion_based)
@@ -349,8 +355,10 @@ class RailGoods(Invest):
         mileage = transport_capacity_tkm / fact(
             "Fact_T_D_rail_gds_ratio_tkm_to_fzkm_2018"
         )
-        CO2e_total_2021_estimated = t18.rail_gds.CO2e_combustion_based * fact(
-            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+        CO2e_total_2021_estimated = (
+            t18.rail_gds.CO2e_combustion_based
+            * fact("Fact_M_CO2e_wo_lulucf_2021")
+            / fact(f"Fact_M_CO2e_wo_lulucf_{entries.m_year_ref}")
         )
         cost_climate_saved = (
             (CO2e_total_2021_estimated - CO2e_combustion_based)

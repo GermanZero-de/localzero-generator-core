@@ -3,6 +3,7 @@
 from dataclasses import dataclass, InitVar
 
 from ...refdata import Facts, Assumptions
+from ...makeentries import Entries
 from ...utils import div, MILLION
 from ...heat2018.h18 import H18
 from ...common.energy import EnergyChange
@@ -15,6 +16,7 @@ from ...common.invest import InvestCommune
 @dataclass(kw_only=True)
 class CO2eChangeHeatProduction(EnergyWithCO2e, CO2eChange, EnergyChange):
     facts: InitVar[Facts]
+    entries: InitVar[Entries]
     duration_CO2e_neutral_years: InitVar[float]
     what: InitVar[str]
     h18: InitVar[H18]
@@ -22,6 +24,7 @@ class CO2eChangeHeatProduction(EnergyWithCO2e, CO2eChange, EnergyChange):
     def __post_init__(  # type: ignore[override]
         self,
         facts: Facts,
+        entries: Entries,
         duration_CO2e_neutral_years: float,
         what: str,
         h18: H18,
@@ -41,8 +44,10 @@ class CO2eChangeHeatProduction(EnergyWithCO2e, CO2eChange, EnergyChange):
         self.change_CO2e_t = self.CO2e_total - h18_p_what.CO2e_total
         self.change_CO2e_pct = div(self.change_CO2e_t, h18_p_what.CO2e_total)
 
-        self.CO2e_total_2021_estimated = h18_p_what.CO2e_total * fact(
-            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+        self.CO2e_total_2021_estimated = (
+            h18_p_what.CO2e_total
+            * fact("Fact_M_CO2e_wo_lulucf_2021")
+            / fact(f"Fact_M_CO2e_wo_lulucf_{entries.m_year_ref}")
         )
 
         self.cost_climate_saved = (
@@ -89,6 +94,7 @@ class InvestHeatProduction(InvestCommune):
 @dataclass(kw_only=True)
 class HeatProduction(EnergyWithCO2ePerMWh, CO2eChangeHeatProduction):  # type: ignore[override]
     facts: InitVar[Facts]
+    entries: InitVar[Entries]
     duration_CO2e_neutral_years: InitVar[float]
     what: InitVar[str]
     h18: InitVar[H18]
@@ -96,6 +102,7 @@ class HeatProduction(EnergyWithCO2ePerMWh, CO2eChangeHeatProduction):  # type: i
     def __post_init__(  # type: ignore[override]
         self,
         facts: Facts,
+        entries: Entries,
         duration_CO2e_neutral_years: float,
         what: str,
         h18: H18,
@@ -104,6 +111,7 @@ class HeatProduction(EnergyWithCO2ePerMWh, CO2eChangeHeatProduction):  # type: i
         CO2eChangeHeatProduction.__post_init__(
             self,
             facts=facts,
+            entries=entries,
             duration_CO2e_neutral_years=duration_CO2e_neutral_years,
             what=what,
             h18=h18,

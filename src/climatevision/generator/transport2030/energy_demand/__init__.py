@@ -91,9 +91,10 @@ def calc_production(
     area_kind = entries.t_rt3
 
     # --- Air ---
-    air_dmstc = calc_air_domestic(facts, duration_CO2e_neutral_years, t18)
+    air_dmstc = calc_air_domestic(facts, entries, duration_CO2e_neutral_years, t18)
     air_inter = calc_air_international(
         facts,
+        entries,
         assumptions,
         duration_CO2e_neutral_years,
         population_commune_203X,

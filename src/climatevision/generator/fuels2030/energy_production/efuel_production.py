@@ -3,6 +3,7 @@
 from dataclasses import dataclass
 
 from ...refdata import Facts, Assumptions
+from ...makeentries import Entries
 from ...utils import div
 from ...common.energy import Energy, EnergyChange
 from ...common.co2e_change import CO2eChange
@@ -31,6 +32,7 @@ class EFuelProduction(Energy, CO2eChange, EnergyChange, Invest):
         cls,
         energy: float,
         facts: Facts,
+        entries: Entries,
         assumptions: Assumptions,
         duration_CO2e_neutral_years: float,
         duration_until_target_year: int,
@@ -40,8 +42,10 @@ class EFuelProduction(Energy, CO2eChange, EnergyChange, Invest):
         fact = facts.fact
         ass = assumptions.ass
 
-        CO2e_total_2021_estimated = production_2018.CO2e_total * fact(
-            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+        CO2e_total_2021_estimated = (
+            production_2018.CO2e_total
+            * fact("Fact_M_CO2e_wo_lulucf_2021")
+            / fact(f"Fact_M_CO2e_wo_lulucf_{entries.m_year_ref}")
         )
         # We assume that we take as much CO2e out of the air when the E-Fuel
         # is produced, as we later emit when it is burned.

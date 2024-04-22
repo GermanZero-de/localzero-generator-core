@@ -51,6 +51,7 @@ def calc(
 
     a = CO2eChangeA(
         facts=facts,
+        entries=entries,
         duration_until_target_year=entries.m_duration_target,
         duration_CO2e_neutral_years=entries.m_duration_neutral,
         what="a",
