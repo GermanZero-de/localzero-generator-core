@@ -100,15 +100,15 @@ def test_all_used_variables_are_populated():
     ), f"The following variables are used by KNUD but populated with None: {populated_with_none}"
 
 
-def end_to_end(year_ref: int, ags: str, year: int = 2035):
+def end_to_end(year_ref: int, ags: str, year_target: int = 2035):
     """This runs an end to end test. No entries are overriden, only AGS"""
     root = refdatatools.root_of_this_repo()
-    fname = f"production_{ags}_{year}.json"
+    fname = f"production_{ags}_{year_target}.json"
     with open(
         os.path.join(root, "tests", "end_to_end_expected", f"{year_ref}", fname)
     ) as fp:
         expected = json.load(fp)
-        g = calculate_with_default_inputs(year_ref=year_ref, ags=ags, year=year)
+        g = calculate_with_default_inputs(year_ref=year_ref, ags=ags, year=year_target)
         got = g.result_dict()
         ds = list(diffs.all(expected=expected, actual=got))  # type: ignore
         if ds:
@@ -125,15 +125,15 @@ def end_to_end(year_ref: int, ags: str, year: int = 2035):
         ), f"h18 energy demand {g.h18.d.energy} is not equal to energy production {g.h18.p.energy}"
 
 
-def make_entries_test(year_ref: int, ags: str, year: int):
+def make_entries_test(year_ref: int, ags: str, year_target: int):
     refdata = RefData.load(year_ref=year_ref)
     root = refdatatools.root_of_this_repo()
-    fname = f"entries_{ags}_{year}.json"
+    fname = f"entries_{ags}_{year_target}.json"
     with open(
         os.path.join(root, "tests", "end_to_end_expected", f"{year_ref}", fname)
     ) as fp:
         expected = json.load(fp)
-        e = make_entries(refdata, ags, year)
+        e = make_entries(refdata, ags, year_target)
         got = asdict(e)
         ds = list(diffs.all(expected=expected, actual=got))  # type: ignore
         if ds:
@@ -158,14 +158,14 @@ def test_end_to_end_germany(year_ref: int):
 
 # Min year for the generator = 2021
 def test_end_to_end_goettingen_2021(year_ref: int):
-    end_to_end(year_ref, ags="03159016", year=2021)
+    end_to_end(year_ref, ags="03159016", year_target=2021)
 
 
 # Min year for the website = 2025
 def test_end_to_end_goettingen_2025(year_ref: int):
-    end_to_end(year_ref, ags="03159016", year=2025)
+    end_to_end(year_ref, ags="03159016", year_target=2025)
 
 
 # Max year for the generator and website = 2050
 def test_end_to_end_goettingen_2050(year_ref: int):
-    end_to_end(year_ref, ags="03159016", year=2050)
+    end_to_end(year_ref, ags="03159016", year_target=2050)
