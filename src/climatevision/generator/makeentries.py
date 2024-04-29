@@ -5,7 +5,7 @@ from .utils import div
 from .refdata import RefData, Row
 
 
-def make_entries(data: RefData, ags: str, year: int) -> Entries:
+def make_entries(data: RefData, ags: str, year_target: int) -> Entries:
     # ags identifies the community (Kommune)
     ags_dis = ags[:5]  # This identifies the administrative district (Landkreis)
     ags_sta = ags[:2]  # This identifies the federal state (Bundesland)
@@ -16,14 +16,15 @@ def make_entries(data: RefData, ags: str, year: int) -> Entries:
 
     ags = ags
 
-    # m_year_today = date.today.year
-    m_year_today = 2022  # TODO replace by above
-
     m_AGS_com = ags
     m_AGS_dis = ags_dis
     m_AGS_sta = ags_sta
 
-    m_year_target = year
+    # m_year_today = date.today.year
+    m_year_today = 2022  # TODO replace by above
+
+    m_year_target = year_target
+    m_year_ref = data.year_ref()
 
     m_duration_target = m_year_target - m_year_today
     duration_target_until_2050 = 2050 - m_year_target
@@ -533,7 +534,7 @@ def make_entries(data: RefData, ags: str, year: int) -> Entries:
         "farmed_soil", farmland_area_organic_sta + greenland_area_organic_sta
     )
     data_nat_agri_germany = data.nat_agri(ags_germany)
-    if True or data.year_ref() == 2018:
+    if True or m_year_ref == 2018:
         # unlike the other factors we don't have the n2o levels below the national level available
         # in 2018 :-(
         a_soil_orgloss_ratio_CO2e_to_ha = compute_efactor_from_n2o(
@@ -563,10 +564,10 @@ def make_entries(data: RefData, ags: str, year: int) -> Entries:
         data_nat_organic_agri_sta.float("organic_farms_area") / m_area_agri_sta
     )
 
-    m_GHG_budget_2016_to_year_target = data.co2path(year).float(
+    m_GHG_budget_2016_to_year_target = data.co2path(m_year_target).float(
         "GHG_budget_2016_to_year"
     )
-    m_nonCO2_budget_2016_to_year_target = data.co2path(year).float(
+    m_nonCO2_budget_2016_to_year_target = data.co2path(m_year_target).float(
         "nonCO2_budget_2016_to_year"
     )
 
@@ -684,7 +685,7 @@ def make_entries(data: RefData, ags: str, year: int) -> Entries:
         m_population_sta=m_population_sta,
         m_year_target=m_year_target,
         m_year_today=m_year_today,
-        m_year_ref=data.year_ref(),
+        m_year_ref=m_year_ref,
         r_area_m2=r_area_m2,
         r_area_m2_1flat=r_area_m2_1flat,
         r_area_m2_2flat=r_area_m2_2flat,

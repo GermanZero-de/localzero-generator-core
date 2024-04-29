@@ -30,7 +30,7 @@ def update_expectation(year_ref: int, ags: str, year: int, file_path: str):
 
 def update_entries(year_ref: int, ags: str, year: int, file_path: str):
     rd = RefData.load(year_ref=year_ref)
-    entries = make_entries(rd, ags=ags, year=year)
+    entries = make_entries(rd, ags=ags, year_target=year)
     json_to_output_file(asdict(entries), file_path)
 
 
