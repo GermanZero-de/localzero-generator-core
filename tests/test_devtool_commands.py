@@ -43,7 +43,7 @@ def test_cmd_make_entries_with_parameters():
         assert False, "file " + filePath + " already exists"
 
     check_cmd(
-        ["make", "-ags", "10000000", "-year", "2040", "-o", filePath],
+        ["make", "-ags", "10000000", "-year", "2040", "-year_ref", "2021", "-o", filePath],
         "make",
         True,
     )
