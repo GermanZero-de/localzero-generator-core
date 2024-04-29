@@ -24,7 +24,9 @@ def json_to_output_file(json_object: object, file_path: str):
 
 
 def update_expectation(year_ref: int, ags: str, year_target: int, file_path: str):
-    g = calculate_with_default_inputs(year_ref=year_ref, ags=ags, year_target=year_target)
+    g = calculate_with_default_inputs(
+        year_ref=year_ref, ags=ags, year_target=year_target
+    )
     json_to_output_file(g.result_dict(), file_path)
 
 
@@ -50,10 +52,16 @@ def cmd_test_end_to_end_update_expectations(args: Any):
     expect_file_pattern = r"production_((\d+)|(DG000000))_(20\d\d)\.json"
 
     for year_ref in [2018, 2021]:
-        for file_path, ags, year_target in expectation_files(year_ref, expect_entries_pattern):
-            update_entries(year_ref=year_ref, ags=ags, year_target=year_target, file_path=file_path)
+        for file_path, ags, year_target in expectation_files(
+            year_ref, expect_entries_pattern
+        ):
+            update_entries(
+                year_ref=year_ref, ags=ags, year_target=year_target, file_path=file_path
+            )
 
-        for file_path, ags, year_target in expectation_files(year_ref, expect_file_pattern):
+        for file_path, ags, year_target in expectation_files(
+            year_ref, expect_file_pattern
+        ):
             update_expectation(
                 year_ref=year_ref, ags=ags, year_target=year_target, file_path=file_path
             )
@@ -64,7 +72,10 @@ def cmd_test_end_to_end_create_expectation(args: Any):
     for year_ref in [2018, 2021]:
         filepath = os.path.join(test_dir, f"{year_ref}", filename)
         update_expectation(
-            year_ref=year_ref, ags=args.ags, year_target=int(args.year_target), file_path=filepath
+            year_ref=year_ref,
+            ags=args.ags,
+            year_target=int(args.year_target),
+            file_path=filepath,
         )
 
 

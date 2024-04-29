@@ -108,7 +108,9 @@ def end_to_end(year_ref: int, ags: str, year_target: int = 2035):
         os.path.join(root, "tests", "end_to_end_expected", f"{year_ref}", fname)
     ) as fp:
         expected = json.load(fp)
-        g = calculate_with_default_inputs(year_ref=year_ref, ags=ags, year_target=year_target)
+        g = calculate_with_default_inputs(
+            year_ref=year_ref, ags=ags, year_target=year_target
+        )
         got = g.result_dict()
         ds = list(diffs.all(expected=expected, actual=got))  # type: ignore
         if ds:

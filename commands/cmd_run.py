@@ -31,6 +31,7 @@ def cmd_run(args: Any):
 def cmd_make_entries(args: Any):
     rd = RefData.load(args.year_ref)
     e = with_tracing(
-        enabled=args.trace, f=lambda: asdict(make_entries(rd, args.ags, int(args.year_target)))
+        enabled=args.trace,
+        f=lambda: asdict(make_entries(rd, args.ags, int(args.year_target))),
     )
     json_to_output(e, args)
