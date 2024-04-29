@@ -23,7 +23,7 @@ def test_cmd_run_with_parameters():
         assert False, "file " + filePath + " already exists"
 
     check_cmd(
-        ["run", "-ags", "10000000", "-year", "2040", "-o", filePath],
+        ["run", "-ags", "10000000", "-year_target", "2040", "-o", filePath],
         "run",
         True,
     )
@@ -43,7 +43,7 @@ def test_cmd_make_entries_with_parameters():
         assert False, "file " + filePath + " already exists"
 
     check_cmd(
-        ["make", "-ags", "10000000", "-year", "2040", "-year_ref", "2021", "-o", filePath],
+        ["make", "-ags", "10000000", "-year_target", "2040", "-year_ref", "2021", "-o", filePath],
         "make",
         True,
     )

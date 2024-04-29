@@ -24,7 +24,7 @@ def json_to_output_file(json_object: object, file_path: str):
 
 
 def update_expectation(year_ref: int, ags: str, year_target: int, file_path: str):
-    g = calculate_with_default_inputs(year_ref=year_ref, ags=ags, year=year_target)
+    g = calculate_with_default_inputs(year_ref=year_ref, ags=ags, year_target=year_target)
     json_to_output_file(g.result_dict(), file_path)
 
 
@@ -60,11 +60,11 @@ def cmd_test_end_to_end_update_expectations(args: Any):
 
 
 def cmd_test_end_to_end_create_expectation(args: Any):
-    filename = "production_" + args.ags + "_" + str(args.year) + ".json"
+    filename = "production_" + args.ags + "_" + str(args.year_target) + ".json"
     for year_ref in [2018, 2021]:
         filepath = os.path.join(test_dir, f"{year_ref}", filename)
         update_expectation(
-            year_ref=year_ref, ags=args.ags, year_target=int(args.year), file_path=filepath
+            year_ref=year_ref, ags=args.ags, year_target=int(args.year_target), file_path=filepath
         )
 
 
@@ -76,7 +76,7 @@ def cmd_test_end_to_end_run_all_ags(args: Any):
         for ags in list(data.ags_master().keys()):
             try:
                 calculate_with_default_inputs(
-                    year_ref=args.year_ref, ags=ags, year=int(args.year)
+                    year_ref=args.year_ref, ags=ags, year_target=int(args.year_target)
                 )
                 good = good + 1
             except Exception as e:

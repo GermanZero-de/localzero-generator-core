@@ -75,7 +75,7 @@ def test_all_used_variables_are_populated():
     reminder when we change that something that will need KNUD to be adjusted.
     """
     root = refdatatools.root_of_this_repo()
-    g = calculate_with_default_inputs(2018, ags="03159016", year=2035)
+    g = calculate_with_default_inputs(2018, ags="03159016", year_target=2035)
     result = g.result_dict()
     with open(os.path.join(root, "tests", "usage.json")) as fp:
         usage = json.load(fp)
@@ -108,7 +108,7 @@ def end_to_end(year_ref: int, ags: str, year_target: int = 2035):
         os.path.join(root, "tests", "end_to_end_expected", f"{year_ref}", fname)
     ) as fp:
         expected = json.load(fp)
-        g = calculate_with_default_inputs(year_ref=year_ref, ags=ags, year=year_target)
+        g = calculate_with_default_inputs(year_ref=year_ref, ags=ags, year_target=year_target)
         got = g.result_dict()
         ds = list(diffs.all(expected=expected, actual=got))  # type: ignore
         if ds:

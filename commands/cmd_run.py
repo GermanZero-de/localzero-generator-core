@@ -22,7 +22,7 @@ def cmd_run(args: Any):
     d = with_tracing(
         enabled=args.trace,
         f=lambda: calculate_with_default_inputs(
-            year_ref=args.year_ref, ags=args.ags, year=int(args.year)
+            year_ref=args.year_ref, ags=args.ags, year_target=int(args.year_target)
         ).result_dict(),
     )
     json_to_output(d, args)
@@ -31,6 +31,6 @@ def cmd_run(args: Any):
 def cmd_make_entries(args: Any):
     rd = RefData.load(args.year_ref)
     e = with_tracing(
-        enabled=args.trace, f=lambda: asdict(make_entries(rd, args.ags, int(args.year)))
+        enabled=args.trace, f=lambda: asdict(make_entries(rd, args.ags, int(args.year_target)))
     )
     json_to_output(e, args)
