@@ -7,6 +7,7 @@ from commands.cmd_test_end_to_end import (
     cmd_test_end_to_end_create_expectation,
     cmd_test_end_to_end_run_all_ags,
 )
+from . import arguments
 
 
 def add_cmd_test_end_to_end_parser(subcmd_parsers: Any):
@@ -29,10 +30,8 @@ def add_cmd_test_end_to_end_parser(subcmd_parsers: Any):
         "create_expectation",
         help="Create an expectation for the end to end tests.",
     )
-    cmd_test_end_to_end_create_expectation_parser.add_argument(
-        "-ags", default="03159016"
-    )
-    cmd_test_end_to_end_create_expectation_parser.add_argument("-year", default=2035)
+    arguments.add_ags_argument(cmd_test_end_to_end_create_expectation_parser)
+    arguments.add_year_target_argument(cmd_test_end_to_end_create_expectation_parser)
     cmd_test_end_to_end_create_expectation_parser.set_defaults(
         func=cmd_test_end_to_end_create_expectation
     )
@@ -41,8 +40,8 @@ def add_cmd_test_end_to_end_parser(subcmd_parsers: Any):
         "run_all_ags",
         help="Runs the generator for all ags.",
     )
-    cmd_test_end_to_end_run_all_ags_parser.add_argument("-year", default=2035)
-    cmd_test_end_to_end_run_all_ags_parser.add_argument("-year_ref", default=2018)
+    arguments.add_year_ref_argument(cmd_test_end_to_end_run_all_ags_parser)
+    arguments.add_year_target_argument(cmd_test_end_to_end_run_all_ags_parser)
     cmd_test_end_to_end_run_all_ags_parser.set_defaults(
         func=cmd_test_end_to_end_run_all_ags
     )

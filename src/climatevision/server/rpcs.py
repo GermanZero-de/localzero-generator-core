@@ -65,7 +65,7 @@ class GeneratorRpcs:
                 entries_germany = entries
             else:
                 entries_germany = generator.make_entries(
-                    self.rd, ags="DG000000", year=year
+                    self.rd, ags="DG000000", year_target=year
                 )
 
             inputs = generator.Inputs(
