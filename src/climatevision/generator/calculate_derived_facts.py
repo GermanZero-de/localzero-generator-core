@@ -130,33 +130,32 @@ def calculate_derived_facts(rd: refdata.RefData):
         },
     )
 
-    # TODO: ENABLE WHEN DATA WAS ADDED
-    # f.add_derived_fact(
-    #     "Fact_M_CO2e_wo_lulucf_2022_vs_year_ref",
-    #     f.fact("Fact_M_CO2e_wo_lulucf_2022") / f.fact("Fact_M_CO2e_wo_lulucf_year_ref"),
-    #     {
-    #         "note HS": "ACHTUNG VARIABLE ENDUNG",
-    #         "group": "ud",
-    #         "description": "Emissionen ohne LULUCF Deutschland 2022 vs 2018 in Prozentpunkten",
-    #         "unit": "%",
-    #         "rationale": "SchÃ¤tzung von August 2021",
-    #         "reference": "Ã–ko-Institut 2021 Hochrechnung der deutschen THG-Emissionen 2021",
-    #         "link": "https://www.oeko.de/fileadmin/oekodoc/Hochrechnung-der-deutschen-THG-Emissionen-2021.pdf ",
-    #     },
-    # )
-    # f.add_derived_fact(
-    #     "Fact_M_CO2e_wo_lulucf_2023_vs_year_ref",
-    #     f.fact("Fact_M_CO2e_wo_lulucf_2023") / f.fact("Fact_M_CO2e_wo_lulucf_year_ref"),
-    #     {
-    #         "note HS": "ACHTUNG VARIABLE ENDUNG",
-    #         "group": "ud",
-    #         "description": "Emissionen ohne LULUCF Deutschland 2023 vs 2018 in Prozentpunkten",
-    #         "unit": "%",
-    #         "rationale": "SchÃ¤tzung von August 2021",
-    #         "reference": "Ã–ko-Institut 2021 Hochrechnung der deutschen THG-Emissionen 2021",
-    #         "link": "https://www.oeko.de/fileadmin/oekodoc/Hochrechnung-der-deutschen-THG-Emissionen-2021.pdf ",
-    #     },
-    # )
+    f.add_derived_fact(
+        "Fact_M_CO2e_wo_lulucf_2022_vs_year_ref",
+        f.fact("Fact_M_CO2e_wo_lulucf_2022") / f.fact("Fact_M_CO2e_wo_lulucf_year_ref"),
+        {
+            "note HS": "ACHTUNG VARIABLE ENDUNG",
+            "group": "ud",
+            "description": "Emissionen ohne LULUCF Deutschland 2022 vs 2018 in Prozentpunkten",
+            "unit": "%",
+            "rationale": "SchÃ¤tzung von August 2021",
+            "reference": "Ã–ko-Institut 2021 Hochrechnung der deutschen THG-Emissionen 2021",
+            "link": "https://www.oeko.de/fileadmin/oekodoc/Hochrechnung-der-deutschen-THG-Emissionen-2021.pdf ",
+        },
+    )
+    f.add_derived_fact(
+        "Fact_M_CO2e_wo_lulucf_2023_vs_year_ref",
+        f.fact("Fact_M_CO2e_wo_lulucf_2023") / f.fact("Fact_M_CO2e_wo_lulucf_year_ref"),
+        {
+            "note HS": "ACHTUNG VARIABLE ENDUNG",
+            "group": "ud",
+            "description": "Emissionen ohne LULUCF Deutschland 2023 vs 2018 in Prozentpunkten",
+            "unit": "%",
+            "rationale": "SchÃ¤tzung von August 2021",
+            "reference": "Ã–ko-Institut 2021 Hochrechnung der deutschen THG-Emissionen 2021",
+            "link": "https://www.oeko.de/fileadmin/oekodoc/Hochrechnung-der-deutschen-THG-Emissionen-2021.pdf ",
+        },
+    )
 
     f.add_derived_fact(
         "Fact_M_CO2e_lulucf_2015_vs_year_ref",
@@ -250,33 +249,32 @@ def calculate_derived_facts(rd: refdata.RefData):
         },
     )
 
-    # TODO: ENABLE WHEN DATA WAS ADDED
-    # f.add_derived_fact(
-    #     "Fact_M_CO2e_lulucf_2022_vs_year_ref",
-    #     f.fact("Fact_M_CO2e_lulucf_2022") / f.fact("Fact_M_CO2e_lulucf_year_ref"),
-    #     {
-    #         "note HS": "ACHTUNG VARIABLE ENDUNG",
-    #         "group": "ud",
-    #         "description": "Emissionen ohne LULUCF Deutschland 2022 vs 2018 in Prozentpunkten",
-    #         "unit": "%",
-    #         "rationale": "SchÃ¤tzung von August 2021",
-    #         "reference": "Ã–ko-Institut 2021 Hochrechnung der deutschen THG-Emissionen 2021",
-    #         "link": "https://www.oeko.de/fileadmin/oekodoc/Hochrechnung-der-deutschen-THG-Emissionen-2021.pdf ",
-    #     },
-    # )
-    # f.add_derived_fact(
-    #     "Fact_M_CO2e_lulucf_2023_vs_year_ref",
-    #     f.fact("Fact_M_CO2e_lulucf_2023") / f.fact("Fact_M_CO2e_lulucf_year_ref"),
-    #     {
-    #         "note HS": "ACHTUNG VARIABLE ENDUNG",
-    #         "group": "ud",
-    #         "description": "Emissionen ohne LULUCF Deutschland 2023 vs 2018 in Prozentpunkten",
-    #         "unit": "%",
-    #         "rationale": "SchÃ¤tzung von August 2021",
-    #         "reference": "Ã–ko-Institut 2021 Hochrechnung der deutschen THG-Emissionen 2021",
-    #         "link": "https://www.oeko.de/fileadmin/oekodoc/Hochrechnung-der-deutschen-THG-Emissionen-2021.pdf ",
-    #     },
-    # )
+    f.add_derived_fact(
+        "Fact_M_CO2e_lulucf_2022_vs_year_ref",
+        f.fact("Fact_M_CO2e_lulucf_2022") / f.fact("Fact_M_CO2e_lulucf_year_ref"),
+        {
+           "note HS": "ACHTUNG VARIABLE ENDUNG",
+            "group": "ud",
+            "description": "Emissionen ohne LULUCF Deutschland 2022 vs 2018 in Prozentpunkten",
+            "unit": "%",
+            "rationale": "SchÃ¤tzung von August 2021",
+            "reference": "Ã–ko-Institut 2021 Hochrechnung der deutschen THG-Emissionen 2021",
+            "link": "https://www.oeko.de/fileadmin/oekodoc/Hochrechnung-der-deutschen-THG-Emissionen-2021.pdf ",
+        },
+    )
+    f.add_derived_fact(
+        "Fact_M_CO2e_lulucf_2023_vs_year_ref",
+        f.fact("Fact_M_CO2e_lulucf_2023") / f.fact("Fact_M_CO2e_lulucf_year_ref"),
+        {
+            "note HS": "ACHTUNG VARIABLE ENDUNG",
+            "group": "ud",
+            "description": "Emissionen ohne LULUCF Deutschland 2023 vs 2018 in Prozentpunkten",
+            "unit": "%",
+            "rationale": "SchÃ¤tzung von August 2021",
+            "reference": "Ã–ko-Institut 2021 Hochrechnung der deutschen THG-Emissionen 2021",
+            "link": "https://www.oeko.de/fileadmin/oekodoc/Hochrechnung-der-deutschen-THG-Emissionen-2021.pdf ",
+        },
+    )
 
     f.add_derived_fact(
         "Fact_H_P_heatnet_prodvol_brutto_2018",
