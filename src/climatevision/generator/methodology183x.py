@@ -245,7 +245,7 @@ def calc_budget(
 
     for year in years_list_wo_2018:
         years_dict[year]["CO2e_lulucf"] = years_dict[2018]["CO2e_lulucf"] * fact(
-            f"Fact_M_CO2e_lulucf_{year}_vs_2018"
+            f"Fact_M_CO2e_lulucf_{year}_vs_year_ref"
         )
 
     ############################################
