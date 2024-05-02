@@ -253,7 +253,7 @@ def calculate_derived_facts(rd: refdata.RefData):
         "Fact_M_CO2e_lulucf_2022_vs_year_ref",
         f.fact("Fact_M_CO2e_lulucf_2022") / f.fact("Fact_M_CO2e_lulucf_year_ref"),
         {
-           "note HS": "ACHTUNG VARIABLE ENDUNG",
+            "note HS": "ACHTUNG VARIABLE ENDUNG",
             "group": "ud",
             "description": f"Emissionen ohne LULUCF Deutschland 2022 vs {rd.year_ref()} in Prozentpunkten",
             "unit": "%",

@@ -798,7 +798,9 @@ def calc(
     s_gas.CO2e_total_2021_estimated = r18.s_gas.CO2e_combustion_based * fact(
         "Fact_M_CO2e_wo_lulucf_2021_vs_year_ref"
     )
-    s_emethan.CO2e_total_2021_estimated = 0 * fact("Fact_M_CO2e_wo_lulucf_2021_vs_year_ref")
+    s_emethan.CO2e_total_2021_estimated = 0 * fact(
+        "Fact_M_CO2e_wo_lulucf_2021_vs_year_ref"
+    )
 
     s.CO2e_total_2021_estimated = r18.s.CO2e_combustion_based * fact(
         "Fact_M_CO2e_wo_lulucf_2021_vs_year_ref"
@@ -1284,7 +1286,9 @@ def calc(
     )
     s_gas.change_CO2e_pct = div(s_gas.change_CO2e_t, r18.s_gas.CO2e_combustion_based)
     s_elec.CO2e_total = s_elec.CO2e_combustion_based
-    s_emethan.CO2e_total_2021_estimated = 0 * fact("Fact_M_CO2e_wo_lulucf_2021_vs_year_ref")
+    s_emethan.CO2e_total_2021_estimated = 0 * fact(
+        "Fact_M_CO2e_wo_lulucf_2021_vs_year_ref"
+    )
     s_elec.CO2e_combustion_based_per_MWh = r18.s_elec.CO2e_combustion_based_per_MWh
     s.CO2e_total = (
         s_fueloil.CO2e_total

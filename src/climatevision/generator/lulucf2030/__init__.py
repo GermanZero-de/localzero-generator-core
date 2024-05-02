@@ -277,7 +277,9 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, l18: L18) 
     g_wet_org_high.ratio_wage_to_emplo = fact(
         "Fact_L_G_wet_rewetting_ratio_wage_to_emplo_2018"
     )
-    g_wet_org_r.CO2e_total_2021_estimated = 0 * fact("Fact_M_CO2e_lulucf_2021_vs_year_ref")
+    g_wet_org_r.CO2e_total_2021_estimated = 0 * fact(
+        "Fact_M_CO2e_lulucf_2021_vs_year_ref"
+    )
 
     g_wet_org_low_r.CO2e_production_based_per_t = fact(
         "Fact_L_G_fen_wet_CO2e_per_ha_203X"
@@ -292,7 +294,9 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, l18: L18) 
     g_wet_org_high_r.CO2e_total_2021_estimated = 0 * fact(
         "Fact_M_CO2e_lulucf_2021_vs_year_ref"
     )
-    g_wet_org_rp.CO2e_total_2021_estimated = 0 * fact("Fact_M_CO2e_lulucf_2021_vs_year_ref")
+    g_wet_org_rp.CO2e_total_2021_estimated = 0 * fact(
+        "Fact_M_CO2e_lulucf_2021_vs_year_ref"
+    )
     g_wet_org_low_rp.pct_x = ass("Ass_L_G_wet_paludi_pct_2012")
     g_wet_org_low_rp.CO2e_production_based_per_t = fact(
         "Fact_L_G_wetland_peat_org_soil_paludi_CO2e_per_ha_203X"
@@ -351,14 +355,16 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, l18: L18) 
         "Fact_L_G_settl_org_soil_fen_CO2e_per_ha_2018"
     )
     g_settlement_org_low.CO2e_total_2021_estimated = (
-        l18.g_settlement_org_low.CO2e_total * fact("Fact_M_CO2e_lulucf_2021_vs_year_ref")
+        l18.g_settlement_org_low.CO2e_total
+        * fact("Fact_M_CO2e_lulucf_2021_vs_year_ref")
     )
     g_settlement_org_high.demand_change = ass("Ass_L_G_settl_rewetting_2050")
     g_settlement_org_high.CO2e_production_based_per_t = fact(
         "Fact_L_G_settl_org_soil_bog_CO2e_per_ha_2018"
     )
     g_settlement_org_high.CO2e_total_2021_estimated = (
-        l18.g_settlement_org_high.CO2e_total * fact("Fact_M_CO2e_lulucf_2021_vs_year_ref")
+        l18.g_settlement_org_high.CO2e_total
+        * fact("Fact_M_CO2e_lulucf_2021_vs_year_ref")
     )
     g_other.demand_change = ass("Ass_L_G_no_LUC_203X")
     g_other.CO2e_production_based_per_t = fact(
