@@ -41,7 +41,7 @@ class EFuelProduction(Energy, CO2eChange, EnergyChange, Invest):
         ass = assumptions.ass
 
         CO2e_total_2021_estimated = production_2018.CO2e_total * fact(
-            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+            "Fact_M_CO2e_wo_lulucf_2021_vs_year_ref"
         )
         # We assume that we take as much CO2e out of the air when the E-Fuel
         # is produced, as we later emit when it is burned.

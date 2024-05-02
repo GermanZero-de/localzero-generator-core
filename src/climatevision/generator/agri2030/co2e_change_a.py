@@ -56,7 +56,7 @@ class CO2eChangeA(InvestCommune):
         self.CO2e_total = g.CO2e_total + p.CO2e_total + s.CO2e_total
 
         self.CO2e_total_2021_estimated = getattr(a18, what).CO2e_total * fact(
-            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+            "Fact_M_CO2e_wo_lulucf_2021_vs_year_ref"
         )
 
         self.invest_pa_outside = g.invest_pa_outside

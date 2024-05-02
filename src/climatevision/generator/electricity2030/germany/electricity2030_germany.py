@@ -222,7 +222,7 @@ def calc(
     p_renew_wind_offshore.emplo_existing = fact("Fact_E_P_wind_offshore_emplo_2018")
     p_local_biomass.CO2e_total_2021_estimated = (
         e18.p_local_biomass.CO2e_combustion_based
-        * fact("Fact_M_CO2e_wo_lulucf_2021_vs_2018")
+        * fact("Fact_M_CO2e_wo_lulucf_2021_vs_year_ref")
     )
     p_local_biomass.cost_fuel_per_MWh = ass(
         "Ass_E_P_local_biomass_material_costs"

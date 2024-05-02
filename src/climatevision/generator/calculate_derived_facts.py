@@ -39,7 +39,7 @@ def calculate_derived_facts(rd: refdata.RefData):
         },
     )
     f.add_derived_fact(
-        "Fact_M_CO2e_wo_lulucf_2015_vs_2018",
+        "Fact_M_CO2e_wo_lulucf_2015_vs_year_ref",
         f.fact("Fact_M_CO2e_wo_lulucf_2015") / f.fact("Fact_M_CO2e_wo_lulucf_year_ref"),
         {
             "note HS": "ACHTUNG VARIABLE ENDUNG",
@@ -52,7 +52,7 @@ def calculate_derived_facts(rd: refdata.RefData):
         },
     )
     f.add_derived_fact(
-        "Fact_M_CO2e_wo_lulucf_2016_vs_2018",
+        "Fact_M_CO2e_wo_lulucf_2016_vs_year_ref",
         f.fact("Fact_M_CO2e_wo_lulucf_2016") / f.fact("Fact_M_CO2e_wo_lulucf_year_ref"),
         {
             "note HS": "ACHTUNG VARIABLE ENDUNG",
@@ -65,7 +65,7 @@ def calculate_derived_facts(rd: refdata.RefData):
         },
     )
     f.add_derived_fact(
-        "Fact_M_CO2e_wo_lulucf_2017_vs_2018",
+        "Fact_M_CO2e_wo_lulucf_2017_vs_year_ref",
         f.fact("Fact_M_CO2e_wo_lulucf_2017") / f.fact("Fact_M_CO2e_wo_lulucf_year_ref"),
         {
             "note HS": "ACHTUNG VARIABLE ENDUNG",
@@ -78,7 +78,7 @@ def calculate_derived_facts(rd: refdata.RefData):
         },
     )
     f.add_derived_fact(
-        "Fact_M_CO2e_wo_lulucf_2018_vs_2018",
+        "Fact_M_CO2e_wo_lulucf_2018_vs_year_ref",
         f.fact("Fact_M_CO2e_wo_lulucf_2018") / f.fact("Fact_M_CO2e_wo_lulucf_year_ref"),
         {
             "note HS": "ACHTUNG VARIABLE ENDUNG",
@@ -91,7 +91,7 @@ def calculate_derived_facts(rd: refdata.RefData):
         },
     )
     f.add_derived_fact(
-        "Fact_M_CO2e_wo_lulucf_2019_vs_2018",
+        "Fact_M_CO2e_wo_lulucf_2019_vs_year_ref",
         f.fact("Fact_M_CO2e_wo_lulucf_2019") / f.fact("Fact_M_CO2e_wo_lulucf_year_ref"),
         {
             "note HS": "ACHTUNG VARIABLE ENDUNG",
@@ -104,7 +104,7 @@ def calculate_derived_facts(rd: refdata.RefData):
         },
     )
     f.add_derived_fact(
-        "Fact_M_CO2e_wo_lulucf_2020_vs_2018",
+        "Fact_M_CO2e_wo_lulucf_2020_vs_year_ref",
         f.fact("Fact_M_CO2e_wo_lulucf_2020") / f.fact("Fact_M_CO2e_wo_lulucf_year_ref"),
         {
             "note HS": "ACHTUNG VARIABLE ENDUNG",
@@ -117,7 +117,7 @@ def calculate_derived_facts(rd: refdata.RefData):
         },
     )
     f.add_derived_fact(
-        "Fact_M_CO2e_wo_lulucf_2021_vs_2018",
+        "Fact_M_CO2e_wo_lulucf_2021_vs_year_ref",
         f.fact("Fact_M_CO2e_wo_lulucf_2021") / f.fact("Fact_M_CO2e_wo_lulucf_year_ref"),
         {
             "note HS": "ACHTUNG VARIABLE ENDUNG",
@@ -132,7 +132,7 @@ def calculate_derived_facts(rd: refdata.RefData):
 
     # TODO: ENABLE WHEN DATA WAS ADDED
     # f.add_derived_fact(
-    #     "Fact_M_CO2e_wo_lulucf_2022_vs_2018",
+    #     "Fact_M_CO2e_wo_lulucf_2022_vs_year_ref",
     #     f.fact("Fact_M_CO2e_wo_lulucf_2022") / f.fact("Fact_M_CO2e_wo_lulucf_year_ref"),
     #     {
     #         "note HS": "ACHTUNG VARIABLE ENDUNG",
@@ -145,7 +145,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     #     },
     # )
     # f.add_derived_fact(
-    #     "Fact_M_CO2e_wo_lulucf_2023_vs_2018",
+    #     "Fact_M_CO2e_wo_lulucf_2023_vs_year_ref",
     #     f.fact("Fact_M_CO2e_wo_lulucf_2023") / f.fact("Fact_M_CO2e_wo_lulucf_year_ref"),
     #     {
     #         "note HS": "ACHTUNG VARIABLE ENDUNG",

@@ -112,7 +112,7 @@ def calc(
 
     p_local_biomass.CO2e_total_2021_estimated = (
         e18.p_local_biomass.CO2e_combustion_based
-        * fact("Fact_M_CO2e_wo_lulucf_2021_vs_2018")
+        * fact("Fact_M_CO2e_wo_lulucf_2021_vs_year_ref")
     )
 
     p_local_pv_roof = calc_production_local_pv_roof(
@@ -166,7 +166,7 @@ def calc(
     p_renew_biomass = EColVars2030()
     p_renew_biomass.CO2e_total_2021_estimated = (
         e18.p_renew_biomass.CO2e_combustion_based
-        * fact("Fact_M_CO2e_wo_lulucf_2021_vs_2018")
+        * fact("Fact_M_CO2e_wo_lulucf_2021_vs_year_ref")
     )
     p_renew_biomass.cost_fuel_per_MWh = ass(
         "Ass_E_P_local_biomass_material_costs"
