@@ -41,7 +41,7 @@ class CO2eChangeP(Invest):
         a18_CO2e_total = getattr(a18, what).CO2e_total
 
         self.CO2e_total_2021_estimated = a18_CO2e_total * fact(
-            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+            "Fact_M_CO2e_wo_lulucf_2021_vs_year_ref"
         )
 
         self.change_CO2e_t = self.CO2e_total - a18_CO2e_total

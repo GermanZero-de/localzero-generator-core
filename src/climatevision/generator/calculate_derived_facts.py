@@ -39,12 +39,12 @@ def calculate_derived_facts(rd: refdata.RefData):
         },
     )
     f.add_derived_fact(
-        "Fact_M_CO2e_wo_lulucf_2015_vs_2018",
+        "Fact_M_CO2e_wo_lulucf_2015_vs_year_ref",
         f.fact("Fact_M_CO2e_wo_lulucf_2015") / f.fact("Fact_M_CO2e_wo_lulucf_year_ref"),
         {
             "note HS": "ACHTUNG VARIABLE ENDUNG",
             "group": "ud",
-            "description": "Emissionen ohne LULUCF Deutschland 2015 vs 2018 in Prozentpunkten",
+            "description": f"Emissionen ohne LULUCF Deutschland 2015 vs {rd.year_ref()} in Prozentpunkten",
             "unit": "%",
             "rationale": "Offizieller Wert",
             "reference": "UBA 2021 Trendtabelle THG 1990-2020, Blatt THG",
@@ -52,12 +52,12 @@ def calculate_derived_facts(rd: refdata.RefData):
         },
     )
     f.add_derived_fact(
-        "Fact_M_CO2e_wo_lulucf_2016_vs_2018",
+        "Fact_M_CO2e_wo_lulucf_2016_vs_year_ref",
         f.fact("Fact_M_CO2e_wo_lulucf_2016") / f.fact("Fact_M_CO2e_wo_lulucf_year_ref"),
         {
             "note HS": "ACHTUNG VARIABLE ENDUNG",
             "group": "ud",
-            "description": "Emissionen ohne LULUCF Deutschland 2016 vs 2018 in Prozentpunkten",
+            "description": f"Emissionen ohne LULUCF Deutschland 2016 vs {rd.year_ref()} in Prozentpunkten",
             "unit": "%",
             "rationale": "Offizieller Wert",
             "reference": "UBA 2021 Trendtabelle THG 1990-2020, Blatt THG",
@@ -65,12 +65,12 @@ def calculate_derived_facts(rd: refdata.RefData):
         },
     )
     f.add_derived_fact(
-        "Fact_M_CO2e_wo_lulucf_2017_vs_2018",
+        "Fact_M_CO2e_wo_lulucf_2017_vs_year_ref",
         f.fact("Fact_M_CO2e_wo_lulucf_2017") / f.fact("Fact_M_CO2e_wo_lulucf_year_ref"),
         {
             "note HS": "ACHTUNG VARIABLE ENDUNG",
             "group": "ud",
-            "description": "Emissionen ohne LULUCF Deutschland 2017 vs 2018 in Prozentpunkten",
+            "description": f"Emissionen ohne LULUCF Deutschland 2017 vs {rd.year_ref()} in Prozentpunkten",
             "unit": "%",
             "rationale": "Offizieller Wert",
             "reference": "UBA 2021 Trendtabelle THG 1990-2020, Blatt THG",
@@ -78,12 +78,12 @@ def calculate_derived_facts(rd: refdata.RefData):
         },
     )
     f.add_derived_fact(
-        "Fact_M_CO2e_wo_lulucf_2018_vs_2018",
+        "Fact_M_CO2e_wo_lulucf_2018_vs_year_ref",
         f.fact("Fact_M_CO2e_wo_lulucf_2018") / f.fact("Fact_M_CO2e_wo_lulucf_year_ref"),
         {
             "note HS": "ACHTUNG VARIABLE ENDUNG",
             "group": "ud",
-            "description": "Emissionen ohne LULUCF Deutschland 2018 vs 2018 in Prozentpunkten",
+            "description": f"Emissionen ohne LULUCF Deutschland 2018 vs {rd.year_ref()} in Prozentpunkten",
             "unit": "%",
             "rationale": "Offizieller Wert",
             "reference": "UBA 2021 Trendtabelle THG 1990-2020, Blatt THG",
@@ -91,12 +91,12 @@ def calculate_derived_facts(rd: refdata.RefData):
         },
     )
     f.add_derived_fact(
-        "Fact_M_CO2e_wo_lulucf_2019_vs_2018",
+        "Fact_M_CO2e_wo_lulucf_2019_vs_year_ref",
         f.fact("Fact_M_CO2e_wo_lulucf_2019") / f.fact("Fact_M_CO2e_wo_lulucf_year_ref"),
         {
             "note HS": "ACHTUNG VARIABLE ENDUNG",
             "group": "ud",
-            "description": "Emissionen ohne LULUCF Deutschland 2019 vs 2018 in Prozentpunkten",
+            "description": f"Emissionen ohne LULUCF Deutschland 2019 vs {rd.year_ref()} in Prozentpunkten",
             "unit": "%",
             "rationale": "Offizieller Wert",
             "reference": "UBA 2021 Trendtabelle THG 1990-2020, Blatt THG",
@@ -104,12 +104,12 @@ def calculate_derived_facts(rd: refdata.RefData):
         },
     )
     f.add_derived_fact(
-        "Fact_M_CO2e_wo_lulucf_2020_vs_2018",
+        "Fact_M_CO2e_wo_lulucf_2020_vs_year_ref",
         f.fact("Fact_M_CO2e_wo_lulucf_2020") / f.fact("Fact_M_CO2e_wo_lulucf_year_ref"),
         {
             "note HS": "ACHTUNG VARIABLE ENDUNG",
             "group": "ud",
-            "description": "Emissionen ohne LULUCF Deutschland 2020 vs 2018 in Prozentpunkten",
+            "description": f"Emissionen ohne LULUCF Deutschland 2020 vs {rd.year_ref()} in Prozentpunkten",
             "unit": "%",
             "rationale": "Offizielle SchÃ¤tzung",
             "reference": "UBA 2021 Trendtabelle THG 1990-2020, Blatt THG",
@@ -117,12 +117,12 @@ def calculate_derived_facts(rd: refdata.RefData):
         },
     )
     f.add_derived_fact(
-        "Fact_M_CO2e_wo_lulucf_2021_vs_2018",
+        "Fact_M_CO2e_wo_lulucf_2021_vs_year_ref",
         f.fact("Fact_M_CO2e_wo_lulucf_2021") / f.fact("Fact_M_CO2e_wo_lulucf_year_ref"),
         {
             "note HS": "ACHTUNG VARIABLE ENDUNG",
             "group": "ud",
-            "description": "Emissionen ohne LULUCF Deutschland 2021 vs 2018 in Prozentpunkten",
+            "description": f"Emissionen ohne LULUCF Deutschland 2021 vs {rd.year_ref()} in Prozentpunkten",
             "unit": "%",
             "rationale": "SchÃ¤tzung von August 2021",
             "reference": "Ã–ko-Institut 2021 Hochrechnung der deutschen THG-Emissionen 2021",
@@ -130,41 +130,40 @@ def calculate_derived_facts(rd: refdata.RefData):
         },
     )
 
-    # TODO: ENABLE WHEN DATA WAS ADDED
-    # f.add_derived_fact(
-    #     "Fact_M_CO2e_wo_lulucf_2022_vs_2018",
-    #     f.fact("Fact_M_CO2e_wo_lulucf_2022") / f.fact("Fact_M_CO2e_wo_lulucf_year_ref"),
-    #     {
-    #         "note HS": "ACHTUNG VARIABLE ENDUNG",
-    #         "group": "ud",
-    #         "description": "Emissionen ohne LULUCF Deutschland 2022 vs 2018 in Prozentpunkten",
-    #         "unit": "%",
-    #         "rationale": "SchÃ¤tzung von August 2021",
-    #         "reference": "Ã–ko-Institut 2021 Hochrechnung der deutschen THG-Emissionen 2021",
-    #         "link": "https://www.oeko.de/fileadmin/oekodoc/Hochrechnung-der-deutschen-THG-Emissionen-2021.pdf ",
-    #     },
-    # )
-    # f.add_derived_fact(
-    #     "Fact_M_CO2e_wo_lulucf_2023_vs_2018",
-    #     f.fact("Fact_M_CO2e_wo_lulucf_2023") / f.fact("Fact_M_CO2e_wo_lulucf_year_ref"),
-    #     {
-    #         "note HS": "ACHTUNG VARIABLE ENDUNG",
-    #         "group": "ud",
-    #         "description": "Emissionen ohne LULUCF Deutschland 2023 vs 2018 in Prozentpunkten",
-    #         "unit": "%",
-    #         "rationale": "SchÃ¤tzung von August 2021",
-    #         "reference": "Ã–ko-Institut 2021 Hochrechnung der deutschen THG-Emissionen 2021",
-    #         "link": "https://www.oeko.de/fileadmin/oekodoc/Hochrechnung-der-deutschen-THG-Emissionen-2021.pdf ",
-    #     },
-    # )
+    f.add_derived_fact(
+        "Fact_M_CO2e_wo_lulucf_2022_vs_year_ref",
+        f.fact("Fact_M_CO2e_wo_lulucf_2022") / f.fact("Fact_M_CO2e_wo_lulucf_year_ref"),
+        {
+            "note HS": "ACHTUNG VARIABLE ENDUNG",
+            "group": "ud",
+            "description": f"Emissionen ohne LULUCF Deutschland 2022 vs {rd.year_ref()} in Prozentpunkten",
+            "unit": "%",
+            "rationale": "SchÃ¤tzung von August 2021",
+            "reference": "Ã–ko-Institut 2021 Hochrechnung der deutschen THG-Emissionen 2021",
+            "link": "https://www.oeko.de/fileadmin/oekodoc/Hochrechnung-der-deutschen-THG-Emissionen-2021.pdf ",
+        },
+    )
+    f.add_derived_fact(
+        "Fact_M_CO2e_wo_lulucf_2023_vs_year_ref",
+        f.fact("Fact_M_CO2e_wo_lulucf_2023") / f.fact("Fact_M_CO2e_wo_lulucf_year_ref"),
+        {
+            "note HS": "ACHTUNG VARIABLE ENDUNG",
+            "group": "ud",
+            "description": f"Emissionen ohne LULUCF Deutschland 2023 vs {rd.year_ref()} in Prozentpunkten",
+            "unit": "%",
+            "rationale": "SchÃ¤tzung von August 2021",
+            "reference": "Ã–ko-Institut 2021 Hochrechnung der deutschen THG-Emissionen 2021",
+            "link": "https://www.oeko.de/fileadmin/oekodoc/Hochrechnung-der-deutschen-THG-Emissionen-2021.pdf ",
+        },
+    )
 
     f.add_derived_fact(
-        "Fact_M_CO2e_lulucf_2015_vs_2018",
+        "Fact_M_CO2e_lulucf_2015_vs_year_ref",
         f.fact("Fact_M_CO2e_lulucf_2015") / f.fact("Fact_M_CO2e_lulucf_year_ref"),
         {
             "note HS": "ACHTUNG VARIABLE ENDUNG",
             "group": "ud",
-            "description": "Emissionen LULUCF Deutschland 2015 vs 2018 in Prozentpunkten",
+            "description": f"Emissionen LULUCF Deutschland 2015 vs {rd.year_ref()} in Prozentpunkten",
             "unit": "%",
             "rationale": "Offizieller Wert",
             "reference": "UBA 2021 Trendtabelle THG 1990-2020, Blatt THG",
@@ -172,12 +171,12 @@ def calculate_derived_facts(rd: refdata.RefData):
         },
     )
     f.add_derived_fact(
-        "Fact_M_CO2e_lulucf_2016_vs_2018",
+        "Fact_M_CO2e_lulucf_2016_vs_year_ref",
         f.fact("Fact_M_CO2e_lulucf_2016") / f.fact("Fact_M_CO2e_lulucf_year_ref"),
         {
             "note HS": "ACHTUNG VARIABLE ENDUNG",
             "group": "ud",
-            "description": "Emissionen LULUCF Deutschland 2016 vs 2018 in Prozentpunkten",
+            "description": f"Emissionen LULUCF Deutschland 2016 vs {rd.year_ref()} in Prozentpunkten",
             "unit": "%",
             "rationale": "Offizieller Wert",
             "reference": "UBA 2021 Trendtabelle THG 1990-2020, Blatt THG",
@@ -185,12 +184,12 @@ def calculate_derived_facts(rd: refdata.RefData):
         },
     )
     f.add_derived_fact(
-        "Fact_M_CO2e_lulucf_2017_vs_2018",
+        "Fact_M_CO2e_lulucf_2017_vs_year_ref",
         f.fact("Fact_M_CO2e_lulucf_2017") / f.fact("Fact_M_CO2e_lulucf_year_ref"),
         {
             "note HS": "ACHTUNG VARIABLE ENDUNG",
             "group": "ud",
-            "description": "Emissionen LULUCF Deutschland 2017 vs 2018 in Prozentpunkten",
+            "description": f"Emissionen LULUCF Deutschland 2017 vs {rd.year_ref()} in Prozentpunkten",
             "unit": "%",
             "rationale": "Offizieller Wert",
             "reference": "UBA 2021 Trendtabelle THG 1990-2020, Blatt THG",
@@ -198,12 +197,12 @@ def calculate_derived_facts(rd: refdata.RefData):
         },
     )
     f.add_derived_fact(
-        "Fact_M_CO2e_lulucf_2018_vs_2018",
+        "Fact_M_CO2e_lulucf_2018_vs_year_ref",
         f.fact("Fact_M_CO2e_lulucf_2018") / f.fact("Fact_M_CO2e_lulucf_year_ref"),
         {
             "note HS": "ACHTUNG VARIABLE ENDUNG",
             "group": "ud",
-            "description": "Emissionen LULUCF Deutschland 2018 vs 2018 in Prozentpunkten",
+            "description": f"Emissionen LULUCF Deutschland 2018 vs {rd.year_ref()} in Prozentpunkten",
             "unit": "%",
             "rationale": "Offizieller Wert",
             "reference": "UBA 2021 Trendtabelle THG 1990-2020, Blatt THG",
@@ -211,12 +210,12 @@ def calculate_derived_facts(rd: refdata.RefData):
         },
     )
     f.add_derived_fact(
-        "Fact_M_CO2e_lulucf_2019_vs_2018",
+        "Fact_M_CO2e_lulucf_2019_vs_year_ref",
         f.fact("Fact_M_CO2e_lulucf_2019") / f.fact("Fact_M_CO2e_lulucf_year_ref"),
         {
             "note HS": "ACHTUNG VARIABLE ENDUNG",
             "group": "ud",
-            "description": "Emissionen LULUCF Deutschland 2019 vs 2018 in Prozentpunkten",
+            "description": f"Emissionen LULUCF Deutschland 2019 vs {rd.year_ref()} in Prozentpunkten",
             "unit": "%",
             "rationale": "Offizieller Wert",
             "reference": "UBA 2021 Trendtabelle THG 1990-2020, Blatt THG",
@@ -224,12 +223,12 @@ def calculate_derived_facts(rd: refdata.RefData):
         },
     )
     f.add_derived_fact(
-        "Fact_M_CO2e_lulucf_2020_vs_2018",
+        "Fact_M_CO2e_lulucf_2020_vs_year_ref",
         f.fact("Fact_M_CO2e_lulucf_2020") / f.fact("Fact_M_CO2e_lulucf_year_ref"),
         {
             "note HS": "ACHTUNG VARIABLE ENDUNG",
             "group": "ud",
-            "description": "Emissionen LULUCF Deutschland 2020 vs 2018 in Prozentpunkten",
+            "description": f"Emissionen LULUCF Deutschland 2020 vs {rd.year_ref()} in Prozentpunkten",
             "unit": "%",
             "rationale": "Offizielle SchÃ¤tzung",
             "reference": "UBA 2021 Trendtabelle THG 1990-2020, Blatt THG",
@@ -237,12 +236,12 @@ def calculate_derived_facts(rd: refdata.RefData):
         },
     )
     f.add_derived_fact(
-        "Fact_M_CO2e_lulucf_2021_vs_2018",
+        "Fact_M_CO2e_lulucf_2021_vs_year_ref",
         f.fact("Fact_M_CO2e_lulucf_2021") / f.fact("Fact_M_CO2e_lulucf_year_ref"),
         {
             "note HS": "ACHTUNG VARIABLE ENDUNG",
             "group": "ud",
-            "description": "Emissionen LULUCF Deutschland 2021 vs 2018 in Prozentpunkten",
+            "description": f"Emissionen LULUCF Deutschland 2021 vs {rd.year_ref()} in Prozentpunkten",
             "unit": "%",
             "rationale": "Gleicher LULUCF-Wert wie 2020 angenommen, da in den Vorjahren auch kaum VerÃ¤nderung",
             "reference": "Ã–ko-Institut 2021 Hochrechnung der deutschen THG-Emissionen 2021",
@@ -250,33 +249,32 @@ def calculate_derived_facts(rd: refdata.RefData):
         },
     )
 
-    # TODO: ENABLE WHEN DATA WAS ADDED
-    # f.add_derived_fact(
-    #     "Fact_M_CO2e_lulucf_2022_vs_2018",
-    #     f.fact("Fact_M_CO2e_lulucf_2022") / f.fact("Fact_M_CO2e_lulucf_year_ref"),
-    #     {
-    #         "note HS": "ACHTUNG VARIABLE ENDUNG",
-    #         "group": "ud",
-    #         "description": "Emissionen ohne LULUCF Deutschland 2022 vs 2018 in Prozentpunkten",
-    #         "unit": "%",
-    #         "rationale": "SchÃ¤tzung von August 2021",
-    #         "reference": "Ã–ko-Institut 2021 Hochrechnung der deutschen THG-Emissionen 2021",
-    #         "link": "https://www.oeko.de/fileadmin/oekodoc/Hochrechnung-der-deutschen-THG-Emissionen-2021.pdf ",
-    #     },
-    # )
-    # f.add_derived_fact(
-    #     "Fact_M_CO2e_lulucf_2023_vs_2018",
-    #     f.fact("Fact_M_CO2e_lulucf_2023") / f.fact("Fact_M_CO2e_lulucf_year_ref"),
-    #     {
-    #         "note HS": "ACHTUNG VARIABLE ENDUNG",
-    #         "group": "ud",
-    #         "description": "Emissionen ohne LULUCF Deutschland 2023 vs 2018 in Prozentpunkten",
-    #         "unit": "%",
-    #         "rationale": "SchÃ¤tzung von August 2021",
-    #         "reference": "Ã–ko-Institut 2021 Hochrechnung der deutschen THG-Emissionen 2021",
-    #         "link": "https://www.oeko.de/fileadmin/oekodoc/Hochrechnung-der-deutschen-THG-Emissionen-2021.pdf ",
-    #     },
-    # )
+    f.add_derived_fact(
+        "Fact_M_CO2e_lulucf_2022_vs_year_ref",
+        f.fact("Fact_M_CO2e_lulucf_2022") / f.fact("Fact_M_CO2e_lulucf_year_ref"),
+        {
+            "note HS": "ACHTUNG VARIABLE ENDUNG",
+            "group": "ud",
+            "description": f"Emissionen ohne LULUCF Deutschland 2022 vs {rd.year_ref()} in Prozentpunkten",
+            "unit": "%",
+            "rationale": "SchÃ¤tzung von August 2021",
+            "reference": "Ã–ko-Institut 2021 Hochrechnung der deutschen THG-Emissionen 2021",
+            "link": "https://www.oeko.de/fileadmin/oekodoc/Hochrechnung-der-deutschen-THG-Emissionen-2021.pdf ",
+        },
+    )
+    f.add_derived_fact(
+        "Fact_M_CO2e_lulucf_2023_vs_year_ref",
+        f.fact("Fact_M_CO2e_lulucf_2023") / f.fact("Fact_M_CO2e_lulucf_year_ref"),
+        {
+            "note HS": "ACHTUNG VARIABLE ENDUNG",
+            "group": "ud",
+            "description": f"Emissionen ohne LULUCF Deutschland 2023 vs {rd.year_ref()} in Prozentpunkten",
+            "unit": "%",
+            "rationale": "SchÃ¤tzung von August 2021",
+            "reference": "Ã–ko-Institut 2021 Hochrechnung der deutschen THG-Emissionen 2021",
+            "link": "https://www.oeko.de/fileadmin/oekodoc/Hochrechnung-der-deutschen-THG-Emissionen-2021.pdf ",
+        },
+    )
 
     f.add_derived_fact(
         "Fact_H_P_heatnet_prodvol_brutto_2018",

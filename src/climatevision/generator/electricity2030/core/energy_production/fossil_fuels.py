@@ -18,7 +18,7 @@ def calc_stop_production_by_fossil_fuels(
 
     energy = 0
     CO2e_total_2021_estimated = e18_production.CO2e_combustion_based * fact(
-        "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+        "Fact_M_CO2e_wo_lulucf_2021_vs_year_ref"
     )
     cost_fuel_per_MWh = e18_production.cost_fuel_per_MWh
     cost_mro_per_MWh = e18_production.cost_mro_per_MWh

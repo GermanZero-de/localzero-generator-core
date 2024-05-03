@@ -245,7 +245,7 @@ def calc_budget(
 
     for year in years_list_wo_2018:
         years_dict[year]["CO2e_lulucf"] = years_dict[2018]["CO2e_lulucf"] * fact(
-            f"Fact_M_CO2e_lulucf_{year}_vs_2018"
+            f"Fact_M_CO2e_lulucf_{year}_vs_year_ref"
         )
 
     ############################################
@@ -271,7 +271,7 @@ def calc_budget(
     # 2015 just as a backup, probably not needed
     for year in years_list_wo_2018:
         years_dict[year]["CO2e_wo_lulucf"] = years_dict[2018]["CO2e_wo_lulucf"] * fact(
-            f"Fact_M_CO2e_wo_lulucf_{year}_vs_2018"
+            f"Fact_M_CO2e_wo_lulucf_{year}_vs_year_ref"
         )
 
     #############################################
@@ -629,10 +629,10 @@ def calc_z(
     z.change_CO2e_pct = div(z.CO2e_total_30, z.CO2e_total_18)
 
     s.CO2e_total_2021_estimated = s.CO2e_total_18 * fact(
-        "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+        "Fact_M_CO2e_wo_lulucf_2021_vs_year_ref"
     )
     d.CO2e_total_2021_estimated = d.CO2e_total_18 * fact(
-        "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+        "Fact_M_CO2e_wo_lulucf_2021_vs_year_ref"
     )
     z.CO2e_total_2021_estimated = (
         s.CO2e_total_2021_estimated + d.CO2e_total_2021_estimated

@@ -35,7 +35,7 @@ class CO2eChangeAgri(CO2eEmission, CO2eChange):
         self.change_CO2e_pct = div(self.change_CO2e_t, a18_CO2e_total)
 
         self.CO2e_total_2021_estimated = a18_CO2e_total * fact(
-            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+            "Fact_M_CO2e_wo_lulucf_2021_vs_year_ref"
         )
         self.cost_climate_saved = (
             (self.CO2e_total_2021_estimated - self.CO2e_total)

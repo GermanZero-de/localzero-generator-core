@@ -57,7 +57,7 @@ class OtherFoot:
         )
 
         CO2e_total_2021_estimated = t18.other_foot.CO2e_combustion_based * fact(
-            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+            "Fact_M_CO2e_wo_lulucf_2021_vs_year_ref"
         )
         cost_climate_saved = (
             (CO2e_total_2021_estimated)
@@ -128,7 +128,7 @@ class OtherCycle:
         )
         invest = base_unit * invest_per_x
         CO2e_total_2021_estimated = t18.other_cycl.CO2e_combustion_based * fact(
-            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+            "Fact_M_CO2e_wo_lulucf_2021_vs_year_ref"
         )
         cost_climate_saved = (
             (CO2e_total_2021_estimated)

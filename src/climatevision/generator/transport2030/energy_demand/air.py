@@ -21,7 +21,7 @@ def calc_air_domestic(
     fact = facts.fact
 
     CO2e_total_2021_estimated = t18.air_dmstc.CO2e_combustion_based * fact(
-        "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+        "Fact_M_CO2e_wo_lulucf_2021_vs_year_ref"
     )
     # Assuming every year from 2021 onwards we would have use the same amount
     # of CO2e on domestic flights if we hadn't decided to ban them.
@@ -67,7 +67,7 @@ def calc_air_international(
         "Ass_T_S_jetfuel_EmFa_tank_wheel_2050"
     )
     CO2e_total_2021_estimated = t18.air_inter.CO2e_combustion_based * fact(
-        "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+        "Fact_M_CO2e_wo_lulucf_2021_vs_year_ref"
     )
     cost_climate_saved = (
         (CO2e_total_2021_estimated - CO2e_combustion_based)

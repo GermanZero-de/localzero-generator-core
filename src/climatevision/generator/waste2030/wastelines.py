@@ -48,7 +48,7 @@ class EnergySupplyDetail:
         change_CO2e_t = CO2e_total - w18.s_elec.CO2e_total
         change_CO2e_pct = div(change_CO2e_t, w18.s_elec.CO2e_total)
         CO2e_total_2021_estimated = w18.s_elec.CO2e_total * fact(
-            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+            "Fact_M_CO2e_wo_lulucf_2021_vs_year_ref"
         )
         cost_climate_saved = (
             (CO2e_total_2021_estimated - CO2e_total)
@@ -113,7 +113,7 @@ class Landfilling:
         change_CO2e_pct = change_CO2e_t / w18.p_landfilling.CO2e_total
 
         CO2e_total_2021_estimated = w18.p_landfilling.CO2e_total * fact(
-            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+            "Fact_M_CO2e_wo_lulucf_2021_vs_year_ref"
         )
         cost_climate_saved = (
             (CO2e_total_2021_estimated - CO2e_total)
@@ -177,7 +177,7 @@ class Organic_treatment:
         change_CO2e_pct = change_CO2e_t / w18.p_organic_treatment.CO2e_total
 
         CO2e_total_2021_estimated = w18.p_organic_treatment.CO2e_total * fact(
-            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+            "Fact_M_CO2e_wo_lulucf_2021_vs_year_ref"
         )
         cost_climate_saved = (
             (CO2e_total_2021_estimated - CO2e_total)
@@ -265,7 +265,7 @@ class Wastewater:
         change_CO2e_pct = div(change_CO2e_t, w18.p_organic_treatment.CO2e_total)
 
         CO2e_total_2021_estimated = w18.p_organic_treatment.CO2e_total * fact(
-            "Fact_M_CO2e_wo_lulucf_2021_vs_2018"
+            "Fact_M_CO2e_wo_lulucf_2021_vs_year_ref"
         )
         cost_climate_saved = (
             (CO2e_total_2021_estimated - CO2e_total)
