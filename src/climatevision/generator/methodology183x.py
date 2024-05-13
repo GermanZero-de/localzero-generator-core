@@ -271,9 +271,9 @@ def calc_budget(
     # calculate the CO2e of all sectors without LULUCF for 2015-2021 by multiplying year_ref's value with percentage
     # 2015 just as a backup, probably not needed
     for year in years_list_wo_year_ref:
-        years_dict[year]["CO2e_wo_lulucf"] = years_dict[year_ref]["CO2e_wo_lulucf"] * fact(
-            f"Fact_M_CO2e_wo_lulucf_{year}_vs_year_ref"
-        )
+        years_dict[year]["CO2e_wo_lulucf"] = years_dict[year_ref][
+            "CO2e_wo_lulucf"
+        ] * fact(f"Fact_M_CO2e_wo_lulucf_{year}_vs_year_ref")
 
     #################################################
     ### year_ref as base for emissions 2016-2021  ###
