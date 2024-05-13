@@ -215,18 +215,19 @@ def calc_budget(
         m183X.GHG_budget_2016_to_year_target - m183X.nonCO2_budget_2016_to_year_target
     )
 
-    ############################################
-    ### 2018 as base for emissions 2016-2021 ###
-    ############################################
-    ### beginning with LULUCF                ###
-    ############################################
+    ################################################
+    ### year_ref as base for emissions 2016-2021 ###
+    ################################################
+    ### beginning with LULUCF                    ###
+    ################################################
     start_year = 2015
     current_year = 2022
+    year_ref = entries.m_year_ref
 
     years_list = list(range(start_year, current_year))
 
-    years_list_wo_2018 = years_list.copy()
-    years_list_wo_2018.remove(2018)
+    years_list_wo_year_ref = years_list.copy()
+    years_list_wo_year_ref.remove(year_ref)
 
     years_list_wo_2015 = years_list.copy()
     years_list_wo_2015.remove(2015)
@@ -237,25 +238,25 @@ def calc_budget(
 
     years_dict: dict[int, dict[str, float]] = {year: {} for year in years_list}
 
-    # get the CO2e of LULUCF for 2018 as calculated
-    years_dict[2018]["CO2e_lulucf"] = l18.l.CO2e_total
+    # get the CO2e of LULUCF for year_ref as calculated
+    years_dict[year_ref]["CO2e_lulucf"] = l18.l.CO2e_total
 
-    # calculate the CO2e of LULUCF for 2015-2017 and 2019-2021 by multiplying 2018's value with percentage
+    # calculate the CO2e of LULUCF for 2015-2021 by multiplying year_ref's value with percentage
     # 2015 just as a backup, probably not needed
 
-    for year in years_list_wo_2018:
-        years_dict[year]["CO2e_lulucf"] = years_dict[2018]["CO2e_lulucf"] * fact(
+    for year in years_list_wo_year_ref:
+        years_dict[year]["CO2e_lulucf"] = years_dict[year_ref]["CO2e_lulucf"] * fact(
             f"Fact_M_CO2e_lulucf_{year}_vs_year_ref"
         )
 
-    ############################################
-    ### 2018 as base for emissions 2016-2021 ###
-    ############################################
-    ### second emissions without (wo) LULUCF ###
-    ############################################
+    ################################################
+    ### year_ref as base for emissions 2016-2021 ###
+    ################################################
+    ### second emissions without (wo) LULUCF     ###
+    ################################################
 
-    # get the CO2e of all sectors for 2018 excluding LULUCF since this is negative
-    years_dict[2018]["CO2e_wo_lulucf"] = (
+    # get the CO2e of all sectors for year_ref excluding LULUCF since this is negative
+    years_dict[year_ref]["CO2e_wo_lulucf"] = (
         h18.h.CO2e_total
         + e18.e.CO2e_total
         + f18.f.CO2e_total
@@ -267,20 +268,20 @@ def calc_budget(
         + w18.w.CO2e_total
     )
 
-    # calculate the CO2e of all sectors without LULUCF for 2015-2017 and 2019-2021 by multiplying 2018's value with percentage
+    # calculate the CO2e of all sectors without LULUCF for 2015-2021 by multiplying year_ref's value with percentage
     # 2015 just as a backup, probably not needed
-    for year in years_list_wo_2018:
-        years_dict[year]["CO2e_wo_lulucf"] = years_dict[2018]["CO2e_wo_lulucf"] * fact(
+    for year in years_list_wo_year_ref:
+        years_dict[year]["CO2e_wo_lulucf"] = years_dict[year_ref]["CO2e_wo_lulucf"] * fact(
             f"Fact_M_CO2e_wo_lulucf_{year}_vs_year_ref"
         )
 
-    #############################################
-    ### 2018 as base for emissions 2016-2021  ###
-    #############################################
-    ### sum up CO2e_wo_lulucf and CO2e_lulucf ###
-    #############################################
+    #################################################
+    ### year_ref as base for emissions 2016-2021  ###
+    #################################################
+    ### sum up CO2e_wo_lulucf and CO2e_lulucf     ###
+    #################################################
 
-    # 2015 just as a backup, probably not
+    # 2015 just as a backup, probably not needed
     for year in years_list:
         years_dict[year]["CO2e_w_lulucf"] = (
             years_dict[year]["CO2e_wo_lulucf"] + years_dict[year]["CO2e_lulucf"]
