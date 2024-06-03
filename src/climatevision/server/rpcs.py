@@ -43,21 +43,30 @@ class GeneratorRpcs:
     def list_ags(self) -> jsonrpcserver.Result:
         return self.wrap_result(self.do_list_ags)
 
-    def make_entries(self, ags: str, year: int, trace: bool) -> jsonrpcserver.Result:
+    def make_entries(
+        self, ags: str, year_baseline: int, year_target: int, trace: bool
+    ) -> jsonrpcserver.Result:
         return self.wrap_result(
             lambda: with_tracing(
                 enabled=trace,
                 f=lambda: dataclasses.asdict(
-                    generator.make_entries(self.rd, ags, year)
+                    generator.make_entries(self.rd, ags, year_baseline, year_target)
                 ),
             )
         )
 
     def calculate(
-        self, ags: str, year: int, overrides: dict[str, int | float | str], trace: bool
+        self,
+        ags: str,
+        year_baseline: int,
+        year_target: int,
+        overrides: dict[str, int | float | str],
+        trace: bool,
     ) -> jsonrpcserver.Result:
         def calculate():
-            defaults = dataclasses.asdict(generator.make_entries(self.rd, ags, year))
+            defaults = dataclasses.asdict(
+                generator.make_entries(self.rd, ags, year_baseline, year_target)
+            )
             defaults.update(overrides)
             entries = generator.Entries(**defaults)
 
@@ -65,7 +74,10 @@ class GeneratorRpcs:
                 entries_germany = entries
             else:
                 entries_germany = generator.make_entries(
-                    self.rd, ags="DG000000", year_target=year
+                    self.rd,
+                    ags="DG000000",
+                    year_baseline=year_baseline,
+                    year_target=year_target,
                 )
 
             inputs = generator.Inputs(
@@ -83,9 +95,13 @@ class GeneratorRpcs:
 
         return self.wrap_result(lambda: with_tracing(enabled=trace, f=calculate))
 
-    def get_overridables(self, ags: str, year: int) -> jsonrpcserver.Result:
+    def get_overridables(
+        self, ags: str, year_baseline: int, year_target: int
+    ) -> jsonrpcserver.Result:
         return self.wrap_result(
-            lambda: overridables.sections_with_defaults(self.rd, ags, year)
+            lambda: overridables.sections_with_defaults(
+                self.rd, ags, year_baseline, year_target
+            )
         )
 
     def info(self, key: str) -> jsonrpcserver.Result:
