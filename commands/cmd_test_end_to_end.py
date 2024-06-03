@@ -23,27 +23,28 @@ def json_to_output_file(json_object: object, file_path: str):
         print("No file specified!", file=sys.stderr)
 
 
-def update_expectation(year_ref: int, ags: str, year_baseline: int, year_target: int, file_path: str):
+def update_expectation(
+    year_ref: int, ags: str, year_baseline: int, year_target: int, file_path: str
+):
     g = calculate_with_default_inputs(
-        year_ref=year_ref, 
-        ags=ags, 
-        year_baseline=year_baseline,
-        year_target=year_target
+        year_ref=year_ref, ags=ags, year_baseline=year_baseline, year_target=year_target
     )
     json_to_output_file(g.result_dict(), file_path)
 
 
-def update_entries(year_ref: int, ags: str, year_baseline: int, year_target: int, file_path: str):
+def update_entries(
+    year_ref: int, ags: str, year_baseline: int, year_target: int, file_path: str
+):
     rd = RefData.load(year_ref=year_ref)
     entries = make_entries(
-        data=rd, 
-        ags=ags, 
-        year_baseline=year_baseline,
-        year_target=year_target)
+        data=rd, ags=ags, year_baseline=year_baseline, year_target=year_target
+    )
     json_to_output_file(asdict(entries), file_path)
 
 
-def expectation_files(year_baseline: int, year_ref: int, pattern: str) -> Iterator[tuple[str, str, int, int]]:
+def expectation_files(
+    year_baseline: int, year_ref: int, pattern: str
+) -> Iterator[tuple[str, str, int, int]]:
     dir = os.path.join(test_dir, f"{year_ref}")
     for filename in os.listdir(dir):
         m = re.match(pattern, filename)
@@ -66,22 +67,22 @@ def cmd_test_end_to_end_update_expectations(args: Any):
             year_baseline, year_ref, expect_entries_pattern
         ):
             update_entries(
-                year_ref=year_ref, 
-                ags=ags, 
+                year_ref=year_ref,
+                ags=ags,
                 year_baseline=year_baseline,
-                year_target=year_target, 
-                file_path=file_path
+                year_target=year_target,
+                file_path=file_path,
             )
 
         for file_path, ags, year_baseline, year_target in expectation_files(
             year_baseline, year_ref, expect_file_pattern
         ):
             update_expectation(
-                year_ref=year_ref, 
-                ags=ags, 
+                year_ref=year_ref,
+                ags=ags,
                 year_baseline=year_baseline,
-                year_target=year_target, 
-                file_path=file_path
+                year_target=year_target,
+                file_path=file_path,
             )
 
 
@@ -106,10 +107,11 @@ def cmd_test_end_to_end_run_all_ags(args: Any):
         for ags in list(data.ags_master().keys()):
             try:
                 calculate_with_default_inputs(
-                    year_ref=args.year_ref, 
-                    ags=ags, 
-                    year_baseline=args.year_baseline, 
-                    year_target=args.year_target)
+                    year_ref=args.year_ref,
+                    ags=ags,
+                    year_baseline=args.year_baseline,
+                    year_target=args.year_target,
+                )
                 good = good + 1
             except Exception as e:
                 errors = errors + 1

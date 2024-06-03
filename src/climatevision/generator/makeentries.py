@@ -5,7 +5,9 @@ from .utils import div
 from .refdata import RefData, Row
 
 
-def make_entries(data: RefData, ags: str, year_baseline: int, year_target: int) -> Entries:
+def make_entries(
+    data: RefData, ags: str, year_baseline: int, year_target: int
+) -> Entries:
     # ags identifies the community (Kommune)
     ags_dis = ags[:5]  # This identifies the administrative district (Landkreis)
     ags_sta = ags[:2]  # This identifies the federal state (Bundesland)

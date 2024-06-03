@@ -75,7 +75,9 @@ def test_all_used_variables_are_populated():
     reminder when we change that something that will need KNUD to be adjusted.
     """
     root = refdatatools.root_of_this_repo()
-    g = calculate_with_default_inputs(2018, ags="03159016", year_baseline=2022, year_target=2035)
+    g = calculate_with_default_inputs(
+        2018, ags="03159016", year_baseline=2022, year_target=2035
+    )
     result = g.result_dict()
     with open(os.path.join(root, "tests", "usage.json")) as fp:
         usage = json.load(fp)
@@ -100,7 +102,9 @@ def test_all_used_variables_are_populated():
     ), f"The following variables are used by KNUD but populated with None: {populated_with_none}"
 
 
-def end_to_end(year_ref: int, ags: str, year_baseline: int = 2022, year_target: int = 2035):
+def end_to_end(
+    year_ref: int, ags: str, year_baseline: int = 2022, year_target: int = 2035
+):
     """This runs an end to end test. No entries are overriden, only AGS"""
     root = refdatatools.root_of_this_repo()
     fname = f"production_{ags}_{year_baseline}_{year_target}.json"
@@ -109,7 +113,10 @@ def end_to_end(year_ref: int, ags: str, year_baseline: int = 2022, year_target: 
     ) as fp:
         expected = json.load(fp)
         g = calculate_with_default_inputs(
-            year_ref=year_ref, ags=ags, year_baseline=year_baseline, year_target=year_target
+            year_ref=year_ref,
+            ags=ags,
+            year_baseline=year_baseline,
+            year_target=year_target,
         )
         got = g.result_dict()
         ds = list(diffs.all(expected=expected, actual=got))  # type: ignore
