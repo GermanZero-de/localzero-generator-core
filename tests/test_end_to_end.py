@@ -75,7 +75,7 @@ def test_all_used_variables_are_populated():
     reminder when we change that something that will need KNUD to be adjusted.
     """
     root = refdatatools.root_of_this_repo()
-    g = calculate_with_default_inputs(2018, ags="03159016", year_target=2035)
+    g = calculate_with_default_inputs(2018, ags="03159016", year_baseline=2022, year_target=2035)
     result = g.result_dict()
     with open(os.path.join(root, "tests", "usage.json")) as fp:
         usage = json.load(fp)
@@ -100,16 +100,16 @@ def test_all_used_variables_are_populated():
     ), f"The following variables are used by KNUD but populated with None: {populated_with_none}"
 
 
-def end_to_end(year_ref: int, ags: str, year_target: int = 2035):
+def end_to_end(year_ref: int, ags: str, year_baseline: int = 2022, year_target: int = 2035):
     """This runs an end to end test. No entries are overriden, only AGS"""
     root = refdatatools.root_of_this_repo()
-    fname = f"production_{ags}_{year_target}.json"
+    fname = f"production_{ags}_{year_baseline}_{year_target}.json"
     with open(
         os.path.join(root, "tests", "end_to_end_expected", f"{year_ref}", fname)
     ) as fp:
         expected = json.load(fp)
         g = calculate_with_default_inputs(
-            year_ref=year_ref, ags=ags, year_target=year_target
+            year_ref=year_ref, ags=ags, year_baseline=year_baseline, year_target=year_target
         )
         got = g.result_dict()
         ds = list(diffs.all(expected=expected, actual=got))  # type: ignore
@@ -127,15 +127,15 @@ def end_to_end(year_ref: int, ags: str, year_target: int = 2035):
         ), f"h18 energy demand {g.h18.d.energy} is not equal to energy production {g.h18.p.energy}"
 
 
-def make_entries_test(year_ref: int, ags: str, year_target: int):
+def make_entries_test(year_ref: int, ags: str, year_baseline: int, year_target: int):
     refdata = RefData.load(year_ref=year_ref)
     root = refdatatools.root_of_this_repo()
-    fname = f"entries_{ags}_{year_target}.json"
+    fname = f"entries_{ags}_{year_baseline}_{year_target}.json"
     with open(
         os.path.join(root, "tests", "end_to_end_expected", f"{year_ref}", fname)
     ) as fp:
         expected = json.load(fp)
-        e = make_entries(refdata, ags, year_target)
+        e = make_entries(refdata, ags, year_baseline, year_target)
         got = asdict(e)
         ds = list(diffs.all(expected=expected, actual=got))  # type: ignore
         if ds:
@@ -145,15 +145,15 @@ def make_entries_test(year_ref: int, ags: str, year_target: int):
 
 
 def test_entries_test(year_ref: int):
-    make_entries_test(year_ref, "03159016", 2035)
+    make_entries_test(year_ref, "03159016", 2022, 2035)
 
 
-# Default year = 2035
+# Default year_baseline = 2022, default year_target = 2035
 def test_end_to_end_goettingen(year_ref: int):
     end_to_end(year_ref, "03159016")
 
 
-# Default year = 2035
+# Default year_baseline = 2022, default year_target = 2035
 def test_end_to_end_germany(year_ref: int):
     end_to_end(year_ref, "DG000000")
 

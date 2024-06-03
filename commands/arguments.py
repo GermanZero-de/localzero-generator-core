@@ -15,6 +15,16 @@ def add_year_ref_argument(parser: Any):
     )
 
 
+def add_year_baseline_argument(parser: Any):
+    parser.add_argument(
+        "-year_baseline",
+        type=int,
+        default=2022,
+        choices=[2022],
+        help="the baseline year should nearly be the current year - it represents the year which separates the past (based on reference data) and the future (where the path to CO2 neutrality starts)",
+    )
+
+
 def add_year_target_argument(parser: Any):
     parser.add_argument(
         "-year_target",

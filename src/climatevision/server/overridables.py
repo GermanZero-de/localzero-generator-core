@@ -343,11 +343,11 @@ def overridables_only() -> list[Overridable]:
 
 
 def sections_with_defaults(
-    data: generator.RefData, ags: str, year: int
+    data: generator.RefData, ags: str, year_baseline: int, year_target: int
 ) -> list[OverridableSectionWithDefaults]:
     """Complete overridable data including section data and info blocks, with defaults
     populated."""
-    entries = generator.make_entries(data, ags, year)
+    entries = generator.make_entries(data, ags, year_baseline, year_target)
     res: list[OverridableSectionWithDefaults] = []
     for os in _sections:
         populated_section: OverridableSectionWithDefaults = {
