@@ -10,6 +10,8 @@ from os import path, getcwd
 import csv
 import json
 
+from .years import YEAR_REF_CHOICES
+
 # TODO: Write small wrappers classes for each data source so that we can document
 # the columns and get better type checking from pylance.
 
@@ -773,6 +775,9 @@ class RefData:
         TODO: Provide a way to run this even when no proprietary data is available. As of right now unnecessary
         as we can't yet run the generator without the data.
         """
+
+        assert year_ref in YEAR_REF_CHOICES
+
         datadir = datadir_or_default(datadir)
 
         area_0_columns = (

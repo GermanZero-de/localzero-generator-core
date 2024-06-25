@@ -11,17 +11,18 @@ import Value
 type alias AgsData =
     { ags : String, desc : String, short : String }
 
+
 type alias Info =
-    {
-        label: String,
-        group: String,
-        description: String,
-        value: Float,
-        unit: String,
-        rationale: String,
-        reference: String,
-        link: String
+    { label : String
+    , group : String
+    , description : String
+    , value : Float
+    , unit : String
+    , rationale : String
+    , reference : String
+    , link : String
     }
+
 
 infoDecoder : Decode.Decoder Info
 infoDecoder =
@@ -34,6 +35,7 @@ infoDecoder =
         (Decode.field "rationale" Decode.string)
         (Decode.field "reference" Decode.string)
         (Decode.field "link" Decode.string)
+
 
 apiUrl : String
 apiUrl =
@@ -69,7 +71,8 @@ makeEntries { inputs, toMsg } =
         , method = "make-entries"
         , params =
             [ ( "ags", Encode.string inputs.ags )
-            , ( "year", Encode.int inputs.year )
+            , ( "year_target", Encode.int inputs.year_target )
+            , ( "year_baseline", Encode.int inputs.year_baseline )
             , ( "trace", Encode.bool True )
             ]
         }
@@ -85,7 +88,8 @@ calculate { inputs, overrides, toMsg } =
         , method = "calculate"
         , params =
             [ ( "ags", Encode.string inputs.ags )
-            , ( "year", Encode.int inputs.year )
+            , ( "year_target", Encode.int inputs.year_target )
+            , ( "year_baseline", Encode.int inputs.year_baseline )
             , ( "overrides", Run.encodeOverrides overrides )
             , ( "trace", Encode.bool True )
             ]
@@ -93,14 +97,15 @@ calculate { inputs, overrides, toMsg } =
         (Tree.decoder (Value.maybeWithTraceDecoder "result"))
         toMsg
 
-info : { name: String, toMsg : JsonRpc.RpcData Info -> msg } -> Cmd msg
+
+info : { name : String, toMsg : JsonRpc.RpcData Info -> msg } -> Cmd msg
 info { name, toMsg } =
     JsonRpc.call
         { url = apiUrl
         , token = Nothing
         , method = "info"
         , params =
-            [ ( "key", Encode.string name)]
+            [ ( "key", Encode.string name ) ]
         }
         infoDecoder
         toMsg

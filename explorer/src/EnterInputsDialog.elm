@@ -133,7 +133,13 @@ view updateStateMsg okClickedMsg state =
             }
         , case state.filteredAgs of
             [ exactlyOne ] ->
-                iconButton (size32 FeatherIcons.check) (okClickedMsg { year = state.year, ags = exactlyOne.ags })
+                iconButton (size32 FeatherIcons.check)
+                    (okClickedMsg
+                        { year_baseline = Run.year_baseline
+                        , year_target = state.year
+                        , ags = exactlyOne.ags
+                        }
+                    )
 
             _ ->
                 text "Enter a valid AGS first!"

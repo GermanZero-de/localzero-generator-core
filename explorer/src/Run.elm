@@ -12,6 +12,7 @@ module Run exposing
     , getOverrides
     , getTree
     , mapOverrides
+    , year_baseline
     )
 
 {-| A run of the generator.
@@ -48,7 +49,12 @@ type Run
 
 
 type alias Inputs =
-    { ags : String, year : Int }
+    { ags : String, year_target : Int, year_baseline : Int }
+
+
+year_baseline : Int
+year_baseline =
+    2022
 
 
 create :

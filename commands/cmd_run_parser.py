@@ -11,6 +11,7 @@ def add_cmd_run_parser(subcmd_parsers: Any):
 
     arguments.add_ags_argument(cmd_run_parser)
     arguments.add_year_ref_argument(cmd_run_parser)
+    arguments.add_year_baseline_argument(cmd_run_parser)
     arguments.add_year_target_argument(cmd_run_parser)
     arguments.add_output_argument(cmd_run_parser)
     arguments.add_trace_argument(cmd_run_parser)
@@ -23,6 +24,7 @@ def add_cmd_make_entries_parser(subcmd_parsers: Any):
 
     arguments.add_ags_argument(cmd_make_entries_parser)
     arguments.add_year_ref_argument(cmd_make_entries_parser)
+    arguments.add_year_baseline_argument(cmd_make_entries_parser)
     arguments.add_year_target_argument(cmd_make_entries_parser)
     arguments.add_output_argument(cmd_make_entries_parser)
     arguments.add_trace_argument(cmd_make_entries_parser)

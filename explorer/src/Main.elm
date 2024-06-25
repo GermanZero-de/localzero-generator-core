@@ -1896,15 +1896,15 @@ viewRun runId lensId temporaryHighlight lens collapseStatus activeOverrideEditor
                     row [ width fill, spacing sizes.medium ]
                         [ collapsedStatusIcon (differentIfFilterActive.isCollapsed runId [])
                         , viewRunId [] runId
-                        , text (inputs.ags ++ " " ++ String.fromInt inputs.year)
+                        , text (inputs.ags ++ " " ++ String.fromInt inputs.year_target)
                         ]
                 , onPress = Just (ToggleCollapseTreeClicked (Explorable.Run runId) [])
                 }
             , buttons
                 [ differentIfFilterActive.filterButton
                 , selectForComparisonButton
-                , iconButton FeatherIcons.edit (DisplayCalculateModalClicked (Just runId) { agsFilter = inputs.ags, year = inputs.year } overrides)
-                , iconButton FeatherIcons.copy (DisplayCalculateModalClicked Nothing { agsFilter = inputs.ags, year = inputs.year } overrides)
+                , iconButton FeatherIcons.edit (DisplayCalculateModalClicked (Just runId) { agsFilter = inputs.ags, year = inputs.year_target } overrides)
+                , iconButton FeatherIcons.copy (DisplayCalculateModalClicked Nothing { agsFilter = inputs.ags, year = inputs.year_target } overrides)
                 , dangerousIconButton FeatherIcons.trash2 (RemoveExplorableClicked (Explorable.Run runId))
                 ]
             ]

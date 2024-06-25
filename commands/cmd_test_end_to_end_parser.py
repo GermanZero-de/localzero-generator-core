@@ -31,6 +31,7 @@ def add_cmd_test_end_to_end_parser(subcmd_parsers: Any):
         help="Create an expectation for the end to end tests.",
     )
     arguments.add_ags_argument(cmd_test_end_to_end_create_expectation_parser)
+    arguments.add_year_baseline_argument(cmd_test_end_to_end_create_expectation_parser)
     arguments.add_year_target_argument(cmd_test_end_to_end_create_expectation_parser)
     cmd_test_end_to_end_create_expectation_parser.set_defaults(
         func=cmd_test_end_to_end_create_expectation
@@ -41,6 +42,7 @@ def add_cmd_test_end_to_end_parser(subcmd_parsers: Any):
         help="Runs the generator for all ags.",
     )
     arguments.add_year_ref_argument(cmd_test_end_to_end_run_all_ags_parser)
+    arguments.add_year_baseline_argument(cmd_test_end_to_end_run_all_ags_parser)
     arguments.add_year_target_argument(cmd_test_end_to_end_run_all_ags_parser)
     cmd_test_end_to_end_run_all_ags_parser.set_defaults(
         func=cmd_test_end_to_end_run_all_ags
