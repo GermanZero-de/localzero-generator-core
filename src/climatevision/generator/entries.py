@@ -105,7 +105,7 @@ class Entries:
     m_area_water_com: float
     m_area_wood_com: float
     m_duration_neutral: float  # duration of CO2 neutrality in years until 2050
-    m_duration_target: int  # duration from today until target year
+    m_duration_target: int  # duration from baseline until target year
     m_nonCO2_budget_2016_to_year_target: float
     m_population_com_2018: int  # population of commune in 2018
     m_population_com_203X: int
