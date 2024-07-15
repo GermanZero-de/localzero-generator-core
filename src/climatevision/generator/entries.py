@@ -112,8 +112,8 @@ class Entries:
     m_population_dis: int  # population of district in 2018
     m_population_nat: int  # population of germany in 2018
     m_population_sta: int  # population of state in 2018
-    m_year_target: int # see years.py
-    m_year_baseline: int # see years.py
+    m_year_target: int  # see years.py
+    m_year_baseline: int  # see years.py
     m_year_ref: int  # see years.py (i.e RefData.year_ref() )
     r_area_m2: float
     r_area_m2_1flat: float
