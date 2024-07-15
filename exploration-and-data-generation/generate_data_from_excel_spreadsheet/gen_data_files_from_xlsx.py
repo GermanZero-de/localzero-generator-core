@@ -636,7 +636,7 @@ def make_entry(ags: str, year: int):
     currentDateTime = datetime.datetime.now()
     date = currentDateTime.date()
 
-    entry["In_M_year_today"] = 2022  # int(date.strftime("%Y"))
+    entry["In_M_year_baseline"] = 2022  # int(date.strftime("%Y"))
 
     entry["In_M_AGS_com"] = ags
     entry["In_M_AGS_dis"] = ags_dis
@@ -644,7 +644,7 @@ def make_entry(ags: str, year: int):
 
     entry["In_M_year_target"] = year
 
-    entry["In_M_duration_target"] = entry["In_M_year_target"] - entry["In_M_year_today"]
+    entry["In_M_duration_target"] = entry["In_M_year_target"] - entry["In_M_year_baseline"]
     entry["In_M_duration_target_until_2050"] = 2050 - entry["In_M_year_target"]
     entry["In_M_duration_neutral"] = float(
         entry["In_M_duration_target_until_2050"] + entry["In_M_duration_target"] / 2

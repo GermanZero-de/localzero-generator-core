@@ -26,11 +26,11 @@ def make_entries(
     m_AGS_dis = ags_dis
     m_AGS_sta = ags_sta
 
-    m_year_today = year_baseline
+    m_year_baseline = year_baseline
     m_year_target = year_target
     m_year_ref = data.year_ref()
 
-    m_duration_target = m_year_target - m_year_today
+    m_duration_target = m_year_target - m_year_baseline
     duration_target_until_2050 = 2050 - m_year_target
     m_duration_neutral = float(duration_target_until_2050 + m_duration_target / 2)
 
@@ -688,7 +688,7 @@ def make_entries(
         m_population_nat=m_population_nat,
         m_population_sta=m_population_sta,
         m_year_target=m_year_target,
-        m_year_today=m_year_today,
+        m_year_baseline=m_year_baseline,
         m_year_ref=m_year_ref,
         r_area_m2=r_area_m2,
         r_area_m2_1flat=r_area_m2_1flat,

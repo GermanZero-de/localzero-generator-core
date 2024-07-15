@@ -3,10 +3,13 @@ from typing import Any
 from climatevision.generator.years import (
     YEAR_REF_DEFAULT,
     YEAR_REF_CHOICES,
+    YEAR_REF_HELP,
     YEAR_BASELINE_DEFAULT,
     YEAR_BASELINE_CHOICES,
+    YEAR_BASELINE_HELP,
     YEAR_TARGET_DEFAULT,
     YEAR_TARGET_CHOICES,
+    YEAR_TARGET_HELP,
 )
 
 
@@ -20,7 +23,7 @@ def add_year_ref_argument(parser: Any):
         type=int,
         default=YEAR_REF_DEFAULT,
         choices=YEAR_REF_CHOICES,
-        help="year of the reference data",
+        help=YEAR_REF_HELP,
     )
 
 
@@ -30,7 +33,7 @@ def add_year_baseline_argument(parser: Any):
         type=int,
         default=YEAR_BASELINE_DEFAULT,
         choices=YEAR_BASELINE_CHOICES,
-        help="the baseline year should nearly be the current year - it represents the year which separates the past (based on reference data) and the future (where the path to CO2 neutrality starts)",
+        help=YEAR_BASELINE_HELP,
     )
 
 
@@ -40,7 +43,7 @@ def add_year_target_argument(parser: Any):
         type=int,
         default=YEAR_TARGET_DEFAULT,
         choices=YEAR_TARGET_CHOICES,
-        help="target year",
+        help=YEAR_TARGET_HELP,
     )
 
 
