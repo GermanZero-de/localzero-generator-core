@@ -221,10 +221,10 @@ def calc_budget(
     ### beginning with LULUCF                    ###
     ################################################
     start_year = 2015
-    current_year = entries.m_year_baseline
+    year_baseline = entries.m_year_baseline
     year_ref = entries.m_year_ref
 
-    years_list = list(range(start_year, current_year))
+    years_list = list(range(start_year, year_baseline))
 
     years_list_wo_year_ref = years_list.copy()
     years_list_wo_year_ref.remove(year_ref)
@@ -234,7 +234,7 @@ def calc_budget(
 
     years_list_to_2051 = list(range(start_year, 2052))
 
-    years_predicted = list(range(current_year, 2052))
+    years_predicted = list(range(year_baseline, 2052))
 
     years_dict: dict[int, dict[str, float]] = {year: {} for year in years_list}
 
@@ -304,9 +304,9 @@ def calc_budget(
     #########################################################
 
     # calculating the yearly decrease of the emissions, going down linearly to 0 in target_year+1
-    m183X.CO2e_w_lulucf_change_pa = years_dict[current_year - 1]["CO2e_w_lulucf"] / (
+    m183X.CO2e_w_lulucf_change_pa = years_dict[year_baseline - 1]["CO2e_w_lulucf"] / (
         entries.m_year_target
-        - (current_year - 1)
+        - (year_baseline - 1)
         + 1  # TODO end of 2022,  substract year 2021 as emissions are only known until that year
     )  # +1 because we want to reach 0 in target_year+1
     # reducing the yearly emissions year by year, starting with 2022
