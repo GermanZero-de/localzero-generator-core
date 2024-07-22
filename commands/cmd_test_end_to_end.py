@@ -87,7 +87,15 @@ def cmd_test_end_to_end_update_expectations(args: Any):
 
 
 def cmd_test_end_to_end_create_expectation(args: Any):
-    filename = "production_" + args.ags + "_" + str(args.year_target) + ".json"
+    filename = (
+        "production_"
+        + args.ags
+        + "_"
+        + str(args.year_baseline)
+        + "_"
+        + str(args.year_target)
+        + ".json"
+    )
     for year_ref in [2018, 2021]:
         filepath = os.path.join(test_dir, f"{year_ref}", filename)
         update_expectation(
