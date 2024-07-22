@@ -221,7 +221,7 @@ def calc_budget(
     ### beginning with LULUCF                    ###
     ################################################
     start_year = 2015
-    current_year = entries.m_year_today
+    current_year = entries.m_year_baseline
     year_ref = entries.m_year_ref
 
     years_list = list(range(start_year, current_year))

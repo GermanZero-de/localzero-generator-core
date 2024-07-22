@@ -26,13 +26,15 @@ def make_entries(
     m_AGS_dis = ags_dis
     m_AGS_sta = ags_sta
 
-    m_year_today = year_baseline
+    m_year_baseline = year_baseline
     m_year_target = year_target
     m_year_ref = data.year_ref()
 
-    m_duration_target = m_year_target - m_year_today
+    duration_baseline_until_target = m_year_target - m_year_baseline
     duration_target_until_2050 = 2050 - m_year_target
-    m_duration_neutral = float(duration_target_until_2050 + m_duration_target / 2)
+    m_duration_neutral = float(
+        duration_target_until_2050 + duration_baseline_until_target / 2
+    )
 
     m_population_com_2018 = data.population(ags).int("total")
     m_population_com_203X = m_population_com_2018
@@ -680,7 +682,7 @@ def make_entries(
         m_area_water_com=m_area_water_com,
         m_area_wood_com=m_area_wood_com,
         m_duration_neutral=m_duration_neutral,
-        m_duration_target=m_duration_target,
+        m_duration_target=duration_baseline_until_target,
         m_nonCO2_budget_2016_to_year_target=m_nonCO2_budget_2016_to_year_target,
         m_population_com_2018=m_population_com_2018,
         m_population_com_203X=m_population_com_203X,
@@ -688,7 +690,7 @@ def make_entries(
         m_population_nat=m_population_nat,
         m_population_sta=m_population_sta,
         m_year_target=m_year_target,
-        m_year_today=m_year_today,
+        m_year_baseline=m_year_baseline,
         m_year_ref=m_year_ref,
         r_area_m2=r_area_m2,
         r_area_m2_1flat=r_area_m2_1flat,
