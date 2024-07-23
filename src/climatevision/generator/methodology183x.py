@@ -220,23 +220,25 @@ def calc_budget(
     ################################################
     ### beginning with LULUCF                    ###
     ################################################
-    start_year = 2015
     year_baseline = entries.m_year_baseline
+    year_before_baseline = year_baseline - 1
     year_ref = entries.m_year_ref
 
-    years_list = list(range(start_year, year_baseline))
+    years_list_2015_to_year_before_baseline = list(range(2015, year_baseline))
+    years_list_2016_to_year_before_baseline = list(range(2016, year_baseline))
 
-    years_list_wo_year_ref = years_list.copy()
-    years_list_wo_year_ref.remove(year_ref)
+    years_list_2015_to_year_before_baseline_wo_year_ref = (
+        years_list_2015_to_year_before_baseline.copy()
+    )
+    years_list_2015_to_year_before_baseline_wo_year_ref.remove(year_ref)
 
-    years_list_wo_2015 = years_list.copy()
-    years_list_wo_2015.remove(2015)
-
-    years_list_to_2051 = list(range(start_year, 2052))
+    years_list_2015_to_2051 = list(range(2015, 2052))
 
     years_predicted = list(range(year_baseline, 2052))
 
-    years_dict: dict[int, dict[str, float]] = {year: {} for year in years_list}
+    years_dict: dict[int, dict[str, float]] = {
+        year: {} for year in years_list_2015_to_year_before_baseline
+    }
 
     # get the CO2e of LULUCF for year_ref as calculated
     years_dict[year_ref]["CO2e_lulucf"] = l18.l.CO2e_total
@@ -244,7 +246,7 @@ def calc_budget(
     # calculate the CO2e of LULUCF for 2015-2021 by multiplying year_ref's value with percentage
     # 2015 just as a backup, probably not needed
 
-    for year in years_list_wo_year_ref:
+    for year in years_list_2015_to_year_before_baseline_wo_year_ref:
         years_dict[year]["CO2e_lulucf"] = years_dict[year_ref]["CO2e_lulucf"] * fact(
             f"Fact_M_CO2e_lulucf_{year}_vs_year_ref"
         )
@@ -270,7 +272,7 @@ def calc_budget(
 
     # calculate the CO2e of all sectors without LULUCF for 2015-2021 by multiplying year_ref's value with percentage
     # 2015 just as a backup, probably not needed
-    for year in years_list_wo_year_ref:
+    for year in years_list_2015_to_year_before_baseline_wo_year_ref:
         years_dict[year]["CO2e_wo_lulucf"] = years_dict[year_ref][
             "CO2e_wo_lulucf"
         ] * fact(f"Fact_M_CO2e_wo_lulucf_{year}_vs_year_ref")
@@ -282,7 +284,7 @@ def calc_budget(
     #################################################
 
     # 2015 just as a backup, probably not needed
-    for year in years_list:
+    for year in years_list_2015_to_year_before_baseline:
         years_dict[year]["CO2e_w_lulucf"] = (
             years_dict[year]["CO2e_wo_lulucf"] + years_dict[year]["CO2e_lulucf"]
         )
@@ -292,7 +294,7 @@ def calc_budget(
     ####################################################################
 
     temp_val = m183X.GHG_budget_2016_to_year_target
-    for year in years_list_wo_2015:
+    for year in years_list_2016_to_year_before_baseline:
         temp_val -= years_dict[year]["CO2e_w_lulucf"]
 
     m183X.GHG_budget_2022_to_year_target = temp_val
@@ -304,9 +306,11 @@ def calc_budget(
     #########################################################
 
     # calculating the yearly decrease of the emissions, going down linearly to 0 in target_year+1
-    m183X.CO2e_w_lulucf_change_pa = years_dict[year_baseline - 1]["CO2e_w_lulucf"] / (
+    m183X.CO2e_w_lulucf_change_pa = years_dict[year_before_baseline][
+        "CO2e_w_lulucf"
+    ] / (
         entries.m_year_target
-        - (year_baseline - 1)
+        - (year_before_baseline)
         + 1  # TODO end of 2022,  substract year 2021 as emissions are only known until that year
     )  # +1 because we want to reach 0 in target_year+1
     # reducing the yearly emissions year by year, starting with 2022
@@ -334,7 +338,7 @@ def calc_budget(
     m183X.GHG_budget_after_year_target = temp_val
 
     temp_val = entries.m_GHG_budget_2016_to_year_target
-    for year in years_list_wo_2015:
+    for year in years_list_2016_to_year_before_baseline:
         temp_val -= fact(f"Fact_M_CO2e_lulucf_{year}") + fact(
             f"Fact_M_CO2e_wo_lulucf_{year}"
         )
@@ -354,7 +358,10 @@ def calc_budget(
         m183X.CO2e_lulucf_2019,
         m183X.CO2e_lulucf_2020,
         m183X.CO2e_lulucf_2021,
-    ) = [years_dict[year]["CO2e_lulucf"] for year in years_list]
+    ) = [
+        years_dict[year]["CO2e_lulucf"]
+        for year in years_list_2015_to_year_before_baseline
+    ]
 
     (
         m183X.CO2e_wo_lulucf_2015,
@@ -364,7 +371,10 @@ def calc_budget(
         m183X.CO2e_wo_lulucf_2019,
         m183X.CO2e_wo_lulucf_2020,
         m183X.CO2e_wo_lulucf_2021,
-    ) = [years_dict[year]["CO2e_wo_lulucf"] for year in years_list]
+    ) = [
+        years_dict[year]["CO2e_wo_lulucf"]
+        for year in years_list_2015_to_year_before_baseline
+    ]
 
     (
         m183X.CO2e_w_lulucf_2015,
@@ -404,7 +414,7 @@ def calc_budget(
         m183X.CO2e_w_lulucf_2049,
         m183X.CO2e_w_lulucf_2050,
         m183X.CO2e_w_lulucf_2051,
-    ) = [years_dict[year]["CO2e_w_lulucf"] for year in years_list_to_2051]
+    ) = [years_dict[year]["CO2e_w_lulucf"] for year in years_list_2015_to_2051]
 
     return m183X
 
@@ -523,12 +533,14 @@ def calc_z(
         + e18.e.CO2e_production_based
         + f18.f.CO2e_production_based
     )
-    # d.CO2e_pb_18 = r18.r.CO2e_pb + b18.b.CO2e_pb + i18.i.CO2e_pb + t18.t.CO2e_pb + a18.a.CO2e_pb + l18.l.CO2e_pb
     d.CO2e_production_based_18 = (
         i18.i.CO2e_production_based
         + a18.a.CO2e_production_based
         + l18.l.CO2e_production_based
         + w18.w.CO2e_production_based
+        # + r18.r.CO2e_production_based
+        # + b18.b.CO2e_production_based
+        # + t18.t.CO2e_production_based
     )
     z.CO2e_production_based_18 = s.CO2e_production_based_18 + d.CO2e_production_based_18
 
@@ -571,22 +583,26 @@ def calc_z(
     )
     z.energy_30 = s.energy_30
 
-    # s.CO2e_pb_30 = h30.h.CO2e_pb + e30.e.CO2e_pb + f30.f.CO2e_pb
     s.CO2e_production_based_30 = (
-        h30.h.CO2e_production_based + f30.f.CO2e_production_based
+        h30.h.CO2e_production_based
+        + f30.f.CO2e_production_based
+        # + e30.e.CO2e_production_based
     )
-    # d.CO2e_pb_30 = r30.r.CO2e_pb + b30.b.CO2e_pb + i30.i.CO2e_pb + t30.t.CO2e_pb + a30.a.CO2e_pb + l30.l.CO2e_pb
     d.CO2e_production_based_30 = (
         i30.i.CO2e_production_based
         + a30.a.CO2e_production_based
         + l30.l.CO2e_production_based
         + w30.w.CO2e_production_based
+        # + r30.r.CO2e_production_based
+        # + b30.b.CO2e_production_based
+        # + t30.t.CO2e_production_based
     )
     z.CO2e_production_based_30 = s.CO2e_production_based_30 + d.CO2e_production_based_30
 
-    # s.CO2e_cb_30 = h30.h.CO2e_cb + e30.e.CO2e_cb + f30.f.CO2e_cb
     s.CO2e_combustion_based_30 = (
-        h30.h.CO2e_combustion_based + e30.e.CO2e_combustion_based
+        h30.h.CO2e_combustion_based
+        + e30.e.CO2e_combustion_based
+        # + f30.f.CO2e_combustion_based
     )
     d.CO2e_combustion_based_30 = (
         r30.r.CO2e_combustion_based
@@ -663,9 +679,7 @@ def calc_z(
     )
     z.invest_pa = s.invest_pa + d.invest_pa
 
-    # s.invest_pa_com = h30.h.invest_pa_com + e30.e.invest_pa_com + f30.f.invest_pa_com
-    s.invest_pa_com = h30.h.invest_pa_com + e30.e.invest_pa_com
-    # d.invest_pa_com = r30.r.invest_pa_com + b30.b.invest_pa_com + i30.i.invest_pa_com + t30.t.invest_pa_com + a30.a.invest_pa_com + l30.l.invest_pa_com
+    s.invest_pa_com = h30.h.invest_pa_com + e30.e.invest_pa_com  # + f30.f.invest_pa_com
     d.invest_pa_com = (
         r30.r.invest_pa_com
         + b30.b.invest_pa_com
@@ -673,13 +687,23 @@ def calc_z(
         + t30.t.invest_pa_com
         + a30.a.invest_pa_com
         + w30.w.invest_pa_com
+        # + l30.l.invest_pa_com
     )
     z.invest_pa_com = s.invest_pa_com + d.invest_pa_com
 
-    # s.invest_pa_outside = h30.h.invest_pa_outside + e30.e.invest_pa_outside + f30.f.invest_pa_outside
-    s.invest_pa_outside = e30.e.invest_pa_outside + f30.f.invest_pa_outside
-    # d.invest_pa_outside = r30.r.invest_pa_outside + b30.b.invest_pa_outside + i30.i.invest_pa_outside + t30.t.invest_pa_outside + a30.a.invest_pa_outside + l30.l.invest_pa_outside
-    d.invest_pa_outside = i30.i.invest_pa_outside + a30.a.invest_pa_outside
+    s.invest_pa_outside = (
+        e30.e.invest_pa_outside
+        + f30.f.invest_pa_outside
+        # + h30.h.invest_pa_outside
+    )
+    d.invest_pa_outside = (
+        i30.i.invest_pa_outside
+        + a30.a.invest_pa_outside
+        # + r30.r.invest_pa_outside
+        # + b30.b.invest_pa_outside
+        # + t30.t.invest_pa_outside
+        # + l30.l.invest_pa_outside
+    )
     z.invest_pa_outside = s.invest_pa_outside + d.invest_pa_outside
 
     s.invest = h30.h.invest + e30.e.invest + f30.f.invest
@@ -694,9 +718,11 @@ def calc_z(
     )
     z.invest = s.invest + d.invest
 
-    # s.invest_com = h30.h.invest_com + e30.e.invest_com + f30.f.invest_com
-    s.invest_com = h30.h.invest_com + e30.e.invest_com
-    # d.invest_com = r30.r.invest_com + b30.b.invest_com + i30.i.invest_com + t30.t.invest_com + a30.a.invest_com + l30.l.invest_com
+    s.invest_com = (
+        h30.h.invest_com
+        + e30.e.invest_com
+        # + f30.f.invest_com
+    )
     d.invest_com = (
         r30.r.invest_com
         + b30.b.invest_com
@@ -704,13 +730,23 @@ def calc_z(
         + t30.t.invest_com
         + a30.a.invest_com
         + w30.w.invest_com
+        # + l30.l.invest_com
     )
     z.invest_com = s.invest_com + d.invest_com
 
-    # s.invest_outside = h30.h.invest_outside + e30.e.invest_outside + f30.f.invest_outside
-    s.invest_outside = e30.e.invest_outside + f30.f.invest_outside
-    # d.invest_outside = r30.r.invest_outside + b30.b.invest_outside + i30.i.invest_outside + t30.t.invest_outside + a30.a.invest_outside + l30.l.invest_outside
-    d.invest_outside = i30.i.invest_outside + a30.a.invest_outside
+    s.invest_outside = (
+        e30.e.invest_outside
+        + f30.f.invest_outside
+        # + h30.h.invest_outside
+    )
+    d.invest_outside = (
+        i30.i.invest_outside
+        + a30.a.invest_outside
+        # + r30.r.invest_outside
+        # + b30.b.invest_outside
+        # + t30.t.invest_outside
+        # + l30.l.invest_outside
+    )
     z.invest_outside = s.invest_outside + d.invest_outside
 
     s.cost_wage = h30.h.cost_wage + e30.e.cost_wage + f30.f.cost_wage
@@ -751,14 +787,18 @@ def calc_z(
     )
     z.demand_emplo_new = s.demand_emplo_new + d.demand_emplo_new
 
-    # s.demand_emplo_com = h30.h.demand_emplo_com + e30.e.demand_emplo_com + f30.f.demand_emplo_com
-    s.demand_emplo_com = h30.h.demand_emplo_com
-    # d.demand_emplo_com = r30.r.demand_emplo_com + b30.b.demand_emplo_com + i30.i.demand_emplo_com + t30.t.demand_emplo_com + a30.a.demand_emplo_com + l30.l.demand_emplo_com
+    s.demand_emplo_com = (
+        h30.h.demand_emplo_com
+        # + e30.e.demand_emplo_com
+        # + f30.f.demand_emplo_com
+    )
     d.demand_emplo_com = (
         r30.r.demand_emplo_com
         + b30.b.demand_emplo_com
         + t30.t.demand_emplo_com
         + a30.a.demand_emplo_com
+        # + i30.i.demand_emplo_com
+        # + l30.l.demand_emplo_com
     )
     z.demand_emplo_com = s.demand_emplo_com + d.demand_emplo_com
 
