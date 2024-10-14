@@ -457,6 +457,7 @@ def calc_z(
 
     duration_CO2e_neutral_years = entries.m_duration_neutral
     year_baseline = entries.m_year_baseline
+    year_before_baseline = year_baseline - 1
     year_ref = entries.m_year_ref
 
     population_commune_year_ref = entries.m_population_com_2018
@@ -657,10 +658,10 @@ def calc_z(
     z.change_CO2e_pct = div(z.CO2e_total_30, z.CO2e_total_18)
 
     s.CO2e_total_2021_estimated = s.CO2e_total_18 * fact(
-        f"Fact_M_CO2e_wo_lulucf_{year_baseline}_vs_year_ref"
+        f"Fact_M_CO2e_wo_lulucf_{year_before_baseline}_vs_year_ref"
     )
     d.CO2e_total_2021_estimated = d.CO2e_total_18 * fact(
-        f"Fact_M_CO2e_wo_lulucf_{year_baseline}_vs_year_ref"
+        f"Fact_M_CO2e_wo_lulucf_{year_before_baseline}_vs_year_ref"
     )
     z.CO2e_total_2021_estimated = (
         s.CO2e_total_2021_estimated + d.CO2e_total_2021_estimated
