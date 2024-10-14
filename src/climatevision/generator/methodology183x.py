@@ -184,12 +184,18 @@ def calc_budget(
     t18: T18,
     w18: W18,
 ) -> M183X:
-    """Calculate the budget needed."""
+    """
+    This function calculates the CO2 budget and a linear emission reduction path for the selected municipality.
+    The remaining CO2 budget calculated for 2016 in accordance with the Paris Climate Agreement is used for this,
+    which is the maximum amount that can still be emitted for global warming of 1.5 °C. Germany's real emissions in
+    recent years are then subtracted from this budget to calculate how many emissions may still be emitted in a
+    municipality from year_baseline to year_target.
+    """
 
     fact = facts.fact
 
-    population_commune_2018 = entries.m_population_com_2018
-    population_germany_2018 = entries.m_population_nat
+    population_commune_year_ref = entries.m_population_com_2018
+    population_germany_year_ref = entries.m_population_nat
 
     ######################################
     ### budgets 2016 until target year ###
@@ -199,15 +205,15 @@ def calc_budget(
     # local greenhouse gas budget from 2016 until target year in com!!
     m183X.GHG_budget_2016_to_year_target = (
         entries.m_GHG_budget_2016_to_year_target
-        * population_commune_2018
-        / population_germany_2018
+        * population_commune_year_ref
+        / population_germany_year_ref
     )
 
     # local nonCO2 budget from 2016 until target year in com!!
     m183X.nonCO2_budget_2016_to_year_target = (
         entries.m_nonCO2_budget_2016_to_year_target
-        * population_commune_2018
-        / population_germany_2018
+        * population_commune_year_ref
+        / population_germany_year_ref
     )
 
     # local CO2 budget from 2016 until infinity
@@ -215,11 +221,11 @@ def calc_budget(
         m183X.GHG_budget_2016_to_year_target - m183X.nonCO2_budget_2016_to_year_target
     )
 
-    ################################################
-    ### year_ref as base for emissions 2016-2021 ###
-    ################################################
-    ### beginning with LULUCF                    ###
-    ################################################
+    ################################################################
+    ### year_ref as base for emissions 2016-year_before_baseline ###
+    ################################################################
+    ### beginning with LULUCF                                    ###
+    ################################################################
     year_baseline = entries.m_year_baseline
     year_before_baseline = year_baseline - 1
     year_ref = entries.m_year_ref
@@ -243,7 +249,7 @@ def calc_budget(
     # get the CO2e of LULUCF for year_ref as calculated
     years_dict[year_ref]["CO2e_lulucf"] = l18.l.CO2e_total
 
-    # calculate the CO2e of LULUCF for 2015-2021 by multiplying year_ref's value with percentage
+    # calculate the CO2e of LULUCF for 2015-year_before_baseline by multiplying year_ref's value with percentage
     # 2015 just as a backup, probably not needed
 
     for year in years_list_2015_to_year_before_baseline_wo_year_ref:
@@ -251,11 +257,11 @@ def calc_budget(
             f"Fact_M_CO2e_lulucf_{year}_vs_year_ref"
         )
 
-    ################################################
-    ### year_ref as base for emissions 2016-2021 ###
-    ################################################
-    ### second emissions without (wo) LULUCF     ###
-    ################################################
+    ################################################################
+    ### year_ref as base for emissions 2016-year_before_baseline ###
+    ################################################################
+    ### second emissions without (wo) LULUCF                     ###
+    ################################################################
 
     # get the CO2e of all sectors for year_ref excluding LULUCF since this is negative
     years_dict[year_ref]["CO2e_wo_lulucf"] = (
@@ -270,18 +276,18 @@ def calc_budget(
         + w18.w.CO2e_total
     )
 
-    # calculate the CO2e of all sectors without LULUCF for 2015-2021 by multiplying year_ref's value with percentage
+    # calculate the CO2e of all sectors without LULUCF for 2015-year_before_baseline by multiplying year_ref's value with percentage
     # 2015 just as a backup, probably not needed
     for year in years_list_2015_to_year_before_baseline_wo_year_ref:
         years_dict[year]["CO2e_wo_lulucf"] = years_dict[year_ref][
             "CO2e_wo_lulucf"
         ] * fact(f"Fact_M_CO2e_wo_lulucf_{year}_vs_year_ref")
 
-    #################################################
-    ### year_ref as base for emissions 2016-2021  ###
-    #################################################
-    ### sum up CO2e_wo_lulucf and CO2e_lulucf     ###
-    #################################################
+    ################################################################
+    ### year_ref as base for emissions 2016-year_before_baseline ###
+    ################################################################
+    ###          sum up CO2e_wo_lulucf and CO2e_lulucf           ###
+    ################################################################
 
     # 2015 just as a backup, probably not needed
     for year in years_list_2015_to_year_before_baseline:
@@ -289,9 +295,9 @@ def calc_budget(
             years_dict[year]["CO2e_wo_lulucf"] + years_dict[year]["CO2e_lulucf"]
         )
 
-    ####################################################################
-    ### remaining local greenhouse gas budget 2022 until target year ###
-    ####################################################################
+    #################################################################################
+    ### remaining local greenhouse gas budget for year_baseline until target year ###
+    #################################################################################
 
     temp_val = m183X.GHG_budget_2016_to_year_target
     for year in years_list_2016_to_year_before_baseline:
@@ -309,11 +315,9 @@ def calc_budget(
     m183X.CO2e_w_lulucf_change_pa = years_dict[year_before_baseline][
         "CO2e_w_lulucf"
     ] / (
-        entries.m_year_target
-        - (year_before_baseline)
-        + 1  # TODO end of 2022,  substract year 2021 as emissions are only known until that year
+        entries.m_year_target - (year_before_baseline) + 1
     )  # +1 because we want to reach 0 in target_year+1
-    # reducing the yearly emissions year by year, starting with 2022
+    # reducing the yearly emissions year by year, starting with year_baseline
 
     for year in years_predicted:
         # INFO  '> 1' instead '> 0' to avoid having very small numbers such as 0.00000001 and unwanted additional substraction of CO2e_w_lulucf_change_pa
@@ -335,6 +339,8 @@ def calc_budget(
     temp_val = m183X.GHG_budget_2022_to_year_target
     for year in years_predicted:
         temp_val -= years_dict[year]["CO2e_w_lulucf"]
+    # A budget_after_year_target remains if the emissions over the years exceed or fall short of the
+    # calculated remaining budget.
     m183X.GHG_budget_after_year_target = temp_val
 
     temp_val = entries.m_GHG_budget_2016_to_year_target
@@ -450,18 +456,19 @@ def calc_z(
     fact = facts.fact
 
     duration_CO2e_neutral_years = entries.m_duration_neutral
+    year_baseline = entries.m_year_baseline
+    year_before_baseline = year_baseline - 1
+    year_ref = entries.m_year_ref
 
-    population_commune_2018 = entries.m_population_com_2018
-    population_germany_2018 = entries.m_population_nat
+    population_commune_year_ref = entries.m_population_com_2018
+    population_germany_year_ref = entries.m_population_nat
 
     ##################################################################
     ### total emissions 203X, saved emissions, saved climate costs ###
     ##################################################################
 
     # get the CO2e of all sectors for 203X (the target year) excluding LULUCF
-    # TODO: Warum exkludieren wir LULUCF?
-    #   Weil es negativ ist?  Dann müssten wir auch Fuels2030 exkludieren?
-    #   Ist es die Pyrolyse?
+    # Calculate the emissions of all sectors excluding LULUCF (used in the Klimavision).
     m183X.CO2e_wo_lulucf_203X = (
         h30.h.CO2e_total
         + e30.e.CO2e_total
@@ -474,16 +481,15 @@ def calc_z(
         + w30.w.CO2e_total
     )
 
-    # TODO: Check with Hauke if this is correct:
     m183X.CO2e_lulucf_203X = l30.l.CO2e_total
 
     # get the CO2e of all sectors für 203X (the target year) which should be 0
     m183X.CO2e_w_lulucf_203X = m183X.CO2e_wo_lulucf_203X + m183X.CO2e_lulucf_203X
 
-    # calculate the total CO2e difference in t between 2018 and 203X
+    # calculate the total CO2e difference in t between year_ref and 203X
     m183X.change_CO2e_t = m183X.CO2e_w_lulucf_203X - m183X.CO2e_w_lulucf_2018
 
-    # calculate the total CO2e difference in % between 2018 and 203X
+    # calculate the total CO2e difference in % between year_ref and 203X
     m183X.change_CO2e_pct = div(m183X.change_CO2e_t, m183X.CO2e_w_lulucf_2018)
 
     # get the total saved climate cost of all sectors until 2050
@@ -533,6 +539,9 @@ def calc_z(
         + e18.e.CO2e_production_based
         + f18.f.CO2e_production_based
     )
+    # The values commented out below are basically (in previous modeling) 0 and therefore not created in the
+    # respective sector. In the long term, it would be better to also create these in order to make the code
+    # more robust.
     d.CO2e_production_based_18 = (
         i18.i.CO2e_production_based
         + a18.a.CO2e_production_based
@@ -549,6 +558,9 @@ def calc_z(
         + e18.e.CO2e_combustion_based
         + f18.f.CO2e_combustion_based
     )
+    # The values commented out below are basically (in previous modeling) 0 and therefore not created in the
+    # respective sector. In the long term, it would be better to also create these in order to make the code
+    # more robust.
     d.CO2e_combustion_based_18 = (
         r18.r.CO2e_combustion_based
         + b18.b.CO2e_combustion_based
@@ -646,10 +658,10 @@ def calc_z(
     z.change_CO2e_pct = div(z.CO2e_total_30, z.CO2e_total_18)
 
     s.CO2e_total_2021_estimated = s.CO2e_total_18 * fact(
-        "Fact_M_CO2e_wo_lulucf_2021_vs_year_ref"
+        f"Fact_M_CO2e_wo_lulucf_{year_before_baseline}_vs_year_ref"
     )
     d.CO2e_total_2021_estimated = d.CO2e_total_18 * fact(
-        "Fact_M_CO2e_wo_lulucf_2021_vs_year_ref"
+        f"Fact_M_CO2e_wo_lulucf_{year_before_baseline}_vs_year_ref"
     )
     z.CO2e_total_2021_estimated = (
         s.CO2e_total_2021_estimated + d.CO2e_total_2021_estimated
@@ -805,10 +817,11 @@ def calc_z(
     # ==========Extra Calculations=====================
 
     m183X.CO2e_per_capita_nat = div(
-        fact("Fact_M_CO2e_wo_lulucf_2018") + fact("Fact_M_CO2e_lulucf_2018"),
-        population_germany_2018,
+        fact(f"Fact_M_CO2e_wo_lulucf_{year_ref}")
+        + fact(f"Fact_M_CO2e_lulucf_{year_ref}"),
+        population_germany_year_ref,
     )
-    m183X.CO2e_per_capita_com = div(z.CO2e_total_18, population_commune_2018)
+    m183X.CO2e_per_capita_com = div(z.CO2e_total_18, population_commune_year_ref)
     m183X.CO2e_per_capita_com_pct_of_nat = div(
         m183X.CO2e_per_capita_com, m183X.CO2e_per_capita_nat
     )
