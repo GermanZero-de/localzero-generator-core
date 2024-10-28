@@ -471,6 +471,7 @@ def filename(year_ref: int, what: str) -> str:
         2018: {
             "ags": "master",  # This is a bit stupid, we should have named that file by year as well.
             "nat_organic_agri": "2016",
+            "renewable_energy": "2021",
         },
         # 2021: {
         #     "ags": "2021",
@@ -512,7 +513,7 @@ def filename(year_ref: int, what: str) -> str:
             "nat_organic_agri": "2016",
             "nat_res_buildings": "2018",  # TODO: Building census is delayed
             "population": "2018",  # Checked Germany
-            "renewable_energy": "2018",  # TODO: What about this?
+            "renewable_energy": "2021",
             "traffic": "2018",  # TODO: We did write code to transplant this, must still check in the work
             "traffic_air": "2018",  # TODO: ?
             "traffic_rail": "2018",  # TODO: ?
