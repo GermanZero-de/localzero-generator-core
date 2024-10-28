@@ -11,7 +11,6 @@ class EColVars2030(EnergyDemand):
     cost_fuel: float = None  # type: ignore
     pet_sites: float = None  # type: ignore
     energy_installable: float = None  # type: ignore
-    cost_fuel_per_MWh: float = None  # type: ignore
     CO2e_combustion_based_per_MWh: float = None  # type: ignore
     CO2e_combustion_based: float = None  # type: ignore
     cost_climate_saved: float = None  # type: ignore
