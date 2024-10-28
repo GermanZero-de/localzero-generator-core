@@ -29,12 +29,8 @@ def calc_production_local_hydro(
         * full_load_hour
         * (1 - ass("Ass_E_P_renew_loss_brutto_to_netto"))
     )
-    cost_mro = (
-        energy * cost_mro_per_MWh / MILLION
-    )
-    CO2e_combustion_based = (
-        energy * CO2e_combustion_based_per_MWh
-    )
+    cost_mro = energy * cost_mro_per_MWh / MILLION
+    CO2e_combustion_based = energy * CO2e_combustion_based_per_MWh
     CO2e_total = CO2e_combustion_based
     change_CO2e_t = 0
     change_CO2e_pct = 0
@@ -71,47 +67,47 @@ def calc_production_local_hydro(
     demand_emplo_new = None
 
     p_local_hydro = EColVars2030(
-        cost_fuel_per_MWh=cost_fuel_per_MWh, # type: ignore
-        cost_fuel=cost_fuel, # type: ignore
-        pet_sites=pet_sites, # type: ignore
-        energy_installable=energy_installable, # type: ignore
+        cost_fuel_per_MWh=cost_fuel_per_MWh,  # type: ignore
+        cost_fuel=cost_fuel,  # type: ignore
+        pet_sites=pet_sites,  # type: ignore
+        energy_installable=energy_installable,  # type: ignore
         CO2e_combustion_based_per_MWh=CO2e_combustion_based_per_MWh,
         CO2e_combustion_based=CO2e_combustion_based,
         cost_climate_saved=cost_climate_saved,
         cost_mro=cost_mro,
         CO2e_total=CO2e_total,
-        CO2e_total_2021_estimated=CO2e_total_2021_estimated, # type: ignore
-        demand_electricity=demand_electricity, # type: ignore
-        demand_emplo=demand_emplo, # type: ignore
-        demand_emplo_com=demand_emplo_com, # type: ignore
+        CO2e_total_2021_estimated=CO2e_total_2021_estimated,  # type: ignore
+        demand_electricity=demand_electricity,  # type: ignore
+        demand_emplo=demand_emplo,  # type: ignore
+        demand_emplo_com=demand_emplo_com,  # type: ignore
         power_installed=power_installed,
-        power_to_be_installed_pct=power_to_be_installed_pct, # type: ignore
-        power_to_be_installed=power_to_be_installed, # type: ignore
-        power_installable=power_installable, # type: ignore
-        area_ha_available=area_ha_available, # type: ignore
-        area_ha_available_pct_of_action=area_ha_available_pct_of_action, # type: ignore
-        ratio_power_to_area_ha=ratio_power_to_area_ha, # type: ignore
+        power_to_be_installed_pct=power_to_be_installed_pct,  # type: ignore
+        power_to_be_installed=power_to_be_installed,  # type: ignore
+        power_installable=power_installable,  # type: ignore
+        area_ha_available=area_ha_available,  # type: ignore
+        area_ha_available_pct_of_action=area_ha_available_pct_of_action,  # type: ignore
+        ratio_power_to_area_ha=ratio_power_to_area_ha,  # type: ignore
         change_CO2e_t=change_CO2e_t,
         change_CO2e_pct=change_CO2e_pct,
-        change_cost_energy=change_cost_energy, # type: ignore
-        change_cost_mro=change_cost_mro, # type: ignore
-        invest=invest, # type: ignore
-        invest_pa=invest_pa, # type: ignore
-        invest_com=invest_com, # type: ignore
-        invest_pa_com=invest_pa_com, # type: ignore
-        invest_outside=invest_outside, # type: ignore
-        invest_pa_outside=invest_pa_outside, # type: ignore
-        invest_per_x=invest_per_x, # type: ignore
-        pct_of_wage=pct_of_wage, # type: ignore
-        pct_x=pct_x, # type: ignore
-        ratio_wage_to_emplo=ratio_wage_to_emplo, # type: ignore
-        cost_wage=cost_wage, # type: ignore
+        change_cost_energy=change_cost_energy,  # type: ignore
+        change_cost_mro=change_cost_mro,  # type: ignore
+        invest=invest,  # type: ignore
+        invest_pa=invest_pa,  # type: ignore
+        invest_com=invest_com,  # type: ignore
+        invest_pa_com=invest_pa_com,  # type: ignore
+        invest_outside=invest_outside,  # type: ignore
+        invest_pa_outside=invest_pa_outside,  # type: ignore
+        invest_per_x=invest_per_x,  # type: ignore
+        pct_of_wage=pct_of_wage,  # type: ignore
+        pct_x=pct_x,  # type: ignore
+        ratio_wage_to_emplo=ratio_wage_to_emplo,  # type: ignore
+        cost_wage=cost_wage,  # type: ignore
         cost_mro_per_MWh=cost_mro_per_MWh,
-        emplo_existing=emplo_existing, # type: ignore
-        demand_emplo_new=demand_emplo_new, # type: ignore
+        emplo_existing=emplo_existing,  # type: ignore
+        demand_emplo_new=demand_emplo_new,  # type: ignore
         full_load_hour=full_load_hour,
-        )
-        
+    )
+
     p_local_hydro.change_energy_MWh = energy - e18.p_local_hydro.energy
 
     p_local_hydro.energy = energy
