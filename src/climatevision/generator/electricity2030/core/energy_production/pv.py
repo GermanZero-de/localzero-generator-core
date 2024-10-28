@@ -132,7 +132,7 @@ def calc_production_local_pv_facade(
 
     duration_until_target_year = entries.m_duration_target
 
-    # TODO: Change the below
+    # TODO: Change the below -> nicht leer initialsieren -> kriege sonst keine compiler warnung, wenn ich was vergesse zu setzen
     p_local_pv_facade = EColVars2030()
     p_local_pv_facade.full_load_hour = ass("Ass_E_P_local_pv_facade_full_load_hours")
 
