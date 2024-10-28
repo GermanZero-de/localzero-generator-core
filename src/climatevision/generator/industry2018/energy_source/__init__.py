@@ -66,7 +66,7 @@ def calc_supply(facts: Facts, energies: Energies) -> EnergySupply:
     chem_ammonia = EnergySupplySubBranch.calc_sub_branch(
         facts=facts,
         energy_demand=energies.chem_ammonia.energy,
-        sub_branch="basic",  # assumtion same as chem basic (TODO Find specific factors for ammonia production)
+        sub_branch="basic",  # assumtion same as chem basic (TODO Find specific factors for ammonia production) -> Erwartung wäre, dass sub_branch amonia oder so wäre
         branch="chem",
     )
     chem_other = EnergySupplySubBranch.calc_sub_branch(

@@ -50,7 +50,7 @@ class Production:
 def calc_production(
     entries: Entries, facts: Facts, assumptions: Assumptions
 ) -> Production:
-    # TODO: Fix the it at confusion
+    # TODO: Fix the it at confusion -> renaming
 
     population_commune_2018 = entries.m_population_com_2018
     population_district_2018 = entries.m_population_dis
