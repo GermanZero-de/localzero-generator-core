@@ -164,7 +164,6 @@ def calc_production_local_wind_onshore(
         demand_emplo_new=demand_emplo_new, # type: ignore
         full_load_hour=full_load_hour,
         )
-
         
     p_local_wind_onshore.change_energy_MWh = (
         energy - e18.p_local_wind_onshore.energy
