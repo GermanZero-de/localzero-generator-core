@@ -31,7 +31,7 @@
     "a_soil_leaching_ratio_CO2e_to_ha": 0.24738100014465422,
     "a_soil_manure_ratio_CO2e_to_ha": 0.3399102037935738,
     "a_soil_orgfarm_ratio_CO2e_to_ha": 6.6127120667566786,
-    "a_soil_orgloss_ratio_CO2e_to_ha": 0.04612786108175125,
+    "a_soil_orgloss_ratio_CO2e_to_ha": 0.016745862051649667,
     "a_soil_residue_ratio_CO2e_to_ha": 0.12196462252385729,
     "a_soil_sludge_ratio_CO2e_to_ha": 0.004850373539165511,
     "b_biomass_fec": 44243.22265227692,
