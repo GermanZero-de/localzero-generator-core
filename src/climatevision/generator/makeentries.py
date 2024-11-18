@@ -540,7 +540,7 @@ def make_entries(
         "farmed_soil", farmland_area_organic_sta + greenland_area_organic_sta
     )
     data_nat_agri_germany = data.nat_agri(ags_germany)
-    if True or m_year_ref == 2018:
+    if m_year_ref == 2018:
         # unlike the other factors we don't have the n2o levels below the national level available
         # in 2018 :-(
         a_soil_orgloss_ratio_CO2e_to_ha = compute_efactor_from_n2o(

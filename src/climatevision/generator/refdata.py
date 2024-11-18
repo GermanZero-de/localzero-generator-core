@@ -495,28 +495,30 @@ def filename(year_ref: int, what: str) -> str:
         #     "traffic_air": "2018",  # TODO: ? Can we use the transplant code for this as well?!
         #     "traffic_rail": "2018",  # TODO: ? CAn we use the transplant code for this as well?!
         # },
-        # For Testing
+        # For all "unchanged" reference files we need to do
+        # the merging of the AGSes (we have previously convinced ourselves
+        # that the only interesting changes that have happened to AGS
+        # is that some kommune have been joined)
         2021: {
-            "ags": "master",
-            "area": "2018",  # Checked Germany + Göttingen
-            "area_kinds": "2018",
-            "assumptions": "2018",
-            "buildings": "2018",  # Building census is delayed
-            "co2path": "2018",  # TODO: Will we get this?
-            "destatis": "2018",  # TODO: What about this?
-            # "facts": "2021",  # TODO: Bene is late
-            "facts": "2018",  # TODO: Bene is late
-            "flats": "2018",  # TODO: Building census is delayed
-            "industry_facilites": "2018",  # TODO: Jan
-            "nat_agri": "2018",
-            "nat_energy": "2018",
-            "nat_organic_agri": "2016",
-            "nat_res_buildings": "2018",  # TODO: Building census is delayed
-            "population": "2018",  # Checked Germany
-            "renewable_energy": "2021",
-            "traffic": "2018",  # TODO: We did write code to transplant this, must still check in the work
-            "traffic_air": "2018",  # TODO: ?
-            "traffic_rail": "2018",  # TODO: ?
+            "ags": "2021",  # FINISHED
+            "area": "2021",  # FINISHED
+            "area_kinds": "2021",  # FINISHED
+            "assumptions": "2018",  # NO CHANGES
+            "buildings": "2018",  # AGS TRANSPLANT 2018 to 2021 OR 2022 - 5 month
+            "co2path": "2018",  # NO CHANGES NEEDED (IF CO2 BUDGET STAYS "CONSTANT")
+            "destatis": "2018",  # AGS TRANSPLANT 2018 TO 2021
+            "facts": "2021",  # FINISHED
+            "flats": "2018",  # AGS TRANSPLANT 2018 to 2021 OR 2022 - 5 month
+            "industry_facilites": "2021",  # FINISHED
+            "nat_agri": "2021",  # FINISHED
+            "nat_energy": "2021",  # FINISHED
+            "nat_organic_agri": "2020",  # FINISHED
+            "nat_res_buildings": "2018",  # AGS TRANSPLANT 2018 to 2021 OR 2022 - 5 month
+            "population": "2021",  # FINISHED
+            "renewable_energy": "2021",  # LEON TO CHECK WHAT WENT WRONG
+            "traffic": "2018",  # AGS TRANSPLANT 2018 to 2021
+            "traffic_air": "2018",  # AGS TRANSPLANT 2018 to 2021
+            "traffic_rail": "2018",  # AGS TRANSPLANT 2018 to 2021
         },
     }
     return exceptions.get(year_ref, {}).get(what, str(year_ref))
