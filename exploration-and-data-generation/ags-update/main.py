@@ -13,9 +13,9 @@ from agshistory import (
     show,
 )
 import agshistory
-import traffic
 import json
 import agsmaster
+import adjust
 
 
 def create_partial_spin_off(
@@ -135,6 +135,18 @@ def changed_urban_area():
             print(ch)
 
 
+def tell_me():
+    changes = agshistory.load()
+    (_, old) = adjust.read_data(
+        "../../data/proprietary/traffic/2018.csv", remove_empty_rows=False
+    )
+    for ch in changes:
+        match ch:
+            case Dissolution():
+                if len(ch.parts) > 1 and not (ch.ags in old):
+                    print(ch.ags, ch.name)
+
+
 def main():
     match sys.argv:
         case [_, "convert"]:
@@ -143,27 +155,38 @@ def main():
             show(False, ags)
         case [_, "show", "-p", ags]:
             show(True, ags)
-        case [_, "transplant-traffic", target_date]:
-            target_date = datetime.date.fromisoformat(target_date)
-            traffic.transplant(target_date)
+        case [_, "transplant", "--remove-empty-rows", mode, src, dst]:
+            mode = adjust.Mode[mode]
+            adjust.transplant(
+                mode, src, dst, datetime.date(2021, 12, 31), remove_empty_rows=True
+            )
+        case [_, "transplant", mode, src, dst]:
+            mode = adjust.Mode[mode]
+            adjust.transplant(
+                mode, src, dst, datetime.date(2021, 12, 31), remove_empty_rows=False
+            )
         case [_, "transplant-master", target_date]:
             target_date = datetime.date.fromisoformat(target_date)
             agsmaster.transplant(target_date)
-        case [_, "compare-traffic", file1, file2]:
-            traffic.compare(file1, file2)
+        case [_, "compare", file1, file2]:
+            adjust.compare(file1, file2, remove_empty_rows=False)
+        case [_, "compare", "--remove-empty-rows", file1, file2]:
+            adjust.compare(file1, file2, remove_empty_rows=True)
         case [_, "compare-master", file1, file2]:
             agsmaster.compare(file1, file2)
         case [_, "changed-urban-area"]:
             changed_urban_area()
-
+        case [_, "tell-me"]:
+            tell_me()
         case _:
+            modes = "|".join([name for name in adjust.Mode.__members__.keys()])
             print(
-                """Usage: python agshistory.py CMD...
+                f"""Usage: python agshistory.py CMD...
 Where CMD is
     convert                           -- Convert excel to json
     show <ags>                        -- Show history of one AGS from the json
-    transplant-traffic <target-date>] -- Transplant traffic data from 2018 to the given date"
-    compare-traffic <file1> <file2>   -- Compare two traffic files
+    transplant [--remove-empty-rows] {modes} <src> <dst>            -- Transplant data files from 2018 to 2021"
+    compare [--remove-empty-rows] <file1> <file2>   -- Compare two traffic files
     changed-urban-area                -- List all AGS changes that changed urban area
     transplant-master <target-date>]  -- Transplant master data from 2018 to the given date"
     compare-master <file1> <file2>    -- Compare two ags master files
