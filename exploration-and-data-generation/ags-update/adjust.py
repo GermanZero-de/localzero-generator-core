@@ -1,15 +1,17 @@
+from enum import Enum
 import sys
 import typing
 import csv
 import agshistory
 from agshistory import AgsOrNameChange, Dissolution, PartialSpinOff
 import datetime
+from typing import Literal
 
 
-def read_traffic(
+def read_data(
     filename: str, *, remove_empty_rows: bool
 ) -> typing.Tuple[list[str], dict[str, list[float]]]:
-    """Read the traffic data.  Returns a tuple of the header and a dict
+    """Read the original data.  Returns a tuple of the header and a dict
     mapping the AGS (first column of the file) to the remaining data.
     """
     with open(filename, encoding="utf-8") as f:
@@ -18,15 +20,16 @@ def read_traffic(
         result = {}
         for row in csv_reader:
             ags = row[0]
-            data = [float(x) for x in row[1:]]
+            data = row[1:]
+            if remove_empty_rows and all((x == "" for x in data)):
+                continue
+            data = [float(x) for x in data]
             result[ags] = data
         return header, result
 
 
-def write_traffic(date: datetime.date, header: list[str], data: dict[str, list[float]]):
-    with open(
-        f"../../data/proprietary/traffic/{date.isoformat()}.csv", "w", encoding="utf-8"
-    ) as f:
+def write_data(filename: str, header: list[str], data: dict[str, list[float]]):
+    with open(filename, "w", encoding="utf-8") as f:
         csv_writer = csv.writer(f, delimiter=",", lineterminator="\n")
         csv_writer.writerow(header)
         for ags, row in data.items():
@@ -36,42 +39,53 @@ def write_traffic(date: datetime.date, header: list[str], data: dict[str, list[f
 FIRST_DATE_OF_INTEREST = datetime.date(2019, 1, 1)
 
 
-def distribute_traffic_by_parts(
+def distribute_by_area(
     label: str,
-    traffic_data: dict[str, list[float]],
+    original_data: dict[str, list[float]],
     change: PartialSpinOff | Dissolution,
 ) -> bool:
-    """Distribute traffic from the ags of the change to the ags's mentioned in parts of the change,
+    """Distribute data from the ags of the change to the ags's mentioned in parts of the change,
     proportional to the area of the parts.
 
     NOTE: A good argument can be made that there are cases where proportional to the
-    population is sometimes "more right".  And potentially we should invest more
-    time here, but this seems like a reasonable first attempt.
+    population is sometimes "more right".
 
     Return's false if the ags of the change is not in the traffic data.
     """
-    if change.ags not in traffic_data:
+    if change.ags not in original_data:
         print(
             f"WARNING (during  {label}): {change.ags} ({change.name}) not found.",
             file=sys.stderr,
         )
         return False
-    source = traffic_data[change.ags]
+    source = original_data[change.ags]
+    print(change)
     for part, ratio in change.parts_with_ratios_by_area():
-        if part.ags in traffic_data:
-            traffic_data[part.ags] = [
-                s * ratio + o for s, o in zip(source, traffic_data[part.ags])
+        if part.ags in original_data:
+            original_data[part.ags] = [
+                s * ratio + o for s, o in zip(source, original_data[part.ags])
             ]
         else:
-            traffic_data[part.ags] = [s * ratio for s in source]
+            original_data[part.ags] = [s * ratio for s in source]
 
     return True
 
 
-def transplant(last_date: datetime.date, remove_empty_rows: bool = False):
+class Mode(Enum):
+    BY_AREA = 1
+    IGNORE_SPIN_OFFS = 2
+
+
+def transplant(
+    mode: Mode,
+    source_filename: str,
+    target_filename: str,
+    last_date: datetime.date,
+    remove_empty_rows: bool,
+):
     changes = agshistory.load()
-    traffic_header, traffic_data = read_traffic(
-        "../../data/proprietary/traffic/2018.csv", remove_empty_rows=remove_empty_rows
+    traffic_header, original_data = read_data(
+        source_filename, remove_empty_rows=remove_empty_rows
     )
     for ch in changes:
         if ch.effective_date < FIRST_DATE_OF_INTEREST:
@@ -79,33 +93,40 @@ def transplant(last_date: datetime.date, remove_empty_rows: bool = False):
         if ch.effective_date > last_date:
             break
         match ch:
-            case PartialSpinOff():
-                distribute_traffic_by_parts("spin off", traffic_data, ch)
+            case PartialSpinOff(ags=ags):
+                if mode != Mode.IGNORE_SPIN_OFFS:
+                    if distribute_by_area("spin off", original_data, ch):
+                        ratio = (
+                            1 - ch.total_area_of_parts_in_sqm() / ch.total_area_in_sqm()
+                        )
+                        original_data[ags] = [o * ratio for o in original_data[ags]]
+                else:
+                    print("ignoring", ch)
             case Dissolution(ags=ags):
-                if distribute_traffic_by_parts("dissolution", traffic_data, ch):
-                    del traffic_data[ags]
+                if distribute_by_area("dissolution", original_data, ch):
+                    del original_data[ags]
             case AgsOrNameChange(
                 ags=ags, new_ags=new_ags, name=name, new_name=new_name
             ):
-                if ags not in traffic_data:
+                if ags not in original_data:
                     print(
                         f"WARNING (during change to {new_ags} ({new_name})): {ags} ({name}) not found.",
                         file=sys.stderr,
                     )
                     continue
-                data = traffic_data[ags]
-                del traffic_data[ags]
-                assert new_ags not in traffic_data
-                traffic_data[new_ags] = data
+                data = original_data[ags]
+                del original_data[ags]
+                assert new_ags not in original_data
+                original_data[new_ags] = data
             case _:
                 continue
-    write_traffic(last_date, traffic_header, traffic_data)
+    write_data(target_filename, traffic_header, original_data)
 
 
 def compare(file1: str, file2: str, *, remove_empty_rows: bool):
     """Compare two traffic files."""
-    (header1, data1) = read_traffic(file1, remove_empty_rows=remove_empty_rows)
-    (header2, data2) = read_traffic(file2, remove_empty_rows=remove_empty_rows)
+    (header1, data1) = read_data(file1, remove_empty_rows=remove_empty_rows)
+    (header2, data2) = read_data(file2, remove_empty_rows=remove_empty_rows)
     assert header1 == header2
     equals = 0
     only_in_1 = []

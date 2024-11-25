@@ -1,0 +1,6852 @@
+[
+  {
+    "effective_date": "2019-01-01",
+    "ags": "01061030",
+    "name": "Grevenkop",
+    "parts": [
+      {
+        "ags": "01061055",
+        "name": "Krempe, Stadt",
+        "area_in_sqm": 60289,
+        "population": 0
+      }
+    ],
+    "remaining_area": 9565562,
+    "remaining_population": 315,
+    "kind": "PartialSpinOff"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "01061055",
+    "name": "Krempe, Stadt",
+    "parts": [
+      {
+        "ags": "01061030",
+        "name": "Grevenkop",
+        "area_in_sqm": 70882,
+        "population": 0
+      }
+    ],
+    "remaining_area": 3323200,
+    "remaining_population": 2384,
+    "kind": "PartialSpinOff"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "05162012",
+    "name": "J\u00fcchen",
+    "new_ags": "05162012",
+    "new_name": "J\u00fcchen, Stadt",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "09172444",
+    "name": "Gdefr. Geb. (Lkr Berchtesgadener Land)",
+    "parts": [
+      {
+        "ags": "09172452",
+        "name": "Eck",
+        "area_in_sqm": 12597566,
+        "population": 0
+      },
+      {
+        "ags": "09172454",
+        "name": "Schellenberger Forst",
+        "area_in_sqm": 17010942,
+        "population": 0
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "09173444",
+    "name": "Gdefr. Geb. (Lkr Bad T\u00f6lz-Wolfratshausen)",
+    "parts": [
+      {
+        "ags": "09173451",
+        "name": "Pupplinger Au",
+        "area_in_sqm": 3720969,
+        "population": 0
+      },
+      {
+        "ags": "09173452",
+        "name": "Wolfratshauser Forst",
+        "area_in_sqm": 4282858,
+        "population": 0
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "09175444",
+    "name": "Gdefr. Geb. (Lkr Ebersberg)",
+    "parts": [
+      {
+        "ags": "09175451",
+        "name": "Anzinger Forst",
+        "area_in_sqm": 31029844,
+        "population": 0
+      },
+      {
+        "ags": "09175452",
+        "name": "Ebersberger Forst",
+        "area_in_sqm": 17832327,
+        "population": 0
+      },
+      {
+        "ags": "09175453",
+        "name": "Eglhartinger Forst",
+        "area_in_sqm": 26762888,
+        "population": 0
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "09176444",
+    "name": "Gdefr. Geb. (Lkr Eichst\u00e4tt)",
+    "parts": [
+      {
+        "ags": "09176451",
+        "name": "Haunstetter Forst",
+        "area_in_sqm": 5429648,
+        "population": 0
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "09180444",
+    "name": "Gdefr. Geb. (Lkr Garmisch-Partenkirchen)",
+    "parts": [
+      {
+        "ags": "09180451",
+        "name": "Ettaler Forst",
+        "area_in_sqm": 83469445,
+        "population": 0
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "09181444",
+    "name": "Gdefr. Geb. (Lkr Landsberg am Lech)",
+    "parts": [
+      {
+        "ags": "09181451",
+        "name": "Ammersee",
+        "area_in_sqm": 47397051,
+        "population": 0
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "09183444",
+    "name": "Gdefr. Geb. (Lkr M\u00fchldorf a.Inn)",
+    "parts": [
+      {
+        "ags": "09183451",
+        "name": "M\u00fchldorfer Hart",
+        "area_in_sqm": 7117317,
+        "population": 0
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "09184444",
+    "name": "Gdefr. Geb. (Lkr M\u00fcnchen)",
+    "parts": [
+      {
+        "ags": "09184452",
+        "name": "Forstenrieder Park",
+        "area_in_sqm": 37089350,
+        "population": 0
+      },
+      {
+        "ags": "09184454",
+        "name": "Gr\u00fcnwalder Forst",
+        "area_in_sqm": 19573212,
+        "population": 0
+      },
+      {
+        "ags": "09184457",
+        "name": "Perlacher Forst",
+        "area_in_sqm": 13362538,
+        "population": 0
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "09187444",
+    "name": "Gdefr. Geb. (Lkr Rosenheim)",
+    "parts": [
+      {
+        "ags": "09187451",
+        "name": "Rotter Forst-Nord",
+        "area_in_sqm": 7328039,
+        "population": 0
+      },
+      {
+        "ags": "09187452",
+        "name": "Rotter Forst-S\u00fcd",
+        "area_in_sqm": 3039168,
+        "population": 0
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "09188444",
+    "name": "Gdefr. Geb. (Lkr Starnberg)",
+    "parts": [
+      {
+        "ags": "09188451",
+        "name": "Starnberger See",
+        "area_in_sqm": 56880736,
+        "population": 0
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "09189444",
+    "name": "Gdefr. Geb. (Lkr Traunstein)",
+    "parts": [
+      {
+        "ags": "09189451",
+        "name": "Chiemsee (See)",
+        "area_in_sqm": 77755686,
+        "population": 0
+      },
+      {
+        "ags": "09189452",
+        "name": "Waginger See",
+        "area_in_sqm": 8990773,
+        "population": 0
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "09272444",
+    "name": "Gdefr. Geb. (Lkr Freyung-Grafenau)",
+    "parts": [
+      {
+        "ags": "09272451",
+        "name": "Annathaler Wald",
+        "area_in_sqm": 10410936,
+        "population": 0
+      },
+      {
+        "ags": "09272452",
+        "name": "Frauenberger u. Duschelberger Wald",
+        "area_in_sqm": 21049238,
+        "population": 0
+      },
+      {
+        "ags": "09272453",
+        "name": "Graineter Wald",
+        "area_in_sqm": 6593271,
+        "population": 0
+      },
+      {
+        "ags": "09272455",
+        "name": "Leopoldsreuter Wald",
+        "area_in_sqm": 14794289,
+        "population": 0
+      },
+      {
+        "ags": "09272456",
+        "name": "Mauther Forst",
+        "area_in_sqm": 24638683,
+        "population": 0
+      },
+      {
+        "ags": "09272457",
+        "name": "Philippsreuter Wald",
+        "area_in_sqm": 3005220,
+        "population": 0
+      },
+      {
+        "ags": "09272458",
+        "name": "Pleckensteiner Wald",
+        "area_in_sqm": 12985468,
+        "population": 0
+      },
+      {
+        "ags": "09272459",
+        "name": "Sankt Oswald",
+        "area_in_sqm": 12152341,
+        "population": 0
+      },
+      {
+        "ags": "09272460",
+        "name": "Schlichtenberger Wald",
+        "area_in_sqm": 17802085,
+        "population": 0
+      },
+      {
+        "ags": "09272461",
+        "name": "Sch\u00f6nbrunner Wald",
+        "area_in_sqm": 21297082,
+        "population": 0
+      },
+      {
+        "ags": "09272463",
+        "name": "Waldh\u00e4userwald",
+        "area_in_sqm": 11473362,
+        "population": 0
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "09273444",
+    "name": "Gdefr. Geb. (Lkr Kelheim)",
+    "parts": [
+      {
+        "ags": "09273451",
+        "name": "D\u00fcrnbucher Forst",
+        "area_in_sqm": 44740394,
+        "population": 0
+      },
+      {
+        "ags": "09273452",
+        "name": "Frauenforst",
+        "area_in_sqm": 19849239,
+        "population": 0
+      },
+      {
+        "ags": "09273453",
+        "name": "Hacklberg",
+        "area_in_sqm": 562202,
+        "population": 0
+      },
+      {
+        "ags": "09273454",
+        "name": "Hienheimer Forst",
+        "area_in_sqm": 23552107,
+        "population": 0
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "09371444",
+    "name": "Gdefr. Geb. (Lkr Amberg-Sulzbach)",
+    "parts": [
+      {
+        "ags": "09371452",
+        "name": "Eichen",
+        "area_in_sqm": 2782135,
+        "population": 0
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "09374444",
+    "name": "Gdefr. Geb. (Lkr Neustadt a.d.Waldnaab)",
+    "parts": [
+      {
+        "ags": "09374451",
+        "name": "Heinersreuther Forst",
+        "area_in_sqm": 5883367,
+        "population": 0
+      },
+      {
+        "ags": "09374452",
+        "name": "Manteler Forst",
+        "area_in_sqm": 30778616,
+        "population": 0
+      },
+      {
+        "ags": "09374458",
+        "name": "Speinsharter Forst",
+        "area_in_sqm": 11160539,
+        "population": 0
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "09375444",
+    "name": "Gdefr. Geb. (Lkr Regensburg)",
+    "parts": [
+      {
+        "ags": "09375451",
+        "name": "Forstm\u00fchler Forst",
+        "area_in_sqm": 24268337,
+        "population": 0
+      },
+      {
+        "ags": "09375452",
+        "name": "Kreuther Forst",
+        "area_in_sqm": 7697754,
+        "population": 0
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "09376444",
+    "name": "Gdefr. Geb. (Lkr Schwandorf)",
+    "parts": [
+      {
+        "ags": "09376455",
+        "name": "Wolferlohe",
+        "area_in_sqm": 6606747,
+        "population": 0
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "09471444",
+    "name": "Gdefr. Geb. (Lkr Bamberg)",
+    "parts": [
+      {
+        "ags": "09471452",
+        "name": "Ebracher Forst",
+        "area_in_sqm": 9023660,
+        "population": 0
+      },
+      {
+        "ags": "09471453",
+        "name": "Eichwald",
+        "area_in_sqm": 4331009,
+        "population": 0
+      },
+      {
+        "ags": "09471454",
+        "name": "Geisberger Forst",
+        "area_in_sqm": 10307383,
+        "population": 0
+      },
+      {
+        "ags": "09471455",
+        "name": "Hauptsmoor",
+        "area_in_sqm": 20841571,
+        "population": 0
+      },
+      {
+        "ags": "09471456",
+        "name": "Koppenwinder Forst",
+        "area_in_sqm": 12914280,
+        "population": 0
+      },
+      {
+        "ags": "09471457",
+        "name": "Lindach",
+        "area_in_sqm": 6236919,
+        "population": 0
+      },
+      {
+        "ags": "09471459",
+        "name": "Semberg",
+        "area_in_sqm": 4492762,
+        "population": 0
+      },
+      {
+        "ags": "09471460",
+        "name": "Steinachsrangen",
+        "area_in_sqm": 5735417,
+        "population": 0
+      },
+      {
+        "ags": "09471461",
+        "name": "Winkelhofer Forst",
+        "area_in_sqm": 8512208,
+        "population": 0
+      },
+      {
+        "ags": "09471462",
+        "name": "Z\u00fcckshuter Forst",
+        "area_in_sqm": 5784711,
+        "population": 0
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "09473444",
+    "name": "Gdefr. Geb. (Lkr Coburg)",
+    "parts": [
+      {
+        "ags": "09473452",
+        "name": "Callenberger Forst-West",
+        "area_in_sqm": 2322892,
+        "population": 0
+      },
+      {
+        "ags": "09473453",
+        "name": "Gellnhausen",
+        "area_in_sqm": 2800160,
+        "population": 0
+      },
+      {
+        "ags": "09473454",
+        "name": "K\u00f6llnholz",
+        "area_in_sqm": 900903,
+        "population": 0
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "09475444",
+    "name": "Gdefr. Geb. (Lkr Hof)",
+    "parts": [
+      {
+        "ags": "09475451",
+        "name": "Forst Schwarzenbach a. Wald",
+        "area_in_sqm": 8276645,
+        "population": 0
+      },
+      {
+        "ags": "09475452",
+        "name": "Gerlaser Forst",
+        "area_in_sqm": 5831989,
+        "population": 0
+      },
+      {
+        "ags": "09475453",
+        "name": "Geroldsgr\u00fcner Forst",
+        "area_in_sqm": 16705781,
+        "population": 0
+      },
+      {
+        "ags": "09475454",
+        "name": "Martinlamitzer Forst-Nord",
+        "area_in_sqm": 6775683,
+        "population": 0
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "09476444",
+    "name": "Gdefr. Geb. (Lkr Kronach)",
+    "parts": [
+      {
+        "ags": "09476451",
+        "name": "Birnbaum",
+        "area_in_sqm": 8148040,
+        "population": 0
+      },
+      {
+        "ags": "09476453",
+        "name": "Langenbacher Forst",
+        "area_in_sqm": 12710324,
+        "population": 0
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "09478444",
+    "name": "Gdefr. Geb. (Lkr Lichtenfels)",
+    "parts": [
+      {
+        "ags": "09478451",
+        "name": "Breiteng\u00fc\u00dfbacher Forst",
+        "area_in_sqm": 2401924,
+        "population": 0
+      },
+      {
+        "ags": "09478453",
+        "name": "Neuensorger Forst",
+        "area_in_sqm": 5084997,
+        "population": 0
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "09479444",
+    "name": "Gdefr. Geb. (Lkr Wunsiedel i.Fichtelgebirge)",
+    "parts": [
+      {
+        "ags": "09479453",
+        "name": "Kaiserhammer Forst-Ost",
+        "area_in_sqm": 8005229,
+        "population": 0
+      },
+      {
+        "ags": "09479455",
+        "name": "Martinlamitzer Forst-S\u00fcd",
+        "area_in_sqm": 8464529,
+        "population": 0
+      },
+      {
+        "ags": "09479456",
+        "name": "Meierh\u00f6fer Seite",
+        "area_in_sqm": 2973727,
+        "population": 0
+      },
+      {
+        "ags": "09479457",
+        "name": "Neubauer Forst-S\u00fcd",
+        "area_in_sqm": 3133219,
+        "population": 0
+      },
+      {
+        "ags": "09479459",
+        "name": "Tr\u00f6stauer Forst-Ost",
+        "area_in_sqm": 9713657,
+        "population": 0
+      },
+      {
+        "ags": "09479460",
+        "name": "Tr\u00f6stauer Forst-West",
+        "area_in_sqm": 14462292,
+        "population": 0
+      },
+      {
+        "ags": "09479461",
+        "name": "Vordorfer Forst",
+        "area_in_sqm": 9712300,
+        "population": 0
+      },
+      {
+        "ags": "09479462",
+        "name": "Wei\u00dfenstadter Forst-Nord",
+        "area_in_sqm": 5450284,
+        "population": 0
+      },
+      {
+        "ags": "09479463",
+        "name": "Wei\u00dfenstadter Forst-S\u00fcd",
+        "area_in_sqm": 15107040,
+        "population": 0
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "09571444",
+    "name": "Gdefr. Geb. (Lkr Ansbach)",
+    "parts": [
+      {
+        "ags": "09571451",
+        "name": "Unterer Wald",
+        "area_in_sqm": 1817098,
+        "population": 0
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "09572444",
+    "name": "Gdefr. Geb. (Lkr Erlangen-H\u00f6chstadt)",
+    "parts": [
+      {
+        "ags": "09572451",
+        "name": "Birkach",
+        "area_in_sqm": 3243734,
+        "population": 0
+      },
+      {
+        "ags": "09572452",
+        "name": "Buckenhofer Forst",
+        "area_in_sqm": 8789576,
+        "population": 0
+      },
+      {
+        "ags": "09572453",
+        "name": "Dormitzer Forst",
+        "area_in_sqm": 10166528,
+        "population": 0
+      },
+      {
+        "ags": "09572454",
+        "name": "Erlenstegener Forst",
+        "area_in_sqm": 11772525,
+        "population": 0
+      },
+      {
+        "ags": "09572455",
+        "name": "Forst Tennenlohe",
+        "area_in_sqm": 10812733,
+        "population": 0
+      },
+      {
+        "ags": "09572456",
+        "name": "Geschaidt",
+        "area_in_sqm": 8481079,
+        "population": 0
+      },
+      {
+        "ags": "09572457",
+        "name": "Kalchreuther Forst",
+        "area_in_sqm": 6101587,
+        "population": 0
+      },
+      {
+        "ags": "09572458",
+        "name": "Kraftshofer Forst",
+        "area_in_sqm": 12182199,
+        "population": 0
+      },
+      {
+        "ags": "09572459",
+        "name": "Mark",
+        "area_in_sqm": 20944240,
+        "population": 0
+      },
+      {
+        "ags": "09572460",
+        "name": "Neunhofer Forst",
+        "area_in_sqm": 10169945,
+        "population": 0
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "09574444",
+    "name": "Gdefr. Geb. (Lkr N\u00fcrnberger Land)",
+    "parts": [
+      {
+        "ags": "09574451",
+        "name": "Behringersdorfer Forst",
+        "area_in_sqm": 11156073,
+        "population": 0
+      },
+      {
+        "ags": "09574452",
+        "name": "Brunn",
+        "area_in_sqm": 10178088,
+        "population": 0
+      },
+      {
+        "ags": "09574453",
+        "name": "Engelthaler Forst",
+        "area_in_sqm": 2416963,
+        "population": 0
+      },
+      {
+        "ags": "09574454",
+        "name": "Feuchter Forst",
+        "area_in_sqm": 20820163,
+        "population": 0
+      },
+      {
+        "ags": "09574455",
+        "name": "Fischbach",
+        "area_in_sqm": 18370212,
+        "population": 0
+      },
+      {
+        "ags": "09574456",
+        "name": "Forsthof",
+        "area_in_sqm": 7429650,
+        "population": 0
+      },
+      {
+        "ags": "09574457",
+        "name": "G\u00fcnthersb\u00fchler Forst",
+        "area_in_sqm": 5921023,
+        "population": 0
+      },
+      {
+        "ags": "09574458",
+        "name": "Haimendorfer Forst",
+        "area_in_sqm": 7526746,
+        "population": 0
+      },
+      {
+        "ags": "09574460",
+        "name": "Laufamholzer Forst",
+        "area_in_sqm": 6554630,
+        "population": 0
+      },
+      {
+        "ags": "09574461",
+        "name": "Leinburg",
+        "area_in_sqm": 4204371,
+        "population": 0
+      },
+      {
+        "ags": "09574462",
+        "name": "R\u00fcckersdorfer Forst",
+        "area_in_sqm": 5149374,
+        "population": 0
+      },
+      {
+        "ags": "09574463",
+        "name": "Sch\u00f6nberg",
+        "area_in_sqm": 3416702,
+        "population": 0
+      },
+      {
+        "ags": "09574464",
+        "name": "Winkelhaid",
+        "area_in_sqm": 18438252,
+        "population": 0
+      },
+      {
+        "ags": "09574465",
+        "name": "Zerzabelshofer Forst",
+        "area_in_sqm": 6554913,
+        "population": 0
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "09575444",
+    "name": "Gdefr. Geb. (Lkr Neustadt a.d.Aisch-Bad Windsheim)",
+    "parts": [
+      {
+        "ags": "09575451",
+        "name": "Osing",
+        "area_in_sqm": 2742519,
+        "population": 0
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "09576444",
+    "name": "Gdefr. Geb. (Lkr Roth)",
+    "parts": [
+      {
+        "ags": "09576451",
+        "name": "Abenberger Wald",
+        "area_in_sqm": 3159470,
+        "population": 0
+      },
+      {
+        "ags": "09576452",
+        "name": "Dechenwald",
+        "area_in_sqm": 1674124,
+        "population": 0
+      },
+      {
+        "ags": "09576453",
+        "name": "Forst Kleinschwarzenlohe",
+        "area_in_sqm": 13910094,
+        "population": 0
+      },
+      {
+        "ags": "09576454",
+        "name": "Heidenberg",
+        "area_in_sqm": 3228698,
+        "population": 0
+      },
+      {
+        "ags": "09576455",
+        "name": "Soos",
+        "area_in_sqm": 1301767,
+        "population": 0
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "09672444",
+    "name": "Gdefr. Geb. (Lkr Bad Kissingen)",
+    "parts": [
+      {
+        "ags": "09672451",
+        "name": "Dreistelzer Forst",
+        "area_in_sqm": 846524,
+        "population": 0
+      },
+      {
+        "ags": "09672454",
+        "name": "Forst Detter-S\u00fcd",
+        "area_in_sqm": 11388359,
+        "population": 0
+      },
+      {
+        "ags": "09672455",
+        "name": "Geiersnest-Ost",
+        "area_in_sqm": 19609187,
+        "population": 0
+      },
+      {
+        "ags": "09672456",
+        "name": "Geiersnest-West",
+        "area_in_sqm": 2424675,
+        "population": 0
+      },
+      {
+        "ags": "09672457",
+        "name": "Gro\u00dfer Auersberg",
+        "area_in_sqm": 4672235,
+        "population": 0
+      },
+      {
+        "ags": "09672458",
+        "name": "K\u00e4lberberg",
+        "area_in_sqm": 2338498,
+        "population": 0
+      },
+      {
+        "ags": "09672461",
+        "name": "Mottener Forst-S\u00fcd",
+        "area_in_sqm": 5046861,
+        "population": 0
+      },
+      {
+        "ags": "09672462",
+        "name": "Neuwirtshauser Forst",
+        "area_in_sqm": 20690510,
+        "population": 0
+      },
+      {
+        "ags": "09672463",
+        "name": "Omerz u. Roter Berg",
+        "area_in_sqm": 6514583,
+        "population": 0
+      },
+      {
+        "ags": "09672464",
+        "name": "R\u00f6mershager Forst-Nord",
+        "area_in_sqm": 12915977,
+        "population": 0
+      },
+      {
+        "ags": "09672465",
+        "name": "R\u00f6mershager Forst-Ost",
+        "area_in_sqm": 3762143,
+        "population": 0
+      },
+      {
+        "ags": "09672466",
+        "name": "Ro\u00dfbacher Forst",
+        "area_in_sqm": 21149493,
+        "population": 0
+      },
+      {
+        "ags": "09672468",
+        "name": "Waldfensterer Forst",
+        "area_in_sqm": 11294563,
+        "population": 0
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "09673444",
+    "name": "Gdefr. Geb. (Lkr Rh\u00f6n-Grabfeld)",
+    "parts": [
+      {
+        "ags": "09673451",
+        "name": "Bundorfer Forst",
+        "area_in_sqm": 18056380,
+        "population": 0
+      },
+      {
+        "ags": "09673452",
+        "name": "Burgwallbacher Forst",
+        "area_in_sqm": 16181169,
+        "population": 0
+      },
+      {
+        "ags": "09673453",
+        "name": "Forst Schmalwasser-Nord",
+        "area_in_sqm": 1686315,
+        "population": 0
+      },
+      {
+        "ags": "09673454",
+        "name": "Forst Schmalwasser-S\u00fcd",
+        "area_in_sqm": 14311387,
+        "population": 0
+      },
+      {
+        "ags": "09673455",
+        "name": "Mellrichstadter Forst",
+        "area_in_sqm": 4144583,
+        "population": 0
+      },
+      {
+        "ags": "09673456",
+        "name": "Steinacher Forst r.d.Saale",
+        "area_in_sqm": 19836712,
+        "population": 0
+      },
+      {
+        "ags": "09673457",
+        "name": "Sulzfelder Forst",
+        "area_in_sqm": 2535424,
+        "population": 0
+      },
+      {
+        "ags": "09673458",
+        "name": "Weigler",
+        "area_in_sqm": 2723812,
+        "population": 0
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "09676444",
+    "name": "Gdefr. Geb. (Lkr Miltenberg)",
+    "parts": [
+      {
+        "ags": "09676452",
+        "name": "Forstwald",
+        "area_in_sqm": 4109132,
+        "population": 0
+      },
+      {
+        "ags": "09676455",
+        "name": "Hohe Wart",
+        "area_in_sqm": 4678080,
+        "population": 0
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "09677444",
+    "name": "Gdefr. Geb. (Lkr Main-Spessart)",
+    "parts": [
+      {
+        "ags": "09677452",
+        "name": "Burgjo\u00df",
+        "area_in_sqm": 23108190,
+        "population": 0
+      },
+      {
+        "ags": "09677453",
+        "name": "Forst Aura",
+        "area_in_sqm": 23419758,
+        "population": 0
+      },
+      {
+        "ags": "09677454",
+        "name": "Forst Lohrerstra\u00dfe",
+        "area_in_sqm": 21314676,
+        "population": 0
+      },
+      {
+        "ags": "09677455",
+        "name": "Frammersbacher Forst",
+        "area_in_sqm": 16797828,
+        "population": 0
+      },
+      {
+        "ags": "09677456",
+        "name": "F\u00fcrstl. L\u00f6wenstein'scher Park",
+        "area_in_sqm": 30662816,
+        "population": 0
+      },
+      {
+        "ags": "09677457",
+        "name": "Haurain",
+        "area_in_sqm": 3128534,
+        "population": 0
+      },
+      {
+        "ags": "09677458",
+        "name": "Herrnwald",
+        "area_in_sqm": 2993441,
+        "population": 0
+      },
+      {
+        "ags": "09677459",
+        "name": "Langenprozeltener Forst",
+        "area_in_sqm": 8656423,
+        "population": 0
+      },
+      {
+        "ags": "09677461",
+        "name": "Partensteiner Forst",
+        "area_in_sqm": 19370493,
+        "population": 0
+      },
+      {
+        "ags": "09677463",
+        "name": "Ruppertsh\u00fcttener Forst",
+        "area_in_sqm": 17777012,
+        "population": 0
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "09678444",
+    "name": "Gdefr. Geb. (Lkr Schweinfurt)",
+    "parts": [
+      {
+        "ags": "09678451",
+        "name": "B\u00fcrgerwald",
+        "area_in_sqm": 7991985,
+        "population": 0
+      },
+      {
+        "ags": "09678452",
+        "name": "Geiersberg",
+        "area_in_sqm": 784871,
+        "population": 0
+      },
+      {
+        "ags": "09678453",
+        "name": "Hundelshausen",
+        "area_in_sqm": 11096687,
+        "population": 0
+      },
+      {
+        "ags": "09678454",
+        "name": "Nonnenkloster",
+        "area_in_sqm": 1216700,
+        "population": 0
+      },
+      {
+        "ags": "09678455",
+        "name": "Stollbergerforst",
+        "area_in_sqm": 4198538,
+        "population": 0
+      },
+      {
+        "ags": "09678456",
+        "name": "Vollburg",
+        "area_in_sqm": 1456998,
+        "population": 0
+      },
+      {
+        "ags": "09678457",
+        "name": "Wustvieler Forst",
+        "area_in_sqm": 8558512,
+        "population": 0
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "09679444",
+    "name": "Gdefr. Geb. (Lkr W\u00fcrzburg)",
+    "parts": [
+      {
+        "ags": "09679451",
+        "name": "Gramschatzer Wald",
+        "area_in_sqm": 22273944,
+        "population": 0
+      },
+      {
+        "ags": "09679452",
+        "name": "Guttenberger Wald",
+        "area_in_sqm": 18050873,
+        "population": 0
+      },
+      {
+        "ags": "09679453",
+        "name": "Irtenberger Wald",
+        "area_in_sqm": 14810761,
+        "population": 0
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "09772444",
+    "name": "Gdefr. Geb. (Lkr Augsburg)",
+    "parts": [
+      {
+        "ags": "09772451",
+        "name": "Schmellerforst",
+        "area_in_sqm": 3279626,
+        "population": 0
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "09774444",
+    "name": "Gdefr. Geb. (Lkr G\u00fcnzburg)",
+    "parts": [
+      {
+        "ags": "09774451",
+        "name": "Ebershauser-Nattenhauser Wald",
+        "area_in_sqm": 2095091,
+        "population": 0
+      },
+      {
+        "ags": "09774452",
+        "name": "Winzerwald",
+        "area_in_sqm": 1159705,
+        "population": 0
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "09775444",
+    "name": "Gdefr. Geb. (Lkr Neu-Ulm)",
+    "parts": [
+      {
+        "ags": "09775451",
+        "name": "Auwald",
+        "area_in_sqm": 5248143,
+        "population": 0
+      },
+      {
+        "ags": "09775452",
+        "name": "Oberroggenburger Wald",
+        "area_in_sqm": 6251801,
+        "population": 0
+      },
+      {
+        "ags": "09775454",
+        "name": "Stoffenrieder Forst",
+        "area_in_sqm": 15790989,
+        "population": 0
+      },
+      {
+        "ags": "09775455",
+        "name": "Unterroggenburger Wald",
+        "area_in_sqm": 17595808,
+        "population": 0
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "09778444",
+    "name": "Gdefr. Geb. (Lkr Unterallg\u00e4u)",
+    "parts": [
+      {
+        "ags": "09778451",
+        "name": "Ungerhauser Wald",
+        "area_in_sqm": 3239904,
+        "population": 0
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "09779444",
+    "name": "Gdefr. Geb. (Lkr Donau-Ries)",
+    "parts": [
+      {
+        "ags": "09779452",
+        "name": "Dornstadt-Linkersbaindt",
+        "area_in_sqm": 17756623,
+        "population": 0
+      },
+      {
+        "ags": "09779453",
+        "name": "Esterholz",
+        "area_in_sqm": 3247897,
+        "population": 0
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "09780444",
+    "name": "Gdefr. Geb. (Lkr Oberallg\u00e4u)",
+    "parts": [
+      {
+        "ags": "09780451",
+        "name": "Kempter Wald",
+        "area_in_sqm": 12038407,
+        "population": 0
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "09671444",
+    "name": "Gdefr. Geb. (Lkr Aschaffenburg)",
+    "parts": [
+      {
+        "ags": "09671451",
+        "name": "Forst Hain i.Spessart",
+        "area_in_sqm": 21095879,
+        "population": 0
+      },
+      {
+        "ags": "09671453",
+        "name": "Heinrichsthaler Forst",
+        "area_in_sqm": 26752459,
+        "population": 0
+      },
+      {
+        "ags": "09671456",
+        "name": "Rohrbrunner Forst",
+        "area_in_sqm": 39026852,
+        "population": 0
+      },
+      {
+        "ags": "09671457",
+        "name": "Rothenbucher Forst",
+        "area_in_sqm": 34908519,
+        "population": 0
+      },
+      {
+        "ags": "09671458",
+        "name": "Sailaufer Forst",
+        "area_in_sqm": 14353861,
+        "population": 0
+      },
+      {
+        "ags": "09671459",
+        "name": "Sch\u00f6llkrippener Forst",
+        "area_in_sqm": 18078407,
+        "population": 0
+      },
+      {
+        "ags": "09671460",
+        "name": "Waldaschaffer Forst",
+        "area_in_sqm": 23114751,
+        "population": 0
+      },
+      {
+        "ags": "09671461",
+        "name": "Wiesener Forst",
+        "area_in_sqm": 20189556,
+        "population": 0
+      },
+      {
+        "ags": "09671159",
+        "name": "Westerngrund",
+        "area_in_sqm": 4367866,
+        "population": 0
+      },
+      {
+        "ags": "09671135",
+        "name": "Kleinkahl",
+        "area_in_sqm": 2351594,
+        "population": 0
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "09472444",
+    "name": "Gdefr. Geb. (Lkr Bayreuth)",
+    "parts": [
+      {
+        "ags": "09472451",
+        "name": "Bischofsgr\u00fcner Forst",
+        "area_in_sqm": 26996752,
+        "population": 0
+      },
+      {
+        "ags": "09472453",
+        "name": "Fichtelberg",
+        "area_in_sqm": 20888600,
+        "population": 0
+      },
+      {
+        "ags": "09472454",
+        "name": "Forst Neust\u00e4dtlein a.Forst",
+        "area_in_sqm": 7549351,
+        "population": 0
+      },
+      {
+        "ags": "09472456",
+        "name": "Glash\u00fcttener Forst",
+        "area_in_sqm": 4765220,
+        "population": 0
+      },
+      {
+        "ags": "09472458",
+        "name": "Heinersreuther Forst",
+        "area_in_sqm": 7610344,
+        "population": 0
+      },
+      {
+        "ags": "09472459",
+        "name": "Langweiler Wald",
+        "area_in_sqm": 4515193,
+        "population": 0
+      },
+      {
+        "ags": "09472460",
+        "name": "Lindenhardter Forst-Nordwest",
+        "area_in_sqm": 8314356,
+        "population": 0
+      },
+      {
+        "ags": "09472461",
+        "name": "Lindenhardter Forst-S\u00fcdost",
+        "area_in_sqm": 2719942,
+        "population": 0
+      },
+      {
+        "ags": "09472463",
+        "name": "Neubauer Forst-Nord",
+        "area_in_sqm": 5655433,
+        "population": 0
+      },
+      {
+        "ags": "09472464",
+        "name": "Pr\u00fcll",
+        "area_in_sqm": 2219794,
+        "population": 0
+      },
+      {
+        "ags": "09472468",
+        "name": "Veldensteinerforst",
+        "area_in_sqm": 55594646,
+        "population": 0
+      },
+      {
+        "ags": "09472469",
+        "name": "Waidacher Forst",
+        "area_in_sqm": 6420487,
+        "population": 0
+      },
+      {
+        "ags": "09472470",
+        "name": "Warmensteinacher Forst-Nord",
+        "area_in_sqm": 321625,
+        "population": 0
+      },
+      {
+        "ags": "09472116",
+        "name": "Bad Berneck i.Fichtelgebirge, St",
+        "area_in_sqm": 4696184,
+        "population": 0
+      },
+      {
+        "ags": "09472143",
+        "name": "Goldkronach, St",
+        "area_in_sqm": 7441511,
+        "population": 0
+      },
+      {
+        "ags": "09472198",
+        "name": "Warmensteinach",
+        "area_in_sqm": 5891117,
+        "population": 0
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "12063036",
+    "name": "Brieselang",
+    "parts": [
+      {
+        "ags": "12063080",
+        "name": "Falkensee, Stadt",
+        "area_in_sqm": 128815,
+        "population": 0
+      }
+    ],
+    "remaining_area": 44211185,
+    "remaining_population": 11714,
+    "kind": "PartialSpinOff"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "12063080",
+    "name": "Falkensee, Stadt",
+    "parts": [
+      {
+        "ags": "12063036",
+        "name": "Brieselang",
+        "area_in_sqm": 40541,
+        "population": 6
+      }
+    ],
+    "remaining_area": 43219459,
+    "remaining_population": 43546,
+    "kind": "PartialSpinOff"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "13076095",
+    "name": "Marnitz",
+    "parts": [
+      {
+        "ags": "13076168",
+        "name": "Ruhner Berge",
+        "area_in_sqm": 31276960,
+        "population": 767
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "13076132",
+    "name": "Suckow",
+    "parts": [
+      {
+        "ags": "13076168",
+        "name": "Ruhner Berge",
+        "area_in_sqm": 27256449,
+        "population": 499
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "13076137",
+    "name": "Tessenow",
+    "parts": [
+      {
+        "ags": "13076168",
+        "name": "Ruhner Berge",
+        "area_in_sqm": 35994166,
+        "population": 584
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "13074063",
+    "name": "Pl\u00fcschow",
+    "parts": [
+      {
+        "ags": "13074079",
+        "name": "Upahl",
+        "area_in_sqm": 19899321,
+        "population": 484
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "13071030",
+    "name": "Duckow",
+    "parts": [
+      {
+        "ags": "13071092",
+        "name": "Malchin, Stadt",
+        "area_in_sqm": 14205172,
+        "population": 227
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "13074045",
+    "name": "Lockwisch",
+    "parts": [
+      {
+        "ags": "13074074",
+        "name": "Sch\u00f6nberg, Stadt",
+        "area_in_sqm": 13973850,
+        "population": 369
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "14521030",
+    "name": "Aue, Stadt",
+    "parts": [
+      {
+        "ags": "14521035",
+        "name": "Aue-Bad Schlema, Stadt",
+        "area_in_sqm": 20920661,
+        "population": 16012
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "14521050",
+    "name": "Bad Schlema",
+    "parts": [
+      {
+        "ags": "14521035",
+        "name": "Aue-Bad Schlema, Stadt",
+        "area_in_sqm": 15507718,
+        "population": 4777
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "14625540",
+    "name": "Sch\u00f6nteichen",
+    "parts": [
+      {
+        "ags": "14625250",
+        "name": "Kamenz, Stadt",
+        "area_in_sqm": 45049044,
+        "population": 2095
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "14523010",
+    "name": "Adorf/Vogtl., Stadt",
+    "parts": [
+      {
+        "ags": "14523230",
+        "name": "M\u00fchlental",
+        "area_in_sqm": 36770,
+        "population": 0
+      }
+    ],
+    "remaining_area": 42888099,
+    "remaining_population": 4995,
+    "kind": "PartialSpinOff"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "14523230",
+    "name": "M\u00fchlental",
+    "parts": [
+      {
+        "ags": "14523010",
+        "name": "Adorf/Vogtl., Stadt",
+        "area_in_sqm": 80740,
+        "population": 0
+      }
+    ],
+    "remaining_area": 39559039,
+    "remaining_population": 1283,
+    "kind": "PartialSpinOff"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "14523200",
+    "name": "Markneukirchen, Stadt",
+    "parts": [
+      {
+        "ags": "14523160",
+        "name": "Klingenthal, Stadt",
+        "area_in_sqm": 284,
+        "population": 0
+      }
+    ],
+    "remaining_area": 69060079,
+    "remaining_population": 7648,
+    "kind": "PartialSpinOff"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "14511000",
+    "name": "Chemnitz, Stadt",
+    "parts": [
+      {
+        "ags": "14521120",
+        "name": "Burkhardtsdorf",
+        "area_in_sqm": 30000,
+        "population": 2
+      }
+    ],
+    "remaining_area": 221020451,
+    "remaining_population": 246853,
+    "kind": "PartialSpinOff"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16061022",
+    "name": "Deuna",
+    "parts": [
+      {
+        "ags": "16061074",
+        "name": "Niederorschel",
+        "area_in_sqm": 12824609,
+        "population": 1157
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16061038",
+    "name": "Gerterode",
+    "parts": [
+      {
+        "ags": "16061074",
+        "name": "Niederorschel",
+        "area_in_sqm": 6300643,
+        "population": 350
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16061043",
+    "name": "Hausen",
+    "parts": [
+      {
+        "ags": "16061074",
+        "name": "Niederorschel",
+        "area_in_sqm": 4301980,
+        "population": 416
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16061059",
+    "name": "Kleinbartloff",
+    "parts": [
+      {
+        "ags": "16061074",
+        "name": "Niederorschel",
+        "area_in_sqm": 12626589,
+        "population": 415
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16061004",
+    "name": "Bernterode (bei Heilbad Heiligenstadt)",
+    "parts": [
+      {
+        "ags": "16061045",
+        "name": "Heilbad Heiligenstadt, Stadt",
+        "area_in_sqm": 8620799,
+        "population": 233
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16061025",
+    "name": "Dingelst\u00e4dt, Stadt",
+    "parts": [
+      {
+        "ags": "16061118",
+        "name": "Dingelst\u00e4dt, Stadt",
+        "area_in_sqm": 20450681,
+        "population": 4349
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16061046",
+    "name": "Helmsdorf",
+    "parts": [
+      {
+        "ags": "16061118",
+        "name": "Dingelst\u00e4dt, Stadt",
+        "area_in_sqm": 5239667,
+        "population": 501
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16061054",
+    "name": "Kallmerode",
+    "parts": [
+      {
+        "ags": "16061115",
+        "name": "Leinefelde-Worbis, Stadt",
+        "area_in_sqm": 5611625,
+        "population": 601
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16061055",
+    "name": "Kefferhausen",
+    "parts": [
+      {
+        "ags": "16061118",
+        "name": "Dingelst\u00e4dt, Stadt",
+        "area_in_sqm": 10386157,
+        "population": 723
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16061061",
+    "name": "Kreuzebra",
+    "parts": [
+      {
+        "ags": "16061118",
+        "name": "Dingelst\u00e4dt, Stadt",
+        "area_in_sqm": 13006220,
+        "population": 716
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16061087",
+    "name": "Silberhausen",
+    "parts": [
+      {
+        "ags": "16061118",
+        "name": "Dingelst\u00e4dt, Stadt",
+        "area_in_sqm": 10306663,
+        "population": 612
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16067003",
+    "name": "Ballst\u00e4dt",
+    "parts": [
+      {
+        "ags": "16067091",
+        "name": "Nessetal",
+        "area_in_sqm": 11864576,
+        "population": 650
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16067005",
+    "name": "Br\u00fcheim",
+    "parts": [
+      {
+        "ags": "16067091",
+        "name": "Nessetal",
+        "area_in_sqm": 7437086,
+        "population": 457
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16067006",
+    "name": "Bufleben",
+    "parts": [
+      {
+        "ags": "16067091",
+        "name": "Nessetal",
+        "area_in_sqm": 13150529,
+        "population": 1010
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16067021",
+    "name": "Friedrichswerth",
+    "parts": [
+      {
+        "ags": "16067091",
+        "name": "Nessetal",
+        "area_in_sqm": 4898317,
+        "population": 474
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16067027",
+    "name": "Goldbach",
+    "parts": [
+      {
+        "ags": "16067091",
+        "name": "Nessetal",
+        "area_in_sqm": 12148998,
+        "population": 1642
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16067035",
+    "name": "Haina",
+    "parts": [
+      {
+        "ags": "16067091",
+        "name": "Nessetal",
+        "area_in_sqm": 6721958,
+        "population": 468
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16067037",
+    "name": "Hochheim",
+    "parts": [
+      {
+        "ags": "16067091",
+        "name": "Nessetal",
+        "area_in_sqm": 7670005,
+        "population": 446
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16067056",
+    "name": "Remst\u00e4dt",
+    "parts": [
+      {
+        "ags": "16067091",
+        "name": "Nessetal",
+        "area_in_sqm": 6478382,
+        "population": 970
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16067074",
+    "name": "Wangenheim",
+    "parts": [
+      {
+        "ags": "16067091",
+        "name": "Nessetal",
+        "area_in_sqm": 10001335,
+        "population": 658
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16067075",
+    "name": "Warza",
+    "parts": [
+      {
+        "ags": "16067091",
+        "name": "Nessetal",
+        "area_in_sqm": 6493943,
+        "population": 721
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16067078",
+    "name": "Westhausen",
+    "parts": [
+      {
+        "ags": "16067091",
+        "name": "Nessetal",
+        "area_in_sqm": 4674020,
+        "population": 533
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16067008",
+    "name": "Crawinkel",
+    "parts": [
+      {
+        "ags": "16067053",
+        "name": "Ohrdruf, Stadt",
+        "area_in_sqm": 25227816,
+        "population": 1446
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16067032",
+    "name": "Gr\u00e4fenhain",
+    "parts": [
+      {
+        "ags": "16067053",
+        "name": "Ohrdruf, Stadt",
+        "area_in_sqm": 19375520,
+        "population": 1387
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16067081",
+    "name": "W\u00f6lfis",
+    "parts": [
+      {
+        "ags": "16067053",
+        "name": "Ohrdruf, Stadt",
+        "area_in_sqm": 29218452,
+        "population": 1454
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16069039",
+    "name": "Sachsenbrunn",
+    "parts": [
+      {
+        "ags": "16069012",
+        "name": "Eisfeld, Stadt",
+        "area_in_sqm": 33858415,
+        "population": 2050
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16070015",
+    "name": "Frauenwald",
+    "parts": [
+      {
+        "ags": "16070029",
+        "name": "Ilmenau, Stadt",
+        "area_in_sqm": 19142633,
+        "population": 992
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16070046",
+    "name": "Schmiedefeld am Rennsteig",
+    "parts": [
+      {
+        "ags": "16054000",
+        "name": "Suhl, Stadt",
+        "area_in_sqm": 18171505,
+        "population": 1653
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16070049",
+    "name": "St\u00fctzerbach",
+    "parts": [
+      {
+        "ags": "16070029",
+        "name": "Ilmenau, Stadt",
+        "area_in_sqm": 11366933,
+        "population": 1364
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16070053",
+    "name": "Wipfratal",
+    "parts": [
+      {
+        "ags": "16070004",
+        "name": "Arnstadt, Stadt",
+        "area_in_sqm": 49912569,
+        "population": 2907
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16069002",
+    "name": "Bad Colberg-Heldburg, Stadt",
+    "parts": [
+      {
+        "ags": "16069063",
+        "name": "Heldburg, Stadt",
+        "area_in_sqm": 53389159,
+        "population": 2045
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16069015",
+    "name": "Gompertshausen",
+    "parts": [
+      {
+        "ags": "16069063",
+        "name": "Heldburg, Stadt",
+        "area_in_sqm": 14806482,
+        "population": 434
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16069019",
+    "name": "Hellingen",
+    "parts": [
+      {
+        "ags": "16069063",
+        "name": "Heldburg, Stadt",
+        "area_in_sqm": 44547601,
+        "population": 991
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16070019",
+    "name": "Geraberg",
+    "parts": [
+      {
+        "ags": "16070057",
+        "name": "Geratal",
+        "area_in_sqm": 15049092,
+        "population": 2312
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16070037",
+    "name": "Neusi\u00df",
+    "parts": [
+      {
+        "ags": "16070043",
+        "name": "Plaue, Stadt",
+        "area_in_sqm": 4498776,
+        "population": 214
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16070014",
+    "name": "Frankenhain",
+    "parts": [
+      {
+        "ags": "16070057",
+        "name": "Geratal",
+        "area_in_sqm": 12248371,
+        "population": 711
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16070017",
+    "name": "Gehlberg",
+    "parts": [
+      {
+        "ags": "16054000",
+        "name": "Suhl, Stadt",
+        "area_in_sqm": 20425144,
+        "population": 502
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16070021",
+    "name": "Geschwenda",
+    "parts": [
+      {
+        "ags": "16070057",
+        "name": "Geratal",
+        "area_in_sqm": 5876536,
+        "population": 1979
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16070023",
+    "name": "Gossel",
+    "parts": [
+      {
+        "ags": "16070057",
+        "name": "Geratal",
+        "area_in_sqm": 13613039,
+        "population": 460
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16070024",
+    "name": "Gr\u00e4fenroda",
+    "parts": [
+      {
+        "ags": "16070057",
+        "name": "Geratal",
+        "area_in_sqm": 23311689,
+        "population": 3158
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16070033",
+    "name": "Liebenstein",
+    "parts": [
+      {
+        "ags": "16070057",
+        "name": "Geratal",
+        "area_in_sqm": 12228910,
+        "population": 371
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16070002",
+    "name": "Altenfeld",
+    "parts": [
+      {
+        "ags": "16070058",
+        "name": "Gro\u00dfbreitenbach, Stadt",
+        "area_in_sqm": 17054250,
+        "population": 927
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16070005",
+    "name": "B\u00f6hlen",
+    "parts": [
+      {
+        "ags": "16070058",
+        "name": "Gro\u00dfbreitenbach, Stadt",
+        "area_in_sqm": 6157864,
+        "population": 542
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16070016",
+    "name": "Friedersdorf",
+    "parts": [
+      {
+        "ags": "16070058",
+        "name": "Gro\u00dfbreitenbach, Stadt",
+        "area_in_sqm": 3108427,
+        "population": 195
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16070022",
+    "name": "Gillersdorf",
+    "parts": [
+      {
+        "ags": "16070058",
+        "name": "Gro\u00dfbreitenbach, Stadt",
+        "area_in_sqm": 3833529,
+        "population": 244
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16070025",
+    "name": "Gro\u00dfbreitenbach, Stadt",
+    "parts": [
+      {
+        "ags": "16070058",
+        "name": "Gro\u00dfbreitenbach, Stadt",
+        "area_in_sqm": 19597159,
+        "population": 2582
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16070027",
+    "name": "Herschdorf",
+    "parts": [
+      {
+        "ags": "16070058",
+        "name": "Gro\u00dfbreitenbach, Stadt",
+        "area_in_sqm": 9552707,
+        "population": 809
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16070038",
+    "name": "Neustadt am Rennsteig",
+    "parts": [
+      {
+        "ags": "16070058",
+        "name": "Gro\u00dfbreitenbach, Stadt",
+        "area_in_sqm": 17031923,
+        "population": 918
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16070052",
+    "name": "Wildenspring",
+    "parts": [
+      {
+        "ags": "16070058",
+        "name": "Gro\u00dfbreitenbach, Stadt",
+        "area_in_sqm": 4428919,
+        "population": 170
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16070031",
+    "name": "Kirchheim",
+    "parts": [
+      {
+        "ags": "16070028",
+        "name": "Amt Wachsenburg",
+        "area_in_sqm": 21200728,
+        "population": 1274
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16065002",
+    "name": "Artern/Unstrut, Stadt",
+    "parts": [
+      {
+        "ags": "16065086",
+        "name": "Artern, Stadt",
+        "area_in_sqm": 24189668,
+        "population": 5418
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16065061",
+    "name": "Ro\u00dfleben, Stadt",
+    "parts": [
+      {
+        "ags": "16065087",
+        "name": "Ro\u00dfleben-Wiehe, Stadt",
+        "area_in_sqm": 33567067,
+        "population": 4885
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16065035",
+    "name": "Heygendorf",
+    "parts": [
+      {
+        "ags": "16065086",
+        "name": "Artern, Stadt",
+        "area_in_sqm": 9375958,
+        "population": 536
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16065039",
+    "name": "Ichstedt",
+    "parts": [
+      {
+        "ags": "16065003",
+        "name": "Bad Frankenhausen/Kyffh\u00e4user, Stadt",
+        "area_in_sqm": 9696516,
+        "population": 578
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16065047",
+    "name": "Nausitz",
+    "parts": [
+      {
+        "ags": "16065087",
+        "name": "Ro\u00dfleben-Wiehe, Stadt",
+        "area_in_sqm": 3432290,
+        "population": 169
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16065057",
+    "name": "Ringleben",
+    "parts": [
+      {
+        "ags": "16065003",
+        "name": "Bad Frankenhausen/Kyffh\u00e4user, Stadt",
+        "area_in_sqm": 15143278,
+        "population": 828
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16065076",
+    "name": "Voigtstedt",
+    "parts": [
+      {
+        "ags": "16065086",
+        "name": "Artern, Stadt",
+        "area_in_sqm": 11479010,
+        "population": 877
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16065013",
+    "name": "Donndorf",
+    "parts": [
+      {
+        "ags": "16065087",
+        "name": "Ro\u00dfleben-Wiehe, Stadt",
+        "area_in_sqm": 11544213,
+        "population": 783
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16065081",
+    "name": "Wiehe, Stadt",
+    "parts": [
+      {
+        "ags": "16065087",
+        "name": "Ro\u00dfleben-Wiehe, Stadt",
+        "area_in_sqm": 24533926,
+        "population": 1871
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16065011",
+    "name": "Bretleben",
+    "parts": [
+      {
+        "ags": "16065088",
+        "name": "An der Schm\u00fccke, Stadt",
+        "area_in_sqm": 8691751,
+        "population": 530
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16065022",
+    "name": "Gorsleben",
+    "parts": [
+      {
+        "ags": "16065088",
+        "name": "An der Schm\u00fccke, Stadt",
+        "area_in_sqm": 10810237,
+        "population": 498
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16065031",
+    "name": "Hauteroda",
+    "parts": [
+      {
+        "ags": "16065088",
+        "name": "An der Schm\u00fccke, Stadt",
+        "area_in_sqm": 12657482,
+        "population": 501
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16065033",
+    "name": "Heldrungen, Stadt",
+    "parts": [
+      {
+        "ags": "16065088",
+        "name": "An der Schm\u00fccke, Stadt",
+        "area_in_sqm": 23266785,
+        "population": 2207
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16065034",
+    "name": "Hemleben",
+    "parts": [
+      {
+        "ags": "16065088",
+        "name": "An der Schm\u00fccke, Stadt",
+        "area_in_sqm": 7334967,
+        "population": 225
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16065054",
+    "name": "Oldisleben",
+    "parts": [
+      {
+        "ags": "16065088",
+        "name": "An der Schm\u00fccke, Stadt",
+        "area_in_sqm": 32522248,
+        "population": 2196
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16062014",
+    "name": "Hainrode/Hainleite",
+    "parts": [
+      {
+        "ags": "16062066",
+        "name": "Bleicherode, Stadt",
+        "area_in_sqm": 8788113,
+        "population": 352
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16062039",
+    "name": "Nohra",
+    "parts": [
+      {
+        "ags": "16062066",
+        "name": "Bleicherode, Stadt",
+        "area_in_sqm": 16212414,
+        "population": 811
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16062058",
+    "name": "Wipperdorf",
+    "parts": [
+      {
+        "ags": "16062066",
+        "name": "Bleicherode, Stadt",
+        "area_in_sqm": 18305855,
+        "population": 1368
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16062059",
+    "name": "Wolkramshausen",
+    "parts": [
+      {
+        "ags": "16062066",
+        "name": "Bleicherode, Stadt",
+        "area_in_sqm": 10834900,
+        "population": 936
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16062002",
+    "name": "Bleicherode, Stadt",
+    "parts": [
+      {
+        "ags": "16062066",
+        "name": "Bleicherode, Stadt",
+        "area_in_sqm": 28317223,
+        "population": 6134
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16062006",
+    "name": "Etzelsrode",
+    "parts": [
+      {
+        "ags": "16062066",
+        "name": "Bleicherode, Stadt",
+        "area_in_sqm": 3559579,
+        "population": 88
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16062007",
+    "name": "Friedrichsthal",
+    "parts": [
+      {
+        "ags": "16062066",
+        "name": "Bleicherode, Stadt",
+        "area_in_sqm": 12340179,
+        "population": 220
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16062025",
+    "name": "Kleinbodungen",
+    "parts": [
+      {
+        "ags": "16062066",
+        "name": "Bleicherode, Stadt",
+        "area_in_sqm": 5247468,
+        "population": 353
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16062029",
+    "name": "Kraja",
+    "parts": [
+      {
+        "ags": "16062066",
+        "name": "Bleicherode, Stadt",
+        "area_in_sqm": 4425161,
+        "population": 301
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16074006",
+    "name": "Bollberg",
+    "parts": [
+      {
+        "ags": "16074094",
+        "name": "Stadtroda, Stadt",
+        "area_in_sqm": 3344472,
+        "population": 287
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16074069",
+    "name": "Quirla",
+    "parts": [
+      {
+        "ags": "16074094",
+        "name": "Stadtroda, Stadt",
+        "area_in_sqm": 4073415,
+        "population": 504
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16075002",
+    "name": "Birkenh\u00fcgel",
+    "parts": [
+      {
+        "ags": "16075136",
+        "name": "Rosenthal am Rennsteig",
+        "area_in_sqm": 5549150,
+        "population": 364
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16075003",
+    "name": "Blankenberg",
+    "parts": [
+      {
+        "ags": "16075136",
+        "name": "Rosenthal am Rennsteig",
+        "area_in_sqm": 3705233,
+        "population": 902
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16075004",
+    "name": "Blankenstein",
+    "parts": [
+      {
+        "ags": "16075136",
+        "name": "Rosenthal am Rennsteig",
+        "area_in_sqm": 1535382,
+        "population": 705
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16075042",
+    "name": "Harra",
+    "parts": [
+      {
+        "ags": "16075136",
+        "name": "Rosenthal am Rennsteig",
+        "area_in_sqm": 13998145,
+        "population": 828
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16075071",
+    "name": "Neundorf (bei Lobenstein)",
+    "parts": [
+      {
+        "ags": "16075136",
+        "name": "Rosenthal am Rennsteig",
+        "area_in_sqm": 11809152,
+        "population": 553
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16075086",
+    "name": "Pottiga",
+    "parts": [
+      {
+        "ags": "16075136",
+        "name": "Rosenthal am Rennsteig",
+        "area_in_sqm": 7602948,
+        "population": 397
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16075097",
+    "name": "Schlegel",
+    "parts": [
+      {
+        "ags": "16075136",
+        "name": "Rosenthal am Rennsteig",
+        "area_in_sqm": 12288310,
+        "population": 299
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16075008",
+    "name": "Bucha",
+    "parts": [
+      {
+        "ags": "16075049",
+        "name": "Knau",
+        "area_in_sqm": 3173780,
+        "population": 93
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16075106",
+    "name": "Stanau",
+    "parts": [
+      {
+        "ags": "16075073",
+        "name": "Neustadt an der Orla, Stadt",
+        "area_in_sqm": 4281473,
+        "population": 117
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16075013",
+    "name": "Crispendorf",
+    "parts": [
+      {
+        "ags": "16075098",
+        "name": "Schleiz, Stadt",
+        "area_in_sqm": 11407449,
+        "population": 378
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16073112",
+    "name": "K\u00f6nigsee-Rottenbach, Stadt",
+    "new_ags": "16073112",
+    "new_name": "K\u00f6nigsee, Stadt",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16073056",
+    "name": "Meuselbach-Schwarzm\u00fchle",
+    "parts": [
+      {
+        "ags": "16073113",
+        "name": "Schwarzatal, Stadt",
+        "area_in_sqm": 7518652,
+        "population": 1064
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16073065",
+    "name": "Oberwei\u00dfbach/Th\u00fcr. Wald, Stadt",
+    "parts": [
+      {
+        "ags": "16073113",
+        "name": "Schwarzatal, Stadt",
+        "area_in_sqm": 9648082,
+        "population": 1678
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16073021",
+    "name": "Dr\u00f6bischau",
+    "parts": [
+      {
+        "ags": "16073112",
+        "name": "K\u00f6nigsee-Rottenbach, Stadt",
+        "area_in_sqm": 4637895,
+        "population": 409
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16073054",
+    "name": "Mellenbach-Glasbach",
+    "parts": [
+      {
+        "ags": "16073113",
+        "name": "Schwarzatal, Stadt",
+        "area_in_sqm": 8815786,
+        "population": 930
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16073063",
+    "name": "Oberhain",
+    "parts": [
+      {
+        "ags": "16073112",
+        "name": "K\u00f6nigsee-Rottenbach, Stadt",
+        "area_in_sqm": 14082887,
+        "population": 652
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16073049",
+    "name": "Lichte",
+    "parts": [
+      {
+        "ags": "16072013",
+        "name": "Neuhaus am Rennweg, Stadt",
+        "area_in_sqm": 19355001,
+        "population": 1526
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16073066",
+    "name": "Piesau",
+    "parts": [
+      {
+        "ags": "16072013",
+        "name": "Neuhaus am Rennweg, Stadt",
+        "area_in_sqm": 7889463,
+        "population": 715
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16073068",
+    "name": "Reichmannsdorf",
+    "parts": [
+      {
+        "ags": "16073077",
+        "name": "Saalfeld/Saale, Stadt",
+        "area_in_sqm": 19990287,
+        "population": 767
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16073079",
+    "name": "Schmiedefeld",
+    "parts": [
+      {
+        "ags": "16073077",
+        "name": "Saalfeld/Saale, Stadt",
+        "area_in_sqm": 9536174,
+        "population": 996
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16073105",
+    "name": "Remda-Teichel, Stadt",
+    "parts": [
+      {
+        "ags": "16073076",
+        "name": "Rudolstadt, Stadt",
+        "area_in_sqm": 79763297,
+        "population": 2898
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16066001",
+    "name": "Altersbach",
+    "parts": [
+      {
+        "ags": "16066069",
+        "name": "Steinbach-Hallenberg, Kurort, Stadt",
+        "area_in_sqm": 3154257,
+        "population": 446
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16066008",
+    "name": "Bermbach",
+    "parts": [
+      {
+        "ags": "16066069",
+        "name": "Steinbach-Hallenberg, Kurort, Stadt",
+        "area_in_sqm": 6268026,
+        "population": 504
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16066051",
+    "name": "Obersch\u00f6nau, Kurort",
+    "parts": [
+      {
+        "ags": "16066069",
+        "name": "Steinbach-Hallenberg, Kurort, Stadt",
+        "area_in_sqm": 16117208,
+        "population": 783
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16066062",
+    "name": "Rotterode",
+    "parts": [
+      {
+        "ags": "16066069",
+        "name": "Steinbach-Hallenberg, Kurort, Stadt",
+        "area_in_sqm": 6736720,
+        "population": 702
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16066077",
+    "name": "Untersch\u00f6nau",
+    "parts": [
+      {
+        "ags": "16066069",
+        "name": "Steinbach-Hallenberg, Kurort, Stadt",
+        "area_in_sqm": 5904924,
+        "population": 485
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16066082",
+    "name": "Viernau",
+    "parts": [
+      {
+        "ags": "16066069",
+        "name": "Steinbach-Hallenberg, Kurort, Stadt",
+        "area_in_sqm": 15904017,
+        "population": 1926
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16066006",
+    "name": "Benshausen",
+    "parts": [
+      {
+        "ags": "16066092",
+        "name": "Zella-Mehlis, Stadt",
+        "area_in_sqm": 24919208,
+        "population": 2333
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16066084",
+    "name": "Wallbach",
+    "parts": [
+      {
+        "ags": "16066042",
+        "name": "Meiningen, Stadt",
+        "area_in_sqm": 5069818,
+        "population": 375
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16066085",
+    "name": "Walldorf",
+    "parts": [
+      {
+        "ags": "16066042",
+        "name": "Meiningen, Stadt",
+        "area_in_sqm": 12156171,
+        "population": 2164
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16066028",
+    "name": "Henneberg",
+    "parts": [
+      {
+        "ags": "16066042",
+        "name": "Meiningen, Stadt",
+        "area_in_sqm": 13199466,
+        "population": 602
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16066033",
+    "name": "H\u00fcmpfershausen",
+    "parts": [
+      {
+        "ags": "16066086",
+        "name": "Wasungen, Stadt",
+        "area_in_sqm": 13299523,
+        "population": 418
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16066044",
+    "name": "Metzels",
+    "parts": [
+      {
+        "ags": "16066086",
+        "name": "Wasungen, Stadt",
+        "area_in_sqm": 16176261,
+        "population": 654
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16066053",
+    "name": "Oepfershausen",
+    "parts": [
+      {
+        "ags": "16066086",
+        "name": "Wasungen, Stadt",
+        "area_in_sqm": 12260086,
+        "population": 461
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16066075",
+    "name": "Unterkatz",
+    "parts": [
+      {
+        "ags": "16066086",
+        "name": "Wasungen, Stadt",
+        "area_in_sqm": 9826791,
+        "population": 359
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16066083",
+    "name": "Wahns",
+    "parts": [
+      {
+        "ags": "16066086",
+        "name": "Wasungen, Stadt",
+        "area_in_sqm": 8010993,
+        "population": 407
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16066088",
+    "name": "W\u00f6lfershausen",
+    "parts": [
+      {
+        "ags": "16066094",
+        "name": "Grabfeld",
+        "area_in_sqm": 4345517,
+        "population": 357
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16068006",
+    "name": "Buttst\u00e4dt, Stadt",
+    "parts": [
+      {
+        "ags": "16068063",
+        "name": "Buttst\u00e4dt, Stadt",
+        "area_in_sqm": 18357266,
+        "population": 2502
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16068008",
+    "name": "Ellersleben",
+    "parts": [
+      {
+        "ags": "16068063",
+        "name": "Buttst\u00e4dt, Stadt",
+        "area_in_sqm": 6481452,
+        "population": 253
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16068011",
+    "name": "E\u00dfleben-Teutleben",
+    "parts": [
+      {
+        "ags": "16068063",
+        "name": "Buttst\u00e4dt, Stadt",
+        "area_in_sqm": 7653864,
+        "population": 287
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16068016",
+    "name": "Gro\u00dfbrembach",
+    "parts": [
+      {
+        "ags": "16068063",
+        "name": "Buttst\u00e4dt, Stadt",
+        "area_in_sqm": 16278066,
+        "population": 694
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16068023",
+    "name": "Guthmannshausen",
+    "parts": [
+      {
+        "ags": "16068063",
+        "name": "Buttst\u00e4dt, Stadt",
+        "area_in_sqm": 10124400,
+        "population": 712
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16068024",
+    "name": "Hardisleben",
+    "parts": [
+      {
+        "ags": "16068063",
+        "name": "Buttst\u00e4dt, Stadt",
+        "area_in_sqm": 9429580,
+        "population": 551
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16068031",
+    "name": "Kleinbrembach",
+    "parts": [
+      {
+        "ags": "16068063",
+        "name": "Buttst\u00e4dt, Stadt",
+        "area_in_sqm": 8152401,
+        "population": 304
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16068035",
+    "name": "Mannstedt",
+    "parts": [
+      {
+        "ags": "16068063",
+        "name": "Buttst\u00e4dt, Stadt",
+        "area_in_sqm": 7367137,
+        "population": 356
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16068038",
+    "name": "Olbersleben",
+    "parts": [
+      {
+        "ags": "16068063",
+        "name": "Buttst\u00e4dt, Stadt",
+        "area_in_sqm": 13161640,
+        "population": 711
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16068046",
+    "name": "Rudersdorf",
+    "parts": [
+      {
+        "ags": "16068063",
+        "name": "Buttst\u00e4dt, Stadt",
+        "area_in_sqm": 7795955,
+        "population": 328
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16068004",
+    "name": "Bilzingsleben",
+    "parts": [
+      {
+        "ags": "16068064",
+        "name": "Kindelbr\u00fcck, Stadt",
+        "area_in_sqm": 16853547,
+        "population": 669
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16068012",
+    "name": "Fr\u00f6mmstedt",
+    "parts": [
+      {
+        "ags": "16068064",
+        "name": "Kindelbr\u00fcck, Stadt",
+        "area_in_sqm": 12105007,
+        "population": 500
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16068027",
+    "name": "Herrnschwende",
+    "parts": [
+      {
+        "ags": "16068058",
+        "name": "Wei\u00dfensee, Stadt",
+        "area_in_sqm": 8622141,
+        "population": 273
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16068028",
+    "name": "Kannawurf",
+    "parts": [
+      {
+        "ags": "16068064",
+        "name": "Kindelbr\u00fcck, Stadt",
+        "area_in_sqm": 15530137,
+        "population": 783
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16068029",
+    "name": "Kindelbr\u00fcck, Stadt",
+    "parts": [
+      {
+        "ags": "16068064",
+        "name": "Kindelbr\u00fcck, Stadt",
+        "area_in_sqm": 13356664,
+        "population": 1894
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16068003",
+    "name": "Beichlingen",
+    "parts": [
+      {
+        "ags": "16068034",
+        "name": "K\u00f6lleda, Stadt",
+        "area_in_sqm": 19116304,
+        "population": 498
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16064066",
+    "name": "Weinbergen",
+    "parts": [
+      {
+        "ags": "16064046",
+        "name": "M\u00fchlhausen/Th\u00fcringen, Stadt",
+        "area_in_sqm": 43963887,
+        "population": 3068
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16064001",
+    "name": "Altengottern",
+    "parts": [
+      {
+        "ags": "16064076",
+        "name": "Unstrut-Hainich",
+        "area_in_sqm": 18326381,
+        "population": 1017
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16064017",
+    "name": "Flarchheim",
+    "parts": [
+      {
+        "ags": "16064076",
+        "name": "Unstrut-Hainich",
+        "area_in_sqm": 11856220,
+        "population": 417
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16064018",
+    "name": "Gro\u00dfengottern",
+    "parts": [
+      {
+        "ags": "16064076",
+        "name": "Unstrut-Hainich",
+        "area_in_sqm": 19340428,
+        "population": 2286
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16064023",
+    "name": "Heroldishausen",
+    "parts": [
+      {
+        "ags": "16064076",
+        "name": "Unstrut-Hainich",
+        "area_in_sqm": 3212217,
+        "population": 192
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16064047",
+    "name": "M\u00fclverstedt",
+    "parts": [
+      {
+        "ags": "16064076",
+        "name": "Unstrut-Hainich",
+        "area_in_sqm": 23244360,
+        "population": 681
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16064065",
+    "name": "Weberstedt",
+    "parts": [
+      {
+        "ags": "16064076",
+        "name": "Unstrut-Hainich",
+        "area_in_sqm": 18359789,
+        "population": 597
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16064036",
+    "name": "Klettstedt",
+    "parts": [
+      {
+        "ags": "16064003",
+        "name": "Bad Langensalza, Stadt",
+        "area_in_sqm": 5700597,
+        "population": 218
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16063039",
+    "name": "Ifta",
+    "parts": [
+      {
+        "ags": "16063076",
+        "name": "Treffurt, Stadt",
+        "area_in_sqm": 17686816,
+        "population": 1100
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16063007",
+    "name": "Berka/Werra, Stadt",
+    "parts": [
+      {
+        "ags": "16063103",
+        "name": "Werra-Suhl-Tal, Stadt",
+        "area_in_sqm": 57090351,
+        "population": 4231
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16063014",
+    "name": "Dankmarshausen",
+    "parts": [
+      {
+        "ags": "16063103",
+        "name": "Werra-Suhl-Tal, Stadt",
+        "area_in_sqm": 11212300,
+        "population": 971
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16063017",
+    "name": "Dippach",
+    "parts": [
+      {
+        "ags": "16063103",
+        "name": "Werra-Suhl-Tal, Stadt",
+        "area_in_sqm": 6087205,
+        "population": 1071
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16063036",
+    "name": "Gro\u00dfensee",
+    "parts": [
+      {
+        "ags": "16063103",
+        "name": "Werra-Suhl-Tal, Stadt",
+        "area_in_sqm": 3277001,
+        "population": 191
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16063009",
+    "name": "Brunnhartshausen",
+    "parts": [
+      {
+        "ags": "16063015",
+        "name": "Dermbach",
+        "area_in_sqm": 10647758,
+        "population": 348
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16063059",
+    "name": "Neidhartshausen",
+    "parts": [
+      {
+        "ags": "16063015",
+        "name": "Dermbach",
+        "area_in_sqm": 7612596,
+        "population": 347
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16063072",
+    "name": "Stadtlengsfeld, Stadt",
+    "parts": [
+      {
+        "ags": "16063015",
+        "name": "Dermbach",
+        "area_in_sqm": 27701382,
+        "population": 2356
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16063081",
+    "name": "Urnshausen",
+    "parts": [
+      {
+        "ags": "16063015",
+        "name": "Dermbach",
+        "area_in_sqm": 15985542,
+        "population": 708
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16063093",
+    "name": "Zella/Rh\u00f6n",
+    "parts": [
+      {
+        "ags": "16063015",
+        "name": "Dermbach",
+        "area_in_sqm": 1717402,
+        "population": 412
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16063016",
+    "name": "Diedorf/Rh\u00f6n",
+    "parts": [
+      {
+        "ags": "16063015",
+        "name": "Dermbach",
+        "area_in_sqm": 4763236,
+        "population": 345
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16071044",
+    "name": "K\u00f6dderitzsch",
+    "parts": [
+      {
+        "ags": "16071004",
+        "name": "Bad Sulza, Stadt",
+        "area_in_sqm": 2822835,
+        "population": 124
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16077002",
+    "name": "Altkirchen",
+    "parts": [
+      {
+        "ags": "16077043",
+        "name": "Schm\u00f6lln, Stadt",
+        "area_in_sqm": 20068527,
+        "population": 990
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16077004",
+    "name": "Drogen",
+    "parts": [
+      {
+        "ags": "16077043",
+        "name": "Schm\u00f6lln, Stadt",
+        "area_in_sqm": 4275496,
+        "population": 123
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16077029",
+    "name": "Lumpzig",
+    "parts": [
+      {
+        "ags": "16077043",
+        "name": "Schm\u00f6lln, Stadt",
+        "area_in_sqm": 10736410,
+        "population": 493
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16077037",
+    "name": "N\u00f6bdenitz",
+    "parts": [
+      {
+        "ags": "16077043",
+        "name": "Schm\u00f6lln, Stadt",
+        "area_in_sqm": 10016242,
+        "population": 857
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16077051",
+    "name": "Wildenb\u00f6rten",
+    "parts": [
+      {
+        "ags": "16077043",
+        "name": "Schm\u00f6lln, Stadt",
+        "area_in_sqm": 7823613,
+        "population": 258
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16063102",
+    "name": "Kaltennordheim, Stadt",
+    "parts": [
+      {
+        "ags": "16066095",
+        "name": "Kaltennordheim, Stadt",
+        "area_in_sqm": 40475887,
+        "population": 3326
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16066002",
+    "name": "Aschenhausen",
+    "parts": [
+      {
+        "ags": "16066095",
+        "name": "Kaltennordheim, Stadt",
+        "area_in_sqm": 3636918,
+        "population": 136
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16066035",
+    "name": "Kaltensundheim",
+    "parts": [
+      {
+        "ags": "16066095",
+        "name": "Kaltennordheim, Stadt",
+        "area_in_sqm": 11801200,
+        "population": 795
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16066036",
+    "name": "Kaltenwestheim",
+    "parts": [
+      {
+        "ags": "16066095",
+        "name": "Kaltennordheim, Stadt",
+        "area_in_sqm": 19427676,
+        "population": 905
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16066043",
+    "name": "Melpers",
+    "parts": [
+      {
+        "ags": "16066095",
+        "name": "Kaltennordheim, Stadt",
+        "area_in_sqm": 2829159,
+        "population": 90
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16066048",
+    "name": "Oberkatz",
+    "parts": [
+      {
+        "ags": "16066095",
+        "name": "Kaltennordheim, Stadt",
+        "area_in_sqm": 9111935,
+        "population": 239
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16066078",
+    "name": "Unterweid",
+    "parts": [
+      {
+        "ags": "16066095",
+        "name": "Kaltennordheim, Stadt",
+        "area_in_sqm": 7130570,
+        "population": 417
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16071007",
+    "name": "Berlstedt",
+    "parts": [
+      {
+        "ags": "16071102",
+        "name": "Am Ettersberg, Stadt",
+        "area_in_sqm": 18968184,
+        "population": 1770
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16071011",
+    "name": "Buttelstedt, Stadt",
+    "parts": [
+      {
+        "ags": "16071102",
+        "name": "Am Ettersberg, Stadt",
+        "area_in_sqm": 18853143,
+        "population": 1317
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16071023",
+    "name": "Gro\u00dfobringen",
+    "parts": [
+      {
+        "ags": "16071102",
+        "name": "Am Ettersberg, Stadt",
+        "area_in_sqm": 7648910,
+        "population": 898
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16071028",
+    "name": "Heichelheim",
+    "parts": [
+      {
+        "ags": "16071102",
+        "name": "Am Ettersberg, Stadt",
+        "area_in_sqm": 3521625,
+        "population": 304
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16071039",
+    "name": "Kleinobringen",
+    "parts": [
+      {
+        "ags": "16071102",
+        "name": "Am Ettersberg, Stadt",
+        "area_in_sqm": 3108889,
+        "population": 317
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16071047",
+    "name": "Krautheim",
+    "parts": [
+      {
+        "ags": "16071102",
+        "name": "Am Ettersberg, Stadt",
+        "area_in_sqm": 10243350,
+        "population": 499
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16071051",
+    "name": "Leutenthal",
+    "parts": [
+      {
+        "ags": "16071101",
+        "name": "Ilmtal-Weinstra\u00dfe",
+        "area_in_sqm": 5507535,
+        "population": 256
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16071076",
+    "name": "Ramsla",
+    "parts": [
+      {
+        "ags": "16071102",
+        "name": "Am Ettersberg, Stadt",
+        "area_in_sqm": 4049519,
+        "population": 304
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16071081",
+    "name": "Rohrbach",
+    "parts": [
+      {
+        "ags": "16071101",
+        "name": "Ilmtal-Weinstra\u00dfe",
+        "area_in_sqm": 3477298,
+        "population": 207
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16071082",
+    "name": "Sachsenhausen",
+    "parts": [
+      {
+        "ags": "16071102",
+        "name": "Am Ettersberg, Stadt",
+        "area_in_sqm": 4856636,
+        "population": 358
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16071085",
+    "name": "Schwerstedt",
+    "parts": [
+      {
+        "ags": "16071102",
+        "name": "Am Ettersberg, Stadt",
+        "area_in_sqm": 6810006,
+        "population": 329
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16071092",
+    "name": "Vippachedelhausen",
+    "parts": [
+      {
+        "ags": "16071102",
+        "name": "Am Ettersberg, Stadt",
+        "area_in_sqm": 10336828,
+        "population": 558
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16071097",
+    "name": "Wohlsborn",
+    "parts": [
+      {
+        "ags": "16071102",
+        "name": "Am Ettersberg, Stadt",
+        "area_in_sqm": 4043720,
+        "population": 477
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16071048",
+    "name": "Kromsdorf",
+    "parts": [
+      {
+        "ags": "16071101",
+        "name": "Ilmtal-Weinstra\u00dfe",
+        "area_in_sqm": 10736760,
+        "population": 1449
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "07132002",
+    "name": "Alsdorf",
+    "parts": [
+      {
+        "ags": "07132101",
+        "name": "Schutzbach",
+        "area_in_sqm": 2155,
+        "population": 0
+      }
+    ],
+    "remaining_area": 5924173,
+    "remaining_population": 1498,
+    "kind": "PartialSpinOff"
+  },
+  {
+    "effective_date": "2019-02-21",
+    "ags": "06633028",
+    "name": "Wolfhagen, Stadt",
+    "new_ags": "06633028",
+    "new_name": "Wolfhagen, Hans-Staden-Stadt",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2019-02-21",
+    "ags": "06635009",
+    "name": "Edertal",
+    "new_ags": "06635009",
+    "new_name": "Edertal, Nationalparkgemeinde",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2019-02-21",
+    "ags": "06635010",
+    "name": "Frankenau, Stadt",
+    "new_ags": "06635010",
+    "new_name": "Frankenau, Nationalparkstadt",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2019-02-21",
+    "ags": "06635019",
+    "name": "V\u00f6hl",
+    "new_ags": "06635019",
+    "new_name": "V\u00f6hl, Nationalparkgemeinde",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2019-03-17",
+    "ags": "06531007",
+    "name": "Heuchelheim",
+    "new_ags": "06531007",
+    "new_name": "Heuchelheim a. d. Lahn",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2019-05-26",
+    "ags": "13071038",
+    "name": "Genzkow",
+    "parts": [
+      {
+        "ags": "13071035",
+        "name": "Friedland, Stadt",
+        "area_in_sqm": 9117787,
+        "population": 116
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-05-26",
+    "ags": "13071116",
+    "name": "Petersdorf",
+    "parts": [
+      {
+        "ags": "13071164",
+        "name": "Woldegk, Stadt",
+        "area_in_sqm": 7860468,
+        "population": 148
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-05-26",
+    "ags": "13072016",
+    "name": "Boddin",
+    "parts": [
+      {
+        "ags": "13072111",
+        "name": "Walkendorf",
+        "area_in_sqm": 23617683,
+        "population": 314
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-05-26",
+    "ags": "13072068",
+    "name": "L\u00fchburg",
+    "parts": [
+      {
+        "ags": "13072111",
+        "name": "Walkendorf",
+        "area_in_sqm": 17374406,
+        "population": 215
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-05-26",
+    "ags": "13072025",
+    "name": "Diekhof",
+    "parts": [
+      {
+        "ags": "13072062",
+        "name": "Laage, Stadt",
+        "area_in_sqm": 33305724,
+        "population": 909
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-05-26",
+    "ags": "13076043",
+    "name": "Gischow",
+    "parts": [
+      {
+        "ags": "13076089",
+        "name": "L\u00fcbz, Stadt",
+        "area_in_sqm": 16957788,
+        "population": 233
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-05-26",
+    "ags": "13076123",
+    "name": "Setzin",
+    "parts": [
+      {
+        "ags": "13076169",
+        "name": "Toddin",
+        "area_in_sqm": 20622968,
+        "population": 465
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-05-26",
+    "ags": "13076139",
+    "name": "Toddin",
+    "parts": [
+      {
+        "ags": "13076169",
+        "name": "Toddin",
+        "area_in_sqm": 11036806,
+        "population": 449
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-05-26",
+    "ags": "13075028",
+    "name": "Diedrichshagen",
+    "parts": [
+      {
+        "ags": "13075142",
+        "name": "Weitenhagen",
+        "area_in_sqm": 17348736,
+        "population": 548
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-05-26",
+    "ags": "13074029",
+    "name": "Gro\u00df Siemz",
+    "parts": [
+      {
+        "ags": "13074094",
+        "name": "Siemz-Niendorf",
+        "area_in_sqm": 14823831,
+        "population": 308
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-05-26",
+    "ags": "13074058",
+    "name": "Niendorf",
+    "parts": [
+      {
+        "ags": "13074094",
+        "name": "Siemz-Niendorf",
+        "area_in_sqm": 11536409,
+        "population": 314
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-05-26",
+    "ags": "13071149",
+    "name": "Varchentin",
+    "parts": [
+      {
+        "ags": "13071056",
+        "name": "Gro\u00df Plasten",
+        "area_in_sqm": 17379373,
+        "population": 291
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-05-26",
+    "ags": "13071046",
+    "name": "Grabow-Below",
+    "parts": [
+      {
+        "ags": "13071175",
+        "name": "Eldetal",
+        "area_in_sqm": 13628192,
+        "population": 103
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-05-26",
+    "ags": "13071095",
+    "name": "Massow",
+    "parts": [
+      {
+        "ags": "13071175",
+        "name": "Eldetal",
+        "area_in_sqm": 17421487,
+        "population": 190
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-05-26",
+    "ags": "13071165",
+    "name": "Wredenhagen",
+    "parts": [
+      {
+        "ags": "13071175",
+        "name": "Eldetal",
+        "area_in_sqm": 28247010,
+        "population": 448
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-05-26",
+    "ags": "13071168",
+    "name": "Zepkow",
+    "parts": [
+      {
+        "ags": "13071175",
+        "name": "Eldetal",
+        "area_in_sqm": 12631616,
+        "population": 187
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-05-26",
+    "ags": "13075057",
+    "name": "Karlsburg",
+    "parts": [
+      {
+        "ags": "13075156",
+        "name": "Karlsburg",
+        "area_in_sqm": 28717183,
+        "population": 1173
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-05-26",
+    "ags": "13075086",
+    "name": "L\u00fchmannsdorf",
+    "parts": [
+      {
+        "ags": "13075156",
+        "name": "Karlsburg",
+        "area_in_sqm": 5656568,
+        "population": 679
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-05-26",
+    "ags": "13073047",
+    "name": "Kummerow",
+    "parts": [
+      {
+        "ags": "13073060",
+        "name": "Niepars",
+        "area_in_sqm": 11581667,
+        "population": 316
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-05-26",
+    "ags": "13073058",
+    "name": "Neu Bartelshagen",
+    "parts": [
+      {
+        "ags": "13073060",
+        "name": "Niepars",
+        "area_in_sqm": 17442219,
+        "population": 320
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-05-26",
+    "ags": "13072052",
+    "name": "Kirch Mulsow",
+    "parts": [
+      {
+        "ags": "13072022",
+        "name": "Carinerland",
+        "area_in_sqm": 14506828,
+        "population": 298
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-05-26",
+    "ags": "13076084",
+    "name": "Leussow",
+    "parts": [
+      {
+        "ags": "13076046",
+        "name": "G\u00f6hlen",
+        "area_in_sqm": 19935441,
+        "population": 248
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-05-26",
+    "ags": "13071091",
+    "name": "Ludorf",
+    "parts": [
+      {
+        "ags": "13071176",
+        "name": "S\u00fcdm\u00fcritz",
+        "area_in_sqm": 48515338,
+        "population": 481
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-05-26",
+    "ags": "13071152",
+    "name": "Vipperow",
+    "parts": [
+      {
+        "ags": "13071176",
+        "name": "S\u00fcdm\u00fcritz",
+        "area_in_sqm": 21000392,
+        "population": 411
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-07-01",
+    "ags": "07339027",
+    "name": "Heidesheim am Rhein",
+    "parts": [
+      {
+        "ags": "07339030",
+        "name": "Ingelheim am Rhein, Stadt",
+        "area_in_sqm": 17562600,
+        "population": 7619
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-07-01",
+    "ags": "07339061",
+    "name": "Wackernheim",
+    "parts": [
+      {
+        "ags": "07339030",
+        "name": "Ingelheim am Rhein, Stadt",
+        "area_in_sqm": 5890261,
+        "population": 2517
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16068063",
+    "name": "Buttst\u00e4dt, Stadt",
+    "new_ags": "16068063",
+    "new_name": "Buttst\u00e4dt",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "16068064",
+    "name": "Kindelbr\u00fcck, Stadt",
+    "new_ags": "16068064",
+    "new_name": "Kindelbr\u00fcck",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2019-08-01",
+    "ags": "16071102",
+    "name": "Am Ettersberg, Stadt",
+    "new_ags": "16071102",
+    "new_name": "Am Ettersberg",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2019-08-13",
+    "ags": "06433011",
+    "name": "Riedstadt, Stadt",
+    "new_ags": "06433011",
+    "new_name": "Riedstadt, B\u00fcchnerstadt",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2019-08-31",
+    "ags": "06634004",
+    "name": "Frielendorf",
+    "new_ags": "06634004",
+    "new_name": "Frielendorf, Marktflecken",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "01053002",
+    "name": "Alt M\u00f6lln",
+    "new_ags": "01053002",
+    "new_name": "Alt-M\u00f6lln",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "10042115",
+    "name": "Perl",
+    "parts": [
+      {
+        "ags": "10042999",
+        "name": "Deutsch-luxemburgisches Hoheitsgebiet",
+        "area_in_sqm": 1034530,
+        "population": 0
+      }
+    ],
+    "remaining_area": 75235470,
+    "remaining_population": 8566,
+    "kind": "PartialSpinOff"
+  },
+  {
+    "effective_date": "2019-12-05",
+    "ags": "09377142",
+    "name": "Neualbenreuth, M",
+    "new_ags": "09377142",
+    "new_name": "Bad Neualbenreuth, M",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "16067083",
+    "name": "Leinatal",
+    "parts": [
+      {
+        "ags": "16067092",
+        "name": "Georgenthal",
+        "area_in_sqm": 36016008,
+        "population": 3581
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "16067025",
+    "name": "Georgenthal/Th\u00fcr. Wald",
+    "parts": [
+      {
+        "ags": "16067092",
+        "name": "Georgenthal",
+        "area_in_sqm": 28798903,
+        "population": 2712
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "16067039",
+    "name": "Hohenkirchen",
+    "parts": [
+      {
+        "ags": "16067092",
+        "name": "Georgenthal",
+        "area_in_sqm": 6814764,
+        "population": 708
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "16067054",
+    "name": "Petriroda",
+    "parts": [
+      {
+        "ags": "16067092",
+        "name": "Georgenthal",
+        "area_in_sqm": 3150873,
+        "population": 300
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "16076052",
+    "name": "Neum\u00fchle/Elster",
+    "parts": [
+      {
+        "ags": "16076022",
+        "name": "Greiz, Stadt",
+        "area_in_sqm": 8428294,
+        "population": 421
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "16070044",
+    "name": "Rockhausen",
+    "parts": [
+      {
+        "ags": "16070028",
+        "name": "Amt Wachsenburg",
+        "area_in_sqm": 4005938,
+        "population": 276
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "16070003",
+    "name": "Angelroda",
+    "parts": [
+      {
+        "ags": "16070034",
+        "name": "Martinroda",
+        "area_in_sqm": 4946633,
+        "population": 377
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "16065072",
+    "name": "Th\u00fcringenhausen",
+    "parts": [
+      {
+        "ags": "16065014",
+        "name": "Ebeleben, Stadt",
+        "area_in_sqm": 3800714,
+        "population": 108
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "16075018",
+    "name": "Dreba",
+    "parts": [
+      {
+        "ags": "16075073",
+        "name": "Neustadt an der Orla, Stadt",
+        "area_in_sqm": 12470422,
+        "population": 233
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "16075049",
+    "name": "Knau",
+    "parts": [
+      {
+        "ags": "16075073",
+        "name": "Neustadt an der Orla, Stadt",
+        "area_in_sqm": 15929882,
+        "population": 718
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "16075061",
+    "name": "Linda b. Neustadt an der Orla",
+    "parts": [
+      {
+        "ags": "16075073",
+        "name": "Neustadt an der Orla, Stadt",
+        "area_in_sqm": 16663555,
+        "population": 381
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "16075009",
+    "name": "Burgk",
+    "parts": [
+      {
+        "ags": "16075098",
+        "name": "Schleiz, Stadt",
+        "area_in_sqm": 13658598,
+        "population": 82
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "16066071",
+    "name": "Stepfershausen",
+    "parts": [
+      {
+        "ags": "16066042",
+        "name": "Meiningen, Stadt",
+        "area_in_sqm": 15758747,
+        "population": 619
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "16068026",
+    "name": "Henschleben",
+    "parts": [
+      {
+        "ags": "16068053",
+        "name": "Strau\u00dffurt",
+        "area_in_sqm": 6982756,
+        "population": 333
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "16072001",
+    "name": "Bachfeld",
+    "parts": [
+      {
+        "ags": "16072015",
+        "name": "Schalkau, Stadt",
+        "area_in_sqm": 10458460,
+        "population": 438
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "16064008",
+    "name": "Bothenheilingen",
+    "parts": [
+      {
+        "ags": "16064077",
+        "name": "Nottertal-Heilinger H\u00f6hen, Stadt",
+        "area_in_sqm": 9471487,
+        "population": 439
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "16064029",
+    "name": "Issersheilingen",
+    "parts": [
+      {
+        "ags": "16064077",
+        "name": "Nottertal-Heilinger H\u00f6hen, Stadt",
+        "area_in_sqm": 4215611,
+        "population": 135
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "16064035",
+    "name": "Kleinwelsbach",
+    "parts": [
+      {
+        "ags": "16064077",
+        "name": "Nottertal-Heilinger H\u00f6hen, Stadt",
+        "area_in_sqm": 3462165,
+        "population": 126
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "16064048",
+    "name": "Neunheilingen",
+    "parts": [
+      {
+        "ags": "16064077",
+        "name": "Nottertal-Heilinger H\u00f6hen, Stadt",
+        "area_in_sqm": 14750097,
+        "population": 459
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "16064052",
+    "name": "Obermehler",
+    "parts": [
+      {
+        "ags": "16064077",
+        "name": "Nottertal-Heilinger H\u00f6hen, Stadt",
+        "area_in_sqm": 21659483,
+        "population": 1245
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "16064057",
+    "name": "Schlotheim, Stadt",
+    "parts": [
+      {
+        "ags": "16064077",
+        "name": "Nottertal-Heilinger H\u00f6hen, Stadt",
+        "area_in_sqm": 22398262,
+        "population": 3559
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "16063013",
+    "name": "Creuzburg, Stadt",
+    "parts": [
+      {
+        "ags": "16063104",
+        "name": "Amt Creuzburg, Stadt",
+        "area_in_sqm": 35452155,
+        "population": 2305
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "16063019",
+    "name": "Ebenshausen",
+    "parts": [
+      {
+        "ags": "16063104",
+        "name": "Amt Creuzburg, Stadt",
+        "area_in_sqm": 2615113,
+        "population": 294
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "16063055",
+    "name": "Mihla",
+    "parts": [
+      {
+        "ags": "16063104",
+        "name": "Amt Creuzburg, Stadt",
+        "area_in_sqm": 31663219,
+        "population": 2133
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "16071006",
+    "name": "Bechstedtstra\u00df",
+    "parts": [
+      {
+        "ags": "16071103",
+        "name": "Grammetal",
+        "area_in_sqm": 5751097,
+        "population": 267
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "16071012",
+    "name": "Daasdorf a. Berge",
+    "parts": [
+      {
+        "ags": "16071103",
+        "name": "Grammetal",
+        "area_in_sqm": 2851160,
+        "population": 274
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "16071034",
+    "name": "Hopfgarten",
+    "parts": [
+      {
+        "ags": "16071103",
+        "name": "Grammetal",
+        "area_in_sqm": 9112796,
+        "population": 673
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "16071036",
+    "name": "Isseroda",
+    "parts": [
+      {
+        "ags": "16071103",
+        "name": "Grammetal",
+        "area_in_sqm": 3905328,
+        "population": 561
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "16071057",
+    "name": "M\u00f6nchenholzhausen",
+    "parts": [
+      {
+        "ags": "16071103",
+        "name": "Grammetal",
+        "area_in_sqm": 19421380,
+        "population": 1631
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "16071065",
+    "name": "Niederzimmern",
+    "parts": [
+      {
+        "ags": "16071103",
+        "name": "Grammetal",
+        "area_in_sqm": 13223663,
+        "population": 1032
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "16071067",
+    "name": "Nohra",
+    "parts": [
+      {
+        "ags": "16071103",
+        "name": "Grammetal",
+        "area_in_sqm": 19638270,
+        "population": 1653
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "16071073",
+    "name": "Ottstedt a. Berge",
+    "parts": [
+      {
+        "ags": "16071103",
+        "name": "Grammetal",
+        "area_in_sqm": 5107213,
+        "population": 241
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "16071088",
+    "name": "Troistedt",
+    "parts": [
+      {
+        "ags": "16071103",
+        "name": "Grammetal",
+        "area_in_sqm": 9270444,
+        "population": 188
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "16071099",
+    "name": "Saaleplatte",
+    "parts": [
+      {
+        "ags": "16071004",
+        "name": "Bad Sulza, Stadt",
+        "area_in_sqm": 42828452,
+        "population": 2870
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2020-01-01",
+    "ags": "03358004",
+    "name": "Bomlitz",
+    "parts": [
+      {
+        "ags": "03358024",
+        "name": "Walsrode, Stadt",
+        "area_in_sqm": 64171851,
+        "population": 6970
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2020-01-01",
+    "ags": "03358022",
+    "name": "Walsrode, Stadt",
+    "parts": [
+      {
+        "ags": "03358024",
+        "name": "Walsrode, Stadt",
+        "area_in_sqm": 336459040,
+        "population": 30038
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2020-01-01",
+    "ags": "06633021",
+    "name": "Oberweser",
+    "parts": [
+      {
+        "ags": "06633030",
+        "name": "Wesertal",
+        "area_in_sqm": 41173299,
+        "population": 3158
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2020-01-01",
+    "ags": "06633027",
+    "name": "Wahlsburg",
+    "parts": [
+      {
+        "ags": "06633030",
+        "name": "Wesertal",
+        "area_in_sqm": 11473026,
+        "population": 2044
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2020-01-01",
+    "ags": "08125058",
+    "name": "Leingarten",
+    "new_ags": "08125058",
+    "new_name": "Leingarten, Stadt",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2020-01-01",
+    "ags": "09472460",
+    "name": "Lindenhardter Forst-Nordwest",
+    "parts": [
+      {
+        "ags": "09472140",
+        "name": "Gesees",
+        "area_in_sqm": 536790,
+        "population": 0
+      },
+      {
+        "ags": "09472146",
+        "name": "Haag",
+        "area_in_sqm": 2595727,
+        "population": 0
+      },
+      {
+        "ags": "09472155",
+        "name": "Hummeltal",
+        "area_in_sqm": 3496932,
+        "population": 0
+      },
+      {
+        "ags": "09472127",
+        "name": "Creu\u00dfen, St",
+        "area_in_sqm": 1684906,
+        "population": 0
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2020-01-01",
+    "ags": "09472461",
+    "name": "Lindenhardter Forst-S\u00fcdost",
+    "parts": [
+      {
+        "ags": "09472127",
+        "name": "Creu\u00dfen, St",
+        "area_in_sqm": 2719942,
+        "population": 0
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2020-01-08",
+    "ags": "09673117",
+    "name": "Bischofsheim a.d.Rh\u00f6n, St",
+    "new_ags": "09673117",
+    "new_name": "Bischofsheim i.d.Rh\u00f6n, St",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2017-06-23",
+    "ags": "15088020",
+    "name": "Bad D\u00fcrrenberg, Stadt",
+    "new_ags": "15088020",
+    "new_name": "Bad D\u00fcrrenberg, Solestadt",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2020-01-17",
+    "ags": "14511000",
+    "name": "Chemnitz, Stadt",
+    "parts": [
+      {
+        "ags": "14522330",
+        "name": "Lichtenau",
+        "area_in_sqm": 53276,
+        "population": 0
+      }
+    ],
+    "remaining_area": 220966969,
+    "remaining_population": 247235,
+    "kind": "PartialSpinOff"
+  },
+  {
+    "effective_date": "2020-01-17",
+    "ags": "14522330",
+    "name": "Lichtenau",
+    "parts": [
+      {
+        "ags": "14511000",
+        "name": "Chemnitz, Stadt",
+        "area_in_sqm": 59424,
+        "population": 0
+      }
+    ],
+    "remaining_area": 49088802,
+    "remaining_population": 7106,
+    "kind": "PartialSpinOff"
+  },
+  {
+    "effective_date": "2020-01-01",
+    "ags": "01053034",
+    "name": "G\u00f6ldenitz",
+    "parts": [
+      {
+        "ags": "01053009",
+        "name": "Berkenthin",
+        "area_in_sqm": 97450,
+        "population": 0
+      }
+    ],
+    "remaining_area": 5055349,
+    "remaining_population": 236,
+    "kind": "PartialSpinOff"
+  },
+  {
+    "effective_date": "2020-01-01",
+    "ags": "01061082",
+    "name": "Oldendorf",
+    "parts": [
+      {
+        "ags": "01061046",
+        "name": "Itzehoe, Stadt",
+        "area_in_sqm": 365651,
+        "population": 0
+      }
+    ],
+    "remaining_area": 9980376,
+    "remaining_population": 1090,
+    "kind": "PartialSpinOff"
+  },
+  {
+    "effective_date": "2020-01-01",
+    "ags": "01061083",
+    "name": "Ottenb\u00fcttel",
+    "parts": [
+      {
+        "ags": "01061046",
+        "name": "Itzehoe, Stadt",
+        "area_in_sqm": 141170,
+        "population": 0
+      }
+    ],
+    "remaining_area": 9914581,
+    "remaining_population": 738,
+    "kind": "PartialSpinOff"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "03159501",
+    "name": "Harz (Ldkr. G\u00f6ttingen), gemfr. Geb.",
+    "new_ags": "03159501",
+    "new_name": "Harz (Landkreis G\u00f6ttingen), gemfr. Geb.",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2020-02-05",
+    "ags": "06438013",
+    "name": "Seligenstadt, Stadt",
+    "new_ags": "06438013",
+    "new_name": "Seligenstadt, Einhardstadt",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2020-03-01",
+    "ags": "09472459",
+    "name": "Langweiler Wald",
+    "parts": [
+      {
+        "ags": "09472111",
+        "name": "Ahorntal",
+        "area_in_sqm": 1775953,
+        "population": 0
+      },
+      {
+        "ags": "09472167",
+        "name": "Mistelgau",
+        "area_in_sqm": 2001630,
+        "population": 0
+      },
+      {
+        "ags": "09472197",
+        "name": "Waischenfeld, St",
+        "area_in_sqm": 737609,
+        "population": 0
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2020-02-21",
+    "ags": "14729070",
+    "name": "Brandis, Stadt",
+    "parts": [
+      {
+        "ags": "14729300",
+        "name": "Naunhof, Stadt",
+        "area_in_sqm": 249690,
+        "population": 0
+      }
+    ],
+    "remaining_area": 34642000,
+    "remaining_population": 9613,
+    "kind": "PartialSpinOff"
+  },
+  {
+    "effective_date": "2020-02-21",
+    "ags": "14729300",
+    "name": "Naunhof, Stadt",
+    "parts": [
+      {
+        "ags": "14729070",
+        "name": "Brandis, Stadt",
+        "area_in_sqm": 250306,
+        "population": 0
+      }
+    ],
+    "remaining_area": 39464431,
+    "remaining_population": 8735,
+    "kind": "PartialSpinOff"
+  },
+  {
+    "effective_date": "2020-04-24",
+    "ags": "14627180",
+    "name": "Nossen, Stadt",
+    "parts": [
+      {
+        "ags": "14522540",
+        "name": "Striegistal",
+        "area_in_sqm": 5360,
+        "population": 0
+      }
+    ],
+    "remaining_area": 122738805,
+    "remaining_population": 10598,
+    "kind": "PartialSpinOff"
+  },
+  {
+    "effective_date": "2017-08-14",
+    "ags": "12061476",
+    "name": "Straupitz",
+    "new_ags": "12061476",
+    "new_name": "Straupitz (Spreewald)/T\u0161upc (B\u0142ota)",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2018-04-01",
+    "ags": "12052000",
+    "name": "Cottbus, Stadt",
+    "new_ags": "12052000",
+    "new_name": "Cottbus/Ch\u00f3\u015bebuz, Stadt",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2018-04-01",
+    "ags": "12061316",
+    "name": "L\u00fcbben (Spreewald), Stadt",
+    "new_ags": "12061316",
+    "new_name": "L\u00fcbben (Spreewald) / Lubin (B\u0142ota), Stadt",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2018-04-01",
+    "ags": "12061329",
+    "name": "M\u00e4rkische Heide",
+    "new_ags": "12061329",
+    "new_name": "M\u00e4rkische Heide/Markojska G\u00f3la",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2018-04-01",
+    "ags": "12061005",
+    "name": "Alt Zauche-Wu\u00dfwerk",
+    "new_ags": "12061005",
+    "new_name": "Alt Zauche-Wu\u00dfwerk/Stara Niwa-W\u00f3zwjerch",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2018-04-01",
+    "ags": "12061061",
+    "name": "Byhleguhre-Byhlen",
+    "new_ags": "12061061",
+    "new_name": "Byhleguhre-Byhlen/Be\u0142a G\u00f3ra-B\u011blin",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2018-04-01",
+    "ags": "12061352",
+    "name": "Neu Zauche",
+    "new_ags": "12061352",
+    "new_name": "Neu Zauche/Nowa Niwa",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2018-04-01",
+    "ags": "12061450",
+    "name": "Schwielochsee",
+    "new_ags": "12061450",
+    "new_name": "Schwielochsee/G\u00f3jacki Jazor",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2018-04-01",
+    "ags": "12061470",
+    "name": "Spreewaldheide",
+    "new_ags": "12061470",
+    "new_name": "Spreewaldheide/B\u0142o\u015ba\u0144ska G\u00f3la",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2018-04-01",
+    "ags": "12061428",
+    "name": "Schlepzig",
+    "new_ags": "12061428",
+    "new_name": "Schlepzig/S\u0142opi\u0161\u0107a",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2018-04-01",
+    "ags": "12066052",
+    "name": "Calau, Stadt",
+    "new_ags": "12066052",
+    "new_name": "Calau/Kalawa, Stadt",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2018-04-01",
+    "ags": "12066112",
+    "name": "Gro\u00dfr\u00e4schen, Stadt",
+    "new_ags": "12066112",
+    "new_name": "Gro\u00dfr\u00e4schen/Ra\u0144, Stadt",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2018-04-01",
+    "ags": "12066196",
+    "name": "L\u00fcbbenau/Spreewald, Stadt",
+    "new_ags": "12066196",
+    "new_name": "L\u00fcbbenau/Spreewald / Lubnjow/B\u0142ota, Stadt",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2018-04-01",
+    "ags": "12066304",
+    "name": "Senftenberg, Stadt",
+    "new_ags": "12066304",
+    "new_name": "Senftenberg/Z\u0142y Komorow, Stadt",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2018-04-01",
+    "ags": "12066320",
+    "name": "Vetschau/Spreewald, Stadt",
+    "new_ags": "12066320",
+    "new_name": "Vetschau/Spreewald / W\u011bto\u0161ow/B\u0142ota, Stadt",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2018-04-01",
+    "ags": "12066226",
+    "name": "Neu-Seeland",
+    "new_ags": "12066226",
+    "new_name": "Neu-Seeland/Nowa Jazorina",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2018-04-01",
+    "ags": "12066228",
+    "name": "Neupetershain",
+    "new_ags": "12066228",
+    "new_name": "Neupetershain/Nowe Wiki",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2018-04-01",
+    "ags": "12071057",
+    "name": "Drebkau, Stadt",
+    "new_ags": "12071057",
+    "new_name": "Drebkau/Drjowk, Stadt",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2018-04-01",
+    "ags": "12071076",
+    "name": "Forst (Lausitz), Stadt",
+    "new_ags": "12071076",
+    "new_name": "Forst (Lausitz)/Bar\u0161\u0107 (\u0141u\u017eyca), Stadt",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2018-04-01",
+    "ags": "12071244",
+    "name": "Kolkwitz",
+    "new_ags": "12071244",
+    "new_name": "Kolkwitz/Go\u0142kojce",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2018-04-01",
+    "ags": "12071301",
+    "name": "Neuhausen/Spree",
+    "new_ags": "12071301",
+    "new_name": "Neuhausen/Spree / Kopa\u0144ce/Sprjewja",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2018-04-01",
+    "ags": "12071337",
+    "name": "Schenkend\u00f6bern",
+    "new_ags": "12071337",
+    "new_name": "Schenkend\u00f6bern/Derbno",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2018-04-01",
+    "ags": "12071372",
+    "name": "Spremberg, Stadt",
+    "new_ags": "12071372",
+    "new_name": "Spremberg/Grodk, Stadt",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2018-04-01",
+    "ags": "12071408",
+    "name": "Welzow, Stadt",
+    "new_ags": "12071408",
+    "new_name": "Welzow/Wjelcej, Stadt",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2018-04-01",
+    "ags": "12071028",
+    "name": "Briesen",
+    "new_ags": "12071028",
+    "new_name": "Briesen/Brjazyna",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2018-04-01",
+    "ags": "12071032",
+    "name": "Burg (Spreewald)",
+    "new_ags": "12071032",
+    "new_name": "Burg (Spreewald)/B\u00f3rkowy (B\u0142ota)",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2018-04-01",
+    "ags": "12071041",
+    "name": "Dissen-Striesow",
+    "new_ags": "12071041",
+    "new_name": "Dissen-Striesow/De\u0161no-Strja\u017eow",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2018-04-01",
+    "ags": "12071164",
+    "name": "Guhrow",
+    "new_ags": "12071164",
+    "new_name": "Guhrow/G\u00f3ry",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2018-04-01",
+    "ags": "12071341",
+    "name": "Schmogrow-Fehrow",
+    "new_ags": "12071341",
+    "new_name": "Schmogrow-Fehrow/Smogorjow-Prjawoz",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2018-04-01",
+    "ags": "12071412",
+    "name": "Werben",
+    "new_ags": "12071412",
+    "new_name": "Werben/Wjerbno",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2018-04-01",
+    "ags": "12071044",
+    "name": "D\u00f6bern, Stadt",
+    "new_ags": "12071044",
+    "new_name": "D\u00f6bern/Derbno, Stadt",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2018-04-01",
+    "ags": "12071074",
+    "name": "Felixsee",
+    "new_ags": "12071074",
+    "new_name": "Felixsee/Feliksowy Jazor",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2018-04-01",
+    "ags": "12071294",
+    "name": "Nei\u00dfe-Malxetal",
+    "new_ags": "12071294",
+    "new_name": "Nei\u00dfe-Malxetal/Dolina Nysa-Ma\u0142ksa ",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2018-04-01",
+    "ags": "12071392",
+    "name": "Tschernitz",
+    "new_ags": "12071392",
+    "new_name": "Tschernitz/Cersk",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2018-04-01",
+    "ags": "12071414",
+    "name": "Wiesengrund",
+    "new_ags": "12071414",
+    "new_name": "Wiesengrund/\u0141ukojce",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2018-04-01",
+    "ags": "12071052",
+    "name": "Drachhausen",
+    "new_ags": "12071052",
+    "new_name": "Drachhausen/Hochoza",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2018-04-01",
+    "ags": "12071060",
+    "name": "Drehnow",
+    "new_ags": "12071060",
+    "new_name": "Drehnow/Drjenow",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2018-04-01",
+    "ags": "12071176",
+    "name": "Heinersbr\u00fcck",
+    "new_ags": "12071176",
+    "new_name": "Heinersbr\u00fcck/M\u00f3st",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2018-04-01",
+    "ags": "12071193",
+    "name": "J\u00e4nschwalde",
+    "new_ags": "12071193",
+    "new_name": "J\u00e4nschwalde/Jan\u0161ojce",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2018-04-01",
+    "ags": "12071304",
+    "name": "Peitz, Stadt",
+    "new_ags": "12071304",
+    "new_name": "Peitz/Picnjo, Stadt",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2018-04-01",
+    "ags": "12071384",
+    "name": "Tauer",
+    "new_ags": "12071384",
+    "new_name": "Tauer/Turjej",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2018-04-01",
+    "ags": "12071386",
+    "name": "Teichland",
+    "new_ags": "12071386",
+    "new_name": "Teichland/Gatojce",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2018-04-01",
+    "ags": "12071401",
+    "name": "Turnow-Preilack",
+    "new_ags": "12071401",
+    "new_name": "Turnow-Preilack/Turnow-P\u015bi\u0142uk",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "09272452",
+    "name": "Frauenberger u. Duschelberger Wald",
+    "new_ags": "09272452",
+    "new_name": "Frauenberger u. Duschlberger Wald",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2019-01-01",
+    "ags": "09475451",
+    "name": "Forst Schwarzenbach a. Wald",
+    "new_ags": "09475451",
+    "new_name": "Forst Schwarzenbach a.Wald",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "14625020",
+    "name": "Bautzen, Stadt",
+    "new_ags": "14625020",
+    "new_name": "Bautzen / Budy\u0161in, Stadt",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "14625110",
+    "name": "Doberschau-Gau\u00dfig",
+    "new_ags": "14625110",
+    "new_name": "Doberschau-Gau\u00dfig / Dobru\u0161a-Huska",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "14625120",
+    "name": "Elsterheide",
+    "new_ags": "14625120",
+    "new_name": "Elsterheide / Hal\u0161trowska Hola",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "14625150",
+    "name": "G\u00f6da",
+    "new_ags": "14625150",
+    "new_name": "G\u00f6da / Hod\u017aij",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "14625160",
+    "name": "Gro\u00dfdubrau",
+    "new_ags": "14625160",
+    "new_name": "Gro\u00dfdubrau / Wulka Dubrawa",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "14625230",
+    "name": "Hochkirch",
+    "new_ags": "14625230",
+    "new_name": "Hochkirch / Bukecy",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "14625240",
+    "name": "Hoyerswerda, Stadt",
+    "new_ags": "14625240",
+    "new_name": "Hoyerswerda / Wojerecy, Stadt",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "14625250",
+    "name": "Kamenz, Stadt",
+    "new_ags": "14625250",
+    "new_name": "Kamenz / Kamjenc, Stadt",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "14625280",
+    "name": "K\u00f6nigswartha",
+    "new_ags": "14625280",
+    "new_name": "K\u00f6nigswartha / Rakecy",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "14625290",
+    "name": "Kubsch\u00fctz",
+    "new_ags": "14625290",
+    "new_name": "Kubsch\u00fctz / Kub\u0161icy",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "14625330",
+    "name": "Lohsa",
+    "new_ags": "14625330",
+    "new_name": "Lohsa / \u0141az",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "14625340",
+    "name": "Malschwitz",
+    "new_ags": "14625340",
+    "new_name": "Malschwitz / Male\u0161ecy",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "14625490",
+    "name": "Radibor",
+    "new_ags": "14625490",
+    "new_name": "Radibor / Radwor",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "14625570",
+    "name": "Spreetal",
+    "new_ags": "14625570",
+    "new_name": "Spreetal / Sprjewiny Do\u0142",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "14625610",
+    "name": "Wei\u00dfenberg, Stadt",
+    "new_ags": "14625610",
+    "new_name": "Wei\u00dfenberg / W\u00f3spork, Stadt",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "14625640",
+    "name": "Wittichenau, Stadt",
+    "new_ags": "14625640",
+    "new_name": "Wittichenau / Kulow, Stadt",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "14625190",
+    "name": "Gro\u00dfpostwitz/O.L.",
+    "new_ags": "14625190",
+    "new_name": "Gro\u00dfpostwitz/O.L. / Budestecy",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "14625390",
+    "name": "Obergurig",
+    "new_ags": "14625390",
+    "new_name": "Obergurig / Hornja H\u00f3rka",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "14625360",
+    "name": "Neschwitz",
+    "new_ags": "14625360",
+    "new_name": "Neschwitz / Njeswa\u010did\u0142o",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "14625460",
+    "name": "Puschwitz",
+    "new_ags": "14625460",
+    "new_name": "Puschwitz / B\u00f3\u0161icy",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "14625080",
+    "name": "Crostwitz",
+    "new_ags": "14625080",
+    "new_name": "Crostwitz / Chr\u00f3s\u0107icy",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "14625350",
+    "name": "Nebelsch\u00fctz",
+    "new_ags": "14625350",
+    "new_name": "Nebelsch\u00fctz / Njebjel\u010dicy",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "14625440",
+    "name": "Panschwitz-Kuckau",
+    "new_ags": "14625440",
+    "new_name": "Panschwitz-Kuckau / Pan\u010dicy-Kukow",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "14625470",
+    "name": "R\u00e4ckelwitz",
+    "new_ags": "14625470",
+    "new_name": "R\u00e4ckelwitz / Worklecy",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "14625500",
+    "name": "Ralbitz-Rosenthal",
+    "new_ags": "14625500",
+    "new_name": "Ralbitz-Rosenthal / Ralbicy-R\u00f3\u017eant",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "14626060",
+    "name": "Boxberg/O.L.",
+    "new_ags": "14626060",
+    "new_name": "Boxberg/O.L. / Hamor",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "14626250",
+    "name": "Krauschwitz i.d. O.L.",
+    "new_ags": "14626250",
+    "new_name": "Krauschwitz i.d. O.L. / Kru\u0161wica",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "14626010",
+    "name": "Bad Muskau, Stadt",
+    "new_ags": "14626010",
+    "new_name": "Bad Muskau / Mu\u017eakow, Stadt",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "14626100",
+    "name": "Gablenz",
+    "new_ags": "14626100",
+    "new_name": "Gablenz / Jab\u0142o\u0144c",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "14626260",
+    "name": "Kreba-Neudorf",
+    "new_ags": "14626260",
+    "new_name": "Kreba-Neudorf / Chrjebja-Nowa Wjes",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "14626460",
+    "name": "Rietschen",
+    "new_ags": "14626460",
+    "new_name": "Rietschen / R\u011b\u010dicy",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "14626120",
+    "name": "Gro\u00df D\u00fcben",
+    "new_ags": "14626120",
+    "new_name": "Gro\u00df D\u00fcben / D\u017a\u011bwin",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "14626490",
+    "name": "Schleife",
+    "new_ags": "14626490",
+    "new_name": "Schleife / Slepo",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "14626560",
+    "name": "Trebendorf",
+    "new_ags": "14626560",
+    "new_name": "Trebendorf / Trjebin",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "14626590",
+    "name": "Wei\u00dfkei\u00dfel",
+    "new_ags": "14626590",
+    "new_name": "Wei\u00dfkei\u00dfel / Wuskid\u017a",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "14626600",
+    "name": "Wei\u00dfwasser/O.L., Stadt",
+    "new_ags": "14626600",
+    "new_name": "Wei\u00dfwasser/O.L., Stadt / B\u011b\u0142a Woda",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "14626190",
+    "name": "Hohendubrau",
+    "new_ags": "14626190",
+    "new_name": "Hohendubrau / Wysoka Dubrawa",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2019-12-31",
+    "ags": "14626320",
+    "name": "M\u00fccka",
+    "new_ags": "14626320",
+    "new_name": "M\u00fccka / Mikow",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2020-02-01",
+    "ags": "08121000",
+    "name": "Heilbronn, Stadt",
+    "new_ags": "08121000",
+    "new_name": "Heilbronn, Universit\u00e4tsstadt",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2020-09-25",
+    "ags": "14625330",
+    "name": "Lohsa / \u0141az",
+    "parts": [
+      {
+        "ags": "14625240",
+        "name": "Hoyerswerda / Wojerecy, Stadt",
+        "area_in_sqm": 16060,
+        "population": 0
+      }
+    ],
+    "remaining_area": 134519090,
+    "remaining_population": 5232,
+    "kind": "PartialSpinOff"
+  },
+  {
+    "effective_date": "2020-06-29",
+    "ags": "05382008",
+    "name": "Bad Honnef, Stadt",
+    "parts": [
+      {
+        "ags": "05382024",
+        "name": "K\u00f6nigswinter, Stadt",
+        "area_in_sqm": 30632,
+        "population": 0
+      }
+    ],
+    "remaining_area": 48139442,
+    "remaining_population": 25812,
+    "kind": "PartialSpinOff"
+  },
+  {
+    "effective_date": "2020-10-10",
+    "ags": "12069304",
+    "name": "Kleinmachnow",
+    "parts": [
+      {
+        "ags": "12069604",
+        "name": "Stahnsdorf",
+        "area_in_sqm": 8533,
+        "population": 2
+      }
+    ],
+    "remaining_area": 11904794,
+    "remaining_population": 20374,
+    "kind": "PartialSpinOff"
+  },
+  {
+    "effective_date": "2020-10-10",
+    "ags": "12069604",
+    "name": "Stahnsdorf",
+    "parts": [
+      {
+        "ags": "12069304",
+        "name": "Kleinmachnow",
+        "area_in_sqm": 8533,
+        "population": 0
+      }
+    ],
+    "remaining_area": 49458806,
+    "remaining_population": 15371,
+    "kind": "PartialSpinOff"
+  },
+  {
+    "effective_date": "2020-12-01",
+    "ags": "16063094",
+    "name": "Moorgrund",
+    "parts": [
+      {
+        "ags": "16063003",
+        "name": "Bad Salzungen, Stadt",
+        "area_in_sqm": 53516076,
+        "population": 3358
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2020-12-15",
+    "ags": "07133006",
+    "name": "Bad Kreuznach, Stadt",
+    "parts": [
+      {
+        "ags": "07133035",
+        "name": "Guldental",
+        "area_in_sqm": 1283,
+        "population": 0
+      }
+    ],
+    "remaining_area": 55559144,
+    "remaining_population": 51170,
+    "kind": "PartialSpinOff"
+  },
+  {
+    "effective_date": "2020-12-15",
+    "ags": "07133035",
+    "name": "Guldental",
+    "parts": [
+      {
+        "ags": "07133006",
+        "name": "Bad Kreuznach, Stadt",
+        "area_in_sqm": 3143,
+        "population": 0
+      }
+    ],
+    "remaining_area": 12982810,
+    "remaining_population": 2485,
+    "kind": "PartialSpinOff"
+  },
+  {
+    "effective_date": "2021-01-01",
+    "ags": "07132074",
+    "name": "Neitersen",
+    "new_ags": "07132502",
+    "new_name": "Neitersen",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2021-01-01",
+    "ags": "07132084",
+    "name": "Obernau",
+    "parts": [
+      {
+        "ags": "07132502",
+        "name": "Neitersen",
+        "area_in_sqm": 1487788,
+        "population": 187
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2021-01-01",
+    "ags": "07340011",
+    "name": "Fischbach bei Dahn",
+    "parts": [
+      {
+        "ags": "07340029",
+        "name": "Ludwigswinkel",
+        "area_in_sqm": 29178,
+        "population": 0
+      }
+    ],
+    "remaining_area": 32837581,
+    "remaining_population": 1464,
+    "kind": "PartialSpinOff"
+  },
+  {
+    "effective_date": "2021-01-01",
+    "ags": "07340029",
+    "name": "Ludwigswinkel",
+    "parts": [
+      {
+        "ags": "07340011",
+        "name": "Fischbach bei Dahn",
+        "area_in_sqm": 31905,
+        "population": 0
+      }
+    ],
+    "remaining_area": 21246636,
+    "remaining_population": 767,
+    "kind": "PartialSpinOff"
+  },
+  {
+    "effective_date": "2021-01-01",
+    "ags": "09671456",
+    "name": "Rohrbrunner Forst",
+    "parts": [
+      {
+        "ags": "09671160",
+        "name": "Dammbach",
+        "area_in_sqm": 3327613,
+        "population": 0
+      },
+      {
+        "ags": "09671157",
+        "name": "Weibersbrunn",
+        "area_in_sqm": 5728,
+        "population": 0
+      }
+    ],
+    "remaining_area": 3333341,
+    "remaining_population": 0,
+    "kind": "PartialSpinOff"
+  },
+  {
+    "effective_date": "2021-01-01",
+    "ags": "13003000",
+    "name": "Rostock, Hansestadt",
+    "new_ags": "13003000",
+    "new_name": "Rostock, Hanse- und Universit\u00e4tsstadt",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2021-01-01",
+    "ags": "13071107",
+    "name": "Neubrandenburg, Stadt",
+    "new_ags": "13071107",
+    "new_name": "Neubrandenburg, Vier-Tore-Stadt",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2021-01-01",
+    "ags": "13071110",
+    "name": "Neustrelitz, Stadt",
+    "new_ags": "13071110",
+    "new_name": "Neustrelitz, Residenzstadt",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2021-01-01",
+    "ags": "13071109",
+    "name": "Neukalen, Stadt",
+    "new_ags": "13071109",
+    "new_name": "Neukalen, Peenestadt",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2021-01-01",
+    "ags": "13071093",
+    "name": "Malchow, Stadt",
+    "new_ags": "13071093",
+    "new_name": "Malchow, Inselstadt",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2021-01-01",
+    "ags": "13071005",
+    "name": "Ankershagen",
+    "new_ags": "13071005",
+    "new_name": "Ankershagen, Schliemanngemeinde",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2021-01-01",
+    "ags": "13071164",
+    "name": "Woldegk, Stadt",
+    "new_ags": "13071164",
+    "new_name": "Woldegk, Windm\u00fchlenstadt",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2021-01-01",
+    "ags": "13072036",
+    "name": "Graal-M\u00fcritz",
+    "new_ags": "13072036",
+    "new_name": "Graal-M\u00fcritz, Ostseeheilbad",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2021-01-01",
+    "ags": "13072043",
+    "name": "G\u00fcstrow, Stadt",
+    "new_ags": "13072043",
+    "new_name": "G\u00fcstrow, Barlachstadt",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2021-01-01",
+    "ags": "13072060",
+    "name": "K\u00fchlungsborn, Stadt",
+    "new_ags": "13072060",
+    "new_name": "K\u00fchlungsborn, Ostseebad, Stadt",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2021-01-01",
+    "ags": "13072106",
+    "name": "Teterow, Stadt",
+    "new_ags": "13072106",
+    "new_name": "Teterow, Bergringstadt",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2021-01-01",
+    "ags": "13072075",
+    "name": "Nienhagen",
+    "new_ags": "13072075",
+    "new_name": "Nienhagen, Ostseebad",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2021-01-01",
+    "ags": "13072035",
+    "name": "Gnoien, Stadt",
+    "new_ags": "13072035",
+    "new_name": "Gnoien, Warbelstadt",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2021-01-01",
+    "ags": "13072085",
+    "name": "Rerik, Stadt",
+    "new_ags": "13072085",
+    "new_name": "Rerik, Ostseebad, Stadt",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2021-01-01",
+    "ags": "13073011",
+    "name": "Binz",
+    "new_ags": "13073011",
+    "new_name": "Binz, Ostseebad",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2021-01-01",
+    "ags": "13073105",
+    "name": "Zingst",
+    "new_ags": "13073105",
+    "new_name": "Zingst, Ostseeheilbad",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2021-01-01",
+    "ags": "13073002",
+    "name": "Ahrenshoop",
+    "new_ags": "13073002",
+    "new_name": "Ahrenshoop, Ostseebad",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2021-01-01",
+    "ags": "13073017",
+    "name": "Dierhagen",
+    "new_ags": "13073017",
+    "new_name": "Dierhagen, Ostseebad",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2021-01-01",
+    "ags": "13073067",
+    "name": "Prerow",
+    "new_ags": "13073067",
+    "new_name": "Prerow, Ostseebad",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2021-01-01",
+    "ags": "13073103",
+    "name": "Wustrow",
+    "new_ags": "13073103",
+    "new_name": "Wustrow, Ostseebad",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2021-01-01",
+    "ags": "13073006",
+    "name": "Baabe",
+    "new_ags": "13073006",
+    "new_name": "Baabe, Ostseebad",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2021-01-01",
+    "ags": "13073031",
+    "name": "G\u00f6hren",
+    "new_ags": "13073031",
+    "new_name": "G\u00f6hren, Ostseebad",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2021-01-01",
+    "ags": "13073084",
+    "name": "Sellin",
+    "new_ags": "13073084",
+    "new_name": "Sellin, Ostseebad",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2021-01-01",
+    "ags": "13073075",
+    "name": "Ribnitz-Damgarten, Stadt",
+    "new_ags": "13073075",
+    "new_name": "Ribnitz-Damgarten, Bernsteinstadt",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2021-01-01",
+    "ags": "13073040",
+    "name": "Insel Hiddensee",
+    "new_ags": "13073040",
+    "new_name": "Insel Hiddensee, Seebad",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2021-01-01",
+    "ags": "13074035",
+    "name": "Insel Poel",
+    "new_ags": "13074035",
+    "new_name": "Insel Poel, Ostseebad",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2021-01-01",
+    "ags": "13074010",
+    "name": "Boltenhagen",
+    "new_ags": "13074010",
+    "new_name": "Boltenhagen, Ostseebad",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2021-01-01",
+    "ags": "13075005",
+    "name": "Anklam, Stadt",
+    "new_ags": "13075005",
+    "new_name": "Anklam, Hansestadt",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2021-01-01",
+    "ags": "13075039",
+    "name": "Greifswald, Hansestadt",
+    "new_ags": "13075039",
+    "new_name": "Greifswald, Universit\u00e4ts- und Hansestadt",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2021-01-01",
+    "ags": "13075049",
+    "name": "Heringsdorf",
+    "new_ags": "13075049",
+    "new_name": "Heringsdorf, Ostseebad",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2021-01-01",
+    "ags": "13075136",
+    "name": "Ueckerm\u00fcnde, Stadt",
+    "new_ags": "13075136",
+    "new_name": "Ueckerm\u00fcnde, Seebad , Stadt",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2021-01-01",
+    "ags": "13075083",
+    "name": "Lubmin",
+    "new_ags": "13075083",
+    "new_name": "Lubmin, Seebad",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2021-01-01",
+    "ags": "13075058",
+    "name": "Karlshagen",
+    "new_ags": "13075058",
+    "new_name": "Karlshagen, Ostseebad",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2021-01-01",
+    "ags": "13075133",
+    "name": "Trassenheide",
+    "new_ags": "13075133",
+    "new_name": "Trassenheide, Ostseebad",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2021-01-01",
+    "ags": "13075151",
+    "name": "Zinnowitz",
+    "new_ags": "13075151",
+    "new_name": "Zinnowitz, Ostseebad",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2021-01-01",
+    "ags": "13075066",
+    "name": "Koserow",
+    "new_ags": "13075066",
+    "new_name": "Koserow, Ostseebad",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2021-01-01",
+    "ags": "13075080",
+    "name": "Loddin",
+    "new_ags": "13075080",
+    "new_name": "Loddin, Seebad",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2021-01-01",
+    "ags": "13075135",
+    "name": "\u00dcckeritz",
+    "new_ags": "13075135",
+    "new_name": "\u00dcckeritz, Seebad",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2021-01-01",
+    "ags": "13075148",
+    "name": "Zempin",
+    "new_ags": "13075148",
+    "new_name": "Zempin, Seebad",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2021-01-01",
+    "ags": "16065023",
+    "name": "Greu\u00dfen, Stadt",
+    "parts": [
+      {
+        "ags": "16065089",
+        "name": "Greu\u00dfen, Stadt",
+        "area_in_sqm": 19208997,
+        "population": 3432
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2021-01-01",
+    "ags": "16065084",
+    "name": "Gro\u00dfenehrich, Stadt",
+    "parts": [
+      {
+        "ags": "16065089",
+        "name": "Greu\u00dfen, Stadt",
+        "area_in_sqm": 63344414,
+        "population": 2299
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2021-01-01",
+    "ags": "16065082",
+    "name": "Wolferschwenda",
+    "parts": [
+      {
+        "ags": "16065089",
+        "name": "Greu\u00dfen, Stadt",
+        "area_in_sqm": 4268533,
+        "population": 139
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2020-12-14",
+    "ags": "07336102",
+    "name": "Waldmohr",
+    "new_ags": "07336102",
+    "new_name": "Waldmohr, Stadt",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2020-12-04",
+    "ags": "05554060",
+    "name": "S\u00fcdlohn",
+    "parts": [
+      {
+        "ags": "05554012",
+        "name": "Borken, Stadt",
+        "area_in_sqm": 271407,
+        "population": 0
+      }
+    ],
+    "remaining_area": 45286422,
+    "remaining_population": 9262,
+    "kind": "PartialSpinOff"
+  },
+  {
+    "effective_date": "2021-01-01",
+    "ags": "12073505",
+    "name": "Sch\u00f6neberg",
+    "parts": [
+      {
+        "ags": "12073532",
+        "name": "Schwedt/Oder, Stadt",
+        "area_in_sqm": 46621802,
+        "population": 803
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2021-02-02",
+    "ags": "06533009",
+    "name": "Limburg a.d. Lahn, Kreisstadt",
+    "new_ags": "06533009",
+    "new_name": "Limburg a. d. Lahn, Kreisstadt",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2021-03-19",
+    "ags": "14627100",
+    "name": "Klipphausen",
+    "parts": [
+      {
+        "ags": "14627180",
+        "name": "Nossen, Stadt",
+        "area_in_sqm": 1252,
+        "population": 4
+      }
+    ],
+    "remaining_area": 111667552,
+    "remaining_population": 10345,
+    "kind": "PartialSpinOff"
+  },
+  {
+    "effective_date": "2021-04-01",
+    "ags": "07232018",
+    "name": "Bitburg, Stadt",
+    "parts": [
+      {
+        "ags": "07232109",
+        "name": "Rittersdorf",
+        "area_in_sqm": 19758,
+        "population": 0
+      }
+    ],
+    "remaining_area": 47530337,
+    "remaining_population": 15047,
+    "kind": "PartialSpinOff"
+  },
+  {
+    "effective_date": "2021-04-01",
+    "ags": "07232109",
+    "name": "Rittersdorf",
+    "parts": [
+      {
+        "ags": "07232018",
+        "name": "Bitburg, Stadt",
+        "area_in_sqm": 20917,
+        "population": 0
+      }
+    ],
+    "remaining_area": 11847633,
+    "remaining_population": 1399,
+    "kind": "PartialSpinOff"
+  },
+  {
+    "effective_date": "2021-03-23",
+    "ags": "13073107",
+    "name": "M\u00f6nchgut",
+    "new_ags": "13073107",
+    "new_name": "M\u00f6nchgut, Osteseebad",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2021-07-01",
+    "ags": "16056000",
+    "name": "Eisenach, Stadt",
+    "new_ags": "16063105",
+    "new_name": "Eisenach, Stadt",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2021-03-23",
+    "ags": "13073107",
+    "name": "M\u00f6nchgut, Osteseebad",
+    "new_ags": "13073107",
+    "new_name": "M\u00f6nchgut, Ostseebad",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2021-07-16",
+    "ags": "14521690",
+    "name": "Zschopau, Stadt",
+    "new_ags": "14521690",
+    "new_name": "Zschopau, Stadt, Motorradstadt",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2021-07-19",
+    "ags": "14522150",
+    "name": "Frankenberg/Sa., Stadt",
+    "new_ags": "14522150",
+    "new_name": "Frankenberg/Sa., Stadt, Garnisonsstadt",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2021-08-26",
+    "ags": "06434009",
+    "name": "Schmitten",
+    "new_ags": "06434009",
+    "new_name": "Schmitten im Taunus",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2021-09-13",
+    "ags": "06635021",
+    "name": "Waldeck, Stadt",
+    "new_ags": "06635021",
+    "new_name": "Waldeck, Nationalparkstadt",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2021-11-01",
+    "ags": "03153007",
+    "name": "Langelsheim, Stadt",
+    "new_ags": "03153019",
+    "new_name": "Langelsheim, Stadt",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2021-11-01",
+    "ags": "03153006",
+    "name": "Hahausen",
+    "parts": [
+      {
+        "ags": "03153019",
+        "name": "Langelsheim, Stadt",
+        "area_in_sqm": 9727032,
+        "population": 769
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2021-11-01",
+    "ags": "03153009",
+    "name": "Lutter am Barenberge, Flecken",
+    "parts": [
+      {
+        "ags": "03153019",
+        "name": "Langelsheim, Stadt",
+        "area_in_sqm": 33326159,
+        "population": 2278
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2021-11-01",
+    "ags": "03153014",
+    "name": "Wallmoden",
+    "parts": [
+      {
+        "ags": "03153019",
+        "name": "Langelsheim, Stadt",
+        "area_in_sqm": 16897458,
+        "population": 881
+      }
+    ],
+    "kind": "Dissolution"
+  },
+  {
+    "effective_date": "2021-11-01",
+    "ags": "12071401",
+    "name": "Turnow-Preilack/Turnow-Psi\u0142uk",
+    "new_ags": "12071401",
+    "new_name": "Turnow-Preilack/Turnow-P\u015bi\u0142uk",
+    "kind": "AgsOrNameChange"
+  },
+  {
+    "effective_date": "2021-10-01",
+    "ags": "12065251",
+    "name": "Oberkr\u00e4mer",
+    "parts": [
+      {
+        "ags": "12065332",
+        "name": "Velten, Stadt",
+        "area_in_sqm": 45447,
+        "population": 86
+      }
+    ],
+    "remaining_area": 103619454,
+    "remaining_population": 11747,
+    "kind": "PartialSpinOff"
+  },
+  {
+    "effective_date": "2021-11-05",
+    "ags": "14625570",
+    "name": "Spreetal / Sprjewiny Do\u0142",
+    "parts": [
+      {
+        "ags": "14625120",
+        "name": "Elsterheide / Hal\u0161trowska Hola",
+        "area_in_sqm": 84900,
+        "population": 0
+      }
+    ],
+    "remaining_area": 108776776,
+    "remaining_population": 1832,
+    "kind": "PartialSpinOff"
+  }
+]
