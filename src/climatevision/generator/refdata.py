@@ -141,7 +141,7 @@ class DataFrame(Generic[KeyT]):
             datadir=datadir,
             what=what,
             key_column="ags",
-            key_from_raw=lambda i: i,
+            key_from_raw=lambda i: i,  # type: ignore
             filename=filename,
             set_nans_to_0_in_columns=set_nans_to_0_in_columns,
         )
@@ -528,7 +528,7 @@ def load_data_frame_ags(
     datadir: str, year_ref: int, what: str, set_nans_to_0_in_columns: list[str] = []
 ) -> DataFrame[str]:
     """Load a data frame for the given data set for the current refyear."""
-    return DataFrame.load_ags(
+    return DataFrame.load_ags(  # type: ignore
         datadir,
         what,
         filename=filename(year_ref, what),
@@ -545,7 +545,7 @@ def load_data_frame(
     set_nans_to_0_in_columns: list[str] = [],
 ) -> DataFrame[KeyT]:
     """Load a data frame for the given data set for the current refyear."""
-    return DataFrame.load(
+    return DataFrame.load(  # type: ignore
         datadir,
         what,
         key_column,
@@ -815,7 +815,7 @@ class RefData:
         population_0_columns = ["total"] if fix_missing_entries else []
         d = cls(
             year_ref=year_ref,
-            ags_master=DataFrame.load_ags(datadir, "ags", filename="master"),
+            ags_master=DataFrame.load_ags(datadir, "ags", filename="master"),  # type: ignore
             area=load_data_frame_ags(
                 datadir, year_ref, "area", set_nans_to_0_in_columns=area_0_columns
             ),

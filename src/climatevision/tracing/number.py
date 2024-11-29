@@ -43,7 +43,7 @@ class FactOrAss(TypedDict):
 class DerivedFactOrAss(TypedDict):
     derived_fact_or_ass: str
     value: float | int
-    trace: TRACE
+    trace: TRACE  # type: ignore
 
 
 class NameTrace(TypedDict):
@@ -52,19 +52,19 @@ class NameTrace(TypedDict):
 
 class DefTrace(TypedDict):
     def_name: NameTrace
-    trace: TRACE
+    trace: TRACE  # type: ignore
 
 
 class BinaryTrace(TypedDict):
     binary: Literal["+", "-", "*", "/"]
-    a: TRACE
-    b: TRACE
+    a: TRACE  # type: ignore
+    b: TRACE  # type: ignore
     value: float | int
 
 
 class UnaryTrace(TypedDict):
     unary: Literal["+", "-"]
-    a: TRACE
+    a: TRACE  # type: ignore
 
 
 def literal(v: int | float) -> TRACE:
@@ -85,28 +85,28 @@ def derived_fact_or_ass(n: str, value: float | int, trace: TRACE) -> TRACE:
 
 def _replace_name_defs_by_names(trace: TRACE) -> TRACE:
     match trace:
-        case {"binary": op, "a": a, "b": b, "value": v}:
+        case {"binary": op, "a": a, "b": b, "value": v}:  # type: ignore
             return {
                 "binary": op,
-                "a": _replace_name_defs_by_names(a),
-                "b": _replace_name_defs_by_names(b),
+                "a": _replace_name_defs_by_names(a),  # type: ignore
+                "b": _replace_name_defs_by_names(b),  # type: ignore
                 "value": v,
             }
-        case {"unary": op, "a": a}:
-            return {"unary": op, "a": _replace_name_defs_by_names(a)}
+        case {"unary": op, "a": a}:  # type: ignore
+            return {"unary": op, "a": _replace_name_defs_by_names(a)}  # type: ignore
         case int() | float():
             return trace
-        case {"def_name": ({"name": n} as name), "trace": t}:
+        case {"def_name": ({"name": n} as name), "trace": t}:  # type: ignore
             # Names we could not resolve we replace by their expression
             if n.startswith("?"):
-                return _replace_name_defs_by_names(t)
+                return _replace_name_defs_by_names(t)  # type: ignore
             else:
                 return name
         case {"source": _, "key": _, "attr": _, "value": _}:
             return trace
         case {"fact_or_ass": _, "value": _}:
             return trace
-        case {"derived_fact_or_ass": _, "value": _, "trace": _}:
+        case {"derived_fact_or_ass": _, "value": _, "trace": _}:  # type: ignore
             # By construction derived facts or assumptions do not themselves contain
             # named values (other than facts or assumptions). So we can return the
             # original trace unchanged
@@ -269,7 +269,7 @@ def set_names(r: RESULT_DICTIONARY, path: list[str] = []) -> None:
         match node:
             case TracedNumber():
                 match node.trace:
-                    case {"def_name": ({"name": str(n)} as name), "trace": _}:
+                    case {"def_name": ({"name": str(n)} as name), "trace": _}:  # type: ignore
                         if n.startswith("?"):
                             name["name"] = ".".join(path)
                     case _:
@@ -300,10 +300,10 @@ def finalize_traces_in_result(r: RESULT_DICTIONARY, path: list[str] = []) -> Non
             match v:
                 case TracedNumber() as tn:
                     match tn.trace:
-                        case {"def_name": _, "trace": t}:
+                        case {"def_name": _, "trace": t}:  # type: ignore
                             r[k] = {
                                 "value": tn.value,
-                                "trace": _replace_name_defs_by_names(t),
+                                "trace": _replace_name_defs_by_names(t),  # type: ignore
                             }
 
                         case _:
