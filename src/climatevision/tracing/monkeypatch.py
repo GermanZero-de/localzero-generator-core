@@ -47,7 +47,7 @@ def maybe_enable_tracing(args: Any) -> Callable[[object], object]:
 
 
 def recursively_patch_getattribute_on_dataclasses(
-    t: type, new_getattribute: Callable[[object, str], object] | None
+    t: type | str, new_getattribute: Callable[[object, str], object] | None
 ) -> None:
     tracing_enabled_marker = "_has_tracing_enabled"
     if is_dataclass(t):
