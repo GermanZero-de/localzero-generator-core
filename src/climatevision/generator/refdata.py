@@ -471,7 +471,7 @@ def filename(year_ref: int, what: str) -> str:
         2018: {
             "ags": "master",  # This is a bit stupid, we should have named that file by year as well.
             "nat_organic_agri": "2016",
-            "renewable_energy": "2021", # data is not used for the calculation for the ref year, but as an assumption for the diff to the target year
+            "renewable_energy": "2021",  # data is not used for the calculation for the ref year, but as an assumption for the diff to the target year
         },
         # 2021: {
         #     "ags": "2021",
