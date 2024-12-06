@@ -31,38 +31,38 @@ from .waste2030 import W30
 
 @dataclass(kw_only=True)
 class ZColVars:
-    energy_18: float = None  # type: ignore
-    pct_energy_18: float = None  # type: ignore
-    CO2e_production_based_18: float = None  # type: ignore
-    CO2e_combustion_based_18: float = None  # type: ignore
-    CO2e_total_18: float = None  # type: ignore
-    pct_CO2e_total_18: float = None  # type: ignore
+    energy_18: float | None = None
+    pct_energy_18: float | None = None
+    CO2e_production_based_18: float | None = None
+    CO2e_combustion_based_18: float | None = None
+    CO2e_total_18: float | None = None
+    pct_CO2e_total_18: float | None = None
 
-    energy_30: float = None  # type: ignore
-    pct_energy_30: float = None  # type: ignore
-    CO2e_production_based_30: float = None  # type: ignore
-    CO2e_combustion_based_30: float = None  # type: ignore
-    CO2e_combustion_based_per_MWh: float = None  # type: ignore
-    CO2e_total_30: float = None  # type: ignore
-    change_energy_MWh: float = None  # type: ignore
-    change_energy_pct: float = None  # type: ignore
-    change_CO2e_t: float = None  # type: ignore
-    change_CO2e_pct: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
-    cost_climate_saved: float = None  # type: ignore
-    invest_pa: float = None  # type: ignore
-    invest_pa_com: float = None  # type: ignore
-    invest_pa_outside: float = None  # type: ignore
-    invest: float = None  # type: ignore
-    invest_com: float = None  # type: ignore
-    invest_outside: float = None  # type: ignore
-    cost_wage: float = None  # type: ignore
-    demand_emplo: float = None  # type: ignore
-    demand_emplo_new: float = None  # type: ignore
-    demand_emplo_com: float = None  # type: ignore
-    invest_pct: float = None  # type: ignore
-    cost_climate_saved_pct: float = None  # type: ignore
-    demand_emplo_new_pct: float = None  # type: ignore
+    energy_30: float | None = None
+    pct_energy_30: float | None = None
+    CO2e_production_based_30: float | None = None
+    CO2e_combustion_based_30: float | None = None
+    CO2e_combustion_based_per_MWh: float | None = None
+    CO2e_total_30: float | None = None
+    change_energy_MWh: float | None = None
+    change_energy_pct: float | None = None
+    change_CO2e_t: float | None = None
+    change_CO2e_pct: float | None = None
+    CO2e_total_2021_estimated: float | None = None
+    cost_climate_saved: float | None = None
+    invest_pa: float | None = None
+    invest_pa_com: float | None = None
+    invest_pa_outside: float | None = None
+    invest: float | None = None
+    invest_com: float | None = None
+    invest_outside: float | None = None
+    cost_wage: float | None = None
+    demand_emplo: float | None = None
+    demand_emplo_new: float | None = None
+    demand_emplo_com: float | None = None
+    invest_pct: float | None = None
+    cost_climate_saved_pct: float | None = None
+    demand_emplo_new_pct: float | None = None
 
 
 # definition of variable names for sector M(ethodology) - there are no rows or columns in the excel!

@@ -11,7 +11,7 @@ from .transport import Transport
 from .investmentaction import InvestmentAction
 
 
-@dataclass(kw_only=True, frozen=True)
+@dataclass(kw_only=True)
 class ZeroEnergyAndCO2e:
     transport_capacity_pkm: float
     transport_capacity_tkm: float
