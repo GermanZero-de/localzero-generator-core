@@ -2,7 +2,7 @@
 
 from .entries import Entries
 from .utils import div
-from .refdata import RefData, Row
+from .refdata import RefData, Row, RowNotFound
 from .years import YEAR_BASELINE_CHOICES, YEAR_TARGET_CHOICES
 
 
@@ -42,7 +42,12 @@ def make_entries(
     m_population_sta = data.population(ags_sta_padded).int("total")
     m_population_nat = data.population(ags_germany).int("total")
 
-    data_area_com = data.area(ags)
+    try:
+        data_area_com = data.area(ags)
+    except RowNotFound:
+        raise ValueError(
+            f"ags '{ags}' was not found in the data, please check your entry."
+        )
     data_area_dis = data.area(ags_dis_padded)
     data_area_sta = data.area(ags_sta_padded)
     data_area_nat = data.area(ags_germany)
