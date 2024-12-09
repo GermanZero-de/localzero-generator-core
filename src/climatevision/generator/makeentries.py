@@ -12,6 +12,13 @@ def make_entries(
     assert year_baseline in YEAR_BASELINE_CHOICES
     assert year_target in YEAR_TARGET_CHOICES
 
+    try:
+        data_area_com = data.area(ags)
+    except RowNotFound:
+        raise ValueError(
+            f"ags '{ags}' was not found in the data, please check your entry."
+        )
+
     # ags identifies the community (Kommune)
     ags_dis = ags[:5]  # This identifies the administrative district (Landkreis)
     ags_sta = ags[:2]  # This identifies the federal state (Bundesland)
@@ -42,12 +49,6 @@ def make_entries(
     m_population_sta = data.population(ags_sta_padded).int("total")
     m_population_nat = data.population(ags_germany).int("total")
 
-    try:
-        data_area_com = data.area(ags)
-    except RowNotFound:
-        raise ValueError(
-            f"ags '{ags}' was not found in the data, please check your entry."
-        )
     data_area_dis = data.area(ags_dis_padded)
     data_area_sta = data.area(ags_sta_padded)
     data_area_nat = data.area(ags_germany)
