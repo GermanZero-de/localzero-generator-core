@@ -85,28 +85,28 @@ def derived_fact_or_ass(n: str, value: float | int, trace: TRACE) -> TRACE:
 
 def _replace_name_defs_by_names(trace: TRACE) -> TRACE:
     match trace:
-        case {"binary": op, "a": a, "b": b, "value": v}:  # type: ignore
+        case {"binary": op, "a": a, "b": b, "value": v}:
             return {
                 "binary": op,
-                "a": _replace_name_defs_by_names(a),  # type: ignore
-                "b": _replace_name_defs_by_names(b),  # type: ignore
+                "a": _replace_name_defs_by_names(a),
+                "b": _replace_name_defs_by_names(b),
                 "value": v,
             }
-        case {"unary": op, "a": a}:  # type: ignore
-            return {"unary": op, "a": _replace_name_defs_by_names(a)}  # type: ignore
+        case {"unary": op, "a": a}:
+            return {"unary": op, "a": _replace_name_defs_by_names(a)}
         case int() | float():
             return trace
-        case {"def_name": ({"name": n} as name), "trace": t}:  # type: ignore
+        case {"def_name": ({"name": n} as name), "trace": t}:
             # Names we could not resolve we replace by their expression
             if n.startswith("?"):
-                return _replace_name_defs_by_names(t)  # type: ignore
+                return _replace_name_defs_by_names(t)
             else:
                 return name
         case {"source": _, "key": _, "attr": _, "value": _}:
             return trace
         case {"fact_or_ass": _, "value": _}:
             return trace
-        case {"derived_fact_or_ass": _, "value": _, "trace": _}:  # type: ignore
+        case {"derived_fact_or_ass": _, "value": _, "trace": _}:
             # By construction derived facts or assumptions do not themselves contain
             # named values (other than facts or assumptions). So we can return the
             # original trace unchanged
@@ -269,7 +269,7 @@ def set_names(r: RESULT_DICTIONARY, path: list[str] = []) -> None:
         match node:
             case TracedNumber():
                 match node.trace:
-                    case {"def_name": ({"name": str(n)} as name), "trace": _}:  # type: ignore
+                    case {"def_name": ({"name": str(n)} as name), "trace": _}:
                         if n.startswith("?"):
                             name["name"] = ".".join(path)
                     case _:
@@ -300,10 +300,10 @@ def finalize_traces_in_result(r: RESULT_DICTIONARY, path: list[str] = []) -> Non
             match v:
                 case TracedNumber() as tn:
                     match tn.trace:
-                        case {"def_name": _, "trace": t}:  # type: ignore
+                        case {"def_name": _, "trace": t}:
                             r[k] = {
                                 "value": tn.value,
-                                "trace": _replace_name_defs_by_names(t),  # type: ignore
+                                "trace": _replace_name_defs_by_names(t),
                             }
 
                         case _:
