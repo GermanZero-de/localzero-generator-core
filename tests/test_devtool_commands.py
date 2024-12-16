@@ -2,6 +2,8 @@
 
 import os
 
+import pytest
+
 from devtool import Devtool
 
 filePath = "test.txt"
@@ -64,6 +66,48 @@ def test_cmd_make_entries_with_parameters():
         assert False, "file " + filePath + " was not created"
 
 
+def test_cmd_make_entries_with_invalid_target_year():
+    with pytest.raises(SystemExit) as excinfo:
+        check_cmd(
+            [
+                "make",
+                "-ags",
+                "100000000",
+                "-year_target",
+                "2100",  # Invalid target year
+                "-year_ref",
+                "2018",
+                "-o",
+                filePath,
+            ],
+            "make",
+            False,
+        )
+
+    assert excinfo.value.code == 2
+
+
+def test_cmd_make_entries_with_invalid_ref_year():
+    with pytest.raises(SystemExit) as excinfo:
+        check_cmd(
+            [
+                "make",
+                "-ags",
+                "100000000",
+                "-year_target",
+                "2040",
+                "-year_ref",
+                "1999",  # Invalid ref year
+                "-o",
+                filePath,
+            ],
+            "make",
+            False,
+        )
+
+    assert excinfo.value.code == 2
+
+
 def test_cmd_explorer():
     check_cmd(
         ["explorer"],
@@ -124,7 +168,7 @@ def test_cmd_test_end_to_end_update_expectations():
     check_cmd(
         ["test_end_to_end", "update_expectations"],
         "update_expectations",
-        False  # You shouldn't run this as it will update expectations.
+        False,  # You shouldn't run this as it will update expectations.
         # We only want people to do so when they have thought about it first.
     )
 
