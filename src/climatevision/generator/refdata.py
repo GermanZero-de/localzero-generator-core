@@ -504,21 +504,21 @@ def filename(year_ref: int, what: str) -> str:
             "area": "2021",  # FINISHED
             "area_kinds": "2021",  # FINISHED
             "assumptions": "2018",  # NO CHANGES
-            "buildings": "2018",  # AGS TRANSPLANT 2018 to 2021 OR 2022 - 5 month
+            "buildings": "2018",  # AGS TRANSPLANT 2018 to 2021 OR 2022 - 5 month (HAUKE)
             "co2path": "2018",  # NO CHANGES NEEDED (IF CO2 BUDGET STAYS "CONSTANT")
-            "destatis": "2018",  # AGS TRANSPLANT 2018 TO 2021
+            "destatis": "2021",  # AGS TRANSPLANT 2018 TO 2021 FINISHED
             "facts": "2021",  # FINISHED
-            "flats": "2018",  # AGS TRANSPLANT 2018 to 2021 OR 2022 - 5 month
+            "flats": "2018",  # AGS TRANSPLANT 2018 to 2021 OR 2022 - 5 month (HAUKE)
             "industry_facilites": "2021",  # FINISHED
             "nat_agri": "2021",  # FINISHED
             "nat_energy": "2021",  # FINISHED
             "nat_organic_agri": "2020",  # FINISHED
-            "nat_res_buildings": "2018",  # AGS TRANSPLANT 2018 to 2021 OR 2022 - 5 month
+            "nat_res_buildings": "2018",  # AGS TRANSPLANT 2018 to 2021 OR 2022 - 5 month (HAUKE -- MAYBE UNCHANGED?)
             "population": "2021",  # FINISHED
             "renewable_energy": "2021",  # LEON TO CHECK WHAT WENT WRONG
-            "traffic": "2018",  # AGS TRANSPLANT 2018 to 2021
-            "traffic_air": "2018",  # AGS TRANSPLANT 2018 to 2021
-            "traffic_rail": "2018",  # AGS TRANSPLANT 2018 to 2021
+            "traffic": "2021",  # AGS TRANSPLANT 2018 to 2021 FINISHED
+            "traffic_air": "2021",  # AGS TRANSPLANT 2018 to 2021 FINISHED
+            "traffic_rail": "2021",  # AGS TRANSPLANT 2018 to 2021 FINISHED
         },
     }
     return exceptions.get(year_ref, {}).get(what, str(year_ref))
