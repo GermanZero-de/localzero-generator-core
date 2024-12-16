@@ -8,9 +8,12 @@ import datetime
 from typing import Literal
 
 
+STR_COLS = 3
+
+
 def read_data(
     filename: str, *, remove_empty_rows: bool
-) -> typing.Tuple[list[str], dict[str, list[float]]]:
+) -> typing.Tuple[list[str], dict[str, tuple[list[str], list[float]]]]:
     """Read the original data.  Returns a tuple of the header and a dict
     mapping the AGS (first column of the file) to the remaining data.
     """
@@ -20,20 +23,23 @@ def read_data(
         result = {}
         for row in csv_reader:
             ags = row[0]
-            data = row[1:]
+            str_data = row[1 : STR_COLS + 1]
+            data = row[STR_COLS + 1 :]
             if remove_empty_rows and all((x == "" for x in data)):
                 continue
             data = [float(x) for x in data]
-            result[ags] = data
+            result[ags] = (str_data, data)
         return header, result
 
 
-def write_data(filename: str, header: list[str], data: dict[str, list[float]]):
+def write_data(
+    filename: str, header: list[str], data: dict[str, tuple[list[str], list[float]]]
+):
     with open(filename, "w", encoding="utf-8") as f:
         csv_writer = csv.writer(f, delimiter=",", lineterminator="\n")
         csv_writer.writerow(header)
         for ags, row in data.items():
-            csv_writer.writerow([ags] + row)
+            csv_writer.writerow([ags] + row[0] + row[1])
 
 
 FIRST_DATE_OF_INTEREST = datetime.date(2019, 1, 1)
@@ -41,7 +47,7 @@ FIRST_DATE_OF_INTEREST = datetime.date(2019, 1, 1)
 
 def distribute_by_area(
     label: str,
-    original_data: dict[str, list[float]],
+    original_data: dict[str, tuple[list[str], list[float]]],
     change: PartialSpinOff | Dissolution,
 ) -> bool:
     """Distribute data from the ags of the change to the ags's mentioned in parts of the change,
@@ -55,19 +61,19 @@ def distribute_by_area(
     if change.ags not in original_data:
         print(
             f"WARNING (during  {label}): {change.ags} ({change.name}) not found.",
-            file=sys.stderr,
         )
         return False
     if len(change.parts) > 1:
         print("MANY", change)
-    source = original_data[change.ags]
+    (source_str, source) = original_data[change.ags]
     for part, ratio in change.parts_with_ratios_by_area():
         if part.ags in original_data:
-            original_data[part.ags] = [
-                s * ratio + o for s, o in zip(source, original_data[part.ags])
-            ]
+            original_data[part.ags] = (
+                source_str,
+                [s * ratio + o for s, o in zip(source, original_data[part.ags][1])],
+            )
         else:
-            original_data[part.ags] = [s * ratio for s in source]
+            original_data[part.ags] = ([""] * STR_COLS, [s * ratio for s in source])
 
     return True
 
@@ -100,7 +106,9 @@ def transplant(
                         ratio = (
                             1 - ch.total_area_of_parts_in_sqm() / ch.total_area_in_sqm()
                         )
-                        original_data[ags] = [o * ratio for o in original_data[ags]]
+                        assert False
+                        # This is dead code we no longer run with mode != IGNORE_SPIN_OFFS
+                        # original_data[ags] = [o * ratio for o in original_data[ags]]
                 else:
                     print("ignoring", ch)
             case Dissolution(ags=ags):
