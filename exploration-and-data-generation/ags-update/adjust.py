@@ -58,8 +58,9 @@ def distribute_by_area(
             file=sys.stderr,
         )
         return False
+    if len(change.parts) > 1:
+        print("MANY", change)
     source = original_data[change.ags]
-    print(change)
     for part, ratio in change.parts_with_ratios_by_area():
         if part.ags in original_data:
             original_data[part.ags] = [
@@ -103,6 +104,11 @@ def transplant(
                 else:
                     print("ignoring", ch)
             case Dissolution(ags=ags):
+                if len(ch.parts) > 1:
+                    print("ignoring dissolution into multiple parts", ch)
+                    if ags in original_data:
+                        del original_data[ags]
+                    continue
                 if distribute_by_area("dissolution", original_data, ch):
                     del original_data[ags]
             case AgsOrNameChange(
@@ -142,6 +148,8 @@ def compare(file1: str, file2: str, *, remove_empty_rows: bool):
             if data1[ags] == data2[ags]:
                 equals += 1
             else:
+                for (a, b) in zip(data1[ags], data2[ags]):
+                    assert a <= b
                 unequal.append(ags)
 
     print("SUMMARY")
