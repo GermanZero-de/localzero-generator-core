@@ -2,7 +2,7 @@
 
 from .entries import Entries
 from .utils import div
-from .refdata import RefData, Row, RowNotFound
+from .refdata import RefData, Row
 from .years import YEAR_BASELINE_CHOICES, YEAR_TARGET_CHOICES
 
 
@@ -12,9 +12,9 @@ def make_entries(
     assert year_baseline in YEAR_BASELINE_CHOICES
     assert year_target in YEAR_TARGET_CHOICES
 
-    if ags not in list(data.ags_master().keys()):
+    if ags not in data.ags_master():
         print(f"ags '{ags}' was not found in the master CSV, please check your entry.")
-        exit(1)  # Exit gracefully with a non-zero status code
+        exit(1)
 
     # ags identifies the community (Kommune)
     ags_dis = ags[:5]  # This identifies the administrative district (Landkreis)
@@ -769,8 +769,3 @@ def make_entries(
         ags=ags,
         w_elec_fec=w_elec_fec,
     )
-
-
-if __name__ == "__main__":
-    rd = RefData.load(year_ref=2035)
-    entries = make_entries(data=rd, ags=12345678, year_baseline=2018, year_target=2035)
