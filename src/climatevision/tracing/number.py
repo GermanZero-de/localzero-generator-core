@@ -43,7 +43,7 @@ class FactOrAss(TypedDict):
 class DerivedFactOrAss(TypedDict):
     derived_fact_or_ass: str
     value: float | int
-    trace: TRACE
+    trace: "TRACE"
 
 
 class NameTrace(TypedDict):
@@ -52,19 +52,19 @@ class NameTrace(TypedDict):
 
 class DefTrace(TypedDict):
     def_name: NameTrace
-    trace: TRACE
+    trace: "TRACE"
 
 
 class BinaryTrace(TypedDict):
     binary: Literal["+", "-", "*", "/"]
-    a: TRACE
-    b: TRACE
+    a: "TRACE"
+    b: "TRACE"
     value: float | int
 
 
 class UnaryTrace(TypedDict):
     unary: Literal["+", "-"]
-    a: TRACE
+    a: "TRACE"
 
 
 def literal(v: int | float) -> TRACE:
