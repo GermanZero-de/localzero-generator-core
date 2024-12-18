@@ -25,7 +25,19 @@ def test_cmd_run_with_parameters():
         assert False, "file " + filePath + " already exists"
 
     check_cmd(
-        ["run", "-ags", "10000000", "-year_target", "2040", "-o", filePath],
+        [
+            "run",
+            "-ags",
+            "10000000",
+            "-year_target",
+            "2040",
+            "-year_ref",
+            "2021",
+            "-year_baseline",
+            "2022",
+            "-o",
+            filePath,
+        ],
         "run",
         True,
     )
@@ -53,6 +65,8 @@ def test_cmd_make_entries_with_parameters():
             "2040",
             "-year_ref",
             "2021",
+            "-year_baseline",
+            "2022",
             "-o",
             filePath,
         ],
@@ -66,13 +80,34 @@ def test_cmd_make_entries_with_parameters():
         assert False, "file " + filePath + " was not created"
 
 
+def test_cmd_make_entries_with_invalid_ags():
+    with pytest.raises(SystemExit) as excinfo:
+        check_cmd(
+            [
+                "make",
+                "-ags",
+                "12345678",  # Invalid AGS value
+                "-year_target",
+                "2040",
+                "-year_ref",
+                "2018",
+                "-o",
+                "dummy_output_path",
+            ],
+            "make",
+            False,
+        )
+
+    assert excinfo.value.code == 2
+
+
 def test_cmd_make_entries_with_invalid_target_year():
     with pytest.raises(SystemExit) as excinfo:
         check_cmd(
             [
                 "make",
                 "-ags",
-                "100000000",
+                "10000000",
                 "-year_target",
                 "2100",  # Invalid target year
                 "-year_ref",
@@ -93,11 +128,34 @@ def test_cmd_make_entries_with_invalid_ref_year():
             [
                 "make",
                 "-ags",
-                "100000000",
+                "10000000",
                 "-year_target",
                 "2040",
                 "-year_ref",
                 "1999",  # Invalid ref year
+                "-o",
+                filePath,
+            ],
+            "make",
+            False,
+        )
+
+    assert excinfo.value.code == 2
+
+
+def test_cmd_make_entries_with_invalid_baseline_year():
+    with pytest.raises(SystemExit) as excinfo:
+        check_cmd(
+            [
+                "make",
+                "-ags",
+                "10000000",
+                "-year_target",
+                "2040",
+                "-year_ref",
+                "2018",
+                "-year_baseline",
+                "1999",  # Invalid baseline year
                 "-o",
                 filePath,
             ],
