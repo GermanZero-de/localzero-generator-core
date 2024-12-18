@@ -1,8 +1,8 @@
 # pyright: strict
 
 from .entries import Entries
-from .utils import div
 from .refdata import RefData, Row
+from .utils import div
 from .years import YEAR_BASELINE_CHOICES, YEAR_TARGET_CHOICES
 
 
@@ -11,6 +11,7 @@ def make_entries(
 ) -> Entries:
     assert year_baseline in YEAR_BASELINE_CHOICES
     assert year_target in YEAR_TARGET_CHOICES
+    assert ags in data.ags_master()
 
     # ags identifies the community (Kommune)
     ags_dis = ags[:5]  # This identifies the administrative district (Landkreis)
