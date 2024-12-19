@@ -473,47 +473,21 @@ def filename(year_ref: int, what: str) -> str:
             "nat_organic_agri": "2016",
             "renewable_energy": "2021",
         },
-        # 2021: {
-        #     "ags": "2021",
-        #     "area": "2021",
-        #     "area_kinds": "2021",
-        #     "assumptions": "2021",
-        #     "buildings": "2018",  # Building census is delayed
-        #     "co2path": "2018",  # We can use this unchanged.
-        #     "destatis": "2018",  # TODO: What about this? (Landkreisfeiner öffentlicher Verkehr)
-        # Have to check for above that we can use the traffic code to do the transplant
-        #     "facts": "2018",  # TODO: Bene is late
-        #     "flats": "2018",  # TODO: Building census is delayed
-        #     "industry_facilites": "2018",  # TODO: Jan
-        #     "nat_agri": "2021",
-        #     "nat_energy": "2021",
-        #     "nat_organic_agri": "2020",
-        #     "nat_res_buildings": "2018",  # TODO: Building census is delayed
-        #     "population": "2021",
-        #     "renewable_energy": "2018",  # TODO: What about this?
-        #     "traffic": "2018",  # TODO: We did write code to transplant this, must still check in the work
-        #     "traffic_air": "2018",  # TODO: ? Can we use the transplant code for this as well?!
-        #     "traffic_rail": "2018",  # TODO: ? CAn we use the transplant code for this as well?!
-        # },
-        # For all "unchanged" reference files we need to do
-        # the merging of the AGSes (we have previously convinced ourselves
-        # that the only interesting changes that have happened to AGS
-        # is that some kommune have been joined)
         2021: {
             "ags": "2021",  # FINISHED
             "area": "2021",  # FINISHED
             "area_kinds": "2021",  # FINISHED
-            "assumptions": "2018",  # NO CHANGES
-            "buildings": "2018",  # AGS TRANSPLANT 2018 to 2021 OR 2022 - 5 month (HAUKE)
+            "assumptions": "2018",  # NO CHANGES - FINISHED
+            "buildings": "2021",  # AGS TRANSPLANT 2018 to 2021 FINISHED
             "co2path": "2018",  # NO CHANGES NEEDED (IF CO2 BUDGET STAYS "CONSTANT")
             "destatis": "2021",  # AGS TRANSPLANT 2018 TO 2021 FINISHED
             "facts": "2021",  # FINISHED
-            "flats": "2018",  # AGS TRANSPLANT 2018 to 2021 OR 2022 - 5 month (HAUKE)
+            "flats": "2021",  # FROM DESTATIS 2021 - FINISHED
             "industry_facilites": "2021",  # FINISHED
             "nat_agri": "2021",  # FINISHED
             "nat_energy": "2021",  # FINISHED
             "nat_organic_agri": "2020",  # FINISHED
-            "nat_res_buildings": "2018",  # AGS TRANSPLANT 2018 to 2021 OR 2022 - 5 month (HAUKE -- MAYBE UNCHANGED?)
+            "nat_res_buildings": "2018",  # WE ARE USING THIS UNCHANGED (ONLY STATES AND NO NEW DATA)
             "population": "2021",  # FINISHED
             "renewable_energy": "2021",  # LEON TO CHECK WHAT WENT WRONG
             "traffic": "2021",  # AGS TRANSPLANT 2018 to 2021 FINISHED
