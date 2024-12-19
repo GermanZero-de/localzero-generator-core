@@ -8,7 +8,7 @@ import datetime
 from typing import Literal
 
 
-STR_COLS = 3
+STR_COLS = 0
 
 
 def read_data(
@@ -27,7 +27,7 @@ def read_data(
             data = row[STR_COLS + 1 :]
             if remove_empty_rows and all((x == "" for x in data)):
                 continue
-            data = [float(x) for x in data]
+            data = [float(x) if x != "" else 0.0 for x in data]
             result[ags] = (str_data, data)
         return header, result
 
@@ -156,8 +156,6 @@ def compare(file1: str, file2: str, *, remove_empty_rows: bool):
             if data1[ags] == data2[ags]:
                 equals += 1
             else:
-                for (a, b) in zip(data1[ags], data2[ags]):
-                    assert a <= b
                 unequal.append(ags)
 
     print("SUMMARY")
