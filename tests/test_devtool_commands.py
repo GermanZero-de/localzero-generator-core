@@ -85,7 +85,7 @@ def test_cmd_data_is_production():
 
 
 def test_cmd_data_checkout():
-    check_cmd(["data", "checkout"], "checkout", True)
+    check_cmd(["data", "checkout"], "checkout", False)
 
 
 def test_cmd_data_lookup_ags():
