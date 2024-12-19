@@ -141,7 +141,7 @@ class DataFrame(Generic[KeyT]):
             datadir=datadir,
             what=what,
             key_column="ags",
-            key_from_raw=lambda i: i,
+            key_from_raw=lambda i: i,  # type: ignore
             filename=filename,
             set_nans_to_0_in_columns=set_nans_to_0_in_columns,
         )
@@ -471,54 +471,28 @@ def filename(year_ref: int, what: str) -> str:
         2018: {
             "ags": "master",  # This is a bit stupid, we should have named that file by year as well.
             "nat_organic_agri": "2016",
-            "renewable_energy": "2021",  # data is not used for the calculation for the ref year, but as an assumption for the diff to the target year
+            "renewable_energy": "2021",
         },
-        # 2021: {
-        #     "ags": "2021",
-        #     "area": "2021",
-        #     "area_kinds": "2021",
-        #     "assumptions": "2021",
-        #     "buildings": "2018",  # Building census is delayed
-        #     "co2path": "2018",  # We can use this unchanged.
-        #     "destatis": "2018",  # TODO: What about this? (Landkreisfeiner öffentlicher Verkehr)
-        # Have to check for above that we can use the traffic code to do the transplant
-        #     "facts": "2018",  # TODO: Bene is late
-        #     "flats": "2018",  # TODO: Building census is delayed
-        #     "industry_facilites": "2018",  # TODO: Jan
-        #     "nat_agri": "2021",
-        #     "nat_energy": "2021",
-        #     "nat_organic_agri": "2020",
-        #     "nat_res_buildings": "2018",  # TODO: Building census is delayed
-        #     "population": "2021",
-        #     "renewable_energy": "2018",  # TODO: What about this?
-        #     "traffic": "2018",  # TODO: We did write code to transplant this, must still check in the work
-        #     "traffic_air": "2018",  # TODO: ? Can we use the transplant code for this as well?!
-        #     "traffic_rail": "2018",  # TODO: ? CAn we use the transplant code for this as well?!
-        # },
-        # For all "unchanged" reference files we need to do
-        # the merging of the AGSes (we have previously convinced ourselves
-        # that the only interesting changes that have happened to AGS
-        # is that some kommune have been joined)
         2021: {
             "ags": "2021",  # FINISHED
             "area": "2021",  # FINISHED
             "area_kinds": "2021",  # FINISHED
-            "assumptions": "2018",  # NO CHANGES
-            "buildings": "2018",  # AGS TRANSPLANT 2018 to 2021 OR 2022 - 5 month
+            "assumptions": "2018",  # NO CHANGES - FINISHED
+            "buildings": "2021",  # AGS TRANSPLANT 2018 to 2021 FINISHED
             "co2path": "2018",  # NO CHANGES NEEDED (IF CO2 BUDGET STAYS "CONSTANT")
-            "destatis": "2018",  # AGS TRANSPLANT 2018 TO 2021
+            "destatis": "2021",  # AGS TRANSPLANT 2018 TO 2021 FINISHED
             "facts": "2021",  # FINISHED
-            "flats": "2018",  # AGS TRANSPLANT 2018 to 2021 OR 2022 - 5 month
+            "flats": "2021",  # FROM DESTATIS 2021 - FINISHED
             "industry_facilites": "2021",  # FINISHED
             "nat_agri": "2021",  # FINISHED
             "nat_energy": "2021",  # FINISHED
             "nat_organic_agri": "2020",  # FINISHED
-            "nat_res_buildings": "2018",  # AGS TRANSPLANT 2018 to 2021 OR 2022 - 5 month
+            "nat_res_buildings": "2018",  # WE ARE USING THIS UNCHANGED (ONLY STATES AND NO NEW DATA)
             "population": "2021",  # FINISHED
-            "renewable_energy": "2023",  # FINISHED  # data is not used for the calculation for the ref year, but as an assumption for the diff to the target year
-            "traffic": "2018",  # AGS TRANSPLANT 2018 to 2021
-            "traffic_air": "2018",  # AGS TRANSPLANT 2018 to 2021
-            "traffic_rail": "2018",  # AGS TRANSPLANT 2018 to 2021
+            "renewable_energy": "2023",  # FINISHED
+            "traffic": "2021",  # AGS TRANSPLANT 2018 to 2021 FINISHED
+            "traffic_air": "2021",  # AGS TRANSPLANT 2018 to 2021 FINISHED
+            "traffic_rail": "2021",  # AGS TRANSPLANT 2018 to 2021 FINISHED
         },
     }
     return exceptions.get(year_ref, {}).get(what, str(year_ref))
@@ -528,7 +502,7 @@ def load_data_frame_ags(
     datadir: str, year_ref: int, what: str, set_nans_to_0_in_columns: list[str] = []
 ) -> DataFrame[str]:
     """Load a data frame for the given data set for the current refyear."""
-    return DataFrame.load_ags(
+    return DataFrame.load_ags(  # type: ignore
         datadir,
         what,
         filename=filename(year_ref, what),
@@ -545,7 +519,7 @@ def load_data_frame(
     set_nans_to_0_in_columns: list[str] = [],
 ) -> DataFrame[KeyT]:
     """Load a data frame for the given data set for the current refyear."""
-    return DataFrame.load(
+    return DataFrame.load(  # type: ignore
         datadir,
         what,
         key_column,
@@ -815,7 +789,7 @@ class RefData:
         population_0_columns = ["total"] if fix_missing_entries else []
         d = cls(
             year_ref=year_ref,
-            ags_master=DataFrame.load_ags(datadir, "ags", filename="master"),
+            ags_master=DataFrame.load_ags(datadir, "ags", filename="master"),  # type: ignore
             area=load_data_frame_ags(
                 datadir, year_ref, "area", set_nans_to_0_in_columns=area_0_columns
             ),
