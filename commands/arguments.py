@@ -17,7 +17,7 @@ from climatevision.generator.years import (
 
 class DynamicChoicesAction(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
-        year_ref = getattr(namespace, "year_ref", 2018)  # Default to 2018 if not set
+        year_ref = getattr(namespace, "year_ref", 2021)  # Default to 2021 if not set
         ags_master = RefData.load(int(year_ref)).ags_master()
         if values not in ags_master:
             raise argparse.ArgumentError(
