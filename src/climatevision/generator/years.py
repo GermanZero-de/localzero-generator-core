@@ -1,4 +1,4 @@
-YEAR_REF_DEFAULT = 2018
+YEAR_REF_DEFAULT = 2021
 YEAR_REF_CHOICES = [2018, 2021]
 YEAR_REF_HELP = "year of the reference data"
 
