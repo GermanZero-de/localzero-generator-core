@@ -29,3 +29,4 @@ sphinx:
 python:
   install:
     - method: poetry
+    - path: "."
