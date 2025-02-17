@@ -2,30 +2,28 @@
 
 from dataclasses import dataclass, field
 
+from .agri2018.a18 import A18
+from .agri2030.a30 import A30
+from .business2018.b18 import B18
+from .business2030.b30 import B30
+from .electricity2018.e18 import E18
+from .electricity2030.e30 import E30
+from .fuels2018.f18 import F18
+from .fuels2030.f30 import F30
+from .heat2018.h18 import H18
+from .heat2030.h30 import H30
+from .industry2018.i18 import I18
+from .industry2030.i30 import I30
+from .lulucf2018.l18 import L18
+from .lulucf2030.l30 import L30
 from .makeentries import Entries
 from .refdata import Facts
-from .utils import div
-
-from .electricity2018.e18 import E18
-from .business2018.b18 import B18
-from .industry2018.i18 import I18
-from .transport2018.t18 import T18
 from .residences2018.r18 import R18
-from .agri2018.a18 import A18
-from .heat2018.h18 import H18
-from .lulucf2018.l18 import L18
-from .fuels2018.f18 import F18
-from .waste2018 import W18
-
-from .electricity2030.e30 import E30
-from .business2030.b30 import B30
-from .industry2030.i30 import I30
-from .transport2030.t30 import T30
 from .residences2030.r30 import R30
-from .agri2030.a30 import A30
-from .heat2030.h30 import H30
-from .lulucf2030.l30 import L30
-from .fuels2030.f30 import F30
+from .transport2018.t18 import T18
+from .transport2030.t30 import T30
+from .utils import div
+from .waste2018 import W18
 from .waste2030 import W30
 
 
@@ -134,6 +132,7 @@ class M183X:
     CO2e_w_lulucf_2049: float = None  # type: ignore
     CO2e_w_lulucf_2050: float = None  # type: ignore
     CO2e_w_lulucf_2051: float = None  # type: ignore
+    CO2e_w_lulucf_year_ref: float = None  # type: ignore
 
     # =======Z-Script Varaibles=============================
 
@@ -486,11 +485,13 @@ def calc_z(
     # get the CO2e of all sectors für 203X (the target year) which should be 0
     m183X.CO2e_w_lulucf_203X = m183X.CO2e_wo_lulucf_203X + m183X.CO2e_lulucf_203X
 
+    m183X.CO2e_w_lulucf_year_ref = getattr(m183X, f"CO2e_w_lulucf_{year_ref}")
+
     # calculate the total CO2e difference in t between year_ref and 203X
-    m183X.change_CO2e_t = m183X.CO2e_w_lulucf_203X - m183X.CO2e_w_lulucf_2018
+    m183X.change_CO2e_t = m183X.CO2e_w_lulucf_203X - m183X.CO2e_w_lulucf_year_ref
 
     # calculate the total CO2e difference in % between year_ref and 203X
-    m183X.change_CO2e_pct = div(m183X.change_CO2e_t, m183X.CO2e_w_lulucf_2018)
+    m183X.change_CO2e_pct = div(m183X.change_CO2e_t, m183X.CO2e_w_lulucf_year_ref)
 
     # get the total saved climate cost of all sectors until 2050
     m183X.cost_climate_saved = (
