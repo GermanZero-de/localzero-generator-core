@@ -13,7 +13,7 @@
     "a_gas_fec": 599.3691340843684,
     "a_lpg_fec": 490.39292788721053,
     "a_manure_dairycow_ratio_CO2e_to_amount": 0.8412996075302087,
-    "a_manure_deposition_ratio_CO2e_to_amount": 1.0,
+    "a_manure_deposition_ratio_CO2e_to_amount": 0.02198581012522579,
     "a_manure_nondairy_ratio_CO2e_to_amount": 0.29386359306321336,
     "a_manure_oanimal_ratio_CO2e_to_amount": 0.06477482754195574,
     "a_manure_poultry_ratio_CO2e_to_amount": 0.0010899406456758474,
