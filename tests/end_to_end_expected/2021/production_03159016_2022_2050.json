@@ -8712,10 +8712,11 @@
         "CO2e_w_lulucf_2049": 50500.71415603248,
         "CO2e_w_lulucf_2050": 25250.35707801643,
         "CO2e_w_lulucf_2051": 3.7834979593753815e-10,
+        "CO2e_w_lulucf_year_ref": 757510.7123404816,
         "CO2e_lulucf_203X": -7298.913790528384,
         "CO2e_wo_lulucf_203X": 7298.913790528384,
         "CO2e_w_lulucf_203X": 0.0,
-        "change_CO2e_t": -847995.9582927661,
+        "change_CO2e_t": -757510.7123404816,
         "change_CO2e_pct": -1.0,
         "cost_climate_saved": 2068363972.1279712,
         "z": {
