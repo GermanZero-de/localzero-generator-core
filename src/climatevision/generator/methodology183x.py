@@ -79,22 +79,6 @@ class M183X:
 
     CO2e_w_lulucf_change_pa: float = None  # type: ignore
 
-    CO2e_lulucf_2015: float = None  # type: ignore
-    CO2e_lulucf_2016: float = None  # type: ignore
-    CO2e_lulucf_2017: float = None  # type: ignore
-    CO2e_lulucf_2018: float = None  # type: ignore
-    CO2e_lulucf_2019: float = None  # type: ignore
-    CO2e_lulucf_2020: float = None  # type: ignore
-    CO2e_lulucf_2021: float = None  # type: ignore
-
-    CO2e_wo_lulucf_2015: float = None  # type: ignore
-    CO2e_wo_lulucf_2016: float = None  # type: ignore
-    CO2e_wo_lulucf_2017: float = None  # type: ignore
-    CO2e_wo_lulucf_2018: float = None  # type: ignore
-    CO2e_wo_lulucf_2019: float = None  # type: ignore
-    CO2e_wo_lulucf_2020: float = None  # type: ignore
-    CO2e_wo_lulucf_2021: float = None  # type: ignore
-
     CO2e_w_lulucf_2015: float = None  # type: ignore
     CO2e_w_lulucf_2016: float = None  # type: ignore
     CO2e_w_lulucf_2017: float = None  # type: ignore
@@ -251,9 +235,11 @@ def calc_budget(
     # calculate the CO2e of LULUCF for 2015-year_before_baseline by multiplying year_ref's value with percentage
     # 2015 just as a backup, probably not needed
 
+    # fact wo_lulucf used because forestry emission development is more similar to overall emmission development than to lulucf emmission development in data for year_ref 2021
+
     for year in years_list_2015_to_year_before_baseline_wo_year_ref:
         years_dict[year]["CO2e_lulucf"] = years_dict[year_ref]["CO2e_lulucf"] * fact(
-            f"Fact_M_CO2e_lulucf_{year}_vs_year_ref"
+            f"Fact_M_CO2e_wo_lulucf_{year}_vs_year_ref"
         )
 
     ################################################################
