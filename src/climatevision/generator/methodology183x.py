@@ -206,8 +206,6 @@ def calc_budget(
     ################################################################
     ### year_ref as base for emissions 2016-year_before_baseline ###
     ################################################################
-    ### beginning with LULUCF                                    ###
-    ################################################################
     year_baseline = entries.m_year_baseline
     year_before_baseline = year_baseline - 1
     year_ref = entries.m_year_ref
@@ -248,7 +246,9 @@ def calc_budget(
     # calculate the CO2e of all sectors for 2016-year_before_baseline by multiplying year_ref's value with percentage
     # fact wo_lulucf used for lulucf as well because forrestry emission development is more similar to overall emmission development than to lulucf emmission development in data for year_ref 2021
     for year in years_list_2016_to_year_before_baseline_wo_year_ref:
-        years_dict[year]["CO2e_w_lulucf"] = years_dict[year_ref]["CO2e_w_lulucf"] * fact(f"Fact_M_CO2e_wo_lulucf_{year}_vs_year_ref")
+        years_dict[year]["CO2e_w_lulucf"] = years_dict[year_ref][
+            "CO2e_w_lulucf"
+        ] * fact(f"Fact_M_CO2e_wo_lulucf_{year}_vs_year_ref")
 
     #################################################################################
     ### remaining local greenhouse gas budget for year_baseline until target year ###

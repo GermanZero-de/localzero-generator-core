@@ -38,7 +38,7 @@ def calculate_derived_facts(rd: refdata.RefData):
             "link": "",
         },
     )
-    
+
     f.add_derived_fact(
         "Fact_M_CO2e_wo_lulucf_2016_vs_year_ref",
         f.fact("Fact_M_CO2e_wo_lulucf_2016") / f.fact("Fact_M_CO2e_wo_lulucf_year_ref"),
