@@ -79,7 +79,6 @@ class M183X:
 
     CO2e_w_lulucf_change_pa: float = None  # type: ignore
 
-    CO2e_w_lulucf_2015: float = None  # type: ignore
     CO2e_w_lulucf_2016: float = None  # type: ignore
     CO2e_w_lulucf_2017: float = None  # type: ignore
     CO2e_w_lulucf_2018: float = None  # type: ignore
@@ -213,31 +212,29 @@ def calc_budget(
     year_before_baseline = year_baseline - 1
     year_ref = entries.m_year_ref
 
-    years_list_2015_to_year_before_baseline = list(range(2015, year_baseline))
     years_list_2016_to_year_before_baseline = list(range(2016, year_baseline))
 
-    years_list_2015_to_year_before_baseline_wo_year_ref = (
-        years_list_2015_to_year_before_baseline.copy()
+    years_list_2016_to_year_before_baseline_wo_year_ref = (
+        years_list_2016_to_year_before_baseline.copy()
     )
-    years_list_2015_to_year_before_baseline_wo_year_ref.remove(year_ref)
+    years_list_2016_to_year_before_baseline_wo_year_ref.remove(year_ref)
 
-    years_list_2015_to_2051 = list(range(2015, 2052))
+    years_list_2016_to_2051 = list(range(2016, 2052))
 
     years_predicted = list(range(year_baseline, 2052))
 
     years_dict: dict[int, dict[str, float]] = {
-        year: {} for year in years_list_2015_to_year_before_baseline
+        year: {} for year in years_list_2016_to_year_before_baseline
     }
 
     # get the CO2e of LULUCF for year_ref as calculated
     years_dict[year_ref]["CO2e_lulucf"] = l18.l.CO2e_total
 
-    # calculate the CO2e of LULUCF for 2015-year_before_baseline by multiplying year_ref's value with percentage
-    # 2015 just as a backup, probably not needed
+    # calculate the CO2e of LULUCF for 2016-year_before_baseline by multiplying year_ref's value with percentage
 
     # fact wo_lulucf used because forestry emission development is more similar to overall emmission development than to lulucf emmission development in data for year_ref 2021
 
-    for year in years_list_2015_to_year_before_baseline_wo_year_ref:
+    for year in years_list_2016_to_year_before_baseline_wo_year_ref:
         years_dict[year]["CO2e_lulucf"] = years_dict[year_ref]["CO2e_lulucf"] * fact(
             f"Fact_M_CO2e_wo_lulucf_{year}_vs_year_ref"
         )
@@ -261,9 +258,8 @@ def calc_budget(
         + w18.w.CO2e_total
     )
 
-    # calculate the CO2e of all sectors without LULUCF for 2015-year_before_baseline by multiplying year_ref's value with percentage
-    # 2015 just as a backup, probably not needed
-    for year in years_list_2015_to_year_before_baseline_wo_year_ref:
+    # calculate the CO2e of all sectors without LULUCF for 2016-year_before_baseline by multiplying year_ref's value with percentage
+    for year in years_list_2016_to_year_before_baseline_wo_year_ref:
         years_dict[year]["CO2e_wo_lulucf"] = years_dict[year_ref][
             "CO2e_wo_lulucf"
         ] * fact(f"Fact_M_CO2e_wo_lulucf_{year}_vs_year_ref")
@@ -274,8 +270,7 @@ def calc_budget(
     ###          sum up CO2e_wo_lulucf and CO2e_lulucf           ###
     ################################################################
 
-    # 2015 just as a backup, probably not needed
-    for year in years_list_2015_to_year_before_baseline:
+    for year in years_list_2016_to_year_before_baseline:
         years_dict[year]["CO2e_w_lulucf"] = (
             years_dict[year]["CO2e_wo_lulucf"] + years_dict[year]["CO2e_lulucf"]
         )
@@ -342,7 +337,6 @@ def calc_budget(
 
     # safe dict values in class variables
     (
-        m183X.CO2e_lulucf_2015,
         m183X.CO2e_lulucf_2016,
         m183X.CO2e_lulucf_2017,
         m183X.CO2e_lulucf_2018,
@@ -351,11 +345,10 @@ def calc_budget(
         m183X.CO2e_lulucf_2021,
     ) = [
         years_dict[year]["CO2e_lulucf"]
-        for year in years_list_2015_to_year_before_baseline
+        for year in years_list_2016_to_year_before_baseline
     ]
 
     (
-        m183X.CO2e_wo_lulucf_2015,
         m183X.CO2e_wo_lulucf_2016,
         m183X.CO2e_wo_lulucf_2017,
         m183X.CO2e_wo_lulucf_2018,
@@ -364,11 +357,10 @@ def calc_budget(
         m183X.CO2e_wo_lulucf_2021,
     ) = [
         years_dict[year]["CO2e_wo_lulucf"]
-        for year in years_list_2015_to_year_before_baseline
+        for year in years_list_2016_to_year_before_baseline
     ]
 
     (
-        m183X.CO2e_w_lulucf_2015,
         m183X.CO2e_w_lulucf_2016,
         m183X.CO2e_w_lulucf_2017,
         m183X.CO2e_w_lulucf_2018,
@@ -405,7 +397,7 @@ def calc_budget(
         m183X.CO2e_w_lulucf_2049,
         m183X.CO2e_w_lulucf_2050,
         m183X.CO2e_w_lulucf_2051,
-    ) = [years_dict[year]["CO2e_w_lulucf"] for year in years_list_2015_to_2051]
+    ) = [years_dict[year]["CO2e_w_lulucf"] for year in years_list_2016_to_2051]
 
     return m183X
 
