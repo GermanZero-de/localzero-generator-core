@@ -103,7 +103,7 @@ def test_enable_disable_tracing():
     result = with_tracing(
         enabled=True,
         f=lambda: calculate_with_default_inputs(
-            2018, "08416041", 2022, 2035
+            2018, "08416041", 2025, 2035
         ).result_dict(),
     )
     assert (
@@ -114,7 +114,7 @@ def test_enable_disable_tracing():
     result = with_tracing(
         enabled=False,
         f=lambda: calculate_with_default_inputs(
-            2018, "08416041", 2022, 2035
+            2018, "08416041", 2025, 2035
         ).result_dict(),
     )
     assert str(result["a30"]["g"]["cost_wage"]) == expected_value  # type: ignore
@@ -122,7 +122,7 @@ def test_enable_disable_tracing():
     result = with_tracing(
         enabled=True,
         f=lambda: calculate_with_default_inputs(
-            2018, "08416041", 2022, 2035
+            2018, "08416041", 2025, 2035
         ).result_dict(),
     )
     assert (
