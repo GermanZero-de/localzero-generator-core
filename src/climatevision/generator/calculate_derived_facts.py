@@ -2992,6 +2992,92 @@ def calculate_derived_facts(rd: refdata.RefData):
             "link": "",
         },
     )
+    # TODO: REFERENZJAHR EINFÜGEN??
+    f.add_derived_fact(
+        "Fact_T_S_road_petrol_fec_2018_ratio_ageb_to_kv",
+        f.fact("Fact_T_S_road_petrol_fec_2018_ageb")
+        / f.fact("Fact_T_S_road_petrol_fec_2018_kv"),
+        {
+            "note HS": "",
+            "group": "ui",
+            "description": "Faktor AGEB vs KV von EEV Benzin Strassenverkehr 2018",
+            "unit": "",
+            "rationale": "Skalierungsfaktor um EEV und damit CO2e aus IFEU an AGEB und damit NIR anzupassen. Berechnet als Verhältnis von Fact_T_S_road_petrol_fec_2018_ageb zu Fact_T_S_road_petrol_fec_2018_kv",
+            "reference": "",
+            "link": "",
+        },
+    )
+    f.add_derived_fact(
+        "Fact_T_S_road_diesel_fec_2018_ratio_ageb_to_kv",
+        f.fact("Fact_T_S_road_diesel_fec_2018_ageb")
+        / f.fact("Fact_T_S_road_diesel_fec_2018_kv"),
+        {
+            "note HS": "",
+            "group": "ui",
+            "description": "Faktor AGEB vs KV von EEV Diesel Strassenverkehr 2018",
+            "unit": "",
+            "rationale": "Skalierungsfaktor um EEV und damit CO2e aus IFEU an AGEB und damit NIR anzupassen. Berechnet als Verhältnis von Fact_T_S_road_diesel_fec_2018_ageb zu Fact_T_S_road_diesel_fec_2018_kv",
+            "reference": "",
+            "link": "",
+        },
+    )
+    f.add_derived_fact(
+        "Fact_T_S_road_lpg_fec_2018_ratio_ageb_to_kv",
+        f.fact("Fact_T_S_road_lpg_fec_2018_ageb")
+        / f.fact("Fact_T_S_road_lpg_fec_2018_kv"),
+        {
+            "note HS": "",
+            "group": "ui",
+            "description": "Faktor AGEB vs KV von EEV Flüssiggas (LPG) Strassenverkehr 2018",
+            "unit": "",
+            "rationale": "Skalierungsfaktor um EEV und damit CO2e aus IFEU an AGEB und damit NIR anzupassen. Berechnet als Verhältnis von Fact_T_S_road_lpg_fec_2018_ageb zu Fact_T_S_road_lpg_fec_2018_kv",
+            "reference": "",
+            "link": "",
+        },
+    )
+    f.add_derived_fact(
+        "Fact_T_S_road_gas_fec_2018_ratio_ageb_to_kv",
+        f.fact("Fact_T_S_road_gas_fec_2018_ageb")
+        / f.fact("Fact_T_S_road_gas_fec_2018_kv"),
+        {
+            "note HS": "",
+            "group": "ui",
+            "description": "Faktor AGEB vs KV von EEV Erdgas (CNG) Strassenverkehr 2018",
+            "unit": "",
+            "rationale": "Skalierungsfaktor um EEV und damit CO2e aus IFEU an AGEB und damit NIR anzupassen. Berechnet als Verhältnis von Fact_T_S_road_gas_fec_2018_ageb zu Fact_T_S_road_gas_fec_2018_kv",
+            "reference": "",
+            "link": "",
+        },
+    )
+    f.add_derived_fact(
+        "Fact_T_S_road_biomass_fec_2018_ratio_ageb_to_kv",
+        f.fact("Fact_T_S_road_biomass_fec_2018_ageb")
+        / f.fact("Fact_T_S_road_biomass_fec_2018_kv"),
+        {
+            "note HS": "",
+            "group": "ui",
+            "description": "Faktor AGEB vs KV von EEV Biomasse Strassenverkehr 2018",
+            "unit": "",
+            "rationale": "Skalierungsfaktor um EEV und damit CO2e aus IFEU an AGEB und damit NIR anzupassen. Berechnet als Verhältnis von Fact_T_S_road_biomass_fec_2018_ageb zu Fact_T_S_road_biomass_fec_2018_kv",
+            "reference": "",
+            "link": "",
+        },
+    )
+    f.add_derived_fact(
+        "Fact_T_S_road_elec_fec_2018_ratio_ageb_to_kv",
+        f.fact("Fact_T_S_road_elec_fec_2018_ageb")
+        / f.fact("Fact_T_S_road_elec_fec_2018_ev"),
+        {
+            "note HS": "",
+            "group": "ui",
+            "description": "Faktor AGEB vs KV von EEV Strom Strassenverkehr 2018",
+            "unit": "",
+            "rationale": "Skalierungsfaktor um EEV und damit CO2e aus IFEU an AGEB und damit NIR anzupassen. Berechnet als Verhältnis von Fact_T_S_road_elec_fec_2018_ageb zu Fact_T_S_road_elec_fec_2018_ev",
+            "reference": "",
+            "link": "",
+        },
+    )
+    ########################################
     f.add_derived_fact(
         "Fact_A_P_fermen_oanimal_CO2e_2018",
         f.fact("Fact_A_P_fermen_sheep_CO2e_2018")
