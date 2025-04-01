@@ -38,7 +38,6 @@ def calculate_derived_facts(rd: refdata.RefData):
             "link": "",
         },
     )
-
     f.add_derived_fact(
         "Fact_M_CO2e_wo_lulucf_2016_vs_year_ref",
         f.fact("Fact_M_CO2e_wo_lulucf_2016") / f.fact("Fact_M_CO2e_wo_lulucf_year_ref"),
@@ -2994,85 +2993,85 @@ def calculate_derived_facts(rd: refdata.RefData):
     )
     # TODO: REFERENZJAHR EINFÜGEN??
     f.add_derived_fact(
-        "Fact_T_S_road_petrol_fec_2018_ratio_ageb_to_kv",
-        f.fact("Fact_T_S_road_petrol_fec_2018_ageb")
-        / f.fact("Fact_T_S_road_petrol_fec_2018_kv"),
+        f"Fact_T_S_road_petrol_fec_{rd.year_ref()}_ratio_ageb_to_kv",
+        f.fact(f"Fact_T_S_road_petrol_fec_{rd.year_ref()}_ageb")
+        / f.fact(f"Fact_T_S_road_petrol_fec_{rd.year_ref()}_kv"),
         {
             "note HS": "",
             "group": "ui",
-            "description": "Faktor AGEB vs KV von EEV Benzin Strassenverkehr 2018",
+            "description": f"Faktor AGEB vs KV von EEV Benzin Strassenverkehr {rd.year_ref()}",
             "unit": "",
-            "rationale": "Skalierungsfaktor um EEV und damit CO2e aus IFEU an AGEB und damit NIR anzupassen. Berechnet als Verhältnis von Fact_T_S_road_petrol_fec_2018_ageb zu Fact_T_S_road_petrol_fec_2018_kv",
+            "rationale": f"Skalierungsfaktor um EEV und damit CO2e aus IFEU an AGEB und damit NIR anzupassen. Berechnet als Verhältnis von Fact_T_S_road_petrol_fec_{rd.year_ref()}_ageb zu Fact_T_S_road_petrol_fec_2018_kv",
             "reference": "",
             "link": "",
         },
     )
     f.add_derived_fact(
-        "Fact_T_S_road_diesel_fec_2018_ratio_ageb_to_kv",
-        f.fact("Fact_T_S_road_diesel_fec_2018_ageb")
-        / f.fact("Fact_T_S_road_diesel_fec_2018_kv"),
+        f"Fact_T_S_road_diesel_fec_{rd.year_ref()}_ratio_ageb_to_kv",
+        f.fact(f"Fact_T_S_road_diesel_fec_{rd.year_ref()}_ageb")
+        / f.fact(f"Fact_T_S_road_diesel_fec_2018_kv"),
         {
             "note HS": "",
             "group": "ui",
-            "description": "Faktor AGEB vs KV von EEV Diesel Strassenverkehr 2018",
+            "description": f"Faktor AGEB vs KV von EEV Diesel Strassenverkehr {rd.year_ref()}",
             "unit": "",
-            "rationale": "Skalierungsfaktor um EEV und damit CO2e aus IFEU an AGEB und damit NIR anzupassen. Berechnet als Verhältnis von Fact_T_S_road_diesel_fec_2018_ageb zu Fact_T_S_road_diesel_fec_2018_kv",
+            "rationale": f"Skalierungsfaktor um EEV und damit CO2e aus IFEU an AGEB und damit NIR anzupassen. Berechnet als Verhältnis von Fact_T_S_road_diesel_fec_{rd.year_ref()}_ageb zu Fact_T_S_road_diesel_fec_2018_kv",
             "reference": "",
             "link": "",
         },
     )
     f.add_derived_fact(
-        "Fact_T_S_road_lpg_fec_2018_ratio_ageb_to_kv",
-        f.fact("Fact_T_S_road_lpg_fec_2018_ageb")
-        / f.fact("Fact_T_S_road_lpg_fec_2018_kv"),
+        f"Fact_T_S_road_lpg_fec_{rd.year_ref()}_ratio_ageb_to_kv",
+        f.fact(f"Fact_T_S_road_lpg_fec_{rd.year_ref()}_ageb")
+        / f.fact(f"Fact_T_S_road_lpg_fec_2018_kv"),
         {
             "note HS": "",
             "group": "ui",
-            "description": "Faktor AGEB vs KV von EEV Flüssiggas (LPG) Strassenverkehr 2018",
+            "description": f"Faktor AGEB vs KV von EEV Flüssiggas (LPG) Strassenverkehr {rd.year_ref()}",
             "unit": "",
-            "rationale": "Skalierungsfaktor um EEV und damit CO2e aus IFEU an AGEB und damit NIR anzupassen. Berechnet als Verhältnis von Fact_T_S_road_lpg_fec_2018_ageb zu Fact_T_S_road_lpg_fec_2018_kv",
+            "rationale": f"Skalierungsfaktor um EEV und damit CO2e aus IFEU an AGEB und damit NIR anzupassen. Berechnet als Verhältnis von Fact_T_S_road_lpg_fec_{rd.year_ref()}_ageb zu Fact_T_S_road_lpg_fec_2018_kv",
             "reference": "",
             "link": "",
         },
     )
     f.add_derived_fact(
-        "Fact_T_S_road_gas_fec_2018_ratio_ageb_to_kv",
-        f.fact("Fact_T_S_road_gas_fec_2018_ageb")
-        / f.fact("Fact_T_S_road_gas_fec_2018_kv"),
+        f"Fact_T_S_road_gas_fec_{rd.year_ref()}_ratio_ageb_to_kv",
+        f.fact(f"Fact_T_S_road_gas_fec_{rd.year_ref()}_ageb")
+        / f.fact(f"Fact_T_S_road_gas_fec_2018_kv"),
         {
             "note HS": "",
             "group": "ui",
-            "description": "Faktor AGEB vs KV von EEV Erdgas (CNG) Strassenverkehr 2018",
+            "description": f"Faktor AGEB vs KV von EEV Erdgas (CNG) Strassenverkehr {rd.year_ref()}",
             "unit": "",
-            "rationale": "Skalierungsfaktor um EEV und damit CO2e aus IFEU an AGEB und damit NIR anzupassen. Berechnet als Verhältnis von Fact_T_S_road_gas_fec_2018_ageb zu Fact_T_S_road_gas_fec_2018_kv",
+            "rationale": f"Skalierungsfaktor um EEV und damit CO2e aus IFEU an AGEB und damit NIR anzupassen. Berechnet als Verhältnis von Fact_T_S_road_gas_fec_{rd.year_ref()}_ageb zu Fact_T_S_road_gas_fec_2018_kv",
             "reference": "",
             "link": "",
         },
     )
     f.add_derived_fact(
-        "Fact_T_S_road_biomass_fec_2018_ratio_ageb_to_kv",
-        f.fact("Fact_T_S_road_biomass_fec_2018_ageb")
-        / f.fact("Fact_T_S_road_biomass_fec_2018_kv"),
+        f"Fact_T_S_road_biomass_fec_{rd.year_ref()}_ratio_ageb_to_kv",
+        f.fact(f"Fact_T_S_road_biomass_fec_{rd.year_ref()}_ageb")
+        / f.fact(f"Fact_T_S_road_biomass_fec_2018_kv"),
         {
             "note HS": "",
             "group": "ui",
-            "description": "Faktor AGEB vs KV von EEV Biomasse Strassenverkehr 2018",
+            "description": f"Faktor AGEB vs KV von EEV Biomasse Strassenverkehr {rd.year_ref()}",
             "unit": "",
-            "rationale": "Skalierungsfaktor um EEV und damit CO2e aus IFEU an AGEB und damit NIR anzupassen. Berechnet als Verhältnis von Fact_T_S_road_biomass_fec_2018_ageb zu Fact_T_S_road_biomass_fec_2018_kv",
+            "rationale": f"Skalierungsfaktor um EEV und damit CO2e aus IFEU an AGEB und damit NIR anzupassen. Berechnet als Verhältnis von Fact_T_S_road_biomass_fec_{rd.year_ref()}_ageb zu Fact_T_S_road_biomass_fec_2018_kv",
             "reference": "",
             "link": "",
         },
     )
     f.add_derived_fact(
-        "Fact_T_S_road_elec_fec_2018_ratio_ageb_to_kv",
-        f.fact("Fact_T_S_road_elec_fec_2018_ageb")
-        / f.fact("Fact_T_S_road_elec_fec_2018_ev"),
+        f"Fact_T_S_road_elec_fec_{rd.year_ref()}_ratio_ageb_to_kv",
+        f.fact(f"Fact_T_S_road_elec_fec_{rd.year_ref()}_ageb")
+        / f.fact(f"Fact_T_S_road_elec_fec_2018_ev"),
         {
             "note HS": "",
             "group": "ui",
-            "description": "Faktor AGEB vs KV von EEV Strom Strassenverkehr 2018",
+            "description": f"Faktor AGEB vs KV von EEV Strom Strassenverkehr {rd.year_ref()}",
             "unit": "",
-            "rationale": "Skalierungsfaktor um EEV und damit CO2e aus IFEU an AGEB und damit NIR anzupassen. Berechnet als Verhältnis von Fact_T_S_road_elec_fec_2018_ageb zu Fact_T_S_road_elec_fec_2018_ev",
+            "rationale": f"Skalierungsfaktor um EEV und damit CO2e aus IFEU an AGEB und damit NIR anzupassen. Berechnet als Verhältnis von Fact_T_S_road_elec_fec_{rd.year_ref()}_ageb zu Fact_T_S_road_elec_fec_2018_ev",
             "reference": "",
             "link": "",
         },
