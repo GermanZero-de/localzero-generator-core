@@ -2991,7 +2991,6 @@ def calculate_derived_facts(rd: refdata.RefData):
             "link": "",
         },
     )
-    # TODO: REFERENZJAHR EINFÜGEN??
     f.add_derived_fact(
         f"Fact_T_S_road_petrol_fec_{rd.year_ref()}_ratio_ageb_to_kv",
         f.fact(f"Fact_T_S_road_petrol_fec_{rd.year_ref()}_ageb")
@@ -3076,7 +3075,6 @@ def calculate_derived_facts(rd: refdata.RefData):
             "link": "",
         },
     )
-    ########################################
     f.add_derived_fact(
         "Fact_A_P_fermen_oanimal_CO2e_2018",
         f.fact("Fact_A_P_fermen_sheep_CO2e_2018")
