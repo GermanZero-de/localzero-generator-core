@@ -2,18 +2,19 @@
 
 # pyright: strict
 
-from dataclasses import asdict
-from typing import Literal
 import json
 import os
+from dataclasses import asdict
+from typing import Literal
+
 import pytest
 
 from climatevision.generator import (
-    refdatatools,
+    RefData,
+    calculate_with_default_inputs,
     diffs,
     make_entries,
-    calculate_with_default_inputs,
-    RefData,
+    refdatatools,
 )
 
 PUBLIC_OR_PROP = Literal["public", "proprietary"]
@@ -165,11 +166,11 @@ def test_end_to_end_germany(year_ref: int):
     end_to_end(year_ref, "DG000000")
 
 
-# Min year for the generator = 2025
-def test_end_to_end_goettingen_2026(year_ref: int):
-    end_to_end(year_ref, ags="03159016", year_target=2026)
+# Min year_target for the generator = 2030
+def test_end_to_end_goettingen_2030(year_ref: int):
+    end_to_end(year_ref, ags="03159016", year_target=2030)
 
 
-# Max year for the generator = 2050
+# Max year_target for the generator = 2050
 def test_end_to_end_goettingen_2050(year_ref: int):
     end_to_end(year_ref, ags="03159016", year_target=2050)
