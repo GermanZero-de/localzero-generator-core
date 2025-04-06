@@ -2992,9 +2992,9 @@ def calculate_derived_facts(rd: refdata.RefData):
         },
     )
     f.add_derived_fact(
-        f"Fact_T_S_road_petrol_fec_{rd.year_ref()}_ratio_ageb_to_kv",
+        f"Fact_T_S_road_petrol_fec_year_ref_ratio_ageb_to_kv",
         f.fact(f"Fact_T_S_road_petrol_fec_{rd.year_ref()}_ageb")
-        / f.fact(f"Fact_T_S_road_petrol_fec_{rd.year_ref()}_kv"),
+        / f.fact("Fact_T_S_road_petrol_fec_2018_kv"),
         {
             "note HS": "",
             "group": "ui",
@@ -3006,9 +3006,9 @@ def calculate_derived_facts(rd: refdata.RefData):
         },
     )
     f.add_derived_fact(
-        f"Fact_T_S_road_diesel_fec_{rd.year_ref()}_ratio_ageb_to_kv",
+        f"Fact_T_S_road_diesel_fec_year_ref_ratio_ageb_to_kv",
         f.fact(f"Fact_T_S_road_diesel_fec_{rd.year_ref()}_ageb")
-        / f.fact(f"Fact_T_S_road_diesel_fec_2018_kv"),
+        / f.fact("Fact_T_S_road_diesel_fec_2018_kv"),
         {
             "note HS": "",
             "group": "ui",
@@ -3020,9 +3020,9 @@ def calculate_derived_facts(rd: refdata.RefData):
         },
     )
     f.add_derived_fact(
-        f"Fact_T_S_road_lpg_fec_{rd.year_ref()}_ratio_ageb_to_kv",
+        f"Fact_T_S_road_lpg_fec_year_ref_ratio_ageb_to_kv",
         f.fact(f"Fact_T_S_road_lpg_fec_{rd.year_ref()}_ageb")
-        / f.fact(f"Fact_T_S_road_lpg_fec_2018_kv"),
+        / f.fact("Fact_T_S_road_lpg_fec_2018_kv"),
         {
             "note HS": "",
             "group": "ui",
@@ -3034,9 +3034,9 @@ def calculate_derived_facts(rd: refdata.RefData):
         },
     )
     f.add_derived_fact(
-        f"Fact_T_S_road_gas_fec_{rd.year_ref()}_ratio_ageb_to_kv",
+        f"Fact_T_S_road_gas_fec_year_ref_ratio_ageb_to_kv",
         f.fact(f"Fact_T_S_road_gas_fec_{rd.year_ref()}_ageb")
-        / f.fact(f"Fact_T_S_road_gas_fec_2018_kv"),
+        / f.fact("Fact_T_S_road_gas_fec_2018_kv"),
         {
             "note HS": "",
             "group": "ui",
@@ -3048,9 +3048,9 @@ def calculate_derived_facts(rd: refdata.RefData):
         },
     )
     f.add_derived_fact(
-        f"Fact_T_S_road_biomass_fec_{rd.year_ref()}_ratio_ageb_to_kv",
+        f"Fact_T_S_road_biomass_fec_year_ref_ratio_ageb_to_kv",
         f.fact(f"Fact_T_S_road_biomass_fec_{rd.year_ref()}_ageb")
-        / f.fact(f"Fact_T_S_road_biomass_fec_2018_kv"),
+        / f.fact("Fact_T_S_road_biomass_fec_2018_kv"),
         {
             "note HS": "",
             "group": "ui",
@@ -3062,9 +3062,9 @@ def calculate_derived_facts(rd: refdata.RefData):
         },
     )
     f.add_derived_fact(
-        f"Fact_T_S_road_elec_fec_{rd.year_ref()}_ratio_ageb_to_kv",
+        f"Fact_T_S_road_elec_fec_year_ref_ratio_ageb_to_kv",
         f.fact(f"Fact_T_S_road_elec_fec_{rd.year_ref()}_ageb")
-        / f.fact(f"Fact_T_S_road_elec_fec_2018_ev"),
+        / f.fact("Fact_T_S_road_elec_fec_2018_ev"),
         {
             "note HS": "",
             "group": "ui",
