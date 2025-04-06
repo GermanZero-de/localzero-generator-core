@@ -118,47 +118,47 @@ class Road:
                 fact(f"Fact_T_S_Car_frac_diesel_mlg_2018")
                 * fact("Fact_T_S_Rl_Rd_diesel_bio_frac_2018")
                 * fact(f"Fact_T_S_Car_SEC_diesel_{subsection}_2018")
-                * 1/3 * fact(f"Fact_T_S_road_biomass_fec_{year_ref}_ratio_ageb_to_kv")
+                * 1/3 * fact(f"Fact_T_S_road_biomass_fec_year_ref_ratio_ageb_to_kv")
             ),
             bioethanol=(
                 fact(f"Fact_T_S_Car_frac_petrol_with_phev_mlg_2018")
                 * fact("Fact_T_S_Rl_Rd_benzin_bio_frac_2018")
                 * fact(f"Fact_T_S_Car_SEC_petrol_{subsection}_2018")
-                * 1/3 * fact(f"Fact_T_S_road_biomass_fec_{year_ref}_ratio_ageb_to_kv")
+                * 1/3 * fact(f"Fact_T_S_road_biomass_fec_year_ref_ratio_ageb_to_kv")
             ),
             biogas=(
                 fact(f"Fact_T_S_Car_frac_cng_mlg_2018")
                 * fact("Fact_T_S_Rl_Rd_cng_bio_frac_2018")
                 * fact(f"Fact_T_S_Car_SEC_petrol_it_ot_2018")
-                * 1/3 * fact(f"Fact_T_S_road_biomass_fec_{year_ref}_ratio_ageb_to_kv")
+                * 1/3 * fact(f"Fact_T_S_road_biomass_fec_year_ref_ratio_ageb_to_kv")
             ),
             diesel=(
                 fact(f"Fact_T_S_Car_frac_diesel_mlg_2018")
                 * (1 - fact("Fact_T_S_Rl_Rd_diesel_bio_frac_2018"))
                 * fact(f"Fact_T_S_Car_SEC_diesel_{subsection}_2018")
-                * fact(f"Fact_T_S_road_diesel_fec_{year_ref}_ratio_ageb_to_kv")
+                * fact(f"Fact_T_S_road_diesel_fec_year_ref_ratio_ageb_to_kv")
             ),
             electricity=(
                 fact(f"Fact_T_S_Car_frac_bev_with_phev_mlg_2018")
                 * fact(f"Fact_T_S_Car_SEC_elec_{subsection}_2018")
-                * fact(f"Fact_T_S_road_elec_fec_{year_ref}_ratio_ageb_to_kv")
+                * fact(f"Fact_T_S_road_elec_fec_year_ref_ratio_ageb_to_kv")
             ),
             gas=(
                 fact(f"Fact_T_S_Car_frac_cng_mlg_2018")
                 * (1 - fact("Fact_T_S_Rl_Rd_cng_bio_frac_2018"))
                 * fact(f"Fact_T_S_Car_SEC_petrol_it_ot_2018")
-                * fact(f"Fact_T_S_road_gas_fec_{year_ref}_ratio_ageb_to_kv")
+                * fact(f"Fact_T_S_road_gas_fec_year_ref_ratio_ageb_to_kv")
             ),
             lpg=(
                 fact(f"Fact_T_S_Car_frac_lpg_mlg_2018")
                 * fact(f"Fact_T_S_Car_SEC_petrol_{subsection}_2018")
-                * fact(f"Fact_T_S_road_lpg_fec_{year_ref}_ratio_ageb_to_kv")
+                * fact(f"Fact_T_S_road_lpg_fec_year_ref_ratio_ageb_to_kv")
             ),
             petrol=(
                 fact(f"Fact_T_S_Car_frac_petrol_with_phev_mlg_2018")
                 * (1 - fact("Fact_T_S_Rl_Rd_benzin_bio_frac_2018"))
                 * fact(f"Fact_T_S_Car_SEC_petrol_{subsection}_2018")
-                * fact(f"Fact_T_S_road_petrol_fec_{year_ref}_ratio_ageb_to_kv")
+                * fact(f"Fact_T_S_road_petrol_fec_year_ref_ratio_ageb_to_kv")
             ),
         )
 
@@ -188,30 +188,30 @@ class Road:
                 fact("Fact_T_S_Bus_frac_diesel_stock_2018")
                 * fact("Fact_T_S_Rl_Rd_diesel_bio_frac_2018")
                 * fact("Fact_T_S_Bus_SEC_diesel_2018")
-                * 1/3 * fact(f"Fact_T_S_road_biomass_fec_{year_ref}_ratio_ageb_to_kv")
+                * 1/3 * fact(f"Fact_T_S_road_biomass_fec_year_ref_ratio_ageb_to_kv")
             ),
             biogas=(
                 fact("Fact_T_S_Bus_frac_cng_stock_2018")
                 * fact("Fact_T_S_Rl_Rd_cng_bio_frac_2018")
                 * fact("Fact_T_S_Bus_SEC_diesel_2018")
-                * 1/3 * fact(f"Fact_T_S_road_biomass_fec_{year_ref}_ratio_ageb_to_kv")
+                * 1/3 * fact(f"Fact_T_S_road_biomass_fec_year_ref_ratio_ageb_to_kv")
             ),
             diesel=(
                 fact("Fact_T_S_Bus_frac_diesel_with_hybrid_stock_2018")
                 * (1 - fact("Fact_T_S_Rl_Rd_diesel_bio_frac_2018"))
                 * fact("Fact_T_S_Bus_SEC_diesel_2018")
-                * fact(f"Fact_T_S_road_diesel_fec_{year_ref}_ratio_ageb_to_kv")
+                * fact(f"Fact_T_S_road_diesel_fec_year_ref_ratio_ageb_to_kv")
             ),
             electricity=(
                 fact("Fact_T_S_Bus_frac_bev_stock_2018")
                 * fact("Fact_T_S_Bus_SEC_elec_2018")
-                * fact(f"Fact_T_S_road_elec_fec_{year_ref}_ratio_ageb_to_kv")
+                * fact(f"Fact_T_S_road_elec_fec_year_ref_ratio_ageb_to_kv")
             ),
             gas=(
                 fact("Fact_T_S_Bus_frac_cng_stock_2018")
                 * (1 - fact("Fact_T_S_Rl_Rd_cng_bio_frac_2018"))
                 * fact("Fact_T_S_Bus_SEC_diesel_2018")
-                * fact(f"Fact_T_S_road_gas_fec_{year_ref}_ratio_ageb_to_kv")
+                * fact(f"Fact_T_S_road_gas_fec_year_ref_ratio_ageb_to_kv")
             ),
             # Buses do not use the below
             bioethanol=0,
@@ -239,35 +239,35 @@ class Road:
                 fact("Fact_T_S_LDT_frac_diesel_mlg_2018")
                 * fact("Fact_T_S_Rl_Rd_diesel_bio_frac_2018")
                 * fact(f"Fact_T_S_LDT_SEC_diesel_{section}_2018")
-                * 1/3 * fact(f"Fact_T_S_road_biomass_fec_{year_ref}_ratio_ageb_to_kv")
+                * 1/3 * fact(f"Fact_T_S_road_biomass_fec_year_ref_ratio_ageb_to_kv")
             ),
             bioethanol=(
                 fact("Fact_T_S_LDT_frac_petrol_mlg_2018")
                 * fact("Fact_T_S_Rl_Rd_benzin_bio_frac_2018")
                 * fact(f"Fact_T_S_LDT_SEC_petrol_{section}_2018")
-                * 1/3 * fact(f"Fact_T_S_road_biomass_fec_{year_ref}_ratio_ageb_to_kv")
+                * 1/3 * fact(f"Fact_T_S_road_biomass_fec_year_ref_ratio_ageb_to_kv")
             ),
             diesel=(
                 fact("Fact_T_S_LDT_frac_diesel_mlg_2018")
                 * (1 - fact("Fact_T_S_Rl_Rd_diesel_bio_frac_2018"))
                 * fact(f"Fact_T_S_LDT_SEC_diesel_{section}_2018")
-                * fact(f"Fact_T_S_road_diesel_fec_{year_ref}_ratio_ageb_to_kv")
+                * fact(f"Fact_T_S_road_diesel_fec_year_ref_ratio_ageb_to_kv")
             ),
             electricity=(
                 fact("Fact_T_S_LDT_frac_bev_mlg_2018")
                 * fact(f"Fact_T_S_LDT_SEC_elec_{section}_2018")
-                * fact(f"Fact_T_S_road_elec_fec_{year_ref}_ratio_ageb_to_kv")
+                * fact(f"Fact_T_S_road_elec_fec_year_ref_ratio_ageb_to_kv")
             ),
             lpg=(
                 fact("Fact_T_S_LDT_frac_lpg_mlg_2018")
                 * fact(f"Fact_T_S_LDT_SEC_petrol_{section}_2018")
-                * fact(f"Fact_T_S_road_lpg_fec_{year_ref}_ratio_ageb_to_kv")
+                * fact(f"Fact_T_S_road_lpg_fec_year_ref_ratio_ageb_to_kv")
             ),
             petrol=(
                 fact("Fact_T_S_LDT_frac_petrol_mlg_2018")
                 * (1 - fact("Fact_T_S_Rl_Rd_benzin_bio_frac_2018"))
                 * fact(f"Fact_T_S_LDT_SEC_petrol_{section}_2018")
-                * fact(f"Fact_T_S_road_petrol_fec_{year_ref}_ratio_ageb_to_kv")
+                * fact(f"Fact_T_S_road_petrol_fec_year_ref_ratio_ageb_to_kv")
             ),
             # Neither biogas nor gas are used by light goods transports
             biogas=0,
@@ -294,30 +294,30 @@ class Road:
                 fact("Fact_T_S_MHD_frac_cng_lngl_stock_2018")
                 * fact("Fact_T_S_Rl_Rd_cng_bio_frac_2018")
                 * fact("Fact_T_S_MHD_SEC_diesel_it_ot_2018")
-                * 1/3 * fact(f"Fact_T_S_road_biomass_fec_{year_ref}_ratio_ageb_to_kv")
+                * 1/3 * fact(f"Fact_T_S_road_biomass_fec_year_ref_ratio_ageb_to_kv")
             ),
             biodiesel=(
                 fact("Fact_T_S_MHD_frac_diesel_stock_2018")
                 * fact("Fact_T_S_Rl_Rd_diesel_bio_frac_2018")
                 * fact("Fact_T_S_MHD_SEC_diesel_it_ot_2018")
-                * 1/3 * fact(f"Fact_T_S_road_biomass_fec_{year_ref}_ratio_ageb_to_kv")
+                * 1/3 * fact(f"Fact_T_S_road_biomass_fec_year_ref_ratio_ageb_to_kv")
             ),
             diesel=(
                 fact("Fact_T_S_MHD_frac_diesel_stock_2018")
                 * (1 - fact("Fact_T_S_Rl_Rd_diesel_bio_frac_2018"))
                 * fact("Fact_T_S_MHD_SEC_diesel_it_ot_2018")
-                * fact(f"Fact_T_S_road_diesel_fec_{year_ref}_ratio_ageb_to_kv")
+                * fact(f"Fact_T_S_road_diesel_fec_year_ref_ratio_ageb_to_kv")
             ),
             electricity=(
                 fact("Fact_T_S_MHD_frac_bev_stock_2018")
                 * fact("Fact_T_S_MHD_SEC_elec_it_ot_2018")
-                * fact(f"Fact_T_S_road_elec_fec_{year_ref}_ratio_ageb_to_kv")
+                * fact(f"Fact_T_S_road_elec_fec_year_ref_ratio_ageb_to_kv")
             ),
             gas=(
                 fact("Fact_T_S_MHD_frac_cng_lngl_stock_2018")
                 * (1 - fact("Fact_T_S_Rl_Rd_cng_bio_frac_2018"))
                 * fact("Fact_T_S_MHD_SEC_diesel_it_ot_2018")
-                * fact(f"Fact_T_S_road_gas_fec_{year_ref}_ratio_ageb_to_kv")
+                * fact(f"Fact_T_S_road_gas_fec_year_ref_ratio_ageb_to_kv")
             ),
             bioethanol=0,
             lpg=0,
@@ -340,30 +340,30 @@ class Road:
                 fact("Fact_T_S_MHD_frac_diesel_stock_2018")
                 * fact("Fact_T_S_Rl_Rd_diesel_bio_frac_2018")
                 * fact("Fact_T_S_MHD_SEC_diesel_ab_2018")
-                * 1/3 * fact(f"Fact_T_S_road_biomass_fec_{year_ref}_ratio_ageb_to_kv")
+                * 1/3 * fact(f"Fact_T_S_road_biomass_fec_year_ref_ratio_ageb_to_kv")
             ),
             biogas=(
                 fact("Fact_T_S_MHD_frac_cng_lngl_stock_2018")
                 * fact("Fact_T_S_Rl_Rd_cng_bio_frac_2018")
                 * fact("Fact_T_S_MHD_SEC_diesel_ab_2018")
-                * 1/3 * fact(f"Fact_T_S_road_biomass_fec_{year_ref}_ratio_ageb_to_kv")
+                * 1/3 * fact(f"Fact_T_S_road_biomass_fec_year_ref_ratio_ageb_to_kv")
             ),
             diesel=(
                 fact("Fact_T_S_MHD_frac_diesel_stock_2018")
                 * (1 - fact("Fact_T_S_Rl_Rd_diesel_bio_frac_2018"))
                 * fact("Fact_T_S_MHD_SEC_diesel_ab_2018")
-                * fact(f"Fact_T_S_road_diesel_fec_{year_ref}_ratio_ageb_to_kv")
+                * fact(f"Fact_T_S_road_diesel_fec_year_ref_ratio_ageb_to_kv")
             ),
             electricity=(
                 fact("Fact_T_S_MHD_frac_bev_stock_2018")
                 * fact("Fact_T_S_MHD_SEC_elec_ab_2018")
-                * fact(f"Fact_T_S_road_elec_fec_{year_ref}_ratio_ageb_to_kv")
+                * fact(f"Fact_T_S_road_elec_fec_year_ref_ratio_ageb_to_kv")
             ),
             gas=(
                 fact("Fact_T_S_MHD_frac_cng_lngl_stock_2018")
                 * (1 - fact("Fact_T_S_Rl_Rd_cng_bio_frac_2018"))
                 * fact("Fact_T_S_MHD_SEC_diesel_ab_2018")
-                * fact(f"Fact_T_S_road_gas_fec_{year_ref}_ratio_ageb_to_kv")
+                * fact(f"Fact_T_S_road_gas_fec_year_ref_ratio_ageb_to_kv")
             ),
             bioethanol=0,
             lpg=0,
