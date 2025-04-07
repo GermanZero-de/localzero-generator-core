@@ -1,10 +1,11 @@
 [tool.poetry]
 name = "climatevision"
-version = "2.1.0"
+version = "3.0.3"
 description = "LocalZero Climate Vision -- Calculation and basic infrastructure."
 authors = ["Benedikt Grundmann <benedikt.grundmann@gmail.com>","Anja Höhne","Anne Klenge","Jan Kuhlem",
           "Sebastian Lüttig","Silvan Ostheimer","Hauke Schmülling","Leon Schomburg <Leon.Schomburg.ext@germanzero.de>",
-          "Manfred Schüssler","Anne Schwob", "Eckhard Weißhaar","Jeniffer Wessel"]
+          "Manfred Schüssler","Anne Schwob", "Eckhard Weißhaar","Jeniffer Wessel","Simon Fichtner","Jannes Lampe",
+          "Patrick Schmitz"]
 
 packages = [
   { include = "climatevision", from="src" }

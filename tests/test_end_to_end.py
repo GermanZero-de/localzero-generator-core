@@ -165,11 +165,11 @@ def test_end_to_end_germany(year_ref: int):
     end_to_end(year_ref, "DG000000")
 
 
-# Min year for the generator = 2025
-def test_end_to_end_goettingen_2025(year_ref: int):
-    end_to_end(year_ref, ags="03159016", year_target=2025)
+# Min year_target for the generator = 2030
+def test_end_to_end_goettingen_2030(year_ref: int):
+    end_to_end(year_ref, ags="03159016", year_target=2030)
 
 
-# Max year for the generator = 2050
+# Max year_target for the generator = 2050
 def test_end_to_end_goettingen_2050(year_ref: int):
     end_to_end(year_ref, ags="03159016", year_target=2050)

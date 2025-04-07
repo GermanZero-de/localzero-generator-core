@@ -1,20 +1,35 @@
+import argparse
 from typing import Any
 
+from climatevision.generator import RefData
 from climatevision.generator.years import (
-    YEAR_REF_DEFAULT,
-    YEAR_REF_CHOICES,
-    YEAR_REF_HELP,
-    YEAR_BASELINE_DEFAULT,
     YEAR_BASELINE_CHOICES,
+    YEAR_BASELINE_DEFAULT,
     YEAR_BASELINE_HELP,
-    YEAR_TARGET_DEFAULT,
+    YEAR_REF_CHOICES,
+    YEAR_REF_DEFAULT,
+    YEAR_REF_HELP,
     YEAR_TARGET_CHOICES,
+    YEAR_TARGET_DEFAULT,
     YEAR_TARGET_HELP,
 )
 
 
+class DynamicChoicesAction(argparse.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        year_ref = getattr(namespace, "year_ref", 2021)  # Default to 2021 if not set
+        ags_master = RefData.load(int(year_ref)).ags_master()
+        if values not in ags_master:
+            raise argparse.ArgumentError(
+                self,
+                f"Invalid choice: {values!r}. Valid choices include: {', '.join(list(ags_master)[:10])}, ...",
+            )
+
+        setattr(namespace, self.dest, values)
+
+
 def add_ags_argument(parser: Any):
-    parser.add_argument("-ags", default="03159016")
+    parser.add_argument("-ags", default="03159016", action=DynamicChoicesAction)
 
 
 def add_year_ref_argument(parser: Any):

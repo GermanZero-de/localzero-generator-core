@@ -2,6 +2,8 @@
 
 import os
 
+import pytest
+
 from devtool import Devtool
 
 filePath = "test.txt"
@@ -23,7 +25,19 @@ def test_cmd_run_with_parameters():
         assert False, "file " + filePath + " already exists"
 
     check_cmd(
-        ["run", "-ags", "10000000", "-year_target", "2040", "-o", filePath],
+        [
+            "run",
+            "-ags",
+            "10000000",
+            "-year_target",
+            "2040",
+            "-year_ref",
+            "2021",
+            "-year_baseline",
+            "2022",
+            "-o",
+            filePath,
+        ],
         "run",
         True,
     )
@@ -51,6 +65,8 @@ def test_cmd_make_entries_with_parameters():
             "2040",
             "-year_ref",
             "2021",
+            "-year_baseline",
+            "2022",
             "-o",
             filePath,
         ],
@@ -62,6 +78,92 @@ def test_cmd_make_entries_with_parameters():
         os.remove(filePath)
     else:
         assert False, "file " + filePath + " was not created"
+
+
+def test_cmd_make_entries_with_invalid_ags():
+    with pytest.raises(SystemExit) as excinfo:
+        check_cmd(
+            [
+                "make",
+                "-ags",
+                "12345678",  # Invalid AGS value
+                "-year_target",
+                "2040",
+                "-year_ref",
+                "2018",
+                "-o",
+                "dummy_output_path",
+            ],
+            "make",
+            False,
+        )
+
+    assert excinfo.value.code == 2
+
+
+def test_cmd_make_entries_with_invalid_target_year():
+    with pytest.raises(SystemExit) as excinfo:
+        check_cmd(
+            [
+                "make",
+                "-ags",
+                "10000000",
+                "-year_target",
+                "2100",  # Invalid target year
+                "-year_ref",
+                "2018",
+                "-o",
+                filePath,
+            ],
+            "make",
+            False,
+        )
+
+    assert excinfo.value.code == 2
+
+
+def test_cmd_make_entries_with_invalid_ref_year():
+    with pytest.raises(SystemExit) as excinfo:
+        check_cmd(
+            [
+                "make",
+                "-ags",
+                "10000000",
+                "-year_target",
+                "2040",
+                "-year_ref",
+                "1999",  # Invalid ref year
+                "-o",
+                filePath,
+            ],
+            "make",
+            False,
+        )
+
+    assert excinfo.value.code == 2
+
+
+def test_cmd_make_entries_with_invalid_baseline_year():
+    with pytest.raises(SystemExit) as excinfo:
+        check_cmd(
+            [
+                "make",
+                "-ags",
+                "10000000",
+                "-year_target",
+                "2040",
+                "-year_ref",
+                "2018",
+                "-year_baseline",
+                "1999",  # Invalid baseline year
+                "-o",
+                filePath,
+            ],
+            "make",
+            False,
+        )
+
+    assert excinfo.value.code == 2
 
 
 def test_cmd_explorer():
@@ -98,7 +200,7 @@ def test_cmd_data_lookup_ags():
 
 def test_cmd_data_lookup_fact():
     check_cmd(
-        ["data", "lookup", "Fact_M_CO2e_wo_lulucf_2015_vs_year_ref"],
+        ["data", "lookup", "Fact_M_CO2e_wo_lulucf_2016_vs_year_ref"],
         "lookup",
         True,
     )
@@ -124,7 +226,7 @@ def test_cmd_test_end_to_end_update_expectations():
     check_cmd(
         ["test_end_to_end", "update_expectations"],
         "update_expectations",
-        False  # You shouldn't run this as it will update expectations.
+        False,  # You shouldn't run this as it will update expectations.
         # We only want people to do so when they have thought about it first.
     )
 

@@ -38,19 +38,7 @@ def calculate_derived_facts(rd: refdata.RefData):
             "link": "",
         },
     )
-    f.add_derived_fact(
-        "Fact_M_CO2e_wo_lulucf_2015_vs_year_ref",
-        f.fact("Fact_M_CO2e_wo_lulucf_2015") / f.fact("Fact_M_CO2e_wo_lulucf_year_ref"),
-        {
-            "note HS": "ACHTUNG VARIABLE ENDUNG",
-            "group": "ud",
-            "description": f"Emissionen ohne LULUCF Deutschland 2015 vs {rd.year_ref()} in Prozentpunkten",
-            "unit": "%",
-            "rationale": "Offizieller Wert",
-            "reference": "UBA 2021 Trendtabelle THG 1990-2020, Blatt THG",
-            "link": "https://www.umweltbundesamt.de/themen/klima-energie/treibhausgas-emissionen",
-        },
-    )
+
     f.add_derived_fact(
         "Fact_M_CO2e_wo_lulucf_2016_vs_year_ref",
         f.fact("Fact_M_CO2e_wo_lulucf_2016") / f.fact("Fact_M_CO2e_wo_lulucf_year_ref"),
@@ -170,19 +158,6 @@ def calculate_derived_facts(rd: refdata.RefData):
         },
     )
 
-    f.add_derived_fact(
-        "Fact_M_CO2e_lulucf_2015_vs_year_ref",
-        f.fact("Fact_M_CO2e_lulucf_2015") / f.fact("Fact_M_CO2e_lulucf_year_ref"),
-        {
-            "note HS": "ACHTUNG VARIABLE ENDUNG",
-            "group": "ud",
-            "description": f"Emissionen LULUCF Deutschland 2015 vs {rd.year_ref()} in Prozentpunkten",
-            "unit": "%",
-            "rationale": "Offizieller Wert",
-            "reference": "UBA 2021 Trendtabelle THG 1990-2020, Blatt THG",
-            "link": "https://www.umweltbundesamt.de/themen/klima-energie/treibhausgas-emissionen",
-        },
-    )
     f.add_derived_fact(
         "Fact_M_CO2e_lulucf_2016_vs_year_ref",
         f.fact("Fact_M_CO2e_lulucf_2016") / f.fact("Fact_M_CO2e_lulucf_year_ref"),

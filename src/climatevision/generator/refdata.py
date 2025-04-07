@@ -4,11 +4,11 @@
 
 # pyright: strict
 
-from dataclasses import dataclass
-from typing import Generic, TypeVar, Callable, Iterable
-from os import path, getcwd
 import csv
 import json
+from dataclasses import dataclass
+from os import getcwd, path
+from typing import Callable, Generic, Iterable, TypeVar
 
 from .years import YEAR_REF_CHOICES
 
@@ -489,7 +489,7 @@ def filename(year_ref: int, what: str) -> str:
             "nat_organic_agri": "2020",  # FINISHED
             "nat_res_buildings": "2018",  # WE ARE USING THIS UNCHANGED (ONLY STATES AND NO NEW DATA)
             "population": "2021",  # FINISHED
-            "renewable_energy": "2023",  # FINISHED
+            "renewable_energy": "2024",  # FINISHED
             "traffic": "2021",  # AGS TRANSPLANT 2018 to 2021 FINISHED
             "traffic_air": "2021",  # AGS TRANSPLANT 2018 to 2021 FINISHED
             "traffic_rail": "2021",  # AGS TRANSPLANT 2018 to 2021 FINISHED
@@ -789,7 +789,7 @@ class RefData:
         population_0_columns = ["total"] if fix_missing_entries else []
         d = cls(
             year_ref=year_ref,
-            ags_master=DataFrame.load_ags(datadir, "ags", filename="master"),  # type: ignore
+            ags_master=DataFrame.load_ags(datadir, "ags", filename=filename(year_ref, "ags")),  # type: ignore
             area=load_data_frame_ags(
                 datadir, year_ref, "area", set_nans_to_0_in_columns=area_0_columns
             ),
@@ -835,8 +835,7 @@ class RefData:
             industry_dehst=load_data_frame_ags(datadir, year_ref, "industry_facilites"),
             fix_missing_entries=fix_missing_entries,
         )
-        from . import calculate_derived_facts
-        from . import calculate_derived_assumptions
+        from . import calculate_derived_assumptions, calculate_derived_facts
 
         calculate_derived_facts.calculate_derived_facts(d)
         calculate_derived_assumptions.calculate_derived_assumptions(d)
