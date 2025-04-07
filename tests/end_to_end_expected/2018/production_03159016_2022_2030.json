@@ -2190,9 +2190,9 @@
             "ratio_wage_to_emplo": 73800.0
         },
         "p": {
-            "cost_wage": 39466498.92189297,
-            "demand_emplo": 924.6227425389653,
-            "demand_emplo_new": 507.21084856198917,
+            "cost_wage": 39345806.264639474,
+            "demand_emplo": 921.7951500541366,
+            "demand_emplo_new": 504.3832560771604,
             "invest": 965541258.0279626,
             "invest_pa": 120692657.25349532,
             "invest_com": 22920318.2920813,
@@ -2208,9 +2208,9 @@
             "energy": 737376.1077169897
         },
         "p_buildings_total": {
-            "cost_wage": 39466498.92189297,
-            "demand_emplo": 924.6227425389653,
-            "demand_emplo_new": 507.21084856198917,
+            "cost_wage": 39345806.264639474,
+            "demand_emplo": 921.7951500541366,
+            "demand_emplo_new": 504.3832560771604,
             "invest": 965541258.0279626,
             "invest_pa": 120692657.25349532,
             "invest_com": 22920318.2920813,
@@ -2229,7 +2229,7 @@
             "fec_factor_averaged": 0.12036021383451122,
             "number_of_buildings_rehab": 8909.894304787374,
             "pct_nonrehab": 0.5628844468828104,
-            "pct_of_wage": 0.327,
+            "pct_of_wage": 0.326,
             "pct_rehab": 0.43711555311718964,
             "rate_rehab_pa": 0.04,
             "ratio_wage_to_emplo": 42683.89377219951
@@ -2373,9 +2373,9 @@
             "pct_x": 0.031
         },
         "r": {
-            "cost_wage": 53962569.20072939,
-            "demand_emplo": 1242.117229085819,
-            "demand_emplo_new": 658.9904162568055,
+            "cost_wage": 53803237.82033725,
+            "demand_emplo": 1238.395829663708,
+            "demand_emplo_new": 655.2690168346944,
             "invest": 1289540705.6371105,
             "invest_pa": 161192588.2046388,
             "invest_com": 47392384.13046488,
@@ -2391,9 +2391,9 @@
             "demand_emplo_com": 10.554607168256492
         },
         "s": {
-            "cost_wage": 12634862.466336424,
-            "demand_emplo": 292.274868491298,
-            "demand_emplo_new": 141.22496052655976,
+            "cost_wage": 12596223.74319778,
+            "demand_emplo": 291.38106155401573,
+            "demand_emplo_new": 140.3311535892775,
             "invest": 309109785.10914797,
             "invest_pa": 38638723.138643496,
             "invest_com": 9582403.338383587,
@@ -2510,9 +2510,9 @@
             "energy": 91770.96793808899
         },
         "s_solarth": {
-            "cost_wage": 7192019.87898259,
-            "demand_emplo": 166.36878081712447,
-            "demand_emplo_new": 86.54240561456744,
+            "cost_wage": 7170025.934398545,
+            "demand_emplo": 165.8600077871027,
+            "demand_emplo_new": 86.03363258454566,
             "invest": 175951556.67235693,
             "invest_pa": 21993944.584044617,
             "invest_com": 5454498.256843065,
@@ -2536,14 +2536,14 @@
             "energy": 27595.71855898216,
             "energy_installable": 657411.5887079999,
             "invest_per_x": 1500.0,
-            "pct_of_wage": 0.327,
+            "pct_of_wage": 0.326,
             "power_to_be_installed_pct": 0.05,
             "ratio_wage_to_emplo": 43229.38380421376
         },
         "s_heatpump": {
-            "cost_wage": 5442842.587353834,
-            "demand_emplo": 125.90608767417352,
-            "demand_emplo_new": 54.68255491199231,
+            "cost_wage": 5426197.808799235,
+            "demand_emplo": 125.52105376691304,
+            "demand_emplo_new": 54.297521004731834,
             "invest": 133158228.43679105,
             "invest_pa": 16644778.554598881,
             "invest_com": 4127905.0815405226,
@@ -2565,7 +2565,7 @@
             "energy": 52755.70736015808,
             "full_load_hour": 1800.0,
             "invest_per_x": 1328.1860000000001,
-            "pct_of_wage": 0.327,
+            "pct_of_wage": 0.326,
             "power_installed": 11.768265462653584,
             "power_to_be_installed": 100.25570849021976,
             "ratio_wage_to_emplo": 43229.38380421376
@@ -2654,9 +2654,9 @@
     },
     "b30": {
         "b": {
-            "cost_wage": 21247526.103676476,
-            "demand_emplo": 491.1004556726839,
-            "demand_emplo_new": 289.6726139723295,
+            "cost_wage": 21184205.90379849,
+            "demand_emplo": 489.6210712348252,
+            "demand_emplo_new": 288.19322953447085,
             "invest": 510896164.9724736,
             "invest_pa": 63862020.6215592,
             "invest_com": 108716956.05049513,
@@ -2693,9 +2693,9 @@
             "ratio_wage_to_emplo": 73800.0
         },
         "p": {
-            "cost_wage": 16188534.916500404,
-            "demand_emplo": 379.2656546962961,
-            "demand_emplo_new": 227.42621573557022,
+            "cost_wage": 16139028.693514165,
+            "demand_emplo": 378.1058208898854,
+            "demand_emplo_new": 226.26638192915954,
             "invest": 396049783.88991815,
             "invest_pa": 49506222.98623977,
             "invest_com": 81610258.49852858,
@@ -2712,9 +2712,9 @@
             "energy": 378953.5362520424
         },
         "p_nonresi": {
-            "cost_wage": 16188534.916500404,
-            "demand_emplo": 379.2656546962961,
-            "demand_emplo_new": 227.42621573557022,
+            "cost_wage": 16139028.693514165,
+            "demand_emplo": 378.1058208898854,
+            "demand_emplo_new": 226.26638192915954,
             "invest": 396049783.88991815,
             "invest_pa": 49506222.98623977,
             "invest_com": 81610258.49852858,
@@ -2734,7 +2734,7 @@
             "fec_factor_averaged": 0.1136105237730681,
             "invest_per_x": 478.0,
             "pct_nonrehab": 0.53,
-            "pct_of_wage": 0.327,
+            "pct_of_wage": 0.326,
             "pct_rehab": 0.47,
             "rate_rehab_pa": 0.04,
             "ratio_wage_to_emplo": 42683.89377219951
@@ -2780,9 +2780,9 @@
             "energy": 143327.29116564235
         },
         "s": {
-            "cost_wage": 4517170.443600122,
-            "demand_emplo": 104.49305648348874,
-            "demand_emplo_new": 58.27778662937677,
+            "cost_wage": 4503356.466708378,
+            "demand_emplo": 104.17350585204076,
+            "demand_emplo_new": 57.958235997928796,
             "invest": 110511815.13394792,
             "invest_pa": 13813976.89174349,
             "invest_com": 22772131.603358965,
@@ -2945,9 +2945,9 @@
             "energy": 21931.059322373465
         },
         "s_heatpump": {
-            "cost_wage": 1607047.9585077118,
-            "demand_emplo": 37.17489857792203,
-            "demand_emplo_new": 23.17027134940325,
+            "cost_wage": 1602133.4387569237,
+            "demand_emplo": 37.06121387279077,
+            "demand_emplo_new": 23.056586644271995,
             "invest": 39316158.006304875,
             "invest_pa": 4914519.750788109,
             "invest_com": 8101511.346753731,
@@ -2967,15 +2967,15 @@
             "energy": 50966.829438535715,
             "full_load_hour": 1650.0,
             "invest_per_x": 1328.1860000000001,
-            "pct_of_wage": 0.327,
+            "pct_of_wage": 0.326,
             "power_installed": 1.287592849581245,
             "power_to_be_installed": 29.60139468892525,
             "ratio_wage_to_emplo": 43229.38380421376
         },
         "s_solarth": {
-            "cost_wage": 2910122.48509241,
-            "demand_emplo": 67.31815790556671,
-            "demand_emplo_new": 35.10751527997352,
+            "cost_wage": 2901223.0279514543,
+            "demand_emplo": 67.11229197924999,
+            "demand_emplo_new": 34.9016493536568,
             "invest": 71195657.12764305,
             "invest_pa": 8899457.140955381,
             "invest_com": 14670620.256605234,
@@ -2995,7 +2995,7 @@
             "energy": 9469.022397976527,
             "energy_installable": 657411.5887079999,
             "invest_per_x": 1500.0,
-            "pct_of_wage": 0.327,
+            "pct_of_wage": 0.326,
             "power_to_be_installed_pct": 0.05,
             "ratio_wage_to_emplo": 43229.38380421376
         },
@@ -3012,9 +3012,9 @@
             "energy": 155378.20492646107
         },
         "rb": {
-            "cost_wage": 75210095.30440587,
-            "demand_emplo": 1733.2176847585029,
-            "demand_emplo_new": 948.663030229135,
+            "cost_wage": 74987443.72413574,
+            "demand_emplo": 1728.016900898533,
+            "demand_emplo_new": 943.4622463691653,
             "invest": 1800436870.609584,
             "invest_pa": 225054608.826198,
             "invest_com": 156109340.18096,
@@ -7862,9 +7862,9 @@
     },
     "a30": {
         "a": {
-            "cost_wage": 2090294.588859878,
-            "demand_emplo": 47.96674851604197,
-            "demand_emplo_new": 28.164495928017548,
+            "cost_wage": 2084118.2235759916,
+            "demand_emplo": 47.822248126137964,
+            "demand_emplo_new": 28.019995538113545,
             "invest": 50159520.335314274,
             "invest_pa": 6269940.041914284,
             "invest_com": 251068.87372843246,
@@ -7924,9 +7924,9 @@
             "ratio_wage_to_emplo": 47195.042683097665
         },
         "p": {
-            "cost_wage": 1798726.1018333784,
-            "demand_emplo": 42.140628299588464,
-            "demand_emplo_new": 25.139301157267806,
+            "cost_wage": 1793225.4103904627,
+            "demand_emplo": 42.01175787665394,
+            "demand_emplo_new": 25.01043073433328,
             "invest": 44005531.54332424,
             "invest_pa": 5500691.44291553,
             "CO2e_production_based": 7187.751558957441,
@@ -8306,9 +8306,9 @@
             "prod_volume": 0.0
         },
         "p_operation": {
-            "cost_wage": 1798726.1018333784,
-            "demand_emplo": 42.140628299588464,
-            "demand_emplo_new": 25.139301157267806,
+            "cost_wage": 1793225.4103904627,
+            "demand_emplo": 42.01175787665394,
+            "demand_emplo_new": 25.01043073433328,
             "invest": 44005531.54332424,
             "invest_pa": 5500691.44291553,
             "change_energy_MWh": 4047.4390508020024,
@@ -8322,9 +8322,9 @@
             "demand_heatpump": 6715.09464850136
         },
         "p_operation_heat": {
-            "cost_wage": 1798726.1018333784,
-            "demand_emplo": 42.140628299588464,
-            "demand_emplo_new": 25.139301157267806,
+            "cost_wage": 1793225.4103904627,
+            "demand_emplo": 42.01175787665394,
+            "demand_emplo_new": 25.01043073433328,
             "invest": 44005531.54332424,
             "invest_pa": 5500691.44291553,
             "change_energy_MWh": 4007.9298537576433,
@@ -8345,7 +8345,7 @@
             "fec_factor_averaged": 0.0331939697579234,
             "invest_per_x": 478.0,
             "pct_nonrehab": 0.53,
-            "pct_of_wage": 0.327,
+            "pct_of_wage": 0.326,
             "pct_rehab": 0.47,
             "rate_rehab_pa": 0.04,
             "ratio_wage_to_emplo": 42683.89377219951
@@ -8380,9 +8380,9 @@
             "demand_heatpump": 0
         },
         "s": {
-            "cost_wage": 220945.34599744834,
-            "demand_emplo": 5.110999199019622,
-            "demand_emplo_new": 2.310073753315866,
+            "cost_wage": 220269.67215647755,
+            "demand_emplo": 5.095369232050143,
+            "demand_emplo_new": 2.294443786346388,
             "invest": 5405390.72776632,
             "invest_pa": 675673.84097079,
             "CO2e_total_2021_estimated": 1457.1839227559326,
@@ -8490,9 +8490,9 @@
             "change_energy_pct": 1.4339316015085235
         },
         "s_heatpump": {
-            "cost_wage": 220945.34599744834,
-            "demand_emplo": 5.110999199019622,
-            "demand_emplo_new": 2.310073753315866,
+            "cost_wage": 220269.67215647755,
+            "demand_emplo": 5.095369232050143,
+            "demand_emplo_new": 2.294443786346388,
             "invest": 5405390.72776632,
             "invest_pa": 675673.84097079,
             "CO2e_total_2021_estimated": 0.0,
@@ -8511,7 +8511,7 @@
             "emplo_existing": 2.8009254457037556,
             "full_load_hour": 1650.0,
             "invest_per_x": 1328.1860000000001,
-            "pct_of_wage": 0.327,
+            "pct_of_wage": 0.326,
             "power_installed": 0.0,
             "power_to_be_installed": 4.069754332425067,
             "ratio_wage_to_emplo": 43229.38380421376
@@ -8729,9 +8729,9 @@
             "invest": 4363289851.495746,
             "invest_com": 887652549.835686,
             "invest_outside": 736907320.0838814,
-            "cost_wage": 140545963.3700027,
-            "demand_emplo": 3507.7417611385513,
-            "demand_emplo_new": 1846.134970513457,
+            "cost_wage": 140317135.42444867,
+            "demand_emplo": 3502.3964768886776,
+            "demand_emplo_new": 1840.7896862635832,
             "demand_emplo_com": 43.87445882891499,
             "invest_pct": null,
             "cost_climate_saved_pct": null,
@@ -8795,9 +8795,9 @@
             "invest": 3560627156.936113,
             "invest_com": 831601478.7475166,
             "invest_outside": 47836178.72795105,
-            "cost_wage": 112763851.74706708,
-            "demand_emplo": 2879.599888149218,
-            "demand_emplo_new": 1436.4212155616035,
+            "cost_wage": 112535023.80151308,
+            "demand_emplo": 2874.254603899344,
+            "demand_emplo_new": 1431.0759313117298,
             "demand_emplo_com": 42.80436284677213,
             "invest_pct": null,
             "cost_climate_saved_pct": null,
@@ -8834,7 +8834,7 @@
             "demand_emplo_com": null,
             "invest_pct": 0.08129359818328459,
             "cost_climate_saved_pct": 0.38611703539286407,
-            "demand_emplo_new_pct": 0.05751515331597859
+            "demand_emplo_new_pct": 0.057682165791897555
         },
         "h": {
             "energy_18": null,
@@ -8867,7 +8867,7 @@
             "demand_emplo_com": null,
             "invest_pct": 0.010107582739920093,
             "cost_climate_saved_pct": 0.05908329981805554,
-            "demand_emplo_new_pct": 0.016670154664049402
+            "demand_emplo_new_pct": 0.016718561451545894
         },
         "f": {
             "energy_18": null,
@@ -8900,7 +8900,7 @@
             "demand_emplo_com": null,
             "invest_pct": 0.09255696118474588,
             "cost_climate_saved_pct": 0.12405068478191421,
-            "demand_emplo_new_pct": 0.14774524503793562
+            "demand_emplo_new_pct": 0.14817426761296865
         },
         "rb": {
             "energy_18": null,
@@ -8966,7 +8966,7 @@
             "demand_emplo_com": null,
             "invest_pct": 0.2955432138424297,
             "cost_climate_saved_pct": 0.09724793937014312,
-            "demand_emplo_new_pct": 0.35695679177428913
+            "demand_emplo_new_pct": 0.3559716906958301
         },
         "b": {
             "energy_18": null,
@@ -8999,7 +8999,7 @@
             "demand_emplo_com": null,
             "invest_pct": 0.11708966911683331,
             "cost_climate_saved_pct": 0.03453985975202299,
-            "demand_emplo_new_pct": 0.15690760350623995
+            "demand_emplo_new_pct": 0.1565595633683947
         },
         "t": {
             "energy_18": null,
@@ -9032,7 +9032,7 @@
             "demand_emplo_com": null,
             "invest_pct": 0.37776348159155027,
             "cost_climate_saved_pct": 0.176729800082339,
-            "demand_emplo_new_pct": 0.2460346022984006
+            "demand_emplo_new_pct": 0.24674903746413593
         },
         "i": {
             "energy_18": null,
@@ -9065,7 +9065,7 @@
             "demand_emplo_com": null,
             "invest_pct": 0.012815391376991347,
             "cost_climate_saved_pct": 0.07053955795942862,
-            "demand_emplo_new_pct": 0.0004885380554759416
+            "demand_emplo_new_pct": 0.0004899566720582085
         },
         "a": {
             "energy_18": null,
@@ -9098,7 +9098,7 @@
             "demand_emplo_com": null,
             "invest_pct": 0.011495802947429558,
             "cost_climate_saved_pct": 0.015969127531046894,
-            "demand_emplo_new_pct": 0.015255924608905647
+            "demand_emplo_new_pct": 0.015221725625260458
         },
         "l": {
             "energy_18": null,
@@ -9131,7 +9131,7 @@
             "demand_emplo_com": null,
             "invest_pct": 0.00030166304010057615,
             "cost_climate_saved_pct": 0.014053403344534449,
-            "demand_emplo_new_pct": 0.0007764899902326117
+            "demand_emplo_new_pct": 0.0007787447615114533
         },
         "w": {
             "energy_18": null,
@@ -9164,7 +9164,7 @@
             "demand_emplo_com": null,
             "invest_pct": 0.0010326359767146793,
             "cost_climate_saved_pct": 0.021979635494348275,
-            "demand_emplo_new_pct": 0.0016494967484925631
+            "demand_emplo_new_pct": 0.0016542865563971435
         },
         "CO2e_per_capita_nat": 10.089278972085655,
         "CO2e_per_capita_com": 6.901779192251503,
