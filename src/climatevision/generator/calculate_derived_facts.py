@@ -3075,6 +3075,50 @@ def calculate_derived_facts(rd: refdata.RefData):
             "link": "",
         },
     )
+##
+    f.add_derived_fact(
+        f"Fact_T_S_rail_diesel_fec_year_ref_ratio_ageb_to_kv",
+        f.fact(f"Fact_T_S_rail_diesel_fec_{rd.year_ref()}_ageb")
+        / f.fact("Fact_T_S_rail_diesel_fec_2018_kv"),
+        {
+            "note HS": "",
+            "group": "ui",
+            "description": f"Faktor AGEB vs KV von EEV Diesel Strassenverkehr {rd.year_ref()}",
+            "unit": "",
+            "rationale": f"Skalierungsfaktor um EEV und damit CO2e aus IFEU an AGEB und damit NIR anzupassen. Berechnet als Verhältnis von Fact_T_S_rail_diesel_fec_{rd.year_ref()}_ageb zu Fact_T_S_rail_diesel_fec_2018_kv",
+            "reference": "",
+            "link": "",
+        },
+    )
+    f.add_derived_fact(
+        f"Fact_T_S_rail_biomass_fec_year_ref_ratio_ageb_to_kv",
+        f.fact(f"Fact_T_S_rail_biomass_fec_{rd.year_ref()}_ageb")
+        / f.fact("Fact_T_S_rail_biomass_fec_2018_kv"),
+        {
+            "note HS": "",
+            "group": "ui",
+            "description": f"Faktor AGEB vs KV von EEV Biomasse Strassenverkehr {rd.year_ref()}",
+            "unit": "",
+            "rationale": f"Skalierungsfaktor um EEV und damit CO2e aus IFEU an AGEB und damit NIR anzupassen. Berechnet als Verhältnis von Fact_T_S_rail_biomass_fec_{rd.year_ref()}_ageb zu Fact_T_S_rail_biomass_fec_2018_kv",
+            "reference": "",
+            "link": "",
+        },
+    )
+    f.add_derived_fact(
+        f"Fact_T_S_rail_elec_fec_year_ref_ratio_ageb_to_kv",
+        f.fact(f"Fact_T_S_rail_elec_fec_{rd.year_ref()}_ageb")
+        / f.fact("Fact_T_S_rail_elec_fec_2018_ev"),
+        {
+            "note HS": "",
+            "group": "ui",
+            "description": f"Faktor AGEB vs KV von EEV Strom Strassenverkehr {rd.year_ref()}",
+            "unit": "",
+            "rationale": f"Skalierungsfaktor um EEV und damit CO2e aus IFEU an AGEB und damit NIR anzupassen. Berechnet als Verhältnis von Fact_T_S_rail_elec_fec_{rd.year_ref()}_ageb zu Fact_T_S_rail_elec_fec_2018_ev",
+            "reference": "",
+            "link": "",
+        },
+    )
+##
     f.add_derived_fact(
         "Fact_A_P_fermen_oanimal_CO2e_2018",
         f.fact("Fact_A_P_fermen_sheep_CO2e_2018")

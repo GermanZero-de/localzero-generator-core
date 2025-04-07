@@ -33,13 +33,15 @@ class Rail:
     ) -> "Rail":
         fact = facts.fact
 
-        demand_electricity = ec_rail_ppl_elec
+        demand_electricity = ec_rail_ppl_elec * fact(f"Fact_T_S_road_elec_fec_year_ref_ratio_ageb_to_kv")
+
         demand_diesel = ec_rail_ppl_diesel * (
             1 - fact("Fact_T_S_Rl_Rd_diesel_bio_frac_2018")
-        )
+        ) * fact(f"Fact_T_S_road_diesel_fec_year_ref_ratio_ageb_to_kv")
+
         demand_biodiesel = ec_rail_ppl_diesel * fact(
             "Fact_T_S_Rl_Rd_diesel_bio_frac_2018"
-        )
+        ) * fact(f"Fact_T_S_rail_biomass_fec_year_ref_ratio_ageb_to_kv")
 
         transport_capacity_pkm = (demand_diesel + demand_biodiesel) / fact(
             "Fact_T_S_Rl_Train_ppl_long_diesel_SEC_2018"
@@ -78,13 +80,15 @@ class Rail:
     ) -> "Rail":
         fact = facts.fact
 
-        demand_electricity = ec_rail_gds_elec
+        demand_electricity = ec_rail_gds_elec * fact(f"Fact_T_S_road_elec_fec_year_ref_ratio_ageb_to_kv")
+
         demand_diesel = ec_rail_gds_diesel * (
             1 - fact("Fact_T_S_Rl_Rd_diesel_bio_frac_2018")
-        )
+        ) * fact(f"Fact_T_S_road_diesel_fec_year_ref_ratio_ageb_to_kv")
+
         demand_biodiesel = ec_rail_gds_diesel * fact(
             "Fact_T_S_Rl_Rd_diesel_bio_frac_2018"
-        )
+        ) * fact(f"Fact_T_S_rail_biomass_fec_year_ref_ratio_ageb_to_kv")
 
         transport_capacity_tkm = (demand_diesel + demand_biodiesel) / fact(
             "Fact_T_S_Rl_Train_gds_diesel_SEC_2018"
@@ -127,7 +131,7 @@ class Rail:
             * population_commune_2018
             / population_district_2018
         )
-        demand_electricity = mileage * fact("Fact_T_S_Rl_Metro_SEC_fzkm_2018")
+        demand_electricity = mileage * fact("Fact_T_S_Rl_Metro_SEC_fzkm_2018") * fact(f"Fact_T_S_road_elec_fec_year_ref_ratio_ageb_to_kv")
         energy = demand_electricity
         transport_capacity_pkm = mileage * fact("Fact_T_D_lf_Rl_Metro_2018")
         CO2e_combustion_based = co2e.from_demands(
