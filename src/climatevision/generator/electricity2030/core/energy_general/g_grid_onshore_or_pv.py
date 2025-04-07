@@ -26,8 +26,8 @@ class GGridOnshoreOrPV(Invest):
     ) -> "GGridOnshoreOrPV":
         fact = facts.fact
 
-        pct_of_wage = fact("Fact_B_P_constr_main_revenue_pct_of_wage_2017")
-        ratio_wage_to_emplo = fact("Fact_B_P_constr_main_ratio_wage_to_emplo_2017")
+        pct_of_wage = fact("Fact_B_P_constr_main_revenue_pct_of_wage_2018")
+        ratio_wage_to_emplo = fact("Fact_B_P_constr_main_ratio_wage_to_emplo_2018")
         invest = power_to_be_installed * invest_per_x
         cost_mro = invest * mro / MILLION
         invest_pa = invest / duration_until_target_year
