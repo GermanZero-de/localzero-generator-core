@@ -89,7 +89,7 @@ def make_entries(
     r_buildings_2005_2008 = data_buildings_com.float("buildings_2005_2008")
     r_buildings_2009_2011 = data_buildings_com.float("buildings_2009_2011")
     r_buildings_2011_today = (
-        data.fact("Fact_R_P_newbuilt_2011_year_ref")
+        data.fact("Fact_R_P_newbuilt_2011_2018")
         * m_population_com_2018
         / m_population_nat
     )
@@ -107,7 +107,7 @@ def make_entries(
         + r_buildings_2011_today
     )
     r_buildings_nat = data.buildings(ags_germany).float("buildings_total") + data.fact(
-        "Fact_R_P_newbuilt_2011_year_ref"
+        "Fact_R_P_newbuilt_2011_2018"
     )
 
     r_flats_com = data_buildings_com.float("flats_total")

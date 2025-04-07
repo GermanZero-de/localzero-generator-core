@@ -711,7 +711,7 @@ def make_entry(ags: str, year: int):
     entry["In_R_buildings_2005_2008"] = data_buildings_com.float("buildings_2005_2008")
     entry["In_R_buildings_2009_2011"] = data_buildings_com.float("buildings_2009_2011")
     entry["In_R_buildings_2011_today"] = (
-        fact("Fact_R_P_newbuilt_2011_year_ref")
+        fact("Fact_R_P_newbuilt_2011_2018")
         * entry["In_M_population_com_2018"]
         / entry["In_M_population_nat"]
     )
@@ -730,7 +730,7 @@ def make_entry(ags: str, year: int):
     )
     entry["In_R_buildings_nat"] = data.buildings(ags_germany).float(
         "buildings_total"
-    ) + fact("Fact_R_P_newbuilt_2011_year_ref")
+    ) + fact("Fact_R_P_newbuilt_2011_2018")
 
     entry["In_R_flats_com"] = data_buildings_com.float("flats_total")
     entry["In_R_flats_w_heatnet"] = data_buildings_com.float("flats_heatnet")

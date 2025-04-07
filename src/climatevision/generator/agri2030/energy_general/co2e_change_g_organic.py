@@ -49,6 +49,6 @@ class CO2eChangeGOrganic(Invest):
         self.pct_of_wage = fact("Fact_B_P_constr_main_revenue_pct_of_wage_2018")
         self.cost_wage = self.invest_pa * self.pct_of_wage
 
-        self.ratio_wage_to_emplo = fact("Fact_B_P_constr_main_ratio_wage_to_emplo_2017")
+        self.ratio_wage_to_emplo = fact("Fact_B_P_constr_main_ratio_wage_to_emplo_2018")
         self.demand_emplo = div(self.cost_wage, self.ratio_wage_to_emplo)
         self.demand_emplo_new = self.demand_emplo

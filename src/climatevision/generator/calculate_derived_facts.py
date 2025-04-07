@@ -582,7 +582,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     )
 
     f.add_derived_fact(
-        "Fact_B_P_constr_main_ratio_wage_to_emplo_2017",
+        "Fact_B_P_constr_main_ratio_wage_to_emplo_2018",
         f.fact("Fact_B_P_constr_main_wage_2018")
         / f.fact("Fact_B_P_constr_main_emplo_2018"),
         {
@@ -1209,7 +1209,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     )
     f.add_derived_fact(
         "Fact_I_P_other_food_ratio_CO2e_cb_to_prodvol",
-        f.fact("Fact_I_P_other_food_CO2e_cb_2015")
+        f.fact("Fact_I_P_other_food_CO2e_cb_2018")
         / f.fact("Fact_I_P_other_food_prodvol_2018"),
         {
             "note HS": "",
@@ -5738,7 +5738,7 @@ def calculate_derived_facts(rd: refdata.RefData):
         "Fact_I_P_other_further_CO2e_cb_2018",
         f.fact("Fact_I_P_other_CO2e_cb_2018")
         - f.fact("Fact_I_P_other_paper_CO2e_cb_2018")
-        - f.fact("Fact_I_P_other_food_CO2e_cb_2015"),
+        - f.fact("Fact_I_P_other_food_CO2e_cb_2018"),
         {
             "note HS": "",
             "group": "ui",
