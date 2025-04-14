@@ -5,17 +5,16 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/heat.html
 
 # pyright: strict
 
-from ..makeentries import Entries
-from ..refdata import Facts, Assumptions
-from ..heat2018.h18 import H18
-from ..residences2030.r30 import R30
-from ..business2030.b30 import B30
 from ..agri2030.a30 import A30
+from ..business2030.b30 import B30
+from ..heat2018.h18 import H18
 from ..industry2030.i30 import I30
-
-from .h30 import H30
-from .h import H
+from ..makeentries import Entries
+from ..refdata import Assumptions, Facts
+from ..residences2030.r30 import R30
 from . import energy_demand, energy_general, energy_production
+from .h import H
+from .h30 import H30
 
 
 def calc(
@@ -35,6 +34,7 @@ def calc(
 
     production = energy_production.calc_production(
         facts,
+        entries,
         assumptions,
         entries.m_duration_neutral,
         entries.m_duration_target,

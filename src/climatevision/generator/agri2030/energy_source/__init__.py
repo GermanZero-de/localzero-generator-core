@@ -1,16 +1,15 @@
 # pyright: strict
 from dataclasses import dataclass
 
-from ...refdata import Facts, Assumptions
 from ...agri2018.a18 import A18
-
+from ...entries import Entries
+from ...refdata import Assumptions, Facts
 from ..energy_demand import Production
-
-from .co2e_change_s import CO2eChangeS
 from .co2e_change_energy_per_mwh import CO2eChangeEnergyPerMWh
-from .co2e_change_fuel_oil_gas import CO2eChangeFuelOilGas
-from .co2e_change_fuel_heatpump import CO2eChangeFuelHeatpump
 from .co2e_change_fuel_emethan import CO2eChangeFuelEmethan
+from .co2e_change_fuel_heatpump import CO2eChangeFuelHeatpump
+from .co2e_change_fuel_oil_gas import CO2eChangeFuelOilGas
+from .co2e_change_s import CO2eChangeS
 
 
 @dataclass(kw_only=True)
@@ -29,6 +28,7 @@ class EnergySupply:
 
 def calc_supply(
     facts: Facts,
+    entries: Entries,
     assumptions: Assumptions,
     duration_CO2e_neutral_years: float,
     duration_until_target_year: int,
@@ -40,6 +40,7 @@ def calc_supply(
 
     petrol = CO2eChangeEnergyPerMWh(
         facts=facts,
+        entries=entries,
         duration_CO2e_neutral_years=duration_CO2e_neutral_years,
         what="s_petrol",
         a18=a18,
@@ -49,6 +50,7 @@ def calc_supply(
     )
     diesel = CO2eChangeEnergyPerMWh(
         facts=facts,
+        entries=entries,
         duration_CO2e_neutral_years=duration_CO2e_neutral_years,
         what="s_diesel",
         a18=a18,
@@ -58,6 +60,7 @@ def calc_supply(
     )
     lpg = CO2eChangeEnergyPerMWh(
         facts=facts,
+        entries=entries,
         duration_CO2e_neutral_years=duration_CO2e_neutral_years,
         what="s_lpg",
         a18=a18,
@@ -67,6 +70,7 @@ def calc_supply(
     )
     biomass = CO2eChangeEnergyPerMWh(
         facts=facts,
+        entries=entries,
         duration_CO2e_neutral_years=duration_CO2e_neutral_years,
         what="s_biomass",
         a18=a18,
@@ -76,6 +80,7 @@ def calc_supply(
     )
     elec = CO2eChangeEnergyPerMWh(
         facts=facts,
+        entries=entries,
         duration_CO2e_neutral_years=duration_CO2e_neutral_years,
         what="s_elec",
         a18=a18,
@@ -85,6 +90,7 @@ def calc_supply(
     )
     fueloil = CO2eChangeFuelOilGas(
         facts=facts,
+        entries=entries,
         duration_CO2e_neutral_years=duration_CO2e_neutral_years,
         what="s_fueloil",
         a18=a18,
@@ -94,6 +100,7 @@ def calc_supply(
     )
     gas = CO2eChangeFuelOilGas(
         facts=facts,
+        entries=entries,
         duration_CO2e_neutral_years=duration_CO2e_neutral_years,
         what="s_gas",
         a18=a18,
@@ -104,6 +111,7 @@ def calc_supply(
 
     heatpump = CO2eChangeFuelHeatpump(
         facts=facts,
+        entries=entries,
         duration_CO2e_neutral_years=duration_CO2e_neutral_years,
         assumptions=assumptions,
         duration_until_target_year=duration_until_target_year,
@@ -117,6 +125,7 @@ def calc_supply(
     )
     emethan = CO2eChangeFuelEmethan(
         facts=facts,
+        entries=entries,
         duration_CO2e_neutral_years=duration_CO2e_neutral_years,
         what="",
         a18=a18,
@@ -127,6 +136,7 @@ def calc_supply(
 
     total = CO2eChangeS(
         facts=facts,
+        entries=entries,
         duration_CO2e_neutral_years=duration_CO2e_neutral_years,
         what="s",
         a18=a18,

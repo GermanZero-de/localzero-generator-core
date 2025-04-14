@@ -2,21 +2,21 @@
 
 from dataclasses import dataclass
 
-from ...refdata import Facts, Assumptions
-from ...heat2018.h18 import H18
-from ...residences2030.r30 import R30
-from ...business2030.b30 import B30
 from ...agri2030.a30 import A30
+from ...business2030.b30 import B30
+from ...entries import Entries
+from ...heat2018.h18 import H18
 from ...industry2030.i30 import I30
-
+from ...refdata import Assumptions, Facts
+from ...residences2030.r30 import R30
 from .dataclasses import (
-    TotalHeatProduction,
-    HeatProductionWithCostFuel,
-    HeatProduction,
-    HeatnetProduction,
-    HeatnetPlantProduction,
-    HeatnetLheatpumpProduction,
     HeatnetGeothProduction,
+    HeatnetLheatpumpProduction,
+    HeatnetPlantProduction,
+    HeatnetProduction,
+    HeatProduction,
+    HeatProductionWithCostFuel,
+    TotalHeatProduction,
 )
 
 
@@ -42,6 +42,7 @@ class Production:
 
 def calc_production(
     facts: Facts,
+    entries: Entries,
     assumptions: Assumptions,
     duration_CO2e_neutral_years: float,
     duration_until_target_year: int,
@@ -58,6 +59,7 @@ def calc_production(
 
     gas = HeatProductionWithCostFuel(
         facts=facts,
+        entries=entries,
         assumptions=assumptions,
         duration_CO2e_neutral_years=duration_CO2e_neutral_years,
         what="gas",
@@ -68,6 +70,7 @@ def calc_production(
     )
     coal = HeatProductionWithCostFuel(
         facts=facts,
+        entries=entries,
         assumptions=assumptions,
         duration_CO2e_neutral_years=duration_CO2e_neutral_years,
         what="coal",
@@ -78,6 +81,7 @@ def calc_production(
     )
     fueloil = HeatProductionWithCostFuel(
         facts=facts,
+        entries=entries,
         assumptions=assumptions,
         duration_CO2e_neutral_years=duration_CO2e_neutral_years,
         what="fueloil",
@@ -89,6 +93,7 @@ def calc_production(
 
     biomass = HeatProductionWithCostFuel(
         facts=facts,
+        entries=entries,
         assumptions=assumptions,
         duration_CO2e_neutral_years=duration_CO2e_neutral_years,
         what="biomass",
@@ -105,6 +110,7 @@ def calc_production(
 
     lpg = HeatProduction(
         facts=facts,
+        entries=entries,
         duration_CO2e_neutral_years=duration_CO2e_neutral_years,
         what="lpg",
         h18=h18,
@@ -115,6 +121,7 @@ def calc_production(
 
     opetpro = HeatProduction(
         facts=facts,
+        entries=entries,
         duration_CO2e_neutral_years=duration_CO2e_neutral_years,
         what="opetpro",
         h18=h18,
@@ -135,6 +142,7 @@ def calc_production(
 
     heatnet_cogen = HeatProduction(
         facts=facts,
+        entries=entries,
         duration_CO2e_neutral_years=duration_CO2e_neutral_years,
         what="heatnet_cogen",
         h18=h18,
@@ -151,6 +159,7 @@ def calc_production(
 
     heatnet_plant = HeatnetPlantProduction(
         facts=facts,
+        entries=entries,
         duration_CO2e_neutral_years=duration_CO2e_neutral_years,
         duration_until_target_year=duration_until_target_year,
         what="heatnet_plant",
@@ -163,6 +172,7 @@ def calc_production(
 
     heatnet_lheatpump = HeatnetLheatpumpProduction(
         facts=facts,
+        entries=entries,
         duration_CO2e_neutral_years=duration_CO2e_neutral_years,
         duration_until_target_year=duration_until_target_year,
         what="heatnet_lheatpump",
@@ -176,6 +186,7 @@ def calc_production(
 
     heatnet_geoth = HeatnetGeothProduction(
         facts=facts,
+        entries=entries,
         duration_CO2e_neutral_years=duration_CO2e_neutral_years,
         duration_until_target_year=duration_until_target_year,
         what="heatnet_geoth",
@@ -189,6 +200,7 @@ def calc_production(
 
     heatnet = HeatnetProduction(
         facts=facts,
+        entries=entries,
         duration_CO2e_neutral_years=duration_CO2e_neutral_years,
         duration_until_target_year=duration_until_target_year,
         what="heatnet",
@@ -206,6 +218,7 @@ def calc_production(
 
     ofossil = HeatProduction(
         facts=facts,
+        entries=entries,
         duration_CO2e_neutral_years=duration_CO2e_neutral_years,
         what="ofossil",
         h18=h18,
@@ -217,6 +230,7 @@ def calc_production(
     )
     solarth = HeatProduction(
         facts=facts,
+        entries=entries,
         duration_CO2e_neutral_years=duration_CO2e_neutral_years,
         what="solarth",
         h18=h18,
@@ -226,6 +240,7 @@ def calc_production(
     )
     heatpump = HeatProduction(
         facts=facts,
+        entries=entries,
         duration_CO2e_neutral_years=duration_CO2e_neutral_years,
         what="heatpump",
         h18=h18,
@@ -235,6 +250,7 @@ def calc_production(
     )
     orenew = HeatProduction(
         facts=facts,
+        entries=entries,
         duration_CO2e_neutral_years=duration_CO2e_neutral_years,
         what="orenew",
         h18=h18,
@@ -245,6 +261,7 @@ def calc_production(
 
     total = TotalHeatProduction(
         facts=facts,
+        entries=entries,
         duration_CO2e_neutral_years=duration_CO2e_neutral_years,
         duration_until_target_year=duration_until_target_year,
         what="",

@@ -1,35 +1,34 @@
 # pyright: strict
 
-from ...makeentries import Entries
-from ...refdata import Facts, Assumptions
-from ...utils import div, MILLION
-from ...electricity2018.e18 import E18
-from ...residences2018.r18 import R18
-from ...business2018.b18 import B18
 from ...agri2030.a30 import A30
+from ...business2018.b18 import B18
 from ...business2030.b30 import B30
+from ...electricity2018.e18 import E18
 from ...fuels2030.f30 import F30
 from ...heat2030.h30 import H30
 from ...industry2030.i30 import I30
+from ...makeentries import Entries
+from ...refdata import Assumptions, Facts
+from ...residences2018.r18 import R18
 from ...residences2030.r30 import R30
 from ...transport2030.t30 import T30
+from ...utils import MILLION, div
 from ...waste2030 import WasteLines
-
-from ..e30 import E30
-from ..core.energy import Energy
+from ..core import energy_demand
 from ..core.e_col_vars_2030 import EColVars2030
+from ..core.energy import Energy
+from ..core.energy_production.fossil_fuels import calc_stop_production_by_fossil_fuels
 from ..core.energy_production.fossil_fuels_production import FossilFuelsProduction
 from ..core.energy_production.geothermal import calc_production_renewable_geothermal
-from ..core.energy_production.fossil_fuels import calc_stop_production_by_fossil_fuels
+from ..core.energy_production.hydro import calc_production_local_hydro
+from ..core.energy_production.local_wind_onshore import (
+    calc_production_local_wind_onshore,
+)
 from ..core.energy_production.pv import (
     calc_production_local_pv_agri,
     calc_production_local_pv_facade,
     calc_production_local_pv_park,
     calc_production_local_pv_roof,
-)
-from ..core.energy_production.hydro import calc_production_local_hydro
-from ..core.energy_production.local_wind_onshore import (
-    calc_production_local_wind_onshore,
 )
 from ..core.energy_production.renew_hydro import calc_production_renew_hydro
 from ..core.energy_production.renew_pv_agri import calc_production_renew_pv_agri
@@ -37,15 +36,14 @@ from ..core.energy_production.renew_pv_facade import calc_production_renew_pv_fa
 from ..core.energy_production.renew_pv_park import calc_production_renew_pv_park
 from ..core.energy_production.renew_pv_roof import calc_production_renew_pv_roof
 from ..core.energy_production.renew_wind_offshore import calc_renew_wind_offshore
-from ..core import energy_demand
-
+from ..e30 import E30
+from . import energy_general
 from .energy_production.calc_production_local_biomass_stage2 import (
     calc_production_local_biomass_stage2,
 )
 from .energy_production.calc_production_renewable_reverse import (
     calc_production_renewable_reverse,
 )
-from . import energy_general
 
 
 def calc(
@@ -85,19 +83,25 @@ def calc(
     p_renew.invest_com = 0
 
     p_fossil_nuclear = calc_stop_production_by_fossil_fuels(
-        facts, duration_CO2e_neutral_years, e18_production=e18.p_fossil_nuclear
+        facts, entries, duration_CO2e_neutral_years, e18_production=e18.p_fossil_nuclear
     )
     p_fossil_coal_brown = calc_stop_production_by_fossil_fuels(
-        facts, duration_CO2e_neutral_years, e18_production=e18.p_fossil_coal_brown
+        facts,
+        entries,
+        duration_CO2e_neutral_years,
+        e18_production=e18.p_fossil_coal_brown,
     )
     p_fossil_coal_black = calc_stop_production_by_fossil_fuels(
-        facts, duration_CO2e_neutral_years, e18_production=e18.p_fossil_coal_black
+        facts,
+        entries,
+        duration_CO2e_neutral_years,
+        e18_production=e18.p_fossil_coal_black,
     )
     p_fossil_gas = calc_stop_production_by_fossil_fuels(
-        facts, duration_CO2e_neutral_years, e18_production=e18.p_fossil_gas
+        facts, entries, duration_CO2e_neutral_years, e18_production=e18.p_fossil_gas
     )
     p_fossil_ofossil = calc_stop_production_by_fossil_fuels(
-        facts, duration_CO2e_neutral_years, e18_production=e18.p_fossil_ofossil
+        facts, entries, duration_CO2e_neutral_years, e18_production=e18.p_fossil_ofossil
     )
 
     p_fossil = FossilFuelsProduction.sum(
@@ -112,7 +116,7 @@ def calc(
 
     p_local_biomass.CO2e_total_2021_estimated = (
         e18.p_local_biomass.CO2e_combustion_based
-        * fact("Fact_M_CO2e_wo_lulucf_2021_vs_year_ref")
+        * fact(f"Fact_M_CO2e_wo_lulucf_{entries.m_year_baseline - 1}_vs_year_ref")
     )
 
     p_local_pv_roof = calc_production_local_pv_roof(
@@ -166,7 +170,7 @@ def calc(
     p_renew_biomass = EColVars2030()
     p_renew_biomass.CO2e_total_2021_estimated = (
         e18.p_renew_biomass.CO2e_combustion_based
-        * fact("Fact_M_CO2e_wo_lulucf_2021_vs_year_ref")
+        * fact(f"Fact_M_CO2e_wo_lulucf_{entries.m_year_baseline - 1}_vs_year_ref")
     )
     p_renew_biomass.cost_fuel_per_MWh = ass(
         "Ass_E_P_local_biomass_material_costs"

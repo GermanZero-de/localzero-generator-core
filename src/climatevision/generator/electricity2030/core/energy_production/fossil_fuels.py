@@ -1,14 +1,15 @@
 # pyright: strict
 
+from .... import electricity2018
+from ....entries import Entries
 from ....refdata import Facts
 from ....utils import div
-from .... import electricity2018
-
 from .fossil_fuels_production import FossilFuelsProduction
 
 
 def calc_stop_production_by_fossil_fuels(
     facts: Facts,
+    entries: Entries,
     duration_CO2e_neutral_years: float,
     *,
     e18_production: electricity2018.dataclasses.FossilFuelsProduction,
@@ -18,7 +19,7 @@ def calc_stop_production_by_fossil_fuels(
 
     energy = 0
     CO2e_total_2021_estimated = e18_production.CO2e_combustion_based * fact(
-        "Fact_M_CO2e_wo_lulucf_2021_vs_year_ref"
+        f"Fact_M_CO2e_wo_lulucf_{entries.m_year_baseline - 1}_vs_year_ref"
     )
     cost_fuel_per_MWh = e18_production.cost_fuel_per_MWh
     cost_mro_per_MWh = e18_production.cost_mro_per_MWh

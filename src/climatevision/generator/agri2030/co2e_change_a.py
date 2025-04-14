@@ -1,15 +1,15 @@
 # pyright: strict
 
-from dataclasses import dataclass, InitVar
+from dataclasses import InitVar, dataclass
 
+from ..agri2018.a18 import A18
+from ..common.invest import InvestCommune
+from ..entries import Entries
 from ..refdata import Facts
 from ..utils import div
-from ..common.invest import InvestCommune
-from ..agri2018.a18 import A18
-
-from .energy_demand import EnergyChangePOperation, CO2eChangeP
-from .energy_source import CO2eChangeS
+from .energy_demand import CO2eChangeP, EnergyChangePOperation
 from .energy_general import CO2eChangeG
+from .energy_source import CO2eChangeS
 
 
 @dataclass(kw_only=True)
@@ -28,6 +28,7 @@ class CO2eChangeA(InvestCommune):
     invest_pa_outside: float = 0
 
     facts: InitVar[Facts]
+    entries: Entries
     duration_until_target_year: InitVar[int]
     duration_CO2e_neutral_years: InitVar[float]
     what: InitVar[str]
@@ -56,7 +57,7 @@ class CO2eChangeA(InvestCommune):
         self.CO2e_total = g.CO2e_total + p.CO2e_total + s.CO2e_total
 
         self.CO2e_total_2021_estimated = getattr(a18, what).CO2e_total * fact(
-            "Fact_M_CO2e_wo_lulucf_2021_vs_year_ref"
+            f"Fact_M_CO2e_wo_lulucf_{self.entries.m_year_baseline - 1}_vs_year_ref"
         )
 
         self.invest_pa_outside = g.invest_pa_outside

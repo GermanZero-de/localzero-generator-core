@@ -1,17 +1,19 @@
 # pyright: strict
 
-from dataclasses import dataclass, InitVar
+from dataclasses import InitVar, dataclass
 
-from ...refdata import Facts
-from ...utils import div
+from ...agri2018.a18 import A18
 from ...common.co2_equivalent_emission import CO2eEmission
 from ...common.co2e_change import CO2eChange
-from ...agri2018.a18 import A18
+from ...entries import Entries
+from ...refdata import Facts
+from ...utils import div
 
 
 @dataclass(kw_only=True)
 class CO2eChangeAgri(CO2eEmission, CO2eChange):
     facts: InitVar[Facts]
+    entries: Entries
     duration_CO2e_neutral_years: InitVar[float]
     what: InitVar[str]
     a18: InitVar[A18]
@@ -35,7 +37,7 @@ class CO2eChangeAgri(CO2eEmission, CO2eChange):
         self.change_CO2e_pct = div(self.change_CO2e_t, a18_CO2e_total)
 
         self.CO2e_total_2021_estimated = a18_CO2e_total * fact(
-            "Fact_M_CO2e_wo_lulucf_2021_vs_year_ref"
+            f"Fact_M_CO2e_wo_lulucf_{self.entries.m_year_baseline - 1}_vs_year_ref"
         )
         self.cost_climate_saved = (
             (self.CO2e_total_2021_estimated - self.CO2e_total)
