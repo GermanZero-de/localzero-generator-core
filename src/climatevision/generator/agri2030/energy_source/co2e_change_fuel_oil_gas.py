@@ -1,9 +1,8 @@
 # pyright: strict
-from dataclasses import dataclass, InitVar
+from dataclasses import InitVar, dataclass
 
-from ...refdata import Facts
 from ...agri2018.a18 import A18
-
+from ...refdata import Facts
 from .co2e_change_energy_per_mwh import CO2eChangeEnergyPerMWh
 
 
@@ -17,7 +16,12 @@ class CO2eChangeFuelOilGas(CO2eChangeEnergyPerMWh):
     a18: InitVar[A18]
 
     def __post_init__(
-        self, facts: Facts, duration_CO2e_neutral_years: float, what: str, a18: A18
+        self,
+        facts: Facts,
+        year_baseline: int,
+        duration_CO2e_neutral_years: float,
+        what: str,
+        a18: A18,
     ):
 
         self.CO2e_combustion_based = 0
@@ -27,6 +31,7 @@ class CO2eChangeFuelOilGas(CO2eChangeEnergyPerMWh):
         CO2eChangeEnergyPerMWh.__post_init__(
             self,
             facts=facts,
+            year_baseline=year_baseline,
             duration_CO2e_neutral_years=duration_CO2e_neutral_years,
             what=what,
             a18=a18,

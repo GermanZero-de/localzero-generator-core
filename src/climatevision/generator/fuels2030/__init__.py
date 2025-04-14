@@ -5,20 +5,20 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/fuel.html
 
 # pyright: strict
 
-from ..makeentries import Entries
-from ..refdata import Facts, Assumptions
-from ..fuels2018.f18 import F18
 from ..agri2030.a30 import A30
 from ..business2030.b30 import B30
+from ..fuels2018.f18 import F18
 from ..heat2030.h30 import H30
 from ..industry2030.i30 import I30
+from ..makeentries import Entries
+from ..refdata import Assumptions, Facts
 from ..residences2030.r30 import R30
 from ..transport2030.t30 import T30
 from ..waste2030 import WasteLines
-from .f30 import F30
-from .f import F
-from .energy_demand import EnergyDemand
 from . import energy_demand, energy_production
+from .energy_demand import EnergyDemand
+from .f import F
+from .f30 import F30
 
 
 def calc(
@@ -39,6 +39,7 @@ def calc(
     production = energy_production.calc_production(
         facts,
         assumptions,
+        entries.m_year_baseline,
         entries.m_duration_neutral,
         entries.m_duration_target,
         f18,

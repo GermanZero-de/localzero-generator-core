@@ -1,14 +1,15 @@
 # pyright: strict
 
-from ....refdata import Facts, Assumptions
-from ....utils import div, MILLION
 from ....electricity2018.e18 import E18
-
+from ....entries import Entries
+from ....refdata import Assumptions, Facts
+from ....utils import MILLION, div
 from ...core.e_col_vars_2030 import EColVars2030
 
 
 def calc_production_renewable_biomass(
     facts: Facts,
+    entries: Entries,
     assumptions: Assumptions,
     duration_CO2e_neutral_years: float,
     *,
@@ -20,7 +21,7 @@ def calc_production_renewable_biomass(
     p_renew_biomass = EColVars2030()
     p_renew_biomass.CO2e_total_2021_estimated = (
         e18.p_renew_biomass.CO2e_combustion_based
-        * fact("Fact_M_CO2e_wo_lulucf_2021_vs_year_ref")
+        * fact(f"Fact_M_CO2e_wo_lulucf_{entries.m_year_baseline - 1}_vs_year_ref")
     )
     p_renew_biomass.cost_fuel_per_MWh = ass(
         "Ass_E_P_local_biomass_material_costs"
