@@ -27,9 +27,7 @@ def calculate_derived_facts(rd: refdata.RefData):
     )
     f.add_derived_fact(
         "Fact_M_CO2e_wo_lulucf_year_ref",
-        f.fact(
-            f"Fact_M_CO2e_wo_lulucf_{rd.year_ref()}"
-        ),  # TODO: Like here with all Fact_M_CO2e_wo_lulucf_2021_vs_year_ref
+        f.fact(f"Fact_M_CO2e_wo_lulucf_{rd.year_ref()}"),
         {
             "note HS": "",
             "group": "ud",
