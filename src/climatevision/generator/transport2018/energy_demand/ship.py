@@ -39,7 +39,7 @@ class Ship:
             / entries.t_s_eev_fuel_overseas_mwh_total
         )
 
-        demand_diesel = entries.t_s_eev_diesel_inland_mwh_com
+        demand_diesel = entries.t_s_eev_diesel_inland_mwh_com * fact("Fact_T_S_ship_diesel_fec_year_ref_ratio_ageb_to_kv")
 
         energy = demand_diesel
 
@@ -74,7 +74,7 @@ class Ship:
             / entries.t_s_eev_fuel_overseas_mwh_total
         )
 
-        demand_fueloil = entries.t_s_eev_fuel_overseas_mwh_com
+        demand_fueloil = entries.t_s_eev_fuel_overseas_mwh_com * fact("Fact_T_S_ship_fueloil_fec_year_ref_ratio_ageb_to_kv")
 
         energy = demand_fueloil
         CO2e_combustion_based = co2e.from_demands(
