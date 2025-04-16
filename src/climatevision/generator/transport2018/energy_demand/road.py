@@ -8,6 +8,7 @@ from ...utils import element_wise_plus, MILLION
 
 from . import co2e
 
+
 @dataclass
 class Road:
     """Emissions caused by transport on the Road (car, bus, lorry, ...) of both goods and people."""
