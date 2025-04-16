@@ -49,14 +49,45 @@ class Road:
         lpg: float,
         petrol: float,
     ) -> "Road":
-        demand_biodiesel = mileage * biodiesel
-        demand_bioethanol = mileage * bioethanol
-        demand_biogas = mileage * biogas
-        demand_diesel = mileage * diesel
-        demand_electricity = mileage * electricity
-        demand_gas = mileage * gas
-        demand_lpg = mileage * lpg
-        demand_petrol = mileage * petrol
+
+        fact = facts.fact
+
+        demand_biodiesel = (
+            mileage
+            * biodiesel
+            * fact("Fact_T_S_road_biomass_fec_year_ref_ratio_ageb_to_kv")
+        )
+        demand_bioethanol = (
+            mileage
+            * bioethanol
+            * fact("Fact_T_S_road_biomass_fec_year_ref_ratio_ageb_to_kv")
+        )
+        demand_biogas = (
+            mileage
+            * biogas
+            * fact("Fact_T_S_road_biomass_fec_year_ref_ratio_ageb_to_kv")
+        )
+        demand_diesel = (
+            mileage
+            * diesel
+            * fact("Fact_T_S_road_diesel_fec_year_ref_ratio_ageb_to_kv")
+        )
+        demand_electricity = (
+            mileage
+            * electricity
+            * fact("Fact_T_S_road_elec_fec_year_ref_ratio_ageb_to_kv")
+        )
+        demand_gas = (
+            mileage * gas * fact("Fact_T_S_road_gas_fec_year_ref_ratio_ageb_to_kv")
+        )
+        demand_lpg = (
+            mileage * lpg * fact("Fact_T_S_road_lpg_fec_year_ref_ratio_ageb_to_kv")
+        )
+        demand_petrol = (
+            mileage
+            * petrol
+            * fact("Fact_T_S_road_petrol_fec_year_ref_ratio_ageb_to_kv")
+        )
         CO2e_combustion_based = co2e.from_demands(
             facts,
             assumptions,
