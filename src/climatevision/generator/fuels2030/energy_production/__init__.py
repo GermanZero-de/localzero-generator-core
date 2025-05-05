@@ -4,7 +4,6 @@ from dataclasses import dataclass
 
 from ...agri2030.a30 import A30
 from ...business2030.b30 import B30
-from ...entries import Entries
 from ...fuels2018.f18 import F18
 from ...heat2030.h30 import H30
 from ...industry2030.i30 import I30
@@ -39,8 +38,8 @@ class Production:
 
 def calc_production(
     facts: Facts,
-    entries: Entries,
     assumptions: Assumptions,
+    year_baseline: int,
     duration_CO2e_neutral_years: float,
     duration_until_target_year: int,
     f18: F18,
@@ -60,8 +59,8 @@ def calc_production(
         energy=t30.t.transport.demand_epetrol + a30.p_operation.demand_epetrol,
         CO2e_emission_factor=fact("Fact_T_S_petrol_EmFa_tank_wheel_2018"),
         facts=facts,
-        entries=entries,
         assumptions=assumptions,
+        year_baseline=year_baseline,
         duration_CO2e_neutral_years=duration_CO2e_neutral_years,
         duration_until_target_year=duration_until_target_year,
         production_2018=f18.p_petrol,
@@ -70,8 +69,8 @@ def calc_production(
         energy=t30.t.transport.demand_ejetfuel,
         CO2e_emission_factor=fact("Fact_T_S_petroljet_EmFa_tank_wheel_2018"),
         facts=facts,
-        entries=entries,
         assumptions=assumptions,
+        year_baseline=year_baseline,
         duration_CO2e_neutral_years=duration_CO2e_neutral_years,
         duration_until_target_year=duration_until_target_year,
         production_2018=f18.p_jetfuel,
@@ -84,8 +83,8 @@ def calc_production(
         ),
         CO2e_emission_factor=fact("Fact_T_S_diesel_EmFa_tank_wheel_2018"),
         facts=facts,
-        entries=entries,
         assumptions=assumptions,
+        year_baseline=year_baseline,
         duration_CO2e_neutral_years=duration_CO2e_neutral_years,
         duration_until_target_year=duration_until_target_year,
         production_2018=f18.p_diesel,

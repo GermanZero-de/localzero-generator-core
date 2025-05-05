@@ -21,7 +21,7 @@ def calc(
     production = energy_demand.calc_production(
         facts,
         assumptions,
-        entries,
+        entries.m_year_baseline,
         entries.m_duration_neutral,
         entries.m_duration_target,
         entries.m_population_com_2018,
@@ -32,8 +32,8 @@ def calc(
     )
     supply = energy_source.calc_supply(
         facts,
-        entries,
         assumptions,
+        entries.m_year_baseline,
         entries.m_duration_neutral,
         entries.m_duration_target,
         entries.m_population_com_2018,
@@ -52,7 +52,7 @@ def calc(
 
     a = CO2eChangeA(
         facts=facts,
-        entries=entries,
+        year_baseline=entries.m_year_baseline,
         duration_until_target_year=entries.m_duration_target,
         duration_CO2e_neutral_years=entries.m_duration_neutral,
         what="a",

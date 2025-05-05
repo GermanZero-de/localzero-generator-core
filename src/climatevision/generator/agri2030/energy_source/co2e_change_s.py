@@ -1,17 +1,15 @@
 # pyright: strict
-from dataclasses import dataclass, InitVar
+from dataclasses import InitVar, dataclass
 
+from ...agri2018.a18 import A18
+from ...common.invest import Invest
 from ...refdata import Facts
 from ...utils import div
-from ...common.invest import Invest
-from ...agri2018.a18 import A18
-
 from ..energy_demand import CO2eChangeAgri
-
 from .co2e_change_energy_per_mwh import CO2eChangeEnergyPerMWh
-from .co2e_change_fuel_oil_gas import CO2eChangeFuelOilGas
 from .co2e_change_fuel_emethan import CO2eChangeFuelEmethan
 from .co2e_change_fuel_heatpump import CO2eChangeFuelHeatpump
+from .co2e_change_fuel_oil_gas import CO2eChangeFuelOilGas
 
 
 @dataclass(kw_only=True)
@@ -38,6 +36,7 @@ class CO2eChangeS(CO2eChangeAgri, Invest):
     def __post_init__(  # type: ignore[override]
         self,
         facts: Facts,
+        year_baseline: int,
         duration_CO2e_neutral_years: float,
         what: str,
         a18: A18,
@@ -90,6 +89,7 @@ class CO2eChangeS(CO2eChangeAgri, Invest):
         CO2eChangeAgri.__post_init__(
             self,
             facts=facts,
+            year_baseline=year_baseline,
             duration_CO2e_neutral_years=duration_CO2e_neutral_years,
             what=what,
             a18=a18,

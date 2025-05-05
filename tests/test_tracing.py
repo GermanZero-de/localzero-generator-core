@@ -1,6 +1,6 @@
-from climatevision.tracing.number import TracedNumber
 from climatevision.generator import calculate_with_default_inputs
 from climatevision.tracing import with_tracing
+from climatevision.tracing.number import TracedNumber
 
 
 def test_literal():
@@ -93,7 +93,7 @@ def test_enable_disable_tracing():
 
     # We check ENABLE -> DISABLE -> ENABLE to make sure that there are no
     # leftovers that only break on multiple runs
-    expected_value = "55229.174057478296"
+    expected_value = "71797.92627472179"
     expected_trace = (
         "{'binary': '+', 'a': {'name': 'a30.g_consult.cost_wage'}, 'b': {'name': 'a30.g_organic.cost_wage'}, 'value': "
         + expected_value

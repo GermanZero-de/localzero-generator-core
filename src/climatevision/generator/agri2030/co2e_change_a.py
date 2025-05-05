@@ -4,7 +4,6 @@ from dataclasses import InitVar, dataclass
 
 from ..agri2018.a18 import A18
 from ..common.invest import InvestCommune
-from ..entries import Entries
 from ..refdata import Facts
 from ..utils import div
 from .energy_demand import CO2eChangeP, EnergyChangePOperation
@@ -28,7 +27,7 @@ class CO2eChangeA(InvestCommune):
     invest_pa_outside: float = 0
 
     facts: InitVar[Facts]
-    entries: Entries
+    year_baseline: InitVar[int]
     duration_until_target_year: InitVar[int]
     duration_CO2e_neutral_years: InitVar[float]
     what: InitVar[str]
@@ -41,6 +40,7 @@ class CO2eChangeA(InvestCommune):
     def __post_init__(
         self,
         facts: Facts,
+        year_baseline: int,
         duration_until_target_year: int,
         duration_CO2e_neutral_years: float,
         what: str,
@@ -57,7 +57,7 @@ class CO2eChangeA(InvestCommune):
         self.CO2e_total = g.CO2e_total + p.CO2e_total + s.CO2e_total
 
         self.CO2e_total_2021_estimated = getattr(a18, what).CO2e_total * fact(
-            f"Fact_M_CO2e_wo_lulucf_{self.entries.m_year_baseline - 1}_vs_year_ref"
+            f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref"
         )
 
         self.invest_pa_outside = g.invest_pa_outside

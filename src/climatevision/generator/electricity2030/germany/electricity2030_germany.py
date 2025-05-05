@@ -69,6 +69,8 @@ def calc(
     fact = facts.fact
     ass = assumptions.ass
 
+    year_baseline = entries.m_year_baseline
+
     duration_until_target_year = entries.m_duration_target
     duration_CO2e_neutral_years = entries.m_duration_neutral
 
@@ -153,25 +155,34 @@ def calc(
     p_renew.invest_pa_com = 0
     p_renew.invest_com = 0
     p_fossil_nuclear = calc_stop_production_by_fossil_fuels(
-        facts, entries, duration_CO2e_neutral_years, e18_production=e18.p_fossil_nuclear
+        facts,
+        year_baseline,
+        duration_CO2e_neutral_years,
+        e18_production=e18.p_fossil_nuclear,
     )
     p_fossil_coal_brown = calc_stop_production_by_fossil_fuels(
         facts,
-        entries,
+        year_baseline,
         duration_CO2e_neutral_years,
         e18_production=e18.p_fossil_coal_brown,
     )
     p_fossil_coal_black = calc_stop_production_by_fossil_fuels(
         facts,
-        entries,
+        year_baseline,
         duration_CO2e_neutral_years,
         e18_production=e18.p_fossil_coal_black,
     )
     p_fossil_gas = calc_stop_production_by_fossil_fuels(
-        facts, entries, duration_CO2e_neutral_years, e18_production=e18.p_fossil_gas
+        facts,
+        year_baseline,
+        duration_CO2e_neutral_years,
+        e18_production=e18.p_fossil_gas,
     )
     p_fossil_ofossil = calc_stop_production_by_fossil_fuels(
-        facts, entries, duration_CO2e_neutral_years, e18_production=e18.p_fossil_ofossil
+        facts,
+        year_baseline,
+        duration_CO2e_neutral_years,
+        e18_production=e18.p_fossil_ofossil,
     )
     p_renew_pv = EColVars2030()
     p_renew_pv.CO2e_total = 0

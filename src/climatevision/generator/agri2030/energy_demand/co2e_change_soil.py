@@ -3,7 +3,6 @@
 from dataclasses import dataclass
 
 from ...agri2018.a18 import A18
-from ...entries import Entries
 from ...refdata import Assumptions, Facts
 from ...utils import div
 from .co2e_change_agri import CO2eChangeAgri
@@ -20,7 +19,7 @@ class CO2eChangeSoil(CO2eChangeAgri):
     def calc_soil_special(
         cls,
         facts: Facts,
-        entries: Entries,
+        year_baseline: int,
         duration_CO2e_neutral_years: float,
         what: str,
         a18: A18,
@@ -43,7 +42,7 @@ class CO2eChangeSoil(CO2eChangeAgri):
 
         parent = CO2eChangeAgri(
             facts=facts,
-            entries=entries,
+            year_baseline=year_baseline,
             duration_CO2e_neutral_years=duration_CO2e_neutral_years,
             what=what,
             a18=a18,
@@ -53,7 +52,7 @@ class CO2eChangeSoil(CO2eChangeAgri):
 
         return cls(
             facts=facts,
-            entries=entries,
+            year_baseline=year_baseline,
             duration_CO2e_neutral_years=duration_CO2e_neutral_years,
             what=what,
             a18=a18,
@@ -74,7 +73,7 @@ class CO2eChangeSoil(CO2eChangeAgri):
     def calc_soil(
         cls,
         facts: Facts,
-        entries: Entries,
+        year_baseline: int,
         assumptions: Assumptions,
         duration_CO2e_neutral_years: float,
         what: str,
@@ -96,7 +95,7 @@ class CO2eChangeSoil(CO2eChangeAgri):
 
         parent = CO2eChangeAgri(
             facts=facts,
-            entries=entries,
+            year_baseline=year_baseline,
             duration_CO2e_neutral_years=duration_CO2e_neutral_years,
             what=what,
             a18=a18,
@@ -106,7 +105,7 @@ class CO2eChangeSoil(CO2eChangeAgri):
 
         return cls(
             facts=facts,
-            entries=entries,
+            year_baseline=year_baseline,
             duration_CO2e_neutral_years=duration_CO2e_neutral_years,
             what=what,
             a18=a18,

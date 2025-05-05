@@ -75,6 +75,8 @@ def calc_production(
 ) -> Production:
     ass = assumptions.ass
 
+    year_baseline = entries.m_year_baseline
+
     duration_until_target_year = entries.m_duration_target
     duration_CO2e_neutral_years = entries.m_duration_neutral
 
@@ -112,8 +114,8 @@ def calc_production(
     # -- Road ---
     road_car_it_ot = Road.calc_car_it_ot(
         facts,
-        entries,
         assumptions,
+        year_baseline,
         duration_CO2e_neutral_years,
         area_kind,
         t18=t18,
@@ -121,8 +123,8 @@ def calc_production(
     )
     road_car_ab = Road.calc_car_ab(
         facts,
-        entries,
         assumptions,
+        year_baseline,
         duration_CO2e_neutral_years,
         area_kind,
         t18=t18,
@@ -145,8 +147,8 @@ def calc_production(
     )
     road_bus = RoadBus.calc(
         facts,
-        entries,
         assumptions,
+        year_baseline,
         duration_until_target_year,
         duration_CO2e_neutral_years,
         area_kind,
@@ -166,10 +168,10 @@ def calc_production(
         road_bus_action_infra=road_bus_action_infra,
     )
     road_gds_ldt_it_ot = Road.calc_goods_lightduty_it_ot(
-        facts, entries, assumptions, duration_CO2e_neutral_years, t18=t18
+        facts, assumptions, year_baseline, duration_CO2e_neutral_years, t18=t18
     )
     road_gds_ldt_ab = Road.calc_goods_lightduty_ab(
-        facts, entries, assumptions, duration_CO2e_neutral_years, t18=t18
+        facts, assumptions, year_baseline, duration_CO2e_neutral_years, t18=t18
     )
     road_gds_ldt = RoadGoodsLightDuty.calc(
         facts,
@@ -180,10 +182,10 @@ def calc_production(
         ab=road_gds_ldt_ab,
     )
     road_gds_mhd_ab = Road.calc_goods_medium_and_heavy_duty_ab(
-        facts, entries, assumptions, duration_CO2e_neutral_years, t18=t18
+        facts, assumptions, year_baseline, duration_CO2e_neutral_years, t18=t18
     )
     road_gds_mhd_it_ot = Road.calc_goods_medium_and_heavy_duty_it_ot(
-        facts, entries, assumptions, duration_CO2e_neutral_years, t18=t18
+        facts, assumptions, year_baseline, duration_CO2e_neutral_years, t18=t18
     )
     road_gds_mhd = RoadGoodsMediumAndHeavyDuty.calc(
         facts,

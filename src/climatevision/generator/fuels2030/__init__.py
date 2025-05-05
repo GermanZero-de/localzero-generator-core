@@ -38,8 +38,8 @@ def calc(
 
     production = energy_production.calc_production(
         facts,
-        entries,
         assumptions,
+        entries.m_year_baseline,
         entries.m_duration_neutral,
         entries.m_duration_target,
         f18,
