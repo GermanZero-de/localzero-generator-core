@@ -137,9 +137,6 @@ def calculate(inputs: Inputs, inputs_germany: Inputs) -> Result:
     entries.assert_is_valid()
     entries_germany.assert_is_valid()
 
-    facts.assert_is_valid()
-    # TODO validate assumptions
-
     start_t = time()
 
     # 2018
