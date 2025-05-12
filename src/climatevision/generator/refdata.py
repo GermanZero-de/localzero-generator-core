@@ -404,6 +404,19 @@ class Facts:
             label, value, other_data
         )
 
+    def assert_is_valid(self):
+        key: str
+        row: FactOrAssumptionCompleteRow
+        for (key, row) in self._derived_facts.items():
+            assert (
+                row.value >= 0
+            ), f"Derived fact {key}={row.value} should be 0 or positive"
+
+        value: str
+        for (key, value) in self._facts.to_dict():
+            if value.isnumeric():
+                assert float(value) >= 0, f"Fact {key}={value} should be 0 or positive"
+
 
 @dataclass(kw_only=True)
 class Assumptions:
