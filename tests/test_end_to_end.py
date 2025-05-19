@@ -77,7 +77,7 @@ def test_all_used_variables_are_populated():
     """
     root = refdatatools.root_of_this_repo()
     g = calculate_with_default_inputs(
-        2018, ags="03159016", year_baseline=2025, year_target=2035
+        2018, ags="03159016", year_baseline=2022, year_target=2035
     )
     result = g.result_dict()
     with open(os.path.join(root, "tests", "usage.json")) as fp:
@@ -104,7 +104,7 @@ def test_all_used_variables_are_populated():
 
 
 def end_to_end(
-    year_ref: int, ags: str, year_baseline: int = 2025, year_target: int = 2035
+    year_ref: int, ags: str, year_baseline: int = 2022, year_target: int = 2035
 ):
     """This runs an end to end test. No entries are overriden, only AGS"""
     root = refdatatools.root_of_this_repo()
@@ -153,15 +153,15 @@ def make_entries_test(year_ref: int, ags: str, year_baseline: int, year_target: 
 
 
 def test_entries_test(year_ref: int):
-    make_entries_test(year_ref, "03159016", 2025, 2035)
+    make_entries_test(year_ref, "03159016", 2022, 2035)
 
 
-# Default year_baseline = 2025, default year_target = 2035
+# Default year_baseline = 2022, default year_target = 2035
 def test_end_to_end_goettingen(year_ref: int):
     end_to_end(year_ref, "03159016")
 
 
-# Default year_baseline = 2025, default year_target = 2035
+# Default year_baseline = 2022, default year_target = 2035
 def test_end_to_end_germany(year_ref: int):
     end_to_end(year_ref, "DG000000")
 

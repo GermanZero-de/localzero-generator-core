@@ -60,7 +60,7 @@ def cmd_test_end_to_end_update_expectations(args: Any):
     expect_entries_pattern = r"entries_((\d+)|(DG000000))_(20\d\d)_(20\d\d)\.json"
     expect_file_pattern = r"production_((\d+)|(DG000000))_(20\d\d)_(20\d\d)\.json"
 
-    year_baseline = 2025
+    year_baseline = 2022
 
     for year_ref in [2018, 2021]:
         for file_path, ags, year_baseline, year_target in expectation_files(
