@@ -1,14 +1,13 @@
 # pyright: strict
 
-from dataclasses import dataclass, asdict
+from dataclasses import asdict, dataclass
 
-from ...refdata import Facts, Assumptions
-from ...utils import div
 from ...common.invest import InvestCommune
+from ...refdata import Assumptions, Facts
 from ...transport2018.t18 import T18
-
-from .transport import Transport
+from ...utils import div
 from .investmentaction import InvestmentAction, RoadInvestmentAction
+from .transport import Transport
 
 
 @dataclass(kw_only=True)
@@ -36,6 +35,7 @@ class Road:
         cls,
         facts: Facts,
         assumptions: Assumptions,
+        year_baseline: int,
         duration_CO2e_neutral_years: float,
         *,
         t18: T18,
@@ -69,7 +69,7 @@ class Road:
         )
 
         CO2e_total_2021_estimated = t18.road_gds_ldt_it_ot.CO2e_combustion_based * fact(
-            "Fact_M_CO2e_wo_lulucf_2021_vs_year_ref"
+            f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref"
         )
         cost_climate_saved = (
             (CO2e_total_2021_estimated - CO2e_combustion_based)
@@ -97,6 +97,7 @@ class Road:
         cls,
         facts: Facts,
         assumptions: Assumptions,
+        year_baseline: int,
         duration_CO2e_neutral_years: float,
         *,
         t18: T18,
@@ -129,7 +130,7 @@ class Road:
             "Ass_T_S_diesel_EmFa_tank_wheel_2050"
         ) + demand_electricity * fact("Fact_T_S_electricity_EmFa_tank_wheel_2018")
         CO2e_total_2021_estimated = t18.road_gds_ldt_ab.CO2e_combustion_based * fact(
-            "Fact_M_CO2e_wo_lulucf_2021_vs_year_ref"
+            f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref"
         )
         cost_climate_saved = (
             (CO2e_total_2021_estimated - CO2e_combustion_based)
@@ -156,6 +157,7 @@ class Road:
         cls,
         facts: Facts,
         assumptions: Assumptions,
+        year_baseline: int,
         duration_CO2e_neutral_years: float,
         *,
         t18: T18,
@@ -164,7 +166,7 @@ class Road:
         ass = assumptions.ass
 
         CO2e_total_2021_estimated = t18.road_gds_mhd_ab.CO2e_combustion_based * fact(
-            "Fact_M_CO2e_wo_lulucf_2021_vs_year_ref"
+            f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref"
         )
         transport_capacity_tkm = (
             ass("Ass_T_D_trnsprt_gds_Rd_2050")
@@ -216,6 +218,7 @@ class Road:
         cls,
         facts: Facts,
         assumptions: Assumptions,
+        year_baseline: int,
         duration_CO2e_neutral_years: float,
         *,
         t18: T18,
@@ -249,7 +252,7 @@ class Road:
         )
 
         CO2e_total_2021_estimated = t18.road_gds_mhd_it_ot.CO2e_combustion_based * fact(
-            "Fact_M_CO2e_wo_lulucf_2021_vs_year_ref"
+            f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref"
         )
         cost_climate_saved = (
             (CO2e_total_2021_estimated - CO2e_combustion_based)
@@ -277,6 +280,7 @@ class Road:
         cls,
         facts: Facts,
         assumptions: Assumptions,
+        year_baseline: int,
         duration_CO2e_neutral_years: float,
         area_kind: str,
         *,
@@ -299,20 +303,24 @@ class Road:
                     + ass("Ass_T_D_trnsprt_ppl_city_car3_frac_2050")
                     + ass("Ass_T_D_trnsprt_ppl_city_car4_frac_2050")
                     if area_kind == "city"
-                    else ass("Ass_T_D_trnsprt_ppl_smcty_car1_frac_2050")
-                    + ass("Ass_T_D_trnsprt_ppl_smcty_car2_frac_2050")
-                    + ass("Ass_T_D_trnsprt_ppl_smcty_car3_frac_2050")
-                    + ass("Ass_T_D_trnsprt_ppl_smcty_car4_frac_2050")
-                    if area_kind == "smcty"
-                    else ass("Ass_T_D_trnsprt_ppl_rural_car1_frac_2050")
-                    + ass("Ass_T_D_trnsprt_ppl_rural_car2_frac_2050")
-                    + ass("Ass_T_D_trnsprt_ppl_rural_car3_frac_2050")
-                    + ass("Ass_T_D_trnsprt_ppl_rural_car4_frac_2050")
-                    if area_kind == "rural"
-                    else ass("Ass_T_D_trnsprt_ppl_nat_car1_frac_2050")
-                    + ass("Ass_T_D_trnsprt_ppl_nat_car2_frac_2050")
-                    + ass("Ass_T_D_trnsprt_ppl_nat_car3_frac_2050")
-                    + ass("Ass_T_D_trnsprt_ppl_nat_car4_frac_2050")
+                    else (
+                        ass("Ass_T_D_trnsprt_ppl_smcty_car1_frac_2050")
+                        + ass("Ass_T_D_trnsprt_ppl_smcty_car2_frac_2050")
+                        + ass("Ass_T_D_trnsprt_ppl_smcty_car3_frac_2050")
+                        + ass("Ass_T_D_trnsprt_ppl_smcty_car4_frac_2050")
+                        if area_kind == "smcty"
+                        else (
+                            ass("Ass_T_D_trnsprt_ppl_rural_car1_frac_2050")
+                            + ass("Ass_T_D_trnsprt_ppl_rural_car2_frac_2050")
+                            + ass("Ass_T_D_trnsprt_ppl_rural_car3_frac_2050")
+                            + ass("Ass_T_D_trnsprt_ppl_rural_car4_frac_2050")
+                            if area_kind == "rural"
+                            else ass("Ass_T_D_trnsprt_ppl_nat_car1_frac_2050")
+                            + ass("Ass_T_D_trnsprt_ppl_nat_car2_frac_2050")
+                            + ass("Ass_T_D_trnsprt_ppl_nat_car3_frac_2050")
+                            + ass("Ass_T_D_trnsprt_ppl_nat_car4_frac_2050")
+                        )
+                    )
                 )
             )
         )
@@ -331,7 +339,7 @@ class Road:
             "Ass_T_S_petrol_EmFa_tank_wheel_2050"
         ) + demand_electricity * fact("Fact_T_S_electricity_EmFa_tank_wheel_2018")
         CO2e_total_2021_estimated = t18.road_car_it_ot.CO2e_combustion_based * fact(
-            "Fact_M_CO2e_wo_lulucf_2021_vs_year_ref"
+            f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref"
         )
         cost_climate_saved = (
             (CO2e_total_2021_estimated - CO2e_combustion_based)
@@ -359,6 +367,7 @@ class Road:
         cls,
         facts: Facts,
         assumptions: Assumptions,
+        year_baseline: int,
         duration_CO2e_neutral_years: float,
         area_kind: str,
         *,
@@ -380,20 +389,24 @@ class Road:
                 + ass("Ass_T_D_trnsprt_ppl_city_car3_frac_2050")
                 + ass("Ass_T_D_trnsprt_ppl_city_car4_frac_2050")
                 if area_kind == "city"
-                else ass("Ass_T_D_trnsprt_ppl_smcty_car1_frac_2050")
-                + ass("Ass_T_D_trnsprt_ppl_smcty_car2_frac_2050")
-                + ass("Ass_T_D_trnsprt_ppl_smcty_car3_frac_2050")
-                + ass("Ass_T_D_trnsprt_ppl_smcty_car4_frac_2050")
-                if area_kind == "smcty"
-                else ass("Ass_T_D_trnsprt_ppl_rural_car1_frac_2050")
-                + ass("Ass_T_D_trnsprt_ppl_rural_car2_frac_2050")
-                + ass("Ass_T_D_trnsprt_ppl_rural_car3_frac_2050")
-                + ass("Ass_T_D_trnsprt_ppl_rural_car4_frac_2050")
-                if area_kind == "rural"
-                else ass("Ass_T_D_trnsprt_ppl_nat_car1_frac_2050")
-                + ass("Ass_T_D_trnsprt_ppl_nat_car2_frac_2050")
-                + ass("Ass_T_D_trnsprt_ppl_nat_car3_frac_2050")
-                + ass("Ass_T_D_trnsprt_ppl_nat_car4_frac_2050")
+                else (
+                    ass("Ass_T_D_trnsprt_ppl_smcty_car1_frac_2050")
+                    + ass("Ass_T_D_trnsprt_ppl_smcty_car2_frac_2050")
+                    + ass("Ass_T_D_trnsprt_ppl_smcty_car3_frac_2050")
+                    + ass("Ass_T_D_trnsprt_ppl_smcty_car4_frac_2050")
+                    if area_kind == "smcty"
+                    else (
+                        ass("Ass_T_D_trnsprt_ppl_rural_car1_frac_2050")
+                        + ass("Ass_T_D_trnsprt_ppl_rural_car2_frac_2050")
+                        + ass("Ass_T_D_trnsprt_ppl_rural_car3_frac_2050")
+                        + ass("Ass_T_D_trnsprt_ppl_rural_car4_frac_2050")
+                        if area_kind == "rural"
+                        else ass("Ass_T_D_trnsprt_ppl_nat_car1_frac_2050")
+                        + ass("Ass_T_D_trnsprt_ppl_nat_car2_frac_2050")
+                        + ass("Ass_T_D_trnsprt_ppl_nat_car3_frac_2050")
+                        + ass("Ass_T_D_trnsprt_ppl_nat_car4_frac_2050")
+                    )
+                )
             )
         )
         mileage = transport_capacity_pkm / ass("Ass_T_D_lf_ppl_Car_2050")
@@ -411,7 +424,7 @@ class Road:
             "Ass_T_S_petrol_EmFa_tank_wheel_2050"
         ) + demand_electricity * fact("Fact_T_S_electricity_EmFa_tank_wheel_2018")
         CO2e_total_2021_estimated = t18.road_car_ab.CO2e_combustion_based * fact(
-            "Fact_M_CO2e_wo_lulucf_2021_vs_year_ref"
+            f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref"
         )
         cost_climate_saved = (
             (CO2e_total_2021_estimated - CO2e_combustion_based)
@@ -582,6 +595,7 @@ class RoadBus(Road, BusInvestments):
         cls,
         facts: Facts,
         assumptions: Assumptions,
+        year_baseline: int,
         duration_until_target_year: int,
         duration_CO2e_neutral_years: float,
         area_kind: str,
@@ -600,11 +614,15 @@ class RoadBus(Road, BusInvestments):
         public_transport_ppl_frac_2050 = (
             ass("Ass_T_D_trnsprt_ppl_city_pt_frac_2050")
             if area_kind == "city"
-            else ass("Ass_T_D_trnsprt_ppl_smcty_pt_frac_2050")
-            if area_kind == "smcty"
-            else ass("Ass_T_D_trnsprt_ppl_rural_pt_frac_2050")
-            if area_kind == "rural"
-            else ass("Ass_T_D_trnsprt_ppl_nat_pt_frac_2050")
+            else (
+                ass("Ass_T_D_trnsprt_ppl_smcty_pt_frac_2050")
+                if area_kind == "smcty"
+                else (
+                    ass("Ass_T_D_trnsprt_ppl_rural_pt_frac_2050")
+                    if area_kind == "rural"
+                    else ass("Ass_T_D_trnsprt_ppl_nat_pt_frac_2050")
+                )
+            )
         )
 
         import math
@@ -633,7 +651,7 @@ class RoadBus(Road, BusInvestments):
         )
 
         CO2e_total_2021_estimated = t18.road_bus.CO2e_combustion_based * fact(
-            "Fact_M_CO2e_wo_lulucf_2021_vs_year_ref"
+            f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref"
         )
         cost_climate_saved = (
             (CO2e_total_2021_estimated - CO2e_combustion_based)

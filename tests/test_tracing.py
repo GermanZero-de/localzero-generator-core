@@ -1,6 +1,6 @@
-from climatevision.tracing.number import TracedNumber
 from climatevision.generator import calculate_with_default_inputs
 from climatevision.tracing import with_tracing
+from climatevision.tracing.number import TracedNumber
 
 
 def test_literal():

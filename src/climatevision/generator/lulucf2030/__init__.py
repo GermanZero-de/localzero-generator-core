@@ -5,13 +5,12 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/lulucf.html
 
 # pyright: strict
 
-from ..makeentries import Entries
-from ..refdata import Facts, Assumptions
-from ..utils import div
 from ..lulucf2018.l18 import L18
-
-from .l30 import L30
+from ..makeentries import Entries
+from ..refdata import Assumptions, Facts
+from ..utils import div
 from .dataclasses import LColVars2030
+from .l30 import L30
 
 
 def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, l18: L18) -> L30:
@@ -75,14 +74,14 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, l18: L18) 
 
     """S T A R T"""
     l.CO2e_total_2021_estimated = l18.l.CO2e_total * fact(
-        "Fact_M_CO2e_lulucf_2021_vs_year_ref"
+        f"Fact_M_CO2e_lulucf_{entries.m_year_baseline - 1}_vs_year_ref"
     )
     g.CO2e_total_2021_estimated = l18.g.CO2e_total * fact(
-        "Fact_M_CO2e_lulucf_2021_vs_year_ref"
+        f"Fact_M_CO2e_lulucf_{entries.m_year_baseline - 1}_vs_year_ref"
     )
     g_settlement.invest = 0
     g_forest.CO2e_total_2021_estimated = l18.g_forest.CO2e_total * fact(
-        "Fact_M_CO2e_lulucf_2021_vs_year_ref"
+        f"Fact_M_CO2e_lulucf_{entries.m_year_baseline - 1}_vs_year_ref"
     )
     g_forest_managed.demand_change = ass("Ass_L_G_forest_conv_pct_change")
     g_forest_managed.CO2e_production_based_per_t = ass(
@@ -92,7 +91,7 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, l18: L18) 
         "Ass_L_G_forest_CO2e_cb_per_ha_2050"
     )
     g_forest_managed.CO2e_total_2021_estimated = l18.g_forest_managed.CO2e_total * fact(
-        "Fact_M_CO2e_lulucf_2021_vs_year_ref"
+        f"Fact_M_CO2e_lulucf_{entries.m_year_baseline - 1}_vs_year_ref"
     )
     g_forest_managed.invest_per_x = ass(
         "Ass_L_G_forest_afforestation_invest_per_ha_2020"
@@ -111,33 +110,33 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, l18: L18) 
         "Fact_L_G_forest_nature_CO2e_per_ha_2018"
     )
     g_forest_natural.CO2e_total_2021_estimated = l18.g_forest_natural.CO2e_total * fact(
-        "Fact_M_CO2e_lulucf_2021_vs_year_ref"
+        f"Fact_M_CO2e_lulucf_{entries.m_year_baseline - 1}_vs_year_ref"
     )
     g_crop.CO2e_total_2021_estimated = l18.g_crop.CO2e_total * fact(
-        "Fact_M_CO2e_lulucf_2021_vs_year_ref"
+        f"Fact_M_CO2e_lulucf_{entries.m_year_baseline - 1}_vs_year_ref"
     )
     g_crop_min_conv.demand_change = ass("Ass_L_G_crop_organic_matter_pct_2050")
     g_crop_min_conv.CO2e_production_based_per_t = fact(
         "Fact_L_G_crop_minrl_soil_ord_CO2e_per_ha_2018"
     )
     g_crop_min_conv.CO2e_total_2021_estimated = l18.g_crop_min_conv.CO2e_total * fact(
-        "Fact_M_CO2e_lulucf_2021_vs_year_ref"
+        f"Fact_M_CO2e_lulucf_{entries.m_year_baseline - 1}_vs_year_ref"
     )
     g_crop_min_hum.CO2e_production_based_per_t = fact(
         "Fact_L_G_crop_minrl_soil_sust_CO2e_per_ha_203X"
     )
     g_crop_min_hum.CO2e_total_2021_estimated = 0 * fact(
-        "Fact_M_CO2e_lulucf_2021_vs_year_ref"
+        f"Fact_M_CO2e_lulucf_{entries.m_year_baseline - 1}_vs_year_ref"
     )
     g_crop_org.CO2e_total_2021_estimated = l18.g_crop_org.CO2e_total * fact(
-        "Fact_M_CO2e_lulucf_2021_vs_year_ref"
+        f"Fact_M_CO2e_lulucf_{entries.m_year_baseline - 1}_vs_year_ref"
     )
     g_crop_org_low.demand_change = ass("Ass_L_G_area_rewetting_2050")
     g_crop_org_low.CO2e_production_based_per_t = fact(
         "Fact_L_G_crop_fen_CO2e_per_ha_2018"
     )
     g_crop_org_low.CO2e_total_2021_estimated = l18.g_crop_org_low.CO2e_total * fact(
-        "Fact_M_CO2e_lulucf_2021_vs_year_ref"
+        f"Fact_M_CO2e_lulucf_{entries.m_year_baseline - 1}_vs_year_ref"
     )
     g_crop_org_low.invest_per_x = ass("Ass_L_G_wet_rewetting_invest_per_ha_2016")
     g_crop_org_low.pct_of_wage = fact("Fact_L_G_wet_rewetting_revenue_pct_of_wage_2018")
@@ -149,7 +148,7 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, l18: L18) 
         "Fact_L_G_crop_bog_CO2e_per_ha_2018"
     )
     g_crop_org_high.CO2e_total_2021_estimated = l18.g_crop_org_high.CO2e_total * fact(
-        "Fact_M_CO2e_lulucf_2021_vs_year_ref"
+        f"Fact_M_CO2e_lulucf_{entries.m_year_baseline - 1}_vs_year_ref"
     )
     g_crop_org_high.invest_per_x = ass("Ass_L_G_wet_rewetting_invest_per_ha_2016")
     g_crop_org_high.pct_of_wage = fact(
@@ -159,24 +158,24 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, l18: L18) 
         "Fact_L_G_wet_rewetting_ratio_wage_to_emplo_2018"
     )
     g_grass.CO2e_total_2021_estimated = l18.g_grass.CO2e_total * fact(
-        "Fact_M_CO2e_lulucf_2021_vs_year_ref"
+        f"Fact_M_CO2e_lulucf_{entries.m_year_baseline - 1}_vs_year_ref"
     )
     g_grass_min_conv.demand_change = ass("Ass_L_G_no_LUC_203X")
     g_grass_min_conv.CO2e_production_based_per_t = fact(
         "Fact_L_G_grass_strict_minrl_soil_ord_CO2e_per_ha_2018"
     )
     g_grass_min_conv.CO2e_total_2021_estimated = l18.g_grass_min_conv.CO2e_total * fact(
-        "Fact_M_CO2e_lulucf_2021_vs_year_ref"
+        f"Fact_M_CO2e_lulucf_{entries.m_year_baseline - 1}_vs_year_ref"
     )
     g_grass_org.CO2e_total_2021_estimated = l18.g_grass_org.CO2e_total * fact(
-        "Fact_M_CO2e_lulucf_2021_vs_year_ref"
+        f"Fact_M_CO2e_lulucf_{entries.m_year_baseline - 1}_vs_year_ref"
     )
     g_grass_org_low.demand_change = ass("Ass_L_G_area_rewetting_2050")
     g_grass_org_low.CO2e_production_based_per_t = fact(
         "Fact_L_G_grass_strict_org_soil_fen_CO2e_per_ha_2018"
     )
     g_grass_org_low.CO2e_total_2021_estimated = l18.g_grass_org_low.CO2e_total * fact(
-        "Fact_M_CO2e_lulucf_2021_vs_year_ref"
+        f"Fact_M_CO2e_lulucf_{entries.m_year_baseline - 1}_vs_year_ref"
     )
     g_grass_org_low.invest_per_x = ass("Ass_L_G_wet_rewetting_invest_per_ha_2016")
     g_grass_org_low.pct_of_wage = fact(
@@ -190,7 +189,7 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, l18: L18) 
         "Fact_L_G_grass_strict_org_soil_bog_CO2e_per_ha_2018"
     )
     g_grass_org_high.CO2e_total_2021_estimated = l18.g_grass_org_high.CO2e_total * fact(
-        "Fact_M_CO2e_lulucf_2021_vs_year_ref"
+        f"Fact_M_CO2e_lulucf_{entries.m_year_baseline - 1}_vs_year_ref"
     )
     g_grass_org_high.invest_per_x = ass("Ass_L_G_wet_rewetting_invest_per_ha_2016")
     g_grass_org_high.pct_of_wage = fact(
@@ -200,24 +199,24 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, l18: L18) 
         "Fact_L_G_wet_rewetting_ratio_wage_to_emplo_2018"
     )
     g_grove.CO2e_total_2021_estimated = l18.g_grove.CO2e_total * fact(
-        "Fact_M_CO2e_lulucf_2021_vs_year_ref"
+        f"Fact_M_CO2e_lulucf_{entries.m_year_baseline - 1}_vs_year_ref"
     )
     g_grove_min.demand_change = ass("Ass_L_G_no_LUC_203X")
     g_grove_min.CO2e_production_based_per_t = fact(
         "Fact_L_G_grass_woody_minrl_soil_ord_CO2e_per_ha_2018"
     )
     g_grove_min.CO2e_total_2021_estimated = l18.g_grove_min.CO2e_total * fact(
-        "Fact_M_CO2e_lulucf_2021_vs_year_ref"
+        f"Fact_M_CO2e_lulucf_{entries.m_year_baseline - 1}_vs_year_ref"
     )
     g_grove_org.CO2e_total_2021_estimated = l18.g_grove_org.CO2e_total * fact(
-        "Fact_M_CO2e_lulucf_2021_vs_year_ref"
+        f"Fact_M_CO2e_lulucf_{entries.m_year_baseline - 1}_vs_year_ref"
     )
     g_grove_org_low.demand_change = ass("Ass_L_G_area_rewetting_2050")
     g_grove_org_low.CO2e_production_based_per_t = fact(
         "Fact_L_G_grass_woody_org_soil_fen_CO2e_per_ha_2018"
     )
     g_grove_org_low.CO2e_total_2021_estimated = l18.g_grove_org_low.CO2e_total * fact(
-        "Fact_M_CO2e_lulucf_2021_vs_year_ref"
+        f"Fact_M_CO2e_lulucf_{entries.m_year_baseline - 1}_vs_year_ref"
     )
     g_grove_org_low.invest_per_x = ass("Ass_L_G_wet_rewetting_invest_per_ha_2016")
     g_grove_org_low.pct_of_wage = fact(
@@ -231,7 +230,7 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, l18: L18) 
         "Fact_L_G_grass_woody_org_soil_bog_CO2e_per_ha_2018"
     )
     g_grove_org_high.CO2e_total_2021_estimated = l18.g_grove_org_high.CO2e_total * fact(
-        "Fact_M_CO2e_lulucf_2021_vs_year_ref"
+        f"Fact_M_CO2e_lulucf_{entries.m_year_baseline - 1}_vs_year_ref"
     )
     g_grove_org_high.invest_per_x = ass("Ass_L_G_wet_rewetting_invest_per_ha_2016")
     g_grove_org_high.pct_of_wage = fact(
@@ -241,24 +240,24 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, l18: L18) 
         "Fact_L_G_wet_rewetting_ratio_wage_to_emplo_2018"
     )
     g_wet.CO2e_total_2021_estimated = l18.g_wet.CO2e_total * fact(
-        "Fact_M_CO2e_lulucf_2021_vs_year_ref"
+        f"Fact_M_CO2e_lulucf_{entries.m_year_baseline - 1}_vs_year_ref"
     )
     g_wet_min.demand_change = ass("Ass_L_G_no_LUC_203X")
     g_wet_min.CO2e_production_based_per_t = fact(
         "Fact_L_G_wetland_peat_minrl_soil_ord_CO2e_per_ha_2018"
     )
     g_wet_min.CO2e_total_2021_estimated = l18.g_wet_min.CO2e_total * fact(
-        "Fact_M_CO2e_lulucf_2021_vs_year_ref"
+        f"Fact_M_CO2e_lulucf_{entries.m_year_baseline - 1}_vs_year_ref"
     )
     g_wet_org.CO2e_total_2021_estimated = l18.g_wet_org.CO2e_total * fact(
-        "Fact_M_CO2e_lulucf_2021_vs_year_ref"
+        f"Fact_M_CO2e_lulucf_{entries.m_year_baseline - 1}_vs_year_ref"
     )
     g_wet_org_low.demand_change = ass("Ass_L_G_area_rewetting_2050")
     g_wet_org_low.CO2e_production_based_per_t = fact(
         "Fact_L_G_wetland_peat_org_soil_fen_CO2e_per_ha_2018"
     )
     g_wet_org_low.CO2e_total_2021_estimated = l18.g_wet_org_low.CO2e_total * fact(
-        "Fact_M_CO2e_lulucf_2021_vs_year_ref"
+        f"Fact_M_CO2e_lulucf_{entries.m_year_baseline - 1}_vs_year_ref"
     )
     g_wet_org_low.invest_per_x = ass("Ass_L_G_wet_rewetting_invest_per_ha_2016")
     g_wet_org_low.pct_of_wage = fact("Fact_L_G_wet_rewetting_revenue_pct_of_wage_2018")
@@ -270,7 +269,7 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, l18: L18) 
         "Fact_L_G_wetland_peat_org_soil_bog_CO2e_per_ha_2018"
     )
     g_wet_org_high.CO2e_total_2021_estimated = l18.g_wet_org_high.CO2e_total * fact(
-        "Fact_M_CO2e_lulucf_2021_vs_year_ref"
+        f"Fact_M_CO2e_lulucf_{entries.m_year_baseline - 1}_vs_year_ref"
     )
     g_wet_org_high.invest_per_x = ass("Ass_L_G_wet_rewetting_invest_per_ha_2016")
     g_wet_org_high.pct_of_wage = fact("Fact_L_G_wet_rewetting_revenue_pct_of_wage_2018")
@@ -278,31 +277,31 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, l18: L18) 
         "Fact_L_G_wet_rewetting_ratio_wage_to_emplo_2018"
     )
     g_wet_org_r.CO2e_total_2021_estimated = 0 * fact(
-        "Fact_M_CO2e_lulucf_2021_vs_year_ref"
+        f"Fact_M_CO2e_lulucf_{entries.m_year_baseline - 1}_vs_year_ref"
     )
 
     g_wet_org_low_r.CO2e_production_based_per_t = fact(
         "Fact_L_G_fen_wet_CO2e_per_ha_203X"
     )
     g_wet_org_low_r.CO2e_total_2021_estimated = 0 * fact(
-        "Fact_M_CO2e_lulucf_2021_vs_year_ref"
+        f"Fact_M_CO2e_lulucf_{entries.m_year_baseline - 1}_vs_year_ref"
     )
 
     g_wet_org_high_r.CO2e_production_based_per_t = fact(
         "Fact_L_G_bog_wet_CO2e_per_ha_203X"
     )
     g_wet_org_high_r.CO2e_total_2021_estimated = 0 * fact(
-        "Fact_M_CO2e_lulucf_2021_vs_year_ref"
+        f"Fact_M_CO2e_lulucf_{entries.m_year_baseline - 1}_vs_year_ref"
     )
     g_wet_org_rp.CO2e_total_2021_estimated = 0 * fact(
-        "Fact_M_CO2e_lulucf_2021_vs_year_ref"
+        f"Fact_M_CO2e_lulucf_{entries.m_year_baseline - 1}_vs_year_ref"
     )
     g_wet_org_low_rp.pct_x = ass("Ass_L_G_wet_paludi_pct_2012")
     g_wet_org_low_rp.CO2e_production_based_per_t = fact(
         "Fact_L_G_wetland_peat_org_soil_paludi_CO2e_per_ha_203X"
     )
     g_wet_org_low_rp.CO2e_total_2021_estimated = 0 * fact(
-        "Fact_M_CO2e_lulucf_2021_vs_year_ref"
+        f"Fact_M_CO2e_lulucf_{entries.m_year_baseline - 1}_vs_year_ref"
     )
     g_wet_org_low_rp.invest_per_x = ass("Ass_L_G_wet_paludi_invest_per_ha_2016")
     g_wet_org_high_rp.pct_x = ass("Ass_L_G_wet_paludi_pct_2012")
@@ -310,11 +309,11 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, l18: L18) 
         "Fact_L_G_wetland_peat_org_soil_paludi_CO2e_per_ha_203X"
     )
     g_wet_org_high_rp.CO2e_total_2021_estimated = 0 * fact(
-        "Fact_M_CO2e_lulucf_2021_vs_year_ref"
+        f"Fact_M_CO2e_lulucf_{entries.m_year_baseline - 1}_vs_year_ref"
     )
     g_wet_org_high_rp.invest_per_x = ass("Ass_L_G_wet_paludi_invest_per_ha_2016")
     g_water.CO2e_total_2021_estimated = l18.g_water.CO2e_total * fact(
-        "Fact_M_CO2e_lulucf_2021_vs_year_ref"
+        f"Fact_M_CO2e_lulucf_{entries.m_year_baseline - 1}_vs_year_ref"
     )
     g_water_org.invest = 0
     g_water_org.invest_pa = g_water_org.invest / duration_until_target_year
@@ -324,31 +323,31 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, l18: L18) 
         "Fact_L_G_wetland_water_minrl_soil_ord_CO2e_per_ha_2018"
     )
     g_water_min.CO2e_total_2021_estimated = l18.g_water_min.CO2e_total * fact(
-        "Fact_M_CO2e_lulucf_2021_vs_year_ref"
+        f"Fact_M_CO2e_lulucf_{entries.m_year_baseline - 1}_vs_year_ref"
     )
     g_water_org_low.demand_change = ass("Ass_L_G_no_LUC_203X")
     g_water_org_low.CO2e_production_based_per_t = fact(
         "Fact_L_G_wetland_water_org_soil_fen_CO2e_per_ha_2018"
     )
     g_water_org_low.CO2e_total_2021_estimated = l18.g_water_org_low.CO2e_total * fact(
-        "Fact_M_CO2e_lulucf_2021_vs_year_ref"
+        f"Fact_M_CO2e_lulucf_{entries.m_year_baseline - 1}_vs_year_ref"
     )
     g_water_org_high.demand_change = ass("Ass_L_G_no_LUC_203X")
     g_water_org_high.CO2e_production_based_per_t = fact(
         "Fact_L_G_wetland_water_org_soil_bog_CO2e_per_ha_2018"
     )
     g_water_org_high.CO2e_total_2021_estimated = l18.g_water_org_high.CO2e_total * fact(
-        "Fact_M_CO2e_lulucf_2021_vs_year_ref"
+        f"Fact_M_CO2e_lulucf_{entries.m_year_baseline - 1}_vs_year_ref"
     )
     g_settlement.CO2e_total_2021_estimated = l18.g_settlement.CO2e_total * fact(
-        "Fact_M_CO2e_lulucf_2021_vs_year_ref"
+        f"Fact_M_CO2e_lulucf_{entries.m_year_baseline - 1}_vs_year_ref"
     )
     g_settlement_min.demand_change = ass("Ass_L_G_no_LUC_203X")
     g_settlement_min.CO2e_production_based_per_t = fact(
         "Fact_L_G_settl_minrl_soil_no_LUC_CO2e_per_ha_203X"
     )
     g_settlement_min.CO2e_total_2021_estimated = l18.g_settlement_min.CO2e_total * fact(
-        "Fact_M_CO2e_lulucf_2021_vs_year_ref"
+        f"Fact_M_CO2e_lulucf_{entries.m_year_baseline - 1}_vs_year_ref"
     )
     g_settlement_org_low.demand_change = ass("Ass_L_G_settl_rewetting_2050")
     g_settlement_org_low.CO2e_production_based_per_t = fact(
@@ -356,7 +355,7 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, l18: L18) 
     )
     g_settlement_org_low.CO2e_total_2021_estimated = (
         l18.g_settlement_org_low.CO2e_total
-        * fact("Fact_M_CO2e_lulucf_2021_vs_year_ref")
+        * fact(f"Fact_M_CO2e_lulucf_{entries.m_year_baseline - 1}_vs_year_ref")
     )
     g_settlement_org_high.demand_change = ass("Ass_L_G_settl_rewetting_2050")
     g_settlement_org_high.CO2e_production_based_per_t = fact(
@@ -364,14 +363,14 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, l18: L18) 
     )
     g_settlement_org_high.CO2e_total_2021_estimated = (
         l18.g_settlement_org_high.CO2e_total
-        * fact("Fact_M_CO2e_lulucf_2021_vs_year_ref")
+        * fact(f"Fact_M_CO2e_lulucf_{entries.m_year_baseline - 1}_vs_year_ref")
     )
     g_other.demand_change = ass("Ass_L_G_no_LUC_203X")
     g_other.CO2e_production_based_per_t = fact(
         "Fact_L_G_other_minrl_soil_CO2e_per_ha_2018"
     )
     g_other.CO2e_total_2021_estimated = l18.g_other.CO2e_total * fact(
-        "Fact_M_CO2e_lulucf_2021_vs_year_ref"
+        f"Fact_M_CO2e_lulucf_{entries.m_year_baseline - 1}_vs_year_ref"
     )
     g_forest_managed.area_ha_change = (
         l18.g_forest_managed.area_ha * g_forest_managed.demand_change
@@ -1370,7 +1369,7 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, l18: L18) 
         g_water_org.change_CO2e_t, l18.g_water_org.CO2e_total
     )
     g_water_org.CO2e_total_2021_estimated = l18.g_water_org.CO2e_total * fact(
-        "Fact_M_CO2e_lulucf_2021_vs_year_ref"
+        f"Fact_M_CO2e_lulucf_{entries.m_year_baseline - 1}_vs_year_ref"
     )
     g_water_org.cost_climate_saved = (
         (g_water_org.CO2e_total_2021_estimated - g_water_org.CO2e_total)
@@ -1400,7 +1399,7 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, l18: L18) 
         g_settlement_org.change_CO2e_t, l18.g_settlement_org.CO2e_total
     )
     g_settlement_org.CO2e_total_2021_estimated = l18.g_settlement_org.CO2e_total * fact(
-        "Fact_M_CO2e_lulucf_2021_vs_year_ref"
+        f"Fact_M_CO2e_lulucf_{entries.m_year_baseline - 1}_vs_year_ref"
     )
     g_settlement_org.cost_climate_saved = (
         (g_settlement_org.CO2e_total_2021_estimated - g_settlement_org.CO2e_total)
@@ -1414,7 +1413,7 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, l18: L18) 
     g_wood.change_CO2e_t = g_wood.CO2e_total - l18.g_wood.CO2e_total
     g_wood.change_CO2e_pct = div(g_wood.change_CO2e_t, l18.g_wood.CO2e_total)
     g_wood.CO2e_total_2021_estimated = l18.g_wood.CO2e_total * fact(
-        "Fact_M_CO2e_lulucf_2021_vs_year_ref"
+        f"Fact_M_CO2e_lulucf_{entries.m_year_baseline - 1}_vs_year_ref"
     )
     g_wood.cost_climate_saved = (
         (g_wood.CO2e_total_2021_estimated - g_wood.CO2e_total)
@@ -1435,7 +1434,7 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, l18: L18) 
     l.change_CO2e_t = l.CO2e_total - l18.l.CO2e_total
     l.change_CO2e_pct = div(l.change_CO2e_t, l18.l.CO2e_total)
     l.CO2e_total_2021_estimated = l18.l.CO2e_total * fact(
-        "Fact_M_CO2e_lulucf_2021_vs_year_ref"
+        f"Fact_M_CO2e_lulucf_{entries.m_year_baseline - 1}_vs_year_ref"
     )
 
     l.cost_climate_saved = (

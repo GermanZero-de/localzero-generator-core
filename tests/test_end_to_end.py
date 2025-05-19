@@ -2,18 +2,19 @@
 
 # pyright: strict
 
-from dataclasses import asdict
-from typing import Literal
 import json
 import os
+from dataclasses import asdict
+from typing import Literal
+
 import pytest
 
 from climatevision.generator import (
-    refdatatools,
+    RefData,
+    calculate_with_default_inputs,
     diffs,
     make_entries,
-    calculate_with_default_inputs,
-    RefData,
+    refdatatools,
 )
 
 PUBLIC_OR_PROP = Literal["public", "proprietary"]

@@ -1,14 +1,14 @@
 # pyright: strict
 
-from dataclasses import asdict
-from typing import Iterator, Any
 import json
-import sys
 import os
 import os.path
 import re
+import sys
+from dataclasses import asdict
+from typing import Any, Iterator
 
-from climatevision.generator import calculate_with_default_inputs, make_entries, RefData
+from climatevision.generator import RefData, calculate_with_default_inputs, make_entries
 
 test_dir = os.path.join("tests", "end_to_end_expected")
 

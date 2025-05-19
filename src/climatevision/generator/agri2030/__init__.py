@@ -5,14 +5,13 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/agriculture.html
 
 # pyright: strict
 
-from ..makeentries import Entries
-from ..refdata import Facts, Assumptions
 from ..agri2018.a18 import A18
 from ..lulucf2030.l30 import L30
-
-from .co2e_change_a import CO2eChangeA
+from ..makeentries import Entries
+from ..refdata import Assumptions, Facts
+from . import energy_demand, energy_general, energy_source
 from .a30 import A30
-from . import energy_demand, energy_source, energy_general
+from .co2e_change_a import CO2eChangeA
 
 
 def calc(
@@ -22,6 +21,7 @@ def calc(
     production = energy_demand.calc_production(
         facts,
         assumptions,
+        entries.m_year_baseline,
         entries.m_duration_neutral,
         entries.m_duration_target,
         entries.m_population_com_2018,
@@ -33,6 +33,7 @@ def calc(
     supply = energy_source.calc_supply(
         facts,
         assumptions,
+        entries.m_year_baseline,
         entries.m_duration_neutral,
         entries.m_duration_target,
         entries.m_population_com_2018,
@@ -51,6 +52,7 @@ def calc(
 
     a = CO2eChangeA(
         facts=facts,
+        year_baseline=entries.m_year_baseline,
         duration_until_target_year=entries.m_duration_target,
         duration_CO2e_neutral_years=entries.m_duration_neutral,
         what="a",
