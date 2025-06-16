@@ -2,9 +2,8 @@
 
 from dataclasses import dataclass
 
-from ...refdata import Facts, Assumptions
 from ...agri2018.a18 import A18
-
+from ...refdata import Assumptions, Facts
 from .co2e_change_agri import CO2eChangeAgri
 
 
@@ -19,6 +18,7 @@ class CO2eChangeFermentationOrManure(CO2eChangeAgri):
         cls,
         facts: Facts,
         assumptions: Assumptions,
+        year_baseline: int,
         duration_CO2e_neutral_years: float,
         what: str,
         ass_demand_change: str,
@@ -36,6 +36,7 @@ class CO2eChangeFermentationOrManure(CO2eChangeAgri):
 
         parent = CO2eChangeAgri(
             facts=facts,
+            year_baseline=year_baseline,
             duration_CO2e_neutral_years=duration_CO2e_neutral_years,
             what=what,
             a18=a18,
@@ -45,6 +46,7 @@ class CO2eChangeFermentationOrManure(CO2eChangeAgri):
 
         return cls(
             facts=facts,
+            year_baseline=year_baseline,
             duration_CO2e_neutral_years=duration_CO2e_neutral_years,
             what=what,
             a18=a18,
@@ -65,6 +67,7 @@ class CO2eChangeFermentationOrManure(CO2eChangeAgri):
         cls,
         facts: Facts,
         assumptions: Assumptions,
+        year_baseline: int,
         duration_CO2e_neutral_years: float,
         what: str,
         a18: A18,
@@ -83,6 +86,7 @@ class CO2eChangeFermentationOrManure(CO2eChangeAgri):
 
         parent = CO2eChangeAgri(
             facts=facts,
+            year_baseline=year_baseline,
             duration_CO2e_neutral_years=duration_CO2e_neutral_years,
             what=what,
             a18=a18,
@@ -92,6 +96,7 @@ class CO2eChangeFermentationOrManure(CO2eChangeAgri):
 
         return cls(
             facts=facts,
+            year_baseline=year_baseline,
             duration_CO2e_neutral_years=duration_CO2e_neutral_years,
             what=what,
             a18=a18,

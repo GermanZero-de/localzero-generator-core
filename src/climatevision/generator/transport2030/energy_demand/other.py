@@ -2,13 +2,12 @@
 
 from dataclasses import dataclass
 
-from ...refdata import Facts, Assumptions
-from ...utils import div
 from ...common.invest import InvestCommune
+from ...refdata import Assumptions, Facts
 from ...transport2018.t18 import T18
-
-from .transport import Transport
+from ...utils import div
 from .investmentaction import InvestmentAction
+from .transport import Transport
 
 
 @dataclass(kw_only=True)
@@ -34,6 +33,7 @@ class OtherFoot:
         cls,
         facts: Facts,
         assumptions: Assumptions,
+        year_baseline: int,
         duration_CO2e_neutral_years: float,
         area_kind: str,
         *,
@@ -49,15 +49,19 @@ class OtherFoot:
         transport_capacity_pkm = total_transport_capacity_pkm * (
             ass("Ass_T_D_trnsprt_ppl_city_foot_frac_2050")
             if area_kind == "city"
-            else ass("Ass_T_D_trnsprt_ppl_smcty_foot_frac_2050")
-            if area_kind == "smcty"
-            else ass("Ass_T_D_trnsprt_ppl_rural_foot_frac_2050")
-            if area_kind == "rural"
-            else ass("Ass_T_D_trnsprt_ppl_nat_foot_frac_2050")
+            else (
+                ass("Ass_T_D_trnsprt_ppl_smcty_foot_frac_2050")
+                if area_kind == "smcty"
+                else (
+                    ass("Ass_T_D_trnsprt_ppl_rural_foot_frac_2050")
+                    if area_kind == "rural"
+                    else ass("Ass_T_D_trnsprt_ppl_nat_foot_frac_2050")
+                )
+            )
         )
 
         CO2e_total_2021_estimated = t18.other_foot.CO2e_combustion_based * fact(
-            "Fact_M_CO2e_wo_lulucf_2021_vs_year_ref"
+            f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref"
         )
         cost_climate_saved = (
             (CO2e_total_2021_estimated)
@@ -101,6 +105,7 @@ class OtherCycle:
         cls,
         facts: Facts,
         assumptions: Assumptions,
+        year_baseline: int,
         duration_until_target_year: int,
         duration_CO2e_neutral_years: float,
         area_kind: str,
@@ -113,11 +118,15 @@ class OtherCycle:
         transport_capacity_pkm = total_transport_capacity_pkm * (
             ass("Ass_T_D_trnsprt_ppl_city_cycl_frac_2050")
             if area_kind == "city"
-            else ass("Ass_T_D_trnsprt_ppl_smcty_cycl_frac_2050")
-            if area_kind == "smcty"
-            else ass("Ass_T_D_trnsprt_ppl_rural_cycl_frac_2050")
-            if area_kind == "rural"
-            else ass("Ass_T_D_trnsprt_ppl_nat_cycl_frac_2050")
+            else (
+                ass("Ass_T_D_trnsprt_ppl_smcty_cycl_frac_2050")
+                if area_kind == "smcty"
+                else (
+                    ass("Ass_T_D_trnsprt_ppl_rural_cycl_frac_2050")
+                    if area_kind == "rural"
+                    else ass("Ass_T_D_trnsprt_ppl_nat_cycl_frac_2050")
+                )
+            )
         )
 
         invest_per_x = fact("Fact_T_D_cycl_vehicle_invest_hannah")
@@ -128,7 +137,7 @@ class OtherCycle:
         )
         invest = base_unit * invest_per_x
         CO2e_total_2021_estimated = t18.other_cycl.CO2e_combustion_based * fact(
-            "Fact_M_CO2e_wo_lulucf_2021_vs_year_ref"
+            f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref"
         )
         cost_climate_saved = (
             (CO2e_total_2021_estimated)

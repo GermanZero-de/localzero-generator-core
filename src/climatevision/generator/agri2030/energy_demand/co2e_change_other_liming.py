@@ -1,10 +1,9 @@
 # pyright: strict
 
-from dataclasses import dataclass, InitVar
+from dataclasses import InitVar, dataclass
 
-from ...refdata import Facts
 from ...agri2018.a18 import A18
-
+from ...refdata import Facts
 from .co2e_change_agri import CO2eChangeAgri
 
 
@@ -20,6 +19,7 @@ class CO2eChangeOtherLiming(CO2eChangeAgri):
     def __post_init__(
         self,
         facts: Facts,
+        year_baseline: int,
         duration_CO2e_neutral_years: float,
         what: str,
         a18: A18,
@@ -30,6 +30,7 @@ class CO2eChangeOtherLiming(CO2eChangeAgri):
         CO2eChangeAgri.__post_init__(
             self,
             facts=facts,
+            year_baseline=year_baseline,
             duration_CO2e_neutral_years=duration_CO2e_neutral_years,
             what=what,
             a18=a18,

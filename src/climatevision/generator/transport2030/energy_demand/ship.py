@@ -2,12 +2,11 @@
 
 from dataclasses import dataclass
 
-from ...refdata import Facts, Assumptions
-from ...entries import Entries
-from ...utils import div
 from ...common.invest import Invest, InvestCommune
+from ...entries import Entries
+from ...refdata import Assumptions, Facts
 from ...transport2018.t18 import T18
-
+from ...utils import div
 from .transport import Transport
 
 
@@ -52,7 +51,7 @@ class ShipDomestic(Invest):
             "Ass_T_S_diesel_EmFa_tank_wheel_2050"
         )
         CO2e_total_2021_estimated = t18.ship_dmstc.CO2e_combustion_based * fact(
-            "Fact_M_CO2e_wo_lulucf_2021_vs_year_ref"
+            f"Fact_M_CO2e_wo_lulucf_{entries.m_year_baseline - 1}_vs_year_ref"
         )
         cost_climate_saved = (
             (CO2e_total_2021_estimated - CO2e_combustion_based)
@@ -173,7 +172,7 @@ class ShipInternational:
         ass = assumptions.ass
 
         CO2e_total_2021_estimated = t18.ship_inter.CO2e_combustion_based * fact(
-            "Fact_M_CO2e_wo_lulucf_2021_vs_year_ref"
+            f"Fact_M_CO2e_wo_lulucf_{entries.m_year_baseline - 1}_vs_year_ref"
         )
         demand_ediesel = (
             ass("Ass_T_D_Shp_sea_nat_EB_2050")
