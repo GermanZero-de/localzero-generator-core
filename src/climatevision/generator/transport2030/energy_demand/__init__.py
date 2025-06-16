@@ -86,7 +86,9 @@ def calc_production(
     area_kind = entries.t_rt3
 
     # --- Air ---
-    air_dmstc = calc_air_domestic(facts, entries, duration_CO2e_neutral_years, t18)
+    air_dmstc = calc_air_domestic(
+        facts, year_baseline, duration_CO2e_neutral_years, t18
+    )
     air_inter = calc_air_international(
         facts,
         assumptions,
@@ -214,8 +216,8 @@ def calc_production(
     # --- Rail ---
     rail_ppl_metro = RailPeople.calc_metro(
         facts,
-        entries,
         assumptions,
+        year_baseline,
         duration_until_target_year,
         duration_CO2e_neutral_years,
         area_kind,
@@ -224,8 +226,8 @@ def calc_production(
     )
     rail_ppl_distance = RailPeople.calc_distance(
         facts,
-        entries,
         assumptions,
+        year_baseline,
         duration_until_target_year,
         duration_CO2e_neutral_years,
         area_kind,
@@ -252,8 +254,8 @@ def calc_production(
     )
     rail_gds = RailGoods.calc(
         facts,
-        entries,
         assumptions,
+        year_baseline,
         duration_until_target_year,
         duration_CO2e_neutral_years,
         t18=t18,
@@ -303,8 +305,8 @@ def calc_production(
     # --- Other ---
     other_cycl = OtherCycle.calc(
         facts,
-        entries,
         assumptions,
+        year_baseline,
         duration_until_target_year,
         duration_CO2e_neutral_years,
         area_kind,
@@ -319,8 +321,8 @@ def calc_production(
     )
     other_foot = OtherFoot.calc(
         facts,
-        entries,
         assumptions,
+        year_baseline,
         duration_CO2e_neutral_years,
         area_kind,
         t18=t18,

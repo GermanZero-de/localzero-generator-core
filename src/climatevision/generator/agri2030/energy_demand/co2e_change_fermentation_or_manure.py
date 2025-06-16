@@ -17,8 +17,8 @@ class CO2eChangeFermentationOrManure(CO2eChangeAgri):
     def calc_fermen(
         cls,
         facts: Facts,
-        year_baseline: int,
         assumptions: Assumptions,
+        year_baseline: int,
         duration_CO2e_neutral_years: float,
         what: str,
         ass_demand_change: str,
@@ -66,8 +66,8 @@ class CO2eChangeFermentationOrManure(CO2eChangeAgri):
     def calc_manure(
         cls,
         facts: Facts,
-        year_baseline: int,
         assumptions: Assumptions,
+        year_baseline: int,
         duration_CO2e_neutral_years: float,
         what: str,
         a18: A18,

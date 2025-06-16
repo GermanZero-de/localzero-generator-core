@@ -137,7 +137,7 @@ def calc(
 
     p_renew_hydro = calc_production_renew_hydro(facts, assumptions, e18=e18, energy=0)
     p_renew_biomass = calc_production_renewable_biomass(
-        facts, entries, assumptions, duration_CO2e_neutral_years, e18=e18
+        facts, assumptions, year_baseline, duration_CO2e_neutral_years, e18=e18
     )
 
     """S T A R T"""
@@ -237,7 +237,7 @@ def calc(
     p_renew_wind_offshore.emplo_existing = fact("Fact_E_P_wind_offshore_emplo_2018")
     p_local_biomass.CO2e_total_2021_estimated = (
         e18.p_local_biomass.CO2e_combustion_based
-        * fact(f"Fact_M_CO2e_wo_lulucf_{entries.m_year_baseline - 1}_vs_year_ref")
+        * fact(f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref")
     )
     p_local_biomass.cost_fuel_per_MWh = ass(
         "Ass_E_P_local_biomass_material_costs"

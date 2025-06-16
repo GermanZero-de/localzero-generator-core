@@ -10,7 +10,7 @@ from .transport import Transport
 
 
 def calc_air_domestic(
-    facts: Facts, entries: Entries, duration_CO2e_neutral_years: float, t18: T18
+    facts: Facts, year_baseline: int, duration_CO2e_neutral_years: float, t18: T18
 ) -> "Transport":
     """We assume that no domestic flights are allowed when Germany is carbon neutral as trains
     are a good and cheap alternative (or should be).
@@ -20,7 +20,7 @@ def calc_air_domestic(
     fact = facts.fact
 
     CO2e_total_2021_estimated = t18.air_dmstc.CO2e_combustion_based * fact(
-        f"Fact_M_CO2e_wo_lulucf_{entries.m_year_baseline - 1}_vs_year_ref"
+        f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref"
     )
     # Assuming every year from 2021 onwards we would have use the same amount
     # of CO2e on domestic flights if we hadn't decided to ban them.

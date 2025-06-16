@@ -69,8 +69,8 @@ def calc_production(
     )
     coal = HeatProductionWithCostFuel(
         facts=facts,
-        year_baseline=year_baseline,
         assumptions=assumptions,
+        year_baseline=year_baseline,
         duration_CO2e_neutral_years=duration_CO2e_neutral_years,
         what="coal",
         h18=h18,
@@ -80,8 +80,8 @@ def calc_production(
     )
     fueloil = HeatProductionWithCostFuel(
         facts=facts,
-        year_baseline=year_baseline,
         assumptions=assumptions,
+        year_baseline=year_baseline,
         duration_CO2e_neutral_years=duration_CO2e_neutral_years,
         what="fueloil",
         h18=h18,
@@ -92,8 +92,8 @@ def calc_production(
 
     biomass = HeatProductionWithCostFuel(
         facts=facts,
-        year_baseline=year_baseline,
         assumptions=assumptions,
+        year_baseline=year_baseline,
         duration_CO2e_neutral_years=duration_CO2e_neutral_years,
         what="biomass",
         h18=h18,

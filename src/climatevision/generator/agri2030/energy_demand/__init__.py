@@ -82,8 +82,8 @@ def calc_production(
 ) -> Production:
     fermen_dairycow = CO2eChangeFermentationOrManure.calc_fermen(
         facts,
-        year_baseline,
         assumptions,
+        year_baseline,
         duration_CO2e_neutral_years,
         "p_fermen_dairycow",
         "Ass_A_P_fermen_dairycow_change",
@@ -91,8 +91,8 @@ def calc_production(
     )
     fermen_nondairy = CO2eChangeFermentationOrManure.calc_fermen(
         facts,
-        year_baseline,
         assumptions,
+        year_baseline,
         duration_CO2e_neutral_years,
         "p_fermen_nondairy",
         "Ass_A_P_fermen_nondairy_change",
@@ -100,8 +100,8 @@ def calc_production(
     )
     fermen_swine = CO2eChangeFermentationOrManure.calc_fermen(
         facts,
-        year_baseline,
         assumptions,
+        year_baseline,
         duration_CO2e_neutral_years,
         "p_fermen_swine",
         "Ass_A_P_fermen_swine_change",
@@ -109,8 +109,8 @@ def calc_production(
     )
     fermen_poultry = CO2eChangeFermentationOrManure.calc_fermen(
         facts,
-        year_baseline,
         assumptions,
+        year_baseline,
         duration_CO2e_neutral_years,
         "p_fermen_poultry",
         "Ass_A_P_fermen_poultry_change",
@@ -118,8 +118,8 @@ def calc_production(
     )
     fermen_oanimal = CO2eChangeFermentationOrManure.calc_fermen(
         facts,
-        year_baseline,
         assumptions,
+        year_baseline,
         duration_CO2e_neutral_years,
         "p_fermen_oanimal",
         "Ass_A_P_fermen_oanimal_change",
@@ -128,8 +128,8 @@ def calc_production(
 
     manure_dairycow = CO2eChangeFermentationOrManure.calc_manure(
         facts,
-        year_baseline,
         assumptions,
+        year_baseline,
         duration_CO2e_neutral_years,
         "p_manure_dairycow",
         a18,
@@ -137,8 +137,8 @@ def calc_production(
     )
     manure_nondairy = CO2eChangeFermentationOrManure.calc_manure(
         facts,
-        year_baseline,
         assumptions,
+        year_baseline,
         duration_CO2e_neutral_years,
         "p_manure_nondairy",
         a18,
@@ -146,8 +146,8 @@ def calc_production(
     )
     manure_swine = CO2eChangeFermentationOrManure.calc_manure(
         facts,
-        year_baseline,
         assumptions,
+        year_baseline,
         duration_CO2e_neutral_years,
         "p_manure_swine",
         a18,
@@ -155,8 +155,8 @@ def calc_production(
     )
     manure_poultry = CO2eChangeFermentationOrManure.calc_manure(
         facts,
-        year_baseline,
         assumptions,
+        year_baseline,
         duration_CO2e_neutral_years,
         "p_manure_poultry",
         a18,
@@ -164,8 +164,8 @@ def calc_production(
     )
     manure_oanimal = CO2eChangeFermentationOrManure.calc_manure(
         facts,
-        year_baseline,
         assumptions,
+        year_baseline,
         duration_CO2e_neutral_years,
         "p_manure_oanimal",
         a18,
@@ -173,8 +173,8 @@ def calc_production(
     )
     manure_deposition = CO2eChangeFermentationOrManure.calc_manure(
         facts,
-        year_baseline,
         assumptions,
+        year_baseline,
         duration_CO2e_neutral_years,
         "p_manure_deposition",
         a18,
@@ -186,8 +186,8 @@ def calc_production(
 
     soil_fertilizer = CO2eChangeSoil.calc_soil(
         facts,
-        year_baseline,
         assumptions,
+        year_baseline,
         duration_CO2e_neutral_years,
         "p_soil_fertilizer",
         a18,
@@ -195,8 +195,8 @@ def calc_production(
     )
     soil_manure = CO2eChangeSoil.calc_soil(
         facts,
-        year_baseline,
         assumptions,
+        year_baseline,
         duration_CO2e_neutral_years,
         "p_soil_manure",
         a18,
@@ -204,8 +204,8 @@ def calc_production(
     )
     soil_sludge = CO2eChangeSoil.calc_soil(
         facts,
-        year_baseline,
         assumptions,
+        year_baseline,
         duration_CO2e_neutral_years,
         "p_soil_sludge",
         a18,
@@ -213,8 +213,8 @@ def calc_production(
     )
     soil_ecrop = CO2eChangeSoil.calc_soil(
         facts,
-        year_baseline,
         assumptions,
+        year_baseline,
         duration_CO2e_neutral_years,
         "p_soil_ecrop",
         a18,
@@ -267,8 +267,8 @@ def calc_production(
     )
     soil_leaching = CO2eChangeSoil.calc_soil(
         facts,
-        year_baseline,
         assumptions,
+        year_baseline,
         duration_CO2e_neutral_years,
         "p_soil_leaching",
         a18,
@@ -276,8 +276,8 @@ def calc_production(
     )
     soil_deposition = CO2eChangeSoil.calc_soil(
         facts,
-        year_baseline,
         assumptions,
+        year_baseline,
         duration_CO2e_neutral_years,
         "p_soil_deposition",
         a18,
@@ -286,8 +286,8 @@ def calc_production(
 
     other_liming_calcit = CO2eChangeOther(
         facts=facts,
-        year_baseline=year_baseline,
         assumptions=assumptions,
+        year_baseline=year_baseline,
         duration_CO2e_neutral_years=duration_CO2e_neutral_years,
         what="p_other_liming_calcit",
         a18=a18,
@@ -298,8 +298,8 @@ def calc_production(
     )
     other_liming_dolomite = CO2eChangeOther(
         facts=facts,
-        year_baseline=year_baseline,
         assumptions=assumptions,
+        year_baseline=year_baseline,
         duration_CO2e_neutral_years=duration_CO2e_neutral_years,
         what="p_other_liming_dolomite",
         a18=a18,
@@ -310,8 +310,8 @@ def calc_production(
     )
     other_urea = CO2eChangeOther(
         facts=facts,
-        year_baseline=year_baseline,
         assumptions=assumptions,
+        year_baseline=year_baseline,
         duration_CO2e_neutral_years=duration_CO2e_neutral_years,
         what="p_other_urea",
         a18=a18,
@@ -322,8 +322,8 @@ def calc_production(
     )
     other_kas = CO2eChangeOther(
         facts=facts,
-        year_baseline=year_baseline,
         assumptions=assumptions,
+        year_baseline=year_baseline,
         duration_CO2e_neutral_years=duration_CO2e_neutral_years,
         what="p_other_kas",
         a18=a18,
@@ -334,8 +334,8 @@ def calc_production(
     )
     other_ecrop = CO2eChangeOther(
         facts=facts,
-        year_baseline=year_baseline,
         assumptions=assumptions,
+        year_baseline=year_baseline,
         duration_CO2e_neutral_years=duration_CO2e_neutral_years,
         what="p_other_ecrop",
         a18=a18,

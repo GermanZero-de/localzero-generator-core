@@ -73,8 +73,8 @@ class CO2eChangeSoil(CO2eChangeAgri):
     def calc_soil(
         cls,
         facts: Facts,
-        year_baseline: int,
         assumptions: Assumptions,
+        year_baseline: int,
         duration_CO2e_neutral_years: float,
         what: str,
         a18: A18,

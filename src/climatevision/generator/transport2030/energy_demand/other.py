@@ -3,7 +3,6 @@
 from dataclasses import dataclass
 
 from ...common.invest import InvestCommune
-from ...entries import Entries
 from ...refdata import Assumptions, Facts
 from ...transport2018.t18 import T18
 from ...utils import div
@@ -33,8 +32,8 @@ class OtherFoot:
     def calc(
         cls,
         facts: Facts,
-        entries: Entries,
         assumptions: Assumptions,
+        year_baseline: int,
         duration_CO2e_neutral_years: float,
         area_kind: str,
         *,
@@ -62,7 +61,7 @@ class OtherFoot:
         )
 
         CO2e_total_2021_estimated = t18.other_foot.CO2e_combustion_based * fact(
-            f"Fact_M_CO2e_wo_lulucf_{entries.m_year_baseline - 1}_vs_year_ref"
+            f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref"
         )
         cost_climate_saved = (
             (CO2e_total_2021_estimated)
@@ -105,8 +104,8 @@ class OtherCycle:
     def calc(
         cls,
         facts: Facts,
-        entries: Entries,
         assumptions: Assumptions,
+        year_baseline: int,
         duration_until_target_year: int,
         duration_CO2e_neutral_years: float,
         area_kind: str,
@@ -138,7 +137,7 @@ class OtherCycle:
         )
         invest = base_unit * invest_per_x
         CO2e_total_2021_estimated = t18.other_cycl.CO2e_combustion_based * fact(
-            f"Fact_M_CO2e_wo_lulucf_{entries.m_year_baseline - 1}_vs_year_ref"
+            f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref"
         )
         cost_climate_saved = (
             (CO2e_total_2021_estimated)
