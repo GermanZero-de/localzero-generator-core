@@ -216,6 +216,12 @@ class TracedNumber:
         else:
             return self.value > other.value
 
+    def __ge__(self, other: Union["TracedNumber", float, int]) -> bool:
+        if isinstance(other, (float, int)):
+            return self.value >= other
+        else:
+            return self.value >= other.value
+
     def __lt__(self, other: Union["TracedNumber", float, int]) -> bool:
         if isinstance(other, (float, int)):
             return self.value < other

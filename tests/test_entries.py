@@ -19,7 +19,7 @@ def create_valid_entries_values() -> dict[str, object]:
         elif param.annotation == str:
             entries_values[name] = "test"
 
-    return entries_values # type: ignore
+    return entries_values  # type: ignore
 
 
 def test_sections_with_defaults():
@@ -32,7 +32,7 @@ def test_sections_with_defaults():
 def test_when_all_values_are_positive_then_assert_is_valid_is_successful():
     """Tests that assert_is_valid passes with non-negative numeric values."""
     valid_data = create_valid_entries_values()
-    entry = Entries(**valid_data) # type: ignore
+    entry = Entries(**valid_data)  # type: ignore
     try:
         entry.assert_is_valid()
     except AssertionError as e:
@@ -44,7 +44,7 @@ def test_when_float_value_is_negative_then_assert_is_valid_throws_exception():
     invalid_data = create_valid_entries_values()
     invalid_data["a_biomass_fec"] = -10.5
 
-    entry = Entries(**invalid_data) # type: ignore
+    entry = Entries(**invalid_data)  # type: ignore
     with pytest.raises(AssertionError, match="a_biomass_fec should be 0 or positive"):
         entry.assert_is_valid()
 
@@ -54,7 +54,7 @@ def test_when_int_value_is_negative_then_assert_is_valid_throws_exception():
     invalid_data = create_valid_entries_values()
     invalid_data["m_population_com_2018"] = -50
 
-    entry = Entries(**invalid_data) # type: ignore
+    entry = Entries(**invalid_data)  # type: ignore
     with pytest.raises(
         AssertionError, match="m_population_com_2018 should be 0 or positive"
     ):
