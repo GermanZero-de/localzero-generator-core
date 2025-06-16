@@ -1,14 +1,13 @@
 # pyright: strict
 
-from dataclasses import dataclass, asdict
+from dataclasses import asdict, dataclass
 
-from ...refdata import Facts, Assumptions
-from ...utils import div
 from ...common.invest import InvestCommune
+from ...refdata import Assumptions, Facts
 from ...transport2018.t18 import T18
-
-from .transport import Transport
+from ...utils import div
 from .investmentaction import InvestmentAction, RoadInvestmentAction
+from .transport import Transport
 
 
 @dataclass(kw_only=True)
@@ -299,20 +298,24 @@ class Road:
                     + ass("Ass_T_D_trnsprt_ppl_city_car3_frac_2050")
                     + ass("Ass_T_D_trnsprt_ppl_city_car4_frac_2050")
                     if area_kind == "city"
-                    else ass("Ass_T_D_trnsprt_ppl_smcty_car1_frac_2050")
-                    + ass("Ass_T_D_trnsprt_ppl_smcty_car2_frac_2050")
-                    + ass("Ass_T_D_trnsprt_ppl_smcty_car3_frac_2050")
-                    + ass("Ass_T_D_trnsprt_ppl_smcty_car4_frac_2050")
-                    if area_kind == "smcty"
-                    else ass("Ass_T_D_trnsprt_ppl_rural_car1_frac_2050")
-                    + ass("Ass_T_D_trnsprt_ppl_rural_car2_frac_2050")
-                    + ass("Ass_T_D_trnsprt_ppl_rural_car3_frac_2050")
-                    + ass("Ass_T_D_trnsprt_ppl_rural_car4_frac_2050")
-                    if area_kind == "rural"
-                    else ass("Ass_T_D_trnsprt_ppl_nat_car1_frac_2050")
-                    + ass("Ass_T_D_trnsprt_ppl_nat_car2_frac_2050")
-                    + ass("Ass_T_D_trnsprt_ppl_nat_car3_frac_2050")
-                    + ass("Ass_T_D_trnsprt_ppl_nat_car4_frac_2050")
+                    else (
+                        ass("Ass_T_D_trnsprt_ppl_smcty_car1_frac_2050")
+                        + ass("Ass_T_D_trnsprt_ppl_smcty_car2_frac_2050")
+                        + ass("Ass_T_D_trnsprt_ppl_smcty_car3_frac_2050")
+                        + ass("Ass_T_D_trnsprt_ppl_smcty_car4_frac_2050")
+                        if area_kind == "smcty"
+                        else (
+                            ass("Ass_T_D_trnsprt_ppl_rural_car1_frac_2050")
+                            + ass("Ass_T_D_trnsprt_ppl_rural_car2_frac_2050")
+                            + ass("Ass_T_D_trnsprt_ppl_rural_car3_frac_2050")
+                            + ass("Ass_T_D_trnsprt_ppl_rural_car4_frac_2050")
+                            if area_kind == "rural"
+                            else ass("Ass_T_D_trnsprt_ppl_nat_car1_frac_2050")
+                            + ass("Ass_T_D_trnsprt_ppl_nat_car2_frac_2050")
+                            + ass("Ass_T_D_trnsprt_ppl_nat_car3_frac_2050")
+                            + ass("Ass_T_D_trnsprt_ppl_nat_car4_frac_2050")
+                        )
+                    )
                 )
             )
         )
@@ -380,20 +383,24 @@ class Road:
                 + ass("Ass_T_D_trnsprt_ppl_city_car3_frac_2050")
                 + ass("Ass_T_D_trnsprt_ppl_city_car4_frac_2050")
                 if area_kind == "city"
-                else ass("Ass_T_D_trnsprt_ppl_smcty_car1_frac_2050")
-                + ass("Ass_T_D_trnsprt_ppl_smcty_car2_frac_2050")
-                + ass("Ass_T_D_trnsprt_ppl_smcty_car3_frac_2050")
-                + ass("Ass_T_D_trnsprt_ppl_smcty_car4_frac_2050")
-                if area_kind == "smcty"
-                else ass("Ass_T_D_trnsprt_ppl_rural_car1_frac_2050")
-                + ass("Ass_T_D_trnsprt_ppl_rural_car2_frac_2050")
-                + ass("Ass_T_D_trnsprt_ppl_rural_car3_frac_2050")
-                + ass("Ass_T_D_trnsprt_ppl_rural_car4_frac_2050")
-                if area_kind == "rural"
-                else ass("Ass_T_D_trnsprt_ppl_nat_car1_frac_2050")
-                + ass("Ass_T_D_trnsprt_ppl_nat_car2_frac_2050")
-                + ass("Ass_T_D_trnsprt_ppl_nat_car3_frac_2050")
-                + ass("Ass_T_D_trnsprt_ppl_nat_car4_frac_2050")
+                else (
+                    ass("Ass_T_D_trnsprt_ppl_smcty_car1_frac_2050")
+                    + ass("Ass_T_D_trnsprt_ppl_smcty_car2_frac_2050")
+                    + ass("Ass_T_D_trnsprt_ppl_smcty_car3_frac_2050")
+                    + ass("Ass_T_D_trnsprt_ppl_smcty_car4_frac_2050")
+                    if area_kind == "smcty"
+                    else (
+                        ass("Ass_T_D_trnsprt_ppl_rural_car1_frac_2050")
+                        + ass("Ass_T_D_trnsprt_ppl_rural_car2_frac_2050")
+                        + ass("Ass_T_D_trnsprt_ppl_rural_car3_frac_2050")
+                        + ass("Ass_T_D_trnsprt_ppl_rural_car4_frac_2050")
+                        if area_kind == "rural"
+                        else ass("Ass_T_D_trnsprt_ppl_nat_car1_frac_2050")
+                        + ass("Ass_T_D_trnsprt_ppl_nat_car2_frac_2050")
+                        + ass("Ass_T_D_trnsprt_ppl_nat_car3_frac_2050")
+                        + ass("Ass_T_D_trnsprt_ppl_nat_car4_frac_2050")
+                    )
+                )
             )
         )
         mileage = transport_capacity_pkm / ass("Ass_T_D_lf_ppl_Car_2050")
@@ -600,11 +607,15 @@ class RoadBus(Road, BusInvestments):
         public_transport_ppl_frac_2050 = (
             ass("Ass_T_D_trnsprt_ppl_city_pt_frac_2050")
             if area_kind == "city"
-            else ass("Ass_T_D_trnsprt_ppl_smcty_pt_frac_2050")
-            if area_kind == "smcty"
-            else ass("Ass_T_D_trnsprt_ppl_rural_pt_frac_2050")
-            if area_kind == "rural"
-            else ass("Ass_T_D_trnsprt_ppl_nat_pt_frac_2050")
+            else (
+                ass("Ass_T_D_trnsprt_ppl_smcty_pt_frac_2050")
+                if area_kind == "smcty"
+                else (
+                    ass("Ass_T_D_trnsprt_ppl_rural_pt_frac_2050")
+                    if area_kind == "rural"
+                    else ass("Ass_T_D_trnsprt_ppl_nat_pt_frac_2050")
+                )
+            )
         )
 
         import math
@@ -877,6 +888,9 @@ class RoadGoods(Road, InvestCommune):
 
 @dataclass(kw_only=True)
 class RoadSum(Road, InvestCommune):
+
+    gds_mhd_action_wire: float
+
     @classmethod
     def calc(
         cls,
@@ -917,4 +931,5 @@ class RoadSum(Road, InvestCommune):
             demand_emplo=demand_emplo,
             mileage=people.mileage + goods.mileage,
             transport=sum,
+            gds_mhd_action_wire=goods.invest_com,
         )

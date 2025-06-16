@@ -2,13 +2,12 @@
 
 from dataclasses import dataclass
 
-from ...refdata import Facts, Assumptions
-from ...utils import div
 from ...common.invest import Invest, InvestCommune
+from ...refdata import Assumptions, Facts
 from ...transport2018.t18 import T18
-
-from .transport import Transport
+from ...utils import div
 from .investmentaction import InvestmentAction
+from .transport import Transport
 
 
 @dataclass(kw_only=True)
@@ -48,11 +47,15 @@ class RailPeople(Invest):
         ) * (
             ass("Ass_T_D_trnsprt_ppl_city_pt_frac_2050")
             if area_kind == "city"
-            else ass("Ass_T_D_trnsprt_ppl_smcty_pt_frac_2050")
-            if area_kind == "smcty"
-            else ass("Ass_T_D_trnsprt_ppl_rural_pt_frac_2050")
-            if area_kind == "rural"
-            else ass("Ass_T_D_trnsprt_ppl_nat_pt_frac_2050")
+            else (
+                ass("Ass_T_D_trnsprt_ppl_smcty_pt_frac_2050")
+                if area_kind == "smcty"
+                else (
+                    ass("Ass_T_D_trnsprt_ppl_rural_pt_frac_2050")
+                    if area_kind == "rural"
+                    else ass("Ass_T_D_trnsprt_ppl_nat_pt_frac_2050")
+                )
+            )
         )
         mileage = transport_capacity_pkm / ass("Ass_T_D_lf_Rl_Metro_2050")
         demand_electricity = mileage * ass("Ass_T_S_Rl_Metro_SEC_fzkm_2050")
@@ -127,11 +130,15 @@ class RailPeople(Invest):
         ) * (
             ass("Ass_T_D_trnsprt_ppl_city_pt_frac_2050")
             if area_kind == "city"
-            else ass("Ass_T_D_trnsprt_ppl_smcty_pt_frac_2050")
-            if area_kind == "smcty"
-            else ass("Ass_T_D_trnsprt_ppl_rural_pt_frac_2050")
-            if area_kind == "rural"
-            else ass("Ass_T_D_trnsprt_ppl_nat_pt_frac_2050")
+            else (
+                ass("Ass_T_D_trnsprt_ppl_smcty_pt_frac_2050")
+                if area_kind == "smcty"
+                else (
+                    ass("Ass_T_D_trnsprt_ppl_rural_pt_frac_2050")
+                    if area_kind == "rural"
+                    else ass("Ass_T_D_trnsprt_ppl_nat_pt_frac_2050")
+                )
+            )
         )
         demand_electricity = transport_capacity_pkm * ass(
             "Ass_T_S_Rl_Train_ppl_long_elec_SEC_2050"
@@ -403,6 +410,8 @@ class Rail(InvestCommune):
 
     base_unit: float
     mileage: float
+    action_invest_infra: float
+    action_invest_station: float
 
     @classmethod
     def calc(
@@ -470,4 +479,6 @@ class Rail(InvestCommune):
             transport=Transport.sum(
                 rail_ppl.transport, rail_gds.transport, transport2018=t18.rail
             ),
+            action_invest_infra=rail_action_invest_infra.invest_com,
+            action_invest_station=rail_action_invest_station.invest_com,
         )

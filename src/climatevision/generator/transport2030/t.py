@@ -4,15 +4,7 @@ from dataclasses import dataclass
 
 from ..common.invest import InvestCommune
 from ..transport2018.t18 import T18
-
-from .energy_demand import (
-    Air,
-    RoadSum,
-    Rail,
-    Ship,
-    Other,
-    Transport,
-)
+from .energy_demand import Air, Other, Rail, RoadSum, Ship, Transport
 from .energy_general import G
 
 
@@ -22,6 +14,11 @@ class T(InvestCommune):
     transport: Transport
 
     demand_emplo_com: float
+
+    invest_com_state: float
+    invest_com_pa_state: float
+    invest_com_wo_state: float
+    invest_com_pa_wo_state: float
 
     @classmethod
     def calc(
@@ -92,6 +89,19 @@ class T(InvestCommune):
             + g.invest_pa
         )
         demand_emplo_com = g.demand_emplo_com
+        invest_com_state = (
+            road.gds_mhd_action_wire
+            + rail.action_invest_infra
+            + rail.action_invest_station
+            + ship.dmstc_action_infra
+        )
+        invest_com_pa_state = (
+            invest_com_state / g.duration_until_target_year
+        )  # FIXME: This is a guess, please verify
+        invest_com_wo_state = invest_com - invest_com_state
+        invest_com_pa_wo_state = (
+            invest_com_wo_state / g.duration_until_target_year
+        )  # FIXME: This is a guess, please verify
 
         res = cls(
             cost_wage=cost_wage,
@@ -110,5 +120,9 @@ class T(InvestCommune):
                 other.transport,
                 transport2018=t18.t,
             ),
+            invest_com_state=invest_com_state,
+            invest_com_pa_state=invest_com_pa_state,
+            invest_com_wo_state=invest_com_wo_state,
+            invest_com_pa_wo_state=invest_com_pa_wo_state,
         )
         return res
