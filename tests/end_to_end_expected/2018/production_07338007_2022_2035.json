@@ -2176,7 +2176,8 @@
             "invest_pa": 94940.38461538461,
             "invest_com": 1234225.0,
             "invest_pa_com": 94940.38461538461,
-            "demand_emplo_com": 0.5483141953752604
+            "demand_emplo_com": 0.5483141953752604,
+            "duration_until_target_year": 13
         },
         "g_consult": {
             "cost_wage": 94940.38461538461,
@@ -2187,6 +2188,7 @@
             "invest_com": 1234225.0,
             "invest_pa_com": 94940.38461538461,
             "demand_emplo_com": 0.5483141953752604,
+            "duration_until_target_year": 13,
             "ratio_wage_to_emplo": 73800.0
         },
         "p": {
@@ -2679,7 +2681,8 @@
             "invest_pa": 16782.595669937087,
             "invest_com": 218173.74370918213,
             "invest_pa_com": 16782.595669937087,
-            "demand_emplo_com": 0.05762496360426517
+            "demand_emplo_com": 0.05762496360426517,
+            "duration_until_target_year": 13
         },
         "g_consult": {
             "cost_wage": 16782.595669937087,
@@ -2690,6 +2693,7 @@
             "invest_com": 218173.74370918213,
             "invest_pa_com": 16782.595669937087,
             "demand_emplo_com": 0.05762496360426517,
+            "duration_until_target_year": 13,
             "ratio_wage_to_emplo": 73800.0
         },
         "p": {
@@ -3040,7 +3044,8 @@
             "invest_pa": 50843.65230010071,
             "invest_com": 660967.4799013092,
             "invest_pa_com": 50843.65230010071,
-            "demand_emplo_com": 0.045396118125089924
+            "demand_emplo_com": 0.045396118125089924,
+            "duration_until_target_year": 13
         },
         "g_consult": {
             "cost_wage": 5084.365230010071,
@@ -3051,6 +3056,7 @@
             "invest_com": 660967.4799013092,
             "invest_pa_com": 50843.65230010071,
             "demand_emplo_com": 0.045396118125089924,
+            "duration_until_target_year": 13,
             "ratio_wage_to_emplo": 112000.0
         },
         "i": {
@@ -4107,6 +4113,7 @@
             "invest_pa_com": 34640.73013853015,
             "base_unit": 0.0,
             "emplo_existing": 0.0,
+            "dmstc_action_infra": 450329.49180089193,
             "CO2e_combustion_based": 0.0,
             "CO2e_total_2021_estimated": 0.0,
             "cost_climate_saved": 0.0,
@@ -4273,6 +4280,7 @@
             "invest_com": 1299092.1318124544,
             "invest_pa_com": 99930.16398557342,
             "demand_emplo_com": 0.8922336070140484,
+            "duration_until_target_year": 13,
             "ratio_wage_to_emplo": 112000.0
         },
         "s": {
@@ -4322,7 +4330,8 @@
             "invest_pa": 99930.16398557342,
             "invest_com": 1299092.1318124544,
             "invest_pa_com": 99930.16398557342,
-            "demand_emplo_com": 0.8922336070140484
+            "demand_emplo_com": 0.8922336070140484,
+            "duration_until_target_year": 13
         },
         "t": {
             "cost_wage": 3308461.7307573273,
@@ -4333,6 +4342,10 @@
             "invest_com": 79185782.76209922,
             "invest_pa_com": 6091214.058623018,
             "demand_emplo_com": 0.8922336070140484,
+            "invest_com_state": 23838409.549847215,
+            "invest_com_pa_state": 1833723.8115267088,
+            "invest_com_wo_state": 55347373.212252006,
+            "invest_com_pa_wo_state": 4257490.2470963085,
             "CO2e_combustion_based": 192.69922696254747,
             "CO2e_total_2021_estimated": 4953.239471956747,
             "cost_climate_saved": 19958564.977138184,
@@ -4387,6 +4400,7 @@
             "invest_com": 55219344.89753136,
             "invest_pa_com": 4247641.915194721,
             "mileage": 21880042.4879179,
+            "gds_mhd_action_wire": 1888478.5140037402,
             "CO2e_combustion_based": 192.69922696254747,
             "CO2e_total_2021_estimated": 4953.239471956747,
             "cost_climate_saved": 19958564.977138184,
@@ -4416,6 +4430,8 @@
             "invest_pa_com": 1653815.5033878908,
             "base_unit": 0.0,
             "mileage": 0.0,
+            "action_invest_infra": 19901658.186039418,
+            "action_invest_station": 1597943.3580031646,
             "CO2e_combustion_based": 0.0,
             "CO2e_total_2021_estimated": 0.0,
             "cost_climate_saved": 0.0,
@@ -6135,7 +6151,8 @@
             "invest_pa": 3669.3819529821258,
             "invest_com": 47701.96538876764,
             "invest_pa_com": 3669.3819529821258,
-            "demand_emplo_com": 0.30823660714285717
+            "demand_emplo_com": 0.30823660714285717,
+            "duration_until_target_year": 13
         },
         "g_storage": {
             "cost_wage": 258.5202826258267,
@@ -6146,6 +6163,7 @@
             "invest_com": 13179.465388767638,
             "invest_pa_com": 1013.8050299052029,
             "demand_emplo_com": 0,
+            "duration_until_target_year": 13,
             "ratio_wage_to_emplo": 47195.042683097665
         },
         "g_planning": {
@@ -6157,6 +6175,7 @@
             "invest_com": 34522.5,
             "invest_pa_com": 2655.576923076923,
             "demand_emplo_com": 0.30823660714285717,
+            "duration_until_target_year": 13,
             "ratio_wage_to_emplo": 112000.0
         },
         "d": {
