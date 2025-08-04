@@ -27,6 +27,7 @@ class RailPeople(Invest):
         cls,
         facts: Facts,
         assumptions: Assumptions,
+        year_baseline: int,
         duration_until_target_year: int,
         duration_CO2e_neutral_years: float,
         area_kind: str,
@@ -75,7 +76,7 @@ class RailPeople(Invest):
         cost_wage = ratio_wage_to_emplo * demand_emplo_new
         invest = base_unit * invest_per_x + cost_wage * duration_until_target_year
         CO2e_total_2021_estimated = t18.rail_ppl_metro.CO2e_combustion_based * fact(
-            "Fact_M_CO2e_wo_lulucf_2021_vs_year_ref"
+            f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref"
         )
         cost_climate_saved = (
             (CO2e_total_2021_estimated - CO2e_combustion_based)
@@ -112,6 +113,7 @@ class RailPeople(Invest):
         cls,
         facts: Facts,
         assumptions: Assumptions,
+        year_baseline: int,
         duration_until_target_year: int,
         duration_CO2e_neutral_years: float,
         area_kind: str,
@@ -162,7 +164,7 @@ class RailPeople(Invest):
         cost_wage = ratio_wage_to_emplo * demand_emplo_new
         invest_per_x = fact("Fact_T_D_rail_ppl_vehicle_invest")
         CO2e_total_2021_estimated = t18.rail_ppl_distance.CO2e_combustion_based * fact(
-            "Fact_M_CO2e_wo_lulucf_2021_vs_year_ref"
+            f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref"
         )
         cost_climate_saved = (
             (CO2e_total_2021_estimated - CO2e_combustion_based)
@@ -335,6 +337,7 @@ class RailGoods(Invest):
         cls,
         facts: Facts,
         assumptions: Assumptions,
+        year_baseline: int,
         duration_until_target_year: int,
         duration_CO2e_neutral_years: float,
         *,
@@ -357,7 +360,7 @@ class RailGoods(Invest):
             "Fact_T_D_rail_gds_ratio_tkm_to_fzkm_2018"
         )
         CO2e_total_2021_estimated = t18.rail_gds.CO2e_combustion_based * fact(
-            "Fact_M_CO2e_wo_lulucf_2021_vs_year_ref"
+            f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref"
         )
         cost_climate_saved = (
             (CO2e_total_2021_estimated - CO2e_combustion_based)

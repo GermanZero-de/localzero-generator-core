@@ -1,11 +1,10 @@
 # pyright: strict
-from dataclasses import dataclass, InitVar
+from dataclasses import InitVar, dataclass
 
-from ...refdata import Facts, Assumptions
-from ...utils import div, MILLION
-from ...common.invest import Invest
 from ...agri2018.a18 import A18
-
+from ...common.invest import Invest
+from ...refdata import Assumptions, Facts
+from ...utils import MILLION, div
 from .co2e_change_energy_per_mwh import CO2eChangeEnergyPerMWh
 
 
@@ -33,6 +32,7 @@ class CO2eChangeFuelHeatpump(CO2eChangeEnergyPerMWh, Invest):
     def __post_init__(  # type: ignore[override]
         self,
         facts: Facts,
+        year_baseline: int,
         duration_CO2e_neutral_years: float,
         what: str,
         a18: A18,
@@ -79,6 +79,7 @@ class CO2eChangeFuelHeatpump(CO2eChangeEnergyPerMWh, Invest):
         CO2eChangeEnergyPerMWh.__post_init__(
             self,
             facts=facts,
+            year_baseline=year_baseline,
             duration_CO2e_neutral_years=duration_CO2e_neutral_years,
             what=what,
             a18=a18,

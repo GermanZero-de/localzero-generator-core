@@ -1,12 +1,11 @@
 # pyright: strict
 
-from dataclasses import dataclass, InitVar
+from dataclasses import InitVar, dataclass
 
+from ...agri2018.a18 import A18
+from ...common.invest import Invest
 from ...refdata import Facts
 from ...utils import div
-from ...common.invest import Invest
-from ...agri2018.a18 import A18
-
 from .energy_change_p_operation import EnergyChangePOperation
 
 
@@ -21,6 +20,7 @@ class CO2eChangeP(Invest):
     energy: float = 0
 
     facts: InitVar[Facts]
+    year_baseline: InitVar[int]
     duration_until_target_year: InitVar[int]
     duration_CO2e_neutral_years: InitVar[float]
     what: InitVar[str]
@@ -30,6 +30,7 @@ class CO2eChangeP(Invest):
     def __post_init__(
         self,
         facts: Facts,
+        year_baseline: int,
         duration_until_target_year: int,
         duration_CO2e_neutral_years: float,
         what: str,
@@ -41,7 +42,7 @@ class CO2eChangeP(Invest):
         a18_CO2e_total = getattr(a18, what).CO2e_total
 
         self.CO2e_total_2021_estimated = a18_CO2e_total * fact(
-            "Fact_M_CO2e_wo_lulucf_2021_vs_year_ref"
+            f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref"
         )
 
         self.change_CO2e_t = self.CO2e_total - a18_CO2e_total
