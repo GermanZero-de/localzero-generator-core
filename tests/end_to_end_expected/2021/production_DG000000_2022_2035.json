@@ -2176,8 +2176,7 @@
             "invest_pa": 1023202519.2307693,
             "invest_com": 13301632750.0,
             "invest_pa_com": 1023202519.2307693,
-            "demand_emplo_com": 3702.032780904732,
-            "duration_until_target_year": 13
+            "demand_emplo_com": 3702.032780904732
         },
         "g_consult": {
             "cost_wage": 1023202519.2307693,
@@ -2188,7 +2187,6 @@
             "invest_com": 13301632750.0,
             "invest_pa_com": 1023202519.2307693,
             "demand_emplo_com": 3702.032780904732,
-            "duration_until_target_year": 13,
             "ratio_wage_to_emplo": 73800.0
         },
         "p": {
@@ -2681,8 +2679,7 @@
             "invest_pa": 231057692.30769232,
             "invest_com": 3003750000.0,
             "invest_pa_com": 231057692.30769232,
-            "demand_emplo_com": 793.363039399625,
-            "duration_until_target_year": 13
+            "demand_emplo_com": 793.363039399625
         },
         "g_consult": {
             "cost_wage": 231057692.30769232,
@@ -2693,7 +2690,6 @@
             "invest_com": 3003750000.0,
             "invest_pa_com": 231057692.30769232,
             "demand_emplo_com": 793.363039399625,
-            "duration_until_target_year": 13,
             "ratio_wage_to_emplo": 73800.0
         },
         "p": {
@@ -3044,8 +3040,7 @@
             "invest_pa": 700000000.0,
             "invest_com": 9100000000.0,
             "invest_pa_com": 700000000.0,
-            "demand_emplo_com": 625.0,
-            "duration_until_target_year": 13
+            "demand_emplo_com": 625.0
         },
         "g_consult": {
             "cost_wage": 70000000.0,
@@ -3056,7 +3051,6 @@
             "invest_com": 9100000000.0,
             "invest_pa_com": 700000000.0,
             "demand_emplo_com": 625.0,
-            "duration_until_target_year": 13,
             "ratio_wage_to_emplo": 112000.0
         },
         "i": {
@@ -4280,7 +4274,6 @@
             "invest_com": 18461569052.01159,
             "invest_pa_com": 1420120696.3085837,
             "demand_emplo_com": 12679.649074183784,
-            "duration_until_target_year": 13,
             "ratio_wage_to_emplo": 112000.0
         },
         "s": {
@@ -4330,8 +4323,7 @@
             "invest_pa": 1420120696.3085837,
             "invest_com": 18461569052.01159,
             "invest_pa_com": 1420120696.3085837,
-            "demand_emplo_com": 12679.649074183784,
-            "duration_until_target_year": 13
+            "demand_emplo_com": 12679.649074183784
         },
         "t": {
             "cost_wage": 16834715041.20546,
@@ -4343,9 +4335,9 @@
             "invest_pa_com": 40075523453.379745,
             "demand_emplo_com": 12679.649074183784,
             "invest_com_state": 328200000000.0,
-            "invest_com_pa_state": 25246153846.153847,
+            "invest_com_pa_state": 15265116279.069767,
             "invest_com_wo_state": 192781804893.93665,
-            "invest_com_pa_wo_state": 14829369607.225895,
+            "invest_com_pa_wo_state": 8966595576.46217,
             "CO2e_combustion_based": 18797385.33212108,
             "CO2e_total_2021_estimated": 166509413.32140908,
             "cost_climate_saved": 619282677345.09,
@@ -6151,8 +6143,7 @@
             "invest_pa": 124834545.6153846,
             "invest_com": 1622849092.9999998,
             "invest_pa_com": 124834545.6153846,
-            "demand_emplo_com": 557.6593125,
-            "duration_until_target_year": 13
+            "demand_emplo_com": 557.6593125
         },
         "g_storage": {
             "cost_wage": 30007524.038461532,
@@ -6163,7 +6154,6 @@
             "invest_com": 1560391249.9999998,
             "invest_pa_com": 120030096.15384613,
             "demand_emplo_com": 0,
-            "duration_until_target_year": 13,
             "ratio_wage_to_emplo": 49240.495292326195
         },
         "g_planning": {
@@ -6175,7 +6165,6 @@
             "invest_com": 62457843.0,
             "invest_pa_com": 4804449.461538462,
             "demand_emplo_com": 557.6593125,
-            "duration_until_target_year": 13,
             "ratio_wage_to_emplo": 112000.0
         },
         "d": {

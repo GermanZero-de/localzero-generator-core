@@ -6,12 +6,11 @@ https://localzero-generator.readthedocs.io/de/latest/sectors/traffic.html
 # pyright: strict
 
 from ..makeentries import Entries
-from ..refdata import Facts, Assumptions
+from ..refdata import Assumptions, Facts
 from ..transport2018.t18 import T18
-from . import energy_demand, energy_source, energy_general
-
-from .t30 import T30
+from . import energy_demand, energy_general, energy_source
 from .t import T
+from .t30 import T30
 
 
 def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, t18: T18) -> T30:
@@ -37,6 +36,7 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, t18: T18) 
         road=production.road,
         ship=production.ship,
         other=production.other,
+        entries=entries,
         g=general.g,
     )
 

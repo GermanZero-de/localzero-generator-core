@@ -2176,8 +2176,7 @@
             "invest_pa": 536493.75,
             "invest_com": 15021825.0,
             "invest_pa_com": 536493.75,
-            "demand_emplo_com": 0,
-            "duration_until_target_year": 28
+            "demand_emplo_com": 0
         },
         "g_consult": {
             "cost_wage": 536493.75,
@@ -2188,7 +2187,6 @@
             "invest_com": 15021825.0,
             "invest_pa_com": 536493.75,
             "demand_emplo_com": 0,
-            "duration_until_target_year": 28,
             "ratio_wage_to_emplo": 73800.0
         },
         "p": {
@@ -2681,8 +2679,7 @@
             "invest_pa": 150219.754258929,
             "invest_com": 4206153.119250012,
             "invest_pa_com": 150219.754258929,
-            "demand_emplo_com": 0,
-            "duration_until_target_year": 28
+            "demand_emplo_com": 0
         },
         "g_consult": {
             "cost_wage": 150219.754258929,
@@ -2693,7 +2690,6 @@
             "invest_com": 4206153.119250012,
             "invest_pa_com": 150219.754258929,
             "demand_emplo_com": 0,
-            "duration_until_target_year": 28,
             "ratio_wage_to_emplo": 73800.0
         },
         "p": {
@@ -3044,8 +3040,7 @@
             "invest_pa": 980210.4647440726,
             "invest_com": 27445893.012834035,
             "invest_pa_com": 980210.4647440726,
-            "demand_emplo_com": 0.8751879149500649,
-            "duration_until_target_year": 28
+            "demand_emplo_com": 0.8751879149500649
         },
         "g_consult": {
             "cost_wage": 98021.04647440727,
@@ -3056,7 +3051,6 @@
             "invest_com": 27445893.012834035,
             "invest_pa_com": 980210.4647440726,
             "demand_emplo_com": 0.8751879149500649,
-            "duration_until_target_year": 28,
             "ratio_wage_to_emplo": 112000.0
         },
         "i": {
@@ -4280,7 +4274,6 @@
             "invest_com": 24121191.93695657,
             "invest_pa_com": 861471.1406055918,
             "demand_emplo_com": 7.691706612549927,
-            "duration_until_target_year": 28,
             "ratio_wage_to_emplo": 112000.0
         },
         "s": {
@@ -4330,8 +4323,7 @@
             "invest_pa": 861471.1406055918,
             "invest_com": 24121191.93695657,
             "invest_pa_com": 861471.1406055918,
-            "demand_emplo_com": 7.691706612549927,
-            "duration_until_target_year": 28
+            "demand_emplo_com": 7.691706612549927
         },
         "t": {
             "cost_wage": 18748754.525437966,
@@ -4343,9 +4335,9 @@
             "invest_pa_com": 29417223.828135565,
             "demand_emplo_com": 7.691706612549927,
             "invest_com_state": 459578677.89857805,
-            "invest_com_pa_state": 16413524.210663501,
+            "invest_com_pa_state": 32827048.421327002,
             "invest_com_wo_state": 364103589.2892177,
-            "invest_com_pa_wo_state": 13003699.617472062,
+            "invest_com_pa_wo_state": 26007399.234944124,
             "CO2e_combustion_based": 3697.4310851369087,
             "CO2e_total_2021_estimated": 121124.00851379601,
             "cost_climate_saved": 320574556.3802393,
@@ -6151,8 +6143,7 @@
             "invest_pa": 29024.612034091293,
             "invest_com": 812689.1369545562,
             "invest_pa_com": 29024.612034091293,
-            "demand_emplo_com": 1.0483727678571428,
-            "duration_until_target_year": 28
+            "demand_emplo_com": 1.0483727678571428
         },
         "g_storage": {
             "cost_wage": 6207.78024066568,
@@ -6163,7 +6154,6 @@
             "invest_com": 695271.3869545562,
             "invest_pa_com": 24831.12096266272,
             "demand_emplo_com": 0,
-            "duration_until_target_year": 28,
             "ratio_wage_to_emplo": 49240.495292326195
         },
         "g_planning": {
@@ -6175,7 +6165,6 @@
             "invest_com": 117417.75,
             "invest_pa_com": 4193.491071428572,
             "demand_emplo_com": 1.0483727678571428,
-            "duration_until_target_year": 28,
             "ratio_wage_to_emplo": 112000.0
         },
         "d": {

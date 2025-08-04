@@ -10,7 +10,6 @@ from .invest import InvestCommune
 @dataclass(kw_only=True)
 class G(InvestCommune):
     demand_emplo_com: float
-    duration_until_target_year: int
 
     @classmethod
     def sum(cls, *gs: "G") -> "G":
@@ -23,7 +22,6 @@ class G(InvestCommune):
             invest_com=sum(g.invest_com for g in gs),
             invest_pa=sum(g.invest_pa for g in gs),
             invest_pa_com=sum(g.invest_pa_com for g in gs),
-            duration_until_target_year=max(g.duration_until_target_year for g in gs),
         )
 
 
@@ -64,7 +62,6 @@ class GConsult(G):
             invest_pa=invest_pa,
             invest_pa_com=invest_pa_commune,
             ratio_wage_to_emplo=ratio_wage_to_emplo,
-            duration_until_target_year=duration_until_target_year,
         )
 
     @classmethod
@@ -101,7 +98,6 @@ class GConsult(G):
             invest_pa=invest_pa,
             invest_pa_com=invest_pa_commune,
             ratio_wage_to_emplo=ratio_wage_to_emplo,
-            duration_until_target_year=duration_until_target_year,
         )
 
     @classmethod
@@ -133,7 +129,6 @@ class GConsult(G):
             invest_pa=invest_pa,
             invest_pa_com=invest_pa_commune,
             ratio_wage_to_emplo=ratio_wage_to_emplo,
-            duration_until_target_year=duration_until_target_year,
         )
 
     @classmethod
@@ -169,7 +164,6 @@ class GConsult(G):
             invest_pa=invest_pa,
             invest_pa_com=invest_pa_commune,
             ratio_wage_to_emplo=ratio_wage_to_emplo,
-            duration_until_target_year=duration_until_target_year,
         )
 
     @classmethod
@@ -210,5 +204,4 @@ class GConsult(G):
             invest_pa=invest_pa,
             invest_pa_com=invest_pa_commune,
             ratio_wage_to_emplo=ratio_wage_to_emplo,
-            duration_until_target_year=duration_until_target_year,
         )

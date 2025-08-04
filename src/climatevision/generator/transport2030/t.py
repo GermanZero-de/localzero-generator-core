@@ -3,6 +3,7 @@
 from dataclasses import dataclass
 
 from ..common.invest import InvestCommune
+from ..makeentries import Entries
 from ..transport2018.t18 import T18
 from .energy_demand import Air, Other, Rail, RoadSum, Ship, Transport
 from .energy_general import G
@@ -31,6 +32,7 @@ class T(InvestCommune):
         road: RoadSum,
         ship: Ship,
         other: Other,
+        entries: Entries,
         g: G,
     ) -> "T":
         invest_com = (
@@ -95,13 +97,9 @@ class T(InvestCommune):
             + rail.action_invest_station
             + ship.dmstc_action_infra
         )
-        invest_com_pa_state = (
-            invest_com_state / g.duration_until_target_year
-        )  # FIXME: This is a guess, please verify
+        invest_com_pa_state = invest_com_state / entries.m_duration_neutral
         invest_com_wo_state = invest_com - invest_com_state
-        invest_com_pa_wo_state = (
-            invest_com_wo_state / g.duration_until_target_year
-        )  # FIXME: This is a guess, please verify
+        invest_com_pa_wo_state = invest_com_wo_state / entries.m_duration_neutral
 
         res = cls(
             cost_wage=cost_wage,
