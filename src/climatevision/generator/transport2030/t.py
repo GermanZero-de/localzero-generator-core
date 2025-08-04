@@ -97,9 +97,9 @@ class T(InvestCommune):
             + rail.action_invest_station
             + ship.dmstc_action_infra
         )
-        invest_com_pa_state = invest_com_state / entries.m_duration_neutral
+        invest_com_pa_state = invest_com_state / entries.m_duration_target
         invest_com_wo_state = invest_com - invest_com_state
-        invest_com_pa_wo_state = invest_com_wo_state / entries.m_duration_neutral
+        invest_com_pa_wo_state = invest_com_wo_state / entries.m_duration_target
 
         res = cls(
             cost_wage=cost_wage,
