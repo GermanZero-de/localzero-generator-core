@@ -413,6 +413,8 @@ class Rail(InvestCommune):
 
     base_unit: float
     mileage: float
+    action_invest_infra: float
+    action_invest_station: float
 
     @classmethod
     def calc(
@@ -480,4 +482,6 @@ class Rail(InvestCommune):
             transport=Transport.sum(
                 rail_ppl.transport, rail_gds.transport, transport2018=t18.rail
             ),
+            action_invest_infra=rail_action_invest_infra.invest_com,
+            action_invest_station=rail_action_invest_station.invest_com,
         )

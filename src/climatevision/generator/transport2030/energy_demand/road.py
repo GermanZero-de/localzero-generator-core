@@ -895,6 +895,9 @@ class RoadGoods(Road, InvestCommune):
 
 @dataclass(kw_only=True)
 class RoadSum(Road, InvestCommune):
+
+    gds_mhd_action_wire: float
+
     @classmethod
     def calc(
         cls,
@@ -935,4 +938,5 @@ class RoadSum(Road, InvestCommune):
             demand_emplo=demand_emplo,
             mileage=people.mileage + goods.mileage,
             transport=sum,
+            gds_mhd_action_wire=goods.invest_com,
         )

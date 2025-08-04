@@ -2,9 +2,8 @@
 
 from dataclasses import dataclass
 
-from ..refdata import Facts, Assumptions
+from ..refdata import Assumptions, Facts
 from ..utils import div
-
 from .invest import InvestCommune
 
 

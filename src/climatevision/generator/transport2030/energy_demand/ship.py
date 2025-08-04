@@ -211,6 +211,7 @@ class Ship(InvestCommune):
 
     base_unit: float
     emplo_existing: float
+    dmstc_action_infra: float
 
     @classmethod
     def calc(
@@ -260,4 +261,5 @@ class Ship(InvestCommune):
             invest_pa=invest_pa,
             invest_pa_com=invest_pa_com,
             transport=sum,
+            dmstc_action_infra=ship_dmstc_action_infra.invest_com,
         )
