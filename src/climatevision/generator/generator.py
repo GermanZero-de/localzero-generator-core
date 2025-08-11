@@ -211,7 +211,7 @@ def calculate(inputs: Inputs, inputs_germany: Inputs) -> Result:
         e30_p_local_biomass_cogen_energy=e30_p_local_biomass_cogen.energy,
     )
 
-    print("calc waste 2030 ")
+    print("Waste2030_calc", file=stderr)
     wastelines = WasteLines.calc_waste_lines(entries, facts, assumptions, w18=w18)
 
     print("Fuels2030_calc", file=stderr)
