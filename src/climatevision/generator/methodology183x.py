@@ -307,7 +307,8 @@ def calc_budget(
     m183X.GHG_budget_year_baseline_to_year_target_nat = temp_val
 
     m183X.CO2e_year_baseline_to_year_target = (
-        m183X.GHG_budget_year_baseline_to_year_target - m183X.GHG_budget_after_year_target
+        m183X.GHG_budget_year_baseline_to_year_target
+        - m183X.GHG_budget_after_year_target
     )
 
     # safe dict values in class variables
