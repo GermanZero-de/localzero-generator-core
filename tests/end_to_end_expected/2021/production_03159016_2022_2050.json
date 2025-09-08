@@ -8666,7 +8666,7 @@
         "CO2_budget_2016_to_year_target": 8872937.551813984,
         "nonCO2_budget_2016_to_year_target": 3306743.7374159996,
         "GHG_budget_2016_to_year_target": 12179681.289229983,
-        "GHG_budget_2022_to_year_target": 7477332.413157437,
+        "GHG_budget_year_baseline_to_year_target": 7477332.413157437,
         "GHG_budget_after_year_target": -3061699.4098200384,
         "CO2e_w_lulucf_change_pa": 24227.659363166593,
         "CO2e_w_lulucf_2016": 856110.8381607191,
@@ -9177,8 +9177,8 @@
         "CO2e_per_capita_nat": 9.157210633562975,
         "CO2e_per_capita_com": 6.235831231886527,
         "CO2e_per_capita_com_pct_of_nat": 0.6809749694990067,
-        "GHG_budget_2022_to_year_target_nat": 3792756292.0,
-        "CO2e_2022_to_year_target": 10539031.822977476
+        "GHG_budget_year_baseline_to_year_target_nat": 3792756292.0,
+        "CO2e_year_baseline_to_year_target": 10539031.822977476
     },
     "bisko": {
         "priv_residences": {

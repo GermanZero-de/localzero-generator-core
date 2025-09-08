@@ -74,7 +74,7 @@ class M183X:
     CO2_budget_2016_to_year_target: float = None  # type: ignore
     nonCO2_budget_2016_to_year_target: float = None  # type: ignore
     GHG_budget_2016_to_year_target: float = None  # type: ignore
-    GHG_budget_2022_to_year_target: float = None  # type: ignore
+    GHG_budget_year_baseline_to_year_target: float = None  # type: ignore
     GHG_budget_after_year_target: float = None  # type: ignore
 
     CO2e_w_lulucf_change_pa: float = None  # type: ignore
@@ -147,8 +147,8 @@ class M183X:
     CO2e_per_capita_com: float = None  # type: ignore
     CO2e_per_capita_com_pct_of_nat: float = None  # type: ignore
 
-    GHG_budget_2022_to_year_target_nat: float = None  # type: ignore  # INFO THG Budget Deutschland
-    CO2e_2022_to_year_target: float = None  # type: ignore  # INFO CO2e sind Emissionen für Kommune
+    GHG_budget_year_baseline_to_year_target_nat: float = None  # type: ignore  # INFO THG Budget Deutschland
+    CO2e_year_baseline_to_year_target: float = None  # type: ignore  # INFO CO2e sind Emissionen für Kommune
 
 
 def calc_budget(
@@ -258,7 +258,7 @@ def calc_budget(
     for year in years_list_2016_to_year_before_baseline:
         temp_val -= years_dict[year]["CO2e_w_lulucf"]
 
-    m183X.GHG_budget_2022_to_year_target = temp_val
+    m183X.GHG_budget_year_baseline_to_year_target = temp_val
 
     #########################################################
     ### calculating the linear decrease until target year ###
@@ -291,7 +291,7 @@ def calc_budget(
     ##############################################################################################
 
     # all emission values until 2051 are subtracted since they are 0 after target year
-    temp_val = m183X.GHG_budget_2022_to_year_target
+    temp_val = m183X.GHG_budget_year_baseline_to_year_target
     for year in years_predicted:
         temp_val -= years_dict[year]["CO2e_w_lulucf"]
     # A budget_after_year_target remains if the emissions over the years exceed or fall short of the
@@ -304,10 +304,11 @@ def calc_budget(
             f"Fact_M_CO2e_wo_lulucf_{year}"
         )
 
-    m183X.GHG_budget_2022_to_year_target_nat = temp_val
+    m183X.GHG_budget_year_baseline_to_year_target_nat = temp_val
 
-    m183X.CO2e_2022_to_year_target = (
-        m183X.GHG_budget_2022_to_year_target - m183X.GHG_budget_after_year_target
+    m183X.CO2e_year_baseline_to_year_target = (
+        m183X.GHG_budget_year_baseline_to_year_target
+        - m183X.GHG_budget_after_year_target
     )
 
     # safe dict values in class variables
