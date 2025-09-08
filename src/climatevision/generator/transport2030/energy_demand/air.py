@@ -19,18 +19,19 @@ def calc_air_domestic(
     """
     fact = facts.fact
 
-    CO2e_total_2021_estimated = t18.air_dmstc.CO2e_combustion_based * fact(
-        f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref"
+    CO2e_total_year_before_baseline_estimated = (
+        t18.air_dmstc.CO2e_combustion_based
+        * fact(f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref")
     )
     # Assuming every year from 2021 onwards we would have use the same amount
     # of CO2e on domestic flights if we hadn't decided to ban them.
     cost_climate_saved = (
-        (CO2e_total_2021_estimated)
+        (CO2e_total_year_before_baseline_estimated)
         * duration_CO2e_neutral_years
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     return Transport(
-        CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+        CO2e_total_year_before_baseline_estimated=CO2e_total_year_before_baseline_estimated,
         cost_climate_saved=cost_climate_saved,
         # We need no energy to transport nothing
         transport_capacity_tkm=0,
@@ -65,11 +66,12 @@ def calc_air_international(
     CO2e_combustion_based = demand_ejetfuel * ass(
         "Ass_T_S_jetfuel_EmFa_tank_wheel_2050"
     )
-    CO2e_total_2021_estimated = t18.air_inter.CO2e_combustion_based * fact(
-        f"Fact_M_CO2e_wo_lulucf_{entries.m_year_baseline - 1}_vs_year_ref"
+    CO2e_total_year_before_baseline_estimated = (
+        t18.air_inter.CO2e_combustion_based
+        * fact(f"Fact_M_CO2e_wo_lulucf_{entries.m_year_baseline - 1}_vs_year_ref")
     )
     cost_climate_saved = (
-        (CO2e_total_2021_estimated - CO2e_combustion_based)
+        (CO2e_total_year_before_baseline_estimated - CO2e_combustion_based)
         * duration_CO2e_neutral_years
         * fact("Fact_M_cost_per_CO2e_2020")
     )
@@ -78,7 +80,7 @@ def calc_air_international(
     )
     return Transport(
         CO2e_combustion_based=CO2e_combustion_based,
-        CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+        CO2e_total_year_before_baseline_estimated=CO2e_total_year_before_baseline_estimated,
         transport_capacity_tkm=transport_capacity_tkm,
         transport_capacity_pkm=transport_capacity_pkm,
         cost_climate_saved=cost_climate_saved,

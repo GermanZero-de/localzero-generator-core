@@ -75,11 +75,12 @@ class RailPeople(Invest):
         demand_emplo_new = demand_emplo - emplo_existing
         cost_wage = ratio_wage_to_emplo * demand_emplo_new
         invest = base_unit * invest_per_x + cost_wage * duration_until_target_year
-        CO2e_total_2021_estimated = t18.rail_ppl_metro.CO2e_combustion_based * fact(
-            f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref"
+        CO2e_total_year_before_baseline_estimated = (
+            t18.rail_ppl_metro.CO2e_combustion_based
+            * fact(f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref")
         )
         cost_climate_saved = (
-            (CO2e_total_2021_estimated - CO2e_combustion_based)
+            (CO2e_total_year_before_baseline_estimated - CO2e_combustion_based)
             * duration_CO2e_neutral_years
             * fact("Fact_M_cost_per_CO2e_2020")
         )
@@ -99,7 +100,7 @@ class RailPeople(Invest):
             ratio_wage_to_emplo=ratio_wage_to_emplo,
             transport=Transport(
                 CO2e_combustion_based=CO2e_combustion_based,
-                CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+                CO2e_total_year_before_baseline_estimated=CO2e_total_year_before_baseline_estimated,
                 cost_climate_saved=cost_climate_saved,
                 demand_electricity=demand_electricity,
                 transport_capacity_pkm=transport_capacity_pkm,
@@ -163,11 +164,12 @@ class RailPeople(Invest):
         ratio_wage_to_emplo = ass("Ass_T_D_rail_wage_driver")
         cost_wage = ratio_wage_to_emplo * demand_emplo_new
         invest_per_x = fact("Fact_T_D_rail_ppl_vehicle_invest")
-        CO2e_total_2021_estimated = t18.rail_ppl_distance.CO2e_combustion_based * fact(
-            f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref"
+        CO2e_total_year_before_baseline_estimated = (
+            t18.rail_ppl_distance.CO2e_combustion_based
+            * fact(f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref")
         )
         cost_climate_saved = (
-            (CO2e_total_2021_estimated - CO2e_combustion_based)
+            (CO2e_total_year_before_baseline_estimated - CO2e_combustion_based)
             * duration_CO2e_neutral_years
             * fact("Fact_M_cost_per_CO2e_2020")
         )
@@ -188,7 +190,7 @@ class RailPeople(Invest):
             ratio_wage_to_emplo=ratio_wage_to_emplo,
             transport=Transport(
                 CO2e_combustion_based=CO2e_combustion_based,
-                CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+                CO2e_total_year_before_baseline_estimated=CO2e_total_year_before_baseline_estimated,
                 cost_climate_saved=cost_climate_saved,
                 demand_electricity=demand_electricity,
                 transport_capacity_pkm=transport_capacity_pkm,
@@ -359,11 +361,12 @@ class RailGoods(Invest):
         mileage = transport_capacity_tkm / fact(
             "Fact_T_D_rail_gds_ratio_tkm_to_fzkm_2018"
         )
-        CO2e_total_2021_estimated = t18.rail_gds.CO2e_combustion_based * fact(
-            f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref"
+        CO2e_total_year_before_baseline_estimated = (
+            t18.rail_gds.CO2e_combustion_based
+            * fact(f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref")
         )
         cost_climate_saved = (
-            (CO2e_total_2021_estimated - CO2e_combustion_based)
+            (CO2e_total_year_before_baseline_estimated - CO2e_combustion_based)
             * duration_CO2e_neutral_years
             * fact("Fact_M_cost_per_CO2e_2020")
         )
@@ -396,7 +399,7 @@ class RailGoods(Invest):
             ratio_wage_to_emplo=ratio_wage_to_emplo,
             transport=Transport(
                 CO2e_combustion_based=CO2e_combustion_based,
-                CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+                CO2e_total_year_before_baseline_estimated=CO2e_total_year_before_baseline_estimated,
                 cost_climate_saved=cost_climate_saved,
                 demand_electricity=demand_electricity,
                 transport_capacity_tkm=transport_capacity_tkm,

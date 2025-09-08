@@ -35,11 +35,13 @@ class TotalEFuelProduction(Energy, CO2eChange, EnergyChange, Invest):
             + sum(x.CO2e_production_based for x in efuels),
             CO2e_total=sum(x.CO2e_total for x in new_efuels)
             + sum(x.CO2e_total for x in efuels),
-            CO2e_total_2021_estimated=sum(
-                x.CO2e_total_2021_estimated for x in new_efuels
+            CO2e_total_year_before_baseline_estimated=sum(
+                x.CO2e_total_year_before_baseline_estimated for x in new_efuels
             )
-            + sum(x.CO2e_total_2021_estimated for x in efuels)
-            + sum(x.CO2e_total_2021_estimated for x in fuels_without_repl),
+            + sum(x.CO2e_total_year_before_baseline_estimated for x in efuels)
+            + sum(
+                x.CO2e_total_year_before_baseline_estimated for x in fuels_without_repl
+            ),
             change_CO2e_pct=0,
             change_CO2e_t=sum(x.change_CO2e_t for x in new_efuels)
             + sum(x.change_CO2e_t for x in efuels)

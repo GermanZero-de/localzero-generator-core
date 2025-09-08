@@ -77,11 +77,15 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, i18: I18) 
     p_chem_basic.change_CO2e_pct = div(
         p_chem_basic.change_CO2e_t, i18.p_chem_basic.CO2e_total
     )
-    p_chem_basic.CO2e_total_2021_estimated = i18.p_chem_basic.CO2e_total * fact(
-        f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref"
+    p_chem_basic.CO2e_total_year_before_baseline_estimated = (
+        i18.p_chem_basic.CO2e_total
+        * fact(f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref")
     )
     p_chem_basic.cost_climate_saved = (
-        (p_chem_basic.CO2e_total_2021_estimated - p_chem_basic.CO2e_total)
+        (
+            p_chem_basic.CO2e_total_year_before_baseline_estimated
+            - p_chem_basic.CO2e_total
+        )
         * duration_CO2e_neutral_years
         * fact("Fact_M_cost_per_CO2e_2020")
     )
@@ -124,11 +128,15 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, i18: I18) 
     p_chem_ammonia.change_CO2e_pct = div(
         p_chem_ammonia.change_CO2e_t, i18.p_chem_ammonia.CO2e_total
     )
-    p_chem_ammonia.CO2e_total_2021_estimated = i18.p_chem_ammonia.CO2e_total * fact(
-        f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref"
+    p_chem_ammonia.CO2e_total_year_before_baseline_estimated = (
+        i18.p_chem_ammonia.CO2e_total
+        * fact(f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref")
     )
     p_chem_ammonia.cost_climate_saved = (
-        (p_chem_ammonia.CO2e_total_2021_estimated - p_chem_ammonia.CO2e_total)
+        (
+            p_chem_ammonia.CO2e_total_year_before_baseline_estimated
+            - p_chem_ammonia.CO2e_total
+        )
         * duration_CO2e_neutral_years
         * fact("Fact_M_cost_per_CO2e_2020")
     )
@@ -178,11 +186,15 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, i18: I18) 
     p_chem_other.change_CO2e_pct = div(
         p_chem_other.change_CO2e_t, i18.p_chem_other.CO2e_total
     )
-    p_chem_other.CO2e_total_2021_estimated = i18.p_chem_other.CO2e_total * fact(
-        f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref"
+    p_chem_other.CO2e_total_year_before_baseline_estimated = (
+        i18.p_chem_other.CO2e_total
+        * fact(f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref")
     )
     p_chem_other.cost_climate_saved = (
-        (p_chem_other.CO2e_total_2021_estimated - p_chem_other.CO2e_total)
+        (
+            p_chem_other.CO2e_total_year_before_baseline_estimated
+            - p_chem_other.CO2e_total
+        )
         * duration_CO2e_neutral_years
         * fact("Fact_M_cost_per_CO2e_2020")
     )
@@ -233,10 +245,10 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, i18: I18) 
         + p_chem_other.change_CO2e_t
     )
     p_chem.change_CO2e_pct = div(p_chem.change_CO2e_t, i18.p_chem.CO2e_total)
-    p_chem.CO2e_total_2021_estimated = (
-        p_chem_basic.CO2e_total_2021_estimated
-        + p_chem_ammonia.CO2e_total_2021_estimated
-        + p_chem_other.CO2e_total_2021_estimated
+    p_chem.CO2e_total_year_before_baseline_estimated = (
+        p_chem_basic.CO2e_total_year_before_baseline_estimated
+        + p_chem_ammonia.CO2e_total_year_before_baseline_estimated
+        + p_chem_other.CO2e_total_year_before_baseline_estimated
     )
     p_chem.cost_climate_saved = (
         p_chem_basic.cost_climate_saved
@@ -304,13 +316,13 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, i18: I18) 
     p_metal_steel_primary.change_CO2e_pct = div(
         p_metal_steel_primary.change_CO2e_t, i18.p_metal_steel_primary.CO2e_total
     )
-    p_metal_steel_primary.CO2e_total_2021_estimated = (
+    p_metal_steel_primary.CO2e_total_year_before_baseline_estimated = (
         i18.p_metal_steel_primary.CO2e_total
         * fact(f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref")
     )
     p_metal_steel_primary.cost_climate_saved = (
         (
-            p_metal_steel_primary.CO2e_total_2021_estimated
+            p_metal_steel_primary.CO2e_total_year_before_baseline_estimated
             - p_metal_steel_primary.CO2e_total
         )
         * duration_CO2e_neutral_years
@@ -394,13 +406,13 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, i18: I18) 
     p_metal_steel_secondary.change_CO2e_pct = div(
         p_metal_steel_secondary.change_CO2e_t, i18.p_metal_steel_secondary.CO2e_total
     )
-    p_metal_steel_secondary.CO2e_total_2021_estimated = (
+    p_metal_steel_secondary.CO2e_total_year_before_baseline_estimated = (
         i18.p_metal_steel_secondary.CO2e_total
         * fact(f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref")
     )
     p_metal_steel_secondary.cost_climate_saved = (
         (
-            p_metal_steel_secondary.CO2e_total_2021_estimated
+            p_metal_steel_secondary.CO2e_total_year_before_baseline_estimated
             - p_metal_steel_secondary.CO2e_total
         )
         * duration_CO2e_neutral_years
@@ -460,11 +472,15 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, i18: I18) 
     p_metal_steel.change_CO2e_pct = div(
         p_metal_steel.change_CO2e_t, i18.p_metal_steel.CO2e_total
     )
-    p_metal_steel.CO2e_total_2021_estimated = i18.p_metal_steel.CO2e_total * fact(
-        f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref"
+    p_metal_steel.CO2e_total_year_before_baseline_estimated = (
+        i18.p_metal_steel.CO2e_total
+        * fact(f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref")
     )
     p_metal_steel.cost_climate_saved = (
-        (p_metal_steel.CO2e_total_2021_estimated - p_metal_steel.CO2e_total)
+        (
+            p_metal_steel.CO2e_total_year_before_baseline_estimated
+            - p_metal_steel.CO2e_total
+        )
         * duration_CO2e_neutral_years
         * fact("Fact_M_cost_per_CO2e_2020")
     )
@@ -522,11 +538,15 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, i18: I18) 
     p_metal_nonfe.change_CO2e_pct = div(
         p_metal_nonfe.change_CO2e_t, i18.p_metal_nonfe.CO2e_total
     )
-    p_metal_nonfe.CO2e_total_2021_estimated = i18.p_metal_nonfe.CO2e_total * fact(
-        f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref"
+    p_metal_nonfe.CO2e_total_year_before_baseline_estimated = (
+        i18.p_metal_nonfe.CO2e_total
+        * fact(f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref")
     )
     p_metal_nonfe.cost_climate_saved = (
-        (p_metal_nonfe.CO2e_total_2021_estimated - p_metal_nonfe.CO2e_total)
+        (
+            p_metal_nonfe.CO2e_total_year_before_baseline_estimated
+            - p_metal_nonfe.CO2e_total
+        )
         * duration_CO2e_neutral_years
         * fact("Fact_M_cost_per_CO2e_2020")
     )
@@ -563,9 +583,9 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, i18: I18) 
     p_metal.change_energy_pct = div(p_metal.change_energy_MWh, i18.p_metal.energy)
     p_metal.change_CO2e_t = p_metal_steel.change_CO2e_t + p_metal_nonfe.change_CO2e_t
     p_metal.change_CO2e_pct = div(p_metal.change_CO2e_t, i18.p_metal.CO2e_total)
-    p_metal.CO2e_total_2021_estimated = (
-        p_metal_steel.CO2e_total_2021_estimated
-        + p_metal_nonfe.CO2e_total_2021_estimated
+    p_metal.CO2e_total_year_before_baseline_estimated = (
+        p_metal_steel.CO2e_total_year_before_baseline_estimated
+        + p_metal_nonfe.CO2e_total_year_before_baseline_estimated
     )
     p_metal.cost_climate_saved = (
         p_metal_steel.cost_climate_saved + p_metal_nonfe.cost_climate_saved
@@ -607,11 +627,15 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, i18: I18) 
     p_other_paper.change_CO2e_pct = div(
         p_other_paper.change_CO2e_t, i18.p_other_paper.CO2e_total
     )
-    p_other_paper.CO2e_total_2021_estimated = i18.p_other_paper.CO2e_total * fact(
-        f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref"
+    p_other_paper.CO2e_total_year_before_baseline_estimated = (
+        i18.p_other_paper.CO2e_total
+        * fact(f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref")
     )
     p_other_paper.cost_climate_saved = (
-        (p_other_paper.CO2e_total_2021_estimated - p_other_paper.CO2e_total)
+        (
+            p_other_paper.CO2e_total_year_before_baseline_estimated
+            - p_other_paper.CO2e_total
+        )
         * duration_CO2e_neutral_years
         * fact("Fact_M_cost_per_CO2e_2020")
     )
@@ -664,11 +688,15 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, i18: I18) 
     p_other_food.change_CO2e_pct = div(
         p_other_food.change_CO2e_t, i18.p_other_food.CO2e_total
     )
-    p_other_food.CO2e_total_2021_estimated = i18.p_other_food.CO2e_total * fact(
-        f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref"
+    p_other_food.CO2e_total_year_before_baseline_estimated = (
+        i18.p_other_food.CO2e_total
+        * fact(f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref")
     )
     p_other_food.cost_climate_saved = (
-        (p_other_food.CO2e_total_2021_estimated - p_other_food.CO2e_total)
+        (
+            p_other_food.CO2e_total_year_before_baseline_estimated
+            - p_other_food.CO2e_total
+        )
         * duration_CO2e_neutral_years
         * fact("Fact_M_cost_per_CO2e_2020")
     )
@@ -731,11 +759,15 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, i18: I18) 
     p_other_further.change_CO2e_pct = div(
         p_other_further.change_CO2e_t, i18.p_other_further.CO2e_total
     )
-    p_other_further.CO2e_total_2021_estimated = i18.p_other_further.CO2e_total * fact(
-        f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref"
+    p_other_further.CO2e_total_year_before_baseline_estimated = (
+        i18.p_other_further.CO2e_total
+        * fact(f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref")
     )
     p_other_further.cost_climate_saved = (
-        (p_other_further.CO2e_total_2021_estimated - p_other_further.CO2e_total)
+        (
+            p_other_further.CO2e_total_year_before_baseline_estimated
+            - p_other_further.CO2e_total
+        )
         * duration_CO2e_neutral_years
         * fact("Fact_M_cost_per_CO2e_2020")
     )
@@ -774,11 +806,15 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, i18: I18) 
     p_other_2efgh.change_CO2e_pct = div(
         p_other_2efgh.change_CO2e_t, i18.p_other_2efgh.CO2e_total
     )
-    p_other_2efgh.CO2e_total_2021_estimated = i18.p_other_2efgh.CO2e_total * fact(
-        f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref"
+    p_other_2efgh.CO2e_total_year_before_baseline_estimated = (
+        i18.p_other_2efgh.CO2e_total
+        * fact(f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref")
     )
     p_other_2efgh.cost_climate_saved = (
-        (p_other_2efgh.CO2e_total_2021_estimated - p_other_2efgh.CO2e_total)
+        (
+            p_other_2efgh.CO2e_total_year_before_baseline_estimated
+            - p_other_2efgh.CO2e_total
+        )
         * duration_CO2e_neutral_years
         * fact("Fact_M_cost_per_CO2e_2020")
     )
@@ -834,11 +870,11 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, i18: I18) 
         + p_other_2efgh.change_CO2e_t
     )
     p_other.change_CO2e_pct = div(p_other.change_CO2e_t, i18.p_other.CO2e_total)
-    p_other.CO2e_total_2021_estimated = (
-        p_other_paper.CO2e_total_2021_estimated
-        + p_other_food.CO2e_total_2021_estimated
-        + p_other_further.CO2e_total_2021_estimated
-        + p_other_2efgh.CO2e_total_2021_estimated
+    p_other.CO2e_total_year_before_baseline_estimated = (
+        p_other_paper.CO2e_total_year_before_baseline_estimated
+        + p_other_food.CO2e_total_year_before_baseline_estimated
+        + p_other_further.CO2e_total_year_before_baseline_estimated
+        + p_other_2efgh.CO2e_total_year_before_baseline_estimated
     )
     p_other.cost_climate_saved = (
         p_other_paper.cost_climate_saved
@@ -883,7 +919,7 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, i18: I18) 
     p_miner_cement.CO2e_production_based = (
         p_miner_cement.prod_volume * p_miner_cement.CO2e_production_based_per_t
     )
-    p_miner_cement.CO2e_total_2021_estimated = (
+    p_miner_cement.CO2e_total_year_before_baseline_estimated = (
         i18.p_miner_cement.CO2e_production_based
         + i18.p_miner_cement.CO2e_combustion_based
     ) * fact(f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref")
@@ -983,13 +1019,13 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, i18: I18) 
         + p_metal.CO2e_production_based
         + p_other.CO2e_production_based
     )  # SUM(p_miner.CO2e_pb,p_chem.CO2e_pb,p_metal.CO2e_pb,p_other.CO2e_pb)
-    p_miner_ceram.CO2e_total_2021_estimated = (
+    p_miner_ceram.CO2e_total_year_before_baseline_estimated = (
         i18.p_miner_ceram.CO2e_production_based
         + i18.p_miner_ceram.CO2e_combustion_based
     ) * fact(f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref")
     p_miner_cement.cost_climate_saved = (
         (
-            p_miner_cement.CO2e_total_2021_estimated
+            p_miner_cement.CO2e_total_year_before_baseline_estimated
             - (
                 p_miner_cement.CO2e_production_based
                 + p_miner_cement.CO2e_combustion_based
@@ -1090,23 +1126,23 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, i18: I18) 
         i18.p_miner_ceram.CO2e_production_based
         + i18.p_miner_ceram.CO2e_combustion_based
     )
-    p_miner_chalk.CO2e_total_2021_estimated = (
+    p_miner_chalk.CO2e_total_year_before_baseline_estimated = (
         i18.p_miner_chalk.CO2e_production_based
         + i18.p_miner_chalk.CO2e_combustion_based
     ) * fact(f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref")
-    p_miner_glas.CO2e_total_2021_estimated = (
+    p_miner_glas.CO2e_total_year_before_baseline_estimated = (
         i18.p_miner_glas.CO2e_production_based + i18.p_miner_glas.CO2e_combustion_based
     ) * fact(f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref")
 
-    p_miner.CO2e_total_2021_estimated = (
-        p_miner_cement.CO2e_total_2021_estimated
-        + p_miner_chalk.CO2e_total_2021_estimated
-        + p_miner_glas.CO2e_total_2021_estimated
-        + p_miner_ceram.CO2e_total_2021_estimated
-    )  # SUM(p_miner_cement.CO2e_total_2021_estimated:p_miner_ceram.CO2e_total_2021_estimated)
+    p_miner.CO2e_total_year_before_baseline_estimated = (
+        p_miner_cement.CO2e_total_year_before_baseline_estimated
+        + p_miner_chalk.CO2e_total_year_before_baseline_estimated
+        + p_miner_glas.CO2e_total_year_before_baseline_estimated
+        + p_miner_ceram.CO2e_total_year_before_baseline_estimated
+    )  # SUM(p_miner_cement.CO2e_total_year_before_baseline_estimated:p_miner_ceram.CO2e_total_year_before_baseline_estimated)
     p_miner_ceram.cost_climate_saved = (
         (
-            p_miner_ceram.CO2e_total_2021_estimated
+            p_miner_ceram.CO2e_total_year_before_baseline_estimated
             - (
                 p_miner_ceram.CO2e_production_based
                 + p_miner_ceram.CO2e_combustion_based
@@ -1180,7 +1216,7 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, i18: I18) 
     p.change_CO2e_pct = div(p.change_CO2e_t, i18.p.CO2e_total)
     p_miner_chalk.cost_climate_saved = (
         (
-            p_miner_chalk.CO2e_total_2021_estimated
+            p_miner_chalk.CO2e_total_year_before_baseline_estimated
             - (
                 p_miner_chalk.CO2e_production_based
                 + p_miner_chalk.CO2e_combustion_based
@@ -1191,7 +1227,7 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, i18: I18) 
     )
     p_miner_glas.cost_climate_saved = (
         (
-            p_miner_glas.CO2e_total_2021_estimated
+            p_miner_glas.CO2e_total_year_before_baseline_estimated
             - (p_miner_glas.CO2e_production_based + p_miner_glas.CO2e_combustion_based)
         )
         * duration_CO2e_neutral_years
@@ -1231,11 +1267,11 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, i18: I18) 
     p_miner_cement.change_CO2e_pct = div(
         p_miner_cement.change_CO2e_t, i18.p_miner_cement.CO2e_total
     )
-    p.CO2e_total_2021_estimated = (
-        p_miner.CO2e_total_2021_estimated
-        + p_chem.CO2e_total_2021_estimated
-        + p_metal.CO2e_total_2021_estimated
-        + p_other.CO2e_total_2021_estimated
+    p.CO2e_total_year_before_baseline_estimated = (
+        p_miner.CO2e_total_year_before_baseline_estimated
+        + p_chem.CO2e_total_year_before_baseline_estimated
+        + p_metal.CO2e_total_year_before_baseline_estimated
+        + p_other.CO2e_total_year_before_baseline_estimated
     )
     p.cost_climate_saved = (
         p_miner.cost_climate_saved
@@ -1354,7 +1390,9 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, i18: I18) 
     p_miner_ceram.change_CO2e_pct = div(
         p_miner_ceram.change_CO2e_t, i18.p_miner_ceram.CO2e_total
     )
-    i.CO2e_total_2021_estimated = p.CO2e_total_2021_estimated
+    i.CO2e_total_year_before_baseline_estimated = (
+        p.CO2e_total_year_before_baseline_estimated
+    )
     i.cost_climate_saved = p.cost_climate_saved
     p_metal.invest_pa = (
         p_metal_steel.invest_pa + p_metal_nonfe.invest_pa

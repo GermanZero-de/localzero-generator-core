@@ -16,7 +16,7 @@ class CO2eChangeA(InvestCommune):
     CO2e_combustion_based: float = 0
     CO2e_production_based: float = 0
     CO2e_total: float = 0
-    CO2e_total_2021_estimated: float = 0
+    CO2e_total_year_before_baseline_estimated: float = 0
     change_CO2e_pct: float = 0
     change_CO2e_t: float = 0
     change_energy_MWh: float = 0
@@ -56,9 +56,9 @@ class CO2eChangeA(InvestCommune):
         self.CO2e_combustion_based = s.CO2e_combustion_based
         self.CO2e_total = g.CO2e_total + p.CO2e_total + s.CO2e_total
 
-        self.CO2e_total_2021_estimated = getattr(a18, what).CO2e_total * fact(
-            f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref"
-        )
+        self.CO2e_total_year_before_baseline_estimated = getattr(
+            a18, what
+        ).CO2e_total * fact(f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref")
 
         self.invest_pa_outside = g.invest_pa_outside
         self.invest_outside = g.invest_outside
@@ -79,7 +79,7 @@ class CO2eChangeA(InvestCommune):
         self.demand_emplo_com = g.demand_emplo_com
 
         self.cost_climate_saved = (
-            (self.CO2e_total_2021_estimated - self.CO2e_total)
+            (self.CO2e_total_year_before_baseline_estimated - self.CO2e_total)
             * duration_CO2e_neutral_years
             * fact("Fact_M_cost_per_CO2e_2020")
         )

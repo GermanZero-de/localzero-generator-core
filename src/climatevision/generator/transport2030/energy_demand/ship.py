@@ -50,11 +50,12 @@ class ShipDomestic(Invest):
         CO2e_combustion_based = demand_ediesel * ass(
             "Ass_T_S_diesel_EmFa_tank_wheel_2050"
         )
-        CO2e_total_2021_estimated = t18.ship_dmstc.CO2e_combustion_based * fact(
-            f"Fact_M_CO2e_wo_lulucf_{entries.m_year_baseline - 1}_vs_year_ref"
+        CO2e_total_year_before_baseline_estimated = (
+            t18.ship_dmstc.CO2e_combustion_based
+            * fact(f"Fact_M_CO2e_wo_lulucf_{entries.m_year_baseline - 1}_vs_year_ref")
         )
         cost_climate_saved = (
-            (CO2e_total_2021_estimated - CO2e_combustion_based)
+            (CO2e_total_year_before_baseline_estimated - CO2e_combustion_based)
             * duration_CO2e_neutral_years
             * fact("Fact_M_cost_per_CO2e_2020")
         )
@@ -85,7 +86,7 @@ class ShipDomestic(Invest):
             ratio_wage_to_emplo=ratio_wage_to_emplo,
             transport=Transport(
                 CO2e_combustion_based=CO2e_combustion_based,
-                CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+                CO2e_total_year_before_baseline_estimated=CO2e_total_year_before_baseline_estimated,
                 cost_climate_saved=cost_climate_saved,
                 demand_ediesel=demand_ediesel,
                 transport_capacity_tkm=transport_capacity_tkm,
@@ -97,7 +98,7 @@ class ShipDomestic(Invest):
 
 @dataclass(kw_only=True)
 class ShipDomesticActionInfra(InvestCommune):
-    CO2e_total_2021_estimated: float
+    CO2e_total_year_before_baseline_estimated: float
     cost_climate_saved: float
     demand_ediesel: float
     pct_of_wage: float
@@ -132,11 +133,11 @@ class ShipDomesticActionInfra(InvestCommune):
             ratio_wage_to_emplo,
         )
         demand_emplo_new = demand_emplo
-        CO2e_total_2021_estimated = 0
+        CO2e_total_year_before_baseline_estimated = 0
         cost_climate_saved = 0
 
         return cls(
-            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+            CO2e_total_year_before_baseline_estimated=CO2e_total_year_before_baseline_estimated,
             cost_climate_saved=cost_climate_saved,
             cost_wage=cost_wage,
             demand_ediesel=demand_ediesel,
@@ -171,8 +172,9 @@ class ShipInternational:
         fact = facts.fact
         ass = assumptions.ass
 
-        CO2e_total_2021_estimated = t18.ship_inter.CO2e_combustion_based * fact(
-            f"Fact_M_CO2e_wo_lulucf_{entries.m_year_baseline - 1}_vs_year_ref"
+        CO2e_total_year_before_baseline_estimated = (
+            t18.ship_inter.CO2e_combustion_based
+            * fact(f"Fact_M_CO2e_wo_lulucf_{entries.m_year_baseline - 1}_vs_year_ref")
         )
         demand_ediesel = (
             ass("Ass_T_D_Shp_sea_nat_EB_2050")
@@ -183,7 +185,7 @@ class ShipInternational:
             "Ass_T_S_diesel_EmFa_tank_wheel_2050"
         )
         cost_climate_saved = (
-            (CO2e_total_2021_estimated - CO2e_combustion_based)
+            (CO2e_total_year_before_baseline_estimated - CO2e_combustion_based)
             * duration_CO2e_neutral_years
             * fact("Fact_M_cost_per_CO2e_2020")
         )
@@ -194,7 +196,7 @@ class ShipInternational:
         return cls(
             transport=Transport(
                 CO2e_combustion_based=CO2e_combustion_based,
-                CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+                CO2e_total_year_before_baseline_estimated=CO2e_total_year_before_baseline_estimated,
                 cost_climate_saved=cost_climate_saved,
                 demand_ediesel=demand_ediesel,
                 transport_capacity_tkm=transport_capacity_tkm,
@@ -231,9 +233,9 @@ class Ship(InvestCommune):
         # variables should just completely disappear from ShipDomesticActionInfra
         # or I have some better plan.
         # demand_ediesel = sum + ship_dmstc_action_infra.demand_ediesel
-        # CO2e_total_2021_estimated = (
-        #     sum.CO2e_total_2021_estimated
-        #     + ship_dmstc_action_infra.CO2e_total_2021_estimated
+        # CO2e_total_year_before_baseline_estimated = (
+        #     sum.CO2e_total_year_before_baseline_estimated
+        #     + ship_dmstc_action_infra.CO2e_total_year_before_baseline_estimated
         # )
         # cost_climate_saved = (
         #     sum.cost_climate_saved + ship_dmstc_action_infra.cost_climate_saved

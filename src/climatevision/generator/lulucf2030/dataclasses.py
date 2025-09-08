@@ -15,7 +15,7 @@ class LColVars2030:
     invest: float = None  # type: ignore
     change_CO2e_t: float = None  # type: ignore
     change_CO2e_pct: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
+    CO2e_total_year_before_baseline_estimated: float = None  # type: ignore
     cost_climate_saved: float = None  # type: ignore
     invest_pa: float = None  # type: ignore
     cost_wage: float = None  # type: ignore

@@ -41,7 +41,7 @@ class EFuelProduction(Energy, CO2eChange, EnergyChange, Invest):
         fact = facts.fact
         ass = assumptions.ass
 
-        CO2e_total_2021_estimated = production_2018.CO2e_total * fact(
+        CO2e_total_year_before_baseline_estimated = production_2018.CO2e_total * fact(
             f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref"
         )
         # We assume that we take as much CO2e out of the air when the E-Fuel
@@ -60,7 +60,7 @@ class EFuelProduction(Energy, CO2eChange, EnergyChange, Invest):
         invest = power_to_be_installed * ass("Ass_F_P_power_to_x_invest_per_power")
         change_CO2e_t = CO2e_total - production_2018.CO2e_total
         cost_climate_saved = (
-            (CO2e_total_2021_estimated - CO2e_total)
+            (CO2e_total_year_before_baseline_estimated - CO2e_total)
             * duration_CO2e_neutral_years
             * fact("Fact_M_cost_per_CO2e_2020")
         )
@@ -74,7 +74,7 @@ class EFuelProduction(Energy, CO2eChange, EnergyChange, Invest):
             CO2e_production_based=CO2e_production_based,
             CO2e_production_based_per_MWh=CO2e_production_based_per_MWh,
             CO2e_total=CO2e_total,
-            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+            CO2e_total_year_before_baseline_estimated=CO2e_total_year_before_baseline_estimated,
             change_CO2e_pct=change_CO2e_pct,
             change_CO2e_t=change_CO2e_t,
             change_energy_MWh=change_energy_MWh,

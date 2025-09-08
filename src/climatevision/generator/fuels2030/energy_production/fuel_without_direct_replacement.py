@@ -10,7 +10,7 @@ class FuelWithoutDirectReplacement(EnergyChange):
     """This computes the effect on our CO2e and energy budget of us totally stopping
     to produce some fuels without a direct replacement."""
 
-    CO2e_total_2021_estimated: float
+    CO2e_total_year_before_baseline_estimated: float
     change_CO2e_t: float
     cost_climate_saved: float
 
@@ -24,7 +24,7 @@ class FuelWithoutDirectReplacement(EnergyChange):
         return cls(
             change_energy_MWh=-energy2018,
             change_energy_pct=-1,
-            CO2e_total_2021_estimated=0,
+            CO2e_total_year_before_baseline_estimated=0,
             change_CO2e_t=0,
             cost_climate_saved=0,
         )

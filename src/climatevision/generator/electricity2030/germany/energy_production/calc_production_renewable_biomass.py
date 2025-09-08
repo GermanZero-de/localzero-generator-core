@@ -18,7 +18,7 @@ def calc_production_renewable_biomass(
     ass = assumptions.ass
 
     p_renew_biomass = EColVars2030()
-    p_renew_biomass.CO2e_total_2021_estimated = (
+    p_renew_biomass.CO2e_total_year_before_baseline_estimated = (
         e18.p_renew_biomass.CO2e_combustion_based
         * fact(f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref")
     )
@@ -52,7 +52,7 @@ def calc_production_renewable_biomass(
     p_renew_biomass.CO2e_total = p_renew_biomass.CO2e_combustion_based
     p_renew_biomass.cost_climate_saved = (
         (
-            p_renew_biomass.CO2e_total_2021_estimated
+            p_renew_biomass.CO2e_total_year_before_baseline_estimated
             - p_renew_biomass.CO2e_combustion_based
         )
         * duration_CO2e_neutral_years

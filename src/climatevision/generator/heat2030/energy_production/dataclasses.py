@@ -43,12 +43,12 @@ class CO2eChangeHeatProduction(EnergyWithCO2e, CO2eChange, EnergyChange):
         self.change_CO2e_t = self.CO2e_total - h18_p_what.CO2e_total
         self.change_CO2e_pct = div(self.change_CO2e_t, h18_p_what.CO2e_total)
 
-        self.CO2e_total_2021_estimated = h18_p_what.CO2e_total * fact(
+        self.CO2e_total_year_before_baseline_estimated = h18_p_what.CO2e_total * fact(
             f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref"
         )
 
         self.cost_climate_saved = (
-            (self.CO2e_total_2021_estimated - self.CO2e_total)
+            (self.CO2e_total_year_before_baseline_estimated - self.CO2e_total)
             * duration_CO2e_neutral_years
             * fact("Fact_M_cost_per_CO2e_2020")
         )

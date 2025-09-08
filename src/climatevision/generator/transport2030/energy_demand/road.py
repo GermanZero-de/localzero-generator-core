@@ -68,11 +68,12 @@ class Road:
             * ass("Ass_T_S_LDT_SEC_fcev_2030")
         )
 
-        CO2e_total_2021_estimated = t18.road_gds_ldt_it_ot.CO2e_combustion_based * fact(
-            f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref"
+        CO2e_total_year_before_baseline_estimated = (
+            t18.road_gds_ldt_it_ot.CO2e_combustion_based
+            * fact(f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref")
         )
         cost_climate_saved = (
-            (CO2e_total_2021_estimated - CO2e_combustion_based)
+            (CO2e_total_year_before_baseline_estimated - CO2e_combustion_based)
             * duration_CO2e_neutral_years
             * fact("Fact_M_cost_per_CO2e_2020")
         )
@@ -80,7 +81,7 @@ class Road:
             mileage=mileage,
             transport=Transport(
                 CO2e_combustion_based=CO2e_combustion_based,
-                CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+                CO2e_total_year_before_baseline_estimated=CO2e_total_year_before_baseline_estimated,
                 cost_climate_saved=cost_climate_saved,
                 demand_electricity=demand_electricity,
                 demand_ediesel=demand_ediesel,
@@ -129,11 +130,12 @@ class Road:
         CO2e_combustion_based = demand_ediesel * ass(
             "Ass_T_S_diesel_EmFa_tank_wheel_2050"
         ) + demand_electricity * fact("Fact_T_S_electricity_EmFa_tank_wheel_2018")
-        CO2e_total_2021_estimated = t18.road_gds_ldt_ab.CO2e_combustion_based * fact(
-            f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref"
+        CO2e_total_year_before_baseline_estimated = (
+            t18.road_gds_ldt_ab.CO2e_combustion_based
+            * fact(f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref")
         )
         cost_climate_saved = (
-            (CO2e_total_2021_estimated - CO2e_combustion_based)
+            (CO2e_total_year_before_baseline_estimated - CO2e_combustion_based)
             * duration_CO2e_neutral_years
             * fact("Fact_M_cost_per_CO2e_2020")
         )
@@ -141,7 +143,7 @@ class Road:
             mileage=mileage,
             transport=Transport(
                 CO2e_combustion_based=CO2e_combustion_based,
-                CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+                CO2e_total_year_before_baseline_estimated=CO2e_total_year_before_baseline_estimated,
                 cost_climate_saved=cost_climate_saved,
                 demand_electricity=demand_electricity,
                 demand_ediesel=demand_ediesel,
@@ -165,8 +167,9 @@ class Road:
         fact = facts.fact
         ass = assumptions.ass
 
-        CO2e_total_2021_estimated = t18.road_gds_mhd_ab.CO2e_combustion_based * fact(
-            f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref"
+        CO2e_total_year_before_baseline_estimated = (
+            t18.road_gds_mhd_ab.CO2e_combustion_based
+            * fact(f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref")
         )
         transport_capacity_tkm = (
             ass("Ass_T_D_trnsprt_gds_Rd_2050")
@@ -193,7 +196,7 @@ class Road:
             * ass("Ass_T_S_MHD_SEC_fcev_2030")
         )
         cost_climate_saved = (
-            (CO2e_total_2021_estimated - CO2e_combustion_based)
+            (CO2e_total_year_before_baseline_estimated - CO2e_combustion_based)
             * duration_CO2e_neutral_years
             * fact("Fact_M_cost_per_CO2e_2020")
         )
@@ -201,7 +204,7 @@ class Road:
             mileage=mileage,
             transport=Transport(
                 CO2e_combustion_based=CO2e_combustion_based,
-                CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+                CO2e_total_year_before_baseline_estimated=CO2e_total_year_before_baseline_estimated,
                 cost_climate_saved=cost_climate_saved,
                 demand_electricity=demand_electricity,
                 demand_ediesel=demand_ediesel,
@@ -251,11 +254,12 @@ class Road:
             * ass("Ass_T_S_MHD_SEC_fcev_2030")
         )
 
-        CO2e_total_2021_estimated = t18.road_gds_mhd_it_ot.CO2e_combustion_based * fact(
-            f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref"
+        CO2e_total_year_before_baseline_estimated = (
+            t18.road_gds_mhd_it_ot.CO2e_combustion_based
+            * fact(f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref")
         )
         cost_climate_saved = (
-            (CO2e_total_2021_estimated - CO2e_combustion_based)
+            (CO2e_total_year_before_baseline_estimated - CO2e_combustion_based)
             * duration_CO2e_neutral_years
             * fact("Fact_M_cost_per_CO2e_2020")
         )
@@ -263,7 +267,7 @@ class Road:
             mileage=mileage,
             transport=Transport(
                 CO2e_combustion_based=CO2e_combustion_based,
-                CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+                CO2e_total_year_before_baseline_estimated=CO2e_total_year_before_baseline_estimated,
                 cost_climate_saved=cost_climate_saved,
                 demand_electricity=demand_electricity,
                 demand_ediesel=demand_ediesel,
@@ -338,11 +342,12 @@ class Road:
         CO2e_combustion_based = demand_epetrol * ass(
             "Ass_T_S_petrol_EmFa_tank_wheel_2050"
         ) + demand_electricity * fact("Fact_T_S_electricity_EmFa_tank_wheel_2018")
-        CO2e_total_2021_estimated = t18.road_car_it_ot.CO2e_combustion_based * fact(
-            f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref"
+        CO2e_total_year_before_baseline_estimated = (
+            t18.road_car_it_ot.CO2e_combustion_based
+            * fact(f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref")
         )
         cost_climate_saved = (
-            (CO2e_total_2021_estimated - CO2e_combustion_based)
+            (CO2e_total_year_before_baseline_estimated - CO2e_combustion_based)
             * duration_CO2e_neutral_years
             * fact("Fact_M_cost_per_CO2e_2020")
         )
@@ -350,7 +355,7 @@ class Road:
             mileage=mileage,
             transport=Transport(
                 CO2e_combustion_based=CO2e_combustion_based,
-                CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+                CO2e_total_year_before_baseline_estimated=CO2e_total_year_before_baseline_estimated,
                 cost_climate_saved=cost_climate_saved,
                 demand_electricity=demand_electricity,
                 demand_epetrol=demand_epetrol,
@@ -423,11 +428,12 @@ class Road:
         CO2e_combustion_based = demand_epetrol * ass(
             "Ass_T_S_petrol_EmFa_tank_wheel_2050"
         ) + demand_electricity * fact("Fact_T_S_electricity_EmFa_tank_wheel_2018")
-        CO2e_total_2021_estimated = t18.road_car_ab.CO2e_combustion_based * fact(
-            f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref"
+        CO2e_total_year_before_baseline_estimated = (
+            t18.road_car_ab.CO2e_combustion_based
+            * fact(f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref")
         )
         cost_climate_saved = (
-            (CO2e_total_2021_estimated - CO2e_combustion_based)
+            (CO2e_total_year_before_baseline_estimated - CO2e_combustion_based)
             * duration_CO2e_neutral_years
             * fact("Fact_M_cost_per_CO2e_2020")
         )
@@ -436,7 +442,7 @@ class Road:
             mileage=mileage,
             transport=Transport(
                 CO2e_combustion_based=CO2e_combustion_based,
-                CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+                CO2e_total_year_before_baseline_estimated=CO2e_total_year_before_baseline_estimated,
                 cost_climate_saved=cost_climate_saved,
                 demand_electricity=demand_electricity,
                 demand_epetrol=demand_epetrol,
@@ -650,11 +656,12 @@ class RoadBus(Road, BusInvestments):
             "Fact_T_S_electricity_EmFa_tank_wheel_2018"
         )
 
-        CO2e_total_2021_estimated = t18.road_bus.CO2e_combustion_based * fact(
-            f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref"
+        CO2e_total_year_before_baseline_estimated = (
+            t18.road_bus.CO2e_combustion_based
+            * fact(f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref")
         )
         cost_climate_saved = (
-            (CO2e_total_2021_estimated - CO2e_combustion_based)
+            (CO2e_total_year_before_baseline_estimated - CO2e_combustion_based)
             * duration_CO2e_neutral_years
             * fact("Fact_M_cost_per_CO2e_2020")
         )
@@ -663,7 +670,7 @@ class RoadBus(Road, BusInvestments):
             mileage=mileage,
             transport=Transport(
                 CO2e_combustion_based=CO2e_combustion_based,
-                CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+                CO2e_total_year_before_baseline_estimated=CO2e_total_year_before_baseline_estimated,
                 cost_climate_saved=cost_climate_saved,
                 demand_electricity=demand_electricity,
                 transport_capacity_pkm=transport_capacity_pkm,

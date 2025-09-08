@@ -72,7 +72,7 @@ def calc_production_local_biomass_stage2(
     p_local_biomass.CO2e_total = p_local_biomass.CO2e_combustion_based
     p_local_biomass.cost_climate_saved = (
         (
-            p_local_biomass.CO2e_total_2021_estimated
+            p_local_biomass.CO2e_total_year_before_baseline_estimated
             - p_local_biomass.CO2e_combustion_based
         )
         * duration_CO2e_neutral_years

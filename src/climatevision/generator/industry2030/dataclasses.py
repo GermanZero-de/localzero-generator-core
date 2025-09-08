@@ -11,7 +11,7 @@ class Vars2(InvestCommune):
     CO2e_combustion_based: float = None  # type: ignore
     CO2e_production_based: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
+    CO2e_total_year_before_baseline_estimated: float = None  # type: ignore
     change_CO2e_pct: float = None  # type: ignore
     change_CO2e_t: float = None  # type: ignore
     change_energy_MWh: float = None  # type: ignore
@@ -28,7 +28,7 @@ class Vars3(Invest):
     CO2e_combustion_based: float = None  # type: ignore
     CO2e_production_based: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
+    CO2e_total_year_before_baseline_estimated: float = None  # type: ignore
     change_CO2e_pct: float = None  # type: ignore
     change_CO2e_t: float = None  # type: ignore
     change_energy_MWh: float = None  # type: ignore
@@ -52,7 +52,7 @@ class Vars4:
     CO2e_combustion_based: float = None  # type: ignore
     CO2e_production_based: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
+    CO2e_total_year_before_baseline_estimated: float = None  # type: ignore
     change_CO2e_pct: float = None  # type: ignore
     change_CO2e_t: float = None  # type: ignore
     change_energy_MWh: float = None  # type: ignore
@@ -80,7 +80,7 @@ class Vars5:
     CO2e_production_based: float = None  # type: ignore
     CO2e_production_based_per_t: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
+    CO2e_total_year_before_baseline_estimated: float = None  # type: ignore
     change_CO2e_pct: float = None  # type: ignore
     change_CO2e_t: float = None  # type: ignore
     change_energy_MWh: float = None  # type: ignore
@@ -110,7 +110,7 @@ class Vars6:
     CO2e_production_based: float = None  # type: ignore
     CO2e_production_based_per_t: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
+    CO2e_total_year_before_baseline_estimated: float = None  # type: ignore
     change_CO2e_pct: float = None  # type: ignore
     change_CO2e_t: float = None  # type: ignore
     change_energy_MWh: float = None  # type: ignore
@@ -139,7 +139,7 @@ class Vars7:
     CO2e_production_based: float = None  # type: ignore
     CO2e_production_based_per_t: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
+    CO2e_total_year_before_baseline_estimated: float = None  # type: ignore
     change_CO2e_pct: float = None  # type: ignore
     change_CO2e_t: float = None  # type: ignore
     change_energy_MWh: float = None  # type: ignore
@@ -168,7 +168,7 @@ class Vars8:
     CO2e_combustion_based: float = None  # type: ignore
     CO2e_production_based: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
+    CO2e_total_year_before_baseline_estimated: float = None  # type: ignore
     change_CO2e_pct: float = None  # type: ignore
     change_CO2e_t: float = None  # type: ignore
     change_energy_MWh: float = None  # type: ignore
@@ -192,7 +192,7 @@ class Vars9:
     CO2e_combustion_based: float = None  # type: ignore
     CO2e_production_based: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
+    CO2e_total_year_before_baseline_estimated: float = None  # type: ignore
     change_CO2e_pct: float = None  # type: ignore
     change_CO2e_t: float = None  # type: ignore
     change_energy_MWh: float = None  # type: ignore
@@ -217,7 +217,7 @@ class Vars10:
     CO2e_combustion_based: float = None  # type: ignore
     CO2e_production_based: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
+    CO2e_total_year_before_baseline_estimated: float = None  # type: ignore
     change_CO2e_pct: float = None  # type: ignore
     change_CO2e_t: float = None  # type: ignore
     change_energy_MWh: float = None  # type: ignore
@@ -242,7 +242,7 @@ class Vars11:
     CO2e_production_based: float = None  # type: ignore
     CO2e_production_based_per_t: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
+    CO2e_total_year_before_baseline_estimated: float = None  # type: ignore
     change_CO2e_pct: float = None  # type: ignore
     change_CO2e_t: float = None  # type: ignore
     change_energy_MWh: float = None  # type: ignore
@@ -270,7 +270,7 @@ class Vars12:
     CO2e_combustion_based: float = None  # type: ignore
     CO2e_production_based: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
+    CO2e_total_year_before_baseline_estimated: float = None  # type: ignore
     change_CO2e_pct: float = None  # type: ignore
     change_CO2e_t: float = None  # type: ignore
     change_energy_MWh: float = None  # type: ignore
@@ -297,7 +297,7 @@ class Vars13:
     CO2e_production_based: float = None  # type: ignore
     CO2e_production_based_per_t: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
+    CO2e_total_year_before_baseline_estimated: float = None  # type: ignore
     change_CO2e_pct: float = None  # type: ignore
     change_CO2e_t: float = None  # type: ignore
     change_energy_MWh: float = None  # type: ignore
@@ -327,7 +327,7 @@ class Vars14:
     CO2e_production_based: float = None  # type: ignore
     CO2e_production_based_per_MWh: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
+    CO2e_total_year_before_baseline_estimated: float = None  # type: ignore
     change_CO2e_pct: float = None  # type: ignore
     change_CO2e_t: float = None  # type: ignore
     change_energy_MWh: float = None  # type: ignore
@@ -356,7 +356,7 @@ class Vars15:
     CO2e_production_based: float = None  # type: ignore
     CO2e_production_based_per_MWh: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
+    CO2e_total_year_before_baseline_estimated: float = None  # type: ignore
     change_CO2e_pct: float = None  # type: ignore
     change_CO2e_t: float = None  # type: ignore
     cost_climate_saved: float = None  # type: ignore

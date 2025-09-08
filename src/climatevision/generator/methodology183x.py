@@ -46,7 +46,7 @@ class ZColVars:
     change_energy_pct: float | None = None
     change_CO2e_t: float | None = None
     change_CO2e_pct: float | None = None
-    CO2e_total_2021_estimated: float | None = None
+    CO2e_total_year_before_baseline_estimated: float | None = None
     cost_climate_saved: float | None = None
     invest_pa: float | None = None
     invest_pa_com: float | None = None
@@ -588,23 +588,24 @@ def calc_z(
     d.change_CO2e_pct = div(d.CO2e_total_30, d.CO2e_total_18)
     z.change_CO2e_pct = div(z.CO2e_total_30, z.CO2e_total_18)
 
-    s.CO2e_total_2021_estimated = s.CO2e_total_18 * fact(
+    s.CO2e_total_year_before_baseline_estimated = s.CO2e_total_18 * fact(
         f"Fact_M_CO2e_wo_lulucf_{year_before_baseline}_vs_year_ref"
     )
-    d.CO2e_total_2021_estimated = d.CO2e_total_18 * fact(
+    d.CO2e_total_year_before_baseline_estimated = d.CO2e_total_18 * fact(
         f"Fact_M_CO2e_wo_lulucf_{year_before_baseline}_vs_year_ref"
     )
-    z.CO2e_total_2021_estimated = (
-        s.CO2e_total_2021_estimated + d.CO2e_total_2021_estimated
+    z.CO2e_total_year_before_baseline_estimated = (
+        s.CO2e_total_year_before_baseline_estimated
+        + d.CO2e_total_year_before_baseline_estimated
     )
 
     s.cost_climate_saved = (
-        (s.CO2e_total_2021_estimated - s.CO2e_total_30)
+        (s.CO2e_total_year_before_baseline_estimated - s.CO2e_total_30)
         * duration_CO2e_neutral_years
         * fact("Fact_M_cost_per_CO2e_2020")
     )
     d.cost_climate_saved = (
-        (d.CO2e_total_2021_estimated - d.CO2e_total_30)
+        (d.CO2e_total_year_before_baseline_estimated - d.CO2e_total_30)
         * duration_CO2e_neutral_years
         * fact("Fact_M_cost_per_CO2e_2020")
     )

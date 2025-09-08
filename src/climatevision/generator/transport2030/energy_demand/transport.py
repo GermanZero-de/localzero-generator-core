@@ -21,7 +21,7 @@ class Transport:
     # two transports, one that modified transport_capacity_pkm and one
     # that modified transport_capacity_tkm ?
     CO2e_combustion_based: float
-    CO2e_total_2021_estimated: float
+    CO2e_total_year_before_baseline_estimated: float
     cost_climate_saved: float
     transport_capacity_pkm: float
     transport_capacity_tkm: float
@@ -82,7 +82,9 @@ class Transport:
         return cls(
             CO2e_total=sum_of(lambda t: t.CO2e_total),
             CO2e_combustion_based=sum_of(lambda t: t.CO2e_combustion_based),
-            CO2e_total_2021_estimated=sum_of(lambda t: t.CO2e_total_2021_estimated),
+            CO2e_total_year_before_baseline_estimated=sum_of(
+                lambda t: t.CO2e_total_year_before_baseline_estimated
+            ),
             cost_climate_saved=sum_of(lambda t: t.cost_climate_saved),
             transport_capacity_tkm=sum_of(lambda t: t.transport_capacity_tkm),
             transport_capacity_pkm=sum_of(lambda t: t.transport_capacity_pkm),
