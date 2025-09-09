@@ -50,9 +50,13 @@ class ZColVars:
     cost_climate_saved: float | None = None
     invest_pa: float | None = None
     invest_pa_com: float | None = None
+    invest_com_pa_state: float | None = None
+    invest_com_pa_wo_state: float | None = None
     invest_pa_outside: float | None = None
     invest: float | None = None
     invest_com: float | None = None
+    invest_com_state: float | None = None
+    invest_com_wo_state: float | None = None
     invest_outside: float | None = None
     cost_wage: float | None = None
     demand_emplo: float | None = None
@@ -623,6 +627,7 @@ def calc_z(
     z.invest_pa = s.invest_pa + d.invest_pa
 
     s.invest_pa_com = h30.h.invest_pa_com + e30.e.invest_pa_com  # + f30.f.invest_pa_com
+
     d.invest_pa_com = (
         r30.r.invest_pa_com
         + b30.b.invest_pa_com
@@ -633,6 +638,32 @@ def calc_z(
         # + l30.l.invest_pa_com
     )
     z.invest_pa_com = s.invest_pa_com + d.invest_pa_com
+
+    s.invest_com_pa_state = 0
+
+    d.invest_com_pa_state = (
+        t30.t.invest_com_pa_state
+    )
+
+    z.invest_com_pa_state = s.invest_com_pa_state + d.invest_com_pa_state 
+
+    s.invest_com_pa_wo_state = (
+        h30.h.invest_pa_com + 
+        e30.e.invest_pa_com 
+        # f30.f.invest_com
+    )
+
+    d.invest_com_pa_wo_state = (
+        r30.r.invest_pa_com +
+        b30.b.invest_pa_com +
+        i30.i.invest_pa_com +
+        t30.t.invest_com_pa_wo_state +
+        a30.a.invest_pa_com +
+        w30.w.invest_pa_com 
+        # l30.l.invest_com
+    )
+
+    z.invest_com_pa_wo_state = s.invest_com_pa_wo_state + d.invest_com_pa_wo_state 
 
     s.invest_pa_outside = (
         e30.e.invest_pa_outside
@@ -676,6 +707,32 @@ def calc_z(
         # + l30.l.invest_com
     )
     z.invest_com = s.invest_com + d.invest_com
+
+    s.invest_com_state = 0
+
+    d.invest_com_state = (
+        t30.t.invest_com_state
+    )
+
+    z.invest_com_state = s.invest_com_state + d.invest_com_state
+
+    s.invest_com_wo_state = (
+        h30.h.invest_com + 
+        e30.e.invest_com
+        # f30.f.invest_com
+    )
+
+    d.invest_com_wo_state = (
+        r30.r.invest_com +
+        b30.b.invest_com +
+        i30.i.invest_com +
+        t30.t.invest_com_wo_state +
+        a30.a.invest_com +
+        w30.w.invest_com
+        # l30.l.invest_com
+    )
+
+    z.invest_com_wo_state = s.invest_com_wo_state + d.invest_com_wo_state
 
     s.invest_outside = (
         e30.e.invest_outside
