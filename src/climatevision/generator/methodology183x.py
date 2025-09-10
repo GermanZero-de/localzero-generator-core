@@ -63,6 +63,8 @@ class ZColVars:
     demand_emplo_new: float | None = None
     demand_emplo_com: float | None = None
     invest_pct: float | None = None
+    invest_com_pct: float | None = None
+    invest_com_wo_state_pct: float | None = None
     cost_climate_saved_pct: float | None = None
     demand_emplo_new_pct: float | None = None
 
@@ -871,6 +873,28 @@ def calc_z(
     a.invest_pct = div(a30.a.invest, z.invest)
     l.invest_pct = div(l30.l.invest, z.invest)
     w.invest_pct = div(w30.w.invest, z.invest)
+
+    h.invest_com_pct = div(h30.h.invest_com, z.invest_com)
+    e.invest_com_pct = div(e30.e.invest_com, z.invest_com)
+    f.invest_com_pct = div(f30.f.invest, z.invest_com)
+    r.invest_com_pct = div(r30.r.invest_com, z.invest_com)
+    b.invest_com_pct = div(b30.b.invest_com, z.invest_com)
+    i.invest_com_pct = div(i30.i.invest_com, z.invest_com)
+    t.invest_com_pct = div(t30.t.invest_com, z.invest_com)
+    a.invest_com_pct = div(a30.a.invest_com, z.invest_com)
+    l.invest_com_pct = div(l30.l.invest, z.invest_com)
+    w.invest_com_pct = div(w30.w.invest_com, z.invest_com)
+
+    h.invest_com_wo_state_pct = div(h30.h.invest_com, z.invest_com_wo_state)
+    e.invest_com_wo_state_pct = div(e30.e.invest_com, z.invest_com_wo_state)
+    f.invest_com_wo_state_pct = div(f30.f.invest, z.invest_com_wo_state)
+    r.invest_com_wo_state_pct = div(r30.r.invest_com, z.invest_com_wo_state)
+    b.invest_com_wo_state_pct = div(b30.b.invest_com, z.invest_com_wo_state)
+    i.invest_com_wo_state_pct = div(i30.i.invest_com, z.invest_com_wo_state)
+    t.invest_com_wo_state_pct = div(t30.t.invest_com_wo_state, z.invest_com_wo_state)
+    a.invest_com_wo_state_pct = div(a30.a.invest_com, z.invest_com_wo_state)
+    l.invest_com_wo_state_pct = div(l30.l.invest, z.invest_com_wo_state)
+    w.invest_com_wo_state_pct = div(w30.w.invest_com, z.invest_com_wo_state)
 
     h.cost_climate_saved_pct = div(h30.h.cost_climate_saved, z.cost_climate_saved)
     e.cost_climate_saved_pct = div(e30.e.cost_climate_saved, z.cost_climate_saved)
