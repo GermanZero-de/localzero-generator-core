@@ -78,7 +78,7 @@ def calc_production_local_wind_onshore(
     cost_fuel_per_MWh = None
     cost_fuel = None
     pet_sites = None
-    CO2e_total_2021_estimated = None
+    CO2e_total_year_before_baseline_estimated = None
     demand_electricity = None
     demand_emplo = None
     demand_emplo_com = None
@@ -100,7 +100,7 @@ def calc_production_local_wind_onshore(
         cost_climate_saved=cost_climate_saved,
         cost_mro=cost_mro,
         CO2e_total=CO2e_total,
-        CO2e_total_2021_estimated=CO2e_total_2021_estimated,  # type: ignore
+        CO2e_total_year_before_baseline_estimated=CO2e_total_year_before_baseline_estimated,  # type: ignore
         demand_electricity=demand_electricity,  # type: ignore
         demand_emplo=demand_emplo,  # type: ignore
         demand_emplo_com=demand_emplo_com,  # type: ignore

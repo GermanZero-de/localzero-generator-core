@@ -60,11 +60,12 @@ class OtherFoot:
             )
         )
 
-        CO2e_total_2021_estimated = t18.other_foot.CO2e_combustion_based * fact(
-            f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref"
+        CO2e_total_year_before_baseline_estimated = (
+            t18.other_foot.CO2e_combustion_based
+            * fact(f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref")
         )
         cost_climate_saved = (
-            (CO2e_total_2021_estimated)
+            (CO2e_total_year_before_baseline_estimated)
             * duration_CO2e_neutral_years
             * fact("Fact_M_cost_per_CO2e_2020")
         )
@@ -75,7 +76,7 @@ class OtherFoot:
             invest_pa_com=0,
             transport=Transport(
                 CO2e_combustion_based=0,
-                CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+                CO2e_total_year_before_baseline_estimated=CO2e_total_year_before_baseline_estimated,
                 cost_climate_saved=cost_climate_saved,
                 transport_capacity_pkm=transport_capacity_pkm,
                 transport_capacity_tkm=0,
@@ -136,11 +137,12 @@ class OtherCycle:
             / ass("Ass_T_D_cycl_cargo_mlg")
         )
         invest = base_unit * invest_per_x
-        CO2e_total_2021_estimated = t18.other_cycl.CO2e_combustion_based * fact(
-            f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref"
+        CO2e_total_year_before_baseline_estimated = (
+            t18.other_cycl.CO2e_combustion_based
+            * fact(f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref")
         )
         cost_climate_saved = (
-            (CO2e_total_2021_estimated)
+            (CO2e_total_year_before_baseline_estimated)
             * duration_CO2e_neutral_years
             * fact("Fact_M_cost_per_CO2e_2020")
         )
@@ -157,7 +159,7 @@ class OtherCycle:
             invest_per_x=invest_per_x,
             transport=Transport(
                 CO2e_combustion_based=0,
-                CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+                CO2e_total_year_before_baseline_estimated=CO2e_total_year_before_baseline_estimated,
                 cost_climate_saved=cost_climate_saved,
                 transport_capacity_pkm=transport_capacity_pkm,
                 transport_capacity_tkm=0,

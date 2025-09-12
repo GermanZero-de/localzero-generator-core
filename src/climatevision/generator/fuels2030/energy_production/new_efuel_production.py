@@ -41,7 +41,7 @@ class NewEFuelProduction(CO2eChange, Invest):
     ) -> "NewEFuelProduction":
         fact = facts.fact
 
-        CO2e_total_2021_estimated = 0
+        CO2e_total_year_before_baseline_estimated = 0
         # We assume that we take as much CO2e out of the air when the E-Fuel
         # is produced, as we later emit when it is burned.
         CO2e_production_based_per_MWh = -1 * CO2e_emission_factor
@@ -71,7 +71,7 @@ class NewEFuelProduction(CO2eChange, Invest):
             CO2e_production_based=CO2e_production_based,
             CO2e_production_based_per_MWh=CO2e_production_based_per_MWh,
             CO2e_total=CO2e_total,
-            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+            CO2e_total_year_before_baseline_estimated=CO2e_total_year_before_baseline_estimated,
             change_CO2e_pct=change_CO2e_pct,
             change_CO2e_t=change_CO2e_t,
             change_energy_MWh=change_energy_MWh,

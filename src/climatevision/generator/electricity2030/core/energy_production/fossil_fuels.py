@@ -17,8 +17,9 @@ def calc_stop_production_by_fossil_fuels(
     fact = facts.fact
 
     energy = 0
-    CO2e_total_2021_estimated = e18_production.CO2e_combustion_based * fact(
-        f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref"
+    CO2e_total_year_before_baseline_estimated = (
+        e18_production.CO2e_combustion_based
+        * fact(f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref")
     )
     cost_fuel_per_MWh = e18_production.cost_fuel_per_MWh
     cost_mro_per_MWh = e18_production.cost_mro_per_MWh
@@ -32,7 +33,7 @@ def calc_stop_production_by_fossil_fuels(
     change_cost_mro = cost_mro - e18_production.cost_mro
     CO2e_total = CO2e_combustion_based
     cost_climate_saved = (
-        (CO2e_total_2021_estimated - CO2e_combustion_based)
+        (CO2e_total_year_before_baseline_estimated - CO2e_combustion_based)
         * duration_CO2e_neutral_years
         * fact("Fact_M_cost_per_CO2e_2020")
     )
@@ -48,7 +49,7 @@ def calc_stop_production_by_fossil_fuels(
         cost_climate_saved=cost_climate_saved,
         cost_mro=cost_mro,
         CO2e_total=CO2e_total,
-        CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+        CO2e_total_year_before_baseline_estimated=CO2e_total_year_before_baseline_estimated,
         change_energy_MWh=change_energy_MWh,
         change_energy_pct=change_energy_pct,
         change_CO2e_t=change_CO2e_t,

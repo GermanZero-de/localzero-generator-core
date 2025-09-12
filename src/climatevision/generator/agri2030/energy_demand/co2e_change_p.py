@@ -13,7 +13,7 @@ from .energy_change_p_operation import EnergyChangePOperation
 class CO2eChangeP(Invest):
     CO2e_production_based: float = 0
     CO2e_total: float = 0
-    CO2e_total_2021_estimated: float = 0
+    CO2e_total_year_before_baseline_estimated: float = 0
     change_CO2e_pct: float = 0
     change_CO2e_t: float = 0
     cost_climate_saved: float = 0
@@ -41,13 +41,13 @@ class CO2eChangeP(Invest):
 
         a18_CO2e_total = getattr(a18, what).CO2e_total
 
-        self.CO2e_total_2021_estimated = a18_CO2e_total * fact(
+        self.CO2e_total_year_before_baseline_estimated = a18_CO2e_total * fact(
             f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref"
         )
 
         self.change_CO2e_t = self.CO2e_total - a18_CO2e_total
         self.cost_climate_saved = (
-            (self.CO2e_total_2021_estimated - self.CO2e_total)
+            (self.CO2e_total_year_before_baseline_estimated - self.CO2e_total)
             * duration_CO2e_neutral_years
             * fact("Fact_M_cost_per_CO2e_2020")
         )

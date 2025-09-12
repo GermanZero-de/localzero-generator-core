@@ -93,7 +93,7 @@ def calc_production_local_pv_roof(
     pet_sites = None
     CO2e_combustion_based_per_MWh = None
     CO2e_combustion_based = None
-    CO2e_total_2021_estimated = None
+    CO2e_total_year_before_baseline_estimated = None
     demand_electricity = None
     demand_emplo = None
     demand_emplo_com = None
@@ -114,7 +114,7 @@ def calc_production_local_pv_roof(
         cost_climate_saved=cost_climate_saved,
         cost_mro=cost_mro,
         CO2e_total=CO2e_total,
-        CO2e_total_2021_estimated=CO2e_total_2021_estimated,  # type: ignore
+        CO2e_total_year_before_baseline_estimated=CO2e_total_year_before_baseline_estimated,  # type: ignore
         demand_electricity=demand_electricity,  # type: ignore
         demand_emplo=demand_emplo,  # type: ignore
         demand_emplo_com=demand_emplo_com,  # type: ignore
@@ -227,7 +227,7 @@ def calc_production_local_pv_facade(
     pet_sites = None
     CO2e_combustion_based_per_MWh = None
     CO2e_combustion_based = None
-    CO2e_total_2021_estimated = None
+    CO2e_total_year_before_baseline_estimated = None
     demand_electricity = None
     demand_emplo_com = None
     change_cost_energy = None
@@ -247,7 +247,7 @@ def calc_production_local_pv_facade(
         cost_climate_saved=cost_climate_saved,
         cost_mro=cost_mro,
         CO2e_total=CO2e_total,
-        CO2e_total_2021_estimated=CO2e_total_2021_estimated,  # type: ignore
+        CO2e_total_year_before_baseline_estimated=CO2e_total_year_before_baseline_estimated,  # type: ignore
         demand_electricity=demand_electricity,  # type: ignore
         demand_emplo=demand_emplo,
         demand_emplo_com=demand_emplo_com,  # type: ignore
@@ -352,7 +352,7 @@ def calc_production_local_pv_agri(
     pet_sites = None
     CO2e_combustion_based_per_MWh = None
     CO2e_combustion_based = None
-    CO2e_total_2021_estimated = None
+    CO2e_total_year_before_baseline_estimated = None
     demand_electricity = None
     demand_emplo = None
     demand_emplo_com = None
@@ -375,7 +375,7 @@ def calc_production_local_pv_agri(
         cost_climate_saved=cost_climate_saved,
         cost_mro=cost_mro,
         CO2e_total=CO2e_total,
-        CO2e_total_2021_estimated=CO2e_total_2021_estimated,  # type: ignore
+        CO2e_total_year_before_baseline_estimated=CO2e_total_year_before_baseline_estimated,  # type: ignore
         demand_electricity=demand_electricity,  # type: ignore
         demand_emplo=demand_emplo,  # type: ignore
         demand_emplo_com=demand_emplo_com,  # type: ignore
@@ -476,7 +476,7 @@ def calc_production_local_pv_park(
     pet_sites = None
     CO2e_combustion_based_per_MWh = None
     CO2e_combustion_based = None
-    CO2e_total_2021_estimated = None
+    CO2e_total_year_before_baseline_estimated = None
     demand_electricity = None
     demand_emplo = None
     demand_emplo_com = None
@@ -499,7 +499,7 @@ def calc_production_local_pv_park(
         cost_climate_saved=cost_climate_saved,
         cost_mro=cost_mro,
         CO2e_total=CO2e_total,
-        CO2e_total_2021_estimated=CO2e_total_2021_estimated,  # type: ignore
+        CO2e_total_year_before_baseline_estimated=CO2e_total_year_before_baseline_estimated,  # type: ignore
         demand_electricity=demand_electricity,  # type: ignore
         demand_emplo=demand_emplo,  # type: ignore
         demand_emplo_com=demand_emplo_com,  # type: ignore

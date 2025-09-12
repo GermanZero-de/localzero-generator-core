@@ -16,7 +16,7 @@ class EColVars2030(EnergyDemand):
     cost_climate_saved: float = None  # type: ignore
     cost_mro: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
+    CO2e_total_year_before_baseline_estimated: float = None  # type: ignore
     demand_electricity: float = None  # type: ignore
     demand_emplo: float = None  # type: ignore
     demand_emplo_com: float = None  # type: ignore

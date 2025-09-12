@@ -28,7 +28,7 @@ class EnergySupplyDetail:
     change_energy_pct: float
     change_CO2e_t: float
     change_CO2e_pct: float
-    CO2e_total_2021_estimated: float
+    CO2e_total_year_before_baseline_estimated: float
     cost_climate_saved: float
 
     @classmethod
@@ -49,11 +49,11 @@ class EnergySupplyDetail:
         change_energy_pct = div(change_energy_MWh, w18.s_elec.energy)
         change_CO2e_t = CO2e_total - w18.s_elec.CO2e_total
         change_CO2e_pct = div(change_CO2e_t, w18.s_elec.CO2e_total)
-        CO2e_total_2021_estimated = w18.s_elec.CO2e_total * fact(
+        CO2e_total_year_before_baseline_estimated = w18.s_elec.CO2e_total * fact(
             f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref"
         )
         cost_climate_saved = (
-            (CO2e_total_2021_estimated - CO2e_total)
+            (CO2e_total_year_before_baseline_estimated - CO2e_total)
             * duration_CO2e_neutral_years
             * fact("Fact_M_cost_per_CO2e_2020")
         )
@@ -67,7 +67,7 @@ class EnergySupplyDetail:
             change_energy_pct=change_energy_pct,
             change_CO2e_t=change_CO2e_t,
             change_CO2e_pct=change_CO2e_pct,
-            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+            CO2e_total_year_before_baseline_estimated=CO2e_total_year_before_baseline_estimated,
             cost_climate_saved=cost_climate_saved,
         )
 
@@ -76,7 +76,7 @@ class EnergySupplyDetail:
 class Landfilling:
     CO2e_production_based: float
     CO2e_total: float
-    CO2e_total_2021_estimated: float
+    CO2e_total_year_before_baseline_estimated: float
     change_CO2e_pct: float
     change_CO2e_t: float
     cost_climate_saved: float
@@ -115,11 +115,11 @@ class Landfilling:
         change_CO2e_t = CO2e_total - w18.p_landfilling.CO2e_total
         change_CO2e_pct = change_CO2e_t / w18.p_landfilling.CO2e_total
 
-        CO2e_total_2021_estimated = w18.p_landfilling.CO2e_total * fact(
+        CO2e_total_year_before_baseline_estimated = w18.p_landfilling.CO2e_total * fact(
             f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref"
         )
         cost_climate_saved = (
-            (CO2e_total_2021_estimated - CO2e_total)
+            (CO2e_total_year_before_baseline_estimated - CO2e_total)
             * duration_CO2e_neutral_years
             * fact("Fact_M_cost_per_CO2e_2020")
         )
@@ -127,7 +127,7 @@ class Landfilling:
         return cls(
             CO2e_production_based=CO2e_pb,
             CO2e_total=CO2e_total,
-            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+            CO2e_total_year_before_baseline_estimated=CO2e_total_year_before_baseline_estimated,
             change_CO2e_pct=change_CO2e_pct,
             change_CO2e_t=change_CO2e_t,
             cost_climate_saved=cost_climate_saved,
@@ -142,7 +142,7 @@ class Organic_treatment:
     CO2e_pb_per_t: float
     CO2e_production_based: float
     CO2e_total: float
-    CO2e_total_2021_estimated: float
+    CO2e_total_year_before_baseline_estimated: float
     change_CO2e_pct: float
     change_CO2e_t: float
     cost_climate_saved: float
@@ -180,11 +180,12 @@ class Organic_treatment:
         change_CO2e_t = CO2e_total - w18.p_organic_treatment.CO2e_total
         change_CO2e_pct = change_CO2e_t / w18.p_organic_treatment.CO2e_total
 
-        CO2e_total_2021_estimated = w18.p_organic_treatment.CO2e_total * fact(
-            f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref"
+        CO2e_total_year_before_baseline_estimated = (
+            w18.p_organic_treatment.CO2e_total
+            * fact(f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref")
         )
         cost_climate_saved = (
-            (CO2e_total_2021_estimated - CO2e_total)
+            (CO2e_total_year_before_baseline_estimated - CO2e_total)
             * duration_CO2e_neutral_years
             * fact("Fact_M_cost_per_CO2e_2020")
         )
@@ -207,7 +208,7 @@ class Organic_treatment:
             CO2e_pb_per_t=CO2e_pb_per_t,
             CO2e_production_based=CO2e_pb,
             CO2e_total=CO2e_total,
-            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+            CO2e_total_year_before_baseline_estimated=CO2e_total_year_before_baseline_estimated,
             change_CO2e_pct=change_CO2e_pct,
             change_CO2e_t=change_CO2e_t,
             cost_climate_saved=cost_climate_saved,
@@ -235,7 +236,7 @@ class Wastewater:
     CO2e_total: float
     change_energy_MWh: float
     change_energy_pct: float
-    CO2e_total_2021_estimated: float
+    CO2e_total_year_before_baseline_estimated: float
     change_CO2e_pct: float
     change_CO2e_t: float
     cost_climate_saved: float
@@ -269,11 +270,12 @@ class Wastewater:
         change_CO2e_t = CO2e_total - w18.p_organic_treatment.CO2e_total
         change_CO2e_pct = div(change_CO2e_t, w18.p_organic_treatment.CO2e_total)
 
-        CO2e_total_2021_estimated = w18.p_organic_treatment.CO2e_total * fact(
-            f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref"
+        CO2e_total_year_before_baseline_estimated = (
+            w18.p_organic_treatment.CO2e_total
+            * fact(f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref")
         )
         cost_climate_saved = (
-            (CO2e_total_2021_estimated - CO2e_total)
+            (CO2e_total_year_before_baseline_estimated - CO2e_total)
             * duration_CO2e_neutral_years
             * fact("Fact_M_cost_per_CO2e_2020")
         )
@@ -290,7 +292,7 @@ class Wastewater:
             CO2e_total=CO2e_total,
             change_energy_MWh=change_energy_MWh,
             change_energy_pct=change_energy_pct,
-            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+            CO2e_total_year_before_baseline_estimated=CO2e_total_year_before_baseline_estimated,
             change_CO2e_pct=change_CO2e_pct,
             change_CO2e_t=change_CO2e_t,
             cost_climate_saved=cost_climate_saved,

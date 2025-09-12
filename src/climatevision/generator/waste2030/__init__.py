@@ -42,7 +42,7 @@ class EnergySupply:
     change_energy_pct: float
     change_CO2e_t: float
     change_CO2e_pct: float
-    CO2e_total_2021_estimated: float
+    CO2e_total_year_before_baseline_estimated: float
     cost_climate_saved: float
 
     @classmethod
@@ -57,8 +57,11 @@ class EnergySupply:
         change_energy_pct = div(change_energy_MWh, w18.s.energy)
         change_CO2e_t = sum([supply.change_CO2e_t for supply in energy_supplies])
         change_CO2e_pct = div(change_CO2e_t, w18.s.CO2e_total)
-        CO2e_total_2021_estimated = sum(
-            [supply.CO2e_total_2021_estimated for supply in energy_supplies]
+        CO2e_total_year_before_baseline_estimated = sum(
+            [
+                supply.CO2e_total_year_before_baseline_estimated
+                for supply in energy_supplies
+            ]
         )
         cost_climate_saved = sum(
             [supply.cost_climate_saved for supply in energy_supplies]
@@ -72,7 +75,7 @@ class EnergySupply:
             change_energy_pct=change_energy_pct,
             change_CO2e_t=change_CO2e_t,
             change_CO2e_pct=change_CO2e_pct,
-            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+            CO2e_total_year_before_baseline_estimated=CO2e_total_year_before_baseline_estimated,
             cost_climate_saved=cost_climate_saved,
         )
 
@@ -87,7 +90,7 @@ class Pyrolysis:
     CO2e_total: float = None  # type: ignore
     change_CO2e_t: float = None  # type: ignore
     change_CO2e_pct: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
+    CO2e_total_year_before_baseline_estimated: float = None  # type: ignore
     cost_climate_saved: float = None  # type: ignore
     invest: float = None  # type: ignore
     invest_pa: float = None  # type: ignore
@@ -150,10 +153,10 @@ class Pyrolysis:
         change_CO2e_t = CO2e_production_based
 
         change_CO2e_pct = 0
-        CO2e_total_2021_estimated = 0
+        CO2e_total_year_before_baseline_estimated = 0
 
         cost_climate_saved = (
-            (CO2e_total_2021_estimated - CO2e_total)
+            (CO2e_total_year_before_baseline_estimated - CO2e_total)
             * duration_CO2e_neutral_years
             * fact("Fact_M_cost_per_CO2e_2020")
         )
@@ -177,7 +180,7 @@ class Pyrolysis:
             CO2e_total=CO2e_total,
             change_CO2e_t=change_CO2e_t,
             change_CO2e_pct=change_CO2e_pct,
-            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+            CO2e_total_year_before_baseline_estimated=CO2e_total_year_before_baseline_estimated,
             cost_climate_saved=cost_climate_saved,
             invest=invest,
             invest_pa=invest_pa,
@@ -201,7 +204,7 @@ class EnergyProduction:
     change_energy_pct: float
     change_CO2e_t: float
     change_CO2e_pct: float
-    CO2e_total_2021_estimated: float
+    CO2e_total_year_before_baseline_estimated: float
     cost_climate_saved: float
     invest_pa: float
     invest_pa_com: float
@@ -245,10 +248,10 @@ class EnergyProduction:
             + pyr.change_CO2e_t
         )
         change_CO2e_pct = change_CO2e_t / w18.p.CO2e_total
-        CO2e_total_2021_estimated = (
-            landfilling.CO2e_total_2021_estimated
-            + organic_treatment.CO2e_total_2021_estimated
-            + wastewater.CO2e_total_2021_estimated
+        CO2e_total_year_before_baseline_estimated = (
+            landfilling.CO2e_total_year_before_baseline_estimated
+            + organic_treatment.CO2e_total_year_before_baseline_estimated
+            + wastewater.CO2e_total_year_before_baseline_estimated
         )
         cost_climate_saved = (
             landfilling.cost_climate_saved
@@ -273,7 +276,7 @@ class EnergyProduction:
             change_energy_pct=change_energy_pct,
             change_CO2e_t=change_CO2e_t,
             change_CO2e_pct=change_CO2e_pct,
-            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+            CO2e_total_year_before_baseline_estimated=CO2e_total_year_before_baseline_estimated,
             cost_climate_saved=cost_climate_saved,
             invest_pa=invest_pa,
             invest_pa_com=invest_pa_com,

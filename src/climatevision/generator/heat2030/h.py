@@ -20,7 +20,7 @@ class H(CO2eEmission, InvestCommune, CO2eChange, EnergyChange):
             CO2e_combustion_based=p.CO2e_combustion_based,
             CO2e_production_based=p.CO2e_production_based,
             CO2e_total=p.CO2e_total,
-            CO2e_total_2021_estimated=p.CO2e_total_2021_estimated,
+            CO2e_total_year_before_baseline_estimated=p.CO2e_total_year_before_baseline_estimated,
             change_CO2e_pct=p.change_CO2e_pct,
             change_CO2e_t=p.change_CO2e_t,
             change_energy_MWh=p.change_energy_MWh,

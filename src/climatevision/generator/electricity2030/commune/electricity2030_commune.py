@@ -125,7 +125,7 @@ def calc(
         CO2e_total_18=e18.p_fossil.CO2e_total,
     )
 
-    p_local_biomass.CO2e_total_2021_estimated = (
+    p_local_biomass.CO2e_total_year_before_baseline_estimated = (
         e18.p_local_biomass.CO2e_combustion_based
         * fact(f"Fact_M_CO2e_wo_lulucf_{entries.m_year_baseline - 1}_vs_year_ref")
     )
@@ -179,7 +179,7 @@ def calc(
     )
 
     p_renew_biomass = EColVars2030()
-    p_renew_biomass.CO2e_total_2021_estimated = (
+    p_renew_biomass.CO2e_total_year_before_baseline_estimated = (
         e18.p_renew_biomass.CO2e_combustion_based
         * fact(f"Fact_M_CO2e_wo_lulucf_{entries.m_year_baseline - 1}_vs_year_ref")
     )
@@ -206,7 +206,9 @@ def calc(
         facts, assumptions, duration_until_target_year, d_energy=demand.total.energy
     )
 
-    p_renew.CO2e_total_2021_estimated = p_renew_biomass.CO2e_total_2021_estimated
+    p_renew.CO2e_total_year_before_baseline_estimated = (
+        p_renew_biomass.CO2e_total_year_before_baseline_estimated
+    )
 
     p_renew_wind.invest = p_renew_wind_offshore.invest
     p_renew_wind.demand_emplo = p_renew_wind_offshore.demand_emplo
@@ -251,15 +253,19 @@ def calc(
     p_fossil_and_renew.invest_com = p_renew.invest_com
 
     p_local = EColVars2030()
-    p_local.CO2e_total_2021_estimated = p_local_biomass.CO2e_total_2021_estimated
+    p_local.CO2e_total_year_before_baseline_estimated = (
+        p_local_biomass.CO2e_total_year_before_baseline_estimated
+    )
 
-    p_fossil_and_renew.CO2e_total_2021_estimated = (
-        p_fossil.CO2e_total_2021_estimated + p_renew.CO2e_total_2021_estimated
+    p_fossil_and_renew.CO2e_total_year_before_baseline_estimated = (
+        p_fossil.CO2e_total_year_before_baseline_estimated
+        + p_renew.CO2e_total_year_before_baseline_estimated
     )
 
     p = EColVars2030()
-    p.CO2e_total_2021_estimated = (
-        p_fossil_and_renew.CO2e_total_2021_estimated + p_local.CO2e_total_2021_estimated
+    p.CO2e_total_year_before_baseline_estimated = (
+        p_fossil_and_renew.CO2e_total_year_before_baseline_estimated
+        + p_local.CO2e_total_year_before_baseline_estimated
     )
     p_fossil_and_renew.invest = p_renew.invest
 
@@ -652,7 +658,7 @@ def calc(
     p_renew_biomass.CO2e_total = p_renew_biomass.CO2e_combustion_based
     p_renew_biomass.cost_climate_saved = (
         (
-            p_renew_biomass.CO2e_total_2021_estimated
+            p_renew_biomass.CO2e_total_year_before_baseline_estimated
             - p_renew_biomass.CO2e_combustion_based
         )
         * duration_CO2e_neutral_years
@@ -846,7 +852,9 @@ def calc(
     )
 
     e = EColVars2030()
-    e.CO2e_total_2021_estimated = p.CO2e_total_2021_estimated
+    e.CO2e_total_year_before_baseline_estimated = (
+        p.CO2e_total_year_before_baseline_estimated
+    )
     e.invest_pa_outside = general.g.invest_pa_outside + p.invest_pa_outside
     e.invest_outside = general.g.invest_outside + p.invest_outside
     e.invest = general.g.invest + p.invest

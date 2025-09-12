@@ -18,7 +18,7 @@ class FossilFuelsProduction:
     cost_climate_saved: float = None  # type: ignore
     cost_mro: float = None  # type: ignore
     CO2e_total: float = None  # type: ignore
-    CO2e_total_2021_estimated: float = None  # type: ignore
+    CO2e_total_year_before_baseline_estimated: float = None  # type: ignore
     change_energy_MWh: float = None  # type: ignore
     change_energy_pct: float = None  # type: ignore
     change_CO2e_t: float = None  # type: ignore
@@ -35,7 +35,9 @@ class FossilFuelsProduction:
         CO2e_total_18: float,
     ) -> "FossilFuelsProduction":
         energy = sum(ff.energy for ff in ffs)
-        CO2e_total_2021_estimated = sum(ff.CO2e_total_2021_estimated for ff in ffs)
+        CO2e_total_year_before_baseline_estimated = sum(
+            ff.CO2e_total_year_before_baseline_estimated for ff in ffs
+        )
         cost_fuel = sum(ff.cost_fuel for ff in ffs)
         cost_mro = sum(ff.cost_mro for ff in ffs)
         CO2e_combustion_based = sum(ff.CO2e_combustion_based for ff in ffs)
@@ -51,7 +53,7 @@ class FossilFuelsProduction:
 
         return FossilFuelsProduction(
             energy=energy,
-            CO2e_total_2021_estimated=CO2e_total_2021_estimated,
+            CO2e_total_year_before_baseline_estimated=CO2e_total_year_before_baseline_estimated,
             change_energy_MWh=change_energy_MWh,
             change_energy_pct=change_energy_pct,
             cost_fuel=cost_fuel,
