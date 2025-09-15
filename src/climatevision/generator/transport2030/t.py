@@ -17,9 +17,9 @@ class T(InvestCommune):
     demand_emplo_com: float
 
     invest_com_state: float
-    invest_com_pa_state: float
+    invest_pa_com_state: float
     invest_com_wo_state: float
-    invest_com_pa_wo_state: float
+    invest_pa_com_wo_state: float
 
     @classmethod
     def calc(
@@ -97,9 +97,9 @@ class T(InvestCommune):
             + rail.action_invest_station
             + ship.dmstc_action_infra
         )
-        invest_com_pa_state = invest_com_state / entries.m_duration_target
+        invest_pa_com_state = invest_com_state / entries.m_duration_target
         invest_com_wo_state = invest_com - invest_com_state
-        invest_com_pa_wo_state = invest_com_wo_state / entries.m_duration_target
+        invest_pa_com_wo_state = invest_com_wo_state / entries.m_duration_target
 
         res = cls(
             cost_wage=cost_wage,
@@ -119,8 +119,8 @@ class T(InvestCommune):
                 transport2018=t18.t,
             ),
             invest_com_state=invest_com_state,
-            invest_com_pa_state=invest_com_pa_state,
+            invest_pa_com_state=invest_pa_com_state,
             invest_com_wo_state=invest_com_wo_state,
-            invest_com_pa_wo_state=invest_com_pa_wo_state,
+            invest_pa_com_wo_state=invest_pa_com_wo_state,
         )
         return res
