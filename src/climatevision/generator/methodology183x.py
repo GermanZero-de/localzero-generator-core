@@ -644,25 +644,23 @@ def calc_z(
 
     s.invest_pa_com_state = 0
 
-    d.invest_pa_com_state = (
-        t30.t.invest_pa_com_state
-    )
+    d.invest_pa_com_state = t30.t.invest_pa_com_state
 
     z.invest_pa_com_state = s.invest_pa_com_state + d.invest_pa_com_state
 
     s.invest_pa_com_wo_state = (
-        h30.h.invest_pa_com +
-        e30.e.invest_pa_com
+        h30.h.invest_pa_com
+        + e30.e.invest_pa_com
         # f30.f.invest_com
     )
 
     d.invest_pa_com_wo_state = (
-        r30.r.invest_pa_com +
-        b30.b.invest_pa_com +
-        i30.i.invest_pa_com +
-        t30.t.invest_pa_com_wo_state +
-        a30.a.invest_pa_com +
-        w30.w.invest_pa_com 
+        r30.r.invest_pa_com
+        + b30.b.invest_pa_com
+        + i30.i.invest_pa_com
+        + t30.t.invest_pa_com_wo_state
+        + a30.a.invest_pa_com
+        + w30.w.invest_pa_com
         # l30.l.invest_com
     )
 
@@ -713,25 +711,23 @@ def calc_z(
 
     s.invest_com_state = 0
 
-    d.invest_com_state = (
-        t30.t.invest_com_state
-    )
+    d.invest_com_state = t30.t.invest_com_state
 
     z.invest_com_state = s.invest_com_state + d.invest_com_state
 
     s.invest_com_wo_state = (
-        h30.h.invest_com + 
-        e30.e.invest_com
+        h30.h.invest_com
+        + e30.e.invest_com
         # f30.f.invest_com
     )
 
     d.invest_com_wo_state = (
-        r30.r.invest_com +
-        b30.b.invest_com +
-        i30.i.invest_com +
-        t30.t.invest_com_wo_state +
-        a30.a.invest_com +
-        w30.w.invest_com
+        r30.r.invest_com
+        + b30.b.invest_com
+        + i30.i.invest_com
+        + t30.t.invest_com_wo_state
+        + a30.a.invest_com
+        + w30.w.invest_com
         # l30.l.invest_com
     )
 
