@@ -899,13 +899,13 @@ def calc_z(
 
     h.invest_com_wo_state_pct = div(h30.h.invest_com, z.invest_com_wo_state)
     e.invest_com_wo_state_pct = div(e30.e.invest_com, z.invest_com_wo_state)
-    f.invest_com_wo_state_pct = div(f30.f.invest, z.invest_com_wo_state)
+    f.invest_com_wo_state_pct = div(0, z.invest_com_wo_state)
     r.invest_com_wo_state_pct = div(r30.r.invest_com, z.invest_com_wo_state)
     b.invest_com_wo_state_pct = div(b30.b.invest_com, z.invest_com_wo_state)
     i.invest_com_wo_state_pct = div(i30.i.invest_com, z.invest_com_wo_state)
     t.invest_com_wo_state_pct = div(t30.t.invest_com_wo_state, z.invest_com_wo_state)
     a.invest_com_wo_state_pct = div(a30.a.invest_com, z.invest_com_wo_state)
-    l.invest_com_wo_state_pct = div(l30.l.invest, z.invest_com_wo_state)
+    l.invest_com_wo_state_pct = div(0, z.invest_com_wo_state)
     w.invest_com_wo_state_pct = div(w30.w.invest_com, z.invest_com_wo_state)
 
     h.cost_climate_saved_pct = div(h30.h.cost_climate_saved, z.cost_climate_saved)
