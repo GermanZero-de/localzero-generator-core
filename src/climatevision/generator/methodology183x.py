@@ -50,15 +50,22 @@ class ZColVars:
     cost_climate_saved: float | None = None
     invest_pa: float | None = None
     invest_pa_com: float | None = None
+    invest_pa_com_state: float | None = None
+    invest_pa_com_wo_state: float | None = None
     invest_pa_outside: float | None = None
     invest: float | None = None
     invest_com: float | None = None
+    invest_com_state: float | None = None
+    invest_com_wo_state: float | None = None
     invest_outside: float | None = None
     cost_wage: float | None = None
     demand_emplo: float | None = None
     demand_emplo_new: float | None = None
     demand_emplo_com: float | None = None
     invest_pct: float | None = None
+    invest_com_pct: float | None = None
+    invest_com_state_pct: float | None = None
+    invest_com_wo_state_pct: float | None = None
     cost_climate_saved_pct: float | None = None
     demand_emplo_new_pct: float | None = None
 
@@ -624,6 +631,7 @@ def calc_z(
     z.invest_pa = s.invest_pa + d.invest_pa
 
     s.invest_pa_com = h30.h.invest_pa_com + e30.e.invest_pa_com  # + f30.f.invest_pa_com
+
     d.invest_pa_com = (
         r30.r.invest_pa_com
         + b30.b.invest_pa_com
@@ -634,6 +642,30 @@ def calc_z(
         # + l30.l.invest_pa_com
     )
     z.invest_pa_com = s.invest_pa_com + d.invest_pa_com
+
+    s.invest_pa_com_state = 0
+
+    d.invest_pa_com_state = t30.t.invest_pa_com_state
+
+    z.invest_pa_com_state = s.invest_pa_com_state + d.invest_pa_com_state
+
+    s.invest_pa_com_wo_state = (
+        h30.h.invest_pa_com
+        + e30.e.invest_pa_com
+        # f30.f.invest_com
+    )
+
+    d.invest_pa_com_wo_state = (
+        r30.r.invest_pa_com
+        + b30.b.invest_pa_com
+        + i30.i.invest_pa_com
+        + t30.t.invest_pa_com_wo_state
+        + a30.a.invest_pa_com
+        + w30.w.invest_pa_com
+        # l30.l.invest_com
+    )
+
+    z.invest_pa_com_wo_state = s.invest_pa_com_wo_state + d.invest_pa_com_wo_state
 
     s.invest_pa_outside = (
         e30.e.invest_pa_outside
@@ -677,6 +709,30 @@ def calc_z(
         # + l30.l.invest_com
     )
     z.invest_com = s.invest_com + d.invest_com
+
+    s.invest_com_state = 0
+
+    d.invest_com_state = t30.t.invest_com_state
+
+    z.invest_com_state = s.invest_com_state + d.invest_com_state
+
+    s.invest_com_wo_state = (
+        h30.h.invest_com
+        + e30.e.invest_com
+        # f30.f.invest_com
+    )
+
+    d.invest_com_wo_state = (
+        r30.r.invest_com
+        + b30.b.invest_com
+        + i30.i.invest_com
+        + t30.t.invest_com_wo_state
+        + a30.a.invest_com
+        + w30.w.invest_com
+        # l30.l.invest_com
+    )
+
+    z.invest_com_wo_state = s.invest_com_wo_state + d.invest_com_wo_state
 
     s.invest_outside = (
         e30.e.invest_outside
@@ -815,6 +871,39 @@ def calc_z(
     a.invest_pct = div(a30.a.invest, z.invest)
     l.invest_pct = div(l30.l.invest, z.invest)
     w.invest_pct = div(w30.w.invest, z.invest)
+
+    h.invest_com_pct = div(h30.h.invest_com, z.invest_com)
+    e.invest_com_pct = div(e30.e.invest_com, z.invest_com)
+    f.invest_com_pct = div(f30.f.invest, z.invest_com)
+    r.invest_com_pct = div(r30.r.invest_com, z.invest_com)
+    b.invest_com_pct = div(b30.b.invest_com, z.invest_com)
+    i.invest_com_pct = div(i30.i.invest_com, z.invest_com)
+    t.invest_com_pct = div(t30.t.invest_com, z.invest_com)
+    a.invest_com_pct = div(a30.a.invest_com, z.invest_com)
+    l.invest_com_pct = div(l30.l.invest, z.invest_com)
+    w.invest_com_pct = div(w30.w.invest_com, z.invest_com)
+
+    h.invest_com_state_pct = div(0, z.invest_com_state)
+    e.invest_com_state_pct = div(0, z.invest_com_state)
+    f.invest_com_state_pct = div(0, z.invest_com_state)
+    r.invest_com_state_pct = div(0, z.invest_com_state)
+    b.invest_com_state_pct = div(0, z.invest_com_state)
+    i.invest_com_state_pct = div(0, z.invest_com_state)
+    t.invest_com_state_pct = div(t30.t.invest_com_state, z.invest_com_state)
+    a.invest_com_state_pct = div(0, z.invest_com_state)
+    l.invest_com_state_pct = div(0, z.invest_com_state)
+    w.invest_com_state_pct = div(0, z.invest_com_state)
+
+    h.invest_com_wo_state_pct = div(h30.h.invest_com, z.invest_com_wo_state)
+    e.invest_com_wo_state_pct = div(e30.e.invest_com, z.invest_com_wo_state)
+    f.invest_com_wo_state_pct = div(0, z.invest_com_wo_state)
+    r.invest_com_wo_state_pct = div(r30.r.invest_com, z.invest_com_wo_state)
+    b.invest_com_wo_state_pct = div(b30.b.invest_com, z.invest_com_wo_state)
+    i.invest_com_wo_state_pct = div(i30.i.invest_com, z.invest_com_wo_state)
+    t.invest_com_wo_state_pct = div(t30.t.invest_com_wo_state, z.invest_com_wo_state)
+    a.invest_com_wo_state_pct = div(a30.a.invest_com, z.invest_com_wo_state)
+    l.invest_com_wo_state_pct = div(0, z.invest_com_wo_state)
+    w.invest_com_wo_state_pct = div(w30.w.invest_com, z.invest_com_wo_state)
 
     h.cost_climate_saved_pct = div(h30.h.cost_climate_saved, z.cost_climate_saved)
     e.cost_climate_saved_pct = div(e30.e.cost_climate_saved, z.cost_climate_saved)
