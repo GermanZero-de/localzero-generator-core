@@ -18932,7 +18932,7 @@ var $mdgriffith$elm_ui$Element$Input$text = $mdgriffith$elm_ui$Element$Input$tex
 		H: $mdgriffith$elm_ui$Element$Input$TextInputNode('text')
 	});
 var $author$project$Styling$white = A3($mdgriffith$elm_ui$Element$rgb255, 255, 255, 255);
-var $author$project$Run$year_baseline = 2022;
+var $author$project$Run$year_baseline = 2025;
 var $author$project$EnterInputsDialog$view = F3(
 	function (updateStateMsg, okClickedMsg, state) {
 		var labelStyle = _List_fromArray(
