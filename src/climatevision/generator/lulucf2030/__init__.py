@@ -1461,7 +1461,7 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, l18: L18) 
     )
     g_water_org.CO2e_total_year_before_baseline_estimated = (
         l18.g_water_org.CO2e_total
-        * fact(f"Fact_M_CO2e_lulucf_{year_baseline - 1}_vs_year_ref")
+        * fact(f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref")
     )
     g_water_org.cost_climate_saved = (
         (g_water_org.CO2e_total_year_before_baseline_estimated - g_water_org.CO2e_total)
@@ -1492,7 +1492,7 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, l18: L18) 
     )
     g_settlement_org.CO2e_total_year_before_baseline_estimated = (
         l18.g_settlement_org.CO2e_total
-        * fact(f"Fact_M_CO2e_lulucf_{year_baseline - 1}_vs_year_ref")
+        * fact(f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref")
     )
     g_settlement_org.cost_climate_saved = (
         (
@@ -1509,7 +1509,7 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, l18: L18) 
     g_wood.change_CO2e_t = g_wood.CO2e_total - l18.g_wood.CO2e_total
     g_wood.change_CO2e_pct = div(g_wood.change_CO2e_t, l18.g_wood.CO2e_total)
     g_wood.CO2e_total_year_before_baseline_estimated = l18.g_wood.CO2e_total * fact(
-        f"Fact_M_CO2e_lulucf_{year_baseline - 1}_vs_year_ref"
+        f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref"
     )
     g_wood.cost_climate_saved = (
         (g_wood.CO2e_total_year_before_baseline_estimated - g_wood.CO2e_total)
@@ -1530,7 +1530,7 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, l18: L18) 
     l.change_CO2e_t = l.CO2e_total - l18.l.CO2e_total
     l.change_CO2e_pct = div(l.change_CO2e_t, l18.l.CO2e_total)
     l.CO2e_total_year_before_baseline_estimated = l18.l.CO2e_total * fact(
-        f"Fact_M_CO2e_lulucf_{year_baseline - 1}_vs_year_ref"
+        f"Fact_M_CO2e_wo_lulucf_{year_baseline - 1}_vs_year_ref"
     )
 
     l.cost_climate_saved = (
