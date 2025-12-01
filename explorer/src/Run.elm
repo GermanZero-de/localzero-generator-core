@@ -54,7 +54,7 @@ type alias Inputs =
 
 year_baseline : Int
 year_baseline =
-    2022
+    2025
 
 
 create :
