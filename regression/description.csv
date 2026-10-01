@@ -1,4 +1,6 @@
-﻿var_total;unit;description
+variable;unit;description
+m_AGS_com;;Allgemeiner Gemeindeschlüssel (AGS) der Gemeinde.
+m_year_target;;Zieljahr der CO2 Neutralität.
 r18.r.CO2e_combustion_based;t CO2e;Verbrennungsbasierte Treibhausgasemissionen für private Haushalte und Wohngebäude im Ausgangsjahr.
 r18.r.CO2e_total;t CO2e;Gesamte Treibhausgasemissionen für private Haushalte und Wohngebäude im Ausgangsjahr.
 r18.p.energy;kWh;Energiemenge für private Haushalte und Wohngebäude, Teilbereich Produktion beziehungsweise Aktivität im Ausgangsjahr.

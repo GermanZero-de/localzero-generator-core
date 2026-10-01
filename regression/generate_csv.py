@@ -49,13 +49,23 @@ def main() -> None:
     with args.usage_list.open(encoding="utf-8") as usage_file:
         usage = json.load(usage_file)
 
+    with (REGRESSION_DIR / "description.csv").open(
+        newline="", encoding="utf-8"
+    ) as description_file:
+        descriptions = {
+            row["variable"]: (row["unit"], row["description"])
+            for row in csv.DictReader(description_file, delimiter=";")
+        }
+
     args.output.parent.mkdir(parents=True, exist_ok=True)
     with args.ags_list.open(newline="", encoding="utf-8") as ags_file:
         ags_rows = list(csv.DictReader(ags_file, skipinitialspace=True))
 
     with args.output.open("w", newline="", encoding="utf-8") as output_file:
         writer = csv.writer(output_file)
-        writer.writerow(["ags", "target_year", "variable", "value"])
+        writer.writerow(
+            ["ags", "target_year", "variable", "unit", "description", "value"]
+        )
 
         with TemporaryDirectory() as temp_dir:
             temp_path = Path(temp_dir)
@@ -97,12 +107,28 @@ def main() -> None:
                     result = json.load(result_file)
 
                 for variable in usage["entries"]:
+                    unit, description = descriptions.get(variable, ("", ""))
                     writer.writerow(
-                        [ags, target_year, variable, entries.get(variable, "")]
+                        [
+                            ags,
+                            target_year,
+                            variable,
+                            unit,
+                            description,
+                            entries.get(variable, ""),
+                        ]
                     )
                 for variable in usage["generator"]:
+                    unit, description = descriptions.get(variable, ("", ""))
                     writer.writerow(
-                        [ags, target_year, variable, value_at_path(result, variable)]
+                        [
+                            ags,
+                            target_year,
+                            variable,
+                            unit,
+                            description,
+                            value_at_path(result, variable),
+                        ]
                     )
 
 
