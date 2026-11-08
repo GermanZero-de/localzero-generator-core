@@ -169,3 +169,4 @@ localzero-generator-core.code-workspace
 
 # Simon IKVS
 regression/results
+regression/ags_list.txt
