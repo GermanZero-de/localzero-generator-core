@@ -14,7 +14,7 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 REGRESSION_DIR = Path(__file__).resolve().parent
-
+RESULT_DIR = REGRESSION_DIR / "results"
 
 def value_at_path(data: dict[str, Any], path: str) -> Any:
     value: Any = data
@@ -36,7 +36,7 @@ def main() -> None:
         "--ags-list",
         type=Path,
         default=REGRESSION_DIR / "ags_list.txt",
-        help="CSV input with ags and target_year columns",
+        help="CSV input with ags and year_target columns",
     )
     parser.add_argument(
         "--usage-list",
@@ -63,19 +63,18 @@ def main() -> None:
 
     with args.output.open("w", newline="", encoding="utf-8") as output_file:
         writer = csv.writer(output_file)
-        writer.writerow(
-            ["ags", "target_year", "variable", "unit", "description", "value"]
-        )
+        header = ["ags", "year_target", "variable", "unit", "description", "value"]
+        writer.writerow(header)
 
         with TemporaryDirectory() as temp_dir:
             temp_path = Path(temp_dir)
             for row_number, ags_row in enumerate(ags_rows, start=2):
                 ags = ags_row["ags"].strip()
-                target_year = ags_row["target_year"].strip()
+                year_target = ags_row["year_target"].strip()
                 make_output = temp_path / f"entries_{row_number}.json"
                 run_output = temp_path / f"result_{row_number}.json"
 
-                common_args = ["-ags", ags, "-year_target", target_year]
+                common_args = ["-ags", ags, "-year_target", year_target]
                 subprocess.run(
                     [
                         sys.executable,
@@ -106,30 +105,35 @@ def main() -> None:
                 with run_output.open(encoding="utf-8") as result_file:
                     result = json.load(result_file)
 
-                for variable in usage["entries"]:
-                    unit, description = descriptions.get(variable, ("", ""))
-                    writer.writerow(
-                        [
+                ags_output = args.output.parent / f"{ags}_{year_target}.csv"
+                with ags_output.open("w", newline="", encoding="utf-8") as ags_file:
+                    ags_writer = csv.writer(ags_file)
+                    ags_writer.writerow(header)
+
+                    for variable in usage["entries"]:
+                        unit, description = descriptions.get(variable, ("", ""))
+                        row = [
                             ags,
-                            target_year,
+                            year_target,
                             variable,
                             unit,
                             description,
                             entries.get(variable, ""),
                         ]
-                    )
-                for variable in usage["generator"]:
-                    unit, description = descriptions.get(variable, ("", ""))
-                    writer.writerow(
-                        [
+                        writer.writerow(row)
+                        ags_writer.writerow(row)
+                    for variable in usage["generator"]:
+                        unit, description = descriptions.get(variable, ("", ""))
+                        row = [
                             ags,
-                            target_year,
+                            year_target,
                             variable,
                             unit,
                             description,
                             value_at_path(result, variable),
                         ]
-                    )
+                        writer.writerow(row)
+                        ags_writer.writerow(row)
 
 
 if __name__ == "__main__":
