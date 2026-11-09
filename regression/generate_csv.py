@@ -102,10 +102,10 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "-o",
-        "--output",
+        "--output-dir",
         type=Path,
-        default=RESULT_DIR / "result.csv",
-        help="CSV output path (default: regression/results/result.csv)",
+        default=RESULT_DIR,
+        help="directory for per-AGS CSV files (default: regression/results)",
     )
     parser.add_argument(
         "--ags-list",
@@ -140,35 +140,28 @@ def main() -> None:
             for row in csv.DictReader(description_file, delimiter=";")
         }
 
-    args.output.parent.mkdir(parents=True, exist_ok=True)
+    args.output_dir.mkdir(parents=True, exist_ok=True)
     with args.ags_list.open(newline="", encoding="utf-8") as ags_file:
         ags_rows = list(csv.DictReader(ags_file, skipinitialspace=True))
 
-    with args.output.open("w", newline="", encoding="utf-8") as output_file:
-        writer = csv.writer(output_file)
-        header = ["ags", "year_target", "variable", "unit", "description", "value"]
-        writer.writerow(header)
-
-        with TemporaryDirectory() as temp_dir:
-            temp_path = Path(temp_dir)
-            process = partial(
-                process_ags,
-                temp_path=temp_path,
-                usage=usage,
-                descriptions=descriptions,
-            )
-            with ThreadPoolExecutor(max_workers=args.workers) as executor:
-                for ags, year_target, rows in executor.map(
-                    process, enumerate(ags_rows, start=2)
-                ):
-                    writer.writerows(rows)
-                    ags_output = args.output.parent / f"{ags}_{year_target}.csv"
-                    with ags_output.open(
-                        "w", newline="", encoding="utf-8"
-                    ) as ags_file:
-                        ags_writer = csv.writer(ags_file)
-                        ags_writer.writerow(header)
-                        ags_writer.writerows(rows)
+    header = ["ags", "year_target", "variable", "unit", "description", "value"]
+    with TemporaryDirectory() as temp_dir:
+        temp_path = Path(temp_dir)
+        process = partial(
+            process_ags,
+            temp_path=temp_path,
+            usage=usage,
+            descriptions=descriptions,
+        )
+        with ThreadPoolExecutor(max_workers=args.workers) as executor:
+            for ags, year_target, rows in executor.map(
+                process, enumerate(ags_rows, start=2)
+            ):
+                ags_output = args.output_dir / f"{ags}_{year_target}.csv"
+                with ags_output.open("w", newline="", encoding="utf-8") as ags_file:
+                    ags_writer = csv.writer(ags_file)
+                    ags_writer.writerow(header)
+                    ags_writer.writerows(rows)
 
 
 if __name__ == "__main__":
