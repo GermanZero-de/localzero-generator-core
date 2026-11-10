@@ -82,7 +82,7 @@ class RailPeople(Invest):
         cost_climate_saved = (
             (CO2e_total_year_before_baseline_estimated - CO2e_combustion_based)
             * duration_CO2e_neutral_years
-            * fact("Fact_M_cost_per_CO2e_2020")
+            * fact("Fact_M_cost_per_CO2e_2025")
         )
         invest_pa = invest / duration_until_target_year
         pct_of_wage = div(cost_wage, invest_pa)
@@ -171,7 +171,7 @@ class RailPeople(Invest):
         cost_climate_saved = (
             (CO2e_total_year_before_baseline_estimated - CO2e_combustion_based)
             * duration_CO2e_neutral_years
-            * fact("Fact_M_cost_per_CO2e_2020")
+            * fact("Fact_M_cost_per_CO2e_2025")
         )
         invest = base_unit * invest_per_x + cost_wage * duration_until_target_year
         invest_pa = invest / duration_until_target_year
@@ -368,7 +368,7 @@ class RailGoods(Invest):
         cost_climate_saved = (
             (CO2e_total_year_before_baseline_estimated - CO2e_combustion_based)
             * duration_CO2e_neutral_years
-            * fact("Fact_M_cost_per_CO2e_2020")
+            * fact("Fact_M_cost_per_CO2e_2025")
         )
         ratio_wage_to_emplo = ass("Ass_T_D_rail_wage_driver")
         demand_emplo = mileage / fact("Fact_T_D_rail_ratio_mlg_to_driver")

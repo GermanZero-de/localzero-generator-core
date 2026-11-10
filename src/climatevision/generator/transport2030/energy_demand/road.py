@@ -75,7 +75,7 @@ class Road:
         cost_climate_saved = (
             (CO2e_total_year_before_baseline_estimated - CO2e_combustion_based)
             * duration_CO2e_neutral_years
-            * fact("Fact_M_cost_per_CO2e_2020")
+            * fact("Fact_M_cost_per_CO2e_2025")
         )
         return cls(
             mileage=mileage,
@@ -137,7 +137,7 @@ class Road:
         cost_climate_saved = (
             (CO2e_total_year_before_baseline_estimated - CO2e_combustion_based)
             * duration_CO2e_neutral_years
-            * fact("Fact_M_cost_per_CO2e_2020")
+            * fact("Fact_M_cost_per_CO2e_2025")
         )
         return cls(
             mileage=mileage,
@@ -198,7 +198,7 @@ class Road:
         cost_climate_saved = (
             (CO2e_total_year_before_baseline_estimated - CO2e_combustion_based)
             * duration_CO2e_neutral_years
-            * fact("Fact_M_cost_per_CO2e_2020")
+            * fact("Fact_M_cost_per_CO2e_2025")
         )
         return cls(
             mileage=mileage,
@@ -261,7 +261,7 @@ class Road:
         cost_climate_saved = (
             (CO2e_total_year_before_baseline_estimated - CO2e_combustion_based)
             * duration_CO2e_neutral_years
-            * fact("Fact_M_cost_per_CO2e_2020")
+            * fact("Fact_M_cost_per_CO2e_2025")
         )
         return cls(
             mileage=mileage,
@@ -349,7 +349,7 @@ class Road:
         cost_climate_saved = (
             (CO2e_total_year_before_baseline_estimated - CO2e_combustion_based)
             * duration_CO2e_neutral_years
-            * fact("Fact_M_cost_per_CO2e_2020")
+            * fact("Fact_M_cost_per_CO2e_2025")
         )
         return cls(
             mileage=mileage,
@@ -435,7 +435,7 @@ class Road:
         cost_climate_saved = (
             (CO2e_total_year_before_baseline_estimated - CO2e_combustion_based)
             * duration_CO2e_neutral_years
-            * fact("Fact_M_cost_per_CO2e_2020")
+            * fact("Fact_M_cost_per_CO2e_2025")
         )
 
         return cls(
@@ -663,7 +663,7 @@ class RoadBus(Road, BusInvestments):
         cost_climate_saved = (
             (CO2e_total_year_before_baseline_estimated - CO2e_combustion_based)
             * duration_CO2e_neutral_years
-            * fact("Fact_M_cost_per_CO2e_2020")
+            * fact("Fact_M_cost_per_CO2e_2025")
         )
 
         return cls(

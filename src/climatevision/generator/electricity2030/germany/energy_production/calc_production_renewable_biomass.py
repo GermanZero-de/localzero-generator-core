@@ -56,7 +56,7 @@ def calc_production_renewable_biomass(
             - p_renew_biomass.CO2e_combustion_based
         )
         * duration_CO2e_neutral_years
-        * fact("Fact_M_cost_per_CO2e_2020")
+        * fact("Fact_M_cost_per_CO2e_2025")
     )
     p_renew_biomass.change_CO2e_t = (
         p_renew_biomass.CO2e_total - e18.p_renew_biomass.CO2e_total

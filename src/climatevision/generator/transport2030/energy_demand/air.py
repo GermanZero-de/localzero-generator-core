@@ -28,7 +28,7 @@ def calc_air_domestic(
     cost_climate_saved = (
         (CO2e_total_year_before_baseline_estimated)
         * duration_CO2e_neutral_years
-        * fact("Fact_M_cost_per_CO2e_2020")
+        * fact("Fact_M_cost_per_CO2e_2025")
     )
     return Transport(
         CO2e_total_year_before_baseline_estimated=CO2e_total_year_before_baseline_estimated,
@@ -73,7 +73,7 @@ def calc_air_international(
     cost_climate_saved = (
         (CO2e_total_year_before_baseline_estimated - CO2e_combustion_based)
         * duration_CO2e_neutral_years
-        * fact("Fact_M_cost_per_CO2e_2020")
+        * fact("Fact_M_cost_per_CO2e_2025")
     )
     transport_capacity_pkm = t18.air_inter.transport_capacity_pkm * div(
         demand_ejetfuel, t18.air_inter.demand_jetfuel

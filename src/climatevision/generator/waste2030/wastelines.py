@@ -55,7 +55,7 @@ class EnergySupplyDetail:
         cost_climate_saved = (
             (CO2e_total_year_before_baseline_estimated - CO2e_total)
             * duration_CO2e_neutral_years
-            * fact("Fact_M_cost_per_CO2e_2020")
+            * fact("Fact_M_cost_per_CO2e_2025")
         )
 
         return cls(
@@ -121,7 +121,7 @@ class Landfilling:
         cost_climate_saved = (
             (CO2e_total_year_before_baseline_estimated - CO2e_total)
             * duration_CO2e_neutral_years
-            * fact("Fact_M_cost_per_CO2e_2020")
+            * fact("Fact_M_cost_per_CO2e_2025")
         )
 
         return cls(
@@ -187,7 +187,7 @@ class Organic_treatment:
         cost_climate_saved = (
             (CO2e_total_year_before_baseline_estimated - CO2e_total)
             * duration_CO2e_neutral_years
-            * fact("Fact_M_cost_per_CO2e_2020")
+            * fact("Fact_M_cost_per_CO2e_2025")
         )
 
         invest_per_x = ass(
@@ -277,7 +277,7 @@ class Wastewater:
         cost_climate_saved = (
             (CO2e_total_year_before_baseline_estimated - CO2e_total)
             * duration_CO2e_neutral_years
-            * fact("Fact_M_cost_per_CO2e_2020")
+            * fact("Fact_M_cost_per_CO2e_2025")
         )
 
         demand_electricity = w18.p_wastewater.demand_electricity * div(

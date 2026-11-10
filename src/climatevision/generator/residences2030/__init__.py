@@ -831,7 +831,7 @@ def calc(
             - (s_fueloil.CO2e_production_based + s_fueloil.CO2e_combustion_based)
         )
         * duration_CO2e_neutral_years
-        * fact("Fact_M_cost_per_CO2e_2020")
+        * fact("Fact_M_cost_per_CO2e_2025")
     )
 
     s_lpg.cost_climate_saved = (
@@ -840,7 +840,7 @@ def calc(
             - (s_lpg.CO2e_production_based + s_lpg.CO2e_combustion_based)
         )
         * duration_CO2e_neutral_years
-        * fact("Fact_M_cost_per_CO2e_2020")
+        * fact("Fact_M_cost_per_CO2e_2025")
     )
 
     s_biomass.cost_climate_saved = (
@@ -849,7 +849,7 @@ def calc(
             - (s_biomass.CO2e_production_based + s_biomass.CO2e_combustion_based)
         )
         * duration_CO2e_neutral_years
-        * fact("Fact_M_cost_per_CO2e_2020")
+        * fact("Fact_M_cost_per_CO2e_2025")
     )
 
     s_coal.cost_climate_saved = (
@@ -858,7 +858,7 @@ def calc(
             - (s_coal.CO2e_production_based + s_coal.CO2e_combustion_based)
         )
         * duration_CO2e_neutral_years
-        * fact("Fact_M_cost_per_CO2e_2020")
+        * fact("Fact_M_cost_per_CO2e_2025")
     )
 
     s_petrol.cost_climate_saved = (
@@ -867,7 +867,7 @@ def calc(
             - (s_petrol.CO2e_production_based + s_petrol.CO2e_combustion_based)
         )
         * duration_CO2e_neutral_years
-        * fact("Fact_M_cost_per_CO2e_2020")
+        * fact("Fact_M_cost_per_CO2e_2025")
     )
 
     s_heatnet.cost_climate_saved = (
@@ -876,7 +876,7 @@ def calc(
             - (s_heatnet.CO2e_production_based + s_heatnet.CO2e_combustion_based)
         )
         * duration_CO2e_neutral_years
-        * fact("Fact_M_cost_per_CO2e_2020")
+        * fact("Fact_M_cost_per_CO2e_2025")
     )
 
     s_solarth.cost_climate_saved = (
@@ -885,7 +885,7 @@ def calc(
             - (s_solarth.CO2e_production_based + s_solarth.CO2e_combustion_based)
         )
         * duration_CO2e_neutral_years
-        * fact("Fact_M_cost_per_CO2e_2020")
+        * fact("Fact_M_cost_per_CO2e_2025")
     )
 
     s_heatpump.cost_climate_saved = (
@@ -894,7 +894,7 @@ def calc(
             - (s_heatpump.CO2e_production_based + s_heatpump.CO2e_combustion_based)
         )
         * duration_CO2e_neutral_years
-        * fact("Fact_M_cost_per_CO2e_2020")
+        * fact("Fact_M_cost_per_CO2e_2025")
     )
 
     s_gas.cost_climate_saved = (
@@ -903,7 +903,7 @@ def calc(
             - (0 + s_gas.CO2e_combustion_based)
         )
         * duration_CO2e_neutral_years
-        * fact("Fact_M_cost_per_CO2e_2020")
+        * fact("Fact_M_cost_per_CO2e_2025")
     )
 
     s_emethan.cost_climate_saved = (
@@ -912,14 +912,14 @@ def calc(
             - s_emethan.CO2e_combustion_based
         )
         * duration_CO2e_neutral_years
-        * fact("Fact_M_cost_per_CO2e_2020")
+        * fact("Fact_M_cost_per_CO2e_2025")
     )
     s_elec_heating.cost_climate_saved = 0
 
     s.cost_climate_saved = (
         (s.CO2e_total_year_before_baseline_estimated - s.CO2e_combustion_based)
         * duration_CO2e_neutral_years
-        * fact("Fact_M_cost_per_CO2e_2020")
+        * fact("Fact_M_cost_per_CO2e_2025")
     )
 
     s.change_cost_energy = s.cost_fuel - r18.s.cost_fuel
@@ -1349,7 +1349,7 @@ def calc(
             - s_elec.CO2e_combustion_based
         )
         * duration_CO2e_neutral_years
-        * fact("Fact_M_cost_per_CO2e_2020")
+        * fact("Fact_M_cost_per_CO2e_2025")
     )
     s_elec.change_cost_energy = 0
     s_elec_heating.CO2e_combustion_based_per_MWh = (

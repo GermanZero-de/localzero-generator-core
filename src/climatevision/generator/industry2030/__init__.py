@@ -87,7 +87,7 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, i18: I18) 
             - p_chem_basic.CO2e_total
         )
         * duration_CO2e_neutral_years
-        * fact("Fact_M_cost_per_CO2e_2020")
+        * fact("Fact_M_cost_per_CO2e_2025")
     )
     # investment calculation
     p_chem_basic.invest_per_x = ass(
@@ -138,7 +138,7 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, i18: I18) 
             - p_chem_ammonia.CO2e_total
         )
         * duration_CO2e_neutral_years
-        * fact("Fact_M_cost_per_CO2e_2020")
+        * fact("Fact_M_cost_per_CO2e_2025")
     )
     # investment calculation
     p_chem_ammonia.invest_per_x = ass(
@@ -196,7 +196,7 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, i18: I18) 
             - p_chem_other.CO2e_total
         )
         * duration_CO2e_neutral_years
-        * fact("Fact_M_cost_per_CO2e_2020")
+        * fact("Fact_M_cost_per_CO2e_2025")
     )
     # investment calculation
     p_chem_other.invest_per_x = ass("Ass_I_P_chem_other_factor_invest_per_prodvol_2050")
@@ -326,7 +326,7 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, i18: I18) 
             - p_metal_steel_primary.CO2e_total
         )
         * duration_CO2e_neutral_years
-        * fact("Fact_M_cost_per_CO2e_2020")
+        * fact("Fact_M_cost_per_CO2e_2025")
     )
     # investment calculation
     p_metal_steel_primary.invest_per_x = ass(
@@ -416,7 +416,7 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, i18: I18) 
             - p_metal_steel_secondary.CO2e_total
         )
         * duration_CO2e_neutral_years
-        * fact("Fact_M_cost_per_CO2e_2020")
+        * fact("Fact_M_cost_per_CO2e_2025")
     )
     # investment calculation
     p_metal_steel_secondary.invest_per_x = ass(
@@ -482,7 +482,7 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, i18: I18) 
             - p_metal_steel.CO2e_total
         )
         * duration_CO2e_neutral_years
-        * fact("Fact_M_cost_per_CO2e_2020")
+        * fact("Fact_M_cost_per_CO2e_2025")
     )
     p_metal_steel.invest_pa = (
         p_metal_steel_primary.invest_pa + p_metal_steel_secondary.invest_pa
@@ -548,7 +548,7 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, i18: I18) 
             - p_metal_nonfe.CO2e_total
         )
         * duration_CO2e_neutral_years
-        * fact("Fact_M_cost_per_CO2e_2020")
+        * fact("Fact_M_cost_per_CO2e_2025")
     )
     # investment calculation
     p_metal_nonfe.invest_per_x = ass(
@@ -637,7 +637,7 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, i18: I18) 
             - p_other_paper.CO2e_total
         )
         * duration_CO2e_neutral_years
-        * fact("Fact_M_cost_per_CO2e_2020")
+        * fact("Fact_M_cost_per_CO2e_2025")
     )
 
     # investment calculation
@@ -698,7 +698,7 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, i18: I18) 
             - p_other_food.CO2e_total
         )
         * duration_CO2e_neutral_years
-        * fact("Fact_M_cost_per_CO2e_2020")
+        * fact("Fact_M_cost_per_CO2e_2025")
     )
 
     # investment calculation
@@ -769,7 +769,7 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, i18: I18) 
             - p_other_further.CO2e_total
         )
         * duration_CO2e_neutral_years
-        * fact("Fact_M_cost_per_CO2e_2020")
+        * fact("Fact_M_cost_per_CO2e_2025")
     )
 
     # investment calculation
@@ -816,7 +816,7 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, i18: I18) 
             - p_other_2efgh.CO2e_total
         )
         * duration_CO2e_neutral_years
-        * fact("Fact_M_cost_per_CO2e_2020")
+        * fact("Fact_M_cost_per_CO2e_2025")
     )
 
     # investment calculation
@@ -1032,7 +1032,7 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, i18: I18) 
             )
         )
         * duration_CO2e_neutral_years
-        * fact("Fact_M_cost_per_CO2e_2020")
+        * fact("Fact_M_cost_per_CO2e_2025")
     )
     p_miner_ceram.invest = p_miner_ceram.prod_volume * p_miner_ceram.invest_per_x
     p_miner_cement.invest_pa_outside = p_miner_cement.invest_pa
@@ -1149,7 +1149,7 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, i18: I18) 
             )
         )
         * duration_CO2e_neutral_years
-        * fact("Fact_M_cost_per_CO2e_2020")
+        * fact("Fact_M_cost_per_CO2e_2025")
     )
     p_chem.invest_pa = (
         p_chem_basic.invest_pa + p_chem_ammonia.invest_pa + p_chem_other.invest_pa
@@ -1223,7 +1223,7 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, i18: I18) 
             )
         )
         * duration_CO2e_neutral_years
-        * fact("Fact_M_cost_per_CO2e_2020")
+        * fact("Fact_M_cost_per_CO2e_2025")
     )
     p_miner_glas.cost_climate_saved = (
         (
@@ -1231,7 +1231,7 @@ def calc(entries: Entries, facts: Facts, assumptions: Assumptions, *, i18: I18) 
             - (p_miner_glas.CO2e_production_based + p_miner_glas.CO2e_combustion_based)
         )
         * duration_CO2e_neutral_years
-        * fact("Fact_M_cost_per_CO2e_2020")
+        * fact("Fact_M_cost_per_CO2e_2025")
     )
 
     p_miner.cost_climate_saved = (

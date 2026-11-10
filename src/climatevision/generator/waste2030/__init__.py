@@ -158,7 +158,7 @@ class Pyrolysis:
         cost_climate_saved = (
             (CO2e_total_year_before_baseline_estimated - CO2e_total)
             * duration_CO2e_neutral_years
-            * fact("Fact_M_cost_per_CO2e_2020")
+            * fact("Fact_M_cost_per_CO2e_2025")
         )
 
         invest_per_x = ass("Ass_L_P_pyrolysis_plant_ratio_invest_to_biochar_pa")

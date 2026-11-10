@@ -81,7 +81,7 @@ class CO2eChangeA(InvestCommune):
         self.cost_climate_saved = (
             (self.CO2e_total_year_before_baseline_estimated - self.CO2e_total)
             * duration_CO2e_neutral_years
-            * fact("Fact_M_cost_per_CO2e_2020")
+            * fact("Fact_M_cost_per_CO2e_2025")
         )
 
         self.cost_wage = g.cost_wage + p.cost_wage + s.cost_wage

@@ -57,7 +57,7 @@ class ShipDomestic(Invest):
         cost_climate_saved = (
             (CO2e_total_year_before_baseline_estimated - CO2e_combustion_based)
             * duration_CO2e_neutral_years
-            * fact("Fact_M_cost_per_CO2e_2020")
+            * fact("Fact_M_cost_per_CO2e_2025")
         )
         ratio_wage_to_emplo = ass("Ass_T_D_shp_wage_driver")
         demand_emplo = transport_capacity_tkm / fact("Fact_T_D_shp_ratio_mlg_to_driver")
@@ -187,7 +187,7 @@ class ShipInternational:
         cost_climate_saved = (
             (CO2e_total_year_before_baseline_estimated - CO2e_combustion_based)
             * duration_CO2e_neutral_years
-            * fact("Fact_M_cost_per_CO2e_2020")
+            * fact("Fact_M_cost_per_CO2e_2025")
         )
         transport_capacity_tkm = t18.ship_inter.transport_capacity_tkm * div(
             demand_ediesel, t18.ship_inter.energy

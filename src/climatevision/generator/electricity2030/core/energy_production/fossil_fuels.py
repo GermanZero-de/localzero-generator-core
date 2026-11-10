@@ -35,7 +35,7 @@ def calc_stop_production_by_fossil_fuels(
     cost_climate_saved = (
         (CO2e_total_year_before_baseline_estimated - CO2e_combustion_based)
         * duration_CO2e_neutral_years
-        * fact("Fact_M_cost_per_CO2e_2020")
+        * fact("Fact_M_cost_per_CO2e_2025")
     )
     change_CO2e_t = CO2e_total - e18_production.CO2e_total
     change_CO2e_pct = div(change_CO2e_t, e18_production.CO2e_total)

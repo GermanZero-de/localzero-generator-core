@@ -609,12 +609,12 @@ def calc_z(
     s.cost_climate_saved = (
         (s.CO2e_total_year_before_baseline_estimated - s.CO2e_total_30)
         * duration_CO2e_neutral_years
-        * fact("Fact_M_cost_per_CO2e_2020")
+        * fact("Fact_M_cost_per_CO2e_2025")
     )
     d.cost_climate_saved = (
         (d.CO2e_total_year_before_baseline_estimated - d.CO2e_total_30)
         * duration_CO2e_neutral_years
-        * fact("Fact_M_cost_per_CO2e_2020")
+        * fact("Fact_M_cost_per_CO2e_2025")
     )
     z.cost_climate_saved = s.cost_climate_saved + d.cost_climate_saved
 

@@ -76,7 +76,7 @@ def calc_production_local_biomass_stage2(
             - p_local_biomass.CO2e_combustion_based
         )
         * duration_CO2e_neutral_years
-        * fact("Fact_M_cost_per_CO2e_2020")
+        * fact("Fact_M_cost_per_CO2e_2025")
     )
     p_local_biomass.cost_wage = (
         p_local_biomass.invest_pa
